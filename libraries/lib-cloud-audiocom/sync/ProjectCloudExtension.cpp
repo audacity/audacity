@@ -73,8 +73,10 @@ void ProjectCloudExtension::MarkPendingCloudSave()
 
 void ProjectCloudExtension::OnLoad()
 {
-   if (!IsCloudProject())
-      UpdateIdFromDatabase();
+   if (IsCloudProject())
+      return;
+
+   UpdateIdFromDatabase();
 }
 
 void ProjectCloudExtension::OnSnapshotCreated(
@@ -168,6 +170,16 @@ std::weak_ptr<AudacityProject> ProjectCloudExtension::GetProject() const
 const std::vector<uint8_t>& ProjectCloudExtension::GetUpdatedProjectContents() const
 {
    return mUpdatedProjectContents;
+}
+
+void ProjectCloudExtension::SuppressAutoDownload()
+{
+   mSuppressAutoDownload = true;
+}
+
+bool ProjectCloudExtension::GetAutoDownloadSuppressed() const
+{
+   return mSuppressAutoDownload;
 }
 
 void ProjectCloudExtension::UpdateIdFromDatabase()

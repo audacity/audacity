@@ -56,6 +56,10 @@ public:
    std::weak_ptr<AudacityProject> GetProject() const;
    const std::vector<uint8_t>& GetUpdatedProjectContents() const;
 
+   void SuppressAutoDownload();
+
+   bool GetAutoDownloadSuppressed() const;
+
 private:
    void UpdateIdFromDatabase();
 
@@ -67,5 +71,6 @@ private:
    std::vector<uint8_t> mUpdatedProjectContents;
 
    bool mPendingCloudSave { false };
+   bool mSuppressAutoDownload { false };
 };
 } // namespace cloud::audiocom::sync

@@ -28,6 +28,12 @@ enum class CloudProjectVisibility
    Public,
 };
 
+enum class DownloadConflictResolution
+{
+   Local,
+   Remote,
+};
+
 struct SaveResult
 {
    std::string Title;
@@ -63,9 +69,12 @@ public:
 
    virtual void OnDownloadStarted() = 0;
    virtual bool OnDownloadProgress(double progress) = 0;
-   virtual void OnDownloadFailed(std::string errorMessage, bool verbose) = 0;
-   virtual AudacityProject* OnDownloadSucceeded(
-      AudacityProject* targetProject, const std::string& path) = 0;
+   virtual void OnDownloadFinished() = 0;
+
+   virtual void ShowDownloadError(std::string errorMessage) = 0;
+
+   virtual DownloadConflictResolution
+   OnDownloadConflict(const BasicUI::WindowPlacement& placement) = 0;
 }; // class CloudSyncUI
 
 } // namespace cloud::audiocom::sync

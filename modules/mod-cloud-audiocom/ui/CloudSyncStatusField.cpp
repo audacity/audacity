@@ -128,7 +128,7 @@ TranslatableString CloudSyncStatusField::GetText() const
    case State::Uploading:
       return XO("Uploading %d%%").Format(mProgress);
    default:
-      break;
+      return XO("Unknown");
    }
 }
 

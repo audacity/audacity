@@ -1075,6 +1075,9 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
 AudacityProject *ProjectFileManager::OpenProjectFile(
    const FilePath &fileName, bool addtohistory)
 {
+   // Allow extensions to update the project before opening it.
+   ProjectFileIOExtensionRegistry::OnOpen(mProject, audacity::ToUTF8(fileName));
+
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &tracks = TrackList::Get( project );

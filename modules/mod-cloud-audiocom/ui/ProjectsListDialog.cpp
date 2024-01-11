@@ -22,9 +22,13 @@
 
 #include "BasicUI.h"
 #include "Internat.h"
+#include "CodeConversions.h"
+
+#include "ProjectManager.h"
 
 #include "CloudSyncService.h"
 #include "sync/CloudSyncUtils.h"
+#include "sync/ProjectCloudExtension.h"
 
 namespace cloud::audiocom::sync
 {
@@ -326,7 +330,33 @@ void ProjectsListDialog::OnOpen()
 
    EndModal(wxID_OK);
 
-   CloudSyncService::Get().OpenFromCloud(mProject, std::string(selectedProjectId));
+   CloudSyncService::Get().OpenFromCloud(
+      mProject, std::string(selectedProjectId), {},
+      [](auto result)
+      {
+         switch (result.SyncState)
+         {
+         case ProjectDownloadState::Failed:
+            BasicUI::ShowErrorDialog(
+               {}, XO("Error"), XO("Failed to open cloud project"), {},
+               BasicUI::ErrorDialogOptions {}.Log(
+                  audacity::ToWString(result.ErrorMessage)));
+            break;
+         case ProjectDownloadState::Succeeded:
+            if (result.TargetProject != nullptr)
+            {
+               ProjectCloudExtension::Get(*result.TargetProject)
+                  .SuppressAutoDownload();
+            }
+
+            ProjectManager::OpenProject(
+               result.TargetProject, audacity::ToWXString(result.ProjectPath),
+               true, false);
+            break;
+         default:
+            break;
+         }
+      });
 }
 
 } // namespace cloud::audiocom::sync

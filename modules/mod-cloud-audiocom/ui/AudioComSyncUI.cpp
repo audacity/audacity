@@ -9,6 +9,8 @@
 
 **********************************************************************/
 
+#include <wx/log.h>
+
 #include "CloudSyncService.h"
 #include "sync/CloudSyncUI.h"
 
@@ -19,7 +21,6 @@
 #include "UserService.h"
 
 #include "Project.h"
-#include "ProjectManager.h"
 
 #include "CloudSyncStatusField.h"
 #include "SelectSaveLocationDialog.h"
@@ -124,6 +125,9 @@ public:
 
       auto& statusField = CloudSyncStatusField::Get(*project);
       statusField.UploadCompleted(false);
+
+      wxLogError(
+         "Project upload has failed: %s", audacity::ToWXString(errorMessage));
    }
 
    void OnUploadSucceeded(AudacityProject* project) override
@@ -149,6 +153,7 @@ public:
    bool OnDownloadProgress(double progress) override
    {
       assert(mDownloadProgressDialog);
+
       if (!mDownloadProgressDialog)
          return true;
 
@@ -160,27 +165,27 @@ public:
              BasicUI::ProgressResult::Success;
    }
 
-   void OnDownloadFailed(std::string errorMessage, bool verbose) override
+   void OnDownloadFinished() override
    {
       mDownloadProgressDialog.reset();
-
-      if (verbose)
-      {
-         BasicUI::ShowErrorDialog(
-            {}, XO("Error"), XO("Failed to open cloud project"), {},
-            BasicUI::ErrorDialogOptions {}.Log(audacity::ToWString(errorMessage)));
-      }
    }
 
-   AudacityProject* OnDownloadSucceeded(
-      AudacityProject* targetProject, const std::string& path) override
+   void ShowDownloadError (std::string errorMessage) override
    {
-      mDownloadProgressDialog.reset();
+      const auto platformMessage = audacity::ToWString(errorMessage);
 
-      return ProjectManager::OpenProject(
-         targetProject, audacity::ToWXString(path), true, false);
+      wxLogError("Project download has failed: %s", platformMessage);
+
+      BasicUI::ShowErrorDialog(
+         {}, XO("Error"), XO("Failed to sync cloud project"), {},
+         BasicUI::ErrorDialogOptions {}.Log(platformMessage));
    }
 
+   DownloadConflictResolution
+   OnDownloadConflict(const BasicUI::WindowPlacement& placement) override
+   {
+      return DownloadConflictResolution::Remote;
+   }
 private:
    std::unique_ptr<BasicUI::ProgressDialog> mDownloadProgressDialog;
 };

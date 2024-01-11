@@ -37,7 +37,6 @@
 #include "BasicUI.h"
 #include "FileNames.h"
 
-#include <wx/log.h>
 #include "wxFileNameWrapper.h"
 
 #include "NetworkManager.h"
@@ -91,14 +90,18 @@ public:
       return true;
    }
 
-   void OnDownloadFailed(std::string, bool) override
+   void OnDownloadFinished() override
    {
    }
 
-   AudacityProject*
-   OnDownloadSucceeded(AudacityProject*, const std::string&) override
+   void ShowDownloadError(std::string) override
+   {      
+   }
+
+   sync::DownloadConflictResolution
+   OnDownloadConflict(const BasicUI::WindowPlacement&) override
    {
-      return nullptr;
+      return sync::DownloadConflictResolution::Remote;
    }
 }; // class DefaultCloudSyncUI
 
@@ -154,22 +157,26 @@ void PerformProjectGetRequest(
    response->setRequestFinishedCallback(
       [dataCallback = std::move(dataCallback)](auto response)
       {
-         auto removeRequest =
-            finally([response] { RemovePendingRequest(response); });
+         BasicUI::CallAfter(
+            [dataCallback = std::move(dataCallback), response]
+            {
+               auto removeRequest =
+                  finally([response] { RemovePendingRequest(response); });
 
-         const auto& body = response->readAll<std::string>();
+               const auto& body = response->readAll<std::string>();
 
-         if (response->getError() != NetworkError::NoError)
-         {
-            dataCallback(
-               response->getError() != NetworkError::HTTPError ?
-                  response->getErrorString() :
-                  std::move(body),
-               false);
-            return;
-         }
+               if (response->getError() != NetworkError::NoError)
+               {
+                  dataCallback(
+                     response->getError() != NetworkError::HTTPError ?
+                        response->getErrorString() :
+                        std::move(body),
+                     false);
+                  return;
+               }
 
-         dataCallback(std::move(body), true);
+               dataCallback(std::move(body), true);
+            });
       });
 
    std::lock_guard lock { GetResponsesMutex() };
@@ -279,6 +286,74 @@ void GetSnapshotInfo(
       });
 }
 
+template<typename AuthorizedCallback, typename UnauthorizedCallback>
+void PerformAuthorised(
+   OAuthService& oAuthService, sync::CloudSyncUI& ui,
+   AudacityProject* targetProject, AuthorizedCallback authorizedCallback,
+   UnauthorizedCallback unauthorizedCallback)
+{
+   oAuthService.ValidateAuth(
+      [&oAuthService, &ui, targetProject,
+       authorizedCallback = std::move(authorizedCallback),
+       unauthorizedCallback = std::move(unauthorizedCallback)](auto token)
+      {
+         BasicUI::CallAfter(
+            [&oAuthService, &ui, targetProject,
+             authorizedCallback = std::move(authorizedCallback),
+             unauthorizedCallback = std::move(unauthorizedCallback),
+             authorized = !token.empty()]()
+            {
+               if (authorized)
+               {
+                  authorizedCallback();
+                  return;
+               }
+
+               if (!ui.OnAuthorizationRequired(
+                      *ProjectFramePlacement(targetProject)))
+               {
+                  unauthorizedCallback();
+                  return;
+               }
+
+               PerformAuthorised(
+                  oAuthService, ui, targetProject,
+                  std::move(authorizedCallback),
+                  std::move(unauthorizedCallback));
+            });
+      },
+      true);
+}
+
+bool HasAutosave(const std::string& path)
+{
+   auto connection = sqlite::Connection::Open(path, sqlite::OpenMode::ReadOnly);
+
+   if (!connection)
+      return false;
+
+   if (!connection->CheckTableExists("autosave"))
+      return false;
+
+   auto statement = connection->CreateStatement("SELECT COUNT(1) FROM autosave");
+
+   if (!statement)
+      return false;
+
+   auto result = statement->Prepare().Run();
+
+   if (!result.IsOk())
+      return false;
+
+   for (const auto& row : result)
+   {
+      if (row.GetOr(0, 0) > 0)
+         return true;
+   }
+
+   return false;
+}
+
 } // namespace
 
 CloudSyncService& CloudSyncService::Get()
@@ -288,35 +363,17 @@ CloudSyncService& CloudSyncService::Get()
 }
 
 void CloudSyncService::GetProjects(
-   int page, int pageSize, GetProjectsCallback callback)
+   int page, int pageSize, sync::GetProjectsCallback callback)
 {
    using namespace audacity::network_manager;
 
    if (!callback)
       callback = [](auto...) {};
 
-   GetOAuthService().ValidateAuth(
-      [this, page, pageSize, callback = std::move(callback)](auto token)
+   PerformAuthorised(
+      GetOAuthService(), GetUI(), {},
+      [page, pageSize, callback]()
       {
-         if (token.empty())
-         {
-            BasicUI::CallAfter(
-               [this, page, pageSize, callback = std::move(callback)]
-               {
-                  if (GetUI().OnAuthorizationRequired({}))
-                     GetProjects(page, pageSize, std::move(callback));
-                  else
-                  {
-                     callback(
-                        {},
-                        audacity::ToUTF8(
-                           XO("Authorization required").Translation()),
-                        false);
-                  }
-               });
-            return;
-         }
-
          auto& serviceConfig = GetServiceConfig();
          auto& oAuthService = GetOAuthService();
 
@@ -362,7 +419,7 @@ void CloudSyncService::GetProjects(
                   callback(
                      {},
                      audacity::ToUTF8(
-                        XO("Failed to deserialize projects response")
+                        XO("Failed to parse projects response")
                            .Translation()),
                      false);
                   return;
@@ -371,7 +428,12 @@ void CloudSyncService::GetProjects(
                callback(std::move(*projects), {}, true);
             });
       },
-      true);
+      [callback]()
+      {
+         callback(
+            {}, audacity::ToUTF8(XO("Authorization required").Translation()),
+            false);
+      });
 }
 
 void CloudSyncService::SaveToCloud(AudacityProject& project)
@@ -395,53 +457,50 @@ void CloudSyncService::SaveToCloud(AudacityProject& project)
 
 void CloudSyncService::OpenFromCloud(
    AudacityProject* targetProject, std::string projectId,
-   std::string snapshotId)
+   std::string snapshotId, sync::ProjectDownloadedCallback callback)
 {
+   if (!callback)
+      callback = [](auto...) {};
+
    GetUI().OnDownloadStarted();
 
-   GetOAuthService().ValidateAuth(
+   PerformAuthorised(
+      GetOAuthService(), GetUI(), targetProject,
       [this, projectId = std::move(projectId),
-       snapshotId = std::move(snapshotId), targetProject](auto token)
+       snapshotId = std::move(snapshotId), targetProject, callback]()
       {
-         if (token.empty())
-         {
-            BasicUI::CallAfter(
-               [this, projectId = std::move(projectId),
-                snapshotId = std::move(snapshotId), targetProject]
-               {
-                  GetUI().OnDownloadFailed({}, false);
-
-                  if (GetUI().OnAuthorizationRequired({}))
-                     OpenFromCloud(targetProject, projectId, snapshotId);
-               });
-            return;
-         }
-
          GetSnapshotInfo(
             GetOAuthService(), GetServiceConfig(), projectId, snapshotId,
-            [this, targetProject](
+            [this, targetProject, callback = std::move(callback)](
                sync::ProjectInfo projectInfo, sync::SnapshotInfo snapshotInfo,
                std::string errorMessage, bool success)
             {
                if (!success)
                {
-                  BasicUI::CallAfter(
-                     [errorMessage = std::move(errorMessage), this] {
-                        GetUI().OnDownloadFailed(std::move(errorMessage), true);
-                     });
+                  GetUI().OnDownloadFinished();
+
+                  callback({ targetProject,
+                             {},
+                             std::move(errorMessage),
+                             sync::ProjectDownloadState::Failed });
 
                   return;
                }
 
-               BasicUI::CallAfter(
-                  [this, projectInfo = std::move(projectInfo),
-                   snapshotInfo = std::move(snapshotInfo), targetProject] {
-                     SyncCloudSnapshot(
-                        targetProject, projectInfo, snapshotInfo);
-                  });
+               SyncCloudSnapshot(
+                  targetProject, projectInfo, snapshotInfo,
+                  std::move(callback));
             });
       },
-      true);
+      [this, targetProject, callback]()
+      {
+         GetUI().OnDownloadFinished();
+         callback(
+            { targetProject,
+              {},
+              audacity::ToUTF8(XO("Authorization required").Translation()),
+              sync::ProjectDownloadState::NotAuthorized });
+      });
 }
 
 bool CloudSyncService::DoCloudSave(
@@ -459,6 +518,107 @@ bool CloudSyncService::DoCloudSave(
       sync::MakeSafeProjectPath(dir, audacity::ToWXString(title));
 
    return ProjectFileIO::Get(project).SaveProject(filePath, nullptr);
+}
+
+void CloudSyncService::OnOpen(AudacityProject& project, const std::string& path)
+{
+   auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
+
+   if (cloudExtension.GetAutoDownloadSuppressed())
+      return;
+
+   auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+
+   auto projectInfo = cloudDatabase.GetProjectDataForPath(path);
+
+   if (!projectInfo)
+      return;
+
+   GetUI().OnDownloadStarted();
+
+   bool syncFinished = false;
+
+   PerformAuthorised(
+      GetOAuthService(), GetUI(), &project,
+      [this, projectInfo = std::move(*projectInfo), &project, &syncFinished,
+       path]
+      {
+         GetProjectInfo(
+            GetOAuthService(), GetServiceConfig(), projectInfo.ProjectId,
+            [&syncFinished, projectInfo, &project, path, this](
+               sync::ProjectInfo remoteInfo, std::string errorMessage,
+               bool successful)
+            {
+               syncFinished = true;
+
+               if (!successful)
+               {
+                  GetUI().ShowDownloadError(errorMessage);
+                  return;
+               }
+
+               auto& projectFileIO = ProjectFileIO::Get(project);
+
+               // if (remoteInfo.HeadSnapshot.Id == projectInfo.SnapshotId)
+               //    return;
+
+               if (HasAutosave(path))
+               {
+                  if (
+                     GetUI().OnDownloadConflict(*ProjectFramePlacement(&project)) ==
+                     sync::DownloadConflictResolution::Local)
+                     return;
+               }
+
+               syncFinished = false;
+
+               GetSnapshotInfo(
+                  GetOAuthService(), GetServiceConfig(), remoteInfo.Id,
+                  remoteInfo.HeadSnapshot.Id,
+                  [this, &project, remoteInfo, &syncFinished](sync::SnapshotInfo snapshotInfo,
+                     std::string errorMessage, bool successful)
+                  {
+                     if (!successful)
+                     {
+                        syncFinished = true;
+
+                        GetUI().ShowDownloadError(errorMessage);
+                        return;
+                     }
+
+                     auto& cloudExtension = 
+                        sync::ProjectCloudExtension::Get(project);
+
+                     cloudExtension.SuppressAutoDownload();
+
+                     SyncCloudSnapshot(
+                        &project, remoteInfo, snapshotInfo,
+                        [this, &project, &cloudExtension,
+                         &syncFinished](sync::ProjectDownloadResult result)
+                        {
+                           syncFinished = true;
+
+                           if (
+                              result.SyncState !=
+                              sync::ProjectDownloadState::Succeeded)
+                           {
+                              GetUI().ShowDownloadError(result.ErrorMessage);
+                              return;
+                           }                          
+                        });
+                  });
+            });
+      },
+      [&syncFinished, this]
+      {
+         syncFinished = true;
+         GetUI().ShowDownloadError({});
+      });
+
+   while (!syncFinished)
+      BasicUI::Yield();
+
+   GetUI().OnDownloadFinished();
 }
 
 void CloudSyncService::OnLoad(AudacityProject& project)
@@ -516,12 +676,11 @@ void CloudSyncService::OnUpdateSaved(
                   if (!project)
                      return;
 
-                  auto placement = ProjectFramePlacement(project.get());
-
-                  if (
-                     UI::Get() &&
-                     UI::Get()().OnAuthorizationRequired(*placement))
+                  if (GetUI().OnAuthorizationRequired(
+                         *ProjectFramePlacement(project.get())))
+                  {
                      CreateSnapshot(*project);
+                  }
                });
             return;
          }
@@ -542,12 +701,6 @@ void CloudSyncService::CreateSnapshot(AudacityProject& project)
       GetServiceConfig(), GetOAuthService(), cloudExtension,
       [this](const auto& update)
       {
-         wxLogDebug(
-            "Update: %lld/%lld\n\tproject uploaded: %d\n\tcompleted: %d\n\tsuccess: %d\n\t%s",
-            update.SampleBlocksProcessed, update.SampleBlocksCount,
-            update.ProjectBlobProcessed, update.Completed, update.Successful,
-            update.ErrorMessage);
-
          UpdateProgress();
 
          if (update.Completed)
@@ -577,7 +730,8 @@ void CloudSyncService::CreateSnapshot(AudacityProject& project)
 
 void CloudSyncService::SyncCloudSnapshot(
    AudacityProject* targetProject, const sync::ProjectInfo& projectInfo,
-   const sync::SnapshotInfo& snapshotInfo)
+   const sync::SnapshotInfo& snapshotInfo,
+   sync::ProjectDownloadedCallback callback)
 {
    // Get the project location
    auto localProjectInfo =
@@ -604,8 +758,8 @@ void CloudSyncService::SyncCloudSnapshot(
    mRemoteSnapshot = sync::RemoteProjectSnapshot::Sync(
       projectInfo, snapshotInfo, audacity::ToUTF8(path),
       [this, createNew, path = audacity::ToUTF8(path), targetProject,
-       projectId = projectInfo.Id,
-       snapshotId = snapshotInfo.Id](sync::RemoteProjectSnapshotState state)
+       projectId = projectInfo.Id, snapshotId = snapshotInfo.Id,
+       callback = std::move(callback)](sync::RemoteProjectSnapshotState state)
       {
          UpdateProgress(
             (state.ProjectDownloaded + state.BlocksDownloaded) /
@@ -616,21 +770,16 @@ void CloudSyncService::SyncCloudSnapshot(
             BasicUI::CallAfter(
                [this, createNew, path, state, targetProject,
                 projectId = std::move(projectId),
-                snapshotId = std::move(snapshotId)]
+                snapshotId = std::move(snapshotId),
+                callback = std::move(callback)]
                {
-                  if (state.Success)
-                  {
-                     auto openedProject =
-                        GetUI().OnDownloadSucceeded(targetProject, path);
+                  GetUI().OnDownloadFinished();
 
-                     if (openedProject != nullptr)
-                     {
-                        sync::ProjectCloudExtension::Get(*openedProject)
-                           .OnSnapshotSynced(projectId, snapshotId);
-                     }
-                  }
-                  else if (!state.Cancelled)
-                     GetUI().OnDownloadFailed(state.Error, true);
+                  callback(
+                     { targetProject, path, state.Error,
+                       state.Success   ? sync::ProjectDownloadState::Succeeded :
+                       state.Cancelled ? sync::ProjectDownloadState::Cancelled :
+                                         sync::ProjectDownloadState::Failed });
 
                   mRemoteSnapshot.reset();
                });

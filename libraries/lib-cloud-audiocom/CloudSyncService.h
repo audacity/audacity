@@ -31,8 +31,31 @@ class PaginatedProjectsResponse;
 class ProjectInfo;
 class SnapshotInfo;
 class RemoteProjectSnapshot;
+
+enum class ProjectDownloadState
+{
+   Failed,
+   Cancelled,
+   NotAuthorized,
+   Succeeded,
+};
+
+struct ProjectDownloadResult final
+{
+   AudacityProject* TargetProject {};
+   std::string ProjectPath;
+   std::string ErrorMessage;
+   ProjectDownloadState SyncState { ProjectDownloadState::Failed };
+}; // struct ProjectDownloadResult
+
+using ProjectDownloadedCallback =
+   std::function<void(ProjectDownloadResult result)>;
+
+using GetProjectsCallback =
+   std::function<void(sync::PaginatedProjectsResponse, std::string, bool)>;
 }
 
+//! CloudSyncService is responsible for saving and loading projects from the cloud
 class CLOUD_AUDIOCOM_API CloudSyncService final : public ProjectFileIOExtension
 {
    CloudSyncService() = default;
@@ -44,24 +67,26 @@ class CLOUD_AUDIOCOM_API CloudSyncService final : public ProjectFileIOExtension
    CloudSyncService& operator=(CloudSyncService&&) = delete;
 
 public:
-   struct CLOUD_AUDIOCOM_API UI : GlobalHook<UI, sync::CloudSyncUI&()>
-   {
-   };
+   struct CLOUD_AUDIOCOM_API UI
+      : GlobalHook<UI, sync::CloudSyncUI&()> {};
 
    static CloudSyncService& Get();
 
-   using GetProjectsCallback =
-      std::function<void(sync::PaginatedProjectsResponse, std::string, bool)>;
-   void GetProjects(int page, int pageSize, GetProjectsCallback callback);
+   //! Retrieve the list of projects from the cloud
+   void GetProjects(int page, int pageSize, sync::GetProjectsCallback callback);
 
+   //! Save the project to the cloud. This operation is asynchronous.
    void SaveToCloud(AudacityProject& project);
 
+   //! Open the project from the cloud. This operation is asynchronous.
    void OpenFromCloud(
       AudacityProject* targetProject, std::string projectId,
-      std::string snapshotId = {});
+      std::string snapshotId, sync::ProjectDownloadedCallback callback);
 
 private:
    bool DoCloudSave(AudacityProject& project, const std::string& title);
+
+   void OnOpen(AudacityProject& project, const std::string& path) override;
    void OnLoad(AudacityProject& project) override;
    bool OnSave(AudacityProject& project, bool fromTempProject) override;
    bool OnClose(AudacityProject& project) override;
@@ -75,7 +100,8 @@ private:
    void SyncCloudSnapshot(
       AudacityProject* targetProject,
       const sync::ProjectInfo& projectInfo,
-      const sync::SnapshotInfo& snapshotInfo);
+      const sync::SnapshotInfo& snapshotInfo,
+      sync::ProjectDownloadedCallback callback);
 
    sync::CloudSyncUI& GetUI() const;
 
