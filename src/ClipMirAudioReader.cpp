@@ -44,8 +44,10 @@ void ClipMirAudioReader::AddChannel(
    size_t iChannel, float* buffer, sampleCount start, size_t len) const
 {
    constexpr auto mayThrow = false;
-   auto& cache =
-      const_cast<std::optional<AudioSegmentSampleView>&>(mCache[iChannel]);
-   cache.emplace(mClip.GetSampleView(iChannel, start, len, mayThrow));
+   const auto iCache = mUseFirst[iChannel] ? 0 : 1;
+   auto& cache = mCache[iChannel][iCache];
+   auto view = mClip.GetSampleView(iChannel, start, len, mayThrow);
+   cache.emplace(std::move(view));
    cache->AddTo(buffer, len);
+   mUseFirst[iChannel] = !mUseFirst[iChannel];
 }

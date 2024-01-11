@@ -38,5 +38,10 @@ private:
       size_t iChannel, float* buffer, sampleCount start, size_t len) const;
 
    const ClipInterface& mClip;
-   std::array<std::optional<AudioSegmentSampleView>, 2> mCache;
+   // An array with two entries because maybe two channels, and each channel has
+   // two caches to cope with back-and-forth access between beginning and end
+   // of clip data, in case samples are queried circularly.
+   using ChannelCache = std::array<std::optional<AudioSegmentSampleView>, 2>;
+   mutable std::array<ChannelCache, 2> mCache;
+   mutable std::array<bool, 2> mUseFirst { true, true };
 };
