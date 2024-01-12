@@ -1399,11 +1399,13 @@ void ReactOnMusicFileImport(
       assert(clips.size() == 1);
       const auto clip = *clips.begin();
 
+      auto &ph = ProjectHistory::Get(*pProj);
       if (!isFirstWaveTrack && isBeatsAndMeasures)
       {
          clip->SetRawAudioTempo(syncInfo.rawAudioTempo);
          clip->TrimQuarternotesFromRight(syncInfo.excessDurationInQuarternotes);
          clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
+         ph.ModifyState(true);
       }
       else
       {
@@ -1432,9 +1434,11 @@ void ReactOnMusicFileImport(
          else if (isBeatsAndMeasures)
             clip->StretchBy(syncInfo.stretchMinimizingPowOfTwo);
          if (!ans.readFromPreference && ans.yes)
-            UndoManager::Get(*pProj).PushState(
+            ph.PushState(
                XO("Configure Project from Music File"),
                XO("Automatic Music Configuration"));
+         else
+            ph.ModifyState(true);
       }
    });
 }
