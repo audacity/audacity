@@ -17,7 +17,7 @@ namespace MIR
 
 class EmptyMirAudioReader : public MirAudioReader
 {
-   int GetSampleRate() const override
+   double GetSampleRate() const override
    {
       return 0;
    }
@@ -33,9 +33,10 @@ class EmptyMirAudioReader : public MirAudioReader
 
 class SquareWaveMirAudioReader : public MirAudioReader
 {
+public:
    const int period = 8;
 
-   int GetSampleRate() const override
+   double GetSampleRate() const override
    {
       return 10;
    }
