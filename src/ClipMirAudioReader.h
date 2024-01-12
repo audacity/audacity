@@ -23,7 +23,7 @@ class ClipMirAudioReader : public MIR::MirAudioReader
 public:
    ClipMirAudioReader(const ClipInterface& clip);
 
-   int GetSampleRate() const override;
+   double GetSampleRate() const override;
    long long GetNumSamples() const override;
 
    /*!
