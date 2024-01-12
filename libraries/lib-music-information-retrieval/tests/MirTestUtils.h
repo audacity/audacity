@@ -117,8 +117,6 @@ GetRocInfo(std::vector<Result> results, double allowedFalsePositiveRate = 0.)
    return { auc, threshold };
 }
 
-std::vector<std::string> GetWavFilesUnderDir(const char* dir);
-
 void ProgressBar(int width, int percent);
 
 template <typename T>

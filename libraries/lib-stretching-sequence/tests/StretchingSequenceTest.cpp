@@ -128,7 +128,7 @@ TEST_CASE("StretchingSequence with real audio")
    {
       const auto ratio = GENERATE(0.75, 1.5);
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info, 7s));
       const auto clip =
          std::make_shared<FloatVectorClip>(info.sampleRate, input);
@@ -156,7 +156,7 @@ TEST_CASE("StretchingSequence with real audio")
    SECTION("with several clips")
    {
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info, 7s));
       const auto clip1 =
          std::make_shared<FloatVectorClip>(info.sampleRate, input);
