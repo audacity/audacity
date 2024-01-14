@@ -19796,7 +19796,7 @@ msgstr "Fehler.~%Ungültige Auswahl.~%Mehr als 2 Audioclips ausgewählt."
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Fehler.~%Ungültige Auswahl.~1%ELeerer Platz zu Beginn/Ende der Auswahl."
+msgstr "Fehler.~%Ungültige Auswahl.~%ELeerer Platz zu Beginn/Ende der Auswahl."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
@@ -19941,12 +19941,12 @@ msgstr "Fehler.~%Kann Datei nicht öffnen~%~s"
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "Fehler.~1%FDatei überschreiben verweigert:~%\"~a.txt\""
+msgstr "Fehler.~%FDatei überschreiben verweigert:~%\"~a.txt\""
 
 #: plug-ins/eq-xml-to-txt-converter.ny
 #, lisp-format
 msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Fehler.~1%FDatei kann nicht geschrieben werden:~%\"~a.txt\""
+msgstr "Fehler.~%FDatei kann nicht geschrieben werden:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -20423,12 +20423,12 @@ msgstr "Erlauben"
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Success.~%Files written to:~%~s~%"
-msgstr "Erfolg.~1%FDateien geschrieben nach:~%~s~%"
+msgstr "Erfolg.~%FDateien geschrieben nach:~%~s~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Warnung.~1%FEinige Dateien konnten nicht kopiert werden:~%"
+msgstr "Warnung.~%FEinige Dateien konnten nicht kopiert werden:~%"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -20743,7 +20743,7 @@ msgstr "Abtastrate: ~a Hz.  Abtastwerte auf ~a Skala.~%~a~%~a"
 #: plug-ins/sample-data-export.ny
 #, lisp-format
 msgid "~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a"
-msgstr "~a   ~a~%~aAbtastrate: ~a Hz.~1%LeBearbeitete Länge: ~a Samples ~a Sekunden.~a"
+msgstr "~a   ~a~%~aAbtastrate: ~a Hz.~%LeBearbeitete Länge: ~a Samples ~a Sekunden.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format

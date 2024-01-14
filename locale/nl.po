@@ -20369,7 +20369,7 @@ msgstr "Fout.~%Ongeldige selectie.~%Meer dan 2 audioclips geselecteerd."
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
-"Fout.~%Ongeldige selectie.~1%Er is een lege ruimte bij begin/einde van de "
+"Fout.~%Ongeldige selectie.~%Er is een lege ruimte bij begin/einde van de "
 "selectie."
 
 #: plug-ins/crossfadeclips.ny
