@@ -37,6 +37,10 @@ struct AcidizerTags
       const double bpm;
    };
 
+   AcidizerTags()
+   {
+   }
+
    AcidizerTags(OneShot)
        : isOneShot { true }
    {
@@ -44,11 +48,10 @@ struct AcidizerTags
 
    AcidizerTags(Loop loop)
        : bpm { loop.bpm }
-       , isOneShot { false }
    {
    }
 
    const std::optional<double> bpm;
-   const bool isOneShot;
+   const bool isOneShot = false;
 };
 } // namespace LibFileFormats

@@ -10,20 +10,45 @@
 **********************************************************************/
 #pragma once
 
+#include "AcidizerTags.h"
+
 #include <memory>
 #include <string>
 
 typedef struct SNDFILE_tag SNDFILE;
 
-namespace LibFileFormats
-{
-struct AcidizerTags;
-}
-
 namespace LibImportExport
 {
 namespace Test
 {
+/*!
+ * @brief In the Audacity code, we only are interested in
+ * LibFileFormats::AcidizerTags and the information it carries, but for testing
+ * we need to mimic more than one way ACID metadata may be set out there. We
+ * therefore need to be able to set tempo, beats and one-shot status
+ * independently.
+ */
+struct AcidizerTags : LibFileFormats::AcidizerTags
+{
+   struct Beats
+   {
+      explicit Beats(int beats)
+          : beats { beats }
+      {
+      }
+      const int beats;
+   };
+
+   using LibFileFormats::AcidizerTags::AcidizerTags;
+
+   AcidizerTags(Beats beats)
+       : beats { beats.beats }
+   {
+   }
+
+   const std::optional<int> beats;
+};
+
 /*!
  * @brief When adding tags, the allocated memory must be preserved until the
  * file is closed. This class handles that, beside the regular file opening and
@@ -36,7 +61,7 @@ public:
    ~LibsndfileTagger();
 
    operator bool() const;
-   void AddAcidizerTags(const LibFileFormats::AcidizerTags& acidTags);
+   void AddAcidizerTags(const Test::AcidizerTags& acidTags);
    void AddDistributorInfo(const std::string& distributor);
    SNDFILE& ReopenInReadMode();
 

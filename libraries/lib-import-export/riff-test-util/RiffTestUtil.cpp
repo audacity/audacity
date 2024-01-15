@@ -59,7 +59,7 @@ void PrintHelp(const char* const* argv)
 
 int main(int argc, char* const* argv)
 {
-   using namespace LibFileFormats;
+   using namespace LibImportExport;
 
    if (argc < 5)
    {
@@ -80,7 +80,7 @@ int main(int argc, char* const* argv)
       return 1;
    }
 
-   LibImportExport::Test::LibsndfileTagger tagger { duration, inputFile };
+   Test::LibsndfileTagger tagger { duration, inputFile };
    if (!tagger)
    {
       std::cout << "Failed to open file: " << inputFile << std::endl;
@@ -106,16 +106,12 @@ int main(int argc, char* const* argv)
 
    const auto isOneShot = argc >= 5 && std::string { "one-shot" } == argv[4];
    if (isOneShot)
-   {
-      tagger.AddAcidizerTags(AcidizerTags::OneShot {});
-      return 0;
-   }
-
-   if (mode == Mode::MuseHub)
+      tagger.AddAcidizerTags(Test::AcidizerTags::OneShot {});
+   else if (mode == Mode::MuseHub)
       try
       {
          const auto bpm = std::stod(argv[4]);
-         tagger.AddAcidizerTags(AcidizerTags::Loop { bpm });
+         tagger.AddAcidizerTags(Test::AcidizerTags::Loop { bpm });
          tagger.AddDistributorInfo("Muse Hub");
       }
       catch (std::invalid_argument& e)
@@ -128,8 +124,7 @@ int main(int argc, char* const* argv)
       try
       {
          const auto numBeats = std::stoi(argv[4]);
-         const auto bpm = numBeats / duration * 60;
-         tagger.AddAcidizerTags(AcidizerTags::Loop { bpm });
+         tagger.AddAcidizerTags(Test::AcidizerTags::Beats { numBeats });
       }
       catch (std::invalid_argument& e)
       {

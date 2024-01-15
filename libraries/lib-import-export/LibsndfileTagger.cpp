@@ -66,8 +66,7 @@ SNDFILE& LibsndfileTagger::ReopenInReadMode()
    return *mFile;
 }
 
-void LibsndfileTagger::AddAcidizerTags(
-   const LibFileFormats::AcidizerTags& acidTags)
+void LibsndfileTagger::AddAcidizerTags(const Test::AcidizerTags& acidTags)
 {
    // Adapted from the ACID chunk readout code in libsndfile and its comment:
    // clang-format off
@@ -119,21 +118,19 @@ void LibsndfileTagger::AddAcidizerTags(
 
    // The type has 4 bytes, of which we may only set the 1st bit to 1 if the
    // loop is one-shot:
-   auto type = reinterpret_cast<uint32_t*>(mAcidData.get());
    if (acidTags.isOneShot)
+   {
+      auto type = reinterpret_cast<uint32_t*>(mAcidData.get());
       *type |= 0x00000001;
+   }
+   else if (acidTags.beats.has_value())
+   {
+      auto numBeats = reinterpret_cast<uint32_t*>(mAcidData.get() + 12);
+      *numBeats = *acidTags.beats;
+   }
    else
    {
-      // To get the number of beats, we need to know the duration of the file:
-      SF_INFO info;
-      const auto result =
-         sf_command(mFile, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
-      assert(result == SF_ERR_NO_ERROR);
-      const auto duration = 1. * info.frames / info.samplerate;
-      auto numBeats = reinterpret_cast<uint32_t*>(mAcidData.get() + 12);
-      *numBeats =
-         static_cast<uint32_t>(std::round(*acidTags.bpm * duration / 60.));
-
+      assert(acidTags.bpm.has_value());
       auto tempo = reinterpret_cast<float*>(mAcidData.get() + 20);
       *tempo = *acidTags.bpm;
    }
