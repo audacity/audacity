@@ -180,7 +180,7 @@ class BASIC_UI_API GenericProgressDialog
 public:
    virtual ~GenericProgressDialog();
    //! Give some visual indication of progress.  Call only on the main thread.
-   virtual void Pulse() = 0;
+   virtual ProgressResult Pulse() = 0;
 };
 
 //! @}
