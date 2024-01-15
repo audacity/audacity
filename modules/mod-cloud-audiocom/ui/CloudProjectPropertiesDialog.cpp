@@ -85,7 +85,6 @@ SaveResult CloudProjectPropertiesDialog::Show(
    const auto resultCode = dialog.ShowModal();
 
    return { audacity::ToUTF8(dialog.GetProjectName()),
-            MixdownGenerationFrequency.Read(),
             static_cast<CloudProjectVisibility>(
                dialog.mProjectVisibility->GetSelection()),
             resultCode == wxID_OK, resultCode == wxID_CANCEL };

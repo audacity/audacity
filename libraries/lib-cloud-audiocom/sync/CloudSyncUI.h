@@ -37,10 +37,9 @@ enum class DownloadConflictResolution
 struct SaveResult
 {
    std::string Title;
-   int PreviewSaveFrequency { 0 };
-   CloudProjectVisibility Visiblity {
-      CloudProjectVisibility::Private
-   };
+
+   CloudProjectVisibility Visiblity { CloudProjectVisibility::Private };
+
    bool SaveToCloud { false };
    bool Cancelled { true };
 };
