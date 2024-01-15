@@ -22,6 +22,8 @@
 
 #include "Project.h"
 
+#include "AuthorizationHandler.h"
+
 #include "CloudSyncStatusField.h"
 #include "SelectSaveLocationDialog.h"
 #include "CloudProjectPropertiesDialog.h"
@@ -29,7 +31,16 @@
 
 #include "CloudModuleSettings.h"
 
+#include "LinkAccountDialog.h"
+#include "LinkWithTokenDialog.h"
+
 #include "wxWidgetsWindowPlacement.h"
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+#   include "URLSchemesRegistry.h"
+#endif
+
+#include "HelpSystem.h"
 
 namespace cloud::audiocom::sync
 {
@@ -50,7 +61,7 @@ public:
 
       if (!MixdownDialogShown.Read())
       {
-         result.PreviewSaveFrequency = MixdownPropertiesDialog::Show(parent);
+         MixdownPropertiesDialog::Show(parent);
          MixdownDialogShown.Write(true);
       }
 
@@ -67,7 +78,6 @@ public:
       {
          SaveResult result;
          result.SaveToCloud = SaveToCloudByDefault.Read();
-         result.PreviewSaveFrequency = MixdownGenerationFrequency.Read();
          return result;
       }
 
@@ -102,7 +112,42 @@ public:
    bool
    OnAuthorizationRequired(const BasicUI::WindowPlacement& placement) override
    {
-      
+      LinkAccountDialog linkDialog { wxWidgetsWindowPlacement::GetParent(
+         placement) };
+      if (wxID_OK != linkDialog.ShowModal())
+         return false;
+
+      OpenInDefaultBrowser(
+         { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
+
+#ifdef HAS_CUSTOM_URL_HANDLING
+      if (URLSchemesRegistry::Get().IsURLHandlingSupported())
+      {
+         GetAuthorizationHandler().PushSuppressDialogs();
+
+         auto progress = BasicUI::MakeGenericProgress(placement, XO("Link account"), XO("Waiting for authorization..."));
+
+         while (!GetOAuthService ().HasAccessToken ())
+         {
+            if (progress->Pulse() != BasicUI::ProgressResult::Success)
+               return false;
+         }
+
+         progress.reset();
+
+         GetAuthorizationHandler().PopSuppressDialogs();
+
+         return true;
+      }
+      else
+#endif
+      {
+         LinkWithTokenDialog dlg {
+            wxWidgetsWindowPlacement::GetParent(placement)
+         };
+         dlg.ShowModal();
+      }
+
       return false;
    }
 
