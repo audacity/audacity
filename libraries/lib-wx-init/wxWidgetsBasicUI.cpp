@@ -191,7 +191,15 @@ struct MyGenericProgress : wxGenericProgressDialog, GenericProgressDialog {
       }
    {}
    ~MyGenericProgress() override = default;
-   void Pulse() override { wxGenericProgressDialog::Pulse(); }
+   ProgressResult Pulse() override
+   {
+      if (wxGenericProgressDialog::Pulse())
+            return ProgressResult::Success;
+      else if (WasCancelled())
+            return ProgressResult::Cancelled;
+      else
+            return ProgressResult::Stopped;
+   }
 };
 }
 
