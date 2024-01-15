@@ -7,6 +7,8 @@ set( SOURCES
    ui/CloudProjectPropertiesDialog.h
    ui/CloudSyncStatusField.cpp
    ui/CloudSyncStatusField.h
+   ui/LinkAccountDialog.cpp
+   ui/LinkAccountDialog.h
    ui/LinkWithTokenDialog.cpp
    ui/LinkWithTokenDialog.h
    ui/LinkFailedDialog.cpp
