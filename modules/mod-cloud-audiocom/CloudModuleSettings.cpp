@@ -24,8 +24,4 @@ BoolSetting SaveToCloudByDefault {
 BoolSetting MixdownDialogShown {
    "/cloud/audiocom/MixdownDialogShown", false
 };
-
-IntSetting MixdownGenerationFrequency {
-   "/cloud/audiocom/MixdownGenerationFrequency", 1
-};
 } // namespace cloud::audiocom::sync

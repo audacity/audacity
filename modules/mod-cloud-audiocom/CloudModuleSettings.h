@@ -17,5 +17,4 @@ namespace cloud::audiocom::sync
 extern BoolSetting DoNotShowCloudSyncDialog;
 extern BoolSetting SaveToCloudByDefault;
 extern BoolSetting MixdownDialogShown;
-extern IntSetting MixdownGenerationFrequency;
 } // namespace cloud::audiocom::sync

@@ -26,4 +26,8 @@ StringSetting CloudProjectsSavePath {
       return path.GetPath();
    }
 };
+
+IntSetting MixdownGenerationFrequency {
+   "/cloud/audiocom/MixdownGenerationFrequency", 1
+};
 } // namespace cloud::audiocom

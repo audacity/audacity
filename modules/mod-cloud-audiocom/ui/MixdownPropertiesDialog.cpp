@@ -16,7 +16,8 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
-#include "CloudModuleSettings.h"
+#include "CloudSettings.h"
+
 #include "Internat.h"
 
 

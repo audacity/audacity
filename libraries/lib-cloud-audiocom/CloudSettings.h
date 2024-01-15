@@ -15,4 +15,5 @@
 namespace cloud::audiocom
 {
 CLOUD_AUDIOCOM_API extern StringSetting CloudProjectsSavePath;
+CLOUD_AUDIOCOM_API extern IntSetting MixdownGenerationFrequency;
 } // namespace cloud::audiocom
