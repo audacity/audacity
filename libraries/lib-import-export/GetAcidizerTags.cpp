@@ -14,6 +14,7 @@
 #include "sndfile.h"
 #include <algorithm>
 #include <array>
+#include <cstring> // memset
 #include <memory>
 
 namespace LibImportExport
@@ -41,9 +42,9 @@ std::optional<LibFileFormats::AcidizerTags> GetAcidizerTags(
       // Forward loop with number of beats set: all files like these I have seen
       // so far were correctly tagged.
       SF_INFO info;
-      if (
-         sf_command(&file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info)) ==
-         SF_FALSE)
+      std::memset(&info, 0, sizeof(info));
+      sf_command(&file, SFC_GET_CURRENT_SF_INFO, &info, sizeof(info));
+      if (info.samplerate == 0 || info.frames == 0)
          return {};
       const auto duration = 1. * info.frames / info.samplerate;
       return LibFileFormats::AcidizerTags::Loop { 60. * loopInfo.num_beats /
