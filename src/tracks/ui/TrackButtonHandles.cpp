@@ -173,7 +173,7 @@ UIHandle::Result CloseButtonHandle::CommitChanges
 TranslatableString CloseButtonHandle::Tip(
    const wxMouseState &, AudacityProject &project) const
 {
-   auto name = XO("Close");
+   auto name = XO("Delete Track");
    auto focused =
       TrackFocus::Get( project ).Get() == GetTrack().get();
    if (!focused)
