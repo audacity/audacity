@@ -1,12 +1,18 @@
 /*  SPDX-License-Identifier: GPL-2.0-or-later */
 
+#include <functional>
+#include <optional>
+#include <QDialogButtonBox>
+
 #include "TranslatableString.h"
 
 #include <QFontDatabase>
 #include <QQmlComponent>
 #include <QGuiApplication>
 #include <QQuickWindow>
+#include <QQmlProperty>
 #include <QWindow>
+#include <wx/log.h>
 
 #include "AudioIO.h"
 #include "BasicSettings.h"
@@ -16,29 +22,44 @@
 #include "ProjectQMLEnvironment.h"
 #include "CodeConversions.h"
 #include "ExtraMenu.h"
+#include "ProjectFileIO.h"
+#include "ProjectHistory.h"
 #include "QtQuickUiServices.h"
+#include "trackpanel/TrackListModel.h"
+
+#include "Track.h"
+
+#include "ProjectSerializer.h"
+#include "WaveClip.h"
+#include "WaveTrack.h"
 #include "uithemes/UiTheme.h"
 
 //Takes an ownership, ensures that window is properly deleted
 class ProjectWindow final : public ClientData::Base
 {
+   AudacityProject& mProject;
    std::unique_ptr<QWindow> mWindow;
 public:
-   ProjectWindow(AudacityProject& project)
+   ProjectWindow(AudacityProject& project) : mProject(project)
    {
+   }
+
+   QWindow* GetWindow()
+   {
+      if(mWindow)
+         return mWindow.get();
+
       QQmlComponent component {
-         &audacity::ProjectQMLEnvironment::Get(project).GetEngine(),
+         &audacity::ProjectQMLEnvironment::Get(mProject).GetEngine(),
          "qrc:/qml/main.qml"
       };
+      auto obj = component.create();
       mWindow.reset(
-         qobject_cast<QQuickWindow*>(component.create())
+         qobject_cast<QQuickWindow*>(obj)
       );
       if(!mWindow)
          throw std::runtime_error(component.errorString().toStdString());
-   }
 
-   QWindow* GetWindow() const
-   {
       return mWindow.get();
    }
 
@@ -63,12 +84,15 @@ ProjectWindow& ProjectWindow::Get(AudacityProject& project)
    return project.Get<ProjectWindow>(sProjectWindow);
 }
 
-static bool CreateProjectWindow()
+static std::shared_ptr<AudacityProject> CreateProjectWindow()
 {
-   auto project = AudacityProject::Create();
    try
    {
-      ProjectWindow::Get(*project);//request the window
+      const auto project = AudacityProject::Create();
+      
+      ProjectWindow::GetWindow(*project);//request the window
+      Projects::Get().push_back(project);
+      return project;
    }
    catch(std::exception& e){
       BasicUI::ShowErrorDialog(
@@ -76,7 +100,6 @@ static bool CreateProjectWindow()
          XO("Failed to load applicaiton window:\n%s")
             .Format(e.what()),
          {});
-      return false;
    }
    //Ideally, delete the project and everything when window is closed
    //, but it does not compile as there are undefines...
@@ -92,20 +115,72 @@ static bool CreateProjectWindow()
          }
       }
    );*/
-   Projects::Get().push_back(project);
-   return true;
+   return {};
 }
 
-static ExtraMenu::Item newWindowItem {
-   XO("New window"),
-   [] {
-      CreateProjectWindow();
+static ExtraMenu::Item openItem {
+   XO("Open"),
+   [](AudacityProject& project)
+   {
+      const auto window = ProjectWindow::GetWindow(project);
+      const auto openProjectDialogObj = window->findChild<QObject*>("OpenProjectDialogObj");
+      QMetaObject::invokeMethod(openProjectDialogObj, "open");
+      while(true)
+      {
+         if(!QQmlProperty::read(openProjectDialogObj, "visible").toBool())
+            break;
+         BasicUI::Yield();
+      }
+      auto url = QQmlProperty::read(openProjectDialogObj, "currentFile").toUrl();
+
+      auto openProject = [&](AudacityProject& project)
+      {
+         auto& projectFileIO = ProjectFileIO::Get(project);                                              
+         auto result = projectFileIO.LoadProject(audacity::ToWXString(url.toString()), true);
+         if(result)
+            result->Commit();
+      };
+
+      if(ProjectHistory::Get(project).GetDirty() ||
+         !TrackList::Get(project).empty())
+      {
+         const auto newProject = CreateProjectWindow();
+         openProject(*newProject);
+      }
+      else
+         openProject(project);
+   }
+};
+
+static ExtraMenu::Item generateItem {
+   XO("Generate"),
+   [](AudacityProject& project)
+   {
+      auto& trackList = TrackList::Get(project);
+
+      for(int i = 0; i < 10; ++i)
+         trackList.Append(std::move(*WaveTrackFactory::Get(project).Create(1)));
+
+      for(auto track : trackList.Any<WaveTrack>())
+      {
+         track->OnProjectTempoChange(120);
+         track->InsertSilence(0.0, 1.0);
+         auto clip = track->GetClips().back();
+         clip->SetName("Silence");
+      }
+
+      for(auto track : trackList.Any<WaveTrack>())
+      {
+         auto copy = track->Copy(0, 1);
+         for(int i = 1; i < 100; ++i)
+            track->Paste(static_cast<double>(i), *copy);
+      }
    }
 };
 
 static ExtraMenu::Item exitMenuItem {
    XO("&Exit"),
-   [] {
+   [](AudacityProject&) {
       using namespace BasicUI;
       CallAfter([]{
          if(ShowMessageBox(XO("Are you sure you want to exit?"),
@@ -122,7 +197,7 @@ static ExtraMenu::Item exitMenuItem {
 
 static ExtraMenu::Item showProgress {
    XO("Show progress"),
-   [] {
+   [](AudacityProject&) {
       using namespace BasicUI;
       CallAfter([] {
          using namespace std::chrono;
@@ -149,7 +224,7 @@ static ExtraMenu::Item showProgress {
 
 static ExtraMenu::Item showGenericProgress {
    XO("Show generic progress"),
-   [] {
+   [](AudacityProject&) {
       using namespace BasicUI;
       CallAfter([] {
          using namespace std::chrono;
@@ -175,7 +250,7 @@ static ExtraMenu::Item showGenericProgress {
 
 static ExtraMenu::Item showGenericProgressOrphaned {
    XO("Show generic progress (application modal)"),
-   [] {
+   [](AudacityProject&) {
       using namespace BasicUI;
       CallAfter([] {
          using namespace std::chrono;
@@ -201,7 +276,7 @@ static ExtraMenu::Item showGenericProgressOrphaned {
 
 static ExtraMenu::Item showMultiDialog {
    XO("MultiDialog"),
-   []
+   [](AudacityProject&)
    {
       using namespace BasicUI;
       CallAfter([]
@@ -218,8 +293,17 @@ static ExtraMenu::Item showMultiDialog {
 
 static audacity::ProjectQMLEnvironment::Property extraMenu {
    "extraMenu",
-   [](QQmlEngine&, AudacityProject&) {
-      return std::make_unique<ExtraMenu>();
+   [](QQmlEngine&, AudacityProject& project) {
+      return std::make_unique<ExtraMenu>(project);
+   }
+};
+
+static audacity::ProjectQMLEnvironment::Property projectTrackList {
+   "projectTrackList",
+   [](QQmlEngine& engine, AudacityProject& project) {
+      return std::make_unique<TrackListModel>(
+         TrackList::Get(project).shared_from_this(),
+         &engine);
    }
 };
 
@@ -268,6 +352,8 @@ static audacity::QMLEngineFactory::Scope qmlEngineFactory {
 
 int main(int argc, char *argv[])
 {
+   wxLogNull suppressLog; 	
+
    QtQuickUiServices::Get();//install
    QGuiApplication app(argc, argv);
 
@@ -279,6 +365,14 @@ int main(int argc, char *argv[])
    QFontDatabase::addApplicationFont(":/fonts/Lato-Italic.ttf");
    QFontDatabase::addApplicationFont(":/fonts/Lato-Regular.ttf");
 
+   if (!ProjectFileIO::InitializeSQL())
+   {
+      BasicUI::ShowMessageBox(
+         XO("SQLite library failed to initialize.  Audacity cannot continue.")
+      );
+      return 0;
+   }
+
    InitPreferences(audacity::ApplicationSettings::Call());
    AudioIO::Init();
 
@@ -288,5 +382,12 @@ int main(int argc, char *argv[])
    if(!CreateProjectWindow())
       return 0;
 
-   return app.exec();
+   auto result = app.exec();
+   //close all opened projects
+   for(auto project : Projects::Get())
+   {
+      auto &projectFileIO = ProjectFileIO::Get(*project);
+      projectFileIO.CloseProject();
+   }
+   return result;
 }
