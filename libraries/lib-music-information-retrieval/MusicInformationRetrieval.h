@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include "AcidizerTags.h"
 #include "MirTypes.h"
 
 #include <functional>
@@ -89,8 +90,9 @@ public:
     * @detail For now we only exploit the filename and duration ...
     */
    MusicInformation(
-      const std::string& filename, double duration,
-      const MirAudioReader& source, FalsePositiveTolerance tolerance,
+      const std::optional<LibFileFormats::AcidizerTags>& tags,
+      const std::string& filename, const MirAudioReader& source,
+      FalsePositiveTolerance tolerance,
       std::function<void(double progress)> progressCallback);
 
    const std::string filename;

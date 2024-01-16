@@ -8,6 +8,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-project-history-interface
+   lib-file-formats-interface
 )
 audacity_library( lib-tags "${SOURCES}" "${LIBRARIES}"
    "" "" )

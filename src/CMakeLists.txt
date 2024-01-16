@@ -1314,7 +1314,6 @@ set( AUDACITY_LIBRARIES
    lib-stretching-sequence-interface
    lib-import-export-interface
    lib-export-ui-interface
-   lib-file-formats-interface
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface

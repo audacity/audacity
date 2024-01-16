@@ -8,6 +8,8 @@ set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 def_vars()
 
 set( SOURCES
+   AcidizerTagSerialization.cpp
+   AcidizerTagSerialization.h
    Export.cpp
    Export.h
    ExportOptionsEditor.cpp
@@ -21,6 +23,8 @@ set( SOURCES
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h
+   GetAcidizerTags.cpp
+   GetAcidizerTags.h
    Import.cpp
    Import.h
    ImportExport.cpp
@@ -32,7 +36,8 @@ set( SOURCES
    ImportProgressListener.h
    ImportUtils.cpp
    ImportUtils.h
-
+   LibsndfileTagger.cpp
+   LibsndfileTagger.h
    PlainExportOptionsEditor.cpp
    PlainExportOptionsEditor.h
 )
@@ -42,8 +47,9 @@ set( LIBRARIES
    lib-wave-track-interface
    lib-project-interface
    PRIVATE
-      lib-effects-interface      
+      lib-effects-interface
 )
 audacity_library( lib-import-export "${SOURCES}" "${LIBRARIES}"
    "" ""
 )
+add_subdirectory(riff-test-util)

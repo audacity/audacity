@@ -16,6 +16,7 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/evtloop.h>
 #endif
 
+#include "AcidizerTagSerialization.h"
 #include "AdornedRulerPanel.h"
 #include "AudacityDontAskAgainMessageDialog.h"
 #include "AudacityMessageBox.h"
@@ -1352,8 +1353,6 @@ void ReactOnMusicFileImport(
       return;
 
    WaveTrack& newTrack = **waveTracks.begin();
-   const auto newTrackDuration =
-      newTrack.GetEndTime() - newTrack.GetStartTime();
 
    const auto wideClip = newTrack.GetClipInterfaces()[0];
    const auto pProj = project.shared_from_this();
@@ -1380,8 +1379,14 @@ void ReactOnMusicFileImport(
       const auto isBeatsAndMeasures = TimeDisplayModePreference.ReadEnum() ==
                                       TimeDisplayMode::BeatsAndMeasures;
 
+      const auto& tags = Tags::Get(*pProj);
+      const auto acidTags = tags.HasTag(TAG_ACID) ?
+                               LibImportExport::StringToAcidizerTags(
+                                  tags.GetTag(TAG_ACID).ToStdString()) :
+                               std::nullopt;
+
       MIR::MusicInformation musicInfo {
-         fileName, newTrackDuration, audio,
+         acidTags, fileName, audio,
          isBeatsAndMeasures ? MIR::FalsePositiveTolerance::Lenient :
                               MIR::FalsePositiveTolerance::Strict,
          std::move(reportProgress)

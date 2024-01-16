@@ -492,6 +492,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
          set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN:$ORIGIN/..")
+         set_target_property_all(${TARGET} BUILD_RPATH "$ORIGIN:$ORIGIN/..")
          install( TARGETS ${TARGET} OPTIONAL DESTINATION ${_MODDIR} )
       endif()
 
@@ -506,6 +507,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
          set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN")
+         set_target_property_all(${TARGET} BUILD_RPATH "$ORIGIN")
          install(TARGETS ${TARGET} DESTINATION ${_PKGLIB} )
       endif()
    endif()

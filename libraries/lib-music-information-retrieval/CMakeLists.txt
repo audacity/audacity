@@ -5,6 +5,7 @@ Library for Music Information Retrieval (MIR) algorithms.
 set( SOURCES
    GetMeterUsingTatumQuantizationFit.cpp
    GetMeterUsingTatumQuantizationFit.h
+   MirAudioReader.cpp
    MirAudioReader.h
    MirDsp.cpp
    MirDsp.h
@@ -19,6 +20,7 @@ set( SOURCES
 
 set( LIBRARIES
    lib-math
+   lib-file-formats-interface
 )
 
 audacity_library( lib-music-information-retrieval "${SOURCES}" "${LIBRARIES}"
