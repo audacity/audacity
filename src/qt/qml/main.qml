@@ -6,6 +6,7 @@ import Qt.labs.platform
 import Audacity
 import Audacity.UiComponents
 import Audacity.UiThemes
+import Audacity.TrackPanel
 
 ApplicationWindow {
    id: root
@@ -142,7 +143,7 @@ ApplicationWindow {
                onTriggered: {
                   UiTheme.applyTheme(text)
                   toolsToolbar.refreshSetup()
-                  timelineRuler.updateTheme()
+                  //timelineRuler.updateTheme()
                }
             }
 
@@ -184,7 +185,7 @@ ApplicationWindow {
       id: toolsToolbar
 
       onSetupClicked: customiseToolbar.show()
-
+      /*
       onPlaybackStarted: {
          trackCanvasView.contentItem.contentX = 0
          scrollableRuler.start()
@@ -202,8 +203,21 @@ ApplicationWindow {
          statusBar.text = status
          timer.restart()
       }
+      */
    }
 
+   TrackPanelView {
+      anchors.left : parent.left
+      anchors.right : parent.right
+      anchors.top : toolsToolbar.bottom
+      anchors.bottom : footerId.top
+
+      model : projectTrackList
+
+      color: UiTheme.backgroundColor3
+   }
+
+   /*
    ScrollView {
       id: trackCanvasView
       x: sidebar.width
@@ -293,16 +307,7 @@ ApplicationWindow {
          }
       }
    }
-
-   Sidebar {
-      id: sidebar
-      anchors.top: toolsToolbar.bottom
-      anchors.bottom: footerId.top
-      onUpdateStatusBar: function(status) {
-         statusBar.text = status
-         timer.restart()
-      }
-   }
+   */
 
    Timer {
       id: timer
@@ -310,7 +315,7 @@ ApplicationWindow {
       repeat: false
       onTriggered: statusBar.text = ""
    }
-
+   /*
    ScrollableRuler {
       id: scrollableRuler
       x: sidebar.width
@@ -324,7 +329,7 @@ ApplicationWindow {
          trackCanvasView.contentItem.contentX = scrolledTo
       }
    }
-
+   */
    footer: Rectangle {
       id: footerId
       width: parent.width
