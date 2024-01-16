@@ -350,6 +350,22 @@ ApplicationWindow {
       }
    }
 
+   FileDialog
+   {
+      id : openProjectDialog
+      objectName : "OpenProjectDialogObj"
+
+      fileMode : FileDialog.OpenFile
+      nameFilters : [ "Audacity 3 project files (*.aup3)" ]
+
+      onAccepted : function() {
+         console.log("selectedFile=" + openProjectDialog.selectedFile)
+         console.log("currentFile=" + openProjectDialog.currentFile)
+         close()
+      }
+      onRejected : close()
+   }
+
    Component.onCompleted: {
       window.minimumWidth = root.minimumWidth
       window.minimumHeight = root.minimumHeight

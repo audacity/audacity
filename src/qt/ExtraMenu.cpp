@@ -1,28 +1,33 @@
 #include "ExtraMenu.h"
 
+#include <qqml.h>
+
 #include "BasicUI.h"
 #include "CodeConversions.h"
+#include "Project.h"
+#include "ProjectQMLEnvironment.h"
 
 class MenuItem final : ClientData::Base
 {
 public:
-   MenuItem(TranslatableString name, std::function<void()> action)
+   MenuItem(TranslatableString name, std::function<void(AudacityProject&)> action)
       : name(std::move(name)), action(std::move(action))
    { }
 
    TranslatableString name;
-   std::function<void()> action { nullptr };
+   std::function<void(AudacityProject&)> action { nullptr };
 };
 
-ExtraMenu::Item::Item(TranslatableString name, std::function<void()> action)
+ExtraMenu::Item::Item(TranslatableString name, std::function<void(AudacityProject&)> action)
    : RegisteredFactory([item = MenuItem { std::move(name), std::move(action) } ](auto&) {
       return std::make_unique<MenuItem>(item);
    })
 {
 }
 
-ExtraMenu::ExtraMenu(QObject* parent)
-   : QObject(parent)
+ExtraMenu::ExtraMenu(AudacityProject& project, QObject* parent)
+   : mProject(project)
+   , QObject(parent)
 {
    BuildAll();
 }
@@ -41,10 +46,11 @@ QStringList ExtraMenu::items() const
 void ExtraMenu::activate(int index)
 {
    int counter { 0 };
+
    ForEach([&](MenuItem& item)
    {
       if(counter == index)
-         item.action();
+         item.action(mProject);
       ++counter;
    });
 }
