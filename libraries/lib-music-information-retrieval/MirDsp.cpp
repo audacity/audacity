@@ -9,16 +9,17 @@
 
 **********************************************************************/
 #include "MirDsp.h"
-#include "FFT.h"
 #include "IteratorX.h"
 #include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
+#include "PowerSpectrumGetter.h"
 #include "StftFrameProvider.h"
 
 #include <cassert>
 #include <cmath>
 #include <numeric>
+#include <pffft.h>
 
 namespace MIR
 {
@@ -74,13 +75,29 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
       return x;
    const auto N = x.size();
    assert(IsPowOfTwo(N));
-   PowerSpectrum(N, x.data(), x.data());
-   // We need the entire power spectrum for the auto-correlation, not only the
-   // left-hand side.
-   std::copy(x.begin() + 1, x.begin() + N / 2 - 1, x.rbegin());
-   InverseRealFFT(N, x.data(), nullptr, x.data());
-   // For efficiency, only keep the positive half of this symmetric signal.
+   PFFFT_Setup* setup = pffft_new_setup(N, PFFFT_REAL);
+   std::vector<float> work(N);
+   pffft_transform_ordered(
+      setup, x.data(), x.data(), work.data(), PFFFT_FORWARD);
+
+   // Transform to a power spectrum, but preserving the layout expected by PFFFT
+   // in preparation for the inverse transform.
+   x[0] *= x[0];
+   x[1] *= x[1];
+   for (auto n = 2; n < N; n += 2)
+   {
+      x[n] = x[n] * x[n] + x[n + 1] * x[n + 1];
+      x[n + 1] = 0.f;
+   }
+
+   pffft_transform_ordered(
+      setup, x.data(), x.data(), work.data(), PFFFT_BACKWARD);
+   pffft_destroy_setup(setup);
+
+   // The second half of the circular autocorrelation is the mirror of the first
+   // half. We are economic and only keep the first half.
    x.erase(x.begin() + N / 2 + 1, x.end());
+
    const auto normalizer = 1 / x[0];
    std::transform(x.begin(), x.end(), x.begin(), [normalizer](float x) {
       return x * normalizer;
@@ -106,12 +123,12 @@ std::vector<float> GetOnsetDetectionFunction(
    std::vector<float> firstPowSpec;
    std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
 
+   PowerSpectrumGetter getPowerSpectrum { frameSize };
+
    auto frameCounter = 0;
    while (frameProvider.GetNextFrame(buffer))
    {
-      // StftFrameProvider already applies a normalizing Hann window, no need to
-      // either window it here or normalize it by frame size afterwards.
-      PowerSpectrum(frameSize, buffer.data(), powSpec.data());
+      getPowerSpectrum(buffer.data(), powSpec.data());
 
       // Compress the frame as per section (6.5) in Müller, Meinard.
       // Fundamentals of music processing: Audio, analysis, algorithms,
