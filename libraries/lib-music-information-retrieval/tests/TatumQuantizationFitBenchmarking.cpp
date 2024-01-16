@@ -4,6 +4,7 @@
 #include "WavMirAudioReader.h"
 
 #include <catch2/catch.hpp>
+#include <chrono>
 #include <fstream>
 #include <iomanip>
 #include <iostream>
@@ -201,16 +202,19 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
    std::vector<Sample> samples;
    const auto numFiles = audioFiles.size();
    auto count = 0;
+   std::chrono::milliseconds computationTime { 0 };
    std::transform(
       audioFiles.begin(), audioFiles.begin() + numFiles,
-      std::back_inserter(samples),
-      [&](const std::string& wavFile)
-      {
+      std::back_inserter(samples), [&](const std::string& wavFile) {
          const WavMirAudioReader audio { wavFile };
          checksum += GetChecksum(audio);
          QuantizationFitDebugOutput debugOutput;
          std::function<void(double)> progressCb;
+         const auto now = std::chrono::steady_clock::now();
          GetMusicalMeterFromSignal(audio, tolerance, progressCb, &debugOutput);
+         computationTime +=
+            std::chrono::duration_cast<std::chrono::milliseconds>(
+               std::chrono::steady_clock::now() - now);
          ProgressBar(progressBarWidth, 100 * count++ / numFiles);
          const auto expected = GetBpmFromFilename(wavFile);
          const auto truth = expected.has_value();
@@ -230,6 +234,11 @@ TEST_CASE("TatumQuantizationFitBenchmarking")
                         << Pretty(wavFile) << "\n";
          return Sample { truth, debugOutput.score, error };
       });
+
+   {
+      std::ofstream timeMeasurementFile { "./timeMeasurement.txt" };
+      timeMeasurementFile << computationTime.count() << "ms\n";
+   }
 
    // AUC of ROC curve. Tells how good our loop/not-loop clasifier is.
    const auto rocInfo = GetRocInfo(
