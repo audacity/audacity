@@ -1,6 +1,6 @@
 #include "FourierTransform_pffft.h"
 
-#include "pffft/pffft.h"
+#include "pffft.h"
 
 namespace staffpad::audio {
 
