@@ -29,13 +29,22 @@ set(MODULE_SOURCES
    WaveTrackView.h
 )
 
+set(MODULE_QML_SOURCES
+   qml/TrackPanelView.qml
+   qml/TrackRow.qml
+   qml/WaveTrackControlPanel.qml
+)
+
 audacity_qml_module(${MODULE_NAME}
    URI "Audacity.TrackPanel"
    STATIC
    VERSION 1.0
    DEPENDENCIES
       QtQuick
+      Audacity.UiComponents
       Audacity.UiThemes
+   QML_FILES
+      ${MODULE_QML_SOURCES}
    SOURCES
       ${MODULE_SOURCES}
    LIBRARIES
