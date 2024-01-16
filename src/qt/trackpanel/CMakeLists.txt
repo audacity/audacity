@@ -1,6 +1,14 @@
 set(MODULE_NAME trackpanel)
 
 set(MODULE_SOURCES
+   handles/TimeSelectionHandle.cpp
+   handles/TimeSelectionHandle.h
+   handles/WaveClipShiftHandle.cpp
+   handles/WaveClipShiftHandle.h
+   handles/WaveClipTrimHandle.cpp
+   handles/WaveClipTrimHandle.h
+   items/WaveClipItem.cpp
+   items/WaveClipItem.h
    TimelineContext.cpp
    TimelineContext.h
    TimelineView.cpp
@@ -13,8 +21,12 @@ set(MODULE_SOURCES
    TrackAdapter.h
    TrackListModel.cpp
    TrackListModel.h
+   WaveformCache.cpp
+   WaveformCache.h
    WaveTrackAdapter.cpp
    WaveTrackAdapter.h
+   WaveTrackView.cpp
+   WaveTrackView.h
 )
 
 audacity_qml_module(${MODULE_NAME}
@@ -23,10 +35,13 @@ audacity_qml_module(${MODULE_NAME}
    VERSION 1.0
    DEPENDENCIES
       QtQuick
+      Audacity.UiThemes
    SOURCES
       ${MODULE_SOURCES}
    LIBRARIES
       Qt6::Quick
       lib-track-interface
+      lib-graphics-interface
       lib-wave-track-interface
+      lib-wave-track-paint-interface
 )
