@@ -25,6 +25,21 @@ namespace MIR
 {
 namespace
 {
+constexpr float GetLog2(float x)
+{
+   // https://stackoverflow.com/a/28730362
+   union
+   {
+      float val;
+      int32_t x;
+   } u = { x };
+   auto log_2 = (float)(((u.x >> 23) & 255) - 128);
+   u.x &= ~(255 << 23);
+   u.x += 127 << 23;
+   log_2 += ((-0.3358287811f) * u.val + 2.0f) * u.val - 0.65871759316667f;
+   return log_2;
+}
+
 float GetNoveltyMeasure(
    const std::vector<float>& prevPowSpec, const std::vector<float>& powSpec)
 {
@@ -136,8 +151,7 @@ std::vector<float> GetOnsetDetectionFunction(
       constexpr auto gamma = 100.f;
       std::transform(
          powSpec.begin(), powSpec.end(), powSpec.begin(),
-         // Using `logf` on Linux fails. #ifdef it ?
-         [gamma](float x) { return std::log(1 + gamma * std::sqrt(x)); });
+         [gamma](float x) { return GetLog2(1 + gamma * std::sqrt(x)); });
 
       if (firstPowSpec.empty())
          firstPowSpec = powSpec;
