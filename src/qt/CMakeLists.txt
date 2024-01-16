@@ -28,6 +28,7 @@ qt_add_resources(QT_RESOURCES
 add_subdirectory(uicomponents)
 add_subdirectory(uithemes)
 add_subdirectory(numeric-formats)
+add_subdirectory(trackpanel)
 
 set(QT_TRANSLATION_SOURCES
    translations/de.ts
@@ -67,6 +68,7 @@ audacity_qml_module(
       Audacity.UiComponents
       Audacity.UiThemes
       Audacity.NumericFormats
+      Audacity.TrackPanel
    QML_FILES
       ${QML_SOURCES}
    SOURCES
@@ -80,11 +82,15 @@ audacity_qml_module(
       uicomponentsplugin
       uithemesplugin
       numeric-formatsplugin
+      trackpanelplugin
       lib-qt-init
       lib-project
       lib-audio-io
       lib-numeric-formats
       lib-time-frequency-selection
+      lib-track
+      lib-wave-track
+      lib-project-file-io
 )
 
 set_target_properties(
