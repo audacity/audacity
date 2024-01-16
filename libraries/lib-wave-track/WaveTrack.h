@@ -220,10 +220,16 @@ public:
    inline size_t GetMaxBlockSize() const;
 };
 
+class WaveTrackClipEvent
+{
+   
+};
+
 class WAVE_TRACK_API WaveTrack final
    : public WritableSampleTrack
    // TODO wide wave tracks -- remove this base class
    , public WaveChannel
+   , public Observer::Publisher<WaveTrackClipEvent>
 {
 public:
    // Resolve ambiguous lookup
