@@ -1851,6 +1851,7 @@ void WaveTrack::ClearAndPasteOne(
          }
       }
    }
+   track.Observer::Publisher<WaveTrackClipEvent>::Publish({});
 }
 
 /*! @excsafety{Strong} */
@@ -1905,6 +1906,7 @@ std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
    if (it != mClips.end()) {
       auto result = std::move(*it); // Array stops owning the clip, before we shrink it
       mClips.erase(it);
+      Observer::Publisher<WaveTrackClipEvent>::Publish({});
       return result;
    }
    else
@@ -2070,6 +2072,9 @@ void WaveTrack::HandleClear(
 
    for (auto &clip: clipsToAdd)
       InsertClip(std::move(clip)); // transfer ownership
+
+   if(!clipsToDelete.empty() || !clipsToAdd.empty())
+      Observer::Publisher<WaveTrackClipEvent>::Publish({});
 }
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
@@ -2323,6 +2328,8 @@ void WaveTrack::PasteOne(
             track.InsertClip(std::move(newClip)); // transfer ownership
         }
     }
+
+   track.Publisher<WaveTrackClipEvent>::Publish({});
 }
 
 bool WaveTrack::RateConsistencyCheck() const
@@ -2473,6 +2480,7 @@ void WaveTrack::InsertSilence(double t, double len)
          clip->InsertSilence(0, len);
          // use No-fail-guarantee
          pChannel->InsertClip(move(clip));
+         pChannel->Observer::Publisher<WaveTrackClipEvent>::Publish({});
       }
       else
       {
@@ -3791,6 +3799,7 @@ WaveClip* WaveTrack::CreateClip(double offset, const wxString& name)
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    mClips.push_back(std::move(clip));
+   Observer::Publisher<WaveTrackClipEvent>::Publish({});
 
    auto result = mClips.back().get();
    // TODO wide wave tracks -- for now assertion is correct because widths are
@@ -3976,6 +3985,7 @@ void WaveTrack::Split(double t0, double t1)
    assert(IsLeader());
    for (const auto pChannel : TrackList::Channels(this)) {
       pChannel->SplitAt(t0);
+      pChannel->Observer::Publisher<WaveTrackClipEvent>::Publish({});
       if (t0 != t1)
          pChannel->SplitAt(t1);
    }
@@ -4114,6 +4124,7 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
    // Delete second clip
    auto it = FindClip(mClips, clip2);
    mClips.erase(it);
+   Observer::Publisher<WaveTrackClipEvent>::Publish({});
 
    return true;
 }
@@ -4135,6 +4146,7 @@ void WaveTrack::ApplyStretchRatioOnIntervals(
    // the source with the destination intervals.
    for (auto i = 0; i < srcIntervals.size(); ++i)
       ReplaceInterval(srcIntervals[i], dstIntervals[i]);
+   Observer::Publisher<WaveTrackClipEvent>::Publish({});
 }
 
 void WaveTrack::InsertInterval(const IntervalHolder& interval)
@@ -4192,7 +4204,9 @@ bool WaveTrack::Reverse(sampleCount start, sampleCount len,
       return progress((count + fraction) / range.size());
    };
    for (const auto pChannel : range) {
-      if (!ReverseOne(*pChannel, start, len, myProgress))
+      const auto result = ReverseOne(*pChannel, start, len, myProgress);
+      pChannel->Observer::Publisher<WaveTrackClipEvent>::Publish({});
+      if (!result)
          return false;
       ++count;
    }

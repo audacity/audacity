@@ -6,6 +6,7 @@ import Qt.labs.platform
 import Audacity
 import Audacity.UiComponents
 import Audacity.UiThemes
+import Audacity.TrackPanel
 
 ApplicationWindow {
    id: root
@@ -16,7 +17,7 @@ ApplicationWindow {
    minimumWidth: 480
    minimumHeight: 540
 
-   readonly property string theme: UiTheme.currentTheme
+   //readonly property string theme: UiTheme.currentTheme
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
    property string language: "en"
@@ -133,16 +134,16 @@ ApplicationWindow {
          title: qsTr("Theme")
 
          Instantiator {
-            model: UiTheme.availableThemes()
+            model: UiTheme.themes
             MenuItem {
                required property string modelData
                text: modelData
-               checkable: true
-               checked: theme === text
+               //checkable: true
+               //checked: theme === text
                onTriggered: {
-                  UiTheme.changeTheme(text)
+                  UiTheme.applyTheme(text)
                   toolsToolbar.refreshSetup()
-                  timelineRuler.updateTheme()
+                  //timelineRuler.updateTheme()
                }
             }
 
@@ -184,7 +185,7 @@ ApplicationWindow {
       id: toolsToolbar
 
       onSetupClicked: customiseToolbar.show()
-
+      /*
       onPlaybackStarted: {
          trackCanvasView.contentItem.contentX = 0
          scrollableRuler.start()
@@ -202,8 +203,21 @@ ApplicationWindow {
          statusBar.text = status
          timer.restart()
       }
+      */
    }
 
+   TrackPanelView {
+      anchors.left : parent.left
+      anchors.right : parent.right
+      anchors.top : toolsToolbar.bottom
+      anchors.bottom : footerId.top
+
+      model : projectTrackList
+
+      color: UiTheme.backgroundColor3
+   }
+
+   /*
    ScrollView {
       id: trackCanvasView
       x: sidebar.width
@@ -293,16 +307,7 @@ ApplicationWindow {
          }
       }
    }
-
-   Sidebar {
-      id: sidebar
-      anchors.top: toolsToolbar.bottom
-      anchors.bottom: footerId.top
-      onUpdateStatusBar: function(status) {
-         statusBar.text = status
-         timer.restart()
-      }
-   }
+   */
 
    Timer {
       id: timer
@@ -310,7 +315,7 @@ ApplicationWindow {
       repeat: false
       onTriggered: statusBar.text = ""
    }
-
+   /*
    ScrollableRuler {
       id: scrollableRuler
       x: sidebar.width
@@ -324,7 +329,7 @@ ApplicationWindow {
          trackCanvasView.contentItem.contentX = scrolledTo
       }
    }
-
+   */
    footer: Rectangle {
       id: footerId
       width: parent.width
@@ -343,6 +348,22 @@ ApplicationWindow {
          width: parent.width
          color: UiTheme.strokeColor2
       }
+   }
+
+   FileDialog
+   {
+      id : openProjectDialog
+      objectName : "OpenProjectDialogObj"
+
+      fileMode : FileDialog.OpenFile
+      nameFilters : [ "Audacity 3 project files (*.aup3)" ]
+
+      onAccepted : function() {
+         console.log("selectedFile=" + openProjectDialog.selectedFile)
+         console.log("currentFile=" + openProjectDialog.currentFile)
+         close()
+      }
+      onRejected : close()
    }
 
    Component.onCompleted: {
