@@ -1,4 +1,3 @@
-pragma Singleton
 import QtQml
 
 Theme {

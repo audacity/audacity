@@ -17,6 +17,7 @@
 #include "CodeConversions.h"
 #include "ExtraMenu.h"
 #include "QtQuickUiServices.h"
+#include "uithemes/UiTheme.h"
 
 //Takes an ownership, ensures that window is properly deleted
 class ProjectWindow final : public ClientData::Base
@@ -259,6 +260,8 @@ static audacity::QMLEngineFactory::Scope qmlEngineFactory {
    [] {
       auto engine = std::make_unique<QQmlEngine>();
       engine->addImportPath(QString(":%1").arg(AUDACITY_QML_RESOURCE_PREFIX));
+      const auto uiTheme = UiTheme::Get(*engine);
+      uiTheme->applyTheme(uiTheme->themes()[0]);
       return engine;
    }
 };
@@ -267,6 +270,8 @@ int main(int argc, char *argv[])
 {
    QtQuickUiServices::Get();//install
    QGuiApplication app(argc, argv);
+
+   UiTheme::Register();
 
    QFontDatabase::addApplicationFont(":/fonts/MusescoreIcon.ttf");
    QFontDatabase::addApplicationFont(":/fonts/Lato-Bold.ttf");

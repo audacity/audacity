@@ -16,7 +16,7 @@ ApplicationWindow {
    minimumWidth: 480
    minimumHeight: 540
 
-   readonly property string theme: UiTheme.currentTheme
+   //readonly property string theme: UiTheme.currentTheme
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
    property string language: "en"
@@ -133,14 +133,14 @@ ApplicationWindow {
          title: qsTr("Theme")
 
          Instantiator {
-            model: UiTheme.availableThemes()
+            model: UiTheme.themes
             MenuItem {
                required property string modelData
                text: modelData
-               checkable: true
-               checked: theme === text
+               //checkable: true
+               //checked: theme === text
                onTriggered: {
-                  UiTheme.changeTheme(text)
+                  UiTheme.applyTheme(text)
                   toolsToolbar.refreshSetup()
                   timelineRuler.updateTheme()
                }
