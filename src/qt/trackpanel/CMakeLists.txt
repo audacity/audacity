@@ -1,6 +1,14 @@
 set(MODULE_NAME trackpanel)
 
 set(MODULE_SOURCES
+   TimelineContext.cpp
+   TimelineContext.h
+   TimelineView.cpp
+   TimelineView.h
+   TimelineViewItem.cpp
+   TimelineViewItem.h
+   TimelineViewUIHandle.cpp
+   TimelineViewUIHandle.h
    TrackAdapter.cpp
    TrackAdapter.h
    TrackListModel.cpp
