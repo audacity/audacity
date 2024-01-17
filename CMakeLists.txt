@@ -228,15 +228,12 @@ cmd_option( ${_OPT}has_url_schemes_support
    "Build custom URL schemes support into Audacity"
    Off)
 
-include( CMakeDependentOption )
-
-cmake_dependent_option(
+cmd_option(
    ${_OPT}has_tests
    "Enables automated testing support"
-   On
-   "${_OPT}conan_enabled"
-   Off
-)
+   On)
+
+include( CMakeDependentOption )
 
 cmake_dependent_option(
    ${_OPT}has_audiocom_upload
