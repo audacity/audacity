@@ -103,6 +103,23 @@ public:
    {
       return sync::DownloadConflictResolution::Remote;
    }
+
+   void OnMixdownStarted() override
+   {
+   }
+
+   void SetMixdownProgressMessage(const TranslatableString& message) override
+   {
+   }
+
+   bool OnMixdownProgress(double progress) override
+   {
+      return true;
+   }
+
+   void OnMixdownFinished() override
+   {
+   }
 }; // class DefaultCloudSyncUI
 
 std::mutex& GetResponsesMutex()
@@ -163,7 +180,7 @@ void PerformProjectGetRequest(
                auto removeRequest =
                   finally([response] { RemovePendingRequest(response); });
 
-               const auto& body = response->readAll<std::string>();
+               auto body = response->readAll<std::string>();
 
                if (response->getError() != NetworkError::NoError)
                {
@@ -698,7 +715,7 @@ void CloudSyncService::CreateSnapshot(AudacityProject& project)
 {
    auto& cloudExtension = sync::ProjectCloudExtension::Get(project);
    mLocalSnapshots.emplace_back(sync::LocalProjectSnapshot::Create(
-      GetServiceConfig(), GetOAuthService(), cloudExtension,
+      GetUI(), GetServiceConfig(), GetOAuthService(), cloudExtension,
       [this](const auto& update)
       {
          UpdateProgress();

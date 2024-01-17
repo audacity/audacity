@@ -58,7 +58,13 @@ public:
 
    void Upload(
       const ServiceConfig& config, const UploadUrls& target,
-      std::vector<uint8_t> data, std::function<void(UploadResult)> callback);
+      std::vector<uint8_t> data, std::function<void(UploadResult)> callback,
+      std::function<bool(double)> progressCallback = {});
+
+   void Upload(
+      const ServiceConfig& config, const UploadUrls& target,
+      std::string filePath, std::function<void(UploadResult)> callback,
+      std::function<bool(double)> progressCallback = {});
 
 private:
    struct Response;

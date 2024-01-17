@@ -31,6 +31,8 @@ constexpr auto UNASSIGNED_PROJECT_ID = -1;
 
 class ProjectCloudExtension;
 class LocalProjectSnapshot;
+class MixdownUploader;
+class CloudSyncUI;
 
 struct SnapshotOperationStatus final
 {
@@ -56,14 +58,15 @@ class LocalProjectSnapshot final : public std::enable_shared_from_this<LocalProj
 
 public:
    LocalProjectSnapshot(
-      Tag, const ServiceConfig& config, const OAuthService& authService,
-      ProjectCloudExtension& extension, SnapshotOperationUpdated callback);
+      Tag, CloudSyncUI& ui, const ServiceConfig& config,
+      const OAuthService& authService, ProjectCloudExtension& extension,
+      SnapshotOperationUpdated callback);
    ~LocalProjectSnapshot();
 
    static std::shared_ptr<LocalProjectSnapshot> Create(
-      const ServiceConfig& config, const OAuthService& authService,
-      ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
-      bool forceCreateNewProject = false);
+      CloudSyncUI& ui, const ServiceConfig& config,
+      const OAuthService& authService, ProjectCloudExtension& extension,
+      SnapshotOperationUpdated callback, bool forceCreateNewProject = false);
 
    bool IsCompleted() const;
 
@@ -84,6 +87,7 @@ private:
    ProjectCloudExtension& mProjectCloudExtension;
    std::weak_ptr<AudacityProject> mWeakProject;
 
+   CloudSyncUI& mCloudSyncUI;
    const ServiceConfig& mServiceConfig;
    const OAuthService& mOAuthService;
 
@@ -94,11 +98,14 @@ private:
 
    std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
 
+   std::unique_ptr<MixdownUploader> mMixdownUploader;
+
    std::atomic<int64_t> mUploadedBlocks { 0 };
    std::atomic<int64_t> mTotalBlocks { 0 };
 
    std::atomic<bool> mProjectUploaded { false };
 
    std::atomic<bool> mCompleted { false };
+   std::atomic<bool> mMixdownUploadInProgress { false };
 };
 } // namespace cloud::audiocom::sync

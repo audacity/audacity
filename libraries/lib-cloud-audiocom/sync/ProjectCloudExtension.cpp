@@ -15,6 +15,7 @@
 #include <vector>
 #include <unordered_map>
 
+#include "CloudSettings.h"
 #include "CloudSyncUtils.h"
 
 #include "CodeConversions.h"
@@ -180,6 +181,45 @@ void ProjectCloudExtension::SuppressAutoDownload()
 bool ProjectCloudExtension::GetAutoDownloadSuppressed() const
 {
    return mSuppressAutoDownload;
+}
+
+bool ProjectCloudExtension::NeedsMixdownSync() const
+{
+   if (!IsCloudProject())
+      return false;
+
+   auto& cloudDatabase = CloudProjectsDatabase::Get();
+   auto dbData = cloudDatabase.GetProjectData(mProjectId);
+
+   if (!dbData)
+      return false;
+
+   if (dbData->LastAudioPreview == 0)
+      return true;
+
+   const auto frequency = MixdownGenerationFrequency.Read();
+
+   if (frequency == 0)
+      return false;
+
+   const auto savesSinceLastMixdown = dbData->SavesCount - dbData->LastAudioPreview;
+
+   return savesSinceLastMixdown >= frequency;
+}
+
+void ProjectCloudExtension::MixdownSynced()
+{
+   if (!IsCloudProject())
+      return;
+
+   auto& cloudDatabase = CloudProjectsDatabase::Get();
+   auto dbData = cloudDatabase.GetProjectData(mProjectId);
+
+   if (!dbData)
+      return;
+
+   dbData->LastAudioPreview = dbData->SavesCount;
+   cloudDatabase.UpdateProjectData(*dbData);
 }
 
 void ProjectCloudExtension::UpdateIdFromDatabase()

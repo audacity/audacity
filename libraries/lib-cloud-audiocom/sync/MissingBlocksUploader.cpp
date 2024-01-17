@@ -52,6 +52,10 @@ MissingBlocksUploader::~MissingBlocksUploader()
       thread.join();
 
    mConsumerThread.join();
+
+   // mProgressMutex can be held by the consumer thread, so we need to wait
+   // until it's released.
+   std::lock_guard lock(mProgressDataMutex);
 }
 
 MissingBlocksUploader::ProducedItem MissingBlocksUploader::ProduceBlock()

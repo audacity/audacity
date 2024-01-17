@@ -60,6 +60,9 @@ public:
 
    bool GetAutoDownloadSuppressed() const;
 
+   bool NeedsMixdownSync() const;
+   void MixdownSynced();
+
 private:
    void UpdateIdFromDatabase();
 

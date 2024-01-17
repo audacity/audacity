@@ -13,6 +13,7 @@
 #include <string>
 
 class AudacityProject;
+class TranslatableString;
 
 namespace BasicUI
 {
@@ -74,6 +75,11 @@ public:
 
    virtual DownloadConflictResolution
    OnDownloadConflict(const BasicUI::WindowPlacement& placement) = 0;
+
+   virtual void OnMixdownStarted() = 0;
+   virtual void SetMixdownProgressMessage(const TranslatableString& message) = 0;
+   virtual bool OnMixdownProgress(double progress) = 0;
+   virtual void OnMixdownFinished() = 0;
 }; // class CloudSyncUI
 
 } // namespace cloud::audiocom::sync

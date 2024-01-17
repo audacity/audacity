@@ -16,10 +16,13 @@
 #include "../ServiceConfig.h"
 #include "../OAuthService.h"
 
+#include "BasicUI.h"
+
 #include "BlockHasher.h"
 #include "CloudProjectsDatabase.h"
 #include "ProjectCloudExtension.h"
 #include "DataUploader.h"
+#include "MixdownUploader.h"
 
 #include "SampleBlock.h"
 #include "Sequence.h"
@@ -202,10 +205,12 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 };
 
 LocalProjectSnapshot::LocalProjectSnapshot(
-   Tag, const ServiceConfig& config, const OAuthService& authService,
+   Tag, CloudSyncUI& ui, const ServiceConfig& config,
+   const OAuthService& authService,
    ProjectCloudExtension& extension, SnapshotOperationUpdated callback)
     : mProjectCloudExtension { extension }
     , mWeakProject { extension.GetProject() }
+    , mCloudSyncUI { ui }
     , mServiceConfig { config }
     , mOAuthService { authService }
     , mUpdateCallback { std::move(callback) }
@@ -218,9 +223,9 @@ LocalProjectSnapshot::~LocalProjectSnapshot()
 }
 
 std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
-   const ServiceConfig& config, const OAuthService& authService,
-   ProjectCloudExtension& extension, SnapshotOperationUpdated callback,
-   bool forceCreateNewProject)
+   CloudSyncUI& ui, const ServiceConfig& config,
+   const OAuthService& authService, ProjectCloudExtension& extension,
+   SnapshotOperationUpdated callback, bool forceCreateNewProject)
 {
    auto project = extension.GetProject().lock();
 
@@ -234,7 +239,7 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
    }
 
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
-      Tag {}, config, authService, extension, std::move(callback));
+      Tag {}, ui, config, authService, extension, std::move(callback));
 
    snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
       extension, *project,
@@ -450,6 +455,31 @@ void LocalProjectSnapshot::OnSnapshotCreated(
                });
          }
       });
+
+   BasicUI::CallAfter(
+      [this, mixdownUrls = response.SyncState.MixdownUrls]
+      {
+         auto project = mWeakProject.lock();
+
+         if (!project)
+            return;
+
+         if (mProjectCloudExtension.NeedsMixdownSync())
+         {
+            mMixdownUploadInProgress.store(true, std::memory_order_release);
+            mMixdownUploader = MixdownUploader::Upload(
+               mCloudSyncUI, mServiceConfig, *project, mixdownUrls,
+               [this](std::string, bool success)
+               {
+                  if (success)
+                     mProjectCloudExtension.MixdownSynced();
+
+                  mMixdownUploader.reset();
+                  mMixdownUploadInProgress.store(
+                     false, std::memory_order_release);
+               });
+         }
+      });
 }
 
 void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
@@ -494,6 +524,10 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
 
          mCompleted.store(true, std::memory_order_release);
          mProjectCloudExtension.OnSyncCompleted(true);
+
+         // Wait for mixdown upload to complete
+         while (mMixdownUploadInProgress.load(std::memory_order_acquire))
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
          mUpdateCallback(
             { this, blocksCount, blocksCount, true, true, true, {} });

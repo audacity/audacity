@@ -11,6 +11,8 @@
 
 #include <wx/log.h>
 
+#include <thread>
+
 #include "CloudSyncService.h"
 #include "sync/CloudSyncUI.h"
 
@@ -117,6 +119,16 @@ public:
       if (wxID_OK != linkDialog.ShowModal())
          return false;
 
+      std::atomic<bool> waitingForAuth = true;
+      std::atomic<bool> authSuccessful = false;
+
+      auto authSubscription = GetOAuthService().Subscribe(
+         [&](const AuthStateChangedMessage& message)
+         {
+            authSuccessful.store(message.authorised, std::memory_order_relaxed);
+            waitingForAuth.store(false, std::memory_order_release);
+         });
+
       OpenInDefaultBrowser(
          { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
 
@@ -127,17 +139,18 @@ public:
 
          auto progress = BasicUI::MakeGenericProgress(placement, XO("Link account"), XO("Waiting for authorization..."));
 
-         while (!GetOAuthService ().HasAccessToken ())
+         while (waitingForAuth.load(std::memory_order_acquire))
          {
             if (progress->Pulse() != BasicUI::ProgressResult::Success)
                return false;
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            BasicUI::Yield();
          }
 
          progress.reset();
 
          GetAuthorizationHandler().PopSuppressDialogs();
-
-         return true;
       }
       else
 #endif
@@ -148,7 +161,7 @@ public:
          dlg.ShowModal();
       }
 
-      return false;
+      return authSuccessful.load(std::memory_order_acquire);
    }
 
    bool OnUploadProgress(AudacityProject* project, double progress) override
@@ -186,33 +199,33 @@ public:
 
    void OnDownloadStarted() override
    {
-      assert(!mDownloadProgressDialog);
+      assert(!mProgressDialog);
 
-      mDownloadProgressDialog = BasicUI::MakeProgress(
+      mProgressDialog = BasicUI::MakeProgress(
          XO("Opening cloud project"), XO("Loading..."),
          BasicUI::ProgressShowCancel);
 
-      mDownloadProgressDialog->Poll(0, 10000);
+      mProgressDialog->Poll(0, 10000);
    }
 
    bool OnDownloadProgress(double progress) override
    {
-      assert(mDownloadProgressDialog);
+      assert(mProgressDialog);
 
-      if (!mDownloadProgressDialog)
+      if (!mProgressDialog)
          return true;
 
       if (progress < 0.0)
          progress = 0.0;
 
-      return mDownloadProgressDialog->Poll(
+      return mProgressDialog->Poll(
                 static_cast<unsigned>(progress * 10000), 10000) ==
              BasicUI::ProgressResult::Success;
    }
 
    void OnDownloadFinished() override
    {
-      mDownloadProgressDialog.reset();
+      mProgressDialog.reset();
    }
 
    void ShowDownloadError (std::string errorMessage) override
@@ -231,8 +244,45 @@ public:
    {
       return DownloadConflictResolution::Remote;
    }
+
+   void OnMixdownStarted() override
+   {
+      assert(!mProgressDialog);
+
+      mProgressDialog = BasicUI::MakeProgress(
+         XO("Save to audio.com"), XO("Loading..."),
+         BasicUI::ProgressShowCancel);
+   }
+
+   void SetMixdownProgressMessage(const TranslatableString& message) override
+   {
+      assert(mProgressDialog);
+
+      if (!mProgressDialog)
+         return;
+
+      mProgressDialog->SetMessage(message);
+   }
+
+   bool OnMixdownProgress(double progress) override
+   {
+      assert(mProgressDialog);
+
+      if (!mProgressDialog)
+         return true;
+
+      return mProgressDialog->Poll(
+                static_cast<unsigned>(progress * 10000), 10000) ==
+             BasicUI::ProgressResult::Success;
+   }
+
+   void OnMixdownFinished() override
+   {
+      mProgressDialog.reset();
+   }
+
 private:
-   std::unique_ptr<BasicUI::ProgressDialog> mDownloadProgressDialog;
+   std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 };
 
 CloudSyncService::UI::Scope scope { []() -> CloudSyncUI&

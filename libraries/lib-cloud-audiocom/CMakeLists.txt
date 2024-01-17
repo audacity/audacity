@@ -35,6 +35,8 @@ set( SOURCES
    sync/LocalProjectSnapshot.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
+   sync/MixdownUploader.cpp
+   sync/MixdownUploader.h
    sync/ProjectCloudExtension.cpp
    sync/ProjectCloudExtension.h
    sync/RemoteProjectSnapshot.cpp
@@ -54,6 +56,7 @@ set ( LIBRARIES
    PRIVATE
       lib-sqlite-helpers-interface
       lib-crypto-interface
+      lib-import-export-interface
       wavpack::wavpack # Required for the WavPackCompressor
       wxwidgets::base # Required to retrieve the OS information
 )
