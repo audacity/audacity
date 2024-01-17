@@ -29,6 +29,9 @@ namespace network_manager
 
 class MultipartData;
 
+class RequestPayloadStream;
+using RequestPayloadStreamPtr = std::shared_ptr<RequestPayloadStream>;
+
 class CurlResponse final : public IResponse
 {
 public:
@@ -68,7 +71,7 @@ public:
    uint64_t getBytesAvailable() const noexcept override;
    uint64_t readData(void* buffer, uint64_t maxBytesCount) override;
 
-   void setPayload(const void* ptr, size_t size);
+   void setPayload(RequestPayloadStreamPtr payload);
    void setForm(std::unique_ptr<MultipartData> form);
 
    void perform();
@@ -101,8 +104,7 @@ private:
 
    unsigned mHttpCode { 0 };
 
-   const void* mPayload { nullptr };
-   size_t mPayloadSize { 0 };
+   RequestPayloadStreamPtr mPayload;
    std::unique_ptr<MultipartData> mForm;
 
    bool mHeadersReceived { false };

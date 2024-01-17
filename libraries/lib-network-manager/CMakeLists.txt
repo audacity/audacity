@@ -16,6 +16,9 @@ set( SOURCES
     Request.h
     Request.cpp
 
+    RequestPayload.h
+    RequestPayload.cpp
+
     MultipartData.h
     MultipartData.cpp
 
