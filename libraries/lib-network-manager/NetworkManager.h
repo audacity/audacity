@@ -27,6 +27,9 @@ class MultipartData;
 
 using ResponsePtr = std::shared_ptr<IResponse>;
 
+class RequestPayloadStream;
+using RequestPayloadStreamPtr = std::shared_ptr<RequestPayloadStream>;
+
 class NETWORK_MANAGER_API NetworkManager final
 {
     NetworkManager ();
@@ -41,12 +44,15 @@ public:
     ResponsePtr doDelete(const Request& request);
 
     ResponsePtr doPost(const Request& request, const void* data, size_t size);
+    ResponsePtr doPost(const Request& request, RequestPayloadStreamPtr payloadStream);
     ResponsePtr doPost(const Request& request, std::unique_ptr<MultipartData> form);
 
     ResponsePtr doPut(const Request& request, const void* data, size_t size);
+    ResponsePtr doPut(const Request& request, RequestPayloadStreamPtr payloadStream);
     ResponsePtr doPut(const Request& request, std::unique_ptr<MultipartData> form);
 
     ResponsePtr doPatch(const Request& request, const void* data, size_t size);
+    ResponsePtr doPatch(const Request& request, RequestPayloadStreamPtr payloadStream);
 
     void setProxy (const std::string& proxy);
 private:
