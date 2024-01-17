@@ -42,7 +42,7 @@
 #include "CodeConversions.h"
 
 #include "Export.h"
-#include "export/ExportProgressUI.h"
+#include "ExportProgressUI.h"
 #include "ExportUtils.h"
 #include "AccessibleLinksFormatter.h"
 #include "ExportPluginRegistry.h"

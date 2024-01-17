@@ -33,7 +33,7 @@
 #include "ExportUtils.h"
 #include "ProjectRate.h"
 #include "ExportPluginRegistry.h"
-#include "export/ExportProgressUI.h"
+#include "ExportProgressUI.h"
 
 
 const ComponentInterfaceSymbol ImportCommand::Symbol

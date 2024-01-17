@@ -28,7 +28,7 @@
 #include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
-#include "export/ExportProgressUI.h"
+#include "ExportProgressUI.h"
 #include "export/ExportAudioDialog.h"
 
 #include <wx/app.h>
