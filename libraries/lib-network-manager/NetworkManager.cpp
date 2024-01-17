@@ -22,6 +22,8 @@
 
 #include "MultipartData.h"
 
+#include "RequestPayload.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -64,7 +66,15 @@ ResponsePtr NetworkManager::doDelete (const Request& request)
 
 ResponsePtr NetworkManager::doPost (const Request& request, const void* data, size_t size)
 {
-    return mResponseFactory->performRequest (RequestVerb::Post, request, data, size);
+    return mResponseFactory->performRequest(
+       RequestVerb::Post, request, CreateRequestPayloadStream(data, size, true));
+}
+
+ResponsePtr NetworkManager::doPost(
+   const Request& request, RequestPayloadStreamPtr payloadStream)
+{
+    return mResponseFactory->performRequest(
+       RequestVerb::Post, request, std::move(payloadStream));
 }
 
 ResponsePtr NetworkManager::doPost(
@@ -75,7 +85,15 @@ ResponsePtr NetworkManager::doPost(
 
 ResponsePtr NetworkManager::doPut (const Request& request, const void* data, size_t size)
 {
-    return mResponseFactory->performRequest (RequestVerb::Put, request, data, size);
+   return mResponseFactory->performRequest(
+      RequestVerb::Put, request, CreateRequestPayloadStream(data, size, true));
+}
+
+ResponsePtr NetworkManager::doPut(
+   const Request& request, RequestPayloadStreamPtr payloadStream)
+{
+   return mResponseFactory->performRequest(
+      RequestVerb::Put, request, std::move(payloadStream));
 }
 
 ResponsePtr NetworkManager::doPut(
@@ -88,7 +106,15 @@ ResponsePtr
 NetworkManager::doPatch(const Request& request, const void* data, size_t size)
 {
    return mResponseFactory->performRequest(
-      RequestVerb::Patch, request, data, size);
+      RequestVerb::Patch, request,
+      CreateRequestPayloadStream(data, size, true));
+}
+
+ResponsePtr NetworkManager::doPatch(
+   const Request& request, RequestPayloadStreamPtr payloadStream)
+{
+   return mResponseFactory->performRequest(
+      RequestVerb::Patch, request, std::move(payloadStream));
 }
 
 void NetworkManager::setProxy (const std::string& proxy)
