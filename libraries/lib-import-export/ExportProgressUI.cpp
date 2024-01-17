@@ -14,7 +14,6 @@
 #include "ExportPlugin.h"
 #include "Internat.h"
 #include "BasicUI.h"
-#include "AudacityMessageBox.h"
 #include "FileException.h"
 
 namespace
