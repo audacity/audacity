@@ -272,7 +272,7 @@ void MixdownUploader::ExportProject()
    const auto& registry = ExportPluginRegistry::Get();
 
    for (const auto& preferredMimeType :
-        GetServiceConfig().GetPreferredAudioFormats())
+        GetServiceConfig().GetPreferredAudioFormats(false))
    {
       auto config = GetServiceConfig().GetExportConfig(preferredMimeType);
       ExportProcessor::Parameters parameters;
@@ -325,7 +325,10 @@ void MixdownUploader::UploadMixdown()
       [this](UploadResult result)
       {
          BasicUI::CallAfter([this, result = std::move(result)]
-                            { mCloudSyncUI.OnMixdownFinished(); });
+            {
+               mCloudSyncUI.OnMixdownFinished();
+               mOnComplete(result.ErrorMessage, result.Code == UploadResultCode::Success);
+            });
       },
       {});
 }

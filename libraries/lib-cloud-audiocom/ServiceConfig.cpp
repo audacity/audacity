@@ -152,14 +152,19 @@ std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const
    return std::chrono::seconds(3);
 }
 
-std::vector<std::string> ServiceConfig::GetPreferredAudioFormats() const
+std::vector<std::string>
+ServiceConfig::GetPreferredAudioFormats(bool preferLossless) const
 {
-   return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" };
+   if (preferLossless)
+      return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" };
+   else
+      return { "audio/mpeg" };
 }
 
-rapidjson::Document ServiceConfig::GetExportConfig(const std::string& mimeType) const
+rapidjson::Document
+ServiceConfig::GetExportConfig(const std::string& mimeType) const
 {
-   if(mimeType == "audio/x-wavpack")
+   if (mimeType == "audio/x-wavpack")
    {
       rapidjson::Document config;
       config.SetObject();
@@ -169,17 +174,27 @@ rapidjson::Document ServiceConfig::GetExportConfig(const std::string& mimeType) 
       config.AddMember("hybrid_mode", false, config.GetAllocator());
       return config;
    }
-   if(mimeType == "audio/x-flac")
+   else if (mimeType == "audio/x-flac")
    {
       rapidjson::Document config;
       config.SetObject();
-      config.AddMember("bit_depth", rapidjson::Value(24), config.GetAllocator());
+      config.AddMember(
+         "bit_depth", rapidjson::Value(24), config.GetAllocator());
       config.AddMember("level", rapidjson::Value(5), config.GetAllocator());
    }
-   if(mimeType == "audio/x-wav")
+   else if (mimeType == "audio/x-wav")
    {
       return {};
    }
+   else if (mimeType == "audio/mpeg")
+   {
+      rapidjson::Document config;
+      config.SetObject();
+      config.AddMember("mode", rapidjson::Value("VBR"), config.GetAllocator());
+      config.AddMember("quality", rapidjson::Value(5), config.GetAllocator());
+      return config;
+   }
+
    throw std::invalid_argument("unknown mime-type");
 }
 

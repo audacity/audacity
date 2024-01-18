@@ -467,6 +467,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
          if (mProjectCloudExtension.NeedsMixdownSync())
          {
             mMixdownUploadInProgress.store(true, std::memory_order_release);
+
             mMixdownUploader = MixdownUploader::Upload(
                mCloudSyncUI, mServiceConfig, *project, mixdownUrls,
                [this](std::string, bool success)
@@ -474,7 +475,6 @@ void LocalProjectSnapshot::OnSnapshotCreated(
                   if (success)
                      mProjectCloudExtension.MixdownSynced();
 
-                  mMixdownUploader.reset();
                   mMixdownUploadInProgress.store(
                      false, std::memory_order_release);
                });
