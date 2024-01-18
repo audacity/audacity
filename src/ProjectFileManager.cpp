@@ -183,6 +183,16 @@ auto ProjectFileManager::ReadProjectFile(
    if (bParseSuccess)
    {
       auto& tracks = TrackList::Get(project);
+      // By making a duplicate set of pointers to the existing blocks
+      // on disk, we add one to their reference count, guaranteeing
+      // that their reference counts will never reach zero and thus
+      // the version saved on disk will be preserved until the
+      // user selects Save().
+      // Do this before FixTracks might delete zero-length clips!
+      mLastSavedTracks = TrackList::Create( nullptr );
+      for (auto t : tracks)
+         mLastSavedTracks->Append(std::move(*t->Duplicate()));
+
       FixTracks(
          tracks,
          // Keep at most one of the error messages
@@ -233,15 +243,6 @@ auto ProjectFileManager::ReadProjectFile(
                wxICON_WARNING,
                &window);
          }
-
-         // By making a duplicate set of pointers to the existing blocks
-         // on disk, we add one to their reference count, guaranteeing
-         // that their reference counts will never reach zero and thus
-         // the version saved on disk will be preserved until the
-         // user selects Save().
-         mLastSavedTracks = TrackList::Create( nullptr );
-         for (auto t : tracks)
-            mLastSavedTracks->Append(std::move(*t->Duplicate()));
       }
    }
 
