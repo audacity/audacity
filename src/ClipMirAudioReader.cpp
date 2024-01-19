@@ -13,19 +13,24 @@
 
 #include <cassert>
 
-ClipMirAudioReader::ClipMirAudioReader(const ClipInterface& clip)
-    : mClip(clip)
+ClipMirAudioReader::ClipMirAudioReader(
+   std::optional<LibFileFormats::AcidizerTags> tags, std::string filename,
+   WaveTrack& singleClipWaveTrack)
+    : tags { std::move(tags) }
+    , filename { std::move(filename) }
+    , clip(*singleClipWaveTrack.Intervals().begin())
+    , mWideClip(singleClipWaveTrack.GetClipInterfaces()[0])
 {
 }
 
 double ClipMirAudioReader::GetSampleRate() const
 {
-   return mClip.GetRate();
+   return mWideClip->GetRate();
 }
 
 long long ClipMirAudioReader::GetNumSamples() const
 {
-   return mClip.GetVisibleSampleCount().as_long_long();
+   return mWideClip->GetVisibleSampleCount().as_long_long();
 }
 
 void ClipMirAudioReader::ReadFloats(
@@ -33,7 +38,7 @@ void ClipMirAudioReader::ReadFloats(
 {
    std::fill(buffer, buffer + numFrames, 0.f);
    AddChannel(0, buffer, where, numFrames);
-   if (mClip.GetWidth() == 1)
+   if (mWideClip->GetWidth() == 1)
       return;
    AddChannel(1, buffer, where, numFrames);
    std::transform(
@@ -46,7 +51,7 @@ void ClipMirAudioReader::AddChannel(
    constexpr auto mayThrow = false;
    const auto iCache = mUseFirst[iChannel] ? 0 : 1;
    auto& cache = mCache[iChannel][iCache];
-   auto view = mClip.GetSampleView(iChannel, start, len, mayThrow);
+   auto view = mWideClip->GetSampleView(iChannel, start, len, mayThrow);
    cache.emplace(std::move(view));
    cache->AddTo(buffer, len);
    mUseFirst[iChannel] = !mUseFirst[iChannel];

@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  WaveMirAudioReader.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "WavMirAudioReader.h"
 #include "AudioFileIO.h"
 #include "AudioFileInfo.h"

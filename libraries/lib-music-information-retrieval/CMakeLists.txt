@@ -7,10 +7,9 @@ set( SOURCES
    DecimatingMirAudioReader.h
    GetMeterUsingTatumQuantizationFit.cpp
    GetMeterUsingTatumQuantizationFit.h
-   MirAudioReader.cpp
-   MirAudioReader.h
    MirDsp.cpp
    MirDsp.h
+   MirProjectInterface.h
    MirTypes.h
    MirUtils.cpp
    MirUtils.h

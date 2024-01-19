@@ -67,13 +67,11 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 bool ImportCommand::Apply(const CommandContext & context)
 {
    bool wasEmpty = TrackList::Get(context.project).empty();
-   bool success = ProjectFileManager::Get(context.project)
-                     .ImportOneOfOne(mFileName, false);
+   const bool success =
+      ProjectFileManager::Get(context.project).Import(mFileName, false);
 
    if (success && wasEmpty)
-   {
       SelectUtilities::SelectAllIfNone( context.project );
-   }
 
    return success;
 }

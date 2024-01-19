@@ -1,4 +1,5 @@
-#include "MirAudioReaders.h"
+#include "MirFakes.h"
+#include "MirProjectInterface.h"
 #include "MusicInformationRetrieval.h"
 #include "WavMirAudioReader.h"
 
@@ -74,39 +75,44 @@ TEST_CASE("GetBpmFromFilename")
 namespace
 {
 using namespace LibFileFormats;
-constexpr auto isOneShot = true;
 constexpr auto filename100bpm = "my/path\\foo_-_100BPM_Sticks_-_foo.wav";
 const EmptyMirAudioReader emptyReader;
-const std::function<void(double)> emptyProgressCb;
-constexpr auto arbitraryTolerance = FalsePositiveTolerance::Lenient;
-const std::optional<AcidizerTags> noTags;
+const ProjectSyncInfoInput arbitaryInput { emptyReader };
 } // namespace
 
-TEST_CASE("MusicInformation")
+TEST_CASE("GetProjectSyncInfo")
 {
    SECTION("operator bool")
    {
       SECTION("returns false if ACID tag says one-shot")
-      REQUIRE(!MusicInformation { AcidizerTags::OneShot {}, filename100bpm,
-                                  emptyReader, arbitraryTolerance,
-                                  emptyProgressCb });
+      {
+         auto input = arbitaryInput;
+         input.tags.emplace(AcidizerTags::OneShot {});
+         REQUIRE(!GetProjectSyncInfo(input).has_value());
+      }
 
       SECTION("returns true if ACID tag says non-one-shot")
-      REQUIRE(MusicInformation { AcidizerTags::Loop { 120.0 },
-                                 "filenameWithoutBpm", emptyReader,
-                                 arbitraryTolerance, emptyProgressCb });
+      {
+         auto input = arbitaryInput;
+         input.tags.emplace(AcidizerTags::Loop { 120.0 });
+         REQUIRE(GetProjectSyncInfo(input).has_value());
+      }
 
       SECTION("BPM is invalid")
       {
          SECTION("returns true if filename has BPM")
-         REQUIRE(MusicInformation { AcidizerTags::Loop { -1. }, filename100bpm,
-                                    emptyReader, arbitraryTolerance,
-                                    emptyProgressCb });
+         {
+            auto input = arbitaryInput;
+            input.filename = filename100bpm;
+            REQUIRE(GetProjectSyncInfo(input).has_value());
+         }
 
          SECTION("returns false if filename has no BPM")
-         REQUIRE(!MusicInformation { AcidizerTags::Loop { -1. },
-                                     "filenameWithoutBpm", emptyReader,
-                                     arbitraryTolerance, emptyProgressCb });
+         {
+            auto input = arbitaryInput;
+            input.filename = "filenameWithoutBpm";
+            REQUIRE(!GetProjectSyncInfo(input).has_value());
+         }
       }
    }
 
@@ -114,53 +120,248 @@ TEST_CASE("MusicInformation")
    {
       SECTION("prioritizes ACID tags over filename")
       {
-         MusicInformation info { AcidizerTags::Loop { 120. }, filename100bpm,
-                                 emptyReader, arbitraryTolerance,
-                                 emptyProgressCb };
+         auto input = arbitaryInput;
+         input.filename = filename100bpm;
+         input.tags.emplace(AcidizerTags::Loop { 120. });
+         const auto info = GetProjectSyncInfo(input);
          REQUIRE(info);
-         REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 120);
+         REQUIRE(info->rawAudioTempo == 120);
       }
 
       SECTION("falls back on filename if tag bpm is invalid")
       {
-         MusicInformation info { AcidizerTags::Loop { -1. }, filename100bpm,
-                                 emptyReader, arbitraryTolerance,
-                                 emptyProgressCb };
+         auto input = arbitaryInput;
+         input.filename = filename100bpm;
+         input.tags.emplace(AcidizerTags::Loop { -1. });
+         const auto info = GetProjectSyncInfo(input);
          REQUIRE(info);
-         REQUIRE(info.GetProjectSyncInfo({}).rawAudioTempo == 100);
+         REQUIRE(info->rawAudioTempo == 100);
       }
 
       SECTION("stretchMinimizingPowOfTwo is as expected")
       {
-         std::function<void(double)> progressCallback;
-         MusicInformation info { noTags, filename100bpm, emptyReader,
-                                 arbitraryTolerance, progressCallback };
-         REQUIRE(info);
-         REQUIRE(info.GetProjectSyncInfo(100).stretchMinimizingPowOfTwo == 1.);
+         auto input = arbitaryInput;
+         input.filename = filename100bpm;
+
+         input.projectTempo = 100.;
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 1.);
 
          // Project tempo twice as fast. Without compensation, the audio would
          // be stretched to 0.5 its length. Not stretching it at all may still
          // yield musically interesting results.
-         REQUIRE(info.GetProjectSyncInfo(200).stretchMinimizingPowOfTwo == 2.);
+         input.projectTempo = 200;
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 2.);
 
          // Same principle applies in the following:
-         REQUIRE(info.GetProjectSyncInfo(400).stretchMinimizingPowOfTwo == 4.);
-         REQUIRE(info.GetProjectSyncInfo(50).stretchMinimizingPowOfTwo == .5);
-         REQUIRE(info.GetProjectSyncInfo(25).stretchMinimizingPowOfTwo == .25);
+         input.projectTempo = 400;
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 4.);
+         input.projectTempo = 50;
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == .5);
+         input.projectTempo = 25;
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == .25);
 
          // Now testing edge cases:
-         REQUIRE(
-            info.GetProjectSyncInfo(100 * std::pow(2, .51))
-               .stretchMinimizingPowOfTwo == 2.);
-         REQUIRE(
-            info.GetProjectSyncInfo(100 * std::pow(2, .49))
-               .stretchMinimizingPowOfTwo == 1.);
-         REQUIRE(
-            info.GetProjectSyncInfo(100 * std::pow(2, -.49))
-               .stretchMinimizingPowOfTwo == 1.);
-         REQUIRE(
-            info.GetProjectSyncInfo(100 * std::pow(2, -.51))
-               .stretchMinimizingPowOfTwo == .5);
+         input.projectTempo = 100 * std::pow(2, .51);
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 2.);
+         input.projectTempo = 100 * std::pow(2, .49);
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 1.);
+         input.projectTempo = 100 * std::pow(2, -.49);
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == 1.);
+         input.projectTempo = 100 * std::pow(2, -.51);
+         REQUIRE(GetProjectSyncInfo(input)->stretchMinimizingPowOfTwo == .5);
+      }
+   }
+}
+
+TEST_CASE("SynchronizeProject")
+{
+   constexpr auto initialProjectTempo = 100.;
+   FakeProjectInterface project { initialProjectTempo };
+
+   SECTION("single-file import")
+   {
+      constexpr FakeAnalyzedAudioClip::Params clipParams {
+         123., TempoObtainedFrom::Title
+      };
+
+      // Generate all possible situations, and in the sections filter for the
+      // conditions we want to check.
+      project.isBeatsAndMeasures = GENERATE(false, true);
+      project.shouldBeReconfigured = GENERATE(false, true);
+      const auto projectWasEmpty = GENERATE(false, true);
+      const auto clipsHaveTempo = GENERATE(false, true);
+
+      const std::vector<std::shared_ptr<AnalyzedAudioClip>> clips {
+         std::make_shared<FakeAnalyzedAudioClip>(
+            clipsHaveTempo ? std::make_optional(clipParams) : std::nullopt)
+      };
+
+      const auto projectWasReconfigured = [&](bool yes) {
+         const auto reconfigurationCheck = yes == project.wasReconfigured;
+         const auto projectTempoCheck =
+            project.projectTempo ==
+            (yes ? clipParams.tempo : initialProjectTempo);
+         REQUIRE(reconfigurationCheck);
+         REQUIRE(projectTempoCheck);
+      };
+
+      const auto clipsWereSynchronized = [&](bool yes) {
+         const auto check = yes == project.clipsWereSynchronized;
+         REQUIRE(check);
+      };
+
+      SECTION("nothing happens if")
+      {
+         SECTION("no clip has tempo")
+         if (!clipsHaveTempo)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            projectWasReconfigured(false);
+            clipsWereSynchronized(false);
+         }
+         SECTION(
+            "user doesn't want reconfiguration and view is minutes and seconds")
+         if (!project.shouldBeReconfigured && !project.isBeatsAndMeasures)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            projectWasReconfigured(false);
+            clipsWereSynchronized(false);
+         }
+         SECTION(
+            "user wants reconfiguration but view is minutes and seconds and project is not empty")
+         if (
+            project.shouldBeReconfigured && !project.isBeatsAndMeasures &&
+            !projectWasEmpty)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            projectWasReconfigured(false);
+            clipsWereSynchronized(false);
+         }
+      }
+
+      SECTION(
+         "project gets reconfigured only if clips have tempo, user wants to and project is empty")
+      {
+         SynchronizeProject(clips, project, projectWasEmpty);
+         projectWasReconfigured(
+            clipsHaveTempo && project.shouldBeReconfigured && projectWasEmpty);
+      }
+
+      SECTION("project does not get reconfigured if")
+      {
+         SECTION("user doesn't want to")
+         if (!project.shouldBeReconfigured)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            projectWasReconfigured(false);
+         }
+
+         SECTION("project was not empty")
+         if (!projectWasEmpty)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            projectWasReconfigured(false);
+         }
+      }
+
+      SECTION("clips don't get synchronized if view is minutes and seconds and")
+      if (!project.isBeatsAndMeasures)
+      {
+         SECTION("user says no to reconfiguration")
+         if (!project.shouldBeReconfigured)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            clipsWereSynchronized(false);
+         }
+         SECTION("project was not empty")
+         if (!projectWasEmpty)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            clipsWereSynchronized(false);
+         }
+      }
+
+      SECTION("clips get synchronized if some clip has tempo and")
+      if (clipsHaveTempo)
+      {
+         SECTION(
+            "user doesn't want reconfiguration but view is beats and measures")
+         if (!project.shouldBeReconfigured && project.isBeatsAndMeasures)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            clipsWereSynchronized(true);
+         }
+         SECTION(
+            "user wants reconfiguration, view is beats and measures and project is not empty")
+         if (
+            project.shouldBeReconfigured && project.isBeatsAndMeasures &&
+            !projectWasEmpty)
+         {
+            SynchronizeProject(clips, project, projectWasEmpty);
+            clipsWereSynchronized(true);
+         }
+      }
+   }
+
+   SECTION("multiple-file import")
+   {
+      project.shouldBeReconfigured = true;
+      constexpr auto projectWasEmpty = true;
+
+      SECTION(
+         "for clips of different tempi, precedence is header-based, then title-based, then signal-based")
+      {
+         SynchronizeProject(
+            {
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 123.,
+                                                  TempoObtainedFrom::Title }),
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 456.,
+                                                  TempoObtainedFrom::Header }),
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 789.,
+                                                  TempoObtainedFrom::Signal }),
+            },
+            project, projectWasEmpty);
+         REQUIRE(project.projectTempo == 456.);
+
+         SynchronizeProject(
+            {
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 789.,
+                                                  TempoObtainedFrom::Signal }),
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 123.,
+                                                  TempoObtainedFrom::Title }),
+            },
+            project, projectWasEmpty);
+         REQUIRE(project.projectTempo == 123.);
+
+         SynchronizeProject(
+            {
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 789.,
+                                                  TempoObtainedFrom::Signal }),
+            },
+            project, projectWasEmpty);
+         REQUIRE(project.projectTempo == 789.);
+      }
+
+      SECTION("raw audio tempo of one-shot clips is set to project tempo")
+      {
+         const auto oneShotClip =
+            std::make_shared<FakeAnalyzedAudioClip>(std::nullopt);
+         constexpr auto whicheverMethod = TempoObtainedFrom::Signal;
+         SynchronizeProject(
+            {
+               std::make_shared<FakeAnalyzedAudioClip>(
+                  FakeAnalyzedAudioClip::Params { 123., whicheverMethod }),
+               oneShotClip,
+            },
+            project, projectWasEmpty);
+         REQUIRE(project.projectTempo == 123);
+         REQUIRE(oneShotClip->rawAudioTempo == 123);
       }
    }
 }

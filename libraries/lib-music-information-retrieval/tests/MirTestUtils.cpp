@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  MirTestUtils.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "MirTestUtils.h"
 
 #define USE_FILESYSTEM (__has_include(<filesystem>) && _WIN32)

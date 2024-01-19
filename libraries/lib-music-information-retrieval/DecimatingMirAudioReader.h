@@ -10,7 +10,7 @@
 **********************************************************************/
 #pragma once
 
-#include "MirAudioReader.h"
+#include "MirTypes.h"
 
 #include <vector>
 

@@ -16,8 +16,8 @@
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
-#include "Viewport.h"
 #include "TrackPanel.h"
+#include "Viewport.h"
 
 #if wxUSE_DRAG_AND_DROP
 class FileObject final : public wxFileDataObject
@@ -165,10 +165,8 @@ public:
             Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
-         const auto numFiles = sortednames.GetCount();
-         for (auto i = 0; i < numFiles; i++)
-            ProjectFileManager::Get(*mProject).Import(
-               sortednames[i], i + 1, numFiles);
+         ProjectFileManager::Get(*mProject).Import(
+            std::vector<FilePath> { sortednames.begin(), sortednames.end() });
 
          auto &viewport = Viewport::Get(*mProject);
          viewport.ZoomFitHorizontallyAndShowTrack(nullptr);

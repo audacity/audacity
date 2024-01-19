@@ -8,7 +8,7 @@
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "MirAudioReader.h"
+#include "MirTypes.h"
 #include "MirUtils.h"
 #include "StftFrameProvider.h"
 
@@ -64,7 +64,7 @@ TEST_CASE("StftFrameProvider")
    }
    SECTION("respects MirAudioReader boundaries")
    {
-      TestMirAudioReader reader{ 123456 };
+      TestMirAudioReader reader { 123456 };
       StftFrameProvider sut { reader };
       std::vector<float> frame;
       while (sut.GetNextFrame(frame))
