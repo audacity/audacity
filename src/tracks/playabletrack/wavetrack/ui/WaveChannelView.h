@@ -233,7 +233,7 @@ private:
    bool &DoGetMultiView();
    bool DoGetMultiView() const;
 
-   std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
+   std::shared_ptr<CommonTrackCell> DoGetAffordance(Track& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 

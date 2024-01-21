@@ -48,8 +48,6 @@
 #include "../../../../TrackPanel.h"
 #include "TrackFocus.h"
 
-#include "../WaveTrackUtils.h"
-
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUIUtilities.h"
 
