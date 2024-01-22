@@ -836,8 +836,10 @@ UIHandle::Result TimeShiftHandle::Drag
 
    auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
-   Track *track =
-      *trackList.Find(trackView ? trackView->FindTrack().get() : nullptr);
+   const auto pChannel = trackView ? trackView->FindChannel() : nullptr;
+   auto track = pChannel
+      ? dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup())
+      : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
