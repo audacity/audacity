@@ -29,7 +29,7 @@ namespace MIR
 class DecimatingMirAudioReader : public MirAudioReader
 {
 public:
-   DecimatingMirAudioReader(const MirAudioReader& reader);
+   explicit DecimatingMirAudioReader(const MirAudioReader& reader);
 
    double GetSampleRate() const override;
    long long GetNumSamples() const override;

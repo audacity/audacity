@@ -18,8 +18,8 @@ namespace MIR
 DecimatingMirAudioReader::DecimatingMirAudioReader(const MirAudioReader& reader)
     : mReader { reader }
     , mDecimationFactor {
-       // The highest sample rate less than or equal to 16kHz that is a
-       // divisor of the input sample rate.
+       // Input rate divided by this integer will be as close as possible to
+       // 24kHz and not greater.
        static_cast<int>(std::ceil(reader.GetSampleRate() / 24000.))
     }
 {
