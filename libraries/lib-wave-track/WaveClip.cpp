@@ -1349,7 +1349,17 @@ void WaveClip::TrimQuarternotesFromRight(double quarters)
    if (!mRawAudioTempo.has_value())
       return;
    const auto secondsPerQuarter = 60 * GetStretchRatio() / *mRawAudioTempo;
-   TrimRight(quarters * secondsPerQuarter);
+   // MH https://github.com/audacity/audacity/issues/5878: Clip boundaries are
+   // quantized to the sample period. Music durations aren't, though.
+   // `quarters` was probably chosen such that the clip ends exactly at some
+   // musical grid snapping point. However, if we right-trim by `quarters`,
+   // the clip's play end time might be rounded up to the next sample period,
+   // overlapping the next snapping point on the musical grid. We don't want
+   // this, or it would disturb music producers who want to horizontally
+   // duplicate loops.
+   const auto quantizedTrim =
+      std::ceil(quarters * secondsPerQuarter * GetRate()) / GetRate();
+   TrimRight(quantizedTrim);
 }
 
 void WaveClip::TrimLeftTo(double to)
