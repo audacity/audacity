@@ -46,7 +46,7 @@ float GetNoveltyMeasure(
 {
    auto k = 0;
    return std::accumulate(
-      powSpec.begin(), powSpec.end(), 0., [&](float a, float mag) {
+      powSpec.begin(), powSpec.end(), 0.f, [&](float a, float mag) {
          // Half-wave-rectified stuff
          return a + std::max(0.f, mag - prevPowSpec[k++]);
       });
@@ -63,7 +63,7 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
    std::transform(x.begin(), x.end(), movingAverage.begin(), [&](float) {
       const auto m = IotaRange(-M, M + 1);
       const auto y =
-         std::accumulate(m.begin(), m.end(), 0., [&](double y, int i) {
+         std::accumulate(m.begin(), m.end(), 0.f, [&](float y, int i) {
             auto k = n + i;
             while (k < 0)
                k += x.size();
@@ -78,7 +78,7 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
       // larger this multiplier, the less peaks will remain. This value was
       // found by trial and error, using the benchmarking framework
       // (see TatumQuantizationFitBenchmarking.cpp)
-      constexpr auto thresholdRaiser = 1.5;
+      constexpr auto thresholdRaiser = 1.5f;
       return y * thresholdRaiser;
    });
    return movingAverage;
