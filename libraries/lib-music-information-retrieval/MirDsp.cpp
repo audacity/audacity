@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "MirDsp.h"
 #include "IteratorX.h"
+#include "MemoryX.h"
 #include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
@@ -91,6 +92,7 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
    const auto N = x.size();
    assert(IsPowOfTwo(N));
    PFFFT_Setup* setup = pffft_new_setup(N, PFFFT_REAL);
+   Finally Do { [&] { pffft_destroy_setup(setup); } };
    std::vector<float> work(N);
    pffft_transform_ordered(
       setup, x.data(), x.data(), work.data(), PFFFT_FORWARD);
@@ -107,7 +109,6 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
 
    pffft_transform_ordered(
       setup, x.data(), x.data(), work.data(), PFFFT_BACKWARD);
-   pffft_destroy_setup(setup);
 
    // The second half of the circular autocorrelation is the mirror of the first
    // half. We are economic and only keep the first half.
