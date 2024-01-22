@@ -247,7 +247,7 @@ int ProjectStatusFieldsRegistry::GetFieldIndex(
    const AudacityProject& project, const StatusBarField& identifier)
 {
    int result = -1;
-   int currentIndex = 0;
+   int currentIndex = 1;
    Visit(
       [&](const StatusBarFieldItem& item, const auto&)
       {

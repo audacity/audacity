@@ -896,15 +896,15 @@ wxStatusBar* ProjectWindow::CreateProjectStatusBar()
 #endif
    statusBar->SetName(wxT("status_line")); // not localized
 
-   auto handleStatusBarResize = [this](auto& evt)
-   {
-      evt.Skip();
-      auto pProject = FindProject();
-      if (pProject != nullptr)
-         ProjectStatusFieldsRegistry::OnSize(*pProject);
-   };
-
-   statusBar->Bind(wxEVT_SIZE, handleStatusBarResize);
+   statusBar->Bind(
+      wxEVT_SIZE,
+      [this](auto& evt)
+      {
+         evt.Skip();
+         auto pProject = FindProject();
+         if (pProject != nullptr)
+            ProjectStatusFieldsRegistry::OnSize(*pProject);
+      });
 
    // We have a new status bar now, we need a full content update
    if (pProject)
@@ -919,10 +919,6 @@ wxStatusBar* ProjectWindow::CreateProjectStatusBar()
          });
    }
 
-   // Always call OnSize after the status bar was created
-   wxSizeEvent evt;
-   handleStatusBarResize(evt);
-
    return statusBar;
 }
 
@@ -932,15 +928,21 @@ void ProjectWindow::UpdateStatusWidths()
    if (!pProject)
       return;
 
-   const auto fieldsCount = ProjectStatusFieldsRegistry::Count(pProject.get()) + 1;
+   const auto fieldsCount =
+      ProjectStatusFieldsRegistry::Count(pProject.get()) + 1;
    auto statusBar = GetStatusBar();
 
+   bool statusBarRecreated = false;
+
    if (!statusBar || fieldsCount != statusBar->GetFieldsCount())
+   {
       statusBar = CreateProjectStatusBar();
+      statusBarRecreated = true;
+   }
 
    const auto& functions = ProjectStatus::GetStatusWidthFunctions();
 
-   auto &project = *pProject;
+   auto& project = *pProject;
 
    std::vector<int> widths(fieldsCount, 0);
 
@@ -973,7 +975,8 @@ void ProjectWindow::UpdateStatusWidths()
          widths[index++] = width;
       });
 
-   statusBar->SetStatusWidths( fieldsCount, widths.data() );
+   statusBar->SetStatusWidths(fieldsCount, widths.data());
+   ProjectStatusFieldsRegistry::OnSize(project);
 }
 
 void ProjectWindow::MacShowUndockedToolbars(bool show)

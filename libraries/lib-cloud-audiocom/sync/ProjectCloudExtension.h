@@ -19,13 +19,23 @@
 #include <unordered_map>
 
 #include "ClientData.h"
+#include "Observer.h"
 
 class AudacityProject;
 class ProjectSerializer;
 
 namespace cloud::audiocom::sync
 {
-class CLOUD_AUDIOCOM_API ProjectCloudExtension final : public ClientData::Base
+struct CloudStatusChanged final
+{
+   bool IsSyncing { false };
+   bool LastSyncSuccessful { false };
+   bool IsCloudProject { false };
+};
+
+class CLOUD_AUDIOCOM_API ProjectCloudExtension final :
+    public ClientData::Base,
+    public Observer::Publisher<CloudStatusChanged>
 {
 public:
    explicit ProjectCloudExtension(AudacityProject& project);
@@ -40,11 +50,9 @@ public:
 
    void OnLoad();
 
-   void OnSnapshotCreated(
-      std::string_view projectId, std::string_view snapshotId);
+   void OnSnapshotCreated(std::string_view projectId, std::string_view snapshotId);
 
-   void OnSnapshotSynced (
-      std::string_view projectId, std::string_view snapshotId);
+   void OnSnapshotSynced(std::string_view projectId, std::string_view snapshotId);
 
    void OnSyncCompleted(bool successful);
 

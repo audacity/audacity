@@ -806,7 +806,7 @@ void ProjectManager::SetStatusText(
    const auto index = ProjectStatusFieldsRegistry::GetFieldIndex(mProject, field);
 
    if (index >= 0)
-      SetStatusText(text, index + 1);
+      SetStatusText(text, index);
 }
 
 void ProjectManager::SetStatusText(const TranslatableString& text, int number)

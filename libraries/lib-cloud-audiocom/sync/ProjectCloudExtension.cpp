@@ -107,6 +107,8 @@ void ProjectCloudExtension::OnSnapshotCreated(
 
    mProjectId = projectId;
    mSnapshotId = snapshotId;
+
+   Publish({true, false, true});
 }
 
 void ProjectCloudExtension::OnSnapshotSynced(
@@ -119,6 +121,8 @@ void ProjectCloudExtension::OnSnapshotSynced(
 void ProjectCloudExtension::OnSyncCompleted(bool successful)
 {
    mPendingCloudSave = !CloudProjectsDatabase::Get().MarkProjectAsSynced(mProjectId, mSnapshotId);
+
+   Publish({false, successful, true});
 }
 
 std::string_view ProjectCloudExtension::GetCloudProjectId() const
@@ -235,6 +239,8 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
 
    mProjectId = projectData->ProjectId;
    mSnapshotId = projectData->SnapshotId;
+
+   Publish({ false, false, true });
 }
 
 } // namespace cloud::audiocom::sync

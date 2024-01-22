@@ -11,7 +11,11 @@
 
 #pragma once
 
+#include <type_traits>
+#include <wx/weakref.h>
+
 #include "ClientData.h"
+#include "Observer.h"
 
 class AudacityProject;
 
@@ -20,7 +24,10 @@ class wxRect;
 namespace cloud::audiocom::sync
 {
 class ProjectCloudExtension;
-class CloudSyncStatusField final : public ClientData::Base
+class CloudStatusChanged;
+
+class CloudSyncStatusField final :
+    public ClientData::Base
 {
 public:
    explicit CloudSyncStatusField(AudacityProject& project);
@@ -38,7 +45,13 @@ public:
    void SetUploadProgress(double progress);
    void UploadCompleted(bool successful);
 private:
+   class StatusWidget;
+
    void MarkDirty();
+   void OnCloudStatusChanged(const CloudStatusChanged& extension);
+
+   StatusWidget& GetStatusWidget();
+   const StatusWidget& GetStatusWidget() const;
 
    AudacityProject& mProject;
    ProjectCloudExtension& mCloudExtension;
@@ -51,5 +64,9 @@ private:
    } mState { State::Synced };
 
    int mProgress { 0 }; // Progress, 0-100
+
+   wxWeakRef<StatusWidget> mStatusWidget;
+
+   Observer::Subscription mCloudStatusChangedSubscription;
 }; // class CloudSyncStatusField
 } // namespace cloud::audiocom::sync
