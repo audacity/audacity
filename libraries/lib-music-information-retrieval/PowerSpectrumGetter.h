@@ -25,14 +25,14 @@ namespace MIR
 class PowerSpectrumGetter
 {
 public:
-   PowerSpectrumGetter(int fftSize);
+   explicit PowerSpectrumGetter(int fftSize);
    ~PowerSpectrumGetter();
 
    /*!
     * @brief Computes the power spectrum of `buffer` into `output`.
     * @param buffer Input samples of size `fftSize`. Also gets used as
-    * placeholder and gets overwritten, so copy your data elsewhere your data if
-    * you need it again afterwards.
+    * placeholder and gets overwritten, so copy your data elsewhere if you need
+    * it again afterwards.
     * @param output `fftSize / 2 + 1` samples.
     */
    void operator()(float* buffer, float* output);
