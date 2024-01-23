@@ -1102,27 +1102,27 @@ unsigned SpectrumView::Char(
 namespace {
 void DoNextPeakFrequency(AudacityProject &project, bool up)
 {
+   // This only ever considered the left member of a stereo pair!
+   // TODO:  account for the right hand channel too.
+   // (How?  Average corresponding bin power?)
+
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    // Find the first selected wave track that is in a spectrogram view.
-   const WaveTrack *pTrack {};
-   for (auto wt : tracks.Selected<const WaveTrack>()) {
+   const auto hasSpectrum = [](const WaveTrack *wt){
       const auto displays = WaveChannelView::Get(*wt).GetDisplays();
-      bool hasSpectrum = (displays.end() != std::find(
+      return displays.end() != std::find(
          displays.begin(), displays.end(),
-         WaveChannelSubView::Type{
-            WaveChannelViewConstants::Spectrum, {} }
-      ) );
-      if (hasSpectrum) {
-         pTrack = wt;
-         break;
-      }
-   }
-
-   if (pTrack) {
+         WaveChannelSubView::Type{ WaveChannelViewConstants::Spectrum, {} });
+   };
+   const auto range = tracks.Selected<const WaveTrack>();
+   const auto iter = find_if(begin(range), end(range), hasSpectrum);
+   if (iter != end(range)) {
       SpectrumAnalyst analyst;
-      SelectHandle::SnapCenterOnce(analyst, viewInfo, pTrack, up);
+      auto &wt = **iter;
+      SelectHandle::SnapCenterOnce(analyst,
+         viewInfo, **wt.Channels().first, up);
       ProjectHistory::Get( project ).ModifyState(false);
    }
 }
