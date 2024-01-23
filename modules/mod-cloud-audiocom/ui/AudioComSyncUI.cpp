@@ -44,8 +44,19 @@
 
 #include "HelpSystem.h"
 
+#include "images/CloudImages.hpp"
+
 namespace cloud::audiocom::sync
 {
+namespace
+{
+const auto imageInititalizer = []()
+{
+   bin2c_init_CLOUDIMAGES_HPP();
+   return true;
+}();
+}
+
 class AudioComShareUI : public CloudSyncUI
 {
 public:

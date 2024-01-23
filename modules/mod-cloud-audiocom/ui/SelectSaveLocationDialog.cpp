@@ -13,12 +13,16 @@
 
 #include <wx/button.h>
 #include <wx/checkbox.h>
+#include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
+#include <wx/statbmp.h>
 
 #include "ShuttleGui.h"
 
 #include "CloudModuleSettings.h"
+
+#include "images/CloudImages.hpp"
 
 namespace cloud::audiocom::sync
 {
@@ -27,79 +31,96 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
          parent, wxID_ANY, XO("Audacity"), wxDefaultPosition, { 442, -1 },
          wxDEFAULT_DIALOG_STYLE)
 {
-   ShuttleGui S(this, eIsCreating);
+   wxFont titleFont = GetFont();
+   titleFont.SetWeight(wxFONTWEIGHT_BOLD);
+   titleFont.SetPointSize(titleFont.GetPointSize() * 2);
 
-   wxFont font;
+   wxFont descriptionFont = GetFont();
+   descriptionFont.SetPointSize(descriptionFont.GetPointSize() * 3 / 2);
 
-   S.StartVerticalLay();
-   {
-      S.StartInvisiblePanel(16);
-      S.StartVerticalLay();
-      {
-         S.StartHorizontalLay(wxEXPAND, 0);
-         {
-            S.AddSpace(0, 0, 1);
-            auto title = S.AddVariableText(XO("How would you like to save?"));
-            font = title->GetFont();
-            font.SetWeight(wxFONTWEIGHT_BOLD);
-            font.SetPointSize(font.GetPointSize() + 2);
-            title->SetFont(font);
-            S.AddSpace(0, 0, 1);
-         }
-         S.EndHorizontalLay();
-         S.StartHorizontalLay();
-         {
-            S.StartPanel()->SetMinSize(wxSize { 232, -1 });
-            {
-               S.AddVariableText(XO("Save to the &cloud"))->SetFont(font);
-               S.AddSpace(16);
-               S.AddFixedText(
-                  XO("Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"),
-                  false, 200);
+   auto title = safenew wxStaticText(
+      this, wxID_ANY, XO("How would you like to save?").Translation());
+   title->SetFont(titleFont);
 
-               S.AddSpace(0, 16, 1);
+   auto saveToCloudImage =
+      safenew wxStaticBitmap(this, wxID_ANY, *bin2c_SaveRemote_png);
 
-               S.AddButton(XO("Save to cloud"), wxALIGN_LEFT)
-                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_SAVE); });
-            }
-            S.EndPanel();
-            S.StartPanel()->SetMinSize(wxSize { 232, -1 });
-            {
-               S.AddVariableText(XO("On your c&omputer"))->SetFont(font);
-               S.AddSpace(16);
-               S.AddFixedText(XO("Files are saved on your device"), false, 200);
+   auto saveToCloudTitle = safenew wxStaticText(
+      this, wxID_ANY, XO("Save to the &cloud").Translation());
+   saveToCloudTitle->SetFont(titleFont);
 
-               S.AddSpace(0, 16, 1);
+   auto saveToCloudDescription = safenew wxStaticText(
+      this, wxID_ANY,
+      XO("Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others")
+         .Translation());
+   saveToCloudDescription->SetFont(descriptionFont);
+   saveToCloudDescription->Wrap(bin2c_SaveLocally_png->GetWidth() - 32);
 
-               S.AddButton(XO("Save to computer"), wxALIGN_LEFT)
-                  ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
-            }
-            S.EndPanel();
-         }
-         S.EndHorizontalLay();
-      }
-      S.EndVerticalLay();
-      S.EndInvisiblePanel();
+   auto saveToCloudButton =
+      safenew wxButton(this, wxID_ANY, XXO("Save to &cloud").Translation());
 
-      S.AddWindow(safenew wxStaticLine { S.GetParent() }, wxEXPAND);
+   auto saveToComputerImage =
+      safenew wxStaticBitmap(this, wxID_ANY, *bin2c_SaveLocally_png);
 
-      S.SetBorder(16);
+   auto saveToComputerTitle = safenew wxStaticText(
+      this, wxID_ANY, XO("On your c&omputer").Translation());
+   saveToComputerTitle->SetFont(titleFont);
 
-      auto checkbox = S.AddCheckBox(
-         XO("&Remember my choice and don't show again"),
-         DoNotShowCloudSyncDialog.Read());
+   auto saveToComputerDescription = safenew wxStaticText(
+      this, wxID_ANY, XO("Files are saved on your device").Translation());
+   saveToComputerDescription->SetFont(descriptionFont);
+   saveToComputerDescription->Wrap(bin2c_SaveLocally_png->GetWidth() - 32);
 
-         checkbox->Bind(
-         wxEVT_CHECKBOX, [checkbox](auto&)
-         {
-            DoNotShowCloudSyncDialog.Write(checkbox->GetValue());
-            gPrefs->Flush();
-         });
-   }
-   S.EndVerticalLay();
+   auto saveToComputerButton =
+      safenew wxButton(this, wxID_ANY, XXO("Save to &computer").Translation());
 
-   Layout();
-   Fit();
+   auto rememberChoiceCheckbox = safenew wxCheckBox(
+      this, wxID_ANY,
+      XO("&Remember my choice and don't show again").Translation());
+
+   rememberChoiceCheckbox->SetValue(DoNotShowCloudSyncDialog.Read());
+
+   auto sizer = safenew wxBoxSizer(wxVERTICAL);
+
+   sizer->Add(title, wxSizerFlags {}.CenterHorizontal().Border(wxTOP, 16));
+
+   auto topSizer = safenew wxBoxSizer(wxHORIZONTAL);
+
+   auto cloudSizer = safenew wxBoxSizer(wxVERTICAL);
+
+   cloudSizer->Add(saveToCloudImage, wxSizerFlags {});
+   cloudSizer->Add(
+      saveToCloudTitle, wxSizerFlags {}.Border(wxTOP | wxBOTTOM | wxLEFT, 16));
+   cloudSizer->Add(saveToCloudDescription, wxSizerFlags {}.Border(wxLEFT, 16));
+   cloudSizer->AddStretchSpacer(1);
+   cloudSizer->Add(
+      saveToCloudButton, wxSizerFlags {}.Border(wxTOP | wxBOTTOM | wxLEFT, 16));
+
+   topSizer->Add(cloudSizer, wxSizerFlags {}.Expand());
+
+   auto computerSizer = safenew wxBoxSizer(wxVERTICAL);
+
+   computerSizer->Add(saveToComputerImage, wxSizerFlags {});
+   computerSizer->Add(
+      saveToComputerTitle,
+      wxSizerFlags {}.Border(wxTOP | wxBOTTOM | wxLEFT, 16));
+   computerSizer->Add(
+      saveToComputerDescription, wxSizerFlags {}.Border(wxLEFT, 16));
+   computerSizer->AddStretchSpacer(1);
+   computerSizer->Add(
+      saveToComputerButton,
+      wxSizerFlags {}.Border(wxTOP | wxBOTTOM | wxLEFT, 16));
+
+   topSizer->Add(computerSizer, wxSizerFlags {}.Expand());
+
+   sizer->Add(topSizer, wxSizerFlags {}.Expand().Border(wxALL, 16));
+
+   sizer->Add(safenew wxStaticLine(this), wxSizerFlags {}.Expand());
+
+   sizer->Add(rememberChoiceCheckbox, wxSizerFlags {}.Border(wxALL, 16));
+
+   SetSizerAndFit(sizer);
+
    Center();
 
    Bind(
@@ -114,6 +135,18 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
 
          EndModal(wxID_CANCEL);
       });
+
+   rememberChoiceCheckbox->Bind(
+      wxEVT_CHECKBOX,
+      [rememberChoiceCheckbox](auto&)
+      {
+         DoNotShowCloudSyncDialog.Write(rememberChoiceCheckbox->GetValue());
+         gPrefs->Flush();
+      });
+
+   saveToCloudButton->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_SAVE); });
+   saveToComputerButton->Bind(
+      wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
 }
 
 SelectSaveLocationDialog::~SelectSaveLocationDialog()
