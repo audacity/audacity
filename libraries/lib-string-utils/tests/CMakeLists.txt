@@ -6,5 +6,5 @@ add_unit_test(
       StringUtils.cpp
    LIBRARIES
       lib-string-utils
-      wxwidgets::base
+      wxBase
 )
