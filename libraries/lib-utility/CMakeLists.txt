@@ -32,7 +32,6 @@ set( SOURCES
    IteratorX.h
    MemoryX.cpp
    MemoryX.h
-   MessageBuffer.h
    ModuleConstants.cpp
    ModuleConstants.h
    MemoryStream.cpp
@@ -40,7 +39,6 @@ set( SOURCES
    Observer.cpp
    Observer.h
    PackedArray.h
-   spinlock.h
    Tuple.cpp
    Tuple.h
    TypeEnumerator.cpp
