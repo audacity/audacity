@@ -13,6 +13,7 @@
 #include <chrono>
 #include <functional>
 #include <string_view>
+#include <string>
 #include <mutex>
 
 #include "Observer.h"
