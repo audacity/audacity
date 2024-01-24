@@ -9,9 +9,10 @@
 
 **********************************************************************/
 
-#include <wx/log.h>
-
+#include <atomic>
 #include <thread>
+
+#include <wx/log.h>
 
 #include "CloudSyncService.h"
 #include "sync/CloudSyncUI.h"
