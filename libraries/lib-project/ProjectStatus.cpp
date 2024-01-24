@@ -285,7 +285,7 @@ public:
 
    ~ProjectStatusTextField() override = default;
 
-   void SetText(AudacityProject& project, const TranslatableString& text)
+   void SetText(AudacityProject& project, const TranslatableString& text) override
    {
       auto& projectStatus = ProjectStatus::Get(project);
 
