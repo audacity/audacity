@@ -28,7 +28,7 @@ if(${_OPT}has_sentry_reporting)
         lib-string-utils # ToUtf8
         lib-uuid # UUIDs are required as an event identifier.
         rapidjson::rapidjson # Protocol is JSON based
-        wxwidgets::base # Required to retrieve the OS information
+        wxBase # Required to retrieve the OS information
     )
 
     set ( DEFINES
