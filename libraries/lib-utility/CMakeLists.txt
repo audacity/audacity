@@ -16,6 +16,8 @@ correspond to things in the standard.
 ]]#
 
 set( SOURCES
+   AppEvents.cpp
+   AppEvents.h
    BufferedStreamReader.cpp
    BufferedStreamReader.h
    CFResources.cpp
