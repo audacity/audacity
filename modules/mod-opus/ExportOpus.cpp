@@ -22,6 +22,8 @@
 #include "wxFileNameWrapper.h"
 #include "Mix.h"
 
+#include "MemoryX.h"
+
 #include "Track.h"
 #include "Tags.h"
 
@@ -36,14 +38,6 @@
 
 namespace
 {
-// Detect this computer's endianness
-// This should go to utils?
-bool IsLittleEndian()
-{
-   const std::uint32_t x = 1u;
-   return static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
-   // We will assume the same for other widths!
-}
 
 TranslatableString GetOpusEncErrorString(int error)
 {
@@ -319,12 +313,7 @@ class OpusExportProcessor final : public ExportProcessor
             }
             else
             {
-               IntType swapped = 0;
-               for (size_t i = 0; i < sizeof (IntType); ++i)
-               {
-                  swapped <<= 8;
-                  swapped |= (value >> (i * 8)) & 0xFF;
-               }
+               IntType swapped = SwapIntBytes(value);
                Write(&swapped, sizeof (IntType));
             }
          }
