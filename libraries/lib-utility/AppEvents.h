@@ -17,10 +17,16 @@ namespace AppEvents
  */
 UTILITY_API void OnAppInitialized(std::function<void()> callback);
 
-class UTILITY_API AppEventsProvider /* not final */
+/*! Base class for application events providers.
+ *  This class has no virtual methods and should not be publicly derived from.
+ *  Derived classes should use the provided interface to fire events.
+ *  It is safe to have multiple instances of derived classes, but it does not
+ *  make much sense.
+ */
+class UTILITY_API ProviderBase /* not final */
 {
 protected:
-   virtual ~AppEventsProvider() = default;
+   virtual ~ProviderBase() = default;
 
    void HandleAppInitialized();
 };

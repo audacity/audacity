@@ -37,7 +37,7 @@ class AudacityProject;
 
 class AudacityApp final
    : public wxApp
-   , private AppEvents::AppEventsProvider
+   , private AppEvents::ProviderBase
 {
  public:
    AudacityApp();

@@ -43,7 +43,7 @@ void OnAppInitialized(std::function<void()> callback)
       handlers.appInitialized.push_back(std::move(callback));
 }
 
-void AppEventsProvider::HandleAppInitialized()
+void ProviderBase::HandleAppInitialized()
 {
    auto& handlers = GetEventHandlers();
 
