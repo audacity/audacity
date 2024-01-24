@@ -14,7 +14,7 @@ public:
    WavMirAudioReader(
       const std::string& filename, std::optional<double> timeLimit = {});
 
-   int GetSampleRate() const override;
+   double GetSampleRate() const override;
    long long GetNumSamples() const override;
    void
    ReadFloats(float* buffer, long long start, size_t numFrames) const override;

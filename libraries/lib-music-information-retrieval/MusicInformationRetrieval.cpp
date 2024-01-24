@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "MusicInformationRetrieval.h"
+#include "DecimatingMirAudioReader.h"
 #include "GetMeterUsingTatumQuantizationFit.h"
 #include "MirAudioReader.h"
 #include "MirUtils.h"
@@ -164,7 +165,8 @@ std::optional<MusicalMeter> GetMusicalMeterFromSignal(
       // A file longer than 1 minute is most likely not a loop, and processing
       // it would be costly.
       return {};
+   DecimatingMirAudioReader decimatedAudio { audio };
    return GetMeterUsingTatumQuantizationFit(
-      audio, tolerance, progressCallback, debugOutput);
+      decimatedAudio, tolerance, progressCallback, debugOutput);
 }
 } // namespace MIR

@@ -3,6 +3,8 @@ Library for Music Information Retrieval (MIR) algorithms.
 ]]
 
 set( SOURCES
+   DecimatingMirAudioReader.cpp
+   DecimatingMirAudioReader.h
    GetMeterUsingTatumQuantizationFit.cpp
    GetMeterUsingTatumQuantizationFit.h
    MirAudioReader.cpp
@@ -14,12 +16,16 @@ set( SOURCES
    MirUtils.h
    MusicInformationRetrieval.cpp
    MusicInformationRetrieval.h
+   PowerSpectrumGetter.cpp
+   PowerSpectrumGetter.h
    StftFrameProvider.cpp
    StftFrameProvider.h
 )
 
 set( LIBRARIES
-   lib-math
+PUBLIC
+   pffft
+   lib-utility
    lib-file-formats-interface
 )
 

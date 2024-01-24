@@ -9,27 +9,44 @@
 
 **********************************************************************/
 #include "MirDsp.h"
-#include "FFT.h"
 #include "IteratorX.h"
+#include "MemoryX.h"
 #include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
+#include "PowerSpectrumGetter.h"
 #include "StftFrameProvider.h"
 
 #include <cassert>
 #include <cmath>
 #include <numeric>
+#include <pffft.h>
 
 namespace MIR
 {
 namespace
 {
+constexpr float GetLog2(float x)
+{
+   // https://stackoverflow.com/a/28730362
+   union
+   {
+      float val;
+      int32_t x;
+   } u = { x };
+   auto log_2 = (float)(((u.x >> 23) & 255) - 128);
+   u.x &= ~(255 << 23);
+   u.x += 127 << 23;
+   log_2 += ((-0.3358287811f) * u.val + 2.0f) * u.val - 0.65871759316667f;
+   return log_2;
+}
+
 float GetNoveltyMeasure(
    const std::vector<float>& prevPowSpec, const std::vector<float>& powSpec)
 {
    auto k = 0;
    return std::accumulate(
-      powSpec.begin(), powSpec.end(), 0., [&](float a, float mag) {
+      powSpec.begin(), powSpec.end(), 0.f, [&](float a, float mag) {
          // Half-wave-rectified stuff
          return a + std::max(0.f, mag - prevPowSpec[k++]);
       });
@@ -46,7 +63,7 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
    std::transform(x.begin(), x.end(), movingAverage.begin(), [&](float) {
       const auto m = IotaRange(-M, M + 1);
       const auto y =
-         std::accumulate(m.begin(), m.end(), 0., [&](double y, int i) {
+         std::accumulate(m.begin(), m.end(), 0.f, [&](float y, int i) {
             auto k = n + i;
             while (k < 0)
                k += x.size();
@@ -61,7 +78,7 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
       // larger this multiplier, the less peaks will remain. This value was
       // found by trial and error, using the benchmarking framework
       // (see TatumQuantizationFitBenchmarking.cpp)
-      constexpr auto thresholdRaiser = 1.5;
+      constexpr auto thresholdRaiser = 1.5f;
       return y * thresholdRaiser;
    });
    return movingAverage;
@@ -74,13 +91,29 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
       return x;
    const auto N = x.size();
    assert(IsPowOfTwo(N));
-   PowerSpectrum(N, x.data(), x.data());
-   // We need the entire power spectrum for the auto-correlation, not only the
-   // left-hand side.
-   std::copy(x.begin() + 1, x.begin() + N / 2 - 1, x.rbegin());
-   InverseRealFFT(N, x.data(), nullptr, x.data());
-   // For efficiency, only keep the positive half of this symmetric signal.
+   PFFFT_Setup* setup = pffft_new_setup(N, PFFFT_REAL);
+   Finally Do { [&] { pffft_destroy_setup(setup); } };
+   std::vector<float> work(N);
+   pffft_transform_ordered(
+      setup, x.data(), x.data(), work.data(), PFFFT_FORWARD);
+
+   // Transform to a power spectrum, but preserving the layout expected by PFFFT
+   // in preparation for the inverse transform.
+   x[0] *= x[0];
+   x[1] *= x[1];
+   for (auto n = 2; n < N; n += 2)
+   {
+      x[n] = x[n] * x[n] + x[n + 1] * x[n + 1];
+      x[n + 1] = 0.f;
+   }
+
+   pffft_transform_ordered(
+      setup, x.data(), x.data(), work.data(), PFFFT_BACKWARD);
+
+   // The second half of the circular autocorrelation is the mirror of the first
+   // half. We are economic and only keep the first half.
    x.erase(x.begin() + N / 2 + 1, x.end());
+
    const auto normalizer = 1 / x[0];
    std::transform(x.begin(), x.end(), x.begin(), [normalizer](float x) {
       return x * normalizer;
@@ -106,12 +139,12 @@ std::vector<float> GetOnsetDetectionFunction(
    std::vector<float> firstPowSpec;
    std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
 
+   PowerSpectrumGetter getPowerSpectrum { frameSize };
+
    auto frameCounter = 0;
    while (frameProvider.GetNextFrame(buffer))
    {
-      // StftFrameProvider already applies a normalizing Hann window, no need to
-      // either window it here or normalize it by frame size afterwards.
-      PowerSpectrum(frameSize, buffer.data(), powSpec.data());
+      getPowerSpectrum(buffer.data(), powSpec.data());
 
       // Compress the frame as per section (6.5) in Müller, Meinard.
       // Fundamentals of music processing: Audio, analysis, algorithms,
@@ -119,8 +152,7 @@ std::vector<float> GetOnsetDetectionFunction(
       constexpr auto gamma = 100.f;
       std::transform(
          powSpec.begin(), powSpec.end(), powSpec.begin(),
-         // Using `logf` on Linux fails. #ifdef it ?
-         [gamma](float x) { return std::log(1 + gamma * std::sqrt(x)); });
+         [gamma](float x) { return GetLog2(1 + gamma * std::sqrt(x)); });
 
       if (firstPowSpec.empty())
          firstPowSpec = powSpec;

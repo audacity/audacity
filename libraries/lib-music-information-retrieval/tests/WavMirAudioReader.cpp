@@ -32,7 +32,7 @@ WavMirAudioReader::WavMirAudioReader(
          mutableSamples.begin());
 }
 
-int WavMirAudioReader::GetSampleRate() const
+double WavMirAudioReader::GetSampleRate() const
 {
    return mSampleRate;
 }

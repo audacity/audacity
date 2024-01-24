@@ -18,7 +18,7 @@ ClipMirAudioReader::ClipMirAudioReader(const ClipInterface& clip)
 {
 }
 
-int ClipMirAudioReader::GetSampleRate() const
+double ClipMirAudioReader::GetSampleRate() const
 {
    return mClip.GetRate();
 }
