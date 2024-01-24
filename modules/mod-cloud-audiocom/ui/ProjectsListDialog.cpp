@@ -69,7 +69,7 @@ public:
                               0)(duration_cast<hours>(time_passed).count())
             .Translation();
 
-      return wxDateTime(time).Format("%d.%m.%Y %H:%M");
+      return wxDateTime(static_cast<time_t>(time)).Format("%d.%m.%Y %H:%M");
    }
 
    static wxString FormatSize(int64_t size)
@@ -218,7 +218,7 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
 
    for (auto i = 0; i < mProjectsTableData->GetNumberCols(); ++i)
       mProjectsTable->SetColSize(i, mProjectsTableData->GetColWidth(i));
-   
+
    mPageLabel = safenew wxStaticText { this, wxID_ANY, {} };
    mPrevPageButton = safenew  wxButton { this, wxID_ANY, XO("Prev").Translation() };
    mNextPageButton = safenew  wxButton { this, wxID_ANY, XO("Next").Translation() };
