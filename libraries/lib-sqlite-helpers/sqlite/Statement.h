@@ -99,7 +99,7 @@ public:
    RunResult& operator=(const RunResult&) = delete;
    RunResult& operator=(RunResult&&) noexcept;
 
-   ~RunResult() noexcept;
+   ~RunResult();
 
    bool IsOk() const noexcept;
    bool HasRows() const noexcept;

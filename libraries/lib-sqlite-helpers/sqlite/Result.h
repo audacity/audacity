@@ -42,33 +42,24 @@ public:
    T& operator* () &
    {
       if (!HasValue())
-         std::get<Error>(mValue).Raise();
+         std::get_if<Error>(&mValue)->Raise();
 
-      return std::get<T>(mValue);
+      return *std::get_if<T>(&mValue);
    }
 
    const T& operator*() const&
    {
-      if (!HasValue())
-         std::get<Error>(mValue).Raise();
-
-      return std::get<T>(mValue);
+      return const_cast<Result*>(this)->operator*();
    }
 
-   T* operator-> () 
+   T* operator-> ()
    {
-      if (!HasValue())
-         std::get<Error>(mValue).Raise();
-
-      return &std::get<T>(mValue);
+      return &operator*();
    }
 
    const T* operator-> () const
    {
-      if (!HasValue())
-         std::get<Error>(mValue).Raise();
-
-      return &std::get<T>(mValue);
+      return &operator*();
    }
 
    T&& operator* () &&
