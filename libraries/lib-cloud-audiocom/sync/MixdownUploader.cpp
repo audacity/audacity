@@ -11,7 +11,7 @@
 
 #include "MixdownUploader.h"
 
-#include <rapidjson/Document.h>
+#include <rapidjson/document.h>
 
 #include "WaveTrack.h"
 
