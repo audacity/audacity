@@ -14,6 +14,7 @@
 #include <cassert>
 #include <chrono>
 #include <mutex>
+#include <string>
 
 #include "CloudSettings.h"
 
@@ -95,7 +96,7 @@ public:
    }
 
    void ShowDownloadError(std::string) override
-   {      
+   {
    }
 
    sync::DownloadConflictResolution
@@ -180,7 +181,7 @@ void PerformProjectGetRequest(
                auto removeRequest =
                   finally([response] { RemovePendingRequest(response); });
 
-               auto body = response->readAll<std::string>();
+               auto body = response->template readAll<std::string>();
 
                if (response->getError() != NetworkError::NoError)
                {
@@ -603,7 +604,7 @@ void CloudSyncService::OnOpen(AudacityProject& project, const std::string& path)
                         return;
                      }
 
-                     auto& cloudExtension = 
+                     auto& cloudExtension =
                         sync::ProjectCloudExtension::Get(project);
 
                      cloudExtension.SuppressAutoDownload();
@@ -621,7 +622,7 @@ void CloudSyncService::OnOpen(AudacityProject& project, const std::string& path)
                            {
                               GetUI().ShowDownloadError(result.ErrorMessage);
                               return;
-                           }                          
+                           }
                         });
                   });
             });
