@@ -14,7 +14,9 @@
 #include <string>
 #include <vector>
 
-typedef struct SNDFILE_tag SNDFILE;
+// SNDFILE is defined differently between libsndfile versions
+// making forward declarations impossible.
+#include <sndfile.h>
 
 namespace LibFileFormats
 {

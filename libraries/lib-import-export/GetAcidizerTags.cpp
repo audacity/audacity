@@ -11,7 +11,6 @@
 #include "GetAcidizerTags.h"
 #include "AcidizerTags.h"
 
-#include "sndfile.h"
 #include <algorithm>
 #include <array>
 #include <cstring> // memset
