@@ -12,10 +12,12 @@
 
 #include "AcidizerTags.h"
 
+// SNDFILE is defined differently between libsndfile versions
+// making forward declarations impossible.
+#include <sndfile.h>
+
 #include <memory>
 #include <string>
-
-typedef struct SNDFILE_tag SNDFILE;
 
 namespace LibImportExport
 {

@@ -1,7 +1,6 @@
 #include "LibsndfileTagger.h"
 #include "AcidizerTags.h"
 
-#include "sndfile.h"
 #include <array>
 #include <cassert>
 #include <cmath>
