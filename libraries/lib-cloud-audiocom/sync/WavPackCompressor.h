@@ -11,7 +11,7 @@
 #pragma once
 
 #include <cstdint>
-#include <numeric>
+#include <limits>
 #include <optional>
 #include <vector>
 

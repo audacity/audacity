@@ -11,7 +11,10 @@
 
 #include "WavPackCompressor.h"
 
+#include <cmath>
 #include <cstdint>
+#include <cstring>
+
 #include <wavpack/wavpack.h>
 
 #include "SampleFormat.h"
