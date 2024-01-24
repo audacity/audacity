@@ -4,6 +4,9 @@ Synchronization objects and parallel algorithms
 
 set( SOURCES
    MessageBuffer.h
+   ParallelProgress.h
+   ParallelReduce.h
+   Splittable.h
    spinlock.h
 )
 set( LIBRARIES
