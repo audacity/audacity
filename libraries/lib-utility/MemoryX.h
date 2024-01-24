@@ -12,6 +12,8 @@
 #include <functional>
 #include <limits>
 
+#include <cstdint>
+
 /*
  * ArrayOf<X>
  * Not to be confused with std::array (which takes a fixed size) or std::vector
@@ -194,7 +196,7 @@ template<typename F> Finally(F) -> Finally<F>;
 #include <algorithm>
 
 /**
-  \brief Structure used by ValueRestorer 
+  \brief Structure used by ValueRestorer
  */
 template< typename T >
 struct RestoreValue {
