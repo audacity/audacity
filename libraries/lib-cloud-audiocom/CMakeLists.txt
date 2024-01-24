@@ -58,7 +58,7 @@ set ( LIBRARIES
       lib-crypto-interface
       lib-import-export-interface
       wavpack::wavpack # Required for the WavPackCompressor
-      wxwidgets::base # Required to retrieve the OS information
+      wxBase # Required to retrieve the OS information
 )
 
 set ( DEFINES
