@@ -73,12 +73,11 @@ public:
 private:
    // Calculate one column of the spectrum
    bool CalculateOneSpectrum(
+      std::optional<AudioSegmentSampleView> &sampleCacheHolder,
       const SpectrogramSettings& settings, const WaveChannelInterval &clip,
       const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
       const std::vector<float>& gainFactors, float* __restrict scratch,
       float* __restrict out) const;
-
-   mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };
 
 class SpecPxCache {

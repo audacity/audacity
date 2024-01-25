@@ -92,6 +92,7 @@ bool SpecCache::Matches(
 }
 
 bool SpecCache::CalculateOneSpectrum(
+   std::optional<AudioSegmentSampleView> &sampleCacheHolder,
    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
    const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
    const std::vector<float>& gainFactors, float* __restrict scratch,
@@ -169,10 +170,10 @@ bool SpecCache::CalculateOneSpectrum(
          if (myLen > 0) {
             constexpr auto iChannel = 0u;
             constexpr auto mayThrow = false; // Don't throw just for display
-            mSampleCacheHolder.emplace(
+            sampleCacheHolder.emplace(
                clip.GetSampleView(from, myLen, mayThrow));
             floats.resize(myLen);
-            mSampleCacheHolder->Copy(floats.data(), myLen);
+            sampleCacheHolder->Copy(floats.data(), myLen);
             useBuffer = floats.data();
             if (copy) {
                if (useBuffer)
@@ -393,6 +394,7 @@ void SpecCache::Populate(
 
       #pragma omp parallel for private(tls)
 #endif
+      std::optional<AudioSegmentSampleView> sampleCacheHolder;
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
 #ifdef _OPENMP
@@ -402,7 +404,7 @@ void SpecCache::Populate(
 #else
          float* buffer = &scratch[0];
 #endif
-         CalculateOneSpectrum(
+         CalculateOneSpectrum(sampleCacheHolder,
             settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
             gainFactors, buffer, &freq[0]);
       }
@@ -417,7 +419,7 @@ void SpecCache::Populate(
          const int limit = std::min((int)(0.5 + fftLen * pixelsPerSample), 100);
          for (int ii = 0; ii < limit; ++ii)
          {
-            const bool result = CalculateOneSpectrum(
+            const bool result = CalculateOneSpectrum(sampleCacheHolder,
                settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
                gainFactors, &scratch[0], &freq[0]);
             if (!result)
@@ -427,7 +429,7 @@ void SpecCache::Populate(
          xx = upperBoundX;
          for (int ii = 0; ii < limit; ++ii)
          {
-            const bool result = CalculateOneSpectrum(
+            const bool result = CalculateOneSpectrum(sampleCacheHolder,
                settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
                gainFactors, &scratch[0], &freq[0]);
             if (!result)
