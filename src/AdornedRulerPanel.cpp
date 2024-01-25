@@ -1413,44 +1413,16 @@ void AdornedRulerPanel::ReCreateButtons()
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
-   auto buttonMaker = [&]
-   (wxWindowID id, teBmps bitmap, bool toggle)
-   {
-      const auto button =
-      ToolBar::MakeButton(
-         this,
-         bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
-         bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-         bitmap, bitmap, bitmap,
-         id, position, toggle, size
-      );
-
-      position.x += size.GetWidth();
-      mButtons[iButton++] = button;
-      return button;
-   };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
-   ToolBar::MakeAlternateImages(
-	   *button, 3,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointer, bmpRecordPointer, bmpRecordPointer,
-	   size);
-   ToolBar::MakeAlternateImages(
-	   *button, 2,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointerPinned, bmpRecordPointerPinned, bmpRecordPointerPinned,
-	   size);
-   ToolBar::MakeAlternateImages(
-      *button, 1,
+   const auto button = ToolBar::MakeButton(
+      this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-      //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
       bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
-      size);
+      OnTogglePinnedStateID, position, true, size
+   );
+
+   position.x += size.GetWidth();
+   mButtons[iButton++] = button;
 
    UpdateButtonStates();
 }
@@ -2206,21 +2178,12 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
-      // The button always reflects the pinned head preference, even though
-      // there is also a Playback preference that may overrule it for scrubbing
-      bool state = TracksPrefs::GetPinnedHeadPreference();
-      auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      if( !state )
-         pinButton->PopUp();
-      else
-         pinButton->PushDown();
-      auto gAudioIO = AudioIO::Get();
-      pinButton->SetAlternateIdx(
-         (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
+      auto timelineOptionsButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+      timelineOptionsButton->PopUp();
       // Bug 1584: Tooltip now shows what clicking will do.
       // Bug 2357: Action of button (and hence tooltip wording) updated.
       const auto label = XO("Timeline Options");
-      common(*pinButton, wxT("PinnedHead"), label);
+      common(*timelineOptionsButton, wxT("PinnedHead"), label);
    }
 }
 
