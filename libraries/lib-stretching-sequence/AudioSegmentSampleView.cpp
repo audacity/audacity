@@ -34,6 +34,19 @@ AudioSegmentSampleView::AudioSegmentSampleView(size_t length)
 {
 }
 
+AudioSegmentSampleView::AudioSegmentSampleView(
+   AudioSegmentSampleView &&other) = default;
+
+AudioSegmentSampleView &
+AudioSegmentSampleView::operator=(AudioSegmentSampleView &&other)
+{
+   std::swap(mBlockViews, other.mBlockViews);
+   std::swap(mStart, other.mStart);
+   std::swap(mLength, other.mLength);
+   std::swap(mIsSilent, other.mIsSilent);
+   return *this;
+}
+
 void AudioSegmentSampleView::Copy(float* buffer, size_t bufferSize) const
 {
    mIsSilent ? std::fill(buffer, buffer + bufferSize, 0.f) :

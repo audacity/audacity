@@ -38,5 +38,5 @@ private:
       size_t iChannel, float* buffer, sampleCount start, size_t len) const;
 
    const ClipInterface& mClip;
-   std::array<std::optional<AudioSegmentSampleView>, 2> mCache;
+   mutable std::array<AudioSegmentSampleView, 2> mCache;
 };

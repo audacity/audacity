@@ -169,10 +169,9 @@ bool SpecCache::CalculateOneSpectrum(
          if (myLen > 0) {
             constexpr auto iChannel = 0u;
             constexpr auto mayThrow = false; // Don't throw just for display
-            mSampleCacheHolder.emplace(
-               clip.GetSampleView(from, myLen, mayThrow));
+            mSampleCache = clip.GetSampleView(from, myLen, mayThrow);
             floats.resize(myLen);
-            mSampleCacheHolder->Copy(floats.data(), myLen);
+            mSampleCache.Copy(floats.data(), myLen);
             useBuffer = floats.data();
             if (copy) {
                if (useBuffer)

@@ -66,7 +66,7 @@ void ClipTimeAndPitchSource::Pull(
          // Query `samplesPerChannel` samples ; `AudioSegmentSampleView::Copy`
          // will zero from `numSamplesToRead` to `samplesPerChannel` if needed.
          channelView.Copy(buffers[i], samplesPerChannel);
-         newViews.push_back(std::move(channelView));
+         newViews.emplace_back(std::move(channelView));
          if (!forward)
             ReverseSamples(
                reinterpret_cast<samplePtr>(buffers[i]), floatSample, 0,

@@ -3485,18 +3485,20 @@ WaveTrack::GetSampleView(double t0, double t1, bool mayThrow) const
 ChannelSampleView
 WaveChannel::GetSampleView(double t0, double t1, bool mayThrow) const
 {
+   std::vector<AudioSegmentSampleView> segments;
    std::vector<std::shared_ptr<const WaveChannelInterval>>
       intersectingIntervals;
    for (const auto& interval : Intervals())
       if (interval->Intersects(t0, t1))
          intersectingIntervals.push_back(interval);
-   if (intersectingIntervals.empty())
-      return { AudioSegmentSampleView {
-         (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t() } };
+   if (intersectingIntervals.empty()) {
+      segments.emplace_back(
+         (TimeToLongSamples(t1) - TimeToLongSamples(t0)).as_size_t());
+      return segments;
+   }
    std::sort(
       intersectingIntervals.begin(), intersectingIntervals.end(),
       [](const auto& a, const auto& b) { return a->Start() < b->Start(); });
-   std::vector<AudioSegmentSampleView> segments;
    segments.reserve(2 * intersectingIntervals.size() + 1);
    for (auto i = 0u; i < intersectingIntervals.size();++i)
    {
