@@ -80,7 +80,6 @@ set( IMAGE_LIST
    Play.png
    PlayDisabled.png
    PlayPointer.png
-   PlayPointerPinned.png
    Record.png
    RecordBelow.png
    RecordBelowDisabled.png
@@ -88,7 +87,6 @@ set( IMAGE_LIST
    RecordBesideDisabled.png
    RecordDisabled.png
    RecordPointer.png
-   RecordPointerPinned.png
    Redo.png
    RedoDisabled.png
    Rewind.png
