@@ -40,6 +40,7 @@
 #include <wx/ffile.h>
 #include <wx/log.h>
 
+#include "AudioSegmentSampleView.h"
 #include "BasicUI.h"
 #include "Dither.h"
 #include "SampleBlock.h"

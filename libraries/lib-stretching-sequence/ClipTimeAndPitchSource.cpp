@@ -11,6 +11,7 @@
 
 #include "ClipTimeAndPitchSource.h"
 #include "ClipInterface.h"
+#include "AudioSegmentSampleView.h"
 
 
 #include <cassert>
@@ -40,6 +41,8 @@ ClipTimeAndPitchSource::ClipTimeAndPitchSource(
     , mPlaybackDirection { direction }
 {
 }
+
+ClipTimeAndPitchSource::~ClipTimeAndPitchSource() = default;
 
 void ClipTimeAndPitchSource::Pull(
    float* const* buffers, size_t samplesPerChannel)

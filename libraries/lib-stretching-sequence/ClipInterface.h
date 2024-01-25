@@ -10,9 +10,10 @@
 **********************************************************************/
 #pragma once
 
-#include "AudioSegmentSampleView.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
+
+class AudioSegmentSampleView;
 
 class STRETCHING_SEQUENCE_API ClipTimes
 {

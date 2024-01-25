@@ -11,6 +11,7 @@
 #pragma once
 
 #include "ClipInterface.h"
+#include <vector>
 
 class FloatVectorClip : public ClipInterface
 {

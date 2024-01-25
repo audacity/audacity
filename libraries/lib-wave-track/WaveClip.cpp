@@ -21,6 +21,7 @@
 #include <vector>
 #include <wx/log.h>
 
+#include "AudioSegmentSampleView.h"
 #include "BasicUI.h"
 #include "Envelope.h"
 #include "InconsistencyException.h"

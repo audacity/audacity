@@ -19,8 +19,8 @@
 #include "XMLTagHandler.h"
 
 #include "SampleCount.h"
-#include "AudioSegmentSampleView.h"
 
+class AudioSegmentSampleView;
 class SampleBlock;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;

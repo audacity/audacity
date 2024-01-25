@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "FloatVectorClip.h"
+#include "AudioSegmentSampleView.h"
 #include <cmath>
 
 FloatVectorClip::FloatVectorClip(

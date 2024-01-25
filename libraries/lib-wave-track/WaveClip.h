@@ -19,7 +19,6 @@
 #include "ClipInterface.h"
 #include "XMLTagHandler.h"
 #include "SampleCount.h"
-#include "AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
 

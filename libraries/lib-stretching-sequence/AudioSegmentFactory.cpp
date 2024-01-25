@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "AudioSegmentFactory.h"
+#include "AudioSegmentSampleView.h"
 #include "ClipInterface.h"
 #include "ClipSegment.h"
 #include "SilenceSegment.h"

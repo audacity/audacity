@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "WideClip.h"
+#include "AudioSegmentSampleView.h"
 
 WideClip::WideClip(
    std::shared_ptr<ClipInterface> left, std::shared_ptr<ClipInterface> right)
