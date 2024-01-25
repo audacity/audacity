@@ -17,6 +17,7 @@ class WaveChannelInterval;
 class WideSampleSequence;
 
 #include <vector>
+#include "AudioSegmentSampleView.h"
 #include "MemoryX.h"
 #include "WaveClip.h" // to inherit WaveClipListener
 

@@ -10,13 +10,13 @@
 **********************************************************************/
 #pragma once
 
-#include "AudioSegmentSampleView.h"
 #include "PlaybackDirection.h"
 #include "SampleCount.h"
 #include "TimeAndPitchInterface.h"
 
 #include <memory>
 
+class AudioSegmentSampleView;
 class ClipInterface;
 using ChannelSampleViews = std::vector<AudioSegmentSampleView>;
 
@@ -26,6 +26,7 @@ class STRETCHING_SEQUENCE_API ClipTimeAndPitchSource final :
 public:
    ClipTimeAndPitchSource(
       const ClipInterface&, double durationToDiscard, PlaybackDirection);
+   ~ClipTimeAndPitchSource();
 
    // TimeAndPitchSource
    void Pull(float* const*, size_t samplesPerChannel) override;

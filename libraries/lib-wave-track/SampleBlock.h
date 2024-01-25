@@ -11,7 +11,6 @@ SampleBlock.h
 
 #include "GlobalVariable.h"
 #include "SampleFormat.h"
-#include "AudioSegmentSampleView.h"
 
 #include <functional>
 #include <memory>
@@ -24,6 +23,7 @@ class AudacityProject;
 class ProjectFileIO;
 class XMLWriter;
 
+using BlockSampleView = std::shared_ptr<std::vector<float>>;
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
 class SampleBlockFactory;
