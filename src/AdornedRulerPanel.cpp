@@ -989,7 +989,7 @@ protected:
          &cursor,
          /* i18n-hint: This text is a tooltip on the icon (of a pin) representing 
          the temporal position in the audio.  */
-         XO( "Record/Play head" )
+         XO( "Record/Playhead" )
       };
    }
 
@@ -2281,9 +2281,6 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
 
-   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
-      Check(mViewInfo->bUpdateTrackIndicator);
-
    {
       auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
          LoopToggleText.Stripped().Translation());
@@ -2302,7 +2299,11 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    }
 
    rulerMenu.AppendSeparator();
-   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
+
+   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Scroll view to playhead"))->
+      Check(mViewInfo->bUpdateTrackIndicator);
+
+   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Continuous scrolling"))->
       Check(TracksPrefs::GetPinnedHeadPreference());
 
    BasicMenu::Handle{ &rulerMenu }.Popup(
@@ -2896,7 +2897,7 @@ void OnTogglePinnedHead(const CommandContext &context)
 
 using namespace MenuRegistry;
 AttachedItem sAttachment{
-   Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
+   Command( wxT("PinnedHead"), XXO("Continuous scrolling"),
       OnTogglePinnedHead,
       // Switching of scrolling on and off is permitted
       // even during transport
