@@ -544,7 +544,8 @@ void RemoteProjectSnapshot::RequestsThread()
          if (mRequestsInProgress >= MAX_CONCURRENT_REQUESTS)
          {
             mRequestsCV.wait(
-               lock, [this]
+               lock,
+               [this, MAX_CONCURRENT_REQUESTS]
                {
                   return mRequestsInProgress < MAX_CONCURRENT_REQUESTS ||
                          !WantsNextRequest();
