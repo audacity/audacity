@@ -29,6 +29,10 @@ class EmptyMirAudioReader : public MirAudioReader
    ReadFloats(float* buffer, long long start, size_t numFrames) const override
    {
    }
+   std::unique_ptr<MirAudioReader> Clone() const override
+   {
+      return std::make_unique<EmptyMirAudioReader>(*this);
+   }
 };
 
 class SquareWaveMirAudioReader : public MirAudioReader
@@ -49,6 +53,10 @@ public:
    {
       for (size_t i = 0; i < numFrames; ++i)
          buffer[i] = (where + i) % period < period / 2 ? 1.f : -1.f;
+   }
+   std::unique_ptr<MirAudioReader> Clone() const override
+   {
+      return std::make_unique<SquareWaveMirAudioReader>(*this);
    }
 };
 

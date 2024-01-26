@@ -33,6 +33,8 @@ public:
    void
    ReadFloats(float* buffer, long long where, size_t numFrames) const override;
 
+   std::unique_ptr<MirAudioReader> Clone() const override;
+
 private:
    void AddChannel(
       size_t iChannel, float* buffer, sampleCount start, size_t len) const;

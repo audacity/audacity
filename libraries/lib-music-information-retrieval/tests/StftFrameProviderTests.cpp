@@ -41,6 +41,10 @@ public:
       REQUIRE(where >= 0);
       REQUIRE(where + numFrames <= numSamples);
    };
+   std::unique_ptr<MirAudioReader> Clone() const override
+   {
+      return std::make_unique<TestMirAudioReader>(*this);
+   }
 };
 } // namespace
 TEST_CASE("StftFrameProvider")

@@ -29,14 +29,18 @@ namespace MIR
 class DecimatingMirAudioReader : public MirAudioReader
 {
 public:
-   explicit DecimatingMirAudioReader(const MirAudioReader& reader);
+   explicit DecimatingMirAudioReader(
+      const MirAudioReader& reader, bool cloning = false);
 
    double GetSampleRate() const override;
    long long GetNumSamples() const override;
    void
    ReadFloats(float* buffer, long long start, size_t numFrames) const override;
 
+   std::unique_ptr<MirAudioReader> Clone() const override;
+
 private:
+   std::unique_ptr<MirAudioReader> mClonedReader;
    const MirAudioReader& mReader;
    const int mDecimationFactor;
    mutable std::vector<float> mBuffer;

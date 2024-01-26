@@ -15,8 +15,10 @@
 
 namespace MIR
 {
-DecimatingMirAudioReader::DecimatingMirAudioReader(const MirAudioReader& reader)
-    : mReader { reader }
+DecimatingMirAudioReader::DecimatingMirAudioReader(
+   const MirAudioReader& reader, bool cloning)
+    : mClonedReader{ cloning ? reader.Clone() : nullptr }
+    , mReader { cloning ? *mClonedReader : reader }
     , mDecimationFactor {
        // Input rate divided by this integer will be as close as possible to
        // 24kHz and not greater.
@@ -46,5 +48,10 @@ void DecimatingMirAudioReader::ReadFloats(
    mReader.ReadFloats(mBuffer.data(), start, numFrames);
    for (auto i = 0; i < numDecimatedFrames; ++i)
       decimated[i] = mBuffer[i * mDecimationFactor];
+}
+
+std::unique_ptr<MirAudioReader> DecimatingMirAudioReader::Clone() const
+{
+   return std::make_unique<DecimatingMirAudioReader>(mReader, true);
 }
 } // namespace MIR

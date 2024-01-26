@@ -40,6 +40,11 @@ void ClipMirAudioReader::ReadFloats(
       buffer, buffer + numFrames, buffer, [](float f) { return f / 2; });
 }
 
+auto ClipMirAudioReader::Clone() const -> std::unique_ptr<MirAudioReader>
+{
+   return std::make_unique<ClipMirAudioReader>(*this);
+}
+
 void ClipMirAudioReader::AddChannel(
    size_t iChannel, float* buffer, sampleCount start, size_t len) const
 {

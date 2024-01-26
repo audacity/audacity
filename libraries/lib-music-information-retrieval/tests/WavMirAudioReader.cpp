@@ -10,6 +10,7 @@ namespace MIR
 {
 WavMirAudioReader::WavMirAudioReader(
    const std::string& filename, std::optional<double> timeLimit)
+   : mpSamples{ std::make_shared<std::vector<float>>() }
 {
    AudioFileInfo info;
    std::vector<std::vector<float>> samples;
@@ -20,7 +21,7 @@ WavMirAudioReader::WavMirAudioReader(
    const auto limit = timeLimit.has_value() ?
                          static_cast<long long>(*timeLimit * info.sampleRate) :
                          std::numeric_limits<long long>::max();
-   auto& mutableSamples = const_cast<std::vector<float>&>(mSamples);
+   auto& mutableSamples = const_cast<std::vector<float>&>(*mpSamples);
    const auto numFrames = std::min<long long>(info.numFrames, limit);
    mutableSamples.resize(numFrames);
    if (info.numChannels == 2)
@@ -39,15 +40,22 @@ double WavMirAudioReader::GetSampleRate() const
 
 long long WavMirAudioReader::GetNumSamples() const
 {
-   return mSamples.size();
+   return mpSamples->size();
 }
 
 void WavMirAudioReader::ReadFloats(
    float* buffer, long long start, size_t numFrames) const
 {
    assert(start >= 0);
-   assert(start + numFrames <= mSamples.size());
+   assert(start + numFrames <= mpSamples->size());
    std::copy(
-      mSamples.begin() + start, mSamples.begin() + start + numFrames, buffer);
+      mpSamples->begin() + start, mpSamples->begin() + start + numFrames,
+      buffer);
+}
+
+std::unique_ptr<MirAudioReader> WavMirAudioReader::Clone() const
+{
+   // Shallow copy of the buffer of samples which was fixed at construction time
+   return std::make_unique<WavMirAudioReader>(*this);
 }
 } // namespace MIR

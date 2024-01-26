@@ -18,9 +18,10 @@ public:
    long long GetNumSamples() const override;
    void
    ReadFloats(float* buffer, long long start, size_t numFrames) const override;
+   std::unique_ptr<MirAudioReader> Clone() const override;
 
 private:
-   const std::vector<float> mSamples;
+   const std::shared_ptr<const std::vector<float>> mpSamples;
    const double mSampleRate = 0.;
 };
 } // namespace MIR

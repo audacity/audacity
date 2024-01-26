@@ -11,6 +11,7 @@
 #pragma once
 
 #include <cstddef>
+#include <memory>
 
 namespace MIR
 {
@@ -22,6 +23,7 @@ public:
    virtual void
    ReadFloats(float* buffer, long long where, size_t numFrames) const = 0;
    double GetDuration() const;
+   virtual std::unique_ptr<MirAudioReader> Clone() const = 0;
    virtual ~MirAudioReader() = default;
 };
 } // namespace MIR
