@@ -28,7 +28,10 @@ class MUSIC_INFORMATION_RETRIEVAL_API StftFrameProvider
 {
 public:
    StftFrameProvider(const MirAudioReader& source);
+   StftFrameProvider(StftFrameProvider&&) = default;
+   
    bool GetNextFrame(std::vector<float>& frame);
+   void SkipFrames(int numFrames);
    int GetNumFrames() const;
    int GetSampleRate() const;
    double GetFrameRate() const;

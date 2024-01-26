@@ -21,9 +21,18 @@ PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
 {
 }
 
+PowerSpectrumGetter::PowerSpectrumGetter(PowerSpectrumGetter &&other)
+   : mFftSize{ other.mFftSize }
+   , mSetup{ other.mSetup }
+   , mWork{ move(other.mWork) }
+{
+   other.mSetup = nullptr;
+}
+
 PowerSpectrumGetter::~PowerSpectrumGetter()
 {
-   pffft_destroy_setup(mSetup);
+   if (mSetup)
+      pffft_destroy_setup(mSetup);
 }
 
 void PowerSpectrumGetter::operator()(float* buffer, float* output)

@@ -25,8 +25,9 @@ set( SOURCES
 set( LIBRARIES
 PUBLIC
    pffft
-   lib-utility
+   lib-concurrency-interface
    lib-file-formats-interface
+   lib-utility-interface
 )
 
 audacity_library( lib-music-information-retrieval "${SOURCES}" "${LIBRARIES}"

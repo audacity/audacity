@@ -28,6 +28,10 @@ public:
    explicit PowerSpectrumGetter(int fftSize);
    ~PowerSpectrumGetter();
 
+   // Because mSetup must not be shallow-copied, allow move but not copy ctor
+   PowerSpectrumGetter(const PowerSpectrumGetter &) = delete;
+   PowerSpectrumGetter(PowerSpectrumGetter &&);
+
    /*!
     * @brief Computes the power spectrum of `buffer` into `output`.
     * @param buffer Input samples of size `fftSize`. Also gets used as

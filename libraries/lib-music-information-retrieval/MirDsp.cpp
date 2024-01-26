@@ -14,6 +14,7 @@
 #include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
+#include "ParallelReduce.h"
 #include "PowerSpectrumGetter.h"
 #include "StftFrameProvider.h"
 
@@ -130,50 +131,160 @@ std::vector<float> GetOnsetDetectionFunction(
    const auto sampleRate = frameProvider.GetSampleRate();
    const auto numFrames = frameProvider.GetNumFrames();
    const auto frameSize = frameProvider.GetFftSize();
-   std::vector<float> buffer(frameSize);
-   std::vector<float> odf;
-   odf.reserve(numFrames);
-   const auto powSpecSize = frameSize / 2 + 1;
-   std::vector<float> powSpec(powSpecSize);
-   std::vector<float> prevPowSpec(powSpecSize);
-   std::vector<float> firstPowSpec;
-   std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
+   std::vector<float> odf(numFrames);
+   if (debugOutput)
+      debugOutput->postProcessedStft.resize(numFrames);
 
-   PowerSpectrumGetter getPowerSpectrum { frameSize };
+   using Integral = std::remove_const_t<decltype(numFrames)>;
 
-   auto frameCounter = 0;
-   while (frameProvider.GetNextFrame(buffer))
-   {
-      getPowerSpectrum(buffer.data(), powSpec.data());
+   struct TaskState {
+      // Input
+      struct Provider {
+         Provider(
+            const MirAudioReader &audio, StftFrameProvider &&frameProvider)
+            : audio{ audio }
+            , frameProvider{ std::move(frameProvider) }
+         {}
+         // Don't default-copy state but reinitialize
+         Provider(const Provider &provider)
+            : audio{ provider.audio }
+            , cloned{ audio.Clone() }
+            , frameProvider{ *cloned }
+         {}
+         Provider(Provider &&) = default;
+         const MirAudioReader &audio;
+         std::unique_ptr<MirAudioReader> cloned;
+         StftFrameProvider frameProvider;
+      } provider;
 
-      // Compress the frame as per section (6.5) in Müller, Meinard.
-      // Fundamentals of music processing: Audio, analysis, algorithms,
-      // applications. Vol. 5. Cham: Springer, 2015.
-      constexpr auto gamma = 100.f;
-      std::transform(
-         powSpec.begin(), powSpec.end(), powSpec.begin(),
-         [gamma](float x) { return GetLog2(1 + gamma * std::sqrt(x)); });
+      // Outputs
+      std::vector<float> &odf;
+      QuantizationFitDebugOutput *const debugOutput;
+      const std::function<void(double)>& progressCallback;
 
-      if (firstPowSpec.empty())
-         firstPowSpec = powSpec;
-      else
-         odf.push_back(GetNoveltyMeasure(prevPowSpec, powSpec));
+      // private state
+      std::vector<float> buffer;
+      std::vector<float> powSpec;
+      std::vector<float> firstPowSpec{};
+      std::vector<float> prevPowSpec;
 
-      if (debugOutput)
-         debugOutput->postProcessedStft.push_back(powSpec);
+      struct Getter {
+         Getter(int frameSize) : frameSize{ frameSize } {}
+         // Don't default-copy state but reinitialize
+         Getter(const Getter &g) : Getter{ g.frameSize } {}
+         Getter(Getter &&) = default;
+         const int frameSize;
+         // Each instance of this type has its own scratch buffer state
+         PowerSpectrumGetter getPowerSpectrum{ frameSize };
+      } getter;
 
-      std::swap(prevPowSpec, powSpec);
+      // Only the denominator for progress
+      const Integral numFrames;
 
-      if (progressCallback)
-         progressCallback(1. * ++frameCounter / numFrames);
-   }
+      TaskState(Integral numFrames,
+         const MirAudioReader &audio, StftFrameProvider &&frameProvider,
+         std::vector<float> &odf,
+         QuantizationFitDebugOutput *debugOutput,
+         const std::function<void(double)>& progressCallback,
+         int frameSize
+      )  : provider{ audio, std::move(frameProvider) }
+         , odf{ odf }, debugOutput{ debugOutput }
+         , progressCallback{ progressCallback }
+         , buffer(frameSize)
+         , powSpec(frameSize / 2 + 1), prevPowSpec(frameSize / 2 + 1)
+         , getter{ frameSize }
+         , numFrames{ numFrames }
+      {
+         fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
+      }
+   };
+
+   using namespace Parallel;
+   using Iterator = NumberIterator<Integral>;
+   using Base = SplittableBase<Iterator>;
+   struct Task : TaskState, Base {
+      Task(TaskState &&state)
+         : TaskState{ std::move(state) }
+         , Base{ Iterator{ 0 }, Iterator{ this->numFrames } }
+      {}
+      Task(Task &orig, iterator_type iter)
+         : TaskState{ orig }
+         , Base{ orig, iter }
+      {
+         // Split happens before anything modifies buffer contents
+         assert(firstPowSpec.empty());
+         assert(all_of(prevPowSpec.begin(), prevPowSpec.end(),
+            [](auto f){ return f == 0; }));
+
+         // Will begin reading from the correct place in the input
+         provider.frameProvider.SkipFrames(*iter);
+      }
+      Integral operator()(Integral ii) {
+         Integral increment;
+         bool gotFrame = provider.frameProvider.GetNextFrame(buffer);
+         // Assume the provider reported numFrames consistent with its
+         // serial access behavior
+         assert(gotFrame);
+
+         getter.getPowerSpectrum(buffer.data(), powSpec.data());
+         ++increment;
+
+         // Compress the frame as per section (6.5) in Müller, Meinard.
+         // Fundamentals of music processing: Audio, analysis, algorithms,
+         // applications. Vol. 5. Cham: Springer, 2015.
+         constexpr auto gamma = 100.f;
+         transform(
+            powSpec.begin(), powSpec.end(), powSpec.begin(),
+            [gamma](float x) { return GetLog2(1 + gamma * std::sqrt(x)); });
+
+         if (firstPowSpec.empty())
+            firstPowSpec = powSpec;
+         else {
+            // Assignment into disjoint ranges of the vector will not cause
+            // data races
+            odf[ii - 1] = GetNoveltyMeasure(prevPowSpec, powSpec);
+            ++increment;
+         }
+
+         if (debugOutput)
+            debugOutput->postProcessedStft[ii] = powSpec;
+
+         swap(prevPowSpec, powSpec);
+         return increment;
+      }
+      Integral merge(Task &&task) {
+         auto &next = task.firstPowSpec;
+         // task was run on a non-empty range
+         assert(!next.empty());
+         odf[*this->end() - 1] = GetNoveltyMeasure(this->prevPowSpec, next);
+         this->set_end(task.end());
+         this->prevPowSpec = move(task.prevPowSpec);
+         return 1;
+      }
+      void report_progress(Integral total) {
+         if (progressCallback)
+            // The counter bumps once for each FFT, then again for each
+            // comparison of spectra
+            progressCallback(
+               static_cast<double>(total) / (2 * numFrames - 1));
+      }
+   };
+   TaskAdapter<Task, Integral, Merge, Report> task{ TaskState{
+      numFrames, audio, std::move(frameProvider), odf, debugOutput,
+      progressCallback, frameSize
+   } };
+   // Get the end before splitting task
+   const auto end = task.end();
+   OneDimensionalReduce(task);
+   // Results from all frames should now be merged back in
+   assert(end == task.end());
 
    // Close the loop.
-   odf.push_back(GetNoveltyMeasure(prevPowSpec, firstPowSpec));
+   odf.back() = GetNoveltyMeasure(task.prevPowSpec, task.firstPowSpec);
    assert(IsPowOfTwo(odf.size()));
 
    const auto movingAverage =
-      GetMovingAverage(odf, frameProvider.GetFrameRate());
+      GetMovingAverage(odf, task.provider.frameProvider.GetFrameRate());
 
    if (debugOutput)
    {

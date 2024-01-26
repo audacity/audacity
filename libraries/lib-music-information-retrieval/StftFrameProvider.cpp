@@ -82,6 +82,11 @@ bool StftFrameProvider::GetNextFrame(std::vector<float>& frame)
    return true;
 }
 
+void StftFrameProvider::SkipFrames(int numFrames)
+{
+   mNumFramesProvided += numFrames;
+}
+
 int StftFrameProvider::GetNumFrames() const
 {
    return mNumFrames;

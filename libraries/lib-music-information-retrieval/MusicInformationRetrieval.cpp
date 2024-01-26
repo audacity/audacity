@@ -13,7 +13,6 @@
 #include "GetMeterUsingTatumQuantizationFit.h"
 #include "MirAudioReader.h"
 #include "MirUtils.h"
-#include "StftFrameProvider.h"
 
 #include <array>
 #include <cassert>
