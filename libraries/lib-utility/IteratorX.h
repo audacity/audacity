@@ -263,6 +263,10 @@ public:
    NumberIterator operator ++(int) const
    { auto result = *this; ++result; return result; }
 
+   NumberIterator &operator --() { --mValue; return *this; }
+   NumberIterator operator --(int) const
+   { auto result = *this; --result; return result; }
+
    friend bool operator ==(NumberIterator x, NumberIterator y)
    { return x.mValue == y.mValue; }
    friend bool operator !=(NumberIterator x, NumberIterator y)
