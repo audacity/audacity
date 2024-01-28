@@ -28,6 +28,9 @@ public:
       const ClipInterface&, double durationToDiscard, PlaybackDirection);
    ~ClipTimeAndPitchSource();
 
+   ClipTimeAndPitchSource(const ClipTimeAndPitchSource&) = delete;
+   ClipTimeAndPitchSource &operator =(const ClipTimeAndPitchSource&) = delete;
+
    // TimeAndPitchSource
    void Pull(float* const*, size_t samplesPerChannel) override;
 
