@@ -19,7 +19,7 @@ class ChangeClipSpeedDialog final : public wxDialogWrapper
 {
 public:
    ChangeClipSpeedDialog(
-      WaveTrack& track, WaveTrack::Interval& interval,
+      bool playbackOngoing, WaveTrack& track, WaveTrack::Interval& interval,
       wxWindow* parent = nullptr);
 
    ~ChangeClipSpeedDialog() override;
@@ -29,10 +29,23 @@ private:
 
    void OnOk();
 
+   void OnCancel();
+
    bool SetClipSpeedFromDialog();
 
+   void SetSemitoneShift();
+   void UpdateDialog();
+
+   const bool mPlaybackOngoing;
    WaveTrack& mTrack;
    WaveTrack::Interval& mTrackInterval;
    double mClipSpeed;
-   double mOldClipSpeed;
+   const double mOldClipSpeed;
+   struct PitchShift
+   {
+      int semis = 0;
+      int cents = 0;
+   };
+   PitchShift mShift;
+   PitchShift mOldShift;
 };
