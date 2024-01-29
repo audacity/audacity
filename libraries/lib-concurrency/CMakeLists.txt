@@ -3,6 +3,7 @@ Synchronization objects and parallel algorithms
 ]]#
 
 set( SOURCES
+   AtomicUniquePointer.h
    MessageBuffer.h
    NonInterfering.cpp
    NonInterfering.h
