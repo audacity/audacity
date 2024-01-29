@@ -711,7 +711,7 @@ public:
     * order.
     * @pre `IsLeader()`
     */
-   ClipConstHolders GetClipInterfaces() const;
+   ClipHolders GetClipInterfaces() const;
 
    // Get mutative access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.

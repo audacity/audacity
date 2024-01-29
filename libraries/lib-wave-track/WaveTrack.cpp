@@ -3046,13 +3046,13 @@ const WaveClip* WaveTrack::GetRightmostClip() const {
       ->get();
 }
 
-ClipConstHolders WaveTrack::GetClipInterfaces() const
+ClipHolders WaveTrack::GetClipInterfaces() const
 {
   // We're constructing possibly wide clips here, and for this we need to have
   // access to the other channel-tracks.
   assert(IsLeader());
   const auto pOwner = GetOwner();
-  ClipConstHolders wideClips;
+  ClipHolders wideClips;
   wideClips.reserve(mClips.size());
   for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex)
   {
