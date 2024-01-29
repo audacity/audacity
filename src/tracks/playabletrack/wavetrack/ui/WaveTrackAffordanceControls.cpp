@@ -409,7 +409,7 @@ const ReservedCommandFlag &StretchedClipIsSelectedFlag()
             const_cast<AudacityProject&>(project));
 
          auto interval = *result.second;
-         return interval != nullptr && !interval->StretchRatioEquals(1.0);
+         return interval != nullptr && interval->HasPitchOrSpeed();
       }
    };
    return flag;
@@ -636,12 +636,12 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
 
    auto interval = *it;
 
-   if (!interval || interval->StretchRatioEquals(1.0))
+   if (!interval || !interval->HasPitchOrSpeed())
       return;
 
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   WaveTrackUtilities::WithClipRenderingProgress(
       [track = track, interval = interval](const ProgressReporter& progress) {
-         track->ApplyStretchRatio(
+         track->ApplyPitchAndSpeed(
             { { interval->GetPlayStartTime(), interval->GetPlayEndTime() } },
             progress);
       },
@@ -769,7 +769,7 @@ AttachedItem sAttachment2 {
 };
 
 AttachedItem sAttachment3{
-   Command( L"RenderClipStretching", XXO("Render Clip S&tretching"),
+   Command( L"RenderPitchAndSpeed", XXO("Render Pitch and &Speed"),
       OnRenderClipStretching, StretchedClipIsSelectedFlag()),
    wxT("Edit/Other/Clip")
 };

@@ -182,8 +182,8 @@ public:
 
    //! Checks for stretch-ratio equality, accounting for rounding errors.
    //! @{
-   bool HasEqualStretchRatio(const WaveClip& other) const;
-   bool StretchRatioEquals(double value) const;
+   bool HasEqualPitchAndSpeed(const WaveClip& other) const;
+   bool HasPitchOrSpeed() const;
    //! @}
 
    void SetSemitoneShift(double semitones);
@@ -594,7 +594,7 @@ private:
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;
-
+   bool StretchRatioEquals(double value) const;
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();

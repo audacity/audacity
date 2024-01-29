@@ -641,21 +641,23 @@ void OnZeroCrossing(const CommandContext &context)
    // it if any stretched clip is involved.
    const auto projectRate = ProjectRate(project).GetRate();
    const auto searchWindowDuration = GetWindowSize(projectRate) / projectRate;
-   const auto wouldSearchStretchedClip =
+   const auto wouldSearchClipWithPitchOrSpeed =
       [searchWindowDuration](const WaveTrack& track, double t) {
          const auto clips = track.GetClipsIntersecting(
             t - searchWindowDuration / 2, t + searchWindowDuration / 2);
          return std::any_of(
             clips.begin(), clips.end(),
             [](const std::shared_ptr<const WaveClip>& clip) {
-               return !clip->StretchRatioEquals(1);
+               return clip->HasPitchOrSpeed();
             });
       };
    const auto selected = tracks.Selected<const WaveTrack>();
    if (std::any_of(
           selected.begin(), selected.end(), [&](const WaveTrack* track) {
-             return wouldSearchStretchedClip(*track, selectedRegion.t0()) ||
-                    wouldSearchStretchedClip(*track, selectedRegion.t1());
+             return wouldSearchClipWithPitchOrSpeed(
+                       *track, selectedRegion.t0()) ||
+                    wouldSearchClipWithPitchOrSpeed(
+                       *track, selectedRegion.t1());
           }))
    {
       using namespace BasicUI;

@@ -65,6 +65,8 @@ from the project that will own the track.
 
 #include "ProjectFormatExtensionsRegistry.h"
 
+#include <cmath>
+
 using std::max;
 
 WaveChannelInterval::~WaveChannelInterval() = default;
@@ -279,11 +281,11 @@ void WaveTrack::Interval::SetSemitoneShift(double semitones)
    ForEachClip([semitones](auto& clip) { clip.SetSemitoneShift(semitones); });
 }
 
-WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
+WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
-   if (GetStretchRatio() == 1)
+   if (!HasPitchOrSpeed())
       return std::make_shared<Interval>(group, mpClip, mpClip1);
 
    const auto dst = std::make_shared<Interval>(
@@ -321,6 +323,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
+   params.pitchRatio = std::pow(2., mpClip->GetSemitoneShift() / 12);
    StaffPadTimeAndPitch stretcher { mpClip->GetRate(), numChannels,
                                     stretcherSource, std::move(params) };
 
@@ -366,18 +369,20 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
 
    success = true;
 
-   assert(dst->GetStretchRatio() == 1);
+   assert(!dst->HasPitchOrSpeed());
    return dst;
 }
 
-bool WaveTrack::Interval::StretchRatioEquals(double value) const
+bool WaveTrack::Interval::HasPitchOrSpeed() const
 {
-   for (unsigned channel = 0; channel < NChannels(); ++channel)
-   {
-      if (!GetClip(channel)->StretchRatioEquals(value))
-         return false;
-   }
-   return true;
+   // Assuming equal pitch and speed on both channels
+   return GetClip(0u)->HasPitchOrSpeed();
+}
+
+bool WaveTrack::Interval::HasEqualPitchAndSpeed(const Interval& other) const
+{
+   // Assuming equal pitch and speed on both channels
+   return GetClip(0u)->HasEqualPitchAndSpeed(*other.GetClip(0u));
 }
 
 void WaveTrack::Interval::SetName(const wxString& name)
@@ -1703,7 +1708,7 @@ void WaveTrack::ClearAndPasteOne(
                // Merge this clip and the previous clip if the end time
                // falls within it and this isn't the first clip in the track.
                if (fabs(t1 - clip->GetPlayStartTime()) < tolerance) {
-                  if (prev && clip->HasEqualStretchRatio(*prev))
+                  if (prev && clip->HasEqualPitchAndSpeed(*prev))
                      track.MergeOneClipPair(track.GetClipIndex(prev),
                         track.GetClipIndex(clip));
                   break;
@@ -1725,7 +1730,7 @@ void WaveTrack::ClearAndPasteOne(
                // It must be that clip is what was pasted and it begins where
                // prev ends.
                // use Weak-guarantee
-               if (clip->HasEqualStretchRatio(*prev))
+               if (clip->HasEqualPitchAndSpeed(*prev))
                   track.MergeOneClipPair(
                      track.GetClipIndex(prev), track.GetClipIndex(clip));
                break;
@@ -1750,10 +1755,10 @@ void WaveTrack::ClearAndPasteOne(
          if (target.GetTrimLeft() != 0)
             return;
 
-         // `src` was created by copy from `target`, so they have equal width
-         // and stretch ratio.
+         // `src` was created by copy from `target`, so they have equal width,
+         // pitch and speed.
          assert(target.GetWidth() == src.GetWidth());
-         assert(target.GetStretchRatio() == src.GetStretchRatio());
+         assert(target.HasEqualPitchAndSpeed(src));
 
          auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
          auto success = target.Paste(target.GetPlayStartTime(), src);
@@ -1771,7 +1776,7 @@ void WaveTrack::ClearAndPasteOne(
          if (target.GetTrimRight() != 0)
             return;
          assert(target.GetWidth() == src.GetWidth());
-         assert(target.GetStretchRatio() == src.GetStretchRatio());
+         assert(target.HasEqualPitchAndSpeed(src));
 
          auto trim = src.GetPlayEndTime() - src.GetPlayStartTime();
          auto success = target.Paste(target.GetPlayEndTime(), src);
@@ -2198,16 +2203,16 @@ void WaveTrack::PasteOne(
     const auto clipAtT0 = track.GetClipAtTime(t0);
     const auto otherFirstClip = other.GetLeftmostClip();
     const auto otherLastClip = other.GetRightmostClip();
-    const auto stretchRatiosMatch =
-       !clipAtT0 || (clipAtT0->HasEqualStretchRatio(*otherFirstClip) &&
-                     clipAtT0->HasEqualStretchRatio(*otherLastClip));
+    const auto pitchAndSpeedMatch =
+       !clipAtT0 || (clipAtT0->HasEqualPitchAndSpeed(*otherFirstClip) &&
+                     clipAtT0->HasEqualPitchAndSpeed(*otherLastClip));
 
     // `singleClipMode` will try to merge. Only allow this if clips on both ends
     // of the selection have equal stretch ratio.
     const bool singleClipMode =
        other.GetNumClips() == 1 &&
        std::abs(startTime) < track.LongSamplesToTime(1) * 0.5 &&
-       stretchRatiosMatch && merge;
+       pitchAndSpeedMatch && merge;
 
     const auto rate = track.GetRate();
     if (insertDuration != 0 && insertDuration < 1.0 / rate)
@@ -2383,7 +2388,7 @@ bool WaveTrack::InsertClip(WaveClipHolder clip, bool backup)
    return true;
 }
 
-void WaveTrack::ApplyStretchRatio(
+void WaveTrack::ApplyPitchAndSpeed(
    std::optional<TimeInterval> interval, ProgressReporter reportProgress)
 {
    assert(IsLeader());
@@ -2405,23 +2410,23 @@ void WaveTrack::ApplyStretchRatio(
    // Here we assume that left- and right clips are aligned.
    if (auto clipAtT0 = GetClipAtTime(startTime);
        clipAtT0 && clipAtT0->SplitsPlayRegion(startTime) &&
-       !clipAtT0->StretchRatioEquals(1))
+       clipAtT0->HasPitchOrSpeed())
       Split(startTime, startTime);
    if (auto clipAtT1 = GetClipAtTime(endTime);
        clipAtT1 && clipAtT1->SplitsPlayRegion(endTime) &&
-       !clipAtT1->StretchRatioEquals(1))
+       clipAtT1->HasPitchOrSpeed())
       Split(endTime, endTime);
 
    std::vector<IntervalHolder> srcIntervals;
    auto clip = GetIntervalAtTime(startTime);
    while (clip && clip->GetPlayStartTime() < endTime)
    {
-      if (clip->GetStretchRatio() != 1)
+      if (clip->HasPitchOrSpeed())
          srcIntervals.push_back(clip);
       clip = GetNextInterval(*clip, PlaybackDirection::forward);
    }
 
-   ApplyStretchRatioOnIntervals(srcIntervals, reportProgress);
+   ApplyPitchAndSpeedOnIntervals(srcIntervals, reportProgress);
 }
 
 /*! @excsafety{Weak} */
@@ -2446,7 +2451,7 @@ void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
-   ApplyStretchRatio({ { t0, t1 } }, std::move(reportProgress));
+   ApplyPitchAndSpeed({ { t0, t1 } }, std::move(reportProgress));
 
    auto start = TimeToLongSamples(t0);
    auto end = TimeToLongSamples(t1);
@@ -2611,11 +2616,10 @@ void WaveTrack::Join(
       return;
    if (std::any_of(
           intervalsToJoin.begin() + 1, intervalsToJoin.end(),
-          [first =
-              intervalsToJoin[0]->GetStretchRatio()](const auto& interval) {
-             return first != interval->GetStretchRatio();
+          [first = intervalsToJoin[0]](const auto& interval) {
+             return !first->HasEqualPitchAndSpeed(*interval);
           }))
-      ApplyStretchRatioOnIntervals(intervalsToJoin, reportProgress);
+      ApplyPitchAndSpeedOnIntervals(intervalsToJoin, reportProgress);
 
    for (const auto pChannel : TrackList::Channels(this))
       JoinOne(*pChannel, t0, t1);
@@ -3439,8 +3443,7 @@ bool WaveTrack::GetOne(
 
       if (clipEnd > start && clipStart < start+len)
       {
-         // Yes, exact comparison
-         if (clip->GetStretchRatio() != 1.0)
+         if (clip->HasPitchOrSpeed())
             return false;
 
          // Clip sample region and Get/Put sample region overlap
@@ -3549,7 +3552,7 @@ bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
       if (clipEnd > start && clipStart < start+len)
       {
          // Test as also in WaveTrack::GetOne()
-         if (clip->GetStretchRatio() != 1.0)
+         if (clip->HasPitchOrSpeed())
             return false;
 
          // Clip sample region and Get/Put sample region overlap
@@ -4114,8 +4117,7 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
    if (!clip1 || !clip2) // Could happen if one track of a linked pair had a split and the other didn't.
       return false; // Don't throw, just do nothing.
 
-   const auto stretchRatiosEqual = clip1->HasEqualStretchRatio(*clip2);
-   if (!stretchRatiosEqual)
+   if (!clip1->HasEqualPitchAndSpeed(*clip2))
       return false;
 
    // Append data from second clip to first clip
@@ -4131,7 +4133,7 @@ bool WaveTrack::MergeOneClipPair(int clipidx1, int clipidx2)
    return true;
 }
 
-void WaveTrack::ApplyStretchRatioOnIntervals(
+void WaveTrack::ApplyPitchAndSpeedOnIntervals(
    const std::vector<IntervalHolder>& srcIntervals,
    const ProgressReporter& reportProgress)
 {
@@ -4140,7 +4142,7 @@ void WaveTrack::ApplyStretchRatioOnIntervals(
    std::transform(
       srcIntervals.begin(), srcIntervals.end(),
       std::back_inserter(dstIntervals), [&](const IntervalHolder& interval) {
-         return interval->GetStretchRenderedCopy(
+         return interval->GetRenderedCopy(
             reportProgress, *this, mpFactory, GetSampleFormat());
       });
 

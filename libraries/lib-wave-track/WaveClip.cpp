@@ -364,9 +364,15 @@ WaveClip::SubscribeToSemitoneShiftChange(std::function<void(double)> cb)
    return Subscribe([cb](const Semitones& semitones) { cb(semitones.value); });
 }
 
-bool WaveClip::HasEqualStretchRatio(const WaveClip& other) const
+bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
 {
-   return StretchRatioEquals(other.GetStretchRatio());
+   return StretchRatioEquals(other.GetStretchRatio()) &&
+          GetSemitoneShift() == other.GetSemitoneShift();
+}
+
+bool WaveClip::HasPitchOrSpeed() const
+{
+   return !StretchRatioEquals(1.0) || GetSemitoneShift() != 0.0;
 }
 
 bool WaveClip::StretchRatioEquals(double value) const
