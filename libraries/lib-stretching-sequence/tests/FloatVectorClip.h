@@ -54,9 +54,10 @@ public:
       return 0.;
    }
 
-   void SetPitchShiftChangePublisher(
-      std::weak_ptr<PitchShiftChangePublisher>) override
+   Observer::Subscription
+   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) override
    {
+      return {};
    }
 
 public:

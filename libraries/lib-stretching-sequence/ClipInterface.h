@@ -11,10 +11,9 @@
 #pragma once
 
 #include "AudioSegmentSampleView.h"
+#include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
-
-class PitchShiftChangePublisher;
 
 class STRETCHING_SEQUENCE_API ClipTimes
 {
@@ -50,8 +49,8 @@ public:
 
    virtual double GetSemitoneShift() const = 0;
 
-   virtual void SetPitchShiftChangePublisher(
-      std::weak_ptr<PitchShiftChangePublisher> publisher) = 0;
+   [[nodiscard]] virtual Observer::Subscription
+   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) = 0;
 };
 
 using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;

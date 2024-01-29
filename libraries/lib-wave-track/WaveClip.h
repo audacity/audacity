@@ -96,10 +96,20 @@ struct WAVE_TRACK_API WaveClipListener
    virtual void Invalidate() = 0;
 };
 
+struct Semitones
+{
+   explicit Semitones(double value)
+       : value(value)
+   {
+   }
+   const double value;
+};
+
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public XMLTagHandler,
-    public ClientData::Site<WaveClip, WaveClipListener>
+    public ClientData::Site<WaveClip, WaveClipListener>,
+    public Observer::Publisher<Semitones>
 {
 private:
    // It is an error to copy a WaveClip without specifying the
@@ -178,7 +188,8 @@ public:
 
    void SetSemitoneShift(double semitones);
    double GetSemitoneShift() const override;
-   void SetPitchShiftChangePublisher(std::weak_ptr<PitchShiftChangePublisher>) override;
+   [[nodiscard]] Observer::Subscription
+   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) override;
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
@@ -615,7 +626,6 @@ private:
    double mTrimRight { 0 };
    //! @}
 
-   std::weak_ptr<PitchShiftChangePublisher> mPitchShiftChangePublisher;
    double mSemitoneShift { 0 };
 
    // Used in GetStretchRatio which computes the factor, by which the sample

@@ -13,6 +13,7 @@
 #include "ClipInterface.h"
 #include "ClipSegment.h"
 #include "SilenceSegment.h"
+#include "TimeAndPitchInterface.h"
 
 #include <algorithm>
 
@@ -28,7 +29,7 @@ AudioSegmentFactory::AudioSegmentFactory(
 
 std::vector<std::shared_ptr<AudioSegment>>
 AudioSegmentFactory::CreateAudioSegmentSequence(
-   double playbackStartTime, PlaybackDirection direction) const
+   double playbackStartTime, PlaybackDirection direction)
 {
    return direction == PlaybackDirection::forward ?
              CreateAudioSegmentSequenceForward(playbackStartTime) :
@@ -36,7 +37,7 @@ AudioSegmentFactory::CreateAudioSegmentSequence(
 }
 
 std::vector<std::shared_ptr<AudioSegment>>
-AudioSegmentFactory::CreateAudioSegmentSequenceForward(double t0) const
+AudioSegmentFactory::CreateAudioSegmentSequenceForward(double t0)
 {
    auto sortedClips = mClips;
    std::sort(
@@ -66,7 +67,7 @@ AudioSegmentFactory::CreateAudioSegmentSequenceForward(double t0) const
 }
 
 std::vector<std::shared_ptr<AudioSegment>>
-AudioSegmentFactory::CreateAudioSegmentSequenceBackward(double t0) const
+AudioSegmentFactory::CreateAudioSegmentSequenceBackward(double t0)
 {
    auto sortedClips = mClips;
    std::sort(

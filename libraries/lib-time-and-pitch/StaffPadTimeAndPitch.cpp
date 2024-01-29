@@ -43,24 +43,12 @@ StaffPadTimeAndPitch::StaffPadTimeAndPitch(
    const Parameters& parameters)
     : mAudioSource(audioSource)
     , mReadBuffer(maxBlockSize, numChannels)
+    , mSampleRate(sampleRate)
     , mNumChannels(numChannels)
     , mTimeRatio(parameters.timeRatio.value_or(1.))
     , mTimeAndPitch(
          MaybeCreateTimeAndPitch(sampleRate, numChannels, parameters))
 {
-   if (parameters.pitchRatioChangeCbSubscriber)
-      parameters.pitchRatioChangeCbSubscriber([&,
-                                               sampleRate](double semitones) {
-         const auto pitchRatio = std::pow(2., semitones / 12.);
-         std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
-         if (!mTimeAndPitch)
-            mTimeAndPitch = MaybeCreateTimeAndPitch(
-               sampleRate, mNumChannels,
-               TimeAndPitchInterface::Parameters {
-                  mTimeRatio, pitchRatio, {} });
-         else
-            mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, pitchRatio);
-      });
    BootStretcher();
 }
 
@@ -110,6 +98,18 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
          numOutputSamples += numSamplesToGet;
       }
    }
+}
+
+void StaffPadTimeAndPitch::OnSemitoneShiftChange(double semitones)
+{
+   const auto pitchRatio = std::pow(2., semitones / 12.);
+   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
+   if (!mTimeAndPitch)
+      mTimeAndPitch = MaybeCreateTimeAndPitch(
+         mSampleRate, mNumChannels,
+         TimeAndPitchInterface::Parameters { mTimeRatio, pitchRatio });
+   else
+      mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, pitchRatio);
 }
 
 void StaffPadTimeAndPitch::BootStretcher()

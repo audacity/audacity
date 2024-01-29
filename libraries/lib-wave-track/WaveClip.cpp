@@ -358,11 +358,10 @@ double WaveClip::GetSemitoneShift() const
 {
    return mSemitoneShift;
 }
-
-void WaveClip::SetPitchShiftChangePublisher(
-   std::weak_ptr<PitchShiftChangePublisher> publisher)
+Observer::Subscription
+WaveClip::SubscribeToSemitoneShiftChange(std::function<void(double)> cb)
 {
-   mPitchShiftChangePublisher = std::move(publisher);
+   return Subscribe([cb](const Semitones& semitones) { cb(semitones.value); });
 }
 
 bool WaveClip::HasEqualStretchRatio(const WaveClip& other) const
@@ -1135,8 +1134,7 @@ void WaveClip::SetRawAudioTempo(double tempo)
 void WaveClip::SetSemitoneShift(double semitones)
 {
    mSemitoneShift = semitones;
-   if (const auto cb = mPitchShiftChangePublisher.lock())
-      cb->Publish(semitones);
+   Publish(Semitones { semitones });
 }
 
 /*! @excsafety{Strong} */

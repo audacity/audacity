@@ -16,7 +16,7 @@
 class NiceAudioSegment final : public AudioSegment
 {
 public:
-   size_t GetFloats(float *const *, size_t numSamples) override
+   size_t GetFloats(float* const*, size_t numSamples) override
    {
       return numSamples;
    }
@@ -36,7 +36,7 @@ class MockAudioSegmentFactory : public AudioSegmentFactoryInterface
 {
 public:
    std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequence(double, PlaybackDirection) const override
+   CreateAudioSegmentSequence(double, PlaybackDirection) override
    {
       ++const_cast<size_t&>(callCount);
       return { std::make_shared<NiceAudioSegment>() };

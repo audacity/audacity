@@ -10,7 +10,3 @@ bool TimeAndPitchInterface::IsPassThroughMode(double stretchRatio)
 {
    return std::fabs(stretchRatio - 1.) < 1e-6;
 }
-
-PitchShiftChangePublisher::~PitchShiftChangePublisher()
-{
-}

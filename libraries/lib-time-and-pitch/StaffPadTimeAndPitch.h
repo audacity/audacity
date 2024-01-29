@@ -13,6 +13,7 @@ public:
       int sampleRate, size_t numChannels, TimeAndPitchSource&,
       const Parameters&);
    void GetSamples(float* const*, size_t) override;
+   void OnSemitoneShiftChange(double semitones) override;
 
 private:
    void BootStretcher();
@@ -20,6 +21,7 @@ private:
    std::unique_ptr<staffpad::TimeAndPitch> mTimeAndPitch;
    TimeAndPitchSource& mAudioSource;
    AudioContainer mReadBuffer;
+   const int mSampleRate;
    const size_t mNumChannels;
    const double mTimeRatio;
    std::mutex mTimeAndPitchMutex;

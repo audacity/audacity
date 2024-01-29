@@ -29,6 +29,9 @@ public:
       std::shared_ptr<ClipInterface> left,
       std::shared_ptr<ClipInterface> right);
 
+   [[nodiscard]] Observer::Subscription
+   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) override;
+
    AudioSegmentSampleView GetSampleView(
       size_t ii, sampleCount start, size_t len, bool mayThrow) const override;
 
@@ -47,9 +50,6 @@ public:
    double GetStretchRatio() const override;
 
    double GetSemitoneShift() const override;
-
-   void SetPitchShiftChangePublisher(
-      std::weak_ptr<PitchShiftChangePublisher> publisher) override;
 
 private:
    const std::array<std::shared_ptr<ClipInterface>, 2> mChannels;

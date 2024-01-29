@@ -62,11 +62,11 @@ double WideClip::GetSemitoneShift() const
    return mChannels[0u]->GetSemitoneShift();
 }
 
-void WideClip::SetPitchShiftChangePublisher(
-   std::weak_ptr<PitchShiftChangePublisher> publisher)
+Observer::Subscription
+WideClip::SubscribeToSemitoneShiftChange(std::function<void(double)> cb)
 {
    // On purpose set the publisher on the left channel only. This is not a clip
    // property that is saved to disk, and else we'll get two callbacks for the
    // same event.
-   mChannels[0u]->SetPitchShiftChangePublisher(std::move(publisher));
+   return mChannels[0u]->SubscribeToSemitoneShiftChange(std::move(cb));
 }

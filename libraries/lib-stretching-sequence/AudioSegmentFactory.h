@@ -12,6 +12,10 @@
 #pragma once
 
 #include "AudioSegmentFactoryInterface.h"
+#include "ClipInterface.h"
+#include "TimeAndPitchInterface.h"
+
+#include <memory>
 
 class ClipInterface;
 using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
@@ -23,14 +27,14 @@ public:
    AudioSegmentFactory(int sampleRate, int numChannels, ClipHolders clips);
 
    std::vector<std::shared_ptr<AudioSegment>> CreateAudioSegmentSequence(
-      double playbackStartTime, PlaybackDirection) const override;
+      double playbackStartTime, PlaybackDirection) override;
 
 private:
    std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequenceForward(double playbackStartTime) const;
+   CreateAudioSegmentSequenceForward(double playbackStartTime);
 
    std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequenceBackward(double playbackStartTime) const;
+   CreateAudioSegmentSequenceBackward(double playbackStartTime);
 
 private:
    const ClipHolders mClips;
