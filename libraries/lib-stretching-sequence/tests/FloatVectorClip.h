@@ -49,6 +49,16 @@ public:
       return stretchRatio;
    }
 
+   double GetSemitoneShift() const override
+   {
+      return 0.;
+   }
+
+   void SetPitchShiftChangePublisher(
+      std::weak_ptr<PitchShiftChangePublisher>) override
+   {
+   }
+
 public:
    double stretchRatio = 1.;
    double playStartTime = 0.;

@@ -56,7 +56,8 @@ WaveClip::WaveClip(size_t width,
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines)
-    : mClipStretchRatio { orig.mClipStretchRatio }
+    : mSemitoneShift { orig.mSemitoneShift }
+    , mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
 {
@@ -91,7 +92,8 @@ WaveClip::WaveClip(
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines, double t0, double t1)
-    : mClipStretchRatio { orig.mClipStretchRatio }
+    : mSemitoneShift { orig.mSemitoneShift }
+    , mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
 {
@@ -352,6 +354,17 @@ double WaveClip::GetStretchRatio() const
    return mClipStretchRatio * dstSrcRatio;
 }
 
+double WaveClip::GetSemitoneShift() const
+{
+   return mSemitoneShift;
+}
+
+void WaveClip::SetPitchShiftChangePublisher(
+   std::weak_ptr<PitchShiftChangePublisher> publisher)
+{
+   mPitchShiftChangePublisher = std::move(publisher);
+}
+
 bool WaveClip::HasEqualStretchRatio(const WaveClip& other) const
 {
    return StretchRatioEquals(other.GetStretchRatio());
@@ -569,6 +582,12 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                return false;
             SetTrimRight(dblValue);
          }
+         else if (attr == "semitoneShift")
+         {
+            if (!value.TryGet(dblValue))
+               return false;
+            mSemitoneShift = dblValue;
+         }
          else if (attr == "rawAudioTempo")
          {
             if (!value.TryGet(dblValue))
@@ -657,6 +676,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("offset"), mSequenceOffset, 8);
    xmlFile.WriteAttr(wxT("trimLeft"), mTrimLeft, 8);
    xmlFile.WriteAttr(wxT("trimRight"), mTrimRight, 8);
+   xmlFile.WriteAttr(wxT("semitoneShift"), mSemitoneShift, 8);
    xmlFile.WriteAttr(wxT("rawAudioTempo"), mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(wxT("clipStretchRatio"), mClipStretchRatio, 8);
    xmlFile.WriteAttr(wxT("name"), mName);
@@ -1110,6 +1130,13 @@ void WaveClip::SetRate(int rate)
 void WaveClip::SetRawAudioTempo(double tempo)
 {
    mRawAudioTempo = tempo;
+}
+
+void WaveClip::SetSemitoneShift(double semitones)
+{
+   mSemitoneShift = semitones;
+   if (const auto cb = mPitchShiftChangePublisher.lock())
+      cb->Publish(semitones);
 }
 
 /*! @excsafety{Strong} */

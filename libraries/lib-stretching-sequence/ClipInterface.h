@@ -14,6 +14,8 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
+class PitchShiftChangePublisher;
+
 class STRETCHING_SEQUENCE_API ClipTimes
 {
 public:
@@ -40,11 +42,16 @@ class STRETCHING_SEQUENCE_API ClipInterface : public ClipTimes
 public:
    ~ClipInterface() override;
 
-   virtual AudioSegmentSampleView
-   GetSampleView(size_t iChannel, sampleCount start, size_t length,
+   virtual AudioSegmentSampleView GetSampleView(
+      size_t iChannel, sampleCount start, size_t length,
       bool mayThrow = true) const = 0;
 
    virtual size_t GetWidth() const = 0;
+
+   virtual double GetSemitoneShift() const = 0;
+
+   virtual void SetPitchShiftChangePublisher(
+      std::weak_ptr<PitchShiftChangePublisher> publisher) = 0;
 };
 
 using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;

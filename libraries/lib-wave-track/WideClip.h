@@ -46,6 +46,11 @@ public:
 
    double GetStretchRatio() const override;
 
+   double GetSemitoneShift() const override;
+
+   void SetPitchShiftChangePublisher(
+      std::weak_ptr<PitchShiftChangePublisher> publisher) override;
+
 private:
    const std::array<std::shared_ptr<ClipInterface>, 2> mChannels;
 };

@@ -176,6 +176,10 @@ public:
    bool StretchRatioEquals(double value) const;
    //! @}
 
+   void SetSemitoneShift(double semitones);
+   double GetSemitoneShift() const override;
+   void SetPitchShiftChangePublisher(std::weak_ptr<PitchShiftChangePublisher>) override;
+
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
@@ -610,6 +614,9 @@ private:
    double mTrimLeft { 0 };
    double mTrimRight { 0 };
    //! @}
+
+   std::weak_ptr<PitchShiftChangePublisher> mPitchShiftChangePublisher;
+   double mSemitoneShift { 0 };
 
    // Used in GetStretchRatio which computes the factor, by which the sample
    // interval is multiplied, to get a realtime duration.
