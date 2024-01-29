@@ -10,6 +10,7 @@
 
 #include "SpectrumCache.h"
 
+#include "AudioIOBase.h"
 #include "../../../../prefs/SpectrogramSettings.h"
 #include "ParallelReduce.h"
 #include "RealFFTf.h"
@@ -388,7 +389,11 @@ void SpecCache::Populate(
          };
          using namespace Parallel;
          ForEach task{ first, last, calcOne };
-         OneDimensionalReduce(task);
+         // Don't crowd out threads needed for playback
+         auto nThreads = std::thread::hardware_concurrency();
+         if (AudioIOBase::Get()->IsBusy())
+            nThreads -= 3;
+         OneDimensionalReduce(task, nThreads);
       }
       else {
          // Not yet correctly parallelized to avoid data races, because
