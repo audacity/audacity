@@ -15,6 +15,9 @@
 #include <optional>
 #include <vector>
 
+using PitchRatioChangeCbSubscriber =
+   std::function<void(std::function<void(double)>)>;
+
 class TIME_AND_PITCH_API TimeAndPitchSource
 {
 public:
@@ -31,9 +34,17 @@ public:
    {
       std::optional<double> timeRatio;
       std::optional<double> pitchRatio;
+      PitchRatioChangeCbSubscriber pitchRatioChangeCbSubscriber;
    };
 
    virtual void GetSamples(float* const*, size_t) = 0;
 
    virtual ~TimeAndPitchInterface();
+};
+
+class TIME_AND_PITCH_API PitchShiftChangePublisher
+{
+public:
+   virtual ~PitchShiftChangePublisher();
+   virtual void Publish(double semitones) = 0;
 };
