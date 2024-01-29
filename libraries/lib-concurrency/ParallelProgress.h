@@ -10,6 +10,7 @@
 #ifndef __AUDACITY_PARALLEL_PROGRESS__
 #define __AUDACITY_PARALLEL_PROGRESS__
 
+#include "NonInterfering.h"
 #include <atomic>
 
 namespace Parallel {
@@ -46,8 +47,8 @@ public:
    //! Cause shut-down of tasks
    void abandon() { abandoned.store(true, std::memory_order_relaxed); }
 private:
-   std::atomic<increment_type> total{ Increment{} };
-   std::atomic<bool> abandoned{ false };
+   NonInterfering<std::atomic<increment_type>> total{ Increment{} };
+   NonInterfering<std::atomic<bool>> abandoned{ false };
 };
 
 }
