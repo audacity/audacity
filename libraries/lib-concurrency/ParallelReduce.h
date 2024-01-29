@@ -55,7 +55,7 @@ namespace Parallel {
  other threads are recruited and execution is serial.
 
  @param n_threads maximum number of threads to use in the computation, including
- the calling thread; supply 1 to do all work seriallyx
+ the calling thread; supply 1 to do all work serially
 
  @throws if any exceptions escape the split constructor or any member function
  called on any task, then one of the exceptions (or a copy thereof) propagates
@@ -201,8 +201,10 @@ void OneDimensionalReduce(Task &task, unsigned n_threads)
          // overflow
          auto newDistance = distance + step;
          fraction += remainder;
-         if (fraction >= n_threads)
-            fraction -= n_threads, ++newDistance;
+         if (fraction >= n_threads) {
+            fraction -= n_threads;
+            ++newDistance;
+         }
          if (newDistance != distance) {
             const auto oldFirst = first;
             std::advance(first, newDistance - distance);
