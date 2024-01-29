@@ -74,9 +74,16 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
    {
+      if (IllState())
+      {
+         for (auto i = 0u; i < mNumChannels; ++i)
+            std::fill_n(
+               output[i] + numOutputSamples, outputLen - numOutputSamples, 0.f);
+         return;
+      }
       auto numOutputSamplesAvailable =
          mTimeAndPitch->getNumAvailableOutputSamples();
-      while (numOutputSamplesAvailable == 0)
+      while (numOutputSamplesAvailable <= 0)
       {
          auto numRequired = mTimeAndPitch->getSamplesToNextHop();
          while (numRequired > 0)
@@ -116,6 +123,8 @@ void StaffPadTimeAndPitch::BootStretcher()
    AudioContainer container(maxBlockSize, mNumChannels);
    while (numOutputSamplesToDiscard > 0)
    {
+      if (IllState())
+         return;
       auto numRequired = mTimeAndPitch->getSamplesToNextHop();
       while (numRequired > 0)
       {
@@ -137,4 +146,14 @@ void StaffPadTimeAndPitch::BootStretcher()
       }
       numOutputSamplesToDiscard -= totalNumSamplesToRetrieve;
    }
+}
+
+bool StaffPadTimeAndPitch::IllState() const
+{
+   // It doesn't require samples, yet it doesn't have output samples available.
+   // Note that this must not be a permanent state, and may recover if the user
+   // changes the pitch shift.
+   // TODO: try to fix this in the stretcher implementation.
+   return mTimeAndPitch->getSamplesToNextHop() <= 0 &&
+          mTimeAndPitch->getNumAvailableOutputSamples() <= 0;
 }

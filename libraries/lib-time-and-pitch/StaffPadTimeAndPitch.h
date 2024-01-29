@@ -16,7 +16,8 @@ public:
 
 private:
    void BootStretcher();
-   const std::unique_ptr<staffpad::TimeAndPitch> mTimeAndPitch;
+   bool IllState() const;
+   std::unique_ptr<staffpad::TimeAndPitch> mTimeAndPitch;
    TimeAndPitchSource& mAudioSource;
    AudioContainer mReadBuffer;
    const size_t mNumChannels;
