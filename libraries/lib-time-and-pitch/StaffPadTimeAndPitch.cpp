@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cmath>
 #include <memory>
 
 namespace
@@ -10,9 +11,9 @@ namespace
 // to be specified in the `setup` call.)
 constexpr auto maxBlockSize = 1024;
 
-void
-GetOffsetBuffer(float **offsetBuffer,
-   float* const* buffer, size_t numChannels, size_t offset)
+void GetOffsetBuffer(
+   float** offsetBuffer, float* const* buffer, size_t numChannels,
+   size_t offset)
 {
    for (auto i = 0u; i < numChannels; ++i)
       offsetBuffer[i] = buffer[i] + offset;
@@ -47,6 +48,19 @@ StaffPadTimeAndPitch::StaffPadTimeAndPitch(
     , mTimeAndPitch(
          MaybeCreateTimeAndPitch(sampleRate, numChannels, parameters))
 {
+   if (parameters.pitchRatioChangeCbSubscriber)
+      parameters.pitchRatioChangeCbSubscriber([&,
+                                               sampleRate](double semitones) {
+         const auto pitchRatio = std::pow(2., semitones / 12.);
+         std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
+         if (!mTimeAndPitch)
+            mTimeAndPitch = MaybeCreateTimeAndPitch(
+               sampleRate, mNumChannels,
+               TimeAndPitchInterface::Parameters {
+                  mTimeRatio, pitchRatio, {} });
+         else
+            mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, pitchRatio);
+      });
    BootStretcher();
 }
 
@@ -56,6 +70,7 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
       // Pass-through
       return mAudioSource.Pull(output, outputLen);
 
+   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
    {
@@ -81,7 +96,7 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
                        static_cast<int>(outputLen - numOutputSamples) });
          // More-than-stereo isn't supported
          assert(mNumChannels <= 2);
-         float *buffer[2]{};
+         float* buffer[2] {};
          GetOffsetBuffer(buffer, output, mNumChannels, numOutputSamples);
          mTimeAndPitch->retrieveAudio(buffer, numSamplesToGet);
          numOutputSamplesAvailable -= numSamplesToGet;
@@ -93,10 +108,9 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
 void StaffPadTimeAndPitch::BootStretcher()
 {
    if (!mTimeAndPitch)
-   {
       // Bypass
       return;
-   }
+
    auto numOutputSamplesToDiscard =
       mTimeAndPitch->getLatencySamplesForStretchRatio(mTimeRatio);
    AudioContainer container(maxBlockSize, mNumChannels);
