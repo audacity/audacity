@@ -250,8 +250,11 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight
 }
 
 namespace{
-wxString GetPlaybackSpeedFullText(double clipStretchRatio)
+wxString GetPlaybackSpeedText(double clipStretchRatio)
 {
+   if (TimeAndPitchInterface::IsPassThroughMode(clipStretchRatio))
+      return {};
+
    // clang-format off
    // We reckon that most of the time, a rounded percentage value is sufficient.
    // There are two exceptions:
@@ -273,18 +276,16 @@ wxString GetPlaybackSpeedFullText(double clipStretchRatio)
    // instead.
    if (fabs(playbackSpeed - 100.) < .95)
       // Never show 100.0%
-      fullText = wxString::Format(
-         "%.1f%% speed", playbackSpeed > 100 ?
-                              std::max(playbackSpeed, 100.1) :
-                              std::min(playbackSpeed, 99.9));
+      fullText += wxString::Format(
+         "%.1f%%", playbackSpeed > 100 ? std::max(playbackSpeed, 100.1) :
+                                         std::min(playbackSpeed, 99.9));
    else if (playbackSpeed < 1)
       // Never show 0.0%
-      fullText =
-         wxString::Format("%.1f%% speed", std::max(playbackSpeed, 0.1));
+      fullText += wxString::Format("%.1f%%", std::max(playbackSpeed, 0.1));
    else {
       const auto roundedPlaybackSpeed =
          static_cast<int>(std::round(playbackSpeed));
-      fullText = wxString::Format("%d%% speed", roundedPlaybackSpeed);
+      fullText += wxString::Format("%d%%", roundedPlaybackSpeed);
    }
    return fullText;
 }
@@ -322,6 +323,53 @@ std::optional<ClipTitle> DoDrawAudioTitle(
    return std::nullopt;
 }
 
+wxString GetPitchShiftText(double clipSemitoneShift)
+{
+   wxString pitchShiftText;
+   double absShift = std::abs(clipSemitoneShift);
+   if (absShift >= 0.01)
+   {
+      pitchShiftText = wxString::Format("%.2f", absShift);
+      while (pitchShiftText.EndsWith("0"))
+         pitchShiftText.RemoveLast();
+      if (pitchShiftText.EndsWith("."))
+         pitchShiftText.RemoveLast();
+   }
+   return pitchShiftText;
+}
+
+//! Returns the width of the drawn text and icon.
+int DrawPitchOrSpeedIconIfItFits(
+   wxDC& dc, const wxRect& titleRect, const wxString& clipTitle,
+   const wxBitmap& icon, const wxString& text, int offset, int availableWidth,
+   bool alignRight)
+{
+   const auto textWidth = dc.GetTextExtent(text).GetWidth();
+
+   const auto iconHeight = icon.GetHeight();
+   const auto iconWidth = textWidth == 0 ? 0 : icon.GetWidth();
+   const auto rectWidth = iconWidth + textWidth;
+
+   const auto height = titleRect.GetHeight();
+   const auto iconTop = titleRect.GetTop() + (height - iconHeight) / 2;
+   const auto textTop = titleRect.GetTop();
+
+   if (rectWidth == 0 || rectWidth > availableWidth)
+      return 0;
+
+   if (alignRight)
+   {
+      dc.DrawText(text, offset - textWidth, textTop);
+      dc.DrawBitmap(icon, offset - textWidth - iconWidth, iconTop);
+   }
+   else
+   {
+      dc.DrawBitmap(icon, offset, iconTop);
+      dc.DrawText(text, offset + iconWidth, textTop);
+   }
+
+   return textWidth + iconWidth;
+}
 }
 
 bool TrackArt::DrawClipTitle(
@@ -332,30 +380,44 @@ bool TrackArt::DrawClipTitle(
 
 bool TrackArt::DrawAudioClipTitle(
    wxDC& dc, const wxRect& titleRect, const wxString& title,
-   double clipStretchRatio)
+   double clipStretchRatio, double clipSemitoneShift)
 {
    const auto clipTitle = DoDrawAudioTitle(dc, titleRect, title);
    if (!clipTitle.has_value())
       return false;
-   if (!TimeAndPitchInterface::IsPassThroughMode(clipStretchRatio))
-   {
-      const auto fullText = GetPlaybackSpeedFullText(clipStretchRatio);
-      constexpr auto minSpaceBetweenTitleAndSpeed = 12; // pixels
-      const auto remainingWidth = std::max(
-         titleRect.GetWidth() - dc.GetTextExtent(clipTitle->text).GetWidth() -
-            minSpaceBetweenTitleAndSpeed,
-         0);
-      const auto truncatedText =
-         TrackArt::TruncateText(dc, fullText, remainingWidth);
-      if (truncatedText.find('%') != std::string::npos)
-         // Only show if there is room for the % sign, or else it can be hard to
-         // interpret.
-         dc.DrawLabel(
-            TrackArt::TruncateText(dc, fullText, remainingWidth), titleRect,
-            (clipTitle->alignment == HAlign::left ? wxALIGN_RIGHT :
-                                                    wxALIGN_LEFT) |
-               wxALIGN_CENTER_VERTICAL);
-   }
+
+   const auto pitchText = GetPitchShiftText(clipSemitoneShift);
+   const auto speedText = GetPlaybackSpeedText(clipStretchRatio);
+   constexpr auto minSpaceBetweenTitleAndSpeed = 12;
+   auto availableWidth = titleRect.GetWidth() -
+                         dc.GetTextExtent(clipTitle->text).GetWidth() -
+                         minSpaceBetweenTitleAndSpeed;
+   const auto alignRight = clipTitle->alignment == HAlign::left;
+   auto offset = alignRight ? titleRect.GetRight() : titleRect.GetLeft();
+
+   const auto usedWidth = DrawPitchOrSpeedIconIfItFits(
+      dc, titleRect, clipTitle->text, theTheme.Bitmap(speedIndicator),
+      speedText, offset, availableWidth, alignRight);
+
+   if (!speedText.empty() && usedWidth == 0)
+      // There is a speed change but it couldn't be drawn, meaning there's not
+      // enough room. We don't draw pitch if speed doesn't fit.
+      return true;
+
+   const auto pitchTextWidth = dc.GetTextExtent(pitchText).GetWidth();
+   const auto speedTextWidth = dc.GetTextExtent(speedText).GetWidth();
+   const auto spaceBetweenPitchAndSpeed =
+      speedTextWidth == 0 || pitchTextWidth == 0 ? 0 : 4;
+   alignRight ? offset -= usedWidth + spaceBetweenPitchAndSpeed :
+                offset += usedWidth + spaceBetweenPitchAndSpeed;
+   availableWidth -= usedWidth + spaceBetweenPitchAndSpeed;
+
+   DrawPitchOrSpeedIconIfItFits(
+      dc, titleRect, clipTitle->text,
+      theTheme.Bitmap(
+         clipSemitoneShift >= 0 ? pitchUpIndicator : pitchDownIndicator),
+      pitchText, offset, availableWidth, alignRight);
+
    return true;
 }
 

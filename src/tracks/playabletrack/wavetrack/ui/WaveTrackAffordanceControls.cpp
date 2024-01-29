@@ -283,12 +283,12 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                         mTextEditHelper->Cancel(nullptr);
                         TrackArt::DrawAudioClipTitle(
                            context.dc, titleRect, interval->GetName(),
-                           interval->GetStretchRatio());
+                           interval->GetStretchRatio(), 0.);
                     }
                 }
                 else if (TrackArt::DrawAudioClipTitle(
                             context.dc, titleRect, interval->GetName(),
-                            interval->GetStretchRatio()))
+                            interval->GetStretchRatio(), 0.))
                 {
                    mVisibleIntervals.push_back(it);
                 }
