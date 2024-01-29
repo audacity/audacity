@@ -73,6 +73,8 @@ set( IMAGE_LIST
    PasteDisabled.png
    Pause.png
    PauseDisabled.png
+   PitchDownIndicator.png
+   PitchUpIndicator.png
    Play.png
    PlayDisabled.png
    PlayPointer.png
@@ -103,6 +105,7 @@ set( IMAGE_LIST
    SliderThumbRotatedHilited.png
    Speaker.png
    SpectralBrush.png
+   SpeedIndicator.png
    Stop.png
    StopDisabled.png
    SubViewsCursor.png
