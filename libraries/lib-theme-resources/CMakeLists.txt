@@ -17,6 +17,8 @@ set( IMAGE_LIST
    CutDisabled.png
    CutPreview.png
    CutPreviewDisabled.png
+   Delete.png
+   DeleteDisabled.png
    DisabledCursor.png
    DownButtonExpand.png
    DownButtonExpandSel.png
