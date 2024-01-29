@@ -40,8 +40,13 @@ public:
    increment_type operator()(increment_type inc = {}) {
       if (abandoned.load(std::memory_order_relaxed))
          throw detail::AbortException{};
-      const auto old_total = total.fetch_add(inc, std::memory_order_acq_rel);
-      return old_total + inc;
+      if (inc == increment_type{ 0 }) {
+         return total.load(std::memory_order_acquire);
+      }
+      else {
+         const auto old_total = total.fetch_add(inc, std::memory_order_acq_rel);
+         return old_total + inc;
+      }
    }
 
    //! Cause shut-down of tasks
