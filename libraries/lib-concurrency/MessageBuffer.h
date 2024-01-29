@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_MESSAGE_BUFFER__
 #define __AUDACITY_MESSAGE_BUFFER__
 
+#include "NonInterfering.h"
 #include <atomic>
 
 //! Communicate data atomically from one writer thread to one reader.

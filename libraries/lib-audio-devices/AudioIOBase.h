@@ -18,7 +18,7 @@ Paul Licameli split from AudioIO.h
 #include <optional>
 #include <vector>
 #include <wx/string.h>
-#include "MemoryX.h"
+#include "NonInterfering.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;

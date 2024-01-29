@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_RING_BUFFER__
 #define __AUDACITY_RING_BUFFER__
 
+#include "NonInterfering.h"
 #include "SampleFormat.h"
 #include <atomic>
 

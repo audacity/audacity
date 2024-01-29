@@ -3,7 +3,6 @@
 
 // C++ standard header <memory> with a few extensions
 #include <memory>
-#include <new> // align_val_t and hardware_destructive_interference_size
 #include <cstdlib> // Needed for free.
 #ifndef safenew
 #define safenew new
@@ -254,81 +253,6 @@ template< typename T >
 ValueRestorer< T > valueRestorer( T& var, const T& newValue )
 { return ValueRestorer< T >{ var, newValue }; }
 
-//! Non-template helper for class template NonInterfering
-/*!
- If a structure contains any members with large alignment, this base class may also allow it to work in
- macOS builds under current limitations of the C++17 standard implementation.
- */
-struct UTILITY_API alignas(
-#if defined(_WIN32) && defined(_MSC_VER)
-   // MSVC supports this symbol in std, but MinGW uses libstdc++, which it does not.
-   std::hardware_destructive_interference_size
-#else
-   // That constant isn't defined for the other builds yet
-   64 /* ? */
-#endif
-)
-
-NonInterferingBase {
-   static void *operator new(std::size_t count, std::align_val_t al);
-   static void operator delete(void *ptr, std::align_val_t al);
-
-#if defined (_MSC_VER) && defined(_DEBUG)
-   // Versions that work in the presence of the DEBUG_NEW macro.
-   // Ignore the arguments supplied by the macro and forward to the
-   // other overloads.
-   static void *operator new(
-      std::size_t count, std::align_val_t al, int, const char *, int)
-   { return operator new(count, al); }
-   static void operator delete(
-      void *ptr, std::align_val_t al, int, const char *, int)
-   { return operator delete(ptr, al); }
-#endif
-};
-
-//! Workaround for std::make_shared not working on macOs with over-alignment
-/*!
- Defines a static member function to use as an alternative to that in std::
- */
-template<typename T> // CRTP
-struct SharedNonInterfering : NonInterferingBase
-{
-   template<typename... Args>
-   static std::shared_ptr<T> make_shared(Args &&...args)
-   {
-      return std::
-#ifdef __APPLE__
-         // shared_ptr must be constructed from unique_ptr on Mac
-         make_unique
-#else
-         make_shared
-#endif
-                    <T>(std::forward<Args>(args)...);
-   }
-};
-
-/*! Given a structure type T, derive a structure with sufficient padding so that there is not false sharing of
- cache lines between successive elements of an array of those structures.
- */
-template< typename T > struct NonInterfering
-   : NonInterferingBase // Inherit operators; use empty base class optimization
-   , T
-{
-   using T::T;
-
-   //! Allow assignment from default-aligned base type
-   void Set(const T &other)
-   {
-      T::operator =(other);
-   }
-
-   //! Allow assignment from default-aligned base type
-   void Set(T &&other)
-   {
-      T::operator =(std::move(other));
-   }
-};
-
 // These macros are used widely, so declared here.
 #define QUANTIZED_TIME(time, rate) (floor(((double)(time) * (rate)) + 0.5) / (rate))
 // dB - linear amplitude conversions
@@ -336,29 +260,5 @@ template< typename T > struct NonInterfering
 #define LINEAR_TO_DB(x) (20.0 * log10(x))
 
 #define MAX_AUDIO (1. - 1./(1<<15))
-
-//! Atomic unique pointer (for nonarray type only) with a destructor;
-//! It doesn't copy or move
-template<typename T>
-struct AtomicUniquePointer : public std::atomic<T*> {
-   static_assert(AtomicUniquePointer::is_always_lock_free);
-   using std::atomic<T*>::atomic;
-   //! Reassign the pointer with release ordering,
-   //! then destroy any previously held object
-   /*!
-    Like `std::unique_ptr`, does not check for reassignment of the same pointer */
-   void reset(T *p = nullptr) {
-      delete this->exchange(p, std::memory_order_release);
-   }
-   //! reset to a pointer to a new object with given ctor arguments
-   template<typename... Args> void emplace(Args &&... args) {
-      reset(safenew T(std::forward<Args>(args)...));
-   }
-   ~AtomicUniquePointer() { reset(); }
-private:
-   //! Disallow pointer arithmetic
-   using std::atomic<T*>::fetch_add;
-   using std::atomic<T*>::fetch_sub;
-};
 
 #endif // __AUDACITY_MEMORY_X_H__

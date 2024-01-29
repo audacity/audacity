@@ -26,6 +26,7 @@
 #include "SampleFormat.h"
 #include "Prefs.h"
 #include "MeterPanelBase.h" // to inherit
+#include "NonInterfering.h"
 #include "Observer.h"
 #include "Ruler.h" // member variable
 

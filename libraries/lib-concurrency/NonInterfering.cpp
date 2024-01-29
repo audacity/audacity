@@ -1,17 +1,18 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
 /**********************************************************************
  
  Audacity: A Digital Audio Editor
  
- MemoryX.cpp
+ NonInterfering.cpp
  
  Paul Licameli
  
  **********************************************************************/
-
-#include "MemoryX.h"
+#include "NonInterfering.h"
+#include <algorithm>
 
 // Make the symbol table non-empty
-UTILITY_API void lib_utility_dummy_symbol()
+CONCURRENCY_API void lib_utility_dummy_symbol()
 {}
 
 constexpr auto sizeof_align_val = sizeof(std::align_val_t);
@@ -23,7 +24,7 @@ void *NonInterferingBase::operator new(std::size_t count, std::align_val_t al)
    // (And to do that, adjust the alignment to be not less than the alignment of
    // an alignment value!).
    // Also increase the allocation by one entire alignment.
-   al = max( al, static_cast<align_val_t>( alignof(align_val_t) ) );
+   al = std::max( al, static_cast<align_val_t>( alignof(align_val_t) ) );
    const auto al_as_size = static_cast<size_t>(al);
    auto ptr = static_cast<char*>(
       ::operator new( count + sizeof_align_val + al_as_size ) );

@@ -30,7 +30,6 @@ set( SOURCES
    GlobalVariable.h
    IteratorX.cpp
    IteratorX.h
-   MemoryX.cpp
    MemoryX.h
    ModuleConstants.cpp
    ModuleConstants.h

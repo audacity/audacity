@@ -19,7 +19,7 @@
 #include "ClientData.h"
 #include "EffectInterface.h"
 #include "GlobalVariable.h"
-#include "MemoryX.h"
+#include "NonInterfering.h"
 #include "Observer.h"
 #include "PluginProvider.h" // for PluginID
 #include "XMLTagHandler.h"

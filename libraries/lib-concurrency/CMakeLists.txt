@@ -4,6 +4,8 @@ Synchronization objects and parallel algorithms
 
 set( SOURCES
    MessageBuffer.h
+   NonInterfering.cpp
+   NonInterfering.h
    ParallelProgress.h
    ParallelReduce.h
    Splittable.h
@@ -12,6 +14,6 @@ set( SOURCES
 set( LIBRARIES
 )
 
-audacity_header_only_library( lib-concurrency "${SOURCES}" "${LIBRARIES}"
+audacity_library( lib-concurrency "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

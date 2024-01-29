@@ -23,6 +23,7 @@ set( SOURCES
 set( LIBRARIES
    portaudio::portaudio
    $<$<BOOL:${USE_PORTMIXER}>:portmixer>
+   lib-concurrency-interface
    lib-preferences-interface
 )
 audacity_library( lib-audio-devices "${SOURCES}" "${LIBRARIES}"
