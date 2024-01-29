@@ -274,6 +274,11 @@ void WaveTrack::Interval::StretchBy(double ratio)
       GetClip(channel)->StretchBy(ratio);
 }
 
+void WaveTrack::Interval::SetSemitoneShift(double semitones)
+{
+   ForEachClip([semitones](auto& clip) { clip.SetSemitoneShift(semitones); });
+}
+
 WaveTrack::IntervalHolder WaveTrack::Interval::GetStretchRenderedCopy(
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
@@ -431,6 +436,11 @@ double WaveTrack::Interval::GetStretchRatio() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common stretch ratio
    return mpClip->GetStretchRatio();
+}
+
+double WaveTrack::Interval::GetSemitoneShift() const
+{
+   return mpClip->GetSemitoneShift();
 }
 
 void WaveTrack::Interval::SetRawAudioTempo(double tempo)

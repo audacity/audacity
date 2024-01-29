@@ -956,6 +956,7 @@ public:
       bool WithinPlayRegion(double t) const;
 
       double GetStretchRatio() const;
+      double GetSemitoneShift() const;
       void SetRawAudioTempo(double tempo);
 
       sampleCount TimeToSamples(double time) const;
@@ -985,6 +986,7 @@ public:
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
       void StretchBy(double ratio);
+      void SetSemitoneShift(double semitones);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
       void ClearLeft(double t);

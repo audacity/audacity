@@ -283,12 +283,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                         mTextEditHelper->Cancel(nullptr);
                         TrackArt::DrawAudioClipTitle(
                            context.dc, titleRect, interval->GetName(),
-                           interval->GetStretchRatio(), 0.);
+                           interval->GetStretchRatio(),
+                           interval->GetSemitoneShift());
                     }
                 }
                 else if (TrackArt::DrawAudioClipTitle(
                             context.dc, titleRect, interval->GetName(),
-                            interval->GetStretchRatio(), 0.))
+                            interval->GetStretchRatio(),
+                            interval->GetSemitoneShift()))
                 {
                    mVisibleIntervals.push_back(it);
                 }
