@@ -1732,6 +1732,8 @@ bool AudacityApp::InitPart2()
    }
 #endif
 
+   HandleAppInitialized();
+
    return TRUE;
 }
 

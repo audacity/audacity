@@ -5,6 +5,7 @@ Provides audio file information via libsndfile
 set( SOURCES
    FileFormats.cpp
    FileFormats.h
+   AcidizerTags.h
 )
 set( LIBRARIES
    PUBLIC

@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "MusicInformationRetrieval.h"
+#include "DecimatingMirAudioReader.h"
 #include "GetMeterUsingTatumQuantizationFit.h"
 #include "MirAudioReader.h"
 #include "MirUtils.h"
@@ -41,15 +42,27 @@ constexpr std::array<double, numTimeSignatures> quarternotesPerBeat { 2., 1.,
                                                                       1., 1.5 };
 
 std::optional<MusicalMeter> FillMetadata(
-   const std::string& filename, const MirAudioReader& audio,
-   FalsePositiveTolerance tolerance,
+   const std::string& filename,
+   const std::optional<LibFileFormats::AcidizerTags>& tags,
+   const MirAudioReader& audio, FalsePositiveTolerance tolerance,
    const std::function<void(double progress)>& progressCallback)
 {
+   // Prioritize tags over filename:
+   if (tags.has_value() && tags->isOneShot)
+      // That a tag is one-shot in general doesn't mean it doesn't have
+      // rhythm and tempo, but in practice one-shots are not to be looped or
+      // stretched.
+      return {};
+   else if (tags.has_value() && tags->bpm.has_value() && *tags->bpm > 30.)
+      return MusicalMeter { *tags->bpm, std::optional<TimeSignature> {} };
+
+   // No tags or invalid tags: fall back onto filename:
    const auto bpmFromFilename = GetBpmFromFilename(filename);
    if (bpmFromFilename.has_value())
       return MusicalMeter { *bpmFromFilename, {} };
-   else
-      return GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
+
+   // No luck with filename parsing: try to get the tempo from the audio
+   return GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
 }
 } // namespace
 
@@ -66,13 +79,14 @@ int GetDenominator(TimeSignature ts)
 }
 
 MusicInformation::MusicInformation(
-   const std::string& filename, double duration, const MirAudioReader& audio,
+   const std::optional<LibFileFormats::AcidizerTags>& tags,
+   const std::string& filename, const MirAudioReader& audio,
    FalsePositiveTolerance tolerance,
    std::function<void(double progress)> progressCallback)
     : filename { RemovePathPrefix(filename) }
-    , duration { duration }
+    , duration { audio.GetDuration() }
     , mMusicalMeter { FillMetadata(
-         filename, audio, tolerance, std::move(progressCallback)) }
+         filename, tags, audio, tolerance, std::move(progressCallback)) }
 {
 }
 
@@ -144,11 +158,15 @@ std::optional<MusicalMeter> GetMusicalMeterFromSignal(
    const std::function<void(double)>& progressCallback,
    QuantizationFitDebugOutput* debugOutput)
 {
-   if (audio.GetNumSamples() / audio.GetSampleRate() > 60)
+   if (audio.GetSampleRate() <= 0)
+      return {};
+   const auto duration = 1. * audio.GetNumSamples() / audio.GetSampleRate();
+   if (duration > 60)
       // A file longer than 1 minute is most likely not a loop, and processing
       // it would be costly.
       return {};
+   DecimatingMirAudioReader decimatedAudio { audio };
    return GetMeterUsingTatumQuantizationFit(
-      audio, tolerance, progressCallback, debugOutput);
+      decimatedAudio, tolerance, progressCallback, debugOutput);
 }
 } // namespace MIR

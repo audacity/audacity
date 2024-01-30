@@ -20334,7 +20334,7 @@ msgstr "Sorun.~%Seçim geçersiz.~%2 taneden fazla ses parçası seçilmiş."
 #, lisp-format
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
-msgstr "Hata.~%Seçim geçersiz.~1%ESeçimin başında ya da sonunda boş alan var."
+msgstr "Hata.~%Seçim geçersiz.~%ESeçimin başında ya da sonunda boş alan var."
 
 #: plug-ins/crossfadeclips.ny
 #, lisp-format

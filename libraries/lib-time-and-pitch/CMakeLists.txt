@@ -5,9 +5,6 @@ Based on the more versatile time-stretching from StaffPad, but tailored for the 
 ]]
 
 set( SOURCES
-   StaffPad/pffft/pffft.c
-   StaffPad/pffft/pffft.h
-   StaffPad/pffft/pfsimd_macros.h
    StaffPad/CircularSampleBuffer.h
    StaffPad/FourierTransform_pffft.cpp
    StaffPad/FourierTransform_pffft.h
@@ -29,7 +26,9 @@ set( SOURCES
    TimeAndPitchInterface.h
 )
 set( LIBRARIES
+PUBLIC
+   pffft
 )
-audacity_library( lib-time-and-pitch "${SOURCES}" ""
+audacity_library( lib-time-and-pitch "${SOURCES}" "${LIBRARIES}"
    "" ""
 )

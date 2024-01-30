@@ -27,7 +27,7 @@ public:
        : numSamples { numSamples }
    {
    }
-   int GetSampleRate() const override
+   double GetSampleRate() const override
    {
       return 44100;
    };
