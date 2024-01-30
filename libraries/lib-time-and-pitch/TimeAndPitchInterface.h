@@ -34,7 +34,7 @@ public:
    };
 
    virtual void GetSamples(float* const*, size_t) = 0;
-   virtual void OnSemitoneShiftChange(double semitones) {}
+   virtual void OnCentShiftChange(int cents) = 0;
 
    virtual ~TimeAndPitchInterface();
 };

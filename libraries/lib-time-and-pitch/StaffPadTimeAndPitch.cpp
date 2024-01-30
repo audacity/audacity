@@ -100,9 +100,9 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
    }
 }
 
-void StaffPadTimeAndPitch::OnSemitoneShiftChange(double semitones)
+void StaffPadTimeAndPitch::OnCentShiftChange(int cents)
 {
-   const auto pitchRatio = std::pow(2., semitones / 12.);
+   const auto pitchRatio = std::pow(2., cents / 1200.);
    std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
    if (!mTimeAndPitch)
       mTimeAndPitch = MaybeCreateTimeAndPitch(

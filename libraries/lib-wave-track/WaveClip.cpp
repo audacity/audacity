@@ -56,7 +56,7 @@ WaveClip::WaveClip(size_t width,
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines)
-    : mSemitoneShift { orig.mSemitoneShift }
+    : mCentShift { orig.mCentShift }
     , mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
@@ -92,7 +92,7 @@ WaveClip::WaveClip(
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines, double t0, double t1)
-    : mSemitoneShift { orig.mSemitoneShift }
+    : mCentShift { orig.mCentShift }
     , mClipStretchRatio { orig.mClipStretchRatio }
     , mRawAudioTempo { orig.mRawAudioTempo }
     , mProjectTempo { orig.mProjectTempo }
@@ -354,25 +354,26 @@ double WaveClip::GetStretchRatio() const
    return mClipStretchRatio * dstSrcRatio;
 }
 
-double WaveClip::GetSemitoneShift() const
+int WaveClip::GetCentShift() const
 {
-   return mSemitoneShift;
+   return mCentShift;
 }
+
 Observer::Subscription
-WaveClip::SubscribeToSemitoneShiftChange(std::function<void(double)> cb)
+WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
 {
-   return Subscribe([cb](const Semitones& semitones) { cb(semitones.value); });
+   return Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
 }
 
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
 {
    return StretchRatioEquals(other.GetStretchRatio()) &&
-          GetSemitoneShift() == other.GetSemitoneShift();
+          GetCentShift() == other.GetCentShift();
 }
 
 bool WaveClip::HasPitchOrSpeed() const
 {
-   return !StretchRatioEquals(1.0) || GetSemitoneShift() != 0.0;
+   return !StretchRatioEquals(1.0) || GetCentShift() != 0;
 }
 
 bool WaveClip::StretchRatioEquals(double value) const
@@ -587,11 +588,11 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
                return false;
             SetTrimRight(dblValue);
          }
-         else if (attr == "semitoneShift")
+         else if (attr == "centShift")
          {
             if (!value.TryGet(dblValue))
                return false;
-            mSemitoneShift = dblValue;
+            mCentShift = dblValue;
          }
          else if (attr == "rawAudioTempo")
          {
@@ -681,7 +682,7 @@ void WaveClip::WriteXML(XMLWriter &xmlFile) const
    xmlFile.WriteAttr(wxT("offset"), mSequenceOffset, 8);
    xmlFile.WriteAttr(wxT("trimLeft"), mTrimLeft, 8);
    xmlFile.WriteAttr(wxT("trimRight"), mTrimRight, 8);
-   xmlFile.WriteAttr(wxT("semitoneShift"), mSemitoneShift, 8);
+   xmlFile.WriteAttr(wxT("centShift"), mCentShift);
    xmlFile.WriteAttr(wxT("rawAudioTempo"), mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(wxT("clipStretchRatio"), mClipStretchRatio, 8);
    xmlFile.WriteAttr(wxT("name"), mName);
@@ -1137,10 +1138,10 @@ void WaveClip::SetRawAudioTempo(double tempo)
    mRawAudioTempo = tempo;
 }
 
-void WaveClip::SetSemitoneShift(double semitones)
+void WaveClip::SetCentShift(int cents)
 {
-   mSemitoneShift = semitones;
-   Publish(Semitones { semitones });
+   mCentShift = cents;
+   Publish(CentShiftChange { cents });
 }
 
 /*! @excsafety{Strong} */

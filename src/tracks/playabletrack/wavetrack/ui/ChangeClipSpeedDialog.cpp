@@ -78,6 +78,11 @@ public:
    {
    }
 };
+
+// Obtained by experiment: shifts beyond these bounds aren't well supported by
+// StaffPad's pitch shifter. It's plenty already.
+constexpr auto minSemis = -24;
+constexpr auto maxSemis = 60;
 } // namespace
 
 ChangeClipSpeedDialog::ChangeClipSpeedDialog(
@@ -92,9 +97,9 @@ ChangeClipSpeedDialog::ChangeClipSpeedDialog(
     , mClipSpeed { 100.0 / interval.GetStretchRatio() }
     , mOldClipSpeed { mClipSpeed }
 {
-   const auto shift = mTrackInterval.GetSemitoneShift();
-   mShift.semis = std::floor(shift);
-   mShift.cents = std::round((shift - mShift.semis) * 100);
+   const auto totalShift = mTrackInterval.GetCentShift();
+   mShift.cents = totalShift % 100;
+   mShift.semis = (totalShift - mShift.cents) / 100;
    mOldShift = mShift;
 
    ShuttleGui s(this, eIsCreating);
@@ -136,48 +141,31 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
       }
       {
          ScopedHorizontalLay h { s, wxLeft };
-         constexpr auto minSemis = -24;
-         constexpr auto maxSemis = 60;
          s.SetBorder(2);
          s.TieSpinCtrl(Verbatim(""), mShift.semis, maxSemis, minSemis)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
+               const auto prevSemis = mShift.semis;
                mShift.semis = event.GetInt();
-               if (mShift.semis == maxSemis && mShift.cents != 0)
-               {
-                  mShift.cents = 0;
-                  SetSemitoneShift();
-                  UpdateDialog();
-               }
-               else
-                  SetSemitoneShift();
+               // If we have e.g. -3 semi, -1 cents, and the user changes the
+               // sign of the semitones, the logic in `OnPitchShiftChange`
+               // would result in 2 semi, 99 cents. If the user changes
+               // sign again, we would now get 1 semi, -1 cents. Mirrorring
+               // (e.g. -3 semi, -1 cents -> 3 semi, 1 cents) is not a good
+               // idea because that would ruin the work of users
+               // painstakingly adjusting the cents of an instrument.
+               // So instead, we map -3 semi, -1 cents to 3 semi, 99 cents.
+               if (prevSemis < 0 && mShift.semis > 0)
+                  ++mShift.semis;
+               else if (prevSemis > 0 && mShift.semis < 0)
+                  --mShift.semis;
+               OnPitchShiftChange();
             });
          s.AddSpace(1, 0);
          s.AddFixedText(XO("semitones,"));
-         s.TieSpinCtrl(Verbatim(""), mShift.cents, 100, -1)
+         s.TieSpinCtrl(Verbatim(""), mShift.cents, 100, -100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                mShift.cents = event.GetInt();
-               std::optional<PitchShift> correctedShift;
-               if (mShift.semis == maxSemis && mShift.cents != -1)
-                  // If we've reached the higher limit, unless the user wants to
-                  // go down, the cents stay at 0.
-                  correctedShift = PitchShift { maxSemis, 0 };
-               else if (mShift.cents == -1)
-               {
-                  if (mShift.semis > minSemis)
-                     // Going down is allowed.
-                     correctedShift = PitchShift { mShift.semis - 1, 99 };
-                  else
-                     // We're already at the min transposition.
-                     correctedShift = PitchShift { minSemis, 0 };
-               }
-               else if (mShift.cents == 100)
-                  // Going up is allowed.
-                  correctedShift = PitchShift { mShift.semis + 1, 0 };
-               if (correctedShift.has_value())
-                  mShift = *correctedShift;
-               SetSemitoneShift();
-               if (correctedShift.has_value())
-                  UpdateDialog();
+               OnPitchShiftChange();
             });
          s.AddFixedText(XO("cents"));
       }
@@ -292,6 +280,34 @@ bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
    return true;
 }
 
+void ChangeClipSpeedDialog::OnPitchShiftChange()
+{
+   // Rules:
+   // 1. total shift is clipped to [minSemis, maxSemis]
+   // 2. cents must be in the range [-100, 100]
+   // 3. on cent updates, keep semitone and cent sign consistent
+   const auto totalShift = mShift.semis * 100 + mShift.cents;
+   std::optional<PitchShift> correctedShift;
+   if (totalShift > maxSemis * 100)
+      correctedShift = PitchShift { maxSemis, 0 };
+   else if (totalShift < minSemis * 100)
+      correctedShift = PitchShift { minSemis, 0 };
+   else if (mShift.cents == 100)
+      correctedShift = PitchShift { mShift.semis + 1, 0 };
+   else if (mShift.cents == -100)
+      correctedShift = PitchShift { mShift.semis - 1, 0 };
+   else if (mShift.cents > 0 && mShift.semis < 0)
+      correctedShift = PitchShift { mShift.semis + 1, mShift.cents - 100 };
+   else if (mShift.cents < 0 && mShift.semis > 0)
+      correctedShift = PitchShift { mShift.semis - 1, mShift.cents + 100 };
+
+   if (correctedShift.has_value())
+      mShift = *correctedShift;
+   SetSemitoneShift();
+   if (correctedShift.has_value())
+      UpdateDialog();
+}
+
 void ChangeClipSpeedDialog::UpdateDialog()
 {
    ShuttleGui S(this, eIsSettingToDialog);
@@ -300,5 +316,5 @@ void ChangeClipSpeedDialog::UpdateDialog()
 
 void ChangeClipSpeedDialog::SetSemitoneShift()
 {
-   mTrackInterval.SetSemitoneShift(mShift.semis + mShift.cents / 100.0);
+   mTrackInterval.SetCentShift(mShift.semis * 100 + mShift.cents);
 }

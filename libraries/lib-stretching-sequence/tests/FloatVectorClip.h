@@ -49,13 +49,13 @@ public:
       return stretchRatio;
    }
 
-   double GetSemitoneShift() const override
+   int GetCentShift() const override
    {
-      return 0.;
+      return 0;
    }
 
    Observer::Subscription
-   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) override
+   SubscribeToCentShiftChange(std::function<void(int)> cb) override
    {
       return {};
    }

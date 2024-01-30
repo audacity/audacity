@@ -285,13 +285,13 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                         TrackArt::DrawAudioClipTitle(
                            context.dc, titleRect, interval->GetName(),
                            interval->GetStretchRatio(),
-                           interval->GetSemitoneShift());
+                           interval->GetCentShift());
                     }
                 }
                 else if (TrackArt::DrawAudioClipTitle(
                             context.dc, titleRect, interval->GetName(),
                             interval->GetStretchRatio(),
-                            interval->GetSemitoneShift()))
+                            interval->GetCentShift()))
                 {
                    mVisibleIntervals.push_back(it);
                 }
@@ -659,7 +659,7 @@ void WaveTrackAffordanceControls::OnPitchShift(AudacityProject& project, bool up
    if (track != FindTrack().get())
       return;
    auto interval = *it;
-   interval->SetSemitoneShift(interval->GetSemitoneShift() + (up ? 1 : -1));
+   interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100));
    ProjectHistory::Get(project).PushState(
          XO("Pitch Shift"), XO("Changed Pitch Shift"),
          UndoPush::CONSOLIDATE);

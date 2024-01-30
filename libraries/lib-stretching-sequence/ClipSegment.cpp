@@ -24,7 +24,7 @@ GetStretchingParameters(const ClipInterface& clip)
 {
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = clip.GetStretchRatio();
-   params.pitchRatio = std::pow(2., clip.GetSemitoneShift() / 12);
+   params.pitchRatio = std::pow(2., clip.GetCentShift() / 1200.);
    return params;
 }
 
@@ -45,10 +45,8 @@ ClipSegment::ClipSegment(
     , mStretcher { std::make_unique<StaffPadTimeAndPitch>(
          clip.GetRate(), clip.GetWidth(), mSource,
          GetStretchingParameters(clip)) }
-    , mOnSemitoneShiftChangeSubscription { clip.SubscribeToSemitoneShiftChange(
-         [this](double semitones) {
-            mStretcher->OnSemitoneShiftChange(semitones);
-         }) }
+    , mOnSemitoneShiftChangeSubscription { clip.SubscribeToCentShiftChange(
+         [this](int cents) { mStretcher->OnCentShiftChange(cents); }) }
 {
 }
 

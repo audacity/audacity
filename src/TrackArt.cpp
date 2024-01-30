@@ -323,13 +323,12 @@ std::optional<ClipTitle> DoDrawAudioTitle(
    return std::nullopt;
 }
 
-wxString GetPitchShiftText(double clipSemitoneShift)
+wxString GetPitchShiftText(int clipCentShift)
 {
    wxString pitchShiftText;
-   double absShift = std::abs(clipSemitoneShift);
-   if (absShift >= 0.01)
+   if (clipCentShift != 0)
    {
-      pitchShiftText = wxString::Format("%.2f", absShift);
+      pitchShiftText = wxString::Format("%.2f", std::abs(clipCentShift) / 100.);
       while (pitchShiftText.EndsWith("0"))
          pitchShiftText.RemoveLast();
       if (pitchShiftText.EndsWith("."))
@@ -380,13 +379,13 @@ bool TrackArt::DrawClipTitle(
 
 bool TrackArt::DrawAudioClipTitle(
    wxDC& dc, const wxRect& titleRect, const wxString& title,
-   double clipStretchRatio, double clipSemitoneShift)
+   double clipStretchRatio, int clipCentShift)
 {
    const auto clipTitle = DoDrawAudioTitle(dc, titleRect, title);
    if (!clipTitle.has_value())
       return false;
 
-   const auto pitchText = GetPitchShiftText(clipSemitoneShift);
+   const auto pitchText = GetPitchShiftText(clipCentShift);
    const auto speedText = GetPlaybackSpeedText(clipStretchRatio);
    constexpr auto minSpaceBetweenTitleAndSpeed = 12;
    auto availableWidth = titleRect.GetWidth() -
@@ -415,7 +414,7 @@ bool TrackArt::DrawAudioClipTitle(
    DrawPitchOrSpeedIconIfItFits(
       dc, titleRect, clipTitle->text,
       theTheme.Bitmap(
-         clipSemitoneShift >= 0 ? pitchUpIndicator : pitchDownIndicator),
+         clipCentShift >= 0 ? pitchUpIndicator : pitchDownIndicator),
       pitchText, offset, availableWidth, alignRight);
 
    return true;

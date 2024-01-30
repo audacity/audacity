@@ -13,7 +13,7 @@ public:
       int sampleRate, size_t numChannels, TimeAndPitchSource&,
       const Parameters&);
    void GetSamples(float* const*, size_t) override;
-   void OnSemitoneShiftChange(double semitones) override;
+   void OnCentShiftChange(int cents) override;
 
 private:
    void BootStretcher();

@@ -276,9 +276,9 @@ void WaveTrack::Interval::StretchBy(double ratio)
       GetClip(channel)->StretchBy(ratio);
 }
 
-void WaveTrack::Interval::SetSemitoneShift(double semitones)
+void WaveTrack::Interval::SetCentShift(int cents)
 {
-   ForEachClip([semitones](auto& clip) { clip.SetSemitoneShift(semitones); });
+   ForEachClip([cents](auto& clip) { clip.SetCentShift(cents); });
 }
 
 WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
@@ -323,7 +323,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
-   params.pitchRatio = std::pow(2., mpClip->GetSemitoneShift() / 12);
+   params.pitchRatio = std::pow(2., mpClip->GetCentShift() / 1200.);
    StaffPadTimeAndPitch stretcher { mpClip->GetRate(), numChannels,
                                     stretcherSource, std::move(params) };
 
@@ -443,9 +443,9 @@ double WaveTrack::Interval::GetStretchRatio() const
    return mpClip->GetStretchRatio();
 }
 
-double WaveTrack::Interval::GetSemitoneShift() const
+int WaveTrack::Interval::GetCentShift() const
 {
-   return mpClip->GetSemitoneShift();
+   return mpClip->GetCentShift();
 }
 
 void WaveTrack::Interval::SetRawAudioTempo(double tempo)

@@ -47,10 +47,10 @@ public:
 
    virtual size_t GetWidth() const = 0;
 
-   virtual double GetSemitoneShift() const = 0;
+   virtual int GetCentShift() const = 0;
 
    [[nodiscard]] virtual Observer::Subscription
-   SubscribeToSemitoneShiftChange(std::function<void(double)> cb) = 0;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) = 0;
 };
 
 using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
