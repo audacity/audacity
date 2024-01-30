@@ -93,9 +93,7 @@ public:
 
     void StartEditSelectedClipSpeed(AudacityProject& project);
 
-    void OnRenderClipStretching(AudacityProject& project);
-
-    void OnPitchShift(AudacityProject &project, bool up);
+    void OnRenderClipStretching(AudacityProject& project) const;
 
     std::vector<MenuItem> GetMenuItems(
        const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )

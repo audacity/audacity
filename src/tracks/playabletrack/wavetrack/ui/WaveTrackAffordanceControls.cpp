@@ -627,7 +627,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(
-   AudacityProject& project)
+   AudacityProject& project) const
 {
    const auto [track, it] = SelectedIntervalOfFocusedTrack(project);
 
@@ -651,18 +651,6 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
       XO("Rendered time-stretched audio"), XO("Render"));
 
    SelectInterval(project, *interval);
-}
-
-void WaveTrackAffordanceControls::OnPitchShift(AudacityProject& project, bool up)
-{
-   const auto [track, it] = SelectedIntervalOfFocusedTrack(project);
-   if (track != FindTrack().get())
-      return;
-   auto interval = *it;
-   interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100));
-   ProjectHistory::Get(project).PushState(
-         XO("Pitch Shift"), XO("Changed Pitch Shift"),
-         UndoPush::CONSOLIDATE);
 }
 
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
@@ -727,28 +715,27 @@ void OnRenderClipStretching(const CommandContext& context)
    }
 }
 
+void OnPitchShift(
+   const CommandContext& context, bool up)
+{
+   auto [track, it] = SelectedIntervalOfFocusedTrack(context.project);
+   if (!track)
+      return;
+   const auto interval = *it;
+   interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100));
+   ProjectHistory::Get(context.project)
+      .PushState(
+         XO("Pitch Shift"), XO("Changed Pitch Shift"), UndoPush::CONSOLIDATE);
+}
+
 void OnPitchUp(const CommandContext& context)
 {
-   auto& project = context.project;
-   if (
-      auto pWaveTrack =
-         dynamic_cast<WaveTrack*>(TrackFocus::Get(project).Get()))
-   {
-      if (auto pAffordance = FindAffordance(*pWaveTrack))
-         pAffordance->OnPitchShift(project, true);
-   }
+   OnPitchShift(context, true);
 }
 
 void OnPitchDown(const CommandContext& context)
 {
-   auto& project = context.project;
-   if (
-      auto pWaveTrack =
-         dynamic_cast<WaveTrack*>(TrackFocus::Get(project).Get()))
-   {
-      if (auto pAffordance = FindAffordance(*pWaveTrack))
-         pAffordance->OnPitchShift(project, false);
-   }
+   OnPitchShift(context, false);
 }
 
 using namespace MenuRegistry;
