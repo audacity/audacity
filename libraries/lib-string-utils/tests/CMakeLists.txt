@@ -4,6 +4,7 @@ add_unit_test(
    SOURCES
       FromCharsTests.cpp
       StringUtils.cpp
+      UriParserTests.cpp
    LIBRARIES
       lib-string-utils
       wxBase

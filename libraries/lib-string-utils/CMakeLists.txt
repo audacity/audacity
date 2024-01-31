@@ -25,6 +25,9 @@ set(SOURCES
 
     FromChars.h
     FromChars.cpp
+
+    UriParser.h
+    UriParser.cpp
 )
 
 set( LIBRARIES
