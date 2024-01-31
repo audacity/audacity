@@ -363,7 +363,7 @@ wxString ShareAudioDialog::ExportProject()
 
          ExportProgressUI::ExceptionWrappedCall([&]
          {
-            if(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
+            while(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
                mExportProgressUpdater->UpdateUI();
             result = f.get();
          });
