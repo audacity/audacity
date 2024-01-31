@@ -30,6 +30,8 @@
 
 #include "BasicUI.h"
 
+#include "StringUtils.h"
+
 namespace cloud::audiocom
 {
 namespace
@@ -69,17 +71,6 @@ void WriteCommonFields(
       "scope", StringRef(scope.data(), scope.size()), document.GetAllocator());
 }
 
-bool IsPrefixed(std::string_view hay, std::string_view prefix)
-{
-   if (hay.length() < prefix.length())
-      return false;
-
-   return std::mismatch(
-             prefix.begin(), prefix.end(), hay.begin(),
-             [](auto a, auto b) { return a == std::tolower(b); })
-             .first == prefix.end();
-}
-
 } // namespace
 
 void OAuthService::ValidateAuth(
@@ -95,14 +86,14 @@ void OAuthService::ValidateAuth(
    AuthoriseRefreshToken(GetServiceConfig(), std::move(completedHandler), silent);
 }
 
-void OAuthService::HandleLinkURI(
+bool OAuthService::HandleLinkURI(
    std::string_view uri, std::function<void(std::string_view)> completedHandler)
 {
-   if (!IsPrefixed(uri, uriPrefix))
+   if (!IsPrefixed(uri, uriPrefix, false))
    {
       if (completedHandler)
          completedHandler({});
-      return;
+      return false;
    }
 
    // It was observed, that sometimes link is passed as audacity://link/
@@ -113,7 +104,7 @@ void OAuthService::HandleLinkURI(
    {
       if (completedHandler)
          completedHandler({});
-      return;
+      return false;
    }
 
    // Length is handled in IsPrefixed
@@ -164,7 +155,11 @@ void OAuthService::HandleLinkURI(
    {
       if (completedHandler)
          completedHandler({});
+
+      return false;
    }
+
+   return true;
 }
 
 void OAuthService::UnlinkAccount()

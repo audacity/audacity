@@ -30,6 +30,8 @@
 #include "sync/CloudSyncUtils.h"
 #include "sync/ProjectCloudExtension.h"
 
+#include "CloudProjectUtils.h"
+
 namespace cloud::audiocom::sync
 {
 class ProjectsListDialog::ProjectsTableData final : public wxGridTableBase
@@ -330,33 +332,7 @@ void ProjectsListDialog::OnOpen()
 
    EndModal(wxID_OK);
 
-   CloudSyncService::Get().OpenFromCloud(
-      mProject, std::string(selectedProjectId), {},
-      [](auto result)
-      {
-         switch (result.SyncState)
-         {
-         case ProjectDownloadState::Failed:
-            BasicUI::ShowErrorDialog(
-               {}, XO("Error"), XO("Failed to open cloud project"), {},
-               BasicUI::ErrorDialogOptions {}.Log(
-                  audacity::ToWString(result.ErrorMessage)));
-            break;
-         case ProjectDownloadState::Succeeded:
-            if (result.TargetProject != nullptr)
-            {
-               ProjectCloudExtension::Get(*result.TargetProject)
-                  .SuppressAutoDownload();
-            }
-
-            ProjectManager::OpenProject(
-               result.TargetProject, audacity::ToWXString(result.ProjectPath),
-               true, false);
-            break;
-         default:
-            break;
-         }
-      });
+   OpenProjectFromCloud(mProject, selectedProjectId);
 }
 
 } // namespace cloud::audiocom::sync

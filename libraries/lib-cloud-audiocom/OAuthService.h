@@ -67,8 +67,10 @@ public:
 
       This method will attempt to perform OAuth2 authorization and invoke \p completedHandler (if valid).
       Callback is potentially called from the network thread.
+
+      \returns true if the URL was handled, false otherwise.
    */
-   void HandleLinkURI(
+   bool HandleLinkURI(
       std::string_view uri,
       std::function<void(std::string_view)> completedHandler);
 

@@ -39,6 +39,8 @@ set( SOURCES
    AuthorizationHandler.h
    CloudModuleSettings.cpp
    CloudModuleSettings.h
+   CloudProjectUtils.cpp
+   CloudProjectUtils.h
 )
 
 if(${_OPT}has_url_schemes_support)

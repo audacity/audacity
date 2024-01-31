@@ -29,6 +29,8 @@
 
 #include "Prefs.h"
 
+#include "BasicUI.h"
+
 namespace cloud::audiocom::sync
 {
 namespace
@@ -300,7 +302,7 @@ void CloudSyncStatusField::MarkDirty()
 void CloudSyncStatusField::OnCloudStatusChanged(
    const CloudStatusChanged&)
 {
-   MarkDirty();
+   BasicUI::CallAfter([this] { MarkDirty(); });
 }
 
 CloudSyncStatusField::StatusWidget& CloudSyncStatusField::GetStatusWidget()

@@ -14,6 +14,7 @@
 
 #include <functional>
 #include <string>
+#include <string_view>
 #include <mutex>
 #include <memory>
 #include <vector>

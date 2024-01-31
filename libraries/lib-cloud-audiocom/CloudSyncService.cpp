@@ -577,8 +577,8 @@ void CloudSyncService::OnOpen(AudacityProject& project, const std::string& path)
 
                auto& projectFileIO = ProjectFileIO::Get(project);
 
-               // if (remoteInfo.HeadSnapshot.Id == projectInfo.SnapshotId)
-               //    return;
+               if (remoteInfo.HeadSnapshot.Id == projectInfo.SnapshotId)
+                   return;
 
                if (HasAutosave(path))
                {
