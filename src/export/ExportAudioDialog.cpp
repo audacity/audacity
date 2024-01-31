@@ -231,6 +231,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
    Layout();
    Fit();
+   Center();
 }
 
 ExportAudioDialog::~ExportAudioDialog() = default;
