@@ -53,8 +53,6 @@ private:
    UserPanel* mUserPanel {};
    wxTextCtrl* mProjectName {};
 
-   wxChoice* mProjectVisibility {};
-
    wxButton* mSaveToCloud {};
    wxButton* mSaveLocally {};
    wxButton* mCancel {};

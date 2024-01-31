@@ -43,18 +43,12 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    if (!projectName.empty())
    {
       mProjectName->SetValue(projectName);
-      mProjectName->SetInsertionPoint(projectName.length());
+      //mProjectName->SetInsertionPointEnd();
    }
 
    const wxString choices[] = { XO("Private").Translation(),
                                 XO("Unlisted").Translation(),
                                 XO("Public").Translation() };
-
-   mProjectVisibility =
-      new wxChoice { this,          wxID_ANY,          wxDefaultPosition,
-                     wxDefaultSize, WXSIZEOF(choices), choices };
-
-   mProjectVisibility->SetSelection(0);
 
    mSaveToCloud = new wxButton { this, wxID_ANY, XO("Save").Translation() };
 
@@ -75,7 +69,8 @@ CloudProjectPropertiesDialog::~CloudProjectPropertiesDialog()
 
 SaveResult CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave)
+   UserService& userService, const wxString& projectName, wxWindow* parent,
+   bool allowLocalSave)
 {
    CloudProjectPropertiesDialog dialog { serviceConfig, authService,
                                          userService, projectName, parent };
@@ -84,10 +79,8 @@ SaveResult CloudProjectPropertiesDialog::Show(
 
    const auto resultCode = dialog.ShowModal();
 
-   return { audacity::ToUTF8(dialog.GetProjectName()),
-            static_cast<CloudProjectVisibility>(
-               dialog.mProjectVisibility->GetSelection()),
-            resultCode == wxID_OK, resultCode == wxID_CANCEL };
+   return { audacity::ToUTF8(dialog.GetProjectName()), resultCode == wxID_OK,
+            resultCode == wxID_CANCEL };
 }
 
 void CloudProjectPropertiesDialog::LayoutControls()
@@ -110,15 +103,7 @@ void CloudProjectPropertiesDialog::LayoutControls()
    topSizer->AddSpacer(spacerHeight);
 
    topSizer->Add(mProjectName, 0, wxEXPAND | wxLEFT | wxRIGHT, 16);
-   topSizer->AddSpacer(2 * spacerHeight);
 
-   topSizer->Add(
-      new wxStaticText { this, wxID_ANY,
-                         XO("Project Visibility").Translation() },
-      0, wxEXPAND | wxLEFT | wxRIGHT, 16);
-   topSizer->AddSpacer(spacerHeight);
-
-   topSizer->Add(mProjectVisibility, 0, wxLEFT | wxRIGHT, 16);
    topSizer->AddSpacer(4 * spacerHeight);
 
    auto buttonSizer = new wxBoxSizer { wxHORIZONTAL };

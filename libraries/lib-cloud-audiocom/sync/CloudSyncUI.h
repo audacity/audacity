@@ -22,12 +22,6 @@ class WindowPlacement;
 
 namespace cloud::audiocom::sync
 {
-enum class CloudProjectVisibility
-{
-   Private,
-   Unlisted,
-   Public,
-};
 
 enum class DownloadConflictResolution
 {
@@ -38,8 +32,6 @@ enum class DownloadConflictResolution
 struct SaveResult
 {
    std::string Title;
-
-   CloudProjectVisibility Visiblity { CloudProjectVisibility::Private };
 
    bool SaveToCloud { false };
    bool Cancelled { true };
