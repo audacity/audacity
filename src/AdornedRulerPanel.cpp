@@ -1417,7 +1417,7 @@ void AdornedRulerPanel::ReCreateButtons()
       this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-      bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
+      bmpCogwheel, bmpCogwheel, bmpCogwheel,
       OnTogglePinnedStateID, position, true, size
    );
 
