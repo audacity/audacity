@@ -24,6 +24,9 @@ class TrackPanelResizerCell;
 class AUDACITY_DLL_API ChannelView /* not final */ : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelView>
 {
+   std::shared_ptr<Track> FindTrack() = delete;
+   std::shared_ptr<const Track> FindTrack() const = delete;
+
    ChannelView(const ChannelView&) = delete;
    ChannelView &operator=(const ChannelView&) = delete;
 

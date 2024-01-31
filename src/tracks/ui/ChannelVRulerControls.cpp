@@ -47,9 +47,10 @@ const ChannelVRulerControls &ChannelVRulerControls::Get(
 
 std::shared_ptr<Track> ChannelVRulerControls::DoFindTrack()
 {
+   // Just pass-through to related ChannelView object
    const auto pView = mwChannelView.lock();
    if (pView)
-      return pView->FindTrack();
+      return pView->DoFindTrack();
    return {};
 }
 

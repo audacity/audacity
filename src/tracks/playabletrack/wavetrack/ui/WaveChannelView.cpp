@@ -937,7 +937,8 @@ WaveChannelView::WaveChannelView(
 
 WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
    : CommonChannelView{
-      waveChannelView.FindTrack(), waveChannelView.GetChannelIndex() }
+      // Just passing-through the constructor argument
+      waveChannelView.DoFindTrack(), waveChannelView.GetChannelIndex() }
 {
    mwWaveChannelView = std::static_pointer_cast<WaveChannelView>(
       waveChannelView.shared_from_this() );
