@@ -3,7 +3,7 @@
 
  Audacity: A Digital Audio Editor
 
- @file ChangeClipSpeedDialog.h
+ @file PitchAndSpeedDialog.h
 
  Dmitry Vedenko
 
@@ -15,14 +15,14 @@
 
 class ShuttleGui;
 
-class ChangeClipSpeedDialog final : public wxDialogWrapper
+class PitchAndSpeedDialog final : public wxDialogWrapper
 {
 public:
-   ChangeClipSpeedDialog(
+   PitchAndSpeedDialog(
       bool playbackOngoing, WaveTrack& track, WaveTrack::Interval& interval,
       wxWindow* parent = nullptr);
 
-   ~ChangeClipSpeedDialog() override;
+   ~PitchAndSpeedDialog() override;
 
 private:
    void PopulateOrExchange(ShuttleGui& s);

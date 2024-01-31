@@ -52,7 +52,7 @@
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUtilities.h"
 
-#include "ChangeClipSpeedDialog.h"
+#include "PitchAndSpeedDialog.h"
 
 #include "BasicUI.h"
 #include "UserException.h"
@@ -613,7 +613,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   ChangeClipSpeedDialog dlg(
+   PitchAndSpeedDialog dlg(
       ProjectAudioIO::Get(project).IsAudioActive(), *track, *interval,
       &GetProjectFrame(project));
 

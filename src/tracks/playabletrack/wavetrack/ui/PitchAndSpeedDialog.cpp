@@ -3,12 +3,12 @@
 
  Audacity: A Digital Audio Editor
 
- @file ChangeClipSpeedDialog.cpp
+ @file PitchAndSpeedDialog.cpp
 
  Dmitry Vedenko
 
  **********************************************************************/
-#include "ChangeClipSpeedDialog.h"
+#include "PitchAndSpeedDialog.h"
 
 #include <wx/button.h>
 #include <wx/layout.h>
@@ -110,7 +110,7 @@ auto GetInt(const wxCommandEvent& event, int& output)
 }
 } // namespace
 
-ChangeClipSpeedDialog::ChangeClipSpeedDialog(
+PitchAndSpeedDialog::PitchAndSpeedDialog(
    bool playbackOngoing, WaveTrack& waveTrack, WaveTrack::Interval& interval,
    wxWindow* parent)
     : wxDialogWrapper(
@@ -153,9 +153,9 @@ ChangeClipSpeedDialog::ChangeClipSpeedDialog(
    });
 }
 
-ChangeClipSpeedDialog::~ChangeClipSpeedDialog() = default;
+PitchAndSpeedDialog::~PitchAndSpeedDialog() = default;
 
-void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
+void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
 {
    {
       ScopedInvisiblePanel panel { s, 15 };
@@ -251,21 +251,21 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
    }
 }
 
-void ChangeClipSpeedDialog::OnOk()
+void PitchAndSpeedDialog::OnOk()
 {
    SetSemitoneShift();
    if (SetClipSpeedFromDialog())
       EndModal(wxID_OK);
 }
 
-void ChangeClipSpeedDialog::OnCancel()
+void PitchAndSpeedDialog::OnCancel()
 {
    mShift = mOldShift;
    SetSemitoneShift();
    EndModal(wxID_CANCEL);
 }
 
-bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
+bool PitchAndSpeedDialog::SetClipSpeedFromDialog()
 {
    {
       ShuttleGui S(this, eIsGettingFromDialog);
@@ -315,7 +315,7 @@ bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
    return true;
 }
 
-void ChangeClipSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
+void PitchAndSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
 {
    // Rules:
    // 1. total shift is clipped to [minSemis, maxSemis]
@@ -343,13 +343,13 @@ void ChangeClipSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
       UpdateDialog();
 }
 
-void ChangeClipSpeedDialog::UpdateDialog()
+void PitchAndSpeedDialog::UpdateDialog()
 {
    ShuttleGui S(this, eIsSettingToDialog);
    PopulateOrExchange(S);
 }
 
-void ChangeClipSpeedDialog::SetSemitoneShift()
+void PitchAndSpeedDialog::SetSemitoneShift()
 {
    mTrackInterval.SetCentShift(mShift.semis * 100 + mShift.cents);
 }
