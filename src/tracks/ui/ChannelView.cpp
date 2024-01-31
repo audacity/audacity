@@ -106,11 +106,25 @@ void ChannelView::SetMinimized(bool isMinimized)
 {
    // Do special changes appropriate to subclass
    DoSetMinimized(isMinimized);
+   AdjustPositions();
+}
 
-   // Update positions and heights starting from the first track in the group
-   auto leader = *TrackList::Channels( FindTrack().get() ).begin();
-   if ( leader )
-      leader->AdjustPositions();
+void ChannelView::AdjustPositions()
+{
+   // Update positions and heights starting from the first track in the group,
+   // causing TrackList events
+   if (const auto pLeader = ReallyFindTrack())
+      pLeader->AdjustPositions();
+}
+
+Track *ChannelView::ReallyFindTrack()
+{
+   if (const auto pChannel = FindChannel()) {
+      if (const auto pLeader =
+         dynamic_cast<Track*>(&pChannel->ReallyGetChannelGroup()))
+         return pLeader;
+   }
+   return nullptr;
 }
 
 namespace {
@@ -204,7 +218,7 @@ int ChannelView::GetHeight() const
 void ChannelView::SetExpandedHeight(int h)
 {
    DoSetHeight(h);
-   FindTrack()->AdjustPositions();
+   AdjustPositions();
 }
 
 void ChannelView::DoSetHeight(int h)

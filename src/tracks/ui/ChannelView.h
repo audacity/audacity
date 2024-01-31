@@ -128,6 +128,7 @@ public:
    mutable std::pair<int, int> vrulerSize;
 
 private:
+   void AdjustPositions();
 
    // No need yet to make this virtual
    void DoSetY(int y);
@@ -135,6 +136,7 @@ private:
    void DoSetHeight(int h);
 
 protected:
+   Track *ReallyFindTrack();
 
    // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter

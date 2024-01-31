@@ -76,7 +76,10 @@ std::vector<UIHandlePtr> CommonChannelView::HitTest
 
 std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 {
-   return TrackControls::Get( *FindTrack() ).shared_from_this();
+   const auto pTrack = ReallyFindTrack();
+   if (pTrack)
+      return TrackControls::Get(*pTrack).shared_from_this();
+   return nullptr;
 }
 
 int CommonChannelView::GetMinimizedHeight() const
