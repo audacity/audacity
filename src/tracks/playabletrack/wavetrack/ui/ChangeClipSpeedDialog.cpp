@@ -19,6 +19,8 @@
 #include "SpinControl.h"
 #include "wxWidgetsWindowPlacement.h"
 
+#include <regex>
+
 namespace
 {
 template <typename ReturnType, typename... Args> class ScopedSizer
@@ -83,6 +85,29 @@ public:
 // StaffPad's pitch shifter. It's plenty already.
 constexpr auto minSemis = -24;
 constexpr auto maxSemis = 60;
+
+//! Returns true if and only if `output` was updated.
+auto GetInt(const wxCommandEvent& event, int& output)
+{
+   try
+   {
+      const auto str = event.GetString().ToStdString();
+      if (str.empty() || str == "-")
+      {
+         output = 0;
+         return true;
+      }
+      // Exact integer match
+      if (!std::regex_match(str, std::regex { "^-?[0-9]+$" }))
+         return false;
+      output = std::stoi(str);
+      return true;
+   }
+   catch (const std::exception&)
+   {
+      return false;
+   }
+}
 } // namespace
 
 ChangeClipSpeedDialog::ChangeClipSpeedDialog(
@@ -145,27 +170,35 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
          s.TieSpinCtrl(Verbatim(""), mShift.semis, maxSemis, minSemis)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                const auto prevSemis = mShift.semis;
-               mShift.semis = event.GetInt();
-               // If we have e.g. -3 semi, -1 cents, and the user changes the
-               // sign of the semitones, the logic in `OnPitchShiftChange`
-               // would result in 2 semi, 99 cents. If the user changes
-               // sign again, we would now get 1 semi, -1 cents. Mirrorring
-               // (e.g. -3 semi, -1 cents -> 3 semi, 1 cents) is not a good
-               // idea because that would ruin the work of users
-               // painstakingly adjusting the cents of an instrument.
-               // So instead, we map -3 semi, -1 cents to 3 semi, 99 cents.
-               if (prevSemis < 0 && mShift.semis > 0)
-                  ++mShift.semis;
-               else if (prevSemis > 0 && mShift.semis < 0)
-                  --mShift.semis;
-               OnPitchShiftChange();
+               if (GetInt(event, mShift.semis))
+               {
+                  // If we have e.g. -3 semi, -1 cents, and the user changes the
+                  // sign of the semitones, the logic in `OnPitchShiftChange`
+                  // would result in 2 semi, 99 cents. If the user changes
+                  // sign again, we would now get 1 semi, -1 cents. Mirrorring
+                  // (e.g. -3 semi, -1 cents -> 3 semi, 1 cents) is not a good
+                  // idea because that would ruin the work of users
+                  // painstakingly adjusting the cents of an instrument.
+                  // So instead, we map -3 semi, -1 cents to 3 semi, 99 cents.
+                  if (prevSemis < 0 && mShift.semis > 0)
+                     ++mShift.semis;
+                  else if (prevSemis > 0 && mShift.semis < 0)
+                     --mShift.semis;
+                  OnPitchShiftChange(true);
+               }
+               else
+                  // Something silly was entered; reset dialog
+                  UpdateDialog();
             });
          s.AddSpace(1, 0);
          s.AddFixedText(XO("semitones,"));
          s.TieSpinCtrl(Verbatim(""), mShift.cents, 100, -100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
-               mShift.cents = event.GetInt();
-               OnPitchShiftChange();
+               if (GetInt(event, mShift.cents))
+                  OnPitchShiftChange(false);
+               else
+                  // Something silly was entered; reset dialog
+                  UpdateDialog();
             });
          s.AddFixedText(XO("cents"));
       }
@@ -192,6 +225,8 @@ void ChangeClipSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                }
                catch (const std::exception&)
                {
+                  // Something silly was entered; reset dialog
+                  UpdateDialog();
                }
             });
          }
@@ -280,12 +315,12 @@ bool ChangeClipSpeedDialog::SetClipSpeedFromDialog()
    return true;
 }
 
-void ChangeClipSpeedDialog::OnPitchShiftChange()
+void ChangeClipSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
 {
    // Rules:
    // 1. total shift is clipped to [minSemis, maxSemis]
    // 2. cents must be in the range [-100, 100]
-   // 3. on cent updates, keep semitone and cent sign consistent
+   // 3. on semitone updates, keep semitone and cent sign consistent
    const auto totalShift = mShift.semis * 100 + mShift.cents;
    std::optional<PitchShift> correctedShift;
    if (totalShift > maxSemis * 100)
@@ -296,9 +331,9 @@ void ChangeClipSpeedDialog::OnPitchShiftChange()
       correctedShift = PitchShift { mShift.semis + 1, 0 };
    else if (mShift.cents == -100)
       correctedShift = PitchShift { mShift.semis - 1, 0 };
-   else if (mShift.cents > 0 && mShift.semis < 0)
+   else if (semitonesChanged && mShift.cents > 0 && mShift.semis < 0)
       correctedShift = PitchShift { mShift.semis + 1, mShift.cents - 100 };
-   else if (mShift.cents < 0 && mShift.semis > 0)
+   else if (semitonesChanged && mShift.cents < 0 && mShift.semis > 0)
       correctedShift = PitchShift { mShift.semis - 1, mShift.cents + 100 };
 
    if (correctedShift.has_value())

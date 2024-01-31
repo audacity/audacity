@@ -33,7 +33,7 @@ private:
 
    bool SetClipSpeedFromDialog();
 
-   void OnPitchShiftChange();
+   void OnPitchShiftChange(bool semitonesChanged);
    void SetSemitoneShift();
    void UpdateDialog();
 
