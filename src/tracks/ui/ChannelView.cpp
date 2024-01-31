@@ -31,10 +31,10 @@ ChannelView::~ChannelView()
 
 int ChannelView::GetChannelGroupHeight(const Track *pTrack)
 {
-   const auto GetTrackHeight = [](const Track *pTrack) -> int {
-      return pTrack ? GetFromChannelGroup(*pTrack).GetHeight() : 0;
+   const auto GetChannelHeight = [](const auto &pChannel) -> int {
+      return pChannel ? Get(*pChannel).GetHeight() : 0;
    };
-   return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
+   return pTrack ? pTrack->Channels().sum(GetChannelHeight) : 0;
 }
 
 int ChannelView::GetCumulativeHeight(const Channel *pChannel)
