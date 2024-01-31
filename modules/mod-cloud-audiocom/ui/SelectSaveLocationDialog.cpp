@@ -78,7 +78,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
       this, wxID_ANY,
       XO("&Remember my choice and don't show again").Translation());
 
-   rememberChoiceCheckbox->SetValue(DoNotShowCloudSyncDialog.Read());
+   rememberChoiceCheckbox->SetValue(!ShowCloudSyncDialog.Read());
 
    auto sizer = safenew wxBoxSizer(wxVERTICAL);
 
@@ -140,7 +140,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
       wxEVT_CHECKBOX,
       [rememberChoiceCheckbox](auto&)
       {
-         DoNotShowCloudSyncDialog.Write(rememberChoiceCheckbox->GetValue());
+         ShowCloudSyncDialog.Write(!rememberChoiceCheckbox->GetValue());
          gPrefs->Flush();
       });
 

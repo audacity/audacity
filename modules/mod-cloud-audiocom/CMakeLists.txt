@@ -6,6 +6,7 @@ set( SOURCES
    ui/images/CloudImages.cpp
    ui/images/CloudImages.hpp
 
+   ui/AudioComPrefsPanel.cpp
    ui/AudioComSyncUI.cpp
    ui/CloudProjectPropertiesDialog.cpp
    ui/CloudProjectPropertiesDialog.h
@@ -19,6 +20,8 @@ set( SOURCES
    ui/LinkFailedDialog.h
    ui/LinkSucceededDialog.cpp
    ui/LinkSucceededDialog.h
+   ui/MixdownPrefsPanel.cpp
+   ui/MixdownPrefsPanel.h
    ui/MixdownPropertiesDialog.cpp
    ui/MixdownPropertiesDialog.h
    ui/ProjectsListDialog.cpp

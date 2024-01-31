@@ -30,4 +30,8 @@ StringSetting CloudProjectsSavePath {
 IntSetting MixdownGenerationFrequency {
    "/cloud/audiocom/MixdownGenerationFrequency", 1
 };
+
+IntSetting DaysToKeepFiles {
+   "/cloud/audiocom/DaysToKeepFiles", 30
+};
 } // namespace cloud::audiocom

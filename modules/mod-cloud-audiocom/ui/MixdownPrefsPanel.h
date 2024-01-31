@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  MixdownPropertiesDialog.h
+  MixdownPrefsPanel.h
 
   Dmitry Vedenko
 
@@ -12,22 +12,26 @@
 
 #include "wxPanelWrapper.h"
 
+class wxRadioButton;
+class wxChoice;
+
 namespace cloud::audiocom::sync
 {
-class MixdownPrefsPanel;
-
-class MixdownPropertiesDialog final : public wxDialogWrapper
+class MixdownPrefsPanel final : public wxPanelWrapper
 {
-   MixdownPropertiesDialog(wxWindow* parent);
-   ~MixdownPropertiesDialog() override;
-
 public:
-   static int Show(wxWindow* parent);
+   MixdownPrefsPanel(wxWindow* parent, bool compact);
 
    void SetFrequency(int frequency);
    int GetFrequency() const;
-private:
-   MixdownPrefsPanel* mMixdownPrefsPanel {};
-}; // class MixdownPropertiesDialog
 
+private:
+   void EnableFrequencyChoice(bool enable);
+
+   wxRadioButton* mRBNever {};
+   wxRadioButton* mRBAlways {};
+   wxRadioButton* mRBEvery {};
+
+   wxChoice* mSavesFrequencyChoice {};
+}; // class MixdownPrefsPanel
 } // namespace cloud::audiocom::sync

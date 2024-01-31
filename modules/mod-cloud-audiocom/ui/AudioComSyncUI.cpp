@@ -86,7 +86,7 @@ public:
       const AudacityProject& project,
       const BasicUI::WindowPlacement& placement) override
    {
-      const auto suppressSelectDialog = DoNotShowCloudSyncDialog.Read();
+      const auto suppressSelectDialog = !ShowCloudSyncDialog.Read();
 
       if (suppressSelectDialog)
       {

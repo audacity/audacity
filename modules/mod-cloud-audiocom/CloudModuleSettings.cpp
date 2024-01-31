@@ -13,8 +13,8 @@
 
 namespace cloud::audiocom::sync
 {
-BoolSetting DoNotShowCloudSyncDialog {
-   "/cloud/audiocom/DoNotShowCloudSyncDialog", false
+BoolSetting ShowCloudSyncDialog {
+   "/cloud/audiocom/ShowCloudSyncDialog", true
 };
 
 BoolSetting SaveToCloudByDefault {
