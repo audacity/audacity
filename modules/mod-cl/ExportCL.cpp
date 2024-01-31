@@ -217,6 +217,7 @@ public:
                   mLastCommand = event.GetString();
                });
                mLastCommand = mCommandBox->GetValue();
+               mCommandBox->SetMaxSize(wxSize(50,400));
 
                S.AddButton(XXO("Browse..."), wxALIGN_CENTER_VERTICAL)
                   ->Bind(wxEVT_BUTTON, &ExportOptionsCLEditor::OnBrowse, this);
