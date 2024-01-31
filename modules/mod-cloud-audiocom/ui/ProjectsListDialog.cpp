@@ -50,7 +50,7 @@ public:
 
    int GetNumberCols() override
    {
-      return 4;
+      return 2;
    }
 
    static wxString FormatTime(int64_t time)
@@ -71,12 +71,7 @@ public:
                               0)(duration_cast<hours>(time_passed).count())
             .Translation();
 
-      return wxDateTime(static_cast<time_t>(time)).Format("%d.%m.%Y %H:%M");
-   }
-
-   static wxString FormatSize(int64_t size)
-   {
-      return Internat::FormatSize(size).Translation();
+      return wxDateTime(static_cast<time_t>(time)).Format();
    }
 
    wxString GetValue(int row, int col) override
@@ -91,12 +86,7 @@ public:
       case 0:
          return item.Name;
       case 1:
-         return FormatTime(item.Created);
-      case 2:
          return FormatTime(item.Updated);
-      case 3:
-         return FormatSize(
-            item.HeadSnapshot.FileSize + item.HeadSnapshot.BlocksSize);
       }
 
       return {};
@@ -115,11 +105,9 @@ public:
    wxString GetColLabelValue(int col) override
    {
       static const wxString colLabels[] = { XO("Project Name").Translation(),
-                                            XO("Created").Translation(),
-                                            XO("Modified").Translation(),
-                                            XO("Size").Translation() };
+                                            XO("Modified").Translation(), };
 
-      return col < 4 ? colLabels[col] : wxString {};
+      return col < 2 ? colLabels[col] : wxString {};
    }
 
    wxString GetCornerLabelValue() const override
@@ -129,8 +117,8 @@ public:
 
    int GetColWidth(int col) const
    {
-      static const int colWidths[] = { 300, 100, 100, 70 };
-      return col < 4 ? colWidths[col] : 0;
+      static const int colWidths[] = { 400, 100 };
+      return col < 2 ? colWidths[col] : 0;
    }
 
    void Refresh(int page)
@@ -211,7 +199,9 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
    mSearchCtrl = safenew  wxTextCtrl { this, wxID_ANY };
 
    mProjectsTable = safenew  wxGrid { this, wxID_ANY };
-   mProjectsTableData = safenew ProjectsTableData { *this, 15 };
+   mProjectsTableData = safenew ProjectsTableData { *this, 7 };
+   mProjectsTable->SetDefaultRowSize(32);
+   mProjectsTable->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
    mProjectsTable->SetTable(mProjectsTableData, true);
    mProjectsTable->SetRowLabelSize(1);
 
