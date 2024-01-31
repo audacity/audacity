@@ -57,6 +57,22 @@ public:
    ChannelAttachmentsBase(Track &track, Factory factory);
    ~ChannelAttachmentsBase() override;
 
+   // No copying
+   ChannelAttachmentsBase(const ChannelAttachmentsBase &) = delete;
+   ChannelAttachmentsBase &operator=(const ChannelAttachmentsBase &) = delete;
+
+   // No move construction
+   ChannelAttachmentsBase(ChannelAttachmentsBase &) = delete;
+
+   // Move assignment is allowed
+   /*!
+    @pre `typeid(*this) == typeid(other)`
+    @pre same factories (can't express that in code)
+    */
+   ChannelAttachmentsBase &operator=(ChannelAttachmentsBase &&other);
+
+   size_t Size() const { return mAttachments.size(); }
+
    // Override all the TrackAttachment virtuals and pass through to each
    void CopyTo(Track &track) const override;
    void Reparent(const std::shared_ptr<Track> &parent) override;
@@ -64,6 +80,20 @@ public:
    bool HandleXMLAttribute(
       const std::string_view& attr, const XMLAttributeValueView& valueView)
    override;
+
+   //! Append the other's attachments to this, assuming concrete subclasses are
+   //! the same
+   /*!
+    @pre `typeid(*this) == typeid(other)`
+    @pre `Size() <= 1`
+    @pre `other.Size() <= 1`
+    */
+   void MakeStereo(ChannelAttachmentsBase &&other);
+
+   /*!
+    @pre `Size() <= 2`
+    */
+   void SwapChannels();
 
 protected:
    /*!

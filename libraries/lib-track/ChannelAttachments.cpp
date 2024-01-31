@@ -13,6 +13,14 @@
 
 ChannelAttachment::~ChannelAttachment() = default;
 
+ChannelAttachmentsBase &
+ChannelAttachmentsBase::operator=(ChannelAttachmentsBase &&other)
+{
+   assert(typeid(*this) == typeid(other));
+   mAttachments = move(other.mAttachments);
+   return *this;
+}
+
 void ChannelAttachment::CopyTo(Track&, size_t) const
 {
 }
@@ -116,4 +124,25 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
       ++ii;
       return result;
    });
+}
+
+void ChannelAttachmentsBase::MakeStereo(ChannelAttachmentsBase &&other)
+{
+   assert(typeid(*this) == typeid(other));
+   assert(Size() <= 1);
+   assert(other.Size() <= 1);
+   if (mAttachments.empty())
+      mAttachments.resize(1);
+   for (auto &ptr : other.mAttachments)
+      mAttachments.emplace_back(move(ptr));
+   other.mAttachments.clear();
+}
+
+void ChannelAttachmentsBase::SwapChannels()
+{
+   assert(Size() <= 2);
+   if (mAttachments.empty())
+      return;
+   mAttachments.resize(2);
+   std::swap(mAttachments[0], mAttachments[1]);
 }
