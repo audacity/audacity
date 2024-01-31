@@ -87,3 +87,55 @@ StringType ToUpper (StringType str)
    std::transform(begin(str), end(str), begin(str), ::toupper);
    return str;
 }
+
+namespace details
+{
+inline const char* begin(const char* str) noexcept
+{
+   return str;
+}
+
+inline const char* end(const char* str) noexcept
+{
+   if (str == nullptr)
+      return nullptr;
+
+   return str + StringLength(str);
+}
+
+inline const wchar_t* begin(const wchar_t* str) noexcept
+{
+   return str;
+}
+
+inline const wchar_t* end(const wchar_t* str) noexcept
+{
+   if (str == nullptr)
+      return nullptr;
+
+   return str + StringLength(str);
+}
+} // namespace details
+
+template<typename HayType, typename PrefixType>
+bool IsPrefixed(
+   const HayType& hay, const PrefixType& prefix, const bool caseSensitive = true)
+{
+   if (StringLength(hay) < StringLength(prefix))
+        return false;
+
+   using namespace std;
+   using namespace details;
+
+   const auto prefixBegin = begin(prefix);
+   const auto prefixEnd = end(prefix);
+   const auto hayBegin = begin(hay);
+
+   auto it = caseSensitive ?
+                std::mismatch(prefixBegin, prefixEnd, hayBegin) :
+                std::mismatch(
+                   prefixBegin, prefixEnd, hayBegin,
+                   [](auto a, auto b) { return ::tolower(a) == ::tolower(b); });
+
+   return it.first == prefixEnd;
+}
