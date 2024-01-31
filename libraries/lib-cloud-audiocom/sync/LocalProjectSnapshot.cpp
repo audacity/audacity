@@ -456,6 +456,8 @@ void LocalProjectSnapshot::OnSnapshotCreated(
          }
       });
 
+   mMixdownUploadInProgress.store(true, std::memory_order_release);
+
    BasicUI::CallAfter(
       [this, mixdownUrls = response.SyncState.MixdownUrls]
       {
@@ -464,21 +466,21 @@ void LocalProjectSnapshot::OnSnapshotCreated(
          if (!project)
             return;
 
-         if (mProjectCloudExtension.NeedsMixdownSync())
+         if (!mProjectCloudExtension.NeedsMixdownSync())
          {
-            mMixdownUploadInProgress.store(true, std::memory_order_release);
-
-            mMixdownUploader = MixdownUploader::Upload(
-               mCloudSyncUI, mServiceConfig, *project, mixdownUrls,
-               [this](std::string, bool success)
-               {
-                  if (success)
-                     mProjectCloudExtension.MixdownSynced();
-
-                  mMixdownUploadInProgress.store(
-                     false, std::memory_order_release);
-               });
+            mMixdownUploadInProgress.store(false, std::memory_order_release);
+            return;
          }
+
+         mMixdownUploader = MixdownUploader::Upload(
+            mCloudSyncUI, mServiceConfig, *project, mixdownUrls,
+            [this](std::string, bool success)
+            {
+               if (success)
+                  mProjectCloudExtension.MixdownSynced();
+
+               mMixdownUploadInProgress.store(false, std::memory_order_release);
+            });
       });
 }
 
@@ -505,7 +507,11 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
       {
          const auto error = response->getError();
 
-         if (error != NetworkError::NoError)
+         const auto success = error == NetworkError::NoError;
+
+         std::string errorMessage;
+
+         if (!success)
          {
             auto errorMessage = response->getErrorString();
 
@@ -516,21 +522,17 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
                errorMessage +=
                   "\nResponse: " + response->readAll<std::string>();
             }
-
-            mUpdateCallback({ this, blocksCount, blocksCount, true, true, false,
-                              errorMessage });
-            return;
          }
 
          mCompleted.store(true, std::memory_order_release);
-         mProjectCloudExtension.OnSyncCompleted(true);
+         mProjectCloudExtension.OnSyncCompleted(success);
 
          // Wait for mixdown upload to complete
          while (mMixdownUploadInProgress.load(std::memory_order_acquire))
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-         mUpdateCallback(
-            { this, blocksCount, blocksCount, true, true, true, {} });
+         mUpdateCallback({ this, blocksCount, blocksCount, true, true, success,
+                           std::move(errorMessage) });
       });
 }
 

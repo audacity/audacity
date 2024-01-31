@@ -98,7 +98,7 @@ private:
 
    std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
 
-   std::unique_ptr<MixdownUploader> mMixdownUploader;
+   std::shared_ptr<MixdownUploader> mMixdownUploader;
 
    std::atomic<int64_t> mUploadedBlocks { 0 };
    std::atomic<int64_t> mTotalBlocks { 0 };

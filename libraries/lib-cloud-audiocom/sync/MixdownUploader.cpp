@@ -218,7 +218,7 @@ MixdownUploader::~MixdownUploader()
       wxRemoveFile(mExportedFilePath);
 }
 
-std::unique_ptr<MixdownUploader> MixdownUploader::Upload(
+std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
    CloudSyncUI& ui, const ServiceConfig& config,
    const AudacityProject& project, const UploadUrls& urls,
    MixdownUploaderCompleteCallback onComplete)
@@ -226,7 +226,7 @@ std::unique_ptr<MixdownUploader> MixdownUploader::Upload(
    if (!onComplete)
       onComplete = [](auto...) {};
 
-   return std::make_unique<MixdownUploader>(
+   return std::make_shared<MixdownUploader>(
       Tag {}, ui, config, project, urls, std::move(onComplete));
 }
 
@@ -236,8 +236,13 @@ void MixdownUploader::SetProgress(double progress)
 
    if (!mProgressUpdateQueued.exchange(true, std::memory_order_acq_rel))
       BasicUI::CallAfter(
-         [this]
+         [weakThis = weak_from_this(), this]
          {
+            auto lock = weakThis.lock();
+
+            if (!lock)
+               return;
+
             if (!mCloudSyncUI.OnMixdownProgress(
                    mCurrentProgress.load(std::memory_order_acquire)))
             {
@@ -322,14 +327,21 @@ void MixdownUploader::UploadMixdown()
    mCloudSyncUI.SetMixdownProgressMessage(XO("Uploading mixdown..."));
    DataUploader::Get().Upload(
       mServiceConfig, mUploadUrls, mExportedFilePath,
-      [this](UploadResult result)
+      [this, strongThis = shared_from_this()](UploadResult result)
       {
-         BasicUI::CallAfter([this, result = std::move(result)]
+         BasicUI::CallAfter(
+            [this, result = std::move(result)]
             {
                mCloudSyncUI.OnMixdownFinished();
-               mOnComplete(result.ErrorMessage, result.Code == UploadResultCode::Success);
+               mOnComplete(
+                  result.ErrorMessage,
+                  result.Code == UploadResultCode::Success);
             });
       },
-      {});
+      [this, strongThis = shared_from_this()](double progress)
+      {
+         SetProgress(progress);
+         return !mUploadCancelled.load(std::memory_order_acquire);
+      });
 }
 } // namespace cloud::audiocom::sync

@@ -30,7 +30,8 @@ class CloudSyncUI;
 
 using MixdownUploaderCompleteCallback = std::function<void(std::string, bool)>;
 
-class MixdownUploader final
+class MixdownUploader final :
+    public std::enable_shared_from_this<MixdownUploader>
 {
    struct Tag {};
 
@@ -42,7 +43,7 @@ public:
 
    ~MixdownUploader();
 
-   static std::unique_ptr<MixdownUploader> Upload(
+   static std::shared_ptr<MixdownUploader> Upload(
       CloudSyncUI& ui, const ServiceConfig& config,
       const AudacityProject& project, const UploadUrls& urls,
       MixdownUploaderCompleteCallback onComplete);
