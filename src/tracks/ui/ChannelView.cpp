@@ -106,18 +106,8 @@ void ChannelView::AdjustPositions()
 {
    // Update positions and heights starting from the first track in the group,
    // causing TrackList events
-   if (const auto pLeader = ReallyFindTrack())
+   if (const auto pLeader = FindTrack())
       pLeader->AdjustPositions();
-}
-
-Track *ChannelView::ReallyFindTrack()
-{
-   if (const auto pChannel = FindChannel()) {
-      if (const auto pLeader =
-         dynamic_cast<Track*>(&pChannel->GetChannelGroup()))
-         return pLeader;
-   }
-   return nullptr;
 }
 
 namespace {

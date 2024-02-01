@@ -76,7 +76,7 @@ std::vector<UIHandlePtr> CommonChannelView::HitTest
 
 std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 {
-   const auto pTrack = ReallyFindTrack();
+   const auto pTrack = FindTrack();
    if (pTrack)
       return TrackControls::Get(*pTrack).shared_from_this();
    return nullptr;

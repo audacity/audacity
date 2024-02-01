@@ -23,9 +23,6 @@ class ChannelVRulerControls;
 class AUDACITY_DLL_API ChannelView /* not final */ : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelView>
 {
-   std::shared_ptr<Track> FindTrack() = delete;
-   std::shared_ptr<const Track> FindTrack() const = delete;
-
    ChannelView(const ChannelView&) = delete;
    ChannelView &operator=(const ChannelView&) = delete;
 
@@ -137,8 +134,6 @@ private:
    void DoSetHeight(int h);
 
 protected:
-   Track *ReallyFindTrack();
-
    // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter
    virtual std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() = 0;
