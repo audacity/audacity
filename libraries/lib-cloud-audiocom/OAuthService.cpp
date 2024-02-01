@@ -89,7 +89,7 @@ void OAuthService::ValidateAuth(
 bool OAuthService::HandleLinkURI(
    std::string_view uri, std::function<void(std::string_view)> completedHandler)
 {
-   if (!IsPrefixed(uri, uriPrefix, false))
+   if (!IsPrefixedInsensitive(uri, uriPrefix))
    {
       if (completedHandler)
          completedHandler({});
