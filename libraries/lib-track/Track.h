@@ -1195,29 +1195,6 @@ public:
    static TrackListHolder Temporary(AudacityProject *pProject,
       const Track::Holder &left = {}, const Track::Holder &right = {});
 
-   //! Construct a temporary list whose first channel group contains the given
-   //! channels, up to the limit of channel group size; excess channels go each
-   //! into a separate group; TrackIds are not changed
-   static TrackListHolder Temporary(
-      AudacityProject *pProject, const std::vector<Track::Holder> &channels);
-
-   /*!
-    @copydoc Temporary(AudacityProject *, const std::vector<Track::Holder> &)
-    Overload allowing shared pointers to some subclass of Track
-    */
-   template<typename T>
-   static TrackListHolder Temporary(
-      AudacityProject *pProject,
-      const std::vector<std::shared_ptr<T>> &channels)
-   {
-      std::vector<Track::Holder> temp;
-      static const auto convert = [](auto &pChannel){
-         return std::static_pointer_cast<Track>(pChannel);
-      };
-      transform(channels.begin(), channels.end(), back_inserter(temp), convert);
-      return Temporary(pProject, temp);
-   }
-
    //! Remove all tracks from `list` and put them at the end of `this`
    /*!
     @param assignIds ignored if `this` is a temporary list; else if false,

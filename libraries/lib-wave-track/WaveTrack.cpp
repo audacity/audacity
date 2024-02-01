@@ -1072,9 +1072,13 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, 
       nChannels,
       [&] { return Create(format, rate); }
    );
-   if(nChannels == 2)
+   if (nChannels == 2) {
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
-   return TrackList::Temporary(nullptr, channels);
+   }
+   auto tempList = TrackList::Temporary(nullptr);
+   for (auto &channel : channels)
+      tempList->Add(channel);
+   return tempList;
 }
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
@@ -1085,9 +1089,13 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& prot
       nChannels,
       [&]{ return proto.EmptyCopy(mpFactory, false); }
    );
-   if(nChannels == 2)
+   if (nChannels == 2) {
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
-   return TrackList::Temporary(nullptr, channels);
+   }
+   auto tempList = TrackList::Temporary(nullptr);
+   for (auto &channel : channels)
+      tempList->Add(channel);
+   return tempList;
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
