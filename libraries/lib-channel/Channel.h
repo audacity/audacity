@@ -180,11 +180,11 @@ public:
    virtual ~Channel();
 
    //! Channel object's lifetime is assumed to be nested in its Track's
-   ChannelGroup &GetChannelGroup();
+   //ChannelGroup &GetChannelGroup();
    /*!
     @copydoc GetChannelGroup()
     */
-   const ChannelGroup &GetChannelGroup() const;
+   //const ChannelGroup &GetChannelGroup() const;
 
    //! Channel object's lifetime is assumed to be nested in its Track's
    ChannelGroup &ReallyGetChannelGroup();
@@ -196,7 +196,7 @@ public:
    /*!
     @return `ii` such that `this == GetChannelGroup().GetChannel(ii).get()`
     */
-   size_t GetChannelIndex() const;
+   //size_t GetChannelIndex() const;
 
    size_t ReallyGetChannelIndex() const;
 
@@ -298,13 +298,10 @@ protected:
     @post result: for some `ii` less than `result.NChannels()`,
        `this == result.GetChannel(ii).get()`
     */
-   virtual ChannelGroup &DoGetChannelGroup() const = 0;
-
-   //! This is temporary!  It defaults to call the above
-   virtual ChannelGroup &ReallyDoGetChannelGroup() const;
+   virtual ChannelGroup &ReallyDoGetChannelGroup() const = 0;
 
 private:
-   int FindChannelIndex() const;
+//   int FindChannelIndex() const;
 };
 
 class CHANNEL_API ChannelGroup
@@ -628,7 +625,7 @@ private:
 
 inline size_t Channel::NIntervals() const
 {
-   return GetChannelGroup().NIntervals();
+   return ReallyGetChannelGroup().NIntervals();
 }
 
 template<typename IntervalType>

@@ -31,6 +31,7 @@ WideChannelGroupInterval::~WideChannelGroupInterval() = default;
 
 Channel::~Channel() = default;
 
+#if 0
 int Channel::FindChannelIndex() const
 {
    auto &group = DoGetChannelGroup();
@@ -48,6 +49,7 @@ int Channel::FindChannelIndex() const
 
    return index;
 }
+#endif
 
 size_t Channel::ReallyGetChannelIndex() const
 {
@@ -62,6 +64,7 @@ size_t Channel::ReallyGetChannelIndex() const
    return index;
 }
 
+#if 0
 const ChannelGroup &Channel::GetChannelGroup() const
 {
    assert(FindChannelIndex() >= 0);
@@ -73,6 +76,7 @@ ChannelGroup &Channel::GetChannelGroup()
    assert(FindChannelIndex() >= 0);
    return DoGetChannelGroup();
 }
+#endif
 
 const ChannelGroup &Channel::ReallyGetChannelGroup() const
 {
@@ -84,15 +88,12 @@ ChannelGroup &Channel::ReallyGetChannelGroup()
    return ReallyDoGetChannelGroup();
 }
 
+#if 0
 size_t Channel::GetChannelIndex() const
 {
    return FindChannelIndex();
 }
-
-ChannelGroup &Channel::ReallyDoGetChannelGroup() const
-{
-   return DoGetChannelGroup();
-}
+#endif
 
 ChannelGroup::~ChannelGroup() = default;
 

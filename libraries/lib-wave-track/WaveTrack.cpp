@@ -1449,12 +1449,6 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
    return { pTrack->shared_from_this(), alias };
 }
 
-ChannelGroup &WaveTrack::DoGetChannelGroup() const
-{
-   const ChannelGroup &group = *this;
-   return const_cast<ChannelGroup&>(group);
-}
-
 ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
 {
    const Track *pTrack = this;

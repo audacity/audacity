@@ -521,7 +521,7 @@ public:
       return {};
    }
 protected:
-   ChannelGroup &DoGetChannelGroup() const override {
+   ChannelGroup &ReallyDoGetChannelGroup() const override {
       const Track &track = *this;
       return const_cast<Track&>(track);
    }
