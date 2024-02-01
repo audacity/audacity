@@ -117,7 +117,7 @@ public:
 
    int GetColWidth(int col) const
    {
-      static const int colWidths[] = { 400, 100 };
+      static const int colWidths[] = { 400, 150 };
       return col < 2 ? colWidths[col] : 0;
    }
 
@@ -201,6 +201,7 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
    mProjectsTable = safenew  wxGrid { this, wxID_ANY };
    mProjectsTableData = safenew ProjectsTableData { *this, 7 };
    mProjectsTable->SetDefaultRowSize(32);
+   mProjectsTable->SetGridLineColour(mProjectsTable->GetDefaultCellBackgroundColour());
    mProjectsTable->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
    mProjectsTable->SetTable(mProjectsTableData, true);
    mProjectsTable->SetRowLabelSize(1);
