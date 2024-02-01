@@ -986,7 +986,11 @@ public:
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
       void StretchBy(double ratio);
-      void SetCentShift(int cents);
+      /*
+       * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
+       * TimeAndPitchInterface::MaxCent`
+       */
+      bool SetCentShift(int cents);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
       void ClearLeft(double t);

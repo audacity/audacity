@@ -722,10 +722,11 @@ void OnPitchShift(
    if (!track)
       return;
    const auto interval = *it;
-   interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100));
-   ProjectHistory::Get(context.project)
-      .PushState(
-         XO("Pitch Shift"), XO("Changed Pitch Shift"), UndoPush::CONSOLIDATE);
+   if (interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100)))
+      ProjectHistory::Get(context.project)
+         .PushState(
+            XO("Pitch Shift"), XO("Changed Pitch Shift"),
+            UndoPush::CONSOLIDATE);
 }
 
 void OnPitchUp(const CommandContext& context)

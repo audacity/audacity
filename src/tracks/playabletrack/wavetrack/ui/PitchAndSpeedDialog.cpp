@@ -9,6 +9,7 @@
 
  **********************************************************************/
 #include "PitchAndSpeedDialog.h"
+#include "TimeAndPitchInterface.h"
 
 #include <wx/button.h>
 #include <wx/layout.h>
@@ -80,11 +81,6 @@ public:
    {
    }
 };
-
-// Obtained by experiment: shifts beyond these bounds aren't well supported by
-// StaffPad's pitch shifter. It's plenty already.
-constexpr auto minSemis = -24;
-constexpr auto maxSemis = 60;
 
 //! Returns true if and only if `output` was updated.
 auto GetInt(const wxCommandEvent& event, int& output)
@@ -167,7 +163,11 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
       {
          ScopedHorizontalLay h { s, wxLeft };
          s.SetBorder(2);
-         s.TieSpinCtrl(Verbatim(""), mShift.semis, maxSemis, minSemis)
+         // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
+         // instantly when `UpdateDialog` is called.
+         s.TieSpinCtrl(
+             Verbatim(""), mShift.semis, TimeAndPitchInterface::MaxCents / 100,
+             TimeAndPitchInterface::MinCents / 100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                const auto prevSemis = mShift.semis;
                if (GetInt(event, mShift.semis))
@@ -180,10 +180,13 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   // idea because that would ruin the work of users
                   // painstakingly adjusting the cents of an instrument.
                   // So instead, we map -3 semi, -1 cents to 3 semi, 99 cents.
-                  if (prevSemis < 0 && mShift.semis > 0)
-                     ++mShift.semis;
-                  else if (prevSemis > 0 && mShift.semis < 0)
-                     --mShift.semis;
+                  if (mShift.cents != 0)
+                  {
+                     if (prevSemis < 0 && mShift.semis > 0)
+                        ++mShift.semis;
+                     else if (prevSemis > 0 && mShift.semis < 0)
+                        --mShift.semis;
+                  }
                   OnPitchShiftChange(true);
                }
                else
@@ -321,12 +324,14 @@ void PitchAndSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
    // 1. total shift is clipped to [minSemis, maxSemis]
    // 2. cents must be in the range [-100, 100]
    // 3. on semitone updates, keep semitone and cent sign consistent
-   const auto totalShift = mShift.semis * 100 + mShift.cents;
+   const auto newCentShift = mShift.semis * 100 + mShift.cents;
+   static_assert(TimeAndPitchInterface::MaxCents % 100 == 0);
+   static_assert(TimeAndPitchInterface::MinCents % 100 == 0);
    std::optional<PitchShift> correctedShift;
-   if (totalShift > maxSemis * 100)
-      correctedShift = PitchShift { maxSemis, 0 };
-   else if (totalShift < minSemis * 100)
-      correctedShift = PitchShift { minSemis, 0 };
+   if (newCentShift > TimeAndPitchInterface::MaxCents)
+      correctedShift = PitchShift { TimeAndPitchInterface::MaxCents / 100, 0 };
+   else if (newCentShift < TimeAndPitchInterface::MinCents)
+      correctedShift = PitchShift { TimeAndPitchInterface::MinCents / 100, 0 };
    else if (mShift.cents == 100)
       correctedShift = PitchShift { mShift.semis + 1, 0 };
    else if (mShift.cents == -100)
@@ -351,5 +356,7 @@ void PitchAndSpeedDialog::UpdateDialog()
 
 void PitchAndSpeedDialog::SetSemitoneShift()
 {
-   mTrackInterval.SetCentShift(mShift.semis * 100 + mShift.cents);
+   const auto success =
+      mTrackInterval.SetCentShift(mShift.semis * 100 + mShift.cents);
+   assert(success);
 }

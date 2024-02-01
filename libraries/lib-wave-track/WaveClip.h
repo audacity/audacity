@@ -186,7 +186,11 @@ public:
    bool HasPitchOrSpeed() const;
    //! @}
 
-   void SetCentShift(int cents);
+   /*
+    * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
+    * TimeAndPitchInterface::MaxCent`
+    */
+   bool SetCentShift(int cents);
    int GetCentShift() const override;
    [[nodiscard]] Observer::Subscription
    SubscribeToCentShiftChange(std::function<void(int)> cb) override;

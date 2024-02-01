@@ -1138,10 +1138,15 @@ void WaveClip::SetRawAudioTempo(double tempo)
    mRawAudioTempo = tempo;
 }
 
-void WaveClip::SetCentShift(int cents)
+bool WaveClip::SetCentShift(int cents)
 {
+   if (
+      cents < TimeAndPitchInterface::MinCents ||
+      cents > TimeAndPitchInterface::MaxCents)
+      return false;
    mCentShift = cents;
    Publish(CentShiftChange { cents });
+   return true;
 }
 
 /*! @excsafety{Strong} */

@@ -276,9 +276,12 @@ void WaveTrack::Interval::StretchBy(double ratio)
       GetClip(channel)->StretchBy(ratio);
 }
 
-void WaveTrack::Interval::SetCentShift(int cents)
+bool WaveTrack::Interval::SetCentShift(int cents)
 {
-   ForEachClip([cents](auto& clip) { clip.SetCentShift(cents); });
+   for (unsigned channel = 0; channel < NChannels(); ++channel)
+      if (!GetClip(channel)->SetCentShift(cents))
+         return false;
+   return true;
 }
 
 WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
