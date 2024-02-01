@@ -7,6 +7,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 #include <cwchar>
 #include <type_traits>
