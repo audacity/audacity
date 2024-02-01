@@ -300,8 +300,9 @@ private:
    /*!
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
+    @param backup is passed to Clone
     */
-   virtual TrackListHolder Duplicate() const;
+   virtual TrackListHolder Duplicate(bool backup = false) const;
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;
@@ -391,9 +392,11 @@ private:
     @pre `!unstretchInterval.has_value() ||
        unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
+    @param backup whether the duplication is for backup purposes while opening
+    a project, instead of other editing operations
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Clone() const = 0;
+   virtual TrackListHolder Clone(bool backup) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >

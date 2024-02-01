@@ -117,7 +117,7 @@ class AUDACITY_DLL_API LabelTrack final
    using Holder = std::shared_ptr<LabelTrack>;
 
 private:
-   TrackListHolder Clone() const override;
+   TrackListHolder Clone(bool backup) const override;
    void DoOnProjectTempoChange(
       const std::optional<double>& oldTempo, double newTempo) override;
 

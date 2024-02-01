@@ -165,7 +165,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-TrackListHolder NoteTrack::Clone() const
+TrackListHolder NoteTrack::Clone(bool) const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -874,7 +874,7 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = (*Clone()->begin())->SharedPointer();
+      holder = (*Clone(false)->begin())->SharedPointer();
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);
