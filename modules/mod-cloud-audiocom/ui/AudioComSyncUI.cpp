@@ -198,6 +198,10 @@ public:
 
       wxLogError(
          "Project upload has failed: %s", audacity::ToWXString(errorMessage));
+
+      BasicUI::ShowErrorDialog(
+         {}, XO("Error"), XO("Failed to sync cloud project"), {},
+         BasicUI::ErrorDialogOptions {}.Log(audacity::ToWString(errorMessage)));
    }
 
    void OnUploadSucceeded(AudacityProject* project) override
