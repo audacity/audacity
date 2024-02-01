@@ -72,4 +72,14 @@ wxString ToWXString (const std::wstring& str)
     return wxString (str);
 }
 
+wxString ToWXString(std::wstring_view str)
+{
+    return wxString(str.data(), str.size());
+}
+
+wxString ToWXString(const wchar_t* str)
+{
+    return wxString(str);
+}
+
 }

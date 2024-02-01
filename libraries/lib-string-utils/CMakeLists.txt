@@ -7,6 +7,7 @@ set(SOURCES
     HexHelpers.h
 
     StringUtils.h
+    StringUtils.cpp
 
     UrlEncode.h
     UrlEncode.cpp

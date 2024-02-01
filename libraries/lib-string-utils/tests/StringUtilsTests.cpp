@@ -62,6 +62,6 @@ TEST_CASE("IsPrefixed", "[StringUtils]")
 
    SECTION("Case insensitive")
    {
-      REQUIRE(IsPrefixed("test", "TEST", false));
+      REQUIRE(IsPrefixedInsensitive("test", "TEST"));
    }
 }

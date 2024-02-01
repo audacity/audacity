@@ -7,11 +7,14 @@
 #pragma once
 
 #include <algorithm>
-#include <cctype>
 #include <cstring>
 #include <cwchar>
+#include <string>
+#include <string_view>
 #include <type_traits>
 #include <numeric>
+
+#include <wx/string.h>
 
 inline std::size_t StringLength(const char str)
 {
@@ -75,6 +78,23 @@ ResultType Join(
     return result;
 }
 
+STRING_UTILS_API std::string  ToLower(const std::string& str);
+STRING_UTILS_API std::string  ToLower(const std::string_view& str);
+STRING_UTILS_API std::string  ToLower(const char* str);
+STRING_UTILS_API std::wstring ToLower(const std::wstring& str);
+STRING_UTILS_API std::wstring ToLower(const std::wstring_view& str);
+STRING_UTILS_API std::wstring ToLower(const wchar_t* str);
+STRING_UTILS_API wxString     ToLower(const wxString& str);
+
+STRING_UTILS_API std::string  ToUpper(const std::string& str);
+STRING_UTILS_API std::string  ToUpper(const std::string_view& str);
+STRING_UTILS_API std::string  ToUpper(const char* str);
+STRING_UTILS_API std::wstring ToUpper(const std::wstring& str);
+STRING_UTILS_API std::wstring ToUpper(const std::wstring_view& str);
+STRING_UTILS_API std::wstring ToUpper(const wchar_t* str);
+STRING_UTILS_API wxString     ToUpper(const wxString& str);
+
+
 template<typename StringType>
 StringType ToLower (StringType str)
 {
@@ -120,7 +140,7 @@ inline const wchar_t* end(const wchar_t* str) noexcept
 
 template<typename HayType, typename PrefixType>
 bool IsPrefixed(
-   const HayType& hay, const PrefixType& prefix, const bool caseSensitive = true)
+   const HayType& hay, const PrefixType& prefix)
 {
    if (StringLength(hay) < StringLength(prefix))
         return false;
@@ -132,11 +152,11 @@ bool IsPrefixed(
    const auto prefixEnd = end(prefix);
    const auto hayBegin = begin(hay);
 
-   auto it = caseSensitive ?
-                std::mismatch(prefixBegin, prefixEnd, hayBegin) :
-                std::mismatch(
-                   prefixBegin, prefixEnd, hayBegin,
-                   [](auto a, auto b) { return ::tolower(a) == ::tolower(b); });
+   return std::mismatch(prefixBegin, prefixEnd, hayBegin).first == prefixEnd;
+}
 
-   return it.first == prefixEnd;
+template <typename HayType, typename PrefixType>
+bool IsPrefixedInsensitive(const HayType& hay, const PrefixType& prefix)
+{
+   return IsPrefixed(ToLower(hay), ToLower(prefix));
 }
