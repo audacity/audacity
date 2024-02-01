@@ -177,7 +177,7 @@ void CommonTrackInfo::DrawCloseButton(
 {
    auto dc = &context.dc;
    auto pTrack = pChannel
-      ? dynamic_cast<const Track*>(&pChannel->ReallyGetChannelGroup())
+      ? dynamic_cast<const Track*>(&pChannel->GetChannelGroup())
       : nullptr;
    bool selected = pTrack ? pTrack->GetSelected() : true;
    bool hit = target && target->FindChannel().get() == pChannel;

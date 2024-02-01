@@ -1059,14 +1059,14 @@ Track &GetTrack(Channel &channel)
 {
    // It is assumed that all channels we ever see are in groups that are
    // also Tracks
-   return static_cast<Track &>(channel.ReallyGetChannelGroup());
+   return static_cast<Track &>(channel.GetChannelGroup());
 }
 
 const Track &GetTrack(const Channel &channel)
 {
    // It is assumed that all channels we ever see are in groups that are
    // also Tracks
-   return static_cast<const Track &>(channel.ReallyGetChannelGroup());
+   return static_cast<const Track &>(channel.GetChannelGroup());
 }
 
 void GetTrackNameExtent(

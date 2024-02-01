@@ -114,7 +114,7 @@ Track *ChannelView::ReallyFindTrack()
 {
    if (const auto pChannel = FindChannel()) {
       if (const auto pLeader =
-         dynamic_cast<Track*>(&pChannel->ReallyGetChannelGroup()))
+         dynamic_cast<Track*>(&pChannel->GetChannelGroup()))
          return pLeader;
    }
    return nullptr;
@@ -223,8 +223,8 @@ std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
 
 ChannelView &ChannelView::Get(Channel &channel)
 {
-   return GetFromChannelGroup(channel.ReallyGetChannelGroup(),
-      channel.ReallyGetChannelIndex());
+   return
+      GetFromChannelGroup(channel.GetChannelGroup(), channel.GetChannelIndex());
 }
 
 const ChannelView &ChannelView::Get(const Channel &channel)
@@ -237,7 +237,7 @@ ChannelView *ChannelView::Find(Channel *pChannel)
    if (!pChannel)
       return nullptr;
    return FindFromChannelGroup(
-      &pChannel->ReallyGetChannelGroup(), pChannel->ReallyGetChannelIndex());
+      &pChannel->GetChannelGroup(), pChannel->GetChannelIndex());
 }
 
 const ChannelView *ChannelView::Find(const Channel *pChannel)

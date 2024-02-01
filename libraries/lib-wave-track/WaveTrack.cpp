@@ -1449,7 +1449,7 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
    return { pTrack->shared_from_this(), alias };
 }
 
-ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
+ChannelGroup &WaveTrack::DoGetChannelGroup() const
 {
    const Track *pTrack = this;
    if (const auto pOwner = GetHolder())
@@ -3019,7 +3019,7 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned stride, sampleFormat effectiveFormat)
 {
-   const size_t iChannel = ReallyGetChannelIndex();
+   const size_t iChannel = GetChannelIndex();
    return GetTrack()
       .Append(iChannel, buffer, format, len, stride, effectiveFormat);
 }
@@ -3030,7 +3030,7 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
-   const size_t iChannel = ReallyGetChannelIndex();
+   const size_t iChannel = GetChannelIndex();
    return GetTrack()
       .Append(iChannel, buffer, format, len, 1, widestSampleFormat);
 }

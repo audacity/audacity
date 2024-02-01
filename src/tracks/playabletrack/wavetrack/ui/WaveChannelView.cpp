@@ -713,7 +713,7 @@ public:
    SubViewCloseHandle(
       SubViewAdjuster &&adjuster, size_t index,
       const std::shared_ptr<Channel> &pChannel, const wxRect &rect )
-      : ButtonHandle{ static_cast<Track&>(pChannel->ReallyGetChannelGroup())
+      : ButtonHandle{ static_cast<Track&>(pChannel->GetChannelGroup())
             .SharedPointer(),
          rect }
       , mpChannel{ pChannel }

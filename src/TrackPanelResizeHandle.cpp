@@ -335,5 +335,5 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
 Track &TrackPanelResizeHandle::GetTrack(Channel &channel)
 {
    // Be sure to substitute the leader
-   return *static_cast<Track*>(&channel.ReallyGetChannelGroup());
+   return *static_cast<Track*>(&channel.GetChannelGroup());
 }

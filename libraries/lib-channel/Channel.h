@@ -180,25 +180,16 @@ public:
    virtual ~Channel();
 
    //! Channel object's lifetime is assumed to be nested in its Track's
-   //ChannelGroup &GetChannelGroup();
+   ChannelGroup &GetChannelGroup();
    /*!
     @copydoc GetChannelGroup()
     */
-   //const ChannelGroup &GetChannelGroup() const;
-
-   //! Channel object's lifetime is assumed to be nested in its Track's
-   ChannelGroup &ReallyGetChannelGroup();
-   /*!
-    @copydoc ReallyGetChannelGroup()
-    */
-   const ChannelGroup &ReallyGetChannelGroup() const;
+   const ChannelGroup &GetChannelGroup() const;
 
    /*!
     @return `ii` such that `this == GetChannelGroup().GetChannel(ii).get()`
     */
-   //size_t GetChannelIndex() const;
-
-   size_t ReallyGetChannelIndex() const;
+   size_t GetChannelIndex() const;
 
    /*!
       @name Acesss to intervals
@@ -298,10 +289,9 @@ protected:
     @post result: for some `ii` less than `result.NChannels()`,
        `this == result.GetChannel(ii).get()`
     */
-   virtual ChannelGroup &ReallyDoGetChannelGroup() const = 0;
+   virtual ChannelGroup &DoGetChannelGroup() const = 0;
 
 private:
-//   int FindChannelIndex() const;
 };
 
 class CHANNEL_API ChannelGroup
@@ -625,14 +615,14 @@ private:
 
 inline size_t Channel::NIntervals() const
 {
-   return ReallyGetChannelGroup().NIntervals();
+   return GetChannelGroup().NIntervals();
 }
 
 template<typename IntervalType>
 std::shared_ptr<IntervalType> Channel::GetInterval(size_t iInterval)
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 
 template<typename IntervalType>
@@ -640,7 +630,7 @@ auto Channel::GetInterval(size_t iInterval) const
    -> std::enable_if_t<std::is_const_v<IntervalType>,
       std::shared_ptr<IntervalType>>
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 #endif

@@ -149,7 +149,7 @@ std::shared_ptr<Track> CommonChannelCell::DoFindTrack()
 {
    Track *pTrack{};
    if (const auto pChannel = mwChannel.lock())
-      pTrack = dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup());
+      pTrack = dynamic_cast<Track *>(&pChannel->GetChannelGroup());
    return pTrack ? pTrack->SharedPointer() : nullptr;
 }
 

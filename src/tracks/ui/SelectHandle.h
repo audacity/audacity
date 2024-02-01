@@ -83,8 +83,8 @@ public:
 
 private:
    std::shared_ptr<Channel> FindChannel();
-   static Track *ReallyFindTrack(Channel *);
-   Track *ReallyFindTrack();
+   static Track *FindTrack(Channel *);
+   Track *FindTrack();
 
    void Connect(AudacityProject *pProject);
 

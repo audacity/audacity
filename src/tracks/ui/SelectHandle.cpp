@@ -387,7 +387,7 @@ UIHandlePtr SelectHandle::HitTest
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
-   auto pTrack = ReallyFindTrack(pChannelView->FindChannel().get());
+   auto pTrack = FindTrack(pChannelView->FindChannel().get());
    if (!pTrack->GetSelected())
    {
       return result;
@@ -441,7 +441,7 @@ SelectHandle::SelectHandle(
    mRect = st.rect;
 
    auto time = std::max(0.0, viewInfo.PositionToTime(state.m_x, mRect.x));
-   auto pTrack = ReallyFindTrack(pChannelView->FindChannel().get());
+   auto pTrack = FindTrack(pChannelView->FindChannel().get());
    mSnapStart = mSnapManager->Snap(pTrack, time, false);
    if (mSnapStart.snappedPoint)
          mSnapStart.outCoord += mRect.x;
@@ -468,17 +468,17 @@ std::shared_ptr<const Channel> SelectHandle::FindChannel() const
    return const_cast<SelectHandle &>(*this).FindChannel();
 }
 
-Track *SelectHandle::ReallyFindTrack(Channel *pChannel)
+Track *SelectHandle::FindTrack(Channel *pChannel)
 {
    return pChannel
-      ? dynamic_cast<Track*>(&pChannel->ReallyGetChannelGroup())
+      ? dynamic_cast<Track*>(&pChannel->GetChannelGroup())
       : nullptr;
 }
 
-Track *SelectHandle::ReallyFindTrack()
+Track *SelectHandle::FindTrack()
 {
    const auto pChannel = FindChannel();
-   return ReallyFindTrack(pChannel.get());
+   return FindTrack(pChannel.get());
 }
 
 namespace {
@@ -557,7 +557,7 @@ UIHandle::Result SelectHandle::Click(
 
    wxMouseEvent &event = evt.event;
    auto &trackList = TrackList::Get(*pProject);
-   const auto pLeader = ReallyFindTrack();
+   const auto pLeader = FindTrack();
    if (!pLeader)
       return Cancelled;
    auto &trackPanel = TrackPanel::Get(*pProject);
@@ -879,7 +879,7 @@ UIHandle::Result SelectHandle::Drag(const TrackPanelMouseEvent &evt,
       if ( auto clickedTrack =
           static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack() ) {
          // Handle which tracks are selected
-         Track *sTrack = ReallyFindTrack();
+         Track *sTrack = FindTrack();
          Track *eTrack = clickedTrack.get();
          auto &trackList = TrackList::Get( *pProject );
          if ( sTrack && eTrack && !event.ControlDown() ) {
@@ -956,7 +956,7 @@ HitTestPreview SelectHandle::Preview
          (ToolCodes::multiTool == ProjectSettings::Get( *pProject ).GetTool());
 
       //In Multi-tool mode, give multitool prompt if no-special-hit.
-      const auto pTrack = ReallyFindTrack();
+      const auto pTrack = FindTrack();
       if (bMultiToolMode) {
          // Look up the current key binding for Preferences.
          // (Don't assume it's the default!)
@@ -1211,7 +1211,7 @@ void SelectHandle::AdjustSelection(AudacityProject *pProject,
    if (!track) {
       const auto sChannel = FindChannel();
       track = sChannel
-         ? dynamic_cast<Track*>(&sChannel->ReallyGetChannelGroup())
+         ? dynamic_cast<Track*>(&sChannel->GetChannelGroup())
          : nullptr;
    }
 

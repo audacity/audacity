@@ -112,7 +112,7 @@ void EditCursorOverlay::Draw(OverlayPanel &panel, wxDC &dc)
             return;
          const auto pChannel = pChannelView->FindChannel();
          const auto pTrack =
-            dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup());
+            dynamic_cast<Track *>(&pChannel->GetChannelGroup());
          if (pChannel && (pTrack->GetSelected() ||
              TrackFocus::Get( *mProject ).IsFocused(pTrack)))
          {

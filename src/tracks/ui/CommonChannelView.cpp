@@ -95,8 +95,8 @@ int CommonChannelView::GetMinimizedHeight() const
             &PendingTracks::Get(*p).SubstituteOriginalChannel(*pChannel);
 
    // Find index of the channel in its group and use that to round off correctly
-   const auto index = pChannel->ReallyGetChannelIndex();
-   const auto nChannels = pChannel->ReallyGetChannelGroup().Channels().size();
+   const auto index = pChannel->GetChannelIndex();
+   const auto nChannels = pChannel->GetChannelGroup().Channels().size();
    return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }
 

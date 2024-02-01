@@ -87,10 +87,10 @@ PendingTracks::DoSubstitutePendingChangedChannel(
 
 Channel &PendingTracks::SubstitutePendingChangedChannel(Channel &channel) const
 {
-   const auto pTrack = dynamic_cast<Track *>(&channel.ReallyGetChannelGroup());
+   const auto pTrack = dynamic_cast<Track *>(&channel.GetChannelGroup());
    if (!pTrack)
       return channel;
-   const auto index = channel.ReallyGetChannelIndex();
+   const auto index = channel.GetChannelIndex();
    auto [_, pChannel] = DoSubstitutePendingChangedChannel(*pTrack, index);
    return pChannel ? *pChannel : channel;
 }
@@ -153,10 +153,10 @@ const Channel &PendingTracks::SubstituteOriginalChannel(const Channel &channel)
 const
 {
    const auto pTrack =
-      dynamic_cast<const Track *>(&channel.ReallyGetChannelGroup());
+      dynamic_cast<const Track *>(&channel.GetChannelGroup());
    if (!pTrack)
       return channel;
-   const auto index = channel.ReallyGetChannelIndex();
+   const auto index = channel.GetChannelIndex();
    const auto [_, pChannel] = DoSubstituteOriginalChannel(*pTrack, index);
    return pChannel ? *pChannel : channel;
 }

@@ -1207,7 +1207,7 @@ private:
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
-   ChannelGroup &ReallyDoGetChannelGroup() const override;
+   ChannelGroup &DoGetChannelGroup() const override;
 
    //
    // Protected variables
@@ -1293,12 +1293,12 @@ private:
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
 WaveTrack &WaveChannel::GetTrack() {
-   auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
+   auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
    return result;
 }
 
 const WaveTrack &WaveChannel::GetTrack() const {
-   auto &result = static_cast<const WaveTrack&>(ReallyDoGetChannelGroup());
+   auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
    return result;
 }
 

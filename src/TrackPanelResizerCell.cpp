@@ -48,7 +48,7 @@ void TrackPanelResizerCell::Draw(
    if (iPass == TrackArtist::PassMargins) {
       if (const auto pChannel = FindChannel()) {
          const auto pTrack =
-            dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup());
+            dynamic_cast<Track *>(&pChannel->GetChannelGroup());
          if (!pTrack)
             return;
          auto dc = &context.dc;
@@ -128,8 +128,8 @@ TrackPanelResizerCell &TrackPanelResizerCell::GetFromChannelGroup(
 
 TrackPanelResizerCell &TrackPanelResizerCell::Get(Channel &channel)
 {
-   return GetFromChannelGroup(channel.ReallyGetChannelGroup(),
-      channel.ReallyGetChannelIndex());
+   return GetFromChannelGroup(channel.GetChannelGroup(),
+      channel.GetChannelIndex());
 }
 
 const TrackPanelResizerCell &TrackPanelResizerCell::Get(const Channel &channel)

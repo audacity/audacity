@@ -466,7 +466,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
 {
     auto waveChannel = view.FindWaveChannel();
     //For multichannel tracks, show adjustment handle only for the leader track
-    if (waveChannel->ReallyGetChannelIndex() != 0)
+    if (waveChannel->GetChannelIndex() != 0)
         return {};
 
     std::vector<UIHandlePtr> results;

@@ -477,7 +477,7 @@ UIHandle::Result TimeShiftHandle::Click(
 
    const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
    const auto pTrack = pView && pView->FindChannel() ?
-      dynamic_cast<Track *>(&pView->FindChannel()->ReallyGetChannelGroup())
+      dynamic_cast<Track *>(&pView->FindChannel()->GetChannelGroup())
       : nullptr;
    if (!pTrack)
       return RefreshCode::Cancelled;
@@ -838,7 +838,7 @@ UIHandle::Result TimeShiftHandle::Drag
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
    const auto pChannel = trackView ? trackView->FindChannel() : nullptr;
    auto track = pChannel
-      ? dynamic_cast<Track *>(&pChannel->ReallyGetChannelGroup())
+      ? dynamic_cast<Track *>(&pChannel->GetChannelGroup())
       : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
