@@ -14,7 +14,9 @@
 #include <string_view>
 #include <wx/string.h>
 
-#include <qstring.h>
+#if QT_CORE_LIB
+#include <QString>
+#endif
 
 namespace audacity
 {
