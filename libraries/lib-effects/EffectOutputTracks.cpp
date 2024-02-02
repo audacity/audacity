@@ -50,7 +50,7 @@ EffectOutputTracks::EffectOutputTracks(
       effectTimeInterval.has_value() &&
       effectTimeInterval->second > effectTimeInterval->first)
    {
-      WaveTrackUtilities::WithStretchRenderingProgress(
+      WaveTrackUtilities::WithClipRenderingProgress(
          [&](const ProgressReporter& parent)
          {
             const auto tracksToUnstretch =
@@ -58,14 +58,14 @@ EffectOutputTracks::EffectOutputTracks(
                                     mOutputTracks->Selected<WaveTrack>()) +
                [&](const WaveTrack* pTrack)
             {
-               return WaveTrackUtilities::HasStretch(
+               return WaveTrackUtilities::HasPitchOrSpeed(
                   *pTrack, effectTimeInterval->first,
                   effectTimeInterval->second);
             };
             BasicUI::SplitProgress(
                tracksToUnstretch.begin(), tracksToUnstretch.end(),
                [&](WaveTrack* aTrack, const ProgressReporter& child) {
-                  aTrack->ApplyStretchRatio(effectTimeInterval, child);
+                  aTrack->ApplyPitchAndSpeed(effectTimeInterval, child);
                },
                parent);
          });

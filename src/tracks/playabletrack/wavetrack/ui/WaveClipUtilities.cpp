@@ -85,8 +85,8 @@ std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
         { L"TrackMute", XO("Mute/Unmute Track") },
         {},
         { L"RenameClip", XO("Rename Clip...") },
-        { L"ChangeClipSpeed", XO("Change Speed...") },
-        { L"RenderClipStretching", XO("Render Clip Stretching") },
+        { L"ChangePitchAndSpeed", XO("Pitch and Speed...") },
+        { L"RenderPitchAndSpeed", XO("Render Pitch and Speed") },
      };;
 }
 

@@ -190,10 +190,10 @@ OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 bool EffectAmplify::Init()
 {
    auto range = inputTracks()->Selected<const WaveTrack>();
-   bool hasStretch = any_of(begin(range), end(range),
-      [this](auto *pTrack){
-         return WaveTrackUtilities::HasStretch(*pTrack, mT0, mT1); });
-   if (hasStretch)
+   bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
+      return WaveTrackUtilities::HasPitchOrSpeed(*pTrack, mT0, mT1);
+   });
+   if (hasPitchOrSpeed)
       range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
    mPeak = 0.0;
    for (auto t : range) {
@@ -228,7 +228,7 @@ std::unique_ptr<EffectEditor> EffectAmplify::PopulateOrExchange(
       mCanClip = true;
       mPeak = 1.0;
    }
-   else 
+   else
    {
       if (mPeak > 0.0)
       {

@@ -96,10 +96,20 @@ struct WAVE_TRACK_API WaveClipListener
    virtual void Invalidate() = 0;
 };
 
+struct CentShiftChange
+{
+   explicit CentShiftChange(int newValue)
+       : newValue(newValue)
+   {
+   }
+   const int newValue;
+};
+
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public XMLTagHandler,
-    public ClientData::Site<WaveClip, WaveClipListener>
+    public ClientData::Site<WaveClip, WaveClipListener>,
+    public Observer::Publisher<CentShiftChange>
 {
 private:
    // It is an error to copy a WaveClip without specifying the
@@ -172,9 +182,18 @@ public:
 
    //! Checks for stretch-ratio equality, accounting for rounding errors.
    //! @{
-   bool HasEqualStretchRatio(const WaveClip& other) const;
-   bool StretchRatioEquals(double value) const;
+   bool HasEqualPitchAndSpeed(const WaveClip& other) const;
+   bool HasPitchOrSpeed() const;
    //! @}
+
+   /*
+    * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
+    * TimeAndPitchInterface::MaxCent`
+    */
+   bool SetCentShift(int cents);
+   int GetCentShift() const override;
+   [[nodiscard]] Observer::Subscription
+   SubscribeToCentShiftChange(std::function<void(int)> cb) override;
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
@@ -579,7 +598,7 @@ private:
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
    sampleCount TimeToSequenceSamples(double t) const;
-
+   bool StretchRatioEquals(double value) const;
    sampleCount GetNumSamples() const;
    SampleFormats GetSampleFormats() const;
    const SampleBlockFactoryPtr &GetFactory();
@@ -610,6 +629,8 @@ private:
    double mTrimLeft { 0 };
    double mTrimRight { 0 };
    //! @}
+
+   int mCentShift { 0 };
 
    // Used in GetStretchRatio which computes the factor, by which the sample
    // interval is multiplied, to get a realtime duration.

@@ -872,7 +872,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                !recordingStartsBeforeTrackEnd ||
                lastClip->WithinPlayRegion(recordingStart));
             if (!recordingStartsBeforeTrackEnd ||
-               !lastClip->StretchRatioEquals(1))
+               lastClip->HasPitchOrSpeed())
                pending->CreateWideClip(t0, makeNewClipName(pending));
             transportSequences.captureSequences
                .push_back(pending->SharedPointer<WaveTrack>());
@@ -950,7 +950,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             transportSequences.captureSequences.push_back(
                std::static_pointer_cast<WaveTrack>(newTrack->shared_from_this())
             );
-               
+
             for(auto channel : newTrack->Channels())
             {
                ChannelView::Get(*channel).SetMinimized(minimizeChannelView);

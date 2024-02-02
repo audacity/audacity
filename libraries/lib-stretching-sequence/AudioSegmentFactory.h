@@ -12,29 +12,32 @@
 #pragma once
 
 #include "AudioSegmentFactoryInterface.h"
+#include "ClipInterface.h"
+#include "TimeAndPitchInterface.h"
+
+#include <memory>
 
 class ClipInterface;
-using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
+using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
 
 class STRETCHING_SEQUENCE_API AudioSegmentFactory final :
     public AudioSegmentFactoryInterface
 {
 public:
-   AudioSegmentFactory(
-      int sampleRate, int numChannels, const ClipConstHolders& clips);
+   AudioSegmentFactory(int sampleRate, int numChannels, ClipHolders clips);
 
    std::vector<std::shared_ptr<AudioSegment>> CreateAudioSegmentSequence(
-      double playbackStartTime, PlaybackDirection) const override;
+      double playbackStartTime, PlaybackDirection) override;
 
 private:
    std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequenceForward(double playbackStartTime) const;
+   CreateAudioSegmentSequenceForward(double playbackStartTime);
 
    std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequenceBackward(double playbackStartTime) const;
+   CreateAudioSegmentSequenceBackward(double playbackStartTime);
 
 private:
-   const ClipConstHolders mClips;
+   const ClipHolders mClips;
    const int mSampleRate;
    const int mNumChannels;
 };

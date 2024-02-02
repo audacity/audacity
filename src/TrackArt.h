@@ -33,7 +33,7 @@ namespace TrackArt {
    AUDACITY_DLL_API
    bool DrawAudioClipTitle(
       wxDC& dc, const wxRect& titleRect, const wxString& title,
-      double clipStretchRatio);
+      double clipStretchRatio, int clipCentShift);
 
    AUDACITY_DLL_API
    void DrawClipEdges(wxDC& dc, const wxRect& clipRect, bool selected = false);

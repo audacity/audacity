@@ -56,3 +56,17 @@ double WideClip::GetStretchRatio() const
 {
    return mChannels[0u]->GetStretchRatio();
 }
+
+int WideClip::GetCentShift() const
+{
+   return mChannels[0u]->GetCentShift();
+}
+
+Observer::Subscription
+WideClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
+{
+   // On purpose set the publisher on the left channel only. This is not a clip
+   // property that is saved to disk, and else we'll get two callbacks for the
+   // same event.
+   return mChannels[0u]->SubscribeToCentShiftChange(std::move(cb));
+}

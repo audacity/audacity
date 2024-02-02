@@ -290,7 +290,7 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
    // which is always associated with a leader track
    assert(pTrack->IsLeader());
    pTrack->ConvertToSampleFormat(newFormat, progressUpdate);
-         
+
    ProjectHistory::Get( *project )
    /* i18n-hint: The strings name a track and a format */
       .PushState(XO("Changed '%s' to %s")
@@ -776,7 +776,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
                   std::abs(a->End() - b->End()) < eps &&
                   eqTrims(a->GetTrimLeft(), b->GetTrimLeft()) &&
                   eqTrims(a->GetTrimRight(), b->GetTrimRight()) &&
-                  a->StretchRatioEquals(b->GetStretchRatio());
+                  a->HasEqualPitchAndSpeed(*b);
             });
          if(it == rightIntervals.end())
             return false;
@@ -833,7 +833,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    tracks.Insert(*first, std::move(*mix));
    tracks.Remove(*left);
    tracks.Remove(*right);
-   
+
    for(const auto& channel : newTrack->Channels())
    {
       // Set NEW track heights and minimized state
@@ -870,7 +870,7 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 
    for (const auto track : unlinkedTracks) {
       auto &view = ChannelView::Get(*track->GetChannel(0));
-      
+
       //make sure no channel is smaller than its minimum height
       if (view.GetHeight() < view.GetMinimizedHeight())
          view.SetExpandedHeight(view.GetMinimizedHeight());

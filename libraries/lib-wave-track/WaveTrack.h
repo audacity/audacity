@@ -495,7 +495,7 @@ public:
     *
     * @pre `!interval.has_value() || interval->first <= interval->second`
     */
-   void ApplyStretchRatio(
+   void ApplyPitchAndSpeed(
       std::optional<TimeInterval> interval, ProgressReporter reportProgress);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
@@ -711,7 +711,7 @@ public:
     * order.
     * @pre `IsLeader()`
     */
-   ClipConstHolders GetClipInterfaces() const;
+   ClipHolders GetClipInterfaces() const;
 
    // Get mutative access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
@@ -956,6 +956,7 @@ public:
       bool WithinPlayRegion(double t) const;
 
       double GetStretchRatio() const;
+      int GetCentShift() const;
       void SetRawAudioTempo(double tempo);
 
       sampleCount TimeToSamples(double time) const;
@@ -985,6 +986,11 @@ public:
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
       void StretchBy(double ratio);
+      /*
+       * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
+       * TimeAndPitchInterface::MaxCent`
+       */
+      bool SetCentShift(int cents);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
       void ClearLeft(double t);
@@ -993,11 +999,12 @@ public:
       /*!
        * @post result: `result->GetStretchRatio() == 1`
        */
-      std::shared_ptr<Interval> GetStretchRenderedCopy(
+      std::shared_ptr<Interval> GetRenderedCopy(
          const std::function<void(double)>& reportProgress,
          const ChannelGroup& group, const SampleBlockFactoryPtr& factory,
          sampleFormat format);
-      bool StretchRatioEquals(double value) const;
+      bool HasPitchOrSpeed() const;
+      bool HasEqualPitchAndSpeed(const Interval& other) const;
 
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
@@ -1085,7 +1092,7 @@ private:
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    bool MergeOneClipPair(int clipidx1, int clipidx2);
-   void ApplyStretchRatioOnIntervals(
+   void ApplyPitchAndSpeedOnIntervals(
       const std::vector<IntervalHolder>& intervals,
       const ProgressReporter& reportProgress);
    //! @pre `IsLeader()`
@@ -1196,7 +1203,7 @@ private:
     */
    bool InsertClip(WaveClipHolder clip, bool backup = false);
 
-   void ApplyStretchRatioOne(
+   void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);
 
    SampleBlockFactoryPtr mpFactory;

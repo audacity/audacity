@@ -36,6 +36,7 @@
 #include "WaveChannelView.h"//need only ClipParameters
 #include "WaveTrackAffordanceHandle.h"
 
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectionState.h"
@@ -51,7 +52,7 @@
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUtilities.h"
 
-#include "ChangeClipSpeedDialog.h"
+#include "PitchAndSpeedDialog.h"
 
 #include "BasicUI.h"
 #include "UserException.h"
@@ -283,12 +284,14 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
                         mTextEditHelper->Cancel(nullptr);
                         TrackArt::DrawAudioClipTitle(
                            context.dc, titleRect, interval->GetName(),
-                           interval->GetStretchRatio());
+                           interval->GetStretchRatio(),
+                           interval->GetCentShift());
                     }
                 }
                 else if (TrackArt::DrawAudioClipTitle(
                             context.dc, titleRect, interval->GetName(),
-                            interval->GetStretchRatio()))
+                            interval->GetStretchRatio(),
+                            interval->GetCentShift()))
                 {
                    mVisibleIntervals.push_back(it);
                 }
@@ -406,7 +409,7 @@ const ReservedCommandFlag &StretchedClipIsSelectedFlag()
             const_cast<AudacityProject&>(project));
 
          auto interval = *result.second;
-         return interval != nullptr && !interval->StretchRatioEquals(1.0);
+         return interval != nullptr && interval->HasPitchOrSpeed();
       }
    };
    return flag;
@@ -610,17 +613,21 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   ChangeClipSpeedDialog dlg(*track, *interval, &GetProjectFrame(project));
+   PitchAndSpeedDialog dlg(
+      ProjectAudioIO::Get(project).IsAudioActive(), *track, *interval,
+      &GetProjectFrame(project));
 
    if (wxID_OK == dlg.ShowModal())
    {
-      PushClipSpeedChangedUndoState(project, 100.0 / interval->GetStretchRatio());
+      ProjectHistory::Get(project).PushState(
+         XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
+         UndoPush::CONSOLIDATE);
       SelectInterval(project, *interval);
    }
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(
-   AudacityProject& project)
+   AudacityProject& project) const
 {
    const auto [track, it] = SelectedIntervalOfFocusedTrack(project);
 
@@ -629,12 +636,12 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
 
    auto interval = *it;
 
-   if (!interval || interval->StretchRatioEquals(1.0))
+   if (!interval || !interval->HasPitchOrSpeed())
       return;
 
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   WaveTrackUtilities::WithClipRenderingProgress(
       [track = track, interval = interval](const ProgressReporter& progress) {
-         track->ApplyStretchRatio(
+         track->ApplyPitchAndSpeed(
             { { interval->GetPlayStartTime(), interval->GetPlayEndTime() } },
             progress);
       },
@@ -682,7 +689,7 @@ void OnEditClipName(const CommandContext &context)
    }
 }
 
-void OnChangeClipSpeed(const CommandContext& context)
+void OnChangePitchAndSpeed(const CommandContext& context)
 {
    auto& project = context.project;
 
@@ -708,6 +715,30 @@ void OnRenderClipStretching(const CommandContext& context)
    }
 }
 
+void OnPitchShift(
+   const CommandContext& context, bool up)
+{
+   auto [track, it] = SelectedIntervalOfFocusedTrack(context.project);
+   if (!track)
+      return;
+   const auto interval = *it;
+   if (interval->SetCentShift(interval->GetCentShift() + (up ? 100 : -100)))
+      ProjectHistory::Get(context.project)
+         .PushState(
+            XO("Pitch Shift"), XO("Changed Pitch Shift"),
+            UndoPush::CONSOLIDATE);
+}
+
+void OnPitchUp(const CommandContext& context)
+{
+   OnPitchShift(context, true);
+}
+
+void OnPitchDown(const CommandContext& context)
+{
+   OnPitchShift(context, false);
+}
+
 using namespace MenuRegistry;
 
 // Register menu items
@@ -718,15 +749,28 @@ AttachedItem sAttachment{
    wxT("Edit/Other/Clip")
 };
 
-AttachedItem sAttachment2{
-   Command( L"ChangeClipSpeed", XXO("Change &Speed..."),
-      OnChangeClipSpeed, SomeClipIsSelectedFlag() ),
+AttachedItem sAttachment2 {
+   Command(
+      L"ChangePitchAndSpeed", XXO("&Pitch and Speed..."), OnChangePitchAndSpeed,
+      SomeClipIsSelectedFlag(), Options { wxT("Ctrl+Shift+P") }),
    wxT("Edit/Other/Clip")
 };
 
 AttachedItem sAttachment3{
-   Command( L"RenderClipStretching", XXO("Render Clip S&tretching"),
+   Command( L"RenderPitchAndSpeed", XXO("Render Pitch and &Speed"),
       OnRenderClipStretching, StretchedClipIsSelectedFlag()),
+   wxT("Edit/Other/Clip")
+};
+
+AttachedItem sAttachment4{
+   Command( L"PitchUp", XXO("Pitch &Up"),
+      OnPitchUp, SomeClipIsSelectedFlag(), Options{ wxT("Alt+Up") }),
+   wxT("Edit/Other/Clip")
+};
+
+AttachedItem sAttachment5{
+   Command( L"PitchDown", XXO("Pitch &Down"),
+      OnPitchDown, SomeClipIsSelectedFlag(), Options{ wxT("Alt+Down") }),
    wxT("Edit/Other/Clip")
 };
 }
