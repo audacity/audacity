@@ -800,13 +800,14 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
    DoSetRate(static_cast<int>(rate));
 }
 
-WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a)
+WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a,
+   bool backup)
    : WritableSampleTrack(orig, std::move(a))
    , mpFactory( orig.mpFactory )
 {
    mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
-      InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true));
+      InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true), backup);
 }
 
 size_t WaveTrack::GetWidth() const
@@ -1064,13 +1065,13 @@ ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
    return const_cast<ChannelGroup&>(group);
 }
 
-TrackListHolder WaveTrack::Clone() const
+TrackListHolder WaveTrack::Clone(bool backup) const
 {
    assert(IsLeader());
    auto result = TrackList::Temporary(nullptr);
    const auto cloneOne = [&](const WaveTrack *pChannel){
       const auto pTrack =
-         std::make_shared<WaveTrack>(*pChannel, ProtectedCreationArg{});
+         std::make_shared<WaveTrack>(*pChannel, ProtectedCreationArg{}, backup);
       pTrack->Init(*pChannel);
       result->Add(pTrack);
    };
@@ -2359,9 +2360,9 @@ bool WaveTrack::FormatConsistencyCheck() const
       });
 }
 
-bool WaveTrack::InsertClip(WaveClipHolder clip)
+bool WaveTrack::InsertClip(WaveClipHolder clip, bool backup)
 {
-   if(!clip->GetIsPlaceholder() && clip->IsEmpty())
+   if(!backup && !clip->GetIsPlaceholder() && clip->IsEmpty())
       return false;
 
    const auto& tempo = GetProjectTempo();

@@ -83,11 +83,11 @@ void Track::SetSelected(bool s)
    }
 }
 
-TrackListHolder Track::Duplicate() const
+TrackListHolder Track::Duplicate(bool backup) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
-   auto result = Clone();
+   auto result = Clone(backup);
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
@@ -1001,7 +1001,7 @@ TrackList::RegisterPendingChangedTrack(Updater updater, Track *src)
    assert(GetOwner()); // which implies mPendingUpdates is not null
    assert(src->IsLeader());
    
-   auto tracks = src->Clone(); // not duplicate
+   auto tracks = src->Clone(false); // not duplicate
    assert(src->NChannels() == tracks->NChannels());
    {
       // Share the satellites with the original, though they do not point back
