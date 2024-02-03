@@ -132,6 +132,7 @@ public:
    double SamplesToTime(sampleCount s) const noexcept;
 
    double GetStretchRatio() const override;
+   bool HasPitchOrSpeed() const;
 
    double GetTrimLeft() const;
    double GetTrimRight() const;
@@ -572,7 +573,7 @@ public:
     *
     * @pre `!interval.has_value() || interval->first <= interval->second`
     */
-   void ApplyStretchRatio(
+   void ApplyPitchAndSpeed(
       std::optional<TimeInterval> interval, ProgressReporter reportProgress);
 
    void SyncLockAdjust(double oldT1, double newT1) override;
@@ -704,7 +705,7 @@ public:
     * order.
     * @pre `IsLeader()`
     */
-   ClipConstHolders GetClipInterfaces() const;
+   ClipHolders GetClipInterfaces() const;
 
    /// @pre IsLeader()
    //! Create new clip that uses this track's factory but do not add it to the
@@ -920,6 +921,7 @@ public:
       bool CoversEntirePlayRegion(double t0, double t1) const;
 
       double GetStretchRatio() const;
+      int GetCentShift() const;
       void SetRawAudioTempo(double tempo);
 
       sampleCount TimeToSamples(double time) const;
@@ -950,6 +952,11 @@ public:
       void StretchLeftTo(double t);
       void StretchRightTo(double t);
       void StretchBy(double ratio);
+      /*
+       * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
+       * TimeAndPitchInterface::MaxCent`
+       */
+      bool SetCentShift(int cents);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
 
@@ -975,16 +982,13 @@ public:
       /*!
        * @post result: `result->GetStretchRatio() == 1`
        */
-      std::shared_ptr<Interval> GetStretchRenderedCopy(
+      std::shared_ptr<Interval> GetRenderedCopy(
          const std::function<void(double)>& reportProgress,
          const ChannelGroup& group, const SampleBlockFactoryPtr& factory,
          sampleFormat format);
 
-      //! Checks for stretch-ratio equality, accounting for rounding errors.
-      //! @{
-      bool HasEqualStretchRatio(const Interval& other) const;
-      bool StretchRatioEquals(double value) const;
-      //! @}
+      bool HasPitchOrSpeed() const;
+      bool HasEqualPitchAndSpeed(const Interval& other) const;
 
       /*! @excsafety{No-fail} */
       void ShiftBy(double delta) noexcept;
@@ -1164,8 +1168,8 @@ private:
      size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
-   void ApplyStretchRatioOnIntervals(
-      const IntervalHolders& intervals,
+   void ApplyPitchAndSpeedOnIntervals(
+      const std::vector<IntervalHolder>& intervals,
       const ProgressReporter& reportProgress);
    //! @pre `IsLeader()`
    //! @pre `oldOne->NChannels() == newOne->NChannels()`
@@ -1247,7 +1251,7 @@ private:
     */
    bool InsertClip(WaveClipHolder clip, bool backup = false);
 
-   void ApplyStretchRatioOne(
+   void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);
 
    //! Used only in assertions checking invariants

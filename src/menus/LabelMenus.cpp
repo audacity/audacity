@@ -623,7 +623,7 @@ void OnJoinLabels(const CommandContext &context)
       track.TypeSwitch(
          [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   WaveTrackUtilities::WithClipRenderingProgress(
       [&](ProgressReporter progress) {
          EditByLabel(project, tracks, selectedRegion, editfunc, progress);
       });

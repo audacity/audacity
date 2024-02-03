@@ -757,7 +757,7 @@ void OnSilence(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    const auto selectedWaveTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   WaveTrackUtilities::WithClipRenderingProgress(
       [&](const ProgressReporter& parent) {
          BasicUI::SplitProgress(
             selectedWaveTracks.begin(), selectedWaveTracks.end(),
@@ -914,7 +914,7 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    const auto selectedTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   WaveTrackUtilities::WithClipRenderingProgress(
       [&](const ProgressReporter& reportProgress) {
          using namespace BasicUI;
          SplitProgress(

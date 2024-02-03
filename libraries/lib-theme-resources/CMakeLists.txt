@@ -17,6 +17,8 @@ set( IMAGE_LIST
    CutDisabled.png
    CutPreview.png
    CutPreviewDisabled.png
+   Delete.png
+   DeleteDisabled.png
    DisabledCursor.png
    DownButtonExpand.png
    DownButtonExpandSel.png
@@ -73,6 +75,8 @@ set( IMAGE_LIST
    PasteDisabled.png
    Pause.png
    PauseDisabled.png
+   PitchDownIndicator.png
+   PitchUpIndicator.png
    Play.png
    PlayDisabled.png
    PlayPointer.png
@@ -103,6 +107,7 @@ set( IMAGE_LIST
    SliderThumbRotatedHilited.png
    Speaker.png
    SpectralBrush.png
+   SpeedIndicator.png
    Stop.png
    StopDisabled.png
    SubViewsCursor.png

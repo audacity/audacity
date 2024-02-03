@@ -14,6 +14,8 @@
 #include "StaffPadTimeAndPitch.h"
 
 #include <cassert>
+#include <cmath>
+#include <functional>
 
 namespace
 {
@@ -22,6 +24,7 @@ GetStretchingParameters(const ClipInterface& clip)
 {
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = clip.GetStretchRatio();
+   params.pitchRatio = std::pow(2., clip.GetCentShift() / 1200.);
    return params;
 }
 
@@ -35,18 +38,19 @@ GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 } // namespace
 
 ClipSegment::ClipSegment(
-   const ClipInterface& clip, double durationToDiscard,
-   PlaybackDirection direction)
+   ClipInterface& clip, double durationToDiscard, PlaybackDirection direction)
     : mTotalNumSamplesToProduce { GetTotalNumSamplesToProduce(
          clip, durationToDiscard) }
     , mSource { clip, durationToDiscard, direction }
     , mStretcher { std::make_unique<StaffPadTimeAndPitch>(
          clip.GetRate(), clip.GetWidth(), mSource,
          GetStretchingParameters(clip)) }
+    , mOnSemitoneShiftChangeSubscription { clip.SubscribeToCentShiftChange(
+         [this](int cents) { mStretcher->OnCentShiftChange(cents); }) }
 {
 }
 
-size_t ClipSegment::GetFloats(float *const *buffers, size_t numSamples)
+size_t ClipSegment::GetFloats(float* const* buffers, size_t numSamples)
 {
    const auto numSamplesToProduce = limitSampleBufferSize(
       numSamples, mTotalNumSamplesToProduce - mTotalNumSamplesProduced);

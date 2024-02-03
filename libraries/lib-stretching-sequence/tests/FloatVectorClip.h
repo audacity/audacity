@@ -49,6 +49,17 @@ public:
       return stretchRatio;
    }
 
+   int GetCentShift() const override
+   {
+      return 0;
+   }
+
+   Observer::Subscription
+   SubscribeToCentShiftChange(std::function<void(int)> cb) override
+   {
+      return {};
+   }
+
 public:
    double stretchRatio = 1.;
    double playStartTime = 0.;

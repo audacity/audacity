@@ -29,6 +29,9 @@ public:
       std::shared_ptr<ClipInterface> left,
       std::shared_ptr<ClipInterface> right);
 
+   [[nodiscard]] Observer::Subscription
+   SubscribeToCentShiftChange(std::function<void(int)> cb) override;
+
    AudioSegmentSampleView GetSampleView(
       size_t ii, sampleCount start, size_t len, bool mayThrow) const override;
 
@@ -45,6 +48,8 @@ public:
    sampleCount TimeToSamples(double time) const override;
 
    double GetStretchRatio() const override;
+
+   int GetCentShift() const override;
 
 private:
    const std::array<std::shared_ptr<ClipInterface>, 2> mChannels;

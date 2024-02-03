@@ -187,16 +187,10 @@ bool StretchingSequence::MutableGet(
 }
 
 std::shared_ptr<StretchingSequence> StretchingSequence::Create(
-   const PlayableSequence& sequence, const ClipConstHolders& clips)
+   const PlayableSequence& sequence, const ClipHolders& clips)
 {
    return std::make_shared<StretchingSequence>(
       sequence, sequence.GetRate(), sequence.NChannels(),
       std::make_unique<AudioSegmentFactory>(
          sequence.GetRate(), sequence.NChannels(), clips));
-}
-
-std::shared_ptr<StretchingSequence> StretchingSequence::Create(
-   const PlayableSequence& sequence, const ClipHolders& clips)
-{
-   return Create(sequence, ClipConstHolders { clips.begin(), clips.end() });
 }

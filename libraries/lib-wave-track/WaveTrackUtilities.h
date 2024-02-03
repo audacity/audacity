@@ -124,14 +124,14 @@ inline IteratorRange<AllClipsConstIterator> GetAllClips(const WaveTrack &track)
 //! Whether any clips, whose play regions intersect the interval, have non-unit
 //! stretch ratio
 WAVE_TRACK_API
-bool HasStretch(const WaveTrack &track, double t0, double t1);
+bool HasPitchOrSpeed(const WaveTrack &track, double t0, double t1);
 
 extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
 
-WAVE_TRACK_API void WithStretchRenderingProgress(
+WAVE_TRACK_API void WithClipRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
    TranslatableString title = defaultStretchRenderingTitle,
-   TranslatableString message = XO("Rendering Time-Stretched Audio"));
+   TranslatableString message = XO("Rendering Clip"));
 
 //! Argument is in (0, 1)
 //! @return true if processing should continue

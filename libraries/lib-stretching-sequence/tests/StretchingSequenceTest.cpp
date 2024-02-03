@@ -49,7 +49,7 @@ TEST_CASE("StretchingSequence unit tests")
          const auto mockSequence =
             std::make_shared<MockPlayableSequence>(sampleRate, numChannels);
          const auto sut = StretchingSequence::Create(
-            *mockSequence, ClipConstHolders { clip1, clip3 });
+            *mockSequence, ClipHolders { clip1, clip3 });
 
          constexpr auto len = 2;
          const std::array<std::vector<float>, 6> expected { { { 6.f, 5.f },

@@ -90,7 +90,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
          const auto repair0 = track->TimeToLongSamples(repair_t0);
          const auto repair1 = track->TimeToLongSamples(repair_t1);
          const auto repairLen = repair1 - repair0;
-         if (WaveTrackUtilities::HasStretch(*track, repair_t0, repair_t1)) {
+         if (WaveTrackUtilities::HasPitchOrSpeed(*track, repair_t0, repair_t1)) {
             EffectUIServices::DoMessageBox(*this,
                XO(
 "The Repair effect cannot be applied within stretched or shrunk clips") );

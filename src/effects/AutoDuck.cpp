@@ -196,15 +196,15 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       auto &clips = pControlTrack->GetClips();
       const auto t0 = pControlTrack->LongSamplesToTime(start);
       const auto t1 = pControlTrack->LongSamplesToTime(end);
-      if (WaveTrackUtilities::HasStretch(*pControlTrack, t0, t1)) {
+      if (WaveTrackUtilities::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
          tempTracks = pControlTrack->Duplicate();
          if (tempTracks) {
             const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
             if (pFirstTrack)
             {
-               WaveTrackUtilities::WithStretchRenderingProgress(
+               WaveTrackUtilities::WithClipRenderingProgress(
                   [&](const ProgressReporter& reportProgress) {
-                     pFirstTrack->ApplyStretchRatio(
+                     pFirstTrack->ApplyPitchAndSpeed(
                         { { t0, t1 } }, reportProgress);
                   },
                   WaveTrackUtilities::defaultStretchRenderingTitle,

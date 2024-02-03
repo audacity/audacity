@@ -210,8 +210,9 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
       return;
    auto &project = mProject;
    const auto unscaled = PixelWidthBeforeTime(scrollto);
-   const int max =
-      mpCallbacks->GetHorizontalRange() - mpCallbacks->GetHorizontalThumbSize();
+   const int max = std::max(
+      0, mpCallbacks->GetHorizontalRange() -
+            mpCallbacks->GetHorizontalThumbSize());
    const int pos = std::clamp<int>(floor(0.5 + unscaled * sbarScale), 0, max);
    mpCallbacks->SetHorizontalThumbPosition(pos);
    sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
@@ -741,7 +742,7 @@ void Viewport::ZoomFitVertically()
    // Find total height to apportion
    auto height = viewInfo.GetHeight();
    height -= 28;
-   
+
    // The height of minimized and non-audio tracks cannot be apportioned
    const auto fn = [this](const Track *pTrack){
       return mpCallbacks->GetTrackHeight(*pTrack);

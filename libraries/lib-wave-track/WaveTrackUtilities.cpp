@@ -66,18 +66,16 @@ void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
 const TranslatableString WaveTrackUtilities::defaultStretchRenderingTitle =
    XO("Pre-processing");
 
-bool WaveTrackUtilities::HasStretch(
+bool WaveTrackUtilities::HasPitchOrSpeed(
    const WaveTrack &track, double t0, double t1)
 {
    auto &clips = track.GetClips();
-   return any_of(clips.begin(), clips.end(),
-      [&](auto &pClip){
-         return pClip->IntersectsPlayRegion(t0, t1) &&
-            pClip->GetStretchRatio() != 1.0;
-      });
+   return any_of(clips.begin(), clips.end(), [&](auto& pClip) {
+      return pClip->IntersectsPlayRegion(t0, t1) && pClip->HasPitchOrSpeed();
+   });
 }
 
-void WaveTrackUtilities::WithStretchRenderingProgress(
+void WaveTrackUtilities::WithClipRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
    TranslatableString title, TranslatableString message)
 {
