@@ -1207,7 +1207,7 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
             -> std::unique_ptr<PlaybackPolicy>
       {
          return std::make_unique<DefaultPlaybackPolicy>( project,
-            trackEndTime, loopEndTime,
+            trackEndTime, loopEndTime, options.pStartTime,
             options.loopEnabled, options.variableSpeed);
       };
 
