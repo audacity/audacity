@@ -191,7 +191,8 @@ auto ProjectFileManager::ReadProjectFile(
       // Do this before FixTracks might delete zero-length clips!
       mLastSavedTracks = TrackList::Create( nullptr );
       for (auto t : tracks)
-         mLastSavedTracks->Append(std::move(*t->Duplicate(true)));
+         mLastSavedTracks->Append(
+            move(*t->Duplicate(Track::DuplicateOptions{}.Backup())));
 
       FixTracks(
          tracks,
@@ -406,7 +407,8 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    auto &tracks = TrackList::Get(proj);
    for (auto t : tracks)
-      mLastSavedTracks->Append(std::move(*t->Duplicate(true)));
+      mLastSavedTracks->Append(
+         move(*t->Duplicate(Track::DuplicateOptions{}.Backup())));
 
    // If we get here, saving the project was successful, so we can DELETE
    // any backup project.

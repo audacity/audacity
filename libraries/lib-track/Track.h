@@ -296,13 +296,28 @@ private:
 
    void Init(const Track &orig);
 
+   //! Choices when duplicating a track
+   struct DuplicateOptions {
+      DuplicateOptions()
+         : backup{ false }
+      {}
+
+      //! passed to Track::Clone()
+      bool backup;
+
+      // Supporting chain-call idiom
+      DuplicateOptions Backup() &&
+      { backup = true; return std::move(*this); }
+   };
+
    //! public nonvirtual duplication function that invokes Clone()
    /*!
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
-    @param backup is passed to Clone
     */
-   virtual TrackListHolder Duplicate(bool backup = false) const;
+   virtual TrackListHolder Duplicate(DuplicateOptions = {}) const;
+
+   void ReparentAllAttachments();
 
    //! Name is always the same for all channels of a group
    const wxString &GetName() const;

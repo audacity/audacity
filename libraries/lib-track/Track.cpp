@@ -83,11 +83,11 @@ void Track::SetSelected(bool s)
    }
 }
 
-TrackListHolder Track::Duplicate(bool backup) const
+TrackListHolder Track::Duplicate(DuplicateOptions options) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
-   auto result = Clone(backup);
+   auto result = Clone(options.backup);
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
