@@ -75,7 +75,8 @@ bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
 double PlaybackPolicy::OffsetSequenceTime(
    PlaybackSchedule &schedule, double offset )
 {
-   const auto time = schedule.GetSequenceTime() + offset;
+   auto time = schedule.GetSequenceTime() + offset;
+   time = std::clamp(time, schedule.mT0, schedule.mT1);
    schedule.RealTimeInit( time );
    return time;
 }
