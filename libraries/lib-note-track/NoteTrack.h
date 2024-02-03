@@ -100,7 +100,7 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   TrackListHolder Clone() const override;
+   TrackListHolder Clone(bool backup) const override;
 
 public:
    void MoveTo(double origin) override { mOrigin = origin; }

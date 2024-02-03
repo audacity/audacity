@@ -289,14 +289,22 @@ private:
    struct DuplicateOptions {
       DuplicateOptions()
          : shallowCopyAttachments{ false }
+         , backup{ false }
       {}
 
       //! if true, then share AttachedTrackObjects
       bool shallowCopyAttachments;
 
+      //! passed to Track::Clone()
+      bool backup;
+
       // Supporting chain-call idiom
       DuplicateOptions ShallowCopyAttachments() &&
       { shallowCopyAttachments = true; return std::move(*this); }
+
+      // Supporting chain-call idiom
+      DuplicateOptions Backup() &&
+      { backup = true; return std::move(*this); }
    };
 
    //! public nonvirtual duplication function that invokes Clone()
@@ -397,10 +405,12 @@ private:
     @pre `!unstretchInterval.has_value() ||
        unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
+    @param backup whether the duplication is for backup purposes while opening
+    a project, instead of other editing operations
     @post result: `NChannels() == result->NChannels()`
     @post result tracks have same TrackIds as the channels of `this`
     */
-   virtual TrackListHolder Clone() const = 0;
+   virtual TrackListHolder Clone(bool backup) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >

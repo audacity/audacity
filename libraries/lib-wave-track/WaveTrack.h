@@ -326,7 +326,7 @@ public:
    WaveTrack(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
    //! Copied only in WaveTrack::Clone() !
-   WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&);
+   WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&, bool backup);
 
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
@@ -377,7 +377,7 @@ public:
 
    void Init(const WaveTrack &orig);
 
-   TrackListHolder Clone() const override;
+   TrackListHolder Clone(bool backup) const override;
 
    friend class WaveTrackFactory;
 
@@ -1239,10 +1239,13 @@ private:
    bool FormatConsistencyCheck() const;
 
    //! Adds clip to the track. Clip should be not empty or to be a placeholder.
-   //! Sets project tempo on clip upon push. Use this instead of
-   //! `mClips.push_back`.
-   //! @returns true on success
-   bool InsertClip(WaveClipHolder clip);
+   /*!
+    Sets project tempo on clip upon push. Use this instead of `mClips.push_back`
+    @returns true on success
+    @param backup whether the duplication is for backup purposes while opening
+    a project, instead of other editing operations
+    */
+   bool InsertClip(WaveClipHolder clip, bool backup = false);
 
    void ApplyStretchRatioOne(
       double t0, double t1, const ProgressReporter& reportProgress);
