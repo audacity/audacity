@@ -49,11 +49,12 @@ public:
    // area into cells
    virtual std::shared_ptr<TrackPanelNode> Root() = 0;
 
-   virtual TrackPanelCell *GetFocusedCell() = 0;
+   virtual std::shared_ptr<TrackPanelCell> GetFocusedCell() = 0;
    virtual void SetFocusedCell() = 0;
    
    virtual void ProcessUIHandleResult
-   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
+   (const std::shared_ptr<TrackPanelCell> &pClickedCell,
+    const std::shared_ptr<TrackPanelCell> &pLatestCell,
     unsigned refreshResult) = 0;
    
    virtual void UpdateStatusMessage( const TranslatableString & )  = 0;

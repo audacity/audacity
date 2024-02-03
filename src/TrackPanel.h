@@ -111,7 +111,7 @@ class AUDACITY_DLL_API TrackPanel final
 
    void OnTrackMenu(Track *t = NULL);
 
-   TrackPanelCell *GetFocusedCell() override;
+   std::shared_ptr<TrackPanelCell> GetFocusedCell() override;
    void SetFocusedCell() override;
 
    void UpdateVRulers();
@@ -229,7 +229,8 @@ protected:
    DECLARE_EVENT_TABLE()
 
    void ProcessUIHandleResult
-      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
+      (const std::shared_ptr<TrackPanelCell> &pClickedTrack,
+       const std::shared_ptr<TrackPanelCell> &pLatestCell,
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const TranslatableString &status ) override;

@@ -216,6 +216,11 @@ std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
    return {};
 }
 
+std::shared_ptr<CommonTrackCell> ChannelView::GetShared()
+{
+   return shared_from_this();
+}
+
 ChannelView &ChannelView::Get(Channel &channel)
 {
    return GetFromChannelGroup(channel.GetChannelGroup(),

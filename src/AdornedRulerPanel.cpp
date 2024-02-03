@@ -2837,21 +2837,20 @@ AudacityProject * AdornedRulerPanel::GetProject() const
    return mProject;
 }
 
-
-TrackPanelCell *AdornedRulerPanel::GetFocusedCell()
+std::shared_ptr<TrackPanelCell> AdornedRulerPanel::GetFocusedCell()
 {
    // No switching of focus yet to the other, scrub zone
-   return mQPCell.get();
+   return mQPCell;
 }
-
 
 void AdornedRulerPanel::SetFocusedCell()
 {
 }
 
-
 void AdornedRulerPanel::ProcessUIHandleResult(
-   TrackPanelCell *, TrackPanelCell *, unsigned refreshResult)
+   const std::shared_ptr<TrackPanelCell> &,
+   const std::shared_ptr<TrackPanelCell> &,
+   unsigned refreshResult)
 {
    if (refreshResult & RefreshCode::RefreshAll)
       Refresh(); // Overlays will be repainted too
