@@ -285,13 +285,26 @@ private:
 
    void Init(const Track &orig);
 
+   //! Choices when duplicating a track
+   struct DuplicateOptions {
+      DuplicateOptions()
+         : shallowCopyAttachments{ false }
+      {}
+
+      //! if true, then share AttachedTrackObjects
+      bool shallowCopyAttachments;
+
+      // Supporting chain-call idiom
+      DuplicateOptions ShallowCopyAttachments() &&
+      { shallowCopyAttachments = true; return std::move(*this); }
+   };
+
    //! public nonvirtual duplication function that invokes Clone()
    /*!
-    @param shallowCopyAttachments if true, then share AttachedTrackObjects
     @pre `IsLeader()`
     @post result: `NChannels() == result->NChannels()`
     */
-   virtual TrackListHolder Duplicate(bool shallowCopyAttachments = false) const;
+   virtual TrackListHolder Duplicate(DuplicateOptions = {}) const;
 
    void ReparentAllAttachments();
 

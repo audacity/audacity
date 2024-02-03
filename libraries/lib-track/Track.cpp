@@ -89,7 +89,7 @@ void Track::SetSelected(bool s)
    }
 }
 
-TrackListHolder Track::Duplicate(bool shallowCopyAttachments) const
+TrackListHolder Track::Duplicate(DuplicateOptions options) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
@@ -97,7 +97,7 @@ TrackListHolder Track::Duplicate(bool shallowCopyAttachments) const
 
    auto iter = TrackList::Channels(*result->begin()).begin();
    const auto copyOne = [&](const Track *pChannel){
-      if (shallowCopyAttachments) {
+      if (options.shallowCopyAttachments) {
          // Share the satellites with the original, though they do not point
          // back to the duplicate track
          AttachedTrackObjects &attachments = (**iter);

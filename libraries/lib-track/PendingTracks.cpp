@@ -144,7 +144,8 @@ PendingTracks::SubstituteOriginalTrack(const Track &track) const
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
    assert(src->IsLeader());
-   auto tracks = src->Duplicate(true); // shallow copy of attachmets
+   auto tracks =
+      src->Duplicate(Track::DuplicateOptions{}.ShallowCopyAttachments());
    assert(src->NChannels() == tracks->NChannels());
 
    mUpdaters.push_back(move(updater));
