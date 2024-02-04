@@ -120,7 +120,7 @@ public:
 protected:
    bool HasEscape();
    bool CancelDragging( bool escaping );
-   void DoContextMenu( TrackPanelCell *pCell = nullptr );
+   void DoContextMenu( const std::shared_ptr<TrackPanelCell> &pCell );
    void ClearTargets();
    
 private:

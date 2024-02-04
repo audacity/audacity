@@ -500,7 +500,7 @@ bool CellularPanel::IsMouseCaptured()
 
 void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
-   DoContextMenu();
+   DoContextMenu({});
 }
 
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
@@ -966,17 +966,17 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    }
 }
 
-void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
+void CellularPanel::DoContextMenu( const std::shared_ptr<TrackPanelCell> &pCell )
 {
-   std::shared_ptr<TrackPanelCell>pCellShared(pCell);
+   std::shared_ptr<TrackPanelCell>pCellLocal = pCell;
 
-   if( !pCellShared ) {
-      pCellShared = GetFocusedCell();
-      if( !pCellShared )
+   if( !pCellLocal ) {
+      pCellLocal = GetFocusedCell();
+      if( !pCellLocal )
          return;
    }
 
-   const auto delegate = pCellShared->ContextMenuDelegate();
+   const auto delegate = pCellLocal->ContextMenuDelegate();
    if (!delegate)
       return;
 
@@ -984,7 +984,7 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
    const UIHandle::Result refreshResult =
       delegate->DoContextMenu(rect, this, nullptr, GetProject());
 
-   ProcessUIHandleResult(pCellShared, pCellShared, refreshResult);
+   ProcessUIHandleResult(pCellLocal, pCellLocal, refreshResult);
 }
 
 void CellularPanel::OnSetFocus(wxFocusEvent &event)

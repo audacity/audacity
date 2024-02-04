@@ -1020,8 +1020,9 @@ void TrackPanel::UpdateVRulerSize()
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
+   std::shared_ptr<TrackPanelCell> ptr1(nullptr);
    CellularPanel::DoContextMenu(
-      t ? &ChannelView::Get(*t->GetChannel(0)) : nullptr);
+      t ? ChannelView::Get(*t->GetChannel(0)).GetShared() : ptr1);
 }
 
 namespace {
