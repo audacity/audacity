@@ -206,17 +206,17 @@ public:
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
 
-   void Import(ImportProgressListener& progressListener,
-               WaveTrackFactory *trackFactory,
-               TrackHolders &outTracks,
-               Tags *tags) override;
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
    FilePath GetFilename() const override;
-   
+
    void Cancel() override;
-   
+
    void Stop() override;
-   
+
    ///! Writes decoded data into WaveTracks.
    ///\param sc - stream context
    void WriteData(StreamContext* sc, const AVPacketWrapper* packet);
@@ -448,10 +448,10 @@ auto FFmpegImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
-                                    WaveTrackFactory *trackFactory,
-                                    TrackHolders &outTracks,
-                                    Tags *tags)
+void FFmpegImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+   TrackHolders& outTracks, Tags* tags,
+   std::optional<LibFileFormats::AcidizerTags>&)
 {
    outTracks.clear();
    mCancelled = false;
@@ -500,7 +500,7 @@ void FFmpegImportFileHandle::Import(ImportProgressListener& progressListener,
    }
 
    // This is the heart of the importing process
-   
+
    // Read frames.
    for (std::unique_ptr<AVPacketWrapper> packet;
         (packet = mAVFormatContext->ReadNextPacket()) != nullptr &&

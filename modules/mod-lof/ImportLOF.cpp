@@ -119,15 +119,15 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   void Import(ImportProgressListener& progressListener,
-               WaveTrackFactory *trackFactory,
-               TrackHolders &outTracks,
-               Tags *tags) override;
-   
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+
    FilePath GetFilename() const override;
-   
+
    void Cancel() override;
-   
+
    void Stop() override;
 
    wxInt32 GetStreamCount() override { return 1; }
@@ -268,10 +268,9 @@ auto LOFImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-void LOFImportFileHandle::Import(ImportProgressListener& progressListener,
-                                 WaveTrackFactory*,
-                                 TrackHolders &outTracks,
-                                 Tags*)
+void LOFImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory*,
+   TrackHolders& outTracks, Tags*, std::optional<LibFileFormats::AcidizerTags>&)
 {
    // Unlike other ImportFileHandle subclasses, this one never gives any tracks
    // back to the caller.

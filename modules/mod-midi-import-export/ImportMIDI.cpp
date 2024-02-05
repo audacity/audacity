@@ -44,13 +44,13 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
    auto &tracks = TrackList::Get( project );
    auto newTrack =  std::make_shared<NoteTrack>();
    bool initiallyEmpty = tracks.empty();
-   
+
    if (::ImportMIDI(fileName, newTrack.get())) {
-      
+
       SelectUtilities::SelectNone( project );
       auto pTrack = tracks.Add( newTrack );
       pTrack->SetSelected(true);
-      
+
       // Fix the bug 2109.
       // In case the project had soloed tracks before importing,
       // the newly imported track is muted.
@@ -66,7 +66,7 @@ bool DoImportMIDI( AudacityProject &project, const FilePath &fileName )
             XO("Imported MIDI from '%s'").Format( fileName ),
             XO("Import MIDI")
          );
-      
+
       Viewport::Get(project).ZoomFitHorizontallyAndShowTrack(pTrack);
       FileHistory::Global().Append(fileName);
 
@@ -207,11 +207,11 @@ public:
       return empty;
    }
 
-   void Import(ImportProgressListener &progressListener,
-      WaveTrackFactory *trackFactory,
-      TrackHolders &outTracks,
-      Tags *tags) override;
-   
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
+
    void Cancel() override {}
    void Stop() override {}
 
@@ -220,8 +220,9 @@ public:
    FilePath mFileName;
 };
 
-void MIDIImportFileHandle::Import(ImportProgressListener &progressListener,
-   WaveTrackFactory *, TrackHolders &outTracks, Tags *)
+void MIDIImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory*,
+   TrackHolders& outTracks, Tags*, std::optional<LibFileFormats::AcidizerTags>&)
 {
    auto newTrack = std::make_shared<NoteTrack>();
    if (::ImportMIDI(mFileName, newTrack.get())) {
@@ -243,7 +244,7 @@ public:
    ~MIDIImportPlugin() override {}
 
    wxString GetPluginStringID() override { return wxT("portsmf"); }
-   
+
    TranslatableString GetPluginFormatDescription() override { return DESC; }
 
    std::unique_ptr<ImportFileHandle> Open(const FilePath &fileName,

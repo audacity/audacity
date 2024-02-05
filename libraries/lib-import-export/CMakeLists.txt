@@ -8,8 +8,6 @@ set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 def_vars()
 
 set( SOURCES
-   AcidizerTagSerialization.cpp
-   AcidizerTagSerialization.h
    Export.cpp
    Export.h
    ExportOptionsEditor.cpp
