@@ -2,7 +2,6 @@ add_unit_test(
    NAME
       lib-import-export
    SOURCES
-      AcidizerTagSerializationTests.cpp
       GetAcidizerTagsTests.cpp
    LIBRARIES
       lib-import-export

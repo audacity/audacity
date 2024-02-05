@@ -79,9 +79,9 @@ class MyFLACFile final : public FLAC::Decoder::File
    {
       return mWasError;
    }
-   
+
    ImportProgressListener *mImportProgressListener {nullptr};
-   
+
  private:
    friend class FLACImportFileHandle;
    FLACImportFileHandle *mFile;
@@ -123,10 +123,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   void Import(ImportProgressListener& progressListener,
-               WaveTrackFactory *trackFactory,
-               TrackHolders &outTracks,
-               Tags *tags) override;
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -256,7 +256,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
       if(mFile->mNumSamples > 0)
          mImportProgressListener->OnImportProgress(static_cast<double>(mFile->mSamplesDone) /
                                                    static_cast<double>(mFile->mNumSamples));
-      
+
       if (mFile->IsCancelled() || mFile->IsStopped())
       {
          return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
@@ -392,18 +392,17 @@ auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-
-void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
-                                  WaveTrackFactory *trackFactory,
-                                  TrackHolders &outTracks,
-                                  Tags *tags)
+void FLACImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+   TrackHolders& outTracks, Tags* tags,
+   std::optional<LibFileFormats::AcidizerTags>&)
 {
    BeginImport();
-   
+
    outTracks.clear();
 
    auto cleanup = finally([&]{ mFile->mImportProgressListener = nullptr; });
-   
+
    wxASSERT(mStreamInfoDone);
 
    mTrackList = ImportUtils::NewWaveTrack(*trackFactory, mNumChannels, mFormat, mSampleRate);
@@ -417,7 +416,7 @@ void FLACImportFileHandle::Import(ImportProgressListener& progressListener,
    #else
       bool res = (mFile->process_until_end_of_stream() != 0);
    #endif
-   
+
    if(IsCancelled())
    {
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);

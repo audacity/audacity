@@ -34,6 +34,11 @@ typedef bool (*progress_callback_t)( void *userData, float percent );
 class ExtImportItem;
 class WaveTrack;
 
+namespace LibFileFormats
+{
+struct AcidizerTags;
+}
+
 using ExtImportItems = std::vector<std::unique_ptr<ExtImportItem>>;
 using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
 
@@ -170,17 +175,17 @@ public:
     std::unique_ptr<ExtImportItem> CreateDefaultImportItem();
 
    // if false, the import failed and errorMessage will be set.
-   bool Import( AudacityProject &project,
-              const FilePath &fName,
-              ImportProgressListener* importProgressListener,
-              WaveTrackFactory *trackFactory,
-              TrackHolders &tracks,
-              Tags *tags,
-              TranslatableString &errorMessage);
+    bool Import(
+       AudacityProject& project, const FilePath& fName,
+       ImportProgressListener* importProgressListener,
+       WaveTrackFactory* trackFactory, TrackHolders& tracks, Tags* tags,
+       std::optional<LibFileFormats::AcidizerTags>& outAcidTags,
+       TranslatableString& errorMessage);
 
-private:
-   struct Traits : Registry::DefaultTraits {
-      using LeafTypes = List<ImporterItem>;
+ private:
+    struct Traits : Registry::DefaultTraits
+    {
+       using LeafTypes = List<ImporterItem>;
    };
    struct IMPORT_EXPORT_API ImporterItem final : Registry::SingleItem {
       static Registry::GroupItem<Traits> &Registry();

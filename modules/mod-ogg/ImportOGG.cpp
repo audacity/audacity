@@ -98,10 +98,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   void Import(ImportProgressListener &progressListener,
-               WaveTrackFactory *trackFactory,
-               TrackHolders &outTracks,
-               Tags *tags) override;
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
    wxInt32 GetStreamCount() override
    {
@@ -202,13 +202,13 @@ auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
    return 0;
 }
 
-void OggImportFileHandle::Import(ImportProgressListener &progressListener,
-                                 WaveTrackFactory *trackFactory,
-                                 TrackHolders &outTracks,
-                                 Tags *tags)
+void OggImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+   TrackHolders& outTracks, Tags* tags,
+   std::optional<LibFileFormats::AcidizerTags>&)
 {
    BeginImport();
-   
+
    outTracks.clear();
 
    wxASSERT(mFile->IsOpened());
@@ -330,7 +330,7 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
       return;
    }
-   
+
    if(IsCancelled())
    {
       progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
@@ -338,7 +338,7 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
    }
 
    ImportUtils::FinalizeImport(outTracks, mStreams);
-   
+
    //\todo { Extract comments from each stream? }
    if (mVorbisFile->vc[0].comments > 0) {
       tags->Clear();
@@ -355,7 +355,7 @@ void OggImportFileHandle::Import(ImportProgressListener &progressListener,
          tags->SetTag(name, value);
       }
    }
-   
+
    progressListener.OnImportResult(IsStopped()
                                    ? ImportProgressListener::ImportResult::Stopped
                                    : ImportProgressListener::ImportResult::Success);
