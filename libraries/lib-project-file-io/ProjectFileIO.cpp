@@ -2353,16 +2353,13 @@ bool ProjectFileIO::OpenProject()
    return OpenConnection();
 }
 
-bool ProjectFileIO::CloseProject()
+void ProjectFileIO::CloseProject()
 {
-   if (!ProjectFileIOExtensionRegistry::OnClose(mProject))
-      return false;
-
    auto &currConn = CurrConn();
    if (!currConn)
    {
       wxLogDebug("Closing project with no database connection");
-      return true;
+      return;
    }
 
    // Save the filename since CloseConnection() will clear it
@@ -2384,8 +2381,6 @@ bool ProjectFileIO::CloseProject()
             RemoveProject(filename);
       }
    }
-
-   return true;
 }
 
 bool ProjectFileIO::ReopenProject()
