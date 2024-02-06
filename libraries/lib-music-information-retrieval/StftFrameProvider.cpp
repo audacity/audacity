@@ -56,27 +56,27 @@ StftFrameProvider::StftFrameProvider(const MirAudioReader& audio)
    assert(mNumFrames == 0 || IsPowOfTwo(mNumFrames));
 }
 
-bool StftFrameProvider::GetNextFrame(std::vector<float>& frame)
+bool StftFrameProvider::GetNextFrame(float* frame)
 {
    if (mNumFramesProvided >= mNumFrames)
       return false;
-   frame.resize(mFftSize, 0.f);
+   std::fill(frame, frame + mFftSize, 0.f);
    const int firstReadPosition = mHopSize - mFftSize;
    int start = std::round(firstReadPosition + mNumFramesProvided * mHopSize);
    while (start < 0)
       start += mNumSamples;
    const auto end = std::min<long long>(start + mFftSize, mNumSamples);
    const auto numToRead = end - start;
-   mAudio.ReadFloats(frame.data(), start, numToRead);
+   mAudio.ReadFloats(frame, start, numToRead);
    // It's not impossible that some user drops a file so short that `mFftSize >
    // mNumSamples`. In that case we won't be returning a meaningful
    // STFT, but that's a use case we're not interested in. We just need to make
    // sure we don't crash.
    const auto numRemaining = std::min(mFftSize - numToRead, mNumSamples);
    if (numRemaining > 0)
-      mAudio.ReadFloats(frame.data() + numToRead, 0, numRemaining);
+      mAudio.ReadFloats(frame + numToRead, 0, numRemaining);
    std::transform(
-      frame.begin(), frame.end(), mWindow.begin(), frame.begin(),
+      frame, frame + mFftSize, mWindow.begin(), frame,
       std::multiplies<float>());
    ++mNumFramesProvided;
    return true;

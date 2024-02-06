@@ -48,14 +48,14 @@ TEST_CASE("StftFrameProvider")
    SECTION("handles empty files")
    {
       StftFrameProvider sut { TestMirAudioReader { 0 } };
-      std::vector<float> frame;
-      REQUIRE(!sut.GetNextFrame(frame));
+      std::vector<float> frame(sut.GetFftSize());
+      REQUIRE(!sut.GetNextFrame(frame.data()));
    }
    SECTION("handles very short files")
    {
       StftFrameProvider sut { TestMirAudioReader { 1 } };
-      std::vector<float> frame;
-      REQUIRE(!sut.GetNextFrame(frame));
+      std::vector<float> frame(sut.GetFftSize());
+      REQUIRE(!sut.GetNextFrame(frame.data()));
    }
    SECTION("has power-of-two number of frames")
    {
@@ -64,10 +64,10 @@ TEST_CASE("StftFrameProvider")
    }
    SECTION("respects MirAudioReader boundaries")
    {
-      TestMirAudioReader reader{ 123456 };
+      TestMirAudioReader reader { 123456 };
       StftFrameProvider sut { reader };
-      std::vector<float> frame;
-      while (sut.GetNextFrame(frame))
+      std::vector<float> frame(sut.GetFftSize());
+      while (sut.GetNextFrame(frame.data()))
          ;
    }
 }

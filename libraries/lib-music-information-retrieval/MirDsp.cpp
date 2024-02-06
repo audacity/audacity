@@ -87,32 +87,43 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
 
 std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
 {
-   if (std::all_of(x.begin(), x.end(), [](float x) { return x == 0.f; }))
-      return x;
    const auto N = x.size();
    assert(IsPowOfTwo(N));
+   const auto M = N / 2 + 1;
+   if (std::all_of(x.begin(), x.end(), [](float x) { return x == 0.f; }))
+   {
+      x.resize(M, 0.f);
+      return x;
+   }
+
    PFFFT_Setup* setup = pffft_new_setup(N, PFFFT_REAL);
-   Finally Do { [&] { pffft_destroy_setup(setup); } };
-   std::vector<float> work(N);
-   pffft_transform_ordered(
-      setup, x.data(), x.data(), work.data(), PFFFT_FORWARD);
+   auto xa = reinterpret_cast<float*>(pffft_aligned_malloc(N * sizeof(float)));
+   auto work =
+      reinterpret_cast<float*>(pffft_aligned_malloc(N * sizeof(float)));
+   Finally Do { [&] {
+      pffft_destroy_setup(setup);
+      pffft_aligned_free(xa);
+      pffft_aligned_free(work);
+   } };
+   std::copy(x.begin(), x.end(), static_cast<float*>(xa));
+   pffft_transform_ordered(setup, xa, xa, work, PFFFT_FORWARD);
 
    // Transform to a power spectrum, but preserving the layout expected by PFFFT
    // in preparation for the inverse transform.
-   x[0] *= x[0];
-   x[1] *= x[1];
+   xa[0] *= xa[0];
+   xa[1] *= xa[1];
    for (auto n = 2; n < N; n += 2)
    {
-      x[n] = x[n] * x[n] + x[n + 1] * x[n + 1];
-      x[n + 1] = 0.f;
+      xa[n] = xa[n] * xa[n] + xa[n + 1] * xa[n + 1];
+      xa[n + 1] = 0.f;
    }
 
-   pffft_transform_ordered(
-      setup, x.data(), x.data(), work.data(), PFFFT_BACKWARD);
+   pffft_transform_ordered(setup, xa, xa, work, PFFFT_BACKWARD);
 
    // The second half of the circular autocorrelation is the mirror of the first
    // half. We are economic and only keep the first half.
-   x.erase(x.begin() + N / 2 + 1, x.end());
+   std::copy(xa, xa + M, x.begin());
+   x.erase(x.begin() + M, x.end());
 
    const auto normalizer = 1 / x[0];
    std::transform(x.begin(), x.end(), x.begin(), [normalizer](float x) {
@@ -130,7 +141,6 @@ std::vector<float> GetOnsetDetectionFunction(
    const auto sampleRate = frameProvider.GetSampleRate();
    const auto numFrames = frameProvider.GetNumFrames();
    const auto frameSize = frameProvider.GetFftSize();
-   std::vector<float> buffer(frameSize);
    std::vector<float> odf;
    odf.reserve(numFrames);
    const auto powSpecSize = frameSize / 2 + 1;
@@ -139,12 +149,12 @@ std::vector<float> GetOnsetDetectionFunction(
    std::vector<float> firstPowSpec;
    std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
 
-   PowerSpectrumGetter getPowerSpectrum { frameSize };
+   PowerSpectrumGetter powSpecGetter { frameSize };
 
    auto frameCounter = 0;
-   while (frameProvider.GetNextFrame(buffer))
+   while (frameProvider.GetNextFrame(powSpecGetter.GetInputPtr()))
    {
-      getPowerSpectrum(buffer.data(), powSpec.data());
+      powSpecGetter.Process(powSpec.data());
 
       // Compress the frame as per section (6.5) in Müller, Meinard.
       // Fundamentals of music processing: Audio, analysis, algorithms,

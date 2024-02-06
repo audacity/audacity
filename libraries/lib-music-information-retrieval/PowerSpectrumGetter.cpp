@@ -17,22 +17,34 @@ namespace MIR
 PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
     : mFftSize { fftSize }
     , mSetup { pffft_new_setup(fftSize, PFFFT_REAL) }
-    , mWork(fftSize)
+    , mData { reinterpret_cast<float*>(
+         pffft_aligned_malloc(fftSize * sizeof(float))) }
+    , mWork { reinterpret_cast<float*>(
+         pffft_aligned_malloc(fftSize * sizeof(float))) }
 {
+   std::fill(mData, mData + fftSize, 0.f);
+   std::fill(mWork, mWork + fftSize, 0.f);
 }
 
 PowerSpectrumGetter::~PowerSpectrumGetter()
 {
    pffft_destroy_setup(mSetup);
+   pffft_aligned_free(mData);
+   pffft_aligned_free(mWork);
 }
 
-void PowerSpectrumGetter::operator()(float* buffer, float* output)
+float* PowerSpectrumGetter::GetInputPtr()
 {
-   pffft_transform_ordered(mSetup, buffer, buffer, mWork.data(), PFFFT_FORWARD);
-   output[0] = buffer[0] * buffer[0];
+   return mData;
+}
+
+void PowerSpectrumGetter::Process(float* output)
+{
+   pffft_transform_ordered(mSetup, mData, mData, mWork, PFFFT_FORWARD);
+   output[0] = mData[0] * mData[0];
    for (auto i = 1; i < mFftSize / 2; ++i)
       output[i] =
-         buffer[i * 2] * buffer[i * 2] + buffer[i * 2 + 1] * buffer[i * 2 + 1];
-   output[mFftSize / 2] = buffer[1] * buffer[1];
+         mData[i * 2] * mData[i * 2] + mData[i * 2 + 1] * mData[i * 2 + 1];
+   output[mFftSize / 2] = mData[1] * mData[1];
 }
 } // namespace MIR
