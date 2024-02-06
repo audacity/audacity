@@ -740,9 +740,7 @@ public:
    {
       // May come here when recording is in progress, so hit tests are turned
       // off.
-      TranslatableString tooltip;
-      if (mParent->mTimelineToolTip)
-         tooltip = XO("Timeline actions disabled during recording");
+      TranslatableString tooltip = XO("Timeline actions disabled during recording");
 
       static wxCursor cursor{ wxCURSOR_DEFAULT };
       return {
@@ -1328,7 +1326,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mIsRecording = false;
 
-   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
 
 #if wxUSE_TOOLTIPS
@@ -1377,17 +1374,6 @@ void AdornedRulerPanel::UpdatePrefs()
 
    // Update button texts for language change
    UpdateButtonStates();
-
-   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
-
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-#ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
-   {
-      auto scrollBeyondZero = ScrollingPreference.Read();
-      mRuler.SetTwoTone(scrollBeyondZero);
-   }
-#endif
-#endif
 
    mTimeDisplayMode = TimeDisplayModePreference.ReadEnum();
    Refresh();
@@ -1949,7 +1935,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview(
       message,
       {},
       // Tooltip is same as status message, or blank
-      ((mParent && mParent->mTimelineToolTip) ? message : TranslatableString{}),
+      mParent ? message : TranslatableString{},
    };
 }
 
@@ -1961,7 +1947,7 @@ auto AdornedRulerPanel::QPHandle::Preview(
    mParent->SetNumGuides(1);
    TranslatableString tooltip;
    #if 0
-   if (mParent && mParent->mTimelineToolTip) {
+   if (mParent) {
       if (!mParent->mQuickPlayEnabled)
          tooltip = XO("Quick-Play disabled");
       else
@@ -2384,16 +2370,6 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
    gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
    gPrefs->Flush();
 }
-
-#if 0
-void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
-{
-   mTimelineToolTip = (mTimelineToolTip)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
-   gPrefs->Flush();
-}
-#endif
-
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {

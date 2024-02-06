@@ -696,12 +696,11 @@ static void MuteTracks(const CommandContext &context, bool mute, bool selected)
 
    const auto solo = TracksBehaviorsSolo.ReadEnum();
    const auto soloSimple = (solo == SoloBehaviorSimple);
-   const auto soloNone = (solo == SoloBehaviorNone);
 
    auto iter = selected ? tracks.Selected<PlayableTrack>() : tracks.Any<PlayableTrack>();
    for (auto pt : iter) {
       pt->SetMute(mute);
-      if (soloSimple || soloNone)
+      if (soloSimple)
          pt->SetSolo(false);
    }
 

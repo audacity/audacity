@@ -63,7 +63,7 @@ UIHandlePtr MuteButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, false,
-         (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
+          pTrack.get());
    if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )
       return {};
 
@@ -119,7 +119,7 @@ UIHandlePtr SoloButtonHandle::HitTest
    wxRect buttonRect;
    if ( pTrack )
       PlayableTrackControls::GetMuteSoloRect(rect, buttonRect, true,
-         (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone), pTrack.get());
+          pTrack.get());
 
    if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )
       return {};

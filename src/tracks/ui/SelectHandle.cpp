@@ -391,10 +391,8 @@ UIHandlePtr SelectHandle::HitTest
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
-   // Adjusting the selection edges can be turned off in
-   // the preferences...
    auto pTrack = pChannelView->FindTrack();
-   if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+   if (!pTrack->GetSelected())
    {
       return result;
    }
@@ -694,84 +692,80 @@ UIHandle::Result SelectHandle::Click(
    //Make sure you are within the selected track
    bool startNewSelection = true;
    if (pTrack && pTrack->GetSelected()) {
-      // Adjusting selection edges can be turned off in the
-      // preferences now
-      if (viewInfo.bAdjustSelectionEdges) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
-         if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
-            isSpectralSelectionView(pView.get())) {
-            // This code is no longer reachable, but it had a place in the
-            // spectral selection prototype.  It used to be that you could be
-            // in a center-frequency-snapping mode that was not a mouse drag
-            // but responded to mouse movements.  Click exited that and dragged
-            // width instead.  PRL.
+      if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
+         isSpectralSelectionView(pView.get())) {
+         // This code is no longer reachable, but it had a place in the
+         // spectral selection prototype.  It used to be that you could be
+         // in a center-frequency-snapping mode that was not a mouse drag
+         // but responded to mouse movements.  Click exited that and dragged
+         // width instead.  PRL.
 
-            // Ignore whether we are inside the time selection.
-            // Exit center-snapping, start dragging the width.
-            mFreqSelMode = FREQ_SEL_PINNED_CENTER;
-            mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
-            mFreqSelPin = viewInfo.selectedRegion.fc();
-            // Do not adjust time boundaries
+         // Ignore whether we are inside the time selection.
+         // Exit center-snapping, start dragging the width.
+         mFreqSelMode = FREQ_SEL_PINNED_CENTER;
+         mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
+         mFreqSelPin = viewInfo.selectedRegion.fc();
+         // Do not adjust time boundaries
+         mSelStartValid = false;
+         AdjustFreqSelection(
+            static_cast<WaveTrack*>(pTrack),
+            viewInfo, event.m_y, mRect.y, mRect.height);
+         // For persistence of the selection change:
+         ProjectHistory::Get( *pProject ).ModifyState(false);
+         mSelectionBoundary = SBWidth;
+         return RefreshNone;
+      }
+      else
+#endif
+      {
+         // Not shift-down, choose boundary only within snapping
+         double value;
+         SelectionBoundary boundary =
+            ChooseBoundary(viewInfo, xx, event.m_y,
+               pView.get(), mRect, true, true, &value);
+         mSelectionBoundary = boundary;
+         switch (boundary) {
+         case SBNone:
+            // startNewSelection remains true
+            break;
+         case SBLeft:
+         case SBRight:
+            startNewSelection = false;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+            // Disable frequency selection
+            mFreqSelMode = FREQ_SEL_INVALID;
+#endif
+            mSelStartValid = true;
+            mSelStart = value;
+            mSnapStart = SnapResults{};
+            break;
+#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+         case SBBottom:
+         case SBTop:
+         case SBWidth:
+            startNewSelection = false;
+            // Disable time selection
             mSelStartValid = false;
-            AdjustFreqSelection(
-               static_cast<WaveTrack*>(pTrack),
-               viewInfo, event.m_y, mRect.y, mRect.height);
-            // For persistence of the selection change:
-            ProjectHistory::Get( *pProject ).ModifyState(false);
-            mSelectionBoundary = SBWidth;
-            return RefreshNone;
-         }
-         else
-#endif
+            mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
+            mFreqSelPin = value;
+            mFreqSelMode =
+               (boundary == SBWidth) ? FREQ_SEL_PINNED_CENTER :
+               (boundary == SBBottom) ? FREQ_SEL_BOTTOM_FREE :
+               FREQ_SEL_TOP_FREE;
+            break;
+         case SBCenter:
          {
-            // Not shift-down, choose boundary only within snapping
-            double value;
-            SelectionBoundary boundary =
-               ChooseBoundary(viewInfo, xx, event.m_y,
-                  pView.get(), mRect, true, true, &value);
-            mSelectionBoundary = boundary;
-            switch (boundary) {
-            case SBNone:
-               // startNewSelection remains true
-               break;
-            case SBLeft:
-            case SBRight:
-               startNewSelection = false;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-               // Disable frequency selection
-               mFreqSelMode = FREQ_SEL_INVALID;
-#endif
-               mSelStartValid = true;
-               mSelStart = value;
-               mSnapStart = SnapResults{};
-               break;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-            case SBBottom:
-            case SBTop:
-            case SBWidth:
-               startNewSelection = false;
-               // Disable time selection
-               mSelStartValid = false;
-               mFreqSelTrack = pTrack->SharedPointer<const WaveTrack>();
-               mFreqSelPin = value;
-               mFreqSelMode =
-                  (boundary == SBWidth) ? FREQ_SEL_PINNED_CENTER :
-                  (boundary == SBBottom) ? FREQ_SEL_BOTTOM_FREE :
-                  FREQ_SEL_TOP_FREE;
-               break;
-            case SBCenter:
-            {
-               const auto wt = static_cast<const WaveTrack*>(pTrack);
-               HandleCenterFrequencyClick(viewInfo, false, wt, value);
-               startNewSelection = false;
-               break;
-            }
-#endif
-            default:
-               wxASSERT(false);
-            }
+            const auto wt = static_cast<const WaveTrack*>(pTrack);
+            HandleCenterFrequencyClick(viewInfo, false, wt, value);
+            startNewSelection = false;
+            break;
          }
-      } // bAdjustSelectionEdges
+#endif
+         default:
+            wxASSERT(false);
+         }
+      }
    }
 
    // III. Common case for starting a NEW selection
@@ -942,8 +936,7 @@ HitTestPreview SelectHandle::Preview
          tip = XO("Multi-Tool Mode: %s for Mouse and Keyboard Preferences.")
             .Format( keyStr );
          // Later in this function we may point to some other string instead.
-         if (!pTrack->GetSelected() ||
-             !viewInfo.bAdjustSelectionEdges)
+         if (!pTrack->GetSelected())
             ;
          else {
             const wxRect &rect = st.rect;
@@ -977,7 +970,7 @@ HitTestPreview SelectHandle::Preview
 #endif
 #endif
 
-      if (!pTrack->GetSelected() || !viewInfo.bAdjustSelectionEdges)
+      if (!pTrack->GetSelected())
          ;
       else {
          const wxRect &rect = st.rect;

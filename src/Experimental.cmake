@@ -141,17 +141,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Support for scrubbing in the AudioIO engine, without calls to it
    SCRUBBING_SUPPORT
 
-   # Paul Licameli (PRL) 24 May 2015
-   # Allow scrolling up to one half of a screenful beyond either end of the project,
-   # if you turn on the appropriate Tracks preference.
-   # This allows smooth-scrolling scrub to work more reasonably at the ends.
-   SCROLLING_LIMITS
-
-   # Paul Licameli (PRL) 28 May 2015
-   # Draw negative numbers on the time ruler in a different color, when
-   # scrolling past zero is enabled. Perhaps that lessens confusion.
-   TWO_TONE_TIME_RULER
-
    #Define to include crash reporting, if available in wxWidgets build
    #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
    CRASH_REPORT
