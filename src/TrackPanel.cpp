@@ -1020,7 +1020,7 @@ void TrackPanel::UpdateVRulerSize()
 void TrackPanel::OnTrackMenu(Track *t)
 {
    CellularPanel::DoContextMenu(
-      t ? &ChannelView::Get(*t->GetChannel(0)) : nullptr);
+      t ? ChannelView::Get(*t->GetChannel(0)).shared_from_this() : nullptr);
 }
 
 namespace {
@@ -1677,13 +1677,13 @@ std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
    return results;
 }
 
-TrackPanelCell *TrackPanel::GetFocusedCell()
+std::shared_ptr<TrackPanelCell> TrackPanel::GetFocusedCell()
 {
    // Note that focus track is always a leader
    auto pTrack = TrackFocus::Get(*GetProject()).Get();
    return pTrack
-      ? &ChannelView::Get(*pTrack->GetChannel(0))
-      : GetBackgroundCell().get();
+      ? ChannelView::Get(*pTrack->GetChannel(0)).shared_from_this()
+      : GetBackgroundCell();
 }
 
 void TrackPanel::SetFocusedCell()

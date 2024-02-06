@@ -209,7 +209,7 @@ private:
 public:
    AudacityProject * GetProject() const override;
 private:
-   TrackPanelCell *GetFocusedCell() override;
+   std::shared_ptr<TrackPanelCell> GetFocusedCell() override;
    void SetFocusedCell() override;
    void ProcessUIHandleResult
       (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
