@@ -450,8 +450,13 @@ public:
       return static_cast<int>(FFmpegOptions.size());
    }
 
-   bool GetOption(int, ExportOption&) const override
+   bool GetOption(int index, ExportOption& option) const override
    {
+      if(index >= 0 && index < FFmpegOptions.size())
+      {
+         option = FFmpegOptions[index];
+         return true;
+      }
       return false;
    }
 
