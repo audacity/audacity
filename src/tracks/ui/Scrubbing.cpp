@@ -28,7 +28,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "WaveTrack.h"
 #include "../../prefs/PlaybackPrefs.h"
 #include "../../prefs/TracksPrefs.h"
-#include "../../toolbars/ToolManager.h"
 
 #undef USE_TRANSCRIPTION_TOOLBAR
 
@@ -37,6 +36,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <wx/app.h>
 #include <wx/menu.h>
+#include <wx/timer.h>
 
 // Yet another experimental scrub would drag the track under a
 // stationary play head
@@ -971,9 +971,6 @@ void Scrubber::OnToggleScrubRuler(const CommandContext&)
    mShowScrubbing = !mShowScrubbing;
    WriteScrubEnabledPref(mShowScrubbing);
    gPrefs->Flush();
-   // To do: move this, or eliminate it, use an event instead
-   const auto toolbar = ToolManager::Get(*mProject).GetToolBar(wxT("Scrub"));
-   toolbar->EnableDisableButtons();
    CheckMenuItems();
 }
 

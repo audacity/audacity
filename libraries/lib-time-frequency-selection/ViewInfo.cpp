@@ -246,7 +246,6 @@ ViewInfo::ViewInfo(double start, double pixelsPerSecond)
    : ZoomInfo(start, pixelsPerSecond)
    , selectedRegion()
    , bUpdateTrackIndicator(true)
-   , bScrollBeyondZero(false)
 {
    UpdatePrefs();
 }
@@ -260,12 +259,6 @@ void ViewInfo::UpdateSelectedPrefs( int id )
 
 void ViewInfo::UpdatePrefs()
 {
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-   bScrollBeyondZero = ScrollingPreference.Read();
-#endif
-   gPrefs->Read(wxT("/GUI/AdjustSelectionEdges"), &bAdjustSelectionEdges,
-      true);
-
    UpdateSelectedPrefs( UpdateScrollPrefsID() );
 }
 
@@ -318,8 +311,6 @@ static ProjectFileIORegistry::AttributeWriterEntry entry {
    ViewInfo::Get(project).WriteXMLAttributes(xmlFile);
 }
 };
-
-BoolSetting ScrollingPreference{ L"/GUI/ScrollBeyondZero", false };
 
 // Undo/redo handling of selection changes
 namespace {

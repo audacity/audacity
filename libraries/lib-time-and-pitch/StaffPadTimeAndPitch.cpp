@@ -46,6 +46,7 @@ StaffPadTimeAndPitch::StaffPadTimeAndPitch(
     , mSampleRate(sampleRate)
     , mNumChannels(numChannels)
     , mTimeRatio(parameters.timeRatio.value_or(1.))
+    , mPitchRatio(parameters.pitchRatio.value_or(1.))
     , mTimeAndPitch(
          MaybeCreateTimeAndPitch(sampleRate, numChannels, parameters))
 {
@@ -59,6 +60,9 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
       return mAudioSource.Pull(output, outputLen);
 
    std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
+   // No need to re-check for `mTimeAndPitch`, because once set it's never
+   // unset.
+
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
    {
@@ -102,14 +106,18 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
 
 void StaffPadTimeAndPitch::OnCentShiftChange(int cents)
 {
-   const auto pitchRatio = std::pow(2., cents / 1200.);
    std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
+   // We don't unset `mTimeAndPitch` here, only reset it. If for some reason
+   // this needs to change, then `BootStretcher` and `GetSamples` need
+   // double-checked locking.
+
+   mPitchRatio = std::pow(2., cents / 1200.);
    if (!mTimeAndPitch)
       mTimeAndPitch = MaybeCreateTimeAndPitch(
          mSampleRate, mNumChannels,
-         TimeAndPitchInterface::Parameters { mTimeRatio, pitchRatio });
+         TimeAndPitchInterface::Parameters { mTimeRatio, mPitchRatio });
    else
-      mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, pitchRatio);
+      mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, mPitchRatio);
 }
 
 void StaffPadTimeAndPitch::BootStretcher()
@@ -118,8 +126,12 @@ void StaffPadTimeAndPitch::BootStretcher()
       // Bypass
       return;
 
+   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
+   // No need to re-check for `mTimeAndPitch`, because once set it's never
+   // unset.
+
    auto numOutputSamplesToDiscard =
-      mTimeAndPitch->getLatencySamplesForStretchRatio(mTimeRatio);
+      mTimeAndPitch->getLatencySamplesForStretchRatio(mTimeRatio * mPitchRatio);
    AudioContainer container(maxBlockSize, mNumChannels);
    while (numOutputSamplesToDiscard > 0)
    {

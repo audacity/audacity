@@ -24,5 +24,6 @@ private:
    const int mSampleRate;
    const size_t mNumChannels;
    const double mTimeRatio;
+   double mPitchRatio;
    std::mutex mTimeAndPitchMutex;
 };

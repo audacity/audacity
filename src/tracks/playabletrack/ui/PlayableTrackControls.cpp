@@ -157,13 +157,10 @@ void MuteAndSoloDrawFunction
   const wxRect &rect, const Track *pTrack )
 {
    auto dc = &context.dc;
-   bool bHasSoloButton = (TracksBehaviorsSolo.ReadEnum() != SoloBehaviorNone);
 
    wxRect bev = rect;
-   if ( bHasSoloButton )
-      GetNarrowMuteHorizontalBounds( rect, bev );
-   else
-      GetWideMuteSoloHorizontalBounds( rect, bev );
+
+   GetNarrowMuteHorizontalBounds( rect, bev );
    {
       auto target = dynamic_cast<MuteButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
@@ -171,9 +168,6 @@ void MuteAndSoloDrawFunction
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       MuteOrSoloDrawFunction( dc, bev, pTrack, down, captured, false, hit );
    }
-
-   if( !bHasSoloButton )
-      return;
 
    GetNarrowSoloHorizontalBounds( rect, bev );
    {
@@ -205,7 +199,7 @@ void EffectsDrawFunction
 }
 
 void PlayableTrackControls::GetMuteSoloRect
-(const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
+(const wxRect & rect, wxRect & dest, bool solo,
  const Track *pTrack)
 {
    auto &trackControl = static_cast<const CommonTrackControls&>(
@@ -218,7 +212,7 @@ void PlayableTrackControls::GetMuteSoloRect
    int ySolo = resultsS.first;
 
    bool bSameRow = ( yMute == ySolo );
-   bool bNarrow = bSameRow && bHasSoloButton;
+   bool bNarrow = bSameRow;
 
    if( bNarrow )
    {

@@ -41,7 +41,6 @@ Paul Licameli split from ProjectManager.cpp
 #include "Viewport.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "toolbars/ToolManager.h"
 #include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/ChannelView.h"
 #include "widgets/MeterPanelBase.h"
@@ -556,11 +555,6 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
          meter->Clear();
       }
    }
-
-   // To do: eliminate this, use an event instead
-   const auto toolbar = ToolManager::Get( *project ).GetToolBar(wxT("Scrub"));
-   if (toolbar)
-      toolbar->EnableDisableButtons();
 }
 
 

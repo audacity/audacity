@@ -541,8 +541,7 @@ static struct DefaultConfigEntry {
    { wxT("PlayMeter"),         wxT("RecordMeter"),     {}                },
 
    // start another top dock row
-   { wxT("Scrub"),             {},                     wxT("Control")         },
-   { wxT("Device"),            wxT("Scrub"),           wxT("Control")         },
+   { wxT("Device"),             {},                     wxT("Control")         },
 
    // Hidden by default in top dock
    { wxT("CombinedMeter"),     {},                     {}                },

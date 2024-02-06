@@ -171,7 +171,6 @@ private:
    void HandleSnapping(size_t index);
    void OnTimelineFormatChange(wxCommandEvent& evt);
    void OnSyncSelToQuickPlay(wxCommandEvent &evt);
-   //void OnTimelineToolTips(wxCommandEvent &evt);
    void OnAutoScroll(wxCommandEvent &evt);
    void OnTogglePlayRegion(wxCommandEvent &evt);
    void OnClearPlayRegion(wxCommandEvent &evt);
@@ -181,7 +180,6 @@ private:
    void OnTogglePinnedState(wxCommandEvent & event);
 
    bool mPlayRegionDragsSelection;
-   bool mTimelineToolTip;
 
    enum MouseEventState {
       mesNone,
@@ -211,7 +209,7 @@ private:
 public:
    AudacityProject * GetProject() const override;
 private:
-   TrackPanelCell *GetFocusedCell() override;
+   std::shared_ptr<TrackPanelCell> GetFocusedCell() override;
    void SetFocusedCell() override;
    void ProcessUIHandleResult
       (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,

@@ -16,7 +16,6 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/evtloop.h>
 #endif
 
-#include "AcidizerTagSerialization.h"
 #include "AdornedRulerPanel.h"
 #include "AudacityDontAskAgainMessageDialog.h"
 #include "AudacityMessageBox.h"
@@ -1349,7 +1348,9 @@ UserWantsMirResultToConfigureProject(AudacityProject& project, double qpm)
 }
 
 void ReactOnMusicFileImport(
-   const std::string& fileName, TrackList& newTracks, AudacityProject& project)
+   const std::string& fileName,
+   const std::optional<LibFileFormats::AcidizerTags>& acidTags,
+   TrackList& newTracks, AudacityProject& project)
 {
    const auto waveTracks = newTracks.Any<WaveTrack>();
    if (waveTracks.size() != 1)
@@ -1382,12 +1383,6 @@ void ReactOnMusicFileImport(
 
       const auto isBeatsAndMeasures = TimeDisplayModePreference.ReadEnum() ==
                                       TimeDisplayMode::BeatsAndMeasures;
-
-      const auto& tags = Tags::Get(*pProj);
-      const auto acidTags = tags.HasTag(TAG_ACID) ?
-                               LibImportExport::StringToAcidizerTags(
-                                  tags.GetTag(TAG_ACID).ToStdString()) :
-                               std::nullopt;
 
       MIR::MusicInformation musicInfo {
          acidTags, fileName, audio,
@@ -1530,12 +1525,10 @@ bool ProjectFileManager::Import(
 #endif
 
       ImportProgress importProgress(project);
-      bool success = Importer::Get().Import(project, fileName,
-                                            &importProgress,
-                                            &WaveTrackFactory::Get( project ),
-                                            newTracks,
-                                            newTags.get(),
-                                            errorMessage);
+      std::optional<LibFileFormats::AcidizerTags> acidTags;
+      bool success = Importer::Get().Import(
+         project, fileName, &importProgress, &WaveTrackFactory::Get(project),
+         newTracks, newTags.get(), acidTags, errorMessage);
       if (!errorMessage.empty()) {
          // Error message derived from Importer::Import
          // Additional help via a Help button links to the manual.
@@ -1554,7 +1547,8 @@ bool ProjectFileManager::Import(
       // issue exists to support multiple-file imports:
       // https://github.com/audacity/audacity/issues/5726
       if (numFiles == 1 && !newTracks.empty() && newTracks[0])
-         ReactOnMusicFileImport(fileName.ToStdString(), *newTracks[0], project);
+         ReactOnMusicFileImport(
+            fileName.ToStdString(), acidTags, *newTracks[0], project);
 
       if (addToHistory) {
          FileHistory::Global().Append(fileName);

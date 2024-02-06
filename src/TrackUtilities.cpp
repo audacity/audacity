@@ -85,7 +85,7 @@ void DoTrackMute(AudacityProject &project, Track *t, bool exclusive)
       pt->SetMute(!wasMute);
 
       if (auto value = TracksBehaviorsSolo.ReadEnum();
-         value == SoloBehaviorSimple || value == SoloBehaviorNone)
+         value == SoloBehaviorSimple)
       {
          // We also set a solo indicator if we have just one track / stereo pair playing.
          // in a group of more than one playable tracks.

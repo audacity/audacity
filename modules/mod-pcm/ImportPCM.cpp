@@ -33,7 +33,6 @@
 #error Requires libsndfile 1.0 or higher
 #endif
 
-#include "AcidizerTagSerialization.h"
 #include "FileFormats.h"
 #include "GetAcidizerTags.h"
 #include "ImportPlugin.h"
@@ -82,10 +81,10 @@ public:
 
    TranslatableString GetFileDescription() override;
    ByteCount GetFileUncompressedBytes() override;
-   void Import(ImportProgressListener &progressListener,
-               WaveTrackFactory *trackFactory,
-               TrackHolders &outTracks,
-               Tags *tags) override;
+   void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
    wxInt32 GetStreamCount() override { return 1; }
 
@@ -279,10 +278,10 @@ struct id3_tag_deleter {
 using id3_tag_holder = std::unique_ptr<id3_tag, id3_tag_deleter>;
 #endif
 
-void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
-                                 WaveTrackFactory *trackFactory,
-                                 TrackHolders &outTracks,
-                                 Tags *tags)
+void PCMImportFileHandle::Import(
+   ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+   TrackHolders& outTracks, Tags* tags,
+   std::optional<LibFileFormats::AcidizerTags>& outAcidTags)
 {
    BeginImport();
 
@@ -439,10 +438,8 @@ void PCMImportFileHandle::Import(ImportProgressListener &progressListener,
    // To begin with, only trust the Muse Hub, with whom we collaborate and can
    // ensure they comply. In the future we may extend this list.
    const std::vector<std::string> trustedDistributors { "Muse Hub" };
-   if (
-      const auto acidTags =
-         LibImportExport::GetAcidizerTags(*mFile, trustedDistributors))
-      tags->SetTag(TAG_ACID, LibImportExport::AcidizerTagsToString(*acidTags));
+   if (const auto acidTags = LibImportExport::GetAcidizerTags(*mFile, trustedDistributors))
+      outAcidTags.emplace(*acidTags);
 
 #if defined(USE_LIBID3TAG)
    if (((mInfo.format & SF_FORMAT_TYPEMASK) == SF_FORMAT_AIFF) ||

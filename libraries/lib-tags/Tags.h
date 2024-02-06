@@ -64,7 +64,6 @@ using TagMap = std::unordered_map< wxString, wxString >;
 #define TAG_COMMENTS    wxT("COMMENTS")
 #define TAG_SOFTWARE    wxT("Software")
 #define TAG_COPYRIGHT   wxT("Copyright")
-#define TAG_ACID        wxT("ACID")
 
 class TAGS_API Tags final
    : public XMLTagHandler

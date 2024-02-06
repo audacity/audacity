@@ -76,18 +76,6 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Saving &empty project"),
                     {wxT("/GUI/EmptyCanBeDirty"),
                      true});
-      S.TieCheckBox(XXO("Mixing down to &mono during export"),
-                    {wxT("/Warnings/MixMono"),
-                     true});
-      S.TieCheckBox(XXO("Mixing down to &stereo during export"),
-                    {wxT("/Warnings/MixStereo"),
-                     true});
-      S.TieCheckBox(XXO("Mixing down on export (&Custom FFmpeg or external program)"),
-                    {wxT("/Warnings/MixUnknownChannels"),
-                     true});
-      S.TieCheckBox(XXO("Missing file &name extension during export"),
-                    {wxT("/Warnings/MissingExtension"),
-                     true});
    }
    S.EndStatic();
    S.EndScroller();
