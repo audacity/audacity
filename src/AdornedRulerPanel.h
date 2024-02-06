@@ -214,8 +214,7 @@ private:
    std::shared_ptr<TrackPanelCell> GetFocusedCell() override;
    void SetFocusedCell() override;
    void ProcessUIHandleResult
-      (const std::shared_ptr<TrackPanelCell> &pClickedCell,
-       const std::shared_ptr<TrackPanelCell> &pLatestCell,
+      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const TranslatableString & ) override;

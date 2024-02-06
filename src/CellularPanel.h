@@ -53,8 +53,7 @@ public:
    virtual void SetFocusedCell() = 0;
    
    virtual void ProcessUIHandleResult
-   (const std::shared_ptr<TrackPanelCell> &pClickedCell,
-    const std::shared_ptr<TrackPanelCell> &pLatestCell,
+   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
     unsigned refreshResult) = 0;
    
    virtual void UpdateStatusMessage( const TranslatableString & )  = 0;
@@ -120,7 +119,7 @@ public:
 protected:
    bool HasEscape();
    bool CancelDragging( bool escaping );
-   void DoContextMenu( const std::shared_ptr<TrackPanelCell> &pCell );
+   void DoContextMenu( std::shared_ptr<TrackPanelCell> pCell );
    void ClearTargets();
    
 private:

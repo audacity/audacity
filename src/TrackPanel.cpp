@@ -543,17 +543,16 @@ namespace {
 }
 
 void TrackPanel::ProcessUIHandleResult
-   (const std::shared_ptr<TrackPanelCell> &pClickedCell,
-    const std::shared_ptr<TrackPanelCell> &pLatestCell,
+   (TrackPanelCell *pClickedCell, TrackPanelCell *pLatestCell,
     UIHandle::Result refreshResult)
 {
    const auto panel = this;
-   auto pLatestTrack = FindTrack( pLatestCell.get() ).get();
+   auto pLatestTrack = FindTrack( pLatestCell ).get();
 
    // This precaution checks that the track is not only nonnull, but also
    // really owned by the track list
    auto pClickedTrack = GetTracks()->Lock(
-      std::weak_ptr<Track>{ FindTrack( pClickedCell.get() ) }
+      std::weak_ptr<Track>{ FindTrack( pClickedCell ) }
    ).get();
 
    // TODO:  make a finer distinction between refreshing the track control area,
@@ -1020,9 +1019,8 @@ void TrackPanel::UpdateVRulerSize()
 
 void TrackPanel::OnTrackMenu(Track *t)
 {
-   std::shared_ptr<TrackPanelCell> ptr1(nullptr);
    CellularPanel::DoContextMenu(
-      t ? ChannelView::Get(*t->GetChannel(0)).GetShared() : ptr1);
+      t ? ChannelView::Get(*t->GetChannel(0)).shared_from_this() : nullptr);
 }
 
 namespace {
@@ -1684,7 +1682,7 @@ std::shared_ptr<TrackPanelCell> TrackPanel::GetFocusedCell()
    // Note that focus track is always a leader
    auto pTrack = TrackFocus::Get(*GetProject()).Get();
    return pTrack
-      ? ChannelView::Get(*pTrack->GetChannel(0)).GetShared()
+      ? ChannelView::Get(*pTrack->GetChannel(0)).shared_from_this()
       : GetBackgroundCell();
 }
 

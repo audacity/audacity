@@ -107,8 +107,6 @@ public:
    // Returns cell that would be used at affordance area, by default returns nullptr,
    // meaning that track has no such area.
    virtual std::shared_ptr<CommonTrackCell> GetAffordanceControls();
-   
-   virtual std::shared_ptr<CommonTrackCell> GetShared();
 
    void WriteXMLAttributes( XMLWriter & ) const override;
    bool HandleXMLAttribute(

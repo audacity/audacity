@@ -188,7 +188,7 @@ bool CellularPanel::CancelDragging( bool escaping )
       auto pClickedCell = state.mpClickedCell.lock();
       if (pClickedCell)
          ProcessUIHandleResult(
-            pClickedCell, {},
+            pClickedCell.get(), {},
             refreshResult | state.mMouseOverUpdateFlags );
       state.mpClickedCell.reset();
       state.mUIHandle.reset(), handle.reset(), ClearTargets();
@@ -319,7 +319,7 @@ void CellularPanel::HandleMotion
          // Re-draw any highlighting
          if (oldCell) {
             ProcessUIHandleResult(
-               oldCell, oldCell, updateFlags);
+               oldCell.get(), oldCell.get(), updateFlags);
          }
       }
 
@@ -419,7 +419,7 @@ void CellularPanel::HandleMotion
       UpdateStatusMessage( {} );
 
    if (newCell)
-      ProcessUIHandleResult(newCell, newCell, refreshCode);
+      ProcessUIHandleResult(newCell.get(), newCell.get(), refreshCode);
 }
 
 void CellularPanel::Leave()
@@ -547,7 +547,7 @@ void CellularPanel::HandleWheelRotation( TrackPanelMouseEvent &tpmEvent )
    unsigned result =
       pCell->HandleWheelRotation( tpmEvent, GetProject() );
    ProcessUIHandleResult(
-      pCell, pCell, result);
+      pCell.get(), pCell.get(), result);
 }
 
 void CellularPanel::OnCaptureKey(wxCommandEvent & event)
@@ -564,7 +564,7 @@ void CellularPanel::OnCaptureKey(wxCommandEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->CaptureKey(*kevent, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
       event.Skip(kevent->GetSkipped());
    }
 
@@ -621,7 +621,7 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->KeyDown(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
    }
    else
       event.Skip();
@@ -644,7 +644,7 @@ void CellularPanel::OnChar(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->Char(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
    }
    else
       event.Skip();
@@ -676,7 +676,7 @@ void CellularPanel::OnKeyUp(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->KeyUp(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
       return;
    }
 
@@ -791,7 +791,7 @@ try
          const UIHandle::Result refreshResult =
             handle->Drag( tpmEvent, GetProject() );
          ProcessUIHandleResult
-            (pClickedCell, pCell, refreshResult);
+            (pClickedCell.get(), pCell.get(), refreshResult);
          state.mMouseOverUpdateFlags |= refreshResult;
          if (refreshResult & RefreshCode::Cancelled) {
             // Drag decided to abort itself
@@ -813,7 +813,7 @@ try
          UIHandle::Result refreshResult =
             handle->Release( tpmEvent, GetProject(), this );
          ProcessUIHandleResult
-            (pClickedCell, pCell,
+            (pClickedCell.get(), pCell.get(),
              refreshResult | moreFlags);
          state.mUIHandle.reset(), handle.reset(), ClearTargets();
          state.mpClickedCell.reset();
@@ -961,30 +961,31 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
          HandleMotion( tpmState );
       }
       ProcessUIHandleResult(
-         pCell, pCell, refreshResult);
+         pCell.get(), pCell.get(), refreshResult);
       state.mMouseOverUpdateFlags |= refreshResult;
    }
 }
 
-void CellularPanel::DoContextMenu( const std::shared_ptr<TrackPanelCell> &pCell )
+void CellularPanel::DoContextMenu( std::shared_ptr<TrackPanelCell> pCell )
 {
-   std::shared_ptr<TrackPanelCell>pCellLocal = pCell;
-
-   if( !pCellLocal ) {
-      pCellLocal = GetFocusedCell();
-      if( !pCellLocal )
+   if( !pCell ) {
+      pCell = GetFocusedCell();
+      if( !pCell )
          return;
    }
 
-   const auto delegate = pCellLocal->ContextMenuDelegate();
+   std::weak_ptr<TrackPanelCell> wCell = pCell;
+
+   const auto delegate = pCell->ContextMenuDelegate();
    if (!delegate)
       return;
 
    auto rect = FindRect( *delegate );
    const UIHandle::Result refreshResult =
       delegate->DoContextMenu(rect, this, nullptr, GetProject());
+   pCell.reset();
 
-   ProcessUIHandleResult(pCellLocal, pCellLocal, refreshResult);
+   ProcessUIHandleResult(wCell.lock().get(), wCell.lock().get(), refreshResult);
 }
 
 void CellularPanel::OnSetFocus(wxFocusEvent &event)
@@ -1000,7 +1001,7 @@ void CellularPanel::DoKillFocus()
       auto &state = *mState;
       auto pClickedCell = state.mpClickedCell.lock();
       if (pClickedCell)
-         ProcessUIHandleResult( pClickedCell, {}, refreshResult );
+         ProcessUIHandleResult( pClickedCell.get(), {}, refreshResult );
    }
    Refresh( false);
 }

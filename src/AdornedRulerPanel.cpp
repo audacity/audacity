@@ -2848,9 +2848,7 @@ void AdornedRulerPanel::SetFocusedCell()
 }
 
 void AdornedRulerPanel::ProcessUIHandleResult(
-   const std::shared_ptr<TrackPanelCell> &,
-   const std::shared_ptr<TrackPanelCell> &,
-   unsigned refreshResult)
+   TrackPanelCell *, TrackPanelCell *, unsigned refreshResult)
 {
    if (refreshResult & RefreshCode::RefreshAll)
       Refresh(); // Overlays will be repainted too

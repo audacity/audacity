@@ -229,8 +229,7 @@ protected:
    DECLARE_EVENT_TABLE()
 
    void ProcessUIHandleResult
-      (const std::shared_ptr<TrackPanelCell> &pClickedTrack,
-       const std::shared_ptr<TrackPanelCell> &pLatestCell,
+      (TrackPanelCell *pClickedTrack, TrackPanelCell *pLatestCell,
        unsigned refreshResult) override;
 
    void UpdateStatusMessage( const TranslatableString &status ) override;
