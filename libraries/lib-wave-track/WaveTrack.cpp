@@ -3619,24 +3619,31 @@ sampleFormat WaveTrack::WidestEffectiveFormat() const
 bool WaveTrack::HasTrivialEnvelope() const
 {
    auto pTrack = this;
-   if (GetOwner())
+   if (pTrack->GetOwner())
       // Substitute the leader track
-      pTrack = *TrackList::Channels(this).begin();
-   auto &clips = pTrack->GetClips();
+      pTrack =
+         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
+   if (!pTrack)
+      return false;
+   auto clips = pTrack->Intervals();
    return std::all_of(clips.begin(), clips.end(),
-      [](const auto &pClip){ return pClip->GetEnvelope()->IsTrivial(); });
+      [](const auto &pClip){ return pClip->GetEnvelope().IsTrivial(); });
 }
 
 void WaveTrack::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
    auto pTrack = this;
-   if (GetOwner())
+   if (pTrack->GetOwner())
       // Substitute the leader track
-      pTrack = *TrackList::Channels(this).begin();
+      pTrack =
+         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
+
+   if (!pTrack)
+      return;
 
    if (backwards)
-      t0 -= bufferLen / GetRate();
+      t0 -= bufferLen / pTrack->GetRate();
    // The output buffer corresponds to an unbroken span of time which the callers expect
    // to be fully valid.  As clips are processed below, the output buffer is updated with
    // envelope values from any portion of a clip, start, end, middle, or none at all.
@@ -3653,10 +3660,10 @@ void WaveTrack::GetEnvelopeValues(
    }
 
    double startTime = t0;
-   const auto rate = GetRate();
+   const auto rate = pTrack->GetRate();
    auto tstep = 1.0 / rate;
    double endTime = t0 + tstep * bufferLen;
-   for (const auto &clip: pTrack->mClips)
+   for (const auto &clip: pTrack->Intervals())
    {
       // IF clip intersects startTime..endTime THEN...
       auto dClipStartTime = clip->GetPlayStartTime();
@@ -3696,7 +3703,7 @@ void WaveTrack::GetEnvelopeValues(
          }
          // Samples are obtained for the purpose of rendering a wave track,
          // so quantize time
-         clip->GetEnvelope()->GetValues(rbuf, rlen, rt0, tstep);
+         clip->GetEnvelope().GetValues(rbuf, rlen, rt0, tstep);
       }
    }
    if (backwards)
