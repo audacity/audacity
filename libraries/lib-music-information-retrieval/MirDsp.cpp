@@ -11,7 +11,6 @@
 #include "MirDsp.h"
 #include "IteratorX.h"
 #include "MemoryX.h"
-#include "MirAudioReader.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
 #include "PowerSpectrumGetter.h"

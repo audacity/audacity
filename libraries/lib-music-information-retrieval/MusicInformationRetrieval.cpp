@@ -11,9 +11,12 @@
 #include "MusicInformationRetrieval.h"
 #include "DecimatingMirAudioReader.h"
 #include "GetMeterUsingTatumQuantizationFit.h"
-#include "MirAudioReader.h"
+#include "MirProjectInterface.h"
+#include "MirTypes.h"
 #include "MirUtils.h"
 #include "StftFrameProvider.h"
+
+#include "MemoryX.h"
 
 #include <array>
 #include <cassert>
@@ -40,92 +43,65 @@ auto RemovePathPrefix(const std::string& filename)
 // has 1.5 quarter notes per beat.
 constexpr std::array<double, numTimeSignatures> quarternotesPerBeat { 2., 1.,
                                                                       1., 1.5 };
-
-std::optional<MusicalMeter> FillMetadata(
-   const std::string& filename,
-   const std::optional<LibFileFormats::AcidizerTags>& tags,
-   const MirAudioReader& audio, FalsePositiveTolerance tolerance,
-   const std::function<void(double progress)>& progressCallback)
-{
-   // Prioritize tags over filename:
-   if (tags.has_value() && tags->isOneShot)
-      // That a tag is one-shot in general doesn't mean it doesn't have
-      // rhythm and tempo, but in practice one-shots are not to be looped or
-      // stretched.
-      return {};
-   else if (tags.has_value() && tags->bpm.has_value() && *tags->bpm > 30.)
-      return MusicalMeter { *tags->bpm, std::optional<TimeSignature> {} };
-
-   // No tags or invalid tags: fall back onto filename:
-   const auto bpmFromFilename = GetBpmFromFilename(filename);
-   if (bpmFromFilename.has_value())
-      return MusicalMeter { *bpmFromFilename, {} };
-
-   // No luck with filename parsing: try to get the tempo from the audio
-   return GetMusicalMeterFromSignal(audio, tolerance, progressCallback);
-}
 } // namespace
 
-int GetNumerator(TimeSignature ts)
+std::optional<ProjectSyncInfo>
+GetProjectSyncInfo(const ProjectSyncInfoInput& in)
 {
-   constexpr std::array<int, numTimeSignatures> numerators = { 2, 4, 3, 6 };
-   return numerators[static_cast<int>(ts)];
-}
-
-int GetDenominator(TimeSignature ts)
-{
-   constexpr std::array<int, numTimeSignatures> denominators = { 2, 4, 4, 8 };
-   return denominators[static_cast<int>(ts)];
-}
-
-MusicInformation::MusicInformation(
-   const std::optional<LibFileFormats::AcidizerTags>& tags,
-   const std::string& filename, const MirAudioReader& audio,
-   FalsePositiveTolerance tolerance,
-   std::function<void(double progress)> progressCallback)
-    : filename { RemovePathPrefix(filename) }
-    , duration { audio.GetDuration() }
-    , mMusicalMeter { FillMetadata(
-         filename, tags, audio, tolerance, std::move(progressCallback)) }
-{
-}
-
-MusicInformation::operator bool() const
-{
-   // For now suffices to say that we have detected music content if there is
-   // rhythm.
-   return mMusicalMeter.has_value();
-}
-
-ProjectSyncInfo MusicInformation::GetProjectSyncInfo(
-   const std::optional<double>& projectTempo) const
-{
-   assert(*this);
-   if (!*this)
+   if (in.tags.has_value() && in.tags->isOneShot)
+      // That's a one-shot file, we don't want to sync it.
       return {};
 
-   const auto error = mMusicalMeter->bpm - bpmExpectedValue;
+   std::optional<double> bpm;
+   std::optional<TimeSignature> timeSignature;
+   std::optional<TempoObtainedFrom> usedMethod;
 
-   const auto qpm =
-      mMusicalMeter->bpm *
-      quarternotesPerBeat[static_cast<int>(
-         mMusicalMeter->timeSignature.value_or(TimeSignature::FourFour))];
+   if (in.tags.has_value() && in.tags->bpm.has_value() && *in.tags->bpm > 30.)
+   {
+      bpm = in.tags->bpm;
+      usedMethod = TempoObtainedFrom::Header;
+   }
+   else if (bpm = GetBpmFromFilename(in.filename))
+      usedMethod = TempoObtainedFrom::Title;
+   else if (
+      const auto meter = GetMusicalMeterFromSignal(
+         in.source,
+         in.viewIsBeatsAndMeasures ? FalsePositiveTolerance::Lenient :
+                                     FalsePositiveTolerance::Strict,
+         in.progressCallback))
+   {
+      bpm = meter->bpm;
+      timeSignature = meter->timeSignature;
+      usedMethod = TempoObtainedFrom::Signal;
+   }
+   else
+      return {};
+
+   const auto qpm = *bpm * quarternotesPerBeat[static_cast<int>(
+                              timeSignature.value_or(TimeSignature::FourFour))];
 
    auto recommendedStretch = 1.0;
-   if (projectTempo.has_value())
+   if (!in.projectWasEmpty)
+      // There already is content in this project, meaning that its tempo won't
+      // be changed. Change speed by some power of two to minimize stretching.
       recommendedStretch =
-         std::pow(2., std::round(std::log2(*projectTempo / qpm)));
+         std::pow(2., std::round(std::log2(in.projectTempo / qpm)));
 
    auto excessDurationInQuarternotes = 0.;
-   auto numQuarters = duration * qpm / 60.;
+   auto numQuarters = in.source.GetDuration() * qpm / 60.;
    const auto roundedNumQuarters = std::round(numQuarters);
    const auto delta = numQuarters - roundedNumQuarters;
    // If there is an excess less than a 32nd, we treat it as an edit error.
    if (0 < delta && delta < 1. / 8)
       excessDurationInQuarternotes = delta;
 
-   return { qpm, mMusicalMeter->timeSignature, recommendedStretch,
-            excessDurationInQuarternotes };
+   return ProjectSyncInfo {
+      qpm,
+      *usedMethod,
+      timeSignature,
+      recommendedStretch,
+      excessDurationInQuarternotes,
+   };
 }
 
 std::optional<double> GetBpmFromFilename(const std::string& filename)
@@ -168,5 +144,82 @@ std::optional<MusicalMeter> GetMusicalMeterFromSignal(
    DecimatingMirAudioReader decimatedAudio { audio };
    return GetMeterUsingTatumQuantizationFit(
       decimatedAudio, tolerance, progressCallback, debugOutput);
+}
+
+void SynchronizeProject(
+   const std::vector<std::shared_ptr<AnalyzedAudioClip>>& clips,
+   ProjectInterface& project, bool projectWasEmpty)
+{
+   const auto isBeatsAndMeasures = project.ViewIsBeatsAndMeasures();
+
+   if (!projectWasEmpty && !isBeatsAndMeasures)
+      return;
+
+   const auto projectTempo =
+      !projectWasEmpty ? std::make_optional(project.GetTempo()) : std::nullopt;
+
+   if (!std::any_of(
+          clips.begin(), clips.end(),
+          [](const std::shared_ptr<AnalyzedAudioClip>& clip) {
+             return clip->GetSyncInfo().has_value();
+          }))
+      return;
+
+   Finally Do = [&] {
+      // Re-evaluate if we are in B&M view - we might have convinced the user to
+      // switch:
+      if (!project.ViewIsBeatsAndMeasures())
+         return;
+      std::for_each(
+         clips.begin(), clips.end(),
+         [&](const std::shared_ptr<AnalyzedAudioClip>& clip) {
+            clip->Synchronize();
+         });
+      project.OnClipsSynchronized();
+   };
+
+   if (!projectWasEmpty && isBeatsAndMeasures)
+      return;
+
+   const auto [loopIndices, oneshotIndices] = [&] {
+      std::vector<size_t> loopIndices;
+      std::vector<size_t> oneshotIndices;
+      for (size_t i = 0; i < clips.size(); ++i)
+         if (clips[i]->GetSyncInfo().has_value())
+            loopIndices.push_back(i);
+         else
+            oneshotIndices.push_back(i);
+      return std::make_pair(loopIndices, oneshotIndices);
+   }();
+
+   // Favor results based on reliability. We assume that header info is most
+   // reliable, followed by title, followed by DSP.
+   std::unordered_map<TempoObtainedFrom, size_t> indexMap;
+   std::for_each(loopIndices.begin(), loopIndices.end(), [&](size_t i) {
+      const auto usedMethod = clips[i]->GetSyncInfo()->usedMethod;
+      if (!indexMap.count(usedMethod))
+         indexMap[usedMethod] = i;
+   });
+
+   const auto chosenIndex = indexMap.count(TempoObtainedFrom::Header) ?
+                               indexMap.at(TempoObtainedFrom::Header) :
+                            indexMap.count(TempoObtainedFrom::Title) ?
+                               indexMap.at(TempoObtainedFrom::Title) :
+                               indexMap.at(TempoObtainedFrom::Signal);
+
+   const auto& chosenSyncInfo = *clips[chosenIndex]->GetSyncInfo();
+   const auto isSingleFileImport = clips.size() == 1;
+   if (!project.ShouldBeReconfigured(
+          chosenSyncInfo.rawAudioTempo, isSingleFileImport))
+      return;
+
+   project.ReconfigureMusicGrid(
+      chosenSyncInfo.rawAudioTempo, chosenSyncInfo.timeSignature);
+
+   // Reset tempo of one-shots to this new project tempo, so that they don't
+   // get stretched:
+   std::for_each(oneshotIndices.begin(), oneshotIndices.end(), [&](size_t i) {
+      clips[i]->SetRawAudioTempo(chosenSyncInfo.rawAudioTempo);
+   });
 }
 } // namespace MIR

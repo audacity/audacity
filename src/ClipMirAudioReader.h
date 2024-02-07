@@ -10,8 +10,10 @@
 **********************************************************************/
 #pragma once
 
+#include "AcidizerTags.h"
 #include "AudioSegmentSampleView.h"
-#include "MirAudioReader.h"
+#include "MirTypes.h"
+#include "WaveTrack.h"
 
 #include <array>
 #include <optional>
@@ -21,7 +23,13 @@ class ClipInterface;
 class ClipMirAudioReader : public MIR::MirAudioReader
 {
 public:
-   ClipMirAudioReader(const ClipInterface& clip);
+   ClipMirAudioReader(
+      std::optional<LibFileFormats::AcidizerTags> tags, std::string filename,
+      WaveTrack& singleClipWaveTrack);
+
+   const std::optional<LibFileFormats::AcidizerTags> tags;
+   const std::string filename;
+   const WaveTrack::IntervalHolder clip;
 
    double GetSampleRate() const override;
    long long GetNumSamples() const override;
@@ -37,7 +45,8 @@ private:
    void AddChannel(
       size_t iChannel, float* buffer, sampleCount start, size_t len) const;
 
-   const ClipInterface& mClip;
+   const std::shared_ptr<const ClipInterface> mWideClip;
+
    // An array with two entries because maybe two channels, and each channel has
    // two caches to cope with back-and-forth access between beginning and end
    // of clip data, in case samples are queried circularly.

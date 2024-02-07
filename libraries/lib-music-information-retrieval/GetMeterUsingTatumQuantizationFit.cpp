@@ -11,8 +11,8 @@ Matthieu Hodgkinson
 
 #include "GetMeterUsingTatumQuantizationFit.h"
 #include "IteratorX.h"
-#include "MirAudioReader.h"
 #include "MirDsp.h"
+#include "MirTypes.h"
 #include "MirUtils.h"
 #include "MusicInformationRetrieval.h"
 

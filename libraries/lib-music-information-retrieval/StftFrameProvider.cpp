@@ -9,7 +9,7 @@
 
 **********************************************************************/
 #include "StftFrameProvider.h"
-#include "MirAudioReader.h"
+#include "MirTypes.h"
 #include "MirUtils.h"
 
 #include <algorithm>
