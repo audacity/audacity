@@ -817,9 +817,7 @@ void ExportAudioDialog::UpdateTrackExportSettings(const ExportPlugin& plugin, in
       setting.t0 = skipSilenceAtBeginning ? tr->GetStartTime() : 0;
       setting.t1 = tr->GetEndTime();
 
-      // number of export channels?
-      // It's 1 only for a center-panned mono track
-      setting.channels = (IsMono(*tr) && tr->GetPan() == 0.0) ? 1 : 2;
+      setting.channels = mExportOptionsPanel->GetChannels();
       // Get name and title
       title = tr->GetName();
       if( title.empty() )
