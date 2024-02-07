@@ -193,7 +193,6 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    // If there is any stretch in the control track, substitute a temporary
    // rendering before trying to use GetFloats
    {
-      auto &clips = pControlTrack->GetClips();
       const auto t0 = pControlTrack->LongSamplesToTime(start);
       const auto t1 = pControlTrack->LongSamplesToTime(end);
       if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {

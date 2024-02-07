@@ -32,10 +32,12 @@ public:
       double time, const ViewInfo &viewInfo, HitTestParams* params) override
    {
       const auto pClip = [&]() -> std::shared_ptr<WaveClip> {
-         for (auto clip : mpTrack->GetClips())
+         for (auto clip : mpTrack->Intervals())
             if ((
+               // y coordinates in this HitTest come from the third argument
+               // The channel of the interval is used only for times
                params && WaveChannelView::HitTest(
-                  *clip, viewInfo, params->rect, { params->xx, params->yy })
+                  *clip->GetClip(0), viewInfo, params->rect, { params->xx, params->yy })
             ) || (
                // WithinPlayRegion misses first sample, which breaks moving
                // "selected" clip. Probable WithinPlayRegion should be fixed
@@ -43,7 +45,7 @@ public:
                 clip->GetPlayStartTime() <= time &&
                  time < clip->GetPlayEndTime()
             ))
-               return clip;
+               return clip->GetClip(0);
          return {};
       }();
 

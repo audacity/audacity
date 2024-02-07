@@ -410,7 +410,8 @@ public:
 
    wxString MakeClipCopyName(const wxString& originalName) const;
    wxString MakeNewClipName() const;
- public:
+
+public:
 
    virtual ~WaveTrack();
 
@@ -698,18 +699,6 @@ public:
    // Lock and unlock the track: you must lock the track before
    // doing a copy and paste between projects.
    //
-
-   //! Get access to the (visible) clips in the tracks, in unspecified order
-   //! (not necessarily sequenced in time).
-   /*!
-    @post all pointers are non-null
-    */
-   WaveClipHolders &GetClips() { return mClips; }
-   /*!
-    @copydoc GetClips
-    */
-   const WaveClipConstHolders &GetClips() const
-      { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
 
    IntervalHolder GetLeftmostClip();
    IntervalConstHolder GetLeftmostClip() const;
