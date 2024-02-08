@@ -139,12 +139,12 @@ void SpectrumVRulerControls::UpdateRuler(const wxRect &rect)
 }
 
 void SpectrumVRulerControls::DoUpdateVRuler(
-   const wxRect &rect, const WaveTrack &wt)
+   const wxRect &rect, const WaveChannel &wc)
 {
    auto vruler = &WaveChannelVRulerControls::ScratchRuler();
-   const auto &settings = SpectrogramSettings::Get(wt);
+   const auto &settings = SpectrogramSettings::Get(wc);
    float minFreq, maxFreq;
-   SpectrogramBounds::Get(wt).GetBounds(wt, minFreq, maxFreq);
+   SpectrogramBounds::Get(wc).GetBounds(wc, minFreq, maxFreq);
    vruler->SetDbMirrorValue(0.0);
    
    switch (settings.scaleType) {
@@ -204,6 +204,6 @@ void SpectrumVRulerControls::DoUpdateVRuler(
       }
          break;
    }
-   auto &size = ChannelView::Get(wt).vrulerSize;
+   auto &size = ChannelView::Get(wc).vrulerSize;
    vruler->GetMaxSize(&size.first, &size.second);
 }

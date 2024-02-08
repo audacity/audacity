@@ -93,11 +93,11 @@ void TimeTrackVRulerControls::Draw(
       bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
-      
+
       // Right align the ruler
       wxRect rr = rect;
       rr.width--;
-      auto &size =
+      const auto &size =
          ChannelView::Get(*static_cast<TimeTrack*>(t.get())).vrulerSize;
       if (size.first < rect.GetWidth()) {
          int adj = rr.GetWidth() - size.first;

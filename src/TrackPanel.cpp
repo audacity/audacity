@@ -1022,7 +1022,7 @@ void TrackPanel::UpdateVRulerSize()
       // Find maximum width over all channels
       for (auto t : trackRange)
          for (auto pChannel : t->Channels()) {
-            auto &size = ChannelView::Get(*pChannel).vrulerSize;
+            const auto &size = ChannelView::Get(*pChannel).vrulerSize;
             s.IncTo({ size.first, size.second });
          }
 
