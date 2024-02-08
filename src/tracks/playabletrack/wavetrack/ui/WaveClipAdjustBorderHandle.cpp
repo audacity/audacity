@@ -358,7 +358,7 @@ WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(
 
 WaveClipAdjustBorderHandle::~WaveClipAdjustBorderHandle() = default;
 
-std::shared_ptr<const Channel> WaveClipAdjustBorderHandle::FindChannel() const
+std::shared_ptr<const Track> WaveClipAdjustBorderHandle::FindTrack() const
 {
    return mpTrack;
 }

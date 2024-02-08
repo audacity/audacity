@@ -30,9 +30,9 @@ SpectrumVZoomHandle::SpectrumVZoomHandle(
 
 SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
-std::shared_ptr<const Channel> SpectrumVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> SpectrumVZoomHandle::FindTrack() const
 {
-   return mpChannel.lock();
+   return TrackFromChannel(mpChannel.lock());
 }
 
 std::shared_ptr<WaveChannel> SpectrumVZoomHandle::FindWaveChannel()
@@ -62,7 +62,7 @@ UIHandle::Result SpectrumVZoomHandle::Drag(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (!FindChannel())
+   if (!FindTrack())
       return Cancelled;
    return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, true);
 }
@@ -97,7 +97,7 @@ void SpectrumVZoomHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   const auto pChannel = FindChannel();
+   const auto pChannel = FindTrack();
    if (!pChannel)
       return;
    return WaveChannelVZoomHandle::DoDraw(

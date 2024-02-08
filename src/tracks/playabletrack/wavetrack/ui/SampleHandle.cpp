@@ -176,9 +176,9 @@ SampleHandle::~SampleHandle()
 {
 }
 
-std::shared_ptr<const Channel> SampleHandle::FindChannel() const
+std::shared_ptr<const Track> SampleHandle::FindTrack() const
 {
-   return mClickedTrack;
+   return TrackFromChannel(mClickedTrack);
 }
 
 UIHandle::Result SampleHandle::Click

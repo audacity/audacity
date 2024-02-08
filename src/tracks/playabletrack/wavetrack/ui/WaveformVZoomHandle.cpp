@@ -30,9 +30,9 @@ WaveformVZoomHandle::WaveformVZoomHandle(
 
 WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
-std::shared_ptr<const Channel> WaveformVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> WaveformVZoomHandle::FindTrack() const
 {
-   return mpChannel.lock();
+   return TrackFromChannel(mpChannel.lock());
 }
 
 void WaveformVZoomHandle::Enter( bool, AudacityProject* )

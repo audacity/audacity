@@ -114,7 +114,7 @@ LabelGlyphHandle::~LabelGlyphHandle()
 {
 }
 
-std::shared_ptr<const Channel> LabelGlyphHandle::FindChannel() const
+std::shared_ptr<const Track> LabelGlyphHandle::FindTrack() const
 {
    return mpLT;
 }

@@ -156,7 +156,7 @@ StretchHandle::~StretchHandle()
 {
 }
 
-std::shared_ptr<const Channel> StretchHandle::FindChannel() const
+std::shared_ptr<const Track> StretchHandle::FindTrack() const
 {
    return mpTrack;
 }

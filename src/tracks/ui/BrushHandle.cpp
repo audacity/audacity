@@ -166,9 +166,9 @@ BrushHandle::~BrushHandle()
 {
 }
 
-std::shared_ptr<const Channel> BrushHandle::FindChannel() const
+std::shared_ptr<const Track> BrushHandle::FindTrack() const
 {
-   return const_cast<BrushHandle&>(*this).FindChannel();
+   return TrackFromChannel(const_cast<BrushHandle&>(*this).FindChannel());
 }
 
 namespace {

@@ -47,7 +47,7 @@ public:
 
    Result Cancel(AudacityProject* pProject) override;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    Result Release(
       const TrackPanelMouseEvent& event, AudacityProject* pProject,

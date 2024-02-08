@@ -21,6 +21,7 @@ class SelectionStateChanger;
 class SnapManager;
 class SpectrumAnalyst;
 class Track;
+class Channel;
 class ChannelView;
 class TrackList;
 class ViewInfo;
@@ -49,7 +50,7 @@ public:
    
    virtual ~SelectHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    bool IsDragging() const override;
 

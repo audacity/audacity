@@ -28,9 +28,9 @@ TimeTrackVZoomHandle::TimeTrackVZoomHandle(
 
 TimeTrackVZoomHandle::~TimeTrackVZoomHandle() = default;
 
-std::shared_ptr<const Channel> TimeTrackVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> TimeTrackVZoomHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+   return mpTrack.lock();
 }
 
 void TimeTrackVZoomHandle::Enter( bool, AudacityProject* )

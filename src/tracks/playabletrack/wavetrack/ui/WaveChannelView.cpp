@@ -305,11 +305,11 @@ public:
          --mMySubView;
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 
@@ -539,11 +539,11 @@ public:
    {
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 

@@ -118,9 +118,9 @@ UIHandle::Result HighlitClipButtonHandle::UpdateTrackSelection(
    return RefreshCode::RefreshNone;
 }
 
-std::shared_ptr<const Channel> HighlitClipButtonHandle::FindChannel() const
+std::shared_ptr<const Track> HighlitClipButtonHandle::FindTrack() const
 {
-   return mTrack->GetChannel(0u);
+   return mTrack;
 }
 
 void HighlitClipButtonHandle::Enter(bool forward, AudacityProject* pProject)

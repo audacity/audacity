@@ -35,7 +35,7 @@ public:
 
    ~SpectrumVZoomHandle() override;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
    std::shared_ptr<WaveChannel> FindWaveChannel();
 
    void Enter(bool forward, AudacityProject*) override;

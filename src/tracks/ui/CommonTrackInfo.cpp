@@ -180,7 +180,7 @@ void CommonTrackInfo::DrawCloseButton(
       ? dynamic_cast<const Track*>(&pChannel->GetChannelGroup())
       : nullptr;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool hit = target && target->FindChannel().get() == pChannel;
+   bool hit = target && target->FindTrack().get() == pTrack;
    bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    AColor::Bevel2(*dc, !down, bev, selected, hit );
@@ -226,7 +226,7 @@ void CommonTrackInfo::CloseTitleDrawFunction
       GetTitleBarHorizontalBounds( rect, bev );
       auto target = context.target.get();
       bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+         target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       wxString titleStr =
@@ -297,8 +297,7 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
       auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+      bool hit = target && target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 
@@ -327,8 +326,7 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
       wxRect bev = rect;
       GetSelectButtonHorizontalBounds(rect, bev);
       auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+      bool hit = target && target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 

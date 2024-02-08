@@ -113,7 +113,7 @@ CutlineHandle::~CutlineHandle()
 {
 }
 
-std::shared_ptr<const Channel> CutlineHandle::FindChannel() const
+std::shared_ptr<const Track> CutlineHandle::FindTrack() const
 {
    return mpTrack;
 }

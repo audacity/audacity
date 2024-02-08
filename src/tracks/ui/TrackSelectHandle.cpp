@@ -65,9 +65,9 @@ TrackSelectHandle::~TrackSelectHandle()
 {
 }
 
-std::shared_ptr<const Channel> TrackSelectHandle::FindChannel() const
+std::shared_ptr<const Track> TrackSelectHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack);
+   return mpTrack;
 }
 
 UIHandle::Result TrackSelectHandle::Click

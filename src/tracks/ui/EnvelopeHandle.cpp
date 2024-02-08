@@ -48,9 +48,9 @@ void EnvelopeHandle::Enter(bool, AudacityProject *)
 EnvelopeHandle::~EnvelopeHandle()
 {}
 
-std::shared_ptr<const Channel> EnvelopeHandle::FindChannel() const
+std::shared_ptr<const Track> EnvelopeHandle::FindTrack() const
 {
-   return mwChannel.lock();
+   return TrackFromChannel(mwChannel.lock());
 }
 
 UIHandlePtr EnvelopeHandle::HitAnywhere(std::weak_ptr<EnvelopeHandle> &holder,

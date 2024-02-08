@@ -463,9 +463,9 @@ std::shared_ptr<Channel> SelectHandle::FindChannel()
       return {};
 }
 
-std::shared_ptr<const Channel> SelectHandle::FindChannel() const
+std::shared_ptr<const Track> SelectHandle::FindTrack() const
 {
-   return const_cast<SelectHandle &>(*this).FindChannel();
+   return TrackFromChannel(const_cast<SelectHandle &>(*this).FindChannel());
 }
 
 Track *SelectHandle::FindTrack(Channel *pChannel)
