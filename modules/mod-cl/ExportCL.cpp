@@ -361,8 +361,8 @@ public:
 
    void Load(const audacity::BasicSettings& config) override
    {
-      (void)config.Read(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
-      (void)config.Read(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);
+      mCommand = config.Read(wxT("/FileFormats/ExternalProgramExportCommand"), mCommand);
+      mShowOutput = config.Read(wxT("/FileFormats/ExternalProgramShowOutput"), mShowOutput);
    }
 
    void Store(audacity::BasicSettings& config) const override
