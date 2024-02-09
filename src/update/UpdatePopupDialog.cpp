@@ -48,7 +48,7 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& vers
             {
                 S.Id(DontShowID).AddCheckBox(
                     XO("Don't show this again at start up"),
-                    !DefaultUpdatesCheckingFlag.Read());
+                    !DefaultUpdatesCheckingFlag->Read());
             }
 
             S.Prop(1).AddSpace(1, 0, 1);
@@ -89,7 +89,7 @@ void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
-    DefaultUpdatesCheckingFlag.Write(!event.IsChecked());
+    DefaultUpdatesCheckingFlag->Write(!event.IsChecked());
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
