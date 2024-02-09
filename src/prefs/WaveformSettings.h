@@ -37,7 +37,7 @@ public:
 
    //! Guarantee independence of settings, then assign
    static void Set(
-      WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings );
+      WaveChannel &channel, std::unique_ptr<WaveformSettings> pSettings );
 
    // Singleton for settings that are not per-track
    class AUDACITY_DLL_API Globals
