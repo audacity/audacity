@@ -475,10 +475,9 @@ UIHandle::Result TimeShiftHandle::Click(
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto pTrack = pView && pView->FindChannel() ?
-      dynamic_cast<Track *>(&pView->FindChannel()->GetChannelGroup())
-      : nullptr;
+   const auto pView =
+      std::dynamic_pointer_cast<CommonTrackPanelCell>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack() : nullptr;
    if (!pTrack)
       return RefreshCode::Cancelled;
 
