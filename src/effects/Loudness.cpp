@@ -210,7 +210,10 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
                goto done;
       }
       else {
-         if (!(bGoodResult = processOne(*pTrack)))
+         // processOne captured nChannels which is 2 and is passed to
+         // LoadBufferBlock, StoreBufferBlock which find the track from the
+         // channel and iterate channels
+         if (!(bGoodResult = processOne(**pTrack->Channels().begin())))
             break;
       }
    }

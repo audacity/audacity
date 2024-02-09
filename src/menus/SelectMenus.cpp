@@ -451,7 +451,7 @@ void OnSelectAll(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(*wt);
+      auto& view = WaveChannelView::Get(**wt->Channels().begin());
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);
          return;
