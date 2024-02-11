@@ -17,16 +17,14 @@ struct PFFFT_Setup;
 #include <vector>
 #include "pffft.h"
 
-namespace MIR
-{
-struct PffftSetupDeleter {
+struct FFT_API PffftSetupDeleter {
    void operator ()(PFFFT_Setup *p){ if (p) Pffft_destroy_setup(p); }
 private:
   void Pffft_destroy_setup(PFFFT_Setup *);
 };
 using PffftSetupHolder = std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>;
 
-struct PffftAllocatorBase {
+struct FFT_API PffftAllocatorBase {
    static void *Pffft_aligned_malloc(size_t nb_bytes);
    static void Pffft_aligned_free(void *);
 };
@@ -207,7 +205,7 @@ struct PffftFloatVector : std::vector<float, PffftAllocator<float>> {
  * are needed. Currently only power spectrum, but may be generalized to other
  * uses.
  */
-class PowerSpectrumGetter
+class FFT_API PowerSpectrumGetter
 {
 public:
    explicit PowerSpectrumGetter(int fftSize);
@@ -227,4 +225,3 @@ private:
    PffftSetupHolder mSetup;
    PffftFloatVector mWork;
 };
-} // namespace MIR

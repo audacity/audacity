@@ -13,7 +13,7 @@ struct FFTParam {
 #endif
 };
 
-struct MATH_API FFTDeleter{
+struct FFT_API FFTDeleter{
    void operator () (FFTParam *p) const;
 };
 
@@ -21,11 +21,11 @@ using HFFT = std::unique_ptr<
    FFTParam, FFTDeleter
 >;
 
-MATH_API HFFT GetFFT(size_t);
-MATH_API void RealFFTf(fft_type *, const FFTParam *);
-MATH_API void InverseRealFFTf(fft_type *, const FFTParam *);
-MATH_API void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut);
-MATH_API void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
+FFT_API HFFT GetFFT(size_t);
+FFT_API void RealFFTf(fft_type *, const FFTParam *);
+FFT_API void InverseRealFFTf(fft_type *, const FFTParam *);
+FFT_API void ReorderToTime(const FFTParam *hFFT, const fft_type *buffer, fft_type *TimeOut);
+FFT_API void ReorderToFreq(const FFTParam *hFFT, const fft_type *buffer,
 		   fft_type *RealOut, fft_type *ImagOut);
 
 #endif

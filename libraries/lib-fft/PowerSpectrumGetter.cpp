@@ -13,8 +13,6 @@
 #include <cassert>
 #include <pffft.h>
 
-namespace MIR
-{
 void PffftSetupDeleter::Pffft_destroy_setup(PFFFT_Setup *p)
 {
    pffft_destroy_setup(p);
@@ -64,4 +62,3 @@ void PowerSpectrumGetter::operator()(
          buffer[i * 2] * buffer[i * 2] + buffer[i * 2 + 1] * buffer[i * 2 + 1];
    output[mFftSize / 2] = buffer[1] * buffer[1];
 }
-} // namespace MIR
