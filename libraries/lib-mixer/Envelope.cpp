@@ -1408,44 +1408,32 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
       if (area < 0) {
          // loop BACKWARDS through the rest of the envelope points until we get to t1
          // (which is less than t0)
-         while (1)
+         while (i >= 0)
          {
-            if(i < 0) // the requested range extends beyond the leftmost point
-            {
-               return lastT + area * lastVal;
-            }
-            else
-            {
-               double added =
-                  -IntegrateInverseInterpolated(mEnv[i].GetVal(), lastVal, lastT - mEnv[i].GetT(), mDB);
-               if(added <= area)
-                  return lastT - SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), lastT - mEnv[i].GetT(), -area, mDB);
-               area -= added;
-               lastT = mEnv[i].GetT();
-               lastVal = mEnv[i].GetVal();
-               --i;
-            }
+            double added =
+               -IntegrateInverseInterpolated(mEnv[i].GetVal(), lastVal, lastT - mEnv[i].GetT(), mDB);
+            if(added <= area)
+               return lastT - SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), lastT - mEnv[i].GetT(), -area, mDB);
+            area -= added;
+            lastT = mEnv[i].GetT();
+            lastVal = mEnv[i].GetVal();
+            --i;
          }
+         return lastT + area * lastVal;
       }
       else {
          // loop through the rest of the envelope points until we get to t1
-         while (1)
+         while (i < (int)count)
          {
-            if(i >= (int)count) // the requested range extends beyond the last point
-            {
-               return lastT + area * lastVal;
-            }
-            else
-            {
-               double added = IntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
-               if(added >= area)
-                  return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, area, mDB);
-               area -= added;
-               lastT = mEnv[i].GetT();
-               lastVal = mEnv[i].GetVal();
-               i++;
-            }
+            double added = IntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, mDB);
+            if(added >= area)
+               return lastT + SolveIntegrateInverseInterpolated(lastVal, mEnv[i].GetVal(), mEnv[i].GetT() - lastT, area, mDB);
+            area -= added;
+            lastT = mEnv[i].GetT();
+            lastVal = mEnv[i].GetVal();
+            i++;
          }
+         return lastT + area * lastVal;
       }
    }();
 }
