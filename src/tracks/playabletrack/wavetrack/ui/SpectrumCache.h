@@ -18,6 +18,7 @@ class WideSampleSequence;
 
 #include <vector>
 #include "MemoryX.h"
+#include "PffftTransformer.h"
 #include "WaveClip.h" // to inherit WaveClipListener
 
 using Floats = ArrayOf<float>;
@@ -74,7 +75,7 @@ private:
    bool CalculateOneSpectrum(
       const SpectrogramSettings& settings, const WaveChannelInterval &clip,
       const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-      const std::vector<float>& gainFactors, float* __restrict scratch,
+      const std::vector<float>& gainFactors, PffftFloats scratch,
       float* __restrict out) const;
 
    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;

@@ -21,10 +21,11 @@
 
 namespace {
 
-static void ComputeSpectrumUsingRealFFTf
-   (float * __restrict buffer, const FFTParam *hFFT,
-    const float * __restrict window, size_t len, float * __restrict out)
+static void ComputeSpectrumUsingRealFFTf(PffftFloats buf,
+   const FFTParam *hFFT,
+   const float * __restrict window, size_t len, float * __restrict out)
 {
+   const auto buffer = buf.get();
    size_t i;
    if(len > hFFT->Points * 2)
       len = hFFT->Points * 2;
@@ -94,7 +95,7 @@ bool SpecCache::Matches(
 bool SpecCache::CalculateOneSpectrum(
    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
    const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-   const std::vector<float>& gainFactors, float* __restrict scratch,
+   const std::vector<float>& gainFactors, const PffftFloats scratch,
    float* __restrict out) const
 {
    bool result = false;
@@ -138,9 +139,10 @@ bool SpecCache::CalculateOneSpectrum(
 
       // We can avoid copying memory when ComputeSpectrum is used below
       bool copy = !autocorrelation || (padding > 0) || reassignment;
-      std::vector<float> floats;
-      float* useBuffer = 0;
-      float *adj = scratch + padding;
+      PffftFloatVector floats;
+      PffftFloats useBuffer{};
+      const auto pScratch = scratch.get();
+      float *adj = pScratch + padding;
 
       {
          auto myLen = windowSizeSetting;
@@ -173,10 +175,10 @@ bool SpecCache::CalculateOneSpectrum(
                clip.GetSampleView(from, myLen, mayThrow));
             floats.resize(myLen);
             mSampleCacheHolder->Copy(floats.data(), myLen);
-            useBuffer = floats.data();
+            useBuffer = floats.aligned();
             if (copy) {
                if (useBuffer)
-                  memcpy(adj, useBuffer, myLen * sizeof(float));
+                  memcpy(adj, useBuffer.get(), myLen * sizeof(float));
                else
                   memset(adj, 0, myLen * sizeof(float));
             }
@@ -192,24 +194,27 @@ bool SpecCache::CalculateOneSpectrum(
          float *const results = &out[nBins * xx];
          // This function does not mutate useBuffer
          ComputeSpectrum(
-            useBuffer, windowSizeSetting, windowSizeSetting, results,
+            useBuffer.get(), windowSizeSetting, windowSizeSetting, results,
             autocorrelation, settings.windowType);
       }
       else if (reassignment) {
          static const double epsilon = 1e-16;
          const auto hFFT = settings.hFFT.get();
 
-         float *const scratch2 = scratch + fftLen;
-         std::copy(scratch, scratch2, scratch2);
+         // Assuming scratch is well aligned for pffft, scratch2 and scratch3
+         // should be too
+         const auto scratch2 = (scratch + PffftAlignedCount{ fftLen }).get();
+         std::copy(pScratch, pScratch + fftLen, scratch2);
 
-         float *const scratch3 = scratch + 2 * fftLen;
-         std::copy(scratch, scratch2, scratch3);
+         const auto scratch3 =
+            (scratch + 2u * PffftAlignedCount{ fftLen }).get();
+         std::copy(pScratch, pScratch + fftLen, scratch3);
 
          {
             const float *const window = settings.window.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
-               scratch[ii] *= window[ii];
-            RealFFTf(scratch, hFFT);
+               pScratch[ii] *= window[ii];
+            RealFFTf(pScratch, hFFT);
          }
 
          {
@@ -229,8 +234,8 @@ bool SpecCache::CalculateOneSpectrum(
          for (size_t ii = 0; ii < hFFT->Points; ++ii) {
             const int index = hFFT->BitReversed[ii];
             const float
-               denomRe = scratch[index],
-               denomIm = ii == 0 ? 0 : scratch[index + 1];
+               denomRe = pScratch[index],
+               denomIm = ii == 0 ? 0 : pScratch[index + 1];
             const double power = denomRe * denomRe + denomIm * denomIm;
             if (power < epsilon)
                // Avoid dividing by near-zero below
@@ -302,8 +307,8 @@ bool SpecCache::CalculateOneSpectrum(
          // the part of useBuffer in the padding zones.
 
          // This function mutates useBuffer
-         ComputeSpectrumUsingRealFFTf
-            (useBuffer, settings.hFFT.get(), settings.window.get(), fftLen, results);
+         ComputeSpectrumUsingRealFFTf(useBuffer,
+            settings.hFFT.get(), settings.window.get(), fftLen, results);
          if (!gainFactors.empty()) {
             // Apply a frequency-dependent gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
@@ -357,9 +362,9 @@ void SpecCache::Populate(
    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
    const auto nBins = settings.NBins();
 
-   const size_t bufferSize = fftLen;
-   const size_t scratchSize = reassignment ? 3 * bufferSize : bufferSize;
-   std::vector<float> scratch(scratchSize);
+   const size_t scratchSize =
+      reassignment ? 3u * PffftAlignedCount{ fftLen } : fftLen;
+   PffftFloatVector scratch(scratchSize);
 
    std::vector<float> gainFactors;
    if (!autocorrelation)
@@ -388,19 +393,20 @@ void SpecCache::Populate(
             }
          }
          std::unique_ptr<SampleTrackCache> cache;
-         std::vector<float> scratch;
+         PffftFloatVector scratch;
       } tls;
 
       #pragma omp parallel for private(tls)
 #endif
       for (auto xx = lowerBoundX; xx < upperBoundX; ++xx)
       {
+         PffftFloats buffer{};
 #ifdef _OPENMP
          tls.init(waveTrackCache, scratchSize);
          SampleTrackCache& cache = *tls.cache;
-         float* buffer = &tls.scratch[0];
+         buffer = tls.scratch.aligned();
 #else
-         float* buffer = &scratch[0];
+         buffer = scratch.aligned();
 #endif
          CalculateOneSpectrum(
             settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
@@ -419,7 +425,7 @@ void SpecCache::Populate(
          {
             const bool result = CalculateOneSpectrum(
                settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-               gainFactors, &scratch[0], &freq[0]);
+               gainFactors, scratch.aligned(), &freq[0]);
             if (!result)
                break;
          }
@@ -429,7 +435,7 @@ void SpecCache::Populate(
          {
             const bool result = CalculateOneSpectrum(
                settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
-               gainFactors, &scratch[0], &freq[0]);
+               gainFactors, scratch.aligned(), &freq[0]);
             if (!result)
                break;
          }
