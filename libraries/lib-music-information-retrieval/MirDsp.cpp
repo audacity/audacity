@@ -142,7 +142,7 @@ std::vector<float> GetOnsetDetectionFunction(
    auto frameCounter = 0;
    while (frameProvider.GetNextFrame(buffer))
    {
-      getPowerSpectrum(buffer.data(), powSpec.data());
+      getPowerSpectrum(buffer.aligned(), powSpec.aligned());
 
       // Compress the frame as per section (6.5) in Müller, Meinard.
       // Fundamentals of music processing: Audio, analysis, algorithms,

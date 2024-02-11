@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "PowerSpectrumGetter.h"
 
+#include <cassert>
 #include <pffft.h>
 
 namespace MIR
@@ -29,6 +30,16 @@ void PffftAllocatorBase::Pffft_aligned_free(void *p)
    pffft_aligned_free(p);
 }
 
+PffftFloats PffftFloatVector::aligned(PffftAlignedCount c)
+{
+   return PffftFloats{ data() + c };
+}
+
+PffftConstFloats PffftFloatVector::aligned(PffftAlignedCount c) const
+{
+   return PffftConstFloats{ data() + c };
+}
+
 PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
     : mFftSize { fftSize }
     , mSetup { pffft_new_setup(fftSize, PFFFT_REAL) }
@@ -40,9 +51,13 @@ PowerSpectrumGetter::~PowerSpectrumGetter()
 {
 }
 
-void PowerSpectrumGetter::operator()(float* buffer, float* output)
+void PowerSpectrumGetter::operator()(
+   PffftFloats alignedBuffer, PffftFloats alignedOutput)
 {
-   pffft_transform_ordered(mSetup.get(), buffer, buffer, mWork.data(), PFFFT_FORWARD);
+   const auto buffer = alignedBuffer.get();
+   const auto output = alignedOutput.get();
+   pffft_transform_ordered(mSetup.get(),
+      buffer, buffer, mWork.data(), PFFFT_FORWARD);
    output[0] = buffer[0] * buffer[0];
    for (auto i = 1; i < mFftSize / 2; ++i)
       output[i] =
