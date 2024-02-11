@@ -65,7 +65,7 @@ public:
    size_t       windowSize { 0 };
    unsigned     zeroPaddingFactor { 0 };
    int          frequencyGain;
-   std::vector<float> freq;
+   PffftFloatVector freq;
    std::vector<sampleCount> where;
 
    int          dirty;
@@ -76,7 +76,7 @@ private:
       const SpectrogramSettings& settings, const WaveChannelInterval &clip,
       const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
       const std::vector<float>& gainFactors, PffftFloats scratch,
-      float* __restrict out) const;
+      PffftFloats out) const;
 
    mutable std::optional<AudioSegmentSampleView> mSampleCacheHolder;
 };

@@ -736,14 +736,13 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
 
       // in fisheye mode the time scale has changed, so the row values aren't cached
       // in the loop above, and must be fetched from fft cache
-      float* uncached;
-      if (!zoomInfo.InFisheye(xx, -leftOffset)) {
-          uncached = 0;
-      }
-      else {
-          int specIndex = (xx - fisheyeLeft) * nBins;
-          wxASSERT(specIndex >= 0 && specIndex < (int)specCache.freq.size());
-          uncached = &specCache.freq[specIndex];
+      float* uncached{};
+      if (zoomInfo.InFisheye(xx, -leftOffset)) {
+         auto &freq = specCache.freq;
+         const auto nRow = xx - fisheyeLeft;
+         assert(nRow >= 0);
+         uncached = freq.aligned(PffftAlignedCount{ nBins }, nRow).get();
+         assert(uncached - freq.data() < freq.size());
       }
 
       // zoomInfo must be queried for each column since with fisheye enabled

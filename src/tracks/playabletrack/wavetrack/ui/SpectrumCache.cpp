@@ -23,9 +23,10 @@ namespace {
 
 static void ComputeSpectrumUsingRealFFTf(PffftFloats buf,
    const FFTParam *hFFT,
-   const float * __restrict window, size_t len, float * __restrict out)
+   const float * __restrict window, size_t len, PffftFloats output)
 {
    const auto buffer = buf.get();
+   const auto out = output.get();
    size_t i;
    if(len > hFFT->Points * 2)
       len = hFFT->Points * 2;
@@ -96,7 +97,7 @@ bool SpecCache::CalculateOneSpectrum(
    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
    const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
    const std::vector<float>& gainFactors, const PffftFloats scratch,
-   float* __restrict out) const
+   const PffftFloats out) const
 {
    bool result = false;
    const bool reassignment =
@@ -125,12 +126,17 @@ bool SpecCache::CalculateOneSpectrum(
    const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
    const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
-   auto nBins = settings.NBins();
+   const auto nBins = settings.NBins();
+
+   const auto Column = [&out, nBins](int xx){
+      assert(xx >= 0);
+      return out + PffftAlignedCount{ nBins } * size_t(xx);
+   };
 
    if (from < 0 || from >= numSamples) {
       if (xx >= 0 && xx < (int)len) {
          // Pixel column is out of bounds of the clip!  Should not happen.
-         float *const results = &out[nBins * xx];
+         const auto results = Column(xx).get();
          std::fill(results, results + nBins, 0.0f);
       }
    }
@@ -190,8 +196,8 @@ bool SpecCache::CalculateOneSpectrum(
 
       if (autocorrelation) {
          // not reassignment, xx is surely within bounds.
-         wxASSERT(xx >= 0);
-         float *const results = &out[nBins * xx];
+         assert(xx >= 0);
+         const auto results = Column(xx).get();
          // This function does not mutate useBuffer
          ComputeSpectrum(
             useBuffer.get(), windowSizeSetting, windowSizeSetting, results,
@@ -284,22 +290,22 @@ bool SpecCache::CalculateOneSpectrum(
                   result = true;
 
                   // This is non-negative, because bin and correctedX are
-                  auto ind = (int)nBins * correctedX + bin;
+                  const auto dst = Column(correctedX).get() + bin;
 #ifdef _OPENMP
                   // This assignment can race if index reaches into another thread's bins.
                   // The probability of a race very low, so this carries little overhead,
                   // about 5% slower vs allowing it to race.
                   #pragma omp atomic update
 #endif
-                  out[ind] += power;
+                  *dst += power;
                }
             }
          }
       }
       else {
          // not reassignment, xx is surely within bounds.
-         wxASSERT(xx >= 0);
-         float *const results = &out[nBins * xx];
+         assert(xx >= 0);
+         const auto res = Column(xx);
 
          // Do the FFT.  Note that useBuffer is multiplied by the window,
          // and the window is initialized with leading and trailing zeroes
@@ -308,7 +314,8 @@ bool SpecCache::CalculateOneSpectrum(
 
          // This function mutates useBuffer
          ComputeSpectrumUsingRealFFTf(useBuffer,
-            settings.hFFT.get(), settings.window.get(), fftLen, results);
+            settings.hFFT.get(), settings.window.get(), fftLen, res);
+         const auto results = res.get();
          if (!gainFactors.empty()) {
             // Apply a frequency-dependent gain factor
             for (size_t ii = 0; ii < nBins; ++ii)
@@ -329,7 +336,7 @@ void SpecCache::Grow(
    // len columns, and so many rows, column-major.
    // Don't take column literally -- this isn't pixel data yet, it's the
    // raw data to be mapped onto the display.
-   freq.resize(len_ * settings.NBins());
+   freq.resize(len_ * PffftAlignedCount{ settings.NBins() });
 
    // Sample counts corresponding to the columns, and to one past the end.
    where.resize(len_ + 1);
@@ -410,7 +417,7 @@ void SpecCache::Populate(
 #endif
          CalculateOneSpectrum(
             settings, clip, xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-            gainFactors, buffer, &freq[0]);
+            gainFactors, buffer, freq.aligned());
       }
 
       if (reassignment) {
@@ -425,7 +432,7 @@ void SpecCache::Populate(
          {
             const bool result = CalculateOneSpectrum(
                settings, clip, --xx, pixelsPerSecond, lowerBoundX, upperBoundX,
-               gainFactors, scratch.aligned(), &freq[0]);
+               gainFactors, scratch.aligned(), freq.aligned());
             if (!result)
                break;
          }
@@ -435,7 +442,7 @@ void SpecCache::Populate(
          {
             const bool result = CalculateOneSpectrum(
                settings, clip, xx++, pixelsPerSecond, lowerBoundX, upperBoundX,
-               gainFactors, scratch.aligned(), &freq[0]);
+               gainFactors, scratch.aligned(), freq.aligned());
             if (!result)
                break;
          }
@@ -446,7 +453,8 @@ void SpecCache::Populate(
          #pragma omp parallel for
 #endif
          for (xx = lowerBoundX; xx < upperBoundX; ++xx) {
-            float *const results = &freq[nBins * xx];
+            const auto results =
+               freq.aligned(PffftAlignedCount{ nBins }, xx).get();
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
@@ -530,17 +538,17 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
    mSpecCache->leftTrim = clip.GetTrimLeft();
    mSpecCache->rightTrim = clip.GetTrimRight();
-   auto nBins = settings.NBins();
+   const auto columnSize = PffftAlignedCount{ settings.NBins() };
+   auto &freq = mSpecCache->freq;
 
    // Optimization: if the old cache is good and overlaps
    // with the current one, re-use as much of the cache as
    // possible
-   if (copyEnd > copyBegin)
-   {
+   if (copyEnd > copyBegin) {
       // memmove is required since dst/src overlap
-      memmove(&mSpecCache->freq[nBins * copyBegin],
-               &mSpecCache->freq[nBins * (copyBegin + oldX0)],
-               nBins * (copyEnd - copyBegin) * sizeof(float));
+      const auto dst = freq.aligned(columnSize, copyBegin).get();
+      const auto src = freq.aligned(columnSize, copyBegin + oldX0).get();
+      memmove(dst, src, columnSize * (copyEnd - copyBegin) * sizeof(float));
    }
 
    // Reassignment accumulates, so it needs a zeroed buffer
@@ -555,10 +563,11 @@ bool WaveClipSpectrumCache::GetSpectrogram(
          (copyBegin == 0 && copyEnd <= (int)numPixels)    // copied the beginning
       );
 
-      int zeroBegin = copyBegin > 0 ? 0 : copyEnd-copyBegin;
+      int zeroBegin = copyBegin > 0 ? 0 : copyEnd - copyBegin;
       int zeroEnd = copyBegin > 0 ? copyBegin : numPixels;
 
-      memset(&mSpecCache->freq[nBins*zeroBegin], 0, nBins*(zeroEnd-zeroBegin)*sizeof(float));
+      const auto dst = freq.aligned(columnSize, zeroBegin).get();
+      memset(dst, 0, columnSize * (zeroEnd - zeroBegin) * sizeof(float));
    }
 
    // purposely offset the display 1/2 sample to the left (as compared
