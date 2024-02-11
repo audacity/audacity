@@ -17,6 +17,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include "PowerSpectrumGetter.h"
 
 namespace MIR
 {
@@ -138,7 +139,7 @@ struct QuantizationFitDebugOutput
    double bpm = 0;
    std::optional<TimeSignature> timeSignature;
    double score = 0.;
-   std::vector<std::vector<float>> postProcessedStft;
+   std::vector<PffftFloatVector> postProcessedStft;
    std::vector<float> rawOdf;
    std::vector<float> movingAverage;
    std::vector<float> odf;

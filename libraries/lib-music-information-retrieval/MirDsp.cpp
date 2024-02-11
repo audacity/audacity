@@ -41,7 +41,7 @@ constexpr float GetLog2(float x)
 }
 
 float GetNoveltyMeasure(
-   const std::vector<float>& prevPowSpec, const std::vector<float>& powSpec)
+   const PffftFloatVector& prevPowSpec, const PffftFloatVector& powSpec)
 {
    auto k = 0;
    return std::accumulate(
@@ -128,13 +128,13 @@ std::vector<float> GetOnsetDetectionFunction(
    const auto sampleRate = frameProvider.GetSampleRate();
    const auto numFrames = frameProvider.GetNumFrames();
    const auto frameSize = frameProvider.GetFftSize();
-   std::vector<float> buffer(frameSize);
+   PffftFloatVector buffer(frameSize);
    std::vector<float> odf;
    odf.reserve(numFrames);
    const auto powSpecSize = frameSize / 2 + 1;
-   std::vector<float> powSpec(powSpecSize);
-   std::vector<float> prevPowSpec(powSpecSize);
-   std::vector<float> firstPowSpec;
+   PffftFloatVector powSpec(powSpecSize);
+   PffftFloatVector prevPowSpec(powSpecSize);
+   PffftFloatVector firstPowSpec;
    std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
 
    PowerSpectrumGetter getPowerSpectrum { frameSize };

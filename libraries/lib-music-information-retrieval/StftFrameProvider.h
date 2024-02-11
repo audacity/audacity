@@ -11,6 +11,7 @@
 #pragma once
 
 #include <vector>
+#include "PowerSpectrumGetter.h"
 
 namespace MIR
 {
@@ -28,7 +29,7 @@ class MUSIC_INFORMATION_RETRIEVAL_API StftFrameProvider
 {
 public:
    StftFrameProvider(const MirAudioReader& source);
-   bool GetNextFrame(std::vector<float>& frame);
+   bool GetNextFrame(PffftFloatVector& frame);
    int GetNumFrames() const;
    int GetSampleRate() const;
    double GetFrameRate() const;

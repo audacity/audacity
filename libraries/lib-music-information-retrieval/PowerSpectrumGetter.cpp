@@ -19,6 +19,16 @@ void PffftSetupDeleter::Pffft_destroy_setup(PFFFT_Setup *p)
    pffft_destroy_setup(p);
 }
 
+void *PffftAllocatorBase::Pffft_aligned_malloc(size_t nb_bytes)
+{
+   return pffft_aligned_malloc(nb_bytes);
+}
+
+void PffftAllocatorBase::Pffft_aligned_free(void *p)
+{
+   pffft_aligned_free(p);
+}
+
 PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
     : mFftSize { fftSize }
     , mSetup { pffft_new_setup(fftSize, PFFFT_REAL) }
