@@ -14,6 +14,11 @@
 
 namespace MIR
 {
+void PffftSetupDeleter::Pffft_destroy_setup(PFFFT_Setup *p)
+{
+   pffft_destroy_setup(p);
+}
+
 PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
     : mFftSize { fftSize }
     , mSetup { pffft_new_setup(fftSize, PFFFT_REAL) }
@@ -23,12 +28,11 @@ PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
 
 PowerSpectrumGetter::~PowerSpectrumGetter()
 {
-   pffft_destroy_setup(mSetup);
 }
 
 void PowerSpectrumGetter::operator()(float* buffer, float* output)
 {
-   pffft_transform_ordered(mSetup, buffer, buffer, mWork.data(), PFFFT_FORWARD);
+   pffft_transform_ordered(mSetup.get(), buffer, buffer, mWork.data(), PFFFT_FORWARD);
    output[0] = buffer[0] * buffer[0];
    for (auto i = 1; i < mFftSize / 2; ++i)
       output[i] =

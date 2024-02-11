@@ -12,10 +12,19 @@
 
 struct PFFFT_Setup;
 
+#include <memory>
 #include <vector>
+#include "pffft.h"
 
 namespace MIR
 {
+struct PffftSetupDeleter {
+   void operator ()(PFFFT_Setup *p){ if (p) Pffft_destroy_setup(p); }
+private:
+  void Pffft_destroy_setup(PFFFT_Setup *);
+};
+using PffftSetupHolder = std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>;
+
 /*!
  * @brief Much faster that FFT.h's `PowerSpectrum`, at least in Short-Time
  * Fourier Transform-like situations, where many power spectra of the same size
@@ -39,7 +48,7 @@ public:
 
 private:
    const int mFftSize;
-   PFFFT_Setup* mSetup;
+   PffftSetupHolder mSetup;
    std::vector<float> mWork;
 };
 } // namespace MIR
