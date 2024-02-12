@@ -223,6 +223,8 @@ public:
    virtual void DoSetFocus(const WindowPlacement &focus) = 0;
 
    virtual bool IsUsingRtlLayout() const = 0;
+
+   virtual bool IsUiThread() const = 0;
 };
 
 //! Fetch the global instance, or nullptr if none is yet installed
@@ -392,6 +394,19 @@ inline bool IsUsingRtlLayout()
       return p->IsUsingRtlLayout();
    return false;
 }
+
+//! Whether the current thread is the UI thread
+inline bool IsUiThread ()
+{
+   if (auto p = Get())
+      return p->IsUiThread();
+   return true;
+}
+
+#define ASSERT_MAIN_THREAD() \
+   assert(                     \
+      BasicUI::IsUiThread() && \
+      "This function should only be called on the main thread")
 
 //! @}
 }
