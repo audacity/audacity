@@ -28,6 +28,10 @@ public:
    explicit PowerSpectrumGetter(int fftSize);
    ~PowerSpectrumGetter();
 
+   // Please implement if needed. The dtor calls `delete` on its naked
+   // pointer members, so default-copying this class would lead to crashes.
+   PowerSpectrumGetter(const PowerSpectrumGetter&) = delete;
+
    /*!
     * @brief Returns a pointer to the data to be transformed. User must fill it
     * with `fftSize` samples before calling `Process()`.
