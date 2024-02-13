@@ -10,6 +10,8 @@ Matthieu Hodgkinson split from class WaveChannelView.h
 **********************************************************************/
 #pragma once
 
+#include <wx/gdicmn.h>
+
 class ZoomInfo;
 class ClipTimes;
 

@@ -10,22 +10,30 @@
  **********************************************************************/
 #pragma once
 
-#include "wxPanelWrapper.h"
 #include "WaveTrack.h"
+#include "wxPanelWrapper.h"
 
 class ShuttleGui;
+
+enum class PitchAndSpeedDialogFocus
+{
+   Pitch,
+   Speed
+};
 
 class PitchAndSpeedDialog final : public wxDialogWrapper
 {
 public:
    PitchAndSpeedDialog(
       bool playbackOngoing, WaveTrack& track, WaveTrack::Interval& interval,
-      wxWindow* parent = nullptr);
+      wxWindow* parent,
+      const std::optional<PitchAndSpeedDialogFocus>& focus = {});
 
    ~PitchAndSpeedDialog() override;
 
 private:
-   void PopulateOrExchange(ShuttleGui& s);
+   void PopulateOrExchange(
+      ShuttleGui& s, const std::optional<PitchAndSpeedDialogFocus>& focus = {});
 
    void OnOk();
 

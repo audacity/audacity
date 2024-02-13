@@ -49,10 +49,11 @@
 
 #include "../WaveTrackUtils.h"
 
+#include "ClipOverflowButtonHandle.h"
+#include "ClipPitchAndSpeedButtonHandle.h"
+#include "LowlitClipButton.h"
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUtilities.h"
-
-#include "PitchAndSpeedDialog.h"
 
 #include "BasicUI.h"
 #include "UserException.h"
@@ -171,8 +172,9 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
 {
     std::vector<UIHandlePtr> results;
 
-    auto px = state.state.m_x;
-    auto py = state.state.m_y;
+    const auto px = state.state.m_x;
+    const auto py = state.state.m_y;
+    const wxPoint mousePoint { px, py };
 
     const auto rect = state.rect;
 
@@ -210,17 +212,44 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (it == mEditedInterval)
             continue;
 
-        auto interval = *it;
-        if (WaveChannelView::HitTest(*interval->GetClip(0), zoomInfo, state.rect, {px, py}))
+        const auto clip = (*it)->GetClip(0);
+        if (LowlitClipButton::HitTest<ClipButtonId::Overflow>(
+               { *clip, zoomInfo, rect }, mousePoint))
         {
-            results.push_back(
-                AssignUIHandlePtr(
-                    mAffordanceHandle,
-                    std::make_shared<WaveTrackAffordanceHandle>(track, interval->GetClip(0))
-                )
-            );
-            mFocusInterval = it;
-            break;
+           results.push_back(AssignUIHandlePtr(
+              mOverflowButtonHandle, std::make_shared<ClipOverflowButtonHandle>(
+                                        track, *it, weak_from_this())));
+           mFocusInterval = it;
+           break;
+        }
+        else if (LowlitClipButton::HitTest<ClipButtonId::Pitch>(
+                    { *clip, zoomInfo, rect }, mousePoint))
+        {
+           results.push_back(AssignUIHandlePtr(
+              mPitchButtonHandle,
+              std::make_shared<ClipPitchAndSpeedButtonHandle>(
+                 ClipPitchAndSpeedButtonHandle::Type::Pitch, track, *it)));
+           mFocusInterval = it;
+           break;
+        }
+        else if (LowlitClipButton::HitTest<ClipButtonId::Speed>(
+                    { *clip, zoomInfo, rect }, mousePoint))
+        {
+           results.push_back(AssignUIHandlePtr(
+              mSpeedButtonHandle,
+              std::make_shared<ClipPitchAndSpeedButtonHandle>(
+                 ClipPitchAndSpeedButtonHandle::Type::Speed, track, *it)));
+           mFocusInterval = it;
+           break;
+        }
+        else if (WaveChannelView::HitTest(
+                    *clip, zoomInfo, state.rect, mousePoint))
+        {
+           results.push_back(AssignUIHandlePtr(
+              mAffordanceHandle,
+              std::make_shared<WaveTrackAffordanceHandle>(track, clip)));
+           mFocusInterval = it;
+           break;
         }
     }
 
@@ -261,40 +290,55 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
             auto px = context.lastState.m_x;
             auto py = context.lastState.m_y;
 
+            const auto overflowHandle = mOverflowButtonHandle.lock();
             const auto intervals = waveTrack->Intervals();
             for(auto it = intervals.begin(); it != intervals.end(); ++it)
             {
                 auto interval = *it;
-                auto affordanceRect
-                   = ClipParameters::GetClipRect(*interval->GetClip(0), zoomInfo, rect);
+                const auto& clip = *interval->GetClip(0);
+                const auto clipRect = ClipParameters::GetClipRect(
+                   clip, zoomInfo, rect);
 
-                if(!WaveChannelView::ClipDetailsVisible(*interval->GetClip(0), zoomInfo, rect))
+                if(!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
                 {
-                   TrackArt::DrawClipFolded(context.dc, affordanceRect);
+                   TrackArt::DrawClipFolded(context.dc, clipRect);
                    continue;
                 }
 
                 const auto selected = GetSelectedInterval() == it;
-                const auto highlight = selected || affordanceRect.Contains(px, py);
-                const auto titleRect = TrackArt::DrawClipAffordance(context.dc, affordanceRect, highlight, selected);
+                const auto highlightAffordance =
+                    !overflowHandle && (selected || clipRect.Contains(px, py));
+                auto affordanceRect = TrackArt::DrawClipAffordance(
+                   context.dc, clipRect, highlightAffordance, selected);
+
+                if (
+                   const auto overflowButtonRect =
+                      LowlitClipButton::DrawOnClip<ClipButtonId::Overflow>(
+                         { clip, zoomInfo, rect }, context.dc))
+                   affordanceRect.width -= overflowButtonRect->width;
+                if (
+                   const auto speedButtonRect =
+                      LowlitClipButton::DrawOnClip<ClipButtonId::Speed>(
+                         { clip, zoomInfo, rect }, context.dc))
+                   affordanceRect.width -= speedButtonRect->width;
+                if (
+                   const auto pitchButtonRect =
+                      LowlitClipButton::DrawOnClip<ClipButtonId::Pitch>(
+                         { clip, zoomInfo, rect }, context.dc))
+                   affordanceRect.width -= pitchButtonRect->width;
+
                 if (mTextEditHelper && mEditedInterval == it)
                 {
-                    if(!mTextEditHelper->Draw(context.dc, titleRect))
-                    {
-                        mTextEditHelper->Cancel(nullptr);
-                        TrackArt::DrawAudioClipTitle(
-                           context.dc, titleRect, interval->GetName(),
-                           interval->GetStretchRatio(),
-                           interval->GetCentShift());
-                    }
+                   if (!mTextEditHelper->Draw(context.dc, affordanceRect))
+                   {
+                      mTextEditHelper->Cancel(nullptr);
+                      TrackArt::DrawClipTitle(
+                         context.dc, affordanceRect, interval->GetName());
+                   }
                 }
-                else if (TrackArt::DrawAudioClipTitle(
-                            context.dc, titleRect, interval->GetName(),
-                            interval->GetStretchRatio(),
-                            interval->GetCentShift()))
-                {
+                else if (TrackArt::DrawClipTitle(
+                            context.dc, affordanceRect, interval->GetName()))
                    mVisibleIntervals.push_back(it);
-                }
             }
         }
 
@@ -613,17 +657,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   PitchAndSpeedDialog dlg(
-      ProjectAudioIO::Get(project).IsAudioActive(), *track, *interval,
-      &GetProjectFrame(project));
-
-   if (wxID_OK == dlg.ShowModal())
-   {
-      ProjectHistory::Get(project).PushState(
-         XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
-         UndoPush::CONSOLIDATE);
-      SelectInterval(project, *interval);
-   }
+   ShowClipPitchAndSpeedDialog(project, *track, *interval);
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(

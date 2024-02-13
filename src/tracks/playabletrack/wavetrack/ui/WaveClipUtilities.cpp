@@ -10,8 +10,8 @@
 
 #include "WaveClipUtilities.h"
 
-#include <algorithm>
 #include "SampleCount.h"
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 
@@ -20,6 +20,7 @@
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "UndoManager.h"
+#include "ViewInfo.h"
 #include "WaveTrack.h"
 
 void findCorrection(
@@ -48,7 +49,7 @@ void findCorrection(
    {
       // The computation of oldX0 in the other branch
       // may underflow and the assertion would be violated.
-      oldX0 =  oldLen;
+      oldX0 = oldLen;
       correction = 0.0;
    }
    else
@@ -72,49 +73,51 @@ void fillWhere(
    // Be careful to make the first value non-negative
    const auto bias = addBias ? .5 : 0.;
    const double w0 = 0.5 + correction + bias + t0 * sampleRate / stretchRatio;
-   where[0] = sampleCount( std::max(0.0, floor(w0)) );
+   where[0] = sampleCount(std::max(0.0, floor(w0)));
    for (decltype(len) x = 1; x < len + 1; x++)
-      where[x] = sampleCount( floor(w0 + double(x) * samplesPerPixel) );
+      where[x] = sampleCount(floor(w0 + double(x) * samplesPerPixel));
 }
 
 std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
 {
-    return {
-        { L"Cut", XO("Cut") },
-        { L"Copy", XO("Copy") },
-        { L"Paste", XO("Paste")  },
-        {},
-        { L"Split", XO("Split Clip") },
-        { L"Join", XO("Join Clips") },
-        { L"TrackMute", XO("Mute/Unmute Track") },
-        {},
-        { L"RenameClip", XO("Rename Clip...") },
-        { L"ChangePitchAndSpeed", XO("Pitch and Speed...") },
-        { L"RenderPitchAndSpeed", XO("Render Pitch and Speed") },
-     };;
+   return {
+      { L"Cut", XO("Cut") },
+      { L"Copy", XO("Copy") },
+      { L"Paste", XO("Paste") },
+      {},
+      { L"Split", XO("Split Clip") },
+      { L"Join", XO("Join Clips") },
+      { L"TrackMute", XO("Mute/Unmute Track") },
+      {},
+      { L"RenameClip", XO("Rename Clip...") },
+      { L"ChangePitchAndSpeed", XO("Pitch and Speed...") },
+      { L"RenderPitchAndSpeed", XO("Render Pitch and Speed") },
+   };
+   ;
 }
 
 void PushClipSpeedChangedUndoState(
    AudacityProject& project, double speedInPercent)
 {
-    ProjectHistory::Get(project).PushState(
-       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
-       XO("Changed Clip Speed to %.01f%%").Format(speedInPercent),
-       /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
-       XO("Changed Speed to %.01f%%").Format(speedInPercent),
-       UndoPush::CONSOLIDATE);
+   ProjectHistory::Get(project).PushState(
+      /* i18n-hint: This is about changing the clip playback speed, speed is in
+         percent */
+      XO("Changed Clip Speed to %.01f%%").Format(speedInPercent),
+      /* i18n-hint: This is about changing the clip playback speed, speed is in
+         percent */
+      XO("Changed Speed to %.01f%%").Format(speedInPercent),
+      UndoPush::CONSOLIDATE);
 }
 
 void ShowClipPitchAndSpeedDialog(
-   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval)
+   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval,
+   std::optional<PitchAndSpeedDialogFocus> focus)
 {
    PitchAndSpeedDialog dlg(
       ProjectAudioIO::Get(project).IsAudioActive(), track, interval,
-      &GetProjectFrame(project));
+      &GetProjectFrame(project), focus);
    if (wxID_OK == dlg.ShowModal())
-   {
       ProjectHistory::Get(project).PushState(
          XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
          UndoPush::CONSOLIDATE);
-      }
 }

@@ -27,6 +27,8 @@ class SelectHandle;
 class WaveClip;
 class TrackPanelResizeHandle;
 class WaveClipTitleEditHandle;
+class ClipOverflowButtonHandle;
+class ClipPitchAndSpeedButtonHandle;
 class WaveTrackAffordanceHandle;
 class WaveClipAdjustBorderHandle;
 class TrackList;
@@ -41,6 +43,9 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     using IntervalIterator = ChannelGroup::IntervalIterator<WaveTrack::Interval>;
 
     IntervalIterator mFocusInterval;
+    std::weak_ptr<ClipOverflowButtonHandle> mOverflowButtonHandle;
+    std::weak_ptr<ClipPitchAndSpeedButtonHandle> mPitchButtonHandle;
+    std::weak_ptr<ClipPitchAndSpeedButtonHandle> mSpeedButtonHandle;
     std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;

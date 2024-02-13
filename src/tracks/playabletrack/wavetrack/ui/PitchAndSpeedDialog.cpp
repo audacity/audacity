@@ -108,7 +108,7 @@ auto GetInt(const wxCommandEvent& event, int& output)
 
 PitchAndSpeedDialog::PitchAndSpeedDialog(
    bool playbackOngoing, WaveTrack& waveTrack, WaveTrack::Interval& interval,
-   wxWindow* parent)
+   wxWindow* parent, const std::optional<PitchAndSpeedDialogFocus>& focus)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
          { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
@@ -127,7 +127,7 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(
 
    {
       ScopedVerticalLay v { s };
-      PopulateOrExchange(s);
+      PopulateOrExchange(s, focus);
    }
 
    // TODO: Tolerance?
@@ -151,7 +151,8 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(
 
 PitchAndSpeedDialog::~PitchAndSpeedDialog() = default;
 
-void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
+void PitchAndSpeedDialog::PopulateOrExchange(
+   ShuttleGui& s, const std::optional<PitchAndSpeedDialogFocus>& focus)
 {
    {
       ScopedInvisiblePanel panel { s, 15 };
@@ -164,7 +165,8 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
          // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
          // instantly when `UpdateDialog` is called.
          s.TieSpinCtrl(
-            XO("semitones:"), mShift.semis, TimeAndPitchInterface::MaxCents / 100,
+             XO("semitones:"), mShift.semis,
+             TimeAndPitchInterface::MaxCents / 100,
              TimeAndPitchInterface::MinCents / 100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                const auto prevSemis = mShift.semis;
@@ -211,9 +213,12 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
       }
       {
          ScopedHorizontalLay h { s, wxLeft };
-         auto txtCtrl = s.Name(XO("Clip Speed")).NameSuffix(Verbatim("%"))
+         auto txtCtrl = s.Name(XO("Clip Speed"))
+                           .NameSuffix(Verbatim("%"))
                            .TieNumericTextBox({}, mClipSpeed, 14, true);
          txtCtrl->Enable(!mPlaybackOngoing);
+         if (focus.has_value() && *focus == PitchAndSpeedDialogFocus::Speed)
+            txtCtrl->SetFocus();
          if (!mPlaybackOngoing)
          {
             txtCtrl->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnOk(); });
