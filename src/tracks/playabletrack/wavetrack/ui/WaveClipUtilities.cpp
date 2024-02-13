@@ -15,8 +15,12 @@
 #include <cassert>
 #include <cmath>
 
+#include "PitchAndSpeedDialog.h"
+#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
+#include "ProjectWindows.h"
 #include "UndoManager.h"
+#include "WaveTrack.h"
 
 void findCorrection(
    const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
@@ -99,4 +103,18 @@ void PushClipSpeedChangedUndoState(
        /* i18n-hint: This is about changing the clip playback speed, speed is in percent */
        XO("Changed Speed to %.01f%%").Format(speedInPercent),
        UndoPush::CONSOLIDATE);
+}
+
+void ShowClipPitchAndSpeedDialog(
+   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval)
+{
+   PitchAndSpeedDialog dlg(
+      ProjectAudioIO::Get(project).IsAudioActive(), track, interval,
+      &GetProjectFrame(project));
+   if (wxID_OK == dlg.ShowModal())
+   {
+      ProjectHistory::Get(project).PushState(
+         XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
+         UndoPush::CONSOLIDATE);
+      }
 }

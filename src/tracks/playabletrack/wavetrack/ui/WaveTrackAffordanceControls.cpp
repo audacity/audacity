@@ -31,12 +31,12 @@
 #include "../../../../ProjectWindows.h"
 #include "../../../../commands/AudacityCommand.h"
 
-#include "../../../ui/TextEditHelper.h"
 #include "../../../ui/SelectHandle.h"
-#include "WaveChannelView.h"//need only ClipParameters
+#include "../../../ui/TextEditHelper.h"
+#include "ClipParameters.h"
+#include "WaveChannelView.h"
 #include "WaveTrackAffordanceHandle.h"
 
-#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
 #include "../../../../ProjectSettings.h"
 #include "SelectionState.h"

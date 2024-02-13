@@ -17,8 +17,8 @@ Paul Licameli split from WaveChannelView.cpp
 #include "Sequence.h"
 #include "Spectrum.h"
 
+#include "ClipParameters.h"
 #include "SpectrumVRulerControls.h"
-#include "WaveChannelView.h"
 #include "WaveChannelViewConstants.h"
 
 #include "../../../ui/BrushHandle.h"
@@ -891,7 +891,7 @@ void SpectrumView::Draw(
 {
    if ( iPass == TrackArtist::PassTracks ) {
       auto &dc = context.dc;
- 
+
       const auto wt = std::static_pointer_cast<const WaveTrack>(
          FindTrack()->SubstitutePendingChangedTrack());
 

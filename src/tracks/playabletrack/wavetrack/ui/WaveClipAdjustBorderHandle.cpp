@@ -14,6 +14,7 @@
 
 #include <wx/event.h>
 
+#include "ClipParameters.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
 #include "Snap.h"
@@ -201,7 +202,7 @@ public:
       , mIsStretchMode { isStretchMode }
       , mInitialBorderPosition { adjustLeftBorder ? mInterval->Start() :
                                              mInterval->End() }
-      , mBorderPosition { mInitialBorderPosition } 
+      , mBorderPosition { mInitialBorderPosition }
       , mRange { GetLeftAdjustLimit( *mInterval, *mTrack, adjustLeftBorder, isStretchMode),
                  GetRightAdjustLimit(*mInterval, *mTrack, adjustLeftBorder, isStretchMode) }
       , mAdjustHandler { std::move(adjustHandler) }
@@ -237,7 +238,7 @@ public:
       const auto dx = eventX - mDragStartX;
 
       const auto& viewInfo = ViewInfo::Get(project);
-      
+
       const auto eventT = viewInfo.PositionToTime(
          viewInfo.TimeToPosition(mInitialBorderPosition, event.rect.x) + dx,
          event.rect.x
@@ -369,7 +370,7 @@ std::shared_ptr<const Channel> WaveClipAdjustBorderHandle::FindChannel() const
 {
    return mpTrack;
 }
-   
+
 WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(WaveClipAdjustBorderHandle&&) noexcept = default;
 
 WaveClipAdjustBorderHandle& WaveClipAdjustBorderHandle::operator=(WaveClipAdjustBorderHandle&&) noexcept = default;

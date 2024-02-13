@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "../../../ui/CommonTrackPanelCell.h"
+#include "WaveTrack.h"
 
 class sampleCount;
 class AudacityProject;
@@ -33,5 +34,8 @@ void fillWhere(
 std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems();
 
 void PushClipSpeedChangedUndoState(AudacityProject& project, double speedInPercent);
+
+void ShowClipPitchAndSpeedDialog(
+   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval);
 
 #endif
