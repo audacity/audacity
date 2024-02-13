@@ -88,6 +88,11 @@ EnumValueSymbols EffectsGroupSymbols {
       }
 };
 
+BoolSetting SkipEffectsScanAtStartup {
+   wxT("/Effects/SkipEffectsScanAtStartup"),
+   false
+};
+
 ChoiceSetting EffectsGroupBy{
    wxT("/Effects/GroupBy"),
    EffectsGroupSymbols,
@@ -114,6 +119,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
          S.MinSize()
           .TieChoice( XXO("Realtime effect o&rganization:"), RealtimeEffectsGroupBy);
       }
+      S.TieCheckBox(XXO("&Skip effects scanning at startup"), SkipEffectsScanAtStartup);
       S.EndMultiColumn();
    }
    S.EndStatic();
@@ -128,7 +134,7 @@ void EffectsPrefs::PopulateOrExchange(ShuttleGui & S)
    S.EndStatic();
 #endif
 
-   if (auto pButton = S.AddButton(XO("Open Plugin Manager"), wxALIGN_LEFT))
+   if (auto pButton = S.AddButton(XXO("Open Plugin &Manager"), wxALIGN_LEFT))
       pButton->Bind(wxEVT_BUTTON, [this](auto) {
          //Adding dependency on PluginRegistrationDialog, not good. Alternatively
          //that could be done with events, though event should be visible here too...

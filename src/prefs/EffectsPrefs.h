@@ -38,6 +38,7 @@ class EffectsPrefs final : public PrefsPanel
    void Populate();
 };
 
+AUDACITY_DLL_API extern BoolSetting   SkipEffectsScanAtStartup;
 AUDACITY_DLL_API extern ChoiceSetting EffectsGroupBy;
 AUDACITY_DLL_API extern ChoiceSetting RealtimeEffectsGroupBy;
 #endif
