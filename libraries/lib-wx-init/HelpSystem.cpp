@@ -96,8 +96,11 @@ void HelpSystem::ShowInfoDialog( wxWindow *parent,
    {
       S.AddTitle( shortMsg );
       S.Style( wxTE_MULTILINE | wxTE_READONLY | wxTE_RICH | wxTE_RICH2 |
-              wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL )
-         .AddTextWindow(message);
+              wxTE_AUTO_URL | wxTE_NOHIDESEL | wxHSCROLL | wxTE_PROCESS_ENTER)
+         .AddTextWindow(message)
+         ->Bind(wxEVT_TEXT_ENTER, [&dlog](auto&) {
+         dlog.EndModal(wxID_OK);
+         });
 
       S.SetBorder( 0 );
       S.StartHorizontalLay(wxALIGN_CENTER_HORIZONTAL, 0);
