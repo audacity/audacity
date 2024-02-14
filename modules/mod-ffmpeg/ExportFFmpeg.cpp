@@ -405,7 +405,6 @@ public:
    ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener = nullptr)
       : mListener(listener)
    {
-      
    }
 
    void PopulateUI(ShuttleGui& S) override
@@ -479,8 +478,10 @@ public:
          if(it == mValues.end())
             return {};
 
-         const auto codecId = *std::get_if<std::string>(&it->second); 
-         mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+         const auto codecId = *std::get_if<std::string>(&it->second);
+         if (mFFmpeg) {
+            mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+         }
       }
       if(!mAVCodec)
          return {};
@@ -714,6 +715,9 @@ FFmpegExporter::FFmpegExporter(std::shared_ptr<FFmpegFunctions> ffmpeg,
    , mChannels(numChannels)
    , mSubFormat(subFormat)
 {
+   if (!mFFmpeg) {
+      mFFmpeg = FFmpegFunctions::Load();
+   }
 }
 
 std::unique_ptr<Mixer> FFmpegExporter::CreateMixer(const TrackList& tracks, bool selectionOnly, double startTime, double stopTime, MixerOptions::Downmix* mixerSpec)
