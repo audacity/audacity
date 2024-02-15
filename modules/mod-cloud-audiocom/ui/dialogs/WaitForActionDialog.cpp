@@ -3,13 +3,11 @@
 
   Audacity: A Digital Audio Editor
 
-  WaitForActionDialog.h
+  WaitForActionDialog.cpp
 
   Dmitry Vedenko
 
 **********************************************************************/
-#pragma once
-
 #include "WaitForActionDialog.h"
 
 namespace cloud::audiocom::sync

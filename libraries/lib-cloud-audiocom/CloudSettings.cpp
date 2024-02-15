@@ -8,8 +8,6 @@
   Dmitry Vedenko
 
 **********************************************************************/
-#pragma once
-
 #include "CloudSettings.h"
 
 #include "FileNames.h"
