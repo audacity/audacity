@@ -21,7 +21,7 @@
 #   include "URLSchemesRegistry.h"
 #endif
 
-#include "LinkWithTokenDialog.h"
+#include "dialogs/LinkWithTokenDialog.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"

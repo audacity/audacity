@@ -27,7 +27,7 @@
 #include "Theme.h"
 #include "PlayableTrack.h"
 
-#include "ShareAudioDialog.h"
+#include "dialogs/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AButton.h"
 
