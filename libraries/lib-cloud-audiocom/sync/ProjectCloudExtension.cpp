@@ -269,6 +269,8 @@ void ProjectCloudExtension::OnSyncCompleted(
 
    mUploadQueue.clear();
 
+   MarkProjectSynced(!error.has_value());
+
    Publish({ error.has_value() ? ProjectSyncStatus::Failed :
                                  ProjectSyncStatus::Synced,
              {},
@@ -388,7 +390,7 @@ void ProjectCloudExtension::MixdownSynced()
    if (!IsCloudProject())
       return;
 
-   mNeedsMixdownSync   = false;
+   mNeedsMixdownSync = false;
 
    auto& cloudDatabase = CloudProjectsDatabase::Get();
    auto dbData         = cloudDatabase.GetProjectData(mProjectId);
@@ -419,7 +421,7 @@ int64_t ProjectCloudExtension::GetSavesCountSinceMixdown() const
    if (!IsCloudProject())
       return 0;
 
-    auto& cloudDatabase = CloudProjectsDatabase::Get();
+   auto& cloudDatabase = CloudProjectsDatabase::Get();
    auto dbData         = cloudDatabase.GetProjectData(mProjectId);
 
    if (!dbData)
@@ -505,6 +507,28 @@ void ProjectCloudExtension::Publish(CloudStatusChangedMessage cloudStatus)
             }
          });
    }
+}
+
+void ProjectCloudExtension::MarkProjectSynced(bool success)
+{
+   auto& cloudDatabase = CloudProjectsDatabase::Get();
+
+   const auto projectFilePath =
+      audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+
+   auto previosDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+
+   DBProjectData dbData;
+
+   if (previosDbData)
+      dbData = *previosDbData;
+
+   dbData.LastModified = wxDateTime::Now().GetTicks();
+   dbData.LastRead     = dbData.LastModified;
+   dbData.SyncStatus   = success ? DBProjectData::SyncStatusSynced :
+                                   DBProjectData::SyncStatusUploading;
+
+   cloudDatabase.UpdateProjectData(dbData);
 }
 
 ProjectCloudExtension::UploadQueueElement*

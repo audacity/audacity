@@ -123,6 +123,8 @@ private:
    void UnsafeUpdateProgress();
    void Publish(CloudStatusChangedMessage cloudStatus);
 
+   void MarkProjectSynced(bool success);
+
    UploadQueueElement* UnsafeFindUploadQueueElement(
       const ProjectUploadOperation& uploadOperation);
    const UploadQueueElement* UnsafeFindUploadQueueElement(
