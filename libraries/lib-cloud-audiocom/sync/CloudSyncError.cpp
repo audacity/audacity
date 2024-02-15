@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "CloudSyncError.h"
 
+#include <unordered_map>
+
 #include "IResponse.h"
 
 #include "CodeConversions.h"
