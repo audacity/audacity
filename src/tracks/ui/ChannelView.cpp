@@ -9,6 +9,7 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 #include "ChannelView.h"
 #include "ChannelAttachments.h"
+#include "ChannelVRulerControls.h"
 
 #include "ClientData.h"
 #include "PendingTracks.h"
@@ -26,6 +27,14 @@ ChannelView::ChannelView(const std::shared_ptr<Channel> &pChannel)
 
 ChannelView::~ChannelView()
 {
+}
+
+void ChannelView::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
+{
+   CommonChannelCell::Reparent(parent, iChannel);
+   if (mpVRulerControls)
+      mpVRulerControls->Reparent(parent, iChannel);
 }
 
 int ChannelView::GetChannelGroupHeight(const Track *pTrack)

@@ -50,6 +50,9 @@ public:
    explicit ChannelView(const std::shared_ptr<Channel> &pChannel);
    virtual ~ChannelView() = 0;
 
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+   override;
+
    // some static conveniences, useful for summation over track iterator
    // ranges
    static int GetChannelGroupHeight(const Track *pTrack);
