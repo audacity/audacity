@@ -16,6 +16,7 @@
 #include "CloudSyncService.h"
 #include "CodeConversions.h"
 #include "Project.h"
+#include "ProjectFileIO.h"
 #include "ProjectFileManager.h"
 #include "ProjectManager.h"
 #include "ProjectWindow.h"
@@ -24,8 +25,8 @@
 
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/ProjectVersionConflictDialog.h"
-#include "ui/dialogs/UploadCanceledDialog.h"
 #include "ui/dialogs/UpdateCloudPreviewDialog.h"
+#include "ui/dialogs/UploadCanceledDialog.h"
 
 #include "sync/LocalProjectSnapshot.h"
 #include "sync/MixdownUploader.h"
@@ -295,7 +296,23 @@ bool ResaveLocally(AudacityProject& project)
    // TODO: Delete the old file immediately?
    return ProjectFileManager::Get(project).SaveAs();
 }
+
 void ReopenProject(AudacityProject& project)
 {
+   auto& projectCloudExtension = ProjectCloudExtension::Get(project);
+
+   if (!projectCloudExtension.IsCloudProject())
+      return;
+
+   BasicUI::CallAfter(
+      [&project,
+       projectId = std::string(projectCloudExtension.GetCloudProjectId())]
+      {
+         auto newProject = ProjectManager::New();
+         ProjectWindow::Get(project).Close(true);
+         OpenProjectFromCloud(
+            newProject, projectId, {},
+            CloudSyncService::SyncMode::ForceOverwrite);
+      });
 }
 } // namespace cloud::audiocom::sync
