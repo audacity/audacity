@@ -22,14 +22,19 @@ static const AttachedTrackObjects::RegisteredFactory keyWA{
    }
 };
 
-WaveformAppearance &WaveformAppearance::GetFromTrack(Track &track)
+WaveformAppearance &WaveformAppearance::Get(WaveTrack &track)
 {
    return track.AttachedObjects::Get<WaveformAppearance>(keyWA);
 }
 
+const WaveformAppearance &WaveformAppearance::Get(const WaveTrack &track)
+{
+   return Get(const_cast<WaveTrack&>(track));
+}
+
 WaveformAppearance &WaveformAppearance::Get(WaveChannel &channel)
 {
-   return GetFromTrack(channel.GetTrack());
+   return Get(channel.GetTrack());
 }
 
 const WaveformAppearance &WaveformAppearance::Get(const WaveChannel &channel)
@@ -65,8 +70,10 @@ void WaveformAppearance::Subscribe(const std::shared_ptr<WaveTrack> &pTrack)
 
 void WaveformAppearance::CopyTo(Track &track) const
 {
-   auto &other = GetFromTrack(track);
-   other.mColorIndex = mColorIndex;
+   if (const auto pTrack = dynamic_cast<WaveTrack *>(&track)) {
+      auto &other = Get(*pTrack);
+      other.mColorIndex = mColorIndex;
+   }
 }
 
 void WaveformAppearance::Reparent(const std::shared_ptr<Track> &parent)
