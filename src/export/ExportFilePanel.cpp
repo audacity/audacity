@@ -341,10 +341,11 @@ int ExportFilePanel::GetSampleRate() const
    return mSampleRate;
 }
 
-ExportProcessor::Parameters ExportFilePanel::GetParameters() const
+std::optional<ExportProcessor::Parameters> ExportFilePanel::GetParameters() const
 {
-   mOptionsHandler->TransferDataFromEditor();
-   return mOptionsHandler->GetParameters();
+   if(mOptionsHandler->TransferDataFromEditor())
+      return { mOptionsHandler->GetParameters() };
+   return std::nullopt;
 }
 
 int ExportFilePanel::GetChannels() const

@@ -234,8 +234,8 @@ void TranscriptionToolBar::Populate()
       ASlider::Options{}
          .Style( SPEED_SLIDER )
          //  6 steps using page up/down, and 60 using arrow keys
-         .Line( 0.16667f )
-         .Page( 1.6667f )
+         .Line( 0.16722f )
+         .Page( 1.6722f )
    );
    mPlaySpeedSlider->SetSizeHints(wxSize(100, 25), wxSize(2000, 25));
    mPlaySpeedSlider->Set(mPlaySpeed / 100.0);
