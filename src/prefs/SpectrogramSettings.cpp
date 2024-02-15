@@ -123,8 +123,9 @@ SpectrogramSettings &SpectrogramSettings::Get(const WaveChannel &channel)
    return Get(channel.GetTrack());
 }
 
-SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
+SpectrogramSettings &SpectrogramSettings::Own(WaveChannel &wc)
 {
+   auto &track = wc.GetTrack();
    auto pSettings = track.GetGroupData().Attachments
       ::Find<SpectrogramSettings>(key1);
    if (!pSettings) {
@@ -134,11 +135,6 @@ SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
          ::Assign(key1, std::move(uSettings));
    }
    return *pSettings;
-}
-
-SpectrogramSettings &SpectrogramSettings::Own(WaveChannel &wc)
-{
-   return Own(wc.GetTrack());
 }
 
 void SpectrogramSettings::Reset(WaveChannel &wc)

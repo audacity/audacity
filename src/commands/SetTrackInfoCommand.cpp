@@ -328,6 +328,7 @@ bool SetTrackVisualsCommand::ApplyInner(
    const auto wt = dynamic_cast<WaveTrack *>(&t);
    if (!wt)
       return true;
+   auto &wc = **wt->Channels().begin();
    //auto pt = dynamic_cast<PlayableTrack *>(t);
    static const double ZOOMLIMIT = 0.001f;
 
@@ -335,11 +336,11 @@ bool SetTrackVisualsCommand::ApplyInner(
       WaveformAppearance::Get(*wt).SetColorIndex(mColour);
 
    if (bHasHeight)
-      for (auto pChannel : t.Channels<WaveTrack>())
+      for (auto pChannel : t.Channels<WaveChannel>())
          ChannelView::Get(*pChannel).SetExpandedHeight(mHeight);
 
    if (bHasDisplayType) {
-      auto &view = WaveChannelView::Get(*wt);
+      auto &view = WaveChannelView::Get(wc);
       auto &all = WaveChannelSubViewType::All();
       if (mDisplayType < all.size())
          view.SetDisplay( all[ mDisplayType ].id );
@@ -399,9 +400,9 @@ bool SetTrackVisualsCommand::ApplyInner(
    if (bHasUseSpecPrefs) {
       if (bUseSpecPrefs)
          // reset it, and next we will be getting the defaults.
-         SpectrogramSettings::Reset(*wt);
+         SpectrogramSettings::Reset(wc);
       else
-         SpectrogramSettings::Own(*wt);
+         SpectrogramSettings::Own(wc);
    }
    auto &settings = SpectrogramSettings::Get(*wt);
    if (wt && bHasSpectralSelect)
