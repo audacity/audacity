@@ -9,9 +9,10 @@
 
 **********************************************************************/
 
-#include "MenuRegistry.h"
-#include "CommandContext.h"
 #include "CloudProjectUtils.h"
+#include "CommandContext.h"
+#include "MenuRegistry.h"
+#include "sync/ProjectCloudExtension.h"
 
 #include "ProjectWindow.h"
 
@@ -19,31 +20,56 @@
 
 namespace
 {
+using namespace cloud::audiocom::sync;
 
 void OnSaveToCloud(const CommandContext& context)
 {
-   cloud::audiocom::sync::SaveToCloud(
-      context.project, cloud::audiocom::sync::SaveMode::Normal);
+   SaveToCloud(context.project, SaveMode::Normal);
 }
 
-void OnOpenFromCloud (const CommandContext& context)
-{     
-   cloud::audiocom::sync::ProjectsListDialog dialog {
-      ProjectWindow::Find(&context.project), &context.project
-   };
+void OnOpenFromCloud(const CommandContext& context)
+{
+   ProjectsListDialog dialog { ProjectWindow::Find(&context.project),
+                               &context.project };
 
    dialog.ShowModal();
+}
+
+void OnUpdateMixdown(const CommandContext& context)
+{
+   ProjectCloudExtension::Get(context.project).MarkNeedsMixdownSync();
+   SaveToCloud(context.project, SaveMode::Normal);
+}
+const ReservedCommandFlag& IsCloudProjectFlag()
+{
+   static ReservedCommandFlag flag {
+      [](const AudacityProject& project)
+      { return ProjectCloudExtension::Get(project).IsCloudProject(); },
+      CommandFlagOptions { [](const TranslatableString&) {
+         return XO("Previews can be updated only for cloud projects");
+      } }.QuickTest()
+         .Priority(1)
+   };
+   return flag;
 }
 
 using namespace MenuRegistry;
 
 AttachedItem sSaveAttachment { Command(
-                              wxT("SaveToCloud"), XXO("Save to cloud..."),
-                              OnSaveToCloud, AlwaysEnabledFlag),
-                           wxT("File/Save") };
+                                  wxT("SaveToCloud"), XXO("Save to cloud..."),
+                                  OnSaveToCloud, AlwaysEnabledFlag),
+                               wxT("File/Save") };
+
+AttachedItem sMixdownAttachment { Command(
+                                     wxT("UpdateMixdown"),
+                                     XXO("Update Cloud Audio Preview"),
+                                     OnUpdateMixdown, IsCloudProjectFlag()),
+                                  wxT("File/Save") };
 
 AttachedItem sOpenAttachment { Command(
-                              wxT("OpenFromCloud"), XXO("Open From Cloud"),
-                              OnOpenFromCloud, AlwaysEnabledFlag),
-                           wxT("File") };
+                                  wxT("OpenFromCloud"),
+                                  XXO("Open From Cloud..."), OnOpenFromCloud,
+                                  AlwaysEnabledFlag),
+                               wxT("File/Basic") };
+
 } // namespace
