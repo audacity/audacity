@@ -355,7 +355,7 @@ void ClipMoveState::Init(
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
-            auto group = SyncLock::Group(&track);
+            auto group = SyncLock::Group(track);
             if (group.size() <= 1)
                continue;
 
@@ -475,15 +475,11 @@ UIHandle::Result TimeShiftHandle::Click(
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto clickedTrack = pView ? pView->FindTrack().get() : nullptr;
-   if (!clickedTrack)
+   const auto pView =
+      std::dynamic_pointer_cast<CommonTrackPanelCell>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack() : nullptr;
+   if (!pTrack)
       return RefreshCode::Cancelled;
-
-   auto &trackList = TrackList::Get(*pProject);
-   // Substitute the leader track before giving it to MakeTrackShifter
-   // and ClipMoveState::Init
-   const auto pTrack = *trackList.Find(clickedTrack);
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -513,6 +509,7 @@ UIHandle::Result TimeShiftHandle::Click(
       // just do shifting of one whole track
    }
 
+   auto &trackList = TrackList::Get(*pProject);
    mClipMoveState.Init(*pProject, *pTrack,
       hitTestResult, move(pShifter), clickTime,
       viewInfo, trackList,
@@ -838,8 +835,10 @@ UIHandle::Result TimeShiftHandle::Drag
 
    auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
-   Track *track =
-      *trackList.Find(trackView ? trackView->FindTrack().get() : nullptr);
+   const auto pChannel = trackView ? trackView->FindChannel() : nullptr;
+   auto track = pChannel
+      ? dynamic_cast<Track *>(&pChannel->GetChannelGroup())
+      : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*

@@ -78,7 +78,7 @@ bool EffectReverse::Process(EffectInstance &, EffectSettings &)
    int count = 0;
 
    auto trackRange =
-      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelected;
+      outputs.Get().Any() + &SyncLock::IsSelectedOrSyncLockSelectedP;
    trackRange.VisitWhile(bGoodResult,
       [&](WaveTrack &track) {
          const auto progress =

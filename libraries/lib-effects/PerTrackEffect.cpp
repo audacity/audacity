@@ -299,9 +299,13 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             if (bGoodResult && tempList) {
                if (!results)
                   results = tempList;
-               else
+               else {
+                  if (!multichannel && !isLeader && narrowTrack)
+                     static_cast<WaveTrack*>(*results->rbegin())
+                        ->MergeChannelAttachments(move(*narrowTrack));
                   results->Append(std::move(*tempList));
                }
+            }
          }
          if (!bGoodResult)
             return;
@@ -309,7 +313,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
       };
    const auto defaultTrackVisitor =
       [&](Track &t) {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + duration);
       };
 

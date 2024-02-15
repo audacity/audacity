@@ -955,7 +955,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             }
 
             // Check whether we're in the same group as the last selected track
-            Track *gt = *SyncLock::Group(mCurChannelGroup).first;
+            Track *gt = *SyncLock::Group(*mCurChannelGroup).first;
             mFirstInGroup = !gtLast || (gtLast != gt);
             gtLast = gt;
 
@@ -1760,8 +1760,8 @@ bool NyquistEffect::ProcessOne(
 
    // If we were first in the group adjust non-selected group tracks
    if (mFirstInGroup) {
-      for (auto t : SyncLock::Group(mCurChannelGroup))
-         if (!t->GetSelected() && SyncLock::IsSyncLockSelected(t))
+      for (auto t : SyncLock::Group(*mCurChannelGroup))
+         if (!t->GetSelected() && SyncLock::IsSyncLockSelected(*t))
             t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
 
       // Only the first channel can be first in its group

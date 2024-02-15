@@ -240,7 +240,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
-         if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(&lt)))
+         if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(lt)))
             return fallthrough();
          if (!ProcessLabelTrack(&lt))
             bGoodResult = false;
@@ -416,7 +416,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
       [&](Track &t) {
          // Outer loop is over leaders, so fall-through must check for
          // multiple channels
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mTotalStretch);
       }
    );

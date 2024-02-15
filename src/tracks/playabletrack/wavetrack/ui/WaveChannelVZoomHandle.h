@@ -30,7 +30,7 @@ namespace WaveChannelVZoomHandle
    bool IsDragZooming(int zoomStart, int zoomEnd, bool hasDragZoom);
 
    using DoZoomFunction = void (*)(AudacityProject *pProject,
-       WaveTrack *pTrack,
+       WaveTrack &track,
        WaveChannelViewConstants::ZoomActions ZoomKind,
        const wxRect &rect, int zoomStart, int zoomEnd,
        bool fixedMousePoint);
@@ -43,7 +43,7 @@ namespace WaveChannelVZoomHandle
    AUDACITY_DLL_API
    Result DoRelease(
       const TrackPanelMouseEvent &event, AudacityProject *pProject,
-      wxWindow *pParent, WaveTrack *pTrack, const wxRect &mRect,
+      wxWindow *pParent, WaveTrack &track, const wxRect &mRect,
       DoZoomFunction doZoom, PopupMenuTable &table,
       int zoomStart, int zoomEnd );
 
@@ -68,7 +68,7 @@ public:
    {
    public:
       AudacityProject &project;
-      WaveTrack *pTrack;
+      WaveTrack &track;
       wxRect rect;
       unsigned result;
       int yy;

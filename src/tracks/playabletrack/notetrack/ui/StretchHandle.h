@@ -92,8 +92,8 @@ private:
    static double GetT0(const Track &track, const ViewInfo &viewInfo);
    static double GetT1(const Track &track, const ViewInfo &viewInfo);
 
-   void Stretch
-      (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
+   void Stretch(AudacityProject *pProject, int mouseXCoordinate,
+      int trackLeftEdge, Channel *pChannel);
 
    std::shared_ptr<NoteTrack> mpTrack{};
    int mLeftEdge{ -1 };

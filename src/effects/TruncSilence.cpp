@@ -251,7 +251,7 @@ bool EffectTruncSilence::ProcessIndependently()
       for (auto track : inputTracks()->Selected<const WaveTrack>()) {
          if (syncLock) {
             auto otherTracks =
-               SyncLock::Group(track).Filter<const WaveTrack>()
+               SyncLock::Group(*track).Filter<const WaveTrack>()
                   + &Track::IsSelected
                   - [&](const Track *pTrack){ return pTrack == track; };
             if (otherTracks) {
@@ -288,7 +288,7 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          auto range = syncLock
-            ? SyncLock::Group(track)
+            ? SyncLock::Group(*track)
             : TrackList::SingletonRange<Track>(track);
          double totalCutLen = 0.0;
          if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen))
@@ -438,7 +438,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
       (range
-         + &SyncLock::IsSelectedOrSyncLockSelected
+         + &SyncLock::IsSelectedOrSyncLockSelectedP
          - [&](const Track *pTrack) { return
            // Don't waste time past the end of a track
            pTrack->GetEndTime() < r->start;

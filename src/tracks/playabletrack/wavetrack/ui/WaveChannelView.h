@@ -46,6 +46,8 @@ public:
    explicit
    WaveChannelSubView(WaveChannelView &waveChannelView);
 
+   std::shared_ptr<WaveChannel> FindWaveChannel();
+
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
@@ -62,7 +64,7 @@ public:
 
 protected:
    static void DrawBoldBoundaries(
-      TrackPanelDrawingContext &context, const WaveTrack &track,
+      TrackPanelDrawingContext &context, const WaveChannel &channel,
       const wxRect &rect);
 
    std::weak_ptr<WaveChannelView> GetWaveChannelView() const;
@@ -109,20 +111,19 @@ public:
    static WaveChannelView *Find(WaveChannel *pChannel);
    static const WaveChannelView *Find(const WaveChannel *pChannel);
 
-   //! Construct a view of one channel
-   /*!
-    @param channel which channel of a possibly wide wave track
-    */
-   WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
+   using CommonChannelView::CommonChannelView;
    ~WaveChannelView() override;
 
+   std::shared_ptr<WaveChannel> FindWaveChannel();
+
    // Preserve some view state too for undo/redo purposes
-   void CopyTo( Track &track ) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // CommonChannelView implementation
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
 
    static std::pair<
       bool, // if true, hit-testing is finished
@@ -181,8 +182,9 @@ public:
 
    static bool ClipDetailsVisible(
       const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static wxRect ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static bool HitTest(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
+   static wxRect ClipHitTestArea(const ClipTimes& clip,
+      const ZoomInfo& zoomInfo, const wxRect& viewRect);
+   static bool HitTest(const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
 
    //FIXME: These functions do not push state to undo history
    //because attempt to do so leads to a focus lose which, in
@@ -227,7 +229,7 @@ private:
    bool &DoGetMultiView();
    bool DoGetMultiView() const;
 
-   std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
+   std::shared_ptr<CommonTrackCell> DoGetAffordance(Track& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 

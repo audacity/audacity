@@ -55,7 +55,7 @@ static WaveChannelSubViewType::RegisteredType reg{ sType };
 SpectrumView::SpectrumView(WaveChannelView &waveChannelView)
    : WaveChannelSubView(waveChannelView)
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   const auto wt = FindWaveChannel();
    mpSpectralData = std::make_shared<SpectralData>(wt->GetRate());
    mOnBrushTool = false;
 }
@@ -138,8 +138,9 @@ static UIHandlePtr BrushHandleHitTest(
    result = AssignUIHandlePtr(holder, result);
 
    //Make sure we are within the selected track
-   auto pTrack = pChannelView->FindTrack();
-   if (!pTrack->GetSelected())
+   const auto pChannel = pChannelView->FindWaveChannel();
+   if (!pChannel ||
+       !pChannel->GetTrack().GetSelected())
    {
       return result;
    }
@@ -169,7 +170,7 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool )
 {
-   const auto wt = std::static_pointer_cast<WaveChannel>(FindChannel());
+   const auto wt = FindWaveChannel();
    std::vector<UIHandlePtr> results;
 
 #ifdef EXPERIMENTAL_BRUSH_TOOL
@@ -191,7 +192,9 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
 
 void SpectrumView::DoSetMinimized( bool minimized )
 {
-   auto wt = static_cast<WaveTrack*>( FindTrack().get() );
+   const auto wt = FindWaveChannel();
+   if (!wt)
+      return;
 
 #ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
@@ -335,7 +338,8 @@ std::pair<sampleCount, sampleCount> GetSelectedSampleIndices(
    return { s0, s1 };
 }
 
-void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
+void DrawClipSpectrum(TrackPanelDrawingContext &context,
+   const WaveChannel &channel,
    const WaveChannelInterval &clip, const wxRect &rect,
    const std::shared_ptr<SpectralData> &mpSpectralData,
    bool selected)
@@ -359,7 +363,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
       return;
    }
 
-   auto &settings = SpectrogramSettings::Get(track);
+   auto &settings = SpectrogramSettings::Get(channel);
    const bool autocorrelation = (settings.algorithm == SpectrogramSettings::algPitchEAC);
 
    enum { DASH_LENGTH = 10 /* pixels */ };
@@ -374,8 +378,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
 
    const double &t0 = params.t0;
    const double playStartTime = clip.GetPlayStartTime();
-   const auto [ssel0, ssel1] =
-      GetSelectedSampleIndices(selectedRegion, clip, track.GetSelected());
+   
+   const auto [ssel0, ssel1] = GetSelectedSampleIndices(selectedRegion, clip,
+      channel.GetTrack().GetSelected());
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
    const double sampleRate = clip.GetRate();
    const double stretchRatio = clip.GetStretchRatio();
@@ -431,8 +436,7 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
    auto nBins = settings.NBins();
 
    float minFreq, maxFreq;
-   SpectrogramBounds::Get(track)
-      .GetBounds(track, minFreq, maxFreq);
+   SpectrogramBounds::Get(channel).GetBounds(channel, minFreq, maxFreq);
 
    const SpectrogramSettings::ScaleType scaleType = settings.scaleType;
 
@@ -857,35 +861,24 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
 }
 }
 
-void SpectrumView::DoDraw(TrackPanelDrawingContext& context, size_t channel,
-   const WaveTrack &track, const WaveTrack::Interval* selectedClip,
+void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
+   const WaveChannel &channel, const WaveTrack::Interval* selectedClip,
    const wxRect & rect)
 {
    const auto artist = TrackArtist::Get( context );
    const auto &blankSelectedBrush = artist->blankSelectedBrush;
    const auto &blankBrush = artist->blankBrush;
    TrackArt::DrawBackgroundWithSelection(
-      context, rect, &track, blankSelectedBrush, blankBrush );
+      context, rect, channel, blankSelectedBrush, blankBrush );
 
-   // Really useful channel numbers are not yet passed in
-   // TODO wide wave tracks -- really use channel
-   assert(channel == 0);
-   channel = (track.IsLeader() ? 0 : 1);
-
-   // TODO wide wave tracks -- remove this workaround
-   auto pLeader = *track.GetHolder()->Find(&track);
-   assert(pLeader->IsLeader());
-
-   for (const auto &pInterval : static_cast<const WaveTrack*>(pLeader)
-      ->GetChannel(channel)->Intervals()
-   ) {
+   for (const auto &pInterval : channel.Intervals()) {
       bool selected = selectedClip &&
          WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
-      DrawClipSpectrum(context, track, *pInterval, rect, mpSpectralData,
+      DrawClipSpectrum(context, channel, *pInterval, rect, mpSpectralData,
          selected);
    }
 
-   DrawBoldBoundaries(context, track, rect);
+   DrawBoldBoundaries(context, channel, rect);
 }
 
 void SpectrumView::Draw(
@@ -897,8 +890,11 @@ void SpectrumView::Draw(
 
       auto &dc = context.dc;
  
-      const auto wt = std::static_pointer_cast<const WaveTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*FindTrack()));
+      const auto pChannel = FindChannel();
+      if (!pChannel)
+         return;
+      const auto &wt = static_cast<const WaveTrack&>(
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -909,7 +905,7 @@ void SpectrumView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip();
-      DoDraw(context, GetChannelIndex(), *wt, selectedClip.get(), rect);
+      DoDraw(context, wt, selectedClip.get(), rect);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
@@ -991,16 +987,16 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
       return;
    }
 
-   WaveTrack *const pTrack = static_cast<WaveTrack*>(mpData->pTrack);
+   auto &track = static_cast<WaveTrack&>(mpData->track);
 
    PrefsPanel::Factories factories;
-   // factories.push_back(WaveformPrefsFactory( pTrack ));
-   factories.push_back(SpectrumPrefsFactory( pTrack ));
+   // factories.push_back(WaveformPrefsFactory(&track));
+   factories.push_back(SpectrumPrefsFactory(&track));
    const int page =
       // (pTrack->GetDisplay() == WaveChannelViewConstants::Spectrum) ? 1 :
       0;
 
-   auto title = XO("%s:").Format( pTrack->GetName() );
+   auto title = XO("%s:").Format(track.GetName());
    ViewSettingsDialog dialog(
       mpData->pParent, mpData->project, title, factories, page);
 
@@ -1106,27 +1102,27 @@ unsigned SpectrumView::Char(
 namespace {
 void DoNextPeakFrequency(AudacityProject &project, bool up)
 {
+   // This only ever considered the left member of a stereo pair!
+   // TODO:  account for the right hand channel too.
+   // (How?  Average corresponding bin power?)
+
    auto &tracks = TrackList::Get( project );
    auto &viewInfo = ViewInfo::Get( project );
 
    // Find the first selected wave track that is in a spectrogram view.
-   const WaveTrack *pTrack {};
-   for (auto wt : tracks.Selected<const WaveTrack>()) {
+   const auto hasSpectrum = [](const WaveTrack *wt){
       const auto displays = WaveChannelView::Get(*wt).GetDisplays();
-      bool hasSpectrum = (displays.end() != std::find(
+      return displays.end() != std::find(
          displays.begin(), displays.end(),
-         WaveChannelSubView::Type{
-            WaveChannelViewConstants::Spectrum, {} }
-      ) );
-      if (hasSpectrum) {
-         pTrack = wt;
-         break;
-      }
-   }
-
-   if (pTrack) {
+         WaveChannelSubView::Type{ WaveChannelViewConstants::Spectrum, {} });
+   };
+   const auto range = tracks.Selected<const WaveTrack>();
+   const auto iter = find_if(begin(range), end(range), hasSpectrum);
+   if (iter != end(range)) {
       SpectrumAnalyst analyst;
-      SelectHandle::SnapCenterOnce(analyst, viewInfo, pTrack, up);
+      auto &wt = **iter;
+      SelectHandle::SnapCenterOnce(analyst,
+         viewInfo, **wt.Channels().first, up);
       ProjectHistory::Get( project ).ModifyState(false);
    }
 }

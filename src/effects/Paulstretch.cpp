@@ -184,7 +184,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             fallthrough();
       }; },
       [&](Track &track) {
-         if (SyncLock::IsSyncLockSelected(&track))
+         if (SyncLock::IsSyncLockSelected(track))
             track.SyncLockAdjust(mT1, newT1);
       }
    );

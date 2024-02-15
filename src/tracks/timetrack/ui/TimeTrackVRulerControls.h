@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../ui/ChannelVRulerControls.h"
 
+class TimeTrack;
 class TimeTrackVZoomHandle;
 
 // This class is here for completeness, by analogy with other track
@@ -27,6 +28,8 @@ public:
    TimeTrackVRulerControls(const std::shared_ptr<ChannelView> &pChannelView)
       : ChannelVRulerControls{ pChannelView } {}
    ~TimeTrackVRulerControls();
+
+   std::shared_ptr<TimeTrack> FindTimeTrack();
 
    std::vector<UIHandlePtr> HitTest(
       const TrackPanelMouseState &state,

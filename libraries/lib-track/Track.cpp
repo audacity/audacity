@@ -89,34 +89,28 @@ void Track::SetSelected(bool s)
    }
 }
 
+void Track::CopyAttachments(Track &dst, const Track &src, bool deep)
+{
+   if (!deep) {
+      // Share the satellites with the original, though they do not point
+      // back to the duplicate track
+      AttachedTrackObjects &attachments = dst;
+      attachments = src; // shallow copy
+   }
+   else
+      src.AttachedTrackObjects::ForEach([&](auto &attachment){
+         // Copy view state that might be important to undo/redo
+         attachment.CopyTo(dst);
+      });
+}
+
 TrackListHolder Track::Duplicate(DuplicateOptions options) const
 {
    assert(IsLeader());
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone(options.backup);
-
-   auto iter = TrackList::Channels(*result->begin()).begin();
-   const auto copyOne = [&](const Track *pChannel){
-      if (options.shallowCopyAttachments) {
-         // Share the satellites with the original, though they do not point
-         // back to the duplicate track
-         AttachedTrackObjects &attachments = (**iter);
-         attachments = *pChannel; // shallow copy
-      }
-      else
-         pChannel->AttachedTrackObjects::ForEach([&](auto &attachment){
-            // Copy view state that might be important to undo/redo
-            attachment.CopyTo(**iter);
-         });
-      ++iter;
-   };
-
-   if (GetOwner())
-      for (const auto pChannel : TrackList::Channels(this))
-         copyOne(pChannel);
-   else
-      copyOne(this);
-
+   // Attachments matter for leader only
+   CopyAttachments(**result->begin(), *this, !options.shallowCopyAttachments);
    return result;
 }
 
@@ -523,14 +517,14 @@ Track* TrackList::SwapChannels(Track &track)
    auto pOwner = track.GetOwner();
    if (!pOwner)
       return nullptr;
-   auto pPartner = pOwner->GetNext(&track, false);
+   auto pPartner = pOwner->GetNext(track, false);
    if (!pPartner)
       return nullptr;
 
    // Swap channels, avoiding copying of GroupData
    auto pData = track.DetachGroupData();
    assert(pData);
-   pOwner->MoveUp(pPartner);
+   pOwner->MoveUp(*pPartner);
    pPartner->AssignGroupData(move(pData));
    return pPartner;
 }
@@ -782,69 +776,64 @@ void TrackList::Clear(bool sendEvent)
 }
 
 /// Return a track in the list that comes after Track t
-Track *TrackList::GetNext(Track * t, bool linked) const
+Track *TrackList::GetNext(Track &t, bool linked) const
 {
-   if (t) {
-      auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         if ( linked && t->HasLinkedTrack() )
-            node = getNext( node );
+   auto node = t.GetNode();
+   if (!isNull(node)) {
+      if (linked && t.HasLinkedTrack())
+         node = getNext(node);
 
-         if ( !isNull( node ) )
-            node = getNext( node );
+      if (!isNull(node))
+         node = getNext(node);
 
-         if ( !isNull( node ) )
-            return node.first->get();
-      }
+      if (!isNull(node))
+         return node.first->get();
    }
-
    return nullptr;
 }
 
-Track *TrackList::GetPrev(Track * t, bool linked) const
+Track *TrackList::GetPrev(Track &t, bool linked) const
 {
-   if (t) {
-      TrackNodePointer prev;
-      auto node = t->GetNode();
-      if ( !isNull( node ) ) {
-         // linked is true and input track second in team?
+   TrackNodePointer prev;
+   auto node = t.GetNode();
+   if (!isNull(node)) {
+      // linked is true and input track second in team?
+      if (linked) {
+         prev = getPrev(node);
+         if (!isNull(prev) &&
+             !t.HasLinkedTrack() && t.GetLinkedTrack())
+            // Make it the first
+            node = prev;
+      }
+
+      prev = getPrev(node);
+      if (!isNull(prev)) {
+         // Back up once
+         node = prev;
+
+         // Back up twice sometimes when linked is true
          if (linked) {
-            prev = getPrev( node );
-            if( !isNull( prev ) &&
-                !t->HasLinkedTrack() && t->GetLinkedTrack() )
-               // Make it the first
+            prev = getPrev(node);
+            if( !isNull(prev) &&
+                !(*node.first)->HasLinkedTrack() &&
+               (*node.first)->GetLinkedTrack())
                node = prev;
          }
 
-         prev = getPrev( node );
-         if ( !isNull( prev ) ) {
-            // Back up once
-            node = prev;
-
-            // Back up twice sometimes when linked is true
-            if (linked) {
-               prev = getPrev( node );
-               if( !isNull( prev ) &&
-                   !(*node.first)->HasLinkedTrack() && (*node.first)->GetLinkedTrack() )
-                  node = prev;
-            }
-
-            return node.first->get();
-         }
+         return node.first->get();
       }
    }
-
    return nullptr;
 }
 
-bool TrackList::CanMoveUp(Track * t) const
+bool TrackList::CanMoveUp(Track &t) const
 {
-   return GetPrev(t, true) != NULL;
+   return GetPrev(t, true) != nullptr;
 }
 
-bool TrackList::CanMoveDown(Track * t) const
+bool TrackList::CanMoveDown(Track &t) const
 {
-   return GetNext(t, true) != NULL;
+   return GetNext(t, true) != nullptr;
 }
 
 // This is used when you want to swap the channel group starting
@@ -910,29 +899,23 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    PermutationEvent(s1);
 }
 
-bool TrackList::MoveUp(Track * t)
+bool TrackList::MoveUp(Track &t)
 {
-   if (t) {
-      Track *p = GetPrev(t, true);
-      if (p) {
-         SwapNodes(p->GetNode(), t->GetNode());
-         return true;
-      }
+   Track *p = GetPrev(t, true);
+   if (p) {
+      SwapNodes(p->GetNode(), t.GetNode());
+      return true;
    }
-
    return false;
 }
 
-bool TrackList::MoveDown(Track * t)
+bool TrackList::MoveDown(Track &t)
 {
-   if (t) {
-      Track *n = GetNext(t, true);
-      if (n) {
-         SwapNodes(t->GetNode(), n->GetNode());
-         return true;
-      }
+   Track *n = GetNext(t, true);
+   if (n) {
+      SwapNodes(t.GetNode(), n->GetNode());
+      return true;
    }
-
    return false;
 }
 
@@ -1047,81 +1030,6 @@ Track::LinkType Track::GetLinkType() const noexcept
    return pGroupData ? pGroupData->mLinkType : LinkType::None;
 }
 
-TrackAttachment &ChannelAttachmentsBase::Get(
-   const AttachedTrackObjects::RegisteredFactory &key,
-   Track &track, size_t iChannel)
-{
-   // Precondition of this function; satisfies precondition of factory below
-   assert(iChannel < track.NChannels());
-   auto &attachments = track.AttachedObjects::Get<ChannelAttachmentsBase>(key);
-   auto &objects = attachments.mAttachments;
-   if (iChannel >= objects.size())
-      objects.resize(iChannel + 1);
-   auto &pObject = objects[iChannel];
-   if (!pObject) {
-      // Create on demand
-      pObject = attachments.mFactory(track, iChannel);
-      assert(pObject); // Precondition of constructor
-   }
-   return *pObject;
-}
-
-TrackAttachment *ChannelAttachmentsBase::Find(
-   const AttachedTrackObjects::RegisteredFactory &key,
-   Track *pTrack, size_t iChannel)
-{
-   assert(!pTrack || iChannel < pTrack->NChannels());
-   if (!pTrack)
-      return nullptr;
-   const auto pAttachments =
-      pTrack->AttachedObjects::Find<ChannelAttachmentsBase>(key);
-   // do not create on demand
-   if (!pAttachments || iChannel >= pAttachments->mAttachments.size())
-      return nullptr;
-   return pAttachments->mAttachments[iChannel].get();
-}
-
-ChannelAttachmentsBase::ChannelAttachmentsBase(Track &track, Factory factory)
-   : mFactory{ move(factory) }
-{
-   // Always construct one channel view
-   // TODO wide wave tracks -- number of channels will be known earlier, and
-   // they will all be constructed
-   mAttachments.push_back(mFactory(track, 0));
-}
-
-ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;
-
-void ChannelAttachmentsBase::CopyTo(Track &track) const
-{
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->CopyTo(track);
-}
-
-void ChannelAttachmentsBase::Reparent(const std::shared_ptr<Track> &parent)
-{
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->Reparent(parent);
-}
-
-void ChannelAttachmentsBase::WriteXMLAttributes(XMLWriter &writer) const
-{
-   for (auto &pAttachment : mAttachments)
-      if (pAttachment)
-         pAttachment->WriteXMLAttributes(writer);
-}
-
-bool ChannelAttachmentsBase::HandleXMLAttribute(
-   const std::string_view& attr, const XMLAttributeValueView& valueView)
-{
-   return std::any_of(mAttachments.begin(), mAttachments.end(),
-   [&](auto &pAttachment) {
-      return pAttachment && pAttachment->HandleXMLAttribute(attr, valueView);
-   });
-}
-
 void Track::OnProjectTempoChange(double newTempo)
 {
    assert(IsLeader());
@@ -1150,19 +1058,6 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
       }
    }
    tempList->mAssignsIds = false;
-   return tempList;
-}
-
-TrackListHolder TrackList::Temporary(AudacityProject *pProject,
-   const std::vector<Track::Holder> &channels)
-{
-   size_t iChannel = 0;
-   auto nChannels = channels.size();
-   auto left = (nChannels == 2 ? channels[iChannel++] : nullptr);
-   auto right = (nChannels == 2 ? channels[iChannel++] : nullptr);
-   auto tempList = Temporary(pProject, left, right);
-   for (; iChannel < nChannels; ++iChannel)
-      tempList->Add(channels[iChannel]);
    return tempList;
 }
 

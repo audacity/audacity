@@ -59,7 +59,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "XMLFileReader.h"
 #include "import/ImportStreamDialog.h"
 #include "prefs/ImportExportPrefs.h"
-#include "tracks/playabletrack/wavetrack/WaveTrackUtils.h"
 #include "widgets/FileHistory.h"
 #include "widgets/UnwritableLocationErrorDialog.h"
 #include "widgets/Warning.h"

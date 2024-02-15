@@ -31,27 +31,9 @@ WideChannelGroupInterval::~WideChannelGroupInterval() = default;
 
 Channel::~Channel() = default;
 
-int Channel::FindChannelIndex() const
+size_t Channel::GetChannelIndex() const
 {
    auto &group = DoGetChannelGroup();
-   int index = -1;
-   for (size_t ii = 0, nn = group.NChannels(); ii < nn; ++ii)
-      if (group.GetChannel(ii).get() == this) {
-         index = ii;
-         break;
-      }
-   // post of DoGetChannelGroup
-   assert(index >= 0);
-
-   // TODO wide wave tracks -- remove this stronger assertion
-   assert(index == 0);
-
-   return index;
-}
-
-size_t Channel::ReallyGetChannelIndex() const
-{
-   auto &group = ReallyDoGetChannelGroup();
    int index = -1;
    for (size_t ii = 0, nn = group.NChannels(); ii < nn; ++ii)
       if (group.GetChannel(ii).get() == this) {
@@ -64,22 +46,10 @@ size_t Channel::ReallyGetChannelIndex() const
 
 const ChannelGroup &Channel::GetChannelGroup() const
 {
-   assert(FindChannelIndex() >= 0);
    return DoGetChannelGroup();
 }
 
 ChannelGroup &Channel::GetChannelGroup()
-{
-   assert(FindChannelIndex() >= 0);
-   return DoGetChannelGroup();
-}
-
-size_t Channel::GetChannelIndex() const
-{
-   return FindChannelIndex();
-}
-
-ChannelGroup &Channel::ReallyDoGetChannelGroup() const
 {
    return DoGetChannelGroup();
 }

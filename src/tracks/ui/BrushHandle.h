@@ -90,8 +90,7 @@ private:
    std::shared_ptr<StateSaver> mpStateSaver;
    std::shared_ptr<SpectralData> mpSpectralData;
 
-   std::weak_ptr<Track> FindTrack();
-   std::weak_ptr<const Track> FindTrack() const;
+   std::shared_ptr<WaveChannel> FindChannel();
 
    // TrackPanelDrawable implementation
    void Draw(

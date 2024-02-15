@@ -427,3 +427,13 @@ auto WaveChannelUtilities::GetClipAtTime(
 {
    return GetClipAtTime(const_cast<WaveChannel&>(channel), time);
 }
+
+auto WaveChannelUtilities::GetIntervalAtTime(WaveChannel &channel, double t)
+   -> ClipPointer
+{
+   ClipPointer result;
+   for (const auto &interval : channel.Intervals())
+      if (interval->WithinPlayRegion(t))
+         return interval;
+   return nullptr;
+}

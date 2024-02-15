@@ -35,7 +35,7 @@ EffectOutputTracks::EffectOutputTracks(
    auto trackRange = mTracks.Any() +
       [&] (const Track *pTrack) {
          return allSyncLockSelected
-         ? SyncLock::IsSelectedOrSyncLockSelected(pTrack)
+         ? SyncLock::IsSelectedOrSyncLockSelected(*pTrack)
          : dynamic_cast<const WaveTrack*>(pTrack) && pTrack->GetSelected();
       };
 

@@ -309,7 +309,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
 
          auto t = pFocus->FindTrack(childId);
 
-         if( t == NULL )
+         if (!t)
             return wxACC_FAIL;
 
          name->Printf("%d %s", pFocus->TrackNum(t), t->GetName());
@@ -367,7 +367,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                this track is selected.*/
             name->Append( wxT(" ") + wxString(_( " Selected" )) );
          }
-         if (SyncLock::IsSyncLockSelected(t.get()))
+         if (SyncLock::IsSyncLockSelected(*t))
          {
             /* i18n-hint: This is for screen reader software and indicates that
                this track is shown with a sync-locked icon.*/

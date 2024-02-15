@@ -223,7 +223,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &lt) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(&lt)) {
+         if (SyncLock::IsSelectedOrSyncLockSelected(lt)) {
             if (!ProcessLabelTrack(&lt))
                bGoodResult = false;
          }
@@ -284,7 +284,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             mCurTrackNum += outWaveTrack.NChannels();
       }; },
       [&](Track &t) {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
    );

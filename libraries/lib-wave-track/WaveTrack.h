@@ -43,6 +43,7 @@ class AudioSegmentSampleView;
 using WaveClipHolder = std::shared_ptr<WaveClip>;
 using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipHolders = std::vector<WaveClipHolder>;
+using WaveClipConstHolder = std::shared_ptr<const WaveClip>;
 using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
@@ -70,19 +71,19 @@ class WAVE_TRACK_API WaveChannelInterval final
    , public ClipTimes
 {
 public:
-   //! Assume lifetime of this object nests in those of arguments
-   WaveChannelInterval(WaveClip &wideClip, WaveClip &narrowClip, size_t iChannel
-   )  : mWideClip{ wideClip }
-      , mNarrowClip{ narrowClip }
-      , miChannel{ iChannel }
-   {}
+   /*!
+    @pre `pWideClip != nullptr`
+    @pre `pNarrowClip != nullptr`
+    */
+   WaveChannelInterval(WaveClipHolder pWideClip,
+      WaveClipHolder pNarrowClip, size_t iChannel);
    ~WaveChannelInterval() override;
 
    friend bool operator ==(
       const WaveChannelInterval &x, const WaveChannelInterval &y
    ) {
-      return &x.mWideClip == &y.mWideClip &&
-         &x.mNarrowClip == &y.mNarrowClip &&
+      return x.mpWideClip == y.mpWideClip &&
+         x.mpNarrowClip == y.mpNarrowClip &&
          x.miChannel == y.miChannel;
    }
    friend bool operator !=(
@@ -91,9 +92,13 @@ public:
       return !(x == y);
    }
 
-   const WaveClip &GetWideClip() const { return mWideClip; }
-   WaveClip &GetClip() { return mNarrowClip; }
-   const WaveClip &GetClip() const { return mNarrowClip; }
+   const WaveClip &GetWideClip() const { return *mpWideClip; }
+   WaveClip &GetClip() { return *mpNarrowClip; }
+   const WaveClip &GetClip() const { return *mpNarrowClip; }
+
+   const WaveClipHolder &GetClipPtr() { return mpNarrowClip; }
+   WaveClipConstHolder GetClipPtr() const { return mpNarrowClip; }
+
    Envelope &GetEnvelope();
    const Envelope &GetEnvelope() const;
    size_t GetChannelIndex() const { return miChannel; }
@@ -183,11 +188,14 @@ public:
    );
 
 private:
-   WaveClip &GetNarrowClip() { return mNarrowClip; }
-   const WaveClip &GetNarrowClip() const { return mNarrowClip; }
+   WaveClip &GetWideClip() { return *mpWideClip; }
+   WaveClip &GetNarrowClip() { return *mpNarrowClip; }
+   const WaveClip &GetNarrowClip() const { return *mpNarrowClip; }
 
-   WaveClip &mWideClip;
-   WaveClip &mNarrowClip;
+   //! @invariant non-null
+   const WaveClipHolder mpWideClip;
+   //! @invariant non-null
+   const WaveClipHolder mpNarrowClip;
    const size_t miChannel;
 };
 
@@ -285,6 +293,7 @@ class WAVE_TRACK_API WaveTrack final
    // TODO wide wave tracks -- remove this base class
    , public WaveChannel
 {
+   struct CreateToken {};
 public:
    class Interval;
    using IntervalHolder = std::shared_ptr<Interval>;
@@ -324,8 +333,16 @@ public:
    // Construct and also build all attachments
    static WaveTrack *New( AudacityProject &project );
 
-   WaveTrack(
+   //! Don't call directly, but use Create
+   WaveTrack(CreateToken&&,
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
+
+   using Holder = std::shared_ptr<WaveTrack>;
+
+   //! Factory builds all AttachedTrackObjects
+   static Holder Create(
+      const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
+
    //! Copied only in WaveTrack::Clone() !
    WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&, bool backup);
 
@@ -385,8 +402,6 @@ public:
    wxString MakeClipCopyName(const wxString& originalName) const;
    wxString MakeNewClipName() const;
  public:
-
-   using Holder = std::shared_ptr<WaveTrack>;
 
    virtual ~WaveTrack();
 
@@ -653,7 +668,6 @@ public:
 
    const WaveClip* GetClipAtTime(double time) const;
    WaveClip* GetClipAtTime(double time);
-   WaveClipConstHolders GetClipsIntersecting(double t0, double t1) const;
 
    //
    // Getting information about the track's internal block sizes
@@ -1138,7 +1152,20 @@ public:
    // TODO wide-wave-track: some other API
    void CopyClipEnvelopes();
 
+   //! Steal channel attachments from other for special stereo swap
+   void MoveAndSwapAttachments(WaveTrack &&other);
+
+   //! Steal channel attachments from other, then destroy the track attachment
+   //! slot
+   void MergeChannelAttachments(WaveTrack &&other);
+
+   //! Erase all attachments for a given index
+   void EraseChannelAttachments(size_t index);
+
 private:
+   // Just destroy channel attachments
+   void DestroyAllChannelAttachments();
+
    //! Get the linear index of a given clip (== number of clips if not found)
    int GetClipIndex(const Interval &clip) const;
 
@@ -1181,7 +1208,6 @@ private:
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
    ChannelGroup &DoGetChannelGroup() const override;
-   ChannelGroup &ReallyDoGetChannelGroup() const override;
 
    //
    // Protected variables
@@ -1267,12 +1293,12 @@ private:
 ENUMERATE_TRACK_TYPE(WaveTrack);
 
 WaveTrack &WaveChannel::GetTrack() {
-   auto &result = static_cast<WaveTrack&>(ReallyDoGetChannelGroup());
+   auto &result = static_cast<WaveTrack&>(DoGetChannelGroup());
    return result;
 }
 
 const WaveTrack &WaveChannel::GetTrack() const {
-   auto &result = static_cast<const WaveTrack&>(ReallyDoGetChannelGroup());
+   auto &result = static_cast<const WaveTrack&>(DoGetChannelGroup());
    return result;
 }
 

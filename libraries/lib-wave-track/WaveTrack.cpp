@@ -45,6 +45,7 @@ from the project that will own the track.
 #include "float_cast.h"
 
 #include "AudioSegmentSampleView.h"
+#include "ChannelAttachments.h"
 #include "ClipTimeAndPitchSource.h"
 #include "Envelope.h"
 #include "Sequence.h"
@@ -68,6 +69,16 @@ from the project that will own the track.
 #include <cmath>
 
 using std::max;
+
+WaveChannelInterval::WaveChannelInterval(WaveClipHolder pWideClip,
+   WaveClipHolder pNarrowClip, size_t iChannel
+)  : mpWideClip{ move(pWideClip) }
+   , mpNarrowClip{ move(pNarrowClip) }
+   , miChannel{ iChannel }
+{
+   assert(mpWideClip != nullptr);
+   assert(mpNarrowClip != nullptr);
+}
 
 WaveChannelInterval::~WaveChannelInterval() = default;
 
@@ -97,13 +108,13 @@ WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
 const Envelope &WaveChannelInterval::GetEnvelope() const
 {
    // Always the left clip's envelope
-   return *mWideClip.GetEnvelope();
+   return *GetWideClip().GetEnvelope();
 }
 
 Envelope &WaveChannelInterval::GetEnvelope()
 {
    // Always the left clip's envelope
-   return *mWideClip.GetEnvelope();
+   return *GetWideClip().GetEnvelope();
 }
 
 sampleCount WaveChannelInterval::GetVisibleSampleCount() const
@@ -209,7 +220,7 @@ int WaveChannelInterval::GetColourIndex() const
 
 BlockArray *WaveChannelInterval::GetSequenceBlockArray()
 {
-   return mNarrowClip.GetSequenceBlockArray(
+   return GetNarrowClip().GetSequenceBlockArray(
       0
       // TODO wide wave tracks -- miChannel
    );
@@ -218,32 +229,32 @@ BlockArray *WaveChannelInterval::GetSequenceBlockArray()
 std::pair<float, float>
 WaveChannelInterval::GetMinMax(double t0, double t1, bool mayThrow) const
 {
-   return mNarrowClip.GetMinMax(
+   return GetNarrowClip().GetMinMax(
       // TODO wide wave tracks -- miChannel
       0, t0, t1, mayThrow);
 }
 
 float WaveChannelInterval::GetRMS(double t0, double t1, bool mayThrow) const
 {
-   return mNarrowClip.GetRMS(
+   return GetNarrowClip().GetRMS(
       // TODO wide wave tracks -- miChannel
       0, t0, t1, mayThrow);
 }
 
 sampleCount WaveChannelInterval::GetPlayStartSample() const
 {
-   return mNarrowClip.GetPlayStartSample();
+   return GetNarrowClip().GetPlayStartSample();
 }
 
 sampleCount WaveChannelInterval::GetPlayEndSample() const
 {
-   return mNarrowClip.GetPlayEndSample();
+   return GetNarrowClip().GetPlayEndSample();
 }
 
 void WaveChannelInterval::SetSamples(constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
-   return mNarrowClip.SetSamples(
+   return GetNarrowClip().SetSamples(
       // TODO wide wave tracks -- miChannel
       0, buffer, format, start, len, effectiveFormat);
 }
@@ -802,8 +813,7 @@ WaveTrack::Interval::DoGetChannel(size_t iChannel)
    if (iChannel < NChannels()) {
       // TODO wide wave tracks: there will be only one, wide clip
       const auto pClip = (iChannel == 0 ? mpClip : mpClip1);
-      return std::make_shared<WaveChannelInterval>(*mpClip,
-         *pClip, iChannel);
+      return std::make_shared<WaveChannelInterval>(mpClip, pClip, iChannel);
    }
    return {};
 }
@@ -1042,7 +1052,12 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create()
 
 std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double rate)
 {
-   return std::make_shared<WaveTrack>(mpFactory, format, rate);
+   auto result = std::make_shared<WaveTrack>(
+      WaveTrack::CreateToken{}, mpFactory, format, rate);
+   // Only after make_shared returns, can weak_from_this be used, which
+   // attached object factories may need
+   result->AttachedTrackObjects::BuildAll();
+   return result;
 }
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels)
@@ -1050,30 +1065,89 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels)
    return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
+void WaveTrack::MoveAndSwapAttachments(WaveTrack &&other)
+{
+   this->AttachedTrackObjects::ForCorresponding(other,
+   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+      // Precondition of callback from ClientData::Site
+      assert(pLeft && pRight);
+      const auto pLeftAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pLeft);
+      const auto pRightAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pRight);
+      // They should have come from the same factory of channel attachments
+      assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
+      if (pLeftAttachments) {
+         *pLeftAttachments = std::move(*pRightAttachments);
+         pLeftAttachments->SwapChannels();
+      }
+   });
+   other.DestroyAllChannelAttachments();
+}
+
+void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
+{
+   this->AttachedTrackObjects::ForCorresponding(other,
+   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+      // Precondition of callback from ClientData::Site
+      assert(pLeft && pRight);
+      const auto pLeftAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pLeft);
+      const auto pRightAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(pRight);
+      // They should have come from the same factory of channel attachments
+      assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
+      if (pLeftAttachments)
+         pLeftAttachments->MakeStereo(std::move(*pRightAttachments));
+   });
+   other.DestroyAllChannelAttachments();
+}
+
+//! Erase all attachments for a given index
+void WaveTrack::EraseChannelAttachments(size_t ii)
+{
+   this->AttachedTrackObjects::ForEach(
+   [ii](TrackAttachment &attachment){
+      if (const auto pAttachments =
+         dynamic_cast<ChannelAttachmentsBase *>(&attachment))
+         pAttachments->Erase(ii);
+   });
+}
+
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
 {
-   auto channels = std::vector<std::shared_ptr<Track>>{ };
-   std::generate_n(
-      std::back_inserter(channels),
+   auto channels = std::vector<std::shared_ptr<WaveTrack>>{ };
+   generate_n(
+      back_inserter(channels),
       nChannels,
       [&] { return Create(format, rate); }
    );
-   if(nChannels == 2)
+   if (nChannels == 2) {
+      channels[0]->MergeChannelAttachments(std::move(*channels[1]));
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
-   return TrackList::Temporary(nullptr, channels);
+   }
+   auto tempList = TrackList::Temporary(nullptr);
+   for (auto &channel : channels)
+      tempList->Add(channel);
+   return tempList;
 }
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
 {
-   auto channels = std::vector<std::shared_ptr<Track>>{};
-   std::generate_n(
-      std::back_inserter(channels),
+   auto channels = std::vector<std::shared_ptr<WaveTrack>>{};
+   generate_n(
+      back_inserter(channels),
       nChannels,
       [&]{ return proto.EmptyCopy(mpFactory, false); }
    );
-   if(nChannels == 2)
+   if (nChannels == 2) {
+      channels[0]->MergeChannelAttachments(std::move(*channels[1]));
       return TrackList::Temporary(nullptr, channels[0], channels[1]);
-   return TrackList::Temporary(nullptr, channels);
+   }
+   auto tempList = TrackList::Temporary(nullptr);
+   for (auto &channel : channels)
+      tempList->Add(channel);
+   return tempList;
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
@@ -1081,11 +1155,10 @@ WaveTrack *WaveTrack::New( AudacityProject &project )
    auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
    auto result = tracks.Add(trackFactory.Create());
-   result->AttachedTrackObjects::BuildAll();
    return result;
 }
 
-WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
+WaveTrack::WaveTrack(CreateToken&&, const SampleBlockFactoryPtr &pFactory,
    sampleFormat format, double rate )
    : mpFactory(pFactory)
 {
@@ -1093,6 +1166,19 @@ WaveTrack::WaveTrack( const SampleBlockFactoryPtr &pFactory,
 
    WaveTrackData::Get(*this).SetSampleFormat(format);
    DoSetRate(static_cast<int>(rate));
+}
+
+auto WaveTrack::Create(
+   const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate)
+      -> Holder
+{
+   auto result =
+      std::make_shared<WaveTrack>(CreateToken{}, pFactory, format, rate);
+   // Only after make_shared returns, can weak_from_this be used, which
+   // attached object factories may need
+   // (but this is anyway just the factory for unit test purposes)
+   result->AttachedTrackObjects::BuildAll();
+   return result;
 }
 
 WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a,
@@ -1365,12 +1451,6 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
 
 ChannelGroup &WaveTrack::DoGetChannelGroup() const
 {
-   const ChannelGroup &group = *this;
-   return const_cast<ChannelGroup&>(group);
-}
-
-ChannelGroup &WaveTrack::ReallyDoGetChannelGroup() const
-{
    const Track *pTrack = this;
    if (const auto pOwner = GetHolder())
       pTrack = *pOwner->Find(this);
@@ -1629,8 +1709,11 @@ WaveTrack::Holder WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory, bool keepLink) const
 {
    const auto rate = GetRate();
-   auto result = std::make_shared<WaveTrack>(pFactory, GetSampleFormat(), rate);
+   auto result = std::make_shared<WaveTrack>(CreateToken{},
+      pFactory, GetSampleFormat(), rate);
    result->Init(*this);
+   // Copy state rather than BuildAll()
+   Track::CopyAttachments(*result, *this, true /* deep copy */);
    // The previous line might have destroyed the rate information stored in
    // channel group data.  The copy is not yet in a TrackList.  Reassign rate
    // in case the track needs to make WaveClips before it is properly joined
@@ -1657,14 +1740,28 @@ TrackListHolder WaveTrack::WideEmptyCopy(
    return result;
 }
 
+void WaveTrack::DestroyAllChannelAttachments()
+{
+   AttachedTrackObjects::EraseIf([](TrackAttachment &attachment){
+      return nullptr != dynamic_cast<ChannelAttachmentsBase *>(&attachment);
+   });
+}
+
 TrackListHolder WaveTrack::MonoToStereo()
 {
    assert(!GetOwner());
 
+   // Make new track
    auto result = Duplicate();
+   auto &right = static_cast<WaveTrack&>(**result->begin());
+
+   // Destroy group data, but save other's channel attachments, in
+   // case they were copied with non-default state
    DestroyGroupData();
+   this->MergeChannelAttachments(std::move(right));
+
    result->Add(this->SharedPointer());
-   result->MakeMultiChannelTrack(**result->begin(), 2);
+   result->MakeMultiChannelTrack(right, 2);
 
    return result;
 }
@@ -1675,8 +1772,15 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto list = TrackList::Create(nullptr);
-   for (const auto pChannel : TrackList::Channels(this))
-      list->Add(CopyOne(*pChannel, t0, t1, forClipboard));
+   Holder first{};
+   for (const auto pChannel : TrackList::Channels(this)) {
+      auto holder = CopyOne(*pChannel, t0, t1, forClipboard);
+      if (!first)
+         first = holder;
+      else
+         first->MergeChannelAttachments(move(*holder));
+      list->Add(move(holder));
+   }
    return list;
 }
 
@@ -2915,7 +3019,7 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned stride, sampleFormat effectiveFormat)
 {
-   const size_t iChannel = ReallyGetChannelIndex();
+   const size_t iChannel = GetChannelIndex();
    return GetTrack()
       .Append(iChannel, buffer, format, len, stride, effectiveFormat);
 }
@@ -2926,7 +3030,7 @@ and no content already flushed to disk is lost. */
 bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
-   const size_t iChannel = ReallyGetChannelIndex();
+   const size_t iChannel = GetChannelIndex();
    return GetTrack()
       .Append(iChannel, buffer, format, len, 1, widestSampleFormat);
 }
@@ -3651,16 +3755,6 @@ void WaveTrack::GetEnvelopeValues(
 WaveClip* WaveTrack::GetClipAtTime(double time)
 {
    return const_cast<WaveClip*>(std::as_const(*this).GetClipAtTime(time));
-}
-
-WaveClipConstHolders WaveTrack::GetClipsIntersecting(double t0, double t1) const
-{
-   assert(t0 <= t1);
-   WaveClipConstHolders intersectingClips;
-   for (const auto& clip : mClips)
-      if (clip->IntersectsPlayRegion(t0, t1))
-         intersectingClips.push_back(clip);
-   return intersectingClips;
 }
 
 const WaveClip* WaveTrack::GetClipAtTime(double time) const

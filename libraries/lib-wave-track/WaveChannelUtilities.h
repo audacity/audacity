@@ -199,6 +199,8 @@ WAVE_TRACK_API ClipConstPointer GetNextClip(const ClipConstPointers &clips,
  */
 WAVE_TRACK_API ClipPointer GetNextClip(const ClipPointers &clips,
    const Clip& clip, PlaybackDirection searchDirection);
+
+WAVE_TRACK_API ClipPointer GetIntervalAtTime(WaveChannel &channel, double t);
 }
 
 #endif

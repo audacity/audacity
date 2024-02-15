@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../ui/ChannelVRulerControls.h"
 
+class NoteTrack;
 class NoteTrackVZoomHandle;
 
 class NoteTrackVRulerControls final : public ChannelVRulerControls
@@ -35,6 +36,8 @@ public:
        AudacityProject *pProject) override;
 
 private:
+   std::shared_ptr<NoteTrack> FindNoteTrack();
+
    // TrackPanelDrawable implementation
    void Draw(
       TrackPanelDrawingContext &context,

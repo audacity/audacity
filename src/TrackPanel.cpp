@@ -535,10 +535,14 @@ void TrackPanel::MakeParentRedrawScrollbars()
 }
 
 namespace {
-   std::shared_ptr<Track> FindTrack(TrackPanelCell *pCell )
+   std::shared_ptr<Track> FindTrack(TrackPanelCell *pCell)
    {
       if (pCell)
-         return static_cast<CommonTrackPanelCell*>( pCell )->FindTrack();
+         // FindTrack as applied through the CommonTrackPanelCell interface
+         // will really find a track, though for now it finds a left or right
+         // channel.  That can be corrected to the leader for now with
+         // TrackList::Find().
+         return static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       return {};
    }
 }
@@ -569,11 +573,12 @@ void TrackPanel::ProcessUIHandleResult
       panel->UpdateViewIfNoTracks();
       // Beware stale pointer!
       if (pLatestTrack == pClickedTrack)
-         pLatestTrack = NULL;
-      pClickedTrack = NULL;
+         pLatestTrack = nullptr;
+      pClickedTrack = nullptr;
    }
 
    if (pClickedTrack && (refreshResult & RefreshCode::UpdateVRuler))
+      // This calls TrackList::Find
       panel->UpdateVRuler(pClickedTrack);
 
    if (refreshResult & RefreshCode::DrawOverlays) {
@@ -592,8 +597,10 @@ void TrackPanel::ProcessUIHandleResult
       panel->Refresh(false);
    else {
       if (refreshResult & RefreshCell)
+         // This uses TrackList::Find
          panel->RefreshTrack(pClickedTrack);
       if (refreshResult & RefreshLatestCell)
+         // This uses TrackList::Find
          panel->RefreshTrack(pLatestTrack);
    }
 
@@ -604,8 +611,12 @@ void TrackPanel::ProcessUIHandleResult
       Viewport::Get(*GetProject()).HandleResize();
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
-      TrackFocus::Get(*GetProject()).Set(pClickedTrack);
-      Viewport::Get(*GetProject()).ShowTrack(*pClickedTrack);
+      auto & focus = TrackFocus::Get(*GetProject());
+      // This uses TrackList::Find
+      focus.Set(pClickedTrack);
+      // This expects a leader track, not a channel
+      if (const auto pFocus = focus.Get())
+         Viewport::Get(*GetProject()).ShowTrack(*pFocus);
    }
 }
 
@@ -744,6 +755,7 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
          const auto t = FindTrack( foundCell.pCell.get() );
          if ( t ) {
             auto &focus = TrackFocus::Get(*GetProject());
+            // This uses TrackList::Find:
             focus.Set(t.get());
             auto pLeader = focus.Get();
             if (pLeader)
@@ -868,8 +880,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    const bool hasSolo = GetTracks()->Any<PlayableTrack>()
       .any_of( [&](const PlayableTrack *pt) {
          pt = static_cast<const PlayableTrack *>(
-            pendingTracks.SubstitutePendingChangedTrack(*pt).get());
-         return (pt && pt->GetSolo());
+            &pendingTracks.SubstitutePendingChangedTrack(*pt));
+         return pt->GetSolo();
       } );
 
    mTrackArtist->drawEnvelope = envelopeFlag;
@@ -952,8 +964,12 @@ void TrackPanel::UpdateVRulers()
 
 void TrackPanel::UpdateVRuler(Track *t)
 {
-   if (t)
-      UpdateTrackVRuler(**TrackList::Channels(t).begin());
+   if (t) {
+      // Substitute the leader
+      t = *GetTracks()->Find(t);
+      // This function iterates all channels
+      UpdateTrackVRuler(*t);
+   }
 
    UpdateVRulerSize();
 }
@@ -1006,7 +1022,7 @@ void TrackPanel::UpdateVRulerSize()
       // Find maximum width over all channels
       for (auto t : trackRange)
          for (auto pChannel : t->Channels()) {
-            auto &size = ChannelView::Get(*pChannel).vrulerSize;
+            const auto &size = ChannelView::Get(*pChannel).vrulerSize;
             s.IncTo({ size.first, size.second });
          }
 
@@ -1081,8 +1097,7 @@ void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
       return;
    const auto artist = TrackArtist::Get(context);
    const auto &pendingTracks = *artist->pPendingTracks;
-   auto &track =
-      *pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
+   auto &track = pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
    auto name = track.GetName();
    if (name.IsEmpty())
       return;

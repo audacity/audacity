@@ -135,7 +135,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
          for(auto channel : mix->Channels())
          {
-            auto buffer = mixer.GetBuffer(channel->ReallyGetChannelIndex());
+            auto buffer = mixer.GetBuffer(channel->GetChannelIndex());
             channel->AppendBuffer(buffer, format, blockLen, 1, effectiveFormat);
          }
 

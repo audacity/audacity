@@ -285,6 +285,9 @@ private:
 
    void Init(const Track &orig);
 
+   //! Copy (deep) or just share (!deep) AttachedTrackObjects
+   static void CopyAttachments(Track &dst, const Track &src, bool deep);
+
    //! Choices when duplicating a track
    struct DuplicateOptions {
       DuplicateOptions()
@@ -522,91 +525,6 @@ protected:
       const Track &track = *this;
       return const_cast<Track&>(track);
    }
-};
-
-//! Holds multiple objects as a single attachment to Track
-class TRACK_API ChannelAttachmentsBase : public TrackAttachment
-{
-public:
-   using Factory =
-      std::function<std::shared_ptr<TrackAttachment>(Track &, size_t)>;
-
-   ChannelAttachmentsBase(Track &track, Factory factory);
-   ~ChannelAttachmentsBase() override;
-
-   // Override all the TrackAttachment virtuals and pass through to each
-   void CopyTo(Track &track) const override;
-   void Reparent(const std::shared_ptr<Track> &parent) override;
-   void WriteXMLAttributes(XMLWriter &writer) const override;
-   bool HandleXMLAttribute(
-      const std::string_view& attr, const XMLAttributeValueView& valueView)
-   override;
-
-protected:
-   /*!
-    @pre `iChannel < track.NChannels()`
-    */
-   static TrackAttachment &Get(
-      const AttachedTrackObjects::RegisteredFactory &key,
-      Track &track, size_t iChannel);
-   /*!
-    @pre `!pTrack || iChannel < pTrack->NChannels()`
-    */
-   static TrackAttachment *Find(
-      const AttachedTrackObjects::RegisteredFactory &key,
-      Track *pTrack, size_t iChannel);
-
-private:
-   const Factory mFactory;
-   std::vector<std::shared_ptr<TrackAttachment>> mAttachments;
-};
-
-//! Holds multiple objects of the parameter type as a single attachment to Track
-template<typename Attachment>
-class ChannelAttachments : public ChannelAttachmentsBase
-{
-   static_assert(std::is_base_of_v<TrackAttachment, Attachment>);
-public:
-   ~ChannelAttachments() override = default;
-
-   /*!
-    @pre `iChannel < track.NChannels()`
-    */
-   static Attachment &Get(
-      const AttachedTrackObjects::RegisteredFactory &key,
-      Track &track, size_t iChannel)
-   {
-      return static_cast<Attachment&>(
-         ChannelAttachmentsBase::Get(key, track, iChannel));
-   }
-   /*!
-    @pre `!pTrack || iChannel < pTrack->NChannels()`
-    */
-   static Attachment *Find(
-      const AttachedTrackObjects::RegisteredFactory &key,
-      Track *pTrack, size_t iChannel)
-   {
-      return static_cast<Attachment*>(
-         ChannelAttachmentsBase::Find(key, pTrack, iChannel));
-   }
-
-   //! Type-erasing constructor
-   /*!
-    @tparam F returns a shared pointer to Attachment (or some subtype of it)
-
-    @pre `f` never returns null
-
-    `f` may assume the precondition that the given channel index is less than
-    the given track's number of channels
-    */
-   template<typename F,
-      typename sfinae = std::enable_if_t<std::is_convertible_v<
-         std::invoke_result_t<F, Track&, size_t>, std::shared_ptr<Attachment>
-      >>
-   >
-   explicit ChannelAttachments(Track &track, F &&f)
-      : ChannelAttachmentsBase{ track, std::forward<F>(f) }
-   {}
 };
 
 //! Encapsulate the checked down-casting of track pointers
@@ -1237,12 +1155,12 @@ public:
    /// Make the list empty
    void Clear(bool sendEvent = true);
 
-   bool CanMoveUp(Track * t) const;
-   bool CanMoveDown(Track * t) const;
+   bool CanMoveUp(Track &t) const;
+   bool CanMoveDown(Track &t) const;
 
-   bool MoveUp(Track * t);
-   bool MoveDown(Track * t);
-   bool Move(Track * t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
+   bool MoveUp(Track &t);
+   bool MoveDown(Track &t);
+   bool Move(Track &t, bool up) { return up ? MoveUp(t) : MoveDown(t); }
 
    // Return non-null only if the weak pointer is not, and the track is
    // owned by this list; constant time.
@@ -1276,29 +1194,6 @@ public:
     */
    static TrackListHolder Temporary(AudacityProject *pProject,
       const Track::Holder &left = {}, const Track::Holder &right = {});
-
-   //! Construct a temporary list whose first channel group contains the given
-   //! channels, up to the limit of channel group size; excess channels go each
-   //! into a separate group; TrackIds are not changed
-   static TrackListHolder Temporary(
-      AudacityProject *pProject, const std::vector<Track::Holder> &channels);
-
-   /*!
-    @copydoc Temporary(AudacityProject *, const std::vector<Track::Holder> &)
-    Overload allowing shared pointers to some subclass of Track
-    */
-   template<typename T>
-   static TrackListHolder Temporary(
-      AudacityProject *pProject,
-      const std::vector<std::shared_ptr<T>> &channels)
-   {
-      std::vector<Track::Holder> temp;
-      static const auto convert = [](auto &pChannel){
-         return std::static_pointer_cast<Track>(pChannel);
-      };
-      transform(channels.begin(), channels.end(), back_inserter(temp), convert);
-      return Temporary(pProject, temp);
-   }
 
    //! Remove all tracks from `list` and put them at the end of `this`
    /*!
@@ -1343,8 +1238,8 @@ private:
       return { { b, b, e, pred }, { b, e, e, pred } };
    }
 
-   Track *GetPrev(Track * t, bool linked = false) const;
-   Track *GetNext(Track * t, bool linked = false) const;
+   Track *GetPrev(Track &, bool linked = false) const;
+   Track *GetNext(Track &, bool linked = false) const;
 
    template < typename TrackType >
       TrackIter< TrackType >

@@ -135,7 +135,7 @@ int SpectralDataManager::FindFrequencySnappingBin(const WaveChannel &channel,
       channel, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
 }
 
-std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
+std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveChannel &wc,
                                                           long long int startSC,
                                                           int hopSize,
                                                           double threshold,
@@ -145,7 +145,7 @@ std::vector<int> SpectralDataManager::FindHighestFrequencyBins(WaveTrack *wt,
    setting.mNeedOutput = false;
    Worker worker{ nullptr, setting };
 
-   return worker.ProcessOvertones(*wt, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
+   return worker.ProcessOvertones(wc, startSC, hopSize, setting.mWindowSize, threshold, targetFreqBin);
  }
 
 SpectralDataManager::Worker::Worker(

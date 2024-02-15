@@ -191,8 +191,6 @@ public:
     */
    size_t GetChannelIndex() const;
 
-   size_t ReallyGetChannelIndex() const;
-
    /*!
       @name Acesss to intervals
       @{
@@ -293,11 +291,7 @@ protected:
     */
    virtual ChannelGroup &DoGetChannelGroup() const = 0;
 
-   //! This is temporary!  It defaults to call the above
-   virtual ChannelGroup &ReallyDoGetChannelGroup() const;
-
 private:
-   int FindChannelIndex() const;
 };
 
 class CHANNEL_API ChannelGroup
@@ -423,6 +417,20 @@ public:
    {
       assert(IsLeader());
       return { { this, 0 }, { this, NChannels() } };
+   }
+
+   std::shared_ptr<Channel> NthChannel(size_t nChannel)
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
+   }
+
+   std::shared_ptr<const Channel> NthChannel(size_t nChannel) const
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
    }
 
    /*!
@@ -613,8 +621,8 @@ inline size_t Channel::NIntervals() const
 template<typename IntervalType>
 std::shared_ptr<IntervalType> Channel::GetInterval(size_t iInterval)
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 
 template<typename IntervalType>
@@ -622,7 +630,7 @@ auto Channel::GetInterval(size_t iInterval) const
    -> std::enable_if_t<std::is_const_v<IntervalType>,
       std::shared_ptr<IntervalType>>
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 #endif

@@ -35,8 +35,8 @@ Paul Licameli split from TrackPanel.cpp
 
 using Doubles = ArrayOf<double>;
 
-TimeTrackView::TimeTrackView(const std::shared_ptr<Track> &pTrack)
-   : CommonChannelView{ pTrack, 0 }
+TimeTrackView::TimeTrackView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelView{ pChannel }
 {
 }
 
@@ -49,9 +49,9 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
  const AudacityProject *pProject, int, bool)
 {
    std::vector<UIHandlePtr> results;
-   auto result = EnvelopeHandle::TimeTrackHitTest
-      ( mEnvelopeHandle, st.state, st.rect, pProject,
-        std::static_pointer_cast< TimeTrack >( FindTrack() ) );
+   auto result = EnvelopeHandle::TimeTrackHitTest(
+      mEnvelopeHandle, st.state, st.rect, pProject,
+      FindChannel<TimeTrack>());
    if (result)
       results.push_back(result);
    return results;
@@ -60,7 +60,7 @@ std::vector<UIHandlePtr> TimeTrackView::DetailedHitTest
 using DoGetTimeTrackView = DoGetView::Override<TimeTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetTimeTrackView) {
    return [](TimeTrack &track, size_t) {
-      return std::make_shared<TimeTrackView>(track.SharedPointer());
+      return std::make_shared<TimeTrackView>(track.SharedPointer<TimeTrack>());
    };
 }
 
@@ -161,8 +161,11 @@ void TimeTrackView::Draw(
    if ( iPass == TrackArtist::PassTracks ) {
       const auto artist = TrackArtist::Get(context);
       const auto &pendingTracks = *artist->pPendingTracks;
-      const auto pTrack = FindTrack();
-      const auto pList = pTrack->GetOwner();
+      const auto pChannel = FindChannel();
+      if (!pChannel)
+         return;
+      const auto pList =
+         static_cast<const TimeTrack*>(pChannel.get())->GetOwner();
       if (!pList)
          // Track isn't owned by a list.  Can't proceed!
          return;
@@ -185,9 +188,9 @@ void TimeTrackView::Draw(
       Ruler ruler{ updater, TimeFormat::Instance() };
       ruler.SetLabelEdges(false);
 
-      const auto tt = std::static_pointer_cast<const TimeTrack>(
-         pendingTracks.SubstitutePendingChangedTrack(*pTrack));
-      DrawTimeTrack(context, *tt, ruler, rect);
+      const auto &tt = static_cast<const TimeTrack&>(
+         pendingTracks.SubstitutePendingChangedChannel(*pChannel));
+      DrawTimeTrack(context, tt, ruler, rect);
    }
    CommonChannelView::Draw(context, rect, iPass);
 }

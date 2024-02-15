@@ -115,23 +115,14 @@ unsigned CommonTrackPanelCell::HandleWheelRotation
    return hook ? hook( evt, pProject ) : RefreshCode::Cancelled;
 }
 
-CommonTrackCell::CommonTrackCell(
-   const std::shared_ptr<Track> &parent, size_t iChannel
-)  : mwTrack{ parent }
-   , miChannel{ iChannel }
-{
-   // TODO wide wave tracks -- remove assertion
-   assert(iChannel == 0);
-}
-
-CommonTrackCell::CommonTrackCell(ChannelGroup &group, size_t iChannel)
-   : CommonTrackCell{ static_cast<Track&>(group).shared_from_this(), iChannel }
+CommonTrackCell::CommonTrackCell(const std::shared_ptr<Track> &parent)
+   : mwTrack{ parent }
 {
 }
 
 CommonTrackCell::~CommonTrackCell() = default;
 
-void CommonTrackCell::Reparent( const std::shared_ptr<Track> &parent )
+void CommonTrackCell::Reparent(const std::shared_ptr<Track> &parent)
 {
    mwTrack = parent;
 }
@@ -141,14 +132,33 @@ std::shared_ptr<Track> CommonTrackCell::DoFindTrack()
    return mwTrack.lock();
 }
 
-std::shared_ptr<Channel> CommonTrackCell::FindChannel()
+CommonChannelCell::CommonChannelCell(const std::shared_ptr<Channel> &parent)
+   : mwChannel{ parent }
 {
-   if (const auto pTrack = FindTrack())
-      return pTrack->GetChannel(miChannel);
-   return {};
 }
 
-std::shared_ptr<const Channel> CommonTrackCell::FindChannel() const
+CommonChannelCell::~CommonChannelCell() = default;
+
+void CommonChannelCell::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
 {
-   return const_cast<CommonTrackCell*>(this)->FindChannel();
+   mwChannel = parent->NthChannel(iChannel);
+}
+
+std::shared_ptr<Track> CommonChannelCell::DoFindTrack()
+{
+   Track *pTrack{};
+   if (const auto pChannel = mwChannel.lock())
+      pTrack = dynamic_cast<Track *>(&pChannel->GetChannelGroup());
+   return pTrack ? pTrack->SharedPointer() : nullptr;
+}
+
+std::shared_ptr<Channel> CommonChannelCell::DoFindChannel()
+{
+   return mwChannel.lock();
+}
+
+std::shared_ptr<const Channel> CommonChannelCell::DoFindChannel() const
+{
+   return const_cast<CommonChannelCell*>(this)->FindChannel();
 }

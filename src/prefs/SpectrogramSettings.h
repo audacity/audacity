@@ -212,15 +212,21 @@ class AUDACITY_DLL_API SpectrogramBounds
 public:
 
    //! Get either the global default settings, or the track's own if previously created
-   static SpectrogramBounds &Get( WaveTrack &track );
+   static SpectrogramBounds &Get(WaveTrack &track);
 
-   //! @copydoc Get
-   static const SpectrogramBounds &Get( const WaveTrack &track );
+   //! @copydoc Get(WaveTrack&)
+   static const SpectrogramBounds &Get(const WaveTrack &track);
+
+   //! @copydoc Get(WaveTrack&)
+   static SpectrogramBounds &Get(WaveChannel &channel);
+
+   //! @copydoc Get(WaveTrack&)
+   static const SpectrogramBounds &Get(const WaveChannel &channel);
 
    ~SpectrogramBounds() override;
    PointerType Clone() const override;
 
-   void GetBounds(const WaveTrack &wt, float &min, float &max) const;
+   void GetBounds(const WaveChannel &wc, float &min, float &max) const;
 
    void SetBounds(float min, float max)
    { mSpectrumMin = min, mSpectrumMax = max; }
