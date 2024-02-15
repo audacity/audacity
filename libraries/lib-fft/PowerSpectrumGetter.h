@@ -181,7 +181,7 @@ private:
 
  Size and capacity are NOT constrained to be aligned.
  */
-struct PffftFloatVector : std::vector<float, PffftAllocator<float>> {
+struct FFT_API PffftFloatVector : std::vector<float, PffftAllocator<float>> {
    using std::vector<float, PffftAllocator<float>>::vector;
    //! @return `data() + c`
    PffftFloats aligned(PffftAlignedCount c = {});
