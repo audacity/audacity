@@ -121,7 +121,7 @@ AudioComDialogBase::AudioComDialogBase(
 
       auto checkbox =
          safenew wxCheckBox { this, wxID_ANY,
-                              XO("Don’t show this again").Translation() };
+                              XO("Don't show this again").Translation() };
 
       checkbox->SetValue(skipDialog);
 

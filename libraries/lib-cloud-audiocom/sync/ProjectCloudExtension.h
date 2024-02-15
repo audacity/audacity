@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include <atomic>
 #include <cstdint>
 #include <functional>
 #include <memory>
@@ -23,7 +24,7 @@
 #include "ClientData.h"
 #include "Observer.h"
 
-#include "sync/CloudSyncError.h"
+#include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
 
 class AudacityProject;
