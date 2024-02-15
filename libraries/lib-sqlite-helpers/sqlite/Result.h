@@ -65,9 +65,9 @@ public:
    T&& operator* () &&
    {
       if (!HasValue())
-         std::get<Error>(mValue).Raise();
+         std::get_if<Error>(&mValue)->Raise();
 
-      return std::move(std::get<T>(mValue));
+      return std::move(*std::get_if<T>(&mValue));
    }
 
    explicit operator bool () const noexcept
@@ -80,7 +80,7 @@ public:
       if (HasValue())
          return Error();
 
-      return std::get<Error>(mValue);
+      return *std::get_if<Error>(&mValue);
    }
 private:
    std::variant<Error, T> mValue;
