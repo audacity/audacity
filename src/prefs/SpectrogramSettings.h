@@ -90,8 +90,8 @@ public:
    // Force creation of channels's independent settings
    static SpectrogramSettings &Own(WaveChannel &wc);
 
-   //! Make track lose indpendent settings and use defaults
-   static void Reset(WaveTrack &track);
+   //! Make channel lose indpendent settings and use defaults
+   static void Reset(WaveChannel &channel);
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();

@@ -141,9 +141,9 @@ SpectrogramSettings &SpectrogramSettings::Own(WaveChannel &wc)
    return Own(wc.GetTrack());
 }
 
-void SpectrogramSettings::Reset(WaveTrack &track)
+void SpectrogramSettings::Reset(WaveChannel &wc)
 {
-   track.GetGroupData().Attachments
+   wc.GetTrack().GetGroupData().Attachments
       ::Assign(key1, nullptr);
 }
 

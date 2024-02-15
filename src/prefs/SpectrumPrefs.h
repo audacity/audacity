@@ -33,7 +33,7 @@ class wxTextCtrl;
 struct FFTParam;
 class ShuttleGui;
 class SpectrogramSettings;
-class WaveTrack;
+class WaveChannel;
 struct WaveChannelSubViewPlacement;
 
 #define SPECTRUM_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Spectrum") }
@@ -42,7 +42,7 @@ class SpectrumPrefs final : public PrefsPanel
 {
  public:
    SpectrumPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject, WaveTrack *wt);
+      AudacityProject *pProject, WaveChannel *wc);
    virtual ~SpectrumPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
@@ -69,7 +69,7 @@ class SpectrumPrefs final : public PrefsPanel
 
    AudacityProject *mProject{};
 
-   WaveTrack *const mWt;
+   WaveChannel *const mWc;
    bool mDefaulted, mOrigDefaulted;
 
    wxTextCtrl *mMinFreq;
@@ -107,7 +107,7 @@ class SpectrumPrefs final : public PrefsPanel
 };
 
 /// A PrefsPanel::Factory that creates one SpectrumPrefs panel.
-/// This factory can be parametrized by a single track, to change settings
+/// This factory can be parametrized by a single channel, to change settings
 /// non-globally
-extern PrefsPanel::Factory SpectrumPrefsFactory( WaveTrack *wt = 0 );
+extern PrefsPanel::Factory SpectrumPrefsFactory(WaveChannel *wc = 0);
 #endif
