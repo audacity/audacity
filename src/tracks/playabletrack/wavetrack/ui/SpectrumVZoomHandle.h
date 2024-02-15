@@ -77,10 +77,10 @@ private:
 
 #include "WaveChannelVZoomHandle.h" // to inherit
 
-class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
+class SpectrumVRulerMenuTable : public WaveChannelVRulerMenuTable
 {
    SpectrumVRulerMenuTable()
-      : WaveTrackVRulerMenuTable{ "SpectrumVRuler" }
+      : WaveChannelVRulerMenuTable{ "SpectrumVRuler" }
    {}
    virtual ~SpectrumVRulerMenuTable() {}
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);

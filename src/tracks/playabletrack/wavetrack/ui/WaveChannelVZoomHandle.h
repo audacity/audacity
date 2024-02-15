@@ -44,7 +44,7 @@ namespace WaveChannelVZoomHandle
    AUDACITY_DLL_API
    Result DoRelease(
       const TrackPanelMouseEvent &event, AudacityProject *pProject,
-      wxWindow *pParent, WaveTrack &track, const wxRect &mRect,
+      wxWindow *pParent, WaveChannel &wc, const wxRect &mRect,
       DoZoomFunction doZoom, PopupMenuTable &table,
       int zoomStart, int zoomEnd );
 
@@ -60,7 +60,7 @@ namespace WaveChannelVZoomHandle
 
 #include "../../../../widgets/PopupMenuTable.h" // to inherit
 
-class AUDACITY_DLL_API WaveTrackVRulerMenuTable
+class AUDACITY_DLL_API WaveChannelVRulerMenuTable
    : public PopupMenuTable
    , private PrefsListener
 {
@@ -69,7 +69,7 @@ public:
    {
    public:
       AudacityProject &project;
-      WaveTrack &track;
+      WaveChannel &wc;
       wxRect rect;
       unsigned result;
       int yy;
@@ -77,7 +77,7 @@ public:
    };
 
 protected:
-   WaveTrackVRulerMenuTable( const Identifier &id )
+   WaveChannelVRulerMenuTable( const Identifier &id )
       : PopupMenuTable{ id }
    {}
 

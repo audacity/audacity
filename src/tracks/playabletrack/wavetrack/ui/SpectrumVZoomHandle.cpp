@@ -81,7 +81,7 @@ UIHandle::Result SpectrumVZoomHandle::Release(
    if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, pChannel->GetTrack(), mRect,
+      evt, pProject, pParent, *pChannel, mRect,
       DoZoom, SpectrumVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -285,12 +285,12 @@ BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
          OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
          POPUP_MENU_FN( OnSpectrumScaleType ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            auto &wt =
+            auto &wc =
                static_cast<SpectrumVRulerMenuTable&>(handler)
-                  .mpData->track;
+                  .mpData->wc;
             if ( id ==
                OnFirstSpectrumScaleID +
-                     static_cast<int>(SpectrogramSettings::Get(wt).scaleType))
+                     static_cast<int>(SpectrogramSettings::Get(wc).scaleType))
                menu.Check(id, true);
          }
       );
@@ -308,15 +308,15 @@ END_POPUP_MENU()
 
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
 {
-   auto &wt = mpData->track;
+   auto &wc = mpData->wc;
    const SpectrogramSettings::ScaleType newScaleType =
       SpectrogramSettings::ScaleType(
          std::max(0,
             std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstSpectrumScaleID
       )));
-   if (SpectrogramSettings::Get(wt).scaleType != newScaleType) {
-      SpectrogramSettings::Own(wt).scaleType = newScaleType;
+   if (SpectrogramSettings::Get(wc).scaleType != newScaleType) {
+      SpectrogramSettings::Own(wc).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 

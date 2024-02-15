@@ -76,10 +76,10 @@ private:
 
 #include "WaveChannelVZoomHandle.h" // to inherit
 
-class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
+class WaveformVRulerMenuTable : public WaveChannelVRulerMenuTable
 {
    WaveformVRulerMenuTable()
-      : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
+      : WaveChannelVRulerMenuTable{ "WaveFormVRuler" }
    {}
    virtual ~WaveformVRulerMenuTable() {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);

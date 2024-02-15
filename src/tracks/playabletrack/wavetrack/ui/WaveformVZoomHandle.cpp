@@ -77,7 +77,7 @@ UIHandle::Result WaveformVZoomHandle::Release(
    if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, pChannel->GetTrack(), mRect,
+      evt, pProject, pParent, *pChannel, mRect,
       DoZoom, WaveformVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -240,7 +240,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
                static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
             if (id ==
                OnFirstWaveformScaleID +
-               static_cast<int>(WaveformSettings::Get(pData->track).scaleType))
+               static_cast<int>(WaveformSettings::Get(pData->wc).scaleType))
                menu.Check(id, true);
          }
          );
@@ -272,7 +272,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstWaveformScaleID
       )));
 
-   auto &scaleType = WaveformSettings::Get(mpData->track).scaleType;
+   auto &scaleType = WaveformSettings::Get(mpData->wc).scaleType;
    if (scaleType != newScaleType) {
       scaleType = newScaleType;
 
