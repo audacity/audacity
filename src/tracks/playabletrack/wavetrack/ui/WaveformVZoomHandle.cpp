@@ -112,7 +112,7 @@ wxRect WaveformVZoomHandle::DrawingArea(
 // the zoomKind and cause a drag-zoom-in.
 void WaveformVZoomHandle::DoZoom(
    AudacityProject *pProject,
-   WaveTrack &track,
+   WaveChannel &wc,
    WaveChannelViewConstants::ZoomActions ZoomKind,
    const wxRect &rect, int zoomStart, int zoomEnd,
    bool fixedMousePoint)
@@ -128,18 +128,18 @@ void WaveformVZoomHandle::DoZoom(
       std::swap( zoomStart, zoomEnd );
 
    float min, max, minBand = 0;
-   const double rate = track.GetRate();
+   const double rate = wc.GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
 
 
    float top=2.0;
    float half=0.5;
-   auto &cache = WaveformScale::Get(track);
+   auto &cache = WaveformScale::Get(wc);
 
    {
       cache.GetDisplayBounds(min, max);
-      auto &waveSettings = WaveformSettings::Get(track);
+      auto &waveSettings = WaveformSettings::Get(wc);
       const bool linear = waveSettings.isLinear();
       if( !linear ){
          top = (LINEAR_TO_DB(2.0) + waveSettings.dBRange) / waveSettings.dBRange;

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class PopupMenuTable;
+class WaveChannel;
 class WaveTrack;
 #include "WaveChannelViewConstants.h"
 #include "../../../../UIHandle.h"
@@ -30,7 +31,7 @@ namespace WaveChannelVZoomHandle
    bool IsDragZooming(int zoomStart, int zoomEnd, bool hasDragZoom);
 
    using DoZoomFunction = void (*)(AudacityProject *pProject,
-       WaveTrack &track,
+       WaveChannel &wc,
        WaveChannelViewConstants::ZoomActions ZoomKind,
        const wxRect &rect, int zoomStart, int zoomEnd,
        bool fixedMousePoint);

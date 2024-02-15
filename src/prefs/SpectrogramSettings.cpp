@@ -136,6 +136,11 @@ SpectrogramSettings &SpectrogramSettings::Own(WaveTrack &track)
    return *pSettings;
 }
 
+SpectrogramSettings &SpectrogramSettings::Own(WaveChannel &wc)
+{
+   return Own(wc.GetTrack());
+}
+
 void SpectrogramSettings::Reset(WaveTrack &track)
 {
    track.GetGroupData().Attachments

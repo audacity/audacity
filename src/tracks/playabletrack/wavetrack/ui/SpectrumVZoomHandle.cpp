@@ -116,7 +116,7 @@ wxRect SpectrumVZoomHandle::DrawingArea(
 // the zoomKind and cause a drag-zoom-in.
 void SpectrumVZoomHandle::DoZoom(
    AudacityProject *pProject,
-   WaveTrack &track,
+   WaveChannel &wc,
    WaveChannelViewConstants::ZoomActions ZoomKind,
    const wxRect &rect, int zoomStart, int zoomEnd,
    bool fixedMousePoint)
@@ -132,14 +132,14 @@ void SpectrumVZoomHandle::DoZoom(
       std::swap( zoomStart, zoomEnd );
 
    float min, max, minBand = 0;
-   const double rate = track.GetRate();
+   const double rate = wc.GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const auto &specSettings = SpectrogramSettings::Get(track);
+   const auto &specSettings = SpectrogramSettings::Get(wc);
    NumberScale scale;
    const bool spectrumLinear =
       (specSettings.scaleType == SpectrogramSettings::stLinear);
-   auto &bounds = SpectrogramBounds::Get(track);
+   auto &bounds = SpectrogramBounds::Get(wc);
 
    bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd, true);
    // Add 100 if spectral to separate the kinds of zoom.
@@ -153,7 +153,7 @@ void SpectrumVZoomHandle::DoZoom(
    float half=0.5;
 
    {
-      bounds.GetBounds(track, min, max);
+      bounds.GetBounds(wc, min, max);
       scale = (specSettings.GetScale(min, max));
       const auto fftLength = specSettings.GetFFTLength();
       const float binSize = rate / fftLength;

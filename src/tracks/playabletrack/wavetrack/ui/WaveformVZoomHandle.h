@@ -28,7 +28,7 @@ public:
    WaveformVZoomHandle &operator=(const WaveformVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack &track,
+      AudacityProject *pProject, WaveChannel &wc,
       WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);

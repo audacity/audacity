@@ -56,7 +56,7 @@ unsigned SpectrumVRulerControls::HandleWheelRotation(
    const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return RefreshNone;
-   return DoHandleWheelRotation(evt, pProject, pChannel->GetTrack());
+   return DoHandleWheelRotation(evt, pProject, *pChannel);
 }
 
 std::shared_ptr<WaveChannel> SpectrumVRulerControls::FindWaveChannel()
@@ -65,7 +65,7 @@ std::shared_ptr<WaveChannel> SpectrumVRulerControls::FindWaveChannel()
 }
 
 unsigned SpectrumVRulerControls::DoHandleWheelRotation(
-   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveTrack &wt)
+   const TrackPanelMouseEvent &evt, AudacityProject *pProject, WaveChannel &wc)
 {
    using namespace RefreshCode;
    const wxMouseEvent &event = evt.event;
@@ -83,7 +83,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
    if (event.CmdDown() && !event.ShiftDown()) {
       const int yy = event.m_y;
       SpectrumVZoomHandle::DoZoom(
-         pProject, wt,
+         pProject, wc,
          (steps < 0)
             ? kZoomOut
             : kZoomIn,
@@ -95,11 +95,11 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
       const int height = evt.rect.GetHeight();
       {
          const float delta = steps * movement / height;
-         SpectrogramSettings &settings = SpectrogramSettings::Own(wt);
+         SpectrogramSettings &settings = SpectrogramSettings::Own(wc);
          const bool isLinear = settings.scaleType == SpectrogramSettings::stLinear;
          float bottom, top;
-         SpectrogramBounds::Get(wt).GetBounds(wt, bottom, top);
-         const double rate = wt.GetRate();
+         SpectrogramBounds::Get(wc).GetBounds(wc, bottom, top);
+         const double rate = wc.GetRate();
          const float bound = rate / 2;
          const NumberScale numberScale(settings.GetScale(bottom, top));
          float newTop =
@@ -111,7 +111,7 @@ unsigned SpectrumVRulerControls::DoHandleWheelRotation(
          std::min(bound,
                   numberScale.PositionToValue(numberScale.ValueToPosition(newBottom) + 1.0f));
          
-         SpectrogramBounds::Get(wt).SetBounds(newBottom, newTop);
+         SpectrogramBounds::Get(wc).SetBounds(newBottom, newTop);
       }
    }
    else
