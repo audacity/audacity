@@ -164,6 +164,7 @@ void DoImport(const CommandContext &context, bool isRaw)
       viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
+   std::vector<FilePath> filesToImport;
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
@@ -179,11 +180,11 @@ void DoImport(const CommandContext &context, bool isRaw)
                .AddImportedTracks(fileName, std::move(newTracks));
          }
       }
-      else {
-         ProjectFileManager::Get(project).Import(
-            fileName, ff + 1, selectedFiles.size());
-      }
+      else
+         filesToImport.push_back(fileName);
    }
+   if (!isRaw)
+      ProjectFileManager::Get(project).Import(filesToImport);
 }
 
 // Menu handler functions

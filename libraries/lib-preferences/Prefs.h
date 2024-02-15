@@ -49,7 +49,7 @@
 #include "GlobalVariable.h"
 
 #include "BasicSettings.h"
-
+#include "MemoryX.h"
 
 PREFERENCES_API void InitPreferences( std::unique_ptr<audacity::BasicSettings> uPrefs );
 PREFERENCES_API void GetPreferencesVersion(int& vMajor, int& vMinor, int& vMicro);
@@ -177,6 +177,8 @@ template< typename T >
 class Setting : public CachingSettingBase< T >
 {
 public:
+   using ValueType = T;
+
    using CachingSettingBase< T >::CachingSettingBase;
 
    using DefaultValueFunction = std::function< T() >;
@@ -556,6 +558,95 @@ private:
    }
 };
 
+/// Allows custom logic for preferences reset event
+class PREFERENCES_API PreferencesResetHandler
+{
+   static void Register(std::unique_ptr<PreferencesResetHandler> handler);
+public:
+
+   /// Performs single-time global handler registration
+   template<typename HandlerType>
+   struct Registration final
+   {
+      template<typename... Args>
+      Registration(Args&&... args) {
+         Register(std::make_unique<HandlerType>(std::forward<Args>(args)...));
+      }
+   };
+
+   virtual ~PreferencesResetHandler();
+
+   /// Happens before preferences reset
+   virtual void OnSettingResetBegin() = 0;
+   /// Happens after preferences reset
+   virtual void OnSettingResetEnd() = 0;
+};
+
+/// Setting that survives preferences reset
+/// Currently it's only possible to define sticky setting in a global scope
+/// @tparam SettingType - underlying setting type
+template<typename SettingType>
+class StickySetting final
+{
+   class ResetHandler final : public PreferencesResetHandler
+   {
+      using ValueType = typename SettingType::ValueType;
+
+      SettingType& mSetting;
+
+      std::optional<ValueType> mCapturedValue;
+
+   public:
+      ResetHandler(const ResetHandler&) = delete;
+      ResetHandler& operator=(const ResetHandler&) = delete;
+      ResetHandler(ResetHandler&&) = delete;
+      ResetHandler& operator=(ResetHandler&&) = delete;
+
+      ResetHandler(SettingType& setting) : mSetting(setting) { }
+      ~ResetHandler() override { assert(!mCapturedValue.has_value()); }
+
+      void OnSettingResetBegin() override
+      {
+         assert(!mCapturedValue.has_value());
+         ValueType value;
+         if(mSetting.Read(&value))
+            mCapturedValue = value;
+      }
+
+      void OnSettingResetEnd() override
+      {
+         if(mCapturedValue.has_value())
+         {
+            auto Do = finally([=]{ mCapturedValue = std::nullopt; });
+            mSetting.Write(*mCapturedValue);
+         }
+      }
+   };
+   SettingType mSetting;
+   PreferencesResetHandler::Registration<ResetHandler> mResetHandlerRegistration;
+public:
+   template<typename... Args>
+   StickySetting(Args&& ...args)
+      : mSetting(std::forward<Args>(args)...)
+      , mResetHandlerRegistration(mSetting)
+   { }
+   ~StickySetting() = default;
+
+   StickySetting(const StickySetting&) = delete;
+   StickySetting& operator=(const StickySetting&) = delete;
+   StickySetting(StickySetting&&) = delete;
+   StringSetting& operator=(StickySetting&&) = delete;
+
+   SettingType& Get() noexcept { return mSetting; }
+   const SettingType& Get() const noexcept { return mSetting; }
+
+   SettingType* operator->() noexcept { return &mSetting; }
+   const SettingType* operator->() const noexcept { return &mSetting; }
+
+   SettingType& operator*() noexcept { return mSetting; }
+   const SettingType& operator*() const noexcept { return mSetting; }
+};
+
 //! A listener notified of changes in preferences
 class PREFERENCES_API PrefsListener
 {
@@ -608,6 +699,6 @@ struct PREFERENCES_API PreferenceInitializer {
 };
 
 // Special extra-sticky settings
-extern PREFERENCES_API BoolSetting DefaultUpdatesCheckingFlag;
+extern PREFERENCES_API StickySetting<BoolSetting> DefaultUpdatesCheckingFlag;
 
 #endif

@@ -25,6 +25,7 @@ class Track;
 class TrackList;
 class WaveTrack;
 class XMLTagHandler;
+class ClipMirAudioReader;
 
 using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
 
@@ -94,21 +95,9 @@ public:
    static AudacityProject *OpenFile( const ProjectChooserFn &chooser,
       const FilePath &fileName, bool addtohistory = true);
 
-   /*!
-    * \brief Imports one of a list of files into the project. `fileNumber` and
-    * `numberOfFiles` must read like "1 of 3".
-    * @param fileNumber the number of the file in the list of files to be
-    * opened, starting from 1.
-    * @param numberOfFiles the total number of files to be opened.
-    */
-   bool Import(
-      const FilePath& fileName, size_t fileNumber, size_t numberOfFiles,
-      bool addToHistory = true);
-
-   /*!
-    * \brief A convenience function for importing a single file.
-    */
-   bool ImportOneOfOne(const FilePath& fileName, bool addToHistory = true);
+   bool
+   Import(const std::vector<FilePath>& fileNames, bool addToHistory = true);
+   bool Import(const FilePath& fileName, bool addToHistory = true);
 
    void Compact();
 
@@ -129,6 +118,10 @@ public:
                          const std::function<void(const TranslatableString&/*unlinkReason*/)>& onUnlink);
 
 private:
+   bool Import(
+      const FilePath& fileName, bool addToHistory,
+      std::shared_ptr<ClipMirAudioReader>& resultingReader);
+
    /*!
     @param fileName a path assumed to exist and contain an .aup3 project
     @param addtohistory whether to add the file to the MRU list

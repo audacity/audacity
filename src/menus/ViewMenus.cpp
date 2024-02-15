@@ -341,7 +341,7 @@ auto ViewMenu()
       Section( "Windows" ),
 
       Section( "Other",
-         Command( wxT("ShowExtraMenus"), XXO("Enable &Extra Menus"),
+         Command( wxT("ShowExtraMenus"), XXO("Enable E&xtra Menus"),
             OnShowExtraMenus, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowTrackNameInWaveform"), XXO("Show Track &Name as overlay"),

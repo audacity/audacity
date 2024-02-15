@@ -1,4 +1,4 @@
-#include "MirAudioReaders.h"
+#include "MirFakes.h"
 #include "MirTestUtils.h"
 #include "MusicInformationRetrieval.h"
 #include "WavMirAudioReader.h"

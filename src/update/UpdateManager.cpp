@@ -66,7 +66,7 @@ void UpdateManager::Start(bool suppressModal)
     {
         // DefaultUpdatesCheckingFlag survives the "Reset Preferences"
         // action, so check, if the updates were previously disabled as well.
-        if (DefaultUpdatesCheckingFlag.Read())
+        if (DefaultUpdatesCheckingFlag->Read())
         {
             UpdateNoticeDialog notice(nullptr);
 
@@ -263,7 +263,7 @@ void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotifi
 
 void UpdateManager::OnTimer(wxTimerEvent& WXUNUSED(event))
 {
-    bool updatesCheckingEnabled = DefaultUpdatesCheckingFlag.Read();
+    bool updatesCheckingEnabled = DefaultUpdatesCheckingFlag->Read();
 
 #if UPDATE_LOCAL_TESTING == 0
     if (updatesCheckingEnabled && IsTimeForUpdatesChecking())

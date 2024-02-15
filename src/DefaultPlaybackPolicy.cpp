@@ -14,11 +14,12 @@
 #include "ViewInfo.h"
 
 DefaultPlaybackPolicy::DefaultPlaybackPolicy( AudacityProject &project,
-   double trackEndTime, double loopEndTime,
+   double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
    bool loopEnabled, bool variableSpeed )
    : mProject{ project }
    , mTrackEndTime{ trackEndTime }
    , mLoopEndTime{ loopEndTime }
+   , mpStartTime{ pStartTime }
    , mLoopEnabled{ loopEnabled }
    , mVariableSpeed{ variableSpeed }
 {}
@@ -76,6 +77,30 @@ bool DefaultPlaybackPolicy::Done(
       return sampleCount(floor(diff * mRate + 0.5)) >= 0;
    }
    return false;
+}
+
+double DefaultPlaybackPolicy::OffsetSequenceTime(
+   PlaybackSchedule& schedule, double offset)
+{
+   auto time = schedule.GetSequenceTime();
+
+   // Assuming that mpStartTime always has a value when this policy is used
+   if (mpStartTime) {
+      if (mLoopEnabled) {
+         if (time < schedule.mT0)
+            time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+         else
+            time = std::clamp(time + offset, schedule.mT0, schedule.mT1);
+      }
+      else {
+         // this includes the case where the start time is after the
+         // looped region, and mLoopEnabled is set to false
+         time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+      }
+   }
+
+   schedule.RealTimeInit(time);
+   return time;
 }
 
 PlaybackSlice

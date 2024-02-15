@@ -156,17 +156,15 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
    {
       ScopedInvisiblePanel panel { s, 15 };
       s.SetBorder(0);
-      {
-         ScopedHorizontalLay h { s, wxLeft };
-         s.AddPrompt(XO("Clip Pitch"));
-      }
+
+      s.StartStatic(XO("Clip Pitch"));
       {
          ScopedHorizontalLay h { s, wxLeft };
          s.SetBorder(2);
          // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
          // instantly when `UpdateDialog` is called.
          s.TieSpinCtrl(
-             Verbatim(""), mShift.semis, TimeAndPitchInterface::MaxCents / 100,
+            XO("semitones:"), mShift.semis, TimeAndPitchInterface::MaxCents / 100,
              TimeAndPitchInterface::MinCents / 100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                const auto prevSemis = mShift.semis;
@@ -193,9 +191,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   // Something silly was entered; reset dialog
                   UpdateDialog();
             });
-         s.AddSpace(1, 0);
-         s.AddFixedText(XO("semitones,"));
-         s.TieSpinCtrl(Verbatim(""), mShift.cents, 100, -100)
+         s.TieSpinCtrl(XO("cents:"), mShift.cents, 100, -100)
             ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
                if (GetInt(event, mShift.cents))
                   OnPitchShiftChange(false);
@@ -203,8 +199,8 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   // Something silly was entered; reset dialog
                   UpdateDialog();
             });
-         s.AddFixedText(XO("cents"));
       }
+      s.EndStatic();
 
       s.AddSpace(0, 12);
       s.SetBorder(0);
@@ -215,7 +211,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
       }
       {
          ScopedHorizontalLay h { s, wxLeft };
-         auto txtCtrl = s.NameSuffix(Verbatim("%"))
+         auto txtCtrl = s.Name(XO("Clip Speed")).NameSuffix(Verbatim("%"))
                            .TieNumericTextBox({}, mClipSpeed, 14, true);
          txtCtrl->Enable(!mPlaybackOngoing);
          if (!mPlaybackOngoing)
