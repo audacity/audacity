@@ -12,6 +12,7 @@ Paul Licameli
 #define __AUDACITY_SPECTROGRAM_SETTINGS__
 
 #include "ClientData.h" // to inherit
+#include "PffftTransformer.h"
 #include "Prefs.h"
 #include "SampleFormat.h"
 #include "RealFFTf.h"
@@ -190,7 +191,7 @@ public:
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
-   HFFT           hFFT;
+   PffftTransformer transformer;
    Floats         window;
 
    // Two other windows for computing reassigned spectrogram

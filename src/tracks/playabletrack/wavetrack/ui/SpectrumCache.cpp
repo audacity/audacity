@@ -11,7 +11,6 @@
 #include "SpectrumCache.h"
 
 #include "../../../../prefs/SpectrogramSettings.h"
-#include "RealFFTf.h"
 #include "Sequence.h"
 #include "Spectrum.h"
 #include "WaveClipUtilities.h"
@@ -21,34 +20,34 @@
 
 namespace {
 
-static void ComputeSpectrumUsingRealFFTf(PffftFloats buf,
-   const FFTParam *hFFT,
-   const float * __restrict window, size_t len, PffftFloats output)
+static void ComputeSpectrumUsingPffft(PffftFloats buf,
+   const PffftTransformer &transformer,
+   const float * __restrict window, size_t len,
+   PffftFloats work, PffftFloats output)
 {
    const auto buffer = buf.get();
    const auto out = output.get();
-   size_t i;
-   if(len > hFFT->Points * 2)
-      len = hFFT->Points * 2;
-   for(i = 0; i < len; i++)
-      buffer[i] *= window[i];
-   for( ; i < (hFFT->Points * 2); i++)
-      buffer[i] = 0; // zero pad as needed
-   RealFFTf(buffer, hFFT);
+   {
+      size_t i;
+      for (i = 0; i < len; ++i)
+         buffer[i] *= window[i];
+      for( ; i < len; ++i)
+         buffer[i] = 0; // zero pad as needed
+   }
+   transformer.TransformOrdered(buf, buf, work);
    // Handle the (real-only) DC
    float power = buffer[0] * buffer[0];
    if(power <= 0)
       out[0] = -160.0;
    else
       out[0] = 10.0 * log10f(power);
-   for(i = 1; i < hFFT->Points; i++) {
-      const int index = hFFT->BitReversed[i];
+   for (size_t index = 2; index < len; index += 2) {
       const float re = buffer[index], im = buffer[index + 1];
       power = re * re + im * im;
       if(power <= 0)
-         out[i] = -160.0;
+         out[index / 2] = -160.0;
       else
-         out[i] = 10.0*log10f(power);
+         out[index / 2] = 10.0 * log10f(power);
    }
 }
 
@@ -96,7 +95,7 @@ bool SpecCache::Matches(
 bool SpecCache::CalculateOneSpectrum(
    const SpectrogramSettings& settings, const WaveChannelInterval& clip,
    const int xx, double pixelsPerSecond, int lowerBoundX, int upperBoundX,
-   const std::vector<float>& gainFactors, const PffftFloats scratch,
+   const std::vector<float>& gainFactors, const PffftFloats work,
    const PffftFloats out) const
 {
    bool result = false;
@@ -126,6 +125,7 @@ bool SpecCache::CalculateOneSpectrum(
    const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
    const size_t padding = (windowSizeSetting * (zeroPaddingFactorSetting - 1)) / 2;
    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
+   auto scratch = work + PffftAlignedCount{ fftLen };
    const auto nBins = settings.NBins();
 
    const auto Column = [&out, nBins](int xx){
@@ -205,43 +205,44 @@ bool SpecCache::CalculateOneSpectrum(
       }
       else if (reassignment) {
          static const double epsilon = 1e-16;
-         const auto hFFT = settings.hFFT.get();
 
          // Assuming scratch is well aligned for pffft, scratch2 and scratch3
          // should be too
-         const auto scratch2 = (scratch + PffftAlignedCount{ fftLen }).get();
-         std::copy(pScratch, pScratch + fftLen, scratch2);
+         const auto scratch2 = (scratch + PffftAlignedCount{ fftLen });
+         std::copy(pScratch, pScratch + fftLen, scratch2.get());
 
-         const auto scratch3 =
-            (scratch + 2u * PffftAlignedCount{ fftLen }).get();
-         std::copy(pScratch, pScratch + fftLen, scratch3);
+         const auto scratch3 = (scratch + 2u * PffftAlignedCount{ fftLen });
+         std::copy(pScratch, pScratch + fftLen, scratch3.get());
+
+         auto &transformer = settings.transformer;
 
          {
             const float *const window = settings.window.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
                pScratch[ii] *= window[ii];
-            RealFFTf(pScratch, hFFT);
+            transformer.TransformOrdered(scratch, scratch, work);
          }
 
          {
             const float *const dWindow = settings.dWindow.get();
+            const auto pScratch2 = scratch2.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
-               scratch2[ii] *= dWindow[ii];
-            RealFFTf(scratch2, hFFT);
+               pScratch2[ii] *= dWindow[ii];
+            transformer.TransformOrdered(scratch2, scratch2, work);
          }
 
          {
             const float *const tWindow = settings.tWindow.get();
+            const auto pScratch3 = scratch3.get();
             for (size_t ii = 0; ii < fftLen; ++ii)
-               scratch3[ii] *= tWindow[ii];
-            RealFFTf(scratch3, hFFT);
+               pScratch3[ii] *= tWindow[ii];
+            transformer.TransformOrdered(scratch3, scratch3, work);
          }
 
-         for (size_t ii = 0; ii < hFFT->Points; ++ii) {
-            const int index = hFFT->BitReversed[ii];
+         for (size_t index = 0; index < fftLen; index += 2) {
             const float
                denomRe = pScratch[index],
-               denomIm = ii == 0 ? 0 : pScratch[index + 1];
+               denomIm = index == 0 ? 0 : pScratch[index + 1];
             const double power = denomRe * denomRe + denomIm * denomIm;
             if (power < epsilon)
                // Avoid dividing by near-zero below
@@ -249,10 +250,11 @@ bool SpecCache::CalculateOneSpectrum(
 
             double freqCorrection;
             {
+               const auto pScratch2 = scratch2.get();
                const double multiplier = -(fftLen / (2.0f * M_PI));
                const float
-                  numRe = scratch2[index],
-                  numIm = ii == 0 ? 0 : scratch2[index + 1];
+                  numRe = pScratch2[index],
+                  numIm = index == 0 ? 0 : pScratch2[index + 1];
                // Find complex quotient --
                // Which means, multiply numerator by conjugate of denominator,
                // then divide by norm squared of denominator --
@@ -264,15 +266,16 @@ bool SpecCache::CalculateOneSpectrum(
                freqCorrection = multiplier * quotIm;
             }
 
-            const int bin = (int)((int)ii + freqCorrection + 0.5f);
+            const int bin = (int)((int)index / 2 + freqCorrection + 0.5f);
             // Must check if correction takes bin out of bounds, above or below!
             // bin is signed!
-            if (bin >= 0 && bin < (int)hFFT->Points) {
+            if (bin >= 0 && bin < (int)fftLen / 2) {
                double timeCorrection;
                {
+                  const auto pScratch3 = scratch3.get();
                   const float
-                     numRe = scratch3[index],
-                     numIm = ii == 0 ? 0 : scratch3[index + 1];
+                     numRe = pScratch3[index],
+                     numIm = index == 0 ? 0 : pScratch3[index + 1];
                   // Find another complex quotient --
                   // Then just take its real part.
                   // The result has sample interval as unit.
@@ -313,8 +316,8 @@ bool SpecCache::CalculateOneSpectrum(
          // the part of useBuffer in the padding zones.
 
          // This function mutates useBuffer
-         ComputeSpectrumUsingRealFFTf(useBuffer,
-            settings.hFFT.get(), settings.window.get(), fftLen, res);
+         ComputeSpectrumUsingPffft(useBuffer,
+            settings.transformer, settings.window.get(), fftLen, work, res);
          const auto results = res.get();
          if (!gainFactors.empty()) {
             // Apply a frequency-dependent gain factor
@@ -369,8 +372,10 @@ void SpecCache::Populate(
    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
    const auto nBins = settings.NBins();
 
+   // One work area for pffft, one work area for the outputs, two extra
+   // output areas to compute reassignment
    const size_t scratchSize =
-      reassignment ? 3u * PffftAlignedCount{ fftLen } : fftLen;
+      (reassignment ? 4u : 2u) * PffftAlignedCount{ fftLen };
    PffftFloatVector scratch(scratchSize);
 
    std::vector<float> gainFactors;
