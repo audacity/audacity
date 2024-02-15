@@ -12,6 +12,8 @@ set( SOURCES
    CloudSettings.h
    CloudSyncService.cpp
    CloudSyncService.h
+   NetworkUtils.cpp
+   NetworkUtils.h
    OAuthService.cpp
    OAuthService.h
    ServiceConfig.cpp
@@ -21,12 +23,13 @@ set( SOURCES
    UserService.cpp
    UserService.h
 
+   sync/AsynchronousOperation.h
    sync/BlockHasher.cpp
    sync/BlockHasher.h
    sync/CloudProjectsDatabase.cpp
    sync/CloudProjectsDatabase.h
-   sync/CloudSyncUI.cpp
-   sync/CloudSyncUI.h
+   sync/CloudSyncError.cpp
+   sync/CloudSyncError.h
    sync/CloudSyncUtils.cpp
    sync/CloudSyncUtils.h
    sync/DataUploader.cpp

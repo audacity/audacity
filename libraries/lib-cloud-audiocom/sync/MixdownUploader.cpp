@@ -21,15 +21,13 @@
 
 #include "Export.h"
 #include "ExportPluginRegistry.h"
-#include "ExportUtils.h"
-#include "ExportProgressUI.h"
 
 #include "ProjectRate.h"
 
-#include "UploadService.h"
 #include "DataUploader.h"
+#include "UploadService.h"
 
-#include "sync/CloudSyncUI.h"
+#include "BasicUI.h"
 
 namespace cloud::audiocom::sync
 {
@@ -68,9 +66,7 @@ int CalculateChannels(const TrackList& trackList)
 }
 } // namespace
 
-
-class MixdownUploader::DataExporter final :
-    public ExportProcessorDelegate
+class MixdownUploader::DataExporter final : public ExportProcessorDelegate
 {
 public:
    DataExporter(MixdownUploader& parent, ExportTask task)
@@ -105,7 +101,10 @@ public:
       }
       else
       {
-         mParent.mOnComplete({}, false);
+         mParent.ReportProgress(
+            result == ExportResult::Error ? MixdownState::Failed :
+                                            MixdownState::Cancelled,
+            1.0, {});
       }
    }
 
@@ -125,12 +124,13 @@ public:
 
    void OnProgress(double value) override
    {
-      mParent.SetProgress(value);
+      mParent.ReportProgress(MixdownState::Exporting, value, {});
    }
 
    void ExportTread()
    {
-      try {
+      try
+      {
          auto future = mTask.get_future();
          mTask(*this);
          const auto result = future.get();
@@ -161,7 +161,7 @@ public:
          [this, fileName = error.GetFileName()]
          {
             ShowDiskFullExportErrorDialog(fileName);
-            mParent.mOnComplete({}, false);
+            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
@@ -171,7 +171,7 @@ public:
          [this, message = error.GetMessage(), helpPage = error.GetHelpPageId()]
          {
             ShowExportErrorDialog(message, XO("Export failed"), helpPage, true);
-            mParent.mOnComplete({}, false);
+            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
@@ -181,7 +181,7 @@ public:
          [this, message = error.What()]
          {
             ShowExportErrorDialog(Verbatim(message), XO("Export failed"), true);
-            mParent.mOnComplete({}, false);
+            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
@@ -200,14 +200,11 @@ private:
 };
 
 MixdownUploader::MixdownUploader(
-   Tag, CloudSyncUI& ui, const ServiceConfig& config,
-   const AudacityProject& project, const UploadUrls& urls,
-   MixdownUploaderCompleteCallback onComplete)
-    : mCloudSyncUI { ui }
-    , mServiceConfig { config }
+   Tag, const ServiceConfig& config, const AudacityProject& project,
+   MixdownProgressCallback progressCallback)
+    : mServiceConfig { config }
     , mProject { project }
-    , mUploadUrls { urls }
-    , mOnComplete { std::move(onComplete) }
+    , mProgressCallback { std::move(progressCallback) }
 {
    ExportProject();
 }
@@ -219,22 +216,58 @@ MixdownUploader::~MixdownUploader()
 }
 
 std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
-   CloudSyncUI& ui, const ServiceConfig& config,
-   const AudacityProject& project, const UploadUrls& urls,
-   MixdownUploaderCompleteCallback onComplete)
+   const ServiceConfig& config, const AudacityProject& project,
+   MixdownProgressCallback progressCallback)
 {
-   if (!onComplete)
-      onComplete = [](auto...) {};
+   if (!progressCallback)
+      progressCallback = [](auto...) { return true; };
 
    return std::make_shared<MixdownUploader>(
-      Tag {}, ui, config, project, urls, std::move(onComplete));
+      Tag {}, config, project, std::move(progressCallback));
 }
 
-void MixdownUploader::SetProgress(double progress)
+void MixdownUploader::SetUrls(const UploadUrls& urls)
 {
-   mCurrentProgress.store(progress, std::memory_order_release);
+   auto lock = std::lock_guard { mUploadUrlsMutex };
 
-   if (!mProgressUpdateQueued.exchange(true, std::memory_order_acq_rel))
+   assert(!mUploadUrls);
+   mUploadUrls = urls;
+
+   mUploadUrlsSet.notify_one();
+}
+
+void MixdownUploader::Cancel()
+{
+   if (!mDataExporter)
+      return;
+
+   // To be on a safe side, we cancel both operations
+   mDataExporter->Cancel();
+   mUploadCancelled.store(true, std::memory_order_release);
+   // And ensure that WaitingForUrls is interrupted too
+   mUploadUrlsSet.notify_all();
+}
+
+std::future<MixdownResult> MixdownUploader::GetResultFuture()
+{
+   return mPromise.get_future();
+}
+
+void MixdownUploader::ReportProgress(
+   MixdownState state, double progress, ResponseResult uploadResult)
+{
+   mProgress.store(progress);
+
+   if (BasicUI::IsUiThread())
+   {
+      mProgressUpdateQueued = false;
+      if (!mProgressCallback(progress))
+         Cancel();
+   }
+   else if (!mProgressUpdateQueued)
+   {
+      mProgressUpdateQueued = true;
+
       BasicUI::CallAfter(
          [weakThis = weak_from_this(), this]
          {
@@ -243,24 +276,26 @@ void MixdownUploader::SetProgress(double progress)
             if (!lock)
                return;
 
-            if (!mCloudSyncUI.OnMixdownProgress(
-                   mCurrentProgress.load(std::memory_order_acquire)))
-            {
-               if (mExporting.load(std::memory_order_acquire) && mDataExporter)
-                  mDataExporter->Cancel();
-               else
-                  mUploadCancelled.store(true, std::memory_order_release);
-            }
+            if (mFinished.load())
+               return;
 
-            mProgressUpdateQueued.store(false, std::memory_order_release);
+            if (!mProgressCallback(mProgress.load()))
+               Cancel();
+
+            mProgressUpdateQueued = false;
          });
+   }
+
+   if (state == MixdownState::Succeeded || state == MixdownState::Failed ||
+       state == MixdownState::Cancelled)
+   {
+      mFinished.store(true);
+      mPromise.set_value({ state, uploadResult });
+   }
 }
 
 void MixdownUploader::ExportProject()
 {
-   mCloudSyncUI.OnMixdownStarted();
-   mCloudSyncUI.SetMixdownProgressMessage(XO("Exporting project..."));
-
    auto& tracks = TrackList::Get(mProject);
 
    const double t0 = 0.0;
@@ -280,6 +315,7 @@ void MixdownUploader::ExportProject()
         GetServiceConfig().GetPreferredAudioFormats(false))
    {
       auto config = GetServiceConfig().GetExportConfig(preferredMimeType);
+
       ExportProcessor::Parameters parameters;
       auto pluginIt = std::find_if(
          registry.begin(), registry.end(),
@@ -298,7 +334,7 @@ void MixdownUploader::ExportProject()
       const auto [plugin, formatIndex] = *pluginIt;
 
       const auto formatInfo = plugin->GetFormatInfo(formatIndex);
-      const auto path = GenerateTempPath(formatInfo.extensions[0]);
+      const auto path       = GenerateTempPath(formatInfo.extensions[0]);
 
       if (path.empty())
          continue;
@@ -320,27 +356,49 @@ void MixdownUploader::ExportProject()
    }
 
    if (!mDataExporter)
-      mOnComplete({}, false);
+   {
+      mFinished.store(true);
+      mPromise.set_value({ MixdownState::Failed });
+   }
 }
+
 void MixdownUploader::UploadMixdown()
 {
-   mCloudSyncUI.SetMixdownProgressMessage(XO("Uploading mixdown..."));
+   ReportProgress(MixdownState::WaitingForUrls, 0.0, {});
+
+   {
+      auto lock = std::unique_lock { mUploadUrlsMutex };
+      mUploadUrlsSet.wait(
+         lock, [this] { return mUploadCancelled.load() || !!mUploadUrls; });
+   }
+
+   if (mUploadCancelled.load(std::memory_order_acquire))
+   {
+      ReportProgress(MixdownState::Cancelled, 0.0, {});
+      return;
+   }
+
+   ReportProgress(MixdownState::Uploading, 0.0, {});
+
    DataUploader::Get().Upload(
-      mServiceConfig, mUploadUrls, mExportedFilePath,
-      [this, strongThis = shared_from_this()](UploadResult result)
+      mServiceConfig, *mUploadUrls, mExportedFilePath,
+      [this, strongThis = shared_from_this()](ResponseResult result)
       {
-         BasicUI::CallAfter(
-            [this, result = std::move(result)]
-            {
-               mCloudSyncUI.OnMixdownFinished();
-               mOnComplete(
-                  result.ErrorMessage,
-                  result.Code == UploadResultCode::Success);
-            });
+         const auto state = [code = result.Code]
+         {
+            if (code == ResponseResultCode::Success)
+               return MixdownState::Succeeded;
+            else if (code == ResponseResultCode::Cancelled)
+               return MixdownState::Cancelled;
+            else
+               return MixdownState::Failed;
+         }();
+
+         ReportProgress(state, 1.0, result);
       },
       [this, strongThis = shared_from_this()](double progress)
       {
-         SetProgress(progress);
+         ReportProgress(MixdownState::Uploading, progress, {});
          return !mUploadCancelled.load(std::memory_order_acquire);
       });
 }

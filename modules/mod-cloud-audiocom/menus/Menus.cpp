@@ -10,19 +10,20 @@
 **********************************************************************/
 
 #include "MenuRegistry.h"
-#include "CloudSyncService.h"
 #include "CommandContext.h"
+#include "CloudProjectUtils.h"
 
 #include "ProjectWindow.h"
 
-#include "ui/ProjectsListDialog.h"
+#include "ui/dialogs/ProjectsListDialog.h"
 
 namespace
 {
 
 void OnSaveToCloud(const CommandContext& context)
 {
-   cloud::audiocom::CloudSyncService::Get().SaveToCloud(context.project);
+   cloud::audiocom::sync::SaveToCloud(
+      context.project, cloud::audiocom::sync::SaveMode::Normal);
 }
 
 void OnOpenFromCloud (const CommandContext& context)
@@ -37,7 +38,7 @@ void OnOpenFromCloud (const CommandContext& context)
 using namespace MenuRegistry;
 
 AttachedItem sSaveAttachment { Command(
-                              wxT("SaveToCloud"), XXO("Save to Cloud"),
+                              wxT("SaveToCloud"), XXO("Save to cloud..."),
                               OnSaveToCloud, AlwaysEnabledFlag),
                            wxT("File/Save") };
 

@@ -35,7 +35,7 @@ struct DataUploader::Response final
 {
    DataUploader& Uploader;
    UploadUrls Target;
-   std::function<void(UploadResult)> Callback;
+   std::function<void(ResponseResult)> Callback;
    std::function<bool(double)> ProgressCallback;
 
    int RetriesCount { 3 };
@@ -47,11 +47,11 @@ struct DataUploader::Response final
 
    bool UploadFailed { false };
 
-   UploadResultCode CurrentResult { UploadResultCode::Success };
+   ResponseResult CurrentResult;
 
    Response(
       DataUploader& uploader, const UploadUrls& target, UploadData data,
-      std::string mimeType, std::function<void(UploadResult)> callback,
+      std::string mimeType, std::function<void(ResponseResult)> callback,
       std::function<bool(double)> progressCallback)
        : Uploader { uploader }
        , Target { target }
@@ -116,35 +116,12 @@ struct DataUploader::Response final
       ConfirmUpload();
    }
 
-   UploadResultCode GuessResultCode() const
-   {
-      const auto error = NetworkResponse->getError();
-
-      if (error == NetworkError::NoError)
-         return UploadResultCode::Success;
-      else if (error == NetworkError::OperationCancelled)
-         return UploadResultCode::Cancelled;
-      else if (
-         error == NetworkError::ConnectionFailed ||
-         error == NetworkError::ConnectionRefused ||
-         error == NetworkError::HostNotFound ||
-         error == NetworkError::ProxyConnectionFailed ||
-         error == NetworkError::ProxyNotFound)
-         return UploadResultCode::ConnectionFailed;
-      else if (error == NetworkError::HTTPError)
-         return NetworkResponse->getHTTPCode() == HttpCode::Conflict ?
-                   UploadResultCode::Conflict :
-                   UploadResultCode::Expired;
-
-      return UploadResultCode::UnknownError;
-   }
-
    void OnUploadFailed()
    {
-      CurrentResult = GuessResultCode();
+      CurrentResult = GetResponseResult(*NetworkResponse, false);
 
       if (
-         CurrentResult == UploadResultCode::ConnectionFailed &&
+         CurrentResult.Code == ResponseResultCode::ConnectionFailed &&
          --RetriesLeft > 0)
       {
          PerformUpload();
@@ -166,15 +143,16 @@ struct DataUploader::Response final
       NetworkResponse->setRequestFinishedCallback(
          [this](auto)
          {
-            const auto code = GuessResultCode();
+            CurrentResult = GetResponseResult(*NetworkResponse, false);
 
-            if (code == UploadResultCode::Success)
+            if (CurrentResult.Code == ResponseResultCode::Success)
             {
-               Callback(UploadResult { UploadResultCode::Success, {} });
+               Callback(ResponseResult { ResponseResultCode::Success, {} });
                CleanUp();
             }
             else if (
-               code == UploadResultCode::ConnectionFailed && --RetriesLeft > 0)
+               CurrentResult.Code == ResponseResultCode::ConnectionFailed &&
+               --RetriesLeft > 0)
             {
                ConfirmUpload();
             }
@@ -192,8 +170,7 @@ struct DataUploader::Response final
       {
          Data = {};
 
-         Callback(UploadResult { CurrentResult,
-                                 NetworkResponse->readAll<std::string>() });
+         Callback(CurrentResult);
          UploadFailed = true;
       }
 
@@ -204,9 +181,11 @@ struct DataUploader::Response final
       NetworkResponse->setRequestFinishedCallback(
          [this](auto)
          {
-            const auto code = GuessResultCode();
+            const auto result = GetResponseResult(*NetworkResponse, false);
 
-            if (code == UploadResultCode::ConnectionFailed && --RetriesLeft > 0)
+            if (
+               result.Code == ResponseResultCode::ConnectionFailed &&
+               --RetriesLeft > 0)
                FailUpload();
             else
                CleanUp();
@@ -254,7 +233,7 @@ void DataUploader::CancelAll()
 
 void DataUploader::Upload(
    const ServiceConfig&, const UploadUrls& target, std::vector<uint8_t> data,
-   std::function<void(UploadResult)> callback,
+   std::function<void(ResponseResult)> callback,
    std::function<bool(double)> progressCallback)
 {
    if (!callback)
@@ -273,7 +252,7 @@ void DataUploader::Upload(
 
 void DataUploader::Upload(
    const ServiceConfig& config, const UploadUrls& target, std::string filePath,
-   std::function<void(UploadResult)> callback,
+   std::function<void(ResponseResult)> callback,
    std::function<bool(double)> progressCallback)
 {
    if (!callback)
@@ -285,8 +264,8 @@ void DataUploader::Upload(
    if (!wxFileExists(audacity::ToWXString(filePath)))
    {
       if (callback)
-         callback(UploadResult {
-            UploadResultCode::UnknownError,
+         callback(ResponseResult {
+            ResponseResultCode::UnknownError,
             audacity::ToUTF8(XO("File not found").Translation()) });
 
       return;

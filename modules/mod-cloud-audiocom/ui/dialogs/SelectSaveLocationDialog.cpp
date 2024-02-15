@@ -18,11 +18,9 @@
 #include <wx/stattext.h>
 #include <wx/statbmp.h>
 
-#include "ShuttleGui.h"
-
 #include "CloudModuleSettings.h"
 
-#include "images/CloudImages.hpp"
+#include "../images/CloudImages.hpp"
 
 namespace cloud::audiocom::sync
 {

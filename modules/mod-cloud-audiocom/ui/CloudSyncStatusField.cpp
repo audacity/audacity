@@ -23,13 +23,11 @@
 #include "ProjectWindow.h"
 #include "sync/ProjectCloudExtension.h"
 
-#include "wxPanelWrapper.h"
-#include "Theme.h"
 #include "AllThemeResources.h"
+#include "Theme.h"
+#include "wxPanelWrapper.h"
 
 #include "Prefs.h"
-
-#include "BasicUI.h"
 
 namespace cloud::audiocom::sync
 {
@@ -45,10 +43,9 @@ const AttachedProjectObjects::RegisteredFactory key {
 class CloudSyncStatusBarFieldItem final : public StatusBarFieldItem
 {
 public:
-   CloudSyncStatusBarFieldItem ()
+   CloudSyncStatusBarFieldItem()
        : StatusBarFieldItem { FieldId }
    {
-      
    }
 
    int GetDefaultWidth(const AudacityProject& project) const override
@@ -58,13 +55,14 @@ public:
 
    void OnSize(AudacityProject& project) override
    {
-      const auto index = ProjectStatusFieldsRegistry::GetFieldIndex(project, name);
+      const auto index =
+         ProjectStatusFieldsRegistry::GetFieldIndex(project, name);
 
       wxLogDebug("CloudSyncStatusBarFieldItem::OnSize(%d)", index);
 
       if (index < 0)
          return;
-      
+
       wxRect rect;
       if (ProjectWindow::Get(project).GetStatusBar()->GetFieldRect(index, rect))
          CloudSyncStatusField::Get(project).OnSize(rect);
@@ -75,13 +73,12 @@ public:
    {
    }
 
-   TranslatableString
-   GetText(const AudacityProject& project) const override
-   {      
+   TranslatableString GetText(const AudacityProject& project) const override
+   {
       return CloudSyncStatusField::Get(project).GetText();
    }
 
-   bool IsVisible (const AudacityProject& project) const override
+   bool IsVisible(const AudacityProject& project) const override
    {
       return CloudSyncStatusField::Get(project).IsVisible();
    }
@@ -97,9 +94,9 @@ StatusBarFieldItemRegistrator rateStatusBarField {
    { {}, { Registry::OrderingHint::After, RateStatusBarField().GET() } }
 };
 
-const auto CloudSyncFailedMessage = XO("Failed.");
+const auto CloudSyncFailedMessage   = XO("Failed.");
 const auto CloudSyncProgressMessage = XO("Syncing %d%%");
-const auto Padding = 2;
+const auto Padding                  = 2;
 
 } // namespace
 
@@ -132,6 +129,7 @@ public:
       switch (state)
       {
       case State::Synced:
+      case State::Dirty:
          return mSyncedBitmap->GetWidth() + Padding * 2;
       case State::Failed:
          return mSyncedBitmap->GetWidth() + mCloudSyncFailedMessageWidth +
@@ -144,7 +142,7 @@ public:
       return mSyncedBitmap->GetWidth();
    }
 
-   const wxBitmap* GetBitmap () const
+   const wxBitmap* GetBitmap() const
    {
       return mOwner.mState == State::Uploading ? mProgressBitmap :
                                                  mSyncedBitmap;
@@ -189,7 +187,7 @@ public:
 
    void UpdatePrefs() override
    {
-      mSyncedBitmap = &theTheme.Bitmap(bmpCloud);
+      mSyncedBitmap   = &theTheme.Bitmap(bmpCloud);
       mProgressBitmap = &theTheme.Bitmap(bmpCloudProgress);
 
       mCloudSyncFailedMessageWidth =
@@ -215,8 +213,9 @@ private:
 CloudSyncStatusField::CloudSyncStatusField(AudacityProject& project)
     : mProject { project }
     , mCloudExtension { ProjectCloudExtension::Get(project) }
-    , mCloudStatusChangedSubscription { mCloudExtension.Subscribe(
-         [this](const auto& extension) { OnCloudStatusChanged(extension); }) }
+    , mCloudStatusChangedSubscription { mCloudExtension.SubscribeStatusChanged(
+         [this](const auto& extension) { OnCloudStatusChanged(extension); },
+         true) }
 {
 }
 
@@ -245,46 +244,14 @@ void CloudSyncStatusField::OnSize(const wxRect& rect)
    GetStatusWidget().SetRect(rect);
 }
 
-bool CloudSyncStatusField::IsVisible () const
+bool CloudSyncStatusField::IsVisible() const
 {
-   return mCloudExtension.IsCloudProject();
+   return mState != State::Hidden;
 }
 
 TranslatableString CloudSyncStatusField::GetText() const
 {
    return {};
-}
-
-void CloudSyncStatusField::SetUploadProgress(double progress)
-{
-   const int newProgress = static_cast<int>(progress * 100);
-
-   bool stateChanged = false;
-
-   if (mState != State::Uploading)
-   {
-      mState = State::Uploading;
-      stateChanged = true;
-   }
-
-   if (mProgress != newProgress)
-   {
-      mProgress = newProgress;
-      stateChanged = true;
-   }
-
-   if (stateChanged)
-      MarkDirty();
-}
-
-void CloudSyncStatusField::UploadCompleted(bool successful)
-{
-   if (successful)
-      mState = State::Synced;
-   else
-      mState = State::Failed;
-
-   MarkDirty();
 }
 
 void CloudSyncStatusField::MarkDirty()
@@ -296,20 +263,42 @@ void CloudSyncStatusField::MarkDirty()
       field->MarkDirty(mProject);
 
    GetStatusWidget().Refresh();
-   GetStatusWidget().Show(mCloudExtension.IsCloudProject());
+   GetStatusWidget().Show(mState != State::Hidden);
 }
 
 void CloudSyncStatusField::OnCloudStatusChanged(
-   const CloudStatusChanged&)
+   const CloudStatusChangedMessage& message)
 {
-   BasicUI::CallAfter([this] { MarkDirty(); });
+   mState = [](ProjectSyncStatus status) {
+      switch (status)
+      {
+      case ProjectSyncStatus::Local:
+         return State::Hidden;
+      case ProjectSyncStatus::Unsynced:
+         return State::Dirty;
+      case ProjectSyncStatus::Synced:
+         return State::Synced;
+      case ProjectSyncStatus::Failed:
+         return State::Failed;
+      case ProjectSyncStatus::Syncing:
+         return State::Uploading;
+      default:
+         return State::Hidden;
+      }
+   }(message.Status);
+
+   if (mState == State::Uploading)
+      mProgress = static_cast<int>(message.Progress * 100.0);
+
+   MarkDirty();
 }
 
 CloudSyncStatusField::StatusWidget& CloudSyncStatusField::GetStatusWidget()
 {
    if (!mStatusWidget)
    {
-      mStatusWidget = safenew StatusWidget(*this, ProjectWindow::Get(mProject).GetStatusBar());
+      mStatusWidget = safenew StatusWidget(
+         *this, ProjectWindow::Get(mProject).GetStatusBar());
 
       mStatusWidget->Show(mCloudExtension.IsCloudProject());
    }
@@ -317,7 +306,8 @@ CloudSyncStatusField::StatusWidget& CloudSyncStatusField::GetStatusWidget()
    return *mStatusWidget;
 }
 
-const CloudSyncStatusField::StatusWidget& CloudSyncStatusField::GetStatusWidget() const
+const CloudSyncStatusField::StatusWidget&
+CloudSyncStatusField::GetStatusWidget() const
 {
    return const_cast<CloudSyncStatusField*>(this)->GetStatusWidget();
 }

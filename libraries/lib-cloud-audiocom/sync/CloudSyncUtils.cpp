@@ -257,12 +257,12 @@ bool Deserialize(const rapidjson::Value& value, ProjectSyncState& urls)
    return true;
 }
 
-bool Deserialize(const rapidjson::Value& value, CreateProjectResponse& reponse)
+bool Deserialize(const rapidjson::Value& value, CreateSnapshotResponse& reponse)
 {
    if (!value.IsObject())
       return {};
 
-   CreateProjectResponse tempResponse;
+   CreateSnapshotResponse tempResponse;
 
    if (!Deserialize(value, "project", tempResponse.Project))
       return {};
@@ -396,10 +396,10 @@ std::string SerializeProjectForm(const ProjectForm& form)
    return buffer.GetString();
 }
 
-std::optional<CreateProjectResponse>
-DeserializeCreateProjectResponse(const std::string& data)
+std::optional<CreateSnapshotResponse>
+DeserializeCreateSnapshotResponse(const std::string& data)
 {
-   CreateProjectResponse result;
+   CreateSnapshotResponse result;
 
    if (Deserialize(data, result))
       return std::move(result);

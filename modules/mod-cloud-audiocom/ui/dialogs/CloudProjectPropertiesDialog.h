@@ -10,9 +10,9 @@
 **********************************************************************/
 #pragma once
 
-#include "wxPanelWrapper.h"
+#include <utility>
 
-#include "sync/CloudSyncUI.h"
+#include "wxPanelWrapper.h"
 
 #include "Observer.h"
 
@@ -39,7 +39,14 @@ class CloudProjectPropertiesDialog final : public wxDialogWrapper
    ~CloudProjectPropertiesDialog() override;
 
 public:
-   static SaveResult Show(
+   enum class Action
+   {
+      Cancel,
+      SaveToCloud,
+      SaveLocally
+   };
+
+   static std::pair<Action, wxString> Show(
       const ServiceConfig& serviceConfig, OAuthService& authService,
       UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave);
 

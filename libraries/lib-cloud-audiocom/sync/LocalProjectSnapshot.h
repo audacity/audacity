@@ -13,9 +13,13 @@
 #include <atomic>
 #include <functional>
 #include <memory>
+#include <mutex>
 #include <string_view>
 
+#include "AsynchronousOperation.h"
+#include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
+#include "NetworkUtils.h"
 
 class AudacityProject;
 
@@ -33,79 +37,70 @@ class ProjectCloudExtension;
 class LocalProjectSnapshot;
 class MixdownUploader;
 class CloudSyncUI;
-
-struct SnapshotOperationStatus final
-{
-   LocalProjectSnapshot* Snapshot { nullptr };
-
-   int64_t SampleBlocksProcessed { 0 };
-   int64_t SampleBlocksCount { 0 };
-
-   bool ProjectBlobProcessed { false };
-   bool Completed { false };
-   bool Successful { false };
-
-   std::string ErrorMessage;
-};
+struct MissingBlocksUploadProgress;
 
 class MissingBlocksUploader;
 
-using SnapshotOperationUpdated = std::function<void(const SnapshotOperationStatus&)>;
-
-class LocalProjectSnapshot final : public std::enable_shared_from_this<LocalProjectSnapshot>
+class CLOUD_AUDIOCOM_API LocalProjectSnapshot final :
+    public ProjectUploadOperation,
+    public std::enable_shared_from_this<LocalProjectSnapshot>
 {
-   struct Tag final {};
+   struct Tag final
+   {
+   };
 
 public:
    LocalProjectSnapshot(
-      Tag, CloudSyncUI& ui, const ServiceConfig& config,
-      const OAuthService& authService, ProjectCloudExtension& extension,
-      SnapshotOperationUpdated callback);
+      Tag, const ServiceConfig& config, const OAuthService& oauthService,
+      ProjectCloudExtension& extension, bool forceCreateNewSnapshot);
    ~LocalProjectSnapshot();
 
    static std::shared_ptr<LocalProjectSnapshot> Create(
-      CloudSyncUI& ui, const ServiceConfig& config,
-      const OAuthService& authService, ProjectCloudExtension& extension,
-      SnapshotOperationUpdated callback, bool forceCreateNewProject = false);
+      const ServiceConfig& config, const OAuthService& oauthService,
+      ProjectCloudExtension& extension, bool forceCreateNewProject = false);
 
-   bool IsCompleted() const;
-
-   double GetSyncProgress() const;
+   bool IsCompleted() const override;
 
    std::shared_ptr<AudacityProject> GetProject();
 
-   void Cancel();
+   void Start(const ProjectUploadData& projectData) override;
+   void Cancel() override;
+
+   void SetOnSnapshotCreated(
+      std::function<void(const CreateSnapshotResponse&)> callback);
 
 private:
-   void SetSyncProgress(int64_t uploadedBlocks, int64_t totalBlocks);
+   void UploadFailed(CloudSyncError error);
+   void DataUploadFailed(const ResponseResult& uploadResult);
+   void DataUploadFailed(const MissingBlocksUploadProgress& uploadResult);
 
-   void UpdateProjectSnapshot(bool forceCreateNew);
+   void UpdateProjectSnapshot();
 
-   void OnSnapshotCreated(const CreateProjectResponse& response, bool newProject);
+   void
+   OnSnapshotCreated(const CreateSnapshotResponse& response, bool newProject);
    void MarkSnapshotSynced(int64_t blocksCount);
 
    ProjectCloudExtension& mProjectCloudExtension;
    std::weak_ptr<AudacityProject> mWeakProject;
 
-   CloudSyncUI& mCloudSyncUI;
+   ProjectUploadData mProjectData;
+
    const ServiceConfig& mServiceConfig;
    const OAuthService& mOAuthService;
-
-   SnapshotOperationUpdated mUpdateCallback;
 
    struct ProjectBlocksLock;
    std::unique_ptr<ProjectBlocksLock> mProjectBlocksLock;
 
    std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
 
-   std::shared_ptr<MixdownUploader> mMixdownUploader;
-
-   std::atomic<int64_t> mUploadedBlocks { 0 };
-   std::atomic<int64_t> mTotalBlocks { 0 };
-
-   std::atomic<bool> mProjectUploaded { false };
+   std::mutex mCreateSnapshotResponseMutex;
+   std::optional<CreateSnapshotResponse> mCreateSnapshotResponse;
+   std::mutex mOnSnapshotCreatedCallbacksMutex;
+   std::vector<std::function<void(const CreateSnapshotResponse&)>>
+      mOnSnapshotCreatedCallbacks;
 
    std::atomic<bool> mCompleted { false };
-   std::atomic<bool> mMixdownUploadInProgress { false };
+
+   const bool mForceCreateNewProject;
 };
 } // namespace cloud::audiocom::sync

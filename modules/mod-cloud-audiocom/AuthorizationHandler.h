@@ -10,7 +10,12 @@
 **********************************************************************/
 #pragma once
 
+#include <string>
+
 #include "Observer.h"
+#include "TranslatableString.h"
+
+class AudacityProject;
 
 namespace cloud::audiocom
 {
@@ -20,18 +25,34 @@ class AuthorizationHandler final
 {
 public:
    AuthorizationHandler();
-   
+
    void PushSuppressDialogs();
    void PopSuppressDialogs();
 
 private:
    void OnAuthStateChanged(const AuthStateChangedMessage& message);
-   
-   Observer::Subscription
-      mAuthStateChangedSubscription;
-   
+
+   Observer::Subscription mAuthStateChangedSubscription;
+
    size_t mSuppressed {};
 }; // class AuthorizationHandler
 
 AuthorizationHandler& GetAuthorizationHandler();
+
+struct AuthResult final
+{
+   enum class Status
+   {
+      Authorised,
+      Cancelled,
+      UseAlternative,
+      Failure
+   };
+
+   Status Result { Status::Cancelled };
+   std::string ErrorMessage;
+};
+
+AuthResult
+PerformBlockingAuth(AudacityProject* project, const TranslatableString& alternativeActionLabel = {});
 } // namespace cloud::audiocom

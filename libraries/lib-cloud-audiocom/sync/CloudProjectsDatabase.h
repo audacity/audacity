@@ -12,7 +12,6 @@
 
 #include <optional>
 #include <string>
-#include <unordered_set>
 
 #include "sqlite/Connection.h"
 

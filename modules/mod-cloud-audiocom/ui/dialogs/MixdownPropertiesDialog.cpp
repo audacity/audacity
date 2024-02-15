@@ -14,10 +14,11 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 
+#include "CloudModuleSettings.h"
 #include "CloudSettings.h"
-#include "Internat.h"
-#include "MixdownPrefsPanel.h"
 
+#include "../MixdownPrefsPanel.h"
+#include "Internat.h"
 
 namespace cloud::audiocom::sync
 {
@@ -34,19 +35,17 @@ MixdownPropertiesDialog::MixdownPropertiesDialog(wxWindow* parent)
    font.SetPointSize(static_cast<int>(font.GetPointSize() * 1.5));
    header->SetFont(font);
 
-   auto description1 = new wxStaticText
-   {
+   auto description1 = new wxStaticText {
       this, wxID_ANY,
-         XO("The first time you save a project we generate a mixdown so it  can be previewed on audio.com.")
-            .Translation()
+      XO("The first time you save a project we generate a mixdown so it  can be previewed on audio.com.")
+         .Translation()
    };
 
-   auto description2 = new wxStaticText
-   {
+   auto description2 = new wxStaticText {
       this, wxID_ANY,
       XO("Please select how often"
          "you'd like to generate a new mixdown of your project. This setting can be changed in the preferences menu.")
-            .Translation()
+         .Translation()
    };
 
    description1->Wrap(400);
@@ -57,12 +56,17 @@ MixdownPropertiesDialog::MixdownPropertiesDialog(wxWindow* parent)
    auto sizer = new wxBoxSizer { wxVERTICAL };
 
    sizer->Add(header, wxSizerFlags().Border(wxALL, 16));
-   sizer->Add(description1, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
-   sizer->Add(description2, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
-   sizer->Add(mMixdownPrefsPanel, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
+   sizer->Add(
+      description1, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
+   sizer->Add(
+      description2, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
+   sizer->Add(
+      mMixdownPrefsPanel,
+      wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16));
 
    auto buttons = CreateStdDialogButtonSizer(wxOK);
-   sizer->Add(buttons, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16).Right());
+   sizer->Add(
+      buttons, wxSizerFlags().Border(wxLEFT | wxRIGHT | wxBOTTOM, 16).Right());
 
    SetSizerAndFit(sizer);
    Centre(wxBOTH);
@@ -72,7 +76,7 @@ MixdownPropertiesDialog::~MixdownPropertiesDialog()
 {
 }
 
-int MixdownPropertiesDialog::Show(wxWindow* parent)
+void MixdownPropertiesDialog::Show(wxWindow* parent)
 {
    MixdownPropertiesDialog dialog { parent };
    dialog.SetFrequency(MixdownGenerationFrequency.Read());
@@ -81,13 +85,20 @@ int MixdownPropertiesDialog::Show(wxWindow* parent)
    const auto frequency = dialog.GetFrequency();
    MixdownGenerationFrequency.Write(frequency);
    gPrefs->Flush();
+}
 
-   return frequency;
+void MixdownPropertiesDialog::ShowIfNeeded(wxWindow* parent)
+{
+   if (MixdownDialogShown.Read())
+      return;
+
+   MixdownPropertiesDialog::Show(parent);
+   MixdownDialogShown.Write(true);
 }
 
 void MixdownPropertiesDialog::SetFrequency(int frequency)
 {
-  mMixdownPrefsPanel->SetFrequency(frequency);
+   mMixdownPrefsPanel->SetFrequency(frequency);
 }
 
 int MixdownPropertiesDialog::GetFrequency() const

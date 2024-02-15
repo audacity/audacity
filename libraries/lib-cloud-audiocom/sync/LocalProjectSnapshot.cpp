@@ -13,38 +13,36 @@
 #include <algorithm>
 #include <future>
 
-#include "../ServiceConfig.h"
 #include "../OAuthService.h"
+#include "../ServiceConfig.h"
 
 #include "BasicUI.h"
 
 #include "BlockHasher.h"
 #include "CloudProjectsDatabase.h"
-#include "ProjectCloudExtension.h"
 #include "DataUploader.h"
 #include "MixdownUploader.h"
+#include "ProjectCloudExtension.h"
 
+#include "MemoryX.h"
+#include "Project.h"
 #include "SampleBlock.h"
 #include "Sequence.h"
 #include "Track.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "Project.h"
-#include "MemoryX.h"
 
 #include "TransactionScope.h"
 
 #include "CodeConversions.h"
 
-#include "Request.h"
 #include "IResponse.h"
 #include "NetworkManager.h"
-#include "MultipartData.h"
+#include "Request.h"
 
 #include "MissingBlocksUploader.h"
 
 #include "StringUtils.h"
-
 
 namespace cloud::audiocom::sync
 {
@@ -61,7 +59,6 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    std::unordered_map<std::string, size_t> BlockHashToIndex;
 
    std::unique_ptr<BlockHasher> Hasher;
-
 
    std::future<void> UpdateCacheFuture;
    std::vector<std::pair<int64_t, std::string>> NewHashes;
@@ -134,13 +131,13 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
       {
          auto it = BlockIdToIndex.find(id);
 
-         if (it == BlockIdToIndex.end ())
+         if (it == BlockIdToIndex.end())
          {
             assert(false);
             continue;
          }
 
-         BlockHashToIndex[hash] = BlockIdToIndex[id];
+         BlockHashToIndex[hash]  = BlockIdToIndex[id];
          Blocks[it->second].Hash = hash;
       }
 
@@ -158,10 +155,12 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
          return;
 
       UpdateCacheFuture = std::async(
-         std::launch::async, [this, hashes = std::move(NewHashes)] {
+         std::launch::async,
+         [this, hashes = std::move(NewHashes)]
+         {
             CloudProjectsDatabase::Get().UpdateBlockHashes(
                Extension.GetCloudProjectId(), hashes);
-      });
+         });
    }
 
    bool GetHash(int64_t blockId, std::string& hash) const override
@@ -185,13 +184,13 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
       NewHashes.emplace_back(blockId, hash);
    }
 
-   void FillMissingBlocks (const std::vector<UploadUrls>& missingBlockUrls)
+   void FillMissingBlocks(const std::vector<UploadUrls>& missingBlockUrls)
    {
       for (const auto& urls : missingBlockUrls)
       {
          auto it = BlockHashToIndex.find(ToUpper(urls.Id));
 
-         if (it == BlockHashToIndex.end ())
+         if (it == BlockHashToIndex.end())
          {
             assert(false);
             continue;
@@ -205,17 +204,14 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 };
 
 LocalProjectSnapshot::LocalProjectSnapshot(
-   Tag, CloudSyncUI& ui, const ServiceConfig& config,
-   const OAuthService& authService,
-   ProjectCloudExtension& extension, SnapshotOperationUpdated callback)
+   Tag, const ServiceConfig& config, const OAuthService& oauthService,
+   ProjectCloudExtension& extension, bool forceCreateNewProject)
     : mProjectCloudExtension { extension }
     , mWeakProject { extension.GetProject() }
-    , mCloudSyncUI { ui }
     , mServiceConfig { config }
-    , mOAuthService { authService }
-    , mUpdateCallback { std::move(callback) }
+    , mOAuthService { oauthService }
+    , mForceCreateNewProject { forceCreateNewProject }
 {
-
 }
 
 LocalProjectSnapshot::~LocalProjectSnapshot()
@@ -223,33 +219,35 @@ LocalProjectSnapshot::~LocalProjectSnapshot()
 }
 
 std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
-   CloudSyncUI& ui, const ServiceConfig& config,
-   const OAuthService& authService, ProjectCloudExtension& extension,
-   SnapshotOperationUpdated callback, bool forceCreateNewProject)
+   const ServiceConfig& config, const OAuthService& oauthService,
+   ProjectCloudExtension& extension, bool forceCreateNewProject)
 {
    auto project = extension.GetProject().lock();
 
-   if (!callback)
-      callback = [](const auto) {};
-
    if (!project)
-   {
-      callback({ nullptr, 0, 0, false, false, false, { "Invalid project state" } });
       return {};
-   }
 
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
-      Tag {}, ui, config, authService, extension, std::move(callback));
+      Tag {}, config, oauthService, extension, forceCreateNewProject);
 
    snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
       extension, *project,
-      [weakSnapshot = std::weak_ptr(snapshot), forceCreateNewProject]
+      [weakSnapshot = std::weak_ptr(snapshot)]
       {
          auto snapshot = weakSnapshot.lock();
 
-         if (snapshot)
-            snapshot->UpdateProjectSnapshot(forceCreateNewProject);
+         if (snapshot == nullptr)
+            return;
+
+         auto project = snapshot->GetProject();
+
+         if (project == nullptr)
+            return;
+
+         snapshot->mProjectCloudExtension.OnBlocksHashed(*snapshot);
       });
+
+   snapshot->mProjectCloudExtension.OnUploadOperationCreated(snapshot);
 
    return snapshot;
 }
@@ -259,48 +257,133 @@ bool LocalProjectSnapshot::IsCompleted() const
    return mCompleted.load(std::memory_order_acquire);
 }
 
-void LocalProjectSnapshot::SetSyncProgress(
-   int64_t uploadedBlocks, int64_t totalBlocks)
-{
-   std::atomic_thread_fence(std::memory_order_release);
-   mUploadedBlocks.store(uploadedBlocks, std::memory_order_relaxed);
-   mTotalBlocks.store(totalBlocks, std::memory_order_relaxed);
-}
-
-double LocalProjectSnapshot::GetSyncProgress() const
-{
-   const auto uploadedBlocks = mUploadedBlocks.load(std::memory_order_relaxed);
-   const auto totalBlocks = mTotalBlocks.load(std::memory_order_relaxed);
-   const auto projectUploaded =
-      mProjectUploaded.load(std::memory_order_relaxed) ? 1 : 0;
-   std::atomic_thread_fence(std::memory_order_acquire);
-
-   return (uploadedBlocks + projectUploaded) /
-          static_cast<double>(totalBlocks + 1);
-}
-
 std::shared_ptr<AudacityProject> LocalProjectSnapshot::GetProject()
 {
    return mWeakProject.lock();
+}
+
+void LocalProjectSnapshot::Start(const ProjectUploadData& data)
+{
+   mProjectData = data;
+   UpdateProjectSnapshot();
 }
 
 void LocalProjectSnapshot::Cancel()
 {
 }
 
-void LocalProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
+void LocalProjectSnapshot::SetOnSnapshotCreated(
+   std::function<void(const CreateSnapshotResponse&)> callback)
+{
+   {
+      auto lock = std::lock_guard { mCreateSnapshotResponseMutex };
+
+      if (mCreateSnapshotResponse)
+      {
+         if (callback)
+            callback(*mCreateSnapshotResponse);
+      }
+      else if (callback)
+      {
+         auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
+         mOnSnapshotCreatedCallbacks.push_back(std::move(callback));
+      }
+   }
+}
+
+void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
+{
+   mCompleted.store(true, std::memory_order_release);
+   mProjectCloudExtension.OnSyncCompleted(this, std::make_optional(error));
+}
+
+namespace
+{
+CloudSyncError::ErrorType DeduceError(ResponseResultCode code)
+{
+   switch (code)
+   {
+   case ResponseResultCode::Success:
+      return CloudSyncError::None;
+   case ResponseResultCode::Cancelled:
+      return CloudSyncError::Cancelled;
+   case ResponseResultCode::Expired:
+      return CloudSyncError::DataUploadFailed;
+   case ResponseResultCode::Conflict:
+      return CloudSyncError::ProjectVersionConflict;
+   case ResponseResultCode::ConnectionFailed:
+      return CloudSyncError::Network;
+   case ResponseResultCode::PaymentRequired:
+      return CloudSyncError::ProjectStorageLimitReached;
+   case ResponseResultCode::TooLarge:
+      return CloudSyncError::ProjectStorageLimitReached;
+   case ResponseResultCode::Unauthorized:
+      return CloudSyncError::Authorization;
+   case ResponseResultCode::Forbidden:
+      return CloudSyncError::Authorization;
+   case ResponseResultCode::NotFound:
+      return CloudSyncError::ProjectNotFound;
+   case ResponseResultCode::UnexpectedResponse:
+      return CloudSyncError::Server;
+   case ResponseResultCode::InternalClientError:
+      return CloudSyncError::ClientFailure;
+   case ResponseResultCode::UnknownError:
+      return CloudSyncError::DataUploadFailed;
+   }
+
+   return CloudSyncError::DataUploadFailed;
+}
+} // namespace
+
+void LocalProjectSnapshot::DataUploadFailed(const ResponseResult& uploadResult)
+{
+   UploadFailed({ DeduceError(uploadResult.Code), uploadResult.Content });
+}
+
+void LocalProjectSnapshot::DataUploadFailed(
+   const MissingBlocksUploadProgress& uploadResult)
+{
+   CloudSyncError::ErrorType errorType = CloudSyncError::DataUploadFailed;
+
+   for (const auto& uploadError : uploadResult.UploadErrors)
+   {
+      if (
+         uploadError.Code == ResponseResultCode::Success ||
+         uploadError.Code == ResponseResultCode::Conflict)
+         continue;
+
+      const auto deducedError = DeduceError(uploadError.Code);
+
+      if (
+         errorType == CloudSyncError::DataUploadFailed &&
+         deducedError == CloudSyncError::Network)
+      {
+         errorType = deducedError;
+      }
+      else if (
+         deducedError == CloudSyncError::ProjectStorageLimitReached)
+      {
+         errorType = deducedError;
+         break;
+      }
+   }
+
+   UploadFailed({ errorType, {} });
+}
+
+void LocalProjectSnapshot::UpdateProjectSnapshot()
 {
    auto project = mWeakProject.lock();
 
    if (project == nullptr)
    {
-      mUpdateCallback(
-         { this, 0, 0, false, true, false, { "Invalid project state" } });
+      UploadFailed(MakeClientFailure(
+         XO("Project was closed before snapshot was created")));
       return;
    }
 
    const bool isCloudProject = mProjectCloudExtension.IsCloudProject();
-   const bool createNew = forceCreateNewProject || !isCloudProject;
+   const bool createNew      = mForceCreateNewProject || !isCloudProject;
 
    ProjectForm projectForm;
 
@@ -329,20 +412,19 @@ void LocalProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
       common_headers::Accept, common_content_types::ApplicationJson);
    // request.setHeader(common_headers::ContentEncoding, "gzip");
 
-   const auto language =
-   mServiceConfig.GetAcceptLanguageValue();
+   const auto language = mServiceConfig.GetAcceptLanguageValue();
 
    if (!language.empty())
       request.setHeader(
          audacity::network_manager::common_headers::AcceptLanguage, language);
 
-    request.setHeader(
+   request.setHeader(
       common_headers::Authorization, mOAuthService.GetAccessToken());
 
    auto serializedForm = SerializeProjectForm(projectForm);
 
-   auto response =
-      NetworkManager::GetInstance().doPost(request, serializedForm.data(), serializedForm.size());
+   auto response = NetworkManager::GetInstance().doPost(
+      request, serializedForm.data(), serializedForm.size());
 
    response->setRequestFinishedCallback(
       [this, response, createNew](auto)
@@ -351,135 +433,100 @@ void LocalProjectSnapshot::UpdateProjectSnapshot(bool forceCreateNewProject)
 
          if (error != NetworkError::NoError)
          {
-            auto errorMessage = response->getErrorString();
-
-            if (error == NetworkError::HTTPError)
-            {
-               errorMessage +=
-                  "\nHTTP code: " + std::to_string(response->getHTTPCode());
-               errorMessage +=
-                  "\nResponse: " + response->readAll<std::string>();
-            }
-
-            mUpdateCallback({ this, 0, 0, false, true, false, errorMessage });
+            UploadFailed(DeduceUploadError(*response));
+            return;
          }
-         else
+
+         const auto body = response->readAll<std::string>();
+         auto result     = DeserializeCreateSnapshotResponse(body);
+
+         if (!result)
          {
-            const auto body = response->readAll<std::string>();
-            auto result =
-               DeserializeCreateProjectResponse(body);
+            UploadFailed(MakeClientFailure(
+               XO("Invalid Response: %s").Format(body).Translation()));
 
-            if (!result)
-            {
-               mUpdateCallback({ this, 0, 0, false, true, false,
-                                 audacity::ToUTF8(XO("Invalid Response: %s")
-                                                     .Format(body)
-                                                     .Translation()) });
-               return;
-            }
-
-            OnSnapshotCreated(*result, createNew);
+            return;
          }
+
+         OnSnapshotCreated(*result, createNew);
       });
 }
 
 void LocalProjectSnapshot::OnSnapshotCreated(
-   const CreateProjectResponse& response, bool newProject)
+   const CreateSnapshotResponse& response, bool newProject)
 {
    auto project = mWeakProject.lock();
 
    if (project == nullptr)
    {
-      mUpdateCallback(
-         { this, 0, 0, false, true, false, { "Invalid project state" } });
+      UploadFailed(MakeClientFailure(
+         XO("Project was closed before snapshot was created")));
       return;
    }
-
-   mProjectCloudExtension.OnSnapshotCreated(
-      response.Project.Id, response.Snapshot.Id);
 
    if (newProject)
       mProjectBlocksLock->UpdateProjectHashesInCache();
 
    mProjectBlocksLock->FillMissingBlocks(response.SyncState.MissingBlocks);
 
+   mProjectCloudExtension.OnSnapshotCreated(*this, response);
+
+   {
+      auto lock = std::lock_guard { mCreateSnapshotResponseMutex };
+      mCreateSnapshotResponse = response;
+   }
+
+   decltype(mOnSnapshotCreatedCallbacks) callbacks;
+
+   {
+      auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
+      std::swap(callbacks, mOnSnapshotCreatedCallbacks);
+   }
+
+   std::for_each(
+      callbacks.begin(), callbacks.end(),
+      [response](auto& callback) { callback(response); });
+
    DataUploader::Get().Upload(
-      mServiceConfig, response.SyncState.FileUrls,
-      mProjectCloudExtension.GetUpdatedProjectContents(),
-      [this](UploadResult result)
+      mServiceConfig, response.SyncState.FileUrls, mProjectData.ProjectSnapshot,
+      [this](ResponseResult result)
       {
-         if (result.Code != UploadResultCode::Success)
+         if (result.Code != ResponseResultCode::Success)
          {
-            mUpdateCallback({ this, 0, 0, false, true, false,
-                              std::move(result.ErrorMessage) });
+            DataUploadFailed(result);
+            return;
          }
-         else
+
+         mProjectCloudExtension.OnProjectDataUploaded(*this);
+
+         if (mProjectBlocksLock->MissingBlocks.empty())
          {
-            mProjectUploaded.store(true, std::memory_order_release);
-            mUpdateCallback({ this, 0, 0, true, false, false,
-                              std::move(result.ErrorMessage) });
+            MarkSnapshotSynced(0);
+            return;
+         }
 
-            if (mProjectBlocksLock->MissingBlocks.empty())
+         mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
+            mServiceConfig, mProjectBlocksLock->MissingBlocks,
+            [this](auto result, auto block, auto uploadResult)
             {
-               MarkSnapshotSynced(0);
-               return;
-            }
+               const auto handledBlocks =
+                  result.UploadedBlocks + result.FailedBlocks;
 
-            mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
-               mServiceConfig, mProjectBlocksLock->MissingBlocks,
-               [this](auto result, auto block, auto action)
+               mProjectCloudExtension.OnBlockUploaded(
+                  *this, block.Hash,
+                  uploadResult.Code == ResponseResultCode::Success);
+
+               const auto completed = handledBlocks == result.TotalBlocks;
+               const bool succeeded = completed && result.FailedBlocks == 0;
+
+               if (succeeded)
                {
-                  const auto handledBlocks =
-                     result.UploadedBlocks + result.FailedBlocks;
+                  MarkSnapshotSynced(handledBlocks);
+                  return;
+               }
 
-                  const auto completed = handledBlocks == result.TotalBlocks;
-                  const bool succeeded = completed && result.FailedBlocks == 0;
-
-                  if (succeeded)
-                  {
-                     MarkSnapshotSynced(handledBlocks);
-                     return;
-                  }
-
-                  SetSyncProgress(handledBlocks, result.TotalBlocks);
-
-                  mUpdateCallback({ this, handledBlocks, result.TotalBlocks,
-                                    true, completed, succeeded,
-                                    Join(result.ErrorMessages, "\n") });
-
-                  if (completed)
-                  {
-                     mCompleted.store(true, std::memory_order_release);
-                     mProjectCloudExtension.OnSyncCompleted(false);
-                  }
-               });
-         }
-      });
-
-   mMixdownUploadInProgress.store(true, std::memory_order_release);
-
-   BasicUI::CallAfter(
-      [this, mixdownUrls = response.SyncState.MixdownUrls]
-      {
-         auto project = mWeakProject.lock();
-
-         if (!project)
-            return;
-
-         if (!mProjectCloudExtension.NeedsMixdownSync())
-         {
-            mMixdownUploadInProgress.store(false, std::memory_order_release);
-            return;
-         }
-
-         mMixdownUploader = MixdownUploader::Upload(
-            mCloudSyncUI, mServiceConfig, *project, mixdownUrls,
-            [this](std::string, bool success)
-            {
-               if (success)
-                  mProjectCloudExtension.MixdownSynced();
-
-               mMixdownUploadInProgress.store(false, std::memory_order_release);
+               if (completed && !succeeded)
+                  DataUploadFailed(result);
             });
       });
 }
@@ -491,7 +538,7 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
       mProjectCloudExtension.GetCloudProjectId(),
       mProjectCloudExtension.GetSnapshotId()));
 
-      const auto language = mServiceConfig.GetAcceptLanguageValue();
+   const auto language = mServiceConfig.GetAcceptLanguageValue();
 
    if (!language.empty())
       request.setHeader(
@@ -505,34 +552,14 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
    response->setRequestFinishedCallback(
       [this, response, blocksCount](auto)
       {
-         const auto error = response->getError();
-
-         const auto success = error == NetworkError::NoError;
-
-         std::string errorMessage;
-
-         if (!success)
+         if (response->getError() != NetworkError::NoError)
          {
-            auto errorMessage = response->getErrorString();
-
-            if (error == NetworkError::HTTPError)
-            {
-               errorMessage +=
-                  "\nHTTP code: " + std::to_string(response->getHTTPCode());
-               errorMessage +=
-                  "\nResponse: " + response->readAll<std::string>();
-            }
+            UploadFailed(DeduceUploadError(*response));
+            return;
          }
 
          mCompleted.store(true, std::memory_order_release);
-         mProjectCloudExtension.OnSyncCompleted(success);
-
-         // Wait for mixdown upload to complete
-         while (mMixdownUploadInProgress.load(std::memory_order_acquire))
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-         mUpdateCallback({ this, blocksCount, blocksCount, true, true, success,
-                           std::move(errorMessage) });
+         mProjectCloudExtension.OnSyncCompleted(this, {});
       });
 }
 

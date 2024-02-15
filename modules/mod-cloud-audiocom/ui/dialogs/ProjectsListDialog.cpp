@@ -21,11 +21,13 @@
 #include <wx/textctrl.h>
 
 #include "BasicUI.h"
-#include "Internat.h"
 #include "CodeConversions.h"
+#include "Internat.h"
+#include "wxWidgetsWindowPlacement.h"
 
 #include "ProjectManager.h"
 
+#include "AuthorizationHandler.h"
 #include "CloudSyncService.h"
 #include "sync/CloudSyncUtils.h"
 #include "sync/ProjectCloudExtension.h"
@@ -57,8 +59,8 @@ public:
    {
       using namespace std::chrono;
 
-      const auto time_passed = system_clock::now() -
-                               system_clock::from_time_t(time);
+      const auto time_passed =
+         system_clock::now() - system_clock::from_time_t(time);
 
       if (time_passed < minutes(1))
          return XO("less than 1 minute").Translation();
@@ -68,7 +70,7 @@ public:
             .Translation();
       if (time_passed < hours(48))
          return XP("one hour ago", "%d hours ago",
-                              0)(duration_cast<hours>(time_passed).count())
+                   0)(duration_cast<hours>(time_passed).count())
             .Translation();
 
       return wxDateTime(static_cast<time_t>(time)).Format();
@@ -84,7 +86,7 @@ public:
       switch (col)
       {
       case 0:
-         return item.Name;
+         return audacity::ToWXString(item.Name);
       case 1:
          return FormatTime(item.Updated);
       }
@@ -104,8 +106,10 @@ public:
 
    wxString GetColLabelValue(int col) override
    {
-      static const wxString colLabels[] = { XO("Project Name").Translation(),
-                                            XO("Modified").Translation(), };
+      static const wxString colLabels[] = {
+         XO("Project Name").Translation(),
+         XO("Modified").Translation(),
+      };
 
       return col < 2 ? colLabels[col] : wxString {};
    }
@@ -123,22 +127,67 @@ public:
 
    void Refresh(int page)
    {
+      using namespace std::chrono_literals;
+
+      auto authResult = PerformBlockingAuth(mOwner.mProject);
+
+      switch (authResult.Result)
+      {
+      case AuthResult::Status::Authorised:
+         break;
+      case AuthResult::Status::Failure:
+         BasicUI::ShowErrorDialog(
+            wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+            XO("Failed to authorize account"), {},
+            BasicUI::ErrorDialogOptions {}.Log(
+               audacity::ToWString(authResult.ErrorMessage)));
+         [[fallthrough]];
+      default:
+         mOwner.EndModal(0);
+         return;
+      }
+
       mOwner.OnBeforeRefresh();
 
-      CloudSyncService::Get().GetProjects(
-         page, mPageSize,
-         [this](
-            PaginatedProjectsResponse response, std::string error, bool success)
-         {
-            BasicUI::CallAfter(
-               [this, success = success, response = std::move(response)]
-               {
-                  if (success)
-                     mResponse = std::move(response);
+      auto progressDialog = BasicUI::MakeGenericProgress(
+         wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+         XO("Loading projects list..."));
 
-                  mOwner.OnRefreshCopleted(success);
-               });
-         });
+      auto cancellationContext = CancellationContext::Create();
+
+      auto future = CloudSyncService::Get().GetProjects(
+         cancellationContext, page, mPageSize, {});
+
+      while (std::future_status::ready != future.wait_for(100ms))
+      {
+         BasicUI::Yield();
+         if (progressDialog->Pulse() != BasicUI::ProgressResult::Success)
+            cancellationContext->Cancel();
+      }
+
+      auto result = future.get();
+
+      if (std::holds_alternative<PaginatedProjectsResponse>(result))
+      {
+         auto response = std::get_if<PaginatedProjectsResponse>(&result);
+         mResponse     = std::move(*response);
+         mOwner.OnRefreshCopleted(true);
+      }
+      else
+      {
+         auto responseResult = std::get_if<ResponseResult>(&result);
+
+         BasicUI::ShowErrorDialog(
+            wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+            XO("Failed to get projects list"), {},
+            BasicUI::ErrorDialogOptions {}.Log(
+               audacity::ToWString(responseResult->Content)));
+
+         if (mResponse.Items.empty())
+            mOwner.EndModal(0);
+
+         mOwner.OnRefreshCopleted(false);
+      }
    }
 
    bool HasPrevPage() const
@@ -173,7 +222,7 @@ public:
       return mResponse.Pagination.PagesCount;
    }
 
-   std::string_view GetSelectedProjectId () const
+   std::string_view GetSelectedProjectId() const
    {
       const auto selectedRow = mOwner.mProjectsTable->GetSelectedRows();
 
@@ -190,18 +239,23 @@ private:
    PaginatedProjectsResponse mResponse;
 };
 
-ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* project)
+ProjectsListDialog::ProjectsListDialog(
+   wxWindow* parent, AudacityProject* project)
     : wxDialogWrapper { parent, wxID_ANY, XO("Open from cloud") }
     , mProject { project }
 {
-   auto header = safenew  wxStaticText { this, wxID_ANY, XO("Cloud saved projects").Translation() };
-   auto searchHeader = safenew  wxStaticText { this, wxID_ANY, XO("Search:").Translation() };
-   mSearchCtrl = safenew  wxTextCtrl { this, wxID_ANY };
+   auto header =
+      safenew wxStaticText { this, wxID_ANY,
+                             XO("Cloud saved projects").Translation() };
+   auto searchHeader =
+      safenew wxStaticText { this, wxID_ANY, XO("Search:").Translation() };
+   mSearchCtrl = safenew wxTextCtrl { this, wxID_ANY };
 
-   mProjectsTable = safenew  wxGrid { this, wxID_ANY };
+   mProjectsTable     = safenew wxGrid { this, wxID_ANY };
    mProjectsTableData = safenew ProjectsTableData { *this, 7 };
    mProjectsTable->SetDefaultRowSize(32);
-   mProjectsTable->SetGridLineColour(mProjectsTable->GetDefaultCellBackgroundColour());
+   mProjectsTable->SetGridLineColour(
+      mProjectsTable->GetDefaultCellBackgroundColour());
    mProjectsTable->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
    mProjectsTable->SetTable(mProjectsTableData, true);
    mProjectsTable->SetRowLabelSize(1);
@@ -213,23 +267,28 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
       mProjectsTable->SetColSize(i, mProjectsTableData->GetColWidth(i));
 
    mPageLabel = safenew wxStaticText { this, wxID_ANY, {} };
-   mPrevPageButton = safenew  wxButton { this, wxID_ANY, XO("Prev").Translation() };
-   mNextPageButton = safenew  wxButton { this, wxID_ANY, XO("Next").Translation() };
-   mOpenButton = safenew  wxButton { this, wxID_ANY, XO("Open").Translation() };
-   mOpenAudioCom = safenew  wxButton { this, wxID_ANY, XO("View in audio.com").Translation() };
+   mPrevPageButton =
+      safenew wxButton { this, wxID_ANY, XO("Prev").Translation() };
+   mNextPageButton =
+      safenew wxButton { this, wxID_ANY, XO("Next").Translation() };
+   mOpenButton = safenew wxButton { this, wxID_ANY, XO("Open").Translation() };
+   mOpenAudioCom = safenew wxButton { this, wxID_ANY,
+                                      XO("View in audio.com").Translation() };
 
-   auto topSizer = safenew  wxBoxSizer { wxVERTICAL };
+   auto topSizer = safenew wxBoxSizer { wxVERTICAL };
 
-   auto headerSizer = safenew  wxBoxSizer { wxHORIZONTAL };
+   auto headerSizer = safenew wxBoxSizer { wxHORIZONTAL };
    headerSizer->Add(header, wxSizerFlags().CenterVertical().Left());
    headerSizer->AddStretchSpacer();
-   headerSizer->Add(searchHeader, wxSizerFlags().CenterVertical().Border(wxRIGHT, 4));
+   headerSizer->Add(
+      searchHeader, wxSizerFlags().CenterVertical().Border(wxRIGHT, 4));
    headerSizer->Add(mSearchCtrl, wxSizerFlags().CenterVertical());
 
    topSizer->Add(headerSizer, wxSizerFlags().Expand().Border(wxALL, 16));
-   topSizer->Add(mProjectsTable, wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 16));
+   topSizer->Add(
+      mProjectsTable, wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 16));
 
-   auto pageSizer = safenew  wxBoxSizer { wxHORIZONTAL };
+   auto pageSizer = safenew wxBoxSizer { wxHORIZONTAL };
    pageSizer->Add(mPageLabel, wxSizerFlags().CenterVertical());
    pageSizer->AddStretchSpacer();
    pageSizer->Add(mPrevPageButton, wxSizerFlags().CenterVertical());
@@ -238,7 +297,7 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
    topSizer->Add(
       pageSizer, wxSizerFlags().Expand().Border(wxLEFT | wxRIGHT, 16));
 
-   auto buttonsSizer = safenew  wxBoxSizer { wxHORIZONTAL };
+   auto buttonsSizer = safenew wxBoxSizer { wxHORIZONTAL };
    buttonsSizer->Add(mOpenAudioCom, wxSizerFlags().CenterVertical());
    buttonsSizer->AddStretchSpacer();
    buttonsSizer->Add(mOpenButton, wxSizerFlags().CenterVertical());
@@ -250,7 +309,7 @@ ProjectsListDialog::ProjectsListDialog(wxWindow* parent, AudacityProject* projec
    Center();
 
    SetupHandlers();
-   mProjectsTableData->Refresh(1);
+   BasicUI::CallAfter([this] { mProjectsTableData->Refresh(1); });
 }
 
 void ProjectsListDialog::SetupHandlers()
@@ -323,7 +382,7 @@ void ProjectsListDialog::OnOpen()
 
    EndModal(wxID_OK);
 
-   OpenProjectFromCloud(mProject, selectedProjectId);
+   OpenProjectFromCloud(mProject, selectedProjectId, {}, false);
 }
 
 } // namespace cloud::audiocom::sync

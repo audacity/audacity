@@ -10,110 +10,115 @@
 **********************************************************************/
 #pragma once
 
-#include "ProjectFileIOExtension.h"
-
+#include <atomic>
 #include <functional>
+#include <future>
+#include <memory>
 #include <string>
 #include <string_view>
-#include <mutex>
-#include <memory>
+#include <variant>
 #include <vector>
 
-#include "GlobalVariable.h"
+#include "NetworkUtils.h"
 
+class AudacityProject;
 
 namespace cloud::audiocom
 {
 namespace sync
 {
 class LocalProjectSnapshot;
-class CloudSyncUI;
 class PaginatedProjectsResponse;
 class ProjectInfo;
 class SnapshotInfo;
 class RemoteProjectSnapshot;
 
-enum class ProjectDownloadState
+struct ProjectSyncResult final
 {
-   Failed,
-   Cancelled,
-   NotAuthorized,
-   Succeeded,
-};
+   enum class StatusCode
+   {
+      Succeeded,
+      Blocked,
+      Failed,
+   };
 
-struct ProjectDownloadResult final
-{
-   AudacityProject* TargetProject {};
+   StatusCode Status {};
+   ResponseResult Result;
    std::string ProjectPath;
-   std::string ErrorMessage;
-   ProjectDownloadState SyncState { ProjectDownloadState::Failed };
-}; // struct ProjectDownloadResult
+}; // struct ProjectSyncResult
 
-using ProjectDownloadedCallback =
-   std::function<void(ProjectDownloadResult result)>;
+using ProgressCallback = std::function<bool(double)>;
 
-using GetProjectsCallback =
-   std::function<void(sync::PaginatedProjectsResponse, std::string, bool)>;
-}
+using GetProjectsResult =
+   std::variant<sync::PaginatedProjectsResponse, ResponseResult>;
+} // namespace sync
 
-//! CloudSyncService is responsible for saving and loading projects from the cloud
-class CLOUD_AUDIOCOM_API CloudSyncService final : public ProjectFileIOExtension
+//! CloudSyncService is responsible for saving and loading projects from the
+//! cloud
+class CLOUD_AUDIOCOM_API CloudSyncService final
 {
-   CloudSyncService() = default;
-   ~CloudSyncService() override = default;
+   CloudSyncService()  = default;
+   ~CloudSyncService() = default;
 
-   CloudSyncService(const CloudSyncService&) = delete;
-   CloudSyncService(CloudSyncService&&) = delete;
+   CloudSyncService(const CloudSyncService&)            = delete;
+   CloudSyncService(CloudSyncService&&)                 = delete;
    CloudSyncService& operator=(const CloudSyncService&) = delete;
-   CloudSyncService& operator=(CloudSyncService&&) = delete;
+   CloudSyncService& operator=(CloudSyncService&&)      = delete;
 
 public:
-   struct CLOUD_AUDIOCOM_API UI
-      : GlobalHook<UI, sync::CloudSyncUI&()> {};
-
    static CloudSyncService& Get();
 
-   //! Retrieve the list of projects from the cloud
-   void GetProjects(int page, int pageSize, sync::GetProjectsCallback callback);
+   using SyncPromise = std::promise<sync::ProjectSyncResult>;
+   using SyncFuture  = std::future<sync::ProjectSyncResult>;
 
-   //! Save the project to the cloud. This operation is asynchronous.
-   void SaveToCloud(AudacityProject& project);
+   using GetProjectsPromise = std::promise<sync::GetProjectsResult>;
+   using GetProjectsFuture  = std::future<sync::GetProjectsResult>;
+
+   enum class SyncMode
+   {
+      Normal,
+      ForceOverwrite,
+      ForceNew
+   };
+
+   //! Retrieve the list of projects from the cloud
+   GetProjectsFuture GetProjects(
+      std::shared_ptr<CancellationContext> context, int page, int pageSize,
+      std::string searchString);
 
    //! Open the project from the cloud. This operation is asynchronous.
-   void OpenFromCloud(
-      AudacityProject* targetProject, std::string projectId,
-      std::string snapshotId, sync::ProjectDownloadedCallback callback);
+   [[nodiscard]] SyncFuture OpenFromCloud(
+      std::string projectId, std::string snapshotId, SyncMode mode,
+      sync::ProgressCallback callback);
+
+   [[nodiscard]] SyncFuture SyncProject(
+      AudacityProject& project, const std::string& path, bool forceSync,
+      sync::ProgressCallback callback);
+
+   static bool IsCloudProject(const std::string& path);
 
 private:
-   bool DoCloudSave(AudacityProject& project, const std::string& title);
+   void FailSync(ResponseResult responseResult);
 
-   void OnOpen(AudacityProject& project, const std::string& path) override;
-   void OnLoad(AudacityProject& project) override;
-   bool OnSave(AudacityProject& project, bool fromTempProject) override;
-   bool OnClose(AudacityProject& project) override;
-   bool IsBlockLocked(
-      const AudacityProject& project, int64_t blockId) const override;
-   void OnUpdateSaved(
-      AudacityProject& project, const ProjectSerializer& serializer) override;
+   void CompleteSync(std::string path);
 
-   void CreateSnapshot(AudacityProject& project);
+   void CompleteSync(sync::ProjectSyncResult result);
 
    void SyncCloudSnapshot(
-      AudacityProject* targetProject,
       const sync::ProjectInfo& projectInfo,
-      const sync::SnapshotInfo& snapshotInfo,
-      sync::ProjectDownloadedCallback callback);
+      const sync::SnapshotInfo& snapshotInfo, SyncMode mode);
 
-   sync::CloudSyncUI& GetUI() const;
-
-   void
-   UpdateProgress(double downloadProgress = -1.0);
+   void UpdateDowloadProgress(double downloadProgress);
 
    std::vector<std::shared_ptr<sync::LocalProjectSnapshot>> mLocalSnapshots;
    std::shared_ptr<sync::RemoteProjectSnapshot> mRemoteSnapshot;
 
-   std::mutex mProgressMutex;
-   double mDownloadProgress { 0.0 };
-   bool mProgressUpdateQueued { false };
+   SyncPromise mSyncPromise;
+   sync::ProgressCallback mProgressCallback;
+
+   std::atomic<double> mDownloadProgress { 0.0 };
+   std::atomic<bool> mProgressUpdateQueued { false };
+
+   std::atomic<bool> mSyncInProcess { false };
 };
 } // namespace cloud::audiocom

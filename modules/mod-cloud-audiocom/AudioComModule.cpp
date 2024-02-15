@@ -11,7 +11,9 @@
 
 #include "ModuleConstants.h"
 
-#include "ui/MixdownPropertiesDialog.h"
+#include "ui/images/CloudImages.hpp"
+
+#include "ui/dialogs/UploadCanceledDialog.h"
 
 #include "ServiceConfig.h"
 #include "OAuthService.h"
@@ -20,13 +22,20 @@
 DEFINE_VERSION_CHECK
 extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 {
+   static auto cloudImages = []
+   {
+      bin2c_init_CLOUDIMAGES_HPP();
+      return true;
+   }();
+
    switch (type)
    {
    case ModuleInitialize:
    {
-//       auto r = cloud::audiocom::sync::MixdownPropertiesDialog::Show(nullptr);
-// 
-//       exit(0);
+     
+      //cloud::audiocom::sync::UploadCanceledDialog { nullptr }
+      //   .ShowDialog();
+     // exit(0);
    }
       break;
    default:

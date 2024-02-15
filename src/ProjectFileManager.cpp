@@ -263,7 +263,8 @@ bool ProjectFileManager::Save()
 
    
    if (ProjectFileIOExtensionRegistry::OnSave(
-          mProject, projectFileIO.IsTemporary()))
+          mProject, [this](auto& path, bool rename)
+          { return DoSave(audacity::ToWXString(path), rename); }))
       return true;
 
    // Prompt for file name?
@@ -1076,7 +1077,9 @@ AudacityProject *ProjectFileManager::OpenProjectFile(
    const FilePath &fileName, bool addtohistory)
 {
    // Allow extensions to update the project before opening it.
-   ProjectFileIOExtensionRegistry::OnOpen(mProject, audacity::ToUTF8(fileName));
+   if (!ProjectFileIOExtensionRegistry::OnOpen(
+          mProject, audacity::ToUTF8(fileName)))
+      return nullptr;
 
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );

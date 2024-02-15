@@ -13,15 +13,13 @@
 
 #include <wx/button.h>
 #include <wx/choice.h>
+#include <wx/sizer.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/sizer.h>
 #include <wx/textctrl.h>
 
+#include "../UserPanel.h"
 #include "AuthorizationHandler.h"
-#include "CodeConversions.h"
-#include "CloudModuleSettings.h"
-#include "UserPanel.h"
 
 namespace cloud::audiocom::sync
 {
@@ -41,10 +39,7 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    mProjectName = new wxTextCtrl { this, wxID_ANY, projectName };
 
    if (!projectName.empty())
-   {
       mProjectName->SetValue(projectName);
-      //mProjectName->SetInsertionPointEnd();
-   }
 
    const wxString choices[] = { XO("Private").Translation(),
                                 XO("Unlisted").Translation(),
@@ -67,7 +62,8 @@ CloudProjectPropertiesDialog::~CloudProjectPropertiesDialog()
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-SaveResult CloudProjectPropertiesDialog::Show(
+std::pair<CloudProjectPropertiesDialog::Action, wxString>
+CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
    UserService& userService, const wxString& projectName, wxWindow* parent,
    bool allowLocalSave)
@@ -79,8 +75,12 @@ SaveResult CloudProjectPropertiesDialog::Show(
 
    const auto resultCode = dialog.ShowModal();
 
-   return { audacity::ToUTF8(dialog.GetProjectName()), resultCode == wxID_OK,
-            resultCode == wxID_CANCEL };
+   const auto action =
+      resultCode == wxID_OK ?
+         Action::SaveToCloud :
+         (resultCode == wxID_CANCEL ? Action::Cancel : Action::SaveLocally);
+
+   return { action, dialog.GetProjectName() };
 }
 
 void CloudProjectPropertiesDialog::LayoutControls()
@@ -153,7 +153,8 @@ wxString CloudProjectPropertiesDialog::GetProjectName() const
 
 void CloudProjectPropertiesDialog::OnUpdateCloudSaveState()
 {
-   mSaveToCloud->Enable(mUserPanel->IsAuthorized() && !GetProjectName().empty());
+   mSaveToCloud->Enable(
+      mUserPanel->IsAuthorized() && !GetProjectName().empty());
 }
 
 } // namespace cloud::audiocom::sync

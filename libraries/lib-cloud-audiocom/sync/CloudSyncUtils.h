@@ -113,7 +113,7 @@ struct ProjectSyncState final
    std::vector<UploadUrls> MissingBlocks;
 };
 
-struct CreateProjectResponse final
+struct CreateSnapshotResponse final
 {
    ProjectInfo Project;
    SnapshotInfo Snapshot;
@@ -135,15 +135,15 @@ struct PaginatedProjectsResponse final
    PaginationInfo Pagination;
 };
 
-std::optional<CreateProjectResponse>
-DeserializeCreateProjectResponse(const std::string& data);
+std::optional<CreateSnapshotResponse>
+DeserializeCreateSnapshotResponse(const std::string& data);
 std::optional<PaginatedProjectsResponse>
 DeserializePaginatedProjectsResponse(const std::string& data);
 
 std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data);
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data);
 
-wxString
+CLOUD_AUDIOCOM_API wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
 
 } // namespace cloud::audiocom::sync

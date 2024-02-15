@@ -18,12 +18,12 @@
 
 #include "CodeConversions.h"
 #include "Internat.h"
-#include "StringUtils.h"
 #include "MemoryX.h"
+#include "StringUtils.h"
 
-#include "Request.h"
 #include "IResponse.h"
 #include "NetworkManager.h"
+#include "Request.h"
 
 #include "WavPackCompressor.h"
 
@@ -39,11 +39,11 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
     , mCallback { std::move(callback) }
 {
    {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
-      auto& db = CloudProjectsDatabase::Get().GetConnection();
+      auto writeLock  = std::lock_guard { mDbWriteMutex };
+      auto& db        = CloudProjectsDatabase::Get().GetConnection();
       auto attachStmt = db.CreateStatement("ATTACH DATABASE ? AS ?");
-      auto result = attachStmt->Prepare(mPath, mSnapshotDBName).Run();
-      mAttached = result.IsOk();
+      auto result     = attachStmt->Prepare(mPath, mSnapshotDBName).Run();
+      mAttached       = result.IsOk();
 
       if (!mAttached)
          return;
@@ -60,7 +60,8 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          syncInfo && syncInfo->SnapshotId == mSnapshotInfo.Id &&
          syncInfo->SyncStatus == DBProjectData::SyncStatusSynced)
       {
-         mCallback({ 0, 0, {}, true, true, true });
+         mCallback({ {}, 0, 0, true });
+         mNothingToDo = true;
          return;
       }
    }
@@ -87,7 +88,8 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          { OnBlockDownloaded(std::move(hash), response); }));
    }
 
-   mRequestsThread = std::thread { &RemoteProjectSnapshot::RequestsThread, this };
+   mRequestsThread =
+      std::thread { &RemoteProjectSnapshot::RequestsThread, this };
 }
 
 RemoteProjectSnapshot::~RemoteProjectSnapshot()
@@ -97,10 +99,15 @@ RemoteProjectSnapshot::~RemoteProjectSnapshot()
    if (mRequestsThread.joinable())
       mRequestsThread.join();
 
+   {
+      auto lock = std::unique_lock { mResponsesMutex };
+      mResponsesEmptyCV.wait(lock, [this] { return mResponses.empty(); });
+   }
+
    if (mAttached)
    {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
-      auto& db = CloudProjectsDatabase::Get().GetConnection();
+      auto writeLock  = std::lock_guard { mDbWriteMutex };
+      auto& db        = CloudProjectsDatabase::Get().GetConnection();
       auto detachStmt = db.CreateStatement("DETACH DATABASE ?");
       detachStmt->Prepare(mSnapshotDBName).Run();
    }
@@ -117,11 +124,19 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
    if (!snapshot->mAttached)
    {
       snapshot->mCallback(
-         { 0, 0,
-           audacity::ToUTF8(XO("Failed to attach to the cloud project database")
-                               .Translation()) });
+         { { ResponseResultCode::InternalClientError,
+             audacity::ToUTF8(
+                XO("Failed to attach to the cloud project database")
+                   .Translation()) },
+           0,
+           0,
+           false });
+
       return {};
    }
+
+   if (snapshot->mNothingToDo)
+      return {};
 
    return snapshot;
 }
@@ -130,13 +145,10 @@ void RemoteProjectSnapshot::Cancel()
 {
    DoCancel();
 
-   mCallback({ mDownloadedBlocks.load(std::memory_order_acquire),
+   mCallback({ { ResponseResultCode::Cancelled, {} },
+               mDownloadedBlocks.load(),
                mMissingBlocks,
-               {},
-               mProjectDownloaded.load(std::memory_order_acquire),
-               true,
-               false,
-               true });
+               mProjectDownloaded.load() });
 }
 
 std::unordered_set<std::string>
@@ -183,16 +195,14 @@ void RemoteProjectSnapshot::DoCancel()
    mRequestsCV.notify_one();
 
    {
-      auto responses = std::lock_guard { mResponsesMutex };
+      auto responsesLock = std::lock_guard { mResponsesMutex };
       for (auto& response : mResponses)
          response->abort();
    }
 }
 
 void RemoteProjectSnapshot::DownloadBlob(
-   std::string url,
-   SuccessHandler onSuccess,
-   int retries)
+   std::string url, SuccessHandler onSuccess, int retries)
 {
    using namespace audacity::network_manager;
 
@@ -200,68 +210,57 @@ void RemoteProjectSnapshot::DownloadBlob(
 
    auto response = NetworkManager::GetInstance().doGet(request);
 
-   mResponses.push_back(response);
+   {
+      auto responsesLock = std::lock_guard { mResponsesMutex };
+      mResponses.push_back(response);
+   }
 
    response->setRequestFinishedCallback(
-      [this, onSuccess = std::move(onSuccess), retries](IResponse* response)
+      [this, onSuccess = std::move(onSuccess), retries, response](auto)
       {
-         if (response->getError() == NetworkError::OperationCancelled)
+         RemoveResponse(response.get());
+
+         auto responseResult = GetResponseResult(*response, false);
+
+         if (responseResult.Code == ResponseResultCode::Cancelled)
+            return;
+
+         if (
+            responseResult.Code != ResponseResultCode::Success &&
+            responseResult.Code != ResponseResultCode::ConnectionFailed)
          {
-            RemoveRequest(response);
+            OnFailure(std::move(responseResult));
             return;
          }
 
-         if (response->getError() == NetworkError::HTTPError)
-         {
-            const auto code = response->getHTTPCode();
-
-            if (code < 500 || retries <= 0)
-            {
-               OnFailure(
-                  response, audacity::ToUTF8(
-                               XO("Failed to download the cloud project: %s")
-                                  .Format(response->readAll<std::string>())
-                                  .Translation()));
-               return;
-            }
-         }
-
-         if (response->getError() != NetworkError::NoError)
+         if (responseResult.Code == ResponseResultCode::ConnectionFailed)
          {
             if (retries <= 0)
             {
-               OnFailure(
-                  response, audacity::ToUTF8(
-                               XO("Failed to download the cloud project: %s")
-                                  .Format(response->getErrorString())
-                                  .Translation()));
+               OnFailure(std::move(responseResult));
                return;
             }
 
             DownloadBlob(
                response->getRequest().getURL(), std::move(onSuccess),
                retries - 1);
+
             return;
          }
 
          onSuccess(response);
-
-         RemoveRequest(response);
       });
 }
 
 void RemoteProjectSnapshot::OnProjectBlobDownloaded(
-   audacity::network_manager::IResponse* response)
+   audacity::network_manager::ResponsePtr response)
 {
    const std::vector<uint8_t> data = response->readAll();
-   uint64_t dictSize = 0;
+   uint64_t dictSize               = 0;
 
    if (data.size() < sizeof(uint64_t))
    {
-      OnFailure(
-         response,
-         audacity::ToUTF8(
-            XO("Failed to download the cloud project").Translation()));
+      OnFailure({ ResponseResultCode::UnexpectedResponse, {} });
       return;
    }
 
@@ -272,16 +271,13 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 
    if (data.size() < sizeof(uint64_t) + dictSize)
    {
-      OnFailure(
-         response,
-         audacity::ToUTF8(
-            XO("Failed to download the cloud project").Translation()));
+      OnFailure({ ResponseResultCode::UnexpectedResponse, {} });
       return;
    }
    {
       auto writeLock = std::lock_guard { mDbWriteMutex };
 
-      auto& db = CloudProjectsDatabase::Get().GetConnection();
+      auto& db         = CloudProjectsDatabase::Get().GetConnection();
       auto transaction = db.BeginTransaction("p_" + mProjectInfo.Id);
 
       auto updateProjectStatement = db.CreateStatement(
@@ -291,10 +287,10 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 
       if (!updateProjectStatement)
       {
-         OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+         OnFailure({ ResponseResultCode::InternalClientError,
+                     audacity::ToUTF8(updateProjectStatement.GetError()
+                                         .GetErrorString()
+                                         .Translation()) });
          return;
       }
 
@@ -312,9 +308,10 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
       if (!result.IsOk())
       {
          OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+            { ResponseResultCode::InternalClientError,
+              audacity::ToUTF8(
+                 result.GetErrors().front().GetErrorString().Translation()) });
+
          return;
       }
 
@@ -323,10 +320,10 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 
       if (!deleteAutosaveStatement)
       {
-         OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+         OnFailure({ ResponseResultCode::InternalClientError,
+                     audacity::ToUTF8(deleteAutosaveStatement.GetError()
+                                         .GetErrorString()
+                                         .Translation()) });
          return;
       }
 
@@ -335,18 +332,16 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
       if (!result.IsOk())
       {
          OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+            { ResponseResultCode::InternalClientError,
+              audacity::ToUTF8(
+                 result.GetErrors().front().GetErrorString().Translation()) });
          return;
       }
 
-      if (!transaction.Commit().IsOk())
+      if (auto error = transaction.Commit(); error.IsError())
       {
-         OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+         OnFailure({ ResponseResultCode::InternalClientError,
+                     audacity::ToUTF8(error.GetErrorString().Translation()) });
          return;
       }
    }
@@ -356,7 +351,7 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 }
 
 void RemoteProjectSnapshot::OnBlockDownloaded(
-   std::string blockHash, audacity::network_manager::IResponse* response)
+   std::string blockHash, audacity::network_manager::ResponsePtr response)
 {
    const auto compressedData = response->readAll<std::vector<uint8_t>>();
    const auto blockData =
@@ -365,21 +360,20 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
    if (!blockData)
    {
       OnFailure(
-         response,
-         audacity::ToUTF8(
-            XO("Failed to decompress the cloud project block").Translation()));
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(XO("Failed to decompress the cloud project block")
+                               .Translation()) });
       return;
    }
    {
       auto writeLock = std::lock_guard { mDbWriteMutex };
 
-      auto& db = CloudProjectsDatabase::Get().GetConnection();
+      auto& db         = CloudProjectsDatabase::Get().GetConnection();
       auto transaction = db.BeginTransaction("b_" + blockHash);
 
       auto hashesStatement = db.CreateStatement(
          "INSERT INTO block_hashes (project_id, block_id, hash) VALUES (?1, ?2, ?3) "
-         "ON CONFLICT(project_id, block_id) DO UPDATE SET hash = ?3"
-      );
+         "ON CONFLICT(project_id, block_id) DO UPDATE SET hash = ?3");
 
       auto result = hashesStatement
                        ->Prepare(mProjectInfo.Id, blockData->BlockId, blockHash)
@@ -388,9 +382,9 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
       if (!result.IsOk())
       {
          OnFailure(
-            response, audacity::ToUTF8(
-                         XO("Failed to update the cloud project block hashes")
-                            .Translation()));
+            { ResponseResultCode::InternalClientError,
+              audacity::ToUTF8(
+                 result.GetErrors().front().GetErrorString().Translation()) });
          return;
       }
 
@@ -402,9 +396,9 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
       if (!blockStatement)
       {
          OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project block").Translation()));
+            { ResponseResultCode::InternalClientError,
+              audacity::ToUTF8(
+                 blockStatement.GetError().GetErrorString().Translation()) });
          return;
       }
 
@@ -429,38 +423,34 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
       if (!result.IsOk())
       {
          OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project block").Translation()));
+            { ResponseResultCode::InternalClientError,
+              audacity::ToUTF8(
+                 result.GetErrors().front().GetErrorString().Translation()) });
          return;
       }
 
-      if (!transaction.Commit().IsOk())
+      if (auto error = transaction.Commit(); error.IsError())
       {
-         OnFailure(
-            response,
-            audacity::ToUTF8(
-               XO("Failed to update the cloud project").Translation()));
+         OnFailure({ ResponseResultCode::InternalClientError,
+                     audacity::ToUTF8(error.GetErrorString().Translation()) });
          return;
       }
    }
+
    mDownloadedBlocks.fetch_add(1, std::memory_order_acq_rel);
 
    ReportProgress();
 }
 
-void RemoteProjectSnapshot::OnFailure(
-   audacity::network_manager::IResponse* response, std::string error)
+void RemoteProjectSnapshot::OnFailure(ResponseResult result)
 {
    mFailed.store(true, std::memory_order_release);
-   RemoveRequest(response);
-   mCallback({ mDownloadedBlocks.load(std::memory_order_acquire),
-               mMissingBlocks, std::move(error),
-               mProjectDownloaded.load(std::memory_order_acquire), true, false,
-               false });
+   mCallback({ result, mDownloadedBlocks.load(std::memory_order_acquire),
+               mMissingBlocks,
+               mProjectDownloaded.load(std::memory_order_acquire) });
 }
 
-void RemoteProjectSnapshot::RemoveRequest(
+void RemoteProjectSnapshot::RemoveResponse(
    audacity::network_manager::IResponse* response)
 {
    {
@@ -470,6 +460,9 @@ void RemoteProjectSnapshot::RemoveRequest(
             mResponses.begin(), mResponses.end(),
             [response](auto& r) { return r.get() == response; }),
          mResponses.end());
+
+      if (mResponses.empty())
+         mRequestsCV.notify_all();
    }
    {
       auto lock = std::lock_guard { mRequestsMutex };
@@ -480,17 +473,17 @@ void RemoteProjectSnapshot::RemoveRequest(
 
 void RemoteProjectSnapshot::MarkProjectInDB(bool successfulDownload)
 {
-   auto& db = CloudProjectsDatabase::Get();
+   auto& db         = CloudProjectsDatabase::Get();
    auto currentData = db.GetProjectData(mProjectInfo.Id);
 
    auto data = currentData ? *currentData : DBProjectData {};
 
-   data.ProjectId = mProjectInfo.Id;
+   data.ProjectId  = mProjectInfo.Id;
    data.SnapshotId = mSnapshotInfo.Id;
    data.SyncStatus = successfulDownload ? DBProjectData::SyncStatusSynced :
                                           DBProjectData::SyncStatusDownloading;
-   data.LastRead = wxDateTime::Now().GetTicks();
-   data.LocalPath = mPath;
+   data.LastRead   = wxDateTime::Now().GetTicks();
+   data.LocalPath  = mPath;
 
    db.UpdateProjectData(data);
 }
@@ -515,13 +508,7 @@ void RemoteProjectSnapshot::ReportProgress()
       MarkProjectInDB(true);
    }
 
-   mCallback({ blocksDownloaded,
-               mMissingBlocks,
-               {},
-               projectDownloaded,
-               completed,
-               completed,
-               false });
+   mCallback({ {}, blocksDownloaded, mMissingBlocks, projectDownloaded });
 }
 
 bool RemoteProjectSnapshot::WantsNextRequest() const
@@ -562,12 +549,17 @@ void RemoteProjectSnapshot::RequestsThread()
          mRequestsInProgress++;
       }
 
-      DownloadBlob (
-         std::move(request.first), std::move(request.second), 3);
+      DownloadBlob(std::move(request.first), std::move(request.second), 3);
 
       // TODO: Random sleep to avoid overloading the server
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
    }
+}
+
+bool RemoteProjectSnapshotState::IsComplete() const noexcept
+{
+   return (BlocksDownloaded == BlocksTotal && ProjectDownloaded) ||
+          Result.Code != ResponseResultCode::Success;
 }
 
 } // namespace cloud::audiocom::sync

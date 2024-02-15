@@ -37,7 +37,7 @@
 #include "UserService.h"
 
 #include "AuthorizationHandler.h"
-#include "UserPanel.h"
+#include "../UserPanel.h"
 
 #include "CodeConversions.h"
 

@@ -11,10 +11,6 @@
 
 #include "MissingBlocksUploader.h"
 
-#include "NetworkManager.h"
-#include "Request.h"
-#include "IResponse.h"
-
 #include "DataUploader.h"
 
 #include "WavPackCompressor.h"
@@ -86,9 +82,9 @@ void MissingBlocksUploader::ConsumeBlock(ProducedItem item)
 
    DataUploader::Get().Upload(
       mServiceConfig, item.Task.BlockUrls, std::move(item.CompressedData),
-      [this, task = item.Task](UploadResult result)
+      [this, task = item.Task](ResponseResult result)
       {
-         if (result.Code != UploadResultCode::Success)
+         if (result.Code != ResponseResultCode::Success)
             HandleFailedBlock(result, task);
          else
             ConfirmBlock(task);
@@ -144,8 +140,7 @@ void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
       std::lock_guard<std::mutex> lock(mProgressDataMutex);
       mProgressData.UploadedBlocks++;
 
-      mProgressCallback(
-         mProgressData, item.Block, BlockAction::RemoveFromMissing);
+      mProgressCallback(mProgressData, item.Block, {});
    }
 
    {
@@ -156,21 +151,14 @@ void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
 }
 
 void MissingBlocksUploader::HandleFailedBlock(
-   const UploadResult& result, BlockUploadTask task)
+   const ResponseResult& result, BlockUploadTask task)
 {
    {
       std::lock_guard<std::mutex> lock(mProgressDataMutex);
 
       mProgressData.FailedBlocks++;
-      mProgressData.ErrorMessages.push_back(result.ErrorMessage);
-
-      const auto action =
-         result.Code == UploadResultCode::Conflict ?
-            BlockAction::RemoveFromMissing :
-            (result.Code == UploadResultCode::Expired ? BlockAction::Expire :
-                                                        BlockAction::Ignore);
-
-      mProgressCallback(mProgressData, task.Block, action);
+      mProgressData.UploadErrors.push_back(result);
+      mProgressCallback(mProgressData, task.Block, result);
    }
 
    {
@@ -196,7 +184,8 @@ void MissingBlocksUploader::ProducerThread()
          std::lock_guard<std::mutex> lock(mProgressDataMutex);
          mProgressData.FailedBlocks++;
          mProgressCallback(
-            mProgressData, item.Task.Block, BlockAction::RemoveFromMissing);
+            mProgressData, item.Task.Block,
+            { ResponseResultCode::InternalClientError, {} });
 
          continue;
       }

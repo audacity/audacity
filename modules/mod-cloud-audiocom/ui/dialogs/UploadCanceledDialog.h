@@ -3,16 +3,25 @@
 
   Audacity: A Digital Audio Editor
 
-  CloudSyncUI.cpp
+  UploadCancelledDialog.h
 
   Dmitry Vedenko
 
 **********************************************************************/
 #pragma once
 
-#include "CloudSyncUI.h"
+#include "AudioComDialogBase.h"
 
 namespace cloud::audiocom::sync
 {
-CloudSyncUI::~CloudSyncUI() = default;
+class UploadCanceledDialog final : public AudioComDialogBase
+{
+public:
+   explicit UploadCanceledDialog(const AudacityProject* project);
+
+   static DialogButtonIdentifier OkButtonIdentifier();
+
+private:
+   bool HasSeparator() const override;
+};
 } // namespace cloud::audiocom::sync

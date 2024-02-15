@@ -29,11 +29,14 @@ ProjectFileIOExtensionRegistry::Extension::Extension(
    GetExtensions().push_back(&extension);
 }
 
-void ProjectFileIOExtensionRegistry::OnOpen(
+bool ProjectFileIOExtensionRegistry::OnOpen(
    AudacityProject& project, const std::string& path)
 {
    for (auto& extension : GetExtensions())
-      extension->OnOpen(project, path);
+      if (!extension->OnOpen(project, path))
+         return false;
+
+   return true;
 }
 
 void ProjectFileIOExtensionRegistry::OnLoad(AudacityProject& project)
@@ -43,11 +46,11 @@ void ProjectFileIOExtensionRegistry::OnLoad(AudacityProject& project)
 }
 
 bool ProjectFileIOExtensionRegistry::OnSave(
-   AudacityProject& project, bool fromTempProject)
+   AudacityProject& project, const ProjectSaveCallback& projectSaveCallback)
 {
    for (auto& extension : GetExtensions())
    {
-      if (extension->OnSave(project, fromTempProject))
+      if (extension->OnSave(project, projectSaveCallback))
          return true;
    }
 

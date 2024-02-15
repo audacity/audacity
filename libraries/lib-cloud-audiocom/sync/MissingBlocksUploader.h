@@ -18,7 +18,9 @@
 #include <thread>
 
 #include <functional>
+
 #include "CloudSyncUtils.h"
+#include "NetworkUtils.h"
 
 namespace audacity::network_manager
 {
@@ -35,15 +37,13 @@ class ServiceConfig;
 
 namespace cloud::audiocom::sync
 {
-struct UploadResult;
-
 struct MissingBlocksUploadProgress final
 {
    int64_t TotalBlocks = 0;
    int64_t UploadedBlocks = 0;
    int64_t FailedBlocks = 0;
 
-   std::vector<std::string> ErrorMessages;
+   std::vector<ResponseResult> UploadErrors;
 };
 
 struct BlockUploadTask final
@@ -52,14 +52,7 @@ struct BlockUploadTask final
    LockedBlock Block;
 };
 
-enum class BlockAction
-{
-   RemoveFromMissing,
-   Expire,
-   Ignore,
-};
-
-using MissingBlocksUploadProgressCallback = std::function<void(const MissingBlocksUploadProgress&, const LockedBlock&, BlockAction)>;
+using MissingBlocksUploadProgressCallback = std::function<void(const MissingBlocksUploadProgress&, const LockedBlock&, ResponseResult blockResponseResult)>;
 
 class MissingBlocksUploader final
 {
@@ -89,7 +82,7 @@ private:
    ProducedItem PopBlockFromQueue();
 
    void ConfirmBlock(BlockUploadTask task);
-   void HandleFailedBlock(const UploadResult& result, BlockUploadTask task);
+   void HandleFailedBlock(const ResponseResult& result, BlockUploadTask task);
 
    void ProducerThread();
    void ConsumerThread();

@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "CloudSyncUtils.h"
+#include "NetworkUtils.h"
 
 namespace cloud::audiocom
 {
@@ -26,22 +27,6 @@ class ServiceConfig;
 
 namespace cloud::audiocom::sync
 {
-enum class UploadResultCode
-{
-   Success,
-   Cancelled,
-   Expired,
-   Conflict,
-   ConnectionFailed,
-   UnknownError,
-};
-
-struct UploadResult final
-{
-   UploadResultCode Code { UploadResultCode::Success };
-   std::string ErrorMessage;
-};
-
 class DataUploader final
 {
    DataUploader() = default;
@@ -58,12 +43,12 @@ public:
 
    void Upload(
       const ServiceConfig& config, const UploadUrls& target,
-      std::vector<uint8_t> data, std::function<void(UploadResult)> callback,
+      std::vector<uint8_t> data, std::function<void(ResponseResult)> callback,
       std::function<bool(double)> progressCallback = {});
 
    void Upload(
       const ServiceConfig& config, const UploadUrls& target,
-      std::string filePath, std::function<void(UploadResult)> callback,
+      std::string filePath, std::function<void(ResponseResult)> callback,
       std::function<bool(double)> progressCallback = {});
 
 private:

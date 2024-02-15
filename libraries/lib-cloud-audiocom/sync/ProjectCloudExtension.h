@@ -13,6 +13,8 @@
 #include <cstdint>
 #include <functional>
 #include <memory>
+#include <mutex>
+#include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -21,21 +23,36 @@
 #include "ClientData.h"
 #include "Observer.h"
 
+#include "sync/CloudSyncError.h"
+#include "CloudSyncUtils.h"
+
 class AudacityProject;
 class ProjectSerializer;
 
 namespace cloud::audiocom::sync
 {
-struct CloudStatusChanged final
+class ProjectUploadOperation;
+
+enum class ProjectSyncStatus
 {
-   bool IsSyncing { false };
-   bool LastSyncSuccessful { false };
-   bool IsCloudProject { false };
+   Local,
+   Unsynced,
+   Synced,
+   Failed,
+   Syncing
+};
+
+struct CLOUD_AUDIOCOM_API CloudStatusChangedMessage final
+{
+   ProjectSyncStatus Status { ProjectSyncStatus::Local };
+   double Progress {};
+   std::optional<CloudSyncError> Error {};
+
+   bool IsSyncing() const noexcept;
 };
 
 class CLOUD_AUDIOCOM_API ProjectCloudExtension final :
-    public ClientData::Base,
-    public Observer::Publisher<CloudStatusChanged>
+    public ClientData::Base
 {
 public:
    explicit ProjectCloudExtension(AudacityProject& project);
@@ -46,15 +63,31 @@ public:
 
    bool IsCloudProject() const;
 
-   void MarkPendingCloudSave();
-
    void OnLoad();
 
-   void OnSnapshotCreated(std::string_view projectId, std::string_view snapshotId);
+   //! This method is called from the UI thread
+   void OnSyncStarted();
+   //! This method is called from the UI thread
+   void OnUploadOperationCreated(std::shared_ptr<ProjectUploadOperation> uploadOperation);
+   //! This method is called not from the UI thread
+   void OnBlocksHashed(ProjectUploadOperation& uploadOperation);
+   //! This method is called from the network thread
+   void OnSnapshotCreated(const ProjectUploadOperation& uploadOperation, const
+                             CreateSnapshotResponse& response);
+   //! This method is called from the network thread
+   void OnProjectDataUploaded(const ProjectUploadOperation& uploadOperation);
+   //! This method is called from the network thread
+   void OnBlockUploaded(
+      const ProjectUploadOperation& uploadOperation, std::string_view blockID,
+      bool successful);
+   //! This method is called from any thread
+   void OnSyncCompleted(
+      const ProjectUploadOperation* uploadOperation, std::optional<CloudSyncError>
+         error);
 
-   void OnSnapshotSynced(std::string_view projectId, std::string_view snapshotId);
+   void CancelSync();
 
-   void OnSyncCompleted(bool successful);
+   bool IsSyncing() const;
 
    std::string_view GetCloudProjectId() const;
    std::string_view GetSnapshotId() const;
@@ -62,26 +95,55 @@ public:
    bool OnUpdateSaved(const ProjectSerializer& serializer);
 
    std::weak_ptr<AudacityProject> GetProject() const;
-   const std::vector<uint8_t>& GetUpdatedProjectContents() const;
 
    void SuppressAutoDownload();
 
    bool GetAutoDownloadSuppressed() const;
 
+   void MarkNeedsMixdownSync();
    bool NeedsMixdownSync() const;
    void MixdownSynced();
 
+   int64_t GetSavesCount() const;
+   int64_t GetSavesCountSinceMixdown() const;
+
+   Observer::Subscription SubscribeStatusChanged(
+      std::function<void(const CloudStatusChangedMessage&)> callback, bool onUIThread);
+
+   void MarkPendingCloudSave();
+   bool IsPendingCloudSave() const;
+
 private:
+   struct UploadQueueElement;
+   struct CloudStatusChangedNotifier;
+
    void UpdateIdFromDatabase();
+
+   void UnsafeUpdateProgress();
+   void Publish(CloudStatusChangedMessage cloudStatus);
+
+   UploadQueueElement* UnsafeFindUploadQueueElement(
+      const ProjectUploadOperation& uploadOperation);
+   const UploadQueueElement* UnsafeFindUploadQueueElement(
+      const ProjectUploadOperation& uploadOperation) const;
 
    AudacityProject& mProject;
 
    std::string mProjectId;
    std::string mSnapshotId;
 
-   std::vector<uint8_t> mUpdatedProjectContents;
+   std::mutex mUploadQueueMutex;
+   std::vector<std::shared_ptr<UploadQueueElement>> mUploadQueue;
 
-   bool mPendingCloudSave { false };
+   std::mutex mStatusMutex;
+   CloudStatusChangedMessage mLastStatus;
+
+   std::unique_ptr<CloudStatusChangedNotifier> mAsyncStateNotifier;
+   std::unique_ptr<CloudStatusChangedNotifier> mUIStateNotifier;
+   std::atomic<bool> mUINotificationPending { false };
+
    bool mSuppressAutoDownload { false };
+   bool mPendingCloudSave { false };
+   bool mNeedsMixdownSync { false };
 };
 } // namespace cloud::audiocom::sync

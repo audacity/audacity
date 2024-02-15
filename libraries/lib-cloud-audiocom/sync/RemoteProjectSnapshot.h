@@ -20,10 +20,12 @@
 #include <unordered_set>
 
 #include "CloudSyncUtils.h"
+#include "NetworkUtils.h"
 
 namespace audacity::network_manager
 {
 class IResponse;
+using ResponsePtr = std::shared_ptr<IResponse>;
 }
 
 namespace cloud::audiocom::sync
@@ -31,15 +33,14 @@ namespace cloud::audiocom::sync
 
 struct RemoteProjectSnapshotState final
 {
+   ResponseResult Result;
+
    int64_t BlocksDownloaded { 0 };
    int64_t BlocksTotal { 0 };
 
-   std::string Error;
-
    bool ProjectDownloaded { false };
-   bool Complete { false };
-   bool Success { false };
-   bool Cancelled { false };
+
+   bool IsComplete() const noexcept;
 };
 
 using RemoteProjectSnapshotStateCallback =
@@ -47,7 +48,9 @@ using RemoteProjectSnapshotStateCallback =
 
 class RemoteProjectSnapshot final
 {
-   struct Tag {};
+   struct Tag
+   {
+   };
 
 public:
    RemoteProjectSnapshot(
@@ -56,10 +59,10 @@ public:
 
    ~RemoteProjectSnapshot();
 
-   RemoteProjectSnapshot(const RemoteProjectSnapshot&) = delete;
+   RemoteProjectSnapshot(const RemoteProjectSnapshot&)            = delete;
    RemoteProjectSnapshot& operator=(const RemoteProjectSnapshot&) = delete;
-   RemoteProjectSnapshot(RemoteProjectSnapshot&&) = delete;
-   RemoteProjectSnapshot& operator=(RemoteProjectSnapshot&&) = delete;
+   RemoteProjectSnapshot(RemoteProjectSnapshot&&)                 = delete;
+   RemoteProjectSnapshot& operator=(RemoteProjectSnapshot&&)      = delete;
 
    static std::shared_ptr<RemoteProjectSnapshot> Sync(
       ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path,
@@ -68,18 +71,22 @@ public:
    void Cancel();
 
 private:
-   using SuccessHandler = std::function<void(audacity::network_manager::IResponse*)>;
+   
+
+   using SuccessHandler = std::function<void(audacity::network_manager::ResponsePtr)>;
    std::unordered_set<std::string> CalculateKnownBlocks() const;
 
    void DoCancel();
 
-   void DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
+   void
+   DownloadBlob(std::string url, SuccessHandler onSuccess, int retries = 3);
 
-   void OnProjectBlobDownloaded(audacity::network_manager::IResponse* response);
-   void OnBlockDownloaded(std::string blockHash, audacity::network_manager::IResponse* response);
+   void OnProjectBlobDownloaded(audacity::network_manager::ResponsePtr response);
+   void OnBlockDownloaded(
+      std::string blockHash, audacity::network_manager::ResponsePtr response);
 
-   void OnFailure(audacity::network_manager::IResponse* response, std::string error);
-   void RemoveRequest(audacity::network_manager::IResponse* response);
+   void OnFailure(ResponseResult result);
+   void RemoveResponse(audacity::network_manager::IResponse* response);
 
    void MarkProjectInDB(bool successfulDownload);
 
@@ -108,6 +115,7 @@ private:
    std::mutex mResponsesMutex;
    std::vector<std::shared_ptr<audacity::network_manager::IResponse>>
       mResponses;
+   std::condition_variable mResponsesEmptyCV;
 
    std::atomic<int64_t> mDownloadedBlocks { 0 };
    int64_t mMissingBlocks { 0 };
@@ -117,6 +125,7 @@ private:
    std::atomic<bool> mProjectDownloaded { false };
 
    bool mAttached { false };
-
+   bool mNothingToDo { false };
+   
 }; // class RemoteProjectSnapshot
 } // namespace cloud::audiocom::sync

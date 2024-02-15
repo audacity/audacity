@@ -6,30 +6,50 @@ set( SOURCES
    ui/images/CloudImages.cpp
    ui/images/CloudImages.hpp
 
+   ui/dialogs/AudioComDialogBase.cpp
+   ui/dialogs/AudioComDialogBase.h
+   ui/dialogs/CloudProjectPropertiesDialog.cpp
+   ui/dialogs/CloudProjectPropertiesDialog.h
+   ui/dialogs/ConnectionIssuesDialog.cpp
+   ui/dialogs/ConnectionIssuesDialog.h
+   ui/dialogs/LinkAccountDialog.cpp
+   ui/dialogs/LinkAccountDialog.h
+   ui/dialogs/LinkFailedDialog.cpp
+   ui/dialogs/LinkFailedDialog.h
+   ui/dialogs/LinkSucceededDialog.cpp
+   ui/dialogs/LinkSucceededDialog.h
+   ui/dialogs/LinkWithTokenDialog.cpp
+   ui/dialogs/LinkWithTokenDialog.h
+   ui/dialogs/MixdownPropertiesDialog.cpp
+   ui/dialogs/MixdownPropertiesDialog.h
+   ui/dialogs/NotCloudProjectDialog.cpp
+   ui/dialogs/NotCloudProjectDialog.h
+   ui/dialogs/ProjectLimitDialog.cpp
+   ui/dialogs/ProjectLimitDialog.h
+   ui/dialogs/ProjectsListDialog.cpp
+   ui/dialogs/ProjectsListDialog.h
+   ui/dialogs/ProjectVersionConflictDialog.cpp
+   ui/dialogs/ProjectVersionConflictDialog.h
+   ui/dialogs/SelectSaveLocationDialog.cpp
+   ui/dialogs/SelectSaveLocationDialog.h
+   ui/dialogs/ShareAudioDialog.cpp
+   ui/dialogs/ShareAudioDialog.h
+   ui/dialogs/SyncSuccessDialog.cpp
+   ui/dialogs/SyncSuccessDialog.h
+   ui/dialogs/UpdateCloudPreviewDialog.cpp
+   ui/dialogs/UpdateCloudPreviewDialog.h
+   ui/dialogs/UploadCanceledDialog.cpp
+   ui/dialogs/UploadCanceledDialog.h
+   ui/dialogs/WaitForActionDialog.cpp
+   ui/dialogs/WaitForActionDialog.h
+
    ui/AudioComPrefsPanel.cpp
-   ui/AudioComSyncUI.cpp
-   ui/CloudProjectPropertiesDialog.cpp
-   ui/CloudProjectPropertiesDialog.h
    ui/CloudSyncStatusField.cpp
    ui/CloudSyncStatusField.h
-   ui/LinkAccountDialog.cpp
-   ui/LinkAccountDialog.h
-   ui/LinkWithTokenDialog.cpp
-   ui/LinkWithTokenDialog.h
-   ui/LinkFailedDialog.cpp
-   ui/LinkFailedDialog.h
-   ui/LinkSucceededDialog.cpp
-   ui/LinkSucceededDialog.h
    ui/MixdownPrefsPanel.cpp
    ui/MixdownPrefsPanel.h
-   ui/MixdownPropertiesDialog.cpp
-   ui/MixdownPropertiesDialog.h
-   ui/ProjectsListDialog.cpp
-   ui/ProjectsListDialog.h
-   ui/SelectSaveLocationDialog.cpp
-   ui/SelectSaveLocationDialog.h
-   ui/ShareAudioDialog.cpp
-   ui/ShareAudioDialog.h
+   ui/ProjectCloudUIExtension.cpp
+   ui/ProjectCloudUIExtension.h
    ui/ShareAudioToolbar.cpp
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
@@ -42,6 +62,7 @@ set( SOURCES
    AuthorizationHandler.h
    CloudModuleSettings.cpp
    CloudModuleSettings.h
+   CloudProjectFileIOExtensions.cpp
    CloudProjectUtils.cpp
    CloudProjectUtils.h
 )

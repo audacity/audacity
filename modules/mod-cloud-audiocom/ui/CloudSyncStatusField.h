@@ -11,6 +11,7 @@
 
 #pragma once
 
+// Needed for wx/weakref
 #include <type_traits>
 #include <wx/weakref.h>
 
@@ -24,7 +25,7 @@ class wxRect;
 namespace cloud::audiocom::sync
 {
 class ProjectCloudExtension;
-class CloudStatusChanged;
+class CloudStatusChangedMessage;
 
 class CloudSyncStatusField final :
     public ClientData::Base
@@ -42,13 +43,11 @@ public:
 
    TranslatableString GetText() const;
 
-   void SetUploadProgress(double progress);
-   void UploadCompleted(bool successful);
 private:
    class StatusWidget;
 
    void MarkDirty();
-   void OnCloudStatusChanged(const CloudStatusChanged& extension);
+   void OnCloudStatusChanged(const CloudStatusChangedMessage& extension);
 
    StatusWidget& GetStatusWidget();
    const StatusWidget& GetStatusWidget() const;
@@ -58,10 +57,12 @@ private:
 
    enum class State
    {
+      Hidden,
+      Dirty,
       Synced,
       Failed,
       Uploading,
-   } mState { State::Synced };
+   } mState { State::Hidden };
 
    int mProgress { 0 }; // Progress, 0-100
 

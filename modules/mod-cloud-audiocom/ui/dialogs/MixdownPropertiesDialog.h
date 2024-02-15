@@ -21,11 +21,14 @@ class MixdownPropertiesDialog final : public wxDialogWrapper
    MixdownPropertiesDialog(wxWindow* parent);
    ~MixdownPropertiesDialog() override;
 
+   static void Show(wxWindow* parent);
+
 public:
-   static int Show(wxWindow* parent);
+   static void ShowIfNeeded(wxWindow* parent);
 
    void SetFrequency(int frequency);
    int GetFrequency() const;
+
 private:
    MixdownPrefsPanel* mMixdownPrefsPanel {};
 }; // class MixdownPropertiesDialog
