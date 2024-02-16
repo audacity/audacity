@@ -1183,6 +1183,11 @@ size_t WaveTrack::GetWidth() const
    return 1;
 }
 
+size_t WaveChannel::NChannels() const
+{
+   return 1;
+}
+
 size_t WaveTrack::NChannels() const
 {
    if (IsLeader() && GetOwner()) {
@@ -1194,15 +1199,21 @@ size_t WaveTrack::NChannels() const
       return 1;
 }
 
-AudioGraph::ChannelType WaveTrack::GetChannelType() const
+AudioGraph::ChannelType WaveChannel::GetChannelType() const
 {
-   if (TrackList::NChannels(*this) == 1)
+   if (GetTrack().Channels().size() == 1)
       return AudioGraph::MonoChannel;
-   else if (IsLeader())
+   else if (GetChannelIndex() == 0)
       return AudioGraph::LeftChannel;
    else
       // TODO: more-than-two-channels
       return AudioGraph::RightChannel;
+}
+
+AudioGraph::ChannelType WaveTrack::GetChannelType() const
+{
+   // Not quite meaningful but preserving old behavior
+   return (*Channels().begin())->WaveChannel::GetChannelType();
 }
 
 // Copy the track metadata but not the contents.
@@ -1429,6 +1440,12 @@ std::shared_ptr<::Channel> WaveTrack::DoGetChannel(size_t iChannel)
    return { pTrack->shared_from_this(), alias };
 }
 
+ChannelGroup &WaveChannel::DoGetChannelGroup() const
+{
+   // TODO reimplement
+   return static_cast<const WaveTrack&>(*this).DoGetChannelGroup();
+}
+
 ChannelGroup &WaveTrack::DoGetChannelGroup() const
 {
    const Track *pTrack = this;
@@ -1478,6 +1495,11 @@ wxString WaveTrack::MakeNewClipName() const
       //i18n-hint Template for clip name generation on inserting new empty clip
       name = XC("%s %i", "clip name template").Format(GetName(), i).Translation();
    }
+}
+
+double WaveChannel::GetRate() const
+{
+   return GetTrack().GetRate();
 }
 
 double WaveTrack::GetRate() const
@@ -1543,8 +1565,15 @@ void WaveTrack::SetPan(float newPan)
    }
 }
 
+float WaveChannel::GetChannelGain(int channel) const
+{
+   return GetTrack().GetChannelGain(channel);
+}
+
 float WaveTrack::GetChannelGain(int channel) const
 {
+   // channel is not necessarily less than the channel group width but
+   // a mono track might pan differently according to that
    float left = 1.0;
    float right = 1.0;
 
@@ -1555,7 +1584,7 @@ float WaveTrack::GetChannelGain(int channel) const
       left = 1.0 - pan;
 
    const auto gain = GetGain();
-   if ((channel%2) == 0)
+   if ((channel % 2) == 0)
       return left * gain;
    else
       return right * gain;
@@ -3400,14 +3429,35 @@ ClipHolders WaveTrack::GetClipInterfaces() const
    return wideClips;
 }
 
+double WaveChannel::GetStartTime() const
+{
+   return GetTrack().GetStartTime();
+}
+
 double WaveTrack::GetStartTime() const
 {
    return ChannelGroup::GetStartTime();
 }
 
+double WaveChannel::GetEndTime() const
+{
+   return GetTrack().GetEndTime();
+}
+
 double WaveTrack::GetEndTime() const
 {
    return ChannelGroup::GetEndTime();
+}
+
+bool WaveChannel::DoGet(size_t iChannel, size_t nBuffers,
+   const samplePtr buffers[], sampleFormat format,
+   sampleCount start, size_t len, bool backwards, fillFormat fill,
+   bool mayThrow, sampleCount* pNumWithinClips) const
+{
+   assert(iChannel == 0);
+   assert(nBuffers <= 1);
+   return GetTrack().DoGet(GetChannelIndex(), std::min<size_t>(nBuffers, 1),
+      buffers, format, start, len, backwards, fill, mayThrow, pNumWithinClips);
 }
 
 //
@@ -3635,12 +3685,22 @@ bool WaveChannel::Set(constSamplePtr buffer, sampleFormat format,
    return true;
 }
 
+sampleFormat WaveChannel::WidestEffectiveFormat() const
+{
+   return GetTrack().WidestEffectiveFormat();
+}
+
 sampleFormat WaveTrack::WidestEffectiveFormat() const
 {
    auto result = narrowestSampleFormat;
    for (const auto &pClip : Intervals())
       result = std::max(result, pClip->GetSampleFormats().Effective());
    return result;
+}
+
+bool WaveChannel::HasTrivialEnvelope() const
+{
+   return GetTrack().HasTrivialEnvelope();
 }
 
 bool WaveTrack::HasTrivialEnvelope() const
@@ -3655,6 +3715,12 @@ bool WaveTrack::HasTrivialEnvelope() const
    auto clips = pTrack->Intervals();
    return std::all_of(clips.begin(), clips.end(),
       [](const auto &pClip){ return pClip->GetEnvelope().IsTrivial(); });
+}
+
+void WaveChannel::GetEnvelopeValues(
+   double* buffer, size_t bufferLen, double t0, bool backwards) const
+{
+   return GetTrack().GetEnvelopeValues(buffer, bufferLen, t0, backwards);
 }
 
 void WaveTrack::GetEnvelopeValues(

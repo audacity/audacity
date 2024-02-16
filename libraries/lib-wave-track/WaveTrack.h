@@ -222,6 +222,34 @@ public:
 
    CallbackReturn Publish(const WaveTrackMessage &message);
 
+   AudioGraph::ChannelType GetChannelType() const override;
+
+   size_t NChannels() const override;
+
+   //! Takes gain and pan into account
+   float GetChannelGain(int channel) const override;
+
+   //! This fails if any clip overlapping the range has non-unit stretch ratio!
+   bool DoGet(
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+      sampleFormat format, sampleCount start, size_t len, bool backwards,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
+      // Report how many samples were copied from within clips, rather than
+      // filled according to fillFormat; but these were not necessarily one
+      // contiguous range.
+      sampleCount* pNumWithinClips = nullptr) const override;
+
+   double GetStartTime() const override;
+   double GetEndTime() const override;
+   double GetRate() const override;
+   bool HasTrivialEnvelope() const override;
+   void GetEnvelopeValues(
+      double* buffer, size_t bufferLen, double t0,
+      bool backwards) const override;
+   sampleFormat WidestEffectiveFormat() const override;
+
+   ChannelGroup &DoGetChannelGroup() const override;
+
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
    auto GetInterval(size_t iInterval) const { return
@@ -1206,7 +1234,9 @@ private:
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
+public:
    ChannelGroup &DoGetChannelGroup() const override;
+private:
 
    //
    // Protected variables
