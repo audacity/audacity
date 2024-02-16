@@ -326,6 +326,29 @@ public:
    //! A hint for maximum returned by either of GetBestBlockSize,
    //! GetIdealBlockSize
    inline size_t GetMaxBlockSize() const;
+
+   inline sampleFormat GetSampleFormat() const;
+
+   //! Adds clip to the channel. Clip should not be empty or a placeholder.
+   /*!
+    Sets project tempo on clip upon push. Use this instead of `mClips.push_back`
+    @returns true on success
+    @param backup whether the duplication is for backup purposes while opening
+    a project, instead of other editing operations
+    */
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
+
+   //! Used only in assertions checking invariants
+   bool ClipsAreUnique() const;
+
+   static void CopyOne(WaveChannel &newTrack, const WaveChannel &track,
+      double t0, double t1, double endTime, bool forClipboard);
+
+   WaveTrack &GetNarrowTrack(); // Temporary!
+   const WaveTrack &GetNarrowTrack() const; // Temporary!
+private:
+   const WaveClipHolders &Clips() const;
+   WaveClipHolders &Clips();
 };
 
 class WAVE_TRACK_API WaveTrack final
@@ -385,6 +408,9 @@ public:
    static Holder Create(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
 
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+   
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
@@ -833,7 +859,6 @@ public:
    bool
    CanInsertClip(const WaveClip& clip, double& slideBy, double tolerance) const;
 
-
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
    // clipidx1 and clipidx2 are indices into the clip list.
@@ -1223,8 +1248,6 @@ private:
 
    //! @pre All clips intersecting [t0, t1) have unit stretch ratio
    static void JoinOne(WaveTrack& track, double t0, double t1);
-   static void CopyOne(WaveTrack &newTrack, const WaveTrack &track,
-      double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
       size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
@@ -1253,6 +1276,7 @@ private:
     * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
     * @invariant all are non-null and match `this->GetWidth()`
     */
+   friend WaveChannel; // TODO wide wave tracks -- remove this
    WaveClipHolders mClips;
 
    mutable int  mLegacyRate{ 0 }; //!< used only during deserialization
@@ -1302,20 +1326,8 @@ private:
     */
    bool FormatConsistencyCheck() const;
 
-   //! Adds clip to the track. Clip should be not empty or to be a placeholder.
-   /*!
-    Sets project tempo on clip upon push. Use this instead of `mClips.push_back`
-    @returns true on success
-    @param backup whether the duplication is for backup purposes while opening
-    a project, instead of other editing operations
-    */
-   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
-
    void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);
-
-   //! Used only in assertions checking invariants
-   bool ClipsAreUnique() const;
 
    //! Convert deserialized channel-major storage to interval-major,
    //! replacing two tracks with one in the owning TrackList
@@ -1353,6 +1365,10 @@ size_t WaveChannel::GetIdealBlockSize() {
 
 size_t WaveChannel::GetMaxBlockSize() const {
    return GetTrack().GetMaxBlockSize();
+}
+
+sampleFormat WaveChannel::GetSampleFormat() const {
+   return GetTrack().GetSampleFormat();
 }
 
 class ProjectRate;
