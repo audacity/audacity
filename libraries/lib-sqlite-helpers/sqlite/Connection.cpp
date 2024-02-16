@@ -231,8 +231,6 @@ Error Connection::TransactionHandler(
    {
       transaction.mCommitted = true;
 
-      std::lock_guard<std::mutex> lock(connection.mPendingTransactionsMutex);
-
       connection.mPendingTransactions.erase(
          std::remove_if(
             connection.mPendingTransactions.begin(),
@@ -246,7 +244,6 @@ Error Connection::TransactionHandler(
 
    if (operation == Transaction::TransactionOperation::BeginOp)
    {
-      std::lock_guard<std::mutex> lock(connection.mPendingTransactionsMutex);
       connection.mPendingTransactions.push_back(&transaction);
    }
 
@@ -303,11 +300,6 @@ Error Connection::Close(bool force) noexcept
    // If there is a transaction in progress,
    // rollback it.
    std::vector<Transaction*> pendingTransactions;
-
-   {
-      std::lock_guard<std::mutex> lock(mPendingTransactionsMutex);
-      std::swap(mPendingTransactions, pendingTransactions);
-   }
 
    for (auto* transaction : pendingTransactions)
       if (auto err = transaction->Abort(); !force && err.IsError())

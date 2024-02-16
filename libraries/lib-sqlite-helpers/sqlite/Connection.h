@@ -11,11 +11,11 @@
 #include <string>
 #include <vector>
 
-#include "Result.h"
-#include "Transaction.h"
-#include "Statement.h"
 #include "Blob.h"
 #include "Function.h"
+#include "Result.h"
+#include "Statement.h"
+#include "Transaction.h"
 
 struct sqlite3;
 
@@ -50,7 +50,7 @@ public:
       const Connection& connection, OpenMode mode = OpenMode::ReadWriteCreate,
       ThreadMode threadMode = ThreadMode::Serialized);
 
-   static Result<Connection> Reopen (
+   static Result<Connection> Reopen(
       sqlite3* connection, OpenMode mode = OpenMode::ReadWriteCreate,
       ThreadMode threadMode = ThreadMode::Serialized);
 
@@ -75,20 +75,21 @@ public:
    Result<Statement> CreateStatement(std::string_view sql) const;
 
    template<typename ScalarFunctionType>
-   ScalarFunction CreateScalarFunction(std::string name, ScalarFunctionType function)
+   ScalarFunction
+   CreateScalarFunction(std::string name, ScalarFunctionType function)
    {
       return ScalarFunction { mConnection, std::move(name),
                               std::move(function) };
    }
 
    template<typename StepFunctionType, typename FinalFunctionType>
-   AggregateFunction CreateAggregateFunction (
+   AggregateFunction CreateAggregateFunction(
       std::string name, StepFunctionType stepFunction,
       FinalFunctionType finalFunction)
    {
       return AggregateFunction { mConnection, std::move(name),
-                                      std::move(stepFunction),
-                                      std::move(finalFunction) };
+                                 std::move(stepFunction),
+                                 std::move(finalFunction) };
    }
 
    Result<Blob> OpenBlob(
@@ -96,7 +97,7 @@ public:
       int64_t rowId, bool readOnly,
       const std::string& databaseName = "main") const;
 
-   explicit operator sqlite3* () const noexcept;
+   explicit operator sqlite3*() const noexcept;
    explicit operator bool() const noexcept;
 
    Error Close(bool force) noexcept;
@@ -112,10 +113,10 @@ private:
 
    sqlite3* mConnection {};
 
-   std::mutex mPendingTransactionsMutex {};
    std::vector<Transaction*> mPendingTransactions {};
 
    bool mInDestructor {};
    bool mIsOwned {};
 };
+
 } // namespace sqlite

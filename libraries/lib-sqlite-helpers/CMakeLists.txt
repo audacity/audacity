@@ -16,6 +16,8 @@ set( SOURCES
    sqlite/Function.h
    sqlite/Result.cpp
    sqlite/Result.h
+   sqlite/SafeConnection.cpp
+   sqlite/SafeConnection.h
    sqlite/SQLiteUtils.cpp
    sqlite/SQLiteUtils.h
    sqlite/Statement.cpp
