@@ -1495,18 +1495,38 @@ ChannelGroup &WaveTrack::DoGetChannelGroup() const
 TrackListHolder WaveTrack::Clone(bool backup) const
 {
    assert(IsLeader());
-   auto result = TrackList::Temporary(nullptr);
+   Holder newTracks[2];
+   size_t iTrack = 0;
    const auto cloneOne = [&](const WaveTrack *pChannel){
       const auto pTrack = pChannel->EmptyCopy(pChannel->mpFactory);
       pTrack->Init(*pChannel);
-      pTrack->CopyClips(*pChannel, backup);
-      result->Add(pTrack);
+      newTracks[iTrack++] = pTrack;
    };
-   if (GetOwner())
-      for (const auto pChannel : TrackList::Channels(this))
+   const auto finishCloneOne =
+   [&](WaveTrack &track, const WaveTrack *pChannel){
+      track.CopyClips(*pChannel, backup);
+   };
+   TrackListHolder result;
+   if (GetOwner()) {
+      const auto channels = TrackList::Channels(this);
+      for (const auto pChannel : channels)
          cloneOne(pChannel);
-   else
+      result = TrackList::Temporary(nullptr);
+      result->Add(newTracks[0]);
+      if (newTracks[1])
+         result->Add(newTracks[1]);
+      auto newChannels = TrackList::Channels(*result->Any<WaveTrack>().begin());
+      assert(newChannels.size() == channels.size());
+      auto iter = newChannels.begin();
+      for (const auto pChannel : channels)
+         finishCloneOne(**iter++, pChannel);
+   }
+   else {
       cloneOne(this);
+      result = TrackList::Temporary(nullptr);
+      result->Add(newTracks[0]);
+      finishCloneOne(**result->Any<WaveTrack>().begin(), this);
+   }
    return result;
 }
 
@@ -1804,7 +1824,9 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    auto list = TrackList::Create(nullptr);
    Holder first{};
    for (const auto pChannel : TrackList::Channels(this)) {
-      auto holder = CopyOne(*pChannel, t0, t1, forClipboard);
+      auto &track = *pChannel;
+      auto holder = track.EmptyCopy();
+      CopyOne(*holder, track, t0, t1, forClipboard);
       if (!first)
          first = holder;
       else
@@ -1814,12 +1836,10 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    return list;
 }
 
-auto WaveTrack::CopyOne(
-   const WaveTrack &track, double t0, double t1, bool forClipboard) -> Holder
+void WaveTrack::CopyOne(WaveTrack &newTrack,
+   const WaveTrack &track, double t0, double t1, bool forClipboard)
 {
    const auto &pFactory = track.mpFactory;
-   auto result = track.EmptyCopy();
-   WaveTrack *newTrack = result.get();
 
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
    // but that was the old behavior.  But this function is also used by the
@@ -1833,9 +1853,9 @@ auto WaveTrack::CopyOne(
          // Whole clip is in copy region
          //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
 
-         newTrack->InsertClip(
+         newTrack.InsertClip(
             std::make_shared<WaveClip>(*clip, pFactory, !forClipboard), false);
-         WaveClip *const newClip = newTrack->mClips.back().get();
+         WaveClip *const newClip = newTrack.mClips.back().get();
          newClip->ShiftBy(-t0);
       }
       else if (clip->CountSamples(t0, t1) >= 1) {
@@ -1850,7 +1870,7 @@ auto WaveTrack::CopyOne(
          if (newClip->GetPlayStartTime() < 0)
             newClip->SetPlayStartTime(0);
 
-         newTrack->InsertClip(std::move(newClip), false); // transfer ownership
+         newTrack.InsertClip(std::move(newClip), false); // transfer ownership
       }
    }
 
@@ -1859,17 +1879,16 @@ auto WaveTrack::CopyOne(
    // PRL:  Only if we want the track for pasting into other tracks.  Not if
    // it goes directly into a project as in the Duplicate command.
    if (forClipboard &&
-       newTrack->GetEndTime() + 1.0 / newTrack->GetRate() < t1 - t0) {
+       newTrack.GetEndTime() + 1.0 / newTrack.GetRate() < t1 - t0) {
       // TODO wide wave tracks -- match clip width of newTrack
       auto placeholder = std::make_shared<WaveClip>(1, pFactory,
-         newTrack->GetSampleFormat(),
-         static_cast<int>(newTrack->GetRate()));
+         newTrack.GetSampleFormat(),
+         static_cast<int>(newTrack.GetRate()));
       placeholder->SetIsPlaceholder(true);
-      placeholder->InsertSilence(0, (t1 - t0) - newTrack->GetEndTime());
-      placeholder->ShiftBy(newTrack->GetEndTime());
-      newTrack->InsertClip(std::move(placeholder), true); // transfer ownership
+      placeholder->InsertSilence(0, (t1 - t0) - newTrack.GetEndTime());
+      placeholder->ShiftBy(newTrack.GetEndTime());
+      newTrack.InsertClip(std::move(placeholder), true); // transfer ownership
    }
-   return newTrack->SharedPointer<WaveTrack>();
 }
 
 /*! @excsafety{Strong} */

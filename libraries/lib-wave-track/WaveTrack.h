@@ -1223,7 +1223,7 @@ private:
 
    //! @pre All clips intersecting [t0, t1) have unit stretch ratio
    static void JoinOne(WaveTrack& track, double t0, double t1);
-   static Holder CopyOne(const WaveTrack &track,
+   static void CopyOne(WaveTrack &newTrack, const WaveTrack &track,
       double t0, double t1, bool forClipboard);
    static void WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
       size_t iChannel, size_t nChannels);
