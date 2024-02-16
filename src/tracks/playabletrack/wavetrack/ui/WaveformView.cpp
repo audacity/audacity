@@ -999,12 +999,12 @@ void WaveformView::Draw(
       const auto pChannel = FindChannel();
       if (!pChannel)
          return;
-      const auto &wt = static_cast<const WaveTrack&>(
+      const auto &wc = static_cast<const WaveChannel&>(
          pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
       const auto hasSolo = artist->hasSolo;
-      bool muted = (hasSolo || wt.GetMute()) &&
-      !wt.GetSolo();
+      bool muted = (hasSolo || wc.GetTrack().GetMute()) &&
+         !wc.GetTrack().GetSolo();
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -1015,7 +1015,7 @@ void WaveformView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip();
-      DoDraw(context, wt, selectedClip.get(), rect, muted);
+      DoDraw(context, wc, selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);

@@ -937,7 +937,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       auto &mCurLen = nyxContext.mCurLen;
 
       mCurChannelGroup = pRange ? *pRange->first : nullptr;
-      mCurTrack[0] = mCurChannelGroup;
+      mCurTrack[0] = (*mCurChannelGroup->Channels().begin()).get();
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {

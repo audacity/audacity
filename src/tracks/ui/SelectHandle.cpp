@@ -1265,7 +1265,7 @@ void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,
 
    if (isSpectralSelectionView(channelView)) {
       // Spectral selection track is always wave
-      auto shTrack = channelView.FindChannel<WaveTrack>();
+      auto shTrack = channelView.FindChannel<WaveChannel>();
       mFreqSelTrack = shTrack;
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =

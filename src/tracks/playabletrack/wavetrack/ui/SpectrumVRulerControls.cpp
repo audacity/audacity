@@ -135,7 +135,7 @@ void SpectrumVRulerControls::UpdateRuler(const wxRect &rect)
    const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return;
-   DoUpdateVRuler(rect, pChannel->GetTrack());
+   DoUpdateVRuler(rect, *pChannel);
 }
 
 void SpectrumVRulerControls::DoUpdateVRuler(

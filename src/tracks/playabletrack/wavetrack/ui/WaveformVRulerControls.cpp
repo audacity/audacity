@@ -240,7 +240,7 @@ void WaveformVRulerControls::UpdateRuler( const wxRect &rect )
    const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return;
-   DoUpdateVRuler(rect, pChannel->GetTrack());
+   DoUpdateVRuler(rect, *pChannel);
 }
 
 static CustomUpdaterValue updater;
