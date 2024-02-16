@@ -1421,7 +1421,7 @@ auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
       // case of Nyquist generators
       if (const auto right = ChannelGroup::GetChannel<WaveTrack>(1)) {
          while (iInterval >= right->mClips.size())
-            right->CreateClip(
+            CreateClip(*right, &right->mClips,
                WaveTrackData::Get(*right).GetOrigin(),
                right->MakeNewClipName());
          pClip1 = right->mClips[iInterval];
@@ -3872,7 +3872,7 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
 auto WaveTrack::CreateWideClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
-   WaveClipHolders holders;
+      WaveClipHolders holders;
    if (pToCopy)
       pToCopy->ForEachClip([&](const WaveClip &clip){
          auto pNewClip =
@@ -3883,7 +3883,8 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
       });
    else
       for (auto channel : TrackList::Channels(this)) {
-         holders.emplace_back(channel->CreateClip(offset, name));
+         holders.emplace_back(CreateClip(*channel, &channel->mClips,
+            offset, name));
          channel->mClips.pop_back();
       }
 
@@ -3898,36 +3899,38 @@ auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
       toCopy.GetName(), &toCopy, copyCutlines);
 }
 
-auto WaveTrack::CreateClip(double offset, const wxString& name)
+auto WaveTrack::CreateClip(WaveTrack &track,
+   WaveClipHolders *pClips, double offset, const wxString& name)
    -> WaveClipHolder
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
    auto clip = std::make_shared<WaveClip>(1,
-      mpFactory, GetSampleFormat(), GetRate());
+      track.mpFactory, track.GetSampleFormat(), track.GetRate());
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);
 
-   const auto& tempo = GetProjectTempo(*this);
+   const auto& tempo = GetProjectTempo(track);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
-   mClips.push_back(std::move(clip));
-   auto result = mClips.back();
-   Publish({ result, WaveTrackMessage::New });
+   if (pClips) {
+      pClips->push_back(clip);
+      track.Publish({ clip, WaveTrackMessage::New });
+   }
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
-   assert(result->GetWidth() == GetWidth());
-   return result;
+   assert(clip->GetWidth() == track.GetWidth());
+   return clip;
 }
 
 auto WaveTrack::NewestOrNewClip() -> IntervalHolder
 {
    WaveClipHolder newClips[2];
+   const auto origin = WaveTrackData::Get(*this).GetOrigin();
    const auto getOneNewClip = [&](WaveTrack *pChannel){
       auto &clips = pChannel->mClips;
-      if (clips.empty()) {
-         return pChannel->CreateClip(WaveTrackData::Get(*pChannel).GetOrigin(),
+      if (clips.empty())
+         return CreateClip(*pChannel, &pChannel->mClips, origin,
             MakeNewClipName());
-      }
       else
          return clips.back();
    };

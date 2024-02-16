@@ -793,15 +793,16 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
-   //! Create new clip and add it to this track.
+   //! Create new clip and add it to the clip array; publish on the track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided
 
-    @post result: `result->GetWidth() == GetWidth()`
+    @param pClips if not null, push new clip onto it and publish
+    @post result: `result->GetWidth() == track.GetWidth()`
     */
-   WaveClipHolder
-   CreateClip(double offset = .0, const wxString& name = wxEmptyString);
+   static WaveClipHolder CreateClip(WaveTrack &track, WaveClipHolders *pClips,
+      double offset = .0, const wxString& name = wxEmptyString);
 
 public:
    /** @brief Get access to the most recently added clip, or create a clip,
