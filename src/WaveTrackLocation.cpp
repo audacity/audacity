@@ -18,7 +18,7 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
 {
    WaveTrackLocations locations;
 
-   auto clips = track.SortedClipArray();
+   auto clips = track.SortedIntervalArray();
 
    // Count number of display locations
    int num = 0;
@@ -35,7 +35,7 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
    int curpos = 0;
 
    for (const auto clip: clips) {
-      for (const auto &cc : clip->GetCutLines()) {
+      for (const auto &cc : clip->GetCutLines(track)) {
          auto cutlinePosition =
             clip->GetSequenceStartTime() + cc->GetSequenceStartTime();
          if (clip->WithinPlayRegion(cutlinePosition)) {

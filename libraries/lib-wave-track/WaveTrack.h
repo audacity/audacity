@@ -803,13 +803,14 @@ public:
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
-   int GetNumClips(double t0, double t1) const;
 
+private:
    //! Return all WaveClips sorted by clip play start time.
    WaveClipPointers SortedClipArray();
    //! Return all WaveClips sorted by clip play start time.
    WaveClipConstPointers SortedClipArray() const;
 
+public:
    //! Return all (wide) WaveClips sorted by clip play start time.
    IntervalHolders SortedIntervalArray();
    //! Return all (wide) WaveClips sorted by clip play start time.
@@ -899,8 +900,14 @@ public:
       /// operation (but without putting the cut audio to the clipboard)
       void Clear(double t0, double t1);
 
+      int GetRate() const;
+
+      sampleCount GetVisibleSampleCount() const;
+
       void SetName(const wxString& name);
       const wxString& GetName() const;
+
+      size_t NumCutLines() const;
 
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
@@ -1054,7 +1061,12 @@ public:
        @param track is required to construct new Intervals because this
        Interval does not store a back-reference to its track
        */
-      std::vector<IntervalHolder> GetCutLines(WaveTrack &track);
+      IntervalHolders GetCutLines(WaveTrack &track);
+
+      /*!
+       @copydoc GetCutLines(WaveTrack &)
+       */
+      IntervalConstHolders GetCutLines(const WaveTrack &track) const;
 
       // Resample clip. This also will set the rate, but without changing
       // the length of the clip
@@ -1079,6 +1091,7 @@ public:
       void
       InsertSilence(double t, double len, double *pEnvelopeValue = nullptr);
 
+      Envelope& GetEnvelope();
       const Envelope& GetEnvelope() const;
 
       /** Find cut line at (approximately) this position. Returns true and fills

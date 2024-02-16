@@ -1239,7 +1239,7 @@ wxString GetClipBoundaries(const Track* t)
    const auto wt = dynamic_cast<const WaveTrack*>(t);
    if (!wt)
       return clips;
-   auto ca = wt->SortedClipArray();
+   auto ca = wt->SortedIntervalArray();
    // Each clip is a list (start-time, end-time)
    // Limit number of clips added to avoid argument stack overflow error (bug
    // 2300).

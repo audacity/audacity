@@ -551,14 +551,14 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
    context.StartArray();
    for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
-         WaveClipPointers ptrs(waveTrack.SortedClipArray());
+         auto ptrs = waveTrack.SortedIntervalArray();
          j = 0;
-         for (WaveClip * pClip : ptrs) {
+         for (auto &pClip : ptrs) {
             context.StartStruct();
             context.AddItem((double)i, "track");
             context.AddItem((double)j, "clip");
             context.AddItem(pClip->GetPlayStartTime(), "start");
-            Envelope * pEnv = pClip->GetEnvelope();
+            const auto pEnv = &pClip->GetEnvelope();
             context.StartField("points");
             context.StartArray();
             double offset = pEnv->GetOffset();

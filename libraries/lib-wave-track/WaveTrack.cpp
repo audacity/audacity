@@ -600,8 +600,7 @@ bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
    return true;
 }
 
-auto WaveTrack::Interval::GetCutLines(WaveTrack &track)
-   -> std::vector<IntervalHolder>
+auto WaveTrack::Interval::GetCutLines(WaveTrack &track) -> IntervalHolders
 {
    if (!mpClip) {
       assert(false);
@@ -623,6 +622,14 @@ auto WaveTrack::Interval::GetCutLines(WaveTrack &track)
    return result;
 }
 
+auto WaveTrack::Interval::GetCutLines(const WaveTrack &track) const
+   -> IntervalConstHolders
+{
+   auto results =
+      const_cast<Interval&>(*this).GetCutLines(const_cast<WaveTrack&>(track));
+   return { results.begin(), results.end() };
+}
+
 void WaveTrack::Interval::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
    // TODO Progress denominator?
@@ -638,6 +645,21 @@ const wxString& WaveTrack::Interval::GetName() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common name
    return mpClip->GetName();
+}
+
+int WaveTrack::Interval::GetRate() const
+{
+   return mpClip->GetRate();
+}
+
+sampleCount WaveTrack::Interval::GetVisibleSampleCount() const
+{
+   return mpClip->GetVisibleSampleCount();
+}
+
+size_t WaveTrack::Interval::NumCutLines() const
+{
+   return mpClip->NumCutLines();
 }
 
 void WaveTrack::Interval::SetPlayStartTime(double time)
@@ -776,10 +798,16 @@ void WaveTrack::Interval::SetIsPlaceholder(bool val)
    ForEachClip([=](auto &clip){ clip.SetIsPlaceholder(val); });
 }
 
+Envelope& WaveTrack::Interval::GetEnvelope()
+{
+   return *mpClip->GetEnvelope();
+}
+
 const Envelope& WaveTrack::Interval::GetEnvelope() const
 {
    return *mpClip->GetEnvelope();
 }
+
 
 bool WaveTrack::Interval::FindCutLine(double cutLinePosition,
    double* cutLineStart, double *cutLineEnd) const
@@ -3940,22 +3968,6 @@ const WaveClip* WaveTrack::GetClipByIndex(int index) const
 int WaveTrack::GetNumClips() const
 {
    return mClips.size();
-}
-
-int WaveTrack::GetNumClips(double t0, double t1) const
-{
-   const auto clips = SortedClipArray();
-   // Find first position where the comparison is false
-   const auto firstIn = std::lower_bound(clips.begin(), clips.end(), t0,
-      [](const auto& clip, double t0) {
-         return clip->GetPlayEndTime() <= t0;
-      });
-   // Find first position where the comparison is false
-   const auto firstOut = std::lower_bound(firstIn, clips.end(), t1,
-      [](const auto& clip, double t1) {
-         return clip->GetPlayStartTime() < t1;
-      });
-   return std::distance(firstIn, firstOut);
 }
 
 bool WaveTrack::CanOffsetClips(

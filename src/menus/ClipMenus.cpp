@@ -58,10 +58,10 @@ struct FoundClipBoundary : FoundTrack {
 // start time of the second clip. This ensures that the correct next/prev start
 // time is found.
 double AdjustForFindingStartTimes(
-   const std::vector<const WaveClip*> & clips, double time)
+   const WaveTrack::IntervalConstHolders &clips, double time)
 {
    auto q = std::find_if(clips.begin(), clips.end(),
-      [&] (const WaveClip* const& clip) {
+      [&] (const auto& clip) {
          return clip->GetPlayEndTime() == time; });
    if (q != clips.end() && q + 1 != clips.end() &&
       WaveClipUtilities::SharesBoundaryWithNextClip(**q, **(q+1))) {
@@ -80,10 +80,10 @@ double AdjustForFindingStartTimes(
 // end time of the first clip. This ensures that the correct next/prev end time
 // is found.
 double AdjustForFindingEndTimes(
-   const std::vector<const WaveClip*>& clips, double time)
+   const WaveTrack::IntervalConstHolders& clips, double time)
 {
    auto q = std::find_if(clips.begin(), clips.end(),
-      [&] (const WaveClip* const& clip) {
+      [&] (auto& clip) {
          return clip->GetPlayStartTime() == time; });
    if (q != clips.end() && q != clips.begin() &&
       WaveClipUtilities::SharesBoundaryWithNextClip(**(q - 1), **q)) {
@@ -93,20 +93,19 @@ double AdjustForFindingEndTimes(
    return time;
 }
 
-FoundClipBoundary FindNextClipBoundary
-(const WaveTrack* wt, double time)
+FoundClipBoundary FindNextClipBoundary(const WaveTrack* wt, double time)
 {
    FoundClipBoundary result{};
    result.waveTrack = wt;
-   const auto clips = wt->SortedClipArray();
+   const auto clips = wt->SortedIntervalArray();
    double timeStart = AdjustForFindingStartTimes(clips, time);
    double timeEnd = AdjustForFindingEndTimes(clips, time);
 
    auto pStart = std::find_if(clips.begin(), clips.end(),
-      [&] (const WaveClip* const& clip) {
+      [&] (const auto& clip) {
          return clip->GetPlayStartTime() > timeStart; });
    auto pEnd = std::find_if(clips.begin(), clips.end(),
-      [&] (const WaveClip* const& clip) {
+      [&] (const auto& clip) {
          return clip->GetPlayEndTime() > timeEnd; });
 
    if (pStart != clips.end() && pEnd != clips.end()) {
@@ -151,15 +150,15 @@ FoundClipBoundary FindPrevClipBoundary(const WaveTrack* wt, double time)
 {
    FoundClipBoundary result{};
    result.waveTrack = wt;
-   const auto clips = wt->SortedClipArray();
+   const auto clips = wt->SortedIntervalArray();
    double timeStart = AdjustForFindingStartTimes(clips, time);
    double timeEnd = AdjustForFindingEndTimes(clips, time);
 
    auto pStart = std::find_if(clips.rbegin(), clips.rend(),
-      [&] (const WaveClip* const& clip) {
+      [&] (const auto& clip) {
          return clip->GetPlayStartTime() < timeStart; });
    auto pEnd = std::find_if(clips.rbegin(), clips.rend(),
-      [&] (const WaveClip* const& clip) {
+      [&] (const auto& clip) {
          return clip->GetPlayEndTime() < timeEnd; });
 
    if (pStart != clips.rend() && pEnd != clips.rend()) {
@@ -353,20 +352,17 @@ void DoSelectClipBoundary(AudacityProject &project, bool next)
    }
 }
 
-FoundClip FindNextClip
-(AudacityProject &project, const WaveTrack* wt, double t0, double t1)
+FoundClip FindNextClip(const WaveTrack* wt, double t0, double t1)
 {
-   (void)project;//Compiler food.
-
    FoundClip result{};
    result.waveTrack = wt;
-   const auto clips = wt->SortedClipArray();
+   const auto clips = wt->SortedIntervalArray();
 
    t0 = AdjustForFindingStartTimes(clips, t0);
 
    {
       auto p = std::find_if(clips.begin(), clips.end(),
-         [&] (const WaveClip* const& clip) {
+         [&] (const auto& clip) {
             return clip->GetPlayStartTime() == t0; });
       if (p != clips.end() && (*p)->GetPlayEndTime() > t1) {
          result.found = true;
@@ -380,7 +376,7 @@ FoundClip FindNextClip
 
    {
       auto p = std::find_if(clips.begin(), clips.end(),
-         [&] (const WaveClip* const& clip) {
+         [&] (const auto& clip) {
             return clip->GetPlayStartTime() > t0; });
       if (p != clips.end()) {
          result.found = true;
@@ -395,20 +391,17 @@ FoundClip FindNextClip
    return result;
 }
 
-FoundClip FindPrevClip
-(AudacityProject &project, const WaveTrack* wt, double t0, double t1)
+FoundClip FindPrevClip(const WaveTrack* wt, double t0, double t1)
 {
-   (void)project;//Compiler food.
-
    FoundClip result{};
    result.waveTrack = wt;
-   const auto clips = wt->SortedClipArray();
+   const auto clips = wt->SortedIntervalArray();
 
    t0 = AdjustForFindingStartTimes(clips, t0);
 
    {
       auto p = std::find_if(clips.begin(), clips.end(),
-         [&] (const WaveClip* const& clip) {
+         [&] (const auto& clip) {
             return clip->GetPlayStartTime() == t0; });
       if (p != clips.end() && (*p)->GetPlayEndTime() < t1) {
          result.found = true;
@@ -422,7 +415,7 @@ FoundClip FindPrevClip
    
    {
       auto p = std::find_if(clips.rbegin(), clips.rend(),
-         [&] (const WaveClip* const& clip) {
+         [&] (const auto& clip) {
             return clip->GetPlayStartTime() < t0; });
       if (p != clips.rend()) {
          result.found = true;
@@ -458,8 +451,8 @@ int FindClips
    if (anyWaveTracksSelected)
       rangeLeaders = rangeLeaders + &Track::GetSelected;
    for (auto waveTrack : rangeLeaders) {
-      auto result = next ? FindNextClip(project, waveTrack, t0, t1) :
-         FindPrevClip(project, waveTrack, t0, t1);
+      auto result = next ? FindNextClip(waveTrack, t0, t1) :
+         FindPrevClip(waveTrack, t0, t1);
       if (result.found) {
          result.trackNum =
             1 + std::distance(leaders.begin(), leaders.find(waveTrack));
