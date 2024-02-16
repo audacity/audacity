@@ -265,21 +265,16 @@ Tags & Tags::operator=(const Tags & src)
 
 void Tags::LoadDefaults()
 {
-   wxString path;
-   wxString name;
    wxString value;
-   long ndx;
-   bool cont;
-
    auto tagsGroup = gPrefs->BeginGroup("/Tags");
    for(const auto& key : gPrefs->GetChildKeys())
    {
       gPrefs->Read(key, &value, {});
-      if(name == wxT("ID3V2")) {
+      if(key == wxT("ID3V2")) {
          // LLL:  This is obsolute, but it must be handled and ignored.
       }
       else {
-         SetTag(name, value);
+         SetTag(key, value);
       }
    }
 }
