@@ -1025,7 +1025,7 @@ PopupMenuTable::AttachedItem sAttachment{
             GetWaveTrackMenuTable().ReserveId();
 
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveChannelView::Get(*pTrack);
+            const auto &view = WaveChannelView::GetFirst(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasSpectrum = (displays.end() != std::find(
                displays.begin(), displays.end(),
@@ -1111,7 +1111,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
 
    // Find the first selected wave track that is in a spectrogram view.
    const auto hasSpectrum = [](const WaveTrack *wt){
-      const auto displays = WaveChannelView::Get(*wt).GetDisplays();
+      const auto displays = WaveChannelView::GetFirst(*wt).GetDisplays();
       return displays.end() != std::find(
          displays.begin(), displays.end(),
          WaveChannelSubView::Type{ WaveChannelViewConstants::Spectrum, {} });

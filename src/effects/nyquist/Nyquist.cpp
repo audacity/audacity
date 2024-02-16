@@ -595,7 +595,7 @@ bool NyquistEffect::Init()
             TrackList::Get( *project ).Selected<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            auto pView = WaveChannelView::Find(t);
+            auto pView = WaveChannelView::FindFirst(t);
             if ( pView ) {
                const auto displays = pView->GetDisplays();
                if (displays.end() != std::find(
@@ -1313,7 +1313,7 @@ bool NyquistEffect::ProcessOne(
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            if (const auto pView = WaveChannelView::Find(&wt)) {
+            if (const auto pView = WaveChannelView::FindFirst(&wt)) {
                auto displays = pView->GetDisplays();
                auto format = [&]( decltype(displays[0]) display ) {
                   // Get the English name of the view type, without menu codes,

@@ -75,7 +75,7 @@ bool DoPasteText(AudacityProject &project)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(**wt->Channels().begin());
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.PasteText(project)) {
          auto &trackPanel = TrackPanel::Get(project);
          trackPanel.Refresh(false);
@@ -258,7 +258,7 @@ void OnCut(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(**wt->Channels().begin());
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.CutSelectedText(context.project)) {
          trackPanel.Refresh(false);
          return;
@@ -370,7 +370,7 @@ void OnCopy(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(**wt->Channels().begin());
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.CopySelectedText(context.project)) {
          return;
       }

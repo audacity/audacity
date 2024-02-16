@@ -1149,7 +1149,7 @@ PopupMenuTable::AttachedItem sAttachment{
       PopupMenuTable::Adapt<WaveTrackPopupMenuTable>(
          [](WaveTrackPopupMenuTable &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveChannelView::Get(*pTrack);
+            const auto &view = WaveChannelView::GetFirst(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),

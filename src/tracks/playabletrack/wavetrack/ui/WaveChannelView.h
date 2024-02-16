@@ -111,6 +111,18 @@ public:
    static WaveChannelView *Find(WaveChannel *pChannel);
    static const WaveChannelView *Find(const WaveChannel *pChannel);
 
+   //! Get the view of the first channel
+   static WaveChannelView &GetFirst(WaveTrack &wt);
+
+   //! Get the view of the first channel
+   static const WaveChannelView &GetFirst(const WaveTrack &wt);
+
+   //! If pWt is not null, return a pointer to the view of the first channel
+   static WaveChannelView *FindFirst(WaveTrack *pWt);
+
+   //! If pWt is not null, return a pointer to the view of the first channel
+   static const WaveChannelView *FindFirst(const WaveTrack *pWt);
+
    using CommonChannelView::CommonChannelView;
    ~WaveChannelView() override;
 
@@ -196,6 +208,8 @@ public:
    bool PasteText(AudacityProject& project);
    bool SelectAllText(AudacityProject& project);
 
+   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
+
 private:
    void BuildSubViews() const;
    void DoSetDisplay(Display display, bool exclusive = true);
@@ -215,7 +229,6 @@ private:
    Refinement GetSubViews(const wxRect& rect) override;
 
 private:
-   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
    void DoSetMinimized( bool minimized ) override;
 

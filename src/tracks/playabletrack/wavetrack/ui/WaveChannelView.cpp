@@ -930,6 +930,27 @@ const WaveChannelView *WaveChannelView::Find(const WaveChannel *pChannel)
    return Find(const_cast<WaveChannel*>(pChannel));
 }
 
+WaveChannelView &WaveChannelView::GetFirst(WaveTrack &wt)
+{
+   assert(wt.Channels().size() > 0);
+   return Get(**wt.Channels().begin());
+}
+
+const WaveChannelView &WaveChannelView::GetFirst(const WaveTrack &wt)
+{
+   return GetFirst(const_cast<WaveTrack&>(wt));
+}
+
+WaveChannelView *WaveChannelView::FindFirst(WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
+}
+
+const WaveChannelView *WaveChannelView::FindFirst(const WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
+}
+
 WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
    : CommonChannelView{ waveChannelView.FindChannel() }
 {
