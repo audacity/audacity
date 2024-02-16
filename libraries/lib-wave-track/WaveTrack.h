@@ -355,9 +355,6 @@ public:
    static Holder Create(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
 
-   //! Copied only in WaveTrack::Clone() !
-   WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&, bool backup);
-
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
@@ -385,6 +382,8 @@ public:
     */
    void Reinit(const WaveTrack &orig);
  private:
+   void CopyClips(const WaveTrack &orig, bool backup);
+
    using ConstIterPair = std::pair<
       WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
    /*!
@@ -1302,7 +1301,7 @@ private:
 
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
-   double mLegacyProjectFileOffset;
+   double mLegacyProjectFileOffset{ 0 };
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);

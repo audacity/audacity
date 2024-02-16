@@ -1171,8 +1171,6 @@ WaveTrack::WaveTrack(CreateToken&&, const SampleBlockFactoryPtr &pFactory,
    sampleFormat format, double rate )
    : mpFactory(pFactory)
 {
-   mLegacyProjectFileOffset = 0;
-
    WaveTrackData::Get(*this).SetSampleFormat(format);
    DoSetRate(static_cast<int>(rate));
 }
@@ -1190,12 +1188,8 @@ auto WaveTrack::Create(
    return result;
 }
 
-WaveTrack::WaveTrack(const WaveTrack &orig, ProtectedCreationArg &&a,
-   bool backup)
-   : WritableSampleTrack(orig, std::move(a))
-   , mpFactory( orig.mpFactory )
+void WaveTrack::CopyClips(const WaveTrack &orig, bool backup)
 {
-   mLegacyProjectFileOffset = 0;
    for (const auto &clip : orig.mClips)
       InsertClip(std::make_shared<WaveClip>(*clip, mpFactory, true),
          false, backup);
@@ -1473,9 +1467,9 @@ TrackListHolder WaveTrack::Clone(bool backup) const
    assert(IsLeader());
    auto result = TrackList::Temporary(nullptr);
    const auto cloneOne = [&](const WaveTrack *pChannel){
-      const auto pTrack =
-         std::make_shared<WaveTrack>(*pChannel, ProtectedCreationArg{}, backup);
+      const auto pTrack = pChannel->EmptyCopy(pChannel->mpFactory);
       pTrack->Init(*pChannel);
+      pTrack->CopyClips(*pChannel, backup);
       result->Add(pTrack);
    };
    if (GetOwner())
