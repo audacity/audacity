@@ -38,16 +38,13 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
     , mPath { std::move(path) }
     , mCallback { std::move(callback) }
 {
-   {
-      auto writeLock  = std::lock_guard { mDbWriteMutex };
-      auto& db        = CloudProjectsDatabase::Get().GetConnection();
-      auto attachStmt = db.CreateStatement("ATTACH DATABASE ? AS ?");
-      auto result     = attachStmt->Prepare(mPath, mSnapshotDBName).Run();
-      mAttached       = result.IsOk();
+   auto db         = CloudProjectsDatabase::Get().GetConnection();
+   auto attachStmt = db->CreateStatement("ATTACH DATABASE ? AS ?");
+   auto result     = attachStmt->Prepare(mPath, mSnapshotDBName).Run();
+   mAttached       = result.IsOk();
 
-      if (!mAttached)
-         return;
-   }
+   if (!mAttached)
+      return;
 
    auto knownBlocks = CalculateKnownBlocks();
 
@@ -66,10 +63,7 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
       }
    }
 
-   {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
-      MarkProjectInDB(false);
-   }
+   MarkProjectInDB(false);
 
    mMissingBlocks = mSnapshotInfo.Blocks.size() - knownBlocks.size();
    mRequests.reserve(1 + mMissingBlocks);
@@ -106,9 +100,8 @@ RemoteProjectSnapshot::~RemoteProjectSnapshot()
 
    if (mAttached)
    {
-      auto writeLock  = std::lock_guard { mDbWriteMutex };
-      auto& db        = CloudProjectsDatabase::Get().GetConnection();
-      auto detachStmt = db.CreateStatement("DETACH DATABASE ?");
+      auto db         = CloudProjectsDatabase::Get().GetConnection();
+      auto detachStmt = db->CreateStatement("DETACH DATABASE ?");
       detachStmt->Prepare(mSnapshotDBName).Run();
    }
 }
@@ -159,13 +152,13 @@ RemoteProjectSnapshot::CalculateKnownBlocks() const
    for (const auto& block : mSnapshotInfo.Blocks)
       remoteBlocks.insert(ToUpper(block.Hash));
 
-   auto& db = CloudProjectsDatabase::Get().GetConnection();
+   auto db = CloudProjectsDatabase::Get().GetConnection();
 
-   auto fn = db.CreateScalarFunction(
+   auto fn = db->CreateScalarFunction(
       "inRemoteBlocks", [&remoteBlocks](const std::string& hash)
       { return remoteBlocks.find(hash) != remoteBlocks.end(); });
 
-   auto statement = db.CreateStatement(
+   auto statement = db->CreateStatement(
       "SELECT hash FROM block_hashes WHERE project_id = ? AND inRemoteBlocks(hash) AND block_id IN (SELECT blockid FROM " +
       mSnapshotDBName + ".sampleblocks)");
 
@@ -274,76 +267,73 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
       OnFailure({ ResponseResultCode::UnexpectedResponse, {} });
       return;
    }
+
+   auto db          = CloudProjectsDatabase::Get().GetConnection();
+   auto transaction = db->BeginTransaction("p_" + mProjectInfo.Id);
+
+   auto updateProjectStatement = db->CreateStatement(
+      "INSERT INTO " + mSnapshotDBName +
+      ".project (id, dict, doc) VALUES (1, ?1, ?2) "
+      "ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2");
+
+   if (!updateProjectStatement)
    {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
+      OnFailure({ ResponseResultCode::InternalClientError,
+                  audacity::ToUTF8(updateProjectStatement.GetError()
+                                      .GetErrorString()
+                                      .Translation()) });
+      return;
+   }
 
-      auto& db         = CloudProjectsDatabase::Get().GetConnection();
-      auto transaction = db.BeginTransaction("p_" + mProjectInfo.Id);
+   auto& preparedUpdateProjectStatement = updateProjectStatement->Prepare();
 
-      auto updateProjectStatement = db.CreateStatement(
-         "INSERT INTO " + mSnapshotDBName +
-         ".project (id, dict, doc) VALUES (1, ?1, ?2) "
-         "ON CONFLICT(id) DO UPDATE SET dict = ?1, doc = ?2");
+   preparedUpdateProjectStatement.Bind(
+      1, data.data() + sizeof(uint64_t), dictSize, false);
 
-      if (!updateProjectStatement)
-      {
-         OnFailure({ ResponseResultCode::InternalClientError,
-                     audacity::ToUTF8(updateProjectStatement.GetError()
-                                         .GetErrorString()
-                                         .Translation()) });
-         return;
-      }
+   preparedUpdateProjectStatement.Bind(
+      2, data.data() + sizeof(uint64_t) + dictSize,
+      data.size() - sizeof(uint64_t) - dictSize, false);
 
-      auto& preparedUpdateProjectStatement = updateProjectStatement->Prepare();
+   auto result = preparedUpdateProjectStatement.Run();
 
-      preparedUpdateProjectStatement.Bind(
-         1, data.data() + sizeof(uint64_t), dictSize, false);
+   if (!result.IsOk())
+   {
+      OnFailure(
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(
+              result.GetErrors().front().GetErrorString().Translation()) });
 
-      preparedUpdateProjectStatement.Bind(
-         2, data.data() + sizeof(uint64_t) + dictSize,
-         data.size() - sizeof(uint64_t) - dictSize, false);
+      return;
+   }
 
-      auto result = preparedUpdateProjectStatement.Run();
+   auto deleteAutosaveStatement = db->CreateStatement(
+      "DELETE FROM " + mSnapshotDBName + ".autosave WHERE id = 1");
 
-      if (!result.IsOk())
-      {
-         OnFailure(
-            { ResponseResultCode::InternalClientError,
-              audacity::ToUTF8(
-                 result.GetErrors().front().GetErrorString().Translation()) });
+   if (!deleteAutosaveStatement)
+   {
+      OnFailure({ ResponseResultCode::InternalClientError,
+                  audacity::ToUTF8(deleteAutosaveStatement.GetError()
+                                      .GetErrorString()
+                                      .Translation()) });
+      return;
+   }
 
-         return;
-      }
+   result = deleteAutosaveStatement->Prepare().Run();
 
-      auto deleteAutosaveStatement = db.CreateStatement(
-         "DELETE FROM " + mSnapshotDBName + ".autosave WHERE id = 1");
+   if (!result.IsOk())
+   {
+      OnFailure(
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(
+              result.GetErrors().front().GetErrorString().Translation()) });
+      return;
+   }
 
-      if (!deleteAutosaveStatement)
-      {
-         OnFailure({ ResponseResultCode::InternalClientError,
-                     audacity::ToUTF8(deleteAutosaveStatement.GetError()
-                                         .GetErrorString()
-                                         .Translation()) });
-         return;
-      }
-
-      result = deleteAutosaveStatement->Prepare().Run();
-
-      if (!result.IsOk())
-      {
-         OnFailure(
-            { ResponseResultCode::InternalClientError,
-              audacity::ToUTF8(
-                 result.GetErrors().front().GetErrorString().Translation()) });
-         return;
-      }
-
-      if (auto error = transaction.Commit(); error.IsError())
-      {
-         OnFailure({ ResponseResultCode::InternalClientError,
-                     audacity::ToUTF8(error.GetErrorString().Translation()) });
-         return;
-      }
+   if (auto error = transaction.Commit(); error.IsError())
+   {
+      OnFailure({ ResponseResultCode::InternalClientError,
+                  audacity::ToUTF8(error.GetErrorString().Translation()) });
+      return;
    }
 
    mProjectDownloaded.store(true, std::memory_order_release);
@@ -365,76 +355,73 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
                                .Translation()) });
       return;
    }
+
+   auto db          = CloudProjectsDatabase::Get().GetConnection();
+   auto transaction = db->BeginTransaction("b_" + blockHash);
+
+   auto hashesStatement = db->CreateStatement(
+      "INSERT INTO block_hashes (project_id, block_id, hash) VALUES (?1, ?2, ?3) "
+      "ON CONFLICT(project_id, block_id) DO UPDATE SET hash = ?3");
+
+   auto result =
+      hashesStatement->Prepare(mProjectInfo.Id, blockData->BlockId, blockHash)
+         .Run();
+
+   if (!result.IsOk())
    {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
+      OnFailure(
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(
+              result.GetErrors().front().GetErrorString().Translation()) });
+      return;
+   }
 
-      auto& db         = CloudProjectsDatabase::Get().GetConnection();
-      auto transaction = db.BeginTransaction("b_" + blockHash);
+   auto blockStatement = db->CreateStatement(
+      "INSERT INTO " + mSnapshotDBName +
+      ".sampleblocks (blockid, sampleformat, summin, summax, sumrms, summary256, summary64k, samples) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8) "
+      "ON CONFLICT(blockid) DO UPDATE SET sampleformat = ?2, summin = ?3, summax = ?4, sumrms = ?5, summary256 = ?6, summary64k = ?7, samples = ?8");
 
-      auto hashesStatement = db.CreateStatement(
-         "INSERT INTO block_hashes (project_id, block_id, hash) VALUES (?1, ?2, ?3) "
-         "ON CONFLICT(project_id, block_id) DO UPDATE SET hash = ?3");
+   if (!blockStatement)
+   {
+      OnFailure(
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(
+              blockStatement.GetError().GetErrorString().Translation()) });
+      return;
+   }
 
-      auto result = hashesStatement
-                       ->Prepare(mProjectInfo.Id, blockData->BlockId, blockHash)
-                       .Run();
+   auto& preparedStatement = blockStatement->Prepare();
 
-      if (!result.IsOk())
-      {
-         OnFailure(
-            { ResponseResultCode::InternalClientError,
-              audacity::ToUTF8(
-                 result.GetErrors().front().GetErrorString().Translation()) });
-         return;
-      }
+   preparedStatement.Bind(1, blockData->BlockId);
+   preparedStatement.Bind(2, static_cast<int64_t>(blockData->Format));
+   preparedStatement.Bind(3, blockData->BlockMinMaxRMS.Min);
+   preparedStatement.Bind(4, blockData->BlockMinMaxRMS.Max);
+   preparedStatement.Bind(5, blockData->BlockMinMaxRMS.RMS);
+   preparedStatement.Bind(
+      6, blockData->Summary256.data(),
+      blockData->Summary256.size() * sizeof(MinMaxRMS), false);
+   preparedStatement.Bind(
+      7, blockData->Summary64k.data(),
+      blockData->Summary64k.size() * sizeof(MinMaxRMS), false);
+   preparedStatement.Bind(
+      8, blockData->Data.data(), blockData->Data.size(), false);
 
-      auto blockStatement = db.CreateStatement(
-         "INSERT INTO " + mSnapshotDBName +
-         ".sampleblocks (blockid, sampleformat, summin, summax, sumrms, summary256, summary64k, samples) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8) "
-         "ON CONFLICT(blockid) DO UPDATE SET sampleformat = ?2, summin = ?3, summax = ?4, sumrms = ?5, summary256 = ?6, summary64k = ?7, samples = ?8");
+   result = preparedStatement.Run();
 
-      if (!blockStatement)
-      {
-         OnFailure(
-            { ResponseResultCode::InternalClientError,
-              audacity::ToUTF8(
-                 blockStatement.GetError().GetErrorString().Translation()) });
-         return;
-      }
+   if (!result.IsOk())
+   {
+      OnFailure(
+         { ResponseResultCode::InternalClientError,
+           audacity::ToUTF8(
+              result.GetErrors().front().GetErrorString().Translation()) });
+      return;
+   }
 
-      auto& preparedStatement = blockStatement->Prepare();
-
-      preparedStatement.Bind(1, blockData->BlockId);
-      preparedStatement.Bind(2, static_cast<int64_t>(blockData->Format));
-      preparedStatement.Bind(3, blockData->BlockMinMaxRMS.Min);
-      preparedStatement.Bind(4, blockData->BlockMinMaxRMS.Max);
-      preparedStatement.Bind(5, blockData->BlockMinMaxRMS.RMS);
-      preparedStatement.Bind(
-         6, blockData->Summary256.data(),
-         blockData->Summary256.size() * sizeof(MinMaxRMS), false);
-      preparedStatement.Bind(
-         7, blockData->Summary64k.data(),
-         blockData->Summary64k.size() * sizeof(MinMaxRMS), false);
-      preparedStatement.Bind(
-         8, blockData->Data.data(), blockData->Data.size(), false);
-
-      result = preparedStatement.Run();
-
-      if (!result.IsOk())
-      {
-         OnFailure(
-            { ResponseResultCode::InternalClientError,
-              audacity::ToUTF8(
-                 result.GetErrors().front().GetErrorString().Translation()) });
-         return;
-      }
-
-      if (auto error = transaction.Commit(); error.IsError())
-      {
-         OnFailure({ ResponseResultCode::InternalClientError,
-                     audacity::ToUTF8(error.GetErrorString().Translation()) });
-         return;
-      }
+   if (auto error = transaction.Commit(); error.IsError())
+   {
+      OnFailure({ ResponseResultCode::InternalClientError,
+                  audacity::ToUTF8(error.GetErrorString().Translation()) });
+      return;
    }
 
    mDownloadedBlocks.fetch_add(1, std::memory_order_acq_rel);
@@ -501,12 +488,7 @@ void RemoteProjectSnapshot::ReportProgress()
    const auto completed =
       blocksDownloaded == mMissingBlocks && projectDownloaded;
 
-   // This happens under the write lock
-   if (completed)
-   {
-      auto writeLock = std::lock_guard { mDbWriteMutex };
-      MarkProjectInDB(true);
-   }
+   MarkProjectInDB(true);
 
    mCallback({ {}, blocksDownloaded, mMissingBlocks, projectDownloaded });
 }

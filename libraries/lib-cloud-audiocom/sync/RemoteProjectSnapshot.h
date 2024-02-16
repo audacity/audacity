@@ -101,8 +101,6 @@ private:
    const std::string mPath;
    RemoteProjectSnapshotStateCallback mCallback;
 
-   std::mutex mDbWriteMutex;
-
    std::thread mRequestsThread;
    std::mutex mRequestsMutex;
    std::condition_variable mRequestsCV;

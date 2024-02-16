@@ -13,7 +13,7 @@
 #include <optional>
 #include <string>
 
-#include "sqlite/Connection.h"
+#include "sqlite/SafeConnection.h"
 
 #include "CloudSyncUtils.h"
 
@@ -47,8 +47,8 @@ public:
 
    bool IsOpen() const;
 
-   sqlite::Connection& GetConnection();
-   const sqlite::Connection& GetConnection() const;
+   sqlite::SafeConnection::Lock GetConnection();
+   const sqlite::SafeConnection::Lock GetConnection() const;
 
    std::optional<DBProjectData> GetProjectData(const std::string_view& projectId) const;
    std::optional<DBProjectData> GetProjectDataForPath(const std::string& projectPath) const;
@@ -67,7 +67,7 @@ public:
 private:
    std::optional<DBProjectData> DoGetProjectData(sqlite::RunResult result) const;
    bool OpenConnection();
-   sqlite::Connection mConnection;
+   std::shared_ptr<sqlite::SafeConnection> mConnection;
 
 };
 } // namespace cloud::audiocom::sync
