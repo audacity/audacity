@@ -37,7 +37,7 @@ std::vector<std::string> GetBenchmarkingAudioFiles()
    // Recursively find all files in the dataset directory with .mp3 extension,
    // not using std::filesystem:
    // https://stackoverflow.com/questions/612097/how-can-i-get-the-list-of-files-in-a-directory-using-c-or-c
-   const auto command = "find " + datasetRoot + " -type f -name '*.mp3' -print";
+   const auto command = "find -H " + datasetRoot + " -type f -name '*.mp3' -print";
    FILE* pipe = popen(command.c_str(), "r");
    if (!pipe)
       throw std::runtime_error("popen() failed!");

@@ -41,7 +41,7 @@ constexpr float GetLog2(float x)
 }
 
 float GetNoveltyMeasure(
-   const std::vector<float>& prevPowSpec, const std::vector<float>& powSpec)
+   const PffftFloatVector& prevPowSpec, const PffftFloatVector& powSpec)
 {
    auto k = 0;
    return std::accumulate(
@@ -90,11 +90,10 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
       return x;
    const auto N = x.size();
    assert(IsPowOfTwo(N));
-   PFFFT_Setup* setup = pffft_new_setup(N, PFFFT_REAL);
-   Finally Do { [&] { pffft_destroy_setup(setup); } };
+   PffftSetupHolder setup{ pffft_new_setup(N, PFFFT_REAL) };
    std::vector<float> work(N);
    pffft_transform_ordered(
-      setup, x.data(), x.data(), work.data(), PFFFT_FORWARD);
+      setup.get(), x.data(), x.data(), work.data(), PFFFT_FORWARD);
 
    // Transform to a power spectrum, but preserving the layout expected by PFFFT
    // in preparation for the inverse transform.
@@ -107,7 +106,7 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
    }
 
    pffft_transform_ordered(
-      setup, x.data(), x.data(), work.data(), PFFFT_BACKWARD);
+      setup.get(), x.data(), x.data(), work.data(), PFFFT_BACKWARD);
 
    // The second half of the circular autocorrelation is the mirror of the first
    // half. We are economic and only keep the first half.
@@ -129,13 +128,13 @@ std::vector<float> GetOnsetDetectionFunction(
    const auto sampleRate = frameProvider.GetSampleRate();
    const auto numFrames = frameProvider.GetNumFrames();
    const auto frameSize = frameProvider.GetFftSize();
-   std::vector<float> buffer(frameSize);
+   PffftFloatVector buffer(frameSize);
    std::vector<float> odf;
    odf.reserve(numFrames);
    const auto powSpecSize = frameSize / 2 + 1;
-   std::vector<float> powSpec(powSpecSize);
-   std::vector<float> prevPowSpec(powSpecSize);
-   std::vector<float> firstPowSpec;
+   PffftFloatVector powSpec(powSpecSize);
+   PffftFloatVector prevPowSpec(powSpecSize);
+   PffftFloatVector firstPowSpec;
    std::fill(prevPowSpec.begin(), prevPowSpec.end(), 0.f);
 
    PowerSpectrumGetter getPowerSpectrum { frameSize };
@@ -143,7 +142,7 @@ std::vector<float> GetOnsetDetectionFunction(
    auto frameCounter = 0;
    while (frameProvider.GetNextFrame(buffer))
    {
-      getPowerSpectrum(buffer.data(), powSpec.data());
+      getPowerSpectrum(buffer.aligned(), powSpec.aligned());
 
       // Compress the frame as per section (6.5) in Müller, Meinard.
       // Fundamentals of music processing: Audio, analysis, algorithms,

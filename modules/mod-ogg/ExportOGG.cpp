@@ -124,7 +124,7 @@ class OGGExportProcessor final : public ExportProcessor
       bool analysis_state_ok{false};
    } context;
 public:
-   ~OGGExportProcessor();
+   ~OGGExportProcessor() override;
 
    bool Initialize(AudacityProject& project,
       const Parameters& parameters,

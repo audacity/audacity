@@ -162,6 +162,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "ExportPluginRegistry.h"
 #include "SettingsWX.h"
+#include "prefs/EffectsPrefs.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -1569,7 +1570,7 @@ bool AudacityApp::InitPart2()
 
    //Search for the new plugins
    std::vector<wxString> failedPlugins;
-   if(!playingJournal)
+   if(!playingJournal && !SkipEffectsScanAtStartup.Read())
    {
       auto newPlugins = PluginManager::Get().CheckPluginUpdates();
       if(!newPlugins.empty())
