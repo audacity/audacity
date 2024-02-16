@@ -42,8 +42,7 @@
 #include "FFT.h"
 
 #include "Internat.h"
-
-#include "SampleFormat.h"
+#include "MemoryX.h"
 
 #include <wx/wxcrtvararg.h>
 #include <stdlib.h>
@@ -51,6 +50,7 @@
 
 #include "RealFFTf.h"
 
+using Floats = ArrayOf<float>;
 static ArraysOf<int> gFFTBitTable;
 static const size_t MaxFastBits = 16;
 

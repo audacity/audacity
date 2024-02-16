@@ -16,8 +16,8 @@
 #include "Spectrum.h"
 
 #include <math.h>
-
-#include "SampleFormat.h"
+#include "MemoryX.h"
+using Floats = ArrayOf<float>;
 
 bool ComputeSpectrum(
    const float* data, size_t width, size_t windowSize, float* output,

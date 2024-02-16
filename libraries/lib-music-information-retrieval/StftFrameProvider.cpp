@@ -56,7 +56,7 @@ StftFrameProvider::StftFrameProvider(const MirAudioReader& audio)
    assert(mNumFrames == 0 || IsPowOfTwo(mNumFrames));
 }
 
-bool StftFrameProvider::GetNextFrame(std::vector<float>& frame)
+bool StftFrameProvider::GetNextFrame(PffftFloatVector& frame)
 {
    if (mNumFramesProvided >= mNumFrames)
       return false;

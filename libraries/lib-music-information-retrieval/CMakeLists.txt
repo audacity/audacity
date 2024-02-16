@@ -15,15 +15,13 @@ set( SOURCES
    MirUtils.h
    MusicInformationRetrieval.cpp
    MusicInformationRetrieval.h
-   PowerSpectrumGetter.cpp
-   PowerSpectrumGetter.h
    StftFrameProvider.cpp
    StftFrameProvider.h
 )
 
 set( LIBRARIES
 PUBLIC
-   pffft
+   lib-fft
    lib-utility
    lib-file-formats-interface
 )
