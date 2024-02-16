@@ -1341,8 +1341,8 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
             //this can't break alignment as there should be a "twin"
             //in the right channel which will also be removed, otherwise
             //track will be unlinked because AreAligned returned false
-            removeZeroClips(mClips);
-            removeZeroClips(next->mClips);
+            removeZeroClips(NarrowClips());
+            removeZeroClips(next->NarrowClips());
          }
       }
    }
@@ -1365,7 +1365,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
       }
       if (linkType == LinkType::None)
          // Did not visit the other call to removeZeroClips, do it now
-         removeZeroClips(mClips);
+         removeZeroClips(NarrowClips());
       else
          // Make a real wide wave track from two deserialized narrow tracks
          ZipClips();
@@ -1406,25 +1406,26 @@ Track::Holder WaveTrack::PasteInto(
 
 size_t WaveTrack::NIntervals() const
 {
-   return mClips.size();
+   return NarrowClips().size();
 }
 
 auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
 {
    assert(IsLeader());
    if (iInterval < NIntervals()) {
-      WaveClipHolder pClip = mClips[iInterval],
+      WaveClipHolder pClip = NarrowClips()[iInterval],
          pClip1;
 
       // TODO wide wave tracks
       // Empty clip creation is needed, transitionally, to fix the peculiar
       // case of Nyquist generators
       if (const auto right = ChannelGroup::GetChannel<WaveTrack>(1)) {
-         while (iInterval >= right->mClips.size())
-            CreateClip(*right, &right->mClips,
+         auto &rightClips = RightClips();
+         while (iInterval >= rightClips.size())
+            CreateClip(*right, &rightClips,
                WaveTrackData::Get(*right).GetOrigin(),
                right->MakeNewClipName());
-         pClip1 = right->mClips[iInterval];
+         pClip1 = rightClips[iInterval];
       }
 
       return std::make_shared<Interval>(*this, pClip, pClip1);
@@ -1441,14 +1442,13 @@ std::shared_ptr<WideChannelGroupInterval>
 WaveTrack::DoGetInterval(size_t iInterval)
 {
    if (iInterval < NIntervals()) {
-      WaveClipHolder pClip = mClips[iInterval],
+      WaveClipHolder pClip = NarrowClips()[iInterval],
          pClip1;
-      // TODO wide wave tracks
-      // This assumed correspondence of clips may be wrong if they misalign
-      if (auto right = ChannelGroup::GetChannel<WaveTrack>(1)
-         ; right && iInterval < right->mClips.size()
-      )
-         pClip1 = right->mClips[iInterval];
+      if (NChannels() > 1) {
+         auto &rightClips = RightClips();
+         if (iInterval < rightClips.size())
+            pClip1 = rightClips[iInterval];
+      }
       return std::make_shared<Interval>(*this, pClip, pClip1);
    }
    return {};
@@ -1456,7 +1456,8 @@ WaveTrack::DoGetInterval(size_t iInterval)
 
 bool WaveTrack::HasClipNamed(const wxString& name) const
 {
-   return any_of(mClips.begin(), mClips.end(),
+   auto clips = NarrowClips();
+   return any_of(clips.begin(), clips.end(),
       [&](const auto &pClip){ return pClip->GetName() == name; });
 }
 
@@ -1487,6 +1488,26 @@ ChannelGroup &WaveTrack::DoGetChannelGroup() const
       pTrack = *pOwner->Find(this);
    const ChannelGroup &group = *pTrack;
    return const_cast<ChannelGroup&>(group);
+}
+
+auto WaveTrack::NarrowClips() -> WaveClipHolders &
+{
+   return static_cast<WaveTrack *>((*Channels().begin()).get())->mClips;
+}
+
+auto WaveTrack::NarrowClips() const -> const WaveClipHolders &
+{
+   return const_cast<WaveTrack &>(*this).NarrowClips();
+}
+
+auto WaveTrack::RightClips() -> WaveClipHolders &
+{
+   return static_cast<WaveTrack *>((*Channels().rbegin()).get())->mClips;
+}
+
+auto WaveTrack::RightClips() const -> const WaveClipHolders &
+{
+   return const_cast<WaveTrack &>(*this).RightClips();
 }
 
 TrackListHolder WaveTrack::Clone(bool backup) const
@@ -1648,7 +1669,7 @@ sampleCount WaveTrack::GetVisibleSampleCount() const
 {
     sampleCount result{ 0 };
 
-    for (const auto& clip : mClips)
+    for (const auto& clip : NarrowClips())
         result += clip->GetVisibleSampleCount();
 
     return result;
@@ -1676,7 +1697,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
       return true;
 
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
-   for (const auto &clip : mClips)
+   for (const auto &clip : NarrowClips())
    {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
@@ -2318,11 +2339,10 @@ namespace
 auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    -> IterPair
 {
-   WaveClipHolders &list = mClips;
+   WaveClipHolders &list = NarrowClips();
    WaveClipHolders *pList2{};
-   const auto channels = TrackList::Channels(this);
-   if (channels.size() > 1)
-      pList2 = &(*channels.rbegin())->mClips;
+   if (NChannels() > 1)
+      pList2 = &RightClips();
    int distance = 0;
    auto it = list.begin();
    for (const auto end = list.end(); it != end; ++it) {
@@ -2346,20 +2366,19 @@ auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
 
 void WaveTrack::RemoveWideClip(IterPair pair)
 {
-   mClips.erase(pair.first);
-   const auto channels = TrackList::Channels(this);
-   if (channels.size() > 1)
-      (*channels.rbegin())->mClips.erase(pair.second);
-
+   NarrowClips().erase(pair.first);
+   if (NChannels() > 1)
+      RightClips().erase(pair.second);
 }
 
 std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
 {
+   auto &clips = NarrowClips();
    // Be clear about who owns the clip!!
-   auto it = FindClip(mClips, clip);
-   if (it != mClips.end()) {
+   auto it = FindClip(clips, clip);
+   if (it != clips.end()) {
       auto result = std::move(*it); // Array stops owning the clip, before we shrink it
-      mClips.erase(it);
+      clips.erase(it);
       return result;
    }
    else
@@ -3105,8 +3124,7 @@ size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 {
    auto bestBlockSize = GetMaxBlockSize();
 
-   for (const auto &clip : mClips)
-   {
+   for (const auto &clip : NarrowClips()) {
       auto startSample = clip->GetPlayStartSample();
       auto endSample = clip->GetPlayEndSample();
       if (s >= startSample && s < endSample)
@@ -3124,7 +3142,7 @@ size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 size_t WaveTrack::GetMaxBlockSize() const
 {
    decltype(GetMaxBlockSize()) maxblocksize = 0;
-   for (const auto &clip : mClips)
+   for (const auto &clip : NarrowClips())
       for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
          maxblocksize = std::max(maxblocksize,
             clip->GetSequence(ii)->GetMaxBlockSize());
@@ -3174,16 +3192,15 @@ void WaveTrack::SetLegacyFormat(sampleFormat format)
 
 void WaveTrack::CopyClipEnvelopes()
 {
-   const auto channels = TrackList::Channels(this);
-   if (channels.size() != 2)
+   if (NChannels() != 2)
       return;
    // Assume correspondence of clips
-   const auto left = *channels.begin();
-   auto it = begin(left->mClips),
-      last = end(left->mClips);
-   const auto right = *channels.rbegin();
-   auto it2 = begin(right->mClips),
-      last2 = end(right->mClips);
+   const auto leftClips = NarrowClips();
+   const auto rightClips = RightClips();
+   auto it = begin(leftClips),
+      last = end(leftClips);
+   auto it2 = begin(rightClips),
+      last2 = end(rightClips);
    for (; it != last; ++it, ++it2) {
       if (it2 == last2) {
          assert(false);
@@ -3328,8 +3345,9 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
       auto clip = std::make_shared<WaveClip>(1,
          mpFactory, mLegacyFormat, mLegacyRate);
       const auto xmlHandler = clip.get();
-      mClips.push_back(std::move(clip));
-      Publish({ mClips.back(), WaveTrackMessage::Deserialized });
+      auto &clips = NarrowClips();
+      clips.push_back(std::move(clip));
+      Publish({ clips.back(), WaveTrackMessage::Deserialized });
       return xmlHandler;
    }
 
@@ -3418,10 +3436,11 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 }
 
 auto WaveTrack::GetLeftmostClip() -> IntervalHolder {
-   if (mClips.empty())
+   auto &clips = NarrowClips();
+   if (clips.empty())
       return nullptr;
-   const auto begin = mClips.begin(),
-      iter = std::min_element(begin, mClips.end(),
+   const auto begin = clips.begin(),
+      iter = std::min_element(begin, clips.end(),
           [](const auto& a, const auto b) {
              return a->GetPlayStartTime() < b->GetPlayStartTime();
           });
@@ -3433,10 +3452,11 @@ auto WaveTrack::GetLeftmostClip() const -> IntervalConstHolder {
 }
 
 auto WaveTrack::GetRightmostClip() -> IntervalHolder {
-   if (mClips.empty())
+   auto &clips = NarrowClips();
+   if (clips.empty())
       return nullptr;
-   const auto begin = mClips.begin(),
-      iter = std::max_element(begin, mClips.end(),
+   const auto begin = clips.begin(),
+      iter = std::max_element(begin, clips.end(),
           [](const auto& a, const auto b) {
              return a->GetPlayEndTime() < b->GetPlayEndTime();
           });
@@ -3449,20 +3469,20 @@ auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
 
 ClipHolders WaveTrack::GetClipInterfaces() const
 {
+   auto &clips = NarrowClips();
   // We're constructing possibly wide clips here, and for this we need to have
   // access to the other channel-tracks.
   assert(IsLeader());
   const auto pOwner = GetOwner();
   ClipHolders wideClips;
-  wideClips.reserve(mClips.size());
-  for (auto clipIndex = 0u; clipIndex < mClips.size(); ++clipIndex)
+  wideClips.reserve(clips.size());
+  for (auto clipIndex = 0u; clipIndex < clips.size(); ++clipIndex)
   {
-     const auto leftClip = mClips[clipIndex];
+     const auto leftClip = clips[clipIndex];
      WaveClipHolder rightClip;
      if (NChannels() == 2u && pOwner)
      {
-        const auto& rightClips =
-           (*TrackList::Channels(this).rbegin())->mClips;
+        const auto& rightClips = RightClips();
         // This is known to have potential for failure for stereo tracks with
         // misaligned left/right clips - see
         // https://github.com/audacity/audacity/issues/4791.
@@ -3549,6 +3569,7 @@ bool WaveTrack::GetOne(
    bool backwards, fillFormat fill, bool mayThrow,
    sampleCount* pNumWithinClips) const
 {
+   auto &clips = NarrowClips();
    if (backwards)
       start -= len;
    // Simple optimization: When this buffer is completely contained within one clip,
@@ -3557,7 +3578,7 @@ bool WaveTrack::GetOne(
    bool doClear = true;
    bool result = true;
    sampleCount samplesCopied = 0;
-   for (const auto &clip: mClips)
+   for (const auto &clip: clips)
    {
       if (start >= clip->GetPlayStartSample() && start+len <= clip->GetPlayEndSample())
       {
@@ -3585,7 +3606,7 @@ bool WaveTrack::GetOne(
    }
 
    // Iterate the clips.  They are not necessarily sorted by time.
-   for (const auto &clip: mClips)
+   for (const auto &clip: clips)
    {
       auto clipStart = clip->GetPlayStartSample();
       auto clipEnd = clip->GetPlayEndSample();
@@ -3872,24 +3893,26 @@ const WaveClip* WaveTrack::GetClipAtTime(double time) const
 auto WaveTrack::CreateWideClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
-      WaveClipHolders holders;
+   WaveClipHolder holders[2];
+   size_t iChannel = 0;
    if (pToCopy)
       pToCopy->ForEachClip([&](const WaveClip &clip){
          auto pNewClip =
             std::make_shared<WaveClip>(clip, mpFactory, copyCutlines);
          pNewClip->SetName(name);
          pNewClip->SetSequenceStartTime(offset);
-         holders.emplace_back(pNewClip);
+         holders[iChannel++] = pNewClip;
       });
-   else
-      for (auto channel : TrackList::Channels(this)) {
-         holders.emplace_back(CreateClip(*channel, &channel->mClips,
-            offset, name));
-         channel->mClips.pop_back();
+   else {
+      holders[iChannel++] = CreateClip(*this, &NarrowClips(), offset, name);
+      NarrowClips().pop_back();
+      if (NChannels() > 1) {
+         holders[iChannel++] = CreateClip(*this, &RightClips(), offset, name);
+         RightClips().pop_back();
       }
+   }
 
-   return std::make_shared<Interval>(*this,
-      holders[0], (holders.size() > 1) ? holders[1] : nullptr);
+   return std::make_shared<Interval>(*this, holders[0], holders[1]);
 }
 
 auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
@@ -3924,49 +3947,48 @@ auto WaveTrack::CreateClip(WaveTrack &track,
 
 auto WaveTrack::NewestOrNewClip() -> IntervalHolder
 {
+   auto &clips = NarrowClips();
    WaveClipHolder newClips[2];
    const auto origin = WaveTrackData::Get(*this).GetOrigin();
-   const auto getOneNewClip = [&](WaveTrack *pChannel){
-      auto &clips = pChannel->mClips;
-      if (clips.empty())
-         return CreateClip(*pChannel, &pChannel->mClips, origin,
-            MakeNewClipName());
-      else
-         return clips.back();
-   };
-   if (GetOwner()) {
-      size_t iChannel = 0;
-      for (const auto pChannel : TrackList::Channels(this))
-         newClips[iChannel++] = getOneNewClip(pChannel);
+   const auto name = MakeNewClipName();
+   newClips[0] = clips.empty()
+      ? CreateClip(*this, &clips, origin, name)
+      : clips.back();
+   if (NChannels() > 1) {
+      auto &rightClips = RightClips();
+      newClips[1] = rightClips.empty()
+         ? CreateClip(*this, &rightClips, origin, name)
+         : rightClips.back();
    }
-   else
-      newClips[0] = getOneNewClip(this);
    return std::make_shared<Interval>(*this, newClips[0], newClips[1]);
 }
 
 /*! @excsafety{No-fail} */
 auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
 {
-   if (mClips.empty()) {
+   auto &clips = NarrowClips();
+   if (clips.empty()) {
       auto pInterval = CreateWideClip(
          WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
       InsertInterval(pInterval, true, true);
       return pInterval;
    }
    else {
-      size_t iChannel = 0;
       WaveClipHolder newClips[2];
-      for (auto channel : Channels()) {
-         auto &clips = static_cast<WaveTrack*>(channel.get())->mClips;
-         auto end = clips.end();
-         auto it = clips.begin();
+      size_t iChannel = 0;
+      const auto makeClip = [&](auto &theClips){
+         auto end = theClips.end();
+         auto it = theClips.begin();
          it = max_element(it, end,
             [](const auto &pClip1, const auto &pClip2){
                return pClip1->GetPlayStartTime() < pClip2->GetPlayStartTime();
          });
-         assert(it != clips.end());
+         assert(it != theClips.end());
          newClips[iChannel++] = *it;
-      }
+      };
+      makeClip(clips);
+      if (NChannels() > 1)
+         makeClip(RightClips());
       return std::make_shared<Interval>(*this, newClips[0], newClips[1]);
    }
 }
@@ -3993,7 +4015,7 @@ int WaveTrack::GetClipIndex(const Interval &clip) const
 
 int WaveTrack::GetNumClips() const
 {
-   return mClips.size();
+   return NarrowClips().size();
 }
 
 bool WaveTrack::CanOffsetClips(
@@ -4251,12 +4273,12 @@ namespace {
 
 WaveClipPointers WaveTrack::SortedClipArray()
 {
-   return FillSortedClipArray<WaveClipPointers>(mClips);
+   return FillSortedClipArray<WaveClipPointers>(NarrowClips());
 }
 
 WaveClipConstPointers WaveTrack::SortedClipArray() const
 {
-   return FillSortedClipArray<WaveClipConstPointers>(mClips);
+   return FillSortedClipArray<WaveClipConstPointers>(NarrowClips());
 }
 
 auto WaveTrack::SortedIntervalArray() -> IntervalHolders

@@ -331,7 +331,8 @@ public:
 
    //! Adds clip to the channel. Clip should not be empty or a placeholder.
    /*!
-    Sets project tempo on clip upon push. Use this instead of `mClips.push_back`
+    Sets project tempo on clip upon push. Use this instead of
+    `NarrowClips().push_back`
     @returns true on success
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
@@ -1257,13 +1258,20 @@ private:
 public:
    ChannelGroup &DoGetChannelGroup() const override;
 private:
+   WaveClipHolders &NarrowClips();
+   const WaveClipHolders &NarrowClips() const;
+
+   //! @pre `NChannels() > 1`
+   WaveClipHolders &RightClips();
+   //! @pre `NChannels() > 1`
+   const WaveClipHolders &RightClips() const;
 
    //
    // Protected variables
    //
 
    /*!
-    * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
+    * Do not call `NarrowClips().push_back` directly. Use `InsertClip` instead.
     * @invariant all are non-null and match `this->GetWidth()`
     */
    friend WaveChannel; // TODO wide wave tracks -- remove this
