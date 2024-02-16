@@ -189,9 +189,32 @@ auto ProjectFileManager::ReadProjectFile(
       // user selects Save().
       // Do this before FixTracks might delete zero-length clips!
       mLastSavedTracks = TrackList::Create( nullptr );
-      for (auto t : tracks)
-         mLastSavedTracks->Append(
-            move(*t->Duplicate(Track::DuplicateOptions{}.Backup())));
+      WaveTrack *leader{};
+      for (auto pTrack : tracks.Any<WaveTrack>()) {
+         // A rare place where TrackList::Channels remains necessary, to visit
+         // the right channels of stereo tracks not yet "zipped", otherwise
+         // later, CloseLock() will be missed for some sample blocks and
+         // corrupt the project
+         for (const auto pChannel : TrackList::Channels(pTrack)) {
+            auto left = leader;
+            auto newTrackList =
+               pChannel->Duplicate(Track::DuplicateOptions{}.Backup());
+            leader = left
+               ? nullptr // now visiting the right channel
+               : (pChannel->GetLinkType() == Track::LinkType::None)
+                  ? nullptr // now visiting a mono channel
+                  : *newTrackList->Any<WaveTrack>().begin()
+                    // now visiting a left channel
+            ;
+            mLastSavedTracks->Append(move(*newTrackList));
+            if (left)
+               // Zip clips allowing misalignment -- this may be a legacy
+               // project.  This duplicate track will NOT be used for normal
+               // editing, but only later to visit all the sample blocks that
+               // existed at last save time.
+               left->ZipClips(false);
+         }
+      }
 
       FixTracks(
          tracks,
@@ -1029,7 +1052,7 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
       }
       if (!unlinkedTrack) {
          if (linkType != ChannelGroup::LinkType::None &&
-            t->GetLinkType() == ChannelGroup::LinkType::None) {
+            t->NChannels() == 1) {
             // The track became unlinked.
             // It should NOT have been replaced with a "zip"
             assert(t->GetOwner().get() == &tracks);

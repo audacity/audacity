@@ -851,7 +851,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
-               dst.Reinit(src);
+               dst.Init(src);
             };
 
             // End of current track is before or at recording start time.

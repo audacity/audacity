@@ -76,10 +76,9 @@ ChannelAttachment *ChannelAttachmentsBase::Find(
 ChannelAttachmentsBase::ChannelAttachmentsBase(Track &track, Factory factory)
    : mFactory{ move(factory) }
 {
-   // Always construct one channel view
-   // TODO wide wave tracks -- number of channels will be known earlier, and
-   // they will all be constructed
-   mAttachments.push_back(mFactory(track, 0));
+   const auto nChannels = track.NChannels();
+   for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+      mAttachments.push_back(mFactory(track, iChannel));
 }
 
 ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;

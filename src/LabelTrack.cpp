@@ -343,7 +343,7 @@ TrackListHolder LabelTrack::Clone(bool) const
    assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result, nullptr);
+   return TrackList::Temporary(nullptr, result);
 }
 
 // Adjust label's left or right boundary, depending which is requested.
@@ -776,7 +776,7 @@ TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return TrackList::Temporary(nullptr, tmp, nullptr);
+   return TrackList::Temporary(nullptr, tmp);
 }
 
 

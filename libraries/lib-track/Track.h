@@ -313,7 +313,6 @@ private:
    //! public nonvirtual duplication function that invokes Clone()
    /*!
     @pre `IsLeader()`
-    @post result: `NChannels() == result->NChannels()`
     */
    virtual TrackListHolder Duplicate(DuplicateOptions = {}) const;
 
@@ -334,7 +333,6 @@ public:
     @return non-NULL or else throw
     May assume precondition: t0 <= t1
     @pre `IsLeader()`
-    @post result: `result->NChannels() == NChannels()`
     */
    virtual TrackListHolder Cut(double t0, double t1) = 0;
 
@@ -346,7 +344,6 @@ public:
     May assume precondition: t0 <= t1
     Should invoke Track::Init
     @pre `IsLeader`
-    @post result: `result->NChannels() == NChannels()`
    */
    virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
@@ -368,7 +365,7 @@ public:
    /*!
     Non-virtual overload that passes the first track of a given list
     @pre `IsLeader()`
-    @pre `SameKindAs(**src.begin()).NChannels()`
+    @pre `SameKindAs(**src.begin())`
     @pre `NChannels == (**src.begin()).NChannels()`
     */
    void Paste(double t, const TrackList &src);
@@ -401,7 +398,6 @@ private:
     @pre `IsLeader()`
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
-    @post result: `NChannels() == result->NChannels()`
     @post result tracks have same TrackIds as the channels of `this`
     */
    virtual TrackListHolder Clone(bool backup) const = 0;
@@ -1064,16 +1060,6 @@ public:
       return Channels_<TrackType>(pTrack->GetHolder()->Find(pTrack));
    }
 
-   //! Count channels of a track
-   static size_t NChannels(const Track &track)
-   {
-      return Channels(&track).size();
-   }
-
-   //! If the given track is one of a pair of channels, swap them
-   //! @return New left track on success
-   static Track* SwapChannels(Track &track);
-
    friend class Track;
 
    //! @brief Moves all tracks from \p trackList starting from position
@@ -1105,30 +1091,19 @@ public:
          bool assignIds = true)
             { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
 
-   //! Removes linkage if track belongs to a group
-   std::vector<Track*> UnlinkChannels(Track& track);
-   /** \brief Converts channels to a multichannel track.
-   * @param first and the following must be in this list. Tracks should
-   * not be a part of another group (not linked)
-   * @param nChannels number of channels, for now only 2 channels supported
-   * @returns true on success, false if some prerequisites do not met
-   */
-   bool MakeMultiChannelTrack(Track& first, int nChannels);
-
    /*!
-    Replace channel group `t` with the first group in the given list, return a
+    Replace track `t` with the first group in the given list, return a
     temporary list of the removed tracks, modify given list by removing group
 
-    Replacements may have fewer channels
     Give the replacements the same ids as the replaced
 
     @pre `t.IsLeader()`
     @pre `t.GetOwner().get() == this`
-    @pre `t.NChannels() >= (*with.begin())->NChannels()`
+    @pre `!with.empty()`
     */
    TrackListHolder ReplaceOne(Track &t, TrackList &&with);
 
-   //! Remove a channel group, given the leader, and return it
+   //! Remove a track, given the leader, and return it
    /*!
     @pre `track.IsLeader()`
     */
@@ -1159,7 +1134,6 @@ public:
    }
 
    bool empty() const;
-   size_t NChannels() const;
    size_t Size() const { return Any().size(); }
 
    //! Return the least start time of the tracks, or 0 when no tracks
@@ -1168,14 +1142,13 @@ public:
    double GetEndTime() const;
 
    //! Construct a temporary list owned by `pProject` (if that is not null)
-   //! so that `TrackList::Channels(left.get())` will enumerate the given
-   //! tracks; TrackIds are not changed
+   //! and owning pTrack
+   //! TrackIds are not changed
    /*!
-    @pre `left == nullptr || left->GetOwner() == nullptr`
-    @pre `right == nullptr || (left && right->GetOwner() == nullptr)`
+    @pre `pTrack == nullptr || pTrack->GetOwner() == nullptr`
     */
    static TrackListHolder Temporary(AudacityProject *pProject,
-      const Track::Holder &left = {}, const Track::Holder &right = {});
+      const Track::Holder &pTrack = {});
 
    //! Remove all tracks from `list` and put them at the end of `this`
    /*!
@@ -1184,8 +1157,7 @@ public:
     */
    void Append(TrackList &&list, bool assignIds = true);
 
-   //! Remove first channel group (if any) from `list` and put it at the end of
-   //! `this`
+   //! Remove first track (if any) from `list` and put it at the end of `this`
    void AppendOne(TrackList &&list);
 
 private:

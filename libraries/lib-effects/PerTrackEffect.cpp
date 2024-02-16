@@ -268,13 +268,13 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          auto wideTrack =
             (pRight && isGenerator) ? leader.WideEmptyCopy() : nullptr;
          auto narrowTrack =
-            (!pRight && isGenerator) ? leader.EmptyCopy() : nullptr;
+            (!pRight && isGenerator) ? leader.EmptyCopy(1) : nullptr;
          const auto pGenerated = wideTrack
             ? *wideTrack->Any<WaveTrack>().begin()
             : narrowTrack.get();
          const auto tempList =
             wideTrack ? move(wideTrack)
-            : narrowTrack ? TrackList::Temporary(nullptr, narrowTrack, nullptr)
+            : narrowTrack ? TrackList::Temporary(nullptr, narrowTrack)
             : nullptr;
 
          WaveTrackSink sink{ chan, pRight, pGenerated, start, isProcessor,
@@ -300,10 +300,15 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
                if (!results)
                   results = tempList;
                else {
-                  if (!multichannel && !isLeader && narrowTrack)
-                     static_cast<WaveTrack*>(*results->rbegin())
-                        ->MergeChannelAttachments(move(*narrowTrack));
                   results->Append(std::move(*tempList));
+                  if (!multichannel && !isLeader && narrowTrack) {
+                     // Generated a stereo track, in channel-major fashion.
+                     // Get the last track but one -- generated in the previous
+                     // pass
+                     const auto pLast =
+                        static_cast<WaveTrack*>(*std::next(results->rbegin()));
+                     pLast->ZipClips();
+                  }
                }
             }
          }

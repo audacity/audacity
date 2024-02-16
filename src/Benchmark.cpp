@@ -369,7 +369,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
-   const auto tmp0 = TrackList::Temporary(nullptr, t, nullptr);
+   const auto tmp0 = TrackList::Temporary(nullptr, t);
    const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
    DoProjectTempoChange(*t, tempo);
 

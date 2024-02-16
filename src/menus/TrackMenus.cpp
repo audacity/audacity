@@ -74,7 +74,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       }
 
       // Add new tracks
-      const bool stereo = newTracks->NChannels() > 1;
+      const bool stereo = (*newTracks->begin())->NChannels() > 1;
       const auto firstName = (*newTracks->begin())->GetName();
       tracks.Append(std::move(*newTracks));
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();

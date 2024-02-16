@@ -860,23 +860,11 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
    int nChannels = 0;
 
    auto &track = static_cast<WaveTrack&>(mpData->track);
-   track.CopyClipEnvelopes();
-   const auto unlinkedTracks = [&]{
-      const auto tracks = TrackList::Get(*project).UnlinkChannels(track);
-      assert(tracks.size() == 2);
-      return std::vector<WaveTrack*>{
-         static_cast<WaveTrack*>(tracks[0]),
-         static_cast<WaveTrack*>(tracks[1]) };
-   }();
-
+   const std::vector<WaveTrack::Holder> unlinkedTracks = track.SplitChannels();
    if (stereo) {
       unlinkedTracks[0]->SetPan(-1.0f);
       unlinkedTracks[1]->SetPan(1.0f);
    }
-
-   // Fix up the channel attachments to avoid waste of space
-   unlinkedTracks[0]->EraseChannelAttachments(1);
-   unlinkedTracks[1]->EraseChannelAttachments(0);
 
    for (const auto track : unlinkedTracks) {
       auto &view = ChannelView::Get(*track->GetChannel(0));
@@ -908,21 +896,11 @@ void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 
    auto &trackFocus = TrackFocus::Get( *project );
    auto &track = static_cast<WaveTrack&>(mpData->track);
-   const bool hasFocus = trackFocus.Get() == &track;
-   track.CopyClipEnvelopes();
-   auto pTrack = track.SharedPointer<WaveTrack>();
-   if (auto newTrack = TrackList::SwapChannels(track))
-   {
-      static_cast<WaveTrack*>(newTrack)
-         ->MoveAndSwapAttachments(std::move(*pTrack));
-      if (hasFocus)
-         trackFocus.Set(newTrack);
-
-      ProjectHistory::Get( *project ).PushState(
-         /* i18n-hint: The string names a track  */
-         XO("Swapped Channels in '%s'").Format(newTrack->GetName()),
-         XO("Swap Channels"));
-   }
+   track.SwapChannels();
+   ProjectHistory::Get( *project ).PushState(
+      /* i18n-hint: The string names a track  */
+      XO("Swapped Channels in '%s'").Format(track.GetName()),
+      XO("Swap Channels"));
 
    mpData->result = RefreshCode::RefreshAll;
 }

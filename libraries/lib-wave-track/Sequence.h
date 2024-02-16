@@ -175,7 +175,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   bool GetErrorOpening() { return mErrorOpening; }
+   bool GetErrorOpening() const { return mErrorOpening; }
 
    //
    // Lock all of this sequence's sample blocks, keeping them

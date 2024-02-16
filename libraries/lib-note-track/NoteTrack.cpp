@@ -212,7 +212,7 @@ TrackListHolder NoteTrack::Clone(bool) const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   return TrackList::Temporary(nullptr, duplicate, nullptr);
+   return TrackList::Temporary(nullptr, duplicate);
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
@@ -343,7 +343,7 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return TrackList::Temporary(nullptr, newTrack);
 }
 
 TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
@@ -366,7 +366,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return TrackList::Temporary(nullptr, newTrack);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
