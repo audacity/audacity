@@ -32,7 +32,8 @@ TestWaveTrackMaker::Track(const WaveClipHolders& clips) const
          mFactory, floatSample, mSampleRate);
    tracks->Add(track);
    for (const auto& clip : clips)
-      track->AddClip(clip);
+      track->InsertInterval(
+         std::make_shared<WaveTrack::Interval>(*track, clip, nullptr), true);
    return track;
 }
 

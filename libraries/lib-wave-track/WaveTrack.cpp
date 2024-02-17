@@ -2337,22 +2337,6 @@ std::shared_ptr<WaveClip> WaveTrack::RemoveAndReturnClip(WaveClip* clip)
       return {};
 }
 
-bool WaveTrack::AddClip(const std::shared_ptr<WaveClip> &clip)
-{
-   assert(clip);
-   if (clip->GetSequence(0)->GetFactory() != this->mpFactory)
-      return false;
-
-   if (clip->GetWidth() != GetWidth())
-      return false;
-
-   // Uncomment the following line after we correct the problem of zero-length clips
-   //if (CanInsertClip(clip))
-   InsertClip(clip, false); // transfer ownership
-
-   return true;
-}
-
 /*! @excsafety{Strong} */
 void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
    const bool split, const bool clearByTrimming)
