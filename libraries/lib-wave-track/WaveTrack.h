@@ -833,9 +833,6 @@ public:
    bool
    CanInsertClip(const WaveClip& clip, double& slideBy, double tolerance) const;
 
-   // Remove the clip from the track and return a SMART pointer to it.
-   // You assume responsibility for its memory!
-   std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
@@ -1198,6 +1195,8 @@ public:
    void EraseChannelAttachments(size_t index);
 
 private:
+   std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
+
    // Just destroy channel attachments
    void DestroyAllChannelAttachments();
 

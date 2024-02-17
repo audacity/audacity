@@ -126,16 +126,10 @@ public:
 
    Intervals Detach() override
    {
-      // TODO wide wave tracks -- simplify when clips are really wide
-      auto pRight = mpTrack->ChannelGroup::GetChannel<WaveTrack>(1);
       for (auto &interval: mMoving) {
          auto data = std::static_pointer_cast<WaveTrack::Interval>(interval);
          auto pClip = data->GetClip(0).get();
-         // interval will still hold the clip, so ignore the return:
-         (void) mpTrack->RemoveAndReturnClip(pClip);
-         if (const auto pClip1 = data->GetClip(1).get()) {
-            (void) pRight->RemoveAndReturnClip(pClip1);
-         }
+         mpTrack->RemoveInterval(data);
          // Don't rely on pointer identity of WaveTrack::Interval
          // TODO wide wave clip -- that may change
          mMigrated.erase(
