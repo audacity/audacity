@@ -1016,7 +1016,9 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    {
       WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
 
-      handler = wavetrack->CreateClip().get();
+      const auto pInterval = wavetrack->CreateWideClip();
+      wavetrack->InsertInterval(pInterval, true, true);
+      handler = pInterval->GetClip(0).get();
    }
    else if (mParentTag == WaveClip::WaveClip_tag)
    {
@@ -1051,7 +1053,8 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
    // these versions, we get or create the only clip in the track.
    else if (mParentTag == WaveTrack::WaveTrack_tag)
    {
-      handler = mWaveTrack->RightmostOrNewClip()->GetEnvelope();
+      handler = &(*mWaveTrack->RightmostOrNewClip()->Channels().begin())
+         ->GetEnvelope();
    }
    // Nested wave clips are cut lines
    else if (mParentTag == WaveClip::WaveClip_tag)
@@ -1452,7 +1455,8 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
-   auto pClip = mClip ? mClip : mWaveTrack->RightmostOrNewClip();
+   auto pClip = mClip ? mClip
+      : &(*mWaveTrack->RightmostOrNewClip()->Channels().begin())->GetClip();
    auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks

@@ -22,7 +22,6 @@ WideChannelGroupInterval::WideChannelGroupInterval(
    const ChannelGroup &group
 )  : mNChannels{ group.NChannels() }
 {
-   assert(group.IsLeader());
    assert(mNChannels >= 1); // Post of ChannelGroup::NChannels
 }
 

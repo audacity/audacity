@@ -58,7 +58,6 @@ public:
    //! Initialize immutable properties, constraining number of channels to
    //! equal that of the containing group
    /*!
-    @pre `group.IsLeader()`
     @post `NChannels() == group.NChannels()`
     */
    explicit WideChannelGroupInterval(const ChannelGroup &group);
@@ -386,13 +385,9 @@ public:
    };
 
    //! Get range of channels with mutative access
-   /*!
-    @pre `IsLeader()`
-    */
    template<typename ChannelType = Channel>
    IteratorRange<ChannelIterator<ChannelType>> Channels()
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NChannels() } };
    }
 

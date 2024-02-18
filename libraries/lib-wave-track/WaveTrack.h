@@ -336,7 +336,8 @@ public:
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
     */
-   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup,
+      bool allowEmpty);
 
    //! Used only in assertions checking invariants
    bool ClipsAreUnique() const;
@@ -771,7 +772,6 @@ public:
     */
    ClipHolders GetClipInterfaces() const;
 
-   /// @pre IsLeader()
    //! Create new clip that uses this track's factory but do not add it to the
    //! track
    /*!
@@ -792,6 +792,7 @@ public:
     */
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
+private:
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
@@ -802,30 +803,20 @@ public:
    WaveClipHolder
    CreateClip(double offset = .0, const wxString& name = wxEmptyString);
 
+public:
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
    *
    *  @return a pointer to the most recently added WaveClip
    */
-   WaveClip* NewestOrNewClip();
+   IntervalHolder NewestOrNewClip();
 
    /** @brief Get access to the last (rightmost) clip, or create a clip,
    *  if there is not already one.
    *
    *  @return a pointer to a WaveClip at the end of the track
    */
-   WaveClip* RightmostOrNewClip();
-
-   //! Get the nth clip in this WaveTrack (will return nullptr if not found).
-   /*!
-    Use this only in special cases (like getting the linked clip), because
-    it is much slower than GetClipIterator().
-    */
-   WaveClip *GetClipByIndex(int index);
-   /*!
-    @copydoc GetClipByIndex
-    */
-   const WaveClip* GetClipByIndex(int index) const;
+   IntervalHolder RightmostOrNewClip();
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
@@ -1177,11 +1168,11 @@ public:
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
-   //! @pre `IsLeader()`
    /*
     @param newClip false if clip has contents from another clip or track
     */
-   void InsertInterval(const IntervalHolder& interval, bool newClip);
+   void InsertInterval(const IntervalHolder& interval,
+      bool newClip, bool allowEmpty = false);
 
    //! @pre `IsLeader()`
    void RemoveInterval(const IntervalHolder& interval);
@@ -1189,8 +1180,7 @@ public:
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
 
-   //! Returns nullptr if clip with such name was not found
-   const WaveClip* FindClipByName(const wxString& name) const;
+   bool HasClipNamed(const wxString& name) const;
 
    size_t NIntervals() const override;
 
