@@ -28,9 +28,10 @@ of sample block storage.
 #include <wx/valgen.h>
 #include <wx/valtext.h>
 
+#include "Project.h"
+#include "ProjectTimeSignature.h"
 #include "SampleBlock.h"
 #include "ShuttleGui.h"
-#include "Project.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "Sequence.h"
@@ -368,6 +369,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
    const auto tmp0 = TrackList::Temporary(nullptr, t, nullptr);
+   const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
+   t->OnProjectTempoChange(tempo);
+
    assert(t->IsLeader()); // because it's new and not grouped
 
    t->SetRate(1);
