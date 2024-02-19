@@ -91,11 +91,10 @@ GetNormalizedCircularAutocorr(const std::vector<float>& ux /* unaligned x*/)
       return ux;
    const auto N = ux.size();
    assert(IsPowOfTwo(N));
-   PffftSetupHolder setup { pffft_new_setup(N, PFFFT_REAL) };
+   PffftTransformer setup { N };
    PffftFloatVector x { ux.begin(), ux.end() };
    PffftFloatVector work(N);
-   pffft_transform_ordered(
-      setup.get(), x.data(), x.data(), work.data(), PFFFT_FORWARD);
+   setup.TransformOrdered(x.aligned(), x.aligned(), work.aligned());
 
    // Transform to a power spectrum, but preserving the layout expected by PFFFT
    // in preparation for the inverse transform.
@@ -107,8 +106,7 @@ GetNormalizedCircularAutocorr(const std::vector<float>& ux /* unaligned x*/)
       x[n + 1] = 0.f;
    }
 
-   pffft_transform_ordered(
-      setup.get(), x.data(), x.data(), work.data(), PFFFT_BACKWARD);
+   setup.InverseTransformOrdered(x.aligned(), x.aligned(), work.aligned());
 
    // The second half of the circular autocorrelation is the mirror of the first
    // half. We are economic and only keep the first half.

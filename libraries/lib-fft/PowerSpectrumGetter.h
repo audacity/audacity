@@ -15,14 +15,12 @@ struct PFFFT_Setup;
 #include <memory>
 #include <type_traits>
 #include <vector>
-#include "pffft.h"
 
 struct FFT_API PffftSetupDeleter {
    void operator ()(PFFFT_Setup *p){ if (p) Pffft_destroy_setup(p); }
 private:
   void Pffft_destroy_setup(PFFFT_Setup *);
 };
-using PffftSetupHolder = std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>;
 
 struct FFT_API PffftAllocatorBase {
    static void *Pffft_aligned_malloc(size_t nb_bytes);
@@ -197,6 +195,48 @@ struct FFT_API PffftFloatVector : std::vector<float, PffftAllocator<float>> {
    { return aligned(rowSize * nRow); }
 };
 
+//! Encapsulates allocation of setup and calls to pffft; like a smart pointer
+struct FFT_API PffftTransformer
+   : private std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>
+{
+   //! @post `!*this`
+   PffftTransformer() = default;
+
+   //! Make construction and resetting go through this non-inline call
+   //! @post `*this`
+   explicit PffftTransformer(size_t N);
+
+   //! Free resources
+   //! @post `!*this`
+   void Reset();
+
+   //! Reinitialize resources
+   //! @post `*this`
+   void Reset(size_t N);
+
+   // Movable but not copyable
+   PffftTransformer(PffftTransformer&&) = default;
+   PffftTransformer & operator=(PffftTransformer&&) = default;
+
+   using std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>::operator bool;
+
+   //! Invoke pffft_transform_ordered from time to frequency; real inputs only
+   //! @pre `*this`
+   void TransformOrdered(PffftConstFloats input,
+      PffftFloats output, PffftFloats work) const;
+
+   //! Invoke pffft_transform_ordered from frequency to time,
+   //! then optionally rescale values by 1/Size()
+   //! @pre `*this`
+   void InverseTransformOrdered(PffftConstFloats input,
+      PffftFloats output, PffftFloats work, bool renormalize = false) const;
+
+   size_t Size() const { return N; };
+
+private:
+   size_t N;
+};
+
 /*!
  * @brief Much faster that FFT.h's `PowerSpectrum`, at least in Short-Time
  * Fourier Transform-like situations, where many power spectra of the same size
@@ -220,6 +260,6 @@ public:
 
 private:
    const int mFftSize;
-   PffftSetupHolder mSetup;
+   PffftTransformer mSetup;
    PffftFloatVector mWork;
 };

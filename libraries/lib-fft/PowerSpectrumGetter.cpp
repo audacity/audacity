@@ -38,9 +38,52 @@ PffftConstFloats PffftFloatVector::aligned(PffftAlignedCount c) const
    return PffftConstFloats{ data() + c };
 }
 
+PffftTransformer::PffftTransformer(size_t N)
+   : std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>{
+      pffft_new_setup(N, PFFFT_REAL)
+   }
+   , N{ N }
+{
+}
+
+void PffftTransformer::Reset()
+{
+   reset();
+}
+
+void PffftTransformer::Reset(size_t N)
+{
+   reset(pffft_new_setup(N, PFFFT_REAL));
+}
+
+void PffftTransformer::TransformOrdered(PffftConstFloats input,
+   PffftFloats output, PffftFloats work) const
+{
+   if (!*this) {
+      assert(false);
+      return;
+   }
+   pffft_transform_ordered(get(), input.get(), output.get(), work.get(),
+      PFFFT_FORWARD);
+}
+
+void PffftTransformer::InverseTransformOrdered(PffftConstFloats input,
+   PffftFloats output, PffftFloats work, bool renormalize) const
+{
+   if (!*this) {
+      assert(false);
+      return;
+   }
+   const auto out = output.get();
+   pffft_transform_ordered(get(), input.get(), out, work.get(),
+      PFFFT_BACKWARD);
+   if (renormalize)
+      std::transform(out, out + N, out, [N = N](float f){ return f / N; });
+}
+
 PowerSpectrumGetter::PowerSpectrumGetter(int fftSize)
     : mFftSize { fftSize }
-    , mSetup { pffft_new_setup(fftSize, PFFFT_REAL) }
+    , mSetup { size_t(fftSize) }
     , mWork(fftSize)
 {
 }
@@ -52,10 +95,10 @@ PowerSpectrumGetter::~PowerSpectrumGetter()
 void PowerSpectrumGetter::operator()(
    PffftFloats alignedBuffer, PffftFloats alignedOutput)
 {
+   mSetup.TransformOrdered(
+      alignedBuffer, alignedBuffer, mWork.aligned());
    const auto buffer = alignedBuffer.get();
    const auto output = alignedOutput.get();
-   pffft_transform_ordered(mSetup.get(),
-      buffer, buffer, mWork.data(), PFFFT_FORWARD);
    output[0] = buffer[0] * buffer[0];
    for (auto i = 1; i < mFftSize / 2; ++i)
       output[i] =
