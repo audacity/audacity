@@ -57,26 +57,26 @@ struct PffftAlignedCount
    static constexpr size_t ByteAlignment = 64;
    static constexpr auto FloatAlignment = ByteAlignment / sizeof(float);
 
-   PffftAlignedCount() = default;
+   constexpr PffftAlignedCount() = default;
 
    //! Construct from some number of floats, rounding up as needed
-   explicit PffftAlignedCount(size_t nFloats)
+   constexpr explicit PffftAlignedCount(size_t nFloats)
       : value{
          ((nFloats + (FloatAlignment) - 1) / FloatAlignment) * FloatAlignment }
    {}
 
-   PffftAlignedCount(const PffftAlignedCount &) = default;
+   constexpr PffftAlignedCount(const PffftAlignedCount &) = default;
    PffftAlignedCount &operator =(const PffftAlignedCount &) = default;
 
    //! @invariant `result: result % FloatAlignment == 0`
-   operator size_t() const { return value; }
+   operator size_t() const noexcept { return value; }
 
 private:
    size_t value{};
 };
 
 template<typename Integral>
-inline auto operator * (PffftAlignedCount x, Integral y)
+constexpr inline auto operator * (PffftAlignedCount x, Integral y)
    -> std::enable_if_t<
       std::is_unsigned_v<Integral> && sizeof(Integral) <= sizeof(size_t),
       PffftAlignedCount>
@@ -85,7 +85,7 @@ inline auto operator * (PffftAlignedCount x, Integral y)
 }
 
 template<typename Integral>
-inline auto operator * (Integral x, PffftAlignedCount y)
+constexpr inline auto operator * (Integral x, PffftAlignedCount y)
    -> std::enable_if_t<
       std::is_unsigned_v<Integral> && sizeof(Integral) <= sizeof(size_t),
       PffftAlignedCount>
@@ -102,8 +102,8 @@ struct PffftFloatVector;
  It restricts pointer arithmetic to addition of well-aligned increments
  */
 struct PffftFloats {
-   PffftFloats() = default;
-   PffftFloats(const PffftFloats&) = default;
+   constexpr PffftFloats() = default;
+   constexpr PffftFloats(const PffftFloats&) = default;
    PffftFloats &operator=(const PffftFloats&) = default;
 
    /*!
@@ -114,21 +114,19 @@ struct PffftFloats {
    PffftFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
    }
-   friend PffftFloats operator + (PffftFloats p, PffftAlignedCount c)
+   friend constexpr PffftFloats operator + (PffftFloats p, PffftAlignedCount c)
    {
-      PffftFloats result(p);
-      return result += c;
+      return PffftFloats{ p.p + c };
    }
-   friend PffftFloats operator + (PffftAlignedCount c, PffftFloats p)
+   friend constexpr PffftFloats operator + (PffftAlignedCount c, PffftFloats p)
    {
-      PffftFloats result(p);
-      return result += c;
+      return PffftFloats{ p.p + c };
    }
 
    explicit operator bool() const noexcept { return p != nullptr; }
 
 private:
-   explicit PffftFloats(float *p) : p{ p } {}
+   constexpr explicit PffftFloats(float *p) : p{ p } {}
    friend PffftFloatVector;
    float *p{};
 };
@@ -140,10 +138,10 @@ private:
  It restricts pointer arithmetic to addition of well-aligned increments.
  */
 struct PffftConstFloats {
-   PffftConstFloats() = default;
-   PffftConstFloats(const PffftConstFloats&) = default;
+   constexpr PffftConstFloats() = default;
+   constexpr PffftConstFloats(const PffftConstFloats&) = default;
    PffftConstFloats &operator=(const PffftConstFloats&) = default;
-   PffftConstFloats(PffftFloats p) : PffftConstFloats{ p.get() } {}
+   constexpr PffftConstFloats(PffftFloats p) : PffftConstFloats{ p.get() } {}
 
    /*!
     @invariant result is well aligned for pffft
@@ -153,21 +151,21 @@ struct PffftConstFloats {
    PffftConstFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
    }
-   friend PffftConstFloats operator + (PffftConstFloats p, PffftAlignedCount c)
+   friend constexpr
+   PffftConstFloats operator + (PffftConstFloats p, PffftAlignedCount c)
    {
-      PffftConstFloats result(p);
-      return result += c;
+      return PffftConstFloats{ p.p + c };
    }
-   friend PffftConstFloats operator + (PffftAlignedCount c, PffftConstFloats p)
+   friend constexpr
+   PffftConstFloats operator + (PffftAlignedCount c, PffftConstFloats p)
    {
-      PffftConstFloats result(p);
-      return result += c;
+      return PffftConstFloats{ p.p + c };
    }
 
    explicit operator bool() const noexcept { return p != nullptr; }
 
 private:
-   explicit PffftConstFloats(const float *p) : p{ p } {}
+   explicit constexpr PffftConstFloats(const float *p) : p{ p } {}
    friend PffftFloatVector;
    const float *p{};
 };
