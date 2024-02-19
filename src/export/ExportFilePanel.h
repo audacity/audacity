@@ -88,7 +88,6 @@ private:
    void OnOptionsHandlerEvent(const ExportOptionsHandlerEvent& e);
    
    void UpdateSampleRateList();
-   void UpdateFileNameExt(const wxString& ext);
    void UpdateMaxChannels(unsigned maxChannels);
 
    AudacityProject& mProject;
