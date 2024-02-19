@@ -34,18 +34,17 @@
 // private helper classes and functions
 namespace {
    
-bool ShowManager(
-   PluginManager &pm, wxWindow *parent)
+bool ShowManager(wxWindow *parent, int effectsCategory)
 {
-   PluginRegistrationDialog dlg(parent);
+   PluginRegistrationDialog dlg(parent, effectsCategory);
    return dlg.ShowModal() == wxID_OK;
 }
 
-void DoManagePluginsMenu(AudacityProject &project)
+void DoManagePluginsMenu(AudacityProject &project, int effectsCategory)
 {
    auto &window = GetProjectFrame( project );
    auto &pm = PluginManager::Get();
-   if (ShowManager(pm, &window))
+   if (ShowManager(&window, effectsCategory))
       MenuCreator::RebuildAllMenuBars();
 }
 
@@ -122,7 +121,7 @@ void OnResetConfig(const CommandContext &context)
 void OnManageGenerators(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project);
+   DoManagePluginsMenu(project, EffectTypeGenerate);
 }
 
 void OnEffect(const CommandContext &context)
@@ -134,7 +133,7 @@ void OnEffect(const CommandContext &context)
 void OnManageEffects(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project);
+   DoManagePluginsMenu(project, EffectTypeProcess);
 }
 
 void OnAddRealtimeEffects(const CommandContext& context)
@@ -191,13 +190,13 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
 void OnManageAnalyzers(const CommandContext &context)
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project);
+   DoManagePluginsMenu(project, EffectTypeAnalyze);
 }
 
 void OnManageTools(const CommandContext &context )
 {
    auto &project = context.project;
-   DoManagePluginsMenu(project);
+   DoManagePluginsMenu(project, EffectTypeTool);
 }
 
 void OnBenchmark(const CommandContext &context)
