@@ -120,6 +120,17 @@ void OpenProjectFromCloud(
 {
    ASSERT_MAIN_THREAD();
 
+   auto authResult = PerformBlockingAuth(potentialTarget);
+
+   if (authResult.Result != AuthResult::Status::Authorised)
+   {
+      LinkFailedDialog dialog { potentialTarget != nullptr ?
+                                   &ProjectWindow::Get(*potentialTarget) :
+                                   nullptr };
+      dialog.ShowModal();
+      return;
+   }
+
    auto progressDialog = MakeProgress();
 
    auto future = CloudSyncService::Get().OpenFromCloud(
