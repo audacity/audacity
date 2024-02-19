@@ -958,8 +958,6 @@ UIHandle::Result TimeShiftHandle::Release
    if (mDidSlideVertically) {
       msg = XO("Moved clips to another track");
       consolidate = false;
-      for (auto& pair : mClipMoveState.shifters)
-         pair.first->LinkConsistencyFix();
    }
    else {
       msg = ( mClipMoveState.hSlideAmount > 0
