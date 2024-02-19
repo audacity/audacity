@@ -838,7 +838,7 @@ public:
    @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
     */
    bool CanOffsetClips(
-      const std::vector<WaveClip*> &clips, //!< not necessarily in this track
+      const std::vector<Interval*> &movingClips, //!< not necessarily in this track
       double amount, //!< signed
       double *allowedAmount = nullptr /*!<
          [out] if null, test exact amount only; else, largest (in magnitude) possible offset with same sign */
@@ -848,7 +848,7 @@ public:
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
    bool
-   CanInsertClip(const WaveClip& clip, double& slideBy, double tolerance) const;
+   CanInsertClip(const Interval& clip, double& slideBy, double tolerance) const;
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.

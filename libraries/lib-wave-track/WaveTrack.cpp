@@ -4005,23 +4005,29 @@ int WaveTrack::GetNumClips() const
 }
 
 bool WaveTrack::CanOffsetClips(
-   const std::vector<WaveClip*> &clips,
+   const std::vector<Interval*> &movingClips,
    double amount,
    double *allowedAmount /* = NULL */)
 {
    if (allowedAmount)
       *allowedAmount = amount;
 
-   const auto &moving = [&](WaveClip *clip){
+   const auto &moving = [&](Interval *clip){
       // linear search might be improved, but expecting few moving clips
       // compared with the fixed clips
-      return clips.end() != std::find( clips.begin(), clips.end(), clip );
+      // Don't use pointer identity of WaveTrack::Interval
+      // TODO wide wave clips -- maybe change that
+      const auto pred = [narrowClip = clip->GetClip(0).get()](auto *pInterval){
+         return pInterval->GetClip(0).get() == narrowClip;
+      };
+      return movingClips.end() !=
+         std::find_if(movingClips.begin(), movingClips.end(), pred);
    };
 
-   for (const auto &c: mClips) {
+   for (const auto &c: Intervals()) {
       if ( moving( c.get() ) )
          continue;
-      for (const auto clip : clips) {
+      for (const auto clip : movingClips) {
          if (c->GetPlayStartTime() < clip->GetPlayEndTime() + amount &&
             c->GetPlayEndTime() > clip->GetPlayStartTime() + amount)
          {
@@ -4052,7 +4058,7 @@ bool WaveTrack::CanOffsetClips(
 
       // Check if the NEW calculated amount would not violate
       // any other constraint
-      if (!CanOffsetClips(clips, *allowedAmount, nullptr)) {
+      if (!CanOffsetClips(movingClips, *allowedAmount, nullptr)) {
          *allowedAmount = 0; // play safe and don't allow anything
          return false;
       }
@@ -4063,9 +4069,10 @@ bool WaveTrack::CanOffsetClips(
 }
 
 bool WaveTrack::CanInsertClip(
-   const WaveClip& candidateClip, double& slideBy, double tolerance) const
+   const Interval& candidateClip, double& slideBy, double tolerance) const
 {
-   if (mClips.empty())
+   const auto &clips = Intervals();
+   if (clips.empty())
       return true;
    // Find clip in this that overlaps most with `clip`:
    const auto candidateClipStartTime = candidateClip.GetPlayStartTime();
@@ -4074,7 +4081,7 @@ bool WaveTrack::CanInsertClip(
    const auto t1 = SnapToSample(candidateClipEndTime + slideBy);
    std::vector<double> overlaps;
    std::transform(
-      mClips.begin(), mClips.end(), std::back_inserter(overlaps),
+      clips.begin(), clips.end(), std::back_inserter(overlaps),
       [&](const auto& pClip) {
          return pClip->IntersectsPlayRegion(t0, t1) ?
                    std::min(pClip->GetPlayEndTime(), t1) -
@@ -4084,13 +4091,14 @@ bool WaveTrack::CanInsertClip(
    const auto maxOverlap = std::max_element(overlaps.begin(), overlaps.end());
    if (*maxOverlap > tolerance)
       return false;
-   const auto overlappedClip =
-      mClips[std::distance(overlaps.begin(), maxOverlap)];
+   auto iter = clips.begin();
+   std::advance(iter, std::distance(overlaps.begin(), maxOverlap));
+   const auto overlappedClip = *iter;
    const auto requiredOffset =  slideBy +
              *maxOverlap * (overlappedClip->GetPlayStartTime() < t0 ? 1 : -1);
    // Brute-force check to see if there's another clip that'd be in the way.
    if (std::any_of(
-          mClips.begin(), mClips.end(),
+          clips.begin(), clips.end(),
           [&](const auto& pClip)
           {
              const auto result = pClip->IntersectsPlayRegion(

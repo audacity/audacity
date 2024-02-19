@@ -114,13 +114,13 @@ public:
 
    double AdjustOffsetSmaller(double desiredOffset) override
    {
-      std::vector<WaveClip *> movingClips;
+      std::vector<WaveTrack::Interval *> movingClips;
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         movingClips.push_back(data.GetClip(0).get());
+         movingClips.push_back(&data);
       }
       double newAmount = 0;
-      (void) mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
+      mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
       return newAmount;
    }
 
@@ -149,11 +149,7 @@ public:
       auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
       for (auto &interval: intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip(0).get();
-         ok = pClip ? pOtherWaveTrack->CanInsertClip(
-                         *pClip, desiredOffset, tolerance) :
-                      true;
-         if (!ok)
+         if (!(ok = pOtherWaveTrack->CanInsertClip(data, desiredOffset, tolerance)))
             break;
       }
       return ok;
