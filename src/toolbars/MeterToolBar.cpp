@@ -223,13 +223,18 @@ void MeterToolBar::ReCreateButtons()
 
    ToolBar::ReCreateButtons();
 
-   mPlayMeter->RestoreState(playState);
-   if( playState.mSaved  ){
-      projectAudioIO.SetPlaybackMeter( mPlayMeter->GetMeter() );
+   if(mPlayMeter) {
+      mPlayMeter->RestoreState(playState);
+      if( playState.mSaved  ){
+         projectAudioIO.SetPlaybackMeter( mPlayMeter->GetMeter() );
+      }
    }
-   mRecordMeter->RestoreState(recordState);
-   if( recordState.mSaved ){
-      projectAudioIO.SetCaptureMeter( mRecordMeter->GetMeter() );
+
+   if(mRecordMeter) {
+      mRecordMeter->RestoreState(recordState);
+      if( recordState.mSaved ){
+         projectAudioIO.SetCaptureMeter( mRecordMeter->GetMeter() );
+      }
    }
 }
 
