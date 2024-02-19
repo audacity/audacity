@@ -17,7 +17,6 @@
 #include "EqualizationParameters.h" // base class
 #include "Envelope.h" // member
 #include "PffftTransformer.h"
-#include "RealFFTf.h" // member
 using Floats = ArrayOf<float>;
 
 //! Extend EqualizationParameters with frequency domain coefficients computed
@@ -53,7 +52,7 @@ struct EqualizationFilter : EqualizationParameters {
    { return IsLinear() ? mLinEnvelope : mLogEnvelope; }
 
    Envelope mLinEnvelope, mLogEnvelope;
-   HFFT hFFT{ GetFFT(windowSize) };
+   PffftTransformer transformer{ windowSize };
    Floats mFilterFuncR{ windowSize }, mFilterFuncI{ windowSize };
    double mLoFreq{ loFreqI };
    double mHiFreq{ mLoFreq };

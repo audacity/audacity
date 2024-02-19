@@ -14,6 +14,7 @@
 #include "EqualizationFilter.h"
 #include "Envelope.h"
 #include "FFT.h"
+#include <complex>
 
 EqualizationFilter::EqualizationFilter(const EffectSettingsManager &manager)
    : EqualizationParameters{ manager }
@@ -156,25 +157,23 @@ void EqualizationFilter::Filter(size_t len,
    // Multiply by corresponding coefficients;
    // Inverse transform back to time domain:  that's fast convolution.
 
-   float re,im;
    // Apply FFT
-   RealFFTf(buffer, hFFT.get());
-   //FFT(len, false, inr, NULL, outr, outi);
+   transformer.TransformOrdered(buf, buf, scr);
 
    // Apply filter
    // DC component is purely real
-   scratch[0] = buffer[0] * mFilterFuncR[0];
-   for(size_t i = 1; i < (len / 2); i++)
-   {
-      re=buffer[hFFT->BitReversed[i]  ];
-      im=buffer[hFFT->BitReversed[i]+1];
-      scratch[2*i  ] = re*mFilterFuncR[i] - im*mFilterFuncI[i];
-      scratch[2*i+1] = re*mFilterFuncI[i] + im*mFilterFuncR[i];
+   buffer[0] *= mFilterFuncR[0];
+   for (size_t i = 2; i < len; i += 2) {
+      auto &re = buffer[i];
+      auto &im = buffer[i + 1];
+      using Complex = std::complex<float>;
+      const Complex multiplier{ mFilterFuncR[i / 2], mFilterFuncI[i / 2] };
+      const auto newValue = Complex{ re, im } * multiplier;
+      re = newValue.real();
+      im = newValue.imag();
    }
    // Fs/2 component is purely real
-   scratch[1] = buffer[1] * mFilterFuncR[len/2];
+   buffer[1] *= mFilterFuncR[len/2];
 
-   // Inverse FFT and normalization
-   InverseRealFFTf(scratch, hFFT.get());
-   ReorderToTime(hFFT.get(), scratch, buffer);
+   transformer.InverseTransformOrdered(buf, buf, scr, true);
 }
