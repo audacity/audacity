@@ -16,6 +16,7 @@
 
 #include "EqualizationParameters.h" // base class
 #include "Envelope.h" // member
+#include "PffftTransformer.h"
 #include "RealFFTf.h" // member
 using Floats = ArrayOf<float>;
 
@@ -40,7 +41,7 @@ struct EqualizationFilter : EqualizationParameters {
    //! Transform a given buffer of time domain signal, which should be zero
    //! padded left and right for the tails
    //! @param scratch temporary of same length as buffer
-   void Filter(size_t len, float *buffer, float *scratch) const;
+   void Filter(size_t len, PffftFloats buffer, PffftFloats scratch) const;
 
    const Envelope &ChooseEnvelope() const
    { return mLin ? mLinEnvelope : mLogEnvelope; }

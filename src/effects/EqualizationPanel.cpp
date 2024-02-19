@@ -82,12 +82,12 @@ void EqualizationPanel::Recalc()
    auto &parameters = mCurvesList.mParameters;
    const auto &windowSize = parameters.mWindowSize;
 
-   mOutr = Floats{ windowSize };
+   mOutr.resize(windowSize);
 
    parameters.CalcFilter();   //to calculate the actual response
    InverseRealFFT(windowSize,
       parameters.mFilterFuncR.get(),
-      parameters.mFilterFuncI.get(), mOutr.get());
+      parameters.mFilterFuncI.get(), mOutr.data());
 }
 
 void EqualizationPanel::OnSize(wxSizeEvent &  WXUNUSED(event))

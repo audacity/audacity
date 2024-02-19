@@ -146,8 +146,12 @@ bool EqualizationFilter::CalcFilter()
    return TRUE;
 }
 
-void EqualizationFilter::Filter(size_t len, float *buffer, float *scratch) const
+void EqualizationFilter::Filter(size_t len,
+   PffftFloats buf, PffftFloats scr) const
 {
+   const auto buffer = buf.get();
+   const auto scratch = scr.get();
+
    // Transform a window of the time-domain signal to frequency;
    // Multiply by corresponding coefficients;
    // Inverse transform back to time domain:  that's fast convolution.

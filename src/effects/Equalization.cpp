@@ -365,12 +365,15 @@ bool EffectEqualization::Init()
 
 struct EffectEqualization::Task {
    Task(size_t M, size_t idealBlockLen, WaveChannel &channel)
-      : buffer{ idealBlockLen }
+      : window1( windowSize )
+      , window2( windowSize )
+      , buffer{ idealBlockLen }
       , idealBlockLen{ idealBlockLen }
+      , scratch( windowSize )
       , output{ channel }
       , leftTailRemaining{ (M - 1) / 2 }
    {
-      memset(lastWindow, 0, windowSize * sizeof(float));
+      memset(lastWindow.get(), 0, windowSize * sizeof(float));
    }
 
    void AccumulateSamples(constSamplePtr buffer, size_t len)
@@ -383,16 +386,16 @@ struct EffectEqualization::Task {
    }
 
    static constexpr auto windowSize = EqualizationFilter::windowSize;
-   Floats window1{ windowSize };
-   Floats window2{ windowSize };
+   PffftFloatVector window1;
+   PffftFloatVector window2;
 
    Floats buffer;
    const size_t idealBlockLen;
 
    // These pointers are swapped after each FFT window
-   float *thisWindow{ window1.get() };
-   float *lastWindow{ window2.get() };
-   Floats scratch{ windowSize };
+   PffftFloats thisWindow{ window1.aligned() };
+   PffftFloats lastWindow{ window2.aligned() };
+   PffftFloatVector scratch;
 
    // a new WaveChannel to hold all of the output,
    // including 'tails' each end
@@ -509,18 +512,20 @@ bool EffectEqualization::ProcessOne(Task &task,
       for(size_t i = 0; i < block; i += L)   //go through block in lumps of length L
       {
          wcopy = std::min <size_t> (L, block - i);
-         for(size_t j = 0; j < wcopy; j++)
-            thisWindow[j] = buffer[i+j];   //copy the L (or remaining) samples
-         for(auto j = wcopy; j < windowSize; j++)
-            thisWindow[j] = 0;   //this includes the padding
+         const auto tw = thisWindow.get();
+         for (size_t j = 0; j < wcopy; j++)
+            tw[j] = buffer[i + j];   //copy the L (or remaining) samples
+         for (auto j = wcopy; j < windowSize; j++)
+            tw[j] = 0;   //this includes the padding
 
-         mParameters.Filter(windowSize, thisWindow, scratch.get());
+         mParameters.Filter(windowSize, thisWindow, scratch.aligned());
 
          // Overlap - Add
+         const auto lw = lastWindow.get();
          for(size_t j = 0; (j < M - 1) && (j < wcopy); j++)
-            buffer[i+j] = thisWindow[j] + lastWindow[L + j];
+            buffer[i+j] = tw[j] + lw[L + j];
          for(size_t j = M - 1; j < wcopy; j++)
-            buffer[i+j] = thisWindow[j];
+            buffer[i+j] = tw[j];
 
          std::swap( thisWindow, lastWindow );
       }  //next i, lump of this block
@@ -538,20 +543,22 @@ bool EffectEqualization::ProcessOne(Task &task,
    }
 
    if (bLoopSuccess) {
+      const auto lw = lastWindow.get();
       // M-1 samples of 'tail' left in lastWindow, get them now
       if(wcopy < (M - 1)) {
          // Still have some overlap left to process
          // (note that lastWindow and thisWindow have been exchanged at this point
          //  so that 'thisWindow' is really the window prior to 'lastWindow')
          size_t j = 0;
+         const auto tw = thisWindow.get();
          for(; j < M - 1 - wcopy; j++)
-            buffer[j] = lastWindow[wcopy + j] + thisWindow[L + wcopy + j];
+            buffer[j] = lw[wcopy + j] + tw[L + wcopy + j];
          // And fill in the remainder after the overlap
          for( ; j < M - 1; j++)
-            buffer[j] = lastWindow[wcopy + j];
+            buffer[j] = lw[wcopy + j];
       } else {
          for(size_t j = 0; j < M - 1; j++)
-            buffer[j] = lastWindow[wcopy + j];
+            buffer[j] = lw[wcopy + j];
       }
       task.AccumulateSamples((samplePtr)buffer.get(), M - 1);
    }
