@@ -11,6 +11,7 @@ Paul Licameli split from WaveChannelView.cpp
 
 #include "WaveformView.h"
 
+#include "WaveformAppearance.h"
 #include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
 #include "WaveChannelView.h"
@@ -691,7 +692,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    const float dBRange = settings.dBRange;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
-   int iColorIndex = clip.GetColourIndex();
+   int iColorIndex = WaveColorAttachment::Get(clip).GetColorIndex();
    artist->SetColours( iColorIndex );
 
    // The bounds (controlled by vertical zooming; -1.0...1.0
@@ -1084,7 +1085,8 @@ BEGIN_POPUP_MENU(WaveColorMenuTable)
       auto &project = pData->project;
       bool unsafe = ProjectAudioIO::Get( project ).IsAudioActive();
 
-      menu.Check( id, id == me.IdOfWaveColor( track.GetWaveColorIndex() ) );
+      menu.Check(id, id == me.IdOfWaveColor(
+         WaveformAppearance::Get(track).GetColorIndex()));
       menu.Enable( id, !unsafe );
    };
 
@@ -1124,7 +1126,7 @@ void WaveColorMenuTable::OnWaveColorChange(wxCommandEvent & event)
 
    AudacityProject *const project = &mpData->project;
 
-   track.SetWaveColorIndex(newWaveColor);
+   WaveformAppearance::Get(track).SetColorIndex(newWaveColor);
 
    ProjectHistory::Get( *project )
       .PushState(XO("Changed '%s' to %s")
@@ -1158,4 +1160,3 @@ PopupMenuTable::AttachedItem sAttachment{
          } ) )
 };
 }
-

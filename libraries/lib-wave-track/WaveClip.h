@@ -8,13 +8,11 @@
   ?? Markus Meyer
 
 *******************************************************************/
-
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
-
-
 #include "ClientData.h"
+#include "CRTPBase.h"
 #include "SampleFormat.h"
 #include "ClipInterface.h"
 #include "XMLTagHandler.h"
@@ -90,11 +88,20 @@ public:
    }
 };
 
-struct WAVE_TRACK_API WaveClipListener
-{
+struct WAVE_TRACK_API WaveClipListener;
+CRTP_BASE(WaveClipListenerBase, struct,
+   ClientData::Cloneable<WaveClipListener>);
+struct WaveClipListener : WaveClipListenerBase {
    virtual ~WaveClipListener() = 0;
    virtual void MarkChanged() = 0;
    virtual void Invalidate() = 0;
+
+   // Default implementation does nothing
+   virtual void WriteXMLAttributes(XMLWriter &writer) const;
+
+   // Default implementation just returns false
+   virtual bool HandleXMLAttribute(
+      const std::string_view &attr, const XMLAttributeValueView &valueView);
 };
 
 struct CentShiftChange
@@ -109,7 +116,8 @@ struct CentShiftChange
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public XMLTagHandler,
-    public ClientData::Site<WaveClip, WaveClipListener>,
+    public ClientData::Site<
+      WaveClip, WaveClipListener, ClientData::DeepCopying>,
     public Observer::Publisher<CentShiftChange>
 {
 private:
@@ -120,7 +128,7 @@ private:
    WaveClip& operator= (const WaveClip&) = delete;
 
 public:
-   using Caches = Site< WaveClip, WaveClipListener >;
+   using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
    //! typical constructor
    /*!
@@ -130,7 +138,7 @@ public:
     */
    WaveClip(size_t width,
       const SampleBlockFactoryPtr &factory, sampleFormat format,
-      int rate, int colourIndex);
+      int rate);
 
    //! essentially a copy constructor - but you must pass in the
    //! current sample block factory, because we might be copying
@@ -199,9 +207,6 @@ public:
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
-
-   void SetColourIndex(int index) { mColourIndex = index; }
-   int GetColourIndex() const { return mColourIndex; }
 
    double GetSequenceStartTime() const noexcept;
    void SetSequenceStartTime(double startTime);
@@ -605,7 +610,6 @@ private:
 
    //! Sample rate of the raw audio, i.e., before stretching.
    int mRate;
-   int mColourIndex;
 
    /*!
     @invariant `mSequences.size() > 0`

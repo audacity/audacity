@@ -792,7 +792,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
    bool appendRecord = !sequences.captureSequences.empty();
 
-   auto insertEmptyInterval = [&](WaveTrack &track, double t0) {
+   auto insertEmptyInterval =
+   [&](WaveTrack &track, double t0, bool placeholder) {
       wxString name;
       for (auto i = 1; ; ++i) {
          //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
@@ -805,8 +806,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
       auto clip = track.CreateWideClip(t0, name);
       // So that the empty clip is not skipped for insertion:
       clip->SetIsPlaceholder(true);
-      track.InsertInterval(clip);
-      clip->SetIsPlaceholder(false);
+      track.InsertInterval(clip, true);
+      if (!placeholder)
+         clip->SetIsPlaceholder(false);
+      return clip;
    };
 
    auto &pendingTracks = PendingTracks::Get(project);
@@ -851,22 +854,17 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                dst.Reinit(src);
             };
 
-            // Get a copy of the track to be appended, to be pushed into
-            // undo history only later.
-            const auto pending = static_cast<WaveTrack*>(
-               pendingTracks.RegisterPendingChangedTrack(updater, wt)
-            );
             // End of current track is before or at recording start time.
             // Less than or equal, not just less than, to ensure a clip boundary.
             // when append recording.
             //const auto pending = static_cast<WaveTrack*>(newTrack);
-            const auto lastClip = pending->GetRightmostClip();
+            const auto lastClip = wt->GetRightmostClip();
             // RoundedT0 to have a new clip created when punch-and-roll
             // recording with the cursor in the second half of the space
             // between two samples
             // (https://github.com/audacity/audacity/issues/5113#issuecomment-1705154108)
             const auto recordingStart =
-               std::round(t0 * pending->GetRate()) / pending->GetRate();
+               std::round(t0 * wt->GetRate()) / wt->GetRate();
             const auto recordingStartsBeforeTrackEnd =
                lastClip && recordingStart < lastClip->GetPlayEndTime();
             // Recording doesn't start before the beginning of the last clip
@@ -875,9 +873,21 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             assert(
                !recordingStartsBeforeTrackEnd ||
                lastClip->WithinPlayRegion(recordingStart));
+            WaveTrack::IntervalHolder newClip{};
             if (!recordingStartsBeforeTrackEnd ||
                lastClip->HasPitchOrSpeed())
-               insertEmptyInterval(*pending, t0);
+               newClip = insertEmptyInterval(*wt, t0, true);
+            // Get a copy of the track to be appended, to be pushed into
+            // undo history only later.
+            const auto pending = static_cast<WaveTrack*>(
+               pendingTracks.RegisterPendingChangedTrack(updater, wt)
+            );
+            // Source clip was marked as placeholder so that it would not be
+            // skipped in clip copying.  Un-mark it and its copy now
+            if (newClip)
+               newClip->SetIsPlaceholder(false);
+            if (auto copiedClip = pending->NewestOrNewClip())
+               copiedClip->SetIsPlaceholder(false);
             transportSequences.captureSequences
                .push_back(pending->SharedPointer<WaveTrack>());
          }
@@ -949,7 +959,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                newTrack->SetName(baseTrackName + wxT("_") + nameSuffix);
 
             //create a new clip with a proper name before recording is started
-            insertEmptyInterval(*newTrack, t0);
+            insertEmptyInterval(*newTrack, t0, false);
 
             transportSequences.captureSequences.push_back(
                std::static_pointer_cast<WaveTrack>(newTrack->shared_from_this())

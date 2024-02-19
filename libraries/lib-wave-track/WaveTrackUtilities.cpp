@@ -284,13 +284,13 @@ bool WaveTrackUtilities::Reverse(WaveTrack &track,
    // track is not elsewhere assumed to be by time
    for (auto it = revClips.rbegin(), revEnd = revClips.rend();
          it != revEnd; ++it)
-      track.InsertInterval(*it);
+      track.InsertInterval(*it, false);
 
    if (!rValue)
       return false;
 
    for (auto &clip : otherClips)
-      track.InsertInterval(clip);
+      track.InsertInterval(clip, false);
 
    return rValue;
 }

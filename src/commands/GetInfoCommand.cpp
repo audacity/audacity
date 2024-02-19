@@ -35,6 +35,7 @@ This class now lists
 #include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveClip.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "prefs/WaveformSettings.h"
@@ -521,14 +522,16 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
    context.StartArray();
    for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
-         WaveClipPointers ptrs(waveTrack.SortedClipArray());
-         for (WaveClip * pClip : ptrs) {
+         for (const auto pInterval : waveTrack.Intervals()) {
             context.StartStruct();
             context.AddItem((double)i, "track");
-            context.AddItem(pClip->GetPlayStartTime(), "start");
-            context.AddItem(pClip->GetPlayEndTime(), "end");
-            context.AddItem(pClip->GetColourIndex(), "color");
-            context.AddItem(pClip->GetName(), "name");
+            context.AddItem(pInterval->GetPlayStartTime(), "start");
+            context.AddItem(pInterval->GetPlayEndTime(), "end");
+            // Assuming same colors, look at only left channel
+            const auto &colors =
+               WaveColorAttachment::Get(**pInterval->Channels().begin());
+            context.AddItem(colors.GetColorIndex(), "color");
+            context.AddItem(pInterval->GetName(), "name");
             context.EndStruct();
          }
       });

@@ -24,6 +24,7 @@
 #include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
 #include "WaveTrack.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
@@ -100,8 +101,10 @@ bool SetClipCommand::Apply(const CommandContext& context)
                interval->End() >= mContainsTime ))
             {
                // Inside this IF is where we actually apply the command
-               if( bHasColour )
-                  interval->SetColorIndex(mColour);
+               if (bHasColour) {
+                  for (const auto channel : interval->Channels())
+                     WaveColorAttachment::Get(*channel).SetColorIndex(mColour);
+               }
                // No validation of overlap yet.  We assume the user is sensible!
                if( bHasT0 )
                   interval->SetPlayStartTime(mT0);

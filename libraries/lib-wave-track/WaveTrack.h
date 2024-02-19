@@ -153,8 +153,6 @@ public:
    constSamplePtr GetAppendBuffer() const;
    size_t GetAppendBufferLen() const;
 
-   int GetColourIndex() const;
-
    BlockArray *GetSequenceBlockArray();
 
    /*!
@@ -199,16 +197,28 @@ private:
    const size_t miChannel;
 };
 
+struct WaveTrackMessage {
+   WaveClipHolder pClip{};
+   const enum Type {
+      New, //!< newly created and empty
+      Deserialized, //!< being read from project file
+      Inserted, //!< (partly) copied from another clip, or moved from a track
+   } type{};
+};
+
 class WAVE_TRACK_API WaveChannel
    : public Channel
    // TODO wide wave tracks -- remove "virtual"
    , public virtual WideSampleSequence
+   , public Observer::Publisher<WaveTrackMessage>
 {
 public:
    ~WaveChannel() override;
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
+
+   CallbackReturn Publish(const WaveTrackMessage &message);
 
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
@@ -343,9 +353,6 @@ public:
    static Holder Create(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
 
-   //! Copied only in WaveTrack::Clone() !
-   WaveTrack(const WaveTrack &orig, ProtectedCreationArg&&, bool backup);
-
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
@@ -373,6 +380,8 @@ public:
     */
    void Reinit(const WaveTrack &orig);
  private:
+   void CopyClips(const WaveTrack &orig, bool backup);
+
    using ConstIterPair = std::pair<
       WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
    /*!
@@ -441,12 +450,6 @@ public:
    //! Takes gain and pan into account
    float GetChannelGain(int channel) const override;
 
-   int GetWaveColorIndex() const;
-   /*!
-    @pre `IsLeader()`
-    */
-   void SetWaveColorIndex(int colorIndex);
-
    sampleCount GetVisibleSampleCount() const;
 
    sampleFormat GetSampleFormat() const override;
@@ -463,7 +466,7 @@ public:
 
    TrackListHolder Cut(double t0, double t1) override;
 
-   //! Make another track copying format, rate, color, etc. but containing no
+   //! Make another track copying format, rate, etc. but containing no
    //! clips; and always with a unique channel
    /*!
     It is important to pass the correct factory (that for the project
@@ -477,7 +480,7 @@ public:
    Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
       bool keepLink = true) const;
 
-   //! Make another channel group copying format, rate, color, etc. but
+   //! Make another channel group copying format, rate, etc. but
    //! containing no clips; with as many channels as in `this`
    /*!
     It is important to pass the correct factory (that for the project
@@ -878,9 +881,6 @@ public:
       void SetName(const wxString& name);
       const wxString& GetName() const;
 
-      void SetColorIndex(int index);
-      int GetColorIndex() const;
-
       void SetPlayStartTime(double time);
       double GetPlayStartTime() const;
       double GetPlayEndTime() const;
@@ -1124,7 +1124,10 @@ public:
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
    //! @pre `IsLeader()`
-   void InsertInterval(const IntervalHolder& interval);
+   /*
+    @param newClip false if clip has contents from another clip or track
+    */
+   void InsertInterval(const IntervalHolder& interval, bool newClip);
 
    //! @pre `IsLeader()`
    void RemoveInterval(const IntervalHolder& interval);
@@ -1275,7 +1278,7 @@ private:
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
     */
-   bool InsertClip(WaveClipHolder clip, bool backup = false);
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
 
    void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);
@@ -1287,7 +1290,7 @@ private:
 
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
-   double mLegacyProjectFileOffset;
+   double mLegacyProjectFileOffset{ 0 };
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
