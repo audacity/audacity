@@ -207,7 +207,7 @@ bool SyncCloudProject(
    auto progressDialog = MakeProgress();
 
    auto future = CloudSyncService::Get().SyncProject(
-      project, std::string(path), false, MakePoller(*progressDialog));
+      project, std::string(path), force, MakePoller(*progressDialog));
 
    auto result = GetResult(future);
    LogTransferStats(result.Stats);
