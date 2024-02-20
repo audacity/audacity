@@ -51,6 +51,7 @@ public:
       UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave);
 
 private:
+   bool OnSubmit();
    void LayoutControls();
    void SetupEvents();
 

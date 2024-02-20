@@ -36,7 +36,9 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    mUserStateChangedSubscription =
       mUserPanel->Subscribe([this](auto) { OnUpdateCloudSaveState(); });
 
-   mProjectName = new wxTextCtrl { this, wxID_ANY, projectName };
+   mProjectName = new wxTextCtrl { this,          wxID_ANY,
+                                   projectName,   wxDefaultPosition,
+                                   wxDefaultSize, wxTE_PROCESS_ENTER };
 
    if (!projectName.empty())
       mProjectName->SetValue(projectName);
@@ -50,6 +52,9 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    mSaveLocally =
       new wxButton { this, wxID_ANY, XO("Save to computer...").Translation() };
    mCancel = new wxButton { this, wxID_ANY, XO("Cancel").Translation() };
+
+   mProjectName->SetFocus();
+   mProjectName->SelectAll();
 
    LayoutControls();
    OnUpdateCloudSaveState();
@@ -81,6 +86,18 @@ CloudProjectPropertiesDialog::Show(
          (resultCode == wxID_CANCEL ? Action::Cancel : Action::SaveLocally);
 
    return { action, dialog.GetProjectName() };
+}
+
+bool CloudProjectPropertiesDialog::OnSubmit()
+{
+   const bool canSubmit =
+      mUserPanel->IsAuthorized() && !GetProjectName().empty();
+
+   if (!canSubmit)
+      return false;
+
+   EndModal(wxID_OK);
+   return true;
 }
 
 void CloudProjectPropertiesDialog::LayoutControls()
@@ -141,7 +158,23 @@ void CloudProjectPropertiesDialog::SetupEvents()
          EndModal(wxID_CANCEL);
       });
 
+   Bind(
+      wxEVT_KEY_UP,
+      [this](auto& evt)
+      {
+         const auto keyCode = evt.GetKeyCode();
+         if (keyCode != WXK_RETURN && keyCode != WXK_NUMPAD_ENTER)
+         {
+            evt.Skip();
+            return;
+         }
+
+         if (!OnSubmit())
+            evt.Skip();
+      });
+
    mProjectName->Bind(wxEVT_TEXT, [this](auto&) { OnUpdateCloudSaveState(); });
+   mProjectName->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnSubmit(); });
 }
 
 wxString CloudProjectPropertiesDialog::GetProjectName() const
