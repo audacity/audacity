@@ -25,24 +25,17 @@
 //! A start and an end time, and whatever else subclasses associate with them
 /*!
  Start and end are immutable, but subclasses may add other mutable data
- @invariant `Start() <= End()`
  */
 class CHANNEL_API ChannelGroupInterval {
 public:
-   /*! @pre `start <= end` */
-   ChannelGroupInterval(double start, double end)
-      : mStart{ start }, mEnd{ end }
-   {
-      assert(start <= end);
-   }
+   ChannelGroupInterval() = default;
 
    virtual ~ChannelGroupInterval();
 
-   double Start() const { return mStart; }
-   double End() const { return mEnd; }
-
-private:
-   const double mStart, mEnd;
+   //! @post result: `result < End()`
+   virtual double Start() const = 0;
+   //! @post result: `Start() < result`
+   virtual double End() const = 0;
 };
 
 //! The intersection of a Channel and a WideChannelGroupInterval
@@ -66,11 +59,9 @@ public:
    //! equal that of the containing group
    /*!
     @pre `group.IsLeader()`
-    @pre `start <= end`
     @post `NChannels() == group.NChannels()`
     */
-   WideChannelGroupInterval(
-      const ChannelGroup &group, double start, double end);
+   explicit WideChannelGroupInterval(const ChannelGroup &group);
    ~WideChannelGroupInterval() override;
 
    //! Report the number of channels

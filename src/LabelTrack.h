@@ -176,16 +176,21 @@ public:
       const override;
 
    struct Interval final : WideChannelGroupInterval {
-      Interval(const ChannelGroup &group,
-         double start, double end, size_t index
-      )  : WideChannelGroupInterval{ group, start, end }
+      Interval(const LabelTrack &track, size_t index
+      )  : WideChannelGroupInterval{ track }
+         , mpTrack{ track.SharedPointer<const LabelTrack>() }
          , index{ index }
       {}
 
       ~Interval() override;
+      double Start() const override;
+      double End() const override;
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
 
       size_t index;
+   private:
+      //! @invariant not null
+      const std::shared_ptr<const LabelTrack> mpTrack;
    };
    std::shared_ptr<Interval> MakeInterval(size_t index);
 

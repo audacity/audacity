@@ -264,8 +264,7 @@ void WaveChannelInterval::WriteXML(XMLWriter &xmlFile) const
 WaveTrack::Interval::Interval(const ChannelGroup &group,
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
-)  : WideChannelGroupInterval{ group,
-      pClip->GetPlayStartTime(), pClip->GetPlayEndTime() }
+)  : WideChannelGroupInterval{ group }
    , mpClip{ pClip }
    , mpClip1{ pClip1 }
 {
@@ -283,6 +282,16 @@ WaveTrack::Interval::Interval(
 }
 
 WaveTrack::Interval::~Interval() = default;
+
+double WaveTrack::Interval::Start() const
+{
+   return mpClip->GetPlayStartTime();
+}
+
+double WaveTrack::Interval::End() const
+{
+   return mpClip->GetPlayEndTime();
+}
 
 bool WaveTrack::Interval::EqualSequenceLengthInvariant() const
 {

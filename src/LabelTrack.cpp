@@ -47,6 +47,16 @@ for drawing different aspects of the label and its text box.
 
 LabelTrack::Interval::~Interval() = default;
 
+double LabelTrack::Interval::Start() const
+{
+   return mpTrack->GetLabel(index)->selectedRegion.t0();
+}
+
+double LabelTrack::Interval::End() const
+{
+   return mpTrack->GetLabel(index)->selectedRegion.t1();
+}
+
 std::shared_ptr<ChannelInterval>
 LabelTrack::Interval::DoGetChannel(size_t iChannel)
 {
@@ -139,9 +149,7 @@ auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
 {
    if (index >= mLabels.size())
       return {};
-   auto &label = mLabels[index];
-   return std::make_shared<Interval>(
-      *this, label.getT0(), label.getT1(), index);
+   return std::make_shared<Interval>(*this, index);
 }
 
 std::shared_ptr<WideChannelGroupInterval>

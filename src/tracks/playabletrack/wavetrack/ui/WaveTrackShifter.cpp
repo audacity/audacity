@@ -69,7 +69,7 @@ public:
       return HitTestResult::Intervals;
    }
 
-   void SelectInterval(const ChannelGroupInterval &interval) override
+   void SelectInterval(TimeInterval interval) override
    {
       UnfixIntervals([&](auto &myInterval){
          // Use a slightly different test from CommonSelectInterval, rounding times
@@ -164,11 +164,10 @@ public:
    {
       for (auto &interval : intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         WaveClipHolder clips[2];
          for (size_t ii : { 0, 1 }) {
             // TODO wide wave tracks -- simplify when clips are really wide
             auto pTrack = mpTrack->ChannelGroup::GetChannel<WaveTrack>(ii);
-            auto &pClip = clips[ii] = data.GetClip(ii);
+            auto &pClip = data.GetClip(ii);
             if (pClip) {
                // TODO wide wave tracks -- guarantee matching clip width
                if (!pTrack->AddClip(pClip))
@@ -176,15 +175,9 @@ public:
                mMigrated.insert(pClip.get());
             }
          }
-         if (offset == .0)
-            mMoving.emplace_back(std::move(interval));
-         else {
-            for (auto pClip : clips)
-               if (pClip)
-                  pClip->ShiftBy(offset);
-            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
-               GetTrack(), clips[0], clips[1]));
-         }
+         if (offset != .0)
+            data.ShiftBy(offset);
+         mMoving.emplace_back(std::move(interval));
       }
       return true;
    }

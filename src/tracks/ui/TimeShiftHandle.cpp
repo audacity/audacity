@@ -159,12 +159,12 @@ void TrackShifter::UnfixAll()
    mAllFixed = false;
 }
 
-void TrackShifter::SelectInterval(const ChannelGroupInterval &)
+void TrackShifter::SelectInterval(TimeInterval)
 {
    UnfixAll();
 }
 
-void TrackShifter::CommonSelectInterval(const ChannelGroupInterval &interval)
+void TrackShifter::CommonSelectInterval(TimeInterval interval)
 {
    UnfixIntervals( [&](auto &myInterval){
       return !(interval.End() < myInterval.Start() ||
@@ -327,7 +327,7 @@ void ClipMoveState::Init(
 
    if ( state.movingSelection ) {
       // All selected tracks may move some intervals
-      const ChannelGroupInterval interval{
+      const TrackShifter::TimeInterval interval{
          viewInfo.selectedRegion.t0(),
          viewInfo.selectedRegion.t1()
       };
@@ -370,7 +370,8 @@ void ClipMoveState::Init(
                   // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
-                  shifter2.SelectInterval(*interval);
+                  shifter2.SelectInterval({
+                     interval->Start(), interval->End() });
                   change = change ||
                      (shifter2.SyncLocks() &&
                       size != shifter2.MovingIntervals().size());

@@ -890,6 +890,9 @@ public:
 
       ~Interval() override;
 
+      double Start() const override;
+      double End() const override;
+
       //! An invariant condition, for assertions
       bool EqualSequenceLengthInvariant() const;
 
