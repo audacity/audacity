@@ -273,12 +273,12 @@ void LocalProjectSnapshot::Cancel()
 }
 
 void LocalProjectSnapshot::SetOnSnapshotCreated(
-   std::function<void(const CreateSnapshotResponse&)> callback)
+   OnSnapshotCreatedCallback callback)
 {
    {
       auto lock = std::lock_guard { mCreateSnapshotResponseMutex };
 
-      if (mCreateSnapshotResponse)
+      if (mCreateSnapshotResponse || mCompleted.load())
       {
          if (callback)
             callback(*mCreateSnapshotResponse);
@@ -360,8 +360,7 @@ void LocalProjectSnapshot::DataUploadFailed(
       {
          errorType = deducedError;
       }
-      else if (
-         deducedError == CloudSyncError::ProjectStorageLimitReached)
+      else if (deducedError == CloudSyncError::ProjectStorageLimitReached)
       {
          errorType = deducedError;
          break;
@@ -427,13 +426,15 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
       request, serializedForm.data(), serializedForm.size());
 
    response->setRequestFinishedCallback(
-      [this, response, createNew](auto)
+      [this, response, createNew, strongThis = shared_from_this()](auto)
       {
          const auto error = response->getError();
 
          if (error != NetworkError::NoError)
          {
             UploadFailed(DeduceUploadError(*response));
+
+            ExecuteOnSnapshotCreatedCallbacks({});
             return;
          }
 
@@ -445,6 +446,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
             UploadFailed(MakeClientFailure(
                XO("Invalid Response: %s").Format(body).Translation()));
 
+            ExecuteOnSnapshotCreatedCallbacks({});
             return;
          }
 
@@ -476,16 +478,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
       mCreateSnapshotResponse = response;
    }
 
-   decltype(mOnSnapshotCreatedCallbacks) callbacks;
-
-   {
-      auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
-      std::swap(callbacks, mOnSnapshotCreatedCallbacks);
-   }
-
-   std::for_each(
-      callbacks.begin(), callbacks.end(),
-      [response](auto& callback) { callback(response); });
+   ExecuteOnSnapshotCreatedCallbacks(mCreateSnapshotResponse);
 
    DataUploader::Get().Upload(
       mServiceConfig, response.SyncState.FileUrls, mProjectData.ProjectSnapshot,
@@ -561,6 +554,21 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
          mCompleted.store(true, std::memory_order_release);
          mProjectCloudExtension.OnSyncCompleted(this, {});
       });
+}
+
+void LocalProjectSnapshot::ExecuteOnSnapshotCreatedCallbacks(
+   const std::optional<CreateSnapshotResponse>& response)
+{
+   decltype(mOnSnapshotCreatedCallbacks) callbacks;
+
+   {
+      auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
+      std::swap(callbacks, mOnSnapshotCreatedCallbacks);
+   }
+
+   std::for_each(
+      callbacks.begin(), callbacks.end(),
+      [&response](auto& callback) { callback(response); });
 }
 
 } // namespace cloud::audiocom::sync

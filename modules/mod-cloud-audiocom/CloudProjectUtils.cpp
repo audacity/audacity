@@ -302,9 +302,18 @@ void UploadMixdownForSnapshot(
                 BasicUI::ProgressResult::Success;
       });
 
+   bool inFailedState = false;
+
    snapshot->SetOnSnapshotCreated(
-      [mixdownUploader](const auto& response)
-      { mixdownUploader->SetUrls(response.SyncState.MixdownUrls); });
+      [&inFailedState, mixdownUploader](const auto& response)
+      {
+         inFailedState = !response.has_value();
+
+         if (!inFailedState)
+            mixdownUploader->SetUrls(response->SyncState.MixdownUrls);
+         else
+            mixdownUploader->Cancel();
+      });
 
    auto future = mixdownUploader->GetResultFuture();
 
@@ -314,7 +323,7 @@ void UploadMixdownForSnapshot(
 
    auto result = future.get();
 
-   if (result.State == MixdownState::Cancelled)
+   if (result.State == MixdownState::Cancelled && !inFailedState)
       UploadCanceledDialog { &project }.ShowDialog();
    else if (result.State == MixdownState::Succeeded)
       projectCloudExtension.MixdownSynced();

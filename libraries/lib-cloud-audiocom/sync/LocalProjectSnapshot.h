@@ -66,8 +66,9 @@ public:
    void Start(const ProjectUploadData& projectData) override;
    void Cancel() override;
 
-   void SetOnSnapshotCreated(
-      std::function<void(const CreateSnapshotResponse&)> callback);
+   using OnSnapshotCreatedCallback = std::function<void(const std::optional<CreateSnapshotResponse>&)>;
+
+   void SetOnSnapshotCreated(OnSnapshotCreatedCallback callback);
 
 private:
    void UploadFailed(CloudSyncError error);
@@ -79,6 +80,9 @@ private:
    void
    OnSnapshotCreated(const CreateSnapshotResponse& response, bool newProject);
    void MarkSnapshotSynced(int64_t blocksCount);
+
+   void ExecuteOnSnapshotCreatedCallbacks(
+      const std::optional<CreateSnapshotResponse>& response);
 
    ProjectCloudExtension& mProjectCloudExtension;
    std::weak_ptr<AudacityProject> mWeakProject;
@@ -96,8 +100,7 @@ private:
    std::mutex mCreateSnapshotResponseMutex;
    std::optional<CreateSnapshotResponse> mCreateSnapshotResponse;
    std::mutex mOnSnapshotCreatedCallbacksMutex;
-   std::vector<std::function<void(const CreateSnapshotResponse&)>>
-      mOnSnapshotCreatedCallbacks;
+   std::vector<OnSnapshotCreatedCallback> mOnSnapshotCreatedCallbacks;
 
    std::atomic<bool> mCompleted { false };
 
