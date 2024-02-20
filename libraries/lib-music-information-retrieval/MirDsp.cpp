@@ -84,14 +84,16 @@ std::vector<float> GetMovingAverage(const std::vector<float>& x, double hopRate)
 }
 } // namespace
 
-std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
+std::vector<float>
+GetNormalizedCircularAutocorr(const std::vector<float>& ux /* unaligned x*/)
 {
-   if (std::all_of(x.begin(), x.end(), [](float x) { return x == 0.f; }))
-      return x;
-   const auto N = x.size();
+   if (std::all_of(ux.begin(), ux.end(), [](float x) { return x == 0.f; }))
+      return ux;
+   const auto N = ux.size();
    assert(IsPowOfTwo(N));
-   PffftSetupHolder setup{ pffft_new_setup(N, PFFFT_REAL) };
-   std::vector<float> work(N);
+   PffftSetupHolder setup { pffft_new_setup(N, PFFFT_REAL) };
+   PffftFloatVector x { ux.begin(), ux.end() };
+   PffftFloatVector work(N);
    pffft_transform_ordered(
       setup.get(), x.data(), x.data(), work.data(), PFFFT_FORWARD);
 
@@ -116,7 +118,7 @@ std::vector<float> GetNormalizedCircularAutocorr(std::vector<float> x)
    std::transform(x.begin(), x.end(), x.begin(), [normalizer](float x) {
       return x * normalizer;
    });
-   return x;
+   return { x.begin(), x.end() };
 }
 
 std::vector<float> GetOnsetDetectionFunction(
