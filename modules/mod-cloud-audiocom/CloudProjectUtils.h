@@ -13,6 +13,8 @@
 #include <string_view>
 #include <memory>
 
+#include "sync/AsynchronousOperation.h"
+
 class AudacityProject;
 
 namespace cloud::audiocom::sync
@@ -26,14 +28,7 @@ void OpenProjectFromCloud(
 bool SyncCloudProject(
    AudacityProject& project, std::string_view path, bool force = false);
 
-enum class SaveMode
-{
-   Normal,
-   SaveNew,
-   ForceSave
-};
-
-void SaveToCloud(AudacityProject& project, SaveMode mode);
+void SaveToCloud(AudacityProject& project, UploadMode mode);
 
 bool HandleProjectLink(std::string_view link);
 

@@ -165,7 +165,13 @@ void ProjectCloudExtension::OnBlocksHashed(
       // It is safe to start the upload right away
       if (operation.get() == element)
       {
-         uploadOperation.Start(element->Data);
+         auto mode = UploadMode::Normal;
+         {
+            auto lock = std::lock_guard { mIdentifiersMutex };
+            std::swap(mode, mNextUploadMode);
+         }
+
+         uploadOperation.Start(mode, element->Data);
          return;
       }
       // There is a pending operation, wait for it to finish
@@ -205,8 +211,6 @@ void ProjectCloudExtension::OnSnapshotCreated(
 
       mProjectId  = response.Project.Id;
       mSnapshotId = response.Snapshot.Id;
-
-      mProjectDetached = false;
    }
 
    auto lock    = std::lock_guard { mUploadQueueMutex };
@@ -226,7 +230,9 @@ void ProjectCloudExtension::OnSnapshotCreated(
       if (!operation->ReadyForUpload)
          return;
 
-      operation->Operation->Start(operation->Data);
+      // All saves queued during the upload should act as if they were
+      // just project updates
+      operation->Operation->Start(UploadMode::Normal, operation->Data);
    }
 
    UnsafeUpdateProgress();
@@ -600,17 +606,11 @@ bool ProjectCloudExtension::IsPendingCloudSave() const
    return mPendingCloudSave;
 }
 
-void ProjectCloudExtension::MarkProjectDetached()
+void ProjectCloudExtension::SetUploadModeForNextSave(UploadMode mode)
 {
    auto lock = std::lock_guard { mIdentifiersMutex };
 
-   mProjectDetached = true;
-}
-
-bool ProjectCloudExtension::IsProjectDetached() const
-{
-   auto lock = std::lock_guard { mIdentifiersMutex };
-   return mProjectDetached;
+   mNextUploadMode = mode;
 }
 
 bool CloudStatusChangedMessage::IsSyncing() const noexcept

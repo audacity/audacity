@@ -153,8 +153,7 @@ class IOExtension final : public ProjectFileIOExtension
          return;
 
       auto snapshot = LocalProjectSnapshot::Create(
-         GetServiceConfig(), GetOAuthService(), projectCloudExtension,
-         projectCloudExtension.IsProjectDetached());
+         GetServiceConfig(), GetOAuthService(), projectCloudExtension);
 
       if (snapshot != nullptr)
          // This operation is blocking, but that is expected

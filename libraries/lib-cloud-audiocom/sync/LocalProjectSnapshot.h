@@ -52,18 +52,18 @@ class CLOUD_AUDIOCOM_API LocalProjectSnapshot final :
 public:
    LocalProjectSnapshot(
       Tag, const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension, bool forceCreateNewSnapshot);
+      ProjectCloudExtension& extension);
    ~LocalProjectSnapshot();
 
    static std::shared_ptr<LocalProjectSnapshot> Create(
       const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension, bool forceCreateNewProject = false);
+      ProjectCloudExtension& extension);
 
    bool IsCompleted() const override;
 
    std::shared_ptr<AudacityProject> GetProject();
 
-   void Start(const ProjectUploadData& projectData) override;
+   void Start(UploadMode mode, const ProjectUploadData& projectData) override;
    void Cancel() override;
 
    using OnSnapshotCreatedCallback = std::function<void(const std::optional<CreateSnapshotResponse>&)>;
@@ -102,8 +102,9 @@ private:
    std::mutex mOnSnapshotCreatedCallbacksMutex;
    std::vector<OnSnapshotCreatedCallback> mOnSnapshotCreatedCallbacks;
 
+   UploadMode mUploadMode { UploadMode::Normal };
+
    std::atomic<bool> mCompleted { false };
 
-   const bool mForceCreateNewProject;
 };
 } // namespace cloud::audiocom::sync

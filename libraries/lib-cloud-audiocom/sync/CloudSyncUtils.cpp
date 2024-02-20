@@ -389,6 +389,8 @@ std::string Serialize(const ProjectForm& form)
 
    document.AddMember("blocks", hashesArray, document.GetAllocator());
 
+   document.AddMember("force", form.Force, document.GetAllocator());
+
    StringBuffer buffer;
    Writer<StringBuffer> writer(buffer);
    document.Accept(writer);

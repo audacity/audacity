@@ -45,6 +45,7 @@ struct ProjectForm final
    std::string Name;
    std::string HeadSnapshotId;
    SampleBlockHashes Hashes;
+   bool Force {};
 };
 
 

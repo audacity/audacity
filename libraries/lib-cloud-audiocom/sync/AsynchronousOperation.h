@@ -19,6 +19,13 @@ class TrackList;
 
 namespace cloud::audiocom::sync
 {
+enum class UploadMode
+{
+   Normal,
+   CreateNew,
+   ForceOverwrite,
+};
+
 struct ProjectUploadData final
 {
    std::vector<uint8_t> ProjectSnapshot;
@@ -30,7 +37,7 @@ class ProjectUploadOperation /* not final */
 public:
    virtual ~ProjectUploadOperation() = default;
 
-   virtual void Start(const ProjectUploadData& data) = 0;
+   virtual void Start(UploadMode mode, const ProjectUploadData& data) = 0;
    virtual void Cancel() = 0;
    virtual bool IsCompleted() const = 0;
 }; // class AsynchronousOperation

@@ -18,12 +18,13 @@
 #include <optional>
 #include <string>
 #include <string_view>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 #include "ClientData.h"
 #include "Observer.h"
 
+#include "AsynchronousOperation.h"
 #include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
 
@@ -52,8 +53,7 @@ struct CLOUD_AUDIOCOM_API CloudStatusChangedMessage final
    bool IsSyncing() const noexcept;
 };
 
-class CLOUD_AUDIOCOM_API ProjectCloudExtension final :
-    public ClientData::Base
+class CLOUD_AUDIOCOM_API ProjectCloudExtension final : public ClientData::Base
 {
 public:
    explicit ProjectCloudExtension(AudacityProject& project);
@@ -69,12 +69,14 @@ public:
    //! This method is called from the UI thread
    void OnSyncStarted();
    //! This method is called from the UI thread
-   void OnUploadOperationCreated(std::shared_ptr<ProjectUploadOperation> uploadOperation);
+   void OnUploadOperationCreated(
+      std::shared_ptr<ProjectUploadOperation> uploadOperation);
    //! This method is called not from the UI thread
    void OnBlocksHashed(ProjectUploadOperation& uploadOperation);
    //! This method is called from the network thread
-   void OnSnapshotCreated(const ProjectUploadOperation& uploadOperation, const
-                             CreateSnapshotResponse& response);
+   void OnSnapshotCreated(
+      const ProjectUploadOperation& uploadOperation,
+      const CreateSnapshotResponse& response);
    //! This method is called from the network thread
    void OnProjectDataUploaded(const ProjectUploadOperation& uploadOperation);
    //! This method is called from the network thread
@@ -83,8 +85,8 @@ public:
       bool successful);
    //! This method is called from any thread
    void OnSyncCompleted(
-      const ProjectUploadOperation* uploadOperation, std::optional<CloudSyncError>
-         error);
+      const ProjectUploadOperation* uploadOperation,
+      std::optional<CloudSyncError> error);
 
    void CancelSync();
 
@@ -109,13 +111,13 @@ public:
    int64_t GetSavesCountSinceMixdown() const;
 
    Observer::Subscription SubscribeStatusChanged(
-      std::function<void(const CloudStatusChangedMessage&)> callback, bool onUIThread);
+      std::function<void(const CloudStatusChangedMessage&)> callback,
+      bool onUIThread);
 
    void MarkPendingCloudSave();
    bool IsPendingCloudSave() const;
 
-   void MarkProjectDetached();
-   bool IsProjectDetached() const;
+   void SetUploadModeForNextSave(UploadMode mode);
 
 private:
    struct UploadQueueElement;
@@ -128,8 +130,8 @@ private:
 
    void MarkProjectSynced(bool success);
 
-   UploadQueueElement* UnsafeFindUploadQueueElement(
-      const ProjectUploadOperation& uploadOperation);
+   UploadQueueElement*
+   UnsafeFindUploadQueueElement(const ProjectUploadOperation& uploadOperation);
    const UploadQueueElement* UnsafeFindUploadQueueElement(
       const ProjectUploadOperation& uploadOperation) const;
 
@@ -149,9 +151,10 @@ private:
    std::unique_ptr<CloudStatusChangedNotifier> mUIStateNotifier;
    std::atomic<bool> mUINotificationPending { false };
 
+   UploadMode mNextUploadMode { UploadMode::Normal };
+
    bool mSuppressAutoDownload { false };
    bool mPendingCloudSave { false };
    bool mNeedsMixdownSync { false };
-   bool mProjectDetached { false };
 };
 } // namespace cloud::audiocom::sync

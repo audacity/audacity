@@ -139,7 +139,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
    case CloudSyncError::Authorization:
       // How do we got here? Probable auth_token is invalid?
       GetOAuthService().UnlinkAccount();
-      SaveToCloud(mProject, SaveMode::Normal);
+      SaveToCloud(mProject, UploadMode::Normal);
       break;
    case CloudSyncError::ProjectLimitReached:
       [[fallthrough]];
@@ -153,12 +153,12 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
                                XO("Please, complete your action on audio.com"),
                                true }
             .ShowDialog();
-         SaveToCloud(mProject, SaveMode::Normal);
+         SaveToCloud(mProject, UploadMode::Normal);
       }
       else
       {
          if (!ResaveLocally(mProject))
-            SaveToCloud(mProject, SaveMode::Normal);
+            SaveToCloud(mProject, UploadMode::Normal);
       }
    }
    break;
@@ -168,7 +168,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
          ProjectVersionConflictDialog { &mProject, true }.ShowDialog() ==
          ProjectVersionConflictDialog::UseLocalIdentifier())
       {
-         SaveToCloud(mProject, SaveMode::ForceSave);
+         SaveToCloud(mProject, UploadMode::ForceOverwrite);
       }
       else
       {
@@ -183,11 +183,11 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
          NotCloudProjectDialog::SaveLocallyIdentifier())
       {
          if (!ResaveLocally(mProject))
-            SaveToCloud(mProject, SaveMode::SaveNew);
+            SaveToCloud(mProject, UploadMode::CreateNew);
       }
       else
       {
-         SaveToCloud(mProject, SaveMode::SaveNew);
+         SaveToCloud(mProject, UploadMode::CreateNew);
       }
    }
    break;

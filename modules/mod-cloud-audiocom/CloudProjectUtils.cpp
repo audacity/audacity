@@ -228,7 +228,7 @@ bool SyncCloudProject(
    return true;
 }
 
-void SaveToCloud(AudacityProject& project, SaveMode mode)
+void SaveToCloud(AudacityProject& project, UploadMode mode)
 {
    ASSERT_MAIN_THREAD();
 
@@ -237,9 +237,7 @@ void SaveToCloud(AudacityProject& project, SaveMode mode)
    if (!projectCloudExtension.IsCloudProject())
       projectCloudExtension.MarkPendingCloudSave();
 
-   if (mode == SaveMode::SaveNew)
-      projectCloudExtension.MarkProjectDetached();
-
+   projectCloudExtension.SetUploadModeForNextSave(mode);
    ProjectFileManager::Get(project).Save();
 }
 

@@ -24,7 +24,7 @@ using namespace cloud::audiocom::sync;
 
 void OnSaveToCloud(const CommandContext& context)
 {
-   SaveToCloud(context.project, SaveMode::Normal);
+   SaveToCloud(context.project, UploadMode::Normal);
 }
 
 void OnOpenFromCloud(const CommandContext& context)
@@ -38,7 +38,7 @@ void OnOpenFromCloud(const CommandContext& context)
 void OnUpdateMixdown(const CommandContext& context)
 {
    ProjectCloudExtension::Get(context.project).MarkNeedsMixdownSync();
-   SaveToCloud(context.project, SaveMode::Normal);
+   SaveToCloud(context.project, UploadMode::Normal);
 }
 const ReservedCommandFlag& IsCloudProjectFlag()
 {

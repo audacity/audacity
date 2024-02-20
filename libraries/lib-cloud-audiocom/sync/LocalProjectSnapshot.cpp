@@ -205,12 +205,11 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 
 LocalProjectSnapshot::LocalProjectSnapshot(
    Tag, const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension, bool forceCreateNewProject)
+   ProjectCloudExtension& extension)
     : mProjectCloudExtension { extension }
     , mWeakProject { extension.GetProject() }
     , mServiceConfig { config }
     , mOAuthService { oauthService }
-    , mForceCreateNewProject { forceCreateNewProject }
 {
 }
 
@@ -220,7 +219,7 @@ LocalProjectSnapshot::~LocalProjectSnapshot()
 
 std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
    const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension, bool forceCreateNewProject)
+   ProjectCloudExtension& extension)
 {
    auto project = extension.GetProject().lock();
 
@@ -228,7 +227,7 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
       return {};
 
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
-      Tag {}, config, oauthService, extension, forceCreateNewProject);
+      Tag {}, config, oauthService, extension);
 
    snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
       extension, *project,
@@ -262,9 +261,10 @@ std::shared_ptr<AudacityProject> LocalProjectSnapshot::GetProject()
    return mWeakProject.lock();
 }
 
-void LocalProjectSnapshot::Start(const ProjectUploadData& data)
+void LocalProjectSnapshot::Start(UploadMode mode, const ProjectUploadData& data)
 {
    mProjectData = data;
+   mUploadMode  = mode;
    UpdateProjectSnapshot();
 }
 
@@ -382,7 +382,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
    }
 
    const bool isCloudProject = mProjectCloudExtension.IsCloudProject();
-   const bool createNew      = mForceCreateNewProject || !isCloudProject;
+   const bool createNew      = mUploadMode == UploadMode::CreateNew || !isCloudProject;
 
    ProjectForm projectForm;
 
@@ -402,6 +402,8 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
    const auto url = createNew ? mServiceConfig.GetCreateProjectUrl() :
                                 mServiceConfig.GetCreateSnapshotUrl(
                                    mProjectCloudExtension.GetCloudProjectId());
+
+   projectForm.Force = !createNew && mUploadMode == UploadMode::ForceOverwrite;
 
    auto request = Request(url);
 
