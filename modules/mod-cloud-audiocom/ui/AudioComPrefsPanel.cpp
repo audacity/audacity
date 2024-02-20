@@ -44,10 +44,10 @@ public:
 
    bool Commit() override
    {
+      MixdownGenerationFrequency.Write(mMixdownPrefsPanel->GetFrequency());
+
       ShuttleGui S(this, eIsSavingToPrefs);
       PopulateOrExchange(S);
-
-      MixdownGenerationFrequency.Write(mMixdownPrefsPanel->GetFrequency());
 
       CloudProjectsSavePath.Invalidate();
       sync::ShowCloudSyncDialog.Invalidate();
