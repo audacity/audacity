@@ -267,6 +267,16 @@ std::string ServiceConfig::GetSnapshotInfoUrl(
       });
 }
 
+std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
+{
+   return Substitute(
+      "{api_url}/project/{project_id}/network-stats",
+      {
+         { "api_url", mApiEndpoint },
+         { "project_id", projectId },
+      });
+}
+
 const ServiceConfig& GetServiceConfig()
 {
    static ServiceConfig config;

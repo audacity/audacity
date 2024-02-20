@@ -74,6 +74,8 @@ public:
 
    TransferStats GetTransferStats() const;
 
+   std::string_view GetProjectId() const;
+
 private:
    enum class State
    {

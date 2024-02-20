@@ -214,6 +214,11 @@ TransferStats RemoteProjectSnapshot::GetTransferStats() const
          std::chrono::duration_cast<TransferStats::Duration>(duration));
 }
 
+std::string_view RemoteProjectSnapshot::GetProjectId() const
+{
+   return mProjectInfo.Id;
+}
+
 std::string RemoteProjectSnapshot::AttachOriginalDB()
 {
    const std::string dbName = "o_" + mProjectInfo.Id;

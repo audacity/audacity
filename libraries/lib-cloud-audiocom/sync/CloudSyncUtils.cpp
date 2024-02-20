@@ -366,7 +366,7 @@ template<typename T> bool Deserialize (std::string_view data, T& result)
 
 } // namespace
 
-std::string SerializeProjectForm(const ProjectForm& form)
+std::string Serialize(const ProjectForm& form)
 {
    using namespace rapidjson;
 
@@ -470,6 +470,26 @@ MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
 
 
    return path.GetFullPath();
+}
+
+std::string Serialize(NetworkStats stats)
+{
+   using namespace rapidjson;
+
+   Document document;
+   document.SetObject();
+
+   document.AddMember("is_download", stats.IsDownload, document.GetAllocator());
+   document.AddMember("bytes", stats.Bytes, document.GetAllocator());
+   document.AddMember("blocks", stats.Blocks, document.GetAllocator());
+   document.AddMember("mixes", stats.Mixes, document.GetAllocator());
+   document.AddMember("files", stats.Files, document.GetAllocator());
+
+   StringBuffer buffer;
+   Writer<StringBuffer> writer(buffer);
+   document.Accept(writer);
+
+   return buffer.GetString();
 }
 
 } // namespace cloud::audiocom::sync

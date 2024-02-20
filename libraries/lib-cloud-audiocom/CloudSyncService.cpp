@@ -245,7 +245,8 @@ bool HasAutosave(const std::string& path)
 
 bool DropAutosave(const std::string& path)
 {
-   auto connection = sqlite::Connection::Open(path, sqlite::OpenMode::ReadWrite);
+   auto connection =
+      sqlite::Connection::Open(path, sqlite::OpenMode::ReadWrite);
 
    if (!connection)
       return false;
@@ -253,8 +254,7 @@ bool DropAutosave(const std::string& path)
    if (!connection->CheckTableExists("autosave"))
       return false;
 
-   auto statement =
-      connection->CreateStatement("DELETE FROM autosave");
+   auto statement = connection->CreateStatement("DELETE FROM autosave");
 
    if (!statement)
       return false;
@@ -451,7 +451,10 @@ void CloudSyncService::CompleteSync(std::string path)
 void CloudSyncService::CompleteSync(sync::ProjectSyncResult result)
 {
    if (mRemoteSnapshot)
+   {
       result.Stats = mRemoteSnapshot->GetTransferStats();
+      ReportUploadStats(mRemoteSnapshot->GetProjectId(), result.Stats);
+   }
 
    mSyncPromise.set_value(std::move(result));
    mRemoteSnapshot.reset();
@@ -469,10 +472,10 @@ void CloudSyncService::SyncCloudSnapshot(
    const auto createNew = !localProjectInfo || mode == SyncMode::ForceNew;
 
    const auto wxPath = createNew ?
-                        sync::MakeSafeProjectPath(
-                           CloudProjectsSavePath.Read(),
-                           audacity::ToWXString(projectInfo.Name)) :
-                        audacity::ToWXString(localProjectInfo->LocalPath);
+                          sync::MakeSafeProjectPath(
+                             CloudProjectsSavePath.Read(),
+                             audacity::ToWXString(projectInfo.Name)) :
+                          audacity::ToWXString(localProjectInfo->LocalPath);
 
    const auto utf8Path = audacity::ToUTF8(wxPath);
 
@@ -499,8 +502,7 @@ void CloudSyncService::SyncCloudSnapshot(
 
    mRemoteSnapshot = sync::RemoteProjectSnapshot::Sync(
       projectInfo, snapshotInfo, utf8Path,
-      [this, createNew, path = utf8Path,
-       projectId  = projectInfo.Id,
+      [this, createNew, path = utf8Path, projectId = projectInfo.Id,
        snapshotId = snapshotInfo.Id](sync::RemoteProjectSnapshotState state)
       {
          UpdateDowloadProgress(
@@ -517,7 +519,8 @@ void CloudSyncService::SyncCloudSnapshot(
                               sync::ProjectSyncResult::StatusCode::Failed,
                            std::move(state.Result), std::move(path) });
          }
-      }, mode == SyncMode::ForceNew);
+      },
+      mode == SyncMode::ForceNew);
 }
 
 void CloudSyncService::UpdateDowloadProgress(double downloadProgress)
@@ -537,6 +540,34 @@ void CloudSyncService::UpdateDowloadProgress(double downloadProgress)
 
          mProgressUpdateQueued.store(false);
       });
+}
+
+void CloudSyncService::ReportUploadStats(
+   std::string_view projectId, const TransferStats& stats)
+{
+   sync::NetworkStats networkStats;
+
+   networkStats.Bytes      = stats.BytesTransferred;
+   networkStats.Blocks     = stats.BlocksTransferred;
+   networkStats.Files      = stats.ProjectFilesTransferred;
+   networkStats.Mixes      = 0;
+   networkStats.IsDownload = true;
+
+   using namespace audacity::network_manager;
+
+   auto request = Request(GetServiceConfig().GetNetworkStatsUrl(projectId));
+
+   request.setHeader(
+      common_headers::ContentType, common_content_types::ApplicationJson);
+
+   SetCommonHeaders(request);
+
+   auto body = Serialize(networkStats);
+
+   auto response =
+      NetworkManager::GetInstance().doPost(request, body.data(), body.size());
+   // Keep response alive
+   response->setRequestFinishedCallback([response](auto) {});
 }
 
 } // namespace cloud::audiocom

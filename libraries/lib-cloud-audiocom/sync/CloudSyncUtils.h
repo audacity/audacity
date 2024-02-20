@@ -48,7 +48,7 @@ struct ProjectForm final
 };
 
 
-std::string SerializeProjectForm(const ProjectForm& form);
+std::string Serialize(const ProjectForm& form);
 
 struct UploadUrls final
 {
@@ -135,6 +135,15 @@ struct PaginatedProjectsResponse final
    PaginationInfo Pagination;
 };
 
+struct NetworkStats final
+{
+   int64_t Files {};
+   int64_t Blocks {};
+   int64_t Bytes {};
+   int64_t Mixes {};
+   bool IsDownload {};
+};
+
 std::optional<CreateSnapshotResponse>
 DeserializeCreateSnapshotResponse(const std::string& data);
 std::optional<PaginatedProjectsResponse>
@@ -142,6 +151,8 @@ DeserializePaginatedProjectsResponse(const std::string& data);
 
 std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data);
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data);
+
+std::string Serialize(NetworkStats stats);
 
 CLOUD_AUDIOCOM_API wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);

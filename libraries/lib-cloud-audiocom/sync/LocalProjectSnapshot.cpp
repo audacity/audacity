@@ -420,7 +420,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
    request.setHeader(
       common_headers::Authorization, mOAuthService.GetAccessToken());
 
-   auto serializedForm = SerializeProjectForm(projectForm);
+   auto serializedForm = Serialize(projectForm);
 
    auto response = NetworkManager::GetInstance().doPost(
       request, serializedForm.data(), serializedForm.size());

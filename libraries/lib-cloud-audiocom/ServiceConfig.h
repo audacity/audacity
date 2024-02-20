@@ -61,6 +61,7 @@ public:
    std::string GetSnapshotInfoUrl(
       std::string_view projectId, std::string_view snapshotId) const;
 
+   std::string GetNetworkStatsUrl(std::string_view projectId) const;
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;
