@@ -26,7 +26,7 @@
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveClip.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "UndoManager.h"
 #include "ShuttleGui.h"
 #include "../../../../ProjectWindows.h"
@@ -649,7 +649,7 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
    if (!interval || !interval->HasPitchOrSpeed())
       return;
 
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [track = track, interval = interval](const ProgressReporter& progress) {
          track->ApplyPitchAndSpeed(
             { { interval->GetPlayStartTime(), interval->GetPlayEndTime() } },

@@ -1030,20 +1030,7 @@ Track::LinkType Track::GetLinkType() const noexcept
    return pGroupData ? pGroupData->mLinkType : LinkType::None;
 }
 
-void Track::OnProjectTempoChange(double newTempo)
-{
-   assert(IsLeader());
-   auto &mProjectTempo = GetGroupData().mProjectTempo;
-   DoOnProjectTempoChange(mProjectTempo, newTempo);
-   mProjectTempo = newTempo;
-}
-
-const std::optional<double>& Track::GetProjectTempo() const
-{
-   return GetGroupData().mProjectTempo;
-}
-
-TrackListHolder TrackList::Temporary(AudacityProject *pProject,
+   TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    const Track::Holder &left, const Track::Holder &right)
 {
     assert(left == nullptr || left->GetOwner() == nullptr);

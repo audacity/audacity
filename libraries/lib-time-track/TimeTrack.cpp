@@ -12,8 +12,6 @@
 \brief A kind of Track used to 'warp time'
 
 *//*******************************************************************/
-
-
 #include "TimeTrack.h"
 
 #include <cfloat>
@@ -64,16 +62,6 @@ void TimeTrack::CleanState()
 
    //Time track is always unique
    SetName(GetDefaultName());
-}
-
-void TimeTrack::DoOnProjectTempoChange(
-   const std::optional<double>& oldTempo, double newTempo)
-{
-   assert(IsLeader());
-   if (!oldTempo.has_value())
-      return;
-   const auto ratio = *oldTempo / newTempo;
-   mEnvelope->RescaleTimesBy(ratio);
 }
 
 TimeTrack::TimeTrack(const TimeTrack &orig, ProtectedCreationArg &&a,

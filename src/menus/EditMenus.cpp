@@ -12,12 +12,14 @@
 #include "../ProjectWindows.h"
 #include "../SelectUtilities.h"
 #include "SyncLock.h"
+#include "TempoChange.h"
 #include "../TrackPanel.h"
 #include "TrackFocus.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "WaveClip.h"
 #include "SampleBlock.h"
 #include "CommandContext.h"
@@ -144,7 +146,7 @@ void DoPasteNothingSelected(AudacityProject &project, const TrackList& src, doub
    const double projRate = ProjectRate::Get( project ).GetRate();
    const double projTempo = ProjectTimeSignature::Get(project).GetTempo();
    const double srcTempo =
-      pFirstNewTrack ? pFirstNewTrack->GetProjectTempo().value_or(projTempo) :
+      pFirstNewTrack ? GetProjectTempo(*pFirstNewTrack).value_or(projTempo) :
                        projTempo;
    // Apply adequate stretching to the selection. A selection of 10 seconds of
    // audio in project A should become 5 seconds in project B if tempo in B is
@@ -757,7 +759,7 @@ void OnSilence(const CommandContext &context)
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
 
    const auto selectedWaveTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](const ProgressReporter& parent) {
          BasicUI::SplitProgress(
             selectedWaveTracks.begin(), selectedWaveTracks.end(),
@@ -914,7 +916,7 @@ void OnJoin(const CommandContext &context)
    auto &tracks = TrackList::Get(project);
    auto &selectedRegion = ViewInfo::Get(project).selectedRegion;
    const auto selectedTracks = tracks.Selected<WaveTrack>();
-   WaveTrackUtilities::WithClipRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](const ProgressReporter& reportProgress) {
          using namespace BasicUI;
          SplitProgress(

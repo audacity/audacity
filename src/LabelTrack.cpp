@@ -173,18 +173,6 @@ void LabelTrack::MoveTo(double origin)
    }
 }
 
-void LabelTrack::DoOnProjectTempoChange(
-   const std::optional<double>& oldTempo, double newTempo)
-{
-   assert(IsLeader());
-   if (!oldTempo.has_value())
-      return;
-   const auto ratio = *oldTempo / newTempo;
-   for (auto& label : mLabels)
-      label.selectedRegion.setTimes(
-         label.getT0() * ratio, label.getT1() * ratio);
-}
-
 void LabelTrack::Clear(double b, double e)
 {
    assert(IsLeader());

@@ -329,12 +329,6 @@ private:
 
 public:
 
-   //! method to set project tempo on track
-   /*!
-    @pre `IsLeader()`
-    */
-   void OnProjectTempoChange(double newTempo);
-
    //! Create tracks and modify this track
    /*!
     @return non-NULL or else throw
@@ -404,9 +398,6 @@ private:
    //! the track data proper (not associated data such as for groups and views)
    //! including TrackId
    /*!
-    @param unstretchInterval If set, this time interval's stretching must be applied.
-    @pre `!unstretchInterval.has_value() ||
-       unstretchInterval->first < unstretchInterval->second`
     @pre `IsLeader()`
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
@@ -489,15 +480,6 @@ public:
 
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
-
-   const std::optional<double>& GetProjectTempo() const;
-
-protected:
-   /*!
-    @pre `IsLeader()`
-    */
-   virtual void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) = 0;
 };
 
 ENUMERATE_TRACK_TYPE(Track);

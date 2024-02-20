@@ -126,6 +126,7 @@ list( APPEND SOURCES
       LabelDialog.h
       LabelTrack.cpp
       LabelTrack.h
+      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -141,6 +142,7 @@ list( APPEND SOURCES
       MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
+      NoteTrackEditing.cpp
       PitchName.cpp
       PitchName.h
       PluginRegistrationDialog.cpp
@@ -195,6 +197,7 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeDisplayMode.cpp
       TimeDisplayMode.h
+      TimeTrackEditing.cpp
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp

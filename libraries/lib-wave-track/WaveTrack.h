@@ -1039,6 +1039,9 @@ public:
       // the length of the clip
       void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
+      void OnProjectTempoChange(
+         const std::optional<double>& oldTempo, double newTempo);
+
       std::shared_ptr<const WaveClip> GetClip(size_t iChannel) const
       { return iChannel == 0 ? mpClip : mpClip1; }
       const std::shared_ptr<WaveClip> &GetClip(size_t iChannel)
@@ -1228,8 +1231,6 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
    /*!
     * @pre `IsLeader()`
     * @param[out] leader

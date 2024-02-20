@@ -13,9 +13,7 @@
 #ifndef __AUDACITY_WAVE_TRACK_UTILITIES__
 #define __AUDACITY_WAVE_TRACK_UTILITIES__
 
-#include "Internat.h"
 #include "IteratorX.h"
-#include "TranslatableString.h"
 #include "WaveTrack.h"
 #include <unordered_set>
 
@@ -23,6 +21,8 @@ class SampleBlock;
 class sampleCount;
 class TrackList;
 class WaveTrack;
+
+#include <functional>
 using ProgressReporter = std::function<void(double)>;
 
 class SampleBlock;
@@ -120,18 +120,6 @@ inline IteratorRange<AllClipsConstIterator> GetAllClips(const WaveTrack &track)
 {
    return { AllClipsConstIterator{ track }, AllClipsConstIterator{} };
 }
-
-//! Whether any clips, whose play regions intersect the interval, have non-unit
-//! stretch ratio
-WAVE_TRACK_API
-bool HasPitchOrSpeed(const WaveTrack &track, double t0, double t1);
-
-extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
-
-WAVE_TRACK_API void WithClipRenderingProgress(
-   std::function<void(const ProgressReporter&)> action,
-   TranslatableString title = defaultStretchRenderingTitle,
-   TranslatableString message = XO("Rendering Clip"));
 
 //! Argument is in (0, 1)
 //! @return true if processing should continue

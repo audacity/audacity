@@ -12,12 +12,7 @@
 \brief A Track that is used for Midi notes.  (Somewhat old code).
 
 *//*******************************************************************/
-
-
-
 #include "NoteTrack.h"
-
-
 
 #include <wx/wxcrtvararg.h>
 
@@ -30,9 +25,7 @@
 
 #include "Prefs.h"
 #include "Project.h"
-
 #include "InconsistencyException.h"
-
 #include "TimeWarper.h"
 
 #ifdef SONIFY
@@ -205,23 +198,6 @@ TrackListHolder NoteTrack::Clone(bool) const
    duplicate->SetVelocity(GetVelocity());
 #endif
    return TrackList::Temporary(nullptr, duplicate, nullptr);
-}
-
-
-void NoteTrack::DoOnProjectTempoChange(
-   const std::optional<double>& oldTempo, double newTempo)
-{
-   assert(IsLeader());
-   if (!oldTempo.has_value())
-      return;
-   const auto ratio = *oldTempo / newTempo;
-   auto& seq = GetSeq();
-   seq.convert_to_beats();
-   const auto b1 = seq.get_dur();
-   seq.convert_to_seconds();
-   const auto newDuration = seq.get_dur() * ratio;
-   seq.stretch_region(0, b1, newDuration);
-   seq.set_real_dur(newDuration);
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,

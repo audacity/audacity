@@ -12,7 +12,7 @@
 #include "SyncLock.h"
 #include "UserException.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 
 // Effect application counter
 int EffectOutputTracks::nEffectsDone = 0;
@@ -50,7 +50,7 @@ EffectOutputTracks::EffectOutputTracks(
       effectTimeInterval.has_value() &&
       effectTimeInterval->second > effectTimeInterval->first)
    {
-      WaveTrackUtilities::WithClipRenderingProgress(
+      TimeStretching::WithClipRenderingProgress(
          [&](const ProgressReporter& parent)
          {
             const auto tracksToUnstretch =
@@ -58,7 +58,7 @@ EffectOutputTracks::EffectOutputTracks(
                                     mOutputTracks->Selected<WaveTrack>()) +
                [&](const WaveTrack* pTrack)
             {
-               return WaveTrackUtilities::HasPitchOrSpeed(
+               return TimeStretching::HasPitchOrSpeed(
                   *pTrack, effectTimeInterval->first,
                   effectTimeInterval->second);
             };

@@ -205,8 +205,6 @@ private:
 #endif
 
    void AddToDuration( double delta );
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
 
    // These are mutable to allow NoteTrack to switch details of representation
    // in logically const methods
