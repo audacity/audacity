@@ -155,4 +155,29 @@ void CancellationContext::OnCancelled(
    OnCancelled([response = std::move(response)]() { response->abort(); });
 }
 
+TransferStats& TransferStats::SetBytesTransferred(int64_t bytesTransferred)
+{
+   BytesTransferred = bytesTransferred;
+   return *this;
+}
+
+TransferStats& TransferStats::SetBlocksTransferred(int64_t blocksTransferred)
+{
+   BlocksTransferred = blocksTransferred;
+   return *this;
+}
+
+TransferStats&
+TransferStats::SetProjectFilesTransferred(int64_t projectFilesTransferred)
+{
+   ProjectFilesTransferred = projectFilesTransferred;
+   return *this;
+}
+
+TransferStats& TransferStats::SetTransferDuration(Duration transferDuration)
+{
+   TransferDuration = transferDuration;
+   return *this;
+}
+
 } // namespace cloud::audiocom

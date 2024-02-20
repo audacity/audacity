@@ -12,6 +12,7 @@
 #pragma once
 
 #include <atomic>
+#include <chrono>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -26,6 +27,22 @@ class Request;
 
 namespace cloud::audiocom
 {
+struct CLOUD_AUDIOCOM_API TransferStats final
+{
+   using Duration = std::chrono::milliseconds;
+
+   int64_t BytesTransferred {};
+   int64_t BlocksTransferred {};
+   int64_t ProjectFilesTransferred {};
+
+   Duration TransferDuration {};
+
+   TransferStats& SetBytesTransferred(int64_t bytesTransferred);
+   TransferStats& SetBlocksTransferred(int64_t blocksTransferred);
+   TransferStats& SetProjectFilesTransferred(int64_t projectFilesTransferred);
+   TransferStats& SetTransferDuration(Duration transferDuration);
+}; // struct TransferStats
+
 struct CLOUD_AUDIOCOM_API CancellationContext final
 {
    struct Tag final
@@ -45,7 +62,8 @@ public:
    void Cancel();
 
    void OnCancelled(std::function<void()> callback);
-   void OnCancelled(std::shared_ptr<audacity::network_manager::IResponse> response);
+   void
+   OnCancelled(std::shared_ptr<audacity::network_manager::IResponse> response);
 
 private:
    std::atomic<bool> mCancelled { false };

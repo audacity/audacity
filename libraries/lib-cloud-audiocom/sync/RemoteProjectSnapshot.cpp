@@ -29,26 +29,74 @@
 
 namespace cloud::audiocom::sync
 {
+namespace
+{
+std::vector<std::string> ListAttachedDatabases()
+{
+   auto db        = CloudProjectsDatabase::Get().GetConnection();
+   auto statement = db->CreateStatement("PRAGMA database_list");
+   auto result    = statement->Prepare().Run();
+
+   std::vector<std::string> attachedDBs;
+
+   for (auto row : result)
+   {
+      std::string dbName;
+
+      if (!row.Get(1, dbName))
+         continue;
+
+      if (dbName == "main" || dbName == "temp")
+         continue;
+
+      attachedDBs.push_back(std::move(dbName));
+   }
+
+   return attachedDBs;
+}
+} // namespace
+
 RemoteProjectSnapshot::RemoteProjectSnapshot(
    Tag, ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path,
-   RemoteProjectSnapshotStateCallback callback)
+   RemoteProjectSnapshotStateCallback callback, bool downloadDetached)
     : mSnapshotDBName { std::string("s_") + projectInfo.Id }
     , mProjectInfo { std::move(projectInfo) }
     , mSnapshotInfo { std::move(snapshotInfo) }
     , mPath { std::move(path) }
     , mCallback { std::move(callback) }
+    , mDownloadDetached { downloadDetached }
 {
-   auto db         = CloudProjectsDatabase::Get().GetConnection();
+   auto db = CloudProjectsDatabase::Get().GetConnection();
+   // RemoteProjectSnapshot always receives a path to the database
+   // that has AudacityProject schema installed, even if it's a detached
+   // or was deleted from the disk before
    auto attachStmt = db->CreateStatement("ATTACH DATABASE ? AS ?");
    auto result     = attachStmt->Prepare(mPath, mSnapshotDBName).Run();
-   mAttached       = result.IsOk();
 
-   if (!mAttached)
+   if (!result.IsOk())
       return;
 
-   auto knownBlocks = CalculateKnownBlocks();
+   mAttachedDBNames.push_back(mSnapshotDBName);
 
-   if (knownBlocks.size() == mSnapshotInfo.Blocks.size())
+   auto blocksSource = mSnapshotDBName;
+
+   if (mDownloadDetached)
+   {
+      if (auto name = AttachOriginalDB(); !name.empty())
+         blocksSource = name;
+   }
+
+   // This would return and empty set when the project
+   // is detached
+   auto knownBlocks = CalculateKnownBlocks(blocksSource);
+
+   if (mDownloadDetached)
+   {
+      // We can assume, that if the known blocks are present,
+      // they come from the "original" database
+      SetupBlocksCopy(blocksSource, knownBlocks);
+   }
+   else if (knownBlocks.size() == mSnapshotInfo.Blocks.size())
    {
       auto syncInfo =
          CloudProjectsDatabase::Get().GetProjectData(mProjectInfo.Id);
@@ -65,7 +113,10 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
 
    MarkProjectInDB(false);
 
-   mMissingBlocks = mSnapshotInfo.Blocks.size() - knownBlocks.size();
+   mMissingBlocks = mDownloadDetached ?
+                       mSnapshotInfo.Blocks.size() :
+                       mSnapshotInfo.Blocks.size() - knownBlocks.size();
+
    mRequests.reserve(1 + mMissingBlocks);
 
    mRequests.push_back(std::make_pair(
@@ -93,28 +144,32 @@ RemoteProjectSnapshot::~RemoteProjectSnapshot()
    if (mRequestsThread.joinable())
       mRequestsThread.join();
 
+   if (mCopyBlocksFuture.has_value())
+      mCopyBlocksFuture->wait();
+
    {
       auto lock = std::unique_lock { mResponsesMutex };
       mResponsesEmptyCV.wait(lock, [this] { return mResponses.empty(); });
    }
 
-   if (mAttached)
+   auto db = CloudProjectsDatabase::Get().GetConnection();
+
+   for (const auto& dbName : ListAttachedDatabases())
    {
-      auto db         = CloudProjectsDatabase::Get().GetConnection();
       auto detachStmt = db->CreateStatement("DETACH DATABASE ?");
-      detachStmt->Prepare(mSnapshotDBName).Run();
+      detachStmt->Prepare(dbName).Run();
    }
 }
 
 std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
    ProjectInfo projectInfo, SnapshotInfo snapshotInfo, std::string path,
-   RemoteProjectSnapshotStateCallback callback)
+   RemoteProjectSnapshotStateCallback callback, bool downloadDetached)
 {
    auto snapshot = std::make_shared<RemoteProjectSnapshot>(
       Tag {}, std::move(projectInfo), std::move(snapshotInfo), std::move(path),
-      std::move(callback));
+      std::move(callback), downloadDetached);
 
-   if (!snapshot->mAttached)
+   if (snapshot->mAttachedDBNames.empty())
    {
       snapshot->mCallback(
          { { ResponseResultCode::InternalClientError,
@@ -139,13 +194,117 @@ void RemoteProjectSnapshot::Cancel()
    DoCancel();
 
    mCallback({ { ResponseResultCode::Cancelled, {} },
-               mDownloadedBlocks.load(),
+               mDownloadedBlocks.load() + mCopiedBlocks.load(),
                mMissingBlocks,
                mProjectDownloaded.load() });
 }
 
-std::unordered_set<std::string>
-RemoteProjectSnapshot::CalculateKnownBlocks() const
+TransferStats RemoteProjectSnapshot::GetTransferStats() const
+{
+   const auto duration =
+      mState.load(std::memory_order_acquire) == State::Downloading ?
+         Clock::now() - mStartTime :
+         mEndTime - mStartTime;
+
+   return TransferStats {}
+      .SetBlocksTransferred(mDownloadedBlocks.load())
+      .SetBytesTransferred(mDownloadedBytes.load())
+      .SetProjectFilesTransferred(mProjectDownloaded.load() ? 1 : 0)
+      .SetTransferDuration(
+         std::chrono::duration_cast<TransferStats::Duration>(duration));
+}
+
+std::string RemoteProjectSnapshot::AttachOriginalDB()
+{
+   const std::string dbName = "o_" + mProjectInfo.Id;
+
+   const auto projectData =
+      CloudProjectsDatabase::Get().GetProjectData(mProjectInfo.Id);
+
+   if (!projectData)
+      return {};
+
+   auto db = CloudProjectsDatabase::Get().GetConnection();
+   // RemoteProjectSnapshot always receives a path to the database
+   // that has AudacityProject schema installed, even if it's a detached
+   // or was deleted from the disk before
+   auto attachStmt = db->CreateStatement("ATTACH DATABASE ? AS ?");
+   auto result     = attachStmt->Prepare(projectData->LocalPath, dbName).Run();
+
+   if (!result.IsOk())
+      return {};
+
+   mAttachedDBNames.push_back(dbName);
+
+   return dbName;
+}
+
+void RemoteProjectSnapshot::SetupBlocksCopy(
+   const std::string& dbName, std::unordered_set<std::string> blocks)
+{
+   // Still, better be safe than sorry
+   if (dbName == mSnapshotDBName)
+      return;
+
+   if (blocks.empty())
+      return;
+
+   mCopyBlocksFuture = std::async(
+      std::launch::async,
+      [this, dbName = dbName, blocks = std::move(blocks)]()
+      {
+         const auto queryString =
+            "INSERT INTO " + mSnapshotDBName +
+            ".sampleblocks "
+            "SELECT * FROM " +
+            dbName +
+            ".sampleblocks WHERE blockid IN (SELECT block_id FROM block_hashes WHERE hash = ?)";
+
+         // Only lock DB for one block a time so the download thread can
+         // continue to work
+         for (const auto& block : blocks)
+         {
+            if (!InProgress())
+               return false;
+
+            auto db = CloudProjectsDatabase::Get().GetConnection();
+
+            auto copyBlocksStatement = db->CreateStatement(queryString);
+
+            if (!copyBlocksStatement)
+            {
+               OnFailure({ ResponseResultCode::InternalClientError,
+                           audacity::ToUTF8(copyBlocksStatement.GetError()
+                                               .GetErrorString()
+                                               .Translation()) });
+
+               return false;
+            }
+
+            auto result = copyBlocksStatement->Prepare(block).Run();
+
+            if (!result.IsOk())
+            {
+               OnFailure({ ResponseResultCode::InternalClientError,
+                           audacity::ToUTF8(result.GetErrors()
+                                               .front()
+                                               .GetErrorString()
+                                               .Translation()) });
+               return false;
+            }
+
+            const auto rowsUpdated = result.GetModifiedRowsCount();
+            mCopiedBlocks.fetch_add(rowsUpdated, std::memory_order_acq_rel);
+
+            ReportProgress();
+         }
+
+         return true;
+      });
+}
+
+std::unordered_set<std::string> RemoteProjectSnapshot::CalculateKnownBlocks(
+   const std::string& attachedDbName) const
 {
    std::unordered_set<std::string> remoteBlocks;
 
@@ -160,7 +319,7 @@ RemoteProjectSnapshot::CalculateKnownBlocks() const
 
    auto statement = db->CreateStatement(
       "SELECT hash FROM block_hashes WHERE project_id = ? AND inRemoteBlocks(hash) AND block_id IN (SELECT blockid FROM " +
-      mSnapshotDBName + ".sampleblocks)");
+      attachedDbName + ".sampleblocks)");
 
    if (!statement)
       return {};
@@ -184,7 +343,8 @@ RemoteProjectSnapshot::CalculateKnownBlocks() const
 
 void RemoteProjectSnapshot::DoCancel()
 {
-   mCancelled.store(true, std::memory_order_release);
+   SetState(State::Cancelled);
+
    mRequestsCV.notify_one();
 
    {
@@ -211,6 +371,9 @@ void RemoteProjectSnapshot::DownloadBlob(
    response->setRequestFinishedCallback(
       [this, onSuccess = std::move(onSuccess), retries, response](auto)
       {
+         mDownloadedBytes.fetch_add(
+            response->getBytesAvailable(), std::memory_order_acq_rel);
+
          RemoveResponse(response.get());
 
          auto responseResult = GetResponseResult(*response, false);
@@ -431,8 +594,10 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
 
 void RemoteProjectSnapshot::OnFailure(ResponseResult result)
 {
-   mFailed.store(true, std::memory_order_release);
-   mCallback({ result, mDownloadedBlocks.load(std::memory_order_acquire),
+   SetState(State::Failed);
+   mCallback({ result,
+               mDownloadedBlocks.load(std::memory_order_acquire) +
+                  mCopiedBlocks.load(std::memory_order_acquire),
                mMissingBlocks,
                mProjectDownloaded.load(std::memory_order_acquire) });
 }
@@ -449,7 +614,7 @@ void RemoteProjectSnapshot::RemoveResponse(
          mResponses.end());
 
       if (mResponses.empty())
-         mRequestsCV.notify_all();
+         mResponsesEmptyCV.notify_all();
    }
    {
       auto lock = std::lock_guard { mRequestsMutex };
@@ -460,6 +625,9 @@ void RemoteProjectSnapshot::RemoveResponse(
 
 void RemoteProjectSnapshot::MarkProjectInDB(bool successfulDownload)
 {
+   if (mDownloadDetached)
+      return;
+
    auto& db         = CloudProjectsDatabase::Get();
    auto currentData = db.GetProjectData(mProjectInfo.Id);
 
@@ -472,12 +640,15 @@ void RemoteProjectSnapshot::MarkProjectInDB(bool successfulDownload)
    data.LastRead   = wxDateTime::Now().GetTicks();
    data.LocalPath  = mPath;
 
+   if (data.SavesCount == 0)
+      data.SavesCount = 1;
+
    db.UpdateProjectData(data);
 }
 
 void RemoteProjectSnapshot::ReportProgress()
 {
-   if (mCancelled.load(std::memory_order_acquire))
+   if (mState.load(std::memory_order_acquire) != State::Downloading)
       return;
 
    const auto projectDownloaded =
@@ -485,25 +656,32 @@ void RemoteProjectSnapshot::ReportProgress()
    const auto blocksDownloaded =
       mDownloadedBlocks.load(std::memory_order_acquire);
 
+   const auto blockCopied = mCopiedBlocks.load(std::memory_order_acquire);
+
+   const auto processedBlocks = blocksDownloaded + blockCopied;
+
    const auto completed =
-      blocksDownloaded == mMissingBlocks && projectDownloaded;
+      processedBlocks == mMissingBlocks && projectDownloaded;
 
-   MarkProjectInDB(true);
+   if (completed)
+   {
+      SetState(State::Succeeded);
+      MarkProjectInDB(true);
+   }
 
-   mCallback({ {}, blocksDownloaded, mMissingBlocks, projectDownloaded });
+   mCallback({ {}, processedBlocks, mMissingBlocks, projectDownloaded });
 }
 
-bool RemoteProjectSnapshot::WantsNextRequest() const
+bool RemoteProjectSnapshot::InProgress() const
 {
-   return !mCancelled.load(std::memory_order_acquire) &&
-          !mFailed.load(std::memory_order_acquire);
+   return mState.load(std::memory_order_acquire) == State::Downloading;
 }
 
 void RemoteProjectSnapshot::RequestsThread()
 {
    constexpr auto MAX_CONCURRENT_REQUESTS = 6;
 
-   while (WantsNextRequest())
+   while (InProgress())
    {
       std::pair<std::string, SuccessHandler> request;
 
@@ -514,14 +692,13 @@ void RemoteProjectSnapshot::RequestsThread()
          {
             mRequestsCV.wait(
                lock,
-               [this, MAX_CONCURRENT_REQUESTS]
-               {
+               [this, MAX_CONCURRENT_REQUESTS] {
                   return mRequestsInProgress < MAX_CONCURRENT_REQUESTS ||
-                         !WantsNextRequest();
+                         !InProgress();
                });
          }
 
-         if (!WantsNextRequest())
+         if (!InProgress())
             return;
 
          if (mNextRequestIndex >= mRequests.size())
@@ -536,6 +713,14 @@ void RemoteProjectSnapshot::RequestsThread()
       // TODO: Random sleep to avoid overloading the server
       std::this_thread::sleep_for(std::chrono::milliseconds(50));
    }
+}
+
+void RemoteProjectSnapshot::SetState(State state)
+{
+   if (state != State::Downloading)
+      mEndTime = Clock::now();
+
+   mState.exchange(state);
 }
 
 bool RemoteProjectSnapshotState::IsComplete() const noexcept

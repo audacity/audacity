@@ -77,6 +77,12 @@ void PerformProjectGetRequest(
 {
    assert(oAuthService.HasAccessToken());
 
+   if (!oAuthService.HasAccessToken())
+   {
+      dataCallback({ ResponseResultCode::Unauthorized });
+      return;
+   }
+
    using namespace audacity::network_manager;
 
    auto request = Request(std::move(url));
@@ -444,6 +450,9 @@ void CloudSyncService::CompleteSync(std::string path)
 
 void CloudSyncService::CompleteSync(sync::ProjectSyncResult result)
 {
+   if (mRemoteSnapshot)
+      result.Stats = mRemoteSnapshot->GetTransferStats();
+
    mSyncPromise.set_value(std::move(result));
    mRemoteSnapshot.reset();
    mSyncInProcess.store(false);
@@ -508,7 +517,7 @@ void CloudSyncService::SyncCloudSnapshot(
                               sync::ProjectSyncResult::StatusCode::Failed,
                            std::move(state.Result), std::move(path) });
          }
-      });
+      }, mode == SyncMode::ForceNew);
 }
 
 void CloudSyncService::UpdateDowloadProgress(double downloadProgress)

@@ -53,7 +53,14 @@ CREATE TABLE IF NOT EXISTS block_hashes
 
 CREATE INDEX IF NOT EXISTS block_hashes_index ON block_hashes (hash);
 
+CREATE TABLE IF NOT EXISTS migrations
+(
+   version INTEGER PRIMARY KEY
+);
+
+INSERT OR IGNORE INTO migrations (version) VALUES (0);
 )";
+
 }
 
 CloudProjectsDatabase::CloudProjectsDatabase()

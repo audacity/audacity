@@ -60,9 +60,22 @@ struct ProjectCloudExtension::UploadQueueElement final
 };
 
 struct ProjectCloudExtension::CloudStatusChangedNotifier final :
-    Observer::Publisher<CloudStatusChangedMessage>
+    private Observer::Publisher<CloudStatusChangedMessage>
 {
-   using Observer::Publisher<CloudStatusChangedMessage>::Publish;
+   void PublishSafe(CloudStatusChangedMessage message)
+   {
+      auto lock = std::lock_guard { OberverMutex };
+      Publish(message);
+   }
+
+Observer::Subscription SubscribeSafe(
+      std::function<void(const CloudStatusChangedMessage&)> callback)
+   {
+      auto lock = std::lock_guard { OberverMutex };
+      return Subscribe(std::move(callback));
+   }
+
+   std::mutex OberverMutex;
 };
 
 ProjectCloudExtension::ProjectCloudExtension(AudacityProject& project)
@@ -187,8 +200,14 @@ void ProjectCloudExtension::OnSnapshotCreated(
 
    cloudDatabase.UpdateProjectData(dbData);
 
-   mProjectId  = response.Project.Id;
-   mSnapshotId = response.Snapshot.Id;
+   {
+      auto lock = std::lock_guard { mIdentifiersMutex };
+
+      mProjectId  = response.Project.Id;
+      mSnapshotId = response.Snapshot.Id;
+
+      mProjectDetached = false;
+   }
 
    auto lock    = std::lock_guard { mUploadQueueMutex };
    auto element = UnsafeFindUploadQueueElement(uploadOperation);
@@ -290,13 +309,17 @@ bool ProjectCloudExtension::IsSyncing() const
    return mLastStatus.Status == ProjectSyncStatus::Syncing;
 }
 
-std::string_view ProjectCloudExtension::GetCloudProjectId() const
+std::string ProjectCloudExtension::GetCloudProjectId() const
 {
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
    return mProjectId;
 }
 
-std::string_view ProjectCloudExtension::GetSnapshotId() const
+std::string ProjectCloudExtension::GetSnapshotId() const
 {
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
    return mSnapshotId;
 }
 
@@ -362,7 +385,9 @@ bool ProjectCloudExtension::NeedsMixdownSync() const
    if (mNeedsMixdownSync)
       return true;
 
-   if (!IsCloudProject())
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
       return false;
 
    auto& cloudDatabase = CloudProjectsDatabase::Get();
@@ -387,7 +412,9 @@ bool ProjectCloudExtension::NeedsMixdownSync() const
 
 void ProjectCloudExtension::MixdownSynced()
 {
-   if (!IsCloudProject())
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
       return;
 
    mNeedsMixdownSync = false;
@@ -404,8 +431,10 @@ void ProjectCloudExtension::MixdownSynced()
 
 int64_t ProjectCloudExtension::GetSavesCount() const
 {
-   if (!IsCloudProject())
-      return 0;
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
+      return -1;
 
    auto& cloudDatabase = CloudProjectsDatabase::Get();
    auto dbData         = cloudDatabase.GetProjectData(mProjectId);
@@ -418,7 +447,9 @@ int64_t ProjectCloudExtension::GetSavesCount() const
 
 int64_t ProjectCloudExtension::GetSavesCountSinceMixdown() const
 {
-   if (!IsCloudProject())
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
       return 0;
 
    auto& cloudDatabase = CloudProjectsDatabase::Get();
@@ -434,8 +465,8 @@ Observer::Subscription ProjectCloudExtension::SubscribeStatusChanged(
    std::function<void(const CloudStatusChangedMessage&)> callback,
    bool onUIThread)
 {
-   return onUIThread ? mUIStateNotifier->Subscribe(std::move(callback)) :
-                       mAsyncStateNotifier->Subscribe(std::move(callback));
+   return onUIThread ? mUIStateNotifier->SubscribeSafe(std::move(callback)) :
+                       mAsyncStateNotifier->SubscribeSafe(std::move(callback));
 }
 
 void ProjectCloudExtension::UpdateIdFromDatabase()
@@ -449,8 +480,12 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
    if (!projectData)
       return;
 
-   mProjectId  = projectData->ProjectId;
-   mSnapshotId = projectData->SnapshotId;
+   {
+      auto lock = std::lock_guard { mIdentifiersMutex };
+
+      mProjectId  = projectData->ProjectId;
+      mSnapshotId = projectData->SnapshotId;
+   }
 
    Publish({
       projectData->SyncStatus ==
@@ -488,12 +523,12 @@ void ProjectCloudExtension::Publish(CloudStatusChangedMessage cloudStatus)
       mLastStatus = cloudStatus;
    }
 
-   mAsyncStateNotifier->Publish(cloudStatus);
+   mAsyncStateNotifier->PublishSafe(cloudStatus);
 
    if (BasicUI::IsUiThread())
    {
       mUINotificationPending.store(false);
-      mUIStateNotifier->Publish(cloudStatus);
+      mUIStateNotifier->PublishSafe(cloudStatus);
    }
    else if (!mUINotificationPending.exchange(true))
    {
@@ -503,7 +538,7 @@ void ProjectCloudExtension::Publish(CloudStatusChangedMessage cloudStatus)
             if (mUINotificationPending.exchange(false))
             {
                auto lock = std::lock_guard { mStatusMutex };
-               mUIStateNotifier->Publish(mLastStatus);
+               mUIStateNotifier->PublishSafe(mLastStatus);
             }
          });
    }
@@ -553,12 +588,29 @@ ProjectCloudExtension::UnsafeFindUploadQueueElement(
 
 void ProjectCloudExtension::MarkPendingCloudSave()
 {
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
    mPendingCloudSave = true;
 }
 
 bool ProjectCloudExtension::IsPendingCloudSave() const
 {
+   auto lock = std::lock_guard { mIdentifiersMutex };
+   
    return mPendingCloudSave;
+}
+
+void ProjectCloudExtension::MarkProjectDetached()
+{
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   mProjectDetached = true;
+}
+
+bool ProjectCloudExtension::IsProjectDetached() const
+{
+   auto lock = std::lock_guard { mIdentifiersMutex };
+   return mProjectDetached;
 }
 
 bool CloudStatusChangedMessage::IsSyncing() const noexcept

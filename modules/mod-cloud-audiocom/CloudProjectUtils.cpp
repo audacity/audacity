@@ -10,6 +10,8 @@
 **********************************************************************/
 #include "CloudProjectUtils.h"
 
+#include <wx/log.h>
+
 #include "AuthorizationHandler.h"
 #include "BasicUI.h"
 #include "CloudSettings.h"
@@ -112,6 +114,14 @@ GetConfilctResolution(AudacityProject* project, const ProjectSyncResult& result)
    return ConflictResolution::Stop;
 }
 
+void LogTransferStats(TransferStats stats)
+{
+   wxLogMessage(
+      "Transfer stats: %f Kb transferred, %f secs",
+      stats.BytesTransferred / 1024.0,
+      std::chrono::duration<float>(stats.TransferDuration).count());
+}
+
 } // namespace
 
 void OpenProjectFromCloud(
@@ -138,6 +148,7 @@ void OpenProjectFromCloud(
       MakePoller(*progressDialog));
 
    auto result = GetResult(future);
+   LogTransferStats(result.Stats);
 
    progressDialog.reset();
 
@@ -158,9 +169,12 @@ void OpenProjectFromCloud(
    if (HandleFailure(result))
       return;
 
-   ProjectManager::OpenProject(
+   auto project = ProjectManager::OpenProject(
       GetPotentialTarget(), audacity::ToWXString(result.ProjectPath), true,
       false);
+
+   if (project != nullptr && mode == CloudSyncService::SyncMode::ForceNew)
+      ProjectFileIO::Get(*project).MarkTemporary();
 }
 
 void OpenProjectFromCloud(
@@ -196,6 +210,7 @@ bool SyncCloudProject(
       project, std::string(path), false, MakePoller(*progressDialog));
 
    auto result = GetResult(future);
+   LogTransferStats(result.Stats);
 
    progressDialog.reset();
 
@@ -221,6 +236,9 @@ void SaveToCloud(AudacityProject& project, SaveMode mode)
 
    if (!projectCloudExtension.IsCloudProject())
       projectCloudExtension.MarkPendingCloudSave();
+
+   if (mode == SaveMode::SaveNew)
+      projectCloudExtension.MarkProjectDetached();
 
    ProjectFileManager::Get(project).Save();
 }

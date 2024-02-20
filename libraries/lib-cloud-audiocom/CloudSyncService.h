@@ -45,6 +45,7 @@ struct ProjectSyncResult final
    StatusCode Status {};
    ResponseResult Result;
    std::string ProjectPath;
+   TransferStats Stats;
 }; // struct ProjectSyncResult
 
 using ProgressCallback = std::function<bool(double)>;

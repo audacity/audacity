@@ -90,8 +90,8 @@ public:
 
    bool IsSyncing() const;
 
-   std::string_view GetCloudProjectId() const;
-   std::string_view GetSnapshotId() const;
+   std::string GetCloudProjectId() const;
+   std::string GetSnapshotId() const;
 
    bool OnUpdateSaved(const ProjectSerializer& serializer);
 
@@ -114,6 +114,9 @@ public:
    void MarkPendingCloudSave();
    bool IsPendingCloudSave() const;
 
+   void MarkProjectDetached();
+   bool IsProjectDetached() const;
+
 private:
    struct UploadQueueElement;
    struct CloudStatusChangedNotifier;
@@ -132,6 +135,7 @@ private:
 
    AudacityProject& mProject;
 
+   mutable std::mutex mIdentifiersMutex;
    std::string mProjectId;
    std::string mSnapshotId;
 
@@ -148,5 +152,6 @@ private:
    bool mSuppressAutoDownload { false };
    bool mPendingCloudSave { false };
    bool mNeedsMixdownSync { false };
+   bool mProjectDetached { false };
 };
 } // namespace cloud::audiocom::sync
