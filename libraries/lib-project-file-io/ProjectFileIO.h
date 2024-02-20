@@ -107,6 +107,8 @@ public:
    bool IsTemporary() const;
    bool IsRecovered() const;
 
+   void MarkTemporary();
+
    bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
