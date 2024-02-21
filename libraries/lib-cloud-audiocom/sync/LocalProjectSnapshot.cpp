@@ -229,6 +229,8 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
       Tag {}, config, oauthService, extension);
 
+   snapshot->mProjectCloudExtension.OnUploadOperationCreated(snapshot);
+
    snapshot->mProjectBlocksLock = std::make_unique<ProjectBlocksLock>(
       extension, *project,
       [weakSnapshot = std::weak_ptr(snapshot)]
@@ -245,8 +247,6 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
 
          snapshot->mProjectCloudExtension.OnBlocksHashed(*snapshot);
       });
-
-   snapshot->mProjectCloudExtension.OnUploadOperationCreated(snapshot);
 
    return snapshot;
 }
@@ -391,11 +391,15 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
    else
       projectForm.HeadSnapshotId = mProjectCloudExtension.GetSnapshotId();
 
-   projectForm.Hashes.reserve(mProjectBlocksLock->Blocks.size());
-   std::transform(
-      mProjectBlocksLock->Blocks.begin(), mProjectBlocksLock->Blocks.end(),
-      std::back_inserter(projectForm.Hashes),
-      [](const auto& block) { return block.Hash; });
+   // For empty projects, mProjectBlocksLock will be nullptr at this point
+   if (mProjectBlocksLock != nullptr)
+   {
+      projectForm.Hashes.reserve(mProjectBlocksLock->Blocks.size());
+      std::transform(
+         mProjectBlocksLock->Blocks.begin(), mProjectBlocksLock->Blocks.end(),
+         std::back_inserter(projectForm.Hashes),
+         [](const auto& block) { return block.Hash; });
+   }
 
    using namespace audacity::network_manager;
 

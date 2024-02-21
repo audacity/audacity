@@ -274,6 +274,7 @@ bool HandleProjectLink(std::string_view uri)
 
    return true;
 }
+
 void UploadMixdownForSnapshot(
    AudacityProject& project, std::shared_ptr<LocalProjectSnapshot> snapshot)
 {

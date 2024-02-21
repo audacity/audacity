@@ -64,6 +64,21 @@ int CalculateChannels(const TrackList& trackList)
              1 :
              2;
 }
+
+bool HasPlayableTracks(const AudacityProject& project)
+{
+   // Why Any requires non const ref???
+   for (const auto& track :
+        TrackList::Get(const_cast<AudacityProject&>(project))
+           .Any<PlayableTrack>())
+   {
+      if (track->GetStartTime() != track->GetEndTime())
+         return true;
+   }
+
+   return false;
+}
+
 } // namespace
 
 class MixdownUploader::DataExporter final : public ExportProcessorDelegate
@@ -286,8 +301,9 @@ void MixdownUploader::ReportProgress(
          });
    }
 
-   if (state == MixdownState::Succeeded || state == MixdownState::Failed ||
-       state == MixdownState::Cancelled)
+   if (
+      state == MixdownState::Succeeded || state == MixdownState::Failed ||
+      state == MixdownState::Cancelled)
    {
       mFinished.store(true);
       mPromise.set_value({ state, uploadResult });
@@ -296,6 +312,13 @@ void MixdownUploader::ReportProgress(
 
 void MixdownUploader::ExportProject()
 {
+   if (!HasPlayableTracks(mProject))
+   {
+      mFinished.store(true);
+      mPromise.set_value({ MixdownState::Empty });
+      return;
+   }
+
    auto& tracks = TrackList::Get(mProject);
 
    const double t0 = 0.0;

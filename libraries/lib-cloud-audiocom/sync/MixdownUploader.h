@@ -41,6 +41,7 @@ enum class MixdownState
    Succeeded,
    Cancelled,
    Failed,
+   Empty,
 };
 
 struct CLOUD_AUDIOCOM_API MixdownResult final
