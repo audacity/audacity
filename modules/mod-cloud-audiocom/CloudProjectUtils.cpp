@@ -75,6 +75,12 @@ bool HandleFailure(const ProjectSyncResult& result)
       result.Result.Code == ResponseResultCode::Conflict)
       return false;
 
+   if (result.Result.Code == ResponseResultCode::Cancelled)
+   {
+      wxLogError("Opening of the cloud project was canceled", result.Result.Content);
+      return true;
+   }
+
    BasicUI::ShowErrorDialog(
       {}, XO("Error"), XO("Failed to open cloud project"), {},
       BasicUI::ErrorDialogOptions {}.Log(
