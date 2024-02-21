@@ -16,9 +16,9 @@
 #include <vector>
 
 #include "AsynchronousOperation.h"
-
 #include "CloudSettings.h"
 #include "CloudSyncUtils.h"
+#include "ServiceConfig.h"
 
 #include "CodeConversions.h"
 
@@ -68,8 +68,8 @@ struct ProjectCloudExtension::CloudStatusChangedNotifier final :
       Publish(message);
    }
 
-Observer::Subscription SubscribeSafe(
-      std::function<void(const CloudStatusChangedMessage&)> callback)
+   Observer::Subscription
+   SubscribeSafe(std::function<void(const CloudStatusChangedMessage&)> callback)
    {
       auto lock = std::lock_guard { OberverMutex };
       return Subscribe(std::move(callback));
@@ -205,6 +205,8 @@ void ProjectCloudExtension::OnSnapshotCreated(
    dbData.SavesCount++;
 
    cloudDatabase.UpdateProjectData(dbData);
+   cloudDatabase.SetProjectUserSlug(
+      response.Project.Id, response.Project.Username);
 
    {
       auto lock = std::lock_guard { mIdentifiersMutex };
@@ -440,7 +442,7 @@ int64_t ProjectCloudExtension::GetSavesCount() const
    auto lock = std::lock_guard { mIdentifiersMutex };
 
    if (mProjectId.empty())
-      return -1;
+      return 0;
 
    auto& cloudDatabase = CloudProjectsDatabase::Get();
    auto dbData         = cloudDatabase.GetProjectData(mProjectId);
@@ -602,7 +604,7 @@ void ProjectCloudExtension::MarkPendingCloudSave()
 bool ProjectCloudExtension::IsPendingCloudSave() const
 {
    auto lock = std::lock_guard { mIdentifiersMutex };
-   
+
    return mPendingCloudSave;
 }
 
@@ -611,6 +613,17 @@ void ProjectCloudExtension::SetUploadModeForNextSave(UploadMode mode)
    auto lock = std::lock_guard { mIdentifiersMutex };
 
    mNextUploadMode = mode;
+}
+
+std::string ProjectCloudExtension::GetCloudProjectPage() const
+{
+   const auto projectId =
+      ProjectCloudExtension::Get(mProject).GetCloudProjectId();
+
+   const auto userSlug =
+      CloudProjectsDatabase::Get().GetProjectUserSlug(projectId);
+
+   return GetServiceConfig().GetProjectPageUrl(userSlug, projectId);
 }
 
 bool CloudStatusChangedMessage::IsSyncing() const noexcept

@@ -102,7 +102,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
 {
    mInSync = message.IsSyncing();
 
-   if (!mNeedsFirstSaveDialog)
+   if (!mNeedsFirstSaveDialog && mInSync)
    {
       const auto savesCount =
          ProjectCloudExtension::Get(mProject).GetSavesCount();
@@ -119,8 +119,9 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
          if (
             SyncSuccessDialog { &mProject }.ShowDialog() ==
             SyncSuccessDialog::ViewOnlineIdentifier())
-         {
-            // TODO: Open the project in the browser
+         {       
+            BasicUI::OpenInDefaultBrowser(
+               ProjectCloudExtension::Get(mProject).GetCloudProjectPage());
          }
       }
    }

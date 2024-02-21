@@ -62,6 +62,9 @@ public:
       std::string_view projectId, std::string_view snapshotId) const;
 
    std::string GetNetworkStatsUrl(std::string_view projectId) const;
+   std::string
+   GetProjectPageUrl(std::string_view userId, std::string_view projectId) const;
+
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;
@@ -69,7 +72,7 @@ private:
    std::string mOAuthRedirectURL;
    std::string mOAuthLoginPage;
    std::string mFinishUploadPage;
-   std::string mAudioURL;
+   std::string mFrontendURL;
    std::string mPreferredMimeType;
 };
 

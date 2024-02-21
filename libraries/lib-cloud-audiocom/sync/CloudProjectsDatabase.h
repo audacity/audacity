@@ -64,6 +64,9 @@ public:
 
    bool UpdateProjectData(const DBProjectData& projectData);
 
+   std::string GetProjectUserSlug(std::string_view projectId);
+   void SetProjectUserSlug(std::string_view projectId, std::string_view slug);
+
 private:
    std::optional<DBProjectData> DoGetProjectData(sqlite::RunResult result) const;
    bool OpenConnection();

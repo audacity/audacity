@@ -649,6 +649,9 @@ void RemoteProjectSnapshot::MarkProjectInDB(bool successfulDownload)
       data.SavesCount = 1;
 
    db.UpdateProjectData(data);
+
+   if (successfulDownload)
+      db.SetProjectUserSlug(mProjectInfo.Id, mProjectInfo.Username);
 }
 
 void RemoteProjectSnapshot::ReportProgress()

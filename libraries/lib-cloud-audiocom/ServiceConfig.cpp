@@ -17,24 +17,18 @@
 
 #include <rapidjson/document.h>
 
-#include "Prefs.h"
 #include "CodeConversions.h"
-
-
+#include "Prefs.h"
 
 namespace cloud::audiocom
 {
 namespace
 {
-StringSetting audioComApiEndpoint {
-   L"/CloudServices/AudioCom/ApiEndpoint",
-   L"https://api.audio.com"
-};
+StringSetting audioComApiEndpoint { L"/CloudServices/AudioCom/ApiEndpoint",
+                                    L"https://api.audio.com" };
 
-StringSetting audioComOAuthClientID {
-   L"/CloudServices/AudioCom/OAuthClientID",
-   L"1741964426607541"
-};
+StringSetting audioComOAuthClientID { L"/CloudServices/AudioCom/OAuthClientID",
+                                      L"1741964426607541" };
 
 StringSetting audioComOAuthClientSecret {
    L"/CloudServices/AudioCom/OAuthClientSecret",
@@ -56,19 +50,19 @@ StringSetting audioComFinishUploadPage {
    L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}"
 };
 
-StringSetting audioComAudioURL {
-   L"/CloudServices/AudioCom/AudioURL",
-   L"https://audio.com/{user_slug}/audio/{audio_slug}/edit"
-};
+StringSetting audioComFrontendUrl { L"/CloudServices/AudioCom/FrontendURL",
+                                    L"https://audio.com" };
 
 StringSetting audioComAudioDownloadMimeType {
-   L"/CloudServices/AudioCom/DownloadMimeType",
-   L"audio/x-wav"
+   L"/CloudServices/AudioCom/DownloadMimeType", L"audio/x-wav"
 };
 
-std::string Substitute(std::string pattern, std::initializer_list<std::pair<std::string_view, std::string_view>> substitutions)
+std::string Substitute(
+   std::string pattern,
+   std::initializer_list<std::pair<std::string_view, std::string_view>>
+      substitutions)
 {
-   for(auto& [key, value] : substitutions)
+   for (auto& [key, value] : substitutions)
    {
       auto pos = pattern.find(key);
 
@@ -90,13 +84,13 @@ std::string Substitute(std::string pattern, std::initializer_list<std::pair<std:
 
 ServiceConfig::ServiceConfig()
 {
-   mApiEndpoint = audacity::ToUTF8(audioComApiEndpoint.Read());
-   mOAuthClientID = audacity::ToUTF8(audioComOAuthClientID.Read());
+   mApiEndpoint       = audacity::ToUTF8(audioComApiEndpoint.Read());
+   mOAuthClientID     = audacity::ToUTF8(audioComOAuthClientID.Read());
    mOAuthClientSecret = audacity::ToUTF8(audioComOAuthClientSecret.Read());
-   mOAuthRedirectURL = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
-   mOAuthLoginPage = audacity::ToUTF8(audioComOAuthLoginPage.Read());
-   mFinishUploadPage = audacity::ToUTF8(audioComFinishUploadPage.Read());
-   mAudioURL = audacity::ToUTF8(audioComAudioURL.Read());
+   mOAuthRedirectURL  = audacity::ToUTF8(audioComOAuthRedirectURL.Read());
+   mOAuthLoginPage    = audacity::ToUTF8(audioComOAuthLoginPage.Read());
+   mFinishUploadPage  = audacity::ToUTF8(audioComFinishUploadPage.Read());
+   mFrontendURL       = audacity::ToUTF8(audioComFrontendUrl.Read());
    mPreferredMimeType = audacity::ToUTF8(audioComAudioDownloadMimeType.Read());
 }
 
@@ -144,7 +138,10 @@ std::string ServiceConfig::GetAudioURL(
    std::string_view userSlug, std::string_view audioSlug) const
 {
    return Substitute(
-      mAudioURL, { { "user_slug", userSlug }, { "audio_slug", audioSlug } });
+      "{frontend_url}/{user_slug}/audio/{audio_slug}/edit",
+      { { "frontend_url", mFrontendURL },
+        { "user_slug", userSlug },
+        { "audio_slug", audioSlug } });
 }
 
 std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const
@@ -198,7 +195,6 @@ ServiceConfig::GetExportConfig(const std::string& mimeType) const
    throw std::invalid_argument("unknown mime-type");
 }
 
-
 std::string ServiceConfig::GetDownloadMime() const
 {
    return mPreferredMimeType;
@@ -209,7 +205,9 @@ std::string ServiceConfig::GetAcceptLanguageValue() const
    auto language = Languages::GetLang();
 
    if (language.Contains(L"-") && language.Length() > 2)
-      return wxString::Format("%s;q=1.0, %s;q=0.7, *;q=0.5", language, language.Left(2)).ToStdString();
+      return wxString::Format(
+                "%s;q=1.0, %s;q=0.7, *;q=0.5", language, language.Left(2))
+         .ToStdString();
    else
       return wxString::Format("%s;q=1.0, *;q=0.5", language).ToStdString();
 }
@@ -222,7 +220,8 @@ std::string ServiceConfig::GetCreateProjectUrl() const
 std::string
 ServiceConfig::GetCreateSnapshotUrl(std::string_view projectId) const
 {
-   return Substitute("{api_url}/project/{project_id}/snapshot",
+   return Substitute(
+      "{api_url}/project/{project_id}/snapshot",
       { { "api_url", mApiEndpoint }, { "project_id", projectId } });
 }
 
@@ -248,11 +247,10 @@ std::string ServiceConfig::GetProjectsUrl(int page, int pageSize) const
 std::string ServiceConfig::GetProjectInfoUrl(std::string_view projectId) const
 {
    return Substitute(
-      "{api_url}/project/{project_id}",
-      {
-         { "api_url", mApiEndpoint },
-         { "project_id", projectId },
-      });
+      "{api_url}/project/{project_id}", {
+                                           { "api_url", mApiEndpoint },
+                                           { "project_id", projectId },
+                                        });
 }
 
 std::string ServiceConfig::GetSnapshotInfoUrl(
@@ -275,6 +273,16 @@ std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
          { "api_url", mApiEndpoint },
          { "project_id", projectId },
       });
+}
+
+std::string ServiceConfig::GetProjectPageUrl(
+   std::string_view userId, std::string_view projectId) const
+{
+   return Substitute(
+      "{frontend_url}/{user_slug}/projects/{project_id}",
+      { { "frontend_url", mFrontendURL },
+        { "user_slug", userId },
+        { "project_id", projectId } });
 }
 
 const ServiceConfig& GetServiceConfig()

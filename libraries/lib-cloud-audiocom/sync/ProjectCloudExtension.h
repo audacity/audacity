@@ -119,6 +119,8 @@ public:
 
    void SetUploadModeForNextSave(UploadMode mode);
 
+   std::string GetCloudProjectPage() const;
+
 private:
    struct UploadQueueElement;
    struct CloudStatusChangedNotifier;

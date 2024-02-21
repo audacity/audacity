@@ -53,23 +53,19 @@ CREATE TABLE IF NOT EXISTS block_hashes
 
 CREATE INDEX IF NOT EXISTS block_hashes_index ON block_hashes (hash);
 
-CREATE TABLE IF NOT EXISTS migrations
+CREATE TABLE IF NOT EXISTS project_users
 (
-   version INTEGER PRIMARY KEY
+   project_id INTEGER,
+   user_name TEXT,
+   PRIMARY KEY (project_id)
 );
-
-INSERT OR IGNORE INTO migrations (version) VALUES (0);
 )";
 
 }
 
 CloudProjectsDatabase::CloudProjectsDatabase()
 {
-   AppEvents::OnAppInitialized(
-      [this]
-      {
-         OpenConnection();
-      });
+   AppEvents::OnAppInitialized([this] { OpenConnection(); });
 }
 
 CloudProjectsDatabase& CloudProjectsDatabase::Get()
@@ -124,7 +120,7 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
    auto statement = connection->CreateStatement(
       "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects WHERE local_path = ? LIMIT 1");
 
-    if (!statement)
+   if (!statement)
       return {};
 
    return DoGetProjectData(statement->Prepare(projectFilePath).Run());
@@ -138,12 +134,17 @@ bool CloudProjectsDatabase::MarkProjectAsSynced(
    if (!connection)
       return false;
 
-   auto statement = connection->CreateStatement ("UPDATE projects SET sync_status = ? WHERE project_id = ? AND snapshot_id = ?");
+   auto statement = connection->CreateStatement(
+      "UPDATE projects SET sync_status = ? WHERE project_id = ? AND snapshot_id = ?");
 
    if (!statement)
       return false;
 
-   auto result = statement->Prepare(static_cast<int>(DBProjectData::SyncStatusSynced), projectId, snapshotId).Run();
+   auto result = statement
+                    ->Prepare(
+                       static_cast<int>(DBProjectData::SyncStatusSynced),
+                       projectId, snapshotId)
+                    .Run();
 
    if (!result.IsOk())
       return false;
@@ -170,7 +171,7 @@ void CloudProjectsDatabase::UpdateProjectBlockList(
 
    if (!result.IsOk())
    {
-     assert(false);
+      assert(false);
    }
 }
 
@@ -182,7 +183,8 @@ std::optional<std::string> CloudProjectsDatabase::GetBlockHash(
    if (!connection)
       return {};
 
-   auto statement = connection->CreateStatement ("SELECT hash FROM block_hashes WHERE project_id = ? AND block_id = ? LIMIT 1");
+   auto statement = connection->CreateStatement(
+      "SELECT hash FROM block_hashes WHERE project_id = ? AND block_id = ? LIMIT 1");
 
    if (!statement)
       return {};
@@ -216,7 +218,7 @@ void CloudProjectsDatabase::UpdateBlockHashes(
       std::string("UpdateBlockHashes_") +
       std::to_string(reinterpret_cast<size_t>(&localVar)));
 
-   auto statement = connection->CreateStatement (
+   auto statement = connection->CreateStatement(
       "INSERT OR REPLACE INTO block_hashes (project_id, block_id, hash) VALUES (?, ?, ?)");
 
    for (const auto& [blockId, hash] : hashes)
@@ -225,31 +227,74 @@ void CloudProjectsDatabase::UpdateBlockHashes(
    transaction.Commit();
 }
 
-bool CloudProjectsDatabase::UpdateProjectData(
-   const DBProjectData& projectData)
+bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
 {
    auto connection = GetConnection();
 
    if (!connection)
       return false;
 
-   auto statement = connection->CreateStatement (
+   auto statement = connection->CreateStatement(
       "INSERT OR REPLACE INTO projects (project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
    if (!statement)
       return false;
 
-   auto result = statement->Prepare (
-      projectData.ProjectId,
-      projectData.SnapshotId,
-      projectData.SavesCount,
-      projectData.LastAudioPreview,
-      projectData.LocalPath,
-      projectData.LastModified,
-      projectData.LastRead,
-      projectData.SyncStatus).Run();
+   auto result = statement
+                    ->Prepare(
+                       projectData.ProjectId, projectData.SnapshotId,
+                       projectData.SavesCount, projectData.LastAudioPreview,
+                       projectData.LocalPath, projectData.LastModified,
+                       projectData.LastRead, projectData.SyncStatus)
+                    .Run();
 
    return result.IsOk();
+}
+
+std::string
+CloudProjectsDatabase::GetProjectUserSlug(std::string_view projectId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return {};
+
+   auto statement = connection->CreateStatement(
+      "SELECT user_name FROM project_users WHERE project_id = ? LIMIT 1");
+
+   if (!statement)
+      return {};
+
+   auto result = statement->Prepare(projectId).Run();
+
+   for (auto row : result)
+   {
+      std::string slug;
+
+      if (!row.Get(0, slug))
+         return {};
+
+      return slug;
+   }
+
+   return {};
+}
+
+void CloudProjectsDatabase::SetProjectUserSlug(
+   std::string_view projectId, std::string_view slug)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "INSERT OR REPLACE INTO project_users (project_id, user_name) VALUES (?, ?)");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(projectId, slug).Run();
 }
 
 std::optional<DBProjectData>
@@ -297,7 +342,7 @@ bool CloudProjectsDatabase::OpenConnection()
    if (mConnection)
       return true;
 
-   const auto configDir = FileNames::ConfigDir();
+   const auto configDir  = FileNames::ConfigDir();
    const auto configPath = configDir + "/audiocom_sync.db";
 
    mConnection = sqlite::SafeConnection::Open(audacity::ToUTF8(configPath));
