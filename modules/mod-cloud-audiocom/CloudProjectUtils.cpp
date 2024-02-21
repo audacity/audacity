@@ -73,13 +73,15 @@ bool HandleFailure(const ProjectSyncResult& result)
 {
    if (
       result.Status == ProjectSyncResult::StatusCode::Succeeded ||
-      result.Result.Code != ResponseResultCode::Conflict)
+      result.Result.Code == ResponseResultCode::Conflict)
       return false;
 
    BasicUI::ShowErrorDialog(
       {}, XO("Error"), XO("Failed to open cloud project"), {},
       BasicUI::ErrorDialogOptions {}.Log(
          audacity::ToWString(result.Result.Content)));
+
+   wxLogError("Failed to open cloud project: %s", result.Result.Content);
 
    return true;
 }
