@@ -43,7 +43,7 @@ MixdownPropertiesDialog::MixdownPropertiesDialog(wxWindow* parent)
 
    auto description2 = new wxStaticText {
       this, wxID_ANY,
-      XO("Please select how often"
+      XO("Please select how often "
          "you'd like to generate a new mixdown of your project. This setting can be changed in the preferences menu.")
          .Translation()
    };
