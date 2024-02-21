@@ -68,9 +68,9 @@ namespace {
 static EnumSetting< WaveformSettings::ScaleTypeValues > waveformScaleSetting{
    waveformScaleKey,
    {
+      { dbLinValueString, XO("Linear (dB)") },
       { wxT("Linear"), XO("Linear (amp)") },
       { dbLogValueString, XO("Logarithmic (dB)") },
-      { dbLinValueString, XO("Linear (dB)") },
    },
 
    0, // linear
