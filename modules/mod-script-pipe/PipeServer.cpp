@@ -161,6 +161,7 @@ void PipeServer()
    if (fromFifo == NULL)
    {
       perror("Unable to open fifo from server to script");
+      fclose(toFifo);
       return;
    }
 
