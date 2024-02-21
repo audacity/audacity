@@ -57,6 +57,8 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
    auto saveToCloudButton =
       safenew wxButton(this, wxID_ANY, XXO("Save to &cloud").Translation());
 
+   saveToCloudButton->SetFont(descriptionFont);
+
    auto saveToComputerImage =
       safenew wxStaticBitmap(this, wxID_ANY, *bin2c_SaveLocally_png);
 
@@ -71,6 +73,8 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
 
    auto saveToComputerButton =
       safenew wxButton(this, wxID_ANY, XXO("Save to &computer").Translation());
+
+   saveToComputerButton->SetFont(descriptionFont);
 
    auto rememberChoiceCheckbox = safenew wxCheckBox(
       this, wxID_ANY,
@@ -109,7 +113,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
       saveToComputerButton,
       wxSizerFlags {}.Border(wxTOP | wxBOTTOM | wxLEFT, 16));
 
-   topSizer->Add(computerSizer, wxSizerFlags {}.Expand());
+   topSizer->Add(computerSizer, wxSizerFlags {}.Expand().Border(wxLEFT, 8));
 
    sizer->Add(topSizer, wxSizerFlags {}.Expand().Border(wxALL, 16));
 
