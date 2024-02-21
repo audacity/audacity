@@ -16,10 +16,10 @@ namespace
 {
 std::vector<ProjectFileIOExtension*>& GetExtensions()
 {
-   static std::vector < ProjectFileIOExtension*> extensions;
+   static std::vector<ProjectFileIOExtension*> extensions;
    return extensions;
 }
-}
+} // namespace
 
 ProjectFileIOExtension::~ProjectFileIOExtension() = default;
 
@@ -29,14 +29,14 @@ ProjectFileIOExtensionRegistry::Extension::Extension(
    GetExtensions().push_back(&extension);
 }
 
-bool ProjectFileIOExtensionRegistry::OnOpen(
+OnOpenAction ProjectFileIOExtensionRegistry::OnOpen(
    AudacityProject& project, const std::string& path)
 {
    for (auto& extension : GetExtensions())
-      if (!extension->OnOpen(project, path))
-         return false;
+      if (extension->OnOpen(project, path) == OnOpenAction::Cancel)
+         return OnOpenAction::Cancel;
 
-   return true;
+   return OnOpenAction::Continue;
 }
 
 void ProjectFileIOExtensionRegistry::OnLoad(AudacityProject& project)
@@ -45,27 +45,28 @@ void ProjectFileIOExtensionRegistry::OnLoad(AudacityProject& project)
       extension->OnLoad(project);
 }
 
-bool ProjectFileIOExtensionRegistry::OnSave(
+OnSaveAction ProjectFileIOExtensionRegistry::OnSave(
    AudacityProject& project, const ProjectSaveCallback& projectSaveCallback)
 {
    for (auto& extension : GetExtensions())
    {
-      if (extension->OnSave(project, projectSaveCallback))
-         return true;
+      if (auto action = extension->OnSave(project, projectSaveCallback);
+          action != OnSaveAction::Continue)
+         return action;
    }
 
-   return false;
+   return OnSaveAction::Continue;
 }
 
-bool ProjectFileIOExtensionRegistry::OnClose(AudacityProject& project)
+OnCloseAction ProjectFileIOExtensionRegistry::OnClose(AudacityProject& project)
 {
    for (auto& extension : GetExtensions())
    {
-      if (!extension->OnClose(project))
-         return false;
+      if (extension->OnClose(project) == OnCloseAction::Veto)
+         return OnCloseAction::Veto;
    }
 
-   return true;
+   return OnCloseAction::Continue;
 }
 
 void ProjectFileIOExtensionRegistry::OnUpdateSaved(

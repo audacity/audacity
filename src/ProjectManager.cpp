@@ -460,7 +460,8 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    }
 
    // Ask extensions if they allow the project to be closed
-   if (!ProjectFileIOExtensionRegistry::OnClose(mProject) && event.CanVeto())
+   if (ProjectFileIOExtensionRegistry::OnClose(mProject) == OnCloseAction::Veto
+      && event.CanVeto())
    {
       event.Veto();
       return;
