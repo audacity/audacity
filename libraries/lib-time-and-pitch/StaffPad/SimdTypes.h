@@ -106,6 +106,29 @@ __finl void perform_parallel_simd_aligned(float *a, float *b, int n, const fnc &
     f(a[i], b[i]);
 }
 
+// two buffers read, one written
+template <typename fnc>
+__finl void perform_parallel_simd_aligned(float *a, const float *b, int n, const fnc &f)
+{
+  // fnc& f needs to be a lambda of type [](auto &a, const auto &b){}.
+  // the autos will be float_x4/float
+  constexpr int N = 4;
+  constexpr int byte_size = sizeof(float);
+
+  assert(is_aligned(a, N * byte_size) && is_aligned(b, N * byte_size));
+
+  for (int i = 0; i <= n - N; i += N)
+  {
+    auto x = float_x4_load_aligned(a + i);
+    auto y = float_x4_load_aligned(b + i);
+    f(x, y);
+    store_aligned(x, a + i);
+  }
+  // deal with last partial packet
+  for (int i = n & (~(N - 1)); i < n; ++i)
+    f(a[i], b[i]);
+}
+
 /// template for applying math to one data buffer
 template <typename fnc>
 __finl void perform_parallel_simd_aligned(float *a, int n, const fnc &f)
