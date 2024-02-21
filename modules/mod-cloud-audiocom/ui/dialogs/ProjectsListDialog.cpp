@@ -66,11 +66,11 @@ public:
          return XO("less than 1 minute").Translation();
       if (time_passed < hours(1))
          return XP("one minutes ago", "%d minutes ago",
-                   0)(duration_cast<minutes>(time_passed).count())
+                   0)(static_cast<int>(duration_cast<minutes>(time_passed).count()))
             .Translation();
       if (time_passed < hours(48))
          return XP("one hour ago", "%d hours ago",
-                   0)(duration_cast<hours>(time_passed).count())
+                   0)(static_cast<int>(duration_cast<hours>(time_passed).count()))
             .Translation();
 
       return wxDateTime(static_cast<time_t>(time)).Format();
@@ -222,7 +222,7 @@ public:
       return mResponse.Pagination.PagesCount;
    }
 
-   std::string_view GetSelectedProjectId() const
+   std::string GetSelectedProjectId() const
    {
       const auto selectedRow = mOwner.mProjectsTable->GetSelectedRows();
 
@@ -382,7 +382,9 @@ void ProjectsListDialog::OnOpen()
 
    EndModal(wxID_OK);
 
-   OpenProjectFromCloud(mProject, selectedProjectId, {}, false);
+    BasicUI::CallAfter([project = mProject, selectedProjectId] {
+        OpenProjectFromCloud(project, selectedProjectId, {}, false);
+    });
 }
 
 } // namespace cloud::audiocom::sync
