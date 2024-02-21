@@ -220,33 +220,32 @@ void PitchAndSpeedDialog::PopulateOrExchange(
       s.SetBorder(0);
 
       {
-         ScopedHorizontalLay h { s, wxLeft };
-         s.AddPrompt(XO("Clip Speed"));
-      }
-      {
-         ScopedHorizontalLay h { s, wxLeft };
-         auto txtCtrl = s.Name(XO("Clip Speed"))
-                           .NameSuffix(Verbatim("%"))
-                           .TieNumericTextBox({}, mClipSpeed, 14, true);
-         txtCtrl->Enable(!mPlaybackOngoing);
-         if (focus.has_value() && *focus == PitchAndSpeedDialogFocus::Speed)
-            txtCtrl->SetFocus();
-         if (!mPlaybackOngoing)
+         ScopedStatic scopedStatic { s, XO("Clip Speed") };
          {
-            txtCtrl->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnOk(); });
-            txtCtrl->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
-               try
-               {
-                  mClipSpeed = std::stod(event.GetString().ToStdString());
-               }
-               catch (const std::exception&)
-               {
-                  // Something silly was entered; reset dialog
-                  UpdateDialog();
-               }
-            });
+            ScopedHorizontalLay h { s, wxLeft };
+            auto txtCtrl = s.Name(XO("Clip Speed"))
+                              .NameSuffix(Verbatim("%"))
+                              .TieNumericTextBox({}, mClipSpeed, 14, true);
+            txtCtrl->Enable(!mPlaybackOngoing);
+            if (focus.has_value() && *focus == PitchAndSpeedDialogFocus::Speed)
+               txtCtrl->SetFocus();
+            if (!mPlaybackOngoing)
+            {
+               txtCtrl->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnOk(); });
+               txtCtrl->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
+                  try
+                  {
+                     mClipSpeed = std::stod(event.GetString().ToStdString());
+                  }
+                  catch (const std::exception&)
+                  {
+                     // Something silly was entered; reset dialog
+                     UpdateDialog();
+                  }
+               });
+            }
+            s.AddFixedText(Verbatim("%"));
          }
-         s.AddFixedText(Verbatim("%"));
       }
    }
 
