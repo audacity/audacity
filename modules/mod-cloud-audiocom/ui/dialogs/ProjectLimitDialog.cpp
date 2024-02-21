@@ -22,7 +22,7 @@ cloud::audiocom::sync::ProjectLimitDialog::ProjectLimitDialog(
       "%s", "audio.com", "https://audio.com");
    AddParagraph(
       XO("You can also save this project locally to avoid losing changes."));
-   AddButton(SaveLocallyButtonIdentifier(), XO("Save to computer"), EscButton);
+   AddButton(SaveLocallyButtonIdentifier(), XO("Save to computer"));
    AddButton(VisitAudioComIdentifier(), XO("Visit audio.com"), DefaultButton);
 }
 DialogButtonIdentifier ProjectLimitDialog::SaveLocallyButtonIdentifier()

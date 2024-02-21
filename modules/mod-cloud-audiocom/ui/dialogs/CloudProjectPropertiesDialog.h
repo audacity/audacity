@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include <string>
 #include <utility>
 
 #include "wxPanelWrapper.h"
@@ -46,7 +47,7 @@ public:
       SaveLocally
    };
 
-   static std::pair<Action, wxString> Show(
+   static std::pair<Action, std::string> Show(
       const ServiceConfig& serviceConfig, OAuthService& authService,
       UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave);
 
@@ -55,7 +56,7 @@ private:
    void LayoutControls();
    void SetupEvents();
 
-   wxString GetProjectName() const;
+   std::string GetProjectName() const;
    void OnUpdateCloudSaveState();
 
    UserPanel* mUserPanel {};

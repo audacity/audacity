@@ -95,7 +95,7 @@ public:
    std::string GetCloudProjectId() const;
    std::string GetSnapshotId() const;
 
-   bool OnUpdateSaved(const ProjectSerializer& serializer);
+   void OnUpdateSaved(const ProjectSerializer& serializer);
 
    std::weak_ptr<AudacityProject> GetProject() const;
 
@@ -128,7 +128,7 @@ private:
    void UpdateIdFromDatabase();
 
    void UnsafeUpdateProgress();
-   void Publish(CloudStatusChangedMessage cloudStatus);
+   void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);
 
    void MarkProjectSynced(bool success);
 

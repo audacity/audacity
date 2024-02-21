@@ -128,9 +128,6 @@ public:
    {
       switch (state)
       {
-      case State::Synced:
-      case State::Dirty:
-         return mSyncedBitmap->GetWidth() + Padding * 2;
       case State::Failed:
          return mSyncedBitmap->GetWidth() + mCloudSyncFailedMessageWidth +
                 Padding * 4;
@@ -139,7 +136,7 @@ public:
                 Padding * 4;
       }
 
-      return mSyncedBitmap->GetWidth();
+      return mSyncedBitmap->GetWidth() + Padding * 2;
    }
 
    const wxBitmap* GetBitmap() const

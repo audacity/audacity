@@ -28,9 +28,8 @@
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/ProjectVersionConflictDialog.h"
 #include "ui/dialogs/UpdateCloudPreviewDialog.h"
-#include "ui/dialogs/UploadCanceledDialog.h"
 
-#include "sync/LocalProjectSnapshot.h"
+#include "sync/CloudSyncUtils.h"
 #include "sync/MixdownUploader.h"
 #include "sync/ProjectCloudExtension.h"
 
@@ -275,8 +274,7 @@ bool HandleProjectLink(std::string_view uri)
    return true;
 }
 
-void UploadMixdownForSnapshot(
-   AudacityProject& project, std::shared_ptr<LocalProjectSnapshot> snapshot)
+void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
 {
    auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
@@ -292,7 +290,8 @@ void UploadMixdownForSnapshot(
       return;
 
    auto progressDialog = BasicUI::MakeProgress(
-      XO("Save to audio.com"), XO("Exporting..."), BasicUI::ProgressShowCancel);
+      XO("Save to audio.com"), XO("Generating mixdown..."),
+      BasicUI::ProgressShowCancel);
 
    auto mixdownUploader = MixdownUploader::Upload(
       GetServiceConfig(), project,
@@ -303,18 +302,18 @@ void UploadMixdownForSnapshot(
                 BasicUI::ProgressResult::Success;
       });
 
-   bool inFailedState = false;
+   mixdownUploader->SetUrls(urls);
 
-   snapshot->SetOnSnapshotCreated(
-      [&inFailedState, mixdownUploader](const auto& response)
+   auto subscription = projectCloudExtension.SubscribeStatusChanged(
+      [progressDialog = progressDialog.get(),
+       mixdownUploader](const CloudStatusChangedMessage& message)
       {
-         inFailedState = !response.has_value();
+         if (message.Status != ProjectSyncStatus::Failed)
+            return;
 
-         if (!inFailedState)
-            mixdownUploader->SetUrls(response->SyncState.MixdownUrls);
-         else
-            mixdownUploader->Cancel();
-      });
+         mixdownUploader->Cancel();
+      },
+      true);
 
    auto future = mixdownUploader->GetResultFuture();
 
@@ -324,9 +323,7 @@ void UploadMixdownForSnapshot(
 
    auto result = future.get();
 
-   if (result.State == MixdownState::Cancelled && !inFailedState)
-      UploadCanceledDialog { &project }.ShowDialog();
-   else if (result.State == MixdownState::Succeeded)
+   if (result.State == MixdownState::Succeeded)
       projectCloudExtension.MixdownSynced();
 }
 

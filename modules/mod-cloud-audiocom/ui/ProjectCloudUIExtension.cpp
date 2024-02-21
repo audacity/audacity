@@ -23,6 +23,8 @@
 
 #include "CloudProjectUtils.h"
 #include "OAuthService.h"
+#include "ServiceConfig.h"
+#include "UserService.h"
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
@@ -112,14 +114,14 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
    if (!mInSync)
    {
       mProgressDialog.reset();
-      if (mNeedsFirstSaveDialog)
+      if (mNeedsFirstSaveDialog && message.Status == ProjectSyncStatus::Synced)
       {
          mNeedsFirstSaveDialog = false;
 
          if (
             SyncSuccessDialog { &mProject }.ShowDialog() ==
             SyncSuccessDialog::ViewOnlineIdentifier())
-         {       
+         {
             BasicUI::OpenInDefaultBrowser(
                ProjectCloudExtension::Get(mProject).GetCloudProjectPage());
          }
@@ -150,13 +152,18 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
 
       if (result == ProjectLimitDialog::VisitAudioComIdentifier())
       {
+         const auto slug = audacity::ToUTF8(GetUserService().GetUserSlug());
+
+         BasicUI::OpenInDefaultBrowser(
+            GetServiceConfig().GetProjectsPageUrl(slug));
+
          WaitForActionDialog { &mProject,
                                XO("Please, complete your action on audio.com"),
                                true }
             .ShowDialog();
          SaveToCloud(mProject, UploadMode::Normal);
       }
-      else
+      else if (result == ProjectLimitDialog::SaveLocallyButtonIdentifier())
       {
          if (!ResaveLocally(mProject))
             SaveToCloud(mProject, UploadMode::Normal);

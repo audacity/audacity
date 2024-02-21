@@ -37,7 +37,8 @@ class ProjectUploadOperation /* not final */
 public:
    virtual ~ProjectUploadOperation() = default;
 
-   virtual void Start(UploadMode mode, const ProjectUploadData& data) = 0;
+   virtual void Start(UploadMode mode) = 0;
+   virtual void SetUploadData(const ProjectUploadData& data) = 0;
    virtual void Cancel() = 0;
    virtual bool IsCompleted() const = 0;
 }; // class AsynchronousOperation

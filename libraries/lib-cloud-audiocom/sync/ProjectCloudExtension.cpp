@@ -62,10 +62,30 @@ struct ProjectCloudExtension::UploadQueueElement final
 struct ProjectCloudExtension::CloudStatusChangedNotifier final :
     private Observer::Publisher<CloudStatusChangedMessage>
 {
-   void PublishSafe(CloudStatusChangedMessage message)
+   void Enqueue(CloudStatusChangedMessage message, bool canMerge)
    {
+      auto lock = std::lock_guard { QueueMutex };
+
+      if (Queue.empty() || !canMerge)
+         Queue.push_back({ message, canMerge });
+      else if (Queue.back().second)
+         Queue.back().first = message;
+      else
+         Queue.push_back({ message, canMerge });
+   }
+
+   void PublishSafe()
+   {
+      QueueType queue;
+      {
+         auto lock = std::lock_guard { QueueMutex };
+         std::swap(queue, Queue);
+      }
+
       auto lock = std::lock_guard { OberverMutex };
-      Publish(message);
+
+      for (const auto& [message, _] : queue)
+         Publish(message);
    }
 
    Observer::Subscription
@@ -75,7 +95,11 @@ struct ProjectCloudExtension::CloudStatusChangedNotifier final :
       return Subscribe(std::move(callback));
    }
 
-   std::mutex OberverMutex;
+   using QueueType = std::vector<std::pair<CloudStatusChangedMessage, bool>>;
+
+   std::mutex QueueMutex;
+   QueueType Queue;
+   std::recursive_mutex OberverMutex;
 };
 
 ProjectCloudExtension::ProjectCloudExtension(AudacityProject& project)
@@ -160,24 +184,13 @@ void ProjectCloudExtension::OnBlocksHashed(
 
    element->ReadyForUpload = true;
 
-   for (auto& operation : mUploadQueue)
+   auto mode = UploadMode::Normal;
    {
-      // It is safe to start the upload right away
-      if (operation.get() == element)
-      {
-         auto mode = UploadMode::Normal;
-         {
-            auto lock = std::lock_guard { mIdentifiersMutex };
-            std::swap(mode, mNextUploadMode);
-         }
-
-         uploadOperation.Start(mode, element->Data);
-         return;
-      }
-      // There is a pending operation, wait for it to finish
-      if (!operation->ProjectDataUploaded)
-         return;
+      auto lock = std::lock_guard { mIdentifiersMutex };
+      std::swap(mode, mNextUploadMode);
    }
+
+   uploadOperation.Start(mode);
 }
 
 void ProjectCloudExtension::OnSnapshotCreated(
@@ -223,19 +236,6 @@ void ProjectCloudExtension::OnSnapshotCreated(
 
    element->SnapshotCreated = true;
    element->BlocksTotal     = response.SyncState.MissingBlocks.size();
-
-   for (auto& operation : mUploadQueue)
-   {
-      if (operation->SnapshotCreated)
-         continue;
-
-      if (!operation->ReadyForUpload)
-         return;
-
-      // All saves queued during the upload should act as if they were
-      // just project updates
-      operation->Operation->Start(UploadMode::Normal, operation->Data);
-   }
 
    UnsafeUpdateProgress();
 }
@@ -298,10 +298,15 @@ void ProjectCloudExtension::OnSyncCompleted(
 
    MarkProjectSynced(!error.has_value());
 
-   Publish({ error.has_value() ? ProjectSyncStatus::Failed :
-                                 ProjectSyncStatus::Synced,
-             {},
-             error });
+   Publish(
+      { error.has_value() ? ProjectSyncStatus::Failed :
+                            ProjectSyncStatus::Synced,
+        {},
+        error },
+      false);
+
+   if (!IsCloudProject())
+      Publish({ ProjectSyncStatus::Local }, false);
 }
 
 void ProjectCloudExtension::CancelSync()
@@ -331,12 +336,12 @@ std::string ProjectCloudExtension::GetSnapshotId() const
    return mSnapshotId;
 }
 
-bool ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
+void ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
 {
    auto lock = std::lock_guard { mUploadQueueMutex };
 
    if (mUploadQueue.empty())
-      return false;
+      return;
 
    const size_t dictSize    = serializer.GetDict().GetSize();
    const size_t projectSize = serializer.GetData().GetSize();
@@ -365,7 +370,10 @@ bool ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
 
    mUploadQueue.back()->Data.ProjectSnapshot = std::move(data);
 
-   return true;
+   if (mUploadQueue.back()->Operation)
+      mUploadQueue.back()->Operation->SetUploadData(mUploadQueue.back()->Data);
+   else
+      Publish({ ProjectSyncStatus::Failed }, false);
 }
 
 std::weak_ptr<AudacityProject> ProjectCloudExtension::GetProject() const
@@ -495,12 +503,14 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
       mSnapshotId = projectData->SnapshotId;
    }
 
-   Publish({
-      projectData->SyncStatus ==
-            DBProjectData::SyncStatusType::SyncStatusSynced ?
-         ProjectSyncStatus::Synced :
-         ProjectSyncStatus::Unsynced,
-   });
+   Publish(
+      {
+         projectData->SyncStatus ==
+               DBProjectData::SyncStatusType::SyncStatusSynced ?
+            ProjectSyncStatus::Synced :
+            ProjectSyncStatus::Unsynced,
+      },
+      false);
 }
 
 void ProjectCloudExtension::UnsafeUpdateProgress()
@@ -520,23 +530,29 @@ void ProjectCloudExtension::UnsafeUpdateProgress()
 
    assert(totalElements > 0);
 
-   Publish({ ProjectSyncStatus::Syncing,
-             double(handledElements) / double(totalElements) });
+   Publish(
+      { ProjectSyncStatus::Syncing,
+        double(handledElements) / double(totalElements) },
+      true);
 }
 
-void ProjectCloudExtension::Publish(CloudStatusChangedMessage cloudStatus)
+void ProjectCloudExtension::Publish(
+   CloudStatusChangedMessage cloudStatus, bool canMerge)
 {
    {
       auto lock   = std::lock_guard { mStatusMutex };
       mLastStatus = cloudStatus;
    }
 
-   mAsyncStateNotifier->PublishSafe(cloudStatus);
+   mAsyncStateNotifier->Enqueue(cloudStatus, canMerge);
+   mUIStateNotifier->Enqueue(cloudStatus, canMerge);
+
+   mAsyncStateNotifier->PublishSafe();
 
    if (BasicUI::IsUiThread())
    {
       mUINotificationPending.store(false);
-      mUIStateNotifier->PublishSafe(cloudStatus);
+      mUIStateNotifier->PublishSafe();
    }
    else if (!mUINotificationPending.exchange(true))
    {
@@ -544,10 +560,7 @@ void ProjectCloudExtension::Publish(CloudStatusChangedMessage cloudStatus)
          [this]
          {
             if (mUINotificationPending.exchange(false))
-            {
-               auto lock = std::lock_guard { mStatusMutex };
-               mUIStateNotifier->PublishSafe(mLastStatus);
-            }
+               mUIStateNotifier->PublishSafe();
          });
    }
 }

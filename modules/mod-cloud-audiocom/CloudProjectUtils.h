@@ -11,7 +11,6 @@
 #pragma once
 
 #include <string_view>
-#include <memory>
 
 #include "sync/AsynchronousOperation.h"
 
@@ -19,7 +18,7 @@ class AudacityProject;
 
 namespace cloud::audiocom::sync
 {
-class LocalProjectSnapshot;
+class UploadUrls;
 
 void OpenProjectFromCloud(
    AudacityProject* potentialTarget, std::string_view projectId,
@@ -32,8 +31,7 @@ void SaveToCloud(AudacityProject& project, UploadMode mode);
 
 bool HandleProjectLink(std::string_view link);
 
-void UploadMixdownForSnapshot(
-   AudacityProject& project, std::shared_ptr<LocalProjectSnapshot> snapshot);
+void UploadMixdown(AudacityProject& project, const UploadUrls& urls);
 
 bool ResaveLocally(AudacityProject& project);
 

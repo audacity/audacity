@@ -10,8 +10,8 @@
 **********************************************************************/
 
 #include "AuthorizationHandler.h"
-#include "CloudSettings.h"
 #include "CloudProjectUtils.h"
+#include "CloudSettings.h"
 
 #include "OAuthService.h"
 #include "ServiceConfig.h"
@@ -41,9 +41,11 @@ using namespace cloud::audiocom::sync;
 
 class IOExtension final : public ProjectFileIOExtension
 {
-   bool OnOpen(AudacityProject& project, const std::string& path) override
+   OnOpenAction
+   OnOpen(AudacityProject& project, const std::string& path) override
    {
-      return SyncCloudProject(project, path);
+      return SyncCloudProject(project, path) ? OnOpenAction::Continue :
+                                               OnOpenAction::Cancel;
    }
 
    void OnLoad(AudacityProject& project) override
@@ -51,56 +53,89 @@ class IOExtension final : public ProjectFileIOExtension
       ProjectCloudExtension::Get(project).OnLoad();
    }
 
-   bool OnSave(
+   OnSaveAction CreateSnapshot(AudacityProject& project, std::string name)
+   {
+      auto& projectCloudExtension = ProjectCloudExtension::Get(project);
+
+      projectCloudExtension.OnSyncStarted();
+
+      auto future = LocalProjectSnapshot::Create(
+         GetServiceConfig(), GetOAuthService(), projectCloudExtension, name);
+
+      // Do we need UI here?
+      //while (future.wait_for(std::chrono::milliseconds(50)) !=
+      //       std::future_status::ready)
+      //   BasicUI::Yield();
+
+      auto result = future.get();
+
+      if (!result)
+         // Prevent any updates to the file to preserve the correct state.
+         // Errors would be handled by the UI extension
+         return OnSaveAction::Cancelled;
+
+      BasicUI::CallAfter([urls    = result->SyncState.MixdownUrls,
+                          project = projectCloudExtension.GetProject().lock()]
+                         { UploadMixdown(*project, urls); });
+
+      return OnSaveAction::Continue;
+   }
+
+   OnSaveAction SaveCloudProject (AudacityProject& project)
+   {
+      auto authResult = PerformBlockingAuth(&project);
+
+      if (authResult.Result == AuthResult::Status::Failure)
+      {
+         LinkFailedDialog dialog { &ProjectWindow::Get(project) };
+         dialog.ShowModal();
+         // Pretend we have canceled the save
+         return OnSaveAction::Cancelled;
+      }
+      else if (authResult.Result == AuthResult::Status::Cancelled)
+      {
+         return OnSaveAction::Cancelled;
+      }
+      else if (authResult.Result == AuthResult::Status::UseAlternative)
+      {
+         ProjectFileIO::Get(project).MarkTemporary();
+         return OnSaveAction::Continue;
+      }
+
+      return CreateSnapshot(
+         project, audacity::ToUTF8(project.GetProjectName()));
+   }
+
+   OnSaveAction OnSave(
       AudacityProject& project,
       const ProjectSaveCallback& projectSaveCallback) override
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
       auto& projectFileIO         = ProjectFileIO::Get(project);
 
-      if (
-         !projectFileIO.IsTemporary() &&
-         !projectCloudExtension.IsPendingCloudSave())
-      {
-         if (projectCloudExtension.IsCloudProject())
-         {
-            auto authResult = PerformBlockingAuth(&project);
-
-            if (authResult.Result == AuthResult::Status::Failure)
-            {
-               LinkFailedDialog dialog { &ProjectWindow::Get(project) };
-               dialog.ShowModal();
-               // Pretend we have canceled the save
-               return true;
-            }
-            else if (authResult.Result == AuthResult::Status::Cancelled)
-            {
-               return true;
-            }
-            else if (authResult.Result == AuthResult::Status::UseAlternative)
-            {
-               return false;
-            }
-
-            projectCloudExtension.OnSyncStarted();
-         }
-
-         return false;
-      }
+      const bool isTemporary      = projectFileIO.IsTemporary();
+      const bool pendingCloudSave = projectCloudExtension.IsPendingCloudSave();
+      const bool isCloudProject   = projectCloudExtension.IsCloudProject();
 
       auto parent = &ProjectWindow::Get(project);
 
-      if (
-         projectFileIO.IsTemporary() &&
-         !projectCloudExtension.IsPendingCloudSave())
+      // Check location first
+      if (isTemporary && !pendingCloudSave)
       {
          SelectSaveLocationDialog selectSaveLocationDialog { parent };
          const auto saveLocation = selectSaveLocationDialog.ShowModal();
 
          // Not doing a cloud save
          if (saveLocation != wxID_SAVE)
-            return false;
+            return OnSaveAction::Continue;
       }
+
+      // For regular projects - do nothing
+      if (!isTemporary && !pendingCloudSave && !isCloudProject)
+         return OnSaveAction::Continue;
+
+      if (!isTemporary)
+         return SaveCloudProject(project);
 
       auto result = CloudProjectPropertiesDialog::Show(
          GetServiceConfig(), GetOAuthService(), GetUserService(),
@@ -108,57 +143,48 @@ class IOExtension final : public ProjectFileIOExtension
 
       if (result.first == CloudProjectPropertiesDialog::Action::Cancel)
          // Suppress the Save function completely
-         return true;
+         return OnSaveAction::Cancelled;
       else if (
          result.first == CloudProjectPropertiesDialog::Action::SaveLocally)
          // Just let the things flow as usual
-         return false;
+         return OnSaveAction::Continue;
 
       // Adjust the mix down generation rate (if needed)
       MixdownPropertiesDialog::ShowIfNeeded(parent);
+
+      if (CreateSnapshot(project, result.second) == OnSaveAction::Cancelled)
+         return OnSaveAction::Cancelled;
 
       const auto dir = CloudProjectsSavePath.Read();
       FileNames::MkDir(dir);
 
       const auto filePath = sync::MakeSafeProjectPath(dir, result.second);
 
-      // Notify the extension that Sync has started
-      projectCloudExtension.OnSyncStarted();
-
       if (!projectSaveCallback(audacity::ToUTF8(filePath), true))
          projectCloudExtension.OnSyncCompleted(
             nullptr, MakeClientFailure(XO("Failed to save the project")));
 
-      return true;
+      return OnSaveAction::Handled;
    }
 
-   bool OnClose(AudacityProject& project) override
+   OnCloseAction OnClose(AudacityProject& project) override
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
       if (!projectCloudExtension.IsCloudProject())
-         return true;
+         return OnCloseAction::Continue;
 
       auto& projectCloudUIExtension = ProjectCloudUIExtension::Get(project);
 
-      return projectCloudUIExtension.AllowClosing();
+      return projectCloudUIExtension.AllowClosing() ? OnCloseAction::Continue :
+                                                      OnCloseAction::Veto;
    }
 
    void OnUpdateSaved(
       AudacityProject& project, const ProjectSerializer& serializer) override
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
-
-      if (!projectCloudExtension.OnUpdateSaved(serializer))
-         return;
-
-      auto snapshot = LocalProjectSnapshot::Create(
-         GetServiceConfig(), GetOAuthService(), projectCloudExtension);
-
-      if (snapshot != nullptr)
-         // This operation is blocking, but that is expected
-         // and it Yields appropriately 
-         UploadMixdownForSnapshot(project, snapshot);
+      projectCloudExtension.OnUpdateSaved(serializer);
    }
 
    bool

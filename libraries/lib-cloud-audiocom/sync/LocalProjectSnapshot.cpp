@@ -205,11 +205,12 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 
 LocalProjectSnapshot::LocalProjectSnapshot(
    Tag, const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension)
+   ProjectCloudExtension& extension, std::string name)
     : mProjectCloudExtension { extension }
     , mWeakProject { extension.GetProject() }
     , mServiceConfig { config }
     , mOAuthService { oauthService }
+    , mProjectName { std::move(name) }
 {
 }
 
@@ -217,9 +218,9 @@ LocalProjectSnapshot::~LocalProjectSnapshot()
 {
 }
 
-std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
+LocalProjectSnapshot::Future LocalProjectSnapshot::Create(
    const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension)
+   ProjectCloudExtension& extension, std::string name)
 {
    auto project = extension.GetProject().lock();
 
@@ -227,7 +228,7 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
       return {};
 
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
-      Tag {}, config, oauthService, extension);
+      Tag {}, config, oauthService, extension, std::move(name));
 
    snapshot->mProjectCloudExtension.OnUploadOperationCreated(snapshot);
 
@@ -248,7 +249,7 @@ std::shared_ptr<LocalProjectSnapshot> LocalProjectSnapshot::Create(
          snapshot->mProjectCloudExtension.OnBlocksHashed(*snapshot);
       });
 
-   return snapshot;
+   return snapshot->mCreateSnapshotPromise.get_future();
 }
 
 bool LocalProjectSnapshot::IsCompleted() const
@@ -261,34 +262,19 @@ std::shared_ptr<AudacityProject> LocalProjectSnapshot::GetProject()
    return mWeakProject.lock();
 }
 
-void LocalProjectSnapshot::Start(UploadMode mode, const ProjectUploadData& data)
+void LocalProjectSnapshot::Start(UploadMode mode)
 {
-   mProjectData = data;
    mUploadMode  = mode;
    UpdateProjectSnapshot();
 }
 
-void LocalProjectSnapshot::Cancel()
+void LocalProjectSnapshot::SetUploadData(const ProjectUploadData& data)
 {
+   mProjectDataPromise.set_value(data);
 }
 
-void LocalProjectSnapshot::SetOnSnapshotCreated(
-   OnSnapshotCreatedCallback callback)
+void LocalProjectSnapshot::Cancel()
 {
-   {
-      auto lock = std::lock_guard { mCreateSnapshotResponseMutex };
-
-      if (mCreateSnapshotResponse || mCompleted.load())
-      {
-         if (callback)
-            callback(*mCreateSnapshotResponse);
-      }
-      else if (callback)
-      {
-         auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
-         mOnSnapshotCreatedCallbacks.push_back(std::move(callback));
-      }
-   }
 }
 
 void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
@@ -382,12 +368,13 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
    }
 
    const bool isCloudProject = mProjectCloudExtension.IsCloudProject();
-   const bool createNew      = mUploadMode == UploadMode::CreateNew || !isCloudProject;
+   const bool createNew =
+      mUploadMode == UploadMode::CreateNew || !isCloudProject;
 
    ProjectForm projectForm;
 
    if (createNew)
-      projectForm.Name = audacity::ToUTF8(project->GetProjectName());
+      projectForm.Name = mProjectName;
    else
       projectForm.HeadSnapshotId = mProjectCloudExtension.GetSnapshotId();
 
@@ -440,7 +427,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
          {
             UploadFailed(DeduceUploadError(*response));
 
-            ExecuteOnSnapshotCreatedCallbacks({});
+            mCreateSnapshotPromise.set_value({});
             return;
          }
 
@@ -452,7 +439,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
             UploadFailed(MakeClientFailure(
                XO("Invalid Response: %s").Format(body).Translation()));
 
-            ExecuteOnSnapshotCreatedCallbacks({});
+            mCreateSnapshotPromise.set_value({});
             return;
          }
 
@@ -484,10 +471,12 @@ void LocalProjectSnapshot::OnSnapshotCreated(
       mCreateSnapshotResponse = response;
    }
 
-   ExecuteOnSnapshotCreatedCallbacks(mCreateSnapshotResponse);
+   mCreateSnapshotPromise.set_value(response);
+
+   auto projectData = mProjectDataPromise.get_future().get();
 
    DataUploader::Get().Upload(
-      mServiceConfig, response.SyncState.FileUrls, mProjectData.ProjectSnapshot,
+      mServiceConfig, response.SyncState.FileUrls, projectData.ProjectSnapshot,
       [this](ResponseResult result)
       {
          if (result.Code != ResponseResultCode::Success)
@@ -560,21 +549,6 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
          mCompleted.store(true, std::memory_order_release);
          mProjectCloudExtension.OnSyncCompleted(this, {});
       });
-}
-
-void LocalProjectSnapshot::ExecuteOnSnapshotCreatedCallbacks(
-   const std::optional<CreateSnapshotResponse>& response)
-{
-   decltype(mOnSnapshotCreatedCallbacks) callbacks;
-
-   {
-      auto lock = std::lock_guard { mOnSnapshotCreatedCallbacksMutex };
-      std::swap(callbacks, mOnSnapshotCreatedCallbacks);
-   }
-
-   std::for_each(
-      callbacks.begin(), callbacks.end(),
-      [&response](auto& callback) { callback(response); });
 }
 
 } // namespace cloud::audiocom::sync

@@ -64,6 +64,8 @@ public:
    std::string GetNetworkStatsUrl(std::string_view projectId) const;
    std::string
    GetProjectPageUrl(std::string_view userId, std::string_view projectId) const;
+   std::string
+   GetProjectsPageUrl(std::string_view userId) const;
 
 private:
    std::string mApiEndpoint;

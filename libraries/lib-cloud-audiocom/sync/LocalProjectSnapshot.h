@@ -12,6 +12,7 @@
 
 #include <atomic>
 #include <functional>
+#include <future>
 #include <memory>
 #include <mutex>
 #include <string_view>
@@ -50,25 +51,25 @@ class CLOUD_AUDIOCOM_API LocalProjectSnapshot final :
    };
 
 public:
+   using Promise = std::promise<std::optional<CreateSnapshotResponse>>;
+   using Future = std::future<std::optional<CreateSnapshotResponse>>;
+
    LocalProjectSnapshot(
       Tag, const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension);
+      ProjectCloudExtension& extension, std::string name);
    ~LocalProjectSnapshot();
 
-   static std::shared_ptr<LocalProjectSnapshot> Create(
+   static Future Create(
       const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension);
+      ProjectCloudExtension& extension, std::string name);
 
    bool IsCompleted() const override;
 
    std::shared_ptr<AudacityProject> GetProject();
 
-   void Start(UploadMode mode, const ProjectUploadData& projectData) override;
+   void Start(UploadMode mode) override;
+   void SetUploadData(const ProjectUploadData& data) override;
    void Cancel() override;
-
-   using OnSnapshotCreatedCallback = std::function<void(const std::optional<CreateSnapshotResponse>&)>;
-
-   void SetOnSnapshotCreated(OnSnapshotCreatedCallback callback);
 
 private:
    void UploadFailed(CloudSyncError error);
@@ -81,16 +82,16 @@ private:
    OnSnapshotCreated(const CreateSnapshotResponse& response, bool newProject);
    void MarkSnapshotSynced(int64_t blocksCount);
 
-   void ExecuteOnSnapshotCreatedCallbacks(
-      const std::optional<CreateSnapshotResponse>& response);
 
    ProjectCloudExtension& mProjectCloudExtension;
    std::weak_ptr<AudacityProject> mWeakProject;
 
-   ProjectUploadData mProjectData;
+   std::promise<ProjectUploadData> mProjectDataPromise;
 
    const ServiceConfig& mServiceConfig;
    const OAuthService& mOAuthService;
+
+   std::string mProjectName;
 
    struct ProjectBlocksLock;
    std::unique_ptr<ProjectBlocksLock> mProjectBlocksLock;
@@ -99,10 +100,10 @@ private:
 
    std::mutex mCreateSnapshotResponseMutex;
    std::optional<CreateSnapshotResponse> mCreateSnapshotResponse;
-   std::mutex mOnSnapshotCreatedCallbacksMutex;
-   std::vector<OnSnapshotCreatedCallback> mOnSnapshotCreatedCallbacks;
 
    UploadMode mUploadMode { UploadMode::Normal };
+
+   Promise mCreateSnapshotPromise;
 
    std::atomic<bool> mCompleted { false };
 

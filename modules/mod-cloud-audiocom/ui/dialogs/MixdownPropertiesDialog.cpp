@@ -37,7 +37,7 @@ MixdownPropertiesDialog::MixdownPropertiesDialog(wxWindow* parent)
 
    auto description1 = new wxStaticText {
       this, wxID_ANY,
-      XO("The first time you save a project we generate a mixdown so it  can be previewed on audio.com.")
+      XO("The first time you save a project we generate a mixdown so it can be previewed on audio.com.")
          .Translation()
    };
 

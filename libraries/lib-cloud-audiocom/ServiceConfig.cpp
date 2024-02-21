@@ -280,9 +280,21 @@ std::string ServiceConfig::GetProjectPageUrl(
 {
    return Substitute(
       "{frontend_url}/{user_slug}/projects/{project_id}",
-      { { "frontend_url", mFrontendURL },
-        { "user_slug", userId },
-        { "project_id", projectId } });
+      {
+         { "frontend_url", mFrontendURL },
+         { "user_slug", userId },
+         { "project_id", projectId },
+      });
+}
+
+std::string ServiceConfig::GetProjectsPageUrl(std::string_view userId) const
+{
+   return Substitute(
+      "{frontend_url}/{user_slug}/projects",
+      {
+         { "frontend_url", mFrontendURL },
+         { "user_slug", userId },
+      });
 }
 
 const ServiceConfig& GetServiceConfig()

@@ -20,6 +20,7 @@
 
 #include "../UserPanel.h"
 #include "AuthorizationHandler.h"
+#include "CodeConversions.h"
 
 namespace cloud::audiocom::sync
 {
@@ -54,7 +55,6 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    mCancel = new wxButton { this, wxID_ANY, XO("Cancel").Translation() };
 
    mProjectName->SetFocus();
-   mProjectName->SelectAll();
 
    LayoutControls();
    OnUpdateCloudSaveState();
@@ -67,7 +67,7 @@ CloudProjectPropertiesDialog::~CloudProjectPropertiesDialog()
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-std::pair<CloudProjectPropertiesDialog::Action, wxString>
+std::pair<CloudProjectPropertiesDialog::Action, std::string>
 CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
    UserService& userService, const wxString& projectName, wxWindow* parent,
@@ -177,11 +177,11 @@ void CloudProjectPropertiesDialog::SetupEvents()
    mProjectName->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnSubmit(); });
 }
 
-wxString CloudProjectPropertiesDialog::GetProjectName() const
+std::string CloudProjectPropertiesDialog::GetProjectName() const
 {
    wxString result { mProjectName->GetValue() };
    result.Trim(true).Trim(false);
-   return result;
+   return audacity::ToUTF8(result);
 }
 
 void CloudProjectPropertiesDialog::OnUpdateCloudSaveState()
