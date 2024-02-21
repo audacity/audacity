@@ -29,7 +29,7 @@ template <typename ReturnType, typename... Args> class ScopedSizer
 public:
    ScopedSizer(
       ShuttleGui& s, ReturnType (ShuttleGui::*startFunc)(Args...),
-      void (ShuttleGui::*endFunc)(), Args&&... args)
+      void (ShuttleGui::*endFunc)(), Args... args)
        : mShuttleGui(s)
        , mStartFunction(startFunc)
        , mEndFunction(endFunc)
@@ -55,7 +55,7 @@ public:
       ShuttleGui& s, int PositionFlags = wxALIGN_CENTRE, int iProp = 1)
        : ScopedSizer<void, int, int>(
             s, &ShuttleGui::StartHorizontalLay, &ShuttleGui::EndHorizontalLay,
-            std::move(PositionFlags), std::move(iProp))
+            PositionFlags, iProp)
    {
    }
 };
@@ -66,7 +66,7 @@ public:
    ScopedInvisiblePanel(ShuttleGui& s, int border = 0)
        : ScopedSizer<wxPanel*, int>(
             s, &ShuttleGui::StartInvisiblePanel, &ShuttleGui::EndInvisiblePanel,
-            std::move(border))
+            border)
    {
    }
 };
@@ -77,7 +77,18 @@ public:
    ScopedVerticalLay(ShuttleGui& s, int iProp = 1)
        : ScopedSizer<void, int>(
             s, &ShuttleGui::StartVerticalLay, &ShuttleGui::EndVerticalLay,
-            std::move(iProp))
+            iProp)
+   {
+   }
+};
+
+class ScopedStatic :
+    public ScopedSizer<wxStaticBox*, const TranslatableString&, int>
+{
+public:
+   ScopedStatic(ShuttleGui& s, const TranslatableString& label, int iProp = 0)
+       : ScopedSizer<wxStaticBox*, const TranslatableString&, int>(
+            s, &ShuttleGui::StartStatic, &ShuttleGui::EndStatic, label, iProp)
    {
    }
 };
@@ -157,52 +168,53 @@ void PitchAndSpeedDialog::PopulateOrExchange(
    {
       ScopedInvisiblePanel panel { s, 15 };
       s.SetBorder(0);
-
-      s.StartStatic(XO("Clip Pitch"));
       {
-         ScopedHorizontalLay h { s, wxLeft };
-         s.SetBorder(2);
-         // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
-         // instantly when `UpdateDialog` is called.
-         s.TieSpinCtrl(
-             XO("semitones:"), mShift.semis,
-             TimeAndPitchInterface::MaxCents / 100,
-             TimeAndPitchInterface::MinCents / 100)
-            ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
-               const auto prevSemis = mShift.semis;
-               if (GetInt(event, mShift.semis))
-               {
-                  // If we have e.g. -3 semi, -1 cents, and the user changes the
-                  // sign of the semitones, the logic in `OnPitchShiftChange`
-                  // would result in 2 semi, 99 cents. If the user changes
-                  // sign again, we would now get 1 semi, -1 cents. Mirrorring
-                  // (e.g. -3 semi, -1 cents -> 3 semi, 1 cents) is not a good
-                  // idea because that would ruin the work of users
-                  // painstakingly adjusting the cents of an instrument.
-                  // So instead, we map -3 semi, -1 cents to 3 semi, 99 cents.
-                  if (mShift.cents != 0)
+         ScopedStatic scopedStatic { s, XO("Clip Pitch") };
+         {
+            ScopedHorizontalLay h { s, wxLeft };
+            s.SetBorder(2);
+            // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
+            // instantly when `UpdateDialog` is called.
+            s.TieSpinCtrl(
+                XO("semitones:"), mShift.semis,
+                TimeAndPitchInterface::MaxCents / 100,
+                TimeAndPitchInterface::MinCents / 100)
+               ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
+                  const auto prevSemis = mShift.semis;
+                  if (GetInt(event, mShift.semis))
                   {
-                     if (prevSemis < 0 && mShift.semis > 0)
-                        ++mShift.semis;
-                     else if (prevSemis > 0 && mShift.semis < 0)
-                        --mShift.semis;
+                     // If we have e.g. -3 semi, -1 cents, and the user changes
+                     // the sign of the semitones, the logic in
+                     // `OnPitchShiftChange` would result in 2 semi, 99 cents.
+                     // If the user changes sign again, we would now get 1 semi,
+                     // -1 cents. Mirrorring (e.g. -3 semi, -1 cents -> 3 semi,
+                     // 1 cents) is not a good idea because that would ruin the
+                     // work of users painstakingly adjusting the cents of an
+                     // instrument. So instead, we map -3 semi, -1 cents to 3
+                     // semi, 99 cents.
+                     if (mShift.cents != 0)
+                     {
+                        if (prevSemis < 0 && mShift.semis > 0)
+                           ++mShift.semis;
+                        else if (prevSemis > 0 && mShift.semis < 0)
+                           --mShift.semis;
+                     }
+                     OnPitchShiftChange(true);
                   }
-                  OnPitchShiftChange(true);
-               }
-               else
-                  // Something silly was entered; reset dialog
-                  UpdateDialog();
-            });
-         s.TieSpinCtrl(XO("cents:"), mShift.cents, 100, -100)
-            ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
-               if (GetInt(event, mShift.cents))
-                  OnPitchShiftChange(false);
-               else
-                  // Something silly was entered; reset dialog
-                  UpdateDialog();
-            });
+                  else
+                     // Something silly was entered; reset dialog
+                     UpdateDialog();
+               });
+            s.TieSpinCtrl(XO("cents:"), mShift.cents, 100, -100)
+               ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
+                  if (GetInt(event, mShift.cents))
+                     OnPitchShiftChange(false);
+                  else
+                     // Something silly was entered; reset dialog
+                     UpdateDialog();
+               });
+         }
       }
-      s.EndStatic();
 
       s.AddSpace(0, 12);
       s.SetBorder(0);
