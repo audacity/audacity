@@ -195,7 +195,7 @@ class IOExtension final : public ProjectFileIOExtension
    bool
    IsBlockLocked(const AudacityProject& project, int64_t blockId) const override
    {
-      return false;
+      return ProjectCloudExtension::Get(project).IsBlockLocked(blockId);
    }
 };
 

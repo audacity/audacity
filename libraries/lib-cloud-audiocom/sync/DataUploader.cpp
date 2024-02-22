@@ -181,7 +181,6 @@ struct DataUploader::Response final
       Request request { Target.FailUrl };
 
       NetworkResponse = NetworkManager::GetInstance().doPost(request, nullptr, 0);
-      CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
          [this](auto)
@@ -198,6 +197,7 @@ struct DataUploader::Response final
             // Ignore other errors, server will collect garbage
             // and delete the file eventually
          });
+      CancelContext->OnCancelled(NetworkResponse);
    }
 
    void CleanUp()

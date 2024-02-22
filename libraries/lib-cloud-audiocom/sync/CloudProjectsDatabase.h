@@ -12,6 +12,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "sqlite/SafeConnection.h"
 
@@ -23,18 +24,52 @@ struct DBProjectData final
 {
    std::string ProjectId;
    std::string SnapshotId;
-   int64_t SavesCount = 0;
+   int64_t SavesCount       = 0;
    int64_t LastAudioPreview = 0;
    std::string LocalPath;
    int64_t LastModified = 0;
-   int64_t LastRead = 0;
+   int64_t LastRead     = 0;
 
    enum SyncStatusType
    {
-      SyncStatusSynced = 0,
-      SyncStatusUploading = 1,
+      SyncStatusSynced      = 0,
+      SyncStatusUploading   = 1,
       SyncStatusDownloading = 2,
    } SyncStatus = {};
+};
+
+struct PendingSnapshotData final
+{
+   std::string ProjectId;
+   std::string SnapshotId;
+   std::string ConfirmUrl;
+};
+
+struct PendingProjectBlobData final
+{
+   std::string ProjectId;
+   std::string SnapshotId;
+
+   std::string UploadUrl;
+   std::string ConfirmUrl;
+   std::string FailUrl;
+
+   std::vector<uint8_t> BlobData;
+};
+
+struct PendingProjectBlockData final
+{
+   std::string ProjectId;
+   std::string SnapshotId;
+
+   std::string UploadUrl;
+   std::string ConfirmUrl;
+   std::string FailUrl;
+
+   int64_t BlockId {};
+   int BlockSampleFormat {};
+
+   std::string BlockHash;
 };
 
 class CloudProjectsDatabase final
@@ -50,16 +85,21 @@ public:
    sqlite::SafeConnection::Lock GetConnection();
    const sqlite::SafeConnection::Lock GetConnection() const;
 
-   std::optional<DBProjectData> GetProjectData(const std::string_view& projectId) const;
-   std::optional<DBProjectData> GetProjectDataForPath(const std::string& projectPath) const;
-   bool MarkProjectAsSynced(const std::string_view& projectId, const std::string_view& snapshotId);
+   std::optional<DBProjectData>
+   GetProjectData(std::string_view projectId) const;
+   std::optional<DBProjectData>
+   GetProjectDataForPath(const std::string& projectPath) const;
+   bool
+   MarkProjectAsSynced(std::string_view projectId, std::string_view snapshotId);
 
-   void UpdateProjectBlockList(const std::string_view& projectId, const SampleBlockIDSet& blockSet);
+   void UpdateProjectBlockList(
+      std::string_view projectId, const SampleBlockIDSet& blockSet);
 
-   std::optional<std::string> GetBlockHash(const std::string_view& projectId, int64_t blockId) const;
+   std::optional<std::string>
+   GetBlockHash(std::string_view projectId, int64_t blockId) const;
 
    void UpdateBlockHashes(
-      const std::string_view& projectId,
+      std::string_view projectId,
       const std::vector<std::pair<int64_t, std::string>>& hashes);
 
    bool UpdateProjectData(const DBProjectData& projectData);
@@ -67,10 +107,33 @@ public:
    std::string GetProjectUserSlug(std::string_view projectId);
    void SetProjectUserSlug(std::string_view projectId, std::string_view slug);
 
+   bool IsProjectBlockLocked(std::string_view projectId, int64_t blockId) const;
+
+   void AddPendingSnapshot(const PendingSnapshotData& snapshotData);
+   void RemovePendingSnapshot(
+      std::string_view projectId, std::string_view snapshotId);
+   std::vector<PendingSnapshotData>
+   GetPendingSnapshots(std::string_view projectId) const;
+
+   void AddPendingProjectBlob(const PendingProjectBlobData& blobData);
+   void RemovePendingProjectBlob(
+      std::string_view projectId, std::string_view snapshotId);
+   std::optional<PendingProjectBlobData> GetPendingProjectBlob(
+      std::string_view projectId, std::string_view snapshotId) const;
+
+   void AddPendingProjectBlocks(
+      const std::vector<PendingProjectBlockData>& blockData);
+   void RemovePendingProjectBlock(
+      std::string_view projectId, std::string_view snapshotId, int64_t blockId);
+   void RemovePendingProjectBlocks(
+      std::string_view projectId, std::string_view snapshotId);
+   std::vector<PendingProjectBlockData> GetPendingProjectBlocks(
+      std::string_view projectId, std::string_view snapshotId);
+
 private:
-   std::optional<DBProjectData> DoGetProjectData(sqlite::RunResult result) const;
+   std::optional<DBProjectData>
+   DoGetProjectData(sqlite::RunResult result) const;
    bool OpenConnection();
    std::shared_ptr<sqlite::SafeConnection> mConnection;
-
 };
 } // namespace cloud::audiocom::sync

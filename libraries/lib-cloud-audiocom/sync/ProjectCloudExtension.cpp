@@ -388,7 +388,18 @@ void ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
    mUploadQueue.back()->Data.ProjectSnapshot = std::move(data);
 
    if (mUploadQueue.back()->Operation)
+   {
       mUploadQueue.back()->Operation->SetUploadData(mUploadQueue.back()->Data);
+
+      auto dbData = CloudProjectsDatabase::Get().GetProjectData(mProjectId);
+
+      if (dbData)
+      {
+         dbData->LocalPath =
+            audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+         CloudProjectsDatabase::Get().UpdateProjectData(*dbData);
+      }
+   }
    else
       Publish({ ProjectSyncStatus::Failed }, false);
 }
@@ -654,6 +665,16 @@ std::string ProjectCloudExtension::GetCloudProjectPage() const
       CloudProjectsDatabase::Get().GetProjectUserSlug(projectId);
 
    return GetServiceConfig().GetProjectPageUrl(userSlug, projectId);
+}
+
+bool ProjectCloudExtension::IsBlockLocked(int64_t blockID) const
+{
+   const auto projectId = GetCloudProjectId();
+
+   if (projectId.empty())
+      return false;
+
+   return CloudProjectsDatabase::Get().IsProjectBlockLocked(projectId, blockID);
 }
 
 bool CloudStatusChangedMessage::IsSyncing() const noexcept

@@ -32,10 +32,6 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 
-#include "TransactionScope.h"
-
-#include "CodeConversions.h"
-
 #include "IResponse.h"
 #include "NetworkManager.h"
 #include "Request.h"
@@ -211,7 +207,9 @@ LocalProjectSnapshot::LocalProjectSnapshot(
     , mServiceConfig { config }
     , mOAuthService { oauthService }
     , mProjectName { std::move(name) }
-    , mCancellationContext { audacity::concurrency::CancellationContext::Create() }
+    , mCancellationContext {
+       audacity::concurrency::CancellationContext::Create()
+    }
 {
 }
 
@@ -490,18 +488,30 @@ void LocalProjectSnapshot::OnSnapshotCreated(
    if (mCancelled.load(std::memory_order_acquire))
       return;
 
+   StorePendingSnapshot(response, projectData);
+
    DataUploader::Get().Upload(
       mCancellationContext, mServiceConfig, response.SyncState.FileUrls,
       projectData.ProjectSnapshot,
       [this](ResponseResult result)
       {
+         auto& db = CloudProjectsDatabase::Get();
+
+         const auto projectId  = mCreateSnapshotResponse->Project.Id;
+         const auto snapshotId = mCreateSnapshotResponse->Snapshot.Id;
+
          if (result.Code != ResponseResultCode::Success)
          {
+            db.RemovePendingSnapshot(projectId, snapshotId);
+            db.RemovePendingProjectBlob(projectId, snapshotId);
+            db.RemovePendingProjectBlocks(projectId, snapshotId);
+
             DataUploadFailed(result);
             return;
          }
 
          mProjectCloudExtension.OnProjectDataUploaded(*this);
+         db.RemovePendingProjectBlob(projectId, snapshotId);
 
          if (mProjectBlocksLock->MissingBlocks.empty())
          {
@@ -516,6 +526,11 @@ void LocalProjectSnapshot::OnSnapshotCreated(
             {
                const auto handledBlocks =
                   result.UploadedBlocks + result.FailedBlocks;
+
+               if (uploadResult.Code != ResponseResultCode::ConnectionFailed)
+                  CloudProjectsDatabase::Get().RemovePendingProjectBlock(
+                     mCreateSnapshotResponse->Project.Id,
+                     mCreateSnapshotResponse->Snapshot.Id, block.Id);
 
                mProjectCloudExtension.OnBlockUploaded(
                   *this, block.Hash,
@@ -534,6 +549,38 @@ void LocalProjectSnapshot::OnSnapshotCreated(
                   DataUploadFailed(result);
             });
       });
+}
+
+void LocalProjectSnapshot::StorePendingSnapshot(
+   const CreateSnapshotResponse& response, const ProjectUploadData& projectData)
+{
+   CloudProjectsDatabase::Get().AddPendingSnapshot(
+      { response.Project.Id, response.Snapshot.Id,
+        mServiceConfig.GetSnapshotSyncUrl(
+           mProjectCloudExtension.GetCloudProjectId(),
+           mProjectCloudExtension.GetSnapshotId()) });
+
+   CloudProjectsDatabase::Get().AddPendingProjectBlob(
+      { response.Project.Id, response.Snapshot.Id,
+        response.SyncState.FileUrls.UploadUrl,
+        response.SyncState.FileUrls.SuccessUrl,
+        response.SyncState.FileUrls.FailUrl, projectData.ProjectSnapshot });
+
+   if (mProjectBlocksLock->MissingBlocks.empty())
+      return;
+
+   std::vector<PendingProjectBlockData> pendingBlocks;
+   pendingBlocks.reserve(mProjectBlocksLock->MissingBlocks.size());
+
+   for (const auto& block : mProjectBlocksLock->MissingBlocks)
+   {
+      pendingBlocks.push_back(PendingProjectBlockData {
+         response.Project.Id, response.Snapshot.Id, block.BlockUrls.UploadUrl,
+         block.BlockUrls.SuccessUrl, block.BlockUrls.FailUrl, block.Block.Id,
+         static_cast<int>(block.Block.Format), block.Block.Hash });
+   }
+
+   CloudProjectsDatabase::Get().AddPendingProjectBlocks(pendingBlocks);
 }
 
 void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
@@ -557,6 +604,10 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
    response->setRequestFinishedCallback(
       [this, response, blocksCount](auto)
       {
+         CloudProjectsDatabase::Get().RemovePendingSnapshot(
+            mCreateSnapshotResponse->Project.Id,
+            mCreateSnapshotResponse->Snapshot.Id);
+
          if (response->getError() != NetworkError::NoError)
          {
             UploadFailed(DeduceUploadError(*response));

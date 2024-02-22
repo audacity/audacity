@@ -121,6 +121,8 @@ public:
 
    std::string GetCloudProjectPage() const;
 
+   bool IsBlockLocked(int64_t blockID) const;
+
 private:
    struct UploadQueueElement;
    struct CloudStatusChangedNotifier;

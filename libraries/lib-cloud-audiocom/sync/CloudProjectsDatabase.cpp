@@ -36,13 +36,6 @@ CREATE TABLE IF NOT EXISTS projects
 
 CREATE INDEX IF NOT EXISTS local_path_index ON projects (local_path);
 
-CREATE TABLE IF NOT EXISTS pending_blocks
-(
-   project_id INTEGER,
-   block_id INTEGER,
-   PRIMARY KEY (project_id, block_id)
-);
-
 CREATE TABLE IF NOT EXISTS block_hashes
 (
    project_id INTEGER,
@@ -52,6 +45,42 @@ CREATE TABLE IF NOT EXISTS block_hashes
 );
 
 CREATE INDEX IF NOT EXISTS block_hashes_index ON block_hashes (hash);
+
+CREATE TABLE IF NOT EXISTS pending_snapshots
+(
+   project_id TEXT,
+   snapshot_id TEXT,
+   confirm_url TEXT,
+   PRIMARY KEY (project_id, snapshot_id)
+);
+
+CREATE TABLE IF NOT EXISTS pending_project_blobs
+(
+   project_id TEXT,
+   snapshot_id TEXT,
+
+   upload_url TEXT,
+   confirm_url TEXT,
+   fail_url TEXT,
+
+   blob BLOB,
+   PRIMARY KEY (project_id, snapshot_id)
+);
+
+CREATE TABLE IF NOT EXISTS pending_project_blocks
+(
+   project_id TEXT,
+   snapshot_id TEXT,
+
+   upload_url TEXT,
+   confirm_url TEXT,
+   fail_url TEXT,
+
+   block_id INTEGER,
+   block_sample_format INTEGER,
+   block_hash TEXT,
+   PRIMARY KEY (project_id, snapshot_id, block_id)
+);
 
 CREATE TABLE IF NOT EXISTS project_users
 (
@@ -93,7 +122,7 @@ const sqlite::SafeConnection::Lock CloudProjectsDatabase::GetConnection() const
 }
 
 std::optional<DBProjectData>
-CloudProjectsDatabase::GetProjectData(const std::string_view& projectId) const
+CloudProjectsDatabase::GetProjectData(std::string_view projectId) const
 {
    auto connection = GetConnection();
 
@@ -127,7 +156,7 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
 }
 
 bool CloudProjectsDatabase::MarkProjectAsSynced(
-   const std::string_view& projectId, const std::string_view& snapshotId)
+   std::string_view projectId, std::string_view snapshotId)
 {
    auto connection = GetConnection();
 
@@ -153,7 +182,7 @@ bool CloudProjectsDatabase::MarkProjectAsSynced(
 }
 
 void CloudProjectsDatabase::UpdateProjectBlockList(
-   const std::string_view& projectId, const SampleBlockIDSet& blockSet)
+   std::string_view projectId, const SampleBlockIDSet& blockSet)
 {
    auto connection = GetConnection();
 
@@ -176,7 +205,7 @@ void CloudProjectsDatabase::UpdateProjectBlockList(
 }
 
 std::optional<std::string> CloudProjectsDatabase::GetBlockHash(
-   const std::string_view& projectId, int64_t blockId) const
+   std::string_view projectId, int64_t blockId) const
 {
    auto connection = GetConnection();
 
@@ -205,7 +234,7 @@ std::optional<std::string> CloudProjectsDatabase::GetBlockHash(
 }
 
 void CloudProjectsDatabase::UpdateBlockHashes(
-   const std::string_view& projectId,
+   std::string_view projectId,
    const std::vector<std::pair<int64_t, std::string>>& hashes)
 {
    auto connection = GetConnection();
@@ -295,6 +324,310 @@ void CloudProjectsDatabase::SetProjectUserSlug(
       return;
 
    statement->Prepare(projectId, slug).Run();
+}
+
+bool CloudProjectsDatabase::IsProjectBlockLocked(
+   std::string_view projectId, int64_t blockId) const
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return false;
+
+   auto statement = connection->CreateStatement(
+      "SELECT 1 FROM pending_project_blocks WHERE project_id = ? AND block_id = ? LIMIT 1");
+
+   if (!statement)
+      return false;
+
+   auto result = statement->Prepare(projectId, blockId).Run();
+
+   for (auto row : result)
+      return true;
+
+   return false;
+}
+
+void CloudProjectsDatabase::AddPendingSnapshot(
+   const PendingSnapshotData& snapshotData)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "INSERT OR REPLACE INTO pending_snapshots (project_id, snapshot_id, confirm_url) VALUES (?, ?, ?)");
+
+   if (!statement)
+      return;
+
+   statement
+      ->Prepare(
+         snapshotData.ProjectId, snapshotData.SnapshotId,
+         snapshotData.ConfirmUrl)
+      .Run();
+}
+
+void CloudProjectsDatabase::RemovePendingSnapshot(
+   std::string_view projectId, std::string_view snapshotId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "DELETE FROM pending_snapshots WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(projectId, snapshotId).Run();
+}
+
+std::vector<PendingSnapshotData>
+CloudProjectsDatabase::GetPendingSnapshots(std::string_view projectId) const
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return {};
+
+   auto statement = connection->CreateStatement(
+      "SELECT project_id, snapshot_id, confirm_url FROM pending_snapshots WHERE project_id = ?");
+
+   if (!statement)
+      return {};
+
+   auto result = statement->Prepare(projectId).Run();
+
+   std::vector<PendingSnapshotData> snapshots;
+
+   for (auto row : result)
+   {
+      PendingSnapshotData data;
+
+      if (!row.Get(0, data.ProjectId))
+         return {};
+
+      if (!row.Get(1, data.SnapshotId))
+         return {};
+
+      if (!row.Get(2, data.ConfirmUrl))
+         return {};
+
+      snapshots.push_back(data);
+   }
+
+   return snapshots;
+}
+
+void CloudProjectsDatabase::AddPendingProjectBlob(
+   const PendingProjectBlobData& blobData)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "INSERT OR REPLACE INTO pending_project_blobs (project_id, snapshot_id, upload_url, confirm_url, fail_url, blob) VALUES (?, ?, ?, ?, ?, ?)");
+
+   if (!statement)
+      return;
+
+   statement->Prepare()
+      .Bind(1, blobData.ProjectId)
+      .Bind(2, blobData.SnapshotId)
+      .Bind(3, blobData.UploadUrl)
+      .Bind(4, blobData.ConfirmUrl)
+      .Bind(5, blobData.FailUrl)
+      .Bind(6, blobData.BlobData.data(), blobData.BlobData.size(), false)
+      .Run();
+}
+
+void CloudProjectsDatabase::RemovePendingProjectBlob(
+   std::string_view projectId, std::string_view snapshotId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "DELETE FROM pending_project_blobs WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(projectId, snapshotId).Run();
+}
+
+std::optional<PendingProjectBlobData>
+CloudProjectsDatabase::GetPendingProjectBlob(
+   std::string_view projectId, std::string_view snapshotId) const
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return {};
+
+   auto statement = connection->CreateStatement(
+      "SELECT project_id, snapshot_id, upload_url, confirm_url, fail_url, blob FROM pending_project_blobs WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return {};
+
+   auto result = statement->Prepare(projectId, snapshotId).Run();
+
+   for (auto row : result)
+   {
+      PendingProjectBlobData data;
+
+      if (!row.Get(1, data.ProjectId))
+         return {};
+
+      if (!row.Get(2, data.SnapshotId))
+         return {};
+
+      if (!row.Get(3, data.UploadUrl))
+         return {};
+
+      if (!row.Get(4, data.ConfirmUrl))
+         return {};
+
+      if (!row.Get(5, data.FailUrl))
+         return {};
+
+      const auto size = row.GetColumnBytes(6);
+      data.BlobData.resize(size);
+
+      if (size != row.ReadData(6, data.BlobData.data(), size))
+         return {};
+
+      return data;
+   }
+
+   return {};
+}
+
+void CloudProjectsDatabase::AddPendingProjectBlocks(
+   const std::vector<PendingProjectBlockData>& blockData)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto tx = connection->BeginTransaction("AddPendingProjectBlocks");
+
+   auto statement = connection->CreateStatement(
+      "INSERT OR REPLACE INTO pending_project_blocks (project_id, snapshot_id, upload_url, confirm_url, fail_url, block_id, block_sample_format, block_hash) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+
+   if (!statement)
+      return;
+
+   for (const auto& data : blockData)
+      statement->Prepare()
+         .Bind(1, data.ProjectId)
+         .Bind(2, data.SnapshotId)
+         .Bind(3, data.UploadUrl)
+         .Bind(4, data.ConfirmUrl)
+         .Bind(5, data.FailUrl)
+         .Bind(6, data.BlockId)
+         .Bind(7, data.BlockSampleFormat)
+         .Bind(8, data.BlockHash)
+         .Run();
+
+   tx.Commit();
+}
+
+void CloudProjectsDatabase::RemovePendingProjectBlock(
+   std::string_view projectId, std::string_view snapshotId, int64_t blockId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "DELETE FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ? AND block_id = ?");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(projectId, snapshotId, blockId).Run();
+}
+
+void CloudProjectsDatabase::RemovePendingProjectBlocks(
+   std::string_view projectId, std::string_view snapshotId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement(
+      "DELETE FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(projectId, snapshotId).Run();
+}
+
+std::vector<PendingProjectBlockData>
+CloudProjectsDatabase::GetPendingProjectBlocks(
+   std::string_view projectId, std::string_view snapshotId)
+{
+auto connection = GetConnection();
+
+   if (!connection)
+      return {};
+
+   auto statement = connection->CreateStatement(
+      "SELECT project_id, snapshot_id, upload_url, confirm_url, fail_url, block_id, block_sample_format, block_hash FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ?");
+
+   if (!statement)
+      return {};
+
+   auto result = statement->Prepare(projectId, snapshotId).Run();
+
+   std::vector<PendingProjectBlockData> blocks;
+
+   for (auto row : result)
+   {
+      PendingProjectBlockData data;
+
+      if (!row.Get(0, data.ProjectId))
+         return {};
+
+      if (!row.Get(1, data.SnapshotId))
+         return {};
+
+      if (!row.Get(2, data.UploadUrl))
+         return {};
+
+      if (!row.Get(3, data.ConfirmUrl))
+         return {};
+
+      if (!row.Get(4, data.FailUrl))
+         return {};
+
+      if (!row.Get(5, data.BlockId))
+         return {};
+
+      if (!row.Get(6, data.BlockSampleFormat))
+         return {};
+
+      if (!row.Get(7, data.BlockHash))
+         return {};
+
+      blocks.push_back(data);
+   }
+
+   return blocks;
 }
 
 std::optional<DBProjectData>
