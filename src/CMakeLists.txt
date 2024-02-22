@@ -712,10 +712,21 @@ list( APPEND SOURCES
       tracks/playabletrack/ui/PlayableTrackButtonHandles.h
       tracks/playabletrack/ui/PlayableTrackControls.cpp
       tracks/playabletrack/ui/PlayableTrackControls.h
+      tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.h
+      tracks/playabletrack/wavetrack/ui/ClipButtonId.h
+      tracks/playabletrack/wavetrack/ui/ClipParameters.cpp
+      tracks/playabletrack/wavetrack/ui/ClipParameters.h
+      tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
       tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
       tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
+      tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.h
+      tracks/playabletrack/wavetrack/ui/LowlitClipButton.cpp
+      tracks/playabletrack/wavetrack/ui/LowlitClipButton.h
       tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
       tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.h
       tracks/playabletrack/wavetrack/ui/SampleHandle.cpp

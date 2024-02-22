@@ -52,6 +52,13 @@ namespace
          rect.GetHeight() - ClipSelectionStrokeSize - FrameThickness);
    }
 
+wxString
+GetTruncatedTitle(wxDC& dc, const wxString& title, const wxRect& affordanceRect)
+{
+   if (affordanceRect.IsEmpty() || title.empty())
+      return wxEmptyString;
+   return TrackArt::TruncateText(dc, title, affordanceRect.GetWidth());
+}
 }
 
 /// Takes a value between min and max and returns a value between
@@ -198,25 +205,46 @@ wxString TrackArt::TruncateText(wxDC& dc, const wxString& text, const int maxWid
    return wxEmptyString;
 }
 
-wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight, bool selected)
+namespace {
+wxRect GetClipAffordanceRect(
+   wxDC& dc, const wxRect& clipRect, std::optional<wxRect>& clippedClipRect)
+{
+   wxRect tmp;
+   const auto hasClipRect = dc.GetClippingBox(tmp);
+   if (hasClipRect)
+      clippedClipRect = tmp;
+   return hasClipRect ?
+             // avoid drawing text outside the clipping rectangle if possible
+             GetAffordanceTitleRect(clipRect.Intersect(*clippedClipRect)) :
+             GetAffordanceTitleRect(clipRect);
+}
+}
+
+wxRect TrackArt::DrawClipAffordance(
+   wxDC& dc, const wxRect& clipRect, bool highlight, bool selected)
 {
    //To make sure that roundings do not overlap each other
-   auto clipFrameRadius = std::min(ClipFrameRadius, rect.width / 2);
+   auto clipFrameRadius = std::min(ClipFrameRadius, clipRect.width / 2);
 
-   wxRect clipRect;
-   bool hasClipRect = dc.GetClippingBox(clipRect);
+   std::optional<wxRect> clippedClipRect;
+   const auto affordanceRect =
+      ::GetClipAffordanceRect(dc, clipRect, clippedClipRect);
    //Fix #1689: visual glitches appear on attempt to draw a rectangle
    //larger than 0x7FFFFFF pixels wide (value was discovered
    //by manual testing, and maybe depends on OS being used), but
    //it's very unlikely that such huge rectangle will be ever fully visible
    //on the screen, so we can safely reduce its size to be slightly larger than
    //clipping rectangle, and avoid that problem
-   auto drawingRect = rect;
-   if (hasClipRect)
+   auto drawingRect = clipRect;
+   if (clippedClipRect)
    {
        //to make sure that rounding happends outside the clipping rectangle
-       drawingRect.SetLeft(std::max(rect.GetLeft(), clipRect.GetLeft() - clipFrameRadius - 1));
-       drawingRect.SetRight(std::min(rect.GetRight(), clipRect.GetRight() + clipFrameRadius + 1));
+       drawingRect.SetLeft(std::max(
+          clipRect.GetLeft(),
+          clippedClipRect->GetLeft() - clipFrameRadius - 1));
+       drawingRect.SetRight(std::min(
+          clipRect.GetRight(),
+          clippedClipRect->GetRight() + clipFrameRadius + 1));
    }
 
    if (selected)
@@ -241,182 +269,40 @@ wxRect TrackArt::DrawClipAffordance(wxDC& dc, const wxRect& rect, bool highlight
       ), clipFrameRadius
    );
 
-   auto titleRect = hasClipRect ?
-      //avoid drawing text outside the clipping rectangle if possible
-      GetAffordanceTitleRect(rect.Intersect(clipRect)) :
-      GetAffordanceTitleRect(rect);
-
-   return titleRect;
+   return affordanceRect;
 }
 
-namespace{
-wxString GetPlaybackSpeedText(double clipStretchRatio)
+namespace
 {
-   if (TimeAndPitchInterface::IsPassThroughMode(clipStretchRatio))
-      return {};
-
-   // clang-format off
-   // We reckon that most of the time, a rounded percentage value is sufficient.
-   // There are two exceptions:
-   // - The clip is only slightly stretched such that the rounded value is 100.
-   //   There should be an indicator if and only if the clip is stretched, this
-   //   must be reliable. Yet showing "100%" would be confusing. Hence in that
-   //   case we constrain the values to [99.1, ..., 99.9, 100.1,
-   //   ..., 100.9], i.e., omitting 100.0.
-   // - The clip is stretched so much that the playback speed is less than 1%.
-   //   Make sure in that case that we never show 0%, but always at least 0.1%.
-   // clang-format on
-
-   const auto playbackSpeed = 100 / clipStretchRatio;
-   wxString fullText;
-
-   // We compare with .95 rather than 1, since playback speeds within [100.95,
-   // 101) get rounded to 101.0 and (99, 99.05] to 99.0 by `wxString::Format`.
-   // Let these be processed by the integer-display branch of this if statement
-   // instead.
-   if (fabs(playbackSpeed - 100.) < .95)
-      // Never show 100.0%
-      fullText += wxString::Format(
-         "%.1f%%", playbackSpeed > 100 ? std::max(playbackSpeed, 100.1) :
-                                         std::min(playbackSpeed, 99.9));
-   else if (playbackSpeed < 1)
-      // Never show 0.0%
-      fullText += wxString::Format("%.1f%%", std::max(playbackSpeed, 0.1));
-   else {
-      const auto roundedPlaybackSpeed =
-         static_cast<int>(std::round(playbackSpeed));
-      fullText += wxString::Format("%d%%", roundedPlaybackSpeed);
-   }
-   return fullText;
-}
-
-enum class HAlign
+wxRect GetClipTruncatedTitleRect(
+   wxDC& dc, const wxRect& affordanceRect, const wxString& title)
 {
-   left,
-   right
-};
-
-struct ClipTitle {
-   const wxString text;
-   const HAlign alignment;
-};
-
-std::optional<ClipTitle> DoDrawAudioTitle(
-   wxDC& dc, const wxRect& titleRect, const wxString& title)
-{
-   if(titleRect.IsEmpty())
-      return std::nullopt;
-   const auto hAlign = wxTheApp->GetLayoutDirection() == wxLayout_RightToLeft ?
-                          HAlign::right :
-                          HAlign::left;
-   if(title.empty())
-      return ClipTitle { "", hAlign  };
-   auto truncatedTitle = TrackArt::TruncateText(dc, title, titleRect.GetWidth());
-   if (!truncatedTitle.empty())
-   {
-      dc.DrawLabel(
-         truncatedTitle, titleRect,
-         (hAlign == HAlign::left ? wxALIGN_LEFT : wxALIGN_RIGHT) |
-            wxALIGN_CENTER_VERTICAL);
-      return ClipTitle{ truncatedTitle, hAlign };
-   }
-   return std::nullopt;
+   const auto alignLeft =
+      wxTheApp->GetLayoutDirection() == wxLayout_LeftToRight;
+   const auto width = dc.GetTextExtent(title).GetWidth();
+   const auto left =
+      alignLeft ? affordanceRect.GetLeft() : affordanceRect.GetRight() - width;
+   return { left, affordanceRect.GetTop(), width, affordanceRect.GetHeight() };
 }
-
-wxString GetPitchShiftText(int clipCentShift)
-{
-   wxString pitchShiftText;
-   if (clipCentShift != 0)
-   {
-      pitchShiftText = wxString::Format("%.2f", std::abs(clipCentShift) / 100.);
-      while (pitchShiftText.EndsWith("0"))
-         pitchShiftText.RemoveLast();
-      if (pitchShiftText.EndsWith("."))
-         pitchShiftText.RemoveLast();
-   }
-   return pitchShiftText;
-}
-
-//! Returns the width of the drawn text and icon.
-int DrawPitchOrSpeedIconIfItFits(
-   wxDC& dc, const wxRect& titleRect, const wxString& clipTitle,
-   const wxBitmap& icon, const wxString& text, int offset, int availableWidth,
-   bool alignRight)
-{
-   const auto textWidth = dc.GetTextExtent(text).GetWidth();
-
-   const auto iconHeight = icon.GetHeight();
-   const auto iconWidth = textWidth == 0 ? 0 : icon.GetWidth();
-   const auto rectWidth = iconWidth + textWidth;
-
-   const auto height = titleRect.GetHeight();
-   const auto iconTop = titleRect.GetTop() + (height - iconHeight) / 2;
-   const auto textTop = titleRect.GetTop();
-
-   if (rectWidth == 0 || rectWidth > availableWidth)
-      return 0;
-
-   if (alignRight)
-   {
-      dc.DrawText(text, offset - textWidth, textTop);
-      dc.DrawBitmap(icon, offset - textWidth - iconWidth, iconTop);
-   }
-   else
-   {
-      dc.DrawBitmap(icon, offset, iconTop);
-      dc.DrawText(text, offset + iconWidth, textTop);
-   }
-
-   return textWidth + iconWidth;
-}
-}
+} // namespace
 
 bool TrackArt::DrawClipTitle(
-   wxDC& dc, const wxRect& titleRect, const wxString& title)
+   wxDC& dc, const wxRect& affordanceRect, const wxString& title)
 {
-   return DoDrawAudioTitle(dc, titleRect, title).has_value();
-}
-
-bool TrackArt::DrawAudioClipTitle(
-   wxDC& dc, const wxRect& titleRect, const wxString& title,
-   double clipStretchRatio, int clipCentShift)
-{
-   const auto clipTitle = DoDrawAudioTitle(dc, titleRect, title);
-   if (!clipTitle.has_value())
+   if (affordanceRect.IsEmpty())
       return false;
-
-   const auto pitchText = GetPitchShiftText(clipCentShift);
-   const auto speedText = GetPlaybackSpeedText(clipStretchRatio);
-   constexpr auto minSpaceBetweenTitleAndSpeed = 12;
-   auto availableWidth = titleRect.GetWidth() -
-                         dc.GetTextExtent(clipTitle->text).GetWidth() -
-                         minSpaceBetweenTitleAndSpeed;
-   const auto alignRight = clipTitle->alignment == HAlign::left;
-   auto offset = alignRight ? titleRect.GetRight() : titleRect.GetLeft();
-
-   const auto usedWidth = DrawPitchOrSpeedIconIfItFits(
-      dc, titleRect, clipTitle->text, theTheme.Bitmap(speedIndicator),
-      speedText, offset, availableWidth, alignRight);
-
-   if (!speedText.empty() && usedWidth == 0)
-      // There is a speed change but it couldn't be drawn, meaning there's not
-      // enough room. We don't draw pitch if speed doesn't fit.
+   else if (title.empty())
       return true;
-
-   const auto pitchTextWidth = dc.GetTextExtent(pitchText).GetWidth();
-   const auto speedTextWidth = dc.GetTextExtent(speedText).GetWidth();
-   const auto spaceBetweenPitchAndSpeed =
-      speedTextWidth == 0 || pitchTextWidth == 0 ? 0 : 4;
-   alignRight ? offset -= usedWidth + spaceBetweenPitchAndSpeed :
-                offset += usedWidth + spaceBetweenPitchAndSpeed;
-   availableWidth -= usedWidth + spaceBetweenPitchAndSpeed;
-
-   DrawPitchOrSpeedIconIfItFits(
-      dc, titleRect, clipTitle->text,
-      theTheme.Bitmap(
-         clipCentShift >= 0 ? pitchUpIndicator : pitchDownIndicator),
-      pitchText, offset, availableWidth, alignRight);
-
+   const auto truncatedTitle = ::GetTruncatedTitle(dc, title, affordanceRect);
+   if (truncatedTitle.empty())
+      return false;
+   const auto titleRect =
+      GetClipTruncatedTitleRect(dc, affordanceRect, truncatedTitle);
+   const auto alignLeft =
+      wxTheApp->GetLayoutDirection() == wxLayout_LeftToRight;
+   dc.DrawLabel(
+      truncatedTitle, titleRect,
+      (alignLeft ? wxALIGN_LEFT : wxALIGN_RIGHT) | wxALIGN_CENTER_VERTICAL);
    return true;
 }
 
