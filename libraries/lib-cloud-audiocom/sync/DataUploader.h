@@ -20,6 +20,8 @@
 #include "CloudSyncUtils.h"
 #include "NetworkUtils.h"
 
+#include "concurrency/CancellationContext.h"
+
 namespace cloud::audiocom
 {
 class ServiceConfig;
@@ -27,29 +29,32 @@ class ServiceConfig;
 
 namespace cloud::audiocom::sync
 {
+using audacity::concurrency::CancellationContextPtr;
+
 class DataUploader final
 {
    DataUploader() = default;
    ~DataUploader();
 
-   DataUploader(const DataUploader&) = delete;
-   DataUploader(DataUploader&&) = delete;
+   DataUploader(const DataUploader&)            = delete;
+   DataUploader(DataUploader&&)                 = delete;
    DataUploader& operator=(const DataUploader&) = delete;
-   DataUploader& operator=(DataUploader&&) = delete;
+   DataUploader& operator=(DataUploader&&)      = delete;
+
 public:
    static DataUploader& Get();
 
-   void CancelAll();
+   void Upload(
+      CancellationContextPtr cancelContext, const ServiceConfig& config,
+      const UploadUrls& target, std::vector<uint8_t> data,
+      std::function<void(ResponseResult)> callback,
+      std::function<void(double)> progressCallback = {});
 
    void Upload(
-      const ServiceConfig& config, const UploadUrls& target,
-      std::vector<uint8_t> data, std::function<void(ResponseResult)> callback,
-      std::function<bool(double)> progressCallback = {});
-
-   void Upload(
-      const ServiceConfig& config, const UploadUrls& target,
-      std::string filePath, std::function<void(ResponseResult)> callback,
-      std::function<bool(double)> progressCallback = {});
+      CancellationContextPtr cancelContext, const ServiceConfig& config,
+      const UploadUrls& target, std::string filePath,
+      std::function<void(ResponseResult)> callback,
+      std::function<void(double)> progressCallback = {});
 
 private:
    struct Response;

@@ -153,7 +153,7 @@ public:
          wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
          XO("Loading projects list..."));
 
-      auto cancellationContext = CancellationContext::Create();
+      auto cancellationContext = audacity::concurrency::CancellationContext::Create();
 
       auto future = CloudSyncService::Get().GetProjects(
          cancellationContext, page, mPageSize, {});

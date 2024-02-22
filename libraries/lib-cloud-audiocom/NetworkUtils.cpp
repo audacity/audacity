@@ -106,55 +106,6 @@ void SetCommonHeaders(Request& request)
          common_headers::Authorization, oauthService.GetAccessToken());
 }
 
-CancellationContext::CancellationContext(Tag)
-{
-}
-
-std::shared_ptr<CancellationContext> CancellationContext::Create()
-{
-   return std::make_shared<CancellationContext>(Tag {});
-}
-
-void CancellationContext::Cancel()
-{
-   if (mCancelled.exchange(true))
-      return;
-
-   std::vector<std::function<void()>> callbacks;
-
-   {
-      auto lock = std::lock_guard { mDeferredCallbacksMutex };
-      std::swap(callbacks, mDeferredCallbacks);
-   }
-
-   std::for_each(
-      callbacks.begin(), callbacks.end(), [](auto& callback) { callback(); });
-}
-
-void CancellationContext::OnCancelled(std::function<void()> callback)
-{
-   if (!callback)
-      return;
-
-   if (mCancelled.load())
-   {
-      callback();
-      return;
-   }
-
-   auto lock = std::lock_guard { mDeferredCallbacksMutex };
-   mDeferredCallbacks.push_back(std::move(callback));
-}
-
-void CancellationContext::OnCancelled(
-   std::shared_ptr<audacity::network_manager::IResponse> response)
-{
-   if (!response)
-      return;
-
-   OnCancelled([response = std::move(response)]() { response->abort(); });
-}
-
 TransferStats& TransferStats::SetBytesTransferred(int64_t bytesTransferred)
 {
    BytesTransferred = bytesTransferred;

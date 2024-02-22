@@ -35,15 +35,15 @@ public:
    static ProjectCloudUIExtension& Get(AudacityProject& project);
    static const ProjectCloudUIExtension& Get(const AudacityProject& project);
 
-   bool AllowClosing() const;
+   bool AllowClosing();
 
 private:
-   bool SetUploadProgress(double progress);
+   void SetUploadProgress(double progress);
    void OnCloudStatusChanged(const CloudStatusChangedMessage& message);
 
    AudacityProject& mProject;
 
-   mutable std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+   std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
 
    double mProgress { 0.0 };
 

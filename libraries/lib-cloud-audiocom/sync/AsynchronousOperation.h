@@ -15,6 +15,8 @@
 #include <memory>
 #include <vector>
 
+#include "concurrency/ICancellable.h"
+
 class TrackList;
 
 namespace cloud::audiocom::sync
@@ -32,14 +34,14 @@ struct ProjectUploadData final
    std::shared_ptr<TrackList> Tracks;
 };
 
-class ProjectUploadOperation /* not final */
+class ProjectUploadOperation /* not final */ :
+    public audacity::concurrency::ICancellable
 {
 public:
    virtual ~ProjectUploadOperation() = default;
 
-   virtual void Start(UploadMode mode) = 0;
+   virtual void Start(UploadMode mode)                       = 0;
    virtual void SetUploadData(const ProjectUploadData& data) = 0;
-   virtual void Cancel() = 0;
-   virtual bool IsCompleted() const = 0;
+   virtual bool IsCompleted() const                          = 0;
 }; // class AsynchronousOperation
 } // namespace cloud::audiocom::sync

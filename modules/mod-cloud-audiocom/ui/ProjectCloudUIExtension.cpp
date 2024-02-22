@@ -30,6 +30,7 @@
 #include "CodeConversions.h"
 #include "Project.h"
 
+
 namespace cloud::audiocom::sync
 {
 namespace
@@ -62,12 +63,12 @@ ProjectCloudUIExtension::Get(const AudacityProject& project)
    return Get(const_cast<AudacityProject&>(project));
 }
 
-bool ProjectCloudUIExtension::SetUploadProgress(double progress)
+void ProjectCloudUIExtension::SetUploadProgress(double progress)
 {
    mProgress = progress;
 
    if (mProgressDialog == nullptr)
-      return true;
+      return;
 
    const auto result = mProgressDialog->Poll(progress * 10000, 10000);
 
@@ -75,13 +76,13 @@ bool ProjectCloudUIExtension::SetUploadProgress(double progress)
    {
       mClosingCancelled = true;
       mProgressDialog.reset();
-      return true;
    }
 
-   return result != BasicUI::ProgressResult::Stopped;
+   if (result == BasicUI::ProgressResult::Stopped)
+      ProjectCloudExtension::Get(mProject).CancelSync();
 }
 
-bool ProjectCloudUIExtension::AllowClosing() const
+bool ProjectCloudUIExtension::AllowClosing()
 {
    while (mInSync.load(std::memory_order_acquire) && !mClosingCancelled)
    {
@@ -96,7 +97,12 @@ bool ProjectCloudUIExtension::AllowClosing() const
       BasicUI::Yield();
    }
 
-   return !mInSync.load(std::memory_order_acquire) || !mClosingCancelled;
+   bool closingCancelled = mClosingCancelled;
+   mClosingCancelled = false;
+
+   mProgressDialog.reset();
+
+   return !mInSync.load(std::memory_order_acquire) || !closingCancelled;
 }
 
 void ProjectCloudUIExtension::OnCloudStatusChanged(

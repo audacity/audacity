@@ -23,6 +23,9 @@
 
 #include "NetworkUtils.h"
 
+#include "concurrency/CancellationContext.h"
+#include "concurrency/ICancellable.h"
+
 class AudacityProject;
 
 namespace cloud::audiocom
@@ -50,10 +53,11 @@ struct CLOUD_AUDIOCOM_API MixdownResult final
    ResponseResult UploadResult;
 };
 
-using MixdownProgressCallback = std::function<bool(double progress)>;
+using MixdownProgressCallback = std::function<void(double progress)>;
 
 class CLOUD_AUDIOCOM_API MixdownUploader final :
-    public std::enable_shared_from_this<MixdownUploader>
+    public std::enable_shared_from_this<MixdownUploader>,
+    public audacity::concurrency::ICancellable
 {
    struct Tag final
    {
@@ -61,22 +65,24 @@ class CLOUD_AUDIOCOM_API MixdownUploader final :
 
 public:
    MixdownUploader(
-      Tag, const ServiceConfig& config, const AudacityProject& project,
+      Tag, audacity::concurrency::CancellationContextPtr cancellationContext,
+      const ServiceConfig& config, const AudacityProject& project,
       MixdownProgressCallback progressCallback);
 
    ~MixdownUploader();
 
    static std::shared_ptr<MixdownUploader> Upload(
+      audacity::concurrency::CancellationContextPtr cancellationContext,
       const ServiceConfig& config, const AudacityProject& project,
       MixdownProgressCallback progressCallback);
 
    void SetUrls(const UploadUrls& urls);
 
-   void Cancel();
-
    std::future<MixdownResult> GetResultFuture();
 
 private:
+   void Cancel();
+
    void ReportProgress(
       MixdownState state, double progress, ResponseResult uploadResult);
    void ExportProject();
@@ -104,5 +110,7 @@ private:
    std::atomic<bool> mFinished { false };
 
    std::promise<MixdownResult> mPromise;
+
+   audacity::concurrency::CancellationContextPtr mCancellationContext;
 }; // class MixdownUploader
 } // namespace cloud::audiocom::sync

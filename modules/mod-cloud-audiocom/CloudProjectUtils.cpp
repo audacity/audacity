@@ -77,7 +77,8 @@ bool HandleFailure(const ProjectSyncResult& result)
 
    if (result.Result.Code == ResponseResultCode::Cancelled)
    {
-      wxLogError("Opening of the cloud project was canceled", result.Result.Content);
+      wxLogError(
+         "Opening of the cloud project was canceled", result.Result.Content);
       return true;
    }
 
@@ -295,29 +296,33 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
    if (!projectCloudExtension.NeedsMixdownSync() && !forceMixdown)
       return;
 
+   auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+
    auto progressDialog = BasicUI::MakeProgress(
       XO("Save to audio.com"), XO("Generating mixdown..."),
       BasicUI::ProgressShowCancel);
 
    auto mixdownUploader = MixdownUploader::Upload(
-      GetServiceConfig(), project,
-      [progressDialog = progressDialog.get()](auto progress)
+      cancellationContext, GetServiceConfig(), project,
+      [progressDialog = progressDialog.get(), cancellationContext](auto progress)
       {
-         return progressDialog->Poll(
-                   static_cast<unsigned>(progress * 10000), 10000) ==
-                BasicUI::ProgressResult::Success;
+         if (
+            progressDialog->Poll(
+               static_cast<unsigned>(progress * 10000), 10000) !=
+            BasicUI::ProgressResult::Success)
+            cancellationContext->Cancel();
       });
 
    mixdownUploader->SetUrls(urls);
 
    auto subscription = projectCloudExtension.SubscribeStatusChanged(
       [progressDialog = progressDialog.get(),
-       mixdownUploader](const CloudStatusChangedMessage& message)
+       mixdownUploader, cancellationContext](const CloudStatusChangedMessage& message)
       {
          if (message.Status != ProjectSyncStatus::Failed)
             return;
 
-         mixdownUploader->Cancel();
+         cancellationContext->Cancel();
       },
       true);
 

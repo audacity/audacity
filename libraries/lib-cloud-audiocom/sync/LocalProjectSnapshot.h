@@ -22,6 +22,8 @@
 #include "CloudSyncUtils.h"
 #include "NetworkUtils.h"
 
+#include "concurrency/CancellationContext.h"
+
 class AudacityProject;
 
 namespace cloud::audiocom
@@ -96,7 +98,7 @@ private:
    struct ProjectBlocksLock;
    std::unique_ptr<ProjectBlocksLock> mProjectBlocksLock;
 
-   std::unique_ptr<MissingBlocksUploader> mMissingBlockUploader;
+   std::shared_ptr<MissingBlocksUploader> mMissingBlockUploader;
 
    std::mutex mCreateSnapshotResponseMutex;
    std::optional<CreateSnapshotResponse> mCreateSnapshotResponse;
@@ -105,7 +107,10 @@ private:
 
    Promise mCreateSnapshotPromise;
 
-   std::atomic<bool> mCompleted { false };
+   audacity::concurrency::CancellationContextPtr mCancellationContext;
 
+   std::atomic<bool> mCompleted { false };
+   std::atomic<bool> mCancelled { false };
+   std::atomic<bool> mProjectDataReady { false };
 };
 } // namespace cloud::audiocom::sync

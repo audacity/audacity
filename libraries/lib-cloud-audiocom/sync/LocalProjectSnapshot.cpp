@@ -211,6 +211,7 @@ LocalProjectSnapshot::LocalProjectSnapshot(
     , mServiceConfig { config }
     , mOAuthService { oauthService }
     , mProjectName { std::move(name) }
+    , mCancellationContext { audacity::concurrency::CancellationContext::Create() }
 {
 }
 
@@ -264,23 +265,32 @@ std::shared_ptr<AudacityProject> LocalProjectSnapshot::GetProject()
 
 void LocalProjectSnapshot::Start(UploadMode mode)
 {
-   mUploadMode  = mode;
+   mUploadMode = mode;
    UpdateProjectSnapshot();
 }
 
 void LocalProjectSnapshot::SetUploadData(const ProjectUploadData& data)
 {
+   mProjectDataReady.store(true);
    mProjectDataPromise.set_value(data);
 }
 
 void LocalProjectSnapshot::Cancel()
 {
+   mCancelled.store(true, std::memory_order_release);
+
+   mCancellationContext->Cancel();
+
+   if (!mProjectDataReady.load(std::memory_order_acquire))
+      mProjectDataPromise.set_value({});
+
+   UploadFailed({ CloudSyncError::Cancelled });
 }
 
 void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
 {
-   mCompleted.store(true, std::memory_order_release);
-   mProjectCloudExtension.OnSyncCompleted(this, std::make_optional(error));
+   if (!mCompleted.exchange(true, std::memory_order_release))
+      mProjectCloudExtension.OnSyncCompleted(this, std::make_optional(error));
 }
 
 namespace
@@ -445,6 +455,8 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
 
          OnSnapshotCreated(*result, createNew);
       });
+
+   mCancellationContext->OnCancelled(response);
 }
 
 void LocalProjectSnapshot::OnSnapshotCreated(
@@ -475,8 +487,12 @@ void LocalProjectSnapshot::OnSnapshotCreated(
 
    auto projectData = mProjectDataPromise.get_future().get();
 
+   if (mCancelled.load(std::memory_order_acquire))
+      return;
+
    DataUploader::Get().Upload(
-      mServiceConfig, response.SyncState.FileUrls, projectData.ProjectSnapshot,
+      mCancellationContext, mServiceConfig, response.SyncState.FileUrls,
+      projectData.ProjectSnapshot,
       [this](ResponseResult result)
       {
          if (result.Code != ResponseResultCode::Success)
@@ -493,8 +509,9 @@ void LocalProjectSnapshot::OnSnapshotCreated(
             return;
          }
 
-         mMissingBlockUploader = std::make_unique<MissingBlocksUploader>(
-            mServiceConfig, mProjectBlocksLock->MissingBlocks,
+         mMissingBlockUploader = MissingBlocksUploader::Create(
+            mCancellationContext, mServiceConfig,
+            mProjectBlocksLock->MissingBlocks,
             [this](auto result, auto block, auto uploadResult)
             {
                const auto handledBlocks =
@@ -549,6 +566,8 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
          mCompleted.store(true, std::memory_order_release);
          mProjectCloudExtension.OnSyncCompleted(this, {});
       });
+
+   mCancellationContext->OnCancelled(response);
 }
 
 } // namespace cloud::audiocom::sync

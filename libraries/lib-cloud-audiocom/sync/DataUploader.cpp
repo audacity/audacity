@@ -36,7 +36,7 @@ struct DataUploader::Response final
    DataUploader& Uploader;
    UploadUrls Target;
    std::function<void(ResponseResult)> Callback;
-   std::function<bool(double)> ProgressCallback;
+   std::function<void(double)> ProgressCallback;
 
    int RetriesCount { 3 };
    int RetriesLeft { 3 };
@@ -45,14 +45,16 @@ struct DataUploader::Response final
    UploadData Data;
    std::shared_ptr<IResponse> NetworkResponse;
 
-   bool UploadFailed { false };
-
    ResponseResult CurrentResult;
+   CancellationContextPtr CancelContext;
+
+   std::atomic<bool> UploadFailed { false };
 
    Response(
-      DataUploader& uploader, const UploadUrls& target, UploadData data,
+      DataUploader& uploader, CancellationContextPtr cancelContext,
+      const UploadUrls& target, UploadData data,
       std::string mimeType, std::function<void(ResponseResult)> callback,
-      std::function<bool(double)> progressCallback)
+      std::function<void(double)> progressCallback)
        : Uploader { uploader }
        , Target { target }
        , Callback { std::move(callback) }
@@ -60,6 +62,7 @@ struct DataUploader::Response final
        , RetriesLeft { RetriesCount }
        , MimeType { std::move(mimeType) }
        , Data { std::move(data) }
+       , CancelContext { std::move(cancelContext) }
    {
       PerformUpload();
    }
@@ -77,6 +80,7 @@ struct DataUploader::Response final
 
          NetworkResponse = NetworkManager::GetInstance().doPut(
             request, data.data(), data.size());
+         CancelContext->OnCancelled(NetworkResponse);
       }
       else
       {
@@ -84,6 +88,7 @@ struct DataUploader::Response final
 
          NetworkResponse = NetworkManager::GetInstance().doPut(
             request, CreateRequestPayloadStream(filePath));
+         CancelContext->OnCancelled(NetworkResponse);
 
       }
 
@@ -105,8 +110,7 @@ struct DataUploader::Response final
                current = 0;
             }
 
-            if (!ProgressCallback(static_cast<double>(current) / total))
-               NetworkResponse->abort();
+            ProgressCallback(static_cast<double>(current) / total);
          });
    }
 
@@ -138,7 +142,9 @@ struct DataUploader::Response final
       Data = {};
       Request request { Target.SuccessUrl };
 
-      NetworkResponse = NetworkManager::GetInstance().doPost(request, nullptr, 0);
+      NetworkResponse =
+         NetworkManager::GetInstance().doPost(request, nullptr, 0);
+      CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
          [this](auto)
@@ -166,17 +172,16 @@ struct DataUploader::Response final
 
    void FailUpload()
    {
-      if (!UploadFailed)
+      if (!UploadFailed.exchange(true))
       {
          Data = {};
-
          Callback(CurrentResult);
-         UploadFailed = true;
       }
 
       Request request { Target.FailUrl };
 
       NetworkResponse = NetworkManager::GetInstance().doPost(request, nullptr, 0);
+      CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
          [this](auto)
@@ -195,12 +200,6 @@ struct DataUploader::Response final
          });
    }
 
-   void Cancel()
-   {
-      if (NetworkResponse)
-         NetworkResponse->abort();
-   }
-
    void CleanUp()
    {
       BasicUI::CallAfter([this]() { Uploader.RemoveResponse(*this); });
@@ -209,7 +208,6 @@ struct DataUploader::Response final
 
 DataUploader::~DataUploader()
 {
-   CancelAll();
 }
 
 DataUploader& DataUploader::Get()
@@ -218,23 +216,11 @@ DataUploader& DataUploader::Get()
    return instance;
 }
 
-void DataUploader::CancelAll()
-{
-   ResponsesList responses;
-
-   {
-      auto lock = std::lock_guard { mResponseMutex };
-      responses = std::move(mResponses);
-   }
-
-   for (auto& response : responses)
-      response->Cancel();
-}
-
 void DataUploader::Upload(
+   CancellationContextPtr cancelContext,
    const ServiceConfig&, const UploadUrls& target, std::vector<uint8_t> data,
    std::function<void(ResponseResult)> callback,
-   std::function<bool(double)> progressCallback)
+   std::function<void(double)> progressCallback)
 {
    if (!callback)
       callback = [](auto...) {};
@@ -242,24 +228,31 @@ void DataUploader::Upload(
    if (!progressCallback)
       progressCallback = [](auto...) { return true; };
 
+   if (!cancelContext)
+      cancelContext = audacity::concurrency::CancellationContext::Create();
+
    auto lock = std::lock_guard { mResponseMutex };
 
    mResponses.emplace_back(std::make_unique<Response>(
-      *this, target, std::move(data),
+      *this, cancelContext, target, std::move(data),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
 }
 
 void DataUploader::Upload(
+   CancellationContextPtr cancelContext,
    const ServiceConfig& config, const UploadUrls& target, std::string filePath,
    std::function<void(ResponseResult)> callback,
-   std::function<bool(double)> progressCallback)
+   std::function<void(double)> progressCallback)
 {
    if (!callback)
       callback = [](auto...) {};
 
    if (!progressCallback)
       progressCallback = [](auto...) { return true; };
+
+   if (!cancelContext)
+      cancelContext = audacity::concurrency::CancellationContext::Create();
 
    if (!wxFileExists(audacity::ToWXString(filePath)))
    {
@@ -274,7 +267,7 @@ void DataUploader::Upload(
    auto lock = std::lock_guard { mResponseMutex };
 
    mResponses.emplace_back(std::make_unique<Response>(
-      *this, target, std::move(filePath),
+      *this, cancelContext, target, std::move(filePath),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
 }

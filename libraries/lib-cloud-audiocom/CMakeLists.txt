@@ -56,6 +56,7 @@ set ( LIBRARIES
    lib-project-file-io-interface # ProjectFileIOExtension
    PUBLIC
       rapidjson::rapidjson # Protocol is JSON based
+      lib-concurrency-interface
    PRIVATE
       lib-sqlite-helpers-interface
       lib-crypto-interface

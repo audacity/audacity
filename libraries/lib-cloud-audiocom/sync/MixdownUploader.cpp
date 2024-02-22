@@ -172,36 +172,40 @@ public:
 
    void HandleExportDiskFullError(const ExportDiskFullError& error)
    {
+      mParent.ReportProgress(MixdownState::Failed, 1.0, {});
+
       BasicUI::CallAfter(
          [this, fileName = error.GetFileName()]
          {
             ShowDiskFullExportErrorDialog(fileName);
-            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
    void HandleExportError(const ExportErrorException& error)
    {
+      mParent.ReportProgress(MixdownState::Failed, 1.0, {});
+
       BasicUI::CallAfter(
          [this, message = error.GetMessage(), helpPage = error.GetHelpPageId()]
          {
             ShowExportErrorDialog(message, XO("Export failed"), helpPage, true);
-            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
    void HandleExportException(const ExportException& error)
    {
+      mParent.ReportProgress(MixdownState::Failed, 1.0, {});
+
       BasicUI::CallAfter(
          [this, message = error.What()]
          {
             ShowExportErrorDialog(Verbatim(message), XO("Export failed"), true);
-            mParent.ReportProgress(MixdownState::Failed, 1.0, {});
          });
    }
 
    void HandleUnkonwnException()
    {
+      mParent.ReportProgress(MixdownState::Failed, 1.0, {});
       BasicUI::CallAfter([] { BasicUI::ShowMessageBox(XO("Export error")); });
    }
 
@@ -215,11 +219,12 @@ private:
 };
 
 MixdownUploader::MixdownUploader(
-   Tag, const ServiceConfig& config, const AudacityProject& project,
-   MixdownProgressCallback progressCallback)
+   Tag, CancellationContextPtr cancellationContext, const ServiceConfig& config,
+   const AudacityProject& project, MixdownProgressCallback progressCallback)
     : mServiceConfig { config }
     , mProject { project }
     , mProgressCallback { std::move(progressCallback) }
+    , mCancellationContext { std::move(cancellationContext) }
 {
    ExportProject();
 }
@@ -231,14 +236,22 @@ MixdownUploader::~MixdownUploader()
 }
 
 std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
-   const ServiceConfig& config, const AudacityProject& project,
-   MixdownProgressCallback progressCallback)
+   CancellationContextPtr cancellationContext, const ServiceConfig& config,
+   const AudacityProject& project, MixdownProgressCallback progressCallback)
 {
    if (!progressCallback)
       progressCallback = [](auto...) { return true; };
 
-   return std::make_shared<MixdownUploader>(
-      Tag {}, config, project, std::move(progressCallback));
+   if (!cancellationContext)
+      cancellationContext =
+         audacity::concurrency::CancellationContext::Create();
+
+   auto uploader = std::make_shared<MixdownUploader>(
+      Tag {}, cancellationContext, config, project, std::move(progressCallback));
+
+   cancellationContext->OnCancelled(uploader);
+
+   return uploader;
 }
 
 void MixdownUploader::SetUrls(const UploadUrls& urls)
@@ -256,9 +269,11 @@ void MixdownUploader::Cancel()
    if (!mDataExporter)
       return;
 
+   if (mUploadCancelled.exchange(true, std::memory_order_acq_rel))
+      return;
+
    // To be on a safe side, we cancel both operations
    mDataExporter->Cancel();
-   mUploadCancelled.store(true, std::memory_order_release);
    // And ensure that WaitingForUrls is interrupted too
    mUploadUrlsSet.notify_all();
 }
@@ -276,8 +291,7 @@ void MixdownUploader::ReportProgress(
    if (BasicUI::IsUiThread())
    {
       mProgressUpdateQueued = false;
-      if (!mProgressCallback(progress))
-         Cancel();
+      mProgressCallback(progress);
    }
    else if (!mProgressUpdateQueued)
    {
@@ -294,8 +308,7 @@ void MixdownUploader::ReportProgress(
             if (mFinished.load())
                return;
 
-            if (!mProgressCallback(mProgress.load()))
-               Cancel();
+            mProgressCallback(mProgress.load());
 
             mProgressUpdateQueued = false;
          });
@@ -404,7 +417,7 @@ void MixdownUploader::UploadMixdown()
    ReportProgress(MixdownState::Uploading, 0.0, {});
 
    DataUploader::Get().Upload(
-      mServiceConfig, *mUploadUrls, mExportedFilePath,
+      mCancellationContext, mServiceConfig, *mUploadUrls, mExportedFilePath,
       [this, strongThis = shared_from_this()](ResponseResult result)
       {
          const auto state = [code = result.Code]
@@ -420,9 +433,6 @@ void MixdownUploader::UploadMixdown()
          ReportProgress(state, 1.0, result);
       },
       [this, strongThis = shared_from_this()](double progress)
-      {
-         ReportProgress(MixdownState::Uploading, progress, {});
-         return !mUploadCancelled.load(std::memory_order_acquire);
-      });
+      { ReportProgress(MixdownState::Uploading, progress, {}); });
 }
 } // namespace cloud::audiocom::sync

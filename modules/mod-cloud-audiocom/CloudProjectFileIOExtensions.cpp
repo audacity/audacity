@@ -41,6 +41,8 @@ using namespace cloud::audiocom::sync;
 
 class IOExtension final : public ProjectFileIOExtension
 {
+   std::optional<UploadUrls> LastMixdownUrls;
+
    OnOpenAction
    OnOpen(AudacityProject& project, const std::string& path) override
    {
@@ -55,6 +57,8 @@ class IOExtension final : public ProjectFileIOExtension
 
    OnSaveAction CreateSnapshot(AudacityProject& project, std::string name)
    {
+      LastMixdownUrls = std::nullopt;
+
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
       projectCloudExtension.OnSyncStarted();
@@ -74,9 +78,7 @@ class IOExtension final : public ProjectFileIOExtension
          // Errors would be handled by the UI extension
          return OnSaveAction::Cancelled;
 
-      BasicUI::CallAfter([urls    = result->SyncState.MixdownUrls,
-                          project = projectCloudExtension.GetProject().lock()]
-                         { UploadMixdown(*project, urls); });
+      LastMixdownUrls = result->SyncState.MixdownUrls;
 
       return OnSaveAction::Continue;
    }
@@ -185,6 +187,9 @@ class IOExtension final : public ProjectFileIOExtension
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
       projectCloudExtension.OnUpdateSaved(serializer);
+
+      if (LastMixdownUrls)
+         UploadMixdown(project, *LastMixdownUrls);
    }
 
    bool

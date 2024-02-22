@@ -311,6 +311,23 @@ void ProjectCloudExtension::OnSyncCompleted(
 
 void ProjectCloudExtension::CancelSync()
 {
+   std::vector<std::shared_ptr<UploadQueueElement>> queue;
+
+   {
+      auto lock = std::lock_guard { mUploadQueueMutex };
+      std::swap(queue, mUploadQueue);
+   }
+
+   if (queue.empty())
+      return;
+
+   for (auto& item : queue)
+   {
+      if (!item->Operation)
+         continue;
+
+      item->Operation->Cancel();
+   }
 }
 
 bool ProjectCloudExtension::IsSyncing() const

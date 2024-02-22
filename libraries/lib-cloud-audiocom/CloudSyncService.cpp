@@ -273,7 +273,8 @@ CloudSyncService& CloudSyncService::Get()
 }
 
 CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
-   std::shared_ptr<CancellationContext> context, int page, int pageSize,
+   audacity::concurrency::CancellationContextPtr context, int page,
+   int pageSize,
    std::string searchString)
 {
    using namespace audacity::network_manager;

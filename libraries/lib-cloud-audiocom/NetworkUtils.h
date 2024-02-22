@@ -11,13 +11,8 @@
 
 #pragma once
 
-#include <atomic>
 #include <chrono>
-#include <functional>
-#include <memory>
-#include <mutex>
 #include <string>
-#include <vector>
 
 namespace audacity::network_manager
 {
@@ -43,34 +38,6 @@ struct CLOUD_AUDIOCOM_API TransferStats final
    TransferStats& SetTransferDuration(Duration transferDuration);
 }; // struct TransferStats
 
-struct CLOUD_AUDIOCOM_API CancellationContext final
-{
-   struct Tag final
-   {
-   };
-
-public:
-   explicit CancellationContext(Tag);
-
-   CancellationContext(const CancellationContext&)            = delete;
-   CancellationContext(CancellationContext&&)                 = delete;
-   CancellationContext& operator=(const CancellationContext&) = delete;
-   CancellationContext& operator=(CancellationContext&&)      = delete;
-
-   [[nodiscard]] static std::shared_ptr<CancellationContext> Create();
-
-   void Cancel();
-
-   void OnCancelled(std::function<void()> callback);
-   void
-   OnCancelled(std::shared_ptr<audacity::network_manager::IResponse> response);
-
-private:
-   std::atomic<bool> mCancelled { false };
-
-   std::mutex mDeferredCallbacksMutex;
-   std::vector<std::function<void()>> mDeferredCallbacks;
-}; // struct CancellationContext
 
 enum class ResponseResultCode
 {

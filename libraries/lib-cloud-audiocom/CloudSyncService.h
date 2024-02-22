@@ -21,6 +21,8 @@
 
 #include "NetworkUtils.h"
 
+#include "concurrency/CancellationContext.h"
+
 class AudacityProject;
 
 namespace cloud::audiocom
@@ -84,7 +86,7 @@ public:
 
    //! Retrieve the list of projects from the cloud
    GetProjectsFuture GetProjects(
-      std::shared_ptr<CancellationContext> context, int page, int pageSize,
+      audacity::concurrency::CancellationContextPtr context, int page, int pageSize,
       std::string searchString);
 
    //! Open the project from the cloud. This operation is asynchronous.

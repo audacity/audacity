@@ -10,10 +10,10 @@
 **********************************************************************/
 #pragma once
 
-#include <atomic>
 #include <array>
-#include <cstdint>
+#include <atomic>
 #include <condition_variable>
+#include <cstdint>
 #include <mutex>
 #include <thread>
 
@@ -22,13 +22,15 @@
 #include "CloudSyncUtils.h"
 #include "NetworkUtils.h"
 
+#include "concurrency/CancellationContext.h"
+#include "concurrency/ICancellable.h"
+
 namespace audacity::network_manager
 {
 class IResponse;
 }
 
 class AudacityProject;
-
 
 namespace cloud::audiocom
 {
@@ -37,11 +39,13 @@ class ServiceConfig;
 
 namespace cloud::audiocom::sync
 {
+using audacity::concurrency::CancellationContextPtr;
+
 struct MissingBlocksUploadProgress final
 {
-   int64_t TotalBlocks = 0;
+   int64_t TotalBlocks    = 0;
    int64_t UploadedBlocks = 0;
-   int64_t FailedBlocks = 0;
+   int64_t FailedBlocks   = 0;
 
    std::vector<ResponseResult> UploadErrors;
 };
@@ -52,28 +56,45 @@ struct BlockUploadTask final
    LockedBlock Block;
 };
 
-using MissingBlocksUploadProgressCallback = std::function<void(const MissingBlocksUploadProgress&, const LockedBlock&, ResponseResult blockResponseResult)>;
+using MissingBlocksUploadProgressCallback = std::function<void(
+   const MissingBlocksUploadProgress&, const LockedBlock&,
+   ResponseResult blockResponseResult)>;
 
-class MissingBlocksUploader final
+class MissingBlocksUploader final :
+    public audacity::concurrency::ICancellable,
+    public std::enable_shared_from_this<MissingBlocksUploader>
 {
+   struct Tag final
+   {
+   };
+
 public:
-   static constexpr auto NUM_PRODUCERS = 3;
-   static constexpr auto NUM_UPLOADERS = 6;
+   static constexpr auto NUM_PRODUCERS    = 3;
+   static constexpr auto NUM_UPLOADERS    = 6;
    static constexpr auto RING_BUFFER_SIZE = 16;
 
-   MissingBlocksUploader(
-      const ServiceConfig& serviceConfig, std::vector<BlockUploadTask> uploadTasks,
+   MissingBlocksUploader(Tag, const ServiceConfig& serviceConfig);
+
+   static std::shared_ptr<MissingBlocksUploader> Create(
+      CancellationContextPtr cancelContext, const ServiceConfig& serviceConfig,
+      std::vector<BlockUploadTask> uploadTasks,
       MissingBlocksUploadProgressCallback progress);
 
    ~MissingBlocksUploader();
 
 private:
-
    struct ProducedItem final
    {
       BlockUploadTask Task;
       std::vector<uint8_t> CompressedData;
    };
+
+   void Start(
+      CancellationContextPtr cancelContext,
+      std::vector<BlockUploadTask> uploadTasks,
+      MissingBlocksUploadProgressCallback progress);
+
+   void Cancel() override;
 
    ProducedItem ProduceBlock();
    void ConsumeBlock(ProducedItem item);
@@ -115,5 +136,7 @@ private:
 
    std::mutex mProgressDataMutex;
    MissingBlocksUploadProgress mProgressData;
+
+   CancellationContextPtr mCancellationContext;
 };
 } // namespace cloud::audiocom::sync
