@@ -10,15 +10,13 @@
 
 #pragma once
 
-#include <thread>
-#include <vector>
 #include <memory>
-#include <mutex>
 
 #include "../IResponseFactory.h"
 
 #include "CurlHandleManager.h"
-#include "ThreadPool/ThreadPool.h"
+
+class ThreadPool;
 
 namespace audacity
 {
@@ -29,6 +27,7 @@ class CurlResponseFactory final : public IResponseFactory
 {
 public:
 	CurlResponseFactory ();
+   ~CurlResponseFactory ();
 
 	void setProxy (const std::string& proxy) override;
 

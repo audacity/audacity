@@ -63,6 +63,7 @@ set( LIBRARIES
    lib-music-information-retrieval
    lib-crypto
    lib-fft
+   lib-concurrency
 )
 
 if ( ${_OPT}use_lv2 )
