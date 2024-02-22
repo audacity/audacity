@@ -17,6 +17,8 @@
 
 #include "NetworkManagerApi.h"
 
+#include "concurrency/ICancellable.h"
+
 namespace audacity
 {
 namespace network_manager
@@ -107,7 +109,7 @@ enum
 
 
 //! Interface, that provides access to the data from the HTTP response
-class NETWORK_MANAGER_API IResponse
+class NETWORK_MANAGER_API IResponse : public concurrency::ICancellable
 {
 public:
     using RequestCallback = std::function<void (IResponse*)>;
@@ -173,6 +175,11 @@ public:
         }
 
         return result;
+    }
+
+    void Cancel() override
+    {
+        abort();
     }
 };
 

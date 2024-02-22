@@ -7,14 +7,13 @@
 
  Dmitry Vedenko
  **********************************************************************/
-
 #include "CurlResponseFactory.h"
-
-#include <algorithm>
 
 #include "CurlResponse.h"
 #include "MultipartData.h"
 #include "RequestPayload.h"
+
+#include "ThreadPool/ThreadPool.h"
 
 namespace audacity
 {
@@ -31,6 +30,10 @@ CurlResponseFactory::CurlResponseFactory ()
         )))
 {
 
+}
+
+CurlResponseFactory::~CurlResponseFactory ()
+{
 }
 
 void CurlResponseFactory::setProxy (const std::string& proxy)
