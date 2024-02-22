@@ -64,6 +64,7 @@ set( LIBRARIES
    lib-crypto
    lib-fft
    lib-sqlite-helpers
+   lib-concurrency
 )
 
 if ( ${_OPT}use_lv2 )
