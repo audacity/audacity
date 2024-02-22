@@ -3193,17 +3193,6 @@ void WaveTrack::CopyClipEnvelopes()
    }
 }
 
-/*! @excsafety{Mixed} */
-/*! @excsafety{No-fail} -- The rightmost clip will be in a flushed state. */
-/*! @excsafety{Partial}
--- Some initial portion (maybe none) of the append buffer of the rightmost
-clip gets appended; no previously saved contents are lost. */
-void WaveTrack::FlushOne()
-{
-   // After appending, presumably.  Do this to the clip that gets appended.
-   RightmostOrNewClip()->Flush();
-}
-
 bool WaveTrack::IsLeader() const
 {
    return Track::IsLeader();

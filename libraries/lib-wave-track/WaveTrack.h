@@ -1218,7 +1218,6 @@ private:
    //! Get the linear index of a given clip (== number of clips if not found)
    int GetClipIndex(const Interval &clip) const;
 
-   void FlushOne();
    // May assume precondition: t0 <= t1
    void HandleClear(
       double t0, double t1, bool addCutLines, bool split,
