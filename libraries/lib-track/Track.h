@@ -138,7 +138,6 @@ private:
    //! Holds iterator to self, so that TrackList::Find can be constant-time
    /*! mNode's pointer to std::list might not be this TrackList, if it's a pending update track */
    TrackNodePointer mNode{};
-   int            mIndex; //!< 0-based position of this track in its TrackList
 
  public:
 
@@ -257,9 +256,6 @@ protected:
    void SetLinkType(LinkType linkType, bool completeList = true);
 
 private:
-   int GetIndex() const;
-   void SetIndex(int index);
-
    /*!
     @param completeList only influences debug build consistency checking
     */

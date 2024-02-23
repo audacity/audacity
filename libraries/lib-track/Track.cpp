@@ -37,12 +37,10 @@ and TimeTrack.
 
 Track::Track()
 {
-   mIndex = 0;
 }
 
 Track::Track(const Track& orig, ProtectedCreationArg&&)
 {
-   mIndex = 0;
 }
 
 // Copy all the track properties except the actual contents
@@ -131,16 +129,6 @@ void Track::SetOwner
    // focused track too.  Otherwise focus could remain on an invisible (or deleted) track.
    mList = list;
    mNode = node;
-}
-
-int Track::GetIndex() const
-{
-   return mIndex;
-}
-
-void Track::SetIndex(int index)
-{
-   mIndex = index;
 }
 
 void Track::SetLinkType(LinkType linkType, bool completeList)
@@ -418,19 +406,14 @@ void TrackList::RecalcPositions(TrackNodePointer node)
       return;
 
    Track *t;
-   int i = 0;
 
    auto prev = getPrev(node);
-   if (!isNull(prev)) {
+   if (!isNull(prev))
       t = prev.first->get();
-      i = t->GetIndex() + 1;
-   }
 
    const auto theEnd = End();
-   for (auto n = DoFind(node.first->get()); n != theEnd; ++n) {
+   for (auto n = DoFind(node.first->get()); n != theEnd; ++n)
       t = *n;
-      t->SetIndex(i++);
-   }
 }
 
 void TrackList::QueueEvent(TrackListEvent event)
@@ -743,8 +726,13 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       return;
 
    // Be sure s1 is the earlier iterator
-   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex())
-      std::swap(s1, s2);
+   {
+      const auto begin = ListOfTracks::begin();
+      auto d1 = std::distance(begin, s1.first);
+      auto d2 = std::distance(begin, s2.first);
+      if (d1 > d2)
+         std::swap(s1, s2);
+   }
 
    // For saving the removed tracks
    using Saved = ListOfTracks::value_type;
