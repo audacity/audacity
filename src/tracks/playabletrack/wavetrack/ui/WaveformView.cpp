@@ -12,10 +12,11 @@ Paul Licameli split from WaveChannelView.cpp
 #include "WaveformView.h"
 
 #include "WaveformAppearance.h"
-#include "WaveformCache.h"
-#include "WaveformVRulerControls.h"
+#include "ClipParameters.h"
 #include "WaveChannelView.h"
 #include "WaveChannelViewConstants.h"
+#include "WaveformCache.h"
+#include "WaveformVRulerControls.h"
 
 #include "SampleHandle.h"
 #include "../../../ui/EnvelopeHandle.h"

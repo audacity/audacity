@@ -17,8 +17,8 @@ Paul Licameli split from WaveChannelView.cpp
 #include "Sequence.h"
 #include "Spectrum.h"
 
+#include "ClipParameters.h"
 #include "SpectrumVRulerControls.h"
-#include "WaveChannelView.h"
 #include "WaveChannelViewConstants.h"
 
 #include "../../../ui/BrushHandle.h"
