@@ -173,7 +173,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          }
 
          if (oneChannel) {
-            if (TrackList::NChannels(*track) == 1)
+            if (track->NChannels() == 1)
                // really mono
                msg = topMsg +
                   XO("Processing: %s").Format(trackName);

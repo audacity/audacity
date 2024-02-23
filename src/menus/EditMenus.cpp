@@ -488,7 +488,7 @@ bool FitsInto(const Track &src, const Track &dst)
    // Mono can "fit" into stereo, by duplication of the channel
    // Otherwise non-wave tracks always have just one "channel"
    // Future:  Fit stereo into mono too, using mix-down
-   return TrackList::NChannels(src) <= TrackList::NChannels(dst);
+   return src.NChannels() <= dst.NChannels();
 }
 
 // First, destination track; second, source

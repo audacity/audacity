@@ -558,7 +558,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
    []( PopupMenuHandler &handler ) -> bool {
       auto &track =
          static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
-      return 1 == TrackList::NChannels(track);
+      return 1 == track.NChannels();
    };
 
    static const auto isUnsafe =
@@ -654,7 +654,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
                auto next = * ++ tracks.Find(&track);
                canMakeStereo =
                   (next &&
-                   TrackList::NChannels(*next) == 1 &&
+                   next->NChannels() == 1 &&
                    track_cast<WaveTrack*>(next));
             }
             menu.Enable( id, canMakeStereo );
@@ -667,7 +667,7 @@ BEGIN_POPUP_MENU(WaveTrackMenuTable)
             auto &track =
                static_cast< WaveTrackMenuTable& >( handler ).FindWaveTrack();
             bool isStereo =
-               2 == TrackList::NChannels(track);
+               2 == track.NChannels();
             menu.Enable( id, isStereo && !isUnsafe( handler ) );
          }
       );
@@ -1051,7 +1051,7 @@ void Status1DrawFunction
    /// stereo and what sample rate it's using.
    auto rate = wt ? wt->GetRate() : 44100.0;
    TranslatableString s;
-   if (!pTrack || TrackList::NChannels(*pTrack) > 1)
+   if (!pTrack || pTrack->NChannels() > 1)
       // TODO: more-than-two-channels-message
       // more appropriate strings
       s = XO("Stereo, %dHz");

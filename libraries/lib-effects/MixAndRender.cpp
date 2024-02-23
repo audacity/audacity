@@ -42,8 +42,8 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    // selected WaveTracks. The tracklist is (confusingly) the list of all
    // tracks in the project
 
-   int numWaves = 0; /* number of wave tracks in the selection */
-   int numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
+   size_t numWaves = 0; /* number of wave tracks in the selection */
+   size_t numMono = 0;  /* number of mono, centre-panned wave tracks in selection*/
    for (auto wt : trackRange) {
       numWaves += wt->NChannels();
       if (IsMono(*wt) && wt->GetPan() == 0)
@@ -91,7 +91,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    }
 
    /* create the destination track (NEW track) */
-   if (numWaves == (int)TrackList::NChannels(*first))
+   if (numWaves == first->NChannels())
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 

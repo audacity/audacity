@@ -491,7 +491,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t.GetEndTime(), "end" );
          context.AddItem( t.GetPan() , "pan");
          context.AddItem( t.GetGain() , "gain");
-         context.AddItem( TrackList::NChannels(t), "channels");
+         context.AddItem( t.NChannels(), "channels");
          context.AddBool( t.GetSolo(), "solo" );
          context.AddBool( t.GetMute(), "mute");
          context.AddItem( vzmin, "VZoomMin");
