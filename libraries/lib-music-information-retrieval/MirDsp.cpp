@@ -13,7 +13,7 @@
 #include "MemoryX.h"
 #include "MirTypes.h"
 #include "MirUtils.h"
-#include "PowerSpectrumGetter.h"
+#include "PffftTransformer.h"
 #include "StftFrameProvider.h"
 
 #include <cassert>

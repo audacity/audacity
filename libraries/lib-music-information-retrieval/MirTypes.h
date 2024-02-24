@@ -17,7 +17,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "PowerSpectrumGetter.h"
+#include "PffftTransformer.h"
 
 namespace MIR
 {

@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  PowerSpectrumGetter.h
+  PffftTransformer.h
 
   Matthieu Hodgkinson
 

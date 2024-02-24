@@ -3,12 +3,12 @@
 
   Audacity: A Digital Audio Editor
 
-  PowerSpectrumGetter.cpp
+  PffftTransformer.cpp
 
   Matthieu Hodgkinson
 
 **********************************************************************/
-#include "PowerSpectrumGetter.h"
+#include "PffftTransformer.h"
 
 #include <cassert>
 #include <pffft.h>

@@ -9,8 +9,8 @@ includes a different version of pffft.h
 set( SOURCES
    FFT.cpp
    FFT.h
-   PowerSpectrumGetter.cpp
-   PowerSpectrumGetter.h
+   PffftTransformer.h
+   PffftTransformer.cpp
    RealFFTf.cpp
    RealFFTf.h
    Spectrum.cpp
