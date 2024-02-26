@@ -164,6 +164,9 @@ public:
       sampleFormat srcformat,
       const AttributesList &attrs) override;
 
+   SampleBlockPtr DoCreateFromId(
+      sampleFormat srcformat, SampleBlockID id) override;
+
 private:
    void OnBeginPurge(size_t begin, size_t end);
    void OnEndPurge();
@@ -249,10 +252,6 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const AttributesList &attrs )
 {
-   std::shared_ptr<SampleBlock> sb;
-
-   int found = 0;
-
    // loop through attrs, which is a null-terminated list of attribute-value pairs
    for (auto pair : attrs)
    {
@@ -262,40 +261,33 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       long long nValue;
 
       if (attr == "blockid" && value.TryGet(nValue))
-      {
-         if (nValue <= 0) {
-            sb = DoCreateSilent( -nValue, floatSample );
-         }
-         else {
-            // First see if this block id was previously loaded
-            auto &wb = mAllBlocks[ nValue ];
-            auto pb = wb.lock();
-            if (pb)
-               // Reuse the block
-               sb = pb;
-            else {
-               // First sight of this id
-               auto ssb =
-                  std::make_shared<SqliteSampleBlock>(shared_from_this());
-               wb = ssb;
-               sb = ssb;
-               ssb->mSampleFormat = srcformat;
-               // This may throw database errors
-               // It initializes the rest of the fields
-               ssb->Load((SampleBlockID) nValue);
-            }
-         }
-         found++;
-      }
+         return DoCreateFromId(srcformat, nValue);
    }
 
-  // Were all attributes found?
-   if (found != 1)
-   {
-      return nullptr;
-   }
+   return nullptr;
+}
 
-   return sb;
+SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromId(
+   sampleFormat srcformat, SampleBlockID id)
+{
+   if (id <= 0)
+      return DoCreateSilent(-id, floatSample);
+
+   // First see if this block id was previously loaded
+   auto& wb = mAllBlocks[id];
+
+   if (auto block = wb.lock())
+      return block;
+
+   // First sight of this id
+   auto ssb           = std::make_shared<SqliteSampleBlock>(shared_from_this());
+   wb                 = ssb;
+   ssb->mSampleFormat = srcformat;
+   // This may throw database errors
+   // It initializes the rest of the fields
+   ssb->Load(static_cast<SampleBlockID>(id));
+   
+   return ssb;
 }
 
 BlockSampleView SqliteSampleBlock::GetFloatSampleView(bool mayThrow)
