@@ -787,6 +787,40 @@ public:
 
    size_t CountBlocks() const;
 
+   //! Reduce width
+   /*!
+    @post `GetWidth() == 1`
+    */
+   void DiscardRightChannel();
+
+   //! @pre `GetWidth() == 2`
+   void SwapChannels();
+
+   //! A stereo WaveClip becomes mono, keeping the left side and returning a
+   //! new clip with the right side samples
+   /*!
+    @pre `GetWidth() == 2`
+    @post `GetWidth() == 1`
+    @post result: `result->GetWidth() == 1`
+    */
+   std::shared_ptr<WaveClip> SplitChannels();
+
+   //! Steal the right side data from other
+   //! All cutlines are lost in `this`!  Cutlines are not copied from other.
+   /*!
+    Stating sufficient preconditions for the postondition.  Even stronger
+    preconditions on matching offset, trims, and rates could be stated.
+
+    @pre `GetWidth() == 1`
+    @pre `other.GetWidth() == 1`
+    @pre `GetSampleFormats() == other.GetSampleFormats()`
+    @pre `GetSampleBlockFactory() == other.GetSampleBlockFactory()`
+    @pre `!mustAlign || GetNumSamples() == other.GetNumSamples()`
+    
+    @post `!mustAlign || StrongInvariant()`
+    */
+   void MakeStereo(WaveClip &&other, bool mustAlign);
+
    // These return a nonnegative number of samples meant to size a memory buffer
    size_t GetBestBlockSize(sampleCount t) const;
    size_t GetMaxBlockSize() const;
@@ -810,6 +844,10 @@ public:
             bool copyCutlines, CreateToken token);
 
 private:
+   static void TransferSequence(WaveClip &origClip, WaveClip &newClip);
+   static void FixSplitCutlines(
+      WaveClipHolders &myCutlines, WaveClipHolders &newCutlines);
+
    size_t GreatestAppendBufferLen() const;
 
    //! Called by mutating operations; notifies listeners

@@ -429,6 +429,114 @@ size_t WaveClip::GetAppendBufferLen(size_t iChannel) const
    return mSequences[iChannel]->GetAppendBufferLen();
 }
 
+void WaveClip::DiscardRightChannel()
+{
+   mSequences.resize(1);
+   this->Attachments::ForEach([](WaveClipListener &attachment){
+      attachment.Erase(1);
+   });
+   for (auto &pCutline : mCutLines)
+      pCutline->DiscardRightChannel();
+   assert(GetWidth() == 1);
+   assert(CheckInvariants());
+}
+
+void WaveClip::SwapChannels()
+{
+   assert(GetWidth() == 2);
+   this->Attachments::ForEach([](WaveClipListener &attachment){
+      attachment.SwapChannels();
+   });
+   std::swap(mSequences[0], mSequences[1]);
+   for (auto &pCutline : mCutLines)
+      pCutline->SwapChannels();
+   assert(CheckInvariants());
+}
+
+void WaveClip::TransferSequence(WaveClip &origClip, WaveClip &newClip)
+{
+   // Move right channel into result
+   newClip.mSequences.resize(1);
+   newClip.mSequences[0] = move(origClip.mSequences[1]);
+   // Delayed satisfaction of the class invariants after the empty construction
+   newClip.CheckInvariants();
+}
+
+void WaveClip::FixSplitCutlines(
+   WaveClipHolders &myCutlines, WaveClipHolders &newCutlines)
+{
+   auto beginMe = myCutlines.begin(),
+      endMe = myCutlines.end();
+   auto iterNew = newCutlines.begin(),
+      endNew = newCutlines.end();
+   for_each(beginMe, endMe, [&](const auto &myCutline){
+      assert(iterNew != endNew);
+      const auto pNew = *iterNew;
+      TransferSequence(*myCutline, *pNew);
+      // Recursion!
+      FixSplitCutlines(myCutline->mCutLines, pNew->mCutLines);
+      ++iterNew;
+   });
+   assert(iterNew == endNew);
+}
+
+std::shared_ptr<WaveClip> WaveClip::SplitChannels()
+{
+   assert(GetWidth() == 2);
+
+   // Make empty copies of this and all cutlines
+   CreateToken token{ true };
+   auto result = std::make_shared<WaveClip>(*this, GetFactory(), true, token);
+
+   // Move one Sequence
+   TransferSequence(*this, *result);
+
+   // Must also do that for cutlines, which must be in correspondence, because
+   // of the post of the constructor.
+   // And possibly too for cutlines inside of cutlines!
+   FixSplitCutlines(mCutLines, result->mCutLines);
+
+   // Fix attachments in the new clip and assert consistency conditions between
+   // the clip and its cutlines
+   result->Attachments::ForEach([](WaveClipListener &attachment){
+      attachment.Erase(0);
+   });
+   assert(result->CheckInvariants());
+
+   // This call asserts invariants for this clip
+   DiscardRightChannel();
+
+   // Assert postconditions
+   assert(GetWidth() == 1);
+   assert(result->GetWidth() == 1);
+   return result;
+}
+
+void WaveClip::MakeStereo(WaveClip &&other, bool mustAlign)
+{
+   assert(GetWidth() == 1);
+   assert(other.GetWidth() == 1);
+   assert(GetSampleFormats() == other.GetSampleFormats());
+   assert(GetFactory() == other.GetFactory());
+   assert(!mustAlign || GetNumSamples() == other.GetNumSamples());
+
+   mCutLines.clear();
+   mSequences.resize(2);
+   mSequences[1] = move(other.mSequences[0]);
+
+   this->Attachments::ForCorresponding(other,
+   [mustAlign](WaveClipListener *pLeft, WaveClipListener *pRight){
+      // Precondition of callback from ClientData::Site
+      assert(pLeft && pRight);
+      pLeft->MakeStereo(std::move(*pRight), mustAlign);
+   });
+
+   if (mustAlign)
+      assert(StrongInvariant());
+   else
+      assert(CheckInvariants());
+}
+
 size_t WaveClip::GreatestAppendBufferLen() const
 {
    size_t result = 0;
