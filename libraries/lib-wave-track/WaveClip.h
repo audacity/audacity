@@ -453,8 +453,12 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
+   /*!
+    * @pre `iChannel < GetWidth()`
+    */
    std::shared_ptr<SampleBlock>
-   AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
+   AppendToChannel(size_t iChannel,
+      constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of
    //! blocks; no dithering applied

@@ -474,9 +474,11 @@ void WaveClip::UpdateEnvelopeTrackLen()
 
 /*! @excsafety{Strong} */
 std::shared_ptr<SampleBlock>
-WaveClip::AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len)
+WaveClip::AppendToChannel(size_t iChannel,
+   constSamplePtr buffer, sampleFormat format, size_t len)
 {
-   return mSequences[0]->AppendNewBlock( buffer, format, len );
+   assert(iChannel < GetWidth());
+   return mSequences[iChannel]->AppendNewBlock(buffer, format, len);
 }
 
 /*! @excsafety{Strong} */
@@ -486,7 +488,7 @@ WaveClip::AppendLegacyNewBlock(constSamplePtr buffer, sampleFormat format, size_
    // This is a special use function for legacy files only and this assertion
    // does not need to be relaxed.  The clip is in a still unzipped track.
    assert(GetWidth() == 1);
-   return mSequences[0]->AppendNewBlock( buffer, format, len );
+   return AppendToChannel(0, buffer, format, len);
 }
 
 /*! @excsafety{Strong} */

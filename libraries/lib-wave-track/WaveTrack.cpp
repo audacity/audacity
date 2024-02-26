@@ -334,7 +334,9 @@ void WaveTrack::Interval::Append(
    constSamplePtr buffer[], sampleFormat format, size_t len)
 {
    for (unsigned channel = 0; channel < NChannels(); ++channel)
-      GetClip(channel)->AppendNewBlock(buffer[channel], format, len);
+      // TODO wide wave clips -- pass channel number
+      GetClip(channel)
+         ->AppendToChannel(0, buffer[channel], format, len);
 }
 
 void WaveTrack::Interval::Flush()
