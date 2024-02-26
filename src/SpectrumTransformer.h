@@ -16,7 +16,7 @@ Paul Licameli
 #include <memory>
 #include <vector>
 #include "audacity/Types.h"
-#include "RealFFTf.h"
+#include "PffftTransformer.h"
 #include "SampleCount.h"
 
 enum eWindowFunctions : int;
@@ -164,13 +164,14 @@ protected:
 
 private:
    std::vector<std::unique_ptr<Window>> mQueue;
-   HFFT     hFFT;
+   PffftTransformer mTransformer;
    sampleCount mInSampleCount = 0;
    sampleCount mOutStepCount = 0; //!< sometimes negative
    size_t mInWavePos = 0;
 
    //! These have size mWindowSize:
-   FloatVector mFFTBuffer;
+   PffftFloatVector mFFTBuffer;
+   PffftFloatVector mWork;
    FloatVector mInWaveBuffer;
    FloatVector mOutOverlapBuffer;
    //! These have size mWindowSize, or 0 for rectangular window:
