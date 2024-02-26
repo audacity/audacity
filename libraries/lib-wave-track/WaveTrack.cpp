@@ -294,6 +294,25 @@ double WaveTrack::Interval::End() const
    return mpClip->GetPlayEndTime();
 }
 
+size_t WaveTrack::Interval::GetBestBlockSize(sampleCount start) const
+{
+   return GetClip(0)->GetSequence(0)->GetBestBlockSize(start);
+}
+
+size_t WaveTrack::Interval::GetMaxBlockSize() const
+{
+   auto result = GetClip(0)->GetSequence(0)->GetMaxBlockSize();
+   if (NChannels() > 1)
+      result =
+         std::max(result, GetClip(1)->GetSequence(0)->GetMaxBlockSize());
+   return result;
+}
+
+sampleCount WaveTrack::Interval::GetSequenceStartSample() const
+{
+   return GetClip(0)->GetSequenceStartSample();
+}
+
 bool WaveTrack::Interval::EqualSequenceLengthInvariant() const
 {
    if (NChannels() < 2)
@@ -1419,16 +1438,7 @@ size_t WaveTrack::NIntervals() const
 
 auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
 {
-   if (iInterval < NIntervals()) {
-      WaveClipHolder pClip = NarrowClips()[iInterval],
-         pClip1;
-      if (NChannels() > 1) {
-         auto &rightClips = RightClips();
-         pClip1 = rightClips[iInterval];
-      }
-      return std::make_shared<Interval>(*this, pClip, pClip1);
-   }
-   return {};
+   return std::static_pointer_cast<Interval>(DoGetInterval(iInterval));
 }
 
 auto WaveTrack::GetWideClip(size_t iInterval) const -> IntervalConstHolder
@@ -1454,8 +1464,8 @@ WaveTrack::DoGetInterval(size_t iInterval)
 
 bool WaveTrack::HasClipNamed(const wxString& name) const
 {
-   auto clips = NarrowClips();
-   return any_of(clips.begin(), clips.end(),
+   auto clips = Intervals();
+   return std::any_of(clips.begin(), clips.end(),
       [&](const auto &pClip){ return pClip->GetName() == name; });
 }
 
@@ -1629,7 +1639,7 @@ sampleCount WaveTrack::GetVisibleSampleCount() const
 {
     sampleCount result{ 0 };
 
-    for (const auto& clip : NarrowClips())
+    for (const auto& clip : Intervals())
         result += clip->GetVisibleSampleCount();
 
     return result;
@@ -1656,7 +1666,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
       return true;
 
    //wxPrintf("Searching for overlap in %.6f...%.6f\n", t0, t1);
-   for (const auto &clip : NarrowClips())
+   for (const auto &clip : Intervals())
    {
       if (clip->IntersectsPlayRegion(t0, t1)) {
          //wxPrintf("Overlapping clip: %.6f...%.6f\n",
@@ -3055,14 +3065,14 @@ size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 {
    auto bestBlockSize = GetMaxBlockSize();
 
-   for (const auto &clip : NarrowClips()) {
+   for (const auto &clip : Intervals()) {
       auto startSample = clip->GetPlayStartSample();
       auto endSample = clip->GetPlayEndSample();
       if (s >= startSample && s < endSample)
       {
          // ignore extra channels (this function will soon be removed)
-         bestBlockSize = clip->GetSequence(0)
-            ->GetBestBlockSize(s - clip->GetSequenceStartSample());
+         bestBlockSize =
+            clip->GetBestBlockSize(s - clip->GetSequenceStartSample());
          break;
       }
    }
@@ -3072,11 +3082,10 @@ size_t WaveTrack::GetBestBlockSize(sampleCount s) const
 
 size_t WaveTrack::GetMaxBlockSize() const
 {
-   decltype(GetMaxBlockSize()) maxblocksize = 0;
-   for (const auto &clip : NarrowClips())
-      for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-         maxblocksize = std::max(maxblocksize,
-            clip->GetSequence(ii)->GetMaxBlockSize());
+   const auto clips = Intervals();
+   auto maxblocksize = std::accumulate(clips.begin(), clips.end(), size_t{},
+   [](size_t acc, auto pClip){
+      return std::max(acc, pClip->GetMaxBlockSize()); });
 
    if (maxblocksize == 0)
    {
@@ -3368,7 +3377,7 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 }
 
 auto WaveTrack::GetLeftmostClip() -> IntervalHolder {
-   auto &clips = NarrowClips();
+   auto clips = Intervals();
    if (clips.empty())
       return nullptr;
    const auto begin = clips.begin(),
@@ -3376,7 +3385,7 @@ auto WaveTrack::GetLeftmostClip() -> IntervalHolder {
           [](const auto& a, const auto b) {
              return a->GetPlayStartTime() < b->GetPlayStartTime();
           });
-   return GetWideClip(iter - begin);
+   return GetWideClip(std::distance(begin, iter));
 }
 
 auto WaveTrack::GetLeftmostClip() const -> IntervalConstHolder {
@@ -3384,7 +3393,7 @@ auto WaveTrack::GetLeftmostClip() const -> IntervalConstHolder {
 }
 
 auto WaveTrack::GetRightmostClip() -> IntervalHolder {
-   auto &clips = NarrowClips();
+   auto clips = Intervals();
    if (clips.empty())
       return nullptr;
    const auto begin = clips.begin(),
@@ -3392,7 +3401,7 @@ auto WaveTrack::GetRightmostClip() -> IntervalHolder {
           [](const auto& a, const auto b) {
              return a->GetPlayEndTime() < b->GetPlayEndTime();
           });
-   return GetWideClip(iter - begin);
+   return GetWideClip(std::distance(begin, iter));
 }
 
 auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
@@ -3970,7 +3979,7 @@ bool WaveTrack::CanOffsetClips(
 bool WaveTrack::CanInsertClip(
    const Interval& candidateClip, double& slideBy, double tolerance) const
 {
-   const auto &clips = NarrowClips();
+   const auto &clips = Intervals();
    if (clips.empty())
       return true;
    // Find clip in this that overlaps most with `clip`:

@@ -859,6 +859,10 @@ public:
       double Start() const override;
       double End() const override;
 
+      size_t GetBestBlockSize(sampleCount start) const;
+      size_t GetMaxBlockSize() const;
+      sampleCount GetSequenceStartSample() const;
+
       //! An invariant condition, for assertions
       bool EqualSequenceLengthInvariant() const;
 
