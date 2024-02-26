@@ -43,5 +43,11 @@ class MockSampleBlockFactory final : public SampleBlockFactory
       return nullptr;
    }
 
+   SampleBlockPtr
+      DoCreateFromId (sampleFormat srcformat, SampleBlockID id) override
+   {
+      return nullptr;
+   }
+
    long long blockIdCount = 0;
 };
