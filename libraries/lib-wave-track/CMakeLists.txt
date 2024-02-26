@@ -35,8 +35,6 @@ set( SOURCES
    WaveTrackSink.h
    WaveTrackUtilities.cpp
    WaveTrackUtilities.h
-   WideClip.cpp
-   WideClip.h
 )
 set( LIBRARIES
    lib-project-rate-interface

@@ -25,6 +25,8 @@
 #include <wx/thread.h>
 #include <wx/longlong.h>
 
+#include "ClipInterface.h"
+
 class AudacityProject;
 class BlockArray;
 
@@ -892,7 +894,10 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   class WAVE_TRACK_API Interval final : public WideChannelGroupInterval {
+   class WAVE_TRACK_API Interval final
+      : public WideChannelGroupInterval
+      , public ClipInterface
+   {
    public:
       /*!
        @pre `pClip != nullptr`
@@ -924,9 +929,9 @@ public:
       /// operation (but without putting the cut audio to the clipboard)
       void Clear(double t0, double t1);
 
-      int GetRate() const;
+      int GetRate() const override;
 
-      sampleCount GetVisibleSampleCount() const;
+      sampleCount GetVisibleSampleCount() const override;
 
       void SetName(const wxString& name);
       const wxString& GetName() const;
@@ -934,8 +939,8 @@ public:
       size_t NumCutLines() const;
 
       void SetPlayStartTime(double time);
-      double GetPlayStartTime() const;
-      double GetPlayEndTime() const;
+      double GetPlayStartTime() const override;
+      double GetPlayEndTime() const override;
 
       //! Real start time of the clip, quantized to raw sample rate (track's rate)
       sampleCount GetPlayStartSample() const;
@@ -986,16 +991,24 @@ public:
        */
       bool CoversEntirePlayRegion(double t0, double t1) const;
 
-      double GetStretchRatio() const;
-      int GetCentShift() const;
+      double GetStretchRatio() const override;
+      int GetCentShift() const override;
       void SetRawAudioTempo(double tempo);
 
-      sampleCount TimeToSamples(double time) const;
+      sampleCount TimeToSamples(double time) const override;
       double SamplesToTime(sampleCount s) const;
       double GetSequenceStartTime() const;
       double GetSequenceEndTime() const;
       double GetTrimLeft() const;
       double GetTrimRight() const;
+
+      AudioSegmentSampleView GetSampleView(
+         size_t ii, sampleCount start, size_t len, bool mayThrow) const override;
+
+      size_t GetWidth() const override;
+
+      Observer::Subscription
+      SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }

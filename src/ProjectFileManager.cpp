@@ -56,7 +56,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
-#include "WideClip.h"
 #include "XMLFileReader.h"
 #include "import/ImportStreamDialog.h"
 #include "prefs/ImportExportPrefs.h"

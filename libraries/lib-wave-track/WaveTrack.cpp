@@ -28,7 +28,6 @@ from the project that will own the track.
 
 #include "WaveTrack.h"
 
-#include "WideClip.h"
 #include "WaveClip.h"
 
 #include <wx/defs.h>
@@ -452,12 +451,10 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    TrimLeftTo(tmpPlayStartTime);
    TrimRightTo(tmpPlayEndTime);
 
-   WideClip wideClip { mpClip, mpClip1 };
-
    constexpr auto sourceDurationToDiscard = 0.;
    constexpr auto blockSize = 1024;
    const auto numChannels = NChannels();
-   ClipTimeAndPitchSource stretcherSource { wideClip, sourceDurationToDiscard,
+   ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
@@ -467,7 +464,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
 
    // Post-rendering sample counts, i.e., stretched units
    const auto totalNumOutSamples =
-      sampleCount { wideClip.GetVisibleSampleCount().as_double() *
+      sampleCount { GetVisibleSampleCount().as_double() *
                     stretchRatio };
 
    sampleCount numOutSamples { 0 };
@@ -796,6 +793,27 @@ double WaveTrack::Interval::GetTrimRight() const
 {
    //TODO wide wave tracks:  assuming that all 'narrow' clips share common trims
    return mpClip->GetTrimRight();
+}
+
+AudioSegmentSampleView WaveTrack::Interval::GetSampleView(
+   size_t ii, sampleCount start, size_t len, bool mayThrow) const
+{
+   return GetClip(ii)->GetSampleView(0u, start, len, mayThrow);
+}
+
+size_t WaveTrack::Interval::GetWidth() const
+{
+   return NChannels();
+}
+
+Observer::Subscription
+WaveTrack::Interval::SubscribeToCentShiftChange(std::function<void(int)> cb)
+const
+{
+   // On purpose set the publisher on the left channel only. This is not a clip
+   // property that is saved to disk, and else we'll get two callbacks for the
+   // same event.
+   return mpClip->SubscribeToCentShiftChange(std::move(cb));
 }
 
 bool WaveTrack::Interval::IsPlaceholder() const
@@ -3420,33 +3438,9 @@ auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
 
 ClipConstHolders WaveTrack::GetClipInterfaces() const
 {
-   auto &clips = NarrowClips();
-  // We're constructing possibly wide clips here, and for this we need to have
-  // access to the other channel-tracks.
-  assert(IsLeader());
-  const auto pOwner = GetOwner();
-  ClipConstHolders wideClips;
-  wideClips.reserve(clips.size());
-  for (auto clipIndex = 0u; clipIndex < clips.size(); ++clipIndex)
-  {
-     const auto leftClip = clips[clipIndex];
-     WaveClipHolder rightClip;
-     if (NChannels() == 2u && pOwner)
-     {
-        const auto& rightClips = RightClips();
-        // This is known to have potential for failure for stereo tracks with
-        // misaligned left/right clips - see
-        // https://github.com/audacity/audacity/issues/4791.
-        // If what you are trying to do is something else and this fails,
-        // please report.
-        assert(clipIndex < rightClips.size());
-        if (clipIndex < rightClips.size())
-           rightClip = rightClips[clipIndex];
-     }
-     wideClips.emplace_back(
-        std::make_shared<WideClip>(leftClip, std::move(rightClip)));
-  }
-   return wideClips;
+   assert(IsLeader());
+   auto clips = Intervals();
+   return { clips.begin(), clips.end() };
 }
 
 double WaveChannel::GetStartTime() const
