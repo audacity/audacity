@@ -446,14 +446,9 @@ public:
    //! settings
    void Init(const WaveTrack &orig);
  private:
-   using IterPair = std::pair<
-      WaveClipHolders::iterator, WaveClipHolders::iterator>;
-   /*!
-    @copydoc FindWideClip(const WaveClip &, int *)
-    */
-   IterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr);
+   std::ptrdiff_t FindWideClip(const Interval &clip);
 
-   void RemoveWideClip(IterPair pair);
+   void RemoveWideClip(std::ptrdiff_t distance);
 
    Track::Holder Clone(bool backup) const override;
 
