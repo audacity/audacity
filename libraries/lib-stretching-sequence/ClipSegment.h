@@ -30,7 +30,8 @@ using PitchRatioChangeCbSubscriber =
 class STRETCHING_SEQUENCE_API ClipSegment final : public AudioSegment
 {
 public:
-   ClipSegment(ClipInterface&, double durationToDiscard, PlaybackDirection);
+   ClipSegment(const ClipInterface&,
+      double durationToDiscard, PlaybackDirection);
 
    // AudioSegment
    size_t GetFloats(float* const* buffers, size_t numSamples) override;

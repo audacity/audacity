@@ -3418,14 +3418,14 @@ auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
    return const_cast<WaveTrack&>(*this).GetRightmostClip();
 }
 
-ClipHolders WaveTrack::GetClipInterfaces() const
+ClipConstHolders WaveTrack::GetClipInterfaces() const
 {
    auto &clips = NarrowClips();
   // We're constructing possibly wide clips here, and for this we need to have
   // access to the other channel-tracks.
   assert(IsLeader());
   const auto pOwner = GetOwner();
-  ClipHolders wideClips;
+  ClipConstHolders wideClips;
   wideClips.reserve(clips.size());
   for (auto clipIndex = 0u; clipIndex < clips.size(); ++clipIndex)
   {

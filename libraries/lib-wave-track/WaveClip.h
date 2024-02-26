@@ -204,7 +204,7 @@ public:
    bool SetCentShift(int cents);
    int GetCentShift() const override;
    [[nodiscard]] Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) override;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip

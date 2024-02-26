@@ -63,7 +63,7 @@ int WideClip::GetCentShift() const
 }
 
 Observer::Subscription
-WideClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
+WideClip::SubscribeToCentShiftChange(std::function<void(int)> cb) const
 {
    // On purpose set the publisher on the left channel only. This is not a clip
    // property that is saved to disk, and else we'll get two callbacks for the

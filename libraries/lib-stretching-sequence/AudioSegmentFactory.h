@@ -18,13 +18,13 @@
 #include <memory>
 
 class ClipInterface;
-using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
+using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;
 
 class STRETCHING_SEQUENCE_API AudioSegmentFactory final :
     public AudioSegmentFactoryInterface
 {
 public:
-   AudioSegmentFactory(int sampleRate, int numChannels, ClipHolders clips);
+   AudioSegmentFactory(int sampleRate, int numChannels, ClipConstHolders clips);
 
    std::vector<std::shared_ptr<AudioSegment>> CreateAudioSegmentSequence(
       double playbackStartTime, PlaybackDirection) override;
@@ -37,7 +37,7 @@ private:
    CreateAudioSegmentSequenceBackward(double playbackStartTime);
 
 private:
-   const ClipHolders mClips;
+   const ClipConstHolders mClips;
    const int mSampleRate;
    const int mNumChannels;
 };

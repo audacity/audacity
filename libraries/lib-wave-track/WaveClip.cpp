@@ -327,9 +327,12 @@ int WaveClip::GetCentShift() const
 }
 
 Observer::Subscription
-WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
+WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb) const
 {
-   return Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
+   // Consider the list of subcribers as a mutable member that doesn't change
+   // real state
+   return const_cast<WaveClip*>(this)
+      ->Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
 }
 
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const

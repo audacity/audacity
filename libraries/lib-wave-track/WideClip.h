@@ -30,7 +30,7 @@ public:
       std::shared_ptr<ClipInterface> right);
 
    [[nodiscard]] Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) override;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
    AudioSegmentSampleView GetSampleView(
       size_t ii, sampleCount start, size_t len, bool mayThrow) const override;

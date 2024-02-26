@@ -187,7 +187,7 @@ bool StretchingSequence::MutableGet(
 }
 
 std::shared_ptr<StretchingSequence> StretchingSequence::Create(
-   const PlayableSequence& sequence, const ClipHolders& clips)
+   const PlayableSequence& sequence, const ClipConstHolders& clips)
 {
    return std::make_shared<StretchingSequence>(
       sequence, sequence.GetRate(), sequence.NChannels(),

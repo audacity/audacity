@@ -49,7 +49,7 @@ TEST_CASE("StretchingSequence unit tests")
          const auto mockSequence =
             std::make_shared<MockPlayableSequence>(sampleRate, numChannels);
          const auto sut = StretchingSequence::Create(
-            *mockSequence, ClipHolders { clip1, clip3 });
+            *mockSequence, ClipConstHolders { clip1, clip3 });
 
          constexpr auto len = 2;
          const std::array<std::vector<float>, 6> expected { { { 6.f, 5.f },
@@ -136,7 +136,7 @@ TEST_CASE("StretchingSequence with real audio")
       const auto mockSequence = std::make_shared<MockPlayableSequence>(
          info.sampleRate, info.numChannels);
       const auto sut =
-         StretchingSequence::Create(*mockSequence, ClipHolders { clip });
+         StretchingSequence::Create(*mockSequence, ClipConstHolders { clip });
       const size_t numOutputSamples = clip->stretchRatio * input[0].size() + .5;
       AudioContainer container(numOutputSamples, input.size());
       sut->GetFloats(
@@ -173,7 +173,7 @@ TEST_CASE("StretchingSequence with real audio")
       const auto mockSequence =
          std::make_shared<MockPlayableSequence>(info.sampleRate, 2u);
       const auto sut = StretchingSequence::Create(
-         *mockSequence, ClipHolders { clip1, clip2 });
+         *mockSequence, ClipConstHolders { clip1, clip2 });
       const size_t numOutputSamples =
          totalDuration * info.sampleRate /*assuming both have same sample rate*/
          + .5;

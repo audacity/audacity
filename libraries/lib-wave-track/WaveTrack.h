@@ -783,7 +783,7 @@ public:
     * order.
     * @pre `IsLeader()`
     */
-   ClipHolders GetClipInterfaces() const;
+   ClipConstHolders GetClipInterfaces() const;
 
    //! Create new clip that uses this track's factory but do not add it to the
    //! track
