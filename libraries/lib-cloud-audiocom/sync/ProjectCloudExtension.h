@@ -18,15 +18,14 @@
 #include <optional>
 #include <string>
 #include <string_view>
-#include <unordered_map>
 #include <vector>
 
 #include "ClientData.h"
 #include "Observer.h"
 
-#include "ProjectUploadOperation.h"
 #include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
+#include "ProjectUploadOperation.h"
 
 class AudacityProject;
 class ProjectSerializer;
@@ -68,6 +67,10 @@ public:
 
    //! This method is called from the UI thread
    void OnSyncStarted();
+   //! This method is called from the UI thread
+   void OnSyncResumed(
+      std::shared_ptr<ProjectUploadOperation> uploadOperation,
+      int64_t missingBlocksCount, bool needsProjectUpload);
    //! This method is called from the UI thread
    void OnUploadOperationCreated(
       std::shared_ptr<ProjectUploadOperation> uploadOperation);

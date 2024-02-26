@@ -85,4 +85,39 @@ CloudSyncError MakeClientFailure(const char* message)
    return { CloudSyncError::ClientFailure, message };
 }
 
+CloudSyncError::ErrorType DeduceError(ResponseResultCode code)
+{
+   switch (code)
+   {
+   case ResponseResultCode::Success:
+      return CloudSyncError::None;
+   case ResponseResultCode::Cancelled:
+      return CloudSyncError::Cancelled;
+   case ResponseResultCode::Expired:
+      return CloudSyncError::DataUploadFailed;
+   case ResponseResultCode::Conflict:
+      return CloudSyncError::ProjectVersionConflict;
+   case ResponseResultCode::ConnectionFailed:
+      return CloudSyncError::Network;
+   case ResponseResultCode::PaymentRequired:
+      return CloudSyncError::ProjectStorageLimitReached;
+   case ResponseResultCode::TooLarge:
+      return CloudSyncError::ProjectStorageLimitReached;
+   case ResponseResultCode::Unauthorized:
+      return CloudSyncError::Authorization;
+   case ResponseResultCode::Forbidden:
+      return CloudSyncError::Authorization;
+   case ResponseResultCode::NotFound:
+      return CloudSyncError::ProjectNotFound;
+   case ResponseResultCode::UnexpectedResponse:
+      return CloudSyncError::Server;
+   case ResponseResultCode::InternalClientError:
+      return CloudSyncError::ClientFailure;
+   case ResponseResultCode::UnknownError:
+      return CloudSyncError::DataUploadFailed;
+   }
+
+   return CloudSyncError::DataUploadFailed;
+}
+
 } // namespace audacity::cloud::audiocom::sync

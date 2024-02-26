@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include "NetworkUtils.h"
+
 class TranslatableString;
 
 namespace audacity::network_manager
@@ -53,5 +55,8 @@ CloudSyncError MakeClientFailure(const std::string& message);
 
 CLOUD_AUDIOCOM_API
 CloudSyncError MakeClientFailure(const char* message);
+
+CLOUD_AUDIOCOM_API CloudSyncError::ErrorType
+DeduceError(ResponseResultCode code);
 
 } // namespace audacity::cloud::audiocom::sync

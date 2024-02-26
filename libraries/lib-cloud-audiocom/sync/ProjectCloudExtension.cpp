@@ -53,7 +53,6 @@ struct ProjectCloudExtension::UploadQueueElement final
    int64_t BlocksHandled { 0 };
    int64_t BlocksTotal { 0 };
 
-   bool SnapshotCreated { false };
    bool ProjectDataUploaded { false };
    bool ReadyForUpload { false };
    bool Synced { false };
@@ -160,6 +159,24 @@ void ProjectCloudExtension::OnSyncStarted()
    mUploadQueue.push_back(std::move(element));
 }
 
+void cloud::audiocom::sync::ProjectCloudExtension::OnSyncResumed(
+   std::shared_ptr<ProjectUploadOperation> uploadOperation,
+   int64_t missingBlocksCount, bool needsProjectUpload)
+{
+   auto element = std::make_shared<UploadQueueElement>();
+   element->Operation = uploadOperation;
+   element->BlocksTotal = missingBlocksCount;
+   element->ProjectDataUploaded = !needsProjectUpload;
+
+   {
+      auto lock = std::lock_guard { mUploadQueueMutex };
+      mUploadQueue.push_back(element);
+   }
+
+   uploadOperation->Start(UploadMode::Normal);
+   UnsafeUpdateProgress();
+}
+
 void ProjectCloudExtension::OnUploadOperationCreated(
    std::shared_ptr<ProjectUploadOperation> uploadOperation)
 {
@@ -234,7 +251,6 @@ void ProjectCloudExtension::OnSnapshotCreated(
    if (!element)
       return;
 
-   element->SnapshotCreated = true;
    element->BlocksTotal     = response.SyncState.MissingBlocks.size();
 
    UnsafeUpdateProgress();
@@ -274,6 +290,9 @@ void ProjectCloudExtension::OnSyncCompleted(
    std::optional<CloudSyncError> error)
 {
    auto lock = std::lock_guard { mUploadQueueMutex };
+
+   if (mUploadQueue.empty())
+      return;
 
    if (uploadOperation == nullptr)
    {

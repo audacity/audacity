@@ -291,44 +291,6 @@ void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
       mProjectCloudExtension.OnSyncCompleted(this, std::make_optional(error));
 }
 
-namespace
-{
-CloudSyncError::ErrorType DeduceError(ResponseResultCode code)
-{
-   switch (code)
-   {
-   case ResponseResultCode::Success:
-      return CloudSyncError::None;
-   case ResponseResultCode::Cancelled:
-      return CloudSyncError::Cancelled;
-   case ResponseResultCode::Expired:
-      return CloudSyncError::DataUploadFailed;
-   case ResponseResultCode::Conflict:
-      return CloudSyncError::ProjectVersionConflict;
-   case ResponseResultCode::ConnectionFailed:
-      return CloudSyncError::Network;
-   case ResponseResultCode::PaymentRequired:
-      return CloudSyncError::ProjectStorageLimitReached;
-   case ResponseResultCode::TooLarge:
-      return CloudSyncError::ProjectStorageLimitReached;
-   case ResponseResultCode::Unauthorized:
-      return CloudSyncError::Authorization;
-   case ResponseResultCode::Forbidden:
-      return CloudSyncError::Authorization;
-   case ResponseResultCode::NotFound:
-      return CloudSyncError::ProjectNotFound;
-   case ResponseResultCode::UnexpectedResponse:
-      return CloudSyncError::Server;
-   case ResponseResultCode::InternalClientError:
-      return CloudSyncError::ClientFailure;
-   case ResponseResultCode::UnknownError:
-      return CloudSyncError::DataUploadFailed;
-   }
-
-   return CloudSyncError::DataUploadFailed;
-}
-} // namespace
-
 void LocalProjectSnapshot::DataUploadFailed(const ResponseResult& uploadResult)
 {
    UploadFailed({ DeduceError(uploadResult.Code), uploadResult.Content });
@@ -515,7 +477,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
 
          if (mProjectBlocksLock->MissingBlocks.empty())
          {
-            MarkSnapshotSynced(0);
+            MarkSnapshotSynced();
             return;
          }
 
@@ -541,7 +503,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
 
                if (succeeded)
                {
-                  MarkSnapshotSynced(handledBlocks);
+                  MarkSnapshotSynced();
                   return;
                }
 
@@ -583,26 +545,19 @@ void LocalProjectSnapshot::StorePendingSnapshot(
    CloudProjectsDatabase::Get().AddPendingProjectBlocks(pendingBlocks);
 }
 
-void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
+void LocalProjectSnapshot::MarkSnapshotSynced()
 {
-   using namespace audacity::network_manager;
+   using namespace network_manager;
    Request request(mServiceConfig.GetSnapshotSyncUrl(
       mProjectCloudExtension.GetCloudProjectId(),
       mProjectCloudExtension.GetSnapshotId()));
 
-   const auto language = mServiceConfig.GetAcceptLanguageValue();
-
-   if (!language.empty())
-      request.setHeader(
-         audacity::network_manager::common_headers::AcceptLanguage, language);
-
-   request.setHeader(
-      common_headers::Authorization, mOAuthService.GetAccessToken());
+   SetCommonHeaders(request);
 
    auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
 
    response->setRequestFinishedCallback(
-      [this, response, blocksCount](auto)
+      [this, response](auto)
       {
          CloudProjectsDatabase::Get().RemovePendingSnapshot(
             mCreateSnapshotResponse->Project.Id,

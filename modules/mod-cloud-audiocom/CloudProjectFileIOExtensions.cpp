@@ -26,6 +26,7 @@
 #include "sync/CloudSyncUtils.h"
 #include "sync/LocalProjectSnapshot.h"
 #include "sync/ProjectCloudExtension.h"
+#include "sync/ResumedSnaphotUploadOperation.h"
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
@@ -52,7 +53,13 @@ class IOExtension final : public ProjectFileIOExtension
 
    void OnLoad(AudacityProject& project) override
    {
-      ProjectCloudExtension::Get(project).OnLoad();
+      auto& projectCloudExtenstion = ProjectCloudExtension::Get(project);
+      projectCloudExtenstion.OnLoad();
+
+      if (projectCloudExtenstion.IsCloudProject())
+         ResumeProjectUpload(
+            projectCloudExtenstion,
+            [&project] { PerformBlockingAuth(&project); });
    }
 
    OnSaveAction CreateSnapshot(AudacityProject& project, std::string name)

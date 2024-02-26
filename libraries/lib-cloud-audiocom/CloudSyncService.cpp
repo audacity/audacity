@@ -273,8 +273,7 @@ CloudSyncService& CloudSyncService::Get()
 }
 
 CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
-   concurrency::CancellationContextPtr context, int page,
-   int pageSize,
+   concurrency::CancellationContextPtr context, int page, int pageSize,
    std::string searchString)
 {
    using namespace audacity::network_manager;
@@ -337,6 +336,12 @@ CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
    if (mSyncInProcess.exchange(true))
    {
       CompleteSync({ sync::ProjectSyncResult::StatusCode::Blocked, {}, {} });
+      return mSyncPromise.get_future();
+   }
+
+   if (projectId.empty())
+   {
+      FailSync({ ResponseResultCode::InternalClientError, "Empty projectId" });
       return mSyncPromise.get_future();
    }
 
@@ -403,8 +408,7 @@ CloudSyncService::SyncFuture CloudSyncService::SyncProject(
             return;
          }
 
-         auto& projectFileIO = ProjectFileIO::Get(project);
-
+         // Do not perform the snapshot request if the project is up to date
          if (remoteInfo.HeadSnapshot.Id == projectInfo.SnapshotId)
          {
             CompleteSync({ sync::ProjectSyncResult::StatusCode::Succeeded });
@@ -490,15 +494,42 @@ void CloudSyncService::SyncCloudSnapshot(
       InvisibleTemporaryProject project;
       ProjectFileIO::Get(project.Project()).LoadProject(wxPath, true);
    }
-   else if (HasAutosave(utf8Path))
+   else
    {
-      if (mode == SyncMode::Normal)
+      assert(localProjectInfo.has_value());
+      assert(mode != SyncMode::ForceNew);
+      // The project exists on the disk. Depending on how we got here, we might
+      // different scenarios:
+      // 1. Local snapshot ID matches the remote snapshot ID. Just complete the
+      // sync right away. If the project was modified locally, but not saved,
+      // the user will be prompted about the autosave.
+      if (localProjectInfo->SnapshotId == snapshotInfo.Id)
       {
-         FailSync({ ResponseResultCode::Conflict });
+         CompleteSync(
+            { sync::ProjectSyncResult::StatusCode::Succeeded, {}, utf8Path });
          return;
       }
-
-      DropAutosave(utf8Path);
+      // 2. Project sync was interrupted.
+      if (
+         mode == SyncMode::Normal &&
+         localProjectInfo->SyncStatus != sync::DBProjectData::SyncStatusSynced)
+      {
+         // There is not enough information to decide if the project has
+         // diverged. Just open it, so the sync can resume. If the project has
+         // diverged, the user will be prompted to resolve the conflict on the
+         // next save.
+         CompleteSync(
+            { sync::ProjectSyncResult::StatusCode::Succeeded, {}, utf8Path });
+         return;
+      }
+      // 3. Project was modified locally, but not saved.
+      if (HasAutosave(utf8Path))
+      {
+         if (mode == SyncMode::Normal)
+            FailSync({ ResponseResultCode::Conflict });
+         else
+            DropAutosave(utf8Path);
+      }
    }
 
    mRemoteSnapshot = sync::RemoteProjectSnapshot::Sync(

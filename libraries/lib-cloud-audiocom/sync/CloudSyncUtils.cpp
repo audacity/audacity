@@ -183,6 +183,9 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
    if (!Deserialize(value, "date_updated", tempSnapshot.Updated))
       return {};
 
+   if (!Deserialize(value, "date_synced", tempSnapshot.Synced))
+      return {};
+
    if (!Deserialize(value, "file_size", tempSnapshot.FileSize))
       return {};
 

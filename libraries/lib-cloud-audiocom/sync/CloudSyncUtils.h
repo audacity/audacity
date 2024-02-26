@@ -80,6 +80,7 @@ struct SnapshotInfo final
 
    int64_t Created {};
    int64_t Updated {};
+   int64_t Synced {};
 
    int64_t FileSize;
    int64_t BlocksSize;

@@ -84,7 +84,7 @@ private:
    OnSnapshotCreated(const CreateSnapshotResponse& response, bool newProject);
    void StorePendingSnapshot(
       const CreateSnapshotResponse& response, const ProjectUploadData& data);
-   void MarkSnapshotSynced(int64_t blocksCount);
+   void MarkSnapshotSynced();
 
 
    ProjectCloudExtension& mProjectCloudExtension;
