@@ -109,9 +109,7 @@
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpPlayPointer, wxImage( 20, 20 ), wxT("PlayPointer"));
-   DEFINE_IMAGE( bmpPlayPointerPinned, wxImage( 20, 20 ), wxT("PlayPointerPinned"));
    DEFINE_IMAGE( bmpRecordPointer, wxImage( 20, 20 ), wxT("RecordPointer"));
-   DEFINE_IMAGE( bmpRecordPointerPinned, wxImage( 20, 20 ), wxT("RecordPointerPinned"));
    DEFINE_IMAGE( bmpGrabberDropLoc, wxImage( 20, 20 ), wxT("GrabberDropLoc"));
    DEFINE_IMAGE( bmpSliderThumb, wxImage( 20, 20 ), wxT("SliderThumb"));
    DEFINE_IMAGE( bmpSliderThumbHilited, wxImage( 20, 20 ), wxT("SliderThumbHilited"));

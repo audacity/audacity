@@ -989,7 +989,7 @@ protected:
          &cursor,
          /* i18n-hint: This text is a tooltip on the icon (of a pin) representing 
          the temporal position in the audio.  */
-         XO( "Record/Play head" )
+         XO( "Record/Playhead" )
       };
    }
 
@@ -1413,44 +1413,16 @@ void AdornedRulerPanel::ReCreateButtons()
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
-   auto buttonMaker = [&]
-   (wxWindowID id, teBmps bitmap, bool toggle)
-   {
-      const auto button =
-      ToolBar::MakeButton(
-         this,
-         bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
-         bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-         bitmap, bitmap, bitmap,
-         id, position, toggle, size
-      );
-
-      position.x += size.GetWidth();
-      mButtons[iButton++] = button;
-      return button;
-   };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
-   ToolBar::MakeAlternateImages(
-	   *button, 3,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointer, bmpRecordPointer, bmpRecordPointer,
-	   size);
-   ToolBar::MakeAlternateImages(
-	   *button, 2,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointerPinned, bmpRecordPointerPinned, bmpRecordPointerPinned,
-	   size);
-   ToolBar::MakeAlternateImages(
-      *button, 1,
+   const auto button = ToolBar::MakeButton(
+      this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-      //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-      bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
-      size);
+      bmpCogwheel, bmpCogwheel, bmpCogwheel,
+      OnTogglePinnedStateID, position, true, size
+   );
+
+   position.x += size.GetWidth();
+   mButtons[iButton++] = button;
 
    UpdateButtonStates();
 }
@@ -2206,21 +2178,12 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
-      // The button always reflects the pinned head preference, even though
-      // there is also a Playback preference that may overrule it for scrubbing
-      bool state = TracksPrefs::GetPinnedHeadPreference();
-      auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      if( !state )
-         pinButton->PopUp();
-      else
-         pinButton->PushDown();
-      auto gAudioIO = AudioIO::Get();
-      pinButton->SetAlternateIdx(
-         (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
+      auto timelineOptionsButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+      timelineOptionsButton->PopUp();
       // Bug 1584: Tooltip now shows what clicking will do.
       // Bug 2357: Action of button (and hence tooltip wording) updated.
       const auto label = XO("Timeline Options");
-      common(*pinButton, wxT("PinnedHead"), label);
+      common(*timelineOptionsButton, wxT("PinnedHead"), label);
    }
 }
 
@@ -2281,9 +2244,6 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
 
-   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
-      Check(mViewInfo->bUpdateTrackIndicator);
-
    {
       auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
          LoopToggleText.Stripped().Translation());
@@ -2302,7 +2262,11 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    }
 
    rulerMenu.AppendSeparator();
-   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
+
+   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Scroll view to playhead"))->
+      Check(mViewInfo->bUpdateTrackIndicator);
+
+   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Continuous scrolling"))->
       Check(TracksPrefs::GetPinnedHeadPreference());
 
    BasicMenu::Handle{ &rulerMenu }.Popup(
@@ -2896,7 +2860,7 @@ void OnTogglePinnedHead(const CommandContext &context)
 
 using namespace MenuRegistry;
 AttachedItem sAttachment{
-   Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
+   Command( wxT("PinnedHead"), XXO("Continuous scrolling"),
       OnTogglePinnedHead,
       // Switching of scrolling on and off is permitted
       // even during transport
