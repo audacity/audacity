@@ -1,18 +1,18 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2023 Audacity Team
+# Copyright (C) 2024 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # Grzegorz Pruchniakowski <gootector@o2.pl>, 2013.
 #
 # Translators:
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2023
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2013-2024
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-12-13 02:00+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
+"PO-Revision-Date: 2024-02-26 04:00+0000\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -3119,7 +3119,7 @@ msgstr "FFmpeg : BŁĄD - Nie można określić opisu formatu dla pliku „%s”
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
-msgstr "FFmpeg : BŁĄD - Nie można przydzielić wyjścia kontekstu formatu."
+msgstr "FFmpeg : BŁĄD - Nie można przydzielić kontekstu formatu wyjściowego."
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -3728,13 +3728,13 @@ msgid ""
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
 "FFmpeg został wcześniej skonfigurowany w Ustawieniach i pomyślnie\n"
-"załadowany, ale tym razem nie udało się Audacity załadować go przy starcie.\n"
+"załadowany, ale tym razem nie udało się Audacity załadować go przy uruchamianiu.\n"
 "\n"
 "Możesz rozważyć powrót do „Ustawienia... > Biblioteki” i ponownie go skonfigurować."
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
-msgstr "Start pakietu FFmpeg zakończony niepowodzeniem"
+msgstr "Uruchamianie pakietu FFmpeg zakończone niepowodzeniem"
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg library not found"
@@ -4378,7 +4378,7 @@ msgstr "Po&dziel poziomo"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show S&cript"
-msgstr "Pokaż s&krypt"
+msgstr "Po&każ skrypt"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Show &Output"
@@ -14892,7 +14892,7 @@ msgstr "Wybier&z zaznaczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Retrieve Selectio&n"
-msgstr "Odzyskaj zaz&naczenie"
+msgstr "Pobierz zaz&naczenie"
 
 #: src/menus/SelectMenus.cpp
 msgid "Cursor to Stored &Cursor Position"
@@ -15908,7 +15908,7 @@ msgstr ""
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "O&pen:"
-msgstr "O&twórz:"
+msgstr "Otwó&rz:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "S&ave:"
