@@ -29,7 +29,7 @@
 
 #include "Prefs.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -308,4 +308,4 @@ CloudSyncStatusField::GetStatusWidget() const
 {
    return const_cast<CloudSyncStatusField*>(this)->GetStatusWidget();
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

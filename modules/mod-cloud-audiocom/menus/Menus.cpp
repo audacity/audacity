@@ -20,7 +20,7 @@
 
 namespace
 {
-using namespace cloud::audiocom::sync;
+using namespace audacity::cloud::audiocom::sync;
 
 void OnSaveToCloud(const CommandContext& context)
 {

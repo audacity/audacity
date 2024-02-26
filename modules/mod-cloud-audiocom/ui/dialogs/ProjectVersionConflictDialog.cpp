@@ -11,7 +11,7 @@
 
 #include "ProjectVersionConflictDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -51,4 +51,4 @@ DialogButtonIdentifier ProjectVersionConflictDialog::UseRemoteIdentifier()
 {
    return { L"remote" };
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

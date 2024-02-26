@@ -17,7 +17,7 @@
 #include <mutex>
 #include <string_view>
 
-#include "AsynchronousOperation.h"
+#include "ProjectUploadOperation.h"
 #include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
 #include "NetworkUtils.h"
@@ -26,13 +26,13 @@
 
 class AudacityProject;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class OAuthService;
 class ServiceConfig;
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 constexpr auto UNASSIGNED_PROJECT_ID = -1;
 
@@ -109,10 +109,10 @@ private:
 
    Promise mCreateSnapshotPromise;
 
-   audacity::concurrency::CancellationContextPtr mCancellationContext;
+   concurrency::CancellationContextPtr mCancellationContext;
 
    std::atomic<bool> mCompleted { false };
    std::atomic<bool> mCancelled { false };
    std::atomic<bool> mProjectDataReady { false };
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -14,7 +14,7 @@
 #include <wx/radiobut.h>
 #include <wx/sizer.h>
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 MixdownPrefsPanel::MixdownPrefsPanel(wxWindow* parent, bool compact)
     : wxPanelWrapper { parent }
@@ -109,4 +109,4 @@ void MixdownPrefsPanel::EnableFrequencyChoice(bool enable)
       mSavesFrequencyChoice->MoveAfterInTabOrder(mRBNever);
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

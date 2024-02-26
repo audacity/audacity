@@ -12,7 +12,7 @@
 
 #include "AudioComDialogBase.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 class LinkAccountDialog final : public AudioComDialogBase
@@ -27,4 +27,4 @@ public:
    static DialogButtonIdentifier SignInButtonIdentifier();
 }; // class LinkAccountDialog
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -15,7 +15,7 @@
 class wxRadioButton;
 class wxChoice;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class MixdownPrefsPanel final : public wxPanelWrapper
 {
@@ -34,4 +34,4 @@ private:
 
    wxChoice* mSavesFrequencyChoice {};
 }; // class MixdownPrefsPanel
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

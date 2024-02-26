@@ -20,7 +20,7 @@
 #include "../MixdownPrefsPanel.h"
 #include "Internat.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 MixdownPropertiesDialog::MixdownPropertiesDialog(wxWindow* parent)
     : wxDialogWrapper { parent, wxID_ANY, XO("Save to audio.com") }
@@ -105,4 +105,4 @@ int MixdownPropertiesDialog::GetFrequency() const
 {
    return mMixdownPrefsPanel->GetFrequency();
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -29,7 +29,7 @@
 
 #include "BasicUI.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -244,7 +244,7 @@ std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
 
    if (!cancellationContext)
       cancellationContext =
-         audacity::concurrency::CancellationContext::Create();
+         concurrency::CancellationContext::Create();
 
    auto uploader = std::make_shared<MixdownUploader>(
       Tag {}, cancellationContext, config, project, std::move(progressCallback));
@@ -435,4 +435,4 @@ void MixdownUploader::UploadMixdown()
       [this, strongThis = shared_from_this()](double progress)
       { ReportProgress(MixdownState::Uploading, progress, {}); });
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

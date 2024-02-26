@@ -21,7 +21,7 @@
 
 #include "TranslatableString.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 using namespace audacity::network_manager;
 
@@ -131,4 +131,4 @@ TransferStats& TransferStats::SetTransferDuration(Duration transferDuration)
    return *this;
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

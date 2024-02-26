@@ -33,7 +33,7 @@
 #include "sync/MixdownUploader.h"
 #include "sync/ProjectCloudExtension.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -296,7 +296,7 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
    if (!projectCloudExtension.NeedsMixdownSync() && !forceMixdown)
       return;
 
-   auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+   auto cancellationContext = concurrency::CancellationContext::Create();
 
    auto progressDialog = BasicUI::MakeProgress(
       XO("Save to audio.com"), XO("Generating mixdown..."),
@@ -362,4 +362,4 @@ void ReopenProject(AudacityProject& project)
             CloudSyncService::SyncMode::ForceOverwrite);
       });
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

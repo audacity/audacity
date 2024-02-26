@@ -23,7 +23,6 @@ set( SOURCES
    UserService.cpp
    UserService.h
 
-   sync/AsynchronousOperation.h
    sync/BlockHasher.cpp
    sync/BlockHasher.h
    sync/CloudProjectsDatabase.cpp
@@ -42,6 +41,7 @@ set( SOURCES
    sync/MixdownUploader.h
    sync/ProjectCloudExtension.cpp
    sync/ProjectCloudExtension.h
+   sync/ProjectUploadOperation.h
    sync/RemoteProjectSnapshot.cpp
    sync/RemoteProjectSnapshot.h
    sync/WavPackCompressor.cpp

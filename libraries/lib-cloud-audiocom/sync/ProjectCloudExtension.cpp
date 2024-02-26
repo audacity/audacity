@@ -15,7 +15,7 @@
 #include <cstring>
 #include <vector>
 
-#include "AsynchronousOperation.h"
+#include "ProjectUploadOperation.h"
 #include "CloudSettings.h"
 #include "CloudSyncUtils.h"
 #include "ServiceConfig.h"
@@ -35,7 +35,7 @@
 
 #include "Track.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -682,4 +682,4 @@ bool CloudStatusChangedMessage::IsSyncing() const noexcept
    return Status == ProjectSyncStatus::Syncing;
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

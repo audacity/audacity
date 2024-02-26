@@ -22,7 +22,7 @@
 #include "AuthorizationHandler.h"
 #include "CodeConversions.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    const ServiceConfig& serviceConfig, OAuthService& authService,
@@ -190,4 +190,4 @@ void CloudProjectPropertiesDialog::OnUpdateCloudSaveState()
       mUserPanel->IsAuthorized() && !GetProjectName().empty());
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

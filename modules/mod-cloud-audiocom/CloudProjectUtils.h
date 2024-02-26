@@ -12,11 +12,11 @@
 
 #include <string_view>
 
-#include "sync/AsynchronousOperation.h"
+#include "sync/ProjectUploadOperation.h"
 
 class AudacityProject;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class UploadUrls;
 
@@ -36,4 +36,4 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls);
 bool ResaveLocally(AudacityProject& project);
 
 void ReopenProject(AudacityProject& project);
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

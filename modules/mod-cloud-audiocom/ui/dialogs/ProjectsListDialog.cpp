@@ -34,7 +34,7 @@
 
 #include "CloudProjectUtils.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class ProjectsListDialog::ProjectsTableData final : public wxGridTableBase
 {
@@ -153,7 +153,7 @@ public:
          wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
          XO("Loading projects list..."));
 
-      auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+      auto cancellationContext = concurrency::CancellationContext::Create();
 
       auto future = CloudSyncService::Get().GetProjects(
          cancellationContext, page, mPageSize, {});
@@ -387,4 +387,4 @@ void ProjectsListDialog::OnOpen()
     });
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

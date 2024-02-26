@@ -26,7 +26,7 @@
 #include "LinkFailedDialog.h"
 #include "LinkSucceededDialog.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 LinkWithTokenDialog::LinkWithTokenDialog(wxWindow* parent)
     : wxDialogWrapper(
@@ -88,7 +88,7 @@ void LinkWithTokenDialog::OnContinue()
    mContinueButton->Disable();
 
    wxWeakRef<LinkWithTokenDialog> weakDialog(this);
-   
+
    GetOAuthService().HandleLinkURI(
       audacity::ToUTF8(mToken->GetValue()),
       [weakDialog](auto accessToken)
@@ -126,7 +126,7 @@ void LinkWithTokenDialog::OnTextChanged()
    mContinueButton->Enable(!mToken->GetValue().empty());
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
 
 // Remaining code hooks this add-on into the application
 #include "CommandContext.h"
@@ -136,7 +136,7 @@ namespace {
 // Define our extra menu item
 void OnLinkAccount(const CommandContext&)
 {
-   cloud::audiocom::LinkWithTokenDialog dialog;
+   audacity::cloud::audiocom::LinkWithTokenDialog dialog;
    dialog.ShowModal();
 }
 

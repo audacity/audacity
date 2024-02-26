@@ -19,14 +19,14 @@ namespace audacity::network_manager
 class IResponse;
 } // namespace audacity::network_manager
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 struct CLOUD_AUDIOCOM_API CloudSyncError final
 {
    enum ErrorType
    {
       None,
-      Authorization, 
+      Authorization,
       ProjectLimitReached,
       ProjectStorageLimitReached,
       ProjectVersionConflict,
@@ -54,4 +54,4 @@ CloudSyncError MakeClientFailure(const std::string& message);
 CLOUD_AUDIOCOM_API
 CloudSyncError MakeClientFailure(const char* message);
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

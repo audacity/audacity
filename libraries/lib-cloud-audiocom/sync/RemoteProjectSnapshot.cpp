@@ -27,7 +27,7 @@
 
 #include "WavPackCompressor.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -737,4 +737,4 @@ bool RemoteProjectSnapshotState::IsComplete() const noexcept
           Result.Code != ResponseResultCode::Success;
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -13,7 +13,7 @@
 #include "FileNames.h"
 #include "wxFileNameWrapper.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 StringSetting CloudProjectsSavePath {
    "/cloud/audiocom/CloudProjectsSavePath",
@@ -32,4 +32,4 @@ IntSetting MixdownGenerationFrequency {
 IntSetting DaysToKeepFiles {
    "/cloud/audiocom/DaysToKeepFiles", 30
 };
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

@@ -27,7 +27,7 @@
 
 using namespace audacity::network_manager;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 using UploadData = std::variant<std::vector<uint8_t>, std::string>;
 
@@ -51,7 +51,7 @@ struct DataUploader::Response final
    std::atomic<bool> UploadFailed { false };
 
    Response(
-      DataUploader& uploader, CancellationContextPtr cancelContext,
+      DataUploader& uploader, CancellationContextPtr cancellationContex,
       const UploadUrls& target, UploadData data,
       std::string mimeType, std::function<void(ResponseResult)> callback,
       std::function<void(double)> progressCallback)
@@ -62,7 +62,7 @@ struct DataUploader::Response final
        , RetriesLeft { RetriesCount }
        , MimeType { std::move(mimeType) }
        , Data { std::move(data) }
-       , CancelContext { std::move(cancelContext) }
+       , CancelContext { std::move(cancellationContex) }
    {
       PerformUpload();
    }
@@ -217,7 +217,7 @@ DataUploader& DataUploader::Get()
 }
 
 void DataUploader::Upload(
-   CancellationContextPtr cancelContext,
+   CancellationContextPtr cancellationContex,
    const ServiceConfig&, const UploadUrls& target, std::vector<uint8_t> data,
    std::function<void(ResponseResult)> callback,
    std::function<void(double)> progressCallback)
@@ -228,19 +228,19 @@ void DataUploader::Upload(
    if (!progressCallback)
       progressCallback = [](auto...) { return true; };
 
-   if (!cancelContext)
-      cancelContext = audacity::concurrency::CancellationContext::Create();
+   if (!cancellationContex)
+      cancellationContex = concurrency::CancellationContext::Create();
 
    auto lock = std::lock_guard { mResponseMutex };
 
    mResponses.emplace_back(std::make_unique<Response>(
-      *this, cancelContext, target, std::move(data),
+      *this, cancellationContex, target, std::move(data),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
 }
 
 void DataUploader::Upload(
-   CancellationContextPtr cancelContext,
+   CancellationContextPtr cancellationContex,
    const ServiceConfig& config, const UploadUrls& target, std::string filePath,
    std::function<void(ResponseResult)> callback,
    std::function<void(double)> progressCallback)
@@ -251,8 +251,8 @@ void DataUploader::Upload(
    if (!progressCallback)
       progressCallback = [](auto...) { return true; };
 
-   if (!cancelContext)
-      cancelContext = audacity::concurrency::CancellationContext::Create();
+   if (!cancellationContex)
+      cancellationContex = concurrency::CancellationContext::Create();
 
    if (!wxFileExists(audacity::ToWXString(filePath)))
    {
@@ -267,7 +267,7 @@ void DataUploader::Upload(
    auto lock = std::lock_guard { mResponseMutex };
 
    mResponses.emplace_back(std::make_unique<Response>(
-      *this, cancelContext, target, std::move(filePath),
+      *this, cancellationContex, target, std::move(filePath),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
 }
@@ -282,4 +282,4 @@ void DataUploader::RemoveResponse(Response& response)
          [&response](const auto& item) { return item.get() == &response; }),
       mResponses.end());
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

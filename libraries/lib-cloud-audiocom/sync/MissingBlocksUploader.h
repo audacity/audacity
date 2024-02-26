@@ -32,14 +32,14 @@ class IResponse;
 
 class AudacityProject;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
-using audacity::concurrency::CancellationContextPtr;
+using concurrency::CancellationContextPtr;
 
 struct MissingBlocksUploadProgress final
 {
@@ -61,7 +61,7 @@ using MissingBlocksUploadProgressCallback = std::function<void(
    ResponseResult blockResponseResult)>;
 
 class MissingBlocksUploader final :
-    public audacity::concurrency::ICancellable,
+    public concurrency::ICancellable,
     public std::enable_shared_from_this<MissingBlocksUploader>
 {
    struct Tag final
@@ -76,7 +76,7 @@ public:
    MissingBlocksUploader(Tag, const ServiceConfig& serviceConfig);
 
    static std::shared_ptr<MissingBlocksUploader> Create(
-      CancellationContextPtr cancelContext, const ServiceConfig& serviceConfig,
+      CancellationContextPtr cancellationContex, const ServiceConfig& serviceConfig,
       std::vector<BlockUploadTask> uploadTasks,
       MissingBlocksUploadProgressCallback progress);
 
@@ -90,7 +90,7 @@ private:
    };
 
    void Start(
-      CancellationContextPtr cancelContext,
+      CancellationContextPtr cancellationContex,
       std::vector<BlockUploadTask> uploadTasks,
       MissingBlocksUploadProgressCallback progress);
 
@@ -139,4 +139,4 @@ private:
 
    CancellationContextPtr mCancellationContext;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

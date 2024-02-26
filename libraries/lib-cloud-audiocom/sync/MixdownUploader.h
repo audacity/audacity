@@ -28,12 +28,12 @@
 
 class AudacityProject;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 }
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 enum class MixdownState
@@ -57,7 +57,7 @@ using MixdownProgressCallback = std::function<void(double progress)>;
 
 class CLOUD_AUDIOCOM_API MixdownUploader final :
     public std::enable_shared_from_this<MixdownUploader>,
-    public audacity::concurrency::ICancellable
+    public concurrency::ICancellable
 {
    struct Tag final
    {
@@ -65,14 +65,14 @@ class CLOUD_AUDIOCOM_API MixdownUploader final :
 
 public:
    MixdownUploader(
-      Tag, audacity::concurrency::CancellationContextPtr cancellationContext,
+      Tag, concurrency::CancellationContextPtr cancellationContext,
       const ServiceConfig& config, const AudacityProject& project,
       MixdownProgressCallback progressCallback);
 
    ~MixdownUploader();
 
    static std::shared_ptr<MixdownUploader> Upload(
-      audacity::concurrency::CancellationContextPtr cancellationContext,
+      concurrency::CancellationContextPtr cancellationContext,
       const ServiceConfig& config, const AudacityProject& project,
       MixdownProgressCallback progressCallback);
 
@@ -111,6 +111,6 @@ private:
 
    std::promise<MixdownResult> mPromise;
 
-   audacity::concurrency::CancellationContextPtr mCancellationContext;
+   concurrency::CancellationContextPtr mCancellationContext;
 }; // class MixdownUploader
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

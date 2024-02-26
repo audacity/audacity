@@ -12,7 +12,7 @@
 
 #include "wxPanelWrapper.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class MixdownPrefsPanel;
 
@@ -33,4 +33,4 @@ private:
    MixdownPrefsPanel* mMixdownPrefsPanel {};
 }; // class MixdownPropertiesDialog
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

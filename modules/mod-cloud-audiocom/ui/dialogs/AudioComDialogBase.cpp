@@ -25,7 +25,7 @@
 #include "AccessibleLinksFormatter.h"
 #include "ShuttleGui.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -46,7 +46,7 @@ wxString GetOptionalPrefsIdentifier(const DialogIdentifier& identifier)
 }
 } // namespace
 
-DialogButtonIdentifier cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
+DialogButtonIdentifier audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
    std::function<DialogButtonIdentifier()> poller)
 {
    mDialogSizer->AddStretchSpacer(1);
@@ -236,4 +236,4 @@ void AudioComDialogBase::EndDialog(DialogButtonIdentifier identifier)
    Close();
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

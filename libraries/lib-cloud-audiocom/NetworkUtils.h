@@ -20,7 +20,7 @@ class IResponse;
 class Request;
 } // namespace audacity::network_manager
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 struct CLOUD_AUDIOCOM_API TransferStats final
 {
@@ -66,4 +66,4 @@ struct ResponseResult final
    audacity::network_manager::IResponse& response, bool readBody);
 
 void SetCommonHeaders(audacity::network_manager::Request& request);
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

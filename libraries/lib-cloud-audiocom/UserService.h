@@ -14,10 +14,10 @@
 
 #include "Observer.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 //! Message that is sent when user data changes.
-//! This message is always sent on UI thread.   
+//! This message is always sent on UI thread.
 struct CLOUD_AUDIOCOM_API UserDataChanged final
 {
 };
@@ -41,8 +41,8 @@ public:
 
 private:
    void DownloadAvatar(std::string_view url);
-      
+
 }; // class UserService
 
 CLOUD_AUDIOCOM_API UserService& GetUserService();
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

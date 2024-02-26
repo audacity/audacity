@@ -31,7 +31,7 @@
 #include "Project.h"
 
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -231,4 +231,4 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
       "Cloud sync has failed: %s", audacity::ToWXString(error.ErrorMessage));
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

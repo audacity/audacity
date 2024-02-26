@@ -16,7 +16,7 @@
 #include "CodeConversions.h"
 #include "FileNames.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -693,4 +693,4 @@ bool CloudProjectsDatabase::OpenConnection()
 
    return true;
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

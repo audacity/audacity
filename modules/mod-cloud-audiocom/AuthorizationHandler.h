@@ -17,7 +17,7 @@
 
 class AudacityProject;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 struct AuthStateChangedMessage;
 
@@ -55,4 +55,4 @@ struct AuthResult final
 
 AuthResult
 PerformBlockingAuth(AudacityProject* project, const TranslatableString& alternativeActionLabel = {});
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

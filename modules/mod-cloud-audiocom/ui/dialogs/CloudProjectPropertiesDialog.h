@@ -21,17 +21,17 @@ class wxTextCtrl;
 class wxChoice;
 class wxButton;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 class OAuthService;
 class UserService;
 class UserPanel;
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
-   
+
 class CloudProjectPropertiesDialog final : public wxDialogWrapper
 {
    CloudProjectPropertiesDialog(
@@ -68,4 +68,4 @@ private:
 
    Observer::Subscription mUserStateChangedSubscription {};
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

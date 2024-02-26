@@ -11,7 +11,7 @@
 
 #include "NotCloudProjectDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 NotCloudProjectDialog::NotCloudProjectDialog(const AudacityProject* project)
     : AudioComDialogBase { project }
@@ -37,4 +37,4 @@ DialogButtonIdentifier NotCloudProjectDialog::SaveRemotelyIdentifier()
    return { L"remotely" };
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

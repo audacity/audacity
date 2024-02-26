@@ -18,7 +18,7 @@
 
 #include "Observer.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 
@@ -116,4 +116,4 @@ private:
 //! Returns the instance of the OAuthService
 CLOUD_AUDIOCOM_API OAuthService& GetOAuthService();
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

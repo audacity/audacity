@@ -10,7 +10,7 @@
 **********************************************************************/
 #include "WaitForActionDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 WaitForActionDialog::WaitForActionDialog(
    const AudacityProject* project, const TranslatableString& message,
@@ -28,4 +28,4 @@ bool WaitForActionDialog::HasSeparator() const
 {
    return false;
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

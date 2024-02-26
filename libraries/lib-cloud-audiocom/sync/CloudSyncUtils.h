@@ -26,7 +26,7 @@ using SampleBlockPtr = std::shared_ptr<SampleBlock>;
 using SampleBlockID = long long;
 using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 using BlockID = int64_t;
 using BlockHash = std::string;
@@ -158,4 +158,4 @@ std::string Serialize(NetworkStats stats);
 CLOUD_AUDIOCOM_API wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

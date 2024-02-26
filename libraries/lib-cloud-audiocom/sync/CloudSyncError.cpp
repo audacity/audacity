@@ -17,7 +17,7 @@
 #include "CodeConversions.h"
 #include "TranslatableString.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 CLOUD_AUDIOCOM_API CloudSyncError
 DeduceUploadError(audacity::network_manager::IResponse& response)
@@ -85,4 +85,4 @@ CloudSyncError MakeClientFailure(const char* message)
    return { CloudSyncError::ClientFailure, message };
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

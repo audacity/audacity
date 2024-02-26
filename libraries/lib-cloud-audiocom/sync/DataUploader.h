@@ -22,14 +22,14 @@
 
 #include "concurrency/CancellationContext.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 }
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
-using audacity::concurrency::CancellationContextPtr;
+using concurrency::CancellationContextPtr;
 
 class DataUploader final
 {
@@ -45,13 +45,13 @@ public:
    static DataUploader& Get();
 
    void Upload(
-      CancellationContextPtr cancelContext, const ServiceConfig& config,
+      CancellationContextPtr cancellationContex, const ServiceConfig& config,
       const UploadUrls& target, std::vector<uint8_t> data,
       std::function<void(ResponseResult)> callback,
       std::function<void(double)> progressCallback = {});
 
    void Upload(
-      CancellationContextPtr cancelContext, const ServiceConfig& config,
+      CancellationContextPtr cancellationContex, const ServiceConfig& config,
       const UploadUrls& target, std::string filePath,
       std::function<void(ResponseResult)> callback,
       std::function<void(double)> progressCallback = {});
@@ -67,4 +67,4 @@ private:
    ResponsesList mResponses;
 };
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

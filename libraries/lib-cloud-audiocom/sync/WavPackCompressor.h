@@ -19,7 +19,7 @@
 
 class AudacityProject;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 std::vector<uint8_t> CompressBlock(const LockedBlock& block);
 
@@ -44,4 +44,4 @@ struct DecompressedBlock final
 std::optional<DecompressedBlock> DecompressBlock(
    const void* data, const std::size_t size);
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

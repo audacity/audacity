@@ -32,8 +32,8 @@ extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
    {
    case ModuleInitialize:
    {
-     
-      //cloud::audiocom::sync::UploadCanceledDialog { nullptr }
+
+      //audacity::cloud::audiocom::sync::UploadCanceledDialog { nullptr }
       //   .ShowDialog();
      // exit(0);
    }

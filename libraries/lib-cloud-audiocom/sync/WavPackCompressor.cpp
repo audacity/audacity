@@ -24,7 +24,7 @@
 
 #include "FromChars.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
@@ -531,4 +531,4 @@ DecompressBlock(const void* data, const std::size_t size)
    return result;
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

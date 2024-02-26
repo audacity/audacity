@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  AsynchronousOperation.h
+  ProjectUploadOperation.h
 
   Dmitry Vedenko
 
@@ -19,7 +19,7 @@
 
 class TrackList;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 enum class UploadMode
 {
@@ -35,7 +35,7 @@ struct ProjectUploadData final
 };
 
 class ProjectUploadOperation /* not final */ :
-    public audacity::concurrency::ICancellable
+    public concurrency::ICancellable
 {
 public:
    virtual ~ProjectUploadOperation() = default;
@@ -44,4 +44,4 @@ public:
    virtual void SetUploadData(const ProjectUploadData& data) = 0;
    virtual bool IsCompleted() const                          = 0;
 }; // class AsynchronousOperation
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

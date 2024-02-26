@@ -15,7 +15,7 @@
 class wxButton;
 class wxTextCtrl;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class LinkWithTokenDialog final : public wxDialogWrapper
 {
@@ -30,4 +30,4 @@ private:
    wxButton* mContinueButton { nullptr };
    wxTextCtrl* mToken { nullptr };
 };
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

@@ -40,7 +40,7 @@
 
 #include "StringUtils.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 {
@@ -208,7 +208,7 @@ LocalProjectSnapshot::LocalProjectSnapshot(
     , mOAuthService { oauthService }
     , mProjectName { std::move(name) }
     , mCancellationContext {
-       audacity::concurrency::CancellationContext::Create()
+       concurrency::CancellationContext::Create()
     }
 {
 }
@@ -621,4 +621,4 @@ void LocalProjectSnapshot::MarkSnapshotSynced(int64_t blocksCount)
    mCancellationContext->OnCancelled(response);
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

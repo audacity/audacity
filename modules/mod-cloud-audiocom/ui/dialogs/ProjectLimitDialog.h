@@ -12,7 +12,7 @@
 
 #include "AudioComDialogBase.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class ProjectLimitDialog final : public AudioComDialogBase
 {
@@ -23,4 +23,4 @@ public:
    static DialogButtonIdentifier VisitAudioComIdentifier();
 
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

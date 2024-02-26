@@ -36,8 +36,8 @@
 
 namespace
 {
-using namespace cloud::audiocom;
-using namespace cloud::audiocom::sync;
+using namespace audacity::cloud::audiocom;
+using namespace audacity::cloud::audiocom::sync;
 
 class IOExtension final : public ProjectFileIOExtension
 {

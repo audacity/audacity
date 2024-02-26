@@ -25,7 +25,7 @@
 
 class AudacityProject;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace sync
 {
@@ -86,7 +86,7 @@ public:
 
    //! Retrieve the list of projects from the cloud
    GetProjectsFuture GetProjects(
-      audacity::concurrency::CancellationContextPtr context, int page, int pageSize,
+      concurrency::CancellationContextPtr context, int page, int pageSize,
       std::string searchString);
 
    //! Open the project from the cloud. This operation is asynchronous.
@@ -127,4 +127,4 @@ private:
 
    std::atomic<bool> mSyncInProcess { false };
 };
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

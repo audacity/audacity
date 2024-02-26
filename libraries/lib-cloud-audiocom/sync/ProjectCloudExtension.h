@@ -24,14 +24,14 @@
 #include "ClientData.h"
 #include "Observer.h"
 
-#include "AsynchronousOperation.h"
+#include "ProjectUploadOperation.h"
 #include "CloudSyncError.h"
 #include "CloudSyncUtils.h"
 
 class AudacityProject;
 class ProjectSerializer;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class ProjectUploadOperation;
 
@@ -161,4 +161,4 @@ private:
    bool mPendingCloudSave { false };
    bool mNeedsMixdownSync { false };
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

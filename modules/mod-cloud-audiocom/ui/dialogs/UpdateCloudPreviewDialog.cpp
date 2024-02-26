@@ -11,7 +11,7 @@
 
 #include "UpdateCloudPreviewDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 UpdateCloudPreviewDialog::UpdateCloudPreviewDialog(const AudacityProject* project)
     : AudioComDialogBase { project, { L"UploadCloudPreviewDialog" } }
@@ -28,4 +28,4 @@ DialogButtonIdentifier UpdateCloudPreviewDialog::RenderPreviewIdentifier()
    return { L"render" };
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

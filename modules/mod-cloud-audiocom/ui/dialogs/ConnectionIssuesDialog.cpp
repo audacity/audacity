@@ -11,9 +11,9 @@
 
 #include "ConnectionIssuesDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
-cloud::audiocom::sync::ConnectionIssuesDialog::ConnectionIssuesDialog(
+audacity::cloud::audiocom::sync::ConnectionIssuesDialog::ConnectionIssuesDialog(
    const AudacityProject* project)
     : AudioComDialogBase { project, { "ConnectionIssuesDialog" } }
 {
@@ -28,4 +28,4 @@ DialogButtonIdentifier ConnectionIssuesDialog::OkButtonIdentifier()
 {
    return DialogButtonIdentifier();
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -22,7 +22,7 @@ namespace BasicUI
 class ProgressDialog;
 }
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 struct CloudStatusChangedMessage;
 
@@ -53,4 +53,4 @@ private:
 
    Observer::Subscription mCloudStatusChangedSubscription;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

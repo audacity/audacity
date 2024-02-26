@@ -30,7 +30,7 @@ class IResponse;
 using ResponsePtr = std::shared_ptr<IResponse>;
 } // namespace audacity::network_manager
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 struct RemoteProjectSnapshotState final
@@ -162,4 +162,4 @@ private:
    const bool mDownloadDetached { false };
 
 }; // class RemoteProjectSnapshot
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

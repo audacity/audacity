@@ -51,7 +51,7 @@
 #include "HelpSystem.h"
 #include "ProjectRate.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -105,16 +105,16 @@ public:
    ExportProgressUpdater(ShareAudioDialog& parent)
       : mParent(parent)
    {
-      
+
    }
-   
+
    ~ExportProgressUpdater() override { }
-   
+
    void Cancel()
    {
       mCancelled.store(true, std::memory_order_release);
    }
-   
+
    ExportResult GetResult() const
    {
       return mResult;
@@ -138,7 +138,7 @@ public:
    {
       return false;
    }
-   
+
    void OnProgress(double value) override
    {
       mProgress.store(value, std::memory_order_release);
@@ -147,12 +147,12 @@ public:
    void UpdateUI()
    {
       constexpr auto ProgressSteps = 1000ull;
-      
+
       mParent.UpdateProgress(mProgress.load(std::memory_order_acquire) * ProgressSteps, ProgressSteps);
    }
 
 private:
-   
+
    ShareAudioDialog& mParent;
 
    std::atomic<bool> mCancelled{false};
@@ -165,7 +165,7 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
          parent, wxID_ANY, XO("Share Audio"), wxDefaultPosition, { 480, 250 },
          wxDEFAULT_DIALOG_STYLE)
     , mProject(project)
-    , mInitialStatePanel(*this) 
+    , mInitialStatePanel(*this)
     , mServices(std::make_unique<Services>())
 {
    GetAuthorizationHandler().PushSuppressDialogs();
@@ -231,7 +231,7 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
             mCancelButton = s.AddButton(XXO("&Cancel"));
             mCancelButton->Bind(wxEVT_BUTTON, [this](auto) { OnCancel(); });
-            
+
             s.AddSpace(4, 0, 0);
 
             mContinueButton = s.AddButton(XXO("C&ontinue"));
@@ -268,7 +268,7 @@ void ShareAudioDialog::OnCancel()
       AudacityMessageDialog dlgMessage(
          this, XO("Are you sure you want to cancel?"), XO("Cancel upload to Audio.com"),
          wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
-      
+
       const auto result = dlgMessage.ShowModal();
 
       if (result != wxID_YES)
@@ -279,7 +279,7 @@ void ShareAudioDialog::OnCancel()
          mExportProgressUpdater->Cancel();
    }
 
-   
+
    // If upload was started - ask it to discard the result.
    // The result should be discarded even after the upload has finished
    if (mServices->uploadPromise)
@@ -368,7 +368,7 @@ wxString ShareAudioDialog::ExportProject()
             result = f.get();
          });
       });
-      
+
       mExportProgressUpdater->SetResult(result);
       const auto success = result == ExportResult::Success;
       if(!success && wxFileExists(path))
@@ -382,10 +382,10 @@ wxString ShareAudioDialog::ExportProject()
 void ShareAudioDialog::StartUploadProcess()
 {
    mInProgress = true;
-   
+
    mInitialStatePanel.root->Hide();
    mProgressPanel.root->Show();
-   
+
    mProgressPanel.info->Hide();
 
    mContinueButton->Hide();
@@ -421,7 +421,7 @@ void ShareAudioDialog::StartUploadProcess()
             [this, result]()
             {
                mInProgress = false;
-               
+
                if (result.result == UploadOperationCompleted::Result::Success)
                {
                   // Success indicates that UploadSuccessfulPayload is in the payload
@@ -433,7 +433,7 @@ void ShareAudioDialog::StartUploadProcess()
                      HandleUploadSucceeded(*payload);
                   else
                      HandleUploadSucceeded({});
-                  
+
                }
                else if (
                   result.result != UploadOperationCompleted::Result::Aborted)
@@ -476,7 +476,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
 
       for (auto& err : payload.additionalErrors)
          details += " " + err.second;
-      
+
       message = XO("Error: %s").Format(details);
    }
    else
@@ -490,7 +490,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
       message,
       {},
       BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError });
-         
+
 }
 
 void ShareAudioDialog::HandleExportFailure()
@@ -513,7 +513,7 @@ void ShareAudioDialog::ResetProgress()
    mProgressPanel.progress->SetValue(0);
 
    mLastProgressValue = 0;
-   
+
    mExportProgressUpdater.reset();
 
    BasicUI::Yield();
@@ -604,7 +604,7 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
       s.SetBorder(0);
 
       s.AddWindow(safenew wxStaticLine { s.GetParent() }, wxEXPAND);
-            
+
       s.StartInvisiblePanel(16);
       {
          s.StartInvisiblePanel();
@@ -714,10 +714,10 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
       s.EndInvisiblePanel();
 
       s.AddSpace(0, 16, 0);
-      
+
       info = s.AddVariableText(publicDescriptionText);
    }
-   
+
    s.EndVerticalLay();
    s.EndInvisiblePanel();
 
@@ -727,4 +727,4 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
    elapsedTime->SetFont(font);
    remainingTime->SetFont(font);
 }
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

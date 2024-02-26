@@ -14,7 +14,7 @@
 
 #include <wx/bitmap.h>
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class UserImage final : public wxPanelWrapper
 {
@@ -29,4 +29,4 @@ private:
 
    wxBitmap mBitmap;
 }; // class UserImage
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

@@ -23,7 +23,7 @@
 
 #include "wxFileNameWrapper.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 namespace
@@ -495,4 +495,4 @@ std::string Serialize(NetworkStats stats)
    return buffer.GetString();
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

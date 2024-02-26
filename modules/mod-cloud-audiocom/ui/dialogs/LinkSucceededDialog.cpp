@@ -20,7 +20,7 @@
 #include "HelpSystem.h"
 
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 LinkSucceededDialog::LinkSucceededDialog(wxWindow* parent)
@@ -47,7 +47,7 @@ LinkSucceededDialog::LinkSucceededDialog(wxWindow* parent)
             s.AddSpace(1, 0, 1);
 
             auto btn = s.AddButton(XO("&Ok"));
-            
+
             btn->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
             btn->SetDefault();
          }
@@ -80,4 +80,4 @@ LinkSucceededDialog::~LinkSucceededDialog()
 {
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

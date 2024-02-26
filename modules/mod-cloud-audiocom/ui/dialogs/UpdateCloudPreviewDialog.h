@@ -12,7 +12,7 @@
 
 #include "AudioComDialogBase.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class UpdateCloudPreviewDialog final : public AudioComDialogBase
 {
@@ -21,4 +21,4 @@ public:
 
    static DialogButtonIdentifier RenderPreviewIdentifier();
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

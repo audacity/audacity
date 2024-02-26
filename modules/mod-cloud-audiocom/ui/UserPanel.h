@@ -16,7 +16,7 @@
 class wxStaticText;
 class wxButton;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 class OAuthService;
@@ -63,4 +63,4 @@ private:
    bool mIsAuthorized { false };
 }; // class UserPanel
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

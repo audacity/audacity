@@ -22,7 +22,7 @@ class AudacityProject;
 
 class wxRect;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class ProjectCloudExtension;
 class CloudStatusChangedMessage;
@@ -70,4 +70,4 @@ private:
 
    Observer::Subscription mCloudStatusChangedSubscription;
 }; // class CloudSyncStatusField
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

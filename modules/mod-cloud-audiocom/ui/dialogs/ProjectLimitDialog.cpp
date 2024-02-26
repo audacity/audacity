@@ -10,9 +10,9 @@
 **********************************************************************/
 #include "ProjectLimitDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
-cloud::audiocom::sync::ProjectLimitDialog::ProjectLimitDialog(
+audacity::cloud::audiocom::sync::ProjectLimitDialog::ProjectLimitDialog(
    const AudacityProject* project)
     : AudioComDialogBase { project }
 {
@@ -34,4 +34,4 @@ DialogButtonIdentifier ProjectLimitDialog::VisitAudioComIdentifier()
 {
    return { "visit" };
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -22,7 +22,7 @@
 
 #include "../images/CloudImages.hpp"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
     : wxDialogWrapper(
@@ -154,4 +154,4 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
 SelectSaveLocationDialog::~SelectSaveLocationDialog()
 {
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

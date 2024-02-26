@@ -32,7 +32,7 @@
 
 #include "StringUtils.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -283,7 +283,7 @@ bool OAuthService::HasRefreshToken() const
 std::string OAuthService::GetAccessToken() const
 {
    std::lock_guard<std::recursive_mutex> lock(mMutex);
-   
+
    if (Clock::now() < mTokenExpirationTime)
       return mAccessToken;
 
@@ -300,7 +300,7 @@ void OAuthService::DoAuthorise(
 
    request.setHeader(
       common_headers::ContentType, common_content_types::ApplicationJson);
-   
+
    request.setHeader(
       common_headers::Accept, common_content_types::ApplicationJson);
 
@@ -321,9 +321,9 @@ void OAuthService::DoAuthorise(
             // Token has expired?
             if (httpCode == 422)
                BasicUI::CallAfter([this] { UnlinkAccount(); });
-            else            
+            else
                SafePublish({ {}, body, false, silent });
-            
+
             return;
          }
 
@@ -334,7 +334,7 @@ void OAuthService::DoAuthorise(
          {
             if (handler)
                handler({});
-            
+
             SafePublish({ {}, body, false, silent });
             return;
          }
@@ -380,4 +380,4 @@ OAuthService& GetOAuthService()
    static OAuthService service;
    return service;
 }
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

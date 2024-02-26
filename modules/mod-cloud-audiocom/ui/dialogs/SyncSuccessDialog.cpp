@@ -11,7 +11,7 @@
 
 #include "SyncSuccessDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 SyncSuccessDialog::SyncSuccessDialog(const AudacityProject* project)
     : AudioComDialogBase { project }
@@ -35,4 +35,4 @@ DialogButtonIdentifier SyncSuccessDialog::ViewOnlineIdentifier()
    return { L"view_online" };
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -22,7 +22,7 @@ class AudacityProject;
 
 class wxBoxSizer;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 struct DialogIdentifierTag {};
 using DialogIdentifier = TaggedIdentifier<DialogIdentifierTag>;
@@ -78,4 +78,4 @@ private:
    DialogButtonIdentifier mEscButtonIdentifier { CancellButtonIdentifier() };
    DialogButtonIdentifier mResultButtonIdentifier;
 }; // class AudioComDialogBase
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

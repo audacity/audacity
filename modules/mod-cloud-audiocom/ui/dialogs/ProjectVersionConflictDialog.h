@@ -12,7 +12,7 @@
 
 #include "AudioComDialogBase.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class ProjectVersionConflictDialog final : public AudioComDialogBase
 {
@@ -22,4 +22,4 @@ public:
    static DialogButtonIdentifier UseLocalIdentifier();
    static DialogButtonIdentifier UseRemoteIdentifier();
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

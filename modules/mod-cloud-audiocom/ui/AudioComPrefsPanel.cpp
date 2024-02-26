@@ -30,7 +30,7 @@
 
 namespace
 {
-using namespace cloud::audiocom;
+using namespace audacity::cloud::audiocom;
 
 class AudioComPrefsPanel final : public PrefsPanel
 {

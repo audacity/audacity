@@ -21,7 +21,7 @@
 
 #include "HelpSystem.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 LinkAccountDialog::LinkAccountDialog(
@@ -50,4 +50,4 @@ DialogButtonIdentifier LinkAccountDialog::SignInButtonIdentifier()
    return { L"signin" };
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

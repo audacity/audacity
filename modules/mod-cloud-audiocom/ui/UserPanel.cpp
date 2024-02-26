@@ -38,7 +38,7 @@
 
 #include "HelpSystem.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 namespace
@@ -174,4 +174,4 @@ void UserPanel::SetAnonymousState()
    OnStateChaged(false);
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

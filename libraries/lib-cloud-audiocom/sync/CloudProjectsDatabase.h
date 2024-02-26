@@ -18,7 +18,7 @@
 
 #include "CloudSyncUtils.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 struct DBProjectData final
 {
@@ -136,4 +136,4 @@ private:
    bool OpenConnection();
    std::shared_ptr<sqlite::SafeConnection> mConnection;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

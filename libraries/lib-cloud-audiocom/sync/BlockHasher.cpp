@@ -20,7 +20,7 @@
 
 #include "crypto/SHA256.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class BlockHasher::Workers final
 {
@@ -191,4 +191,4 @@ std::vector<std::pair<int64_t, std::string>> BlockHasher::TakeResult()
    return mWorkers->TakeResult();
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

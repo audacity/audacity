@@ -26,7 +26,7 @@
 #include "HelpSystem.h"
 #include "MemoryX.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -165,4 +165,4 @@ void AuthorizationHandler::OnAuthStateChanged(
       dialog.ShowModal();
    }
 }
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

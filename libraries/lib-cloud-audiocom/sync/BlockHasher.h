@@ -19,7 +19,7 @@
 
 #include "CloudSyncUtils.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class BlockHashCache /* not final */
 {
@@ -34,7 +34,7 @@ class BlockHasher final
 {
 public:
    BlockHasher();
-   ~BlockHasher();   
+   ~BlockHasher();
 
    BlockHasher(const BlockHasher&) = delete;
    BlockHasher(BlockHasher&&) = delete;
@@ -50,4 +50,4 @@ private:
    class Workers;
    std::unique_ptr<Workers> mWorkers;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

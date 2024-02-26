@@ -11,7 +11,7 @@
 
 #include "UploadCanceledDialog.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 UploadCanceledDialog::UploadCanceledDialog(const AudacityProject* project)
     : AudioComDialogBase { project }
@@ -29,4 +29,4 @@ bool UploadCanceledDialog::HasSeparator() const
 {
    return false;
 }
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

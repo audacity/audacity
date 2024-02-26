@@ -15,7 +15,7 @@
 
 #include "WavPackCompressor.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 MissingBlocksUploader::MissingBlocksUploader(
@@ -25,20 +25,20 @@ MissingBlocksUploader::MissingBlocksUploader(
 }
 
 std::shared_ptr<MissingBlocksUploader> MissingBlocksUploader::Create(
-   CancellationContextPtr cancelContext, const ServiceConfig& serviceConfig,
+   CancellationContextPtr cancellationContex, const ServiceConfig& serviceConfig,
    std::vector<BlockUploadTask> uploadTasks,
    MissingBlocksUploadProgressCallback progressCallback)
 {
    auto uploader =
       std::make_shared<MissingBlocksUploader>(Tag {}, serviceConfig);
 
-   if (!cancelContext)
-      cancelContext = audacity::concurrency::CancellationContext::Create();
+   if (!cancellationContex)
+      cancellationContex = concurrency::CancellationContext::Create();
 
-   cancelContext->OnCancelled(uploader);
+   cancellationContex->OnCancelled(uploader);
 
    uploader->Start(
-      std::move(cancelContext), std::move(uploadTasks),
+      std::move(cancellationContex), std::move(uploadTasks),
       std::move(progressCallback));
 
    return uploader;
@@ -50,11 +50,11 @@ MissingBlocksUploader::~MissingBlocksUploader()
 }
 
 void MissingBlocksUploader::Start(
-   CancellationContextPtr cancelContext,
+   CancellationContextPtr cancellationContex,
    std::vector<BlockUploadTask> uploadTasks,
    MissingBlocksUploadProgressCallback progressCallback)
 {
-   mCancellationContext = std::move(cancelContext);
+   mCancellationContext = std::move(cancellationContex);
    mUploadTasks         = std::move(uploadTasks);
    mProgressCallback    = std::move(progressCallback);
    if (!mProgressCallback)
@@ -200,7 +200,7 @@ void MissingBlocksUploader::HandleFailedBlock(
 
       mProgressData.FailedBlocks++;
       mProgressData.UploadErrors.push_back(result);
-      progressData = mProgressData;      
+      progressData = mProgressData;
    }
    mProgressCallback(progressData, task.Block, result);
 
@@ -250,4 +250,4 @@ void MissingBlocksUploader::ConsumerThread()
    }
 }
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

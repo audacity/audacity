@@ -12,7 +12,7 @@
 
 #include "wxPanelWrapper.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class SelectSaveLocationDialog final : public wxDialogWrapper
 {
@@ -20,4 +20,4 @@ public:
    explicit SelectSaveLocationDialog(wxWindow* parent);
    ~SelectSaveLocationDialog() override;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

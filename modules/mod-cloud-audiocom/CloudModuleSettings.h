@@ -12,9 +12,9 @@
 
 #include "Prefs.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 extern BoolSetting ShowCloudSyncDialog;
 extern BoolSetting SaveToCloudByDefault;
 extern BoolSetting MixdownDialogShown;
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -20,7 +20,7 @@ class wxGridTableBase;
 class wxStaticText;
 class wxTextCtrl;
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 
 class ProjectsListDialog final
@@ -55,4 +55,4 @@ private:
    wxButton* mOpenAudioCom { nullptr };
 };
 
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync

@@ -39,7 +39,7 @@
 #include "NetworkManager.h"
 #include "Request.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -273,7 +273,7 @@ CloudSyncService& CloudSyncService::Get()
 }
 
 CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
-   audacity::concurrency::CancellationContextPtr context, int page,
+   concurrency::CancellationContextPtr context, int page,
    int pageSize,
    std::string searchString)
 {
@@ -571,4 +571,4 @@ void CloudSyncService::ReportUploadStats(
    response->setRequestFinishedCallback([response](auto) {});
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

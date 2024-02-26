@@ -12,7 +12,7 @@
 
 #include "AudioComDialogBase.h"
 
-namespace cloud::audiocom::sync
+namespace audacity::cloud::audiocom::sync
 {
 class WaitForActionDialog final : public AudioComDialogBase
 {
@@ -25,4 +25,4 @@ public:
 private:
    bool HasSeparator() const override;
 };
-} // namespace cloud::audiocom::sync
+} // namespace audacity::cloud::audiocom::sync
