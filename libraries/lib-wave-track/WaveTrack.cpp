@@ -2306,33 +2306,28 @@ namespace
    }
 }
 
-auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
-   -> IterPair
+std::ptrdiff_t WaveTrack::FindWideClip(const Interval &clip)
 {
-   WaveClipHolders &list = NarrowClips();
-   WaveClipHolders *pList2{};
-   if (NChannels() > 1)
-      pList2 = &RightClips();
-   int distance = 0;
-   auto it = list.begin();
-   for (const auto end = list.end(); it != end; ++it) {
-      if (it->get() == &clip)
-         break;
-      ++distance;
-   }
-   if (pDistance)
-      *pDistance = distance;
-   WaveClipHolders::iterator it2{};
-   if (pList2 && pList2->size() > distance)
-      it2 = pList2->begin() + distance;
-   return { it, it2 };
+   auto clips = Intervals();
+   const auto begin = clips.begin();
+   const auto pNarrowClip = clip.GetClip(0).get();
+   const auto pred = [pNarrowClip](auto pClip){
+      return pClip->GetClip(0).get() == pNarrowClip; };
+   // Don't use pointer identity of intervals yet TODO wide wave clips
+   auto iter = std::find_if(begin, clips.end(), pred);
+   return std::distance(begin, iter);
 }
 
-void WaveTrack::RemoveWideClip(IterPair pair)
+void WaveTrack::RemoveWideClip(std::ptrdiff_t distance)
 {
-   NarrowClips().erase(pair.first);
-   if (NChannels() > 1)
-      RightClips().erase(pair.second);
+   auto &clips = NarrowClips();
+   if (distance < clips.size())
+      clips.erase(clips.begin() + distance);
+   if (NChannels() > 1) {
+      auto &rightClips = RightClips();
+      if (distance < rightClips.size())
+         rightClips.erase(rightClips.begin() + distance);
+   }
 }
 
 /*! @excsafety{Strong} */
@@ -3014,7 +3009,7 @@ void WaveTrack::Join(
 
       t = newClip->GetPlayEndTime();
 
-      RemoveWideClip(FindWideClip(*clip->GetClip(0)));
+      RemoveWideClip(FindWideClip(*clip));
    }
 
    InsertInterval(move(newClip), false);
