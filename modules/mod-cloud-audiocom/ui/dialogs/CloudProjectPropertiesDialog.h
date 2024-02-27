@@ -20,6 +20,7 @@
 class wxTextCtrl;
 class wxChoice;
 class wxButton;
+class wxStaticText;
 
 namespace audacity::cloud::audiocom
 {
@@ -62,9 +63,11 @@ private:
    UserPanel* mUserPanel {};
    wxTextCtrl* mProjectName {};
 
+
    wxButton* mSaveToCloud {};
    wxButton* mSaveLocally {};
    wxButton* mCancel {};
+   wxStaticText* mAnonStateText {};
 
    Observer::Subscription mUserStateChangedSubscription {};
 };

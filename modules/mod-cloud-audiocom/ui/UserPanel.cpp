@@ -44,6 +44,7 @@ namespace audacity::cloud::audiocom
 namespace
 {
 const wxSize avatarSize = { 32, 32 };
+const auto anonymousText = XO("Account not linked");
 } // namespace
 
 UserPanel::UserPanel(
@@ -60,7 +61,8 @@ UserPanel::UserPanel(
 {
 
    mUserImage = safenew UserImage(this, avatarSize);
-   mUserName = safenew wxStaticText(this, wxID_ANY, XO("Anonymous").Translation());
+   mUserName =
+      safenew wxStaticText(this, wxID_ANY, anonymousText.Translation());
    mLinkButton = safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
    mLinkButton->Show(hasLinkButton);
@@ -167,7 +169,7 @@ void UserPanel::OnLinkButtonPressed()
 
 void UserPanel::SetAnonymousState()
 {
-   mUserName->SetLabel(XO("Anonymous").Translation());
+   mUserName->SetLabel(anonymousText.Translation());
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
    mLinkButton->SetLabel(XXO("&Link Account").Translation());
 
