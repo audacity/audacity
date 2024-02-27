@@ -16,8 +16,6 @@
 #include <wx/graphics.h>
 #include <wx/statusbr.h>
 
-#include <wx/log.h>
-
 #include "Project.h"
 #include "ProjectStatus.h"
 #include "ProjectWindow.h"
@@ -57,8 +55,6 @@ public:
    {
       const auto index =
          ProjectStatusFieldsRegistry::GetFieldIndex(project, name);
-
-      wxLogDebug("CloudSyncStatusBarFieldItem::OnSize(%d)", index);
 
       if (index < 0)
          return;
