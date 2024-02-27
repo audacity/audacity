@@ -29,7 +29,8 @@ static void ComputeSpectrumUsingPffft(PffftFloats buf,
    const auto out = output.get();
    {
       size_t i;
-      for (i = 0; i < len; ++i)
+      const auto size = transformer.Size();
+      for (i = 0; i < size; ++i)
          buffer[i] *= window[i];
       for( ; i < len; ++i)
          buffer[i] = 0; // zero pad as needed

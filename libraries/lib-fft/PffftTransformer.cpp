@@ -48,11 +48,13 @@ PffftTransformer::PffftTransformer(size_t N)
 
 void PffftTransformer::Reset()
 {
+   N = 0;
    reset();
 }
 
 void PffftTransformer::Reset(size_t N)
 {
+   this->N = N;
    reset(pffft_new_setup(N, PFFFT_REAL));
 }
 
