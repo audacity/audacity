@@ -1098,7 +1098,7 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels)
 void WaveTrack::MoveAndSwapAttachments(WaveTrack &&other)
 {
    this->AttachedTrackObjects::ForCorresponding(other,
-   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+   [this](TrackAttachment *pLeft, TrackAttachment *pRight){
       // Precondition of callback from ClientData::Site
       assert(pLeft && pRight);
       const auto pLeftAttachments =
@@ -1109,7 +1109,7 @@ void WaveTrack::MoveAndSwapAttachments(WaveTrack &&other)
       assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
       if (pLeftAttachments) {
          *pLeftAttachments = std::move(*pRightAttachments);
-         pLeftAttachments->SwapChannels();
+         pLeftAttachments->SwapChannels(shared_from_this());
       }
    });
    other.DestroyAllChannelAttachments();
@@ -1118,7 +1118,7 @@ void WaveTrack::MoveAndSwapAttachments(WaveTrack &&other)
 void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
 {
    this->AttachedTrackObjects::ForCorresponding(other,
-   [](TrackAttachment *pLeft, TrackAttachment *pRight){
+   [this](TrackAttachment *pLeft, TrackAttachment *pRight){
       // Precondition of callback from ClientData::Site
       assert(pLeft && pRight);
       const auto pLeftAttachments =
@@ -1128,7 +1128,8 @@ void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
       // They should have come from the same factory of channel attachments
       assert((pLeftAttachments == nullptr) == (pRightAttachments == nullptr));
       if (pLeftAttachments)
-         pLeftAttachments->MakeStereo(std::move(*pRightAttachments));
+         pLeftAttachments->MakeStereo(shared_from_this(),
+            std::move(*pRightAttachments));
    });
    other.DestroyAllChannelAttachments();
 }
@@ -1137,10 +1138,10 @@ void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
 void WaveTrack::EraseChannelAttachments(size_t ii)
 {
    this->AttachedTrackObjects::ForEach(
-   [ii](TrackAttachment &attachment){
+   [this, ii](TrackAttachment &attachment){
       if (const auto pAttachments =
          dynamic_cast<ChannelAttachmentsBase *>(&attachment))
-         pAttachments->Erase(ii);
+         pAttachments->Erase(shared_from_this(), ii);
    });
 }
 
