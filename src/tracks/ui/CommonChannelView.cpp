@@ -88,7 +88,10 @@ int CommonChannelView::GetMinimizedHeight() const
    auto pChannel = FindChannel().get();
    if (!pChannel)
       return height;
-   const auto pTrack = dynamic_cast<const Track *>(pChannel);
+   const auto pTrack =
+      dynamic_cast<const Track *>(&pChannel->GetChannelGroup());
+   if (!pTrack)
+      return 0;
    if (const auto pList = pTrack->GetOwner())
       if (const auto p = pList->GetOwner())
           pChannel =
