@@ -99,7 +99,7 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
    titleFont.SetPixelSize({ 0, 18 });
 
    wxFont descriptionFont = GetFont();
-   descriptionFont.SetPixelSize({ 0, 12 });
+   descriptionFont.SetPixelSize({ 0, 14 });
 
    auto title = safenew wxStaticText(this, wxID_ANY, TitleText.Translation());
    title->SetFont(titleFont);
