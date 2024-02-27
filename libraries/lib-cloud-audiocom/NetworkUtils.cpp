@@ -65,7 +65,8 @@ ResponseResultCode GuessResultCode(IResponse& response) noexcept
       code == NetworkError::ConnectionRefused ||
       code == NetworkError::HostNotFound ||
       code == NetworkError::ProxyConnectionFailed ||
-      code == NetworkError::ProxyNotFound)
+      code == NetworkError::ProxyNotFound ||
+      code == NetworkError::RemoteHostClosed)
       return ResponseResultCode::ConnectionFailed;
 
    if (code == NetworkError::HTTPError)
