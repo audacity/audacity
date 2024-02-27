@@ -175,5 +175,6 @@ void EqualizationFilter::Filter(size_t len,
    // Fs/2 component is purely real
    buffer[1] *= mFilterFuncR[len/2];
 
+   // Inverse transform and rescale by 1/N
    transformer.InverseTransformOrdered(buf, buf, scr, true);
 }

@@ -296,7 +296,7 @@ void SpectrumTransformer::OutputStep()
       // The Fs/2 component is stored as the imaginary part of the DC component
       mFFTBuffer[1] = record.mImagFFTs[0];
 
-      // Invert the FFT into the output buffer
+      // Invert the FFT into the output buffer and rescale by 1/N
       mTransformer.InverseTransformOrdered(
          mFFTBuffer.aligned(), mFFTBuffer.aligned(), mWork.aligned(), true);
 
