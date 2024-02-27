@@ -207,9 +207,7 @@ LocalProjectSnapshot::LocalProjectSnapshot(
     , mServiceConfig { config }
     , mOAuthService { oauthService }
     , mProjectName { std::move(name) }
-    , mCancellationContext {
-       concurrency::CancellationContext::Create()
-    }
+    , mCancellationContext { concurrency::CancellationContext::Create() }
 {
 }
 
@@ -316,7 +314,9 @@ void LocalProjectSnapshot::DataUploadFailed(
       {
          errorType = deducedError;
       }
-      else if (deducedError == CloudSyncError::ProjectStorageLimitReached)
+      else if (
+         deducedError == CloudSyncError::ProjectStorageLimitReached ||
+         deducedError == CloudSyncError::Cancelled)
       {
          errorType = deducedError;
          break;
@@ -455,8 +455,12 @@ void LocalProjectSnapshot::OnSnapshotCreated(
    DataUploader::Get().Upload(
       mCancellationContext, mServiceConfig, response.SyncState.FileUrls,
       projectData.ProjectSnapshot,
-      [this](ResponseResult result)
+      [this, weakThis = weak_from_this()](ResponseResult result)
       {
+         auto strongThis = weakThis.lock();
+         if (!strongThis)
+            return;
+
          auto& db = CloudProjectsDatabase::Get();
 
          const auto projectId  = mCreateSnapshotResponse->Project.Id;
@@ -484,12 +488,16 @@ void LocalProjectSnapshot::OnSnapshotCreated(
          mMissingBlockUploader = MissingBlocksUploader::Create(
             mCancellationContext, mServiceConfig,
             mProjectBlocksLock->MissingBlocks,
-            [this](auto result, auto block, auto uploadResult)
+            [this, weakThis = weak_from_this()](
+               auto result, auto block, auto uploadResult)
             {
-               const auto handledBlocks =
-                  result.UploadedBlocks + result.FailedBlocks;
+               auto strongThis = weakThis.lock();
+               if (!strongThis)
+                  return;
 
-               if (uploadResult.Code != ResponseResultCode::ConnectionFailed)
+               if (
+                  uploadResult.Code != ResponseResultCode::ConnectionFailed &&
+                  uploadResult.Code != ResponseResultCode::Cancelled)
                   CloudProjectsDatabase::Get().RemovePendingProjectBlock(
                      mCreateSnapshotResponse->Project.Id,
                      mCreateSnapshotResponse->Snapshot.Id, block.Id);
@@ -498,16 +506,17 @@ void LocalProjectSnapshot::OnSnapshotCreated(
                   *this, block.Hash,
                   uploadResult.Code == ResponseResultCode::Success);
 
-               const auto completed = handledBlocks == result.TotalBlocks;
+               const auto completed =
+                  result.UploadedBlocks == result.TotalBlocks ||
+                  result.FailedBlocks != 0;
                const bool succeeded = completed && result.FailedBlocks == 0;
 
-               if (succeeded)
-               {
-                  MarkSnapshotSynced();
+               if (!completed)
                   return;
-               }
 
-               if (completed && !succeeded)
+               if (succeeded)
+                  MarkSnapshotSynced();
+               else
                   DataUploadFailed(result);
             });
       });
@@ -557,8 +566,12 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
    auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
 
    response->setRequestFinishedCallback(
-      [this, response](auto)
+      [this, response, weakThis = weak_from_this()](auto)
       {
+         auto strongThis = weakThis.lock();
+         if (!strongThis)
+            return;
+
          CloudProjectsDatabase::Get().RemovePendingSnapshot(
             mCreateSnapshotResponse->Project.Id,
             mCreateSnapshotResponse->Snapshot.Id);

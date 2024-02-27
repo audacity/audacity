@@ -27,9 +27,9 @@
 #include "SampleBlock.h"
 #include "WaveTrack.h"
 
-#include "Request.h"
 #include "IResponse.h"
 #include "NetworkManager.h"
+#include "Request.h"
 
 namespace audacity::cloud::audiocom::sync
 {
@@ -94,8 +94,12 @@ private:
       DataUploader::Get().Upload(
          mCancellationContext, GetServiceConfig(), urls,
          mPendingProjectBlobData->BlobData,
-         [this](auto result)
+         [this, weakThis = weak_from_this()](auto result)
          {
+            auto strongThis = weakThis.lock();
+            if (!strongThis)
+               return;
+
             if (result.Code != ResponseResultCode::ConnectionFailed)
                CloudProjectsDatabase::Get().RemovePendingProjectBlob(
                   mProjectId, mSnapshotId);
@@ -116,7 +120,7 @@ private:
       mProjectCloudExtension.OnSyncCompleted(this, {});
    }
 
-   void FailSync (CloudSyncError error)
+   void FailSync(CloudSyncError error)
    {
       mCompleted.store(true);
       mProjectCloudExtension.OnSyncCompleted(this, error);
@@ -167,15 +171,18 @@ private:
 
       mMissingBlocksUploader = MissingBlocksUploader::Create(
          mCancellationContext, GetServiceConfig(), std::move(blockTasks),
-         [this](
+         [this, weakThis = weak_from_this()](
             const MissingBlocksUploadProgress& progress,
             const LockedBlock& block, ResponseResult blockResponseResult)
          {
-            const auto handledBlocks =
-               progress.UploadedBlocks + progress.FailedBlocks;
+            auto strongThis = weakThis.lock();
+            if (!strongThis)
+               return;
 
             if (
-               blockResponseResult.Code != ResponseResultCode::ConnectionFailed)
+               blockResponseResult.Code !=
+                  ResponseResultCode::ConnectionFailed &&
+               blockResponseResult.Code != ResponseResultCode::Cancelled)
                CloudProjectsDatabase::Get().RemovePendingProjectBlock(
                   mProjectId, mSnapshotId, block.Id);
 
@@ -183,16 +190,18 @@ private:
                *this, block.Hash,
                blockResponseResult.Code == ResponseResultCode::Success);
 
-            const auto completed = handledBlocks == progress.TotalBlocks;
+            const auto completed =
+               progress.UploadedBlocks == progress.TotalBlocks ||
+               progress.FailedBlocks != 0;
+
             const bool succeeded = completed && progress.FailedBlocks == 0;
 
-            if (succeeded)
-            {
-               MarkSnapshotSynced();
+            if (!completed)
                return;
-            }
 
-            if (completed && !succeeded)
+            if (succeeded)
+               MarkSnapshotSynced();
+            else
                FailSync(std::move(blockResponseResult));
          });
    }
@@ -215,8 +224,12 @@ private:
       auto response = NetworkManager::GetInstance().doPost(request, nullptr, 0);
 
       response->setRequestFinishedCallback(
-         [this, response](auto)
+         [this, response, weakThis = weak_from_this()](auto)
          {
+            auto strongThis = weakThis.lock();
+            if (!strongThis)
+               return;
+
             CloudProjectsDatabase::Get().RemovePendingSnapshot(
                mProjectId, mSnapshotId);
 

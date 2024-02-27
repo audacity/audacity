@@ -291,20 +291,14 @@ void ProjectCloudExtension::OnSyncCompleted(
 {
    auto lock = std::lock_guard { mUploadQueueMutex };
 
-   if (mUploadQueue.empty())
-      return;
-
-   if (uploadOperation == nullptr)
-   {
-      mUploadQueue.pop_back();
-      return;
-   }
-
-   auto element = UnsafeFindUploadQueueElement(*uploadOperation);
+   auto element = uploadOperation != nullptr ?
+                     UnsafeFindUploadQueueElement(*uploadOperation) :
+                     nullptr;
 
    if (element != nullptr)
       element->Synced = true;
 
+   // std::all_of returns true if the range is empty
    if (!std::all_of(
           mUploadQueue.begin(), mUploadQueue.end(),
           [](auto& operation) { return operation->Synced; }))
@@ -688,6 +682,10 @@ std::string ProjectCloudExtension::GetCloudProjectPage() const
 
 bool ProjectCloudExtension::IsBlockLocked(int64_t blockID) const
 {
+   // Try load the project info first based on the
+   // file path
+   const_cast<ProjectCloudExtension*>(this)->OnLoad();
+
    const auto projectId = GetCloudProjectId();
 
    if (projectId.empty())

@@ -182,6 +182,7 @@ void MissingBlocksUploader::ConfirmBlock(BlockUploadTask item)
       mProgressData.UploadedBlocks++;
       progressData = mProgressData;
    }
+
    mProgressCallback(progressData, item.Block, {});
 
    {
@@ -202,6 +203,7 @@ void MissingBlocksUploader::HandleFailedBlock(
       mProgressData.UploadErrors.push_back(result);
       progressData = mProgressData;
    }
+
    mProgressCallback(progressData, task.Block, result);
 
    {
@@ -209,6 +211,8 @@ void MissingBlocksUploader::HandleFailedBlock(
       --mConcurrentUploads;
       mUploadsNotFull.notify_one();
    }
+
+   mCancellationContext->Cancel();
 }
 
 void MissingBlocksUploader::ProducerThread()
@@ -234,7 +238,7 @@ void MissingBlocksUploader::ProducerThread()
             progressData, item.Task.Block,
             { ResponseResultCode::InternalClientError, {} });
 
-         continue;
+         return;
       }
 
       PushBlockToQueue(std::move(item));
