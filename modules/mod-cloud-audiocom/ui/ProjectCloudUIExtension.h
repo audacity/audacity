@@ -49,7 +49,6 @@ private:
 
    std::atomic<bool> mInSync { false };
    bool mClosingCancelled { false };
-   bool mNeedsFirstSaveDialog { false };
 
    Observer::Subscription mCloudStatusChangedSubscription;
 };

@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  SyncSuccessDialog.h
+  SyncInBackroundDialog.h
 
   Dmitry Vedenko
 
@@ -14,12 +14,12 @@
 
 namespace audacity::cloud::audiocom::sync
 {
-class SyncSuccessDialog final : public AudioComDialogBase
+class SyncInBackroundDialog final : public AudioComDialogBase
 {
 public:
-   explicit SyncSuccessDialog(const AudacityProject* project);
+   explicit SyncInBackroundDialog(const AudacityProject* project);
 
-   static DialogButtonIdentifier DoneIdentifier();
+   static DialogButtonIdentifier OkIdentifier();
    static DialogButtonIdentifier ViewOnlineIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync

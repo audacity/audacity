@@ -37,6 +37,12 @@
 
 namespace audacity::cloud::audiocom::sync
 {
+
+namespace
+{
+const auto OpenFromCloudTitle = XO("Open from Cloud");
+}
+
 class ProjectsListDialog::ProjectsTableData final : public wxGridTableBase
 {
 public:
@@ -139,7 +145,7 @@ public:
          break;
       case AuthResult::Status::Failure:
          BasicUI::ShowErrorDialog(
-            wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+            wxWidgetsWindowPlacement { &mOwner }, OpenFromCloudTitle,
             XO("Failed to authorize account"), {},
             BasicUI::ErrorDialogOptions {}.Log(
                audacity::ToWString(authResult.ErrorMessage)));
@@ -152,7 +158,7 @@ public:
       mOwner.OnBeforeRefresh();
 
       auto progressDialog = BasicUI::MakeGenericProgress(
-         wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+         wxWidgetsWindowPlacement { &mOwner }, OpenFromCloudTitle,
          XO("Loading projects list..."));
 
       auto cancellationContext = concurrency::CancellationContext::Create();
@@ -198,7 +204,7 @@ public:
          auto responseResult = std::get_if<ResponseResult>(&result);
 
          BasicUI::ShowErrorDialog(
-            wxWidgetsWindowPlacement { &mOwner }, XO("Open from cloud"),
+            wxWidgetsWindowPlacement { &mOwner }, OpenFromCloudTitle,
             XO("Failed to get projects list"), {},
             BasicUI::ErrorDialogOptions {}.Log(
                audacity::ToWString(responseResult->Content)));
@@ -261,7 +267,7 @@ public:
 
       auto& item = mResponse.Items[selectedRow[0]];
 
-      return GetServiceConfig().GetProjectPageUrl(item.Slug, item.Id);
+      return GetServiceConfig().GetProjectPageUrl(item.Username, item.Id);
    }
 
 private:
@@ -273,7 +279,7 @@ private:
 
 ProjectsListDialog::ProjectsListDialog(
    wxWindow* parent, AudacityProject* project)
-    : wxDialogWrapper { parent, wxID_ANY, XO("Open from Cloud") }
+    : wxDialogWrapper { parent, wxID_ANY, OpenFromCloudTitle }
     , mProject { project }
 {
    auto header =

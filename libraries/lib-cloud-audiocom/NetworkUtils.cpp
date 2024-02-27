@@ -47,7 +47,13 @@ ResponseResultCode GetResultCodeFromHttpCode(int code) noexcept
    if (code == HttpCode::PayloadTooLarge)
       return ResponseResultCode::TooLarge;
 
-   return ResponseResultCode::Expired;
+   if (code == HttpCode::Gone)
+      return ResponseResultCode::Expired;
+
+   if (code > 500)
+      return ResponseResultCode::InternalServerError;
+
+   return ResponseResultCode::UnknownError;
 }
 
 ResponseResultCode GuessResultCode(IResponse& response) noexcept

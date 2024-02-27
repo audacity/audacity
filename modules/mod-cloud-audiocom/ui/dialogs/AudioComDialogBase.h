@@ -39,18 +39,20 @@ public:
    static DialogButtonIdentifier CancellButtonIdentifier();
 
 protected:
+   enum class DialogMode
+   {
+      Opening,
+      Saving,
+   };
+
    AudioComDialogBase(
       const AudacityProject* project,
-      const DialogIdentifier& optionalPrefsIdentifier = {});
+      const DialogIdentifier& optionalPrefsIdentifier = {}, DialogMode dialogMode = DialogMode::Saving);
 
    virtual ~AudioComDialogBase() = default;
 
    void AddTitle(const TranslatableString& title);
    void AddParagraph(const TranslatableString& paragraph);
-   void AddParagraphWithLink(
-      const TranslatableString& paragraph, const wxString& placeholder,
-      const wxString& urlText,
-      const std::string& url);
 
    enum ButtonType
    {

@@ -22,11 +22,13 @@
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/MixdownPropertiesDialog.h"
 #include "ui/dialogs/SelectSaveLocationDialog.h"
+#include "ui/dialogs/SyncInBackroundDialog.h"
 
 #include "sync/CloudSyncUtils.h"
 #include "sync/LocalProjectSnapshot.h"
 #include "sync/ProjectCloudExtension.h"
 #include "sync/ResumedSnaphotUploadOperation.h"
+#include "sync/MixdownUploader.h"
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
@@ -74,7 +76,7 @@ class IOExtension final : public ProjectFileIOExtension
          GetServiceConfig(), GetOAuthService(), projectCloudExtension, name);
 
       // Do we need UI here?
-      //while (future.wait_for(std::chrono::milliseconds(50)) !=
+      // while (future.wait_for(std::chrono::milliseconds(50)) !=
       //       std::future_status::ready)
       //   BasicUI::Yield();
 
@@ -90,7 +92,7 @@ class IOExtension final : public ProjectFileIOExtension
       return OnSaveAction::Continue;
    }
 
-   OnSaveAction SaveCloudProject (AudacityProject& project)
+   OnSaveAction SaveCloudProject(AudacityProject& project)
    {
       auto authResult = PerformBlockingAuth(&project);
 
@@ -198,7 +200,21 @@ class IOExtension final : public ProjectFileIOExtension
       projectCloudExtension.OnUpdateSaved(serializer);
 
       if (LastMixdownUrls)
-         UploadMixdown(project, *LastMixdownUrls);
+         UploadMixdown(
+            project, *LastMixdownUrls,
+            [savesCount = projectCloudExtension.GetSavesCount()](
+               auto& project, auto state)
+            {
+               if (savesCount > 1 || state == MixdownState::Failed)
+                  return;
+
+               if (
+                  SyncInBackroundDialog { &project }.ShowDialog() ==
+                  SyncInBackroundDialog::ViewOnlineIdentifier())
+                  BasicUI::OpenInDefaultBrowser(
+                     audacity::ToWXString(ProjectCloudExtension::Get(project)
+                                   .GetCloudProjectPage()));
+            });
    }
 
    bool

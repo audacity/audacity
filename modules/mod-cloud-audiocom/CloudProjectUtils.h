@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include <functional>
 #include <string_view>
 
 #include "sync/ProjectUploadOperation.h"
@@ -19,6 +20,7 @@ class AudacityProject;
 namespace audacity::cloud::audiocom::sync
 {
 class UploadUrls;
+enum class MixdownState : uint32_t;
 
 void OpenProjectFromCloud(
    AudacityProject* potentialTarget, std::string_view projectId,
@@ -31,7 +33,9 @@ void SaveToCloud(AudacityProject& project, UploadMode mode);
 
 bool HandleProjectLink(std::string_view link);
 
-void UploadMixdown(AudacityProject& project, const UploadUrls& urls);
+void UploadMixdown(
+   AudacityProject& project, const UploadUrls& urls,
+   std::function<void(AudacityProject&, MixdownState)> onCompleted);
 
 bool ResaveLocally(AudacityProject& project);
 

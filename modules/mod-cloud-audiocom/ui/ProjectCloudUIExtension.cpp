@@ -18,8 +18,8 @@
 #include "dialogs/NotCloudProjectDialog.h"
 #include "dialogs/ProjectLimitDialog.h"
 #include "dialogs/ProjectVersionConflictDialog.h"
-#include "dialogs/SyncSuccessDialog.h"
 #include "dialogs/WaitForActionDialog.h"
+#include "dialogs/SyncFailedDialog.h"
 
 #include "CloudProjectUtils.h"
 #include "OAuthService.h"
@@ -110,33 +110,10 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
 {
    mInSync = message.IsSyncing();
 
-   if (!mNeedsFirstSaveDialog && mInSync)
-   {
-      const auto savesCount =
-         ProjectCloudExtension::Get(mProject).GetSavesCount();
-      mNeedsFirstSaveDialog = savesCount == 0;
-   }
-
    if (!mInSync)
-   {
       mProgressDialog.reset();
-      if (mNeedsFirstSaveDialog && message.Status == ProjectSyncStatus::Synced)
-      {
-         mNeedsFirstSaveDialog = false;
-
-         if (
-            SyncSuccessDialog { &mProject }.ShowDialog() ==
-            SyncSuccessDialog::ViewOnlineIdentifier())
-         {
-            BasicUI::OpenInDefaultBrowser(
-               ProjectCloudExtension::Get(mProject).GetCloudProjectPage());
-         }
-      }
-   }
    else
-   {
       SetUploadProgress(message.Progress);
-   }
 
    if (message.Status != ProjectSyncStatus::Failed || !message.Error)
       return;
@@ -215,11 +192,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
    case CloudSyncError::Server:
       [[fallthrough]];
    case CloudSyncError::ClientFailure:
-      BasicUI::ShowErrorDialog(
-         *ProjectFramePlacement(&mProject), XO("Save to cloud"),
-         XO("Failed to save the project to the cloud"), {},
-         BasicUI::ErrorDialogOptions {}.Log(
-            audacity::ToWString(error.ErrorMessage)));
+      SyncFailedDialog::OnSave(error);
       break;
    case CloudSyncError::Cancelled:
       [[fallthrough]];

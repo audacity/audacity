@@ -27,6 +27,7 @@
 
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/ProjectVersionConflictDialog.h"
+#include "ui/dialogs/SyncFailedDialog.h"
 #include "ui/dialogs/UpdateCloudPreviewDialog.h"
 
 #include "sync/CloudSyncUtils.h"
@@ -82,10 +83,7 @@ bool HandleFailure(const ProjectSyncResult& result)
       return true;
    }
 
-   BasicUI::ShowErrorDialog(
-      {}, XO("Error"), XO("Failed to open cloud project"), {},
-      BasicUI::ErrorDialogOptions {}.Log(
-         audacity::ToWString(result.Result.Content)));
+   SyncFailedDialog::OnOpen(result.Result);
 
    wxLogError("Failed to open cloud project: %s", result.Result.Content);
 
@@ -281,7 +279,8 @@ bool HandleProjectLink(std::string_view uri)
    return true;
 }
 
-void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
+void UploadMixdown(AudacityProject& project, const UploadUrls& urls,
+                   std::function<void(AudacityProject&, MixdownState)> onComleted)
 {
    auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
@@ -304,7 +303,8 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
 
    auto mixdownUploader = MixdownUploader::Upload(
       cancellationContext, GetServiceConfig(), project,
-      [progressDialog = progressDialog.get(), cancellationContext](auto progress)
+      [progressDialog = progressDialog.get(),
+       cancellationContext](auto progress)
       {
          if (
             progressDialog->Poll(
@@ -316,8 +316,8 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
    mixdownUploader->SetUrls(urls);
 
    auto subscription = projectCloudExtension.SubscribeStatusChanged(
-      [progressDialog = progressDialog.get(),
-       mixdownUploader, cancellationContext](const CloudStatusChangedMessage& message)
+      [progressDialog = progressDialog.get(), mixdownUploader,
+       cancellationContext](const CloudStatusChangedMessage& message)
       {
          if (message.Status != ProjectSyncStatus::Failed)
             return;
@@ -336,6 +336,9 @@ void UploadMixdown(AudacityProject& project, const UploadUrls& urls)
 
    if (result.State == MixdownState::Succeeded)
       projectCloudExtension.MixdownSynced();
+
+   if (onComleted)
+      onComleted(project, result.State);
 }
 
 bool ResaveLocally(AudacityProject& project)

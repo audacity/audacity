@@ -56,7 +56,7 @@ const ReservedCommandFlag& IsCloudProjectFlag()
 using namespace MenuRegistry;
 
 AttachedItem sSaveAttachment { Command(
-                                  wxT("SaveToCloud"), XXO("Save to cloud..."),
+                                  wxT("SaveToCloud"), XXO("Save To Cloud..."),
                                   OnSaveToCloud, AlwaysEnabledFlag),
                                wxT("File/Save") };
 

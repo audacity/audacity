@@ -11,6 +11,7 @@
 #pragma once
 
 #include <atomic>
+#include <cstdint>
 #include <condition_variable>
 #include <functional>
 #include <future>
@@ -36,7 +37,7 @@ class ServiceConfig;
 namespace audacity::cloud::audiocom::sync
 {
 
-enum class MixdownState
+enum class MixdownState : uint32_t
 {
    Exporting,
    WaitingForUrls,

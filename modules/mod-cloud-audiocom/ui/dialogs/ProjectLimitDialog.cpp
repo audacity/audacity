@@ -17,9 +17,8 @@ audacity::cloud::audiocom::sync::ProjectLimitDialog::ProjectLimitDialog(
     : AudioComDialogBase { project }
 {
    AddTitle(XO("Your project storage limit has been reached."));
-   AddParagraphWithLink(
-      XO("You may need to remove older projects to make space available. For more options, visit %s"),
-      "%s", "audio.com", "https://audio.com");
+   AddParagraph(XO(
+      "You may need to remove older projects to make space available. For more options, visit audio.com"));
    AddParagraph(
       XO("You can also save this project locally to avoid losing changes."));
    AddButton(SaveLocallyButtonIdentifier(), XO("Save to computer"));

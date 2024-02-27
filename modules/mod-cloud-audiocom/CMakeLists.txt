@@ -34,8 +34,10 @@ set( SOURCES
    ui/dialogs/SelectSaveLocationDialog.h
    ui/dialogs/ShareAudioDialog.cpp
    ui/dialogs/ShareAudioDialog.h
-   ui/dialogs/SyncSuccessDialog.cpp
-   ui/dialogs/SyncSuccessDialog.h
+   ui/dialogs/SyncFailedDialog.cpp
+   ui/dialogs/SyncFailedDialog.h
+   ui/dialogs/SyncInBackroundDialog.cpp
+   ui/dialogs/SyncInBackroundDialog.h
    ui/dialogs/UpdateCloudPreviewDialog.cpp
    ui/dialogs/UpdateCloudPreviewDialog.h
    ui/dialogs/UploadCanceledDialog.cpp

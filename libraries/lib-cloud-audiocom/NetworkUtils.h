@@ -53,6 +53,7 @@ enum class ResponseResultCode
    NotFound,
    UnexpectedResponse,
    InternalClientError,
+   InternalServerError,
    UnknownError,
 }; // enum class ResponseResultCode
 

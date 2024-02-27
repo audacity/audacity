@@ -46,7 +46,8 @@ wxString GetOptionalPrefsIdentifier(const DialogIdentifier& identifier)
 }
 } // namespace
 
-DialogButtonIdentifier audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
+DialogButtonIdentifier
+audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
    std::function<DialogButtonIdentifier()> poller)
 {
    mDialogSizer->AddStretchSpacer(1);
@@ -104,9 +105,11 @@ DialogButtonIdentifier AudioComDialogBase::CancellButtonIdentifier()
 
 AudioComDialogBase::AudioComDialogBase(
    const AudacityProject* project,
-   const DialogIdentifier& optionalPrefsIdentifier)
+   const DialogIdentifier& optionalPrefsIdentifier, DialogMode dialogMode)
     : wxDialogWrapper { GetProjectWindow(project), wxID_ANY,
-                        XO("Save to audio.com") }
+                        dialogMode == DialogMode::Saving ?
+                           XO("Save to audio.com") :
+                           XO("Open from audio.com") }
     , mProject { project }
     , mOptionalPrefsIdentifier { GetOptionalPrefsIdentifier(
          optionalPrefsIdentifier) }
@@ -175,31 +178,6 @@ void AudioComDialogBase::AddParagraph(const TranslatableString& paragraph)
    mDialogSizer->Add(statText, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
 
    statText->Wrap(400);
-}
-
-void AudioComDialogBase::AddParagraphWithLink(
-   const TranslatableString& paragraph, const wxString& placeholder,
-   const wxString& urlText, const std::string& url)
-{
-   auto panel = safenew wxPanelWrapper { this, wxID_ANY };
-
-   panel->SetMaxSize({ 400, -1 });
-
-   ShuttleGui S { panel, eIsCreating, true, { 400, -1 } };
-   S.SetBorder(0);
-   S.StartVerticalLay();
-   {
-      AccessibleLinksFormatter formatter { paragraph };
-      formatter.FormatLink(placeholder, Verbatim(urlText), url);
-      formatter.Populate(S);
-   }
-   S.EndVerticalLay();
-
-   panel->Layout();
-   panel->Fit();
-
-   mDialogSizer->AddSpacer(16);
-   mDialogSizer->Add(panel, wxSizerFlags {}.Border(wxLEFT | wxRIGHT, 16));
 }
 
 void AudioComDialogBase::AddButton(
