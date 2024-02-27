@@ -6,6 +6,7 @@
   PffftTransformer.cpp
 
   Matthieu Hodgkinson
+  Paul Licameli
 
 **********************************************************************/
 #include "PffftTransformer.h"

@@ -6,6 +6,7 @@
   PffftTransformer.h
 
   Matthieu Hodgkinson
+  Paul Licameli
 
 **********************************************************************/
 #pragma once
