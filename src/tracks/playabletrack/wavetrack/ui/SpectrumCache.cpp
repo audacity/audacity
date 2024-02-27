@@ -131,7 +131,7 @@ bool SpecCache::CalculateOneSpectrum(
 
    const auto Column = [&out, nBins](int xx){
       assert(xx >= 0);
-      return out + PffftAlignedCount{ nBins } * size_t(xx);
+      return out + PffftTransformer::PaddedCount(nBins) * size_t(xx);
    };
 
    if (from < 0 || from >= numSamples) {
@@ -180,7 +180,7 @@ bool SpecCache::CalculateOneSpectrum(
             constexpr auto mayThrow = false; // Don't throw just for display
             mSampleCacheHolder.emplace(
                clip.GetSampleView(from, myLen, mayThrow));
-            floats.resize(myLen);
+            floats.resize(PffftTransformer::PaddedCount(myLen));
             mSampleCacheHolder->Copy(floats.data(), myLen);
             useBuffer = floats.aligned();
             if (copy) {
@@ -209,10 +209,10 @@ bool SpecCache::CalculateOneSpectrum(
 
          // Assuming scratch is well aligned for pffft, scratch2 and scratch3
          // should be too
-         const auto scratch2 = (scratch + PffftAlignedCount{ fftLen });
+         const auto scratch2 = (scratch + PffftTransformer::PaddedCount(fftLen));
          std::copy(pScratch, pScratch + fftLen, scratch2.get());
 
-         const auto scratch3 = (scratch + 2u * PffftAlignedCount{ fftLen });
+         const auto scratch3 = (scratch + 2u * PffftTransformer::PaddedCount(fftLen));
          std::copy(pScratch, pScratch + fftLen, scratch3.get());
 
          auto &transformer = settings.transformer;
@@ -340,7 +340,7 @@ void SpecCache::Grow(
    // len columns, and so many rows, column-major.
    // Don't take column literally -- this isn't pixel data yet, it's the
    // raw data to be mapped onto the display.
-   freq.resize(len_ * PffftAlignedCount{ settings.NBins() });
+   freq.resize(len_ * PffftTransformer::PaddedCount(settings.NBins()));
 
    // Sample counts corresponding to the columns, and to one past the end.
    where.resize(len_ + 1);
@@ -375,8 +375,7 @@ void SpecCache::Populate(
 
    // One work area for pffft, one work area for the outputs, two extra
    // output areas to compute reassignment
-   const size_t scratchSize =
-      (reassignment ? 4u : 2u) * PffftAlignedCount{ fftLen };
+   const size_t scratchSize = (reassignment ? 4u : 2u) * PffftTransformer::PaddedCount(fftLen);
    PffftFloatVector scratch(scratchSize);
 
    std::vector<float> gainFactors;
@@ -460,7 +459,7 @@ void SpecCache::Populate(
 #endif
          for (xx = lowerBoundX; xx < upperBoundX; ++xx) {
             const auto results =
-               freq.aligned(PffftAlignedCount{ nBins }, xx).get();
+               freq.aligned(PffftTransformer::PaddedCount(nBins), xx).get();
             for (size_t ii = 0; ii < nBins; ++ii) {
                float &power = results[ii];
                if (power <= 0)
@@ -544,7 +543,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    mSpecCache->Grow(numPixels, settings, samplesPerPixel, t0);
    mSpecCache->leftTrim = clip.GetTrimLeft();
    mSpecCache->rightTrim = clip.GetTrimRight();
-   const auto columnSize = PffftAlignedCount{ settings.NBins() };
+   const auto columnSize = PffftTransformer::PaddedCount(settings.NBins());
    auto &freq = mSpecCache->freq;
 
    // Optimization: if the old cache is good and overlaps

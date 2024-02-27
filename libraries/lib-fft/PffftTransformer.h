@@ -200,11 +200,25 @@ struct FFT_API PffftFloatVector : std::vector<float, PffftAllocator<float>> {
 struct FFT_API PffftTransformer
    : private std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>
 {
+   //! Return the minimum required buffer size
+   static size_t MinSize();
+
+   //! Return whether the size is allowable
+   //! Prime factors may only be 2, 3, or 5; and only 2, if N is less than
+   //! MinSize()
+   static bool IsAllowedSize(size_t N);
+
+   //! Round up a size for alignment and minimum window size
+   static PffftAlignedCount PaddedCount(size_t fftLen);
+
    //! @post `!*this`
    PffftTransformer() = default;
 
    //! Make construction and resetting go through this non-inline call
-   //! @post `*this`
+   /*!
+    @pre IsAllowedSize(N)
+    @post `*this`
+    */
    explicit PffftTransformer(size_t N);
 
    //! Free resources
@@ -212,7 +226,10 @@ struct FFT_API PffftTransformer
    void Reset();
 
    //! Reinitialize resources
-   //! @post `*this`
+   /*
+    @pre IsAllowedSize(N)
+    @post `*this`
+    */
    void Reset(size_t N);
 
    // Movable but not copyable
@@ -222,20 +239,30 @@ struct FFT_API PffftTransformer
    using std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>::operator bool;
 
    //! Invoke pffft_transform_ordered from time to frequency; real inputs only
-   //! @pre `*this`
+   /*!
+    The forward transform can work for small powers of two.
+    The length of the buffers is the larger of MinSize() or Size().  If Size()
+    is less than MinSize(), the excess floats in input do not need to be
+    initialized and are treated as "mutable."
+    @pre `*this`
+    */
    void TransformOrdered(PffftConstFloats input,
       PffftFloats output, PffftFloats work) const;
 
    //! Invoke pffft_transform_ordered from frequency to time,
    //! then optionally rescale values by 1/Size()
-   //! @pre `*this`
+   /*!
+    @pre `Size() >= MinSize()`
+    @pre `*this`
+    */
    void InverseTransformOrdered(PffftConstFloats input,
       PffftFloats output, PffftFloats work, bool renormalize = false) const;
 
-   size_t Size() const { return N; };
+   //! return the size given to the constructor or Reset
+   size_t Size() const { return requestedSize; }
 
 private:
-   size_t N;
+   size_t requestedSize;
 };
 
 /*!

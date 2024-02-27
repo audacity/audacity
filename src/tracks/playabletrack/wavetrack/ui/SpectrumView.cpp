@@ -741,7 +741,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context, const WaveTrack &track,
          auto &freq = specCache.freq;
          const auto nRow = xx - fisheyeLeft;
          assert(nRow >= 0);
-         uncached = freq.aligned(PffftAlignedCount{ nBins }, nRow).get();
+         uncached =
+            freq.aligned(PffftTransformer::PaddedCount(nBins), nRow).get();
          assert(uncached - freq.data() < freq.size());
       }
 
