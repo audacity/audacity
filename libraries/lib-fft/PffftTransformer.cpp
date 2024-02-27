@@ -11,6 +11,7 @@
 **********************************************************************/
 #include "PffftTransformer.h"
 
+#include <algorithm>
 #include <cassert>
 #include <pffft.h>
 
