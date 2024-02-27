@@ -11,23 +11,30 @@
 
 #pragma once
 
+#include <memory>
+
 #include "wxPanelWrapper.h"
 
 class AudacityProject;
+
 class wxButton;
 class wxGrid;
 class wxGridTableBase;
 class wxStaticText;
 class wxTextCtrl;
+class wxGridRangeSelectEvent;
+class wxGridEvent;
+class wxCommandEvent;
+class wxTimer;
 
 namespace audacity::cloud::audiocom::sync
 {
 
-class ProjectsListDialog final
-   : public wxDialogWrapper
+class ProjectsListDialog final : public wxDialogWrapper
 {
 public:
    ProjectsListDialog(wxWindow* parent, AudacityProject* project);
+   ~ProjectsListDialog() override;
 
 private:
    class ProjectsTableData;
@@ -39,6 +46,13 @@ private:
    void FormatPageLabel();
 
    void OnOpen();
+   void OnOpenAudioCom();
+
+   void OnGridSelect(wxGridRangeSelectEvent& event);
+   void OnSelectCell(wxGridEvent& event);
+
+   void OnSearchTextChanged();
+   void OnSearchTextSubmitted();
 
    AudacityProject* mProject { nullptr };
 
@@ -53,6 +67,12 @@ private:
 
    wxButton* mOpenButton { nullptr };
    wxButton* mOpenAudioCom { nullptr };
+
+   wxString mLastSearchValue;
+
+   std::unique_ptr<wxTimer> mSearchTimer;
+
+   bool mInRangeSelection { false };
 };
 
 } // namespace audacity::cloud::audiocom::sync

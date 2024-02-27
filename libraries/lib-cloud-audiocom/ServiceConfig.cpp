@@ -235,13 +235,22 @@ std::string ServiceConfig::GetSnapshotSyncUrl(
         { "snapshot_id", snapshotId } });
 }
 
-std::string ServiceConfig::GetProjectsUrl(int page, int pageSize) const
+std::string ServiceConfig::GetProjectsUrl(
+   int page, int pageSize, std::string_view searchTerm) const
 {
+   if (searchTerm.empty())
    return Substitute(
       "{api_url}/project?page={page}&per-page={page_size}",
       { { "api_url", mApiEndpoint },
         { "page", std::to_string(page) },
-        { "page_size", std::to_string(pageSize) } });
+        { "page_size", std::to_string(pageSize) }, });
+
+   return Substitute(
+      "{api_url}/project?page={page}&per-page={page_size}&q={search_term}",
+      { { "api_url", mApiEndpoint },
+        { "page", std::to_string(page) },
+        { "page_size", std::to_string(pageSize) },
+        { "search_term", searchTerm }, });
 }
 
 std::string ServiceConfig::GetProjectInfoUrl(std::string_view projectId) const

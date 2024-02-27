@@ -19,6 +19,7 @@
 #include <wx/sizer.h>
 #include <wx/stattext.h>
 #include <wx/textctrl.h>
+#include <wx/timer.h>
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
@@ -29,8 +30,8 @@
 
 #include "AuthorizationHandler.h"
 #include "CloudSyncService.h"
+#include "ServiceConfig.h"
 #include "sync/CloudSyncUtils.h"
-#include "sync/ProjectCloudExtension.h"
 
 #include "CloudProjectUtils.h"
 
@@ -47,7 +48,7 @@ public:
 
    int GetNumberRows() override
    {
-      return mPageSize;
+      return mResponse.Items.size();
    }
 
    int GetNumberCols() override
@@ -66,11 +67,12 @@ public:
          return XO("less than 1 minute").Translation();
       if (time_passed < hours(1))
          return XP("one minutes ago", "%d minutes ago",
-                   0)(static_cast<int>(duration_cast<minutes>(time_passed).count()))
+                   0)(static_cast<int>(
+                         duration_cast<minutes>(time_passed).count()))
             .Translation();
       if (time_passed < hours(48))
-         return XP("one hour ago", "%d hours ago",
-                   0)(static_cast<int>(duration_cast<hours>(time_passed).count()))
+         return XP("one hour ago", "%d hours ago", 0)(
+                   static_cast<int>(duration_cast<hours>(time_passed).count()))
             .Translation();
 
       return wxDateTime(static_cast<time_t>(time)).Format();
@@ -125,7 +127,7 @@ public:
       return col < 2 ? colWidths[col] : 0;
    }
 
-   void Refresh(int page)
+   void Refresh(int page, const wxString& searchTerm)
    {
       using namespace std::chrono_literals;
 
@@ -156,7 +158,7 @@ public:
       auto cancellationContext = concurrency::CancellationContext::Create();
 
       auto future = CloudSyncService::Get().GetProjects(
-         cancellationContext, page, mPageSize, {});
+         cancellationContext, page, mPageSize, ToUTF8(searchTerm));
 
       while (std::future_status::ready != future.wait_for(100ms))
       {
@@ -167,10 +169,28 @@ public:
 
       auto result = future.get();
 
+      if (!mResponse.Items.empty())
+      {
+         wxGridTableMessage msg(
+            this, wxGRIDTABLE_NOTIFY_ROWS_DELETED, 0, mResponse.Items.size());
+
+         GetView()->ProcessTableMessage(msg);
+      }
+
       if (std::holds_alternative<PaginatedProjectsResponse>(result))
       {
          auto response = std::get_if<PaginatedProjectsResponse>(&result);
          mResponse     = std::move(*response);
+
+         if (!mResponse.Items.empty())
+         {
+            wxGridTableMessage msg(
+               this, wxGRIDTABLE_NOTIFY_ROWS_APPENDED, mResponse.Items.size(),
+               0);
+
+            GetView()->ProcessTableMessage(msg);
+         }
+
          mOwner.OnRefreshCopleted(true);
       }
       else
@@ -203,13 +223,13 @@ public:
    void PrevPage()
    {
       if (HasPrevPage())
-         Refresh(mResponse.Pagination.CurrentPage - 1);
+         Refresh(mResponse.Pagination.CurrentPage - 1, mOwner.mLastSearchValue);
    }
 
    void NextPage()
    {
       if (HasNextPage())
-         Refresh(mResponse.Pagination.CurrentPage + 1);
+         Refresh(mResponse.Pagination.CurrentPage + 1, mOwner.mLastSearchValue);
    }
 
    int GetCurrentPage() const
@@ -232,6 +252,18 @@ public:
       return mResponse.Items[selectedRow[0]].Id;
    }
 
+   std::string GetSelectedProjectUrl() const
+   {
+      const auto selectedRow = mOwner.mProjectsTable->GetSelectedRows();
+
+      if (selectedRow.empty())
+         return {};
+
+      auto& item = mResponse.Items[selectedRow[0]];
+
+      return GetServiceConfig().GetProjectPageUrl(item.Slug, item.Id);
+   }
+
 private:
    ProjectsListDialog& mOwner;
    const int mPageSize;
@@ -241,7 +273,7 @@ private:
 
 ProjectsListDialog::ProjectsListDialog(
    wxWindow* parent, AudacityProject* project)
-    : wxDialogWrapper { parent, wxID_ANY, XO("Open from cloud") }
+    : wxDialogWrapper { parent, wxID_ANY, XO("Open from Cloud") }
     , mProject { project }
 {
    auto header =
@@ -249,19 +281,29 @@ ProjectsListDialog::ProjectsListDialog(
                              XO("Cloud saved projects").Translation() };
    auto searchHeader =
       safenew wxStaticText { this, wxID_ANY, XO("Search:").Translation() };
-   mSearchCtrl = safenew wxTextCtrl { this, wxID_ANY };
+
+   mSearchCtrl = safenew wxTextCtrl { this,          wxID_ANY,
+                                      wxEmptyString, wxDefaultPosition,
+                                      wxDefaultSize, wxTE_PROCESS_ENTER };
 
    mProjectsTable     = safenew wxGrid { this, wxID_ANY };
    mProjectsTableData = safenew ProjectsTableData { *this, 7 };
+
    mProjectsTable->SetDefaultRowSize(32);
+
    mProjectsTable->SetGridLineColour(
       mProjectsTable->GetDefaultCellBackgroundColour());
+   mProjectsTable->SetCellHighlightPenWidth(0);
+
    mProjectsTable->SetDefaultCellAlignment(wxALIGN_LEFT, wxALIGN_CENTER);
    mProjectsTable->SetTable(mProjectsTableData, true);
-   mProjectsTable->SetRowLabelSize(1);
+   mProjectsTable->SetRowLabelSize(0);
 
    mProjectsTable->EnableEditing(false);
    mProjectsTable->SetSelectionMode(wxGrid::wxGridSelectRows);
+   mProjectsTable->SetTabBehaviour(wxGrid::Tab_Leave);
+
+   mProjectsTable->SetMinSize({ -1, 32 * 8 + 9 });
 
    for (auto i = 0; i < mProjectsTableData->GetNumberCols(); ++i)
       mProjectsTable->SetColSize(i, mProjectsTableData->GetColWidth(i));
@@ -304,13 +346,20 @@ ProjectsListDialog::ProjectsListDialog(
 
    topSizer->Add(buttonsSizer, wxSizerFlags().Expand().Border(wxALL, 16));
 
+   mOpenButton->Disable();
+   mOpenAudioCom->Disable();
+
+   mSearchTimer = std::make_unique<wxTimer>(this);
+
    SetSizer(topSizer);
    Fit();
    Center();
 
    SetupHandlers();
-   BasicUI::CallAfter([this] { mProjectsTableData->Refresh(1); });
+   BasicUI::CallAfter([this] { mProjectsTableData->Refresh(1, mLastSearchValue); });
 }
+
+ProjectsListDialog::~ProjectsListDialog() = default;
 
 void ProjectsListDialog::SetupHandlers()
 {
@@ -321,6 +370,8 @@ void ProjectsListDialog::SetupHandlers()
       wxEVT_BUTTON, [this](auto&) { mProjectsTableData->NextPage(); });
 
    mOpenButton->Bind(wxEVT_BUTTON, [this](auto&) { OnOpen(); });
+
+   mOpenAudioCom->Bind(wxEVT_BUTTON, [this](auto&) { OnOpenAudioCom(); });
 
    mProjectsTable->Bind(
       wxEVT_GRID_CELL_LEFT_DCLICK, [this](auto&) { OnOpen(); });
@@ -337,6 +388,46 @@ void ProjectsListDialog::SetupHandlers()
 
          EndModal(wxID_CANCEL);
       });
+
+   mProjectsTable->Bind(
+      wxEVT_GRID_RANGE_SELECT, [this](auto& evt) { OnGridSelect(evt); });
+
+   mProjectsTable->Bind(
+      wxEVT_GRID_SELECT_CELL, [this](auto& evt) { OnSelectCell(evt); });
+
+   mProjectsTable->Bind(
+      wxEVT_KEY_UP,
+      [this](auto& evt)
+      {
+         const auto keyCode = evt.GetKeyCode();
+         if (keyCode != WXK_RETURN && keyCode != WXK_NUMPAD_ENTER)
+         {
+            evt.Skip();
+            return;
+         }
+
+         OnOpen();
+      });
+
+   mProjectsTable->Bind(
+      wxEVT_KEY_DOWN,
+      [this](auto& evt)
+      {
+         const auto keyCode = evt.GetKeyCode();
+
+         if (keyCode != WXK_RETURN && keyCode != WXK_NUMPAD_ENTER)
+         {
+            evt.Skip();
+            return;
+         }
+      });
+
+   mSearchCtrl->Bind(wxEVT_TEXT, [this](auto&) { OnSearchTextChanged(); });
+
+   mSearchCtrl->Bind(
+      wxEVT_TEXT_ENTER, [this](auto&) { OnSearchTextSubmitted(); });
+
+   Bind(wxEVT_TIMER, [this](auto&) { OnSearchTextSubmitted(); });
 }
 
 void ProjectsListDialog::OnBeforeRefresh()
@@ -355,7 +446,7 @@ void ProjectsListDialog::OnRefreshCopleted(bool success)
 
    FormatPageLabel();
 
-   mProjectsTable->Refresh();
+   mProjectsTable->ForceRefresh();
 }
 
 void ProjectsListDialog::FormatPageLabel()
@@ -375,6 +466,9 @@ void ProjectsListDialog::FormatPageLabel()
 
 void ProjectsListDialog::OnOpen()
 {
+   if (mProjectsTable->GetSelectedRows().empty())
+      return;
+
    const auto selectedProjectId = mProjectsTableData->GetSelectedProjectId();
 
    if (selectedProjectId.empty())
@@ -382,9 +476,78 @@ void ProjectsListDialog::OnOpen()
 
    EndModal(wxID_OK);
 
-    BasicUI::CallAfter([project = mProject, selectedProjectId] {
-        OpenProjectFromCloud(project, selectedProjectId, {}, false);
-    });
+   BasicUI::CallAfter(
+      [project = mProject, selectedProjectId]
+      { OpenProjectFromCloud(project, selectedProjectId, {}, false); });
+}
+
+void ProjectsListDialog::OnOpenAudioCom()
+{
+   if (mProjectsTable->GetSelectedRows().empty())
+      return;
+
+   const auto selectedProjectUrl = mProjectsTableData->GetSelectedProjectUrl();
+
+   if (selectedProjectUrl.empty())
+      return;
+
+   BasicUI::OpenInDefaultBrowser(ToWXString(selectedProjectUrl));
+}
+
+void ProjectsListDialog::OnGridSelect(wxGridRangeSelectEvent& event)
+{
+   event.Skip();
+
+   if (!event.Selecting())
+   {
+      mOpenButton->Disable();
+      mOpenAudioCom->Disable();
+      return;
+   }
+
+   mOpenButton->Enable();
+   mOpenAudioCom->Enable();
+
+   const auto topRow     = event.GetTopRow();
+   const auto bottomRow  = event.GetBottomRow();
+   const auto currentRow = mProjectsTable->GetGridCursorRow();
+
+   if (topRow != bottomRow)
+   {
+      if (mInRangeSelection)
+         return;
+
+      mInRangeSelection = true;
+      auto switcher     = finally([this] { mInRangeSelection = false; });
+
+      mProjectsTable->SelectRow(currentRow == topRow ? bottomRow : topRow);
+   }
+}
+
+void ProjectsListDialog::OnSelectCell(wxGridEvent& event)
+{
+   event.Skip();
+   mProjectsTable->SelectRow(event.GetRow());
+}
+
+void ProjectsListDialog::OnSearchTextChanged()
+{
+   mSearchTimer->StartOnce(500);
+}
+
+void ProjectsListDialog::OnSearchTextSubmitted()
+{
+   if (mSearchTimer->IsRunning())
+      mSearchTimer->Stop();
+
+   const auto searchTerm = mSearchCtrl->GetValue();
+
+   if (searchTerm == mLastSearchValue)
+      return;
+
+   mLastSearchValue = searchTerm;
+
+   mProjectsTableData->Refresh(1, mLastSearchValue);
 }
 
 } // namespace audacity::cloud::audiocom::sync

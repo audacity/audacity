@@ -88,6 +88,7 @@ wxButton* CreateButton(wxWindow* parent, const wxFont& font, const TranslatableS
 }
 
 } // namespace
+
 SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Audacity"), wxDefaultPosition, { 442, -1 },

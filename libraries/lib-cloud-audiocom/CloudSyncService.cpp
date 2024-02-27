@@ -274,7 +274,7 @@ CloudSyncService& CloudSyncService::Get()
 
 CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
    concurrency::CancellationContextPtr context, int page, int pageSize,
-   std::string searchString)
+   std::string_view searchString)
 {
    using namespace audacity::network_manager;
 
@@ -283,7 +283,7 @@ CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
    auto& serviceConfig = GetServiceConfig();
    auto& oAuthService  = GetOAuthService();
 
-   auto request = Request(serviceConfig.GetProjectsUrl(page, pageSize));
+   auto request = Request(serviceConfig.GetProjectsUrl(page, pageSize, searchString));
 
    request.setHeader(
       common_headers::ContentType, common_content_types::ApplicationJson);

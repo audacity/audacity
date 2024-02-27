@@ -87,7 +87,7 @@ public:
    //! Retrieve the list of projects from the cloud
    GetProjectsFuture GetProjects(
       concurrency::CancellationContextPtr context, int page, int pageSize,
-      std::string searchString);
+      std::string_view searchString);
 
    //! Open the project from the cloud. This operation is asynchronous.
    [[nodiscard]] SyncFuture OpenFromCloud(
