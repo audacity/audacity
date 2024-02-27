@@ -68,7 +68,7 @@ struct PffftAlignedCount
    PffftAlignedCount &operator =(const PffftAlignedCount &) = default;
 
    //! @invariant `result: result % FloatAlignment == 0`
-   operator size_t() const noexcept { return value; }
+   constexpr operator size_t() const noexcept { return value; }
 
 private:
    size_t value{};
