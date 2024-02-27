@@ -14,10 +14,19 @@
 
 namespace audacity::cloud::audiocom::sync
 {
-class SelectSaveLocationDialog final : public wxDialogWrapper
+enum class SaveLocationDialogResult
+{
+   Local,
+   Cloud,
+   Cancel,
+};
+
+class SelectSaveLocationDialog final : private wxDialogWrapper
 {
 public:
    explicit SelectSaveLocationDialog(wxWindow* parent);
    ~SelectSaveLocationDialog() override;
+
+   SaveLocationDialogResult ShowDialog();
 };
 } // namespace audacity::cloud::audiocom::sync

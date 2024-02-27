@@ -132,11 +132,13 @@ class IOExtension final : public ProjectFileIOExtension
       if (isTemporary && !pendingCloudSave)
       {
          SelectSaveLocationDialog selectSaveLocationDialog { parent };
-         const auto saveLocation = selectSaveLocationDialog.ShowModal();
+         const auto saveAction = selectSaveLocationDialog.ShowDialog();
 
          // Not doing a cloud save
-         if (saveLocation != wxID_SAVE)
+         if (saveAction == SaveLocationDialogResult::Local)
             return OnSaveAction::Continue;
+         else if (saveAction == SaveLocationDialogResult::Cancel)
+            return OnSaveAction::Cancelled;
       }
 
       // For regular projects - do nothing

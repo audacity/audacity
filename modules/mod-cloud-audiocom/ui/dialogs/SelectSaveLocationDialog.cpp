@@ -14,9 +14,9 @@
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/sizer.h>
+#include <wx/statbmp.h>
 #include <wx/statline.h>
 #include <wx/stattext.h>
-#include <wx/statbmp.h>
 
 #include "CloudModuleSettings.h"
 
@@ -153,5 +153,18 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
 
 SelectSaveLocationDialog::~SelectSaveLocationDialog()
 {
+}
+
+SaveLocationDialogResult SelectSaveLocationDialog::ShowDialog()
+{
+   const auto result = ShowModal();
+
+   if (result == wxID_OK)
+      return SaveLocationDialogResult::Local;
+
+   if (result == wxID_SAVE)
+      return SaveLocationDialogResult::Cloud;
+
+   return SaveLocationDialogResult::Cancel;
 }
 } // namespace audacity::cloud::audiocom::sync
