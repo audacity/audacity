@@ -46,7 +46,7 @@ const ReservedCommandFlag& IsCloudProjectFlag()
       [](const AudacityProject& project)
       { return ProjectCloudExtension::Get(project).IsCloudProject(); },
       CommandFlagOptions { [](const TranslatableString&) {
-         return XO("Previews can be updated only for cloud projects");
+         return XO("Previews can be updated only for Cloud projects");
       } }.QuickTest()
          .Priority(1)
    };

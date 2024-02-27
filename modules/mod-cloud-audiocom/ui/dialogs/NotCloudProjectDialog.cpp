@@ -16,7 +16,7 @@ namespace audacity::cloud::audiocom::sync
 NotCloudProjectDialog::NotCloudProjectDialog(const AudacityProject* project)
     : AudioComDialogBase { project }
 {
-   AddTitle(XO("This project is no longer saved to the cloud"));
+   AddTitle(XO("This project is no longer saved to the Cloud"));
    AddParagraph(XO(
       "This project was removed from audio.com and therefore cannot be saved at this time. "));
    AddParagraph(

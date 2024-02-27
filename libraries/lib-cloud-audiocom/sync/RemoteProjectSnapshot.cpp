@@ -174,7 +174,7 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
       snapshot->mCallback(
          { { ResponseResultCode::InternalClientError,
              audacity::ToUTF8(
-                XO("Failed to attach to the cloud project database")
+                XO("Failed to attach to the Cloud project database")
                    .Translation()) },
            0,
            0,
@@ -519,7 +519,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
    {
       OnFailure(
          { ResponseResultCode::InternalClientError,
-           audacity::ToUTF8(XO("Failed to decompress the cloud project block")
+           audacity::ToUTF8(XO("Failed to decompress the Cloud project block")
                                .Translation()) });
       return;
    }

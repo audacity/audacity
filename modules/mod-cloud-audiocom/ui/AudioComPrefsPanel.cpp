@@ -91,7 +91,7 @@ public:
          }
          S.EndStatic();
 
-         S.StartStatic(XO("Temporary cloud files directory"));
+         S.StartStatic(XO("Temporary Cloud files directory"));
          {
             S.SetBorder(8);
             S.StartMultiColumn(3, wxEXPAND);
