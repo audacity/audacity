@@ -310,7 +310,7 @@ bool PitchAndSpeedDialog::SetClipSpeedFromDialog()
    const auto expectedEndTime =
       start + (end - start) * mOldClipSpeed / mClipSpeed;
 
-   if (expectedEndTime >= maxEndTime)
+   if (expectedEndTime > maxEndTime)
    {
       BasicUI::ShowErrorDialog(
          wxWidgetsWindowPlacement { this }, XO("Invalid clip speed"),
