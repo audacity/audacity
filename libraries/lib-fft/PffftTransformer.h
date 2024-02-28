@@ -108,7 +108,7 @@ struct PffftFloats {
    /*!
     @invariant result is well aligned for pffft
     */
-   float *get() const noexcept { return p; }
+   constexpr float *get() const noexcept { return p; }
 
    PffftFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
@@ -145,7 +145,7 @@ struct PffftConstFloats {
    /*!
     @invariant result is well aligned for pffft
     */
-   const float *get() const noexcept { return p; }
+   constexpr const float *get() const noexcept { return p; }
 
    PffftConstFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
