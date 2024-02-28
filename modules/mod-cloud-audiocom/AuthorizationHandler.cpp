@@ -34,7 +34,7 @@ AuthorizationHandler handler;
 
 std::optional<AuthResult> WaitForAuth(
    std::future<std::optional<AuthResult>> future,
-   const AudacityProject* project, TranslatableString dialogMessage = {})
+   const AudacityProject* project)
 {
    using namespace sync;
 
@@ -43,16 +43,21 @@ std::optional<AuthResult> WaitForAuth(
       std::future_status::ready)
    {
       auto waitResult =
-         WaitForActionDialog { project, dialogMessage }.ShowDialog(
-            [&future]() -> DialogButtonIdentifier
-            {
-               if (
-                  future.wait_for(std::chrono::milliseconds { 50 }) !=
-                  std::future_status::ready)
-                  return {};
+         WaitForActionDialog {
+            project, XO("Waiting for audio.com"),
+            XO("An action on audio.com is required before you can continue. You can cancel this operation."),
+            false
+         }
+            .ShowDialog(
+               [&future]() -> DialogButtonIdentifier
+               {
+                  if (
+                     future.wait_for(std::chrono::milliseconds { 50 }) !=
+                     std::future_status::ready)
+                     return {};
 
-               return { L"done" };
-            });
+                  return { L"done" };
+               });
 
       if (waitResult == WaitForActionDialog::CancellButtonIdentifier())
          return AuthResult { AuthResult::Status::Cancelled, {} };
@@ -120,8 +125,7 @@ AuthResult PerformBlockingAuth(
    OpenInDefaultBrowser(
       { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
 
-   auto waitResult = WaitForAuth(
-      promise.get_future(), project, XO("Please, complete action in browser"));
+   auto waitResult = WaitForAuth(promise.get_future(), project);
 
    if (waitResult)
       return *waitResult;

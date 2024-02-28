@@ -19,8 +19,8 @@
 #include "dialogs/NotCloudProjectDialog.h"
 #include "dialogs/ProjectLimitDialog.h"
 #include "dialogs/ProjectVersionConflictDialog.h"
-#include "dialogs/WaitForActionDialog.h"
 #include "dialogs/SyncFailedDialog.h"
+#include "dialogs/WaitForActionDialog.h"
 
 #include "CloudProjectUtils.h"
 #include "OAuthService.h"
@@ -30,7 +30,6 @@
 #include "BasicUI.h"
 #include "CodeConversions.h"
 #include "Project.h"
-
 
 namespace audacity::cloud::audiocom::sync
 {
@@ -99,7 +98,7 @@ bool ProjectCloudUIExtension::AllowClosing()
    }
 
    bool closingCancelled = mClosingCancelled;
-   mClosingCancelled = false;
+   mClosingCancelled     = false;
 
    mProgressDialog.reset();
 
@@ -145,9 +144,11 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
          BasicUI::OpenInDefaultBrowser(
             GetServiceConfig().GetProjectsPageUrl(slug));
 
-         WaitForActionDialog { &mProject,
-                               XO("Please, complete your action on audio.com"),
-                               true }
+         WaitForActionDialog {
+            &mProject,
+            XO("Waiting for space to free up"),
+            XO("Once you have made storage space available on audio.com, click Retry."),
+         }
             .ShowDialog();
          SaveToCloud(mProject, UploadMode::Normal);
       }

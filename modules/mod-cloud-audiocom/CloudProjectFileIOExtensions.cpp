@@ -26,9 +26,9 @@
 
 #include "sync/CloudSyncUtils.h"
 #include "sync/LocalProjectSnapshot.h"
+#include "sync/MixdownUploader.h"
 #include "sync/ProjectCloudExtension.h"
 #include "sync/ResumedSnaphotUploadOperation.h"
-#include "sync/MixdownUploader.h"
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
@@ -208,12 +208,7 @@ class IOExtension final : public ProjectFileIOExtension
                if (savesCount > 1 || state == MixdownState::Failed)
                   return;
 
-               if (
-                  SyncInBackroundDialog { &project }.ShowDialog() ==
-                  SyncInBackroundDialog::ViewOnlineIdentifier())
-                  BasicUI::OpenInDefaultBrowser(
-                     audacity::ToWXString(ProjectCloudExtension::Get(project)
-                                   .GetCloudProjectPage()));
+               SyncInBackroundDialog { &project }.ShowDialog();
             });
    }
 

@@ -19,8 +19,10 @@ class WaitForActionDialog final : public AudioComDialogBase
 public:
    WaitForActionDialog(
       const AudacityProject* project,
-      const TranslatableString& message = XO("Waiting for audio.com"),
-      bool retryButton = false);
+      const TranslatableString& title   = XO("Waiting for audio.com"),
+      const TranslatableString& message = XO(
+         "An action on audio.com is required before you can continue. Once you are done with it, click Retry"),
+      bool retryButton = true);
 
 private:
    bool HasSeparator() const override;
