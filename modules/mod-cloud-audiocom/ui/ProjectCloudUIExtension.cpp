@@ -13,6 +13,7 @@
 #include <wx/log.h>
 
 #include "sync/ProjectCloudExtension.h"
+#include "sync/ResumedSnaphotUploadOperation.h"
 
 #include "dialogs/ConnectionIssuesDialog.h"
 #include "dialogs/NotCloudProjectDialog.h"
@@ -114,6 +115,10 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
       mProgressDialog.reset();
    else
       SetUploadProgress(message.Progress);
+
+   // It the sync was successful - check for unsuccessful operations before
+   if (message.Status == ProjectSyncStatus::Synced)
+      ResumeProjectUpload(ProjectCloudExtension::Get(mProject), {});
 
    if (message.Status != ProjectSyncStatus::Failed || !message.Error)
       return;
