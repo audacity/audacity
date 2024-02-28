@@ -43,7 +43,6 @@ const auto LocalSaveDescription = XO("Files are saved on your device");
 
 const auto LocalSaveButton = XXO("Save to &computer");
 
-
 constexpr auto leftPadding = 16;
 
 auto GetWrapWidth()
@@ -71,19 +70,19 @@ std::unique_ptr<wxBoxSizer> SetupVerticalSizer(
    return sizer;
 }
 
-wxButton* CreateButton(wxWindow* parent, const wxFont& font, const TranslatableString& label)
+wxButton* CreateButton(
+   wxWindow* parent, const wxFont& font, const TranslatableString& label)
 {
    const auto transalatedLabel = label.Translation();
 
-   auto button =
-      safenew wxButton(parent, wxID_ANY, transalatedLabel);
+   auto button = safenew wxButton(parent, wxID_ANY, transalatedLabel);
 
    button->SetFont(font);
 
    const auto textSize = button->GetTextExtent(transalatedLabel);
 
    button->SetMinSize({ textSize.x + 12 * 2, 32 });
-   
+
    return button;
 }
 
@@ -116,17 +115,18 @@ SelectSaveLocationDialog::SelectSaveLocationDialog(wxWindow* parent)
    saveToCloudDescription->SetFont(descriptionFont);
    saveToCloudDescription->Wrap(GetWrapWidth());
 
-   auto saveToCloudButton = CreateButton(this, descriptionFont, CloudSaveButton);
+   auto saveToCloudButton =
+      CreateButton(this, descriptionFont, CloudSaveButton);
 
    auto saveToComputerImage =
       safenew wxStaticBitmap(this, wxID_ANY, *bin2c_SaveLocally_png);
 
-   auto saveToComputerTitle = safenew wxStaticText(
-      this, wxID_ANY, LocalSaveTitle.Translation());
+   auto saveToComputerTitle =
+      safenew wxStaticText(this, wxID_ANY, LocalSaveTitle.Translation());
    saveToComputerTitle->SetFont(titleFont);
 
-   auto saveToComputerDescription = safenew wxStaticText(
-      this, wxID_ANY, LocalSaveDescription.Translation());
+   auto saveToComputerDescription =
+      safenew wxStaticText(this, wxID_ANY, LocalSaveDescription.Translation());
    saveToComputerDescription->SetFont(descriptionFont);
    saveToComputerDescription->Wrap(GetWrapWidth());
 
@@ -200,6 +200,13 @@ SelectSaveLocationDialog::~SelectSaveLocationDialog()
 
 SaveLocationDialogResult SelectSaveLocationDialog::ShowDialog()
 {
+   if (!ShowCloudSyncDialog.Read())
+   {
+      return SaveToCloudByDefault.Read() ?
+         SaveLocationDialogResult::Cloud :
+         SaveLocationDialogResult::Local;
+   }
+
    const auto result = ShowModal();
 
    if (result == wxID_OK)
