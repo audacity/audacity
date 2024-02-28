@@ -1,22 +1,22 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2023 Audacity Team
+# Copyright (C) 2024 Audacity Team
 # This file is distributed under the same license as the audacity package.
 #
 # Translators:
 # Ettore Atalan <atalanttore@googlemail.com>, 2023
-# Grzegorz Pruchniakowski <gootector@o2.pl>, 2023
+# Grzegorz Pruchniakowski <gootector@o2.pl>, 2024
 # Joachim Huffer <joachim.huffer@gmail.com>, 2023
-# Link Winterberg, 2023
+# Link Winterberg, 2024
 # Michał Trzebiatowski <michtrz@gmail.com>, 2023
 # Paval Shalamitski <yehekim@gmail.com>, 2023
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-20 02:00+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2023\n"
+"PO-Revision-Date: 2024-02-28 20:00+0000\n"
+"Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -12927,7 +12927,7 @@ msgstr "(%) [-50 bis 100]:"
 
 #: src/effects/TimeScale.cpp
 msgid "Final Pitch Shift"
-msgstr "Letzte Tonhöhenänderung"
+msgstr "Letzte Tonhöhenverschiebung"
 
 #: src/effects/TimeScale.cpp
 msgid "(s&emitones) [-12 to 12]:"
@@ -19886,11 +19886,11 @@ msgstr "Tonhöhe/Tempo"
 
 #: plug-ins/delay.ny
 msgid "Low-quality Pitch Shift"
-msgstr "Tonhöhenänderung mit niedriger Qualität"
+msgstr "Tonhöhenverschiebung mit niedriger Qualität"
 
 #: plug-ins/delay.ny
 msgid "High-quality Pitch Shift"
-msgstr "Tonhöhenänderung mit hoher Qualität"
+msgstr "Tonhöhenverschiebung mit hoher Qualität"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
