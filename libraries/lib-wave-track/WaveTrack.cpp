@@ -1295,13 +1295,11 @@ void WaveTrack::MoveTo(double origin)
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
-TrackListHolder
-WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
+auto WaveTrack::DuplicateWithOtherTempo(double newTempo) const -> Holder
 {
-   const auto srcCopyList = Duplicate();
-   leader = *srcCopyList->Any<WaveTrack>().begin();
-   ::DoProjectTempoChange(*leader, newTempo);
-   return srcCopyList;
+   const auto srcCopy = Duplicate();
+   ::DoProjectTempoChange(*srcCopy, newTempo);
+   return std::static_pointer_cast<WaveTrack>(srcCopy);
 }
 
 bool WaveTrack::LinkConsistencyFix(const bool doFix)
@@ -1508,9 +1506,8 @@ const WaveClipHolders &WaveTrack::RightClips() const
    return mRightChannel->Clips();
 }
 
-TrackListHolder WaveTrack::Clone(bool backup) const
+Track::Holder WaveTrack::Clone(bool backup) const
 {
-   Holder newTracks[2];
    auto newTrack = EmptyCopy(NChannels());
    newTrack->mChannel.CopyClips(newTrack->mpFactory, this->mChannel, backup);
    if (mRightChannel) {
@@ -1518,9 +1515,7 @@ TrackListHolder WaveTrack::Clone(bool backup) const
       newTrack->mRightChannel
          ->CopyClips(newTrack->mpFactory, *this->mRightChannel, backup);
    }
-   auto result = TrackList::Temporary(nullptr);
-   result->Add(newTrack);
-   return result;
+   return newTrack;
 }
 
 wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
@@ -1792,10 +1787,11 @@ TrackListHolder WaveTrack::MonoToStereo()
    EraseChannelAttachments(1);
 
    // Make temporary new mono track
-   auto result = Duplicate();
+   auto newTrack = Duplicate();
 
-   // Put self back onto the list
-   result->AddToHead(this->SharedPointer());
+   // Make a list
+   auto result = TrackList::Temporary(nullptr, shared_from_this());
+   result->Add(newTrack);
    // Destroy the temporary track, widening this track to stereo
    ZipClips();
 
@@ -1985,10 +1981,9 @@ void WaveTrack::ClearAndPaste(
    const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
-   WaveTrack* copy;
-   const auto copyHolder = src.DuplicateWithOtherTempo(*tempo, copy);
+   const auto copyHolder = src.DuplicateWithOtherTempo(*tempo);
    ClearAndPasteAtSameTempo(
-      t0, t1, *copy, preserve, merge, effectWarper, clearByTrimming);
+      t0, t1, *copyHolder, preserve, merge, effectWarper, clearByTrimming);
 }
 
 void WaveTrack::ClearAndPasteAtSameTempo(
@@ -2528,9 +2523,8 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
    const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
-   WaveTrack* copy;
-   const auto copyHolder = other.DuplicateWithOtherTempo(*tempo, copy);
-   PasteWaveTrackAtSameTempo(t0, *copy, merge);
+   const auto copyHolder = other.DuplicateWithOtherTempo(*tempo);
+   PasteWaveTrackAtSameTempo(t0, *copyHolder, merge);
 }
 
 void WaveTrack::PasteWaveTrackAtSameTempo(

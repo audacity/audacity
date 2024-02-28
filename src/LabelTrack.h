@@ -117,7 +117,7 @@ class AUDACITY_DLL_API LabelTrack final
    using Holder = std::shared_ptr<LabelTrack>;
 
 private:
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 
 public:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;

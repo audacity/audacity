@@ -298,7 +298,7 @@ private:
    /*!
     @pre `IsLeader()`
     */
-   virtual TrackListHolder Duplicate(DuplicateOptions = {}) const;
+   virtual Holder Duplicate(DuplicateOptions = {}) const;
 
    void ReparentAllAttachments();
 
@@ -384,7 +384,7 @@ private:
     a project, instead of other editing operations
     @post result tracks have same TrackIds as the channels of `this`
     */
-   virtual TrackListHolder Clone(bool backup) const = 0;
+   virtual Holder Clone(bool backup) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >

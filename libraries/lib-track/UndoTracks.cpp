@@ -22,14 +22,14 @@ struct TrackListRestorer final : UndoStateExtension {
          if (pTrack->GetId() == TrackId{})
             // Don't copy a pending added track
             continue;
-         mpTracks->Append(std::move(*pTrack->Duplicate()));
+         mpTracks->Add(pTrack->Duplicate());
       }
    }
    void RestoreUndoRedoState(AudacityProject &project) override {
       auto &dstTracks = TrackList::Get(project);
       dstTracks.Clear();
       for (auto pTrack : *mpTracks)
-         dstTracks.Append(std::move(*pTrack->Duplicate()));
+         dstTracks.Add(pTrack->Duplicate());
    }
    bool CanUndoOrRedo(const AudacityProject &project) override {
       return !PendingTracks::Get(project).HasPendingTracks();

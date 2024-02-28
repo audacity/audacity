@@ -196,16 +196,16 @@ auto ProjectFileManager::ReadProjectFile(
          // corrupt the project
          for (const auto pChannel : TrackList::Channels(pTrack)) {
             auto left = leader;
-            auto newTrackList =
+            auto newTrack =
                pChannel->Duplicate(Track::DuplicateOptions{}.Backup());
             leader = left
                ? nullptr // now visiting the right channel
                : (pChannel->GetLinkType() == Track::LinkType::None)
                   ? nullptr // now visiting a mono channel
-                  : *newTrackList->Any<WaveTrack>().begin()
+                  : static_cast<WaveTrack*>(newTrack.get())
                     // now visiting a left channel
             ;
-            mLastSavedTracks->Append(move(*newTrackList));
+            mLastSavedTracks->Add(newTrack);
             if (left)
                // Zip clips allowing misalignment -- this may be a legacy
                // project.  This duplicate track will NOT be used for normal
@@ -428,8 +428,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    auto &tracks = TrackList::Get(proj);
    for (auto t : tracks)
-      mLastSavedTracks->Append(
-         move(*t->Duplicate(Track::DuplicateOptions{}.Backup())));
+      mLastSavedTracks->Add(t->Duplicate(Track::DuplicateOptions{}.Backup()));
 
    // If we get here, saving the project was successful, so we can DELETE
    // any backup project.

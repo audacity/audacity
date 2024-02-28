@@ -222,12 +222,12 @@ void TimeTrack::InsertSilence(double t, double len)
    mEnvelope->InsertSpace(t, len);
 }
 
-TrackListHolder TimeTrack::Clone(bool) const
+Track::Holder TimeTrack::Clone(bool) const
 {
    assert(IsLeader());
    auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result);
+   return result;
 }
 
 bool TimeTrack::GetInterpolateLog() const

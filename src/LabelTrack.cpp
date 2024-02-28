@@ -338,12 +338,12 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-TrackListHolder LabelTrack::Clone(bool) const
+Track::Holder LabelTrack::Clone(bool) const
 {
    assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result);
+   return result;
 }
 
 // Adjust label's left or right boundary, depending which is requested.

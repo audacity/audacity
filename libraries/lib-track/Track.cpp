@@ -102,12 +102,12 @@ void Track::CopyAttachments(Track &dst, const Track &src, bool deep)
       });
 }
 
-TrackListHolder Track::Duplicate(DuplicateOptions options) const
+auto Track::Duplicate(DuplicateOptions options) const -> Holder
 {
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone(options.backup);
    // Attachments matter for leader only
-   CopyAttachments(**result->begin(), *this, !options.shallowCopyAttachments);
+   CopyAttachments(*result, *this, !options.shallowCopyAttachments);
    return result;
 }
 

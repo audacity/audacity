@@ -170,13 +170,12 @@ const Track &PendingTracks::SubstituteOriginalTrack(const Track &track) const
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
    assert(src->IsLeader());
-   auto tracks =
+   auto track =
       src->Duplicate(Track::DuplicateOptions{}.ShallowCopyAttachments());
 
    mUpdaters.push_back(move(updater));
-   const auto result = *tracks->begin();
-   mPendingUpdates->Append(std::move(*tracks));
-   return result;
+   mPendingUpdates->Add(track);
+   return track.get();
 }
 
 void PendingTracks::UpdatePendingTracks()

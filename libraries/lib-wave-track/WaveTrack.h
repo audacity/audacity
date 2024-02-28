@@ -470,7 +470,7 @@ public:
 
    void RemoveWideClip(IterPair pair);
 
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 
    friend class WaveTrackFactory;
 
@@ -1303,8 +1303,7 @@ private:
     * @param[out] leader
     */
    //! @pre `IsLeader()`
-   [[nodiscard]] TrackListHolder
-   DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const;
+   [[nodiscard]] Holder DuplicateWithOtherTempo(double newTempo) const;
 
    bool GetOne(const WaveClipHolders &clips,
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,

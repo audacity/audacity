@@ -120,7 +120,7 @@ private:
    using Holder = std::unique_ptr<TimeTrack>;
 
 private:
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 };
 
 ENUMERATE_TRACK_TYPE(TimeTrack);

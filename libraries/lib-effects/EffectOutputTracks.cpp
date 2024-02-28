@@ -40,10 +40,10 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
-      auto list = aTrack->Duplicate();
+      auto pTrack = aTrack->Duplicate();
       mIMap.push_back(aTrack);
-      mOMap.push_back(*list->begin());
-      mOutputTracks->Append(std::move(*list));
+      mOMap.push_back(pTrack.get());
+      mOutputTracks->Add(pTrack);
    }
 
    if (
