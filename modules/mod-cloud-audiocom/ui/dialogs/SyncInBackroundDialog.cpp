@@ -17,28 +17,17 @@ SyncInBackroundDialog::SyncInBackroundDialog(const AudacityProject* project)
     : AudioComDialogBase { project,
                            DialogIdentifier { "SyncInBackroundDialog" } }
 {
-   AddTitle(XO("Mixdown complete!"));
+   AddTitle(XO("Syncing your project"));
 
    AddParagraph(XO(
-      "Your project is being saved and uploaded in the background. You can check on the status in the bottom right corner."));
+      "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"));
 
-   AddParagraph(XO("You can continue working on the project in the meantime."));
-
-   AddParagraph(XO(
-      "You can manage this file form your uploaded projects page on audio.com"));
-
-   AddButton(ViewOnlineIdentifier(), XO("View online"));
-   AddButton(OkIdentifier(), XO("OK"), DefaultButton | EscButton);
+   AddButton(OkIdentifier(), XO("Continue"), DefaultButton | EscButton);
 }
 
 DialogButtonIdentifier SyncInBackroundDialog::OkIdentifier()
 {
    return { L"ok" };
-}
-
-DialogButtonIdentifier SyncInBackroundDialog::ViewOnlineIdentifier()
-{
-   return { L"view_online" };
 }
 
 } // namespace audacity::cloud::audiocom::sync

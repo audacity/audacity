@@ -20,6 +20,5 @@ public:
    explicit SyncInBackroundDialog(const AudacityProject* project);
 
    static DialogButtonIdentifier OkIdentifier();
-   static DialogButtonIdentifier ViewOnlineIdentifier();
 };
 } // namespace audacity::cloud::audiocom::sync
