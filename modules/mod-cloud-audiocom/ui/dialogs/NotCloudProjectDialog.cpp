@@ -20,11 +20,11 @@ NotCloudProjectDialog::NotCloudProjectDialog(const AudacityProject* project)
    AddParagraph(XO(
       "This project was removed from audio.com and therefore cannot be saved at this time. "));
    AddParagraph(
-      XO("You can either upload this as a new project. Or, save it locally."));
+      XO("You can either save it to the Cloud as a new project, or save it to your computer."));
 
-   AddButton(SaveLocallyIdentifier(), XO("Save Locally"), EscButton);
+   AddButton(SaveLocallyIdentifier(), XO("Save to computer"), EscButton);
    AddButton(
-      SaveRemotelyIdentifier(), XO("Save Remotely"), DefaultButton);
+      SaveRemotelyIdentifier(), XO("Save to Cloud"), DefaultButton);
 }
 
 DialogButtonIdentifier NotCloudProjectDialog::SaveLocallyIdentifier()
