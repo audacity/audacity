@@ -38,6 +38,8 @@ set( SOURCES
    ui/dialogs/SyncFailedDialog.h
    ui/dialogs/SyncInBackroundDialog.cpp
    ui/dialogs/SyncInBackroundDialog.h
+   ui/dialogs/UnsyncedProjectDialog.cpp
+   ui/dialogs/UnsyncedProjectDialog.h
    ui/dialogs/UpdateCloudPreviewDialog.cpp
    ui/dialogs/UpdateCloudPreviewDialog.h
    ui/dialogs/UploadCanceledDialog.cpp

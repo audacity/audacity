@@ -15,9 +15,9 @@
 #include <unordered_set>
 
 #include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-#include <rapidjson/stringbuffer.h>
 #include <rapidjson/reader.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/writer.h>
 
 #include <algorithm>
 
@@ -81,14 +81,14 @@ bool Deserialize(const rapidjson::Value& value, bool& result)
    return true;
 }
 
-template <typename T>
+template<typename T>
 bool Deserialize(
    const rapidjson::Value& value, std::string_view zKey, T& result);
 
-template <typename T>
+template<typename T>
 bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result);
 
-template <typename T>
+template<typename T>
 bool DeserializeArray(
    const rapidjson::Value& value, std::string_view zKey, std::vector<T>& result)
 {
@@ -167,7 +167,7 @@ bool Deserialize(const rapidjson::Value& value, SnapshotBlockInfo& urls)
    return true;
 }
 
-bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
+bool Deserialize(const rapidjson::Value& value, SnapshotInfo& snapshotInfo)
 {
    if (!value.IsObject())
       return {};
@@ -195,12 +195,12 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& urls)
    Deserialize(value, "file_url", tempSnapshot.FileUrl);
    DeserializeArray(value, "blocks", tempSnapshot.Blocks);
 
-   urls = std::move(tempSnapshot);
+   snapshotInfo = std::move(tempSnapshot);
 
    return true;
 }
 
-bool Deserialize(const rapidjson::Value& value, ProjectInfo& urls)
+bool Deserialize(const rapidjson::Value& value, ProjectInfo& projectInfo)
 {
    if (!value.IsObject())
       return {};
@@ -232,9 +232,10 @@ bool Deserialize(const rapidjson::Value& value, ProjectInfo& urls)
       return {};
 
    Deserialize(value, "head", tempProject.HeadSnapshot);
-   DeserializeArray(value, "versions", tempProject.Versions);
+   Deserialize(
+      value, "latest_synced_snapshot_id", tempProject.LastSyncedSnapshotId);
 
-   urls = std::move(tempProject);
+   projectInfo = std::move(tempProject);
 
    return true;
 }
@@ -324,7 +325,7 @@ bool Deserialize(
    return true;
 }
 
-template <typename T>
+template<typename T>
 bool Deserialize(
    const rapidjson::Value& value, std::string_view zKey, T& result)
 {
@@ -334,7 +335,7 @@ bool Deserialize(
    return Deserialize(value[zKey.data()], result);
 }
 
-template <typename T>
+template<typename T>
 bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result)
 {
    if (!value.IsArray())
@@ -356,7 +357,8 @@ bool DeserializeArray(const rapidjson::Value& value, std::vector<T>& result)
    return true;
 }
 
-template<typename T> bool Deserialize (std::string_view data, T& result)
+template<typename T>
+bool Deserialize(std::string_view data, T& result)
 {
    rapidjson::Document document;
    document.Parse(data.data(), data.size());
@@ -446,7 +448,7 @@ std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data)
 
 namespace
 {
-wxString SafeName (wxString name)
+wxString SafeName(wxString name)
 {
    static const std::unordered_set<wxChar> invalidChars {
       L'/', L'\\', L':', L'*', L'?', L'"', L'\'', L'<', L'>', L'|', L'@',
@@ -473,7 +475,6 @@ MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
    int iteration = 0;
    while (path.FileExists())
       path.SetName(wxString::Format("%s_%d", safeName, ++iteration));
-
 
    return path.GetFullPath();
 }

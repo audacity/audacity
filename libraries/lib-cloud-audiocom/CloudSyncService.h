@@ -100,6 +100,14 @@ public:
 
    static bool IsCloudProject(const std::string& path);
 
+   enum class ProjectState
+   {
+      NotAvaliable,
+      PendingSync,
+      FullySynced
+   };
+   static ProjectState GetProjectState(const std::string& projectId);
+
 private:
    void FailSync(ResponseResult responseResult);
 

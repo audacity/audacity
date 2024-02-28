@@ -197,8 +197,19 @@ void GetSnapshotInfo(
             return;
          }
 
-         const auto id =
-            !snapshotId.empty() ? snapshotId : projectInfo.HeadSnapshot.Id;
+         const auto id = !snapshotId.empty() ?
+                            snapshotId :
+                            (projectInfo.HeadSnapshot.Synced > 0 ?
+                                projectInfo.HeadSnapshot.Id :
+                                projectInfo.LastSyncedSnapshotId);
+
+         if (id.empty())
+         {
+            callback(
+               std::move(projectInfo), sync::SnapshotInfo {},
+               { ResponseResultCode::Success });
+            return;
+         }
 
          GetSnapshotInfo(
             oAuthService, serviceConfig, projectId, id,
@@ -283,7 +294,8 @@ CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
    auto& serviceConfig = GetServiceConfig();
    auto& oAuthService  = GetOAuthService();
 
-   auto request = Request(serviceConfig.GetProjectsUrl(page, pageSize, searchString));
+   auto request =
+      Request(serviceConfig.GetProjectsUrl(page, pageSize, searchString));
 
    request.setHeader(
       common_headers::ContentType, common_content_types::ApplicationJson);
@@ -415,9 +427,12 @@ CloudSyncService::SyncFuture CloudSyncService::SyncProject(
             return;
          }
 
+         const auto snapshotId = remoteInfo.HeadSnapshot.Synced > 0 ?
+                                    remoteInfo.HeadSnapshot.Id :
+                                    remoteInfo.LastSyncedSnapshotId;
+
          GetSnapshotInfo(
-            GetOAuthService(), GetServiceConfig(), remoteInfo.Id,
-            remoteInfo.HeadSnapshot.Id,
+            GetOAuthService(), GetServiceConfig(), remoteInfo.Id, snapshotId,
             [this, &project, mode,
              remoteInfo](sync::SnapshotInfo snapshotInfo, ResponseResult result)
             {
@@ -437,6 +452,25 @@ bool CloudSyncService::IsCloudProject(const std::string& path)
    auto projectInfo    = cloudDatabase.GetProjectDataForPath(path);
 
    return projectInfo.has_value();
+}
+
+CloudSyncService::ProjectState
+CloudSyncService::GetProjectState(const std::string& projectId)
+{
+   auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+
+   auto projectInfo = cloudDatabase.GetProjectData(projectId);
+
+   if (!projectInfo)
+      return ProjectState::NotAvaliable;
+
+   if (!wxFileExists(ToWXString(projectInfo->LocalPath)))
+      return ProjectState::NotAvaliable;
+
+   if (projectInfo->SyncStatus == sync::DBProjectData::SyncStatusSynced)
+      return ProjectState::FullySynced;
+
+   return ProjectState::PendingSync;
 }
 
 void CloudSyncService::FailSync(ResponseResult responseResult)
@@ -526,10 +560,19 @@ void CloudSyncService::SyncCloudSnapshot(
       if (HasAutosave(utf8Path))
       {
          if (mode == SyncMode::Normal)
+         {
             FailSync({ ResponseResultCode::Conflict });
+            return;
+         }
          else
             DropAutosave(utf8Path);
       }
+   }
+
+   if (snapshotInfo.Id.empty())
+   {
+      FailSync({ ResponseResultCode::NotFound });
+      return;
    }
 
    mRemoteSnapshot = sync::RemoteProjectSnapshot::Sync(

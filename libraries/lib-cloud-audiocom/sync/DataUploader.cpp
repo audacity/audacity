@@ -18,8 +18,8 @@
 #include "CodeConversions.h"
 
 #include "IResponse.h"
-#include "Request.h"
 #include "NetworkManager.h"
+#include "Request.h"
 
 #include "RequestPayload.h"
 
@@ -52,8 +52,8 @@ struct DataUploader::Response final
 
    Response(
       DataUploader& uploader, CancellationContextPtr cancellationContex,
-      const UploadUrls& target, UploadData data,
-      std::string mimeType, std::function<void(ResponseResult)> callback,
+      const UploadUrls& target, UploadData data, std::string mimeType,
+      std::function<void(ResponseResult)> callback,
       std::function<void(double)> progressCallback)
        : Uploader { uploader }
        , Target { target }
@@ -70,9 +70,7 @@ struct DataUploader::Response final
    void PerformUpload()
    {
       Request request { Target.UploadUrl };
-      request.setHeader(
-         common_headers::ContentType,
-         MimeType);
+      request.setHeader(common_headers::ContentType, MimeType);
 
       if (std::holds_alternative<std::vector<uint8_t>>(Data))
       {
@@ -89,12 +87,15 @@ struct DataUploader::Response final
          NetworkResponse = NetworkManager::GetInstance().doPut(
             request, CreateRequestPayloadStream(filePath));
          CancelContext->OnCancelled(NetworkResponse);
-
       }
 
       NetworkResponse->setRequestFinishedCallback(
-         [this](auto)
+         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
          {
+            auto strongResponse = weakResponse.lock();
+            if (!strongResponse)
+               return;
+
             if (NetworkResponse->getError() == NetworkError::NoError)
                OnUploadSucceeded();
             else
@@ -102,11 +103,16 @@ struct DataUploader::Response final
          });
 
       NetworkResponse->setUploadProgressCallback(
-         [this](int64_t current, int64_t total)
+         [this, weakResponse = std::weak_ptr { NetworkResponse }](
+            int64_t current, int64_t total)
          {
+            auto strongResponse = weakResponse.lock();
+            if (!strongResponse)
+               return;
+
             if (total <= 0)
             {
-               total = 1;
+               total   = 1;
                current = 0;
             }
 
@@ -147,8 +153,12 @@ struct DataUploader::Response final
       CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
-         [this](auto)
+         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
          {
+            auto strongResponse = weakResponse.lock();
+            if (!strongResponse)
+               return;
+
             CurrentResult = GetResponseResult(*NetworkResponse, false);
 
             if (CurrentResult.Code == ResponseResultCode::Success)
@@ -180,11 +190,17 @@ struct DataUploader::Response final
 
       Request request { Target.FailUrl };
 
-      NetworkResponse = NetworkManager::GetInstance().doPost(request, nullptr, 0);
+      NetworkResponse =
+         NetworkManager::GetInstance().doPost(request, nullptr, 0);
+      CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
-         [this](auto)
+         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
          {
+            auto strongResponse = weakResponse.lock();
+            if (!strongResponse)
+               return;
+
             const auto result = GetResponseResult(*NetworkResponse, false);
 
             if (
@@ -197,7 +213,6 @@ struct DataUploader::Response final
             // Ignore other errors, server will collect garbage
             // and delete the file eventually
          });
-      CancelContext->OnCancelled(NetworkResponse);
    }
 
    void CleanUp()
@@ -217,8 +232,8 @@ DataUploader& DataUploader::Get()
 }
 
 void DataUploader::Upload(
-   CancellationContextPtr cancellationContex,
-   const ServiceConfig&, const UploadUrls& target, std::vector<uint8_t> data,
+   CancellationContextPtr cancellationContex, const ServiceConfig&,
+   const UploadUrls& target, std::vector<uint8_t> data,
    std::function<void(ResponseResult)> callback,
    std::function<void(double)> progressCallback)
 {
@@ -240,8 +255,8 @@ void DataUploader::Upload(
 }
 
 void DataUploader::Upload(
-   CancellationContextPtr cancellationContex,
-   const ServiceConfig& config, const UploadUrls& target, std::string filePath,
+   CancellationContextPtr cancellationContex, const ServiceConfig& config,
+   const UploadUrls& target, std::string filePath,
    std::function<void(ResponseResult)> callback,
    std::function<void(double)> progressCallback)
 {

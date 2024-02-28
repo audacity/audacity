@@ -33,6 +33,8 @@
 #include "ServiceConfig.h"
 #include "sync/CloudSyncUtils.h"
 
+#include "UnsyncedProjectDialog.h"
+
 #include "CloudProjectUtils.h"
 
 namespace audacity::cloud::audiocom::sync
@@ -248,14 +250,14 @@ public:
       return mResponse.Pagination.PagesCount;
    }
 
-   std::string GetSelectedProjectId() const
+   const ProjectInfo* GetSelectedProjectInfo() const
    {
       const auto selectedRow = mOwner.mProjectsTable->GetSelectedRows();
 
       if (selectedRow.empty())
          return {};
 
-      return mResponse.Items[selectedRow[0]].Id;
+      return &mResponse.Items[selectedRow[0]];
    }
 
    std::string GetSelectedProjectUrl() const
@@ -362,7 +364,8 @@ ProjectsListDialog::ProjectsListDialog(
    Center();
 
    SetupHandlers();
-   BasicUI::CallAfter([this] { mProjectsTableData->Refresh(1, mLastSearchValue); });
+   BasicUI::CallAfter([this]
+                      { mProjectsTableData->Refresh(1, mLastSearchValue); });
 }
 
 ProjectsListDialog::~ProjectsListDialog() = default;
@@ -475,15 +478,40 @@ void ProjectsListDialog::OnOpen()
    if (mProjectsTable->GetSelectedRows().empty())
       return;
 
-   const auto selectedProjectId = mProjectsTableData->GetSelectedProjectId();
+   const auto projectInfo = mProjectsTableData->GetSelectedProjectInfo();
 
-   if (selectedProjectId.empty())
+   if (projectInfo == nullptr)
       return;
+
+   if (projectInfo->HeadSnapshot.Synced == 0)
+   {
+      const auto state = CloudSyncService::GetProjectState(projectInfo->Id);
+
+      if (state != CloudSyncService::ProjectState::PendingSync)
+      {
+         const bool hasValidSnapshot =
+            !projectInfo->LastSyncedSnapshotId.empty();
+
+         const auto result =
+            UnsyncedProjectDialog { mProject, hasValidSnapshot }.ShowDialog();
+
+         if (result == UnsyncedProjectDialog::VisitAudioComButtonIdentifier())
+         {
+            BasicUI::OpenInDefaultBrowser(
+               ToWXString(mProjectsTableData->GetSelectedProjectUrl()));
+
+            return;
+         }
+
+         if (result == UnsyncedProjectDialog::CancellButtonIdentifier())
+            return;
+      }
+   }
 
    EndModal(wxID_OK);
 
    BasicUI::CallAfter(
-      [project = mProject, selectedProjectId]
+      [project = mProject, selectedProjectId = projectInfo->Id]
       { OpenProjectFromCloud(project, selectedProjectId, {}, false); });
 }
 

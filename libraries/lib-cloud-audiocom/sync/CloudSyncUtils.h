@@ -101,8 +101,7 @@ struct ProjectInfo final
    std::string Details;
 
    SnapshotInfo HeadSnapshot;
-   std::vector<VersionInfo> Versions;
-
+   std::string LastSyncedSnapshotId;
 
    int64_t Created {};
    int64_t Updated {};
