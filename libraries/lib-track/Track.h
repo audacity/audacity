@@ -43,19 +43,9 @@ using TrackListHolder = std::shared_ptr<TrackList>;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
-//! Pairs a std::list iterator and a pointer to a list, for comparison purposes
-/*! Compare owning lists first, and only if same, then the iterators;
- else MSVC debug runtime complains. */
-using TrackNodePointer =
-std::pair< ListOfTracks::iterator, ListOfTracks* >;
+using TrackNodePointer = ListOfTracks::iterator;
 
 using ProgressReporter = std::function<void(double)>;
-
-inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
-{ return a.second == b.second && a.first == b.first; }
-
-inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
-{ return !(a == b); }
 
 //! Empty class which will have subclasses
 BEGIN_TYPE_ENUMERATION(TrackTypeTag)
@@ -136,7 +126,6 @@ private:
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
    //! Holds iterator to self, so that TrackList::Find can be constant-time
-   /*! mNode's pointer to std::list might not be this TrackList, if it's a pending update track */
    TrackNodePointer mNode{};
 
  public:
@@ -240,7 +229,6 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
-   inline TrackList* GetHolder() const;
 
    LinkType GetLinkType() const noexcept;
 
@@ -268,8 +256,8 @@ private:
    //! Retrieve mNode with debug checks
    TrackNodePointer GetNode() const;
    //! Update mNode when Track is added to TrackList, or removed from it
-   void SetOwner
-      (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
+   void SetOwner(
+      const std::weak_ptr<TrackList> &list, TrackNodePointer node);
 
  public:
 
@@ -607,7 +595,7 @@ public:
    {
       // Maintain the class invariant
       if (this->mIter != this->mEnd) do
-         ++this->mIter.first;
+         ++this->mIter;
       while (this->mIter != this->mEnd && !this->valid() );
       return *this;
    }
@@ -630,7 +618,7 @@ public:
             // Go circularly
             this->mIter = this->mEnd;
          else
-            --this->mIter.first;
+            --this->mIter;
       } while (this->mIter != this->mEnd && !this->valid() );
       return *this;
    }
@@ -653,7 +641,7 @@ public:
          // Other methods guarantee that the cast is correct
          // (provided no operations on the TrackList invalidated
          // underlying iterators or replaced the tracks there)
-         return static_cast< TrackType * >( &**this->mIter.first );
+         return static_cast< TrackType * >( &**this->mIter );
    }
 
    //! This might be called operator + , but it's not constant-time as with a random access iterator
@@ -692,7 +680,7 @@ private:
    bool valid() const
    {
       // assume mIter != mEnd
-      const auto pTrack = track_cast< TrackType * >( &**this->mIter.first );
+      const auto pTrack = track_cast< TrackType * >( &**this->mIter );
       if (!pTrack)
          return false;
       return !this->mPred || this->mPred( pTrack );
@@ -1053,7 +1041,7 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>(pTrack->GetHolder()->Find(pTrack));
+      return Channels_<TrackType>(pTrack->GetOwner()->Find(pTrack));
    }
 
    friend class Track;
@@ -1210,14 +1198,11 @@ private:
 
    TrackIterRange< Track > EmptyRange() const;
 
-   bool isNull(TrackNodePointer p) const
-   { return (p.second == this && p.first == ListOfTracks::end()); }
+   bool isNull(TrackNodePointer p) const { return p == ListOfTracks::end(); }
    TrackNodePointer getEnd() const
-   { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
-              const_cast<TrackList*>(this)}; }
+   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
    TrackNodePointer getBegin() const
-   { return { const_cast<TrackList*>(this)->ListOfTracks::begin(),
-              const_cast<TrackList*>(this)}; }
+   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
 
    //! Move an iterator to the next node, if any; else stay at end
    TrackNodePointer getNext(TrackNodePointer p) const
@@ -1225,7 +1210,7 @@ private:
       if ( isNull(p) )
          return p;
       auto q = p;
-      ++q.first;
+      ++q;
       return q;
    }
 
@@ -1236,7 +1221,7 @@ private:
          return getEnd();
       else {
          auto q = p;
-         --q.first;
+         --q;
          return q;
       }
    }
@@ -1264,8 +1249,5 @@ private:
    //! false for temporaries
    bool mAssignsIds{ true };
 };
-
-TrackList* Track::GetHolder() const {
-   return static_cast<TrackList*>(mNode.second); }
 
 #endif

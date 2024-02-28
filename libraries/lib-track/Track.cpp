@@ -118,7 +118,6 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList.lock() == NULL || this == mNode.first->get());
    return mNode;
 }
 
@@ -143,7 +142,7 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
 ChannelGroup::ChannelGroupData &Track::GetGroupData()
 {
    auto pTrack = this;
-   if (auto pList = GetHolder())
+   if (auto pList = GetOwner())
       if (auto pLeader = *pList->Find(pTrack))
          pTrack = pLeader;
    // May make on demand
@@ -203,7 +202,7 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
 Track *Track::GetLinkedTrack() const
 {
-   auto pList = static_cast<TrackList*>(mNode.second);
+   auto pList = GetOwner();
    if (!pList)
       return nullptr;
 
@@ -211,13 +210,13 @@ Track *Track::GetLinkedTrack() const
       if (HasLinkedTrack()) {
          auto next = pList->getNext( mNode );
          if ( !pList->isNull( next ) )
-            return next.first->get();
+            return next->get();
       }
 
-      if (mNode.first != mNode.second->begin()) {
+      if (mNode != pList->ListOfTracks::begin()) {
          auto prev = pList->getPrev( mNode );
          if ( !pList->isNull( prev ) ) {
-            auto track = prev.first->get();
+            auto track = prev->get();
             if (track && track->HasLinkedTrack())
                return track;
          }
@@ -367,9 +366,9 @@ void TrackList::Swap(TrackList &that)
    {
       a.swap(b);
       for (auto it = a.begin(), last = a.end(); it != last; ++it)
-         (*it)->SetOwner(aSelf, {it, &a});
+         (*it)->SetOwner(aSelf, it);
       for (auto it = b.begin(), last = b.end(); it != last; ++it)
-         (*it)->SetOwner(bSelf, {it, &b});
+         (*it)->SetOwner(bSelf, it);
    };
 
    const auto self = shared_from_this();
@@ -409,10 +408,10 @@ void TrackList::RecalcPositions(TrackNodePointer node)
 
    auto prev = getPrev(node);
    if (!isNull(prev))
-      t = prev.first->get();
+      t = prev->get();
 
    const auto theEnd = End();
-   for (auto n = DoFind(node.first->get()); n != theEnd; ++n)
+   for (auto n = DoFind(node->get()); n != theEnd; ++n)
       t = *n;
 }
 
@@ -446,7 +445,7 @@ void TrackList::DataEvent(
 
 void TrackList::PermutationEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::PERMUTED, *node.first });
+   QueueEvent({ TrackListEvent::PERMUTED, *node });
 }
 
 void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
@@ -457,12 +456,12 @@ void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
 
 void TrackList::AdditionEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::ADDITION, *node.first });
+   QueueEvent({ TrackListEvent::ADDITION, *node });
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::RESIZING, *node.first });
+   QueueEvent({ TrackListEvent::RESIZING, *node });
 }
 
 auto TrackList::EmptyRange() const
@@ -477,7 +476,7 @@ auto TrackList::EmptyRange() const
 
 auto TrackList::DoFind(Track *pTrack) -> TrackIter<Track>
 {
-   if (!pTrack || pTrack->GetHolder() != this)
+   if (!pTrack || pTrack->GetOwner().get() != this)
       return EndIterator<Track>();
    else
       return MakeTrackIterator<Track>(pTrack->GetNode());
@@ -523,11 +522,10 @@ void TrackList::Permute(const std::vector<Track *> &tracks)
       for (const auto pChannel : Channels(pTrack))
          permutation.push_back(pChannel->GetNode());
    for (const auto iter : permutation) {
-      ListOfTracks::value_type track = *iter.first;
-      erase(iter.first);
+      ListOfTracks::value_type track = *iter;
+      erase(iter);
       Track *pTrack = track.get();
-      pTrack->SetOwner(shared_from_this(),
-         { insert(ListOfTracks::end(), track), this });
+      pTrack->SetOwner(shared_from_this(), insert(ListOfTracks::end(), track));
    }
    auto n = getBegin();
    RecalcPositions(n);
@@ -601,7 +599,7 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    //! Redirect the list element of this
    const auto iter = with.ListOfTracks::begin();
    const auto pTrack = *iter;
-   *node.first = pTrack;
+   *node = pTrack;
    with.erase(iter);
    pTrack->SetOwner(shared_from_this(), node);
    pTrack->SetId(save->GetId());
@@ -622,10 +620,10 @@ std::shared_ptr<TrackList> TrackList::Remove(Track &track)
    t->SetOwner({}, {});
 
    if (!isNull(node)) {
-      ListOfTracks::value_type holder = *node.first;
+      ListOfTracks::value_type holder = *node;
 
       iter = getNext(node);
-      erase(node.first);
+      erase(node);
       if (!isNull(iter))
          RecalcPositions(iter);
 
@@ -663,7 +661,7 @@ Track *TrackList::GetNext(Track &t, bool linked) const
          node = getNext(node);
 
       if (!isNull(node))
-         return node.first->get();
+         return node->get();
    }
    return nullptr;
 }
@@ -691,12 +689,12 @@ Track *TrackList::GetPrev(Track &t, bool linked) const
          if (linked) {
             prev = getPrev(node);
             if( !isNull(prev) &&
-                !(*node.first)->HasLinkedTrack() &&
-               (*node.first)->GetLinkedTrack())
+                !(*node)->HasLinkedTrack() &&
+               (*node)->GetLinkedTrack())
                node = prev;
          }
 
-         return node.first->get();
+         return node->get();
       }
    }
    return nullptr;
@@ -728,8 +726,8 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    // Be sure s1 is the earlier iterator
    {
       const auto begin = ListOfTracks::begin();
-      auto d1 = std::distance(begin, s1.first);
-      auto d2 = std::distance(begin, s2.first);
+      auto d1 = std::distance(begin, s1);
+      auto d2 = std::distance(begin, s2);
       if (d1 > d2)
          std::swap(s1, s2);
    }
@@ -739,7 +737,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
    Saved saved1, saved2;
 
    auto doSave = [&](Saved &saved, TrackNodePointer &s) {
-      saved = *s.first, s.first = erase(s.first);
+      saved = *s, s = erase(s);
    };
 
    doSave(saved1, s1);
@@ -755,8 +753,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       const auto pTrack = saved.get();
       // Insert before s, and reassign s to point at the new node before
       // old s; which is why we saved pointers in backwards order
-      pTrack->SetOwner(shared_from_this(),
-         s = { insert(s.first, saved), this } );
+      pTrack->SetOwner(shared_from_this(), s = insert(s, saved) );
    };
    // This does not invalidate s2 even when it equals s1:
    doInsert(saved2, s1);
