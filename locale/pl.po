@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2024-02-26 04:00+0000\n"
+"PO-Revision-Date: 2024-02-28 20:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -15323,7 +15323,7 @@ msgstr "Mi&ksuj i renderuj"
 
 #: src/menus/TrackMenus.cpp
 msgid "Mix and Render to Ne&w Track"
-msgstr "Miksuj i przet&warzaj do nowej ścieżki"
+msgstr "Miksuj i renderuj do no&wej ścieżki"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Resample..."
