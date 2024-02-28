@@ -78,8 +78,8 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       const auto t0 = wt->LongSamplesToTime(startSample);
       const auto len = endSample - startSample;
       const auto tLen = wt->LongSamplesToTime(len);
-      auto tempList = wt->WideEmptyCopy();
-      auto iter = (*tempList->Any<WaveTrack>().begin())->Channels().begin();
+      auto tempTrack = wt->WideEmptyCopy();
+      auto iter = tempTrack->Channels().begin();
       long long processed{};
       for (auto pChannel : wt->Channels()) {
          Worker worker{ (*iter++).get(), setting };
@@ -103,14 +103,13 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
             }
          }
       }
-      if (!tempList->empty()) {
-         const auto pTrack = *tempList->Any<WaveTrack>().begin();
-         TrackSpectrumTransformer::PostProcess(*pTrack, processed);
+      if (tempTrack) {
+         TrackSpectrumTransformer::PostProcess(*tempTrack, processed);
          // Take the output track and insert it in place of the original
          // sample data
          // TODO make this correct in case start or end of spectral data in
          // the channels differs
-         wt->ClearAndPaste(t0, t0 + tLen, *tempList, true, false);
+         wt->ClearAndPaste(t0, t0 + tLen, *tempTrack, true, false);
       }
    }
 

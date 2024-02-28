@@ -53,12 +53,12 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto &trackPanel = TrackPanel::Get(project);
 
    auto trackRange = tracks.Selected<WaveTrack>();
-   auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
+   auto newTrack = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
       &trackFactory, rate, defaultFormat, 0.0, 0.0);
 
-   if (newTracks) {
+   if (newTrack) {
       // Remove originals, get stats on what tracks were mixed
 
       // But before removing, determine the first track after the removal
@@ -74,9 +74,9 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       }
 
       // Add new tracks
-      const bool stereo = (*newTracks->begin())->NChannels() > 1;
-      const auto firstName = (*newTracks->begin())->GetName();
-      tracks.Append(std::move(*newTracks));
+      const bool stereo = newTrack->NChannels() > 1;
+      const auto firstName = newTrack->GetName();
+      tracks.Add(newTrack);
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
 
       // Bug 2218, remember more things...

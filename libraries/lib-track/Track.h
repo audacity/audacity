@@ -318,7 +318,7 @@ public:
     May assume precondition: t0 <= t1
     @pre `IsLeader()`
     */
-   virtual TrackListHolder Cut(double t0, double t1) = 0;
+   virtual Holder Cut(double t0, double t1) = 0;
 
    //! Create new tracks and don't modify this track
    /*!
@@ -329,7 +329,7 @@ public:
     Should invoke Track::Init
     @pre `IsLeader`
    */
-   virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   virtual Holder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
 
    /*!
@@ -345,14 +345,6 @@ public:
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
    virtual void Paste(double t, const Track &src) = 0;
-
-   /*!
-    Non-virtual overload that passes the first track of a given list
-    @pre `IsLeader()`
-    @pre `SameKindAs(**src.begin())`
-    @pre `NChannels == (**src.begin()).NChannels()`
-    */
-   void Paste(double t, const TrackList &src);
 
    //! This can be used to adjust a sync-lock selected track when the selection
    //! is replaced by one of a different length.
@@ -1046,14 +1038,13 @@ public:
 
    friend class Track;
 
-   //! @brief Moves all tracks from \p trackList starting from position
-   //! where \p before is located. If \p before is nullptr the tracks are
-   //! appended.
+   //! @brief Moves *pSrc to position where \p before is located.
+   //! If \p before is nullptr the track is appended.
    //! @param assignIds ignored if `this` is a temporary list; else if false,
    //! suppresses TrackId assignment
    //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
    void Insert(
-      const Track* before, TrackList&& trackList, bool assignIds = false);
+      const Track* before, const Track::Holder &pSrc, bool assignIds = false);
 
    /*!
     @pre `tracks` contains pointers only to leader tracks of this, and each of
@@ -1076,8 +1067,8 @@ public:
             { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
 
    /*!
-    Replace track `t` with the first group in the given list, return a
-    temporary list of the removed tracks, modify given list by removing group
+    Replace track `t` with the first track in the given list, return
+    the removed track, modify given list by removing first track
 
     Give the replacements the same ids as the replaced
 
@@ -1085,13 +1076,13 @@ public:
     @pre `t.GetOwner().get() == this`
     @pre `!with.empty()`
     */
-   TrackListHolder ReplaceOne(Track &t, TrackList &&with);
+   Track::Holder ReplaceOne(Track &t, TrackList &&with);
 
    //! Remove a track, given the leader, and return it
    /*!
     @pre `track.IsLeader()`
     */
-   std::shared_ptr<TrackList> Remove(Track &track);
+   Track::Holder Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);
@@ -1143,6 +1134,9 @@ public:
 
    //! Remove first track (if any) from `list` and put it at the end of `this`
    void AppendOne(TrackList &&list);
+
+   //! Remove and return the first track
+   Track::Holder DetachFirst();
 
 private:
    using ListOfTracks::size;

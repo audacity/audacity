@@ -244,11 +244,6 @@ void Track::Notify(bool allChannels, int code)
       pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
-void Track::Paste(double t, const TrackList &src)
-{
-   Paste(t, **src.begin());
-}
-
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
    assert(IsLeader());
@@ -490,28 +485,25 @@ auto TrackList::Find(Track *pTrack) -> TrackIter<Track>
    return iter.Filter( &Track::IsLeader );
 }
 
-void TrackList::Insert(
-   const Track* before, TrackList&& trackList, bool assignIds)
+void TrackList::Insert(const Track* before,
+   const Track::Holder &pSrc, bool assignIds)
 {
    assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
 
    if(before == nullptr)
    {
-      Append(std::move(trackList), assignIds);
+      Add(pSrc, assignIds);
       return;
    }
 
    std::vector<Track *> arr;
-   arr.reserve(Size() + trackList.Size());
+   arr.reserve(Size() + 1);
    for (const auto track : *this) {
       if (track == before)
-      {
-         for(const auto addedTrack : trackList)
-            arr.push_back(addedTrack);
-      }
+         arr.push_back(pSrc.get());
       arr.push_back(track);
    }
-   Append(std::move(trackList), assignIds);
+   Add(pSrc, assignIds);
    Permute(arr);
 }
 
@@ -581,20 +573,17 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
    return back().get();
 }
 
-TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
+Track::Holder TrackList::ReplaceOne(Track &t, TrackList &&with)
 {
    assert(t.IsLeader());
    assert(t.GetOwner().get() == this);
    assert(!with.empty());
-
-   TrackListHolder result = Temporary(nullptr);
 
    auto save = t.shared_from_this();
 
    //! Move one track to the temporary list
    auto node = t.GetNode();
    t.SetOwner({}, {});
-   result->Add(save);
 
    //! Redirect the list element of this
    const auto iter = with.ListOfTracks::begin();
@@ -606,21 +595,20 @@ TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
    RecalcPositions(node);
    DeletionEvent(save, true);
    AdditionEvent(node);
-
-   return result;
+   return save;
 }
 
-std::shared_ptr<TrackList> TrackList::Remove(Track &track)
+std::shared_ptr<Track> TrackList::Remove(Track &track)
 {
-   auto result = TrackList::Temporary(nullptr);
    assert(track.IsLeader());
    auto *t = &track;
    auto iter = getEnd();
    auto node = t->GetNode();
    t->SetOwner({}, {});
 
+   std::shared_ptr<Track> holder;
    if (!isNull(node)) {
-      ListOfTracks::value_type holder = *node;
+      holder = *node;
 
       iter = getNext(node);
       erase(node);
@@ -628,9 +616,8 @@ std::shared_ptr<TrackList> TrackList::Remove(Track &track)
          RecalcPositions(iter);
 
       DeletionEvent(t->shared_from_this(), false);
-      result->Add(move(holder));
    }
-   return result;
+   return holder;
 }
 
 void TrackList::Clear(bool sendEvent)
@@ -919,4 +906,13 @@ void TrackList::AppendOne(TrackList &&list)
       list.erase(iter);
       this->Add(pTrack);
    }
+}
+
+Track::Holder TrackList::DetachFirst()
+{
+   auto iter = ListOfTracks::begin();
+   auto result = *iter;
+   erase(iter);
+   result->SetOwner({}, {});
+   return result;
 }

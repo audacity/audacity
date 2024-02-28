@@ -118,10 +118,8 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          if (len <= 0)
             return;
 
-         auto tempList = track.Copy(mT0, mT1);
-         const auto firstTemp = *tempList->Any<const WaveTrack>().begin();
-
-
+         auto firstTemp =
+            std::static_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
 
          auto t0 = tc;
          for (size_t j = 0; j < repeatCount; ++j) {

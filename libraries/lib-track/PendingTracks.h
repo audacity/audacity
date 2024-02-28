@@ -99,7 +99,7 @@ public:
     trailing nulls
    */
    void ClearPendingTracks(
-      std::vector<std::shared_ptr<TrackList>> *pAdded = nullptr);
+      std::vector<std::shared_ptr<Track>> *pAdded = nullptr);
 
    //! Change the state of the project.
    //

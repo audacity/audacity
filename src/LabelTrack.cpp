@@ -706,7 +706,7 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("labeltrack"));
 }
 
-TrackListHolder LabelTrack::Cut(double t0, double t1)
+Track::Holder LabelTrack::Cut(double t0, double t1)
 {
    assert(IsLeader());
    auto tmp = Copy(t0, t1);
@@ -728,7 +728,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
+Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
    tmp->Init(*this);
@@ -776,7 +776,7 @@ TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return TrackList::Temporary(nullptr, tmp);
+   return tmp;
 }
 
 

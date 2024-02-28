@@ -80,23 +80,9 @@ EffectOutputTracks::~EffectOutputTracks() = default;
 
 Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
-   assert(t && t->IsLeader() && t->NChannels() == 1);
    mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
    auto result = mOutputTracks->Add(t);
-   // Invariant is maintained
-   assert(mIMap.size() == mOutputTracks->Size());
-   assert(mIMap.size() == mOMap.size());
-   return result;
-}
-
-Track *EffectOutputTracks::AddToOutputTracks(TrackList &&list)
-{
-   assert(list.Size() == 1);
-   mIMap.push_back(nullptr);
-   auto result = *list.begin();
-   mOMap.push_back(result);
-   mOutputTracks->Append(std::move(list));
    // Invariant is maintained
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());

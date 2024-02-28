@@ -270,14 +270,10 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          auto narrowTrack =
             (!pRight && isGenerator) ? leader.EmptyCopy(1) : nullptr;
          const auto pGenerated = wideTrack
-            ? *wideTrack->Any<WaveTrack>().begin()
-            : narrowTrack.get();
-         const auto tempList =
-            wideTrack ? move(wideTrack)
-            : narrowTrack ? TrackList::Temporary(nullptr, narrowTrack)
-            : nullptr;
+            ? wideTrack
+            : narrowTrack;
 
-         WaveTrackSink sink{ chan, pRight, pGenerated, start, isProcessor,
+         WaveTrackSink sink{ chan, pRight, pGenerated.get(), start, isProcessor,
             instance.NeedsDither() ? widestSampleFormat : narrowestSampleFormat
          };
          assert(sink.AcceptsBuffers(outBuffers));
@@ -296,11 +292,11 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          if (bGoodResult) {
             sink.Flush(outBuffers);
             bGoodResult = sink.IsOk();
-            if (bGoodResult && tempList) {
+            if (bGoodResult && pGenerated) {
                if (!results)
-                  results = tempList;
+                  results = TrackList::Temporary(nullptr, pGenerated);
                else {
-                  results->Append(std::move(*tempList));
+                  results->Add(pGenerated);
                   if (!multichannel && !isLeader && narrowTrack) {
                      // Generated a stereo track, in channel-major fashion.
                      // Get the last track but one -- generated in the previous
@@ -340,7 +336,9 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             const auto t1 = ViewInfo::Get(*FindProject()).selectedRegion.t1();
             PasteTimeWarper warper { t1,
                                      mT0 + (*results->begin())->GetEndTime() };
-            wt.ClearAndPaste(mT0, t1, *results, true, true, &warper);
+            wt.ClearAndPaste(mT0, t1,
+               static_cast<WaveTrack&>(*results->DetachFirst()),
+               true, true, &warper);
             results.reset();
          }
       }; },

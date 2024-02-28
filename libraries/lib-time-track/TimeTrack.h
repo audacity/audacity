@@ -53,8 +53,8 @@ class TIME_TRACK_API TimeTrack final
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
 
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard) const override;
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard) const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track &src) override;
    void

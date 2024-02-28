@@ -829,13 +829,11 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       std::max(left->GetSampleFormat(), right->GetSampleFormat()),
       0.0, 0.0);
 
-   const auto newTrack = *mix->begin();
-
-   tracks.Insert(*first, std::move(*mix));
+   tracks.Insert(*first, mix);
    tracks.Remove(*left);
    tracks.Remove(*right);
 
-   for(const auto& channel : newTrack->Channels())
+   for(const auto& channel : mix->Channels())
    {
       // Set NEW track heights and minimized state
       auto& view = ChannelView::Get(*channel);
@@ -844,7 +842,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    }
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
-      XO("Made '%s' a stereo track").Format( newTrack->GetName() ),
+      XO("Made '%s' a stereo track").Format(mix->GetName()),
       XO("Make Stereo"));
 
    using namespace RefreshCode;

@@ -1203,7 +1203,7 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       }
       for (const auto pTrack : group->Any<WaveTrack>())
          results.push_back(pTrack);
-      tracks.Append(std::move(*group));
+      tracks.Add(group->DetachFirst());
    }
    newTracks.clear();
 

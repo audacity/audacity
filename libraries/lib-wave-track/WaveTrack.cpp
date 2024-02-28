@@ -1133,7 +1133,7 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double 
    return DoCreate(1, format, rate);
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels)
 {
    assert(nChannels > 0);
    assert(nChannels <= 2);
@@ -1142,7 +1142,8 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels)
 
 TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels)
 {
-   return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
+   return CreateMany(nChannels,
+      QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
 void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
@@ -1178,11 +1179,12 @@ void WaveTrack::EraseChannelAttachments(size_t ii)
    });
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
 {
    assert(nChannels > 0);
    assert(nChannels <= 2);
-   return CreateMany(nChannels, format, rate);
+   return CreateMany(nChannels, format, rate)->DetachFirst()
+      ->SharedPointer<WaveTrack>();
 }
 
 TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat format, double rate)
@@ -1196,11 +1198,9 @@ TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat form
    return result;
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
 {
-   auto result = TrackList::Temporary(nullptr,
-      proto.EmptyCopy(nChannels, mpFactory));
-   return result;
+   return proto.EmptyCopy(nChannels, mpFactory);
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
@@ -1404,9 +1404,8 @@ Track::Holder WaveTrack::PasteInto(
    assert(IsLeader());
    auto &trackFactory = WaveTrackFactory::Get(project);
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto tmpList = WideEmptyCopy(pSampleBlockFactory);
-   auto pFirstTrack = *tmpList->Any<WaveTrack>().begin();
-   list.Append(std::move(*tmpList));
+   auto pFirstTrack = WideEmptyCopy(pSampleBlockFactory);
+   list.Add(pFirstTrack->SharedPointer());
    pFirstTrack->Paste(0.0, *this);
    return pFirstTrack->SharedPointer();
 }
@@ -1683,7 +1682,7 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    return true;
 }
 
-TrackListHolder WaveTrack::Cut(double t0, double t1)
+Track::Holder WaveTrack::Cut(double t0, double t1)
 {
    assert(IsLeader());
    if (t1 < t0)
@@ -1695,7 +1694,7 @@ TrackListHolder WaveTrack::Cut(double t0, double t1)
 }
 
 /*! @excsafety{Strong} */
-TrackListHolder WaveTrack::SplitCut(double t0, double t1)
+auto WaveTrack::SplitCut(double t0, double t1) -> Holder
 {
    assert(IsLeader());
    if (t1 < t0)
@@ -1704,7 +1703,7 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
    // SplitCut is the same as 'Copy', then 'SplitDelete'
    auto result = Copy(t0, t1);
    SplitDelete(t0, t1);
-   return result;
+   return std::static_pointer_cast<WaveTrack>(result);
 }
 
 //Trim trims within a clip, rather than trimming everything.
@@ -1765,13 +1764,11 @@ WaveTrack::Holder WaveTrack::EmptyCopy(size_t nChannels,
    return result;
 }
 
-TrackListHolder WaveTrack::WideEmptyCopy(
-   const SampleBlockFactoryPtr &pFactory) const
+auto WaveTrack::WideEmptyCopy(
+   const SampleBlockFactoryPtr &pFactory) const -> Holder
 {
    assert(IsLeader());
-   auto result = TrackList::Temporary(nullptr);
-   const auto pNewTrack = result->Add(EmptyCopy(NChannels(), pFactory));
-   return result;
+   return EmptyCopy(NChannels(), pFactory);
 }
 
 void WaveTrack::MakeMono()
@@ -1780,7 +1777,7 @@ void WaveTrack::MakeMono()
    EraseChannelAttachments(1);
 }
 
-TrackListHolder WaveTrack::MonoToStereo()
+auto WaveTrack::MonoToStereo() -> Holder
 {
    assert(!GetOwner());
    mRightChannel.reset();
@@ -1795,7 +1792,7 @@ TrackListHolder WaveTrack::MonoToStereo()
    // Destroy the temporary track, widening this track to stereo
    ZipClips();
 
-   return result;
+   return std::static_pointer_cast<WaveTrack>(result->DetachFirst());
 }
 
 auto WaveTrack::SplitChannels() -> std::vector<Holder>
@@ -1808,9 +1805,8 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
       auto pNewTrack = result.emplace_back(EmptyCopy(1));
       pNewTrack->mChannel = std::move(*this->mRightChannel);
       this->mRightChannel.reset();
-      auto tempList = TrackList::Temporary(nullptr, pNewTrack);
       auto iter = pOwner->Find(this);
-      pOwner->Insert(*++iter, std::move(*tempList));
+      pOwner->Insert(*++iter, pNewTrack);
       // Fix up the channel attachments to avoid waste of space
       result[0]->EraseChannelAttachments(1);
       result[1]->EraseChannelAttachments(0);
@@ -1831,7 +1827,7 @@ void WaveTrack::SwapChannels()
    });
 }
 
-TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
+Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -1845,7 +1841,7 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       WaveChannel::CopyOne(*newTrack->mRightChannel, *this->mRightChannel,
          t0, t1, endTime, forClipboard);
    }
-   return TrackList::Temporary(nullptr, newTrack);
+   return newTrack;
 }
 
 void WaveChannel::CopyOne(WaveChannel &newChannel,
@@ -2505,11 +2501,10 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          const auto duration = newT1 - oldT1;
-         auto tmpList = WideEmptyCopy(mpFactory);
-         auto &tmp = **tmpList->Any<WaveTrack>().begin();
-         tmp.InsertSilence(0.0, duration);
-         tmp.Flush();
-         Paste(oldT1, tmp);
+         auto tmp = WideEmptyCopy(mpFactory);
+         tmp->InsertSilence(0.0, duration);
+         tmp->Flush();
+         Paste(oldT1, *tmp);
       }
    }
    else if (newT1 < oldT1)

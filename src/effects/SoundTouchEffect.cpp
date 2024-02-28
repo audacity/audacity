@@ -121,8 +121,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             const auto start = orig.TimeToLongSamples(mT0);
             const auto end = orig.TimeToLongSamples(mT1);
 
-            const auto tempList = orig.WideEmptyCopy();
-            auto &out = **tempList->Any<WaveTrack>().begin();
+            const auto tempTrack = orig.WideEmptyCopy();
+            auto &out = *tempTrack;
 
             const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
             initer(pSoundTouch.get());

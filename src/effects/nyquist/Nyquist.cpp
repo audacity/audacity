@@ -695,7 +695,7 @@ struct NyquistEffect::NyxContext {
    size_t            mCurBufferLen[2]{};
    sampleCount       mCurLen{};
 
-   std::shared_ptr<TrackList> mOutputTracks;
+   WaveTrack::Holder mOutputTrack;
 
    double            mProgressIn{};
    double            mProgressOut{};
@@ -1711,9 +1711,8 @@ bool NyquistEffect::ProcessOne(
       return false;
    }
 
-   nyxContext.mOutputTracks = mCurChannelGroup->WideEmptyCopy();
-   auto out = (*nyxContext.mOutputTracks->Any<WaveTrack>().begin())
-      ->SharedPointer<WaveTrack>();
+   nyxContext.mOutputTrack = mCurChannelGroup->WideEmptyCopy();
+   auto out = nyxContext.mOutputTrack;
 
    // Now fully evaluate the sound
    int success = nyx_get_audio(NyxContext::StaticPutCallback, &nyxContext);
@@ -1732,17 +1731,17 @@ bool NyquistEffect::ProcessOne(
       return false;
    }
 
-   std::shared_ptr<TrackList> tempList;
+   WaveTrack::Holder tempTrack;
    if (outChannels < static_cast<int>(mCurNumChannels)) {
       // Be careful to do this before duplication
       out->Flush();
       // Must destroy one temporary list before repopulating another with
       // correct channel grouping
-      nyxContext.mOutputTracks.reset();
-      tempList = out->MonoToStereo();
+      nyxContext.mOutputTrack.reset();
+      tempTrack = out->MonoToStereo();
    }
    else {
-      tempList = move(nyxContext.mOutputTracks);
+      tempTrack = move(nyxContext.mOutputTrack);
       out->Flush();
    }
 
@@ -1753,9 +1752,9 @@ bool NyquistEffect::ProcessOne(
          ? (out->TimeToLongSamples(mT0) + out->TimeToLongSamples(mOutputTime)
             == out->TimeToLongSamples(mT1))
          : mMergeClips != 0;
-      PasteTimeWarper warper { mT1, mT0 + (*tempList->begin())->GetEndTime() };
+      PasteTimeWarper warper { mT1, mT0 + tempTrack->GetEndTime() };
       mCurChannelGroup->ClearAndPaste(
-         mT0, mT1, *tempList, mRestoreSplits, bMergeClips, &warper);
+         mT0, mT1, *tempTrack, mRestoreSplits, bMergeClips, &warper);
    }
 
    // If we were first in the group adjust non-selected group tracks
@@ -2637,8 +2636,7 @@ int NyquistEffect::NyxContext::PutCallback(float *buffer, int channel,
             return -1;
       }
 
-      auto iChannel =
-         (*mOutputTracks->Any<WaveTrack>().begin())->Channels().begin();
+      auto iChannel = mOutputTrack->Channels().begin();
       std::advance(iChannel, channel);
       const auto pChannel = *iChannel;
       pChannel->Append((samplePtr)buffer, floatSample, len);

@@ -118,8 +118,8 @@ public:
    bool ExportAllegro(const wxString &f) const;
 
    // High-level editing
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
    bool Trim (double t0, double t1) /* not override */;
    void Clear(double t0, double t1) override;

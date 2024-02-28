@@ -37,7 +37,8 @@ ImportUtils::NewWaveTrack(WaveTrackFactory &trackFactory,
                           sampleFormat effectiveFormat,
                           double rate)
 {
-   return trackFactory.Create(nChannels, ChooseFormat(effectiveFormat), rate);
+   auto pTrack = trackFactory.Create(nChannels, ChooseFormat(effectiveFormat), rate);
+   return TrackList::Temporary(nullptr, pTrack);
 }
 
 void ImportUtils::ShowMessageBox(const TranslatableString &message, const TranslatableString& caption)

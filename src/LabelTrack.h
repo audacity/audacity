@@ -124,8 +124,8 @@ public:
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track &src) override;

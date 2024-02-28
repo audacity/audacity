@@ -197,7 +197,8 @@ void PendingTracks::UpdatePendingTracks()
 }
 
 /*! @excsafety{No-fail} */
-void PendingTracks::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
+void PendingTracks::ClearPendingTracks(
+   std::vector<std::shared_ptr<Track>> *pAdded)
 {
    mUpdaters.clear();
    mPendingUpdates->Clear();
@@ -228,7 +229,7 @@ void PendingTracks::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
 /*! @excsafety{Strong} */
 bool PendingTracks::ApplyPendingTracks()
 {
-   std::vector<TrackListHolder> additions;
+   std::vector<std::shared_ptr<Track>> additions;
    auto updated = TrackList::Temporary(mTracks.GetOwner());
    {
       // Always clear, even if one of the update functions throws
@@ -279,7 +280,7 @@ bool PendingTracks::ApplyPendingTracks()
       ++next;
       if (pendingTrack)
          // This emits appropriate track list events
-         mTracks.Insert(*iter, std::move(*pendingTrack), true);
+         mTracks.Insert(*iter, pendingTrack, true);
       else
          assert(iter != mTracks.end()); // Deduce that from ClearPendingTrack
       iter = next;

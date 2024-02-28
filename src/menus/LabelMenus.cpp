@@ -224,7 +224,7 @@ void EditByLabel(
 //! The argument is always a leader track and the return has an equal number
 //! of channels, or is null
 using EditDestFunction =
-   std::function<std::shared_ptr<TrackList>(Track &, double, double)>;
+   std::function<Track::Holder(Track &, double, double)>;
 
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
@@ -259,18 +259,17 @@ void EditClipboardByLabel(AudacityProject &project,
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
       if (SyncLock::IsSyncLockSelected(*t) || (notLocked && playable)) {
          // These tracks accumulate the needed clips, right to left:
-         std::shared_ptr<TrackList> merged;
+         Track::Holder merged;
          for (size_t i = regions.size(); i--;) {
             const Region &region = regions.at(i);
             if (auto dest = action(*t, region.start, region.end)) {
                if (!merged)
                   merged = dest;
                else {
-                  const auto pMerged = *merged->begin();
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
                   if (i + 1 < regions.size())
-                     pMerged->ShiftBy(
+                     merged->ShiftBy(
                         regions.at(i + 1).start - region.end);
 
                   // dest may have a placeholder clip at the end that is
@@ -278,18 +277,17 @@ void EditClipboardByLabel(AudacityProject &project,
                   // right to left.  Any placeholder already in merged is kept.
                   // Only the rightmost placeholder is important in the final
                   // result.
-                  pMerged->Paste(0.0, *dest);
+                  merged->Paste(0.0, *dest);
                }
             }
             else
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
                if (i + 1 < regions.size() && merged)
-                  (*merged->begin())
-                     ->ShiftBy(regions.at(i + 1).start - region.end);
+                  merged->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)
-            newClipboard.Append(std::move(*merged));
+            newClipboard.Add(merged);
       }
    }
 
@@ -418,7 +416,7 @@ void OnCutLabels(const CommandContext &context)
    // the clear, so we do these actions separately.
    auto copyfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };
@@ -486,7 +484,7 @@ void OnSplitCutLabels(const CommandContext &context)
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch(
          [&](WaveTrack &wt) {
             result = wt.SplitCut(t0, t1);
@@ -574,7 +572,7 @@ void OnCopyLabels(const CommandContext &context)
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
       assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };

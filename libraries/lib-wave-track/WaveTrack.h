@@ -531,7 +531,7 @@ public:
    // High-level editing
    //
 
-   TrackListHolder Cut(double t0, double t1) override;
+   Track::Holder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, etc. but containing no
    //! clips; with the specified number of channels.
@@ -554,7 +554,7 @@ public:
 
     @pre `IsLeader()`
     */
-   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
+   Holder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
    const;
 
    //! Simply discard any right channel
@@ -563,7 +563,7 @@ public:
    /*!
     @pre `!GetOwner()`
     */
-   TrackListHolder MonoToStereo();
+   Holder MonoToStereo();
 
    /*
     @return a vector of mono tracks, which are in the list that owns `this`
@@ -578,7 +578,7 @@ public:
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
 
    void Clear(double t0, double t1) override;
@@ -596,20 +596,6 @@ public:
       double t0, double t1, const WaveTrack& src, bool preserve = true,
       bool merge = true, const TimeWarper* effectWarper = nullptr,
       bool clearByTrimming = false) /* not override */;
-   /*!
-    Overload that takes a TrackList and passes its first wave track
-    @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
-    of the other overload for `src`
-    */
-   void ClearAndPaste(double t0, double t1,
-      const TrackList &src,
-      bool preserve = true,
-      bool merge = true,
-      const TimeWarper *effectWarper = nullptr)
-   {
-      ClearAndPaste(t0, t1, **src.Any<const WaveTrack>().begin(),
-         preserve, merge, effectWarper);
-   }
 
    void Silence(double t0, double t1, ProgressReporter reportProgress) override;
    void InsertSilence(double t, double len) override;
@@ -634,7 +620,7 @@ public:
     @pre `IsLeader()`
     @post result: `result->NChannels() == NChannels()`
     */
-   TrackListHolder SplitCut(double t0, double t1) /* not override */;
+   Holder SplitCut(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
    /*!
@@ -1435,7 +1421,7 @@ class WAVE_TRACK_API WaveTrackFactory final
     * @pre `nChannels > 0`
     * @pre `nChannels <= 2`
     */
-   TrackListHolder Create(size_t nChannels);
+   WaveTrack::Holder Create(size_t nChannels);
 
    /**
     * \brief Creates tracks with project's default rate and format and the
@@ -1449,7 +1435,7 @@ class WAVE_TRACK_API WaveTrackFactory final
     * @pre `nChannels > 0`
     * @pre `nChannels <= 2`
     */
-   TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
+   WaveTrack::Holder Create(size_t nChannels, sampleFormat format, double rate);
 
    /**
     * \brief Creates tracks with specified \p format and
@@ -1461,7 +1447,7 @@ class WAVE_TRACK_API WaveTrackFactory final
     * \brief Creates an empty copy of \p proto with the specified number
     * of channels.
     */
-   TrackListHolder Create(size_t nChannels, const WaveTrack& proto);
+   WaveTrack::Holder Create(size_t nChannels, const WaveTrack& proto);
 
  private:
    std::shared_ptr<WaveTrack> DoCreate(

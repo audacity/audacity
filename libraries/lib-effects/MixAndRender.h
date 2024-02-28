@@ -41,7 +41,7 @@ class WaveTrackFactory;
  *
  * @pre `trackRange` iterates over leaders only
  */
-EFFECTS_API TrackListHolder MixAndRender(
+EFFECTS_API Track::Holder MixAndRender(
    const TrackIterRange<const WaveTrack> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,

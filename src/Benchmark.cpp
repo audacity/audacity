@@ -455,7 +455,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
-      TrackListHolder tmp;
+      Track::Holder tmp;
       try {
          tmp =
             t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));

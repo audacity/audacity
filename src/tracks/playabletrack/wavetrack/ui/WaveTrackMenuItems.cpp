@@ -59,7 +59,7 @@ void OnNewStereoTrack(const CommandContext &context)
 
    SelectUtilities::SelectNone( project );
 
-   tracks.Append(std::move(*trackFactory.Create(2, defaultFormat, rate)));
+   tracks.Add(trackFactory.Create(2, defaultFormat, rate));
    auto &newTrack = **tracks.rbegin();
    newTrack.SetSelected(true);
    newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));

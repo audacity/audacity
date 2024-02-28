@@ -74,7 +74,7 @@ public:
 private:
    Effect *mpEffect{};
    LabelTrack *mpTrack{};
-   std::shared_ptr<TrackList> mpOrigTrack{};
+   std::shared_ptr<Track> mpOrigTrack{};
 };
 
 // Set name to given value if that is not empty, else use default name
