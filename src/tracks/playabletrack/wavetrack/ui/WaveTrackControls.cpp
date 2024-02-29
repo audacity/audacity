@@ -997,46 +997,6 @@ void GainSliderDrawFunction
       pParent, captured, hit);
 }
 
-void StatusDrawFunction
-   ( const TranslatableString &string, wxDC *dc, const wxRect &rect )
-{
-   static const int offset = 3;
-   dc->DrawText(string.Translation(), rect.x + offset, rect.y);
-}
-
-void Status1DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-
-   /// Returns the string to be displayed in the track label
-   /// indicating whether the track is mono, left, right, or
-   /// stereo and what sample rate it's using.
-   auto rate = wt ? wt->GetRate() : 44100.0;
-   TranslatableString s;
-   if (!pTrack || pTrack->NChannels() > 1)
-      // TODO: more-than-two-channels-message
-      // more appropriate strings
-      s = XO("Stereo, %dHz");
-   else
-      s = XO("Mono, %dHz");
-   s.Format( (int) (rate + 0.5) );
-
-   StatusDrawFunction( s, dc, rect );
-}
-
-void Status2DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-   auto format = wt ? wt->GetSampleFormat() : floatSample;
-   auto s = GetSampleFormatStr(format);
-   StatusDrawFunction( s, dc, rect );
-}
 
 }
 
@@ -1052,11 +1012,6 @@ static const struct WaveTrackTCPLines
         GainSliderDrawFunction },
       { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         PanSliderDrawFunction },
-
-      { TCPLine::kItemStatusInfo1, 12, 0,
-        Status1DrawFunction },
-      { TCPLine::kItemStatusInfo2, 12, 0,
-        Status2DrawFunction },
 
    } );
 } } waveTrackTCPLines;
