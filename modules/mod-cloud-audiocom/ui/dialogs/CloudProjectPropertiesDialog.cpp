@@ -43,7 +43,7 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
 
    mAnonStateText = safenew wxStaticText {
       this, wxID_ANY,
-      XO("Sharing audio requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed.")
+      XO("Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed.")
          .Translation()
    };
 
