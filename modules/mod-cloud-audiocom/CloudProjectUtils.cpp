@@ -28,6 +28,7 @@
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/ProjectVersionConflictDialog.h"
 #include "ui/dialogs/SyncFailedDialog.h"
+#include "ui/dialogs/UnsyncedProjectDialog.h"
 #include "ui/dialogs/UpdateCloudPreviewDialog.h"
 
 #include "sync/CloudSyncUtils.h"
@@ -80,6 +81,12 @@ bool HandleFailure(const ProjectSyncResult& result)
    {
       wxLogError(
          "Opening of the cloud project was canceled", result.Result.Content);
+      return true;
+   }
+
+   if (result.Result.Code == ResponseResultCode::SyncImpossible)
+   {
+      UnsyncedProjectDialog { nullptr, false }.ShowDialog();
       return true;
    }
 
@@ -279,8 +286,9 @@ bool HandleProjectLink(std::string_view uri)
    return true;
 }
 
-void UploadMixdown(AudacityProject& project, const UploadUrls& urls,
-                   std::function<void(AudacityProject&, MixdownState)> onComleted)
+void UploadMixdown(
+   AudacityProject& project, const UploadUrls& urls,
+   std::function<void(AudacityProject&, MixdownState)> onComleted)
 {
    auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 

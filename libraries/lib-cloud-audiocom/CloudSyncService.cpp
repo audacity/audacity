@@ -522,6 +522,12 @@ void CloudSyncService::SyncCloudSnapshot(
 
    if (!fileExists)
    {
+      if (snapshotInfo.Id.empty())
+      {
+         FailSync({ ResponseResultCode::SyncImpossible });
+         return;
+      }
+
       const auto dir = CloudProjectsSavePath.Read();
       FileNames::MkDir(dir);
 
@@ -571,7 +577,7 @@ void CloudSyncService::SyncCloudSnapshot(
 
    if (snapshotInfo.Id.empty())
    {
-      FailSync({ ResponseResultCode::NotFound });
+      FailSync({ ResponseResultCode::SyncImpossible });
       return;
    }
 

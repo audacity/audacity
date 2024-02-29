@@ -54,6 +54,7 @@ enum class ResponseResultCode
    UnexpectedResponse,
    InternalClientError,
    InternalServerError,
+   SyncImpossible,
    UnknownError,
 }; // enum class ResponseResultCode
 
