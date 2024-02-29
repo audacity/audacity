@@ -280,11 +280,17 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrUnselected, wxColour( 30,  30,  30), wxT("Unselected"));
    DEFINE_COLOUR( clrSelected,   wxColour( 93,  65,  93), wxT("Selected"));
    DEFINE_COLOUR( clrSample,     wxColour( 63,  77, 155), wxT("Sample"));
+   DEFINE_COLOUR( clrSample2,    wxColour(160,  10,  10), wxT("Sample2"));
+   DEFINE_COLOUR( clrSample3,    wxColour( 35, 110,  35), wxT("Sample3"));
+   DEFINE_COLOUR( clrSample4,    wxColour(  0,   0,   0), wxT("Sample4"));
    DEFINE_COLOUR( clrSelSample,  wxColour( 50,  50, 200), wxT("SelSample"));
    DEFINE_COLOUR( clrDragSample, wxColour(  0, 100,   0), wxT("DragSample"));
 
    DEFINE_COLOUR( clrMuteSample, wxColour(136, 136, 144), wxT("MuteSample"));
    DEFINE_COLOUR( clrRms,        wxColour(107, 154, 247), wxT("Rms"));
+   DEFINE_COLOUR( clrRms2,       wxColour(230,  80,  80), wxT("Rms2"));
+   DEFINE_COLOUR( clrRms3,       wxColour( 75, 200,  75), wxT("Rms3"));
+   DEFINE_COLOUR( clrRms4,       wxColour(100, 100, 100), wxT("Rms4"));
    DEFINE_COLOUR( clrMuteRms,    wxColour(136, 136, 144), wxT("MuteRms"));
    DEFINE_COLOUR( clrShadow,     wxColour(148, 148, 148), wxT("Shadow"));
 

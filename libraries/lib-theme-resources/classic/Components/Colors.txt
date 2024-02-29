@@ -3,10 +3,16 @@
                     Unselected: #c0c0c0;
                       Selected: #9494aa;
                         Sample: #3232c8;
+                       Sample2: #A00A0A;
+                       Sample3: #236E23;
+                       Sample4: #000000;
                      SelSample: #3232c8;
                     DragSample: #000000;
                     MuteSample: #888890;
                            Rms: #6464dc;
+                          Rms2: #E65050;
+                          Rms3: #4BC84B;
+                          Rms4: #646464;
                        MuteRms: #888890;
                         Shadow: #949494;
                AboutBackground: #ffffff;

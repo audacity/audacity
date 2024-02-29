@@ -110,16 +110,16 @@ void TrackArtist::SetColours( int iColorIndex)
          theTheme.SetPenColour(   rmsPen,          clrRms);
          break;
       case 1: // RED
-         samplePen.SetColour( wxColor( 160,10,10 ) );
-         rmsPen.SetColour( wxColor( 230,80,80 ) );
+         theTheme.SetPenColour(   samplePen,       clrSample2);
+         theTheme.SetPenColour(   rmsPen,          clrRms2);
          break;
       case 2: // GREEN
-         samplePen.SetColour( wxColor( 35,110,35 ) );
-         rmsPen.SetColour( wxColor( 75,200,75 ) );
+         theTheme.SetPenColour(   samplePen,       clrSample3);
+         theTheme.SetPenColour(   rmsPen,          clrRms3);
          break;
       case 3: //BLACK
-         samplePen.SetColour( wxColor( 0,0,0 ) );
-         rmsPen.SetColour( wxColor( 100,100,100 ) );
+         theTheme.SetPenColour(   samplePen,       clrSample4);
+         theTheme.SetPenColour(   rmsPen,          clrRms4);
          break;
 
    }
