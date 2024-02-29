@@ -1135,6 +1135,13 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double 
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels)
 {
+   assert(nChannels > 0);
+   assert(nChannels <= 2);
+   return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
+}
+
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels)
+{
    return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
@@ -1172,6 +1179,13 @@ void WaveTrack::EraseChannelAttachments(size_t ii)
 }
 
 TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+{
+   assert(nChannels > 0);
+   assert(nChannels <= 2);
+   return CreateMany(nChannels, format, rate);
+}
+
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat format, double rate)
 {
    // There are some cases where more than two channels are requested
    if (nChannels == 2)

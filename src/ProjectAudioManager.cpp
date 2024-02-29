@@ -913,7 +913,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
-         auto newTracks = WaveTrackFactory::Get(*p).Create(recordingChannels);
+         auto newTracks =
+            WaveTrackFactory::Get(*p).CreateMany(recordingChannels);
          const auto first = *newTracks->begin();
          int trackCounter = 0;
          const auto minimizeChannelView = recordingChannels > 2

@@ -1433,14 +1433,30 @@ class WAVE_TRACK_API WaveTrackFactory final
    /**
     * \brief Creates a new track with project's default rate and format and the
     * given number of channels.
+    * @pre `nChannels > 0`
+    * @pre `nChannels <= 2`
     */
    TrackListHolder Create(size_t nChannels);
 
    /**
+    * \brief Creates tracks with project's default rate and format and the
+    * given number of channels.
+    */
+   TrackListHolder CreateMany(size_t nChannels);
+
+   /**
     * \brief Creates a new \p track with specified \p format and
     * \p rate and number of channels
+    * @pre `nChannels > 0`
+    * @pre `nChannels <= 2`
     */
    TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
+
+   /**
+    * \brief Creates tracks with specified \p format and
+    * \p rate and number of channels
+    */
+   TrackListHolder CreateMany(size_t nChannels, sampleFormat format, double rate);
 
    /**
     * \brief Creates an empty copy of \p proto with the specified number
