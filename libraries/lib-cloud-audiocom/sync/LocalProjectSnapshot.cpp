@@ -40,6 +40,8 @@
 
 #include "StringUtils.h"
 
+#include "crypto/SHA256.h"
+
 namespace audacity::cloud::audiocom::sync
 {
 struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
@@ -123,7 +125,7 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
       // not found in the cache
       const auto result = Hasher->TakeResult();
 
-      for (const auto& [id, hash] : result)
+      for (auto [id, hash] : result)
       {
          auto it = BlockIdToIndex.find(id);
 
@@ -133,8 +135,14 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
             continue;
          }
 
+         while (BlockHashToIndex.find(hash) != BlockHashToIndex.end())
+         {
+            // Hash is used by another block, rehash
+            hash = crypto::sha256(hash);
+         }
+
          BlockHashToIndex[hash]  = BlockIdToIndex[id];
-         Blocks[it->second].Hash = hash;
+         Blocks[it->second].Hash = std::move(hash);
       }
 
       // This will potentially block, if the cache is being updated
