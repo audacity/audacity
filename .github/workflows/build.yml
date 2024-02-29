@@ -221,7 +221,7 @@ jobs:
         postfix: ${{ matrix.config.postfix }}
   build_macos_intel:
     name: Build macOS (x86_64)
-    runs-on: macos-11
+    runs-on: macos-14
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -255,7 +255,7 @@ jobs:
         path: macos_intel.tar
   build_macos_arm64:
     name: Build macOS (arm64)
-    runs-on: macos-11
+    runs-on: macos-14
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -297,7 +297,7 @@ jobs:
         path: macos_arm64.tar
   package_macos:
     name: Package macOS (x86_64, arm64, universal)
-    runs-on: macos-11
+    runs-on: macos-14
     needs: [build_macos_intel, build_macos_arm64]
     steps:
     - name: Checkout Audacity
