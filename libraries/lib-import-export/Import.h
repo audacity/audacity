@@ -40,7 +40,7 @@ struct AcidizerTags;
 }
 
 using ExtImportItems = std::vector<std::unique_ptr<ExtImportItem>>;
-using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
+using TrackHolders = std::vector<std::shared_ptr<Track>>;
 
 class ExtImportItem
 {

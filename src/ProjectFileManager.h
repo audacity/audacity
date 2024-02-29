@@ -27,7 +27,7 @@ class WaveTrack;
 class XMLTagHandler;
 class ClipMirAudioReader;
 
-using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
+using TrackHolders = std::vector<std::shared_ptr<Track>>;
 
 class AUDACITY_DLL_API ProjectFileManager final
    : public ClientData::Base

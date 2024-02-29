@@ -252,7 +252,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   ImportUtils::FinalizeImport(outTracks, trackList);
+   ImportUtils::FinalizeImport(outTracks, move(*trackList));
 }
 
 

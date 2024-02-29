@@ -1191,19 +1191,15 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo) {
       for (auto &group : newTracks)
-         for (const auto pTrack : group->Any<PlayableTrack>())
+         if (auto pTrack = dynamic_cast<PlayableTrack*>(group.get()))
             pTrack->SetMute(true);
    }
 
    // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
-      if (group->empty()) {
-         assert(false);
-         continue;
-      }
-      for (const auto pTrack : group->Any<WaveTrack>())
+      if (auto pTrack = dynamic_cast<WaveTrack*>(group.get()))
          results.push_back(pTrack);
-      tracks.Add(group->DetachFirst());
+      tracks.Add(group);
    }
    newTracks.clear();
 
@@ -1495,17 +1491,15 @@ bool ProjectFileManager::Import(
          return false;
 
       const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
-      for (auto trackList : newTracks)
-         for (auto track : *trackList)
-            DoProjectTempoChange(*track, projectTempo);
+      for (auto track : newTracks)
+         DoProjectTempoChange(*track, projectTempo);
 
-      if (!newTracks.empty() && newTracks[0])
+      if (newTracks.size() == 1)
       {
-         const auto waveTracks = (*newTracks[0]).Any<WaveTrack>();
-         if (waveTracks.size() == 1)
+         if (const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get()))
             resultingReader.reset(new ClipMirAudioReader {
                std::move(acidTags), fileName.ToStdString(),
-               **waveTracks.begin() });
+               *waveTrack });
       }
 
       if (addToHistory) {
