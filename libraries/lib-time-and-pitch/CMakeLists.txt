@@ -4,6 +4,8 @@ Provides time-stretching and pitch-shifting functionality.
 Based on the more versatile time-stretching from StaffPad, but tailored for the needs of Audacity.
 ]]
 
+add_definitions( -DCMAKE_CURRENT_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}" )
+
 set( SOURCES
    StaffPad/CircularSampleBuffer.h
    StaffPad/FourierTransform_pffft.cpp
@@ -20,6 +22,11 @@ set( SOURCES
    StaffPad/VectorOps.h
    AudioContainer.cpp
    AudioContainer.h
+   FormantShifter.cpp
+   FormantShifter.h
+   FormantShifterLogger.cpp
+   FormantShifterLogger.h
+   FormantShifterLoggerInterface.h
    StaffPadTimeAndPitch.cpp
    StaffPadTimeAndPitch.h
    TimeAndPitchInterface.cpp
