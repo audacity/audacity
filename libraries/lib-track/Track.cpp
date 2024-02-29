@@ -270,9 +270,6 @@ bool Track::IsLeader() const
     return !GetLinkedTrack() || HasLinkedTrack();
 }
 
-bool Track::IsSelectedLeader() const
-   { return IsSelected() && IsLeader(); }
-
 bool Track::LinkConsistencyFix(bool doFix)
 {
    assert(!doFix || IsLeader());

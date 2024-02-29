@@ -441,7 +441,6 @@ public:
    // Frequently useful operands for + and -
    bool IsSelected() const;
    bool IsLeader() const override;
-   bool IsSelectedLeader() const;
 
    // Cause this track and following ones in its TrackList to adjust
    void AdjustPositions();
@@ -982,14 +981,14 @@ public:
    template <typename TrackType = Track>
    auto Selected() -> TrackIterRange<TrackType>
    {
-      return Tracks<TrackType>(&Track::IsSelectedLeader);
+      return Tracks<TrackType>(&Track::IsSelected);
    }
 
    template <typename TrackType = const Track>
    auto Selected() const
       -> std::enable_if_t<std::is_const_v<TrackType>, TrackIterRange<TrackType>>
    {
-      return Tracks<TrackType>(&Track::IsSelectedLeader);
+      return Tracks<TrackType>(&Track::IsSelected);
    }
 
 
