@@ -166,6 +166,7 @@ foreach( pair
    "dark;DarkThemeAsCeeCode"
    "high-contrast;HighContrastThemeAsCeeCode"
    "light;LightThemeAsCeeCode"
+   "modern;ModernThemeAsCeeCode"
 )
    list( POP_FRONT pair theme filename )
    set( THEME_FILES )
@@ -193,6 +194,8 @@ set( SOURCES
    HighContrastThemeAsCeeCode.h
    LightThemeAsCeeCode.cpp
    LightThemeAsCeeCode.h
+   ModernThemeAsCeeCode.cpp
+   ModernThemeAsCeeCode.h
    LoadThemeResources.h
    LoadThemeResources.cpp
 )
