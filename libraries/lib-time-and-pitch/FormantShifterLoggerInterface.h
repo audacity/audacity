@@ -20,6 +20,8 @@ class FormantShifterLoggerInterface
 public:
    virtual ~FormantShifterLoggerInterface() = default;
 
+   virtual void NewSamplesComing(int sampleCount) = 0;
+
    virtual void Log(int value, const char* name) const = 0;
 
    virtual void

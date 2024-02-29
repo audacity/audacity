@@ -1,9 +1,8 @@
 #include "AudioContainer.h"
-#include "TimeAndPitchInterface.h"
-
+#include "FormantShifter.h"
+#include "FormantShifterLoggerInterface.h"
 #include "StaffPad/TimeAndPitch.h"
-
-#include <mutex>
+#include "TimeAndPitchInterface.h"
 
 class TIME_AND_PITCH_API StaffPadTimeAndPitch final :
     public TimeAndPitchInterface
@@ -14,16 +13,18 @@ public:
       const Parameters&);
    void GetSamples(float* const*, size_t) override;
    void OnCentShiftChange(int cents) override;
+   void OnFormantPreservationChange(bool preserve) override;
 
 private:
-   void BootStretcher();
    bool IllState() const;
+   void InitializeStretcher();
+
+   const int mSampleRate;
+   const std::unique_ptr<FormantShifterLoggerInterface> mFormantShifterLogger;
+   TimeAndPitchInterface::Parameters mParameters;
+   FormantShifter mFormantShifter;
    std::unique_ptr<staffpad::TimeAndPitch> mTimeAndPitch;
    TimeAndPitchSource& mAudioSource;
    AudioContainer mReadBuffer;
-   const int mSampleRate;
    const size_t mNumChannels;
-   const double mTimeRatio;
-   double mPitchRatio;
-   std::mutex mTimeAndPitchMutex;
 };

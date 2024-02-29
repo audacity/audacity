@@ -9,77 +9,53 @@
 
 **********************************************************************/
 #include "FormantShifterLogger.h"
+#include "TimeAndPitchExperimentalSettings.h"
 #include <algorithm>
 #include <cmath>
 #include <vector>
 
 namespace
 {
-const std::string logDir { CMAKE_CURRENT_SOURCE_DIR };
+std::string GetLogDir()
+{
+   const char* appDataDir = getenv("APPDATA");
+   if (appDataDir)
+      return std::string(appDataDir) + "/TimeAndPitchTuning";
+   else
+      return "";
+}
 
-template <typename T>
-void PrintPythonVector(std::ofstream& ofs, const T& v, const char* name)
+template <typename Iterator>
+void PrintPythonVector(
+   std::ofstream& ofs, Iterator begin, Iterator end, const char* name)
 {
    ofs << name << " = [";
-   std::for_each(v.begin(), v.end(), [&](float x) { ofs << x << ","; });
+   std::for_each(begin, end, [&](float x) { ofs << x << ","; });
    ofs << "]\n";
-}
-
-template <typename T> std::optional<T> GetFromFile(const char* filenameStem)
-{
-   std::ifstream file { logDir + "/" + filenameStem + ".txt" };
-   if (!file.is_open())
-      return {};
-   // Check if file is empty or first character is newline.
-   if (file.peek() == std::ifstream::traits_type::eof() || file.peek() == '\n')
-      return {};
-   T value;
-   file >> value;
-   return value;
-}
-
-std::optional<int> GetLogSample(int sampleRate)
-{
-   if (const auto logTime = GetFromFile<double>("overrideLogTime"))
-      return static_cast<int>(*logTime * sampleRate);
-   return {};
 }
 } // namespace
 
-std::optional<double> FormantShifterLogger::GetCutoffQuefrencyOverride()
-{
-   return GetFromFile<double>("overrideCutoffQuefrency");
-}
-
-std::optional<int> FormantShifterLogger::GetFftSizeOverride()
-{
-   if (const auto fftSizeExponent = GetFromFile<int>("overrideFftSizeExponent"))
-      return 1 << *fftSizeExponent;
-   return {};
-}
-
-std::optional<bool> FormantShifterLogger::GetReduceImagingOverride()
-{
-   if (const auto reduceImaging = GetFromFile<int>("overrideReduceImaging"))
-      return static_cast<bool>(*reduceImaging);
-   return {};
-}
-
-FormantShifterLogger::FormantShifterLogger(int sampleRate)
+FormantShifterLogger::FormantShifterLogger(int sampleRate, int logSample)
     : mSampleRate { sampleRate }
-    , mLogSample { GetLogSample(sampleRate) }
+    , mLogSample { logSample }
+{
+}
+
+FormantShifterLogger::~FormantShifterLogger()
 {
 }
 
 void FormantShifterLogger::NewSamplesComing(int sampleCount)
 {
    mSampleCount += sampleCount;
-   if (mLogSample.has_value() && *mLogSample <= mSampleCount)
+   if (!mWasLogged && mLogSample <= mSampleCount)
    {
       // Ready for logging.
-      mOfs = std::make_unique<std::ofstream>(logDir + "/FormantShifterLog.py");
+      mOfs = std::make_unique<std::ofstream>(
+         TimeAndPitchExperimentalSettings::GetLogDir() +
+         "/FormantShifterLog.py");
       *mOfs << "sampleRate = " << mSampleRate << "\n";
-      mLogSample.reset();
+      mWasLogged = true;
    }
 }
 
@@ -95,8 +71,7 @@ void FormantShifterLogger::Log(
    if (!mOfs)
       // Keep it lightweight if we're not logging.
       return;
-   PrintPythonVector(
-      *mOfs, std::vector<float> { samples, samples + size }, name);
+   PrintPythonVector(*mOfs, samples, samples + size, name);
 }
 
 void FormantShifterLogger::Log(
@@ -107,7 +82,7 @@ void FormantShifterLogger::Log(
       return;
    std::vector<float> v(cvSize);
    std::transform(cv, cv + cvSize, v.begin(), transform);
-   PrintPythonVector(*mOfs, v, name);
+   PrintPythonVector(*mOfs, v.begin(), v.end(), name);
 }
 
 void FormantShifterLogger::ProcessFinished(

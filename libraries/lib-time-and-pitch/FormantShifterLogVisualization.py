@@ -1,13 +1,28 @@
-# For developers. To use this:
+# A functionality for developers.
+# Disclaimer: At the time of writing only used on Windows; will not work out of the box on other OS.
 #
-# 1. Create overrideLogTime.txt in lib-time-and-pitch's root directory,
-# 2. Enter a time in seconds, e.g. (0.5)
-# 3. Run your Audacity build and play a track with pitch shifting and formant preservation enabled.
+# To use this:
+# 1. Add
+#       [TimeAndPitch]
+#       TuningOn=1
+#    to audacity.cfg (see https://manual.audacityteam.org/man/preferences.html#stored to find out where it is)
+# 2. From the audacity.cfg directory, create `./TimeAndPitchTuning/overrideLogTime.txt`
+# 3. Enter a time in seconds, e.g. (0.5)
+# 4. Run your Audacity build and play a track with pitch shifting and formant preservation enabled.
 #
 # You will hear a gentle noise burst at the specified time, which indicates precisely the place where the snapshot was taken.
 # Now you can run this script from lib-time-and-pitch's root directory.
+#
+# Note: the value in `overrideLogTime.txt` gets re-read on each playback, but to enable/disable the tuning,
+# you have to change the config file and then restart Audacity.
 
 import matplotlib.pyplot as plt
+import os, sys
+
+# Add the path to the local AppData\Roaming directory
+appdata_path = os.path.join(os.getenv('APPDATA'), 'audacity', 'TimeAndPitchTuning')
+sys.path.append(appdata_path)
+
 import FormantShifterLog as FSL
 import numpy as np
 

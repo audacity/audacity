@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "StaffPadTimeAndPitch.h"
 #include "AudioContainer.h"
+#include "MockedPrefs.h"
 #include "TimeAndPitchFakeSource.h"
 #include "TimeAndPitchRealSource.h"
 #include "WavFileIO.h"
@@ -21,6 +22,7 @@ using namespace std::literals::chrono_literals;
 
 TEST_CASE("StaffPadTimeAndPitch")
 {
+   MockedPrefs mockedPrefs;
    SECTION("Smoke test")
    {
       using TestParameter =

@@ -26,6 +26,7 @@
 #include "WindowAccessible.h"
 
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/layout.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
@@ -233,6 +234,9 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
    mOldClipSpeed = mClipSpeed;
    mShift = GetClipShift(*leftClip);
    mOldShift = mShift;
+   mFormantPreservation = leftClip->GetPitchAndSpeedPreset() ==
+                          PitchAndSpeedPreset::OptimizeForVoice;
+   mOldFormantPreservation = mFormantPreservation;
 
    ShuttleGui s(this, mFirst ? eIsCreating : eIsSettingToDialog);
 
@@ -349,6 +353,26 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                            *target->track, target->clip);
                         UpdateDialog();
                      }
+               });
+         }
+      }
+
+      s.AddSpace(0, 12);
+      s.SetBorder(0);
+
+      {
+         ScopedStatic scopedStatic { s, XO("General") };
+         {
+            ScopedHorizontalLay h { s, wxLeft };
+            s.SetBorder(2);
+            s.TieCheckBox(XO("Optimize for Voice"), mFormantPreservation)
+               ->Bind(wxEVT_CHECKBOX, [this](auto&) {
+                  mFormantPreservation = !mFormantPreservation;
+                  if (auto target = LockTarget())
+                     target->clip.SetPitchAndSpeedPreset(
+                        mFormantPreservation ?
+                           PitchAndSpeedPreset::OptimizeForVoice :
+                           PitchAndSpeedPreset::Default);
                });
          }
       }

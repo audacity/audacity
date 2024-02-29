@@ -52,7 +52,7 @@ constexpr float GetLog2(float x)
 
 // `x` has length `fftSize/2+1`.
 // Returns the last bin that wasn't zeroed.
-size_t resampleFreqDomain(float* x, size_t fftSize, double factor)
+size_t ResampleFreqDomain(float* x, size_t fftSize, double factor)
 {
    const auto size = fftSize / 2 + 1;
    const auto end = std::min(size, size_t(size * factor));
@@ -143,7 +143,7 @@ void FormantShifter::Process(
       [](float env) { return std::isnormal(env) ? 1.f / env : 0.f; });
 
    const auto lastNonZeroedBin =
-      resampleFreqDomain(mEnvelopeReal.data(), fftSize, factor);
+      ResampleFreqDomain(mEnvelopeReal.data(), fftSize, factor);
 
    mLogger.Log(mEnvelopeReal.data(), numBins, "envelopeResampled");
    std::transform(

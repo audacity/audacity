@@ -957,6 +957,7 @@ public:
 
       double GetStretchRatio() const;
       int GetCentShift() const;
+      PitchAndSpeedPreset GetPitchAndSpeedPreset() const;
       void SetRawAudioTempo(double tempo);
 
       sampleCount TimeToSamples(double time) const;
@@ -991,6 +992,7 @@ public:
        * TimeAndPitchInterface::MaxCent`
        */
       bool SetCentShift(int cents);
+      void SetPitchAndSpeedPreset(PitchAndSpeedPreset preset);
       void SetTrimLeft(double t);
       void SetTrimRight(double t);
       void ClearLeft(double t);
