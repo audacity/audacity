@@ -364,7 +364,7 @@ void EffectLoudness::AllocBuffers(TrackList &outputs)
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
       // There is a stereo track
-      if(track->IsLeader())
+      if(track->NChannels() == 2)
          stereoTrackFound = true;
    }
 
