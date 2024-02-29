@@ -55,7 +55,6 @@ struct MIXER_API RecordableSequence {
 
    /** @brief Append the sample data to the track. You must call Flush()
     after the last Append.
-    @pre `IsLeader()`
     @pre `iChannel < NChannels()`
     @return true in case a block was flushed from memory to underlying DB
     */
@@ -71,17 +70,9 @@ struct MIXER_API RecordableSequence {
       */
    ) = 0;
 
-   virtual bool IsLeader() const = 0;
-
    //! Flush of related leader must be called after last Append
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void Flush() = 0;
 
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void InsertSilence(double t, double len) = 0;
 };
 

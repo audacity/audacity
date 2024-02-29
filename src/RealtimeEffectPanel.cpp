@@ -107,8 +107,6 @@ namespace
    template <typename Visitor>
    void VisitRealtimeEffectStateUIs(SampleTrack& track, Visitor&& visitor)
    {
-      if (!track.IsLeader())
-         return;
       auto& effects = RealtimeEffectList::Get(track);
       effects.Visit(
          [visitor](auto& effectState, bool)

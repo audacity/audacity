@@ -120,7 +120,7 @@ void EffectOutputTracks::Commit()
       while (i < cnt && mOMap[i] != pOutputTrack) {
          const auto t = mIMap[i];
          // Class invariant justifies the assertion
-         assert(t && t->IsLeader());
+         assert(t);
          ++i;
          mTracks.Remove(*t);
       }
@@ -149,7 +149,7 @@ void EffectOutputTracks::Commit()
    while (i < cnt) {
       const auto t = mIMap[i];
       // Class invariant justifies the assertion
-      assert(t && t->IsLeader());
+      assert(t);
       ++i;
       mTracks.Remove(*t);
    }

@@ -260,9 +260,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
-   // Safe assumption for tracks associated with the context menu
-   assert(track.IsLeader());
-
    // Simply finding a denominator for the progress dialog
    // Hidden samples are processed too, they should be counted as well
    // (Correctly counting all samples of all channels)
@@ -288,9 +285,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
          throw UserException{};
    };
 
-   // We get here from the context menu only in the TrackControlPanel cell
-   // which is always associated with a leader track
-   assert(track.IsLeader());
    track.ConvertToSampleFormat(newFormat, progressUpdate);
 
    ProjectHistory::Get( *project )

@@ -429,8 +429,6 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 void EffectSBSMS::Finalize(
    WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper)
 {
-   assert(orig.IsLeader());
-   assert(out.IsLeader());
    assert(orig.NChannels() == out.NChannels());
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion

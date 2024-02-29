@@ -340,7 +340,6 @@ bool EffectTruncSilence::FindSilences(RegionList &silences,
    // Remove non-silent regions in each track
    int whichTrack = 0;
    for (auto wt : range) {
-      assert(wt->IsLeader());
       // Smallest silent region to detect in frames
       auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs)
@@ -445,7 +444,6 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
          }
       ).VisitWhile(success,
          [&](WaveTrack &wt) {
-            assert(wt.IsLeader());
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
@@ -483,7 +481,6 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
                ++iChannel;
             }
 
-            assert(wt.IsLeader()); // given range visits leaders only
             wt.Clear(cutStart, cutEnd);
 
             iChannel = 0;
@@ -502,7 +499,6 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             }
          },
          [&](Track &t) {
-            assert(t.IsLeader());
             // Non-wave tracks: just do a sync-lock adjust
             t.SyncLockAdjust(cutEnd, cutStart);
          }
@@ -520,7 +516,6 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    sampleCount* index, int whichTrack, double* inputLength,
    double* minInputLength) const
 {
-   assert(wt.IsLeader());
    const auto rate = wt.GetRate();
 
    // Smallest silent region to detect in frames

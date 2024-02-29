@@ -317,7 +317,6 @@ void NoteTrack::PrintSequence()
 
 Track::Holder NoteTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -395,7 +394,6 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -479,7 +477,6 @@ void NoteTrack::Paste(double t, const Track &src)
 
 void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -495,7 +492,6 @@ void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 
 void NoteTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -582,7 +578,6 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
 
 Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
-   assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, *this);
@@ -855,7 +850,6 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    std::ostringstream data;
    Track::Holder holder;
    const NoteTrack *saveme = this;

@@ -380,8 +380,6 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
-   assert(waveTrack->IsLeader());
-
    const auto rect = state.rect;
 
    const auto px = state.state.m_x;

@@ -79,8 +79,6 @@ public:
     accumulated pending changes.
     Pending track will have the same TrackId as the actual.
     Pending changed tracks will not occur in iterations.
-
-    @pre `src->IsLeader()`
     */
    Track* RegisterPendingChangedTrack(
       Updater updater,

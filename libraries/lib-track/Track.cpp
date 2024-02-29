@@ -246,7 +246,6 @@ void Track::Notify(bool allChannels, int code)
 
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
-   assert(IsLeader());
    const auto endTime = GetEndTime();
    if (newT1 > oldT1 && oldT1 > endTime)
          return;
@@ -597,7 +596,6 @@ Track::Holder TrackList::ReplaceOne(Track &t, TrackList &&with)
 
 std::shared_ptr<Track> TrackList::Remove(Track &track)
 {
-   assert(track.IsLeader());
    auto *t = &track;
    auto iter = getEnd();
    auto node = t->GetNode();

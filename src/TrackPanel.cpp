@@ -905,12 +905,8 @@ std::shared_ptr< CommonTrackPanelCell > TrackPanel::GetBackgroundCell()
 }
 
 namespace {
-/*!
- @pre `t.IsLeader()`
- */
 std::vector<int> FindAdjustedChannelHeights(Track &t)
 {
-   assert(t.IsLeader());
    auto channels = t.Channels();
    assert(!channels.empty());
 
@@ -976,8 +972,6 @@ void TrackPanel::UpdateVRuler(Track *t)
 
 void TrackPanel::UpdateTrackVRuler(Track &t)
 {
-   assert(t.IsLeader());
-
    auto heights = FindAdjustedChannelHeights(t);
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
@@ -1100,8 +1094,6 @@ void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
    auto &track = pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
    auto name = track.GetName();
    if (name.IsEmpty())
-      return;
-   if (!track.IsLeader())
       return;
    auto &dc = context.dc;
    wxBrush Brush;
@@ -1381,9 +1373,6 @@ struct HorizontalGroup final : TrackPanelGroup {
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelStack final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    ChannelStack(const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
    Subdivision Children(const wxRect &rect_) override
@@ -1438,7 +1427,6 @@ struct ChannelStack final : TrackPanelGroup {
          const auto channels = mpTrack->Channels();
          const auto pLast = *channels.rbegin();
          wxCoord yy = rect.GetTop();
-         assert(mpTrack->IsLeader()); // by construction
          auto heights = FindAdjustedChannelHeights(*mpTrack);
          auto pHeight = heights.begin();
          for (auto pChannel : channels) {
@@ -1464,9 +1452,6 @@ struct ChannelStack final : TrackPanelGroup {
 // A track control panel, left of n vertical rulers and n channels
 // alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    LabeledChannelGroup(
       const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
@@ -1565,9 +1550,6 @@ struct LabeledChannelGroup final : TrackPanelGroup {
 // Stacks a label and a single or multi-channel track on a resizer below,
 // which is associated with the last channel
 struct ResizingChannelGroup final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    ResizingChannelGroup(
       const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}

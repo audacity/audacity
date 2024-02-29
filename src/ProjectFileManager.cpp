@@ -1195,7 +1195,6 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
             pTrack->SetMute(true);
    }
 
-   // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
       if (auto pTrack = dynamic_cast<WaveTrack*>(group.get()))
          results.push_back(pTrack);

@@ -169,7 +169,6 @@ const Track &PendingTracks::SubstituteOriginalTrack(const Track &track) const
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
-   assert(src->IsLeader());
    auto track =
       src->Duplicate(Track::DuplicateOptions{}.ShallowCopyAttachments());
 

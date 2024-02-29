@@ -373,8 +373,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
    DoProjectTempoChange(*t, tempo);
 
-   assert(t->IsLeader()); // because it's new and not grouped
-
    t->SetRate(1);
 
    srand(randSeed);

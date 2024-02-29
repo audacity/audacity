@@ -116,9 +116,6 @@ class AUDACITY_DLL_API TrackPanel final
 
    void UpdateVRulers();
    void UpdateVRuler(Track *t);
-   /*!
-    @pre `t.IsLeader()`
-    */
    void UpdateTrackVRuler(Track &t);
    void UpdateVRulerSize();
 

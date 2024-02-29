@@ -204,7 +204,6 @@ private:
    //! Find or create the destination track for a paste, maybe in a different
    //! project
    /*!
-    @pre `IsLeader()`
     @param list to which any newly created tracks are added; but left unchanged
        if an existing track is found in the project instead
     @return A smart pointer to a leader track
@@ -295,9 +294,6 @@ private:
    };
 
    //! public nonvirtual duplication function that invokes Clone()
-   /*!
-    @pre `IsLeader()`
-    */
    virtual Holder Duplicate(DuplicateOptions = {}) const;
 
    void ReparentAllAttachments();
@@ -316,7 +312,6 @@ public:
    /*!
     @return non-NULL or else throw
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    virtual Holder Cut(double t0, double t1) = 0;
 
@@ -327,20 +322,17 @@ public:
     from those stored in a project
     May assume precondition: t0 <= t1
     Should invoke Track::Init
-    @pre `IsLeader`
    */
    virtual Holder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
 
    /*!
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    virtual void Clear(double t0, double t1) = 0;
 
    //! Weak precondition allows overrides to replicate one channel into many
    /*!
-    @pre `IsLeader()`
     @pre `SameKindAs(src)`
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
@@ -348,21 +340,14 @@ public:
 
    //! This can be used to adjust a sync-lock selected track when the selection
    //! is replaced by one of a different length.
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void SyncLockAdjust(double oldT1, double newT1);
 
    // May assume precondition: t0 <= t1
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void
    Silence(double t0, double t1, ProgressReporter reportProgress = {}) = 0;
 
    /*!
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    virtual void InsertSilence(double t, double len) = 0;
 
@@ -371,7 +356,6 @@ private:
    //! the track data proper (not associated data such as for groups and views)
    //! including TrackId
    /*!
-    @pre `IsLeader()`
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
     @post result tracks have same TrackIds as the channels of `this`
@@ -426,7 +410,6 @@ public:
    //! open the track from XML
    /*!
     May assume consistency of stereo channel grouping and examine other channels
-    @pre `IsLeader()`
     */
    virtual std::optional<TranslatableString> GetErrorOpening() const;
 
@@ -440,7 +423,7 @@ public:
 
    // Frequently useful operands for + and -
    bool IsSelected() const;
-   bool IsLeader() const override;
+   bool IsLeader() const;
 
    // Cause this track and following ones in its TrackList to adjust
    void AdjustPositions();
@@ -1041,7 +1024,7 @@ public:
    //! If \p before is nullptr the track is appended.
    //! @param assignIds ignored if `this` is a temporary list; else if false,
    //! suppresses TrackId assignment
-   //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
+   //! @pre `before == nullptr || (Find(before) != EndIterator<const Track>())`
    void Insert(
       const Track* before, const Track::Holder &pSrc, bool assignIds = false);
 
@@ -1071,16 +1054,12 @@ public:
 
     Give the replacements the same ids as the replaced
 
-    @pre `t.IsLeader()`
     @pre `t.GetOwner().get() == this`
     @pre `!with.empty()`
     */
    Track::Holder ReplaceOne(Track &t, TrackList &&with);
 
    //! Remove a track, given the leader, and return it
-   /*!
-    @pre `track.IsLeader()`
-    */
    Track::Holder Remove(Track &track);
 
    /// Make the list empty

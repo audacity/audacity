@@ -1672,7 +1672,6 @@ bool NyquistEffect::ProcessOne(
          auto newTrack = std::make_shared<LabelTrack>();
          //new track name should be unique among the names in the list of input tracks, not output
          newTrack->SetName(inputTracks()->MakeUniqueTrackName(LabelTrack::GetDefaultName()));
-         assert(newTrack->IsLeader()); // because it's a label track
          ltrack = static_cast<LabelTrack*>(
             pOutputs->AddToOutputTracks(newTrack));
       }

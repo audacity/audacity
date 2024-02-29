@@ -295,15 +295,9 @@ public:
    double GetEndTime() const;
 
    //! Change start time by given duration
-   /*
-    @pre `IsLeader()`
-    */
    void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
    //! Change start time to given time point
-   /*
-    @pre `IsLeader()`
-    */
    virtual void MoveTo(double o) = 0;
 
    /*!
@@ -392,16 +386,12 @@ public:
    }
 
    //! Get range of channels with read-only access
-   /*!
-    @pre `IsLeader()`
-    */
    template<typename ChannelType = const Channel>
    auto Channels() const
       -> std::enable_if_t<std::is_const_v<ChannelType>,
          IteratorRange<ChannelIterator<ChannelType>>
       >
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NChannels() } };
    }
 
@@ -500,36 +490,25 @@ public:
    };
 
    //! Get range of intervals with mutative access
-   /*
-      @pre `IsLeader()`
-    */
    template<typename IntervalType = Interval>
    IteratorRange<IntervalIterator<IntervalType>> Intervals()
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
    //! Get range of intervals with read-only access
-   /*
-      @pre `IsLeader()`
-    */
    template<typename IntervalType = const Interval>
    auto Intervals() const
       -> std::enable_if_t<std::is_const_v<IntervalType>,
          IteratorRange<IntervalIterator<IntervalType>>
       >
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
    /*!
       @}
    */
-
-   // TODO remove this which is only used in assertions
-   virtual bool IsLeader() const = 0;
 
    //! Hosting of objects attached by higher level code
    struct ChannelGroupData;

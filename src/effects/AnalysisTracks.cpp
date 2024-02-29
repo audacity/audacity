@@ -44,8 +44,6 @@ void AddedAnalysisTrack::Commit()
 AddedAnalysisTrack::~AddedAnalysisTrack()
 {
    if (mpEffect) {
-      // Label tracks are always leaders
-      assert(mpTrack->IsLeader());
       // not committed -- DELETE the label track
       mpEffect->mTracks->Remove(*mpTrack);
    }

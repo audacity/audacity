@@ -71,7 +71,6 @@ public:
     @param id identifies the effect
     @return if null, the given id was not found
 
-    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState> AddState(
@@ -126,9 +125,6 @@ public:
 private:
    friend RealtimeEffects::InitializationScope;
 
-   /*!
-    @pre `!pGroup || pGroup->IsLeader()`
-    */
    std::shared_ptr<RealtimeEffectState>
    MakeNewState(RealtimeEffects::InitializationScope *pScope,
       ChannelGroup *pGroup,
@@ -139,9 +135,6 @@ private:
       double sampleRate);
    //! Main thread adds one group (passing the first of one or more
    //! channels), still before playback
-   /*!
-    @pre `group.IsLeader()`
-    */
    void AddGroup(RealtimeEffects::InitializationScope &scope,
       const ChannelGroup &group, unsigned chans, float rate);
    //! Main thread cleans up after playback
@@ -245,9 +238,6 @@ public:
          RealtimeEffectManager::Get(*pProject).Finalize();
    }
 
-   /*!
-    @pre `group.IsLeader()`
-    */
    void AddGroup(const ChannelGroup &group,
       unsigned chans, float rate)
    {

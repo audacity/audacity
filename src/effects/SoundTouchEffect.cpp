@@ -373,8 +373,6 @@ bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
 void EffectSoundTouch::Finalize(
    WaveTrack &orig, WaveTrack &out, const TimeWarper &warper)
 {
-   assert(orig.IsLeader());
-   assert(out.IsLeader());
    assert(out.NChannels() == orig.NChannels());
    if (mPreserveLength) {
       auto newLen = out.GetVisibleSampleCount();

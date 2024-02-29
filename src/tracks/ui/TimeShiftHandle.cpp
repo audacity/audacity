@@ -194,7 +194,6 @@ bool TrackShifter::MayMigrateTo(Track &)
 
 bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
 {
-   assert(otherTrack.IsLeader());
    auto &track = GetTrack();
    // Both tracks need to be owned to decide this
    auto pMyList = track.GetOwner().get();
@@ -246,7 +245,6 @@ double TrackShifter::AdjustT0(double t0) const
 void TrackShifter::InitIntervals()
 {
    auto &track = GetTrack();
-   assert(track.IsLeader()); // postcondition
    mMoving.clear();
    const auto &range = track.Intervals();
    std::copy(range.begin(), range.end(), back_inserter(mFixed));
@@ -255,7 +253,6 @@ void TrackShifter::InitIntervals()
 CoarseTrackShifter::CoarseTrackShifter(Track &track)
    : mpTrack{ track.SharedPointer() }
 {
-   assert(track.IsLeader());
    InitIntervals();
 }
 
@@ -274,7 +271,6 @@ bool CoarseTrackShifter::SyncLocks()
 
 DEFINE_ATTACHED_VIRTUAL(MakeTrackShifter) {
    return [](Track &track, AudacityProject&) {
-      assert(track.IsLeader()); // pre of the open method
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
@@ -288,7 +284,6 @@ void ClipMoveState::Init(
    const ViewInfo &viewInfo,
    TrackList &trackList, bool syncLocked )
 {
-   assert(capturedTrack.IsLeader());
    shifters.clear();
 
    initialized = true;
@@ -636,7 +631,6 @@ namespace {
                // No corresponding track
                return false;
 
-            assert(pOther->IsLeader()); // by construction of range
             if (!pShifter->MayMigrateTo(*pOther))
                // Rejected for other reason
                return false;
@@ -814,7 +808,6 @@ void TimeShiftHandle::DoSlideVertical(
       viewInfo.selectedRegion.move( slideAmount );
 
    // Make the offset permanent; start from a "clean slate"
-   assert(dstTrack->IsLeader());
    mClipMoveState.mCapturedTrack = dstTrack->SharedPointer();
    mClipMoveState.mMouseClickX = xx;
    mDidSlideVertically = true;

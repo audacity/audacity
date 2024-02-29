@@ -585,8 +585,6 @@ double DoClipMove(AudacityProject &project, TrackList &trackList,
    auto track = trackFocus.Get();
    if (track) {
       // Focus is always a leader,
-      // satisfying the pre of MakeTrackShifter
-      assert(track->IsLeader());
       ClipMoveState state;
 
       auto t0 = selectedRegion.t0();

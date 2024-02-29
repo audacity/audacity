@@ -33,7 +33,6 @@ public:
    // Fix the otherwise ambiguous lookup of these virtual function names
    using ChannelGroup::GetStartTime;
    using ChannelGroup::GetEndTime;
-   using Track::IsLeader;
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
@@ -66,7 +65,6 @@ public:
    ~WritableSampleTrack() override;
 
    // Resolve ambiguous lookups
-   using Track::IsLeader;
    using ChannelGroup::NChannels;
 
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this

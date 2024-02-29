@@ -160,9 +160,6 @@ void GetRegionsByLabel(
    }
 }
 
-/*!
- @pre `track.IsLeader()`
- */
 using EditFunction = std::function<void(Track& track, double, double)>;
 using EditFunctionWithProgress =
    std::function<void(Track& track, double, double, ProgressReporter)>;
@@ -415,7 +412,6 @@ void OnCutLabels(const CommandContext &context)
    // Because of grouping the copy may need to operate on different tracks than
    // the clear, so we do these actions separately.
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
@@ -424,7 +420,6 @@ void OnCutLabels(const CommandContext &context)
 
    bool enableCutlines = gPrefs->ReadBool(wxT( "/GUI/EnableCutLines"), false);
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack &t) {
             if (enableCutlines)
@@ -459,7 +454,6 @@ void OnDeleteLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](Track &t) { t.Clear(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
@@ -483,7 +477,6 @@ void OnSplitCutLabels(const CommandContext &context)
       return;
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       Track::Holder result;
       track.TypeSwitch(
          [&](WaveTrack &wt) {
@@ -516,7 +509,6 @@ void OnSplitDeleteLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack &t) {
             t.SplitDelete(t0, t1);
@@ -547,7 +539,6 @@ void OnSilenceLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       // TODO use progress-bar utilities pending in
       // https://github.com/audacity/audacity/pull/5043
       track.TypeSwitch([&](WaveTrack& t) { t.Silence(t0, t1, {}); });
@@ -571,7 +562,6 @@ void OnCopyLabels(const CommandContext &context)
       return;
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
@@ -594,7 +584,6 @@ void OnSplitLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](WaveTrack &t) { t.Split(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
@@ -617,7 +606,6 @@ void OnJoinLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track& track, double t0, double t1, ProgressReporter reportProgress) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
@@ -644,7 +632,6 @@ void OnDisjoinLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](WaveTrack &t) {
          wxBusyCursor busy;
          t.Disjoin(t0, t1);

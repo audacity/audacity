@@ -824,8 +824,6 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                assert(false);
                continue;
             }
-            if (!wt->IsLeader())
-               continue;
             auto endTime = wt->GetEndTime();
 
             // If the track was chosen for recording and playback both,
@@ -846,8 +844,6 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // wave tracks; in case the track recorded to changes scale
             // type (for instance), during the recording.
             auto updater = [](Track &d, const Track &s){
-               assert(d.IsLeader());
-               assert(s.IsLeader());
                assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);

@@ -169,8 +169,6 @@ void TrackUtilities::DoRemoveTrack(AudacityProject &project, Track &toRemove)
 
    wxString name = toRemove.GetName();
 
-   // By construction of iter
-   assert((*iter)->IsLeader());
    tracks.Remove(**iter);
 
    if (toRemoveWasFocused)
