@@ -5,7 +5,7 @@
                         Sample: #22e727;
                        Sample2: #A00A0A;
                        Sample3: #236E23;
-                       Sample4: #000000;
+                       Sample4: #ffffff;
                      SelSample: #f8fcdd;
                     DragSample: #000000;
                     MuteSample: #7e7e80;
