@@ -15,11 +15,15 @@
 #include "LowlitClipButton.h"
 #include "PitchAndSpeedDialog.h"
 #include "Project.h"
+#include "ProjectHistory.h"
 #include "RefreshCode.h"
 #include "Theme.h"
 #include "TimeAndPitchInterface.h"
+#include "TrackPanelMouseEvent.h"
 #include "WaveClip.h"
 #include "WaveClipUtilities.h"
+#include "WaveTrackUtilities.h"
+#include "wxWidgetsWindowPlacement.h"
 #include <wx/dc.h>
 
 namespace
@@ -114,13 +118,41 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
    const TrackPanelMouseEvent& event, AudacityProject* pProject,
    wxWindow* pParent)
 {
-   const auto focus = mType == Type::Pitch ? PitchAndSpeedDialogFocus::Pitch :
-                                             PitchAndSpeedDialogFocus::Speed;
-   BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
-                       clip = mClip, focus] {
-      if (auto pProject = project.lock())
-         ShowClipPitchAndSpeedDialog(*pProject, *track, *clip, focus);
-   });
+   if (event.event.CmdDown())
+   {
+      if (mType == Type::Pitch)
+      {
+         mClip->SetCentShift(0);
+         ProjectHistory::Get(*pProject).PushState(
+            XO("Reset Clip Pitch"), XO("Reset Clip Pitch"));
+      }
+      else if (!WaveTrackUtilities::SetClipStretchRatio(*mTrack, *mClip, 1))
+      {
+         BasicUI::ShowErrorDialog(
+            wxWidgetsWindowPlacement { pParent }, XO("Not enough space"),
+            XO("There is not enough space to expand the clip to its original speed."),
+            {});
+         return RefreshCode::RefreshNone;
+      }
+      else
+      {
+         WaveClipUtilities::SelectClip(*pProject, *mClip);
+         ProjectHistory::Get(*pProject).PushState(
+            XO("Reset Clip Speed"), XO("Reset Clip Speed"));
+      }
+   }
+   else
+   {
+      const auto focus = mType == Type::Pitch ?
+                            PitchAndSpeedDialogFocus::Pitch :
+                            PitchAndSpeedDialogFocus::Speed;
+      BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
+                          clip = mClip, focus] {
+         if (auto pProject = project.lock())
+            WaveClipUtilities::ShowClipPitchAndSpeedDialog(
+               *pProject, *track, *clip, focus);
+      });
+   }
    return RefreshCode::RefreshNone;
 }
 
