@@ -124,7 +124,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       double correction = 0.0;
       size_t copyBegin = 0, copyEnd = 0;
       if (match) {
-         findCorrection(
+         WaveClipUtilities::findCorrection(
             oldCache->where, oldCache->len, numPixels, t0, sampleRate,
             stretchRatio, samplesPerPixel, oldX0, correction);
          // Remember our first pixel maps to oldX0 in the old cache,
@@ -146,7 +146,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       pWhere = &waveCache->where;
 
       constexpr auto addBias = false;
-      fillWhere(
+      WaveClipUtilities::fillWhere(
          *pWhere, numPixels, addBias, correction, t0, sampleRate, stretchRatio,
          samplesPerPixel);
 

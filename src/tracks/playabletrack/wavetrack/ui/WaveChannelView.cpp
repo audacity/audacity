@@ -894,7 +894,7 @@ auto WaveChannelSubView::GetMenuItems(
          ||
          pTrack->GetClipAtTime(t))
       {
-         return GetWaveClipMenuItems();
+         return WaveClipUtilities::GetWaveClipMenuItems();
       }
    }
    return {

@@ -120,11 +120,13 @@ auto GetInt(const wxCommandEvent& event, int& output)
 } // namespace
 
 PitchAndSpeedDialog::PitchAndSpeedDialog(
-   bool playbackOngoing, WaveTrack& waveTrack, WaveTrack::Interval& interval,
-   wxWindow* parent, const std::optional<PitchAndSpeedDialogFocus>& focus)
+   std::weak_ptr<AudacityProject> project, bool playbackOngoing,
+   WaveTrack& waveTrack, WaveTrack::Interval& interval, wxWindow* parent,
+   const std::optional<PitchAndSpeedDialogFocus>& focus)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
          { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
+    , mProject { project }
     , mPlaybackOngoing { playbackOngoing }
     , mTrack { waveTrack }
     , mTrackInterval { interval }
@@ -310,8 +312,8 @@ bool PitchAndSpeedDialog::SetClipSpeedFromDialog()
 
       return false;
    }
-
-   mTrackInterval.StretchRightTo(expectedEndTime);
+   else if (const auto project = mProject.lock())
+      WaveClipUtilities::SelectClip(*project, mTrackInterval);
 
    {
       ShuttleGui S(this, eIsSettingToDialog);
