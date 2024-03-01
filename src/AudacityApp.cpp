@@ -1751,6 +1751,8 @@ void AudacityApp::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
    try {
+      HandleAppIdle();
+
       if ( Journal::Dispatch() )
          evt.RequestMore();
    }

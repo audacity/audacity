@@ -9,15 +9,23 @@
 #include <cassert>
 #include <vector>
 
+
+
 namespace AppEvents
 {
 namespace
 {
+struct IdleEvent
+{
+};
 
-struct EventHandlers final
+struct EventHandlers final : public Observer::Publisher<IdleEvent>
 {
    std::vector<std::function<void()>> appInitialized;
    bool AppInitializedCalled {};
+
+   using Observer::Publisher<IdleEvent>::Subscribe;
+   using Observer::Publisher<IdleEvent>::Publish;
 };
 
 EventHandlers& GetEventHandlers()
@@ -43,6 +51,12 @@ void OnAppInitialized(std::function<void()> callback)
       handlers.appInitialized.push_back(std::move(callback));
 }
 
+Observer::Subscription OnAppIdle(std::function<void()> callback)
+{
+   return GetEventHandlers().Subscribe([callback = std::move(callback)](auto&)
+                                       { callback(); });
+}
+
 void ProviderBase::HandleAppInitialized()
 {
    auto& handlers = GetEventHandlers();
@@ -54,6 +68,11 @@ void ProviderBase::HandleAppInitialized()
 
    for (auto& callback : handlers.appInitialized)
       callback();
+}
+
+void ProviderBase::HandleAppIdle()
+{
+   GetEventHandlers().Publish(IdleEvent{});
 }
 
 } // namespace AppEvents
