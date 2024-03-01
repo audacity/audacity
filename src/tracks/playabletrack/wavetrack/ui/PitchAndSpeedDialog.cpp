@@ -10,6 +10,8 @@
  **********************************************************************/
 #include "PitchAndSpeedDialog.h"
 #include "TimeAndPitchInterface.h"
+#include "WaveClipUtilities.h"
+#include "WaveTrackUtilities.h"
 
 #include <wx/button.h>
 #include <wx/layout.h>
@@ -298,19 +300,8 @@ bool PitchAndSpeedDialog::SetClipSpeedFromDialog()
       return false;
    }
 
-   const auto nextClip =
-      mTrack.GetNextInterval(mTrackInterval, PlaybackDirection::forward);
-   const auto maxEndTime = nextClip != nullptr ?
-                              nextClip->Start() :
-                              std::numeric_limits<double>::infinity();
-
-   const auto start = mTrackInterval.Start();
-   const auto end = mTrackInterval.End();
-
-   const auto expectedEndTime =
-      start + (end - start) * mOldClipSpeed / mClipSpeed;
-
-   if (expectedEndTime > maxEndTime)
+   if (!WaveTrackUtilities::SetClipStretchRatio(
+          mTrack, mTrackInterval, 100 / mClipSpeed))
    {
       BasicUI::ShowErrorDialog(
          wxWidgetsWindowPlacement { this }, XO("Invalid clip speed"),

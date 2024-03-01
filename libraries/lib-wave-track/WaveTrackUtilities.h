@@ -14,6 +14,7 @@
 
 #include "Internat.h"
 #include "TranslatableString.h"
+#include "WaveTrack.h"
 
 class WaveTrack;
 using ProgressReporter = std::function<void(double)>;
@@ -31,4 +32,7 @@ WAVE_TRACK_API void WithClipRenderingProgress(
    std::function<void(const ProgressReporter&)> action,
    TranslatableString title = defaultStretchRenderingTitle,
    TranslatableString message = XO("Rendering Clip"));
-}
+
+WAVE_TRACK_API bool SetClipStretchRatio(
+   const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio);
+} // namespace WaveTrackUtilities
