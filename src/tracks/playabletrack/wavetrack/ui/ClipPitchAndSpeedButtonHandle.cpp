@@ -159,10 +159,18 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
 HitTestPreview ClipPitchAndSpeedButtonHandle::Preview(
    const TrackPanelMouseState& state, AudacityProject* pProject)
 {
+   const auto ctrlDown = state.state.CmdDown();
+   const bool macOs = wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_MAC;
    if (mType == Type::Pitch)
-      return { XO("Click to change clip pitch."), nullptr };
+      return { ctrlDown ? XO("Click to reset clip pitch.") :
+               macOs ? XO("Click to change clip pitch, Cmd + click to reset.") :
+                       XO("Click to change clip pitch, Ctrl + click to reset."),
+               nullptr };
    else
-      return { XO("Click to change clip speed."), nullptr };
+      return { ctrlDown ? XO("Click to reset clip speed.") :
+               macOs ? XO("Click to change clip speed, Cmd + click to reset.") :
+                       XO("Click to change clip speed, Ctrl + click to reset."),
+               nullptr };
 }
 
 void ClipPitchAndSpeedButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
