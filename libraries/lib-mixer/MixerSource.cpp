@@ -71,18 +71,18 @@ size_t MixerSource::MixVariableRates(
    const auto &[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
 
-   const double sequenceRate = mpLeader->GetRate();
+   const double sequenceRate = mpSeq->GetRate();
    const double initialWarp = mRate / mSpeed / sequenceRate;
    const double tstep = 1.0 / sequenceRate;
    const auto sampleSize = SAMPLE_SIZE(floatSample);
    // Find the last sample
-   const auto endPos = [mpLeader = mpLeader, mT1 = mT1, backwards]{
-      double endTime = mpLeader->GetEndTime();
-      double startTime = mpLeader->GetStartTime();
+   const auto endPos = [mpSeq = mpSeq, mT1 = mT1, backwards]{
+      double endTime = mpSeq->GetEndTime();
+      double startTime = mpSeq->GetStartTime();
       const double tEnd = backwards
          ? std::max(startTime, mT1)
          : std::min(endTime, mT1);
-      return mpLeader->TimeToLongSamples(tEnd);
+      return mpSeq->TimeToLongSamples(tEnd);
    }();
 
    auto pos = mSamplePos;
@@ -128,14 +128,14 @@ size_t MixerSource::MixVariableRates(
             for (auto& queue : mSampleQueue)
                dst.push_back(queue.data() + queueLen);
             constexpr auto iChannel = 0u;
-            if (!mpLeader->GetFloats(
+            if (!mpSeq->GetFloats(
                    iChannel, nChannels, dst.data(), pos, getLen, backwards,
                    FillFormat::fillZero, mMayThrow)) {
                // Now redundant in case of failure
                // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
                   // memset(dst[i], 0, sizeof(float) * getLen);
             }
-            mpLeader->GetEnvelopeValues(
+            mpSeq->GetEnvelopeValues(
                mEnvValues.data(), getLen, (pos).as_double() / sequenceRate,
                backwards);
             for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
@@ -221,10 +221,10 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
 {
    const auto &[mT0, mT1, _, __] = *mTimesAndSpeed;
    const bool backwards = (mT1 < mT0);
-   const auto sequenceRate = mpLeader->GetRate();
-   const double tEnd = [mpLeader = mpLeader, mT1 = mT1, backwards]{
-      const double sequenceEndTime = mpLeader->GetEndTime();
-      const double sequenceStartTime = mpLeader->GetStartTime();
+   const auto sequenceRate = mpSeq->GetRate();
+   const double tEnd = [mpSeq = mpSeq, mT1 = mT1, backwards]{
+      const double sequenceEndTime = mpSeq->GetEndTime();
+      const double sequenceStartTime = mpSeq->GetStartTime();
       return backwards
          ? std::max(sequenceStartTime, mT1)
          : std::min(sequenceEndTime, mT1);
@@ -250,7 +250,7 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
    );
 
    constexpr auto iChannel = 0u;
-   if (!mpLeader->GetFloats(
+   if (!mpSeq->GetFloats(
       iChannel, nChannels, floatBuffers, pos, slen, backwards,
       FillFormat::fillZero, mMayThrow)
    ) {
@@ -260,7 +260,7 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
       
    }
 
-   mpLeader->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
+   mpSeq->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
 
    for (size_t iChannel = 0; iChannel < nChannels; ++iChannel) {
       const auto pFloat = floatBuffers[iChannel];
@@ -287,12 +287,12 @@ void MixerSource::ZeroFill(
 }
 
 MixerSource::MixerSource(
-   const std::shared_ptr<const WideSampleSequence> &leader, size_t bufferSize,
+   const std::shared_ptr<const WideSampleSequence> &seq, size_t bufferSize,
    double rate, const MixerOptions::Warp &options, bool highQuality,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
    const ArrayOf<bool> *pMap
-)  : mpLeader{ leader }
-   , mnChannels{ mpLeader->NChannels() }
+)  : mpSeq{ seq }
+   , mnChannels{ mpSeq->NChannels() }
    , mRate{ rate }
    , mEnvelope{ options.envelope }
    , mMayThrow{ mayThrow }
@@ -300,7 +300,7 @@ MixerSource::MixerSource(
    , mSampleQueue{ initVector<float>(mnChannels, sQueueMaxLen) }
    , mQueueStart{ 0 }
    , mQueueLen{ 0 }
-   , mResampleParameters{ highQuality, mpLeader->GetRate(), rate, options }
+   , mResampleParameters{ highQuality, mpSeq->GetRate(), rate, options }
    , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
@@ -315,7 +315,7 @@ MixerSource::~MixerSource() = default;
 
 const WideSampleSequence &MixerSource::GetSequence() const
 {
-   return *mpLeader;
+   return *mpSeq;
 }
 
 const bool *MixerSource::MixerSpec(unsigned iChannel) const

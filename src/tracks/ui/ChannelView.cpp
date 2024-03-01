@@ -115,8 +115,8 @@ void ChannelView::AdjustPositions()
 {
    // Update positions and heights starting from the first track in the group,
    // causing TrackList events
-   if (const auto pLeader = FindTrack())
-      pLeader->AdjustPositions();
+   if (const auto pTrack = FindTrack())
+      pTrack->AdjustPositions();
 }
 
 namespace {

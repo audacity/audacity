@@ -141,7 +141,7 @@ struct AudioIoCallback::TransportState {
             move(wOwningProject), sampleRate, numPlaybackChannels);
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
-            // An array only of non-null leaders should be given to us
+            // An array only of non-null pointers should be given to us
             const auto vt = playbackSequences[i].get();
             const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
             if (!pGroup) {

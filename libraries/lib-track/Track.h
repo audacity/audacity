@@ -206,7 +206,7 @@ private:
    /*!
     @param list to which any newly created tracks are added; but left unchanged
        if an existing track is found in the project instead
-    @return A smart pointer to a leader track
+    @return A smart pointer to a track
     */
    virtual Holder PasteInto(AudacityProject &project, TrackList &list)
       const = 0;
@@ -245,7 +245,7 @@ private:
    void DoSetLinkType(LinkType linkType, bool completeList = true);
 
    Track* GetLinkedTrack() const;
-   //! Returns true for leaders of multichannel groups
+   //! During file loading only, true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;
 
    //! Retrieve mNode with debug checks
@@ -1030,8 +1030,8 @@ public:
       const Track* before, const Track::Holder &pSrc, bool assignIds = false);
 
    /*!
-    @pre `tracks` contains pointers only to leader tracks of this, and each of
-    them exactly once
+    @pre `tracks` contains pointers only to tracks of this, and each of them
+    exactly once
     */
    void Permute(const std::vector<Track *> &tracks);
 
@@ -1060,7 +1060,7 @@ public:
     */
    Track::Holder ReplaceOne(Track &t, TrackList &&with);
 
-   //! Remove a track, given the leader, and return it
+   //! Remove a track and return it
    Track::Holder Remove(Track &track);
 
    /// Make the list empty

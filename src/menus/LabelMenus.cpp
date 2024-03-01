@@ -218,8 +218,6 @@ void EditByLabel(
       nullptr);
 }
 
-//! The argument is always a leader track and the return has an equal number
-//! of channels, or is null
 using EditDestFunction =
    std::function<Track::Holder(Track &, double, double)>;
 

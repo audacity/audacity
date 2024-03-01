@@ -464,7 +464,8 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     const TrackPanelMouseState& state)
 {
     auto waveChannel = view.FindWaveChannel();
-    //For multichannel tracks, show adjustment handle only for the leader track
+    // For multichannel tracks, show adjustment handle only for the topmost
+    // channel
     if (waveChannel->GetChannelIndex() != 0)
         return {};
 

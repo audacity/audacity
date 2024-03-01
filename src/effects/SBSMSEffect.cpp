@@ -413,8 +413,6 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
          mCurTrackNum++;
       }; },
       [&](Track &t) {
-         // Outer loop is over leaders, so fall-through must check for
-         // multiple channels
          if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mTotalStretch);
       }

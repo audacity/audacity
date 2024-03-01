@@ -61,10 +61,9 @@ PendingTracks::DoSubstitutePendingChangedChannel(
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pTrack = &track;
-   // track might not be a leader
    if (!mPendingUpdates->empty()) {
       const auto end = mPendingUpdates->end();
-      // Find the leader of the group of shadow tracks containing the id
+      // Find the shadow track with the id
       const auto pred = [id = track.GetId()](const auto &pTrack){
          return pTrack->GetId() == id; };
       if (const auto it = std::find_if(mPendingUpdates->begin(), end, pred)
@@ -118,17 +117,16 @@ PendingTracks::DoSubstituteOriginalChannel(
    const Track &track, size_t channelIndex) const
 {
    auto pTrack = &track;
-   // track might not be a leader
    if (!mPendingUpdates->empty()) {
       const auto end = mPendingUpdates->end();
-      // Find the leader of the group of shadow tracks containing the id
+      // Find the shadow track with the id
       const auto pred = [id = track.GetId()](const auto &pTrack){
          return pTrack->GetId() == id; };
       if (const auto it =
           std::find_if(mPendingUpdates->begin(), end, pred); it != end)
       {
          const auto end2 = mTracks.end();
-         // Find the leader of the group of original tracks containing the id
+         // Find the original track with the id
          if (const auto it2 = std::find_if(mTracks.begin(), end2, pred)
             ; it2 != end2)
          {

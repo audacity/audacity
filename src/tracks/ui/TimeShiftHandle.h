@@ -266,16 +266,12 @@ struct AUDACITY_DLL_API ClipMoveState {
    //! Offset tracks or intervals horizontally, without adjusting the offset
    void DoHorizontalOffset(double offset);
 
-   // This should be a leader track when not null
    std::shared_ptr<Track> mCapturedTrack;
 
    bool initialized{ false };
    bool movingSelection {};
    bool wasMoved{ false };
    double hSlideAmount {};
-   /*!
-    @invariant all keys of this map point to leader tracks
-    */
    ShifterMap shifters;
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
@@ -340,9 +336,6 @@ public:
 
    bool Clicked() const;
 
-   /*!
-    @return will point only to a leader
-    */
    std::shared_ptr<Track> GetTrack() const;
 
 protected:

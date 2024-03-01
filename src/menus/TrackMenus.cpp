@@ -69,7 +69,6 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          while (!trackRange.empty())
-            // Range iterates over leaders only
             tracks.Remove(**trackRange.first++);
       }
 

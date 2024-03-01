@@ -1352,7 +1352,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
    }
    if (doFix) {
       // More non-error upgrading
-      // Set the common channel group rate from the leader's rate
+      // Set the common channel group rate from the unzipped leader's rate
       if (mLegacyRate > 0)
       {
          WaveTrack *next{};

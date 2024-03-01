@@ -23,7 +23,7 @@ void TrackUtilities::DoRemoveTracks(AudacityProject &project) {
    auto range = tracks.Selected();
    using Iter = decltype(range.begin());
 
-   // Capture the leader track preceding the first removed track
+   // Find the track preceding the first removed track
    std::optional<Iter> focus;
    if (!range.empty()) {
       auto iter = tracks.Find(*range.begin());
@@ -32,11 +32,10 @@ void TrackUtilities::DoRemoveTracks(AudacityProject &project) {
    }
 
    while (!range.empty())
-      // range iterates over leaders only
       tracks.Remove(**range.first++);
 
    if (!(focus.has_value() && **focus))
-      // try to use the last leader track
+      // try to use the last track
       focus.emplace(tracks.end().advance(-1));
    assert(focus);
    Track *f = **focus;

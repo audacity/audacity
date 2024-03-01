@@ -358,7 +358,6 @@ void ClipMoveState::Init(
                for (auto pTrack2 : group) {
                   if (pTrack2 == &track)
                      continue;
-                  // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
                   shifter2.SelectInterval({

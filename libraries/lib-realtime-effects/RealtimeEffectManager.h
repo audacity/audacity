@@ -166,7 +166,7 @@ private:
    // using StateVisitor =
       // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
-   //! Visit the per-project states first, then states for leader if not null
+   //! Visit the per-project states first, then states for group
    template<typename StateVisitor>
    void VisitGroup(ChannelGroup &group, const StateVisitor &func)
    {

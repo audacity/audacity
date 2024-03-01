@@ -609,7 +609,6 @@ void TrackPanel::ProcessUIHandleResult
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
       auto & focus = TrackFocus::Get(*GetProject());
       focus.Set(pClickedTrack);
-      // This expects a leader track, not a channel
       if (const auto pFocus = focus.Get())
          Viewport::Get(*GetProject()).ShowTrack(*pFocus);
    }
@@ -1565,15 +1564,15 @@ struct Subgroup final : TrackPanelGroup {
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
-      for (const auto leader : tracks) {
+      for (const auto pTrack : tracks) {
          wxCoord height = 0;
-         for (auto pChannel : leader->Channels()) {
+         for (auto pChannel : pTrack->Channels()) {
             auto &view = ChannelView::Get(*pChannel);
             height += view.GetHeight();
          }
          refinement.emplace_back( yy,
             std::make_shared<ResizingChannelGroup>(
-               leader->SharedPointer(), viewInfo.GetLeftOffset())
+               pTrack->SharedPointer(), viewInfo.GetLeftOffset())
          );
          yy += height;
       }
@@ -1662,7 +1661,6 @@ std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
 
 std::shared_ptr<TrackPanelCell> TrackPanel::GetFocusedCell()
 {
-   // Note that focus track is always a leader
    auto pTrack = TrackFocus::Get(*GetProject()).Get();
    return pTrack
       ? ChannelView::Get(*pTrack->GetChannel(0)).shared_from_this()

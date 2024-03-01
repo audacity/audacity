@@ -379,9 +379,9 @@ auto WaveChannelUtilities::GetNextClip(const ClipPointers &clips,
 Envelope* WaveChannelUtilities::GetEnvelopeAtTime(
    WaveChannel &channel, double time)
 {
-   // Substitute the leader track
-   auto &leader = **channel.GetTrack().Channels().begin();
-   if (const auto clip = GetClipAtTime(leader, time))
+   // Substitute the first channel
+   auto &first = **channel.GetTrack().Channels().begin();
+   if (const auto clip = GetClipAtTime(first, time))
       return &clip->GetEnvelope();
    else
       return nullptr;

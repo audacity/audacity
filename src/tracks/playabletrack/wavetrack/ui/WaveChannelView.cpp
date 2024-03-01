@@ -1447,8 +1447,8 @@ using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
    const auto pWaveChannel = view.FindWaveChannel();
-   const auto pLeader = &pWaveChannel->GetTrack();
-   auto& channelView = ChannelView::Get(**pLeader->Channels().begin());
+   const auto pTrack = &pWaveChannel->GetTrack();
+   auto& channelView = ChannelView::Get(**pTrack->Channels().begin());
    if (const auto affordance =
       std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
          channelView.GetAffordanceControls()).get()
@@ -1587,14 +1587,13 @@ void WaveChannelView::Reparent(
 
 WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
 {
-   // Find the leader
    const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return {};
    auto &track = pChannel->GetTrack();
-   auto &leaderView = Get(**track.Channels().begin());
+   auto &topmostView = Get(**track.Channels().begin());
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
-      leaderView.GetAffordanceControls()))
+      topmostView.GetAffordanceControls()))
    {
       return *affordance->GetSelectedInterval();
    }

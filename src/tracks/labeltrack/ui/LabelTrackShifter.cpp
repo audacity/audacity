@@ -31,7 +31,6 @@ public:
    ~LabelTrackShifter() override
    {
    }
-   //! Label track is always leader; satisfying the post
    Track &GetTrack() const override { return *mpTrack; }
    
    static inline size_t& GetIndex(ChannelGroupInterval &interval)

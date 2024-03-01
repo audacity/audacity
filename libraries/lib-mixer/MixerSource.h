@@ -38,7 +38,7 @@ public:
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
-   MixerSource(const std::shared_ptr<const WideSampleSequence> &leader,
+   MixerSource(const std::shared_ptr<const WideSampleSequence> &seq,
       size_t bufferSize,
       double rate, const MixerOptions::Warp &options, bool highQuality,
       bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
@@ -97,7 +97,7 @@ private:
     */
    void ZeroFill(size_t produced, size_t max, float &floatBuffer);
 
-   const std::shared_ptr<const WideSampleSequence> mpLeader;
+   const std::shared_ptr<const WideSampleSequence> mpSeq;
    size_t i;
 
    const size_t mnChannels;

@@ -594,13 +594,13 @@ void OnPaste(const CommandContext &context)
          // Nothing to paste into this group
          continue;
 
-      // Inner loop over the group by tracks (not channels)
-      for (auto leader : group) {
-         if (iPair == endPair || leader != iPair->first) {
+      // Inner loop over the sync-lock group by tracks
+      for (auto member : group) {
+         if (iPair == endPair || member != iPair->first) {
             if (isSyncLocked) {
                // Track is not pasted into but must be adjusted
-               if (t1 != newT1 && t1 <= leader->GetEndTime()) {
-                  leader->SyncLockAdjust(t1, newT1);
+               if (t1 != newT1 && t1 <= member->GetEndTime()) {
+                  member->SyncLockAdjust(t1, newT1);
                   bPastedSomething = true;
                }
             }
@@ -608,10 +608,10 @@ void OnPaste(const CommandContext &context)
          else {
             // Remember first pasted-into track, to focus it
             if (!ff)
-               ff = leader;
+               ff = member;
             // Do the pasting!
             const auto src = (iPair++)->second;
-            leader->TypeSwitch(
+            member->TypeSwitch(
                [&](WaveTrack &wn){
                   bPastedSomething = true;
                   // For correct remapping of preserved split lines:

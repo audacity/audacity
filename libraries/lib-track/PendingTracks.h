@@ -62,8 +62,8 @@ public:
    //! original; else return the track
    const Track &SubstituteOriginalTrack(const Track &track) const;
 
-   //! The tracks supplied to this function will be leaders with the same number
-   //! of channels
+   //! The tracks supplied to this function will have the same number of
+   //! channels
    using Updater = std::function<void(Track &dest, const Track &src)>;
 
    //! Start a deferred update of the project.

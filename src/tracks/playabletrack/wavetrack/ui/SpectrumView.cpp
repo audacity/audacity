@@ -428,8 +428,6 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    const double binUnit = sampleRate / (2 * half);
    const float *freq = 0;
    const sampleCount *where = 0;
-   // Get the cache from the leader clip, but pass the WaveChannelInterval
-   // to use the correct channel in the cache
    bool updated = WaveClipSpectrumCache::Get(clip).GetSpectrogram(
       clip, freq, settings, where, (size_t)hiddenMid.width, t0,
       averagePixelsPerSecond);

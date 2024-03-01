@@ -279,7 +279,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
       const auto &pendingTracks = *artist->pPendingTracks;
       
       // Color the background of the affordance rectangle (only one per track)
-      // as for the leader channel
+      // as for the topmost channel
       TrackArt::DrawBackgroundWithSelection(context,
          rect, **track->Channels().begin(),
          artist->blankSelectedBrush, artist->blankBrush);

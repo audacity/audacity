@@ -85,7 +85,6 @@ private:
    /*!
     @invariant `mIMap.size() == mOutputTracks->Size()`
     @invariant `mIMap.size() == mOMap.size()`
-    @invariant mIMap points to leaders only, or nulls
     */
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;

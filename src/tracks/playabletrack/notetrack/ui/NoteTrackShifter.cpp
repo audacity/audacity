@@ -15,7 +15,6 @@ public:
       InitIntervals();
    }
    ~NoteTrackShifter() override {}
-   //! Note track is always leader; satisfying the post
    Track &GetTrack() const override { return *mpTrack; }
    
    HitTestResult HitTest(

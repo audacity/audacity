@@ -830,9 +830,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // remember the original in preroll tracks, before making the
             // pending replacement.
             const auto shared = wt->SharedPointer<WaveTrack>();
-            // playbackSequences contains only leaders; prerollSequences should
-            // be a subset of it.  Non-leader might not be found, but that is
-            // all right.
+            // prerollSequences should be a subset of playbackSequences.
             const auto &range = transportSequences.playbackSequences;
             bool prerollTrack = any_of(range.begin(), range.end(),
                [&](const auto &pSequence){

@@ -557,8 +557,8 @@ UIHandle::Result SelectHandle::Click(
 
    wxMouseEvent &event = evt.event;
    auto &trackList = TrackList::Get(*pProject);
-   const auto pLeader = FindTrack();
-   if (!pLeader)
+   const auto pTrack = FindTrack();
+   if (!pTrack)
       return Cancelled;
    auto &trackPanel = TrackPanel::Get(*pProject);
    auto &viewInfo = ViewInfo::Get(*pProject);
@@ -569,13 +569,13 @@ UIHandle::Result SelectHandle::Click(
    bool selectChange = (
       event.LeftDown() &&
       event.ControlDown() &&
-      pLeader->TypeSwitch<bool>( [&](LabelTrack &){
+      pTrack->TypeSwitch<bool>( [&](LabelTrack &){
          // We should reach this, only in default of other hits on glyphs or
          // text boxes.
          bool bShift = event.ShiftDown();
          bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
          SelectUtilities::DoListSelection(
-            *pProject, *pLeader, bShift, true, !unsafe);
+            *pProject, *pTrack, bShift, true, !unsafe);
          return true;
        } )
    );
@@ -588,12 +588,12 @@ UIHandle::Result SelectHandle::Click(
       // Deselect all other tracks and select this one.
       selectionState.SelectNone(trackList);
 
-      if (pLeader)
-         selectionState.SelectTrack(*pLeader, true, true);
+      if (pTrack)
+         selectionState.SelectTrack(*pTrack, true, true);
 
       // Default behavior: select whole track
       SelectionState::SelectTrackLength(
-         viewInfo, *pLeader, SyncLockState::Get(*pProject).IsSyncLocked());
+         viewInfo, *pTrack, SyncLockState::Get(*pProject).IsSyncLocked());
 
       // Special case: if we're over a clip in a WaveTrack,
       // select just that clip
@@ -633,7 +633,7 @@ UIHandle::Result SelectHandle::Click(
    if (bShiftDown || bCtrlDown) {
       if (bShiftDown) {
          // Selection state pertains to tracks, not channels
-         selectionState.ChangeSelectionOnShiftClick(trackList, *pLeader);
+         selectionState.ChangeSelectionOnShiftClick(trackList, *pTrack);
       }
       if( bCtrlDown ){
          //Commented out bIsSelected toggles, as in Track Control Panel.
@@ -642,8 +642,8 @@ UIHandle::Result SelectHandle::Click(
          bool bIsSelected = false;
          // Don't toggle away the last selected track.
          if (!bIsSelected || trackPanel.GetSelectedTrackCount() > 1)
-            if (pLeader)
-               selectionState.SelectTrack(*pLeader, !bIsSelected, true);
+            if (pTrack)
+               selectionState.SelectTrack(*pTrack, !bIsSelected, true);
       }
 
       double value;
@@ -664,7 +664,7 @@ UIHandle::Result SelectHandle::Click(
             mSelStartValid = true;
             mSelStart = value;
             mSnapStart = SnapResults{};
-            AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pLeader);
+            AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
@@ -714,7 +714,7 @@ UIHandle::Result SelectHandle::Click(
 
    //Make sure you are within the selected track
    bool startNewSelection = true;
-   if (pLeader && pLeader->GetSelected()) {
+   if (pTrack && pTrack->GetSelected()) {
 #ifdef EXPERIMENTAL_SPECTRAL_EDITING
       if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
          isSpectralSelectionView(view)) {
@@ -810,9 +810,9 @@ UIHandle::Result SelectHandle::Click(
          view);
 #endif
       StartSelection(pProject);
-      if (pLeader)
-         selectionState.SelectTrack(*pLeader, true, true);
-      TrackFocus::Get(*pProject).Set(pLeader);
+      if (pTrack)
+         selectionState.SelectTrack(*pTrack, true, true);
+      TrackFocus::Get(*pProject).Set(pTrack);
 
       Connect(pProject);
       return RefreshAll;

@@ -431,7 +431,6 @@ public:
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
-   //! May report more than one only when this is a leader track
    size_t NChannels() const override;
 
    auto GetChannel(size_t iChannel) {
@@ -1232,9 +1231,6 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   /*!
-    * @param[out] leader
-    */
    [[nodiscard]] Holder DuplicateWithOtherTempo(double newTempo) const;
 
    bool GetOne(const WaveClipHolders &clips,
@@ -1258,9 +1254,10 @@ private:
    void
    PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
 
-   //! Whether all clips of a leader track have a common rate
+   //! Whether all clips of an unzipped leader track have a common rate
    bool RateConsistencyCheck() const;
-   //! Whether all tracks in group and all clips have a common sample format
+   //! Whether all tracks in unzipped group and all clips have a common sample
+   //! format
    bool FormatConsistencyCheck() const;
 
    void ApplyPitchAndSpeedOne(

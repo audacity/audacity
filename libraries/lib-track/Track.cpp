@@ -110,7 +110,6 @@ auto Track::Duplicate(DuplicateOptions options) const -> Holder
 {
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone(options.backup);
-   // Attachments matter for leader only
    CopyAttachments(*result, *this, !options.shallowCopyAttachments);
    return result;
 }
@@ -271,7 +270,7 @@ bool Track::LinkConsistencyFix(bool doFix)
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (HasLinkedTrack()) /* which implies IsLeader() */ {
+   if (HasLinkedTrack()) {
       if (auto link = GetLinkedTrack()) {
          // A linked track's partner should never itself be linked
          if (link->HasLinkedTrack()) {
@@ -479,7 +478,7 @@ auto TrackList::Find(Track *pTrack) -> TrackIter<Track>
 void TrackList::Insert(const Track* before,
    const Track::Holder &pSrc, bool assignIds)
 {
-   assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
+   assert(before == nullptr || Find(before) != EndIterator<const Track>());
 
    if(before == nullptr)
    {
@@ -560,7 +559,6 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
 
 Track::Holder TrackList::ReplaceOne(Track &t, TrackList &&with)
 {
-   assert(t.IsLeader());
    assert(t.GetOwner().get() == this);
    assert(!with.empty());
 

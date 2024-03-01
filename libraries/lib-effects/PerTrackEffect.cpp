@@ -121,8 +121,8 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
    int iChannel = 0;
    TrackListHolder results;
    const auto waveTrackVisitor =
-      [&](WaveTrack &leader, WaveChannel &chan, bool isLeader) {
-         if (isLeader)
+      [&](WaveTrack &wt, WaveChannel &chan, bool isFirst) {
+         if (isFirst)
             iChannel = 0;
 
          sampleCount len = 0;
@@ -130,18 +130,18 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          WaveChannel *pRight{};
 
          const int channel = (multichannel ? -1 : iChannel++);
-         const auto numChannels = MakeChannelMap(leader, channel, map);
+         const auto numChannels = MakeChannelMap(wt, channel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {
                // TODO: more-than-two-channels
-               pRight = (*leader.Channels().rbegin()).get();
+               pRight = (*wt.Channels().rbegin()).get();
                clear = false;
             }
          }
 
          if (!isGenerator) {
-            GetBounds(leader, &start, &len);
+            GetBounds(wt, &start, &len);
             mSampleCnt = len;
             if (len > 0 && numAudioIn < 1) {
                bGoodResult = false;
@@ -149,12 +149,12 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             }
          }
          else
-            mSampleCnt = leader.TimeToLongSamples(duration);
+            mSampleCnt = wt.TimeToLongSamples(duration);
 
-         const auto sampleRate = leader.GetRate();
+         const auto sampleRate = wt.GetRate();
 
          // Get the block size the client wants to use
-         auto max = leader.GetMaxBlockSize() * 2;
+         auto max = wt.GetMaxBlockSize() * 2;
          const auto blockSize = instance.SetBlockSize(max);
          if (blockSize == 0) {
             bGoodResult = false;
@@ -217,7 +217,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
             clear = true;
          }
 
-         const auto genLength = [this, &settings, &leader, isGenerator](
+         const auto genLength = [this, &settings, &wt, isGenerator](
          ) -> std::optional<sampleCount> {
             double genDur = 0;
             if (isGenerator) {
@@ -229,7 +229,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
                else
                   genDur = duration;
                // round to nearest sample
-               return sampleCount{ (leader.GetRate() * genDur) + 0.5 };
+               return sampleCount{ (wt.GetRate() * genDur) + 0.5 };
             }
             else
                return {};
@@ -266,9 +266,9 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          // Make "wide" or "narrow" copy of the track if generating
          // For now EmptyCopy and WideEmptyCopy still return different types
          auto wideTrack =
-            (pRight && isGenerator) ? leader.WideEmptyCopy() : nullptr;
+            (pRight && isGenerator) ? wt.WideEmptyCopy() : nullptr;
          auto narrowTrack =
-            (!pRight && isGenerator) ? leader.EmptyCopy(1) : nullptr;
+            (!pRight && isGenerator) ? wt.EmptyCopy(1) : nullptr;
          const auto pGenerated = wideTrack
             ? wideTrack
             : narrowTrack;
@@ -288,7 +288,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
                return recycledInstances.emplace_back(MakeInstance());
          };
          bGoodResult = ProcessTrack(channel, factory, settings, source, sink,
-            genLength, sampleRate, leader, inBuffers, outBuffers);
+            genLength, sampleRate, wt, inBuffers, outBuffers);
          if (bGoodResult) {
             sink.Flush(outBuffers);
             bGoodResult = sink.IsOk();
@@ -297,7 +297,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
                   results = TrackList::Temporary(nullptr, pGenerated);
                else {
                   results->Add(pGenerated);
-                  if (!multichannel && !isLeader && narrowTrack) {
+                  if (!multichannel && !isFirst && narrowTrack) {
                      // Generated a stereo track, in channel-major fashion.
                      // Get the last track but one -- generated in the previous
                      // pass
@@ -355,7 +355,7 @@ bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
    EffectSettings &settings,
    AudioGraph::Source &upstream, AudioGraph::Sink &sink,
    std::optional<sampleCount> genLength,
-   const double sampleRate, const SampleTrack &leader,
+   const double sampleRate, const SampleTrack &wt,
    Buffers &inBuffers, Buffers &outBuffers)
 {
    assert(upstream.AcceptsBuffers(inBuffers));
@@ -366,7 +366,7 @@ bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
    assert(blockSize == outBuffers.BlockSize());
 
    auto pSource = EffectStage::Create(channel, upstream, inBuffers,
-      factory, settings, sampleRate, genLength, leader);
+      factory, settings, sampleRate, genLength, wt);
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor
