@@ -8,6 +8,8 @@
 
 #include <functional>
 
+#include "Observer.h"
+
 namespace AppEvents
 {
 /*! Register callback to be called when application is initialized.
@@ -16,6 +18,13 @@ namespace AppEvents
  *  @pre `!!calback`
  */
 UTILITY_API void OnAppInitialized(std::function<void()> callback);
+
+/*! Register callback to be called when application is idle.
+ *  @param callback Callback to be called when application is idle.
+ *  @pre `!!calback`
+ */
+
+UTILITY_API Observer::Subscription OnAppIdle(std::function<void()> callback);
 
 /*! Base class for application events providers.
  *  This class has no virtual methods and should not be publicly derived from.
@@ -29,6 +38,7 @@ protected:
    virtual ~ProviderBase() = default;
 
    void HandleAppInitialized();
+   void HandleAppIdle();
 };
 
 } // namespace AppEvents
