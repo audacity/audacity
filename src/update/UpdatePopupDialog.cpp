@@ -97,10 +97,21 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     wxStringOutputStream o;
     wxTextOutputStream informationStr (o);
 
+#if AUDACITY_BUILD_LEVEL == 0
+    const auto versionPostfix = " Alpha";
+#elif AUDACITY_BUILD_LEVEL == 1
+    const auto versionPostfix = " Beta";
+#else
+    const auto versionPostfix = "";
+#endif
+
     informationStr
         << wxT("<html><body><h3>")
         // i18n-hint Substitution of version number for %s.
-        << XC("Audacity %s is available!", "update dialog").Format(mVersionPatch.version.GetString()).Translation()
+                   << XC("Audacity %s is available!", "update dialog")
+                         .Format(
+                            mVersionPatch.version.GetString() + versionPostfix)
+                         .Translation()
         << wxT("</h3><h5>")
         << XC("Changelog", "update dialog")
         << wxT("</h5><p>");
