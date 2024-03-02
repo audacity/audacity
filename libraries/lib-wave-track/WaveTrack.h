@@ -681,9 +681,6 @@ public:
       double* buffer, size_t bufferLen, double t0,
       bool backwards) const override;
 
-   const WaveClip* GetClipAtTime(double time) const;
-   WaveClip* GetClipAtTime(double time);
-
    //
    // Getting information about the track's internal block sizes
    // and alignment for efficiency
@@ -743,6 +740,8 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
+   const WaveClip* GetClipAtTime(double time) const;
+
    void CreateRight();
 
    //! Create new clip and add it to the clip array; publish on the track.

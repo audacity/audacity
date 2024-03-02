@@ -897,7 +897,7 @@ auto WaveChannelSubView::GetMenuItems(
             viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
                .empty())
          ||
-         track.GetClipAtTime(t))
+         WaveChannelUtilities::GetClipAtTime(**track.Channels().begin(), t))
       {
          return WaveClipUIUtilities::GetWaveClipMenuItems();
       }
