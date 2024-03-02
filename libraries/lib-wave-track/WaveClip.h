@@ -418,10 +418,6 @@ public:
    /*!
     @pre `ii < GetWidth()`
     */
-   BlockArray* GetSequenceBlockArray(size_t ii);
-   /*!
-    @copydoc GetSequenceBlockArray
-    */
    const BlockArray* GetSequenceBlockArray(size_t ii) const;
 
    //! Get low-level access to a sequence. Whenever possible, don't use this,

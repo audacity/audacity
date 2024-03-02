@@ -215,7 +215,7 @@ size_t WaveChannelInterval::GetAppendBufferLen() const
    return GetNarrowClip().GetAppendBufferLen(0);
 }
 
-BlockArray *WaveChannelInterval::GetSequenceBlockArray()
+const BlockArray *WaveChannelInterval::GetSequenceBlockArray() const
 {
    return GetNarrowClip().GetSequenceBlockArray(
       0

@@ -221,12 +221,6 @@ void WaveClip::SetEnvelope(std::unique_ptr<Envelope> p)
    mEnvelope = move(p);
 }
 
-BlockArray* WaveClip::GetSequenceBlockArray(size_t ii)
-{
-   assert(ii < GetWidth());
-   return &mSequences[ii]->GetBlockArray();
-}
-
 const BlockArray* WaveClip::GetSequenceBlockArray(size_t ii) const
 {
    assert(ii < GetWidth());
