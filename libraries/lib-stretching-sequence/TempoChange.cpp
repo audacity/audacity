@@ -29,8 +29,7 @@ projectTempoDataFactory{
 
 ProjectTempo &ProjectTempo::Get(ChannelGroup &group)
 {
-   return group.GetGroupData().Attachments
-      ::Get<ProjectTempo>(projectTempoDataFactory);
+   return group.Attachments::Get<ProjectTempo>(projectTempoDataFactory);
 }
 
 const ProjectTempo &ProjectTempo::Get(const ChannelGroup &group)

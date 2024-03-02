@@ -110,8 +110,7 @@ key1{ [](auto &) { return nullptr; } };
 SpectrogramSettings &SpectrogramSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   auto pSettings = mutTrack.GetGroupData().Attachments
-      ::Find<SpectrogramSettings>(key1);
+   auto pSettings = mutTrack.Attachments::Find<SpectrogramSettings>(key1);
    if (pSettings)
       return *pSettings;
    else
@@ -126,21 +125,18 @@ SpectrogramSettings &SpectrogramSettings::Get(const WaveChannel &channel)
 SpectrogramSettings &SpectrogramSettings::Own(WaveChannel &wc)
 {
    auto &track = wc.GetTrack();
-   auto pSettings = track.GetGroupData().Attachments
-      ::Find<SpectrogramSettings>(key1);
+   auto pSettings = track.Attachments::Find<SpectrogramSettings>(key1);
    if (!pSettings) {
       auto uSettings = std::make_unique<SpectrogramSettings>();
       pSettings = uSettings.get();
-      track.GetGroupData().Attachments
-         ::Assign(key1, std::move(uSettings));
+      track.Attachments::Assign(key1, std::move(uSettings));
    }
    return *pSettings;
 }
 
 void SpectrogramSettings::Reset(WaveChannel &wc)
 {
-   wc.GetTrack().GetGroupData().Attachments
-      ::Assign(key1, nullptr);
+   wc.GetTrack().Attachments::Assign(key1, nullptr);
 }
 
 SpectrogramSettings::SpectrogramSettings()
@@ -704,8 +700,7 @@ key2{ [](auto &) { return std::make_unique<SpectrogramBounds>(); } };
 
 SpectrogramBounds &SpectrogramBounds::Get( WaveTrack &track )
 {
-   return track.GetGroupData().Attachments
-      ::Get<SpectrogramBounds>(key2);
+   return track.Attachments::Get<SpectrogramBounds>(key2);
 }
 
 const SpectrogramBounds &SpectrogramBounds::Get(

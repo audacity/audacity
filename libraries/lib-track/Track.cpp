@@ -46,8 +46,12 @@ Track::Track(const Track& orig, ProtectedCreationArg&&)
 // Copy all the track properties except the actual contents
 void Track::Init(const Track &orig)
 {
-   ChannelGroup::Init(orig);
    mId = orig.mId;
+   ChannelGroupAttachments &base = *this;
+   // Intentional slice assignment deep-copies the attachment array:
+   base = orig;
+   CopyGroupProperties(orig);
+   mLinkType = orig.mLinkType;
 }
 
 void Track::ReparentAllAttachments()
@@ -59,12 +63,12 @@ void Track::ReparentAllAttachments()
 
 const wxString &Track::GetName() const
 {
-   return GetGroupData().mName;
+   return mName;
 }
 
 void Track::SetName( const wxString &n )
 {
-   auto &name = GetGroupData().mName;
+   auto &name = mName;
    if (name != n) {
       name = n;
       Notify(true);
@@ -73,12 +77,12 @@ void Track::SetName( const wxString &n )
 
 bool Track::GetSelected() const
 {
-   return GetGroupData().mSelected;
+   return mSelected;
 }
 
 void Track::SetSelected(bool s)
 {
-   auto &selected = GetGroupData().mSelected;
+   auto &selected = mSelected;
    if (selected != s) {
       selected = s;
       auto pList = mList.lock();
@@ -139,19 +143,10 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
    }
 }
 
-ChannelGroup::ChannelGroupData &Track::GetGroupData()
+void Track::CopyGroupProperties(const Track &other)
 {
-   auto pTrack = this;
-   if (auto pList = GetOwner())
-      if (auto pLeader = *pList->Find(pTrack))
-         pTrack = pLeader;
-   // May make on demand
-   return pTrack->ChannelGroup::GetGroupData();
-}
-
-const ChannelGroup::ChannelGroupData &Track::GetGroupData() const
-{
-   return const_cast<Track *>(this)->GetGroupData();
+   mName = other.mName;
+   mSelected = other.mSelected;
 }
 
 void Track::DoSetLinkType(LinkType linkType, bool completeList)
@@ -164,37 +159,38 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
    if (oldType == LinkType::None) {
       // Becoming linked
 
-      // First ensure there is no partner
+      // First ensure that the previous does not link to this
       if (auto partner = GetLinkedTrack())
-         partner->DestroyGroupData();
+         partner->mLinkType = LinkType::None;
       assert(!GetLinkedTrack());
 
-      // Change the link type
-      GetGroupData().mLinkType = linkType;
+      // Change my link type
+      mLinkType = linkType;
 
-      // If this acquired a partner, it loses any old group data
-      if (auto partner = GetLinkedTrack())
-         partner->DestroyGroupData();
+      // Keep link consistency, while still in un-zipped state
+      if (auto partner = GetLinkedTrack()) {
+         partner->mLinkType = LinkType::None;
+         partner->CopyGroupProperties(*this);
+      }
    }
    else if (linkType == LinkType::None) {
       // Becoming unlinked
-      assert(FindGroupData());
       if (HasLinkedTrack()) {
          if (auto partner = GetLinkedTrack()) {
             // Make independent copy of group data in the partner, which should
             // have had none
-            assert(!partner->FindGroupData());
-            partner->ChannelGroup::Init(*this);
-            partner->GetGroupData().mLinkType = LinkType::None;
+            ChannelGroupAttachments &base = *partner;
+            // Intentional slice assignment deep-copies the attachment array:
+            base = *this;
+            partner->CopyGroupProperties(*this);
+            partner->mLinkType = LinkType::None;
          }
       }
-      GetGroupData().mLinkType = LinkType::None;
+      mLinkType = LinkType::None;
    }
-   else {
+   else
       // Remaining linked, changing the type
-      assert(FindGroupData());
-      GetGroupData().mLinkType = linkType;
-   }
+      mLinkType = linkType;
 
    // Assertion checks only in a debug build, does not have side effects!
    assert(!completeList || LinkConsistencyCheck());
@@ -228,8 +224,7 @@ Track *Track::GetLinkedTrack() const
 
 bool Track::HasLinkedTrack() const noexcept
 {
-   auto pGroupData = FindGroupData();
-   return pGroupData && pGroupData->mLinkType != LinkType::None;
+   return mLinkType != LinkType::None;
 }
 
 std::optional<TranslatableString> Track::GetErrorOpening() const
@@ -547,14 +542,8 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
-      if (auto pGroupData = pLast->FindGroupData()
-         ; pGroupData && pGroupData->mLinkType != Track::LinkType::None
-      ) {
-         // Assume the newly added track is intended to pair with the last
-         // Avoid upsetting assumptions in case this track had its own group
-         // data initialized during Duplicate()
-         t->DestroyGroupData();
-      }
+      if (pLast->mLinkType != Track::LinkType::None)
+         t->CopyGroupProperties(*pLast);
    }
 
    push_back(t);
@@ -865,8 +854,7 @@ void Track::AdjustPositions()
 
 Track::LinkType Track::GetLinkType() const noexcept
 {
-   const auto pGroupData = FindGroupData();
-   return pGroupData ? pGroupData->mLinkType : LinkType::None;
+   return mLinkType;
 }
 
 TrackListHolder TrackList::Temporary(AudacityProject *pProject,

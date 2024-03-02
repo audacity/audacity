@@ -71,8 +71,7 @@ key { [](auto &) { return std::make_unique<PlacementArray>(); } };
 // Access for per-track effect list
 PlacementArray &PlacementArray::Get(Track &track)
 {
-   return track.GetGroupData().Attachments
-      ::Get<PlacementArray>(key);
+   return track.Attachments::Get<PlacementArray>(key);
 }
 
 const PlacementArray &PlacementArray::Get(const Track &track)

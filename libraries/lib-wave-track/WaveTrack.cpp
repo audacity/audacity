@@ -966,8 +966,7 @@ std::unique_ptr<ClientData::Cloneable<>> WaveTrackData::Clone() const {
 }
 
 WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
-   return track.GetGroupData().Attachments
-      ::Get<WaveTrackData>(waveTrackDataFactory);
+   return track.Attachments::Get<WaveTrackData>(waveTrackDataFactory);
 }
 
 const WaveTrackData &WaveTrackData::Get(const WaveTrack &track)
@@ -1337,7 +1336,6 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
          if (!AreAligned(SortedClipArray(), next->SortedClipArray()) ||
              !RateConsistencyCheck() || !FormatConsistencyCheck())
          {
-            next->DestroyGroupData();
             SetLinkType(linkType = LinkType::None);
          }
          else
@@ -4216,12 +4214,8 @@ void WaveTrack::ZipClips(bool mustAlign)
    assert(NChannels() == 1); // pre
 
    // If deserializing, first un-link the track, so iterator finds the partner.
-   // Unusual remaining use of TrackList::Channels
-   auto range = TrackList::Channels(this);
-   if (NChannels() == 1 && range.size() == 2) {
-      (*range.rbegin())->DestroyGroupData();
-      this->SetLinkType(LinkType::None);
-   }
+   SetLinkType(LinkType::None);
+
    auto iter = pOwner->Find(this);
    assert(this == *iter);
    ++iter;

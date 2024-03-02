@@ -231,10 +231,6 @@ public:
 
    LinkType GetLinkType() const noexcept;
 
-   ChannelGroupData &GetGroupData();
-   //! May make group data on demand, but consider that logically const
-   const ChannelGroupData &GetGroupData() const;
-
 protected:
 
    /*!
@@ -434,6 +430,14 @@ public:
 
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
+
+private:
+   void CopyGroupProperties(const Track &other);
+
+   wxString mName;
+   // This is important only during loading of files
+   LinkType mLinkType{ LinkType::None };
+   bool mSelected{ false };
 };
 
 ENUMERATE_TRACK_TYPE(Track);

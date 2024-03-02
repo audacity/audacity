@@ -61,7 +61,7 @@ RealtimeEffectList::Get(const AudacityProject &project)
 static const ChannelGroup::Attachments::RegisteredFactory
 channelGroupEffects
 {
-   [](ChannelGroup::ChannelGroupData&)
+   [](auto&)
    {
       return std::make_unique<RealtimeEffectList>();
    }
@@ -70,8 +70,7 @@ channelGroupEffects
 // Access for per-group effect list
 RealtimeEffectList &RealtimeEffectList::Get(ChannelGroup &group)
 {
-   return group.GetGroupData()
-      .Attachments::Get<RealtimeEffectList>(channelGroupEffects);
+   return group.Attachments::Get<RealtimeEffectList>(channelGroupEffects);
 }
 
 const RealtimeEffectList &RealtimeEffectList::Get(
