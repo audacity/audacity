@@ -740,7 +740,9 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
-   const WaveClip* GetClipAtTime(double time) const;
+   //! Return all WaveClips sorted by clip play start time.
+   IntervalConstHolders SortedClipArray() const;
+   IntervalConstHolder GetClipAtTime(double time) const;
 
    void CreateRight();
 
@@ -772,12 +774,6 @@ public:
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
-
-private:
-   //! Return all WaveClips sorted by clip play start time.
-   WaveClipPointers SortedClipArray();
-   //! Return all WaveClips sorted by clip play start time.
-   WaveClipConstPointers SortedClipArray() const;
 
 public:
    //! Return all (wide) WaveClips sorted by clip play start time.

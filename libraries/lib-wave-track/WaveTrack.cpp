@@ -1049,12 +1049,13 @@ void WaveTrackData::SetRate(int value)
 }
 
 namespace {
-bool AreAligned(const WaveClipPointers& a, const WaveClipPointers& b)
+bool AreAligned(const WaveTrack::IntervalConstHolders& a,
+   const WaveTrack::IntervalConstHolders& b)
 {
    if (a.size() != b.size())
       return false;
 
-   const auto compare = [](const WaveClip* a, const WaveClip* b) {
+   const auto compare = [](const auto &a, const auto &b) {
       // clips are aligned if both sequence start/end
       // points and play start/end points of the first clip match
       // the corresponding points of the other clip
@@ -3762,12 +3763,12 @@ void WaveTrack::GetEnvelopeValues(
 
 // When the time is both the end of a clip and the start of the next clip, the
 // latter clip is returned.
-const WaveClip* WaveTrack::GetClipAtTime(double time) const
+auto WaveTrack::GetClipAtTime(double time) const -> IntervalConstHolder
 {
    const auto clips = SortedClipArray();
    auto p = std::find_if(
-      clips.rbegin(), clips.rend(), [&](const WaveClip* const& clip) {
-         return clip->WithinPlayRegion(time);
+      clips.rbegin(), clips.rend(), [&](const auto &pClip) {
+         return pClip->WithinPlayRegion(time);
       });
    return p != clips.rend() ? *p : nullptr;
 }
@@ -4152,28 +4153,14 @@ bool WaveTrack::SetFloats(const float *const *buffers,
    return result;
 }
 
-namespace {
-   template < typename Cont1, typename Cont2 >
-   Cont1 FillSortedClipArray(const Cont2& mClips)
-   {
-      Cont1 clips;
-      for (const auto &clip : mClips)
-         clips.push_back(clip.get());
-      std::sort(clips.begin(), clips.end(),
-         [](const WaveClip *a, const WaveClip *b)
-      { return a->GetPlayStartTime() < b->GetPlayStartTime(); });
-      return clips;
-   }
-}
-
-WaveClipPointers WaveTrack::SortedClipArray()
+auto WaveTrack::SortedClipArray() const -> IntervalConstHolders
 {
-   return FillSortedClipArray<WaveClipPointers>(NarrowClips());
-}
-
-WaveClipConstPointers WaveTrack::SortedClipArray() const
-{
-   return FillSortedClipArray<WaveClipConstPointers>(NarrowClips());
+   const auto &intervals = Intervals();
+   IntervalConstHolders clips{ intervals.begin(), intervals.end() };
+   const auto comp = [](const auto &a, const auto &b) {
+      return a->GetPlayStartTime() < b->GetPlayStartTime(); };
+   std::sort(clips.begin(), clips.end(), comp);
+   return clips;
 }
 
 auto WaveTrack::SortedIntervalArray() -> IntervalHolders
