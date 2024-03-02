@@ -62,20 +62,17 @@ void TrackUtilities::DoTrackMute(
 {
    auto &tracks = TrackList::Get(project);
 
-   // Whatever t is, replace with lead channel
-   const auto t = *tracks.Find(&track);
-
    // "exclusive" mute means mute the chosen track and unmute all others.
    if (exclusive) {
-      for (auto leader : tracks.Any<PlayableTrack>()) {
-         bool chosen = (t == leader);
-         leader->SetMute(chosen);
-         leader->SetSolo(false);
+      for (auto playable : tracks.Any<PlayableTrack>()) {
+         bool chosen = (&track == playable);
+         playable->SetMute(chosen);
+         playable->SetSolo(false);
       }
    }
    else {
       // Normal click toggles this track.
-      auto pt = dynamic_cast<PlayableTrack *>( t );
+      auto pt = dynamic_cast<PlayableTrack *>(&track);
       if (!pt)
          return;
 
@@ -107,10 +104,7 @@ void  TrackUtilities::DoTrackSolo(
 {
    auto &tracks = TrackList::Get( project );
    
-   // Whatever t is, replace with lead channel
-   const auto t = *tracks.Find(&track);
-
-   const auto pt = dynamic_cast<PlayableTrack *>( t );
+   const auto pt = dynamic_cast<PlayableTrack *>(&track);
    if (!pt)
       return;
    bool bWasSolo = pt->GetSolo();
@@ -128,17 +122,17 @@ void  TrackUtilities::DoTrackSolo(
    else {
       // Normal click solo this track only, mute everything else.
       // OR unmute and unsolo everything.
-      for (auto leader : tracks.Any<PlayableTrack>()) {
-         bool chosen = (t == leader);
+      for (auto playable : tracks.Any<PlayableTrack>()) {
+         bool chosen = (&track == playable);
          if (chosen) {
-            leader->SetSolo(!bWasSolo);
+            playable->SetSolo(!bWasSolo);
             if (simple)
-               leader->SetMute(false);
+               playable->SetMute(false);
          }
          else {
-            leader->SetSolo(false);
+            playable->SetSolo(false);
             if (simple)
-               leader->SetMute(!bWasSolo);
+               playable->SetMute(!bWasSolo);
          }
       }
    }

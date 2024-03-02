@@ -799,7 +799,7 @@ void OnSplit(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get(project);
    auto [sel0, sel1] = FindSelection(context);
-   if (auto *pTrack = *tracks.Find(context.temporarySelection.pTrack)) {
+   if (auto *pTrack = context.temporarySelection.pTrack) {
       if (auto pWaveTrack = dynamic_cast<WaveTrack*>(pTrack))
          pWaveTrack->Split(sel0, sel1);
       else

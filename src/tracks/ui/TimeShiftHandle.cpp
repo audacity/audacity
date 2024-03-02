@@ -32,10 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 TimeShiftHandle::TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit)
    : mGripHit{ gripHit }
 {
-   //! Substitute the leader track before assigning mCapturedTrack
-   if (pTrack)
-      if (const auto pOwner = pTrack->GetOwner())
-         pTrack = (*pOwner->Find(pTrack.get()))->SharedPointer();
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
@@ -732,9 +728,6 @@ void TimeShiftHandle::DoSlideVertical(
    TrackList &trackList, Track *dstTrack, double& desiredSlideAmount)
 {
    Correspondence correspondence;
-
-   // Substitute leader track before reassigning mCapturedTrack
-   dstTrack = *trackList.Find(dstTrack);
 
    // See if captured track corresponds to another
    auto &capturedTrack = *mClipMoveState.mCapturedTrack;

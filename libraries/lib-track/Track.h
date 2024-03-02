@@ -919,10 +919,8 @@ class TRACK_API TrackList final
    //! get end iterator if this does not own the track
    TrackIter<Track> DoFind(Track *pTrack);
 
-   // If the track is not an audio track, or not one of a group of channels,
-   // return the track itself; else return the first channel of its group --
-   // in either case as an iterator that will only visit other leader tracks.
-   // (Generalizing away from the assumption of at most stereo)
+   // From a track, get an iterator into its owning TrackList.  If it is not
+   // owned, get a default constructed iterator.
    TrackIter<Track> Find(Track *pTrack);
 
    TrackIter<const Track> Find(const Track *pTrack) const
@@ -992,7 +990,6 @@ private:
       static TrackIterRange< TrackType >
          Channels_( TrackIter< InTrackType > iter1 )
    {
-      // Assume iterator filters leader tracks
       if (*iter1) {
          return {
             iter1.Filter( &Track::Any )

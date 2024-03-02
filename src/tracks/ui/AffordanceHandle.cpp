@@ -99,8 +99,7 @@ UIHandle::Result AffordanceHandle::UpdateTrackSelection(const TrackPanelMouseEve
     {
         auto& selectionState = SelectionState::Get(*pProject);
         selectionState.SelectNone(trackList);
-        if (auto pTrack = *trackList.Find(track.get()))
-           selectionState.SelectTrack(*pTrack, true, true);
+        selectionState.SelectTrack(*track, true, true);
 
         return SelectAt(event, pProject);
     }

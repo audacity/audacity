@@ -83,9 +83,6 @@ void SelectionState::SelectRangeOfTracks(
    auto begin = tracks.begin(),
       iterS = tracks.Find(sTrack),
       iterE = tracks.Find(eTrack);
-   // Be sure to substitute the leaders for given tracks
-   sTrack = *iterS;
-   eTrack = *iterE;
    auto indS = std::distance(begin, iterS),
       indE = std::distance(begin, iterE);
    if (indE < indS)

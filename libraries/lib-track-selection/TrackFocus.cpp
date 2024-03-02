@@ -160,7 +160,6 @@ Track *TrackFocus::Get()
 
 void TrackFocus::Set(Track *pTrack, bool focusPanel)
 {
-   pTrack = *TrackList::Get(mProject).Find(pTrack);
    SetFocus(Track::SharedPointer(pTrack), focusPanel);
 }
 

@@ -3673,10 +3673,6 @@ bool WaveChannel::HasTrivialEnvelope() const
 bool WaveTrack::HasTrivialEnvelope() const
 {
    auto pTrack = this;
-   if (pTrack->GetOwner())
-      // Substitute the leader track
-      pTrack =
-         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
    if (!pTrack)
       return false;
    auto clips = pTrack->Intervals();
@@ -3694,11 +3690,6 @@ void WaveTrack::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
    auto pTrack = this;
-   if (pTrack->GetOwner())
-      // Substitute the leader track
-      pTrack =
-         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
-
    if (!pTrack)
       return;
 
