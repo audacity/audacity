@@ -19,10 +19,7 @@ class ChannelGroup;
  Extends the interface for random access into a sample stream with tests for
  muting and solo
  */
-struct MIXER_API PlayableSequence
-   // TODO wide wave tracks -- remove virtual
-   : virtual WideSampleSequence
-{
+struct MIXER_API PlayableSequence : WideSampleSequence {
    ~PlayableSequence() override;
 
    //! Find associated ChannelGroup if any
