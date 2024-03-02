@@ -156,7 +156,7 @@ public:
    constSamplePtr GetAppendBuffer() const;
    size_t GetAppendBufferLen() const;
 
-   BlockArray *GetSequenceBlockArray();
+   const BlockArray *GetSequenceBlockArray() const;
 
    /*!
     Getting high-level data for one channel for screen display and clipping
