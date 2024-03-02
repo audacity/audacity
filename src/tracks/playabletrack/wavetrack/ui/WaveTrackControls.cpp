@@ -878,12 +878,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 /// Swap the left and right channels of a stero track...
 void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 {
-   // Fix assertion violation in `TrackPanel::OnEnsureVisible` by
-   // dispatching any queued event
-   // TODO wide wave tracks -- remove this when there is no "leader" distinction
-   // any more
-   wxTheApp->Yield();
-
    AudacityProject *const project = &mpData->project;
 
    auto &trackFocus = TrackFocus::Get( *project );
