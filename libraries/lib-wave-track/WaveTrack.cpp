@@ -3762,11 +3762,6 @@ void WaveTrack::GetEnvelopeValues(
 
 // When the time is both the end of a clip and the start of the next clip, the
 // latter clip is returned.
-WaveClip* WaveTrack::GetClipAtTime(double time)
-{
-   return const_cast<WaveClip*>(std::as_const(*this).GetClipAtTime(time));
-}
-
 const WaveClip* WaveTrack::GetClipAtTime(double time) const
 {
    const auto clips = SortedClipArray();
