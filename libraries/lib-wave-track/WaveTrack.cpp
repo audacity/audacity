@@ -2323,12 +2323,6 @@ auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    return { it, it2 };
 }
 
-auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
-   -> ConstIterPair
-{
-   return const_cast<WaveTrack&>(*this).FindWideClip(clip, pDistance);
-}
-
 void WaveTrack::RemoveWideClip(IterPair pair)
 {
    NarrowClips().erase(pair.first);
