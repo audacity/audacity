@@ -372,7 +372,7 @@ SampleFormats WaveClip::GetSampleFormats() const
    return mSequences[0]->GetSampleFormats();
 }
 
-const SampleBlockFactoryPtr &WaveClip::GetFactory()
+const SampleBlockFactoryPtr &WaveClip::GetFactory() const
 {
    // All sequences have the same factory by class invariant
    return mSequences[0]->GetFactory();

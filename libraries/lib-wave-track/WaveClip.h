@@ -586,7 +586,7 @@ private:
    sampleCount TimeToSequenceSamples(double t) const;
    bool StretchRatioEquals(double value) const;
    sampleCount GetNumSamples() const;
-   const SampleBlockFactoryPtr &GetFactory();
+   const SampleBlockFactoryPtr &GetFactory() const;
    std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
