@@ -363,6 +363,7 @@ bool WaveClip::StretchRatioEquals(double value) const
 sampleCount WaveClip::GetNumSamples() const
 {
    // All sequences have equal lengths by class invariant
+   // This assumption will be relaxed later!
    return mSequences[0]->GetNumSamples();
 }
 
@@ -543,6 +544,26 @@ void WaveClip::Flush()
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
+}
+
+void WaveClip::RepairChannels()
+{
+   if (GetWidth() < 2)
+      return;
+   // Be sure of consistency of sample counts
+   // We may be here because the drive can't hold another megabyte, but
+   // note that InsertSilence makes silent blocks that don't occupy
+   // space in the database table of blocks.
+   // (However autosave may want to rewrite the document blob, so this solution
+   // may yet not be perfect.)
+   Transaction transaction{ *this };
+   const auto maxSamples = GetNumSamples();
+   for (const auto &pSequence: mSequences) {
+      const auto numSamples = pSequence->GetNumSamples();
+      if (pSequence->GetNumSamples() != maxSamples)
+         pSequence->InsertSilence(numSamples, maxSamples - numSamples);
+   }
+   transaction.Commit();
 }
 
 static constexpr auto Offset_attr = "offset";

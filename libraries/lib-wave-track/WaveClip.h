@@ -469,6 +469,9 @@ public:
     */
    void Flush();
 
+   //! Ensure that all sequences have the same sample count
+   void RepairChannels();
+
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void Clear(double t0, double t1);

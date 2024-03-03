@@ -70,6 +70,10 @@ struct MIXER_API RecordableSequence {
    //! Flush must be called after last Append
    virtual void Flush() = 0;
 
+   //! Called in exception handling after possibly unbalanced calls to Append
+   //! in different channels. Allows the sequence to repair consistency.
+   virtual void RepairChannels() = 0;
+
    virtual void InsertSilence(double t, double len) = 0;
 };
 

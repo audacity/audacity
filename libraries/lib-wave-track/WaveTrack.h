@@ -637,6 +637,8 @@ public:
 
    void Flush() override;
 
+   void RepairChannels() override;
+
    //! @name PlayableSequence implementation
    //! @{
    const ChannelGroup *FindChannelGroup() const override;
@@ -865,6 +867,7 @@ public:
 
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
+      void RepairChannels();
 
       /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
       /// operation (but without putting the cut audio to the clipboard)

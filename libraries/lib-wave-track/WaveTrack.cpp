@@ -323,6 +323,11 @@ void WaveTrack::Interval::Flush()
    ForEachClip([](auto& clip) { clip.Flush(); });
 }
 
+void WaveTrack::Interval::RepairChannels()
+{
+   ForEachClip([](auto& clip) { clip.RepairChannels(); });
+}
+
 void WaveTrack::Interval::Clear(double t0, double t1)
 {
    ForEachClip([&](auto& clip) { clip.Clear(t0, t1); });
@@ -3117,6 +3122,12 @@ void WaveTrack::Flush()
       return;
    // After appending, presumably.  Do this to the clip that gets appended.
    GetRightmostClip()->Flush();
+}
+
+void WaveTrack::RepairChannels()
+{
+   for (auto pInterval : Intervals())
+      pInterval->RepairChannels();
 }
 
 void WaveTrack::SetLegacyFormat(sampleFormat format)
