@@ -211,7 +211,8 @@ constSamplePtr WaveChannelInterval::GetAppendBuffer() const
 
 size_t WaveChannelInterval::GetAppendBufferLen() const
 {
-   return GetNarrowClip().GetAppendBufferLen();
+   // TODO wide wave tracks -- use miChannel
+   return GetNarrowClip().GetAppendBufferLen(0);
 }
 
 BlockArray *WaveChannelInterval::GetSequenceBlockArray()

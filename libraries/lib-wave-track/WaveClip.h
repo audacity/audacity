@@ -563,7 +563,11 @@ public:
     @pre `ii < GetWidth()`
     */
    constSamplePtr GetAppendBuffer(size_t ii) const;
-   size_t GetAppendBufferLen() const;
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   size_t GetAppendBufferLen(size_t ii) const;
 
    void
    OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo);
@@ -571,6 +575,8 @@ public:
    SampleFormats GetSampleFormats() const;
 
 private:
+   size_t GreatestAppendBufferLen() const;
+
    //! Called by mutating operations; notifies listeners
    /*! @excsafety{No-fail} */
    void MarkChanged();
@@ -623,7 +629,7 @@ private:
    /*!
     @invariant `mSequences.size() > 0`
     @invariant all are non-null
-    @invariant all sequences have the same lengths, append buffer lengths,
+    @invariant all sequences have the same lengths,
       sample formats, and sample block factory
     @invariant all cutlines have the same width
     */
@@ -641,7 +647,6 @@ private:
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
    bool mIsPlaceholder { false };
 
-private:
    wxString mName;
 };
 

@@ -232,10 +232,18 @@ const BlockArray* WaveClip::GetSequenceBlockArray(size_t ii) const
    return &mSequences[ii]->GetBlockArray();
 }
 
-size_t WaveClip::GetAppendBufferLen() const
+size_t WaveClip::GetAppendBufferLen(size_t iChannel) const
 {
-   // All append buffers have equal lengths by class invariant
-   return mSequences[0]->GetAppendBufferLen();
+   assert(iChannel < GetWidth());
+   return mSequences[iChannel]->GetAppendBufferLen();
+}
+
+size_t WaveClip::GreatestAppendBufferLen() const
+{
+   size_t result = 0;
+   for (size_t iChannel = 0; iChannel < GetWidth(); ++iChannel)
+      result = std::max(result, mSequences[iChannel]->GetAppendBufferLen());
+   return result;
 }
 
 void WaveClip::OnProjectTempoChange(
@@ -512,7 +520,7 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
-   if (GetAppendBufferLen() > 0) {
+   if (GreatestAppendBufferLen() > 0) {
 
       Transaction transaction{ *this };
 
@@ -1289,7 +1297,7 @@ double WaveClip::GetPlayEndTime() const
 {
     const auto numSamples = GetNumSamples();
     double maxLen = mSequenceOffset +
-                    ((numSamples + GetAppendBufferLen()).as_double()) *
+                    ((numSamples + GreatestAppendBufferLen()).as_double()) *
                        GetStretchRatio() / mRate -
                     mTrimRight;
     // JS: calculated value is not the length;
@@ -1508,8 +1516,6 @@ bool WaveClip::CheckInvariants() const
          std::all_of(iter, end, [&](decltype(pFirst) pSequence) {
             return pSequence &&
                pSequence->GetNumSamples() == pFirst->GetNumSamples() &&
-               pSequence->GetAppendBufferLen() == pFirst->GetAppendBufferLen()
-                  &&
                pSequence->GetSampleFormats() == pFirst->GetSampleFormats() &&
                pSequence->GetFactory() == pFirst->GetFactory();
          }) &&
