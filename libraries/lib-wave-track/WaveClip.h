@@ -428,14 +428,21 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
-   //! @pre `GetWidth() == 1`
    std::shared_ptr<SampleBlock>
    AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! For use in importing pre-version-3 projects to preserve sharing of
+   //! blocks; no dithering applied
    //! @pre `GetWidth() == 1`
-   void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
+   std::shared_ptr<SampleBlock>
+   AppendLegacyNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
+
+   //! For use in importing pre-version-3 projects to preserve sharing of
+   //! blocks
+   /*!
+    @pre `GetWidth() == 1`
+    */
+   void AppendLegacySharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
    //! Append (non-interleaved) samples to all channels
    //! You must call Flush after the last Append
