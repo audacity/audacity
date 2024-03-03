@@ -1146,19 +1146,40 @@ AudioSegmentSampleView Sequence::GetFloatSampleView(
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, bool mayThrow) const
 {
-   if (start == mNumSamples) {
-      return len == 0;
+   const auto sampleSize = SAMPLE_SIZE(format);
+   bool outOfBounds = false;
+   
+   if (start < 0) {
+      const auto fillLen = limitSampleBufferSize(len, -start);
+      ClearSamples(buffer, format, 0, fillLen);
+      if (len == fillLen)
+         return false;
+      start = 0;
+      buffer += fillLen * sampleSize;
+      len -= fillLen;
+      outOfBounds = true;
    }
 
-   if (start < 0 || start + len > mNumSamples) {
-      if (mayThrow)
-         THROW_INCONSISTENCY_EXCEPTION;
-      ClearSamples( buffer, floatSample, 0, len );
+   if (start >= mNumSamples) {
+      ClearSamples(buffer, format, 0, len);
       return false;
+   }
+   
+   assert(start >= 0);  // Returned already if this is false
+   assert(start < mNumSamples);  // Returned already if this is false
+   if (start + len > mNumSamples) {
+      // Previous assertions justify as_size_t
+      const auto excess = (start + len - mNumSamples).as_size_t();
+      ClearSamples(buffer, format, len - excess, excess);
+      if (len == excess)
+         return true;
+      len -= excess;
+      outOfBounds = true;
    }
    int b = FindBlock(start);
 
-   return Get(b, buffer, format, start, len, mayThrow);
+   return Get(b, buffer, format, start, len, mayThrow) &&
+      !outOfBounds;
 }
 
 bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,
