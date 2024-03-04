@@ -342,7 +342,7 @@ public:
     */
    bool CoversEntirePlayRegion(double t0, double t1) const;
 
-   //! Counts number of samples within t0 and t1 region. t0 and t1 are
+   //! Counts number of sample times within t0 and t1 region. t0 and t1 are
    //! rounded to the nearest clip sample boundary, i.e. relative to clips
    //! start time offset.
    //! @returns Number of samples within t0 and t1 if t1 > t0, 0 otherwise

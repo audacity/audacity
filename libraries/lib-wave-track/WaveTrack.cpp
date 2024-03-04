@@ -282,6 +282,44 @@ WaveTrack::Interval::Interval(
 {
 }
 
+WaveTrack::Interval::Interval(const ChannelGroup &group,
+   const Interval& orig,
+   const SampleBlockFactoryPtr &factory,
+   bool copyCutlines
+)  : WideChannelGroupInterval{ group }
+   , mpClip{
+      std::make_shared<WaveClip>(*orig.mpClip, factory, copyCutlines) }
+   , mpClip1{ orig.mpClip1
+      ? std::make_shared<WaveClip>(*orig.mpClip1, factory, copyCutlines)
+      : nullptr }
+{
+}
+
+WaveTrack::Interval::Interval(const ChannelGroup &group,
+   const Interval& orig,
+   const SampleBlockFactoryPtr &factory,
+   bool copyCutlines,
+   double t0, double t1
+)  : WideChannelGroupInterval{ group }
+   , mpClip{
+      std::make_shared<WaveClip>(*orig.mpClip, factory, copyCutlines, t0, t1) }
+   , mpClip1{ orig.mpClip1
+      ? std::make_shared<WaveClip>(*orig.mpClip1, factory, copyCutlines, t0, t1)
+      : nullptr }
+{
+}
+
+bool WaveTrack::Interval::IsEmpty() const
+{
+   return mpClip->IsEmpty() && (!mpClip1 || mpClip1->IsEmpty());
+}
+
+sampleCount WaveTrack::Interval::CountSamples(double t0, double t1) const
+{
+   // Sample times in the interval, independent of its width
+   return GetClip(0)->CountSamples(t0, t1);
+}
+
 WaveTrack::Interval::~Interval() = default;
 
 double WaveTrack::Interval::Start() const

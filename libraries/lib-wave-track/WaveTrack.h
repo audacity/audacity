@@ -850,6 +850,15 @@ public:
 
       Interval(const Interval &) = delete;
       Interval& operator=(const Interval &) = delete;
+   
+      Interval(const ChannelGroup &group, const Interval& orig,
+         const SampleBlockFactoryPtr &factory,
+         bool copyCutlines);
+
+      Interval(const ChannelGroup &group, const Interval& orig,
+         const SampleBlockFactoryPtr &factory,
+         bool copyCutlines,
+         double t0, double t1);
 
       ~Interval() override;
 
@@ -862,6 +871,9 @@ public:
 
       //! An invariant condition, for assertions
       bool EqualSequenceLengthInvariant() const;
+
+      bool IsEmpty() const;
+      sampleCount CountSamples(double t0, double t1) const;
 
       void Append(constSamplePtr buffer[], sampleFormat format, size_t len);
       void Flush();
