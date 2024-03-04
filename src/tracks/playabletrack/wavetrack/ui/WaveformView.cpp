@@ -977,6 +977,14 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context, size_t channel,
    auto pLeader = *track.GetHolder()->Find(&track);
    assert(pLeader->IsLeader());
 
+   if(&track != pLeader && track.NIntervals() != pLeader->NIntervals())
+      //We don't have a guarantee that left and right channels have same number
+      //of intervals. Sometimes pasting a large amount of data may trigger
+      //UI event loop updates. When that happens it can well be that one
+      //channel has finished pasting while the other hasn't.
+      //TODO: The check would become unnecessary once wave-clip-refactoring is complete. 
+      return;
+
    for (const auto pInterval :
       static_cast<const WaveTrack*>(pLeader)->GetChannel(channel)->Intervals()
    ) {
