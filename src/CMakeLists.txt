@@ -1430,6 +1430,8 @@ if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
       PATTERN "*.dSYM" EXCLUDE
       PATTERN "image-compiler" EXCLUDE
       PATTERN "image-compiler.exe" EXCLUDE
+      PATTERN "riff-test-util" EXCLUDE
+      PATTERN "riff-test-util.exe" EXCLUDE
    )
 else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
