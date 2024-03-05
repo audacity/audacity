@@ -380,4 +380,25 @@ OAuthService& GetOAuthService()
    static OAuthService service;
    return service;
 }
-} // namespace cloud::audiocom
+
+namespace
+{
+
+class OAuthServiceSettingsResetHandler final : public PreferencesResetHandler
+{
+public:
+   void OnSettingResetBegin() override
+   {
+   }
+
+   void OnSettingResetEnd() override
+   {
+      refreshToken.Invalidate();
+   }
+};
+
+static PreferencesResetHandler::Registration<OAuthServiceSettingsResetHandler>
+   resetHandler;
+}
+
+} // namespace audacity::cloud::audiocom
