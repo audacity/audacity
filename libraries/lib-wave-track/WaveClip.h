@@ -106,6 +106,7 @@ struct WaveClipListener : WaveClipListenerBase {
 
 class WAVE_TRACK_API WaveClipChannel
    : public ChannelInterval
+   , public ClipTimes
 {
 public:
    WaveClipChannel(WaveClip &clip, size_t iChannel)
@@ -116,6 +117,100 @@ public:
 
    WaveClip &GetClip() { return mClip; }
    const WaveClip &GetClip() const { return mClip; }
+
+   size_t GetChannelIndex() const { return miChannel; }
+
+   Envelope &GetEnvelope();
+   const Envelope &GetEnvelope() const;
+
+   bool Intersects(double t0, double t1) const;
+   double Start() const;
+   double End() const;
+
+   /*!
+    * @brief Request interval samples within [t0, t1). `t0` and `t1` are
+    * truncated to the interval start and end. Stretching influences the number
+    * of samples fitting into [t0, t1), i.e., half as many for twice as large a
+    * stretch ratio, due to a larger spacing of the raw samples. The actual
+    * number of samples available from the returned view is queried through
+    * `AudioSegmentSampleView::GetSampleCount()`.
+    *
+    * @pre samples in [t0, t1) can be counted with `size_t`
+    */
+   AudioSegmentSampleView
+   GetSampleView(double t0, double t1, bool mayThrow) const;
+
+   /*!
+    * @brief  t ∈ [...)
+    */
+   bool WithinPlayRegion(double t) const;
+   double SamplesToTime(sampleCount s) const noexcept;
+   bool HasPitchOrSpeed() const;
+
+   double GetTrimLeft() const;
+   double GetTrimRight() const;
+
+   bool GetSamples(samplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len, bool mayThrow = true) const;
+
+   AudioSegmentSampleView GetSampleView(
+      sampleCount start, size_t length, bool mayThrow) const;
+
+   const Sequence &GetSequence() const;
+
+   constSamplePtr GetAppendBuffer() const;
+   size_t GetAppendBufferLen() const;
+
+   const BlockArray *GetSequenceBlockArray() const;
+
+   /*!
+    Getting high-level data for one channel for screen display and clipping
+    calculations and Contrast
+    */
+   std::pair<float, float> GetMinMax(double t0, double t1, bool mayThrow) const;
+
+   /*!
+    @copydoc GetMinMax
+    */
+   float GetRMS(double t0, double t1, bool mayThrow) const;
+
+   //! Real start time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayStartSample() const;
+
+   //! Real end time of the clip, quantized to raw sample rate (track's rate)
+   sampleCount GetPlayEndSample() const;
+
+   /*!
+    @param start relative to clip play start sample
+    */
+   void SetSamples(constSamplePtr buffer, sampleFormat format,
+      sampleCount start, size_t len,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
+   void WriteXML(XMLWriter &xmlFile) const;
+
+   // implement ClipTimes
+   sampleCount GetVisibleSampleCount() const override;
+   int GetRate() const override;
+   double GetPlayStartTime() const override;
+   double GetPlayEndTime() const override;
+   double GetPlayDuration() const;
+   sampleCount TimeToSamples(double time) const override;
+   double GetStretchRatio() const override;
+
+   friend inline bool operator ==(
+      const WaveClipChannel &a, const WaveClipChannel &b)
+   { return &a.mClip == &b.mClip && a.miChannel == b.miChannel; }
+   friend inline bool operator !=(
+      const WaveClipChannel &a, const WaveClipChannel &b)
+   { return !(a == b); }
+
 private:
    WaveClip &mClip;
    const size_t miChannel;

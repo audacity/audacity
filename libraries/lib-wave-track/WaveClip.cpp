@@ -49,6 +49,165 @@ bool WaveClipListener::HandleXMLAttribute(
 
 WaveClipChannel::~WaveClipChannel() = default;
 
+Envelope &WaveClipChannel::GetEnvelope()
+{
+   return *GetClip().GetEnvelope();
+}
+
+const Envelope &WaveClipChannel::GetEnvelope() const
+{
+   return *GetClip().GetEnvelope();
+}
+
+bool WaveClipChannel::Intersects(double t0, double t1) const
+{
+   return GetClip().IntersectsPlayRegion(t0, t1);
+}
+
+double WaveClipChannel::Start() const
+{
+   return GetClip().GetPlayStartTime();
+}
+
+double WaveClipChannel::End() const
+{
+   return GetClip().GetPlayEndTime();
+}
+
+AudioSegmentSampleView
+WaveClipChannel::GetSampleView(double t0, double t1, bool mayThrow) const
+{
+   return GetClip().GetSampleView(miChannel, t0, t1, mayThrow);
+}
+
+bool WaveClipChannel::WithinPlayRegion(double t) const
+{
+   return GetClip().WithinPlayRegion(t);
+}
+
+double WaveClipChannel::SamplesToTime(sampleCount s) const noexcept
+{
+   return GetClip().SamplesToTime(s);
+}
+
+bool WaveClipChannel::HasPitchOrSpeed() const
+{
+   return GetClip().HasPitchOrSpeed();
+}
+
+double WaveClipChannel::GetTrimLeft() const
+{
+   return GetClip().GetTrimLeft();
+}
+
+bool WaveClipChannel::GetSamples(samplePtr buffer, sampleFormat format,
+   sampleCount start, size_t len, bool mayThrow) const
+{
+   return GetClip().GetSamples(miChannel, buffer, format, start, len, mayThrow);
+}
+
+AudioSegmentSampleView WaveClipChannel::GetSampleView(
+   sampleCount start, size_t length, bool mayThrow) const
+{
+   return GetClip().GetSampleView(miChannel, start, length, mayThrow);
+}
+
+const Sequence &WaveClipChannel::GetSequence() const
+{
+   const auto pSequence = GetClip().GetSequence(miChannel);
+   // Assume sufficiently wide clip
+   assert(pSequence);
+   return *pSequence;
+}
+
+constSamplePtr WaveClipChannel::GetAppendBuffer() const
+{
+   return GetClip().GetAppendBuffer(miChannel);
+}
+
+size_t WaveClipChannel::GetAppendBufferLen() const
+{
+   return GetClip().GetAppendBufferLen(miChannel);
+}
+
+const BlockArray *WaveClipChannel::GetSequenceBlockArray() const
+{
+   return GetClip().GetSequenceBlockArray(miChannel);
+}
+
+std::pair<float, float>
+WaveClipChannel::GetMinMax(double t0, double t1, bool mayThrow) const
+{
+   return GetClip().GetMinMax(miChannel, t0, t1, mayThrow);
+}
+
+float WaveClipChannel::GetRMS(double t0, double t1, bool mayThrow) const
+{
+   return GetClip().GetRMS(miChannel, t0, t1, mayThrow);
+}
+
+sampleCount WaveClipChannel::GetPlayStartSample() const
+{
+   return GetClip().GetPlayStartSample();
+}
+
+sampleCount WaveClipChannel::GetPlayEndSample() const
+{
+   return GetClip().GetPlayEndSample();
+}
+
+void WaveClipChannel::SetSamples(constSamplePtr buffer, sampleFormat format,
+   sampleCount start, size_t len, sampleFormat effectiveFormat)
+{
+   return GetClip().SetSamples(miChannel,
+      buffer, format, start, len, effectiveFormat);
+}
+
+void WaveClipChannel::WriteXML(XMLWriter &xmlFile) const
+{
+   GetClip().WriteXML(miChannel, xmlFile);
+}
+
+double WaveClipChannel::GetTrimRight() const
+{
+   return GetClip().GetTrimRight();
+}
+
+sampleCount WaveClipChannel::GetVisibleSampleCount() const
+{
+   return GetClip().GetVisibleSampleCount();
+}
+
+int WaveClipChannel::GetRate() const
+{
+   return GetClip().GetRate();
+}
+
+double WaveClipChannel::GetPlayStartTime() const
+{
+   return GetClip().GetPlayStartTime();
+}
+
+double WaveClipChannel::GetPlayEndTime() const
+{
+   return GetClip().GetPlayEndTime();
+}
+
+double WaveClipChannel::GetPlayDuration() const
+{
+   return GetPlayEndTime() - GetPlayStartTime();
+}
+
+sampleCount WaveClipChannel::TimeToSamples(double time) const
+{
+   return GetClip().TimeToSamples(time);
+}
+
+double WaveClipChannel::GetStretchRatio() const
+{
+   return GetClip().GetStretchRatio();
+}
+
 WaveClip::WaveClip(size_t width,
    const SampleBlockFactoryPtr &factory,
    sampleFormat format, int rate)
