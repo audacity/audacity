@@ -1834,18 +1834,18 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    auto newTrack = EmptyCopy(NChannels());
    const auto endTime = std::max(GetEndTime(), t1);
    WaveChannel::CopyOne(newTrack->mChannel, this->mChannel,
-      t0, t1, endTime, forClipboard);
+      t0, t1, forClipboard);
    if (this->mRightChannel) {
       assert(newTrack->mRightChannel);
       WaveChannel::CopyOne(*newTrack->mRightChannel, *this->mRightChannel,
-         t0, t1, endTime, forClipboard);
+         t0, t1, forClipboard);
    }
+   newTrack->FinishCopy(t0, t1, endTime, forClipboard);
    return newTrack;
 }
 
 void WaveChannel::CopyOne(WaveChannel &newChannel,
-   const WaveChannel &channel, double t0, double t1, double endTime,
-   bool forClipboard)
+   const WaveChannel &channel, double t0, double t1, bool forClipboard)
 {
    const auto &pFactory = channel.GetTrack().GetSampleBlockFactory();
 
@@ -1884,20 +1884,21 @@ void WaveChannel::CopyOne(WaveChannel &newChannel,
          newChannel.InsertClip(std::move(newClip), false, false, false);
       }
    }
+}
 
+void WaveTrack::FinishCopy(
+   double t0, double t1, double endTime, bool forClipboard)
+{
    // AWD, Oct 2009: If the selection ends in whitespace, create a
    // placeholder clip representing that whitespace
    // PRL:  Only if we want the track for pasting into other tracks.  Not if
    // it goes directly into a project as in the Duplicate command.
-   if (forClipboard && endTime + 1.0 / newChannel.GetRate() < t1 - t0) {
-      // TODO wide wave tracks -- match clip width of newTrack
-      auto placeholder = std::make_shared<WaveClip>(1, pFactory,
-         newChannel.GetSampleFormat(),
-         static_cast<int>(newChannel.GetRate()));
+   if (forClipboard && endTime + 1.0 / GetRate() < t1 - t0) {
+      auto placeholder = CreateWideClip();
       placeholder->SetIsPlaceholder(true);
-      placeholder->InsertSilence(0, (t1 - t0) - newChannel.GetEndTime());
-      placeholder->ShiftBy(newChannel.GetEndTime());
-      newChannel.InsertClip(std::move(placeholder), true, false, false);
+      placeholder->InsertSilence(0, (t1 - t0) - GetEndTime());
+      placeholder->ShiftBy(GetEndTime());
+      InsertInterval(move(placeholder), true, false);
    }
 }
 
