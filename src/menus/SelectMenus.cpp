@@ -14,6 +14,7 @@
 #include "SyncLock.h"
 #include "../TrackPanel.h"
 #include "Viewport.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include "../LabelTrack.h"

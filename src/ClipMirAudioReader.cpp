@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "ClipMirAudioReader.h"
 #include "ClipInterface.h"
+#include "WaveClip.h"
 
 #include <cassert>
 

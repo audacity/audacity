@@ -573,9 +573,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 }
 
 WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
-   // TODO wide wave tracks -- won't need std::max here
-   : mSpecCaches(std::max<size_t>(2, nChannels))
-   , mSpecPxCaches(std::max<size_t>(2, nChannels))
+   : mSpecCaches(nChannels)
+   , mSpecPxCaches(nChannels)
 {
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
@@ -598,7 +597,7 @@ static WaveClip::Attachments::RegisteredFactory sKeyS{ [](WaveClip &clip){
 WaveClipSpectrumCache &
 WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
 {
-   return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
+   return const_cast<WaveClip&>(clip.GetClip()) // Consider it mutable data
       .Attachments::Get< WaveClipSpectrumCache >( sKeyS );
 }
 

@@ -13,7 +13,8 @@
 
 class sampleCount;
 class SpectrogramSettings;
-class WaveChannelInterval;
+class WaveClipChannel;
+using WaveChannelInterval = WaveClipChannel;
 class WideSampleSequence;
 
 #include <vector>
