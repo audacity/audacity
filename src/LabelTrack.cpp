@@ -47,6 +47,16 @@ for drawing different aspects of the label and its text box.
 
 LabelTrack::Interval::~Interval() = default;
 
+double LabelTrack::Interval::Start() const
+{
+   return mpTrack->GetLabel(index)->selectedRegion.t0();
+}
+
+double LabelTrack::Interval::End() const
+{
+   return mpTrack->GetLabel(index)->selectedRegion.t1();
+}
+
 std::shared_ptr<ChannelInterval>
 LabelTrack::Interval::DoGetChannel(size_t iChannel)
 {
@@ -139,9 +149,7 @@ auto LabelTrack::MakeInterval(size_t index) -> std::shared_ptr<Interval>
 {
    if (index >= mLabels.size())
       return {};
-   auto &label = mLabels[index];
-   return std::make_shared<Interval>(
-      *this, label.getT0(), label.getT1(), index);
+   return std::make_shared<Interval>(*this, index);
 }
 
 std::shared_ptr<WideChannelGroupInterval>
@@ -335,7 +343,7 @@ TrackListHolder LabelTrack::Clone(bool) const
    assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result, nullptr);
+   return TrackList::Temporary(nullptr, result);
 }
 
 // Adjust label's left or right boundary, depending which is requested.
@@ -768,7 +776,7 @@ TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return TrackList::Temporary(nullptr, tmp, nullptr);
+   return TrackList::Temporary(nullptr, tmp);
 }
 
 

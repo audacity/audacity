@@ -84,20 +84,26 @@ public:
    //! Append the other's attachments to this, assuming concrete subclasses are
    //! the same
    /*!
+    Calls Reparent, so it needs a track
     @pre `typeid(*this) == typeid(other)`
     @pre `Size() <= 1`
     @pre `other.Size() <= 1`
     */
-   void MakeStereo(ChannelAttachmentsBase &&other);
+   void MakeStereo(const std::shared_ptr<Track> &parent,
+      ChannelAttachmentsBase &&other);
 
    /*!
+    Calls Reparent, so it needs a track
     @pre `Size() <= 2`
     */
-   void SwapChannels();
+   void SwapChannels(const std::shared_ptr<Track> &parent);
 
    //! Erase attachment at a given index, if it existed, moving later-indexed
    //! attachments to earlier indices
-   void Erase(size_t index);
+   /*!
+    Calls Reparent, so it needs a track
+    */
+   void Erase(const std::shared_ptr<Track> &parent, size_t index);
 
 protected:
    /*!

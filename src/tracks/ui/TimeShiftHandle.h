@@ -83,9 +83,25 @@ public:
    //! Change all intervals from fixed to moving
    void UnfixAll();
 
+   //! A simple time interval
+   /*!
+    @invariant `Start() <= End()`
+    */
+   struct TimeInterval {
+      TimeInterval(double start, double end)
+         : mStart{ start }, mEnd{ std::max(start, end) }
+      {}
+      
+      double Start() const { return mStart; }
+      double End() const { return mEnd; }
+   private:
+      const double mStart;
+      const double mEnd;
+   };
+
    //! Notifies the shifter that a region is selected, so it may update its fixed and moving intervals
    /*! Default behavior:  if any part of the track is selected, unfix all parts of it. */
-   virtual void SelectInterval(const ChannelGroupInterval &interval);
+   virtual void SelectInterval(TimeInterval interval);
 
    //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
    virtual bool SyncLocks() = 0;
@@ -170,7 +186,7 @@ public:
 
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
-   void CommonSelectInterval(const ChannelGroupInterval &interval);
+   void CommonSelectInterval(TimeInterval interval);
 
    /*!
     May be useful to override `MayMigrateTo()`, if certain other needed
@@ -314,7 +330,7 @@ public:
 
    virtual ~TimeShiftHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    void Enter(bool forward, AudacityProject *) override;
 

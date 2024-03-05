@@ -38,7 +38,8 @@ GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 } // namespace
 
 ClipSegment::ClipSegment(
-   ClipInterface& clip, double durationToDiscard, PlaybackDirection direction)
+   const ClipInterface& clip, double durationToDiscard,
+   PlaybackDirection direction)
     : mTotalNumSamplesToProduce { GetTotalNumSamplesToProduce(
          clip, durationToDiscard) }
     , mSource { clip, durationToDiscard, direction }

@@ -14,8 +14,8 @@
 #define __AUDACITY_WAVE_CLIP_UTILITIES__
 
 enum class sampleFormat : unsigned;
-class WaveClip;
 
+#include "WaveTrack.h"
 #include <cstddef>
 
 namespace WaveClipUtilities {
@@ -62,7 +62,7 @@ WAVE_TRACK_API void SetFloatAtTime(WaveClip &clip,
  be exactly equal due to rounding errors.
  */
 WAVE_TRACK_API bool SharesBoundaryWithNextClip(
-   const WaveClip &prev, const WaveClip& next);
+   const WaveTrack::Interval &prev, const WaveTrack::Interval& next);
 }
 
 #endif

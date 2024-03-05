@@ -32,10 +32,12 @@ public:
       double time, const ViewInfo &viewInfo, HitTestParams* params) override
    {
       const auto pClip = [&]() -> std::shared_ptr<WaveClip> {
-         for (auto clip : mpTrack->GetClips())
+         for (auto clip : mpTrack->Intervals())
             if ((
+               // y coordinates in this HitTest come from the third argument
+               // The channel of the interval is used only for times
                params && WaveChannelView::HitTest(
-                  *clip, viewInfo, params->rect, { params->xx, params->yy })
+                  *clip->GetClip(0), viewInfo, params->rect, { params->xx, params->yy })
             ) || (
                // WithinPlayRegion misses first sample, which breaks moving
                // "selected" clip. Probable WithinPlayRegion should be fixed
@@ -43,7 +45,7 @@ public:
                 clip->GetPlayStartTime() <= time &&
                  time < clip->GetPlayEndTime()
             ))
-               return clip;
+               return clip->GetClip(0);
          return {};
       }();
 
@@ -67,7 +69,7 @@ public:
       return HitTestResult::Intervals;
    }
 
-   void SelectInterval(const ChannelGroupInterval &interval) override
+   void SelectInterval(TimeInterval interval) override
    {
       UnfixIntervals([&](auto &myInterval){
          // Use a slightly different test from CommonSelectInterval, rounding times
@@ -112,30 +114,29 @@ public:
 
    double AdjustOffsetSmaller(double desiredOffset) override
    {
-      std::vector<WaveClip *> movingClips;
+      std::vector<WaveTrack::Interval *> movingClips;
       for (auto &interval : MovingIntervals()) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         movingClips.push_back(data.GetClip(0).get());
+         movingClips.push_back(&data);
       }
       double newAmount = 0;
-      (void) mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
+      mpTrack->CanOffsetClips(movingClips, desiredOffset, &newAmount);
       return newAmount;
    }
 
    Intervals Detach() override
    {
-      // TODO wide wave tracks -- simplify when clips are really wide
-      auto pRight = mpTrack->ChannelGroup::GetChannel<WaveTrack>(1);
       for (auto &interval: mMoving) {
-         auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip(0).get();
-         // interval will still hold the clip, so ignore the return:
-         (void) mpTrack->RemoveAndReturnClip(pClip);
-         mMigrated.erase(pClip);
-         if (const auto pClip1 = data.GetClip(1).get()) {
-            (void) pRight->RemoveAndReturnClip(pClip1);
-            mMigrated.erase(pClip1);
-         }
+         auto data = std::static_pointer_cast<WaveTrack::Interval>(interval);
+         auto pClip = data->GetClip(0).get();
+         mpTrack->RemoveInterval(data);
+         // Don't rely on pointer identity of WaveTrack::Interval
+         // TODO wide wave clip -- that may change
+         mMigrated.erase(
+            std::remove_if(mMigrated.begin(), mMigrated.end(),
+               [&](auto &pWideClip){
+                  return pClip == pWideClip->GetClip(0).get(); }),
+            mMigrated.end());
       }
       return std::move(mMoving);
    }
@@ -148,11 +149,7 @@ public:
       auto pOtherWaveTrack = static_cast<const WaveTrack*>(&otherTrack);
       for (auto &interval: intervals) {
          auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         auto pClip = data.GetClip(0).get();
-         ok = pClip ? pOtherWaveTrack->CanInsertClip(
-                         *pClip, desiredOffset, tolerance) :
-                      true;
-         if (!ok)
+         if (!(ok = pOtherWaveTrack->CanInsertClip(data, desiredOffset, tolerance)))
             break;
       }
       return ok;
@@ -160,29 +157,13 @@ public:
 
    bool Attach(Intervals intervals, double offset) override
    {
-      for (auto &interval : intervals) {
-         auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         WaveClipHolder clips[2];
-         for (size_t ii : { 0, 1 }) {
-            // TODO wide wave tracks -- simplify when clips are really wide
-            auto pTrack = mpTrack->ChannelGroup::GetChannel<WaveTrack>(ii);
-            auto &pClip = clips[ii] = data.GetClip(ii);
-            if (pClip) {
-               // TODO wide wave tracks -- guarantee matching clip width
-               if (!pTrack->AddClip(pClip))
-                  return false;
-               mMigrated.insert(pClip.get());
-            }
-         }
-         if (offset == .0)
-            mMoving.emplace_back(std::move(interval));
-         else {
-            for (auto pClip : clips)
-               if (pClip)
-                  pClip->ShiftBy(offset);
-            mMoving.emplace_back(std::make_shared<WaveTrack::Interval>(
-               GetTrack(), clips[0], clips[1]));
-         }
+      for (auto interval : intervals) {
+         auto data = std::static_pointer_cast<WaveTrack::Interval>(interval);
+         mpTrack->InsertInterval(data, false);
+         mMigrated.push_back(data);
+         if (offset != .0)
+            data->ShiftBy(offset);
+         mMoving.emplace_back(std::move(interval));
       }
       return true;
    }
@@ -228,7 +209,7 @@ private:
    const std::shared_ptr<WaveTrack> mpTrack;
 
    // Clips that may require resampling
-   std::unordered_set<WaveClip *> mMigrated;
+   std::vector<WaveTrack::IntervalHolder> mMigrated;
 };
 
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;

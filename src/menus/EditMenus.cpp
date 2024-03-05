@@ -75,7 +75,7 @@ bool DoPasteText(AudacityProject &project)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(*wt);
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.PasteText(project)) {
          auto &trackPanel = TrackPanel::Get(project);
          trackPanel.Refresh(false);
@@ -258,7 +258,7 @@ void OnCut(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(*wt);
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.CutSelectedText(context.project)) {
          trackPanel.Refresh(false);
          return;
@@ -370,7 +370,7 @@ void OnCopy(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(*wt);
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.CopySelectedText(context.project)) {
          return;
       }
@@ -488,7 +488,7 @@ bool FitsInto(const Track &src, const Track &dst)
    // Mono can "fit" into stereo, by duplication of the channel
    // Otherwise non-wave tracks always have just one "channel"
    // Future:  Fit stereo into mono too, using mix-down
-   return TrackList::NChannels(src) <= TrackList::NChannels(dst);
+   return src.NChannels() <= dst.NChannels();
 }
 
 // First, destination track; second, source

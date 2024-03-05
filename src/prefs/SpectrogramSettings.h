@@ -84,11 +84,11 @@ public:
     */
    static SpectrogramSettings &Get(const WaveChannel &channel);
 
-   // Force creation of track's independent settings
-   static SpectrogramSettings &Own(WaveTrack &track);
+   // Force creation of channels's independent settings
+   static SpectrogramSettings &Own(WaveChannel &wc);
 
-   //! Make track lose indpendent settings and use defaults
-   static void Reset(WaveTrack &track);
+   //! Make channel lose indpendent settings and use defaults
+   static void Reset(WaveChannel &channel);
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();

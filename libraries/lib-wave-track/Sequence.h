@@ -53,6 +53,9 @@ using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 class WAVE_TRACK_API Sequence final : public XMLTagHandler{
  public:
 
+   static const char *Sequence_tag;
+   static const char *WaveBlock_tag;
+
    //
    // Static methods
    //
@@ -172,7 +175,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   bool GetErrorOpening() { return mErrorOpening; }
+   bool GetErrorOpening() const { return mErrorOpening; }
 
    //
    // Lock all of this sequence's sample blocks, keeping them

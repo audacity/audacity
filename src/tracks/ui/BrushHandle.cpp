@@ -62,14 +62,14 @@ bool BrushHandle::IsDragging() const
 namespace
 {
    /// Converts a frequency to screen y position.
-   wxInt64 FrequencyToPosition(const WaveTrack *wt,
+   wxInt64 FrequencyToPosition(const WaveChannel &wc,
                                double frequency,
                                wxInt64 trackTopEdge,
                                int trackHeight)
    {
-      const auto &settings = SpectrogramSettings::Get(*wt);
+      const auto &settings = SpectrogramSettings::Get(wc);
       float minFreq, maxFreq;
-      SpectrogramBounds::Get(*wt).GetBounds(*wt, minFreq, maxFreq);
+      SpectrogramBounds::Get(wc).GetBounds(wc, minFreq, maxFreq);
       const NumberScale numberScale(settings.GetScale(minFreq, maxFreq));
       const float p = numberScale.ValueToPosition(frequency);
       return trackTopEdge + wxInt64((1.0 - p) * trackHeight);
@@ -166,9 +166,9 @@ BrushHandle::~BrushHandle()
 {
 }
 
-std::shared_ptr<const Channel> BrushHandle::FindChannel() const
+std::shared_ptr<const Track> BrushHandle::FindTrack() const
 {
-   return const_cast<BrushHandle&>(*this).FindChannel();
+   return TrackFromChannel(const_cast<BrushHandle&>(*this).FindChannel());
 }
 
 namespace {

@@ -28,14 +28,14 @@ public:
    SpectrumVZoomHandle &operator=(const SpectrumVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack &track,
+      AudacityProject *pProject, WaveChannel &wc,
       WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
 
    ~SpectrumVZoomHandle() override;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
    std::shared_ptr<WaveChannel> FindWaveChannel();
 
    void Enter(bool forward, AudacityProject*) override;
@@ -77,10 +77,10 @@ private:
 
 #include "WaveChannelVZoomHandle.h" // to inherit
 
-class SpectrumVRulerMenuTable : public WaveTrackVRulerMenuTable
+class SpectrumVRulerMenuTable : public WaveChannelVRulerMenuTable
 {
    SpectrumVRulerMenuTable()
-      : WaveTrackVRulerMenuTable{ "SpectrumVRuler" }
+      : WaveChannelVRulerMenuTable{ "SpectrumVRuler" }
    {}
    virtual ~SpectrumVRulerMenuTable() {}
    DECLARE_POPUP_MENU(SpectrumVRulerMenuTable);

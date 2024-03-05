@@ -14,7 +14,6 @@ Paul Licameli split from WaveChannelVRulerControls.h
 #include "../../../ui/ChannelVRulerControls.h" // to inherit
 
 class WaveChannel;
-class WaveTrack;
 class SpectrumVZoomHandle;
 
 class SpectrumVRulerControls final : public ChannelVRulerControls
@@ -37,7 +36,7 @@ public:
       AudacityProject *pProject) override;
    static unsigned DoHandleWheelRotation(
       const TrackPanelMouseEvent &evt, AudacityProject *pProject,
-      WaveTrack &wt);
+      WaveChannel &wc);
 
    std::shared_ptr<WaveChannel> FindWaveChannel();
 

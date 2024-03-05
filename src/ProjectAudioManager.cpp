@@ -799,7 +799,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
          name = XC("%s #%d", "clip name template")
             .Format(track.GetName(), i).Translation();
-         if (track.FindClipByName(name) == nullptr)
+         if (!track.HasClipNamed(name))
             break;
       }
 
@@ -851,7 +851,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
-               dst.Reinit(src);
+               dst.Init(src);
             };
 
             // End of current track is before or at recording start time.

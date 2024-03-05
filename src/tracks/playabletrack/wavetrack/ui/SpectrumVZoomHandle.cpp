@@ -30,9 +30,9 @@ SpectrumVZoomHandle::SpectrumVZoomHandle(
 
 SpectrumVZoomHandle::~SpectrumVZoomHandle() = default;
 
-std::shared_ptr<const Channel> SpectrumVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> SpectrumVZoomHandle::FindTrack() const
 {
-   return mpChannel.lock();
+   return TrackFromChannel(mpChannel.lock());
 }
 
 std::shared_ptr<WaveChannel> SpectrumVZoomHandle::FindWaveChannel()
@@ -62,7 +62,7 @@ UIHandle::Result SpectrumVZoomHandle::Drag(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   if (!FindChannel())
+   if (!FindTrack())
       return Cancelled;
    return WaveChannelVZoomHandle::DoDrag(evt, pProject, mZoomStart, mZoomEnd, true);
 }
@@ -81,7 +81,7 @@ UIHandle::Result SpectrumVZoomHandle::Release(
    if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, pChannel->GetTrack(), mRect,
+      evt, pProject, pParent, *pChannel, mRect,
       DoZoom, SpectrumVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -97,7 +97,7 @@ void SpectrumVZoomHandle::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   const auto pChannel = FindChannel();
+   const auto pChannel = FindTrack();
    if (!pChannel)
       return;
    return WaveChannelVZoomHandle::DoDraw(
@@ -116,7 +116,7 @@ wxRect SpectrumVZoomHandle::DrawingArea(
 // the zoomKind and cause a drag-zoom-in.
 void SpectrumVZoomHandle::DoZoom(
    AudacityProject *pProject,
-   WaveTrack &track,
+   WaveChannel &wc,
    WaveChannelViewConstants::ZoomActions ZoomKind,
    const wxRect &rect, int zoomStart, int zoomEnd,
    bool fixedMousePoint)
@@ -132,14 +132,14 @@ void SpectrumVZoomHandle::DoZoom(
       std::swap( zoomStart, zoomEnd );
 
    float min, max, minBand = 0;
-   const double rate = track.GetRate();
+   const double rate = wc.GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
-   const auto &specSettings = SpectrogramSettings::Get(track);
+   const auto &specSettings = SpectrogramSettings::Get(wc);
    NumberScale scale;
    const bool spectrumLinear =
       (specSettings.scaleType == SpectrogramSettings::stLinear);
-   auto &bounds = SpectrogramBounds::Get(track);
+   auto &bounds = SpectrogramBounds::Get(wc);
 
    bool bDragZoom = WaveChannelVZoomHandle::IsDragZooming(zoomStart, zoomEnd, true);
    // Add 100 if spectral to separate the kinds of zoom.
@@ -153,7 +153,7 @@ void SpectrumVZoomHandle::DoZoom(
    float half=0.5;
 
    {
-      bounds.GetBounds(track, min, max);
+      bounds.GetBounds(wc, min, max);
       scale = (specSettings.GetScale(min, max));
       const auto fftLength = specSettings.GetFFTLength();
       const float binSize = rate / fftLength;
@@ -285,12 +285,12 @@ BEGIN_POPUP_MENU(SpectrumVRulerMenuTable)
          OnFirstSpectrumScaleID + ii, names[ii].Msgid(),
          POPUP_MENU_FN( OnSpectrumScaleType ),
          []( PopupMenuHandler &handler, wxMenu &menu, int id ){
-            auto &wt =
+            auto &wc =
                static_cast<SpectrumVRulerMenuTable&>(handler)
-                  .mpData->track;
+                  .mpData->wc;
             if ( id ==
                OnFirstSpectrumScaleID +
-                     static_cast<int>(SpectrogramSettings::Get(wt).scaleType))
+                     static_cast<int>(SpectrogramSettings::Get(wc).scaleType))
                menu.Check(id, true);
          }
       );
@@ -308,15 +308,15 @@ END_POPUP_MENU()
 
 void SpectrumVRulerMenuTable::OnSpectrumScaleType(wxCommandEvent &evt)
 {
-   auto &wt = mpData->track;
+   auto &wc = mpData->wc;
    const SpectrogramSettings::ScaleType newScaleType =
       SpectrogramSettings::ScaleType(
          std::max(0,
             std::min((int)(SpectrogramSettings::stNumScaleTypes) - 1,
                evt.GetId() - OnFirstSpectrumScaleID
       )));
-   if (SpectrogramSettings::Get(wt).scaleType != newScaleType) {
-      SpectrogramSettings::Own(wt).scaleType = newScaleType;
+   if (SpectrogramSettings::Get(wc).scaleType != newScaleType) {
+      SpectrogramSettings::Own(wc).scaleType = newScaleType;
 
       ProjectHistory::Get( mpData->project ).ModifyState(true);
 

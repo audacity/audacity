@@ -62,7 +62,7 @@ void WaveClipUtilities::SetFloatAtTime(WaveClip &clip,
 }
 
 bool WaveClipUtilities::SharesBoundaryWithNextClip(
-   const WaveClip &prev, const WaveClip& next)
+   const WaveTrack::Interval &prev, const WaveTrack::Interval& next)
 {
    double endThis = prev.GetRate() * prev.GetPlayStartTime() +
       prev.GetVisibleSampleCount().as_double() * prev.GetStretchRatio();

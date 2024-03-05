@@ -188,7 +188,7 @@ auto EffectChangeSpeed::FindGaps(
       gaps.emplace_back(track.SnapToSample(st), track.SnapToSample(et));
    };
    double last = curT0;
-   auto clips = track.SortedClipArray();
+   auto clips = track.SortedIntervalArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {

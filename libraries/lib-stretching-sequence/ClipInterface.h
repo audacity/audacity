@@ -50,8 +50,7 @@ public:
    virtual int GetCentShift() const = 0;
 
    [[nodiscard]] virtual Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) = 0;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const = 0;
 };
 
-using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;

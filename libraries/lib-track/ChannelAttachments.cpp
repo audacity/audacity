@@ -76,10 +76,9 @@ ChannelAttachment *ChannelAttachmentsBase::Find(
 ChannelAttachmentsBase::ChannelAttachmentsBase(Track &track, Factory factory)
    : mFactory{ move(factory) }
 {
-   // Always construct one channel view
-   // TODO wide wave tracks -- number of channels will be known earlier, and
-   // they will all be constructed
-   mAttachments.push_back(mFactory(track, 0));
+   const auto nChannels = track.NChannels();
+   for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
+      mAttachments.push_back(mFactory(track, iChannel));
 }
 
 ChannelAttachmentsBase::~ChannelAttachmentsBase() = default;
@@ -126,29 +125,42 @@ bool ChannelAttachmentsBase::HandleXMLAttribute(
    });
 }
 
-void ChannelAttachmentsBase::MakeStereo(ChannelAttachmentsBase &&other)
+void ChannelAttachmentsBase::MakeStereo(const std::shared_ptr<Track> &parent,
+   ChannelAttachmentsBase &&other)
 {
    assert(typeid(*this) == typeid(other));
    assert(Size() <= 1);
    assert(other.Size() <= 1);
    if (mAttachments.empty())
       mAttachments.resize(1);
-   for (auto &ptr : other.mAttachments)
-      mAttachments.emplace_back(move(ptr));
+   auto index = mAttachments.size();
+   for (auto &ptr : other.mAttachments) {
+      if (auto &pAttachment = mAttachments.emplace_back(move(ptr)))
+         pAttachment->Reparent(parent, index++);
+   }
    other.mAttachments.clear();
 }
 
-void ChannelAttachmentsBase::SwapChannels()
+void ChannelAttachmentsBase::SwapChannels(const std::shared_ptr<Track> &parent)
 {
    assert(Size() <= 2);
    if (mAttachments.empty())
       return;
    mAttachments.resize(2);
    std::swap(mAttachments[0], mAttachments[1]);
+   for (auto ii : { 0, 1 })
+      if (const auto &pAttachment = mAttachments[ii])
+         pAttachment->Reparent(parent, ii);
 }
 
-void ChannelAttachmentsBase::Erase(size_t index)
+void ChannelAttachmentsBase::Erase(const std::shared_ptr<Track> &parent,
+   size_t index)
 {
-   if (index < mAttachments.size())
+   auto size = mAttachments.size();
+   if (index < size) {
       mAttachments.erase(mAttachments.begin() + index);
+      for (--size; index < size; ++index)
+         if (auto &pAttachment = mAttachments[index])
+            pAttachment->Reparent(parent, index);
+   }
 }

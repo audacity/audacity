@@ -172,7 +172,6 @@ Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
    assert(src->IsLeader());
    auto tracks =
       src->Duplicate(Track::DuplicateOptions{}.ShallowCopyAttachments());
-   assert(src->NChannels() == tracks->NChannels());
 
    mUpdaters.push_back(move(updater));
    const auto result = *tracks->begin();

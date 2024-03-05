@@ -437,7 +437,7 @@ void EffectSBSMS::Finalize(
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
    double last = mT0;
-   auto clips = orig.SortedClipArray();
+   auto clips = orig.SortedIntervalArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {

@@ -18,6 +18,9 @@
 class WaveformAppearance : public TrackAttachment
 {
 public:
+   static WaveformAppearance &Get(WaveTrack &track);
+   static const WaveformAppearance &Get(const WaveTrack &track);
+
    static WaveformAppearance &Get(WaveChannel &channel);
    static const WaveformAppearance &Get(const WaveChannel &channel);
 
@@ -35,7 +38,6 @@ public:
    void SetColorIndex(int colorIndex);
 
 private:
-   static WaveformAppearance &GetFromTrack(Track &track);
    void Subscribe(const std::shared_ptr<WaveTrack> &pTrack);
 
    std::weak_ptr<WaveTrack> mwTrack;

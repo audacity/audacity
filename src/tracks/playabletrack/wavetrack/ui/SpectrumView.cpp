@@ -893,7 +893,7 @@ void SpectrumView::Draw(
       const auto pChannel = FindChannel();
       if (!pChannel)
          return;
-      const auto &wt = static_cast<const WaveTrack&>(
+      const auto &wt = static_cast<const WaveChannel&>(
          pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
 #if defined(__WXMAC__)
@@ -987,16 +987,16 @@ void SpectrogramSettingsHandler::OnSpectrogramSettings(wxCommandEvent &)
       return;
    }
 
-   auto &track = static_cast<WaveTrack&>(mpData->track);
+   auto &wc = **static_cast<WaveTrack&>(mpData->track).Channels().begin();
 
    PrefsPanel::Factories factories;
    // factories.push_back(WaveformPrefsFactory(&track));
-   factories.push_back(SpectrumPrefsFactory(&track));
+   factories.push_back(SpectrumPrefsFactory(&wc));
    const int page =
       // (pTrack->GetDisplay() == WaveChannelViewConstants::Spectrum) ? 1 :
       0;
 
-   auto title = XO("%s:").Format(track.GetName());
+   auto title = XO("%s:").Format(wc.GetTrack().GetName());
    ViewSettingsDialog dialog(
       mpData->pParent, mpData->project, title, factories, page);
 
@@ -1025,7 +1025,7 @@ PopupMenuTable::AttachedItem sAttachment{
             GetWaveTrackMenuTable().ReserveId();
 
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveChannelView::Get(*pTrack);
+            const auto &view = WaveChannelView::GetFirst(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasSpectrum = (displays.end() != std::find(
                displays.begin(), displays.end(),
@@ -1111,7 +1111,7 @@ void DoNextPeakFrequency(AudacityProject &project, bool up)
 
    // Find the first selected wave track that is in a spectrogram view.
    const auto hasSpectrum = [](const WaveTrack *wt){
-      const auto displays = WaveChannelView::Get(*wt).GetDisplays();
+      const auto displays = WaveChannelView::GetFirst(*wt).GetDisplays();
       return displays.end() != std::find(
          displays.begin(), displays.end(),
          WaveChannelSubView::Type{ WaveChannelViewConstants::Spectrum, {} });

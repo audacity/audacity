@@ -30,7 +30,7 @@ public:
          return HitTestResult::Intervals;
    }
 
-   void SelectInterval(const ChannelGroupInterval &interval) override
+   void SelectInterval(TimeInterval interval) override
    {
       CommonSelectInterval(interval);
    }

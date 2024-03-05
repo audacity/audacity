@@ -102,27 +102,14 @@ bool EffectStereoToMono::Process(EffectInstance &, EffectSettings &)
 
    // Process each stereo track
    sampleCount curTime = 0;
-   bool refreshIter = false;
 
    mProgress->SetMessage(XO("Mixing down to mono"));
 
-   // Don't use range-for, because iterators may be invalidated by erasure from
-   // the track list
-   while (trackRange.first != trackRange.second) {
-      auto track = *trackRange.first;
+   for (const auto track : trackRange) {
       if (track->Channels().size() > 1) {
          if (!ProcessOne(outputs.Get(), curTime, totalTime, *track))
             break;
-         // The right channel has been deleted, so we must restart from the beginning
-         refreshIter = true;
       }
-
-      if (refreshIter) {
-         trackRange = outputs.Get().Selected<WaveTrack>();
-         refreshIter = false;
-      }
-      else
-         ++trackRange.first;
    }
 
    if (bGoodResult)
@@ -157,8 +144,8 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       floatSample);
 
    // Always make mono output; don't use WideEmptyCopy
-   auto outTrack = track.EmptyCopy();
-   auto tempList = TrackList::Temporary(nullptr, outTrack, nullptr);
+   auto outTrack = track.EmptyCopy(1);
+   auto tempList = TrackList::Temporary(nullptr, outTrack);
    assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
@@ -181,11 +168,8 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    }
    outTrack->Flush();
 
-   const auto unlinkedTracks = outputs.UnlinkChannels(track);
-   assert(unlinkedTracks.size() == 2);
-   outputs.Remove(*unlinkedTracks[1]);
-
    track.Clear(start, end);
+   track.MakeMono();
    track.Paste(start, *outTrack);
    RealtimeEffectList::Get(track).Clear();
 

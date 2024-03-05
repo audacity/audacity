@@ -81,7 +81,6 @@ public:
     Pending changed tracks will not occur in iterations.
 
     @pre `src->IsLeader()`
-    @post result: `src->NChannels() == result.size()`
     */
    Track* RegisterPendingChangedTrack(
       Updater updater,

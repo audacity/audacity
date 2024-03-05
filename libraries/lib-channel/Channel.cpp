@@ -19,11 +19,9 @@ ChannelGroupInterval::~ChannelGroupInterval() = default;
 ChannelInterval::~ChannelInterval() = default;
 
 WideChannelGroupInterval::WideChannelGroupInterval(
-   const ChannelGroup &group, double start, double end
-)  : ChannelGroupInterval{ start, end }
-   , mNChannels{ group.NChannels() }
+   const ChannelGroup &group
+)  : mNChannels{ group.NChannels() }
 {
-   assert(group.IsLeader());
    assert(mNChannels >= 1); // Post of ChannelGroup::NChannels
 }
 

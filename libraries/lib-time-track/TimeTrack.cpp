@@ -177,7 +177,7 @@ TrackListHolder TimeTrack::Copy(double t0, double t1, bool) const
    auto track =
       std::make_shared<TimeTrack>(*this, ProtectedCreationArg{}, &t0, &t1);
    track->Init(*this);
-   return TrackList::Temporary(nullptr, track, nullptr);
+   return TrackList::Temporary(nullptr, track);
 }
 
 namespace {
@@ -227,7 +227,7 @@ TrackListHolder TimeTrack::Clone(bool) const
    assert(IsLeader());
    auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result, nullptr);
+   return TrackList::Temporary(nullptr, result);
 }
 
 bool TimeTrack::GetInterpolateLog() const

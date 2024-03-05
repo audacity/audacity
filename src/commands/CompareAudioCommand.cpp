@@ -97,7 +97,7 @@ bool CompareAudioCommand::GetSelection(const CommandContext &context, AudacityPr
       context.Error(wxT("Only one track selected! Select two tracks to compare."));
       return false;
    }
-   if (TrackList::NChannels(*mTrack0) != TrackList::NChannels(*mTrack1)) {
+   if (mTrack0->NChannels() != mTrack1->NChannels()) {
       context.Error(wxT("Selected tracks must have the same number of channels!"));
       return false;
    }

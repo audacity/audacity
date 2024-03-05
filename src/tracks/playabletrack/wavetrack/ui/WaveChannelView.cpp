@@ -305,11 +305,11 @@ public:
          --mMySubView;
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 
@@ -539,11 +539,11 @@ public:
    {
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 
@@ -928,6 +928,27 @@ WaveChannelView *WaveChannelView::Find(WaveChannel *pChannel)
 const WaveChannelView *WaveChannelView::Find(const WaveChannel *pChannel)
 {
    return Find(const_cast<WaveChannel*>(pChannel));
+}
+
+WaveChannelView &WaveChannelView::GetFirst(WaveTrack &wt)
+{
+   assert(wt.Channels().size() > 0);
+   return Get(**wt.Channels().begin());
+}
+
+const WaveChannelView &WaveChannelView::GetFirst(const WaveTrack &wt)
+{
+   return GetFirst(const_cast<WaveTrack&>(wt));
+}
+
+WaveChannelView *WaveChannelView::FindFirst(WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
+}
+
+const WaveChannelView *WaveChannelView::FindFirst(const WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
 }
 
 WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
@@ -1428,7 +1449,7 @@ bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
    const auto pWaveChannel = view.FindWaveChannel();
    const auto pLeader = &pWaveChannel->GetTrack();
-   auto& channelView = ChannelView::Get(*pLeader);
+   auto& channelView = ChannelView::Get(**pLeader->Channels().begin());
    if (const auto affordance =
       std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
          channelView.GetAffordanceControls()).get()

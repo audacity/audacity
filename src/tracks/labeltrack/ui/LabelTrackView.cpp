@@ -858,7 +858,7 @@ const
       bool highlightTrack = false;
       auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
       highlightTrack = target &&
-         target->FindChannel().get() == FindChannel().get();
+         target->FindTrack().get() == FindTrack().get();
 #endif
       int i = -1; for (const auto &labelStruct : mLabels) { ++i;
          bool highlight = false;

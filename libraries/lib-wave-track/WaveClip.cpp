@@ -33,6 +33,8 @@
 #include <omp.h>
 #endif
 
+const char *WaveClip::WaveClip_tag = "waveclip";
+
 WaveClipListener::~WaveClipListener() = default;
 
 void WaveClipListener::WriteXMLAttributes(XMLWriter &) const
@@ -325,9 +327,12 @@ int WaveClip::GetCentShift() const
 }
 
 Observer::Subscription
-WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
+WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb) const
 {
-   return Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
+   // Consider the list of subcribers as a mutable member that doesn't change
+   // real state
+   return const_cast<WaveClip*>(this)
+      ->Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
 }
 
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
@@ -524,9 +529,17 @@ void WaveClip::Flush()
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
 }
 
+static constexpr auto Offset_attr = "offset";
+static constexpr auto TrimLeft_attr = "trimLeft";
+static constexpr auto TrimRight_attr = "trimRight";
+static constexpr auto CentShiftAttr = "centShift";
+static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
+static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
+static constexpr auto Name_attr = "name";
+
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
-   if (tag == "waveclip")
+   if (tag == WaveClip_tag)
    {
       double dblValue;
       long longValue;
@@ -535,31 +548,31 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
          auto attr = pair.first;
          auto value = pair.second;
 
-         if (attr == "offset")
+         if (attr == Offset_attr)
          {
             if (!value.TryGet(dblValue))
                return false;
             SetSequenceStartTime(dblValue);
          }
-         else if (attr == "trimLeft")
+         else if (attr == TrimLeft_attr)
          {
             if (!value.TryGet(dblValue))
                return false;
             SetTrimLeft(dblValue);
          }
-         else if (attr == "trimRight")
+         else if (attr == TrimRight_attr)
          {
             if (!value.TryGet(dblValue))
                return false;
             SetTrimRight(dblValue);
          }
-         else if (attr == "centShift")
+         else if (attr == CentShiftAttr)
          {
             if (!value.TryGet(dblValue))
                return false;
             mCentShift = dblValue;
          }
-         else if (attr == "rawAudioTempo")
+         else if (attr == RawAudioTempo_attr)
          {
             if (!value.TryGet(dblValue))
                return false;
@@ -568,13 +581,13 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             else
                mRawAudioTempo = dblValue;
          }
-         else if (attr == "clipStretchRatio")
+         else if (attr == ClipStretchRatio_attr)
          {
             if (!value.TryGet(dblValue))
                return false;
             mClipStretchRatio = dblValue;
          }
-         else if (attr == "name")
+         else if (attr == Name_attr)
          {
             if(value.IsStringView())
                SetName(value.ToWString());
@@ -597,7 +610,7 @@ void WaveClip::HandleXMLEndTag(const std::string_view& tag)
    // by the constructor which remains empty.
    mSequences.erase(mSequences.begin());
    mSequences.shrink_to_fit();
-   if (tag == "waveclip")
+   if (tag == WaveClip_tag)
       UpdateEnvelopeTrackLen();
    // A proof of this assertion assumes that nothing has happened since
    // construction of this, besides calls to the other deserialization
@@ -608,14 +621,17 @@ void WaveClip::HandleXMLEndTag(const std::string_view& tag)
 XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
 {
    auto &pFirst = mSequences[0];
-   if (tag == "sequence") {
+   if (tag == Sequence::Sequence_tag) {
+      // Push back a new sequence prototyped from the empty sequence made
+      // by the constructor.  See also HandleXMLEndTag above.
+      // Assume sequences were serialized in channel iteration order.
       mSequences.push_back(std::make_unique<Sequence>(
          pFirst->GetFactory(), pFirst->GetSampleFormats()));
       return mSequences.back().get();
    }
    else if (tag == "envelope")
       return mEnvelope.get();
-   else if (tag == "waveclip")
+   else if (tag == WaveClip_tag)
    {
       // Nested wave clips are cut lines
       auto format = pFirst->GetSampleFormats().Stored();
@@ -631,37 +647,38 @@ XMLTagHandler *WaveClip::HandleXMLChild(const std::string_view& tag)
       return mCutLines.back().get();
    }
    else
-      return NULL;
+      return nullptr;
 }
 
-void WaveClip::WriteXML(XMLWriter &xmlFile) const
+void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
 // may throw
 {
+   assert(ii < GetWidth());
+
    if (GetSequenceSamplesCount() <= 0)
       // Oops, I'm empty? How did that happen? Anyway, I do nothing but causing
       // problems, don't save me.
       return;
 
-   xmlFile.StartTag(wxT("waveclip"));
-   xmlFile.WriteAttr(wxT("offset"), mSequenceOffset, 8);
-   xmlFile.WriteAttr(wxT("trimLeft"), mTrimLeft, 8);
-   xmlFile.WriteAttr(wxT("trimRight"), mTrimRight, 8);
-   xmlFile.WriteAttr(wxT("centShift"), mCentShift);
-   xmlFile.WriteAttr(wxT("rawAudioTempo"), mRawAudioTempo.value_or(0.), 8);
-   xmlFile.WriteAttr(wxT("clipStretchRatio"), mClipStretchRatio, 8);
-   xmlFile.WriteAttr(wxT("name"), mName);
+   xmlFile.StartTag(WaveClip_tag);
+   xmlFile.WriteAttr(Offset_attr, mSequenceOffset, 8);
+   xmlFile.WriteAttr(TrimLeft_attr, mTrimLeft, 8);
+   xmlFile.WriteAttr(TrimRight_attr, mTrimRight, 8);
+   xmlFile.WriteAttr(CentShiftAttr, mCentShift);
+   xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
+   xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
+   xmlFile.WriteAttr(Name_attr, mName);
    Attachments::ForEach([&](const WaveClipListener &listener){
       listener.WriteXMLAttributes(xmlFile);
    });
 
-   for (auto &pSequence : mSequences)
-      pSequence->WriteXML(xmlFile);
+   mSequences[ii]->WriteXML(xmlFile);
    mEnvelope->WriteXML(xmlFile);
 
    for (const auto &clip: mCutLines)
-      clip->WriteXML(xmlFile);
+      clip->WriteXML(ii, xmlFile);
 
-   xmlFile.EndTag(wxT("waveclip"));
+   xmlFile.EndTag(WaveClip_tag);
 }
 
 /*! @excsafety{Strong} */

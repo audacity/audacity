@@ -663,7 +663,7 @@ void TrackArt::DrawBackgroundWithSelection(
    const double sel0 = useSelection ? selectedRegion.t0() : 0.0;
    const double sel1 = useSelection ? selectedRegion.t1() : 0.0;
 
-   auto pTrack = dynamic_cast<const Track*>(&channel);
+   auto pTrack = dynamic_cast<const Track*>(&channel.GetChannelGroup());
    if (!pTrack)
       return;
    auto &track = *pTrack;

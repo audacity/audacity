@@ -128,6 +128,8 @@ private:
    WaveClip& operator= (const WaveClip&) = delete;
 
 public:
+   static const char *WaveClip_tag;
+
    using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
 
    //! typical constructor
@@ -202,7 +204,7 @@ public:
    bool SetCentShift(int cents);
    int GetCentShift() const override;
    [[nodiscard]] Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) override;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
    // Resample clip. This also will set the rate, but without changing
    // the length of the clip
@@ -531,7 +533,14 @@ public:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList &attrs) override;
    void HandleXMLEndTag(const std::string_view& tag) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
-   void WriteXML(XMLWriter &xmlFile) const /* not override */;
+
+   //! Wave clip data has always been written by channel-major iteration and
+   //! is still done so for compatibility.  Therefore, the first argument.
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   void WriteXML(size_t ii, XMLWriter &xmlFile) const;
 
    // AWD, Oct 2009: for pasting whitespace at the end of selection
    bool GetIsPlaceholder() const { return mIsPlaceholder; }

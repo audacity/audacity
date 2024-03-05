@@ -190,10 +190,15 @@ public:
 
    size_t NIntervals() const override;
 
-   struct Interval : WideChannelGroupInterval {
-      using WideChannelGroupInterval::WideChannelGroupInterval;
+   struct Interval final : WideChannelGroupInterval {
+      explicit Interval(const NoteTrack &track);
       ~Interval() override;
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+      double Start() const override;
+      double End() const override;
+   private:
+      //! @invariant not null
+      const std::shared_ptr<const NoteTrack> mpTrack;
    };
 
 private:

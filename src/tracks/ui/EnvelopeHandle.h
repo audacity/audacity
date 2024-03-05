@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseEvent;
 class wxMouseState;
 
+class Channel;
 class Envelope;
 class EnvelopeEditor;
 class ViewInfo;
@@ -44,7 +45,7 @@ public:
 
    virtual ~EnvelopeHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    static UIHandlePtr HitAnywhere(std::weak_ptr<EnvelopeHandle> &holder,
       Envelope *envelope, std::weak_ptr<const Channel> wChannel,

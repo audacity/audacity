@@ -463,9 +463,9 @@ std::shared_ptr<Channel> SelectHandle::FindChannel()
       return {};
 }
 
-std::shared_ptr<const Channel> SelectHandle::FindChannel() const
+std::shared_ptr<const Track> SelectHandle::FindTrack() const
 {
-   return const_cast<SelectHandle &>(*this).FindChannel();
+   return TrackFromChannel(const_cast<SelectHandle &>(*this).FindChannel());
 }
 
 Track *SelectHandle::FindTrack(Channel *pChannel)
@@ -1265,7 +1265,7 @@ void SelectHandle::StartFreqSelection(ViewInfo &viewInfo,
 
    if (isSpectralSelectionView(channelView)) {
       // Spectral selection track is always wave
-      auto shTrack = channelView.FindChannel<WaveTrack>();
+      auto shTrack = channelView.FindChannel<WaveChannel>();
       mFreqSelTrack = shTrack;
       mFreqSelMode = FREQ_SEL_FREE;
       mFreqSelPin =

@@ -23,8 +23,8 @@ const TranslatableString TimeStretching::defaultStretchRenderingTitle =
 bool TimeStretching::HasPitchOrSpeed(
    const WaveTrack &track, double t0, double t1)
 {
-   auto &clips = track.GetClips();
-   return any_of(clips.begin(), clips.end(), [&](auto& pClip) {
+   auto clips = track.Intervals();
+   return std::any_of(clips.begin(), clips.end(), [&](auto pClip) {
       return pClip->IntersectsPlayRegion(t0, t1) && pClip->HasPitchOrSpeed();
    });
 }

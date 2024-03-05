@@ -19,10 +19,13 @@
 #include "SampleTrack.h"
 #include "WideSampleSequence.h"
 
-#include <vector>
 #include <functional>
+#include <optional>
+#include <vector>
 #include <wx/thread.h>
 #include <wx/longlong.h>
+
+#include "ClipInterface.h"
 
 class AudacityProject;
 class BlockArray;
@@ -185,6 +188,8 @@ public:
       */
    );
 
+   void WriteXML(XMLWriter &xmlFile) const;
+
 private:
    WaveClip &GetWideClip() { return *mpWideClip; }
    WaveClip &GetNarrowClip() { return *mpNarrowClip; }
@@ -206,19 +211,53 @@ struct WaveTrackMessage {
    } type{};
 };
 
-class WAVE_TRACK_API WaveChannel
+class WAVE_TRACK_API WaveChannel final
    : public Channel
-   // TODO wide wave tracks -- remove "virtual"
-   , public virtual WideSampleSequence
-   , public Observer::Publisher<WaveTrackMessage>
+   , public WideSampleSequence
 {
 public:
+   explicit WaveChannel(WaveTrack &owner);
+   WaveChannel(WaveTrack &owner, WaveChannel &&other);
+   WaveChannel& operator=(WaveChannel &&other);
+   void Swap(WaveChannel &other);
    ~WaveChannel() override;
+
+   void CopyClips(SampleBlockFactoryPtr pFactory,
+      const WaveChannel &orig, bool backup);
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
+
+   void RemoveClip(size_t iClip);
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
 
-   CallbackReturn Publish(const WaveTrackMessage &message);
+   AudioGraph::ChannelType GetChannelType() const override;
+
+   size_t NChannels() const override;
+
+   //! Takes gain and pan into account
+   float GetChannelGain(int channel) const override;
+
+   //! This fails if any clip overlapping the range has non-unit stretch ratio!
+   bool DoGet(
+      size_t iChannel, size_t nBuffers, const samplePtr buffers[],
+      sampleFormat format, sampleCount start, size_t len, bool backwards,
+      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
+      // Report how many samples were copied from within clips, rather than
+      // filled according to fillFormat; but these were not necessarily one
+      // contiguous range.
+      sampleCount* pNumWithinClips = nullptr) const override;
+
+   double GetStartTime() const override;
+   double GetEndTime() const override;
+   double GetRate() const override;
+   bool HasTrivialEnvelope() const override;
+   void GetEnvelopeValues(
+      double* buffer, size_t bufferLen, double t0,
+      bool backwards) const override;
+   sampleFormat WidestEffectiveFormat() const override;
+
+   ChannelGroup &DoGetChannelGroup() const override;
 
    auto GetInterval(size_t iInterval) { return
       ::Channel::GetInterval<WaveChannelInterval>(iInterval); }
@@ -296,15 +335,48 @@ public:
    //! A hint for maximum returned by either of GetBestBlockSize,
    //! GetIdealBlockSize
    inline size_t GetMaxBlockSize() const;
+
+   inline sampleFormat GetSampleFormat() const;
+
+   //! Adds clip to the channel. Clip should not be empty or a placeholder.
+   /*!
+    Sets project tempo on clip upon push. Use this instead of
+    `NarrowClips().push_back`
+    @returns true on success
+    @param backup whether the duplication is for backup purposes while opening
+    a project, instead of other editing operations
+    */
+   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup,
+      bool allowEmpty);
+
+   //! Used only in assertions checking invariants
+   bool ClipsAreUnique() const;
+
+   static void CopyOne(WaveChannel &newTrack, const WaveChannel &track,
+      double t0, double t1, double endTime, bool forClipboard);
+private:
+   const WaveClipHolders &Clips() const;
+   WaveClipHolders &Clips();
+
+   WaveTrack &mOwner;
+
+   /*!
+    * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
+    * @invariant all are non-null
+    */
+   WaveClipHolders mClips;
+
+   friend WaveTrack;
 };
 
 class WAVE_TRACK_API WaveTrack final
    : public WritableSampleTrack
-   // TODO wide wave tracks -- remove this base class
-   , public WaveChannel
+   , public Observer::Publisher<WaveTrackMessage>
 {
    struct CreateToken {};
 public:
+   static const char *WaveTrack_tag;
+
    class Interval;
    using IntervalHolder = std::shared_ptr<Interval>;
    using IntervalHolders = std::vector<IntervalHolder>;
@@ -353,6 +425,9 @@ public:
    static Holder Create(
       const SampleBlockFactoryPtr &pFactory, sampleFormat format, double rate);
 
+   const SampleBlockFactoryPtr &GetSampleBlockFactory() const
+   { return mpFactory; }
+
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
@@ -373,15 +448,8 @@ public:
 
    //! Overwrite data excluding the sample sequence but including display
    //! settings
-   /*!
-    @pre `IsLeader()`
-    @pre `orig.IsLeader()`
-    @pre `NChannels() == orig.NChannels()`
-    */
-   void Reinit(const WaveTrack &orig);
+   void Init(const WaveTrack &orig);
  private:
-   void CopyClips(const WaveTrack &orig, bool backup);
-
    using ConstIterPair = std::pair<
       WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
    /*!
@@ -402,15 +470,14 @@ public:
 
    void RemoveWideClip(IterPair pair);
 
-   void Init(const WaveTrack &orig);
-
    TrackListHolder Clone(bool backup) const override;
 
    friend class WaveTrackFactory;
 
    wxString MakeClipCopyName(const wxString& originalName) const;
    wxString MakeNewClipName() const;
- public:
+
+public:
 
    virtual ~WaveTrack();
 
@@ -467,18 +534,15 @@ public:
    TrackListHolder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, etc. but containing no
-   //! clips; and always with a unique channel
+   //! clips; with the specified number of channels.
    /*!
     It is important to pass the correct factory (that for the project
     which will own the copy) in the unusual case that a track is copied from
     another project or the clipboard.  For copies within one project, the
     default will do.
-
-    @param keepLink if false, make the new track mono.  But always preserve
-    any other track group data.
     */
-   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
-      bool keepLink = true) const;
+   Holder EmptyCopy(size_t nChannels,
+      const SampleBlockFactoryPtr &pFactory = {}) const;
 
    //! Make another channel group copying format, rate, etc. but
    //! containing no clips; with as many channels as in `this`
@@ -488,16 +552,27 @@ public:
     another project or the clipboard.  For copies within one project, the
     default will do.
 
-    @param keepLink if false, make the new track mono.  But always preserve
-    any other track group data.
-
     @pre `IsLeader()`
     */
-   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {},
-      bool keepLink = true) const;
+   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
+   const;
 
-   //! @pre !GetOwner()
+   //! Simply discard any right channel
+   void MakeMono();
+
+   /*!
+    @pre `!GetOwner()`
+    */
    TrackListHolder MonoToStereo();
+
+   /*
+    @return a vector of mono tracks, which are in the list that owns `this`
+    @pre `GetOwner()`
+    */
+   std::vector<Holder> SplitChannels();
+
+   //! @pre `NChannels() == 2`
+   void SwapChannels();
 
    // If forClipboard is true,
    // and there is no clip at the end time of the selection, then the result
@@ -699,18 +774,6 @@ public:
    // doing a copy and paste between projects.
    //
 
-   //! Get access to the (visible) clips in the tracks, in unspecified order
-   //! (not necessarily sequenced in time).
-   /*!
-    @post all pointers are non-null
-    */
-   WaveClipHolders &GetClips() { return mClips; }
-   /*!
-    @copydoc GetClips
-    */
-   const WaveClipConstHolders &GetClips() const
-      { return reinterpret_cast< const WaveClipConstHolders& >( mClips ); }
-
    IntervalHolder GetLeftmostClip();
    IntervalConstHolder GetLeftmostClip() const;
 
@@ -722,9 +785,8 @@ public:
     * order.
     * @pre `IsLeader()`
     */
-   ClipHolders GetClipInterfaces() const;
+   ClipConstHolders GetClipInterfaces() const;
 
-   /// @pre IsLeader()
    //! Create new clip that uses this track's factory but do not add it to the
    //! track
    /*!
@@ -745,50 +807,45 @@ public:
     */
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
-   //! Create new clip and add it to this track.
+private:
+   void CreateRight();
+
+   //! Create new clip and add it to the clip array; publish on the track.
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided
 
-    @post result: `result->GetWidth() == GetWidth()`
+    @param pClips if not null, push new clip onto it and publish
+    @post result: `result->GetWidth() == track.GetWidth()`
     */
-   WaveClipHolder
-   CreateClip(double offset = .0, const wxString& name = wxEmptyString);
+   static WaveClipHolder CreateClip(WaveTrack &track, WaveClipHolders *pClips,
+      double offset = .0, const wxString& name = wxEmptyString);
 
+public:
    /** @brief Get access to the most recently added clip, or create a clip,
    *  if there is not already one.  THIS IS NOT NECESSARILY RIGHTMOST.
    *
    *  @return a pointer to the most recently added WaveClip
    */
-   WaveClip* NewestOrNewClip();
+   IntervalHolder NewestOrNewClip();
 
    /** @brief Get access to the last (rightmost) clip, or create a clip,
    *  if there is not already one.
    *
    *  @return a pointer to a WaveClip at the end of the track
    */
-   WaveClip* RightmostOrNewClip();
-
-   //! Get the nth clip in this WaveTrack (will return nullptr if not found).
-   /*!
-    Use this only in special cases (like getting the linked clip), because
-    it is much slower than GetClipIterator().
-    */
-   WaveClip *GetClipByIndex(int index);
-   /*!
-    @copydoc GetClipByIndex
-    */
-   const WaveClip* GetClipByIndex(int index) const;
+   IntervalHolder RightmostOrNewClip();
 
    // Get number of clips in this WaveTrack
    int GetNumClips() const;
-   int GetNumClips(double t0, double t1) const;
 
+private:
    //! Return all WaveClips sorted by clip play start time.
    WaveClipPointers SortedClipArray();
    //! Return all WaveClips sorted by clip play start time.
    WaveClipConstPointers SortedClipArray() const;
 
+public:
    //! Return all (wide) WaveClips sorted by clip play start time.
    IntervalHolders SortedIntervalArray();
    //! Return all (wide) WaveClips sorted by clip play start time.
@@ -799,7 +856,7 @@ public:
    @return true if possible to offset by `(allowedAmount ? *allowedAmount : amount)`
     */
    bool CanOffsetClips(
-      const std::vector<WaveClip*> &clips, //!< not necessarily in this track
+      const std::vector<Interval*> &movingClips, //!< not necessarily in this track
       double amount, //!< signed
       double *allowedAmount = nullptr /*!<
          [out] if null, test exact amount only; else, largest (in magnitude) possible offset with same sign */
@@ -809,19 +866,7 @@ public:
    // function to see if the times are valid (i.e. don't overlap with
    // existing clips).
    bool
-   CanInsertClip(const WaveClip& clip, double& slideBy, double tolerance) const;
-
-   // Remove the clip from the track and return a SMART pointer to it.
-   // You assume responsibility for its memory!
-   std::shared_ptr<WaveClip> RemoveAndReturnClip(WaveClip* clip);
-
-   //! Append a clip to the track; to succeed, must have the same block factory
-   //! as this track, and `this->GetWidth() == clip->GetWidth()`; return success
-   /*!
-    @pre `clip != nullptr`
-    @pre `this->GetWidth() == clip->GetWidth()`
-    */
-   bool AddClip(const std::shared_ptr<WaveClip> &clip);
+   CanInsertClip(const Interval& clip, double& slideBy, double tolerance) const;
 
    // Merge two clips, that is append data from clip2 to clip1,
    // then remove clip2 from track.
@@ -849,7 +894,10 @@ public:
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
 
-   class WAVE_TRACK_API Interval final : public WideChannelGroupInterval {
+   class WAVE_TRACK_API Interval final
+      : public WideChannelGroupInterval
+      , public ClipInterface
+   {
    public:
       /*!
        @pre `pClip != nullptr`
@@ -868,6 +916,9 @@ public:
 
       ~Interval() override;
 
+      double Start() const override;
+      double End() const override;
+
       //! An invariant condition, for assertions
       bool EqualSequenceLengthInvariant() const;
 
@@ -878,12 +929,18 @@ public:
       /// operation (but without putting the cut audio to the clipboard)
       void Clear(double t0, double t1);
 
+      int GetRate() const override;
+
+      sampleCount GetVisibleSampleCount() const override;
+
       void SetName(const wxString& name);
       const wxString& GetName() const;
 
+      size_t NumCutLines() const;
+
       void SetPlayStartTime(double time);
-      double GetPlayStartTime() const;
-      double GetPlayEndTime() const;
+      double GetPlayStartTime() const override;
+      double GetPlayEndTime() const override;
 
       //! Real start time of the clip, quantized to raw sample rate (track's rate)
       sampleCount GetPlayStartSample() const;
@@ -934,16 +991,24 @@ public:
        */
       bool CoversEntirePlayRegion(double t0, double t1) const;
 
-      double GetStretchRatio() const;
-      int GetCentShift() const;
+      double GetStretchRatio() const override;
+      int GetCentShift() const override;
       void SetRawAudioTempo(double tempo);
 
-      sampleCount TimeToSamples(double time) const;
+      sampleCount TimeToSamples(double time) const override;
       double SamplesToTime(sampleCount s) const;
       double GetSequenceStartTime() const;
       double GetSequenceEndTime() const;
       double GetTrimLeft() const;
       double GetTrimRight() const;
+
+      AudioSegmentSampleView GetSampleView(
+         size_t ii, sampleCount start, size_t len, bool mayThrow) const override;
+
+      size_t GetWidth() const override;
+
+      Observer::Subscription
+      SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
       auto GetChannel(size_t iChannel) { return
          WideChannelGroupInterval::GetChannel<WaveChannelInterval>(iChannel); }
@@ -1033,7 +1098,12 @@ public:
        @param track is required to construct new Intervals because this
        Interval does not store a back-reference to its track
        */
-      std::vector<IntervalHolder> GetCutLines(WaveTrack &track);
+      IntervalHolders GetCutLines(WaveTrack &track);
+
+      /*!
+       @copydoc GetCutLines(WaveTrack &)
+       */
+      IntervalConstHolders GetCutLines(const WaveTrack &track) const;
 
       // Resample clip. This also will set the rate, but without changing
       // the length of the clip
@@ -1058,6 +1128,7 @@ public:
       void
       InsertSilence(double t, double len, double *pEnvelopeValue = nullptr);
 
+      Envelope& GetEnvelope();
       const Envelope& GetEnvelope() const;
 
       /** Find cut line at (approximately) this position. Returns true and fills
@@ -1126,11 +1197,11 @@ public:
    auto Intervals() { return ChannelGroup::Intervals<Interval>(); }
    auto Intervals() const { return ChannelGroup::Intervals<const Interval>(); }
 
-   //! @pre `IsLeader()`
    /*
     @param newClip false if clip has contents from another clip or track
     */
-   void InsertInterval(const IntervalHolder& interval, bool newClip);
+   void InsertInterval(const IntervalHolder& interval,
+      bool newClip, bool allowEmpty = false);
 
    //! @pre `IsLeader()`
    void RemoveInterval(const IntervalHolder& interval);
@@ -1138,8 +1209,7 @@ public:
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
       const override;
 
-   //! Returns nullptr if clip with such name was not found
-   const WaveClip* FindClipByName(const wxString& name) const;
+   bool HasClipNamed(const wxString& name) const;
 
    size_t NIntervals() const override;
 
@@ -1155,12 +1225,7 @@ public:
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);
 
-   // TODO wide-wave-track: some other API
-   void CopyClipEnvelopes();
-
-   //! Steal channel attachments from other for special stereo swap
-   void MoveAndSwapAttachments(WaveTrack &&other);
-
+private:
    //! Steal channel attachments from other, then destroy the track attachment
    //! slot
    void MergeChannelAttachments(WaveTrack &&other);
@@ -1168,14 +1233,12 @@ public:
    //! Erase all attachments for a given index
    void EraseChannelAttachments(size_t index);
 
-private:
-   // Just destroy channel attachments
-   void DestroyAllChannelAttachments();
+   // TODO wide-wave-track: some other API
+   void CopyClipEnvelopes();
 
    //! Get the linear index of a given clip (== number of clips if not found)
    int GetClipIndex(const Interval &clip) const;
 
-   void FlushOne();
    // May assume precondition: t0 <= t1
    void HandleClear(
       double t0, double t1, bool addCutLines, bool split,
@@ -1195,10 +1258,8 @@ private:
 
    //! @pre All clips intersecting [t0, t1) have unit stretch ratio
    static void JoinOne(WaveTrack& track, double t0, double t1);
-   static Holder CopyOne(const WaveTrack &track,
-      double t0, double t1, bool forClipboard);
-   static void WriteOneXML(const WaveTrack &track, XMLWriter &xmlFile,
-     size_t iChannel, size_t nChannels);
+   static void WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
+      size_t iChannel, size_t nChannels);
    void ExpandOneCutLine(double cutLinePosition,
       double* cutlineStart, double* cutlineEnd);
    void ApplyPitchAndSpeedOnIntervals(
@@ -1213,17 +1274,23 @@ private:
       override;
    std::shared_ptr<::Channel> DoGetChannel(size_t iChannel) override;
 
-   ChannelGroup &DoGetChannelGroup() const override;
+   WaveClipHolders &NarrowClips();
+   const WaveClipHolders &NarrowClips() const;
+
+   //! These functions exist while tracks are wide but clips are not yet
+   //! @pre `NChannels() > 1`
+   WaveClipHolders &RightClips();
+   //! @pre `NChannels() > 1`
+   const WaveClipHolders &RightClips() const;
 
    //
    // Protected variables
    //
 
-   /*!
-    * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
-    * @invariant all are non-null and match `this->GetWidth()`
-    */
-   WaveClipHolders mClips;
+   //! @invariant non-null
+   WaveChannel mChannel;
+   //! may be null
+   std::optional<WaveChannel> mRightChannel;
 
    mutable int  mLegacyRate{ 0 }; //!< used only during deserialization
    sampleFormat mLegacyFormat{ undefinedSample }; //!< used only during deserialization
@@ -1239,7 +1306,7 @@ private:
    [[nodiscard]] TrackListHolder
    DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const;
 
-   bool GetOne(
+   bool GetOne(const WaveClipHolders &clips,
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
       bool backwards, fillFormat fill, bool mayThrow,
       sampleCount* pNumWithinClips) const;
@@ -1272,26 +1339,29 @@ private:
     */
    bool FormatConsistencyCheck() const;
 
-   //! Adds clip to the track. Clip should be not empty or to be a placeholder.
-   /*!
-    Sets project tempo on clip upon push. Use this instead of `mClips.push_back`
-    @returns true on success
-    @param backup whether the duplication is for backup purposes while opening
-    a project, instead of other editing operations
-    */
-   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
-
    void ApplyPitchAndSpeedOne(
       double t0, double t1, const ProgressReporter& reportProgress);
 
-   //! Used only in assertions checking invariants
-   bool ClipsAreUnique() const;
+public:
+   //! Convert channel-major storage to interval-major,
+   //! replacing two tracks with one in the owning TrackList
+   /*!
+    @pre `GetOwner()`
+    @pre next track in the list exists, is a WaveTrack, has one channel only
+    @pre `NChannels() == 1`
+    @param mustAlign if false, clips may be of different number or not aligned.
+    Do not use the resulting track normally!
+    */
+   void ZipClips(bool mustAlign = true);
 
+private:
    SampleBlockFactoryPtr mpFactory;
 
    wxCriticalSection mFlushCriticalSection;
    wxCriticalSection mAppendCriticalSection;
    double mLegacyProjectFileOffset{ 0 };
+
+   friend WaveChannel; // so it can Publish
 };
 
 ENUMERATE_TRACK_TYPE(WaveTrack);
@@ -1316,6 +1386,10 @@ size_t WaveChannel::GetIdealBlockSize() {
 
 size_t WaveChannel::GetMaxBlockSize() const {
    return GetTrack().GetMaxBlockSize();
+}
+
+sampleFormat WaveChannel::GetSampleFormat() const {
+   return GetTrack().GetSampleFormat();
 }
 
 class ProjectRate;
@@ -1357,28 +1431,27 @@ class WAVE_TRACK_API WaveTrackFactory final
    std::shared_ptr<WaveTrack> Create(sampleFormat format, double rate);
 
    /**
-    * \brief Creates new \p nChannels tracks with project's default rate and format.
-    * If number of channels is exactly two then a single stereo track is created
-    * instead.
+    * \brief Creates a new track with project's default rate and format and the
+    * given number of channels.
     */
    TrackListHolder Create(size_t nChannels);
 
    /**
-    * \brief Creates new \p nChannels tracks with specified \p format and
-    * \p rate and places them into TrackList.
-    * If number of channels is exactly two then a single stereo track is created
-    * instead.
+    * \brief Creates a new \p track with specified \p format and
+    * \p rate and number of channels
     */
    TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
 
    /**
-    * \brief Creates new \p nChannels tracks by creating empty copies of \p proto.
-    * If number of channels is exactly two then a single stereo track is created
-    * instead.
+    * \brief Creates an empty copy of \p proto with the specified number
+    * of channels.
     */
    TrackListHolder Create(size_t nChannels, const WaveTrack& proto);
 
  private:
+   std::shared_ptr<WaveTrack> DoCreate(
+      size_t nChannels, sampleFormat format, double rate);
+
    const ProjectRate &mRate;
    SampleBlockFactoryPtr mpFactory;
 };

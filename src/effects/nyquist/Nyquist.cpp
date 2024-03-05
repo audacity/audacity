@@ -595,7 +595,7 @@ bool NyquistEffect::Init()
             TrackList::Get( *project ).Selected<const WaveTrack>()) {
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            auto pView = WaveChannelView::Find(t);
+            auto pView = WaveChannelView::FindFirst(t);
             if ( pView ) {
                const auto displays = pView->GetDisplays();
                if (displays.end() != std::find(
@@ -937,7 +937,7 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
       auto &mCurLen = nyxContext.mCurLen;
 
       mCurChannelGroup = pRange ? *pRange->first : nullptr;
-      mCurTrack[0] = mCurChannelGroup;
+      mCurTrack[0] = (*mCurChannelGroup->Channels().begin()).get();
       mCurNumChannels = 1;
       if ( (mT1 >= mT0) || bOnePassTool ) {
          if (bOnePassTool) {
@@ -1239,7 +1239,7 @@ wxString GetClipBoundaries(const Track* t)
    const auto wt = dynamic_cast<const WaveTrack*>(t);
    if (!wt)
       return clips;
-   auto ca = wt->SortedClipArray();
+   auto ca = wt->SortedIntervalArray();
    // Each clip is a list (start-time, end-time)
    // Limit number of clips added to avoid argument stack overflow error (bug
    // 2300).
@@ -1313,7 +1313,7 @@ bool NyquistEffect::ProcessOne(
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we are
             // only previewing
-            if (const auto pView = WaveChannelView::Find(&wt)) {
+            if (const auto pView = WaveChannelView::FindFirst(&wt)) {
                auto displays = pView->GetDisplays();
                auto format = [&]( decltype(displays[0]) display ) {
                   // Get the English name of the view type, without menu codes,

@@ -55,7 +55,7 @@ public:
    }
 
    Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) override
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override
    {
       return {};
    }

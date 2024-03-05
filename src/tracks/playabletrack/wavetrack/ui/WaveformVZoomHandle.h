@@ -28,14 +28,14 @@ public:
    WaveformVZoomHandle &operator=(const WaveformVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack &track,
+      AudacityProject *pProject, WaveChannel &wc,
       WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
 
    ~WaveformVZoomHandle() override;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    void Enter( bool forward, AudacityProject * ) override;
 
@@ -76,10 +76,10 @@ private:
 
 #include "WaveChannelVZoomHandle.h" // to inherit
 
-class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
+class WaveformVRulerMenuTable : public WaveChannelVRulerMenuTable
 {
    WaveformVRulerMenuTable()
-      : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
+      : WaveChannelVRulerMenuTable{ "WaveFormVRuler" }
    {}
    virtual ~WaveformVRulerMenuTable() {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);

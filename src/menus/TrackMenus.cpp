@@ -74,7 +74,7 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       }
 
       // Add new tracks
-      const bool stereo = newTracks->NChannels() > 1;
+      const bool stereo = (*newTracks->begin())->NChannels() > 1;
       const auto firstName = (*newTracks->begin())->GetName();
       tracks.Append(std::move(*newTracks));
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
@@ -467,7 +467,7 @@ void DoSortTracks( AudacityProject &project, int flags )
 
             int ndx;
             for (ndx = 0; ndx < w.GetNumClips(); ndx++) {
-               const auto c = w.GetClipByIndex(ndx);
+               const auto c = w.GetWideClip(ndx);
                if (c->GetVisibleSampleCount() == 0)
                   continue;
                stime = std::min(stime, c->GetPlayStartTime());

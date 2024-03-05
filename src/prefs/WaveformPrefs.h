@@ -16,7 +16,7 @@ Paul Licameli
 #include "WaveformSettings.h"
 
 class ShuttleGui;
-class WaveTrack;
+class WaveChannel;
 class wxCheckBox;
 class wxChoice;
 
@@ -26,7 +26,7 @@ class WaveformPrefs final : public PrefsPanel
 {
 public:
    WaveformPrefs(wxWindow * parent, wxWindowID winid,
-      AudacityProject *pProject, WaveTrack *wt);
+      AudacityProject *pProject, WaveChannel *wc);
    virtual ~WaveformPrefs();
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
@@ -49,7 +49,7 @@ private:
 
    AudacityProject *mProject{};
 
-   WaveTrack *const mWt;
+   WaveChannel *const mWc;
    bool mDefaulted;
 
    wxCheckBox *mDefaultsCheckbox;
@@ -67,5 +67,5 @@ private:
 /// A PrefsPanel::Factory that creates one WaveformPrefs panel.
 /// This factory can be parametrized by a single track, to change settings
 /// non-globally
-extern PrefsPanel::Factory WaveformPrefsFactory(WaveTrack *wt);
+extern PrefsPanel::Factory WaveformPrefsFactory(WaveChannel *wc);
 #endif

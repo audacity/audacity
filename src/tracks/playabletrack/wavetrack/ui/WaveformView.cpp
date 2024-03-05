@@ -855,7 +855,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
             bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
             auto target = dynamic_cast<SampleHandle*>(context.target.get());
-            highlight = target && target->FindChannel().get() == &channel;
+            highlight = target && target->FindTrack().get() ==
+               &static_cast<const Track&>(channel.GetChannelGroup());
 #endif
             DrawIndividualSamples(
                context, leftOffset, rectPortion, zoomMin, zoomMax,
@@ -962,7 +963,8 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
    gripHit = target && target->IsGripHit();
-   highlight = target && target->FindChannel().get() == &channel;
+   highlight = target && target->FindTrack().get() ==
+      &static_cast<const Track &>(channel.GetChannelGroup());
 #endif
 
    const bool dB = !WaveformSettings::Get(channel).isLinear();
@@ -997,12 +999,12 @@ void WaveformView::Draw(
       const auto pChannel = FindChannel();
       if (!pChannel)
          return;
-      const auto &wt = static_cast<const WaveTrack&>(
+      const auto &wc = static_cast<const WaveChannel&>(
          pendingTracks.SubstitutePendingChangedChannel(*pChannel));
 
       const auto hasSolo = artist->hasSolo;
-      bool muted = (hasSolo || wt.GetMute()) &&
-      !wt.GetSolo();
+      bool muted = (hasSolo || wc.GetTrack().GetMute()) &&
+         !wc.GetTrack().GetSolo();
 
 #if defined(__WXMAC__)
       wxAntialiasMode aamode = dc.GetGraphicsContext()->GetAntialiasMode();
@@ -1013,7 +1015,7 @@ void WaveformView::Draw(
       wxASSERT(waveChannelView.use_count());
 
       auto selectedClip = waveChannelView->GetSelectedClip();
-      DoDraw(context, wt, selectedClip.get(), rect, muted);
+      DoDraw(context, wc, selectedClip.get(), rect, muted);
 
 #if defined(__WXMAC__)
       dc.GetGraphicsContext()->SetAntialiasMode(aamode);
@@ -1147,7 +1149,7 @@ PopupMenuTable::AttachedItem sAttachment{
       PopupMenuTable::Adapt<WaveTrackPopupMenuTable>(
          [](WaveTrackPopupMenuTable &table) {
             const auto pTrack = &table.FindWaveTrack();
-            const auto &view = WaveChannelView::Get(*pTrack);
+            const auto &view = WaveChannelView::GetFirst(*pTrack);
             const auto displays = view.GetDisplays();
             bool hasWaveform = (displays.end() != std::find(
                displays.begin(), displays.end(),

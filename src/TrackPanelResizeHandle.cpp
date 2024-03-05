@@ -53,9 +53,9 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 {
 }
 
-std::shared_ptr<const Channel> TrackPanelResizeHandle::FindChannel() const
+std::shared_ptr<const Track> TrackPanelResizeHandle::FindTrack() const
 {
-   return mwChannel.lock();
+   return TrackFromChannel(mwChannel.lock());
 }
 
 std::shared_ptr<Channel> TrackPanelResizeHandle::FindChannel()

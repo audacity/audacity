@@ -286,7 +286,6 @@ size_t WaveTrackUtilities::CountBlocks(const WaveTrack &track)
 
 void WaveTrackUtilities::CloseLock(WaveTrack &track) noexcept
 {
-   assert(track.IsLeader());
    for (const auto &pClip : track.Intervals())
       pClip->CloseLock();
 }

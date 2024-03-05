@@ -30,9 +30,9 @@ WaveformVZoomHandle::WaveformVZoomHandle(
 
 WaveformVZoomHandle::~WaveformVZoomHandle() = default;
 
-std::shared_ptr<const Channel> WaveformVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> WaveformVZoomHandle::FindTrack() const
 {
-   return mpChannel.lock();
+   return TrackFromChannel(mpChannel.lock());
 }
 
 void WaveformVZoomHandle::Enter( bool, AudacityProject* )
@@ -77,7 +77,7 @@ UIHandle::Result WaveformVZoomHandle::Release(
    if (!pChannel)
       return RefreshCode::Cancelled;
    return WaveChannelVZoomHandle::DoRelease(
-      evt, pProject, pParent, pChannel->GetTrack(), mRect,
+      evt, pProject, pParent, *pChannel, mRect,
       DoZoom, WaveformVRulerMenuTable::Instance(),
       mZoomStart, mZoomEnd);
 }
@@ -112,7 +112,7 @@ wxRect WaveformVZoomHandle::DrawingArea(
 // the zoomKind and cause a drag-zoom-in.
 void WaveformVZoomHandle::DoZoom(
    AudacityProject *pProject,
-   WaveTrack &track,
+   WaveChannel &wc,
    WaveChannelViewConstants::ZoomActions ZoomKind,
    const wxRect &rect, int zoomStart, int zoomEnd,
    bool fixedMousePoint)
@@ -128,18 +128,18 @@ void WaveformVZoomHandle::DoZoom(
       std::swap( zoomStart, zoomEnd );
 
    float min, max, minBand = 0;
-   const double rate = track.GetRate();
+   const double rate = wc.GetRate();
    const float halfrate = rate / 2;
    float maxFreq = 8000.0;
 
 
    float top=2.0;
    float half=0.5;
-   auto &cache = WaveformScale::Get(track);
+   auto &cache = WaveformScale::Get(wc);
 
    {
       cache.GetDisplayBounds(min, max);
-      auto &waveSettings = WaveformSettings::Get(track);
+      auto &waveSettings = WaveformSettings::Get(wc);
       const bool linear = waveSettings.isLinear();
       if( !linear ){
          top = (LINEAR_TO_DB(2.0) + waveSettings.dBRange) / waveSettings.dBRange;
@@ -240,7 +240,7 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
                static_cast< WaveformVRulerMenuTable& >( handler ).mpData;
             if (id ==
                OnFirstWaveformScaleID +
-               static_cast<int>(WaveformSettings::Get(pData->track).scaleType))
+               static_cast<int>(WaveformSettings::Get(pData->wc).scaleType))
                menu.Check(id, true);
          }
          );
@@ -272,7 +272,7 @@ void WaveformVRulerMenuTable::OnWaveformScaleType(wxCommandEvent &evt)
                evt.GetId() - OnFirstWaveformScaleID
       )));
 
-   auto &scaleType = WaveformSettings::Get(mpData->track).scaleType;
+   auto &scaleType = WaveformSettings::Get(mpData->wc).scaleType;
    if (scaleType != newScaleType) {
       scaleType = newScaleType;
 

@@ -90,7 +90,22 @@ SONFNS(AutoSave)
 #endif
 
 
+NoteTrack::Interval::Interval(const NoteTrack &track)
+   : WideChannelGroupInterval(track)
+   , mpTrack{ track.SharedPointer<const NoteTrack>() }
+{}
+
 NoteTrack::Interval::~Interval() = default;
+
+double NoteTrack::Interval::Start() const
+{
+   return mpTrack->mOrigin;
+}
+
+double NoteTrack::Interval::End() const
+{
+   return Start() + mpTrack->GetSeq().get_real_dur();
+}
 
 std::shared_ptr<ChannelInterval>
 NoteTrack::Interval::DoGetChannel(size_t iChannel)
@@ -197,7 +212,7 @@ TrackListHolder NoteTrack::Clone(bool) const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   return TrackList::Temporary(nullptr, duplicate, nullptr);
+   return TrackList::Temporary(nullptr, duplicate);
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
@@ -328,7 +343,7 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return TrackList::Temporary(nullptr, newTrack);
 }
 
 TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
@@ -351,7 +366,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return TrackList::Temporary(nullptr, newTrack);
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -583,12 +598,9 @@ size_t NoteTrack::NIntervals() const
 std::shared_ptr<WideChannelGroupInterval>
 NoteTrack::DoGetInterval(size_t iInterval)
 {
-   if (iInterval == 0) {
+   if (iInterval == 0)
       // Just one, and no extra info in it!
-      const auto start = mOrigin;
-      const auto end = start + GetSeq().get_real_dur();
-      return std::make_shared<Interval>(*this, start, end);
-   }
+      return std::make_shared<Interval>(*this);
    return {};
 }
 
