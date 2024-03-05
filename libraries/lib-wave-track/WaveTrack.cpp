@@ -483,26 +483,32 @@ bool WaveTrack::Interval::SetCentShift(int cents)
    return true;
 }
 
-WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
+/*!
+ * @post result: `result->GetStretchRatio() == 1`
+ */
+namespace {
+WaveTrack::IntervalHolder GetRenderedCopy(WaveTrack::Interval &interval,
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
-   if (!HasPitchOrSpeed())
-      return std::make_shared<Interval>(group, mpClip, mpClip1);
+   using Interval = WaveTrack::Interval;
+   if (!interval.HasPitchOrSpeed())
+      return std::make_shared<Interval>(group,
+         interval.GetClip(0), interval.GetClip(1));
 
    const auto dst = std::make_shared<Interval>(
-      group, NChannels(), factory, mpClip->GetRate(), format);
+      group, interval.NChannels(), factory, interval.GetRate(), format);
 
-   const auto originalPlayStartTime = GetPlayStartTime();
-   const auto originalPlayEndTime = GetPlayEndTime();
-   const auto stretchRatio = GetStretchRatio();
+   const auto originalPlayStartTime = interval.GetPlayStartTime();
+   const auto originalPlayEndTime = interval.GetPlayEndTime();
+   const auto stretchRatio = interval.GetStretchRatio();
 
    auto success = false;
    Finally Do { [&] {
       if (!success)
       {
-         TrimLeftTo(originalPlayStartTime);
-         TrimRightTo(originalPlayEndTime);
+         interval.TrimLeftTo(originalPlayStartTime);
+         interval.TrimRightTo(originalPlayEndTime);
       }
    } };
 
@@ -510,26 +516,26 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    // to give the algorithm a chance to be in a steady state when reaching the
    // play boundaries.
    const auto tmpPlayStartTime =
-      std::max(GetSequenceStartTime(), originalPlayStartTime - stretchRatio);
+      std::max(interval.GetSequenceStartTime(), originalPlayStartTime - stretchRatio);
    const auto tmpPlayEndTime =
-      std::min(GetSequenceEndTime(), originalPlayEndTime + stretchRatio);
-   TrimLeftTo(tmpPlayStartTime);
-   TrimRightTo(tmpPlayEndTime);
+      std::min(interval.GetSequenceEndTime(), originalPlayEndTime + stretchRatio);
+   interval.TrimLeftTo(tmpPlayStartTime);
+   interval.TrimRightTo(tmpPlayEndTime);
 
    constexpr auto sourceDurationToDiscard = 0.;
    constexpr auto blockSize = 1024;
-   const auto numChannels = NChannels();
-   ClipTimeAndPitchSource stretcherSource { *this, sourceDurationToDiscard,
+   const auto numChannels = interval.NChannels();
+   ClipTimeAndPitchSource stretcherSource { interval, sourceDurationToDiscard,
                                             PlaybackDirection::forward };
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
-   params.pitchRatio = std::pow(2., mpClip->GetCentShift() / 1200.);
-   StaffPadTimeAndPitch stretcher { mpClip->GetRate(), numChannels,
+   params.pitchRatio = std::pow(2., interval.GetCentShift() / 1200.);
+   StaffPadTimeAndPitch stretcher { interval.GetRate(), numChannels,
                                     stretcherSource, std::move(params) };
 
    // Post-rendering sample counts, i.e., stretched units
    const auto totalNumOutSamples =
-      sampleCount { GetVisibleSampleCount().as_double() *
+      sampleCount { interval.GetVisibleSampleCount().as_double() *
                     stretchRatio };
 
    sampleCount numOutSamples { 0 };
@@ -542,7 +548,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
       stretcher.GetSamples(container.Get(), numSamplesToGet);
       constSamplePtr data[2];
       data[0] = reinterpret_cast<constSamplePtr>(container.Get()[0]);
-      if (NChannels() == 2)
+      if (interval.NChannels() == 2)
          data[1] = reinterpret_cast<constSamplePtr>(container.Get()[1]);
       dst->Append(data, floatSample, numSamplesToGet);
       numOutSamples += numSamplesToGet;
@@ -559,10 +565,10 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    dst->ClearRight(originalPlayEndTime);
 
    // We don't preserve cutlines but the relevant part of the envelope.
-   Envelope dstEnvelope = GetEnvelope();
-   const auto samplePeriod = 1. / mpClip->GetRate();
+   Envelope dstEnvelope = interval.GetEnvelope();
+   const auto samplePeriod = 1. / interval.GetRate();
    dstEnvelope.CollapseRegion(
-      originalPlayEndTime, GetSequenceEndTime() + samplePeriod, samplePeriod);
+      originalPlayEndTime, interval.GetSequenceEndTime() + samplePeriod, samplePeriod);
    dstEnvelope.CollapseRegion(0, originalPlayStartTime, samplePeriod);
    dstEnvelope.SetOffset(originalPlayStartTime);
    dst->SetEnvelope(dstEnvelope);
@@ -571,6 +577,7 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
 
    assert(!dst->HasPitchOrSpeed());
    return dst;
+}
 }
 
 bool WaveTrack::Interval::HasPitchOrSpeed() const
@@ -4093,7 +4100,7 @@ void WaveTrack::ApplyPitchAndSpeedOnIntervals(
    std::transform(
       srcIntervals.begin(), srcIntervals.end(),
       std::back_inserter(dstIntervals), [&](const IntervalHolder& interval) {
-         return interval->GetRenderedCopy(
+         return GetRenderedCopy(*interval,
             reportProgress, *this, mpFactory, GetSampleFormat());
       });
 
