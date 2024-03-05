@@ -166,19 +166,7 @@ void InitProjectWindow( ProjectWindow &window )
    auto &project = *pProject;
    auto &viewport = Viewport::Get(project);
 
-   // Note that the first field of the status bar is a dummy, and its width is set
-   // to zero latter in the code. This field is needed for wxWidgets 2.8.12 because
-   // if you move to the menu bar, the first field of the menu bar is cleared, which
-   // is undesirable behaviour.
-   // In addition, the help strings of menu items are by default sent to the first
-   // field. Currently there are no such help strings, but it they were introduced, then
-   // there would need to be an event handler to send them to the appropriate field.
-   auto statusBar = window.CreateStatusBar(4);
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
-#endif
-   statusBar->SetName(wxT("status_line"));     // not localized
+   auto statusBar = window.CreateProjectStatusBar();
 
    auto &viewInfo = ViewInfo::Get( project );
 
@@ -308,7 +296,7 @@ void InitProjectWindow( ProjectWindow &window )
    window.UpdateStatusWidths();
    auto msg = XO("Welcome to Audacity version %s")
       .Format( AUDACITY_VERSION_STRING );
-   ProjectManager::Get( project ).SetStatusText( msg, mainStatusBarField );
+   ProjectManager::Get( project ).SetStatusText( msg, MainStatusBarField() );
 }
 
 AudacityProject *ProjectManager::New()
@@ -779,7 +767,7 @@ void ProjectManager::OnTimer(wxTimerEvent& WXUNUSED(event))
             .Format( GetHoursMinsString(iRecordingMins) );
 
          // Do not change mLastMainStatusMessage
-         SetStatusText(sMessage, mainStatusBarField);
+         SetStatusText(sMessage, MainStatusBarField());
       }
    }
 
@@ -804,15 +792,24 @@ void ProjectManager::OnStatusChange(StatusBarField field)
 
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
-
-   if ( field == mainStatusBarField )
+   
+   if ( field == MainStatusBarField() )
       // When recording, let the NEW status message stay at least as long as
       // the timer interval (if it is not replaced again by this function),
       // before replacing it with the message about remaining disk capacity.
       RestartTimer();
 }
 
-void ProjectManager::SetStatusText( const TranslatableString &text, int number )
+void ProjectManager::SetStatusText(
+   const TranslatableString& text, const StatusBarField& field)
+{
+   const auto index = ProjectStatusFieldsRegistry::GetFieldIndex(mProject, field);
+
+   if (index >= 0)
+      SetStatusText(text, index);
+}
+
+void ProjectManager::SetStatusText(const TranslatableString& text, int number)
 {
    auto &project = mProject;
    auto pWindow = ProjectWindow::Find( &project );

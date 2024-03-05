@@ -24,7 +24,7 @@ class wxTimerEvent;
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 
-enum StatusBarField : int;
+using StatusBarField = Identifier;
 enum class ProjectFileIOMessage : int;
 
 ///\brief Object associated with a project for high-level management of the
@@ -110,7 +110,8 @@ public:
    // Converts number of minutes to human readable format
    TranslatableString GetHoursMinsString(int iMinutes);
 
-   void SetStatusText( const TranslatableString &text, int number );
+   void SetStatusText(const TranslatableString& text, const StatusBarField& field);
+   void SetStatusText(const TranslatableString& text, int number);
    void SetSkipSavePrompt(bool bSkip) { sbSkipPromptingForSave = bSkip; };
 
    static void SetClosingAll(bool closing);

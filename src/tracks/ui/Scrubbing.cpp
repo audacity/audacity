@@ -1027,7 +1027,7 @@ registeredStatusWidthFunction{
    []( const AudacityProject &, StatusBarField field )
       -> ProjectStatus::StatusWidthResult
    {
-      if ( field == stateStatusBarField ) {
+      if ( field == StateStatusBarField() ) {
          TranslatableStrings strings;
          // Note that Scrubbing + Paused is not allowed.
          for (const auto &item : menuItems())
