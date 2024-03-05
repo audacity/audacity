@@ -20,7 +20,7 @@
 #include "HelpSystem.h"
 
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 LinkFailedDialog::LinkFailedDialog(wxWindow* parent)
@@ -49,7 +49,7 @@ LinkFailedDialog::LinkFailedDialog(wxWindow* parent)
 
             s.AddButton(XO("&Cancel"))
                ->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_CANCEL); });
-            
+
             auto btn = s.AddButton(XO("&Try again"));
 
             btn->Bind(
@@ -64,7 +64,7 @@ LinkFailedDialog::LinkFailedDialog(wxWindow* parent)
             btn->SetDefault();
          }
          s.EndHorizontalLay();
-         
+
       }
       s.EndInvisiblePanel();
    }
@@ -92,4 +92,4 @@ LinkFailedDialog::~LinkFailedDialog()
 {
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
