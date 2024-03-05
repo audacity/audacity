@@ -40,7 +40,7 @@ enum class PlayMode : int {
 
 struct TransportSequences;
 
-enum StatusBarField : int;
+using StatusBarField = Identifier;
 enum class ProjectFileIOMessage : int;
 
 //! Notification, after recording has stopped, when dropouts have been detected

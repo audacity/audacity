@@ -154,6 +154,7 @@ public:
    wxSize GetTPTracksUsableArea() /* not override */;
    void RefreshTPTrack(Track* pTrk, bool refreshbacking = true) /* not override */;
 
+   wxStatusBar* CreateProjectStatusBar();
  private:
    void OnThemeChange(struct ThemeChangeMessage);
 
