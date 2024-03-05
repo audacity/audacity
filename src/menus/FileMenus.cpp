@@ -497,12 +497,7 @@ auto FileMenu()
                      recentFilesMenu->GetParent()->SetHelpString( 0, "" );
                } );
             } )
-         ),
-
-   /////////////////////////////////////////////////////////////////////////////
-
-         Command( wxT("Close"), XXO("&Close"), OnClose,
-            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+         )
       ),
 
       Section( "Save",
@@ -522,6 +517,10 @@ auto FileMenu()
          // approach to this P1 bug is to not provide the 'Compact' menu item.
          //Command( wxT("Compact"), XXO("Co&mpact Project"), OnCompact,
          //   AudioIONotBusyFlag(), wxT("Shift+A") )
+      ),
+
+      Section( "Close", Command( wxT("Close"), XXO("&Close"), OnClose,
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
       Section( "Import-Export",
