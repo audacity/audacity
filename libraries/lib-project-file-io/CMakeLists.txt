@@ -12,6 +12,8 @@ set( SOURCES
    ActiveProjects.h
    DBConnection.cpp
    DBConnection.h
+   ProjectFileIOExtension.cpp
+   ProjectFileIOExtension.h
    ProjectFileIO.cpp
    ProjectFileIO.h
    ProjectSerializer.cpp
