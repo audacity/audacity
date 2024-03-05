@@ -1061,7 +1061,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
    {
       WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
-      handler = waveclip->GetEnvelope();
+      handler = &waveclip->GetEnvelope();
    }
 
    return true;

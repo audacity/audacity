@@ -109,13 +109,13 @@ WaveChannelInterval::GetSampleView(double t0, double t1, bool mayThrow) const
 const Envelope &WaveChannelInterval::GetEnvelope() const
 {
    // Always the left clip's envelope
-   return *GetWideClip().GetEnvelope();
+   return GetWideClip().GetEnvelope();
 }
 
 Envelope &WaveChannelInterval::GetEnvelope()
 {
    // Always the left clip's envelope
-   return *GetWideClip().GetEnvelope();
+   return GetWideClip().GetEnvelope();
 }
 
 sampleCount WaveChannelInterval::GetVisibleSampleCount() const
@@ -897,12 +897,12 @@ void WaveTrack::Interval::SetIsPlaceholder(bool val)
 
 Envelope& WaveTrack::Interval::GetEnvelope()
 {
-   return *mpClip->GetEnvelope();
+   return mpClip->GetEnvelope();
 }
 
 const Envelope& WaveTrack::Interval::GetEnvelope() const
 {
-   return *mpClip->GetEnvelope();
+   return mpClip->GetEnvelope();
 }
 
 
@@ -3180,7 +3180,7 @@ void WaveTrack::CopyClipEnvelopes()
          assert(false);
          break;
       }
-      (*it2)->SetEnvelope(std::make_unique<Envelope>(*(*it)->GetEnvelope()));
+      (*it2)->SetEnvelope(std::make_unique<Envelope>((*it)->GetEnvelope()));
    }
 }
 
@@ -3293,7 +3293,7 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
       if (tag == Sequence::Sequence_tag)
          return getClip().GetSequence(0);
       else if (tag == "envelope")
-         return getClip().GetEnvelope();
+         return &getClip().GetEnvelope();
    }
 
    // JKC... for 1.1.0, one step better than what we had, but still badly broken.
