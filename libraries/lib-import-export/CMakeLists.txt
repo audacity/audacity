@@ -18,6 +18,8 @@ set( SOURCES
    ExportPluginHelpers.h
    ExportPluginRegistry.cpp
    ExportPluginRegistry.h
+   ExportProgressUI.cpp
+   ExportProgressUI.h
    ExportTypes.h
    ExportUtils.cpp
    ExportUtils.h
