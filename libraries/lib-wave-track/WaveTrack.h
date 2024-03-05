@@ -350,7 +350,7 @@ public:
       bool allowEmpty);
 
    static void CopyOne(WaveChannel &newTrack, const WaveChannel &track,
-      double t0, double t1, double endTime, bool forClipboard);
+      double t0, double t1, bool forClipboard);
 private:
    const WaveClipHolders &Clips() const;
    WaveClipHolders &Clips();
@@ -725,6 +725,7 @@ public:
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided, and a clip from which to copy all sample data.
+    The clip is not owned by the track.  Use InsertInterval to make it so.
     @param offset desired sequence (not play) start time
     */
    IntervalHolder
@@ -740,6 +741,8 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
+   void FinishCopy(double t0, double t1, double endTime, bool forClipboard);
+
    //! Return all WaveClips sorted by clip play start time.
    IntervalConstHolders SortedClipArray() const;
    IntervalConstHolder GetClipAtTime(double time) const;
