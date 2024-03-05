@@ -370,11 +370,22 @@ int DBConnection::SetPageSize(const char* schema)
    // This function will be the first called on the connection,
    // so if DB is empty we can assume that journal was not
    // set to WAL yet.
-   int rc = sqlite3_exec(
-      mDB, "SELECT 1 FROM project LIMIT 1;", nullptr, nullptr, nullptr);
+   sqlite3_stmt *stmt = nullptr;
+   int rc = sqlite3_prepare_v2(mDB, "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'project')", -1, &stmt, nullptr);
 
    if (rc == SQLITE_OK)
-      return SQLITE_OK; // Project table exists, too late to VACUUM now
+   {
+      auto finalizer = finally([&stmt] { sqlite3_finalize(stmt); });
+      rc = sqlite3_step(stmt);
+      if (rc == SQLITE_ROW)
+      {
+         if (sqlite3_column_int (stmt, 0) == 1)
+         {
+            // Project table exists, too late to VACUUM now
+            return SQLITE_OK;
+         }
+      }
+   }
 
    return ModeConfig(mDB, schema, PageSizeConfig);
 }
