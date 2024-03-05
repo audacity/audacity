@@ -11,6 +11,7 @@
 #ifndef __AUDACITY_WAVECLIP__
 #define __AUDACITY_WAVECLIP__
 
+#include "Channel.h"
 #include "ClientData.h"
 #include "CRTPBase.h"
 #include "SampleFormat.h"
@@ -28,7 +29,6 @@
 
 class BlockArray;
 class Envelope;
-class ProgressDialog;
 class sampleCount;
 class SampleBlock;
 class SampleBlockFactory;
@@ -104,6 +104,23 @@ struct WaveClipListener : WaveClipListenerBase {
       const std::string_view &attr, const XMLAttributeValueView &valueView);
 };
 
+class WAVE_TRACK_API WaveClipChannel
+   : public ChannelInterval
+{
+public:
+   WaveClipChannel(WaveClip &clip, size_t iChannel)
+      : mClip{ clip }
+      , miChannel{ iChannel }
+   {}
+   ~WaveClipChannel() override;
+
+   WaveClip &GetClip() { return mClip; }
+   const WaveClip &GetClip() const { return mClip; }
+private:
+   WaveClip &mClip;
+   const size_t miChannel;
+};
+
 struct CentShiftChange
 {
    explicit CentShiftChange(int newValue)
@@ -115,6 +132,7 @@ struct CentShiftChange
 
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
+    public WideChannelGroupInterval,
     public XMLTagHandler,
     public ClientData::Site<
       WaveClip, WaveClipListener, ClientData::DeepCopying>,
@@ -164,6 +182,19 @@ public:
 
    virtual ~WaveClip();
 
+   // Satisfying WideChannelGroupInterval
+   double Start() const override;
+   double End() const override;
+   std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+
+   using Channel = WaveClipChannel;
+
+   auto Channels() { return
+      WideChannelGroupInterval::Channels<Channel>(); }
+
+   auto Channels() const { return
+      WideChannelGroupInterval::Channels<const Channel>(); }
+
    //! Check weak invariant conditions on mSequences and mCutlines
    /*! Conditions are
     `mSequences.size() > 0`
@@ -196,6 +227,7 @@ public:
 
    //! How many Sequences the clip contains.
    size_t GetWidth() const override;
+   size_t NChannels() const override;
 
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
