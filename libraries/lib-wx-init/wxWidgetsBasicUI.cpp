@@ -242,3 +242,8 @@ bool wxWidgetsBasicUI::IsUsingRtlLayout() const
 {
    return wxLayout_RightToLeft == wxTheApp->GetLayoutDirection();
 }
+
+bool wxWidgetsBasicUI::IsUiThread() const
+{
+   return wxIsMainThread();
+}
