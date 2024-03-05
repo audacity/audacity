@@ -1844,45 +1844,47 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
    return newTrack;
 }
 
+void WaveTrack::CopyWholeClip(WaveChannel &newChannel,
+   const WaveClip &clip, double t0, bool forClipboard)
+{
+   const auto &pFactory = newChannel.GetTrack().GetSampleBlockFactory();
+   auto &newClips = newChannel.Clips();
+   newChannel.InsertClip(
+      std::make_shared<WaveClip>(clip, pFactory, !forClipboard),
+      false, false, false);
+   const auto newClip = newClips.back().get();
+   newClip->ShiftBy(-t0);
+}
+
+void WaveTrack::CopyPartOfClip(WaveChannel &newChannel,
+   const WaveClip &clip, double t0, double t1, bool forClipboard)
+{
+   const auto &pFactory = newChannel.GetTrack().GetSampleBlockFactory();
+   auto &newClips = newChannel.Clips();
+   auto newClip = std::make_shared<WaveClip>(
+      clip, pFactory, !forClipboard, t0, t1);
+   newClip->SetName(clip.GetName());
+   newClip->ShiftBy(-t0);
+   if (newClip->GetPlayStartTime() < 0)
+      newClip->SetPlayStartTime(0);
+   newChannel.InsertClip(std::move(newClip), false, false, false);
+}
+
 void WaveChannel::CopyOne(WaveChannel &newChannel,
    const WaveChannel &channel, double t0, double t1, bool forClipboard)
 {
-   const auto &pFactory = channel.GetTrack().GetSampleBlockFactory();
-
    // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
    // but that was the old behavior.  But this function is also used by the
    // Duplicate command and I changed its behavior in that case.
-
+   
    auto &clips = channel.Clips();
-   auto &newClips = newChannel.Clips();
    for (const auto &clip : clips) {
-      if(clip->IsEmpty())
+      if (clip->IsEmpty())
          continue;
-
-      if (t0 <= clip->GetPlayStartTime() && t1 >= clip->GetPlayEndTime()) {
-         // Whole clip is in copy region
-         //wxPrintf("copy: clip %i is in copy region\n", (int)clip);
-
-         newChannel.InsertClip(
-            std::make_shared<WaveClip>(*clip, pFactory, !forClipboard),
-            false, false, false);
-         WaveClip *const newClip = newClips.back().get();
-         newClip->ShiftBy(-t0);
-      }
-      else if (clip->CountSamples(t0, t1) >= 1) {
-         // Clip is affected by command
-         //wxPrintf("copy: clip %i is affected by command\n", (int)clip);
-
-         auto newClip = std::make_shared<WaveClip>(
-            *clip, pFactory, !forClipboard, t0, t1);
-         newClip->SetName(clip->GetName());
-
-         newClip->ShiftBy(-t0);
-         if (newClip->GetPlayStartTime() < 0)
-            newClip->SetPlayStartTime(0);
-
-         newChannel.InsertClip(std::move(newClip), false, false, false);
-      }
+      else if (t0 <= clip->GetPlayStartTime() && t1 >= clip->GetPlayEndTime())
+         WaveTrack::CopyWholeClip(newChannel, *clip, t0, forClipboard);
+      else if (clip->CountSamples(t0, t1) >= 1)
+         WaveTrack::CopyPartOfClip(newChannel, *clip, t0, t1, forClipboard);
    }
 }
 
