@@ -90,7 +90,7 @@ auto ProjectAudioManager::StatusWidthFunction(
    const AudacityProject &project, StatusBarField field )
    -> ProjectStatus::StatusWidthResult
 {
-   if ( field == rateStatusBarField ) {
+   if ( field == RateStatusBarField() ) {
       auto &audioManager = ProjectAudioManager::Get( project );
       int rate = audioManager.mDisplayedRate;
       return {
@@ -1057,7 +1057,7 @@ void ProjectAudioManager::OnAudioIORate(int rate)
 
    auto display = FormatRate( rate );
 
-   ProjectStatus::Get( project ).Set( display, rateStatusBarField );
+   ProjectStatus::Get( project ).Set( display, RateStatusBarField() );
 }
 
 void ProjectAudioManager::OnAudioIOStartRecording()

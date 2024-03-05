@@ -676,7 +676,7 @@ registeredStatusWidthFunction{
    []( const AudacityProject &, StatusBarField field )
       -> ProjectStatus::StatusWidthResult
    {
-      if ( field == stateStatusBarField ) {
+      if ( field == StateStatusBarField() ) {
          TranslatableStrings strings;
          for ( auto pString :
             { &sStatePlay, &sStateStop, &sStateRecord } )
@@ -719,7 +719,7 @@ TranslatableString ControlToolBar::StateForStatusBar()
 void ControlToolBar::UpdateStatusBar()
 {
    ProjectStatus::Get( mProject ).Set(
-      StateForStatusBar(), stateStatusBarField
+      StateForStatusBar(), StateStatusBarField()
    );
 }
 
