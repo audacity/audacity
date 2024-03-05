@@ -1,15 +1,61 @@
 set( TARGET mod-cloud-audiocom )
 
 set( SOURCES
+   menus/Menus.cpp
+
+   ui/images/CloudImages.cpp
+   ui/images/CloudImages.hpp
+
+   ui/dialogs/AudioComDialogBase.cpp
+   ui/dialogs/AudioComDialogBase.h
+   ui/dialogs/CloudProjectPropertiesDialog.cpp
+   ui/dialogs/CloudProjectPropertiesDialog.h
+   ui/dialogs/ConnectionIssuesDialog.cpp
+   ui/dialogs/ConnectionIssuesDialog.h
+   ui/dialogs/LinkAccountDialog.cpp
+   ui/dialogs/LinkAccountDialog.h
    ui/dialogs/LinkFailedDialog.cpp
    ui/dialogs/LinkFailedDialog.h
    ui/dialogs/LinkSucceededDialog.cpp
    ui/dialogs/LinkSucceededDialog.h
    ui/dialogs/LinkWithTokenDialog.cpp
    ui/dialogs/LinkWithTokenDialog.h
+   ui/dialogs/MixdownPropertiesDialog.cpp
+   ui/dialogs/MixdownPropertiesDialog.h
+   ui/dialogs/NotCloudProjectDialog.cpp
+   ui/dialogs/NotCloudProjectDialog.h
+   ui/dialogs/ProjectLimitDialog.cpp
+   ui/dialogs/ProjectLimitDialog.h
+   ui/dialogs/ProjectsListDialog.cpp
+   ui/dialogs/ProjectsListDialog.h
+   ui/dialogs/ProjectVersionConflictDialog.cpp
+   ui/dialogs/ProjectVersionConflictDialog.h
+   ui/dialogs/SelectSaveLocationDialog.cpp
+   ui/dialogs/SelectSaveLocationDialog.h
    ui/dialogs/ShareAudioDialog.cpp
    ui/dialogs/ShareAudioDialog.h
+   ui/dialogs/SyncFailedDialog.cpp
+   ui/dialogs/SyncFailedDialog.h
+   ui/dialogs/SyncInBackroundDialog.cpp
+   ui/dialogs/SyncInBackroundDialog.h
+   ui/dialogs/SyncSucceededDialog.cpp
+   ui/dialogs/SyncSucceededDialog.h
+   ui/dialogs/UnsyncedProjectDialog.cpp
+   ui/dialogs/UnsyncedProjectDialog.h
+   ui/dialogs/UpdateCloudPreviewDialog.cpp
+   ui/dialogs/UpdateCloudPreviewDialog.h
+   ui/dialogs/UploadCanceledDialog.cpp
+   ui/dialogs/UploadCanceledDialog.h
+   ui/dialogs/WaitForActionDialog.cpp
+   ui/dialogs/WaitForActionDialog.h
 
+   ui/AudioComPrefsPanel.cpp
+   ui/CloudSyncStatusField.cpp
+   ui/CloudSyncStatusField.h
+   ui/MixdownPrefsPanel.cpp
+   ui/MixdownPrefsPanel.h
+   ui/ProjectCloudUIExtension.cpp
+   ui/ProjectCloudUIExtension.h
    ui/ShareAudioToolbar.cpp
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
@@ -20,6 +66,11 @@ set( SOURCES
    AudioComModule.cpp
    AuthorizationHandler.cpp
    AuthorizationHandler.h
+   CloudModuleSettings.cpp
+   CloudModuleSettings.h
+   CloudProjectFileIOExtensions.cpp
+   CloudProjectUtils.cpp
+   CloudProjectUtils.h
 )
 
 if(${_OPT}has_url_schemes_support)
