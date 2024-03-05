@@ -1007,14 +1007,6 @@ public:
       //! @pre `NChannels() == interval.NChannels()`
       void AddCutLine(Interval &interval);
    
-      /*!
-       * @post result: `result->GetStretchRatio() == 1`
-       */
-      std::shared_ptr<Interval> GetRenderedCopy(
-         const std::function<void(double)>& reportProgress,
-         const ChannelGroup& group, const SampleBlockFactoryPtr& factory,
-         sampleFormat format);
-
       bool HasPitchOrSpeed() const;
       bool HasEqualPitchAndSpeed(const Interval& other) const;
 
@@ -1091,11 +1083,10 @@ public:
 
       void SetRate(int rate);
 
+      void SetEnvelope(const Envelope& envelope);
    private:
       // TODO wide wave tracks -- remove friend
       friend WaveTrack;
-
-      void SetEnvelope(const Envelope& envelope);
 
       // Helper function in time of migration to wide clips
       template<typename Callable> void ForEachClip(const Callable& op) {
