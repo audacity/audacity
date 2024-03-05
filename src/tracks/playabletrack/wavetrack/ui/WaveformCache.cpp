@@ -269,8 +269,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 }
 
 WaveClipWaveformCache::WaveClipWaveformCache(size_t nChannels)
-   // TODO wide wave tracks -- won't need std::max here
-   : mWaveCaches(std::max<size_t>(2, nChannels))
+   : mWaveCaches(nChannels)
 {
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
@@ -293,7 +292,7 @@ static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip &clip) {
 WaveClipWaveformCache &
 WaveClipWaveformCache::Get(const WaveChannelInterval &clip)
 {
-   return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
+   return const_cast<WaveClip&>(clip.GetClip()) // Consider it mutable data
       .Attachments::Get< WaveClipWaveformCache >( sKeyW );
 }
 

@@ -12,9 +12,9 @@
 #define __AUDACITY_WAVEFORM_CACHE__
 
 #include "WaveClip.h"
+using WaveChannelInterval = WaveClipChannel;
 
 class WaveCache;
-class WaveChannelInterval;
 
 // A bundle of arrays needed for drawing waveforms.  The object may or may not
 // own the storage for those arrays.  If it does, it destroys them.

@@ -506,7 +506,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    if (mBlockDetail) {
       // One remaining old direct use of narrow clips, only for debugging
-      auto seq = t->GetWideClip(0)->GetClip(0)->GetSequence(0);
+      auto seq = t->GetWideClip(0)->GetSequence(0);
       seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }

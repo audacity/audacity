@@ -213,7 +213,7 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
         if (it == mEditedInterval)
             continue;
 
-        const auto clip = (*it)->GetClip(0);
+        const auto clip = (*it);
         if (LowlitClipButton::HitTest<ClipButtonId::Overflow>(
                { *clip, zoomInfo, rect }, mousePoint))
         {
@@ -304,7 +304,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
          for(auto it = intervals.begin(); it != intervals.end(); ++it)
          {
              auto interval = *it;
-             const auto& clip = *interval->GetClip(0);
+             const auto& clip = *interval;
              const auto clipRect = ClipParameters::GetClipRect(
                 clip, zoomInfo, rect);
 
@@ -613,7 +613,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
     {
         if (auto interval = *mEditedInterval)
         {
-            auto affordanceRect = ClipParameters::GetClipRect(*interval->GetClip(0), viewInfo, event.rect);
+            auto affordanceRect = ClipParameters::GetClipRect(*interval, viewInfo, event.rect);
             if (!affordanceRect.Contains(event.event.GetPosition()))
                return ExitTextEditing();
         }
@@ -622,7 +622,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
     {
         if (event.event.LeftDClick())
         {
-            auto affordanceRect = ClipParameters::GetClipRect(*interval->GetClip(0), viewInfo, event.rect);
+            auto affordanceRect = ClipParameters::GetClipRect(*interval, viewInfo, event.rect);
             if (affordanceRect.Contains(event.event.GetPosition()) &&
                 StartEditClipName(*project, mFocusInterval))
             {

@@ -393,7 +393,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    //to determine which kind of adjustment is
    //more appropriate
    for (const auto &interval : waveTrack->Intervals()) {
-      const auto& clip = *interval->GetClip(0);
+      const auto& clip = *interval;
       if(!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
          continue;
 
@@ -409,7 +409,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    if (leftInterval && rightInterval)
    {
       //between adjacent clips
-      if(ClipParameters::GetClipRect(*leftInterval->GetClip(0), zoomInfo, rect).GetRight() > px)
+      if(ClipParameters::GetClipRect(*leftInterval, zoomInfo, rect).GetRight() > px)
       {
          adjustedInterval = leftInterval;
          adjustLeftBorder = false;
@@ -428,7 +428,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
          //single clip case, determine the border,
          //hit testing area differs from one
          //used for general case
-         const auto clipRect = ClipParameters::GetClipRect(*adjustedInterval->GetClip(0), zoomInfo, rect);
+         const auto clipRect = ClipParameters::GetClipRect(*adjustedInterval, zoomInfo, rect);
          if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
             adjustLeftBorder = true;
          else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)

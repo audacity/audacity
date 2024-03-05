@@ -1034,8 +1034,7 @@ WaveChannelView::DoDetailedHitTest(
          results.push_back(
             AssignUIHandlePtr(
                waveChannelView.mAffordanceHandle,
-               std::make_shared<WaveTrackAffordanceHandle>(
-                  pTrack, clip->GetClipPtr())
+               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
             )
          );
       }

@@ -399,14 +399,6 @@ void WaveTrackUtilities::InspectBlocks(const TrackList &tracks,
    VisitBlocks(const_cast<TrackList &>(tracks), move(inspector), pIDs);
 }
 
-bool WaveTrackUtilities::WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveChannelInterval &clip)
-{
-   const auto &waveClip = clip.GetClip();
-   return &waveClip == wideClip.GetClip(0).get()
-      || &waveClip == wideClip.GetClip(1).get();
-}
-
 WaveTrack::IntervalConstHolders
 WaveTrackUtilities::GetClipsIntersecting(const WaveTrack &track,
    double t0, double t1)
