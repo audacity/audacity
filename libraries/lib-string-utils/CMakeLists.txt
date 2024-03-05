@@ -6,6 +6,9 @@ def_vars()
 set(SOURCES
     HexHelpers.h
 
+    StringUtils.h
+    StringUtils.cpp
+
     UrlEncode.h
     UrlEncode.cpp
 
@@ -23,6 +26,9 @@ set(SOURCES
 
     FromChars.h
     FromChars.cpp
+
+    UriParser.h
+    UriParser.cpp
 )
 
 set( LIBRARIES
