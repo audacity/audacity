@@ -3816,9 +3816,9 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
          holders[iChannel++] = pNewClip;
       });
    else {
-      holders[iChannel++] = CreateClip(*this, nullptr, offset, name);
+      holders[iChannel++] = CreateClip(*this, offset, name);
       if (mRightChannel.has_value())
-         holders[iChannel++] = CreateClip(*this, nullptr, offset, name);
+         holders[iChannel++] = CreateClip(*this, offset, name);
    }
 
    return std::make_shared<Interval>(*this, holders[0], holders[1]);
@@ -3837,8 +3837,8 @@ void WaveTrack::CreateRight()
 }
 
 auto WaveTrack::CreateClip(WaveTrack &track,
-   WaveClipHolders *pClips, double offset, const wxString& name)
-   -> WaveClipHolder
+   double offset, const wxString& name)
+      -> WaveClipHolder
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
    auto clip = std::make_shared<WaveClip>(1,
@@ -3849,10 +3849,6 @@ auto WaveTrack::CreateClip(WaveTrack &track,
    const auto& tempo = GetProjectTempo(track);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
-   if (pClips) {
-      pClips->push_back(clip);
-      track.Publish({ clip, WaveTrackMessage::New });
-   }
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
    assert(clip->GetWidth() == track.GetWidth());
@@ -3861,33 +3857,31 @@ auto WaveTrack::CreateClip(WaveTrack &track,
 
 auto WaveTrack::NewestOrNewClip() -> IntervalHolder
 {
-   auto &clips = NarrowClips();
-   WaveClipHolder newClips[2];
-   const auto origin = WaveTrackData::Get(*this).GetOrigin();
-   const auto name = MakeNewClipName();
-   newClips[0] = clips.empty()
-      ? CreateClip(*this, &clips, origin, name)
-      : clips.back();
-   if (NChannels() > 1) {
-      auto &rightClips = RightClips();
-      newClips[1] = rightClips.empty()
-         ? CreateClip(*this, &rightClips, origin, name)
-         : rightClips.back();
+   const auto &intervals = Intervals();
+   if (intervals.empty()) {
+      const auto origin = WaveTrackData::Get(*this).GetOrigin();
+      const auto name = MakeNewClipName();
+      auto pInterval = CreateWideClip(origin, name);
+      InsertInterval(pInterval, true, true);
+      return pInterval;
    }
-   return std::make_shared<Interval>(*this, newClips[0], newClips[1]);
+   else
+      return std::make_shared<Interval>(*this, NarrowClips().back(),
+         (NChannels() > 1 ? RightClips().back() : nullptr));
 }
 
 /*! @excsafety{No-fail} */
 auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
 {
-   auto &clips = NarrowClips();
-   if (clips.empty()) {
+   const auto &intervals = Intervals();
+   if (intervals.empty()) {
       auto pInterval = CreateWideClip(
          WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
       InsertInterval(pInterval, true, true);
       return pInterval;
    }
    else {
+      auto &clips = NarrowClips();
       WaveClipHolder newClips[2];
       size_t iChannel = 0;
       const auto makeClip = [&](auto &theClips){

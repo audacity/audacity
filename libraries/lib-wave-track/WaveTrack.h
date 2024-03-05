@@ -755,11 +755,9 @@ private:
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided
 
-    @param pClips if not null, push new clip onto it and publish
     @post result: `result->GetWidth() == track.GetWidth()`
     */
-   static WaveClipHolder CreateClip(WaveTrack &track, WaveClipHolders *pClips,
-      double offset = .0, const wxString& name = wxEmptyString);
+   static WaveClipHolder CreateClip(WaveTrack &track, double offset = .0, const wxString& name = wxEmptyString);
 
 public:
    /** @brief Get access to the most recently added clip, or create a clip,
