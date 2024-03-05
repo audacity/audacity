@@ -31,5 +31,8 @@ STRING_UTILS_API wxString ToWXString (const std::string& str);
 STRING_UTILS_API wxString ToWXString (std::string_view str);
 STRING_UTILS_API wxString ToWXString (const char* str);
 STRING_UTILS_API wxString ToWXString (const std::wstring& str);
+STRING_UTILS_API wxString ToWXString (std::wstring_view str);
+STRING_UTILS_API wxString ToWXString (const wchar_t* str);
+
 
 }
