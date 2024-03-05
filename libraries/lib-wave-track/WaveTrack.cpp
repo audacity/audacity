@@ -1871,59 +1871,45 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 
    auto newTrack = EmptyCopy(NChannels());
    const auto endTime = std::max(GetEndTime(), t1);
-   WaveChannel::CopyOne(newTrack->mChannel, this->mChannel,
-      t0, t1, forClipboard);
-   if (this->mRightChannel) {
-      assert(newTrack->mRightChannel);
-      WaveChannel::CopyOne(*newTrack->mRightChannel, *this->mRightChannel,
-         t0, t1, forClipboard);
+   for (const auto pClip : Intervals()) {
+      // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
+      // but that was the old behavior.  But this function is also used by the
+      // Duplicate command and I changed its behavior in that case.
+      if (pClip->IsEmpty())
+         continue;
+      else if (t0 <= pClip->GetPlayStartTime() && t1 >= pClip->GetPlayEndTime())
+      {
+         newTrack->CopyWholeClip(*pClip, t0, forClipboard);
+      }
+      else if (pClip->CountSamples(t0, t1) >= 1) {
+         newTrack->CopyPartOfClip(*pClip, t0, t1, forClipboard);
+      }
    }
    newTrack->FinishCopy(t0, t1, endTime, forClipboard);
    return newTrack;
 }
 
-void WaveTrack::CopyWholeClip(WaveChannel &newChannel,
-   const WaveClip &clip, double t0, bool forClipboard)
+void WaveTrack::CopyWholeClip(const Interval &clip,
+   double t0, bool forClipboard)
 {
-   const auto &pFactory = newChannel.GetTrack().GetSampleBlockFactory();
-   auto &newClips = newChannel.Clips();
-   newChannel.InsertClip(
-      std::make_shared<WaveClip>(clip, pFactory, !forClipboard),
-      false, false, false);
-   const auto newClip = newClips.back().get();
+   const auto &pFactory = GetSampleBlockFactory();
+   const auto newClip =
+      std::make_shared<Interval>(*this, clip, pFactory, !forClipboard);
+   InsertInterval(newClip, false, false);
    newClip->ShiftBy(-t0);
 }
 
-void WaveTrack::CopyPartOfClip(WaveChannel &newChannel,
-   const WaveClip &clip, double t0, double t1, bool forClipboard)
+void WaveTrack::CopyPartOfClip(const Interval &clip,
+   double t0, double t1, bool forClipboard)
 {
-   const auto &pFactory = newChannel.GetTrack().GetSampleBlockFactory();
-   auto &newClips = newChannel.Clips();
-   auto newClip = std::make_shared<WaveClip>(
+   const auto &pFactory = GetSampleBlockFactory();
+   auto newClip = std::make_shared<Interval>(*this,
       clip, pFactory, !forClipboard, t0, t1);
    newClip->SetName(clip.GetName());
    newClip->ShiftBy(-t0);
    if (newClip->GetPlayStartTime() < 0)
       newClip->SetPlayStartTime(0);
-   newChannel.InsertClip(std::move(newClip), false, false, false);
-}
-
-void WaveChannel::CopyOne(WaveChannel &newChannel,
-   const WaveChannel &channel, double t0, double t1, bool forClipboard)
-{
-   // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
-   // but that was the old behavior.  But this function is also used by the
-   // Duplicate command and I changed its behavior in that case.
-   
-   auto &clips = channel.Clips();
-   for (const auto &clip : clips) {
-      if (clip->IsEmpty())
-         continue;
-      else if (t0 <= clip->GetPlayStartTime() && t1 >= clip->GetPlayEndTime())
-         WaveTrack::CopyWholeClip(newChannel, *clip, t0, forClipboard);
-      else if (clip->CountSamples(t0, t1) >= 1)
-         WaveTrack::CopyPartOfClip(newChannel, *clip, t0, t1, forClipboard);
-   }
+   InsertInterval(std::move(newClip), false, false);
 }
 
 void WaveTrack::FinishCopy(

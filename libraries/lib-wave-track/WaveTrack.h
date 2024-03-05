@@ -349,8 +349,6 @@ public:
    bool InsertClip(WaveClipHolder clip, bool newClip, bool backup,
       bool allowEmpty);
 
-   static void CopyOne(WaveChannel &newTrack, const WaveChannel &track,
-      double t0, double t1, bool forClipboard);
 private:
    const WaveClipHolders &Clips() const;
    WaveClipHolders &Clips();
@@ -741,10 +739,9 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
-   static void CopyWholeClip(WaveChannel &newChannel,
-      const WaveClip &clip, double t0, bool forClipboard);
-   static void CopyPartOfClip(WaveChannel &newChannel,
-      const WaveClip &clip, double t0, double t1, bool forClipboard);
+   void CopyWholeClip(const Interval &clip, double t0, bool forClipboard);
+   void CopyPartOfClip(const Interval &clip,
+      double t0, double t1, bool forClipboard);
    void FinishCopy(double t0, double t1, double endTime, bool forClipboard);
 
    //! Return all WaveClips sorted by clip play start time.
