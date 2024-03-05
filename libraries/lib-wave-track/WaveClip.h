@@ -536,8 +536,8 @@ public:
 
    //! @}
 
-   Envelope* GetEnvelope() { return mEnvelope.get(); }
-   const Envelope* GetEnvelope() const { return mEnvelope.get(); }
+   Envelope &GetEnvelope() { return *mEnvelope; }
+   const Envelope &GetEnvelope() const { return *mEnvelope; }
    void SetEnvelope(std::unique_ptr<Envelope> p);
 
    //! @param ii identifies the channel
@@ -818,7 +818,7 @@ private:
     @invariant `CheckInvariants()`
     */
    std::vector<std::unique_ptr<Sequence>> mSequences;
-   //! Envelope is unique, not per-sequence
+   //! Envelope is unique, not per-sequence, and always non-null
    std::unique_ptr<Envelope> mEnvelope;
 
    //! Cut Lines are nothing more than ordinary wave clips, with the

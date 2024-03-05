@@ -51,12 +51,12 @@ WaveClipChannel::~WaveClipChannel() = default;
 
 Envelope &WaveClipChannel::GetEnvelope()
 {
-   return *GetClip().GetEnvelope();
+   return GetClip().GetEnvelope();
 }
 
 const Envelope &WaveClipChannel::GetEnvelope() const
 {
-   return *GetClip().GetEnvelope();
+   return GetClip().GetEnvelope();
 }
 
 bool WaveClipChannel::Intersects(double t0, double t1) const
@@ -1048,21 +1048,21 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    OffsetCutLines(t, len);
 
    const auto sampleTime = 1.0 / GetRate();
-   auto pEnvelope = GetEnvelope();
+   auto &envelope = GetEnvelope();
    if ( pEnvelopeValue ) {
 
       // Preserve limit value at the end
-      auto oldLen = pEnvelope->GetTrackLen();
+      auto oldLen = envelope.GetTrackLen();
       auto newLen = oldLen + len;
-      pEnvelope->Cap( sampleTime );
+      envelope.Cap( sampleTime );
 
       // Ramp across the silence to the given value
-      pEnvelope->SetTrackLen( newLen, sampleTime );
-      pEnvelope->InsertOrReplace
-         ( pEnvelope->GetOffset() + newLen, *pEnvelopeValue );
+      envelope.SetTrackLen( newLen, sampleTime );
+      envelope.InsertOrReplace
+         ( envelope.GetOffset() + newLen, *pEnvelopeValue );
    }
    else
-      pEnvelope->InsertSpace( t, len );
+      envelope.InsertSpace( t, len );
 
    MarkChanged();
 }
@@ -1171,7 +1171,7 @@ void WaveClip::ClearSequence(double t0, double t1)
       
       // Collapse envelope
       auto sampleTime = 1.0 / GetRate();
-      GetEnvelope()->CollapseRegion(t0, t1, sampleTime);
+      GetEnvelope().CollapseRegion(t0, t1, sampleTime);
    }
 
    transaction.Commit();
@@ -1236,7 +1236,7 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
 
    // Collapse envelope
    auto sampleTime = 1.0 / GetRate();
-   GetEnvelope()->CollapseRegion( t0, t1, sampleTime );
+   GetEnvelope().CollapseRegion( t0, t1, sampleTime );
 
    transaction.Commit();
    MarkChanged();
