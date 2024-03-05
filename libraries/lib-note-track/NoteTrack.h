@@ -196,6 +196,7 @@ public:
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
       double Start() const override;
       double End() const override;
+      size_t NChannels() const override;
    private:
       //! @invariant not null
       const std::shared_ptr<const NoteTrack> mpTrack;

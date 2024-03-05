@@ -195,7 +195,6 @@ public:
    };
 
    //! How many Sequences the clip contains.
-   //! Set at construction time; changes only if increased by deserialization
    size_t GetWidth() const override;
 
    void ConvertToSampleFormat(sampleFormat format,
