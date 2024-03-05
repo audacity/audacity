@@ -47,6 +47,8 @@ bool WaveClipListener::HandleXMLAttribute(
    return false;
 }
 
+WaveClipChannel::~WaveClipChannel() = default;
+
 WaveClip::WaveClip(size_t width,
    const SampleBlockFactoryPtr &factory,
    sampleFormat format, int rate)
@@ -65,10 +67,10 @@ WaveClip::WaveClip(size_t width,
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines)
-    : mCentShift { orig.mCentShift }
-    , mClipStretchRatio { orig.mClipStretchRatio }
-    , mRawAudioTempo { orig.mRawAudioTempo }
-    , mProjectTempo { orig.mProjectTempo }
+   : mCentShift { orig.mCentShift }
+   , mClipStretchRatio { orig.mClipStretchRatio }
+   , mRawAudioTempo { orig.mRawAudioTempo }
+   , mProjectTempo { orig.mProjectTempo }
 {
    // essentially a copy constructor - but you must pass in the
    // current sample block factory, because we might be copying
@@ -105,10 +107,10 @@ WaveClip::WaveClip(
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines, double t0, double t1)
-    : mCentShift { orig.mCentShift }
-    , mClipStretchRatio { orig.mClipStretchRatio }
-    , mRawAudioTempo { orig.mRawAudioTempo }
-    , mProjectTempo { orig.mProjectTempo }
+   : mCentShift { orig.mCentShift }
+   , mClipStretchRatio { orig.mClipStretchRatio }
+   , mRawAudioTempo { orig.mRawAudioTempo }
+   , mProjectTempo { orig.mProjectTempo }
 {
    assert(orig.CountSamples(t0, t1) > 0);
 
@@ -160,6 +162,21 @@ WaveClip::~WaveClip()
 {
 }
 
+double WaveClip::Start() const
+{
+   return GetPlayStartTime();
+}
+
+double WaveClip::End() const
+{
+   return GetPlayEndTime();
+}
+
+std::shared_ptr<ChannelInterval> WaveClip::DoGetChannel(size_t iChannel)
+{
+   return std::make_shared<Channel>(*this, iChannel);
+}
+
 AudioSegmentSampleView WaveClip::GetSampleView(
    size_t ii, sampleCount start, size_t length, bool mayThrow) const
 {
@@ -179,6 +196,11 @@ AudioSegmentSampleView WaveClip::GetSampleView(
 }
 
 size_t WaveClip::GetWidth() const
+{
+   return mSequences.size();
+}
+
+size_t WaveClip::NChannels() const
 {
    return mSequences.size();
 }
