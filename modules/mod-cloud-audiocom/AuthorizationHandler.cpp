@@ -14,15 +14,15 @@
 
 #include "OAuthService.h"
 
-#include "LinkFailedDialog.h"
-#include "LinkSucceededDialog.h"
+#include "ui/dialogs/LinkFailedDialog.h"
+#include "ui/dialogs/LinkSucceededDialog.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
 AuthorizationHandler handler;
-}
+} // namespace
 
 AuthorizationHandler& GetAuthorizationHandler()
 {
@@ -51,7 +51,7 @@ void AuthorizationHandler::PopSuppressDialogs()
 void AuthorizationHandler::OnAuthStateChanged(
    const AuthStateChangedMessage& message)
 {
-   if (mSuppressed > 0)
+   if (mSuppressed > 0 || message.silent)
       return;
 
    if (!message.errorMessage.empty())
@@ -65,4 +65,4 @@ void AuthorizationHandler::OnAuthStateChanged(
       dialog.ShowModal();
    }
 }
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

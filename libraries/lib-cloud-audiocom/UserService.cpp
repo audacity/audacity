@@ -32,7 +32,7 @@
 
 #include "CodeConversions.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -41,7 +41,7 @@ wxString MakeAvatarPath()
    const wxFileName avatarFileName(FileNames::ConfigDir(), "avatar");
    return avatarFileName.GetFullPath();
 }
-   
+
 StringSetting userName { L"/cloud/audiocom/userName", "" };
 StringSetting displayName { L"/cloud/audiocom/displayName", "" };
 StringSetting avatarEtag { L"/cloud/audiocom/avatarEtag", "" };
@@ -82,7 +82,7 @@ void UserService::UpdateUserData()
       [response, this](auto)
       {
          const auto httpCode = response->getHTTPCode();
-         
+
          if (httpCode != 200)
             return;
 
@@ -107,7 +107,7 @@ void UserService::UpdateUserData()
             {
                userName.Write(audacity::ToWXString(username));
                displayName.Write(audacity::ToWXString(profileName));
-               
+
                gPrefs->Flush();
 
                DownloadAvatar(avatar);
@@ -154,12 +154,12 @@ void UserService::DownloadAvatar(std::string_view url)
 
       return;
    }
-   
+
    std::shared_ptr<wxFile> avatarFile = std::make_shared<wxFile>();
 
    if (!avatarFile->Create(avatarTempPath, true))
       return;
-   
+
    using namespace audacity::network_manager;
 
    auto request = Request(std::string(url));
@@ -171,7 +171,7 @@ void UserService::DownloadAvatar(std::string_view url)
       request.setHeader(common_headers::IfNoneMatch, etag);
 
    auto response = NetworkManager::GetInstance().doGet(request);
-   
+
    response->setOnDataReceivedCallback(
       [response, avatarFile](auto)
       {
@@ -198,7 +198,7 @@ void UserService::DownloadAvatar(std::string_view url)
 
          const auto etag = response->getHeader("ETag");
          const auto oldPath = avatarPath + ".old";
-         
+
          if (wxFileExists(avatarPath))
             if (!wxRenameFile(avatarPath, oldPath))
                return;
@@ -212,13 +212,13 @@ void UserService::DownloadAvatar(std::string_view url)
 
          if (wxFileExists(oldPath))
             wxRemoveFile(oldPath);
-         
+
          BasicUI::CallAfter(
             [this, etag]()
             {
                avatarEtag.Write(etag);
                gPrefs->Flush();
-               
+
                Publish({});
             });
       });
@@ -244,4 +244,4 @@ wxString UserService::GetAvatarPath() const
    return path;
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

@@ -37,8 +37,7 @@
 #include "UserService.h"
 
 #include "AuthorizationHandler.h"
-#include "LinkAccountDialog.h"
-#include "UserImage.h"
+#include "../UserPanel.h"
 
 #include "CodeConversions.h"
 
@@ -52,16 +51,10 @@
 #include "HelpSystem.h"
 #include "ProjectRate.h"
 
-#ifdef HAS_CUSTOM_URL_HANDLING
-#include "URLSchemesRegistry.h"
-#endif
-
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
-const wxSize avatarSize = { 32, 32 };
-
 wxString GenerateTempPath(FileExtension extension)
 {
    const auto tempPath = GetUploadTempPath();
@@ -112,16 +105,16 @@ public:
    ExportProgressUpdater(ShareAudioDialog& parent)
       : mParent(parent)
    {
-      
+
    }
-   
+
    ~ExportProgressUpdater() override { }
-   
+
    void Cancel()
    {
       mCancelled.store(true, std::memory_order_release);
    }
-   
+
    ExportResult GetResult() const
    {
       return mResult;
@@ -145,7 +138,7 @@ public:
    {
       return false;
    }
-   
+
    void OnProgress(double value) override
    {
       mProgress.store(value, std::memory_order_release);
@@ -154,12 +147,12 @@ public:
    void UpdateUI()
    {
       constexpr auto ProgressSteps = 1000ull;
-      
+
       mParent.UpdateProgress(mProgress.load(std::memory_order_acquire) * ProgressSteps, ProgressSteps);
    }
 
 private:
-   
+
    ShareAudioDialog& mParent;
 
    std::atomic<bool> mCancelled{false};
@@ -172,7 +165,7 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
          parent, wxID_ANY, XO("Share Audio"), wxDefaultPosition, { 480, 250 },
          wxDEFAULT_DIALOG_STYLE)
     , mProject(project)
-    , mInitialStatePanel(*this) 
+    , mInitialStatePanel(*this)
     , mServices(std::make_unique<Services>())
 {
    GetAuthorizationHandler().PushSuppressDialogs();
@@ -238,7 +231,7 @@ void ShareAudioDialog::Populate(ShuttleGui& s)
 
             mCancelButton = s.AddButton(XXO("&Cancel"));
             mCancelButton->Bind(wxEVT_BUTTON, [this](auto) { OnCancel(); });
-            
+
             s.AddSpace(4, 0, 0);
 
             mContinueButton = s.AddButton(XXO("C&ontinue"));
@@ -275,7 +268,7 @@ void ShareAudioDialog::OnCancel()
       AudacityMessageDialog dlgMessage(
          this, XO("Are you sure you want to cancel?"), XO("Cancel upload to Audio.com"),
          wxYES_NO | wxICON_QUESTION | wxNO_DEFAULT | wxSTAY_ON_TOP);
-      
+
       const auto result = dlgMessage.ShowModal();
 
       if (result != wxID_YES)
@@ -286,7 +279,7 @@ void ShareAudioDialog::OnCancel()
          mExportProgressUpdater->Cancel();
    }
 
-   
+
    // If upload was started - ask it to discard the result.
    // The result should be discarded even after the upload has finished
    if (mServices->uploadPromise)
@@ -370,12 +363,12 @@ wxString ShareAudioDialog::ExportProject()
 
          ExportProgressUI::ExceptionWrappedCall([&]
          {
-            if(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
+            while(f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready)
                mExportProgressUpdater->UpdateUI();
             result = f.get();
          });
       });
-      
+
       mExportProgressUpdater->SetResult(result);
       const auto success = result == ExportResult::Success;
       if(!success && wxFileExists(path))
@@ -389,10 +382,10 @@ wxString ShareAudioDialog::ExportProject()
 void ShareAudioDialog::StartUploadProcess()
 {
    mInProgress = true;
-   
+
    mInitialStatePanel.root->Hide();
    mProgressPanel.root->Show();
-   
+
    mProgressPanel.info->Hide();
 
    mContinueButton->Hide();
@@ -428,7 +421,7 @@ void ShareAudioDialog::StartUploadProcess()
             [this, result]()
             {
                mInProgress = false;
-               
+
                if (result.result == UploadOperationCompleted::Result::Success)
                {
                   // Success indicates that UploadSuccessfulPayload is in the payload
@@ -440,7 +433,7 @@ void ShareAudioDialog::StartUploadProcess()
                      HandleUploadSucceeded(*payload);
                   else
                      HandleUploadSucceeded({});
-                  
+
                }
                else if (
                   result.result != UploadOperationCompleted::Result::Aborted)
@@ -483,7 +476,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
 
       for (auto& err : payload.additionalErrors)
          details += " " + err.second;
-      
+
       message = XO("Error: %s").Format(details);
    }
    else
@@ -497,7 +490,7 @@ void ShareAudioDialog::HandleUploadFailed(const UploadFailedPayload& payload)
       message,
       {},
       BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError });
-         
+
 }
 
 void ShareAudioDialog::HandleExportFailure()
@@ -520,7 +513,7 @@ void ShareAudioDialog::ResetProgress()
    mProgressPanel.progress->SetValue(0);
 
    mLastProgressValue = 0;
-   
+
    mExportProgressUpdater.reset();
 
    BasicUI::Yield();
@@ -589,8 +582,6 @@ void ShareAudioDialog::UpdateProgress(uint64_t current, uint64_t total)
 
 ShareAudioDialog::InitialStatePanel::InitialStatePanel(ShareAudioDialog& parent)
     : parent { parent }
-    , mUserDataChangedSubscription(
-         GetUserService().Subscribe([this](const auto&) { UpdateUserData(); }))
 {
 }
 
@@ -602,41 +593,18 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    {
       s.SetBorder(16);
 
-      s.StartHorizontalLay(wxEXPAND, 0);
-      {
-         avatar = safenew UserImage(s.GetParent(), avatarSize);
+      userPanel = safenew UserPanel { GetServiceConfig(), GetOAuthService(),
+                                      GetUserService(), true, s.GetParent() };
 
-         s.AddWindow(avatar);
+      mUserDataChangedSubscription = userPanel->Subscribe(
+         [this](auto message) { UpdateUserData(message.IsAuthorized); });
 
-         s.StartVerticalLay(wxEXPAND, 1);
-         {
-            s.SetBorder(0);
-            s.AddSpace(0, 0, 1);
-            name = s.AddVariableText(XO("Anonymous"));
-            s.AddSpace(0, 0, 1);
-         }
-         s.EndVerticalLay();
-
-         s.AddSpace(0, 0, 1);
-
-         s.StartVerticalLay(wxEXPAND, 1);
-         {
-            s.AddSpace(0, 0, 1);
-
-            s.SetBorder(16);
-            oauthButton = s.AddButton(XXO("&Link Account"));
-            oauthButton->Bind(
-               wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
-            s.AddSpace(0, 0, 1);
-         }
-         s.EndVerticalLay();
-      }
-      s.EndHorizontalLay();
+      s.Prop(0).AddWindow(userPanel, wxEXPAND);
 
       s.SetBorder(0);
 
       s.AddWindow(safenew wxStaticLine { s.GetParent() }, wxEXPAND);
-            
+
       s.StartInvisiblePanel(16);
       {
          s.StartInvisiblePanel();
@@ -681,102 +649,22 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    s.EndVerticalLay();
    s.EndInvisiblePanel();
 
-   UpdateUserData();
+   UpdateUserData(
+      GetOAuthService().HasRefreshToken() &&
+      !GetUserService().GetUserSlug().empty());
 }
 
-void ShareAudioDialog::InitialStatePanel::UpdateUserData()
+void ShareAudioDialog::InitialStatePanel::UpdateUserData(bool authorized)
 {
-   auto rootParent = root->GetParent();
-   rootParent->Freeze();
-   
-   auto layoutUpdater = finally(
-      [rootParent = root->GetParent(), this]()
-      {
-         oauthButton->Fit();
-         rootParent->Fit();
-         rootParent->Layout();
+   parent.mIsAuthorised = authorized;
 
-         rootParent->Thaw();
-
-         rootParent->Refresh();
-      });
-
-   auto& oauthService = GetOAuthService();
-
-   if (!oauthService.HasRefreshToken())
-   {
-      SetAnonymousState();
-      return;
-   }
-
-   if (!oauthService.HasAccessToken())
-      oauthService.ValidateAuth({});
-
-   auto& userService = GetUserService();
-
-   if (userService.GetUserSlug().empty())
-   {
-      SetAnonymousState();
-      return;
-   }
-
-   const auto displayName = userService.GetDisplayName();
-
-   if (!displayName.empty())
-      name->SetLabel(displayName);
-
-   const auto avatarPath = userService.GetAvatarPath();
-
-   if (!avatarPath.empty())
-      avatar->SetBitmap(avatarPath);
-   else
-      avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-
-   oauthButton->SetLabel(XXO("&Unlink Account").Translation());
-
-   parent.mIsAuthorised = true;
-
-   anonInfoPanel->Hide();
-   authorizedInfoPanel->Show();
+   anonInfoPanel->Show(!authorized);
+   authorizedInfoPanel->Show(authorized);
 
    if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(!trackTitle->GetValue().empty());
-}
+      parent.mContinueButton->Enable(authorized && !GetTrackTitle().empty());
 
-void ShareAudioDialog::InitialStatePanel::OnLinkButtonPressed()
-{
-   auto& oauthService = GetOAuthService();
-
-   if (oauthService.HasAccessToken())
-      oauthService.UnlinkAccount();
-   else
-   {
-      OpenInDefaultBrowser(
-         { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
-
-#ifdef HAS_CUSTOM_URL_HANDLING
-      if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
-#endif
-      {
-         LinkAccountDialog dlg(root);
-         dlg.ShowModal();
-      }
-   }
-}
-
-void ShareAudioDialog::InitialStatePanel::SetAnonymousState()
-{
-   parent.mIsAuthorised = false;
-   
-   name->SetLabel(XO("Anonymous").Translation());
-   avatar->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
-   oauthButton->SetLabel(XXO("&Link Account").Translation());
-
-   anonInfoPanel->Show();
-   authorizedInfoPanel->Hide();
-
-   if (parent.mContinueButton != nullptr)
-      parent.mContinueButton->Enable(false);
+   root->GetParent()->Layout();
 }
 
 wxString ShareAudioDialog::InitialStatePanel::GetTrackTitle() const
@@ -826,10 +714,10 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
       s.EndInvisiblePanel();
 
       s.AddSpace(0, 16, 0);
-      
+
       info = s.AddVariableText(publicDescriptionText);
    }
-   
+
    s.EndVerticalLay();
    s.EndInvisiblePanel();
 
@@ -839,4 +727,4 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
    elapsedTime->SetFont(font);
    remainingTime->SetFont(font);
 }
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

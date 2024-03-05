@@ -15,7 +15,7 @@
 #include <wx/dcbuffer.h>
 #include <wx/graphics.h>
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 UserImage::UserImage(wxWindow* parent, const wxSize& size)
@@ -47,7 +47,7 @@ void UserImage::SetBitmap(const wxString& path)
 }
 
 void UserImage::OnPaint()
-{      
+{
    wxAutoBufferedPaintDC dc(this);
    std::unique_ptr<wxGraphicsContext> gc(wxGraphicsContext::Create(dc));
 
@@ -67,7 +67,7 @@ void UserImage::OnPaint()
    {
       const wxSize resultingImageSize { std::min(size.x, mBitmap.GetWidth()),
                                         std::min(size.y, mBitmap.GetHeight()) };
-      
+
       gc->DrawBitmap(
          mBitmap,
          (size.x - resultingImageSize.x) / 2,
@@ -96,9 +96,9 @@ void UserImage::OnPaint()
       path.AddLineToPoint(0, size.y / 2);
       path.AddArc(size.x / 2, size.y / 2, size.x / 2, M_PI, M_PI_2, false);
       path.CloseSubpath();
-      
+
       gc->DrawPath(path);
    }
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
