@@ -550,8 +550,6 @@ list( APPEND SOURCES
       export/ExportMixerDialog.h
       export/ExportOptionsHandler.cpp
       export/ExportOptionsHandler.h
-      export/ExportProgressUI.cpp
-      export/ExportProgressUI.h
 
       # Import
 

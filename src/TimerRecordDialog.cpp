@@ -63,7 +63,7 @@
 #include "prefs/ImportExportPrefs.h"
 
 #include "TimerRecordExportDialog.h"
-#include "export/ExportProgressUI.h"
+#include "ExportProgressUI.h"
 
 #if wxUSE_ACCESSIBILITY
 #include "WindowAccessible.h"
