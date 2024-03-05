@@ -29,9 +29,9 @@ class wxStaticText;
 class wxTextCtrl;
 class wxRadioButton;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
-class UserImage;
+class UserPanel;
 
 struct UploadFailedPayload;
 struct UploadSuccessfulPayload;
@@ -48,9 +48,9 @@ private:
 
    void OnCancel();
    void OnContinue();
-   
+
    wxString ExportProject();
-   
+
    void StartUploadProcess();
    void HandleUploadSucceeded(const UploadSuccessfulPayload& payload);
    void HandleUploadFailed(const UploadFailedPayload& payload);
@@ -66,12 +66,10 @@ private:
       explicit InitialStatePanel(ShareAudioDialog& parent);
 
       ShareAudioDialog& parent;
-      
+
       wxWindow* root { nullptr };
 
-      UserImage* avatar { nullptr };
-      wxStaticText* name { nullptr };
-      wxButton* oauthButton { nullptr };
+      UserPanel* userPanel { nullptr };
       wxPanel* anonInfoPanel { nullptr };
       wxPanel* authorizedInfoPanel { nullptr };
       wxTextCtrl* trackTitle { nullptr };
@@ -80,10 +78,7 @@ private:
 
       void PopulateInitialStatePanel(ShuttleGui& s);
 
-      void UpdateUserData();
-      void OnLinkButtonPressed();
-
-      void SetAnonymousState();
+      void UpdateUserData(bool authorized);
 
       wxString GetTrackTitle() const;
       bool HasValidTitle() const;
@@ -128,4 +123,4 @@ private:
    bool mIsAuthorised { false };
    bool mInProgress { false };
 };
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

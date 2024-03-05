@@ -12,7 +12,7 @@
 
 #include "wxPanelWrapper.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class LinkFailedDialog final : public wxDialogWrapper
 {
@@ -20,6 +20,6 @@ public:
    explicit LinkFailedDialog(wxWindow* parent);
    ~LinkFailedDialog() override;
 
-   
+
 }; // class LinkFailedDialog
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

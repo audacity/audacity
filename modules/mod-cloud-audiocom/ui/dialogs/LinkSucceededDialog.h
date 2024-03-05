@@ -12,7 +12,7 @@
 
 #include "wxPanelWrapper.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class LinkSucceededDialog final : public wxDialogWrapper
 {
@@ -21,4 +21,4 @@ public:
    ~LinkSucceededDialog() override;
 
 }; // class LinkSucceededDialog
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

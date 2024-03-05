@@ -20,9 +20,7 @@
 #include "Prefs.h"
 #include "CodeConversions.h"
 
-
-
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 namespace
 {
@@ -203,4 +201,4 @@ const ServiceConfig& GetServiceConfig()
    return config;
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

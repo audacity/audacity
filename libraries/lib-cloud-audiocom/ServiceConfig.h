@@ -15,7 +15,7 @@
 #include <vector>
 #include <rapidjson/fwd.h>
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 //! Configuration for the audio.com
@@ -64,4 +64,4 @@ private:
 
 //! Returns the instance of the ServiceConfig
 CLOUD_AUDIOCOM_API const ServiceConfig& GetServiceConfig();
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

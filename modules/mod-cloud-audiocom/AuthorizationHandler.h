@@ -12,7 +12,9 @@
 
 #include "Observer.h"
 
-namespace cloud::audiocom
+class AudacityProject;
+
+namespace audacity::cloud::audiocom
 {
 struct AuthStateChangedMessage;
 
@@ -20,18 +22,18 @@ class AuthorizationHandler final
 {
 public:
    AuthorizationHandler();
-   
+
    void PushSuppressDialogs();
    void PopSuppressDialogs();
 
 private:
    void OnAuthStateChanged(const AuthStateChangedMessage& message);
-   
-   Observer::Subscription
-      mAuthStateChangedSubscription;
-   
+
+   Observer::Subscription mAuthStateChangedSubscription;
+
    size_t mSuppressed {};
 }; // class AuthorizationHandler
 
 AuthorizationHandler& GetAuthorizationHandler();
-} // namespace cloud::audiocom
+
+} // namespace audacity::cloud::audiocom

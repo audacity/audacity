@@ -19,6 +19,6 @@ namespace
 auto subscription = URLSchemesRegistry::Get().Subscribe(
    [](URLschemeHandlerMessage message)
    {
-      cloud::audiocom::GetOAuthService().HandleLinkURI(message.url, {});
+      audacity::cloud::audiocom::GetOAuthService().HandleLinkURI(message.url, {});
    });
 }

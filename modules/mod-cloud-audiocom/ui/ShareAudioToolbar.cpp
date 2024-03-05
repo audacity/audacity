@@ -27,13 +27,13 @@
 #include "Theme.h"
 #include "PlayableTrack.h"
 
-#include "audiocom/ShareAudioDialog.h"
+#include "dialogs/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"
 #include "widgets/AButton.h"
 
-IMPLEMENT_CLASS(cloud::ShareAudioToolbar, ToolBar);
+IMPLEMENT_CLASS(audacity::cloud::ShareAudioToolbar, ToolBar);
 
-namespace cloud
+namespace audacity::cloud
 {
 Identifier ShareAudioToolbar::ID()
 {
@@ -226,4 +226,4 @@ AttachedToolBarMenuItem sAttachment {
 };
 }
 
-} // namespace cloud
+} // namespace audacity::cloud

@@ -14,7 +14,7 @@
 
 class AudacityProject;
 
-namespace cloud
+namespace audacity::cloud
 {
 class ShareAudioToolbar final : public ToolBar
 {
@@ -51,4 +51,4 @@ private:
 
    DECLARE_CLASS(ShareAudioToolbar)
 }; // class ShareAudioToolbar
-} // namespace cloud
+} // namespace audacity::cloud

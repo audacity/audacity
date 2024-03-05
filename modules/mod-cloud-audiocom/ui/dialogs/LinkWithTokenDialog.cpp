@@ -8,7 +8,7 @@
   Dmitry Vedenko
 
 **********************************************************************/
-#include "LinkAccountDialog.h"
+#include "LinkWithTokenDialog.h"
 
 #include <wx/button.h>
 #include <wx/textctrl.h>
@@ -26,9 +26,9 @@
 #include "LinkFailedDialog.h"
 #include "LinkSucceededDialog.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
-LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
+LinkWithTokenDialog::LinkWithTokenDialog(wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 480, -1 },
          wxDEFAULT_DIALOG_STYLE)
@@ -78,17 +78,17 @@ LinkAccountDialog::LinkAccountDialog(wxWindow* parent)
    Centre();
 }
 
-LinkAccountDialog::~LinkAccountDialog()
+LinkWithTokenDialog::~LinkWithTokenDialog()
 {
    GetAuthorizationHandler().PopSuppressDialogs();
 }
 
-void LinkAccountDialog::OnContinue()
+void LinkWithTokenDialog::OnContinue()
 {
    mContinueButton->Disable();
 
-   wxWeakRef<LinkAccountDialog> weakDialog(this);
-   
+   wxWeakRef<LinkWithTokenDialog> weakDialog(this);
+
    GetOAuthService().HandleLinkURI(
       audacity::ToUTF8(mToken->GetValue()),
       [weakDialog](auto accessToken)
@@ -121,12 +121,12 @@ void LinkAccountDialog::OnContinue()
       });
 }
 
-void LinkAccountDialog::OnTextChanged()
+void LinkWithTokenDialog::OnTextChanged()
 {
    mContinueButton->Enable(!mToken->GetValue().empty());
 }
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
 
 // Remaining code hooks this add-on into the application
 #include "CommandContext.h"
@@ -136,7 +136,7 @@ namespace {
 // Define our extra menu item
 void OnLinkAccount(const CommandContext&)
 {
-   cloud::audiocom::LinkAccountDialog dialog;
+   audacity::cloud::audiocom::LinkWithTokenDialog dialog;
    dialog.ShowModal();
 }
 

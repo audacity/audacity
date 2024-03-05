@@ -46,6 +46,12 @@ if ( USE_LIBOPUS AND USE_OPUSFILE AND USE_LIBOGG )
    list ( APPEND MODULES mod-opus )
 endif()
 
+if ( ${_OPT}has_audiocom_upload)
+   list( APPEND MODULES
+      mod-cloud-audiocom
+   )
+endif()
+
 foreach( MODULE ${MODULES} )
    add_subdirectory("${MODULE}")
 endforeach()

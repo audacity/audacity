@@ -15,13 +15,13 @@
 class wxButton;
 class wxTextCtrl;
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
-class LinkAccountDialog final : public wxDialogWrapper
+class LinkWithTokenDialog final : public wxDialogWrapper
 {
 public:
-   explicit LinkAccountDialog(wxWindow* parent = nullptr);
-   ~LinkAccountDialog() override;
+   explicit LinkWithTokenDialog(wxWindow* parent = nullptr);
+   ~LinkWithTokenDialog() override;
 
 private:
    void OnContinue();
@@ -30,4 +30,4 @@ private:
    wxButton* mContinueButton { nullptr };
    wxTextCtrl* mToken { nullptr };
 };
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom
