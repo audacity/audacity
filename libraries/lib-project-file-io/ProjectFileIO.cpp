@@ -25,6 +25,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "DBConnection.h"
 #include "FileNames.h"
 #include "Project.h"
+#include "ProjectFileIOExtension.h"
 #include "ProjectHistory.h"
 #include "ProjectSerializer.h"
 #include "FileNames.h"
@@ -852,18 +853,33 @@ bool ProjectFileIO::InstallSchema(sqlite3 *db, const char *schema /* = "main" */
 // An SQLite function that takes a blockid and looks it up in a set of
 // blockids captured during project load.  If the blockid isn't found
 // in the set, it will be deleted.
+namespace
+{
+struct ContextData final
+{
+   const AudacityProject& project;
+   const BlockIDs& blockids;
+};
+}
+
 void ProjectFileIO::InSet(sqlite3_context *context, int argc, sqlite3_value **argv)
 {
-   BlockIDs *blockids = (BlockIDs *) sqlite3_user_data(context);
+   auto contextData = reinterpret_cast<ContextData*>(sqlite3_user_data(context));
    SampleBlockID blockid = sqlite3_value_int64(argv[0]);
 
-   sqlite3_result_int(context, blockids->find(blockid) != blockids->end());
+   sqlite3_result_int(
+      context,
+      contextData->blockids.find(blockid) != contextData->blockids.end() ||
+         ProjectFileIOExtensionRegistry::IsBlockLocked(
+            contextData->project, blockid));
 }
 
 bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
 {
    auto db = DB();
    int rc;
+
+   ContextData contextData{ mProject, blockids };
 
    auto cleanup = finally([&]
    {
@@ -872,8 +888,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs &blockids, bool complement)
    });
 
    // Add the function used to verify each row's blockid against the set of active blockids
-   const void *p = &blockids;
-   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, const_cast<void*>(p), InSet, nullptr, nullptr);
+   rc = sqlite3_create_function(db, "inset", 1, SQLITE_UTF8 | SQLITE_DETERMINISTIC, &contextData, InSet, nullptr, nullptr);
    if (rc != SQLITE_OK)
    {
       ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
@@ -2154,6 +2169,8 @@ bool ProjectFileIO::UpdateSaved(const TrackList *tracks)
       return false;
    }
 
+   ProjectFileIOExtensionRegistry::OnUpdateSaved(mProject, doc);
+
    return true;
 }
 
@@ -2338,16 +2355,14 @@ bool ProjectFileIO::SaveProject(
       // And make it the active project file 
       UseConnection(std::move(newConn), fileName);
    }
-   else
+
+   if (!UpdateSaved(nullptr))
    {
-      if ( !UpdateSaved( nullptr ) ) {
-         ShowError( {},
-            XO("Error Saving Project"),
-            FileException::WriteFailureMessage(fileName),
-            "Error:_Disk_full_or_not_writable"
-            );
-         return false;
-      }
+      ShowError(
+         {}, XO("Error Saving Project"),
+         FileException::WriteFailureMessage(fileName),
+         "Error:_Disk_full_or_not_writable");
+      return false;
    }
 
    // Reaching this point defines success and all the rest are no-fail

@@ -20,6 +20,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
 #include "ProjectFileIO.h"
+#include "ProjectFileIOExtension.h"
 #include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
@@ -457,6 +458,15 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
          }
       }
    }
+
+   // Ask extensions if they allow the project to be closed
+   if (ProjectFileIOExtensionRegistry::OnClose(mProject) == OnCloseAction::Veto
+      && event.CanVeto())
+   {
+      event.Veto();
+      return;
+   }
+
 #ifdef __WXMAC__
    // Fix bug apparently introduced into 2.1.2 because of wxWidgets 3:
    // closing a project that was made full-screen (as by clicking the green dot
