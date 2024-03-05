@@ -741,6 +741,10 @@ public:
    IntervalHolder CopyClip(const Interval &toCopy, bool copyCutlines);
 
 private:
+   static void CopyWholeClip(WaveChannel &newChannel,
+      const WaveClip &clip, double t0, bool forClipboard);
+   static void CopyPartOfClip(WaveChannel &newChannel,
+      const WaveClip &clip, double t0, double t1, bool forClipboard);
    void FinishCopy(double t0, double t1, double endTime, bool forClipboard);
 
    //! Return all WaveClips sorted by clip play start time.
