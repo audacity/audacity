@@ -1,3 +1,5 @@
+CMakeUserPresets.json
+
 # Autotools generated files
 locale/Makefile.in
 Makefile
@@ -171,7 +173,6 @@ win/xaudacity.ico
 linuxdeploy/*
 appimagetool/*
 
-.build.x64/
-.build.arm64/
+.build.*/
 .conan/
 .debug/
