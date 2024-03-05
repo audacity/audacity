@@ -834,23 +834,22 @@ public:
       /*!
        @pre `pClip != nullptr`
        */
-      Interval(const ChannelGroup &group,
+      Interval(
          const std::shared_ptr<WaveClip> &pClip,
          const std::shared_ptr<WaveClip> &pClip1);
 
-      Interval(
-         const ChannelGroup& group, size_t width,
+      Interval(size_t width,
          const SampleBlockFactoryPtr& factory, int rate,
          sampleFormat storedSampleFormat);
 
       Interval(const Interval &) = delete;
       Interval& operator=(const Interval &) = delete;
    
-      Interval(const ChannelGroup &group, const Interval& orig,
+      Interval(const Interval& orig,
          const SampleBlockFactoryPtr &factory,
          bool copyCutlines);
 
-      Interval(const ChannelGroup &group, const Interval& orig,
+      Interval(const Interval& orig,
          const SampleBlockFactoryPtr &factory,
          bool copyCutlines,
          double t0, double t1);
@@ -859,6 +858,7 @@ public:
 
       double Start() const override;
       double End() const override;
+      size_t NChannels() const override;
 
       size_t GetBestBlockSize(sampleCount start) const;
       size_t GetMaxBlockSize() const;
@@ -1035,16 +1035,12 @@ public:
 
       //! Construct an array of temporary Interval objects that point to
       //! the cutlines
-      /*!
-       @param track is required to construct new Intervals because this
-       Interval does not store a back-reference to its track
-       */
-      IntervalHolders GetCutLines(WaveTrack &track);
+      IntervalHolders GetCutLines();
 
       /*!
-       @copydoc GetCutLines(WaveTrack &)
+       @copydoc GetCutLines()
        */
-      IntervalConstHolders GetCutLines(const WaveTrack &track) const;
+      IntervalConstHolders GetCutLines() const;
 
       // Resample clip. This also will set the rate, but without changing
       // the length of the clip

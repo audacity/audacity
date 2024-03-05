@@ -262,32 +262,27 @@ void WaveChannelInterval::WriteXML(XMLWriter &xmlFile) const
    GetNarrowClip().WriteXML(0, xmlFile);
 }
 
-WaveTrack::Interval::Interval(const ChannelGroup &group,
+WaveTrack::Interval::Interval(
    const std::shared_ptr<WaveClip> &pClip,
    const std::shared_ptr<WaveClip> &pClip1
-)  : WideChannelGroupInterval{ group }
-   , mpClip{ pClip }
+)  : mpClip{ pClip }
    , mpClip1{ pClip1 }
 {
 }
 
-WaveTrack::Interval::Interval(
-   const ChannelGroup& group, size_t width,
+WaveTrack::Interval::Interval(size_t width,
    const SampleBlockFactoryPtr& factory, int rate, sampleFormat format)
-    : Interval(
-         group, std::make_shared<WaveClip>(1, factory, format, rate),
+    : Interval(std::make_shared<WaveClip>(1, factory, format, rate),
          width == 2 ?
             std::make_shared<WaveClip>(1, factory, format, rate) :
             nullptr)
 {
 }
 
-WaveTrack::Interval::Interval(const ChannelGroup &group,
-   const Interval& orig,
+WaveTrack::Interval::Interval(const Interval& orig,
    const SampleBlockFactoryPtr &factory,
    bool copyCutlines
-)  : WideChannelGroupInterval{ group }
-   , mpClip{
+)  : mpClip{
       std::make_shared<WaveClip>(*orig.mpClip, factory, copyCutlines) }
    , mpClip1{ orig.mpClip1
       ? std::make_shared<WaveClip>(*orig.mpClip1, factory, copyCutlines)
@@ -295,13 +290,12 @@ WaveTrack::Interval::Interval(const ChannelGroup &group,
 {
 }
 
-WaveTrack::Interval::Interval(const ChannelGroup &group,
+WaveTrack::Interval::Interval(
    const Interval& orig,
    const SampleBlockFactoryPtr &factory,
    bool copyCutlines,
    double t0, double t1
-)  : WideChannelGroupInterval{ group }
-   , mpClip{
+)  : mpClip{
       std::make_shared<WaveClip>(*orig.mpClip, factory, copyCutlines, t0, t1) }
    , mpClip1{ orig.mpClip1
       ? std::make_shared<WaveClip>(*orig.mpClip1, factory, copyCutlines, t0, t1)
@@ -330,6 +324,11 @@ double WaveTrack::Interval::Start() const
 double WaveTrack::Interval::End() const
 {
    return mpClip->GetPlayEndTime();
+}
+
+size_t WaveTrack::Interval::NChannels() const
+{
+   return mpClip1 ? 2u : 1u;
 }
 
 size_t WaveTrack::Interval::GetBestBlockSize(sampleCount start) const
@@ -488,16 +487,16 @@ bool WaveTrack::Interval::SetCentShift(int cents)
  */
 namespace {
 WaveTrack::IntervalHolder GetRenderedCopy(WaveTrack::Interval &interval,
-   const std::function<void(double)>& reportProgress, const ChannelGroup& group,
+   const std::function<void(double)>& reportProgress,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
 {
    using Interval = WaveTrack::Interval;
    if (!interval.HasPitchOrSpeed())
-      return std::make_shared<Interval>(group,
+      return std::make_shared<Interval>(
          interval.GetClip(0), interval.GetClip(1));
 
    const auto dst = std::make_shared<Interval>(
-      group, interval.NChannels(), factory, interval.GetRate(), format);
+      interval.NChannels(), factory, interval.GetRate(), format);
 
    const auto originalPlayStartTime = interval.GetPlayStartTime();
    const auto originalPlayEndTime = interval.GetPlayEndTime();
@@ -679,7 +678,7 @@ bool WaveTrack::Interval::RemoveCutLine(double cutLinePosition)
    return true;
 }
 
-auto WaveTrack::Interval::GetCutLines(WaveTrack &track) -> IntervalHolders
+auto WaveTrack::Interval::GetCutLines() -> IntervalHolders
 {
    if (!mpClip) {
       assert(false);
@@ -695,17 +694,15 @@ auto WaveTrack::Interval::GetCutLines(WaveTrack &track) -> IntervalHolders
    for (size_t ii = 0; ii < nCutLines0; ++ii) {
       auto pClip0 = cutLines0[ii];
       auto pClip1 = ii < nCutLines1 ? (*pCutLines1)[ii] : nullptr;
-      auto pInterval = std::make_shared<Interval>(track, pClip0, pClip1);
+      auto pInterval = std::make_shared<Interval>(pClip0, pClip1);
       result.emplace_back(move(pInterval));
    }
    return result;
 }
 
-auto WaveTrack::Interval::GetCutLines(const WaveTrack &track) const
-   -> IntervalConstHolders
+auto WaveTrack::Interval::GetCutLines() const -> IntervalConstHolders
 {
-   auto results =
-      const_cast<Interval&>(*this).GetCutLines(const_cast<WaveTrack&>(track));
+   auto results = const_cast<Interval&>(*this).GetCutLines();
    return { results.begin(), results.end() };
 }
 
@@ -1505,7 +1502,7 @@ WaveTrack::DoGetInterval(size_t iInterval)
          if (iInterval < rightClips.size())
             pClip1 = rightClips[iInterval];
       }
-      return std::make_shared<Interval>(*this, pClip, pClip1);
+      return std::make_shared<Interval>(pClip, pClip1);
    }
    return {};
 }
@@ -1901,7 +1898,7 @@ void WaveTrack::CopyWholeClip(const Interval &clip,
 {
    const auto &pFactory = GetSampleBlockFactory();
    const auto newClip =
-      std::make_shared<Interval>(*this, clip, pFactory, !forClipboard);
+      std::make_shared<Interval>(clip, pFactory, !forClipboard);
    InsertInterval(newClip, false, false);
    newClip->ShiftBy(-t0);
 }
@@ -1910,7 +1907,7 @@ void WaveTrack::CopyPartOfClip(const Interval &clip,
    double t0, double t1, bool forClipboard)
 {
    const auto &pFactory = GetSampleBlockFactory();
-   auto newClip = std::make_shared<Interval>(*this,
+   auto newClip = std::make_shared<Interval>(
       clip, pFactory, !forClipboard, t0, t1);
    newClip->SetName(clip.GetName());
    newClip->ShiftBy(-t0);
@@ -2100,7 +2097,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
       }
 
       // Search for cut lines
-      auto cutlines = clip->GetCutLines(track);
+      auto cutlines = clip->GetCutLines();
       for (auto &cut : cutlines) {
          const auto unrounded =
             clip->GetSequenceStartTime() + cut->GetSequenceStartTime();
@@ -3828,7 +3825,7 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
          holders[iChannel++] = CreateClip(*this, offset, name);
    }
 
-   return std::make_shared<Interval>(*this, holders[0], holders[1]);
+   return std::make_shared<Interval>(holders[0], holders[1]);
 }
 
 auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
@@ -3873,7 +3870,7 @@ auto WaveTrack::NewestOrNewClip() -> IntervalHolder
       return pInterval;
    }
    else
-      return std::make_shared<Interval>(*this, NarrowClips().back(),
+      return std::make_shared<Interval>(NarrowClips().back(),
          (NChannels() > 1 ? RightClips().back() : nullptr));
 }
 
@@ -3904,7 +3901,7 @@ auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
       makeClip(clips);
       if (NChannels() > 1)
          makeClip(RightClips());
-      return std::make_shared<Interval>(*this, newClips[0], newClips[1]);
+      return std::make_shared<Interval>(newClips[0], newClips[1]);
    }
 }
 
@@ -4101,7 +4098,7 @@ void WaveTrack::ApplyPitchAndSpeedOnIntervals(
       srcIntervals.begin(), srcIntervals.end(),
       std::back_inserter(dstIntervals), [&](const IntervalHolder& interval) {
          return GetRenderedCopy(*interval,
-            reportProgress, *this, mpFactory, GetSampleFormat());
+            reportProgress, mpFactory, GetSampleFormat());
       });
 
    // If we reach this point it means that no error was thrown - we can replace

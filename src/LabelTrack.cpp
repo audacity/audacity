@@ -57,6 +57,11 @@ double LabelTrack::Interval::End() const
    return mpTrack->GetLabel(index)->selectedRegion.t1();
 }
 
+size_t LabelTrack::Interval::NChannels() const
+{
+   return 1;
+}
+
 std::shared_ptr<ChannelInterval>
 LabelTrack::Interval::DoGetChannel(size_t iChannel)
 {
