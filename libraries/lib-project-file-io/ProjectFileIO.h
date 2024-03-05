@@ -111,7 +111,7 @@ public:
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
    bool OpenProject();
-   bool CloseProject();
+   void CloseProject();
    bool ReopenProject();
 
    //! If successful, return non-empty; the caller must commit to keep the
