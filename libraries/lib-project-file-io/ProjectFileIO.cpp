@@ -2435,6 +2435,11 @@ bool ProjectFileIO::IsRecovered() const
    return mRecovered;
 }
 
+void ProjectFileIO::MarkTemporary()
+{
+   mTemporary = true;
+}
+
 wxLongLong ProjectFileIO::GetFreeDiskSpace() const
 {
    wxLongLong freeSpace;
