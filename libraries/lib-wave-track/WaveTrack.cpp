@@ -1141,23 +1141,6 @@ WaveChannel::WaveChannel(WaveTrack &owner)
 {
 }
 
-WaveChannel::WaveChannel(WaveTrack &owner, WaveChannel &&other)
-   : mOwner{ owner }
-   , mClips{ move(other.mClips) }
-{
-}
-
-WaveChannel &WaveChannel::operator =(WaveChannel &&other)
-{
-   mClips = move(other.mClips);
-   return *this;
-}
-
-void WaveChannel::Swap(WaveChannel &other)
-{
-   mClips.swap(other.mClips);
-}
-
 WaveChannel::~WaveChannel() = default;
 
 wxString WaveTrack::GetDefaultAudioTrackNamePreference()
@@ -1303,11 +1286,12 @@ auto WaveTrack::Create(
    return result;
 }
 
-void WaveChannel::CopyClips(SampleBlockFactoryPtr pFactory,
-   const WaveChannel &orig, bool backup)
+void WaveTrack::CopyClips(WaveClipHolders &clips,
+   SampleBlockFactoryPtr pFactory, const WaveClipHolders &orig, bool backup)
 {
-   for (const auto &clip : orig.mClips)
-      InsertClip(std::make_shared<WaveClip>(*clip, pFactory, true),
+   for (const auto &clip : orig)
+      InsertClip(clips,
+         std::make_shared<WaveClip>(*clip, pFactory, true),
          false, backup, false);
 }
 
@@ -1535,32 +1519,33 @@ ChannelGroup &WaveChannel::DoGetChannelGroup() const
 
 WaveClipHolders &WaveTrack::NarrowClips()
 {
-   return mChannel.Clips();
+   return mClips;
 }
 
 const WaveClipHolders &WaveTrack::NarrowClips() const
 {
-   return mChannel.Clips();
+   return mClips;
 }
 
 WaveClipHolders &WaveTrack::RightClips()
 {
-   return mRightChannel->Clips();
+   return *mRightClips;
 }
 
 const WaveClipHolders &WaveTrack::RightClips() const
 {
-   return mRightChannel->Clips();
+   return *mRightClips;
 }
 
 Track::Holder WaveTrack::Clone(bool backup) const
 {
    auto newTrack = EmptyCopy(NChannels());
-   newTrack->mChannel.CopyClips(newTrack->mpFactory, this->mChannel, backup);
+   newTrack->CopyClips(newTrack->mClips,
+      newTrack->mpFactory, this->mClips, backup);
    if (mRightChannel) {
-      assert(newTrack->mRightChannel.has_value());
-      newTrack->mRightChannel
-         ->CopyClips(newTrack->mpFactory, *this->mRightChannel, backup);
+      assert(newTrack->mRightClips.has_value());
+      newTrack->CopyClips(*newTrack->mRightClips,
+         newTrack->mpFactory, *this->mRightClips, backup);
    }
    return newTrack;
 }
@@ -1816,6 +1801,7 @@ auto WaveTrack::WideEmptyCopy(
 void WaveTrack::MakeMono()
 {
    mRightChannel.reset();
+   mRightClips.reset();
    EraseChannelAttachments(1);
 }
 
@@ -1823,6 +1809,7 @@ auto WaveTrack::MonoToStereo() -> Holder
 {
    assert(!GetOwner());
    mRightChannel.reset();
+   mRightClips.reset();
    EraseChannelAttachments(1);
 
    // Make temporary new mono track
@@ -1845,8 +1832,9 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
       assert(pOwner); // pre
       CopyClipEnvelopes();
       auto pNewTrack = result.emplace_back(EmptyCopy(1));
-      pNewTrack->mChannel = std::move(*this->mRightChannel);
+      pNewTrack->mClips = std::move(*this->mRightClips);
       this->mRightChannel.reset();
+      this->mRightClips.reset();
       auto iter = pOwner->Find(this);
       pOwner->Insert(*++iter, pNewTrack);
       // Fix up the channel attachments to avoid waste of space
@@ -1860,7 +1848,7 @@ void WaveTrack::SwapChannels()
 {
    assert(NChannels() == 2);
    CopyClipEnvelopes();
-   mChannel.Swap(*mRightChannel);
+   mClips.swap(*mRightClips);
    this->AttachedTrackObjects::ForEach([this](TrackAttachment &attachment){
       if (const auto pAttachments =
          dynamic_cast<ChannelAttachmentsBase *>(&attachment)) {
@@ -2748,27 +2736,20 @@ bool WaveTrack::FormatConsistencyCheck() const
       });
 }
 
-bool WaveChannel::InsertClip(WaveClipHolder clip,
+bool WaveTrack::InsertClip(WaveClipHolders &clips, WaveClipHolder clip,
    bool newClip, bool backup, bool allowEmpty)
 {
    if (!backup && !clip->GetIsPlaceholder() && !allowEmpty && clip->IsEmpty())
       return false;
 
-   auto &clips = Clips();
-   const auto& tempo = GetProjectTempo(GetTrack());
+   const auto& tempo = GetProjectTempo(*this);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    clips.push_back(std::move(clip));
-   GetTrack().Publish({ clips.back(),
+   Publish({ clips.back(),
       newClip ? WaveTrackMessage::New : WaveTrackMessage::Inserted });
 
    return true;
-}
-
-void WaveChannel::RemoveClip(size_t iClip)
-{
-   if (iClip < mClips.size())
-      mClips.erase(mClips.begin() + iClip);
 }
 
 void WaveTrack::ApplyPitchAndSpeed(
@@ -3839,6 +3820,7 @@ auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
 void WaveTrack::CreateRight()
 {
    mRightChannel.emplace(*this);
+   mRightClips.emplace();
 }
 
 auto WaveTrack::CreateClip(WaveTrack &track,
@@ -4122,11 +4104,11 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval,
 {
    auto channel = 0;
    for (const auto pChannel : Channels()) {
+      auto &clips = (channel == 0) ? mClips : *mRightClips;
       const auto clip = interval->GetClip(channel);
       if (clip) {
-         pChannel->InsertClip(clip, newClip, false, allowEmpty);
+         InsertClip(clips, clip, newClip, false, allowEmpty);
          // Detect errors resulting in duplicate shared pointers to clips
-         auto &clips = (channel == 0) ? mChannel.mClips : mRightChannel->mClips;
          assert(ClipsAreUnique(clips));
       }
       ++channel;
@@ -4135,6 +4117,11 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval,
 
 void WaveTrack::RemoveInterval(const IntervalHolder& interval)
 {
+   const auto removeClip = [](WaveClipHolders &clips, size_t iClip) {
+      if (iClip < clips.size())
+         clips.erase(clips.begin() + iClip);
+   };
+
    const auto clips = Intervals();
    const auto begin = clips.begin();
    const auto pred = [pClip = interval->GetClip(0)](const auto &pInterval){
@@ -4143,9 +4130,9 @@ void WaveTrack::RemoveInterval(const IntervalHolder& interval)
    const auto iter = std::find_if(begin, clips.end(), pred);
    if (iter != clips.end()) {
       auto dist = std::distance(begin, iter);
-      mChannel.RemoveClip(dist);
+      removeClip(mClips, dist);
       if (NChannels() > 1)
-         mRightChannel->RemoveClip(dist);
+         removeClip(*mRightClips, dist);
    }
 }
 
@@ -4211,16 +4198,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    return result;
 }
 
-WaveClipHolders &WaveChannel::Clips()
-{
-   return mClips;
-}
-
-const WaveClipHolders &WaveChannel::Clips() const
-{
-   return const_cast<WaveChannel&>(*this).Clips();
-}
-
 void WaveTrack::ZipClips(bool mustAlign)
 {
    const auto pOwner = GetOwner();
@@ -4244,7 +4221,8 @@ void WaveTrack::ZipClips(bool mustAlign)
 
    // Still not actually "zipping" clips into single wide clip objects.
    // But there is now a real wide track object.
-   mRightChannel.emplace(*this, std::move(pRight->mChannel));
+   CreateRight();
+   mRightClips = move(pRight->mClips);
 
    this->MergeChannelAttachments(std::move(*pRight));
 
