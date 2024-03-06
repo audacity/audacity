@@ -1079,7 +1079,8 @@ public:
 
       void SetRate(int rate);
 
-      void SetEnvelope(const Envelope& envelope);
+      //! @pre `pEnvelope`
+      void SetEnvelope(std::unique_ptr<Envelope> pEnvelope);
    private:
       // TODO wide wave tracks -- remove friend
       friend WaveTrack;

@@ -564,13 +564,13 @@ WaveTrack::IntervalHolder GetRenderedCopy(WaveTrack::Interval &interval,
    dst->ClearRight(originalPlayEndTime);
 
    // We don't preserve cutlines but the relevant part of the envelope.
-   Envelope dstEnvelope = interval.GetEnvelope();
+   auto dstEnvelope = std::make_unique<Envelope>(interval.GetEnvelope());
    const auto samplePeriod = 1. / interval.GetRate();
-   dstEnvelope.CollapseRegion(
+   dstEnvelope->CollapseRegion(
       originalPlayEndTime, interval.GetSequenceEndTime() + samplePeriod, samplePeriod);
-   dstEnvelope.CollapseRegion(0, originalPlayStartTime, samplePeriod);
-   dstEnvelope.SetOffset(originalPlayStartTime);
-   dst->SetEnvelope(dstEnvelope);
+   dstEnvelope->CollapseRegion(0, originalPlayStartTime, samplePeriod);
+   dstEnvelope->SetOffset(originalPlayStartTime);
+   dst->SetEnvelope(move(dstEnvelope));
 
    success = true;
 
@@ -925,9 +925,10 @@ void WaveTrack::Interval::SetRate(int rate)
    ForEachClip([=](auto &clip){ clip.SetRate(rate); });
 }
 
-void WaveTrack::Interval::SetEnvelope(const Envelope& envelope)
+void WaveTrack::Interval::SetEnvelope(std::unique_ptr<Envelope> pEnvelope)
 {
-   mpClip->SetEnvelope(std::make_unique<Envelope>(envelope));
+   assert(pEnvelope);
+   mpClip->SetEnvelope(move(pEnvelope));
 }
 
 std::shared_ptr<ChannelInterval>

@@ -399,6 +399,7 @@ void WaveClip::SetSamples(size_t ii,
 
 void WaveClip::SetEnvelope(std::unique_ptr<Envelope> p)
 {
+   assert(p);
    mEnvelope = move(p);
 }
 
