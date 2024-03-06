@@ -44,7 +44,7 @@ ExportProcessor::Parameters ExportUtils::ParametersFromEditor(const ExportOption
 
 namespace
 {
-struct ExportHookElkement final
+struct ExportHookElement final
 {
    ExportUtils::ExportHook hook;
    ExportUtils::Priority priority;
@@ -52,7 +52,7 @@ struct ExportHookElkement final
 
 auto& ExportHooks()
 {
-   static std::vector<ExportHookElkement> hooks;
+   static std::vector<ExportHookElement> hooks;
    return hooks;
 }
 }
@@ -63,8 +63,8 @@ void ExportUtils::RegisterExportHook(ExportHook hook, Priority priority)
    hooks.insert(
       std::upper_bound(
          hooks.begin(), hooks.end(), priority,
-         [](Priority priority, const ExportHookElkement& element)
-         { return priority < element.priority; }),
+         [](Priority priority, const ExportHookElement& element)
+         { return priority > element.priority; }),
       { hook, priority });
 }
 
