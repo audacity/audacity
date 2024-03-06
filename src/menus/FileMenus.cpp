@@ -29,7 +29,6 @@
 
 #include "ExportUtils.h"
 #include "ExportProgressUI.h"
-#include "export/ExportAudioDialog.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -61,11 +60,8 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             false);
          return;
       }
-      ExportAudioDialog dialog(&GetProjectFrame(project),
-                               project,
-                               project.GetProjectName(),
-                               format);
-      dialog.ShowModal();
+
+      ExportUtils::PerformInteractiveExport(project, format);
    }
    else {
       // We either use a configured output path,
