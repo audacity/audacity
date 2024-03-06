@@ -11,6 +11,10 @@
 **********************************************************************/
 
 #include "ExportUtils.h"
+
+#include <algorithm>
+#include <vector>
+
 #include "Track.h"
 #include "WaveTrack.h"
 
@@ -38,3 +42,39 @@ ExportProcessor::Parameters ExportUtils::ParametersFromEditor(const ExportOption
    return parameters;
 }
 
+namespace
+{
+struct ExportHookElement final
+{
+   ExportUtils::ExportHook hook;
+   ExportUtils::Priority priority;
+};
+
+auto& ExportHooks()
+{
+   static std::vector<ExportHookElement> hooks;
+   return hooks;
+}
+}
+
+void ExportUtils::RegisterExportHook(ExportHook hook, Priority priority)
+{
+   auto& hooks = ExportHooks();
+   hooks.insert(
+      std::upper_bound(
+         hooks.begin(), hooks.end(), priority,
+         [](Priority priority, const ExportHookElement& element)
+         { return priority > element.priority; }),
+      { hook, priority });
+}
+
+void ExportUtils::PerformInteractiveExport(
+   AudacityProject& project, const FileExtension& format)
+{
+   auto& hooks = ExportHooks();
+   for (auto& hook : hooks)
+   {
+      if(hook.hook(project, format) != ExportHookResult::Continue)
+         return;
+   }
+}
