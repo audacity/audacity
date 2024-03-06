@@ -349,9 +349,6 @@ public:
    bool InsertClip(WaveClipHolder clip, bool newClip, bool backup,
       bool allowEmpty);
 
-   //! Used only in assertions checking invariants
-   bool ClipsAreUnique() const;
-
    static void CopyOne(WaveChannel &newTrack, const WaveChannel &track,
       double t0, double t1, double endTime, bool forClipboard);
 private:
