@@ -1599,7 +1599,7 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
    auto &project = mProject;
 
-   if (fileName != mFileName)
+   if (!fileName.empty() && fileName != mFileName)
    {
       BasicUI::CallAfter(
          [wThis = weak_from_this()]
