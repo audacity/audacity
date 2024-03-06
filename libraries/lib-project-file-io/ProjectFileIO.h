@@ -52,6 +52,7 @@ enum class ProjectFileIOMessage : int {
    ReconnectionFailure, /*!< Failure to reconnect to the database,
       after temporary close and attempted file movement */
    ProjectTitleChange,  //!< A normal occurrence
+   ProjectFilePathChange,  //!< A normal occurrence
 };
 
 ///\brief Object associated with a project that manages reading and writing
