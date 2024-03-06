@@ -397,8 +397,12 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
       request, serializedForm.data(), serializedForm.size());
 
    response->setRequestFinishedCallback(
-      [this, response, createNew, strongThis = shared_from_this()](auto)
+      [this, response, createNew, weakThis = weak_from_this()](auto)
       {
+         auto strongThis = weakThis.lock();
+         if (!strongThis)
+            return;
+
          const auto error = response->getError();
 
          if (error != NetworkError::NoError)
