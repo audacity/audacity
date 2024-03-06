@@ -760,6 +760,12 @@ public:
 
    SampleFormats GetSampleFormats() const;
 
+   size_t CountBlocks() const;
+
+   // These return a nonnegative number of samples meant to size a memory buffer
+   size_t GetBestBlockSize(sampleCount t) const;
+   size_t GetMaxBlockSize() const;
+
 private:
    size_t GreatestAppendBufferLen() const;
 

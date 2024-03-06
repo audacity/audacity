@@ -552,6 +552,26 @@ SampleFormats WaveClip::GetSampleFormats() const
    return mSequences[0]->GetSampleFormats();
 }
 
+size_t WaveClip::CountBlocks() const
+{
+   return std::accumulate(mSequences.begin(), mSequences.end(), size_t{},
+   [](size_t acc, auto &pSequence){
+      return acc + pSequence->GetBlockArray().size(); });
+}
+
+//! A hint for sizing of well aligned fetches
+size_t WaveClip::GetBestBlockSize(sampleCount t) const
+{
+   return mSequences[0]->GetBestBlockSize(t);
+}
+
+size_t WaveClip::GetMaxBlockSize() const
+{
+   return std::accumulate(mSequences.begin(), mSequences.end(), size_t{},
+   [](size_t acc, auto &pSequence){
+      return std::max(acc, pSequence->GetMaxBlockSize()); });
+}
+
 const SampleBlockFactoryPtr &WaveClip::GetFactory() const
 {
    // All sequences have the same factory by class invariant
