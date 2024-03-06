@@ -1599,6 +1599,16 @@ void ProjectFileIO::SetFileName(const FilePath &fileName)
 {
    auto &project = mProject;
 
+   if (!fileName.empty() && fileName != mFileName)
+   {
+      BasicUI::CallAfter(
+         [wThis = weak_from_this()]
+         {
+            if (auto pThis = wThis.lock())
+               pThis->Publish(ProjectFileIOMessage::ProjectFilePathChange);
+         });
+   }
+
    if (!mFileName.empty())
    {
       ActiveProjects::Remove(mFileName);
