@@ -62,8 +62,8 @@ public:
    //! original; else return the track
    const Track &SubstituteOriginalTrack(const Track &track) const;
 
-   //! The tracks supplied to this function will be leaders with the same number
-   //! of channels
+   //! The tracks supplied to this function will have the same number of
+   //! channels
    using Updater = std::function<void(Track &dest, const Track &src)>;
 
    //! Start a deferred update of the project.
@@ -79,8 +79,6 @@ public:
     accumulated pending changes.
     Pending track will have the same TrackId as the actual.
     Pending changed tracks will not occur in iterations.
-
-    @pre `src->IsLeader()`
     */
    Track* RegisterPendingChangedTrack(
       Updater updater,
@@ -99,7 +97,7 @@ public:
     trailing nulls
    */
    void ClearPendingTracks(
-      std::vector<std::shared_ptr<TrackList>> *pAdded = nullptr);
+      std::vector<std::shared_ptr<Track>> *pAdded = nullptr);
 
    //! Change the state of the project.
    //

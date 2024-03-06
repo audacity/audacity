@@ -40,10 +40,10 @@ EffectOutputTracks::EffectOutputTracks(
       };
 
    for (auto aTrack : trackRange) {
-      auto list = aTrack->Duplicate();
+      auto pTrack = aTrack->Duplicate();
       mIMap.push_back(aTrack);
-      mOMap.push_back(*list->begin());
-      mOutputTracks->Append(std::move(*list));
+      mOMap.push_back(pTrack.get());
+      mOutputTracks->Add(pTrack);
    }
 
    if (
@@ -80,23 +80,9 @@ EffectOutputTracks::~EffectOutputTracks() = default;
 
 Track *EffectOutputTracks::AddToOutputTracks(const std::shared_ptr<Track> &t)
 {
-   assert(t && t->IsLeader() && t->NChannels() == 1);
    mIMap.push_back(nullptr);
    mOMap.push_back(t.get());
    auto result = mOutputTracks->Add(t);
-   // Invariant is maintained
-   assert(mIMap.size() == mOutputTracks->Size());
-   assert(mIMap.size() == mOMap.size());
-   return result;
-}
-
-Track *EffectOutputTracks::AddToOutputTracks(TrackList &&list)
-{
-   assert(list.Size() == 1);
-   mIMap.push_back(nullptr);
-   auto result = *list.begin();
-   mOMap.push_back(result);
-   mOutputTracks->Append(std::move(list));
    // Invariant is maintained
    assert(mIMap.size() == mOutputTracks->Size());
    assert(mIMap.size() == mOMap.size());
@@ -134,7 +120,7 @@ void EffectOutputTracks::Commit()
       while (i < cnt && mOMap[i] != pOutputTrack) {
          const auto t = mIMap[i];
          // Class invariant justifies the assertion
-         assert(t && t->IsLeader());
+         assert(t);
          ++i;
          mTracks.Remove(*t);
       }
@@ -163,7 +149,7 @@ void EffectOutputTracks::Commit()
    while (i < cnt) {
       const auto t = mIMap[i];
       // Class invariant justifies the assertion
-      assert(t && t->IsLeader());
+      assert(t);
       ++i;
       mTracks.Remove(*t);
    }

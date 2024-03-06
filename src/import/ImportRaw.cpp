@@ -178,7 +178,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       const auto format = ImportUtils::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
-      trackList = trackFactory->Create(numChannels, format, rate);
+      trackList = trackFactory->CreateMany(numChannels, format, rate);
 
       const auto maxBlockSize = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
 
@@ -252,7 +252,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   ImportUtils::FinalizeImport(outTracks, trackList);
+   ImportUtils::FinalizeImport(outTracks, move(*trackList));
 }
 
 

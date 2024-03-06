@@ -32,10 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 TimeShiftHandle::TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit)
    : mGripHit{ gripHit }
 {
-   //! Substitute the leader track before assigning mCapturedTrack
-   if (pTrack)
-      if (const auto pOwner = pTrack->GetOwner())
-         pTrack = (*pOwner->Find(pTrack.get()))->SharedPointer();
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
@@ -194,7 +190,6 @@ bool TrackShifter::MayMigrateTo(Track &)
 
 bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
 {
-   assert(otherTrack.IsLeader());
    auto &track = GetTrack();
    // Both tracks need to be owned to decide this
    auto pMyList = track.GetOwner().get();
@@ -246,7 +241,6 @@ double TrackShifter::AdjustT0(double t0) const
 void TrackShifter::InitIntervals()
 {
    auto &track = GetTrack();
-   assert(track.IsLeader()); // postcondition
    mMoving.clear();
    const auto &range = track.Intervals();
    std::copy(range.begin(), range.end(), back_inserter(mFixed));
@@ -255,7 +249,6 @@ void TrackShifter::InitIntervals()
 CoarseTrackShifter::CoarseTrackShifter(Track &track)
    : mpTrack{ track.SharedPointer() }
 {
-   assert(track.IsLeader());
    InitIntervals();
 }
 
@@ -274,7 +267,6 @@ bool CoarseTrackShifter::SyncLocks()
 
 DEFINE_ATTACHED_VIRTUAL(MakeTrackShifter) {
    return [](Track &track, AudacityProject&) {
-      assert(track.IsLeader()); // pre of the open method
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
@@ -288,7 +280,6 @@ void ClipMoveState::Init(
    const ViewInfo &viewInfo,
    TrackList &trackList, bool syncLocked )
 {
-   assert(capturedTrack.IsLeader());
    shifters.clear();
 
    initialized = true;
@@ -367,7 +358,6 @@ void ClipMoveState::Init(
                for (auto pTrack2 : group) {
                   if (pTrack2 == &track)
                      continue;
-                  // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
                   shifter2.SelectInterval({
@@ -636,7 +626,6 @@ namespace {
                // No corresponding track
                return false;
 
-            assert(pOther->IsLeader()); // by construction of range
             if (!pShifter->MayMigrateTo(*pOther))
                // Rejected for other reason
                return false;
@@ -739,9 +728,6 @@ void TimeShiftHandle::DoSlideVertical(
 {
    Correspondence correspondence;
 
-   // Substitute leader track before reassigning mCapturedTrack
-   dstTrack = *trackList.Find(dstTrack);
-
    // See if captured track corresponds to another
    auto &capturedTrack = *mClipMoveState.mCapturedTrack;
    if (!FindCorrespondence(
@@ -814,7 +800,6 @@ void TimeShiftHandle::DoSlideVertical(
       viewInfo.selectedRegion.move( slideAmount );
 
    // Make the offset permanent; start from a "clean slate"
-   assert(dstTrack->IsLeader());
    mClipMoveState.mCapturedTrack = dstTrack->SharedPointer();
    mClipMoveState.mMouseClickX = xx;
    mDidSlideVertically = true;

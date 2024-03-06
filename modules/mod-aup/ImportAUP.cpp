@@ -1437,10 +1437,8 @@ bool AUPImportFileHandle::AddSilence(sampleCount len)
    }
    else if (mWaveTrack)
    {
-      // Assume alignment of clips and insert silence into leader only
-      if (mWaveTrack->IsLeader())
-         mWaveTrack->InsertSilence(
-            mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
+      mWaveTrack->InsertSilence(
+         mWaveTrack->GetEndTime(), mWaveTrack->LongSamplesToTime(len));
    }
 
    return true;

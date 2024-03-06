@@ -111,7 +111,7 @@ private:
    void MoveSnappingFreqSelection(
       AudacityProject *pProject, ViewInfo &viewInfo, int mouseYCoordinate,
       int trackTopEdge,
-      int trackHeight, ChannelView &channelView, Track *pLeader);
+      int trackHeight, ChannelView &channelView, Track *pTrack);
 public:
    // This is needed to implement a command assignable to keystrokes
    static void SnapCenterOnce(SpectrumAnalyst &analyst,

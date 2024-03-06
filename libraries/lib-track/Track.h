@@ -43,19 +43,9 @@ using TrackListHolder = std::shared_ptr<TrackList>;
 
 using ListOfTracks = std::list< std::shared_ptr< Track > >;
 
-//! Pairs a std::list iterator and a pointer to a list, for comparison purposes
-/*! Compare owning lists first, and only if same, then the iterators;
- else MSVC debug runtime complains. */
-using TrackNodePointer =
-std::pair< ListOfTracks::iterator, ListOfTracks* >;
+using TrackNodePointer = ListOfTracks::iterator;
 
 using ProgressReporter = std::function<void(double)>;
-
-inline bool operator == (const TrackNodePointer &a, const TrackNodePointer &b)
-{ return a.second == b.second && a.first == b.first; }
-
-inline bool operator != (const TrackNodePointer &a, const TrackNodePointer &b)
-{ return !(a == b); }
 
 //! Empty class which will have subclasses
 BEGIN_TYPE_ENUMERATION(TrackTypeTag)
@@ -136,9 +126,7 @@ private:
  protected:
    std::weak_ptr<TrackList> mList; //!< Back pointer to owning TrackList
    //! Holds iterator to self, so that TrackList::Find can be constant-time
-   /*! mNode's pointer to std::list might not be this TrackList, if it's a pending update track */
    TrackNodePointer mNode{};
-   int            mIndex; //!< 0-based position of this track in its TrackList
 
  public:
 
@@ -216,10 +204,9 @@ private:
    //! Find or create the destination track for a paste, maybe in a different
    //! project
    /*!
-    @pre `IsLeader()`
     @param list to which any newly created tracks are added; but left unchanged
        if an existing track is found in the project instead
-    @return A smart pointer to a leader track
+    @return A smart pointer to a track
     */
    virtual Holder PasteInto(AudacityProject &project, TrackList &list)
       const = 0;
@@ -241,13 +228,8 @@ public:
    bool HasOwner() const { return static_cast<bool>(GetOwner());}
 
    std::shared_ptr<TrackList> GetOwner() const { return mList.lock(); }
-   inline TrackList* GetHolder() const;
 
    LinkType GetLinkType() const noexcept;
-
-   ChannelGroupData &GetGroupData();
-   //! May make group data on demand, but consider that logically const
-   const ChannelGroupData &GetGroupData() const;
 
 protected:
 
@@ -257,23 +239,20 @@ protected:
    void SetLinkType(LinkType linkType, bool completeList = true);
 
 private:
-   int GetIndex() const;
-   void SetIndex(int index);
-
    /*!
     @param completeList only influences debug build consistency checking
     */
    void DoSetLinkType(LinkType linkType, bool completeList = true);
 
    Track* GetLinkedTrack() const;
-   //! Returns true for leaders of multichannel groups
+   //! During file loading only, true for leaders of multichannel groups
    bool HasLinkedTrack() const noexcept;
 
    //! Retrieve mNode with debug checks
    TrackNodePointer GetNode() const;
    //! Update mNode when Track is added to TrackList, or removed from it
-   void SetOwner
-      (const std::weak_ptr<TrackList> &list, TrackNodePointer node);
+   void SetOwner(
+      const std::weak_ptr<TrackList> &list, TrackNodePointer node);
 
  public:
 
@@ -311,10 +290,7 @@ private:
    };
 
    //! public nonvirtual duplication function that invokes Clone()
-   /*!
-    @pre `IsLeader()`
-    */
-   virtual TrackListHolder Duplicate(DuplicateOptions = {}) const;
+   virtual Holder Duplicate(DuplicateOptions = {}) const;
 
    void ReparentAllAttachments();
 
@@ -332,9 +308,8 @@ public:
    /*!
     @return non-NULL or else throw
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
-   virtual TrackListHolder Cut(double t0, double t1) = 0;
+   virtual Holder Cut(double t0, double t1) = 0;
 
    //! Create new tracks and don't modify this track
    /*!
@@ -343,50 +318,32 @@ public:
     from those stored in a project
     May assume precondition: t0 <= t1
     Should invoke Track::Init
-    @pre `IsLeader`
    */
-   virtual TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   virtual Holder Copy(double t0, double t1, bool forClipboard = true)
       const = 0;
 
    /*!
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    virtual void Clear(double t0, double t1) = 0;
 
    //! Weak precondition allows overrides to replicate one channel into many
    /*!
-    @pre `IsLeader()`
     @pre `SameKindAs(src)`
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
    virtual void Paste(double t, const Track &src) = 0;
 
-   /*!
-    Non-virtual overload that passes the first track of a given list
-    @pre `IsLeader()`
-    @pre `SameKindAs(**src.begin())`
-    @pre `NChannels == (**src.begin()).NChannels()`
-    */
-   void Paste(double t, const TrackList &src);
-
    //! This can be used to adjust a sync-lock selected track when the selection
    //! is replaced by one of a different length.
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void SyncLockAdjust(double oldT1, double newT1);
 
    // May assume precondition: t0 <= t1
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void
    Silence(double t0, double t1, ProgressReporter reportProgress = {}) = 0;
 
    /*!
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    virtual void InsertSilence(double t, double len) = 0;
 
@@ -395,12 +352,11 @@ private:
    //! the track data proper (not associated data such as for groups and views)
    //! including TrackId
    /*!
-    @pre `IsLeader()`
     @param backup whether the duplication is for backup purposes while opening
     a project, instead of other editing operations
     @post result tracks have same TrackIds as the channels of `this`
     */
-   virtual TrackListHolder Clone(bool backup) const = 0;
+   virtual Holder Clone(bool backup) const = 0;
 
    template<typename T>
       friend std::enable_if_t< std::is_pointer_v<T>, T >
@@ -450,7 +406,6 @@ public:
    //! open the track from XML
    /*!
     May assume consistency of stereo channel grouping and examine other channels
-    @pre `IsLeader()`
     */
    virtual std::optional<TranslatableString> GetErrorOpening() const;
 
@@ -464,8 +419,7 @@ public:
 
    // Frequently useful operands for + and -
    bool IsSelected() const;
-   bool IsLeader() const override;
-   bool IsSelectedLeader() const;
+   bool IsLeader() const;
 
    // Cause this track and following ones in its TrackList to adjust
    void AdjustPositions();
@@ -476,6 +430,14 @@ public:
 
    // Return true iff the attribute is recognized.
    bool HandleCommonXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView);
+
+private:
+   void CopyGroupProperties(const Track &other);
+
+   wxString mName;
+   // This is important only during loading of files
+   LinkType mLinkType{ LinkType::None };
+   bool mSelected{ false };
 };
 
 ENUMERATE_TRACK_TYPE(Track);
@@ -611,7 +573,7 @@ public:
    {
       // Maintain the class invariant
       if (this->mIter != this->mEnd) do
-         ++this->mIter.first;
+         ++this->mIter;
       while (this->mIter != this->mEnd && !this->valid() );
       return *this;
    }
@@ -634,7 +596,7 @@ public:
             // Go circularly
             this->mIter = this->mEnd;
          else
-            --this->mIter.first;
+            --this->mIter;
       } while (this->mIter != this->mEnd && !this->valid() );
       return *this;
    }
@@ -657,7 +619,7 @@ public:
          // Other methods guarantee that the cast is correct
          // (provided no operations on the TrackList invalidated
          // underlying iterators or replaced the tracks there)
-         return static_cast< TrackType * >( &**this->mIter.first );
+         return static_cast< TrackType * >( &**this->mIter );
    }
 
    //! This might be called operator + , but it's not constant-time as with a random access iterator
@@ -696,7 +658,7 @@ private:
    bool valid() const
    {
       // assume mIter != mEnd
-      const auto pTrack = track_cast< TrackType * >( &**this->mIter.first );
+      const auto pTrack = track_cast< TrackType * >( &**this->mIter );
       if (!pTrack)
          return false;
       return !this->mPred || this->mPred( pTrack );
@@ -961,10 +923,8 @@ class TRACK_API TrackList final
    //! get end iterator if this does not own the track
    TrackIter<Track> DoFind(Track *pTrack);
 
-   // If the track is not an audio track, or not one of a group of channels,
-   // return the track itself; else return the first channel of its group --
-   // in either case as an iterator that will only visit other leader tracks.
-   // (Generalizing away from the assumption of at most stereo)
+   // From a track, get an iterator into its owning TrackList.  If it is not
+   // owned, get a default constructed iterator.
    TrackIter<Track> Find(Track *pTrack);
 
    TrackIter<const Track> Find(const Track *pTrack) const
@@ -1006,14 +966,14 @@ public:
    template <typename TrackType = Track>
    auto Selected() -> TrackIterRange<TrackType>
    {
-      return Tracks<TrackType>(&Track::IsSelectedLeader);
+      return Tracks<TrackType>(&Track::IsSelected);
    }
 
    template <typename TrackType = const Track>
    auto Selected() const
       -> std::enable_if_t<std::is_const_v<TrackType>, TrackIterRange<TrackType>>
    {
-      return Tracks<TrackType>(&Track::IsSelectedLeader);
+      return Tracks<TrackType>(&Track::IsSelected);
    }
 
 
@@ -1034,7 +994,6 @@ private:
       static TrackIterRange< TrackType >
          Channels_( TrackIter< InTrackType > iter1 )
    {
-      // Assume iterator filters leader tracks
       if (*iter1) {
          return {
             iter1.Filter( &Track::Any )
@@ -1057,23 +1016,22 @@ public:
       static auto Channels( TrackType *pTrack )
          -> TrackIterRange< TrackType >
    {
-      return Channels_<TrackType>(pTrack->GetHolder()->Find(pTrack));
+      return Channels_<TrackType>(pTrack->GetOwner()->Find(pTrack));
    }
 
    friend class Track;
 
-   //! @brief Moves all tracks from \p trackList starting from position
-   //! where \p before is located. If \p before is nullptr the tracks are
-   //! appended.
+   //! @brief Moves *pSrc to position where \p before is located.
+   //! If \p before is nullptr the track is appended.
    //! @param assignIds ignored if `this` is a temporary list; else if false,
    //! suppresses TrackId assignment
-   //! @pre `before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>())`
+   //! @pre `before == nullptr || (Find(before) != EndIterator<const Track>())`
    void Insert(
-      const Track* before, TrackList&& trackList, bool assignIds = false);
+      const Track* before, const Track::Holder &pSrc, bool assignIds = false);
 
    /*!
-    @pre `tracks` contains pointers only to leader tracks of this, and each of
-    them exactly once
+    @pre `tracks` contains pointers only to tracks of this, and each of them
+    exactly once
     */
    void Permute(const std::vector<Track *> &tracks);
 
@@ -1092,22 +1050,18 @@ public:
             { return static_cast<TrackKind*>(DoAdd(t, assignIds)); }
 
    /*!
-    Replace track `t` with the first group in the given list, return a
-    temporary list of the removed tracks, modify given list by removing group
+    Replace track `t` with the first track in the given list, return
+    the removed track, modify given list by removing first track
 
     Give the replacements the same ids as the replaced
 
-    @pre `t.IsLeader()`
     @pre `t.GetOwner().get() == this`
     @pre `!with.empty()`
     */
-   TrackListHolder ReplaceOne(Track &t, TrackList &&with);
+   Track::Holder ReplaceOne(Track &t, TrackList &&with);
 
-   //! Remove a track, given the leader, and return it
-   /*!
-    @pre `track.IsLeader()`
-    */
-   std::shared_ptr<TrackList> Remove(Track &track);
+   //! Remove a track and return it
+   Track::Holder Remove(Track &track);
 
    /// Make the list empty
    void Clear(bool sendEvent = true);
@@ -1159,6 +1113,9 @@ public:
 
    //! Remove first track (if any) from `list` and put it at the end of `this`
    void AppendOne(TrackList &&list);
+
+   //! Remove and return the first track
+   Track::Holder DetachFirst();
 
 private:
    using ListOfTracks::size;
@@ -1214,14 +1171,11 @@ private:
 
    TrackIterRange< Track > EmptyRange() const;
 
-   bool isNull(TrackNodePointer p) const
-   { return (p.second == this && p.first == ListOfTracks::end()); }
+   bool isNull(TrackNodePointer p) const { return p == ListOfTracks::end(); }
    TrackNodePointer getEnd() const
-   { return { const_cast<TrackList*>(this)->ListOfTracks::end(),
-              const_cast<TrackList*>(this)}; }
+   { return const_cast<TrackList*>(this)->ListOfTracks::end(); }
    TrackNodePointer getBegin() const
-   { return { const_cast<TrackList*>(this)->ListOfTracks::begin(),
-              const_cast<TrackList*>(this)}; }
+   { return const_cast<TrackList*>(this)->ListOfTracks::begin(); }
 
    //! Move an iterator to the next node, if any; else stay at end
    TrackNodePointer getNext(TrackNodePointer p) const
@@ -1229,7 +1183,7 @@ private:
       if ( isNull(p) )
          return p;
       auto q = p;
-      ++q.first;
+      ++q;
       return q;
    }
 
@@ -1240,7 +1194,7 @@ private:
          return getEnd();
       else {
          auto q = p;
-         --q.first;
+         --q;
          return q;
       }
    }
@@ -1268,8 +1222,5 @@ private:
    //! false for temporaries
    bool mAssignsIds{ true };
 };
-
-TrackList* Track::GetHolder() const {
-   return static_cast<TrackList*>(mNode.second); }
 
 #endif

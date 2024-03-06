@@ -337,7 +337,6 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 
               // Do this after, for its effect on TrackPanel's memory of last selected
               // track (which affects shift-click actions)
-              assert(pTrack->IsLeader()); // It's a label track
               selectionState.SelectTrack(*pTrack, true, true);
 
               // PRL: bug1659 -- make selection change undo correctly

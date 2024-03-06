@@ -49,8 +49,6 @@ private:
 
    bool ProcessLabelTrack(LabelTrack *track);
    /*!
-    @pre `orig.IsLeader()`
-    @pre `out.IsLeader()`
     @pre `orig.NChannels() == out.NChannels()`
     */
    void Finalize(

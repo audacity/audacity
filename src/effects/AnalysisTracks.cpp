@@ -44,8 +44,6 @@ void AddedAnalysisTrack::Commit()
 AddedAnalysisTrack::~AddedAnalysisTrack()
 {
    if (mpEffect) {
-      // Label tracks are always leaders
-      assert(mpTrack->IsLeader());
       // not committed -- DELETE the label track
       mpEffect->mTracks->Remove(*mpTrack);
    }
@@ -64,8 +62,7 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack(
 {
    // copy LabelTrack here, so it can be undone on cancel
    const auto startTime = origTrack.GetStartTime();
-   auto list = origTrack.Copy(startTime, origTrack.GetEndTime());
-   auto newTrack = (*list->begin())->SharedPointer();
+   auto newTrack = origTrack.Copy(startTime, origTrack.GetEndTime());
 
    mpTrack = static_cast<LabelTrack*>(newTrack.get());
 
@@ -78,7 +75,7 @@ ModifiedAnalysisTrack::ModifiedAnalysisTrack(
    // So it's okay that we cast it back to const
    mpOrigTrack =
       pEffect->mTracks->ReplaceOne(const_cast<LabelTrack&>(origTrack),
-         std::move(*list));
+         std::move(*TrackList::Temporary(nullptr, newTrack)));
 }
 
 ModifiedAnalysisTrack::ModifiedAnalysisTrack(ModifiedAnalysisTrack &&that)
@@ -100,7 +97,8 @@ ModifiedAnalysisTrack::~ModifiedAnalysisTrack()
       // not committed -- DELETE the label track
       // mpOrigTrack came from mTracks which we own but expose as const to subclasses
       // So it's okay that we cast it back to const
-      mpEffect->mTracks->ReplaceOne(*mpTrack, std::move(*mpOrigTrack));
+      mpEffect->mTracks->ReplaceOne(*mpTrack,
+         std::move(*TrackList::Temporary(nullptr, mpOrigTrack)));
    }
 }
 

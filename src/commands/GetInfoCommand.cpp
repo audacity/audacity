@@ -712,9 +712,9 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
    wxRect panelRect{ {}, tp.GetSize() };
-   for (auto leader : TrackList::Get(*pProj)) {
-      for (auto t : leader->Channels()) {
-         auto rulers = tp.FindRulerRects(*t);
+   for (auto pTrack : TrackList::Get(*pProj)) {
+      for (auto pChannel : pTrack->Channels()) {
+         auto rulers = tp.FindRulerRects(*pChannel);
          for (auto &R : rulers) {
             if (!R.Intersects(panelRect))
                continue;

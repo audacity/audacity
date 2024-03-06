@@ -180,14 +180,14 @@ void OpusImportFileHandle::Import(
 
    outTracks.clear();
 
-   auto trackList = ImportUtils::NewWaveTrack(
+   auto track = ImportUtils::NewWaveTrack(
       *trackFactory,
       mNumChannels,
       mFormat,
       mSampleRate);
 
    /* The number of samples to read in each loop */
-   const size_t SAMPLES_TO_READ = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
+   const size_t SAMPLES_TO_READ = track->GetMaxBlockSize();
    uint64_t totalSamplesRead = 0;
 
    const auto bufferSize = mNumChannels * SAMPLES_TO_READ;
@@ -216,7 +216,7 @@ void OpusImportFileHandle::Import(
       }
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+      ImportUtils::ForEachChannel(*track, [&](auto& channel)
       {
          channel.AppendBuffer(
             reinterpret_cast<constSamplePtr>(floatBuffer.get() +
@@ -244,7 +244,7 @@ void OpusImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, trackList);
+   ImportUtils::FinalizeImport(outTracks, *track);
 
    auto opusTags = op_tags(mOpusFile, -1);
 

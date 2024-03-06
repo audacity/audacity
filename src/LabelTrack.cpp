@@ -132,7 +132,6 @@ auto LabelTrack::ClassTypeInfo() -> const TypeInfo &
 
 Track::Holder LabelTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
-   assert(IsLeader());
    auto pNewTrack = std::make_shared<LabelTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, *this);
@@ -183,7 +182,6 @@ void LabelTrack::MoveTo(double origin)
 
 void LabelTrack::Clear(double b, double e)
 {
-   assert(IsLeader());
    // May DELETE labels, so use subscripts to iterate
    for (size_t i = 0; i < mLabels.size(); ++i) {
       auto &labelStruct = mLabels[i];
@@ -338,12 +336,11 @@ void LabelTrack::SetSelected( bool s )
          this->SharedPointer<LabelTrack>(), {}, -1, -1 });
 }
 
-TrackListHolder LabelTrack::Clone(bool) const
+Track::Holder LabelTrack::Clone(bool) const
 {
-   assert(IsLeader());
    auto result = std::make_shared<LabelTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result);
+   return result;
 }
 
 // Adjust label's left or right boundary, depending which is requested.
@@ -687,7 +684,6 @@ XMLTagHandler *LabelTrack::HandleXMLChild(const std::string_view& tag)
 void LabelTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    int len = mLabels.size();
 
    xmlFile.StartTag(wxT("labeltrack"));
@@ -706,9 +702,8 @@ void LabelTrack::WriteXML(XMLWriter &xmlFile) const
    xmlFile.EndTag(wxT("labeltrack"));
 }
 
-TrackListHolder LabelTrack::Cut(double t0, double t1)
+Track::Holder LabelTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    auto tmp = Copy(t0, t1);
    Clear(t0, t1);
    return tmp;
@@ -728,7 +723,7 @@ Track::Holder LabelTrack::SplitCut(double t0, double t1)
 }
 #endif
 
-TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
+Track::Holder LabelTrack::Copy(double t0, double t1, bool) const
 {
    auto tmp = std::make_shared<LabelTrack>();
    tmp->Init(*this);
@@ -776,7 +771,7 @@ TrackListHolder LabelTrack::Copy(double t0, double t1, bool) const
    }
    lt->mClipLen = (t1 - t0);
 
-   return TrackList::Temporary(nullptr, tmp);
+   return tmp;
 }
 
 
@@ -880,7 +875,6 @@ bool LabelTrack::Repeat(double t0, double t1, int n)
 
 void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
 {
-   assert(IsLeader());
    if (newT1 > oldT1) {
       // Insert space within the track
 
@@ -898,7 +892,6 @@ void LabelTrack::SyncLockAdjust(double oldT1, double newT1)
 
 void LabelTrack::Silence(double t0, double t1, ProgressReporter)
 {
-   assert(IsLeader());
    int len = mLabels.size();
 
    // mLabels may resize as we iterate, so use subscripting
@@ -945,7 +938,6 @@ void LabelTrack::Silence(double t0, double t1, ProgressReporter)
 
 void LabelTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    for (auto &labelStruct: mLabels) {
       double t0 = labelStruct.getT0();
       double t1 = labelStruct.getT1();

@@ -188,7 +188,7 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    if (end <= start)
       return false;
 
-   TrackListHolder tempTracks;
+   WaveTrack::Holder pFirstTrack;
    auto pControlTrack = mControlTrack;
    // If there is any stretch in the control track, substitute a temporary
    // rendering before trying to use GetFloats
@@ -196,20 +196,16 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
       const auto t0 = pControlTrack->LongSamplesToTime(start);
       const auto t1 = pControlTrack->LongSamplesToTime(end);
       if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
-         tempTracks = pControlTrack->Duplicate();
-         if (tempTracks) {
-            const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
-            if (pFirstTrack)
-            {
-               UserException::WithCancellableProgress(
-                  [&](const ProgressReporter& reportProgress) {
-                     pFirstTrack->ApplyPitchAndSpeed(
-                        { { t0, t1 } }, reportProgress);
-                  },
-                  TimeStretching::defaultStretchRenderingTitle,
-                  XO("Rendering Control-Track Time-Stretched Audio"));
-               pControlTrack = pFirstTrack;
-            }
+         pFirstTrack = pControlTrack->Duplicate()->SharedPointer<WaveTrack>();
+         if (pFirstTrack) {
+            UserException::WithCancellableProgress(
+               [&](const ProgressReporter& reportProgress) {
+                  pFirstTrack->ApplyPitchAndSpeed(
+                     { { t0, t1 } }, reportProgress);
+               },
+               TimeStretching::defaultStretchRenderingTitle,
+               XO("Rendering Control-Track Time-Stretched Audio"));
+            pControlTrack = pFirstTrack.get();
          }
       }
    }

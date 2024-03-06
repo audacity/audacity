@@ -19,10 +19,7 @@ class ChannelGroup;
  Extends the interface for random access into a sample stream with tests for
  muting and solo
  */
-struct MIXER_API PlayableSequence
-   // TODO wide wave tracks -- remove virtual
-   : virtual WideSampleSequence
-{
+struct MIXER_API PlayableSequence : WideSampleSequence {
    ~PlayableSequence() override;
 
    //! Find associated ChannelGroup if any
@@ -55,7 +52,6 @@ struct MIXER_API RecordableSequence {
 
    /** @brief Append the sample data to the track. You must call Flush()
     after the last Append.
-    @pre `IsLeader()`
     @pre `iChannel < NChannels()`
     @return true in case a block was flushed from memory to underlying DB
     */
@@ -71,17 +67,9 @@ struct MIXER_API RecordableSequence {
       */
    ) = 0;
 
-   virtual bool IsLeader() const = 0;
-
-   //! Flush of related leader must be called after last Append
-   /*!
-    @pre `IsLeader()`
-    */
+   //! Flush must be called after last Append
    virtual void Flush() = 0;
 
-   /*!
-    @pre `IsLeader()`
-    */
    virtual void InsertSilence(double t, double len) = 0;
 };
 

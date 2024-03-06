@@ -74,7 +74,6 @@ void RealtimeEffectManager::AddGroup(
    RealtimeEffects::InitializationScope &scope,
    const ChannelGroup &group, unsigned chans, float rate)
 {
-   assert(group.IsLeader());
    mGroups.push_back(&group);
    mRates.insert({&group, rate});
 
@@ -239,7 +238,6 @@ RealtimeEffectManager::MakeNewState(
    RealtimeEffects::InitializationScope *pScope,
    ChannelGroup *pGroup, const PluginID &id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    if (!pScope && mActive)
       return nullptr;
    auto pNewState = RealtimeEffectState::make_shared(id);
@@ -276,7 +274,6 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::AddState(
    RealtimeEffects::InitializationScope *pScope,
    ChannelGroup *pGroup, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    auto &states = FindStates(mProject, pGroup);
    auto pState = MakeNewState(pScope, pGroup, id);
    if (!pState)
@@ -296,7 +293,6 @@ std::shared_ptr<RealtimeEffectState> RealtimeEffectManager::ReplaceState(
    RealtimeEffects::InitializationScope *pScope,
    ChannelGroup *pGroup, size_t index, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    auto &states = FindStates(mProject, pGroup);
    auto pOldState = states.GetStateAt(index);
    if (!pOldState)

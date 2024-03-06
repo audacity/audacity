@@ -19,7 +19,7 @@ Paul Licameli split from Mix.cpp
 using WaveTrackConstArray = std::vector < std::shared_ptr < const WaveTrack > >;
 
 //TODO-MB: wouldn't it make more sense to DELETE the time track after 'mix and render'?
-TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
+Track::Holder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,
    WaveTrackFactory *trackFactory,
@@ -36,7 +36,6 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    auto first = *trackRange.begin();
    assert(first); // because the range is known to be nonempty
-   assert(first->IsLeader()); // precondition on trackRange
 
    // this only iterates tracks which are relevant to this function, i.e.
    // selected WaveTracks. The tracklist is (confusingly) the list of all
@@ -95,8 +94,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       oneinput = true;
    // only one input track (either 1 mono or one linked stereo pair)
 
-   auto result = trackFactory->Create(mono ? 1 : 2, *first);
-   auto mix = static_cast<WaveTrack*>(*result->begin());
+   auto mix = trackFactory->Create(mono ? 1 : 2, *first);
    mix->SetPan(0);
    mix->SetGain(1.0f);
    mix->SetRate(rate);
@@ -163,7 +161,7 @@ TrackListHolder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       RealtimeEffectList::Get(*mix).Clear();
    }
 
-   return result;
+   return mix;
 }
 
 #include "RealtimeEffectList.h"
@@ -222,6 +220,5 @@ static WaveTrackIORegistry::ObjectReaderEntry waveTrackAccessor {
 
 static WaveTrackIORegistry::ObjectWriterEntry waveTrackWriter {
 [](const WaveTrack &track, auto &xmlFile) {
-   if (track.IsLeader())
-      RealtimeEffectList::Get(track).WriteXML(xmlFile);
+   RealtimeEffectList::Get(track).WriteXML(xmlFile);
 } };

@@ -37,19 +37,21 @@ and TimeTrack.
 
 Track::Track()
 {
-   mIndex = 0;
 }
 
 Track::Track(const Track& orig, ProtectedCreationArg&&)
 {
-   mIndex = 0;
 }
 
 // Copy all the track properties except the actual contents
 void Track::Init(const Track &orig)
 {
-   ChannelGroup::Init(orig);
    mId = orig.mId;
+   ChannelGroupAttachments &base = *this;
+   // Intentional slice assignment deep-copies the attachment array:
+   base = orig;
+   CopyGroupProperties(orig);
+   mLinkType = orig.mLinkType;
 }
 
 void Track::ReparentAllAttachments()
@@ -61,12 +63,12 @@ void Track::ReparentAllAttachments()
 
 const wxString &Track::GetName() const
 {
-   return GetGroupData().mName;
+   return mName;
 }
 
 void Track::SetName( const wxString &n )
 {
-   auto &name = GetGroupData().mName;
+   auto &name = mName;
    if (name != n) {
       name = n;
       Notify(true);
@@ -75,12 +77,12 @@ void Track::SetName( const wxString &n )
 
 bool Track::GetSelected() const
 {
-   return GetGroupData().mSelected;
+   return mSelected;
 }
 
 void Track::SetSelected(bool s)
 {
-   auto &selected = GetGroupData().mSelected;
+   auto &selected = mSelected;
    if (selected != s) {
       selected = s;
       auto pList = mList.lock();
@@ -104,12 +106,11 @@ void Track::CopyAttachments(Track &dst, const Track &src, bool deep)
       });
 }
 
-TrackListHolder Track::Duplicate(DuplicateOptions options) const
+auto Track::Duplicate(DuplicateOptions options) const -> Holder
 {
    // invoke "virtual constructor" to copy track object proper:
    auto result = Clone(options.backup);
-   // Attachments matter for leader only
-   CopyAttachments(**result->begin(), *this, !options.shallowCopyAttachments);
+   CopyAttachments(*result, *this, !options.shallowCopyAttachments);
    return result;
 }
 
@@ -120,7 +121,6 @@ Track::~Track()
 
 TrackNodePointer Track::GetNode() const
 {
-   wxASSERT(mList.lock() == NULL || this == mNode.first->get());
    return mNode;
 }
 
@@ -133,16 +133,6 @@ void Track::SetOwner
    mNode = node;
 }
 
-int Track::GetIndex() const
-{
-   return mIndex;
-}
-
-void Track::SetIndex(int index)
-{
-   mIndex = index;
-}
-
 void Track::SetLinkType(LinkType linkType, bool completeList)
 {
    DoSetLinkType(linkType, completeList);
@@ -152,19 +142,10 @@ void Track::SetLinkType(LinkType linkType, bool completeList)
    }
 }
 
-ChannelGroup::ChannelGroupData &Track::GetGroupData()
+void Track::CopyGroupProperties(const Track &other)
 {
-   auto pTrack = this;
-   if (auto pList = GetHolder())
-      if (auto pLeader = *pList->Find(pTrack))
-         pTrack = pLeader;
-   // May make on demand
-   return pTrack->ChannelGroup::GetGroupData();
-}
-
-const ChannelGroup::ChannelGroupData &Track::GetGroupData() const
-{
-   return const_cast<Track *>(this)->GetGroupData();
+   mName = other.mName;
+   mSelected = other.mSelected;
 }
 
 void Track::DoSetLinkType(LinkType linkType, bool completeList)
@@ -177,37 +158,38 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
    if (oldType == LinkType::None) {
       // Becoming linked
 
-      // First ensure there is no partner
+      // First ensure that the previous does not link to this
       if (auto partner = GetLinkedTrack())
-         partner->DestroyGroupData();
+         partner->mLinkType = LinkType::None;
       assert(!GetLinkedTrack());
 
-      // Change the link type
-      GetGroupData().mLinkType = linkType;
+      // Change my link type
+      mLinkType = linkType;
 
-      // If this acquired a partner, it loses any old group data
-      if (auto partner = GetLinkedTrack())
-         partner->DestroyGroupData();
+      // Keep link consistency, while still in un-zipped state
+      if (auto partner = GetLinkedTrack()) {
+         partner->mLinkType = LinkType::None;
+         partner->CopyGroupProperties(*this);
+      }
    }
    else if (linkType == LinkType::None) {
       // Becoming unlinked
-      assert(FindGroupData());
       if (HasLinkedTrack()) {
          if (auto partner = GetLinkedTrack()) {
             // Make independent copy of group data in the partner, which should
             // have had none
-            assert(!partner->FindGroupData());
-            partner->ChannelGroup::Init(*this);
-            partner->GetGroupData().mLinkType = LinkType::None;
+            ChannelGroupAttachments &base = *partner;
+            // Intentional slice assignment deep-copies the attachment array:
+            base = *this;
+            partner->CopyGroupProperties(*this);
+            partner->mLinkType = LinkType::None;
          }
       }
-      GetGroupData().mLinkType = LinkType::None;
+      mLinkType = LinkType::None;
    }
-   else {
+   else
       // Remaining linked, changing the type
-      assert(FindGroupData());
-      GetGroupData().mLinkType = linkType;
-   }
+      mLinkType = linkType;
 
    // Assertion checks only in a debug build, does not have side effects!
    assert(!completeList || LinkConsistencyCheck());
@@ -215,7 +197,7 @@ void Track::DoSetLinkType(LinkType linkType, bool completeList)
 
 Track *Track::GetLinkedTrack() const
 {
-   auto pList = static_cast<TrackList*>(mNode.second);
+   auto pList = GetOwner();
    if (!pList)
       return nullptr;
 
@@ -223,13 +205,13 @@ Track *Track::GetLinkedTrack() const
       if (HasLinkedTrack()) {
          auto next = pList->getNext( mNode );
          if ( !pList->isNull( next ) )
-            return next.first->get();
+            return next->get();
       }
 
-      if (mNode.first != mNode.second->begin()) {
+      if (mNode != pList->ListOfTracks::begin()) {
          auto prev = pList->getPrev( mNode );
          if ( !pList->isNull( prev ) ) {
-            auto track = prev.first->get();
+            auto track = prev->get();
             if (track && track->HasLinkedTrack())
                return track;
          }
@@ -241,8 +223,7 @@ Track *Track::GetLinkedTrack() const
 
 bool Track::HasLinkedTrack() const noexcept
 {
-   auto pGroupData = FindGroupData();
-   return pGroupData && pGroupData->mLinkType != LinkType::None;
+   return mLinkType != LinkType::None;
 }
 
 std::optional<TranslatableString> Track::GetErrorOpening() const
@@ -257,14 +238,8 @@ void Track::Notify(bool allChannels, int code)
       pList->DataEvent(SharedPointer(), allChannels, code);
 }
 
-void Track::Paste(double t, const TrackList &src)
-{
-   Paste(t, **src.begin());
-}
-
 void Track::SyncLockAdjust(double oldT1, double newT1)
 {
-   assert(IsLeader());
    const auto endTime = GetEndTime();
    if (newT1 > oldT1 && oldT1 > endTime)
          return;
@@ -288,9 +263,6 @@ bool Track::IsLeader() const
     return !GetLinkedTrack() || HasLinkedTrack();
 }
 
-bool Track::IsSelectedLeader() const
-   { return IsSelected() && IsLeader(); }
-
 bool Track::LinkConsistencyFix(bool doFix)
 {
    assert(!doFix || IsLeader());
@@ -298,7 +270,7 @@ bool Track::LinkConsistencyFix(bool doFix)
    // doesn't fix the problem, but it likely leaves us with orphaned
    // sample blocks instead of much worse problems.
    bool err = false;
-   if (HasLinkedTrack()) /* which implies IsLeader() */ {
+   if (HasLinkedTrack()) {
       if (auto link = GetLinkedTrack()) {
          // A linked track's partner should never itself be linked
          if (link->HasLinkedTrack()) {
@@ -379,9 +351,9 @@ void TrackList::Swap(TrackList &that)
    {
       a.swap(b);
       for (auto it = a.begin(), last = a.end(); it != last; ++it)
-         (*it)->SetOwner(aSelf, {it, &a});
+         (*it)->SetOwner(aSelf, it);
       for (auto it = b.begin(), last = b.end(); it != last; ++it)
-         (*it)->SetOwner(bSelf, {it, &b});
+         (*it)->SetOwner(bSelf, it);
    };
 
    const auto self = shared_from_this();
@@ -418,19 +390,14 @@ void TrackList::RecalcPositions(TrackNodePointer node)
       return;
 
    Track *t;
-   int i = 0;
 
    auto prev = getPrev(node);
-   if (!isNull(prev)) {
-      t = prev.first->get();
-      i = t->GetIndex() + 1;
-   }
+   if (!isNull(prev))
+      t = prev->get();
 
    const auto theEnd = End();
-   for (auto n = DoFind(node.first->get()); n != theEnd; ++n) {
+   for (auto n = DoFind(node->get()); n != theEnd; ++n)
       t = *n;
-      t->SetIndex(i++);
-   }
 }
 
 void TrackList::QueueEvent(TrackListEvent event)
@@ -463,7 +430,7 @@ void TrackList::DataEvent(
 
 void TrackList::PermutationEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::PERMUTED, *node.first });
+   QueueEvent({ TrackListEvent::PERMUTED, *node });
 }
 
 void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
@@ -474,12 +441,12 @@ void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
 
 void TrackList::AdditionEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::ADDITION, *node.first });
+   QueueEvent({ TrackListEvent::ADDITION, *node });
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::RESIZING, *node.first });
+   QueueEvent({ TrackListEvent::RESIZING, *node });
 }
 
 auto TrackList::EmptyRange() const
@@ -494,7 +461,7 @@ auto TrackList::EmptyRange() const
 
 auto TrackList::DoFind(Track *pTrack) -> TrackIter<Track>
 {
-   if (!pTrack || pTrack->GetHolder() != this)
+   if (!pTrack || pTrack->GetOwner().get() != this)
       return EndIterator<Track>();
    else
       return MakeTrackIterator<Track>(pTrack->GetNode());
@@ -508,28 +475,25 @@ auto TrackList::Find(Track *pTrack) -> TrackIter<Track>
    return iter.Filter( &Track::IsLeader );
 }
 
-void TrackList::Insert(
-   const Track* before, TrackList&& trackList, bool assignIds)
+void TrackList::Insert(const Track* before,
+   const Track::Holder &pSrc, bool assignIds)
 {
-   assert(before == nullptr || (before->IsLeader() && Find(before) != EndIterator<const Track>()));
+   assert(before == nullptr || Find(before) != EndIterator<const Track>());
 
    if(before == nullptr)
    {
-      Append(std::move(trackList), assignIds);
+      Add(pSrc, assignIds);
       return;
    }
 
    std::vector<Track *> arr;
-   arr.reserve(Size() + trackList.Size());
+   arr.reserve(Size() + 1);
    for (const auto track : *this) {
       if (track == before)
-      {
-         for(const auto addedTrack : trackList)
-            arr.push_back(addedTrack);
-      }
+         arr.push_back(pSrc.get());
       arr.push_back(track);
    }
-   Append(std::move(trackList), assignIds);
+   Add(pSrc, assignIds);
    Permute(arr);
 }
 
@@ -540,11 +504,10 @@ void TrackList::Permute(const std::vector<Track *> &tracks)
       for (const auto pChannel : Channels(pTrack))
          permutation.push_back(pChannel->GetNode());
    for (const auto iter : permutation) {
-      ListOfTracks::value_type track = *iter.first;
-      erase(iter.first);
+      ListOfTracks::value_type track = *iter;
+      erase(iter);
       Track *pTrack = track.get();
-      pTrack->SetOwner(shared_from_this(),
-         { insert(ListOfTracks::end(), track), this });
+      pTrack->SetOwner(shared_from_this(), insert(ListOfTracks::end(), track));
    }
    auto n = getBegin();
    RecalcPositions(n);
@@ -578,14 +541,8 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
 {
    if (!ListOfTracks::empty()) {
       auto &pLast = *ListOfTracks::rbegin();
-      if (auto pGroupData = pLast->FindGroupData()
-         ; pGroupData && pGroupData->mLinkType != Track::LinkType::None
-      ) {
-         // Assume the newly added track is intended to pair with the last
-         // Avoid upsetting assumptions in case this track had its own group
-         // data initialized during Duplicate()
-         t->DestroyGroupData();
-      }
+      if (pLast->mLinkType != Track::LinkType::None)
+         t->CopyGroupProperties(*pLast);
    }
 
    push_back(t);
@@ -600,56 +557,49 @@ Track *TrackList::DoAdd(const std::shared_ptr<Track> &t, bool assignIds)
    return back().get();
 }
 
-TrackListHolder TrackList::ReplaceOne(Track &t, TrackList &&with)
+Track::Holder TrackList::ReplaceOne(Track &t, TrackList &&with)
 {
-   assert(t.IsLeader());
    assert(t.GetOwner().get() == this);
    assert(!with.empty());
-
-   TrackListHolder result = Temporary(nullptr);
 
    auto save = t.shared_from_this();
 
    //! Move one track to the temporary list
    auto node = t.GetNode();
    t.SetOwner({}, {});
-   result->Add(save);
 
    //! Redirect the list element of this
    const auto iter = with.ListOfTracks::begin();
    const auto pTrack = *iter;
-   *node.first = pTrack;
+   *node = pTrack;
    with.erase(iter);
    pTrack->SetOwner(shared_from_this(), node);
    pTrack->SetId(save->GetId());
    RecalcPositions(node);
    DeletionEvent(save, true);
    AdditionEvent(node);
-
-   return result;
+   return save;
 }
 
-std::shared_ptr<TrackList> TrackList::Remove(Track &track)
+std::shared_ptr<Track> TrackList::Remove(Track &track)
 {
-   auto result = TrackList::Temporary(nullptr);
-   assert(track.IsLeader());
    auto *t = &track;
    auto iter = getEnd();
    auto node = t->GetNode();
    t->SetOwner({}, {});
 
+   std::shared_ptr<Track> holder;
    if (!isNull(node)) {
-      ListOfTracks::value_type holder = *node.first;
+      holder = *node;
 
       iter = getNext(node);
-      erase(node.first);
+      erase(node);
       if (!isNull(iter))
          RecalcPositions(iter);
 
       DeletionEvent(t->shared_from_this(), false);
-      result->Add(move(holder));
    }
-   return result;
+   return holder;
 }
 
 void TrackList::Clear(bool sendEvent)
@@ -680,7 +630,7 @@ Track *TrackList::GetNext(Track &t, bool linked) const
          node = getNext(node);
 
       if (!isNull(node))
-         return node.first->get();
+         return node->get();
    }
    return nullptr;
 }
@@ -708,12 +658,12 @@ Track *TrackList::GetPrev(Track &t, bool linked) const
          if (linked) {
             prev = getPrev(node);
             if( !isNull(prev) &&
-                !(*node.first)->HasLinkedTrack() &&
-               (*node.first)->GetLinkedTrack())
+                !(*node)->HasLinkedTrack() &&
+               (*node)->GetLinkedTrack())
                node = prev;
          }
 
-         return node.first->get();
+         return node->get();
       }
    }
    return nullptr;
@@ -743,15 +693,20 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       return;
 
    // Be sure s1 is the earlier iterator
-   if ((*s1.first)->GetIndex() >= (*s2.first)->GetIndex())
-      std::swap(s1, s2);
+   {
+      const auto begin = ListOfTracks::begin();
+      auto d1 = std::distance(begin, s1);
+      auto d2 = std::distance(begin, s2);
+      if (d1 > d2)
+         std::swap(s1, s2);
+   }
 
    // For saving the removed tracks
    using Saved = ListOfTracks::value_type;
    Saved saved1, saved2;
 
    auto doSave = [&](Saved &saved, TrackNodePointer &s) {
-      saved = *s.first, s.first = erase(s.first);
+      saved = *s, s = erase(s);
    };
 
    doSave(saved1, s1);
@@ -767,8 +722,7 @@ void TrackList::SwapNodes(TrackNodePointer s1, TrackNodePointer s2)
       const auto pTrack = saved.get();
       // Insert before s, and reassign s to point at the new node before
       // old s; which is why we saved pointers in backwards order
-      pTrack->SetOwner(shared_from_this(),
-         s = { insert(s.first, saved), this } );
+      pTrack->SetOwner(shared_from_this(), s = insert(s, saved) );
    };
    // This does not invalidate s2 even when it equals s1:
    doInsert(saved2, s1);
@@ -898,8 +852,7 @@ void Track::AdjustPositions()
 
 Track::LinkType Track::GetLinkType() const noexcept
 {
-   const auto pGroupData = FindGroupData();
-   return pGroupData ? pGroupData->mLinkType : LinkType::None;
+   return mLinkType;
 }
 
 TrackListHolder TrackList::Temporary(AudacityProject *pProject,
@@ -934,4 +887,13 @@ void TrackList::AppendOne(TrackList &&list)
       list.erase(iter);
       this->Add(pTrack);
    }
+}
+
+Track::Holder TrackList::DetachFirst()
+{
+   auto iter = ListOfTracks::begin();
+   auto result = *iter;
+   erase(iter);
+   result->SetOwner({}, {});
+   return result;
 }

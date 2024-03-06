@@ -431,7 +431,6 @@ public:
    //! The width of every WaveClip in this track; for now always 1
    size_t GetWidth() const;
 
-   //! May report more than one only when this is a leader track
    size_t NChannels() const override;
 
    auto GetChannel(size_t iChannel) {
@@ -450,17 +449,6 @@ public:
    //! settings
    void Init(const WaveTrack &orig);
  private:
-   using ConstIterPair = std::pair<
-      WaveClipHolders::const_iterator, WaveClipHolders::const_iterator>;
-   /*!
-    @param clip is searched for in the leader channel
-    @pre `IsLeader()`
-    @return first is iterator to clip if found, and if stereo, second is the
-       corresponding clip of the other channel
-    */
-   ConstIterPair FindWideClip(const WaveClip &clip, int *pDistance = nullptr)
-      const;
-
    using IterPair = std::pair<
       WaveClipHolders::iterator, WaveClipHolders::iterator>;
    /*!
@@ -470,7 +458,7 @@ public:
 
    void RemoveWideClip(IterPair pair);
 
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 
    friend class WaveTrackFactory;
 
@@ -501,7 +489,6 @@ public:
    double GetRate() const override;
    ///!brief Sets the new rate for the track without resampling it
    /*!
-    @pre `IsLeader()`
     @pre newRate > 0
     */
    void SetRate(double newRate);
@@ -521,9 +508,6 @@ public:
 
    sampleFormat GetSampleFormat() const override;
 
-   /*!
-    @pre `IsLeader()`
-    */
    void ConvertToSampleFormat(sampleFormat format,
       const std::function<void(size_t)> & progressReport = {});
 
@@ -531,7 +515,7 @@ public:
    // High-level editing
    //
 
-   TrackListHolder Cut(double t0, double t1) override;
+   Track::Holder Cut(double t0, double t1) override;
 
    //! Make another track copying format, rate, etc. but containing no
    //! clips; with the specified number of channels.
@@ -551,10 +535,8 @@ public:
     which will own the copy) in the unusual case that a track is copied from
     another project or the clipboard.  For copies within one project, the
     default will do.
-
-    @pre `IsLeader()`
     */
-   TrackListHolder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
+   Holder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
    const;
 
    //! Simply discard any right channel
@@ -563,7 +545,7 @@ public:
    /*!
     @pre `!GetOwner()`
     */
-   TrackListHolder MonoToStereo();
+   Holder MonoToStereo();
 
    /*
     @return a vector of mono tracks, which are in the list that owns `this`
@@ -578,7 +560,7 @@ public:
    // and there is no clip at the end time of the selection, then the result
    // will contain a "placeholder" clip whose only purpose is to make
    // GetEndTime() correct.  This clip is not re-copied when pasting.
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
 
    void Clear(double t0, double t1) override;
@@ -588,75 +570,39 @@ public:
    /*!
     May assume precondition: t0 <= t1
     If the source has one channel and this has more, then replicate source
-    @pre `IsLeader()`
-    @pre `src.IsLeader()`
     @pre `src.NChannels() == 1 || src.NChannels() == NChannels()`
     */
    void ClearAndPaste(
       double t0, double t1, const WaveTrack& src, bool preserve = true,
       bool merge = true, const TimeWarper* effectWarper = nullptr,
       bool clearByTrimming = false) /* not override */;
-   /*!
-    Overload that takes a TrackList and passes its first wave track
-    @pre `**src.Any<const WaveTrack>().begin()` satisfies preconditions
-    of the other overload for `src`
-    */
-   void ClearAndPaste(double t0, double t1,
-      const TrackList &src,
-      bool preserve = true,
-      bool merge = true,
-      const TimeWarper *effectWarper = nullptr)
-   {
-      ClearAndPaste(t0, t1, **src.Any<const WaveTrack>().begin(),
-         preserve, merge, effectWarper);
-   }
 
    void Silence(double t0, double t1, ProgressReporter reportProgress) override;
    void InsertSilence(double t, double len) override;
 
-   /*!
-    @pre `IsLeader()`
-    */
    void Split(double t0, double t1);
 
-   /*!
-    @pre `IsLeader()`
-    */
    std::pair<IntervalHolder, IntervalHolder> SplitAt(double t);
 
    /*!
     May assume precondition: t0 <= t1
-    @pre `IsLeader()`
     */
    void ClearAndAddCutLine(double t0, double t1) /* not override */;
 
    /*!
-    @pre `IsLeader()`
     @post result: `result->NChannels() == NChannels()`
     */
-   TrackListHolder SplitCut(double t0, double t1) /* not override */;
+   Holder SplitCut(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
-   /*!
-    @pre `IsLeader()`
-    */
    void SplitDelete(double t0, double t1) /* not override */;
-   /*!
-    @pre `IsLeader()`
-    */
    void Join(
       double t0, double t1,
       const ProgressReporter& reportProgress) /* not override */;
    // May assume precondition: t0 <= t1
-   /*!
-    @pre `IsLeader()`
-    */
    void Disjoin(double t0, double t1) /* not override */;
 
    // May assume precondition: t0 <= t1
-   /*!
-    @pre `IsLeader()`
-    */
    void Trim(double t0, double t1) /* not override */;
 
    /*
@@ -690,8 +636,6 @@ public:
    override;
 
    void Flush() override;
-
-   bool IsLeader() const override;
 
    //! @name PlayableSequence implementation
    //! @{
@@ -729,7 +673,6 @@ public:
     * samples fitting into [t0, t1), i.e., half as many for twice as large a
     * stretch ratio, due to a larger spacing of the raw samples.
     *
-    * @pre `IsLeader()`
     * @post result: `result.size() == NChannels()`
     * @pre samples in [t0, t1) can be counted with `size_t`
     */
@@ -783,7 +726,6 @@ public:
    /**
     * @brief Get access to the (visible) clips in the tracks, in unspecified
     * order.
-    * @pre `IsLeader()`
     */
    ClipConstHolders GetClipInterfaces() const;
 
@@ -798,7 +740,6 @@ public:
    CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
       const Interval *pToCopy = nullptr, bool copyCutlines = true);
 
-   /// @pre IsLeader()
    //! Create new clip and add it to this track.
    /*!
     Returns a pointer to the newly created clip, using this track's block
@@ -1203,7 +1144,6 @@ public:
    void InsertInterval(const IntervalHolder& interval,
       bool newClip, bool allowEmpty = false);
 
-   //! @pre `IsLeader()`
    void RemoveInterval(const IntervalHolder& interval);
 
    Track::Holder PasteInto(AudacityProject &project, TrackList &list)
@@ -1213,13 +1153,7 @@ public:
 
    size_t NIntervals() const override;
 
-   /*!
-    @pre `IsLeader()`
-    */
    IntervalHolder GetWideClip(size_t iInterval);
-   /*!
-    @pre `IsLeader()`
-    */
    IntervalConstHolder GetWideClip(size_t iInterval) const;
 
    //!< used only during deserialization
@@ -1265,7 +1199,6 @@ private:
    void ApplyPitchAndSpeedOnIntervals(
       const std::vector<IntervalHolder>& intervals,
       const ProgressReporter& reportProgress);
-   //! @pre `IsLeader()`
    //! @pre `oldOne->NChannels() == newOne->NChannels()`
    void
    ReplaceInterval(const IntervalHolder& oldOne, const IntervalHolder& newOne);
@@ -1298,13 +1231,7 @@ private:
 private:
    //Updates rate parameter only in WaveTrackData
    void DoSetRate(double newRate);
-   /*!
-    * @pre `IsLeader()`
-    * @param[out] leader
-    */
-   //! @pre `IsLeader()`
-   [[nodiscard]] TrackListHolder
-   DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const;
+   [[nodiscard]] Holder DuplicateWithOtherTempo(double newTempo) const;
 
    bool GetOne(const WaveClipHolders &clips,
       samplePtr buffer, sampleFormat format, sampleCount start, size_t len,
@@ -1316,7 +1243,6 @@ private:
 
    /*
     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
-    @pre `IsLeader()`
     */
    void PasteWaveTrack(double t0, const WaveTrack &other, bool merge);
    /*
@@ -1328,15 +1254,10 @@ private:
    void
    PasteWaveTrackAtSameTempo(double t0, const WaveTrack& other, bool merge);
 
-   //! Whether all clips of a leader track have a common rate
-   /*!
-    @pre `IsLeader()`
-    */
+   //! Whether all clips of an unzipped leader track have a common rate
    bool RateConsistencyCheck() const;
-   //! Whether all tracks in group and all clips have a common sample format
-   /*!
-    @pre `IsLeader()`
-    */
+   //! Whether all tracks in unzipped group and all clips have a common sample
+   //! format
    bool FormatConsistencyCheck() const;
 
    void ApplyPitchAndSpeedOne(
@@ -1433,20 +1354,36 @@ class WAVE_TRACK_API WaveTrackFactory final
    /**
     * \brief Creates a new track with project's default rate and format and the
     * given number of channels.
+    * @pre `nChannels > 0`
+    * @pre `nChannels <= 2`
     */
-   TrackListHolder Create(size_t nChannels);
+   WaveTrack::Holder Create(size_t nChannels);
+
+   /**
+    * \brief Creates tracks with project's default rate and format and the
+    * given number of channels.
+    */
+   TrackListHolder CreateMany(size_t nChannels);
 
    /**
     * \brief Creates a new \p track with specified \p format and
     * \p rate and number of channels
+    * @pre `nChannels > 0`
+    * @pre `nChannels <= 2`
     */
-   TrackListHolder Create(size_t nChannels, sampleFormat format, double rate);
+   WaveTrack::Holder Create(size_t nChannels, sampleFormat format, double rate);
+
+   /**
+    * \brief Creates tracks with specified \p format and
+    * \p rate and number of channels
+    */
+   TrackListHolder CreateMany(size_t nChannels, sampleFormat format, double rate);
 
    /**
     * \brief Creates an empty copy of \p proto with the specified number
     * of channels.
     */
-   TrackListHolder Create(size_t nChannels, const WaveTrack& proto);
+   WaveTrack::Holder Create(size_t nChannels, const WaveTrack& proto);
 
  private:
    std::shared_ptr<WaveTrack> DoCreate(

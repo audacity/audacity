@@ -226,7 +226,7 @@ void MIDIImportFileHandle::Import(
 {
    auto newTrack = std::make_shared<NoteTrack>();
    if (::ImportMIDI(mFileName, newTrack.get())) {
-      outTracks.push_back(TrackList::Temporary(nullptr, newTrack));
+      outTracks.push_back(newTrack);
       progressListener.OnImportResult(
          ImportProgressListener::ImportResult::Success);
    }

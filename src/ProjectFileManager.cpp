@@ -196,16 +196,16 @@ auto ProjectFileManager::ReadProjectFile(
          // corrupt the project
          for (const auto pChannel : TrackList::Channels(pTrack)) {
             auto left = leader;
-            auto newTrackList =
+            auto newTrack =
                pChannel->Duplicate(Track::DuplicateOptions{}.Backup());
             leader = left
                ? nullptr // now visiting the right channel
                : (pChannel->GetLinkType() == Track::LinkType::None)
                   ? nullptr // now visiting a mono channel
-                  : *newTrackList->Any<WaveTrack>().begin()
+                  : static_cast<WaveTrack*>(newTrack.get())
                     // now visiting a left channel
             ;
-            mLastSavedTracks->Append(move(*newTrackList));
+            mLastSavedTracks->Add(newTrack);
             if (left)
                // Zip clips allowing misalignment -- this may be a legacy
                // project.  This duplicate track will NOT be used for normal
@@ -428,8 +428,7 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
 
    auto &tracks = TrackList::Get(proj);
    for (auto t : tracks)
-      mLastSavedTracks->Append(
-         move(*t->Duplicate(Track::DuplicateOptions{}.Backup())));
+      mLastSavedTracks->Add(t->Duplicate(Track::DuplicateOptions{}.Backup()));
 
    // If we get here, saving the project was successful, so we can DELETE
    // any backup project.
@@ -1192,19 +1191,14 @@ ProjectFileManager::AddImportedTracks(const FilePath &fileName,
       !(tracks.Any<PlayableTrack>() + &PlayableTrack::GetSolo).empty();
    if (projectHasSolo) {
       for (auto &group : newTracks)
-         for (const auto pTrack : group->Any<PlayableTrack>())
+         if (auto pTrack = dynamic_cast<PlayableTrack*>(group.get()))
             pTrack->SetMute(true);
    }
 
-   // Must add all tracks first (before using Track::IsLeader)
    for (auto &group : newTracks) {
-      if (group->empty()) {
-         assert(false);
-         continue;
-      }
-      for (const auto pTrack : group->Any<WaveTrack>())
+      if (auto pTrack = dynamic_cast<WaveTrack*>(group.get()))
          results.push_back(pTrack);
-      tracks.Append(std::move(*group));
+      tracks.Add(group);
    }
    newTracks.clear();
 
@@ -1496,17 +1490,15 @@ bool ProjectFileManager::Import(
          return false;
 
       const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
-      for (auto trackList : newTracks)
-         for (auto track : *trackList)
-            DoProjectTempoChange(*track, projectTempo);
+      for (auto track : newTracks)
+         DoProjectTempoChange(*track, projectTempo);
 
-      if (!newTracks.empty() && newTracks[0])
+      if (newTracks.size() == 1)
       {
-         const auto waveTracks = (*newTracks[0]).Any<WaveTrack>();
-         if (waveTracks.size() == 1)
+         if (const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get()))
             resultingReader.reset(new ClipMirAudioReader {
                std::move(acidTags), fileName.ToStdString(),
-               **waveTracks.begin() });
+               *waveTrack });
       }
 
       if (addToHistory) {

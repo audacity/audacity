@@ -224,16 +224,16 @@ int FindClipBoundaries
    std::vector<FoundClipBoundary> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Any();
-   auto rangeLeaders = leaders.Filter<const WaveTrack>();
+   auto all = tracks.Any();
+   auto waveTracks = all.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
-      rangeLeaders = rangeLeaders + &Track::GetSelected;
-   for (auto waveTrack : rangeLeaders) {
+      waveTracks = waveTracks + &Track::GetSelected;
+   for (auto waveTrack : waveTracks) {
       auto result = next ? FindNextClipBoundary(waveTrack, time) :
          FindPrevClipBoundary(waveTrack, time);
       if (result.nFound > 0) {
          result.trackNum =
-            1 + std::distance(leaders.begin(), leaders.find(waveTrack));
+            1 + std::distance(all.begin(), all.find(waveTrack));
          results.push_back(result);
       }
 
@@ -446,16 +446,16 @@ int FindClips
    std::vector<FoundClip> results;
 
    int nTracksSearched = 0;
-   auto leaders = tracks.Any();
-   auto rangeLeaders = leaders.Filter<const WaveTrack>();
+   auto all = tracks.Any();
+   auto waveTracks = all.Filter<const WaveTrack>();
    if (anyWaveTracksSelected)
-      rangeLeaders = rangeLeaders + &Track::GetSelected;
-   for (auto waveTrack : rangeLeaders) {
+      waveTracks = waveTracks + &Track::GetSelected;
+   for (auto waveTrack : waveTracks) {
       auto result = next ? FindNextClip(waveTrack, t0, t1) :
          FindPrevClip(waveTrack, t0, t1);
       if (result.found) {
          result.trackNum =
-            1 + std::distance(leaders.begin(), leaders.find(waveTrack));
+            1 + std::distance(all.begin(), all.find(waveTrack));
          results.push_back(result);
       }
       nTracksSearched++;
@@ -584,9 +584,6 @@ double DoClipMove(AudacityProject &project, TrackList &trackList,
 
    auto track = trackFocus.Get();
    if (track) {
-      // Focus is always a leader,
-      // satisfying the pre of MakeTrackShifter
-      assert(track->IsLeader());
       ClipMoveState state;
 
       auto t0 = selectedRegion.t0();

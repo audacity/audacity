@@ -378,7 +378,6 @@ bool TrackSpectrumTransformer::DoFinish()
 bool TrackSpectrumTransformer::PostProcess(
    WaveTrack &outputTrack, sampleCount len)
 {
-   assert(outputTrack.IsLeader());
    outputTrack.Flush();
    auto tLen = outputTrack.LongSamplesToTime(len);
    // Filtering effects always end up with more data than they started with.

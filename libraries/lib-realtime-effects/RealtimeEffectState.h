@@ -69,9 +69,6 @@ public:
    //! Main thread sets up for playback
    std::shared_ptr<EffectInstance> Initialize(double rate);
    //! Main thread sets up this state before adding it to lists
-   /*!
-    @pre `group.IsLeader()`
-    */
    std::shared_ptr<EffectInstance>
    AddGroup(
       const ChannelGroup &group, unsigned chans, float sampleRate);

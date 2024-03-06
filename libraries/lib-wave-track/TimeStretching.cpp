@@ -42,7 +42,6 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnWaveTrackProjectTempoChange) {
    return [](WaveTrack &track,
       const std::optional<double> &oldTempo, double newTempo)
    {
-      assert(track.IsLeader());
       for (const auto pClip : track.Intervals())
          pClip->OnProjectTempoChange(oldTempo, newTempo);
    };

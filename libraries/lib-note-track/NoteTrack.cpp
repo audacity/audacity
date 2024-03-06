@@ -173,7 +173,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-TrackListHolder NoteTrack::Clone(bool) const
+Track::Holder NoteTrack::Clone(bool) const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -212,7 +212,7 @@ TrackListHolder NoteTrack::Clone(bool) const
 #ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
 #endif
-   return TrackList::Temporary(nullptr, duplicate);
+   return duplicate;
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
@@ -315,9 +315,8 @@ void NoteTrack::PrintSequence()
    fclose(debugOutput);
 }
 
-TrackListHolder NoteTrack::Cut(double t0, double t1)
+Track::Holder NoteTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -343,10 +342,10 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack);
+   return newTrack;
 }
 
-TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
+Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -366,7 +365,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack);
+   return newTrack;
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -395,7 +394,6 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -479,7 +477,6 @@ void NoteTrack::Paste(double t, const Track &src)
 
 void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -495,7 +492,6 @@ void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 
 void NoteTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -582,7 +578,6 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
 
 Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
-   assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, *this);
@@ -855,14 +850,13 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    std::ostringstream data;
    Track::Holder holder;
    const NoteTrack *saveme = this;
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = (*Clone(false)->begin())->SharedPointer();
+      holder = Clone(false);
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);

@@ -455,7 +455,6 @@ void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
 
 void Viewport::ShowTrack(const Track &track)
 {
-   assert(track.IsLeader());
    auto &viewInfo = ViewInfo::Get(mProject);
 
    int trackTop = 0;

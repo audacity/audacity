@@ -14,9 +14,6 @@
 
 class WaveTrackShifter final : public TrackShifter {
 public:
-   /*!
-    @pre `track.IsLeader()`
-    */
    WaveTrackShifter(WaveTrack &track)
       : mpTrack{ track.SharedPointer<WaveTrack>() }
    {
@@ -24,7 +21,6 @@ public:
    }
    ~WaveTrackShifter() override {}
    Track &GetTrack() const override {
-      assert(mpTrack->IsLeader()); // by construction
       return *mpTrack;
    }
 
@@ -215,7 +211,6 @@ private:
 using MakeWaveTrackShifter = MakeTrackShifter::Override<WaveTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(MakeWaveTrackShifter) {
    return [](WaveTrack &track, AudacityProject&) {
-      assert(track.IsLeader()); // pre of the open method
       return std::make_unique<WaveTrackShifter>(track);
    };
 }

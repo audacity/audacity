@@ -140,9 +140,6 @@ protected:
    int GetNumWaveGroups() const { return mNumGroups; }
 
    // Calculates the start time and length in samples for one or two channels
-   /*!
-    @pre `track.IsLeader()`
-    */
    void GetBounds(const WaveTrack &track, sampleCount *start, sampleCount *len);
 
 private:

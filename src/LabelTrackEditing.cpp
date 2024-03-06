@@ -17,7 +17,6 @@ DEFINE_ATTACHED_VIRTUAL_OVERRIDE(OnLabelTrackProjectTempoChange) {
    return [](LabelTrack &track,
       const std::optional<double> &oldTempo, double newTempo)
    {
-      assert(track.IsLeader());
       if (!oldTempo.has_value())
          return;
       const auto ratio = *oldTempo / newTempo;

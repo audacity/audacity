@@ -368,7 +368,6 @@ void OnImport(const CommandContext &context)
 void OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewport = Viewport::Get(project);
    auto &window = GetProjectFrame(project);

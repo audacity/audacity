@@ -260,9 +260,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
                             XO("Processing...   0%%"),
                             pdlgHideStopButton };
 
-   // Safe assumption for tracks associated with the context menu
-   assert(track.IsLeader());
-
    // Simply finding a denominator for the progress dialog
    // Hidden samples are processed too, they should be counted as well
    // (Correctly counting all samples of all channels)
@@ -288,9 +285,6 @@ void FormatMenuTable::OnFormatChange(wxCommandEvent & event)
          throw UserException{};
    };
 
-   // We get here from the context menu only in the TrackControlPanel cell
-   // which is always associated with a leader track
-   assert(track.IsLeader());
    track.ConvertToSampleFormat(newFormat, progressUpdate);
 
    ProjectHistory::Get( *project )
@@ -829,13 +823,11 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
       std::max(left->GetSampleFormat(), right->GetSampleFormat()),
       0.0, 0.0);
 
-   const auto newTrack = *mix->begin();
-
-   tracks.Insert(*first, std::move(*mix));
+   tracks.Insert(*first, mix);
    tracks.Remove(*left);
    tracks.Remove(*right);
 
-   for(const auto& channel : newTrack->Channels())
+   for(const auto& channel : mix->Channels())
    {
       // Set NEW track heights and minimized state
       auto& view = ChannelView::Get(*channel);
@@ -844,7 +836,7 @@ void WaveTrackMenuTable::OnMergeStereo(wxCommandEvent &)
    }
    ProjectHistory::Get( *project ).PushState(
       /* i18n-hint: The string names a track */
-      XO("Made '%s' a stereo track").Format( newTrack->GetName() ),
+      XO("Made '%s' a stereo track").Format(mix->GetName()),
       XO("Make Stereo"));
 
    using namespace RefreshCode;
@@ -886,12 +878,6 @@ void WaveTrackMenuTable::SplitStereo(bool stereo)
 /// Swap the left and right channels of a stero track...
 void WaveTrackMenuTable::OnSwapChannels(wxCommandEvent &)
 {
-   // Fix assertion violation in `TrackPanel::OnEnsureVisible` by
-   // dispatching any queued event
-   // TODO wide wave tracks -- remove this when there is no "leader" distinction
-   // any more
-   wxTheApp->Yield();
-
    AudacityProject *const project = &mpData->project;
 
    auto &trackFocus = TrackFocus::Get( *project );

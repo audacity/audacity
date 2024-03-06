@@ -380,8 +380,6 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
-   assert(waveTrack->IsLeader());
-
    const auto rect = state.rect;
 
    const auto px = state.state.m_x;
@@ -466,7 +464,8 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     const TrackPanelMouseState& state)
 {
     auto waveChannel = view.FindWaveChannel();
-    //For multichannel tracks, show adjustment handle only for the leader track
+    // For multichannel tracks, show adjustment handle only for the topmost
+    // channel
     if (waveChannel->GetChannelIndex() != 0)
         return {};
 

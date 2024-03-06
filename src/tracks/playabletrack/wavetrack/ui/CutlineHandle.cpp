@@ -86,14 +86,6 @@ UIHandlePtr CutlineHandle::HitTest(
    const AudacityProject *pProject,
    std::shared_ptr<WaveTrack> pTrack)
 {
-   // Substitute the leader
-   if (!pTrack->GetOwner())
-      return {};
-   auto iter = pTrack->GetOwner()->Find(pTrack.get());
-   if (!*iter)
-      return {};
-   pTrack = (*iter)->SharedPointer<WaveTrack>();
-
    auto &viewInfo = ViewInfo::Get(*pProject);
    /// method that tells us if the mouse event landed on an
    /// editable Cutline

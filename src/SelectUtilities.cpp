@@ -122,13 +122,9 @@ void DoListSelection(
    auto &window = GetProjectFrame(project);
 
    auto isSyncLocked = SyncLockState::Get(project).IsSyncLocked();
-   // Substitute the leader to satisfy precondition
-   auto pT = *tracks.Find(&t);
-   if (!pT)
-      return;
 
    selectionState.HandleListSelection(
-      tracks, viewInfo, *pT,
+      tracks, viewInfo, t,
       shift, ctrl, isSyncLocked);
 
    if (!ctrl)

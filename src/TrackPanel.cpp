@@ -540,8 +540,7 @@ namespace {
       if (pCell)
          // FindTrack as applied through the CommonTrackPanelCell interface
          // will really find a track, though for now it finds a left or right
-         // channel.  That can be corrected to the leader for now with
-         // TrackList::Find().
+         // channel.
          return static_cast<CommonTrackPanelCell*>(pCell)->FindTrack();
       return {};
    }
@@ -578,7 +577,6 @@ void TrackPanel::ProcessUIHandleResult
    }
 
    if (pClickedTrack && (refreshResult & RefreshCode::UpdateVRuler))
-      // This calls TrackList::Find
       panel->UpdateVRuler(pClickedTrack);
 
    if (refreshResult & RefreshCode::DrawOverlays) {
@@ -597,10 +595,8 @@ void TrackPanel::ProcessUIHandleResult
       panel->Refresh(false);
    else {
       if (refreshResult & RefreshCell)
-         // This uses TrackList::Find
          panel->RefreshTrack(pClickedTrack);
       if (refreshResult & RefreshLatestCell)
-         // This uses TrackList::Find
          panel->RefreshTrack(pLatestTrack);
    }
 
@@ -612,9 +608,7 @@ void TrackPanel::ProcessUIHandleResult
 
    if ((refreshResult & RefreshCode::EnsureVisible) && pClickedTrack) {
       auto & focus = TrackFocus::Get(*GetProject());
-      // This uses TrackList::Find
       focus.Set(pClickedTrack);
-      // This expects a leader track, not a channel
       if (const auto pFocus = focus.Get())
          Viewport::Get(*GetProject()).ShowTrack(*pFocus);
    }
@@ -753,13 +747,10 @@ void TrackPanel::OnMouseEvent(wxMouseEvent & event)
       this->CallAfter( [this, event]{
          const auto foundCell = FindCell(event.m_x, event.m_y);
          const auto t = FindTrack( foundCell.pCell.get() );
-         if ( t ) {
+         if (t) {
             auto &focus = TrackFocus::Get(*GetProject());
-            // This uses TrackList::Find:
             focus.Set(t.get());
-            auto pLeader = focus.Get();
-            if (pLeader)
-               Viewport::Get(*GetProject()).ShowTrack(*pLeader);
+            Viewport::Get(*GetProject()).ShowTrack(*t);
          }
       } );
    }
@@ -779,9 +770,6 @@ void TrackPanel::RefreshTrack(Track *trk, bool refreshbacking)
    if (!trk)
       return;
 
-   // Always move to the first channel of the group, and use only
-   // the sum of channel heights, not the height of any channel alone!
-   trk = *GetTracks()->Find(trk);
    auto height = ChannelView::GetChannelGroupHeight(trk);
 
    // Set rectangle top according to the scrolling position, `vpos`
@@ -905,12 +893,8 @@ std::shared_ptr< CommonTrackPanelCell > TrackPanel::GetBackgroundCell()
 }
 
 namespace {
-/*!
- @pre `t.IsLeader()`
- */
 std::vector<int> FindAdjustedChannelHeights(Track &t)
 {
-   assert(t.IsLeader());
    auto channels = t.Channels();
    assert(!channels.empty());
 
@@ -964,20 +948,14 @@ void TrackPanel::UpdateVRulers()
 
 void TrackPanel::UpdateVRuler(Track *t)
 {
-   if (t) {
-      // Substitute the leader
-      t = *GetTracks()->Find(t);
-      // This function iterates all channels
+   if (t)
       UpdateTrackVRuler(*t);
-   }
 
    UpdateVRulerSize();
 }
 
 void TrackPanel::UpdateTrackVRuler(Track &t)
 {
-   assert(t.IsLeader());
-
    auto heights = FindAdjustedChannelHeights(t);
 
    wxRect rect(mViewInfo->GetVRulerOffset(),
@@ -1100,8 +1078,6 @@ void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
    auto &track = pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
    auto name = track.GetName();
    if (name.IsEmpty())
-      return;
-   if (!track.IsLeader())
       return;
    auto &dc = context.dc;
    wxBrush Brush;
@@ -1381,9 +1357,6 @@ struct HorizontalGroup final : TrackPanelGroup {
 // alternating with n - 1 resizers;
 // each channel-ruler pair might be divided into multiple views
 struct ChannelStack final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    ChannelStack(const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
       : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
    Subdivision Children(const wxRect &rect_) override
@@ -1438,7 +1411,6 @@ struct ChannelStack final : TrackPanelGroup {
          const auto channels = mpTrack->Channels();
          const auto pLast = *channels.rbegin();
          wxCoord yy = rect.GetTop();
-         assert(mpTrack->IsLeader()); // by construction
          auto heights = FindAdjustedChannelHeights(*mpTrack);
          auto pHeight = heights.begin();
          for (auto pChannel : channels) {
@@ -1464,9 +1436,6 @@ struct ChannelStack final : TrackPanelGroup {
 // A track control panel, left of n vertical rulers and n channels
 // alternating with n - 1 resizers
 struct LabeledChannelGroup final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    LabeledChannelGroup(
       const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
@@ -1565,9 +1534,6 @@ struct LabeledChannelGroup final : TrackPanelGroup {
 // Stacks a label and a single or multi-channel track on a resizer below,
 // which is associated with the last channel
 struct ResizingChannelGroup final : TrackPanelGroup {
-   /*!
-    @pre `pTrack->IsLeader()`
-    */
    ResizingChannelGroup(
       const std::shared_ptr<Track> &pTrack, wxCoord leftOffset)
          : mpTrack{ pTrack }, mLeftOffset{ leftOffset } {}
@@ -1598,15 +1564,15 @@ struct Subgroup final : TrackPanelGroup {
          refinement.emplace_back( yy, EmptyCell::Instance() ),
          yy += kTopMargin;
 
-      for (const auto leader : tracks) {
+      for (const auto pTrack : tracks) {
          wxCoord height = 0;
-         for (auto pChannel : leader->Channels()) {
+         for (auto pChannel : pTrack->Channels()) {
             auto &view = ChannelView::Get(*pChannel);
             height += view.GetHeight();
          }
          refinement.emplace_back( yy,
             std::make_shared<ResizingChannelGroup>(
-               leader->SharedPointer(), viewInfo.GetLeftOffset())
+               pTrack->SharedPointer(), viewInfo.GetLeftOffset())
          );
          yy += height;
       }
@@ -1646,14 +1612,9 @@ std::shared_ptr<TrackPanelNode> TrackPanel::Root()
 // The given track is assumed to be the first channel
 wxRect TrackPanel::FindTrackRect( const Track * target )
 {
-   auto leader = *GetTracks()->Find( target );
-   if (!leader) {
-      return {};
-   }
-
    return CellularPanel::FindRect( [&] ( TrackPanelNode &node ) {
       if (auto pGroup = dynamic_cast<const LabeledChannelGroup*>( &node ))
-         return pGroup->mpTrack.get() == leader;
+         return pGroup->mpTrack.get() == target;
       return false;
    } );
 }
@@ -1700,7 +1661,6 @@ std::vector<wxRect> TrackPanel::FindRulerRects(const Channel &target)
 
 std::shared_ptr<TrackPanelCell> TrackPanel::GetFocusedCell()
 {
-   // Note that focus track is always a leader
    auto pTrack = TrackFocus::Get(*GetProject()).Get();
    return pTrack
       ? ChannelView::Get(*pTrack->GetChannel(0)).shared_from_this()

@@ -121,8 +121,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             const auto start = orig.TimeToLongSamples(mT0);
             const auto end = orig.TimeToLongSamples(mT1);
 
-            const auto tempList = orig.WideEmptyCopy();
-            auto &out = **tempList->Any<WaveTrack>().begin();
+            const auto tempTrack = orig.WideEmptyCopy();
+            auto &out = *tempTrack;
 
             const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
             initer(pSoundTouch.get());
@@ -153,8 +153,6 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
          mCurTrackNum++;
       }; },
       [&](Track &t) {
-         // Outer loop is over leaders, so fall-through must check for
-         // multiple channels
          if (mustSync && SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, warper.Warp(mT1));
       }
@@ -373,8 +371,6 @@ bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
 void EffectSoundTouch::Finalize(
    WaveTrack &orig, WaveTrack &out, const TimeWarper &warper)
 {
-   assert(orig.IsLeader());
-   assert(out.IsLeader());
    assert(out.NChannels() == orig.NChannels());
    if (mPreserveLength) {
       auto newLen = out.GetVisibleSampleCount();

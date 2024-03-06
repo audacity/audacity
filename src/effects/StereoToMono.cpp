@@ -146,7 +146,6 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    // Always make mono output; don't use WideEmptyCopy
    auto outTrack = track.EmptyCopy(1);
    auto tempList = TrackList::Temporary(nullptr, outTrack);
-   assert(outTrack->IsLeader());
    outTrack->ConvertToSampleFormat(floatSample);
 
    double denominator = track.GetChannelGain(0) + track.GetChannelGain(1);

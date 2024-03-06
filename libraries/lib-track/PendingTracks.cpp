@@ -61,10 +61,9 @@ PendingTracks::DoSubstitutePendingChangedChannel(
 {
    // Linear search.  Tracks in a project are usually very few.
    auto pTrack = &track;
-   // track might not be a leader
    if (!mPendingUpdates->empty()) {
       const auto end = mPendingUpdates->end();
-      // Find the leader of the group of shadow tracks containing the id
+      // Find the shadow track with the id
       const auto pred = [id = track.GetId()](const auto &pTrack){
          return pTrack->GetId() == id; };
       if (const auto it = std::find_if(mPendingUpdates->begin(), end, pred)
@@ -118,17 +117,16 @@ PendingTracks::DoSubstituteOriginalChannel(
    const Track &track, size_t channelIndex) const
 {
    auto pTrack = &track;
-   // track might not be a leader
    if (!mPendingUpdates->empty()) {
       const auto end = mPendingUpdates->end();
-      // Find the leader of the group of shadow tracks containing the id
+      // Find the shadow track with the id
       const auto pred = [id = track.GetId()](const auto &pTrack){
          return pTrack->GetId() == id; };
       if (const auto it =
           std::find_if(mPendingUpdates->begin(), end, pred); it != end)
       {
          const auto end2 = mTracks.end();
-         // Find the leader of the group of original tracks containing the id
+         // Find the original track with the id
          if (const auto it2 = std::find_if(mTracks.begin(), end2, pred)
             ; it2 != end2)
          {
@@ -169,14 +167,12 @@ const Track &PendingTracks::SubstituteOriginalTrack(const Track &track) const
 
 Track* PendingTracks::RegisterPendingChangedTrack(Updater updater, Track *src)
 {
-   assert(src->IsLeader());
-   auto tracks =
+   auto track =
       src->Duplicate(Track::DuplicateOptions{}.ShallowCopyAttachments());
 
    mUpdaters.push_back(move(updater));
-   const auto result = *tracks->begin();
-   mPendingUpdates->Append(std::move(*tracks));
-   return result;
+   mPendingUpdates->Add(track);
+   return track.get();
 }
 
 void PendingTracks::UpdatePendingTracks()
@@ -198,7 +194,8 @@ void PendingTracks::UpdatePendingTracks()
 }
 
 /*! @excsafety{No-fail} */
-void PendingTracks::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
+void PendingTracks::ClearPendingTracks(
+   std::vector<std::shared_ptr<Track>> *pAdded)
 {
    mUpdaters.clear();
    mPendingUpdates->Clear();
@@ -229,7 +226,7 @@ void PendingTracks::ClearPendingTracks(std::vector<TrackListHolder> *pAdded)
 /*! @excsafety{Strong} */
 bool PendingTracks::ApplyPendingTracks()
 {
-   std::vector<TrackListHolder> additions;
+   std::vector<std::shared_ptr<Track>> additions;
    auto updated = TrackList::Temporary(mTracks.GetOwner());
    {
       // Always clear, even if one of the update functions throws
@@ -280,7 +277,7 @@ bool PendingTracks::ApplyPendingTracks()
       ++next;
       if (pendingTrack)
          // This emits appropriate track list events
-         mTracks.Insert(*iter, std::move(*pendingTrack), true);
+         mTracks.Insert(*iter, pendingTrack, true);
       else
          assert(iter != mTracks.end()); // Deduce that from ClearPendingTrack
       iter = next;

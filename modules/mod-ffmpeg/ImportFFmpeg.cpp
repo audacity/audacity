@@ -273,7 +273,7 @@ private:
    bool                  mCancelled = false;     //!< True if importing was canceled by user
    bool                  mStopped = false;       //!< True if importing was stopped by user
    const FilePath        mName;
-   std::vector<TrackListHolder> mStreams;
+   std::vector<WaveTrack::Holder> mStreams;
 };
 
 
@@ -492,11 +492,10 @@ void FFmpegImportFileHandle::Import(
       }
 
       if (stream_delay > 0) {
-         for (auto track : *stream)
-            track->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
+         stream->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
       }
 
-      mStreams.push_back(std::move(stream));
+      mStreams.push_back(stream);
    }
 
    // This is the heart of the importing process

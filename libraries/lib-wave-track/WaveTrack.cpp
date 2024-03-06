@@ -966,8 +966,7 @@ std::unique_ptr<ClientData::Cloneable<>> WaveTrackData::Clone() const {
 }
 
 WaveTrackData &WaveTrackData::Get(WaveTrack &track) {
-   return track.GetGroupData().Attachments
-      ::Get<WaveTrackData>(waveTrackDataFactory);
+   return track.Attachments::Get<WaveTrackData>(waveTrackDataFactory);
 }
 
 const WaveTrackData &WaveTrackData::Get(const WaveTrack &track)
@@ -1133,9 +1132,17 @@ std::shared_ptr<WaveTrack> WaveTrackFactory::Create(sampleFormat format, double 
    return DoCreate(1, format, rate);
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels)
 {
+   assert(nChannels > 0);
+   assert(nChannels <= 2);
    return Create(nChannels, QualitySettings::SampleFormatChoice(), mRate.GetRate());
+}
+
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels)
+{
+   return CreateMany(nChannels,
+      QualitySettings::SampleFormatChoice(), mRate.GetRate());
 }
 
 void WaveTrack::MergeChannelAttachments(WaveTrack &&other)
@@ -1171,7 +1178,15 @@ void WaveTrack::EraseChannelAttachments(size_t ii)
    });
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, double rate)
+{
+   assert(nChannels > 0);
+   assert(nChannels <= 2);
+   return CreateMany(nChannels, format, rate)->DetachFirst()
+      ->SharedPointer<WaveTrack>();
+}
+
+TrackListHolder WaveTrackFactory::CreateMany(size_t nChannels, sampleFormat format, double rate)
 {
    // There are some cases where more than two channels are requested
    if (nChannels == 2)
@@ -1182,11 +1197,9 @@ TrackListHolder WaveTrackFactory::Create(size_t nChannels, sampleFormat format, 
    return result;
 }
 
-TrackListHolder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
+WaveTrack::Holder WaveTrackFactory::Create(size_t nChannels, const WaveTrack& proto)
 {
-   auto result = TrackList::Temporary(nullptr,
-      proto.EmptyCopy(nChannels, mpFactory));
-   return result;
+   return proto.EmptyCopy(nChannels, mpFactory);
 }
 
 WaveTrack *WaveTrack::New( AudacityProject &project )
@@ -1274,20 +1287,17 @@ WaveTrack::~WaveTrack()
 void WaveTrack::MoveTo(double origin)
 {
    double delta = origin - GetStartTime();
-   assert(IsLeader());
    for (const auto &pInterval : Intervals())
       // assume No-fail-guarantee
       pInterval->ShiftBy(delta);
    WaveTrackData::Get(*this).SetOrigin(origin);
 }
 
-TrackListHolder
-WaveTrack::DuplicateWithOtherTempo(double newTempo, WaveTrack*& leader) const
+auto WaveTrack::DuplicateWithOtherTempo(double newTempo) const -> Holder
 {
-   const auto srcCopyList = Duplicate();
-   leader = *srcCopyList->Any<WaveTrack>().begin();
-   ::DoProjectTempoChange(*leader, newTempo);
-   return srcCopyList;
+   const auto srcCopy = Duplicate();
+   ::DoProjectTempoChange(*srcCopy, newTempo);
+   return std::static_pointer_cast<WaveTrack>(srcCopy);
 }
 
 bool WaveTrack::LinkConsistencyFix(const bool doFix)
@@ -1326,7 +1336,6 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
          if (!AreAligned(SortedClipArray(), next->SortedClipArray()) ||
              !RateConsistencyCheck() || !FormatConsistencyCheck())
          {
-            next->DestroyGroupData();
             SetLinkType(linkType = LinkType::None);
          }
          else
@@ -1343,7 +1352,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
    }
    if (doFix) {
       // More non-error upgrading
-      // Set the common channel group rate from the leader's rate
+      // Set the common channel group rate from the unzipped leader's rate
       if (mLegacyRate > 0)
       {
          WaveTrack *next{};
@@ -1389,12 +1398,10 @@ auto WaveTrack::ClassTypeInfo() -> const TypeInfo &
 Track::Holder WaveTrack::PasteInto(
    AudacityProject &project, TrackList &list) const
 {
-   assert(IsLeader());
    auto &trackFactory = WaveTrackFactory::Get(project);
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto tmpList = WideEmptyCopy(pSampleBlockFactory);
-   auto pFirstTrack = *tmpList->Any<WaveTrack>().begin();
-   list.Append(std::move(*tmpList));
+   auto pFirstTrack = WideEmptyCopy(pSampleBlockFactory);
+   list.Add(pFirstTrack->SharedPointer());
    pFirstTrack->Paste(0.0, *this);
    return pFirstTrack->SharedPointer();
 }
@@ -1406,7 +1413,6 @@ size_t WaveTrack::NIntervals() const
 
 auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
 {
-   assert(IsLeader());
    if (iInterval < NIntervals()) {
       WaveClipHolder pClip = NarrowClips()[iInterval],
          pClip1;
@@ -1494,9 +1500,8 @@ const WaveClipHolders &WaveTrack::RightClips() const
    return mRightChannel->Clips();
 }
 
-TrackListHolder WaveTrack::Clone(bool backup) const
+Track::Holder WaveTrack::Clone(bool backup) const
 {
-   Holder newTracks[2];
    auto newTrack = EmptyCopy(NChannels());
    newTrack->mChannel.CopyClips(newTrack->mpFactory, this->mChannel, backup);
    if (mRightChannel) {
@@ -1504,9 +1509,7 @@ TrackListHolder WaveTrack::Clone(bool backup) const
       newTrack->mRightChannel
          ->CopyClips(newTrack->mpFactory, *this->mRightChannel, backup);
    }
-   auto result = TrackList::Temporary(nullptr);
-   result->Add(newTrack);
-   return result;
+   return newTrack;
 }
 
 wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
@@ -1545,7 +1548,6 @@ double WaveTrack::GetRate() const
 
 void WaveTrack::SetRate(double newRate)
 {
-   assert(IsLeader());
    assert(newRate > 0);
    newRate = std::max( 1.0, newRate );
    DoSetRate(newRate);
@@ -1645,7 +1647,6 @@ sampleFormat WaveTrack::GetSampleFormat() const
 void WaveTrack::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
-   assert(IsLeader());
    for (const auto &pClip : Intervals())
       pClip->ConvertToSampleFormat(format, progressReport);
    WaveTrackData::Get(*this).SetSampleFormat(format);
@@ -1674,9 +1675,8 @@ bool WaveTrack::IsEmpty(double t0, double t1) const
    return true;
 }
 
-TrackListHolder WaveTrack::Cut(double t0, double t1)
+Track::Holder WaveTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -1686,16 +1686,15 @@ TrackListHolder WaveTrack::Cut(double t0, double t1)
 }
 
 /*! @excsafety{Strong} */
-TrackListHolder WaveTrack::SplitCut(double t0, double t1)
+auto WaveTrack::SplitCut(double t0, double t1) -> Holder
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
    // SplitCut is the same as 'Copy', then 'SplitDelete'
    auto result = Copy(t0, t1);
    SplitDelete(t0, t1);
-   return result;
+   return std::static_pointer_cast<WaveTrack>(result);
 }
 
 //Trim trims within a clip, rather than trimming everything.
@@ -1703,7 +1702,6 @@ TrackListHolder WaveTrack::SplitCut(double t0, double t1)
 /*! @excsafety{Weak} */
 void WaveTrack::Trim(double t0, double t1)
 {
-   assert(IsLeader());
    bool inside0 = false;
    bool inside1 = false;
 
@@ -1756,13 +1754,10 @@ WaveTrack::Holder WaveTrack::EmptyCopy(size_t nChannels,
    return result;
 }
 
-TrackListHolder WaveTrack::WideEmptyCopy(
-   const SampleBlockFactoryPtr &pFactory) const
+auto WaveTrack::WideEmptyCopy(
+   const SampleBlockFactoryPtr &pFactory) const -> Holder
 {
-   assert(IsLeader());
-   auto result = TrackList::Temporary(nullptr);
-   const auto pNewTrack = result->Add(EmptyCopy(NChannels(), pFactory));
-   return result;
+   return EmptyCopy(NChannels(), pFactory);
 }
 
 void WaveTrack::MakeMono()
@@ -1771,21 +1766,22 @@ void WaveTrack::MakeMono()
    EraseChannelAttachments(1);
 }
 
-TrackListHolder WaveTrack::MonoToStereo()
+auto WaveTrack::MonoToStereo() -> Holder
 {
    assert(!GetOwner());
    mRightChannel.reset();
    EraseChannelAttachments(1);
 
    // Make temporary new mono track
-   auto result = Duplicate();
+   auto newTrack = Duplicate();
 
-   // Put self back onto the list
-   result->AddToHead(this->SharedPointer());
+   // Make a list
+   auto result = TrackList::Temporary(nullptr, shared_from_this());
+   result->Add(newTrack);
    // Destroy the temporary track, widening this track to stereo
    ZipClips();
 
-   return result;
+   return std::static_pointer_cast<WaveTrack>(result->DetachFirst());
 }
 
 auto WaveTrack::SplitChannels() -> std::vector<Holder>
@@ -1798,9 +1794,8 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
       auto pNewTrack = result.emplace_back(EmptyCopy(1));
       pNewTrack->mChannel = std::move(*this->mRightChannel);
       this->mRightChannel.reset();
-      auto tempList = TrackList::Temporary(nullptr, pNewTrack);
       auto iter = pOwner->Find(this);
-      pOwner->Insert(*++iter, std::move(*tempList));
+      pOwner->Insert(*++iter, pNewTrack);
       // Fix up the channel attachments to avoid waste of space
       result[0]->EraseChannelAttachments(1);
       result[1]->EraseChannelAttachments(0);
@@ -1821,7 +1816,7 @@ void WaveTrack::SwapChannels()
    });
 }
 
-TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
+Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -1835,7 +1830,7 @@ TrackListHolder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       WaveChannel::CopyOne(*newTrack->mRightChannel, *this->mRightChannel,
          t0, t1, endTime, forClipboard);
    }
-   return TrackList::Temporary(nullptr, newTrack);
+   return newTrack;
 }
 
 void WaveChannel::CopyOne(WaveChannel &newChannel,
@@ -1899,14 +1894,12 @@ void WaveChannel::CopyOne(WaveChannel &newChannel,
 /*! @excsafety{Strong} */
 void WaveTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
    HandleClear(t0, t1, false, false);
 }
 
 /*! @excsafety{Strong} */
 void WaveTrack::ClearAndAddCutLine(double t0, double t1)
 {
-   assert(IsLeader());
    HandleClear(t0, t1, true, false);
 }
 
@@ -1971,10 +1964,9 @@ void WaveTrack::ClearAndPaste(
    const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
-   WaveTrack* copy;
-   const auto copyHolder = src.DuplicateWithOtherTempo(*tempo, copy);
+   const auto copyHolder = src.DuplicateWithOtherTempo(*tempo);
    ClearAndPasteAtSameTempo(
-      t0, t1, *copy, preserve, merge, effectWarper, clearByTrimming);
+      t0, t1, *copyHolder, preserve, merge, effectWarper, clearByTrimming);
 }
 
 void WaveTrack::ClearAndPasteAtSameTempo(
@@ -1982,8 +1974,6 @@ void WaveTrack::ClearAndPasteAtSameTempo(
    const TimeWarper* effectWarper, bool clearByTrimming)
 {
    const auto srcNChannels = src.NChannels();
-   assert(IsLeader());
-   assert(src.IsLeader());
    assert(srcNChannels == NChannels());
    assert(
       GetProjectTempo(*this).has_value() &&
@@ -2269,7 +2259,6 @@ void WaveTrack::ClearAndPasteAtSameTempo(
 /*! @excsafety{Strong} */
 void WaveTrack::SplitDelete(double t0, double t1)
 {
-   assert(IsLeader());
    constexpr bool addCutLines = false;
    constexpr bool split = true;
    HandleClear(t0, t1, addCutLines, split);
@@ -2330,12 +2319,6 @@ auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance)
    if (pList2 && pList2->size() > distance)
       it2 = pList2->begin() + distance;
    return { it, it2 };
-}
-
-auto WaveTrack::FindWideClip(const WaveClip &clip, int *pDistance) const
-   -> ConstIterPair
-{
-   return const_cast<WaveTrack&>(*this).FindWideClip(clip, pDistance);
 }
 
 void WaveTrack::RemoveWideClip(IterPair pair)
@@ -2469,7 +2452,6 @@ void WaveTrack::HandleClear(double t0, double t1, bool addCutLines,
 
 void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
 {
-   assert(IsLeader());
    const auto endTime = GetEndTime();
    if (newT1 > oldT1 &&
       // JKC: This is a rare case where using >= rather than > on a float matters.
@@ -2496,11 +2478,10 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          const auto duration = newT1 - oldT1;
-         auto tmpList = WideEmptyCopy(mpFactory);
-         auto &tmp = **tmpList->Any<WaveTrack>().begin();
-         tmp.InsertSilence(0.0, duration);
-         tmp.Flush();
-         Paste(oldT1, tmp);
+         auto tmp = WideEmptyCopy(mpFactory);
+         tmp->InsertSilence(0.0, duration);
+         tmp->Flush();
+         Paste(oldT1, *tmp);
       }
    }
    else if (newT1 < oldT1)
@@ -2514,15 +2495,13 @@ void WaveTrack::PasteWaveTrack(double t0, const WaveTrack& other, bool merge)
    const auto& tempo = GetProjectTempo(*this);
    if (!tempo.has_value())
       THROW_INCONSISTENCY_EXCEPTION;
-   WaveTrack* copy;
-   const auto copyHolder = other.DuplicateWithOtherTempo(*tempo, copy);
-   PasteWaveTrackAtSameTempo(t0, *copy, merge);
+   const auto copyHolder = other.DuplicateWithOtherTempo(*tempo);
+   PasteWaveTrackAtSameTempo(t0, *copyHolder, merge);
 }
 
 void WaveTrack::PasteWaveTrackAtSameTempo(
    double t0, const WaveTrack& other, bool merge)
 {
-   assert(IsLeader());
    const auto otherNChannels = other.NChannels();
    assert(otherNChannels == NChannels());
    assert(
@@ -2706,8 +2685,6 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 
 bool WaveTrack::RateConsistencyCheck() const
 {
-   assert(IsLeader());
-
    // The channels and all clips in them should have the same sample rate.
    std::optional<double> oRate;
    auto channels = TrackList::Channels(this);
@@ -2727,8 +2704,6 @@ bool WaveTrack::RateConsistencyCheck() const
 
 bool WaveTrack::FormatConsistencyCheck() const
 {
-   assert(IsLeader());
-
    const auto channels = TrackList::Channels(this);
    return std::all_of(channels.begin(), channels.end(),
       [&](const WaveTrack *pTrack){
@@ -2762,7 +2737,6 @@ void WaveChannel::RemoveClip(size_t iClip)
 void WaveTrack::ApplyPitchAndSpeed(
    std::optional<TimeInterval> interval, ProgressReporter reportProgress)
 {
-   assert(IsLeader());
    // Assert that the interval is reasonable, but this function will be no-op
    // anyway if not
    assert(!interval.has_value() ||
@@ -2803,7 +2777,6 @@ void WaveTrack::ApplyPitchAndSpeed(
 /*! @excsafety{Weak} */
 void WaveTrack::Paste(double t0, const Track &src)
 {
-   assert(IsLeader()); // pre of Track::Paste
    if (const auto other = dynamic_cast<const WaveTrack*>(&src))
    {
       // Currently `Paste` isn't used by code that wants the newer "don't merge
@@ -2818,7 +2791,6 @@ void WaveTrack::Paste(double t0, const Track &src)
 
 void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -2842,7 +2814,6 @@ void WaveTrack::Silence(double t0, double t1, ProgressReporter reportProgress)
 /*! @excsafety{Strong} */
 void WaveTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    // Nothing to do, if length is zero.
    // Fixes Bug 1626
    if (len == 0)
@@ -2882,7 +2853,6 @@ void WaveTrack::InsertSilence(double t, double len)
 /*! @excsafety{Weak} */
 void WaveTrack::Disjoin(double t0, double t1)
 {
-   assert(IsLeader());
    auto minSamples = TimeToLongSamples(WAVETRACK_MERGE_POINT_TOLERANCE);
    const size_t maxAtOnce = 1048576;
    std::vector<float> buffer;
@@ -2971,7 +2941,6 @@ void WaveTrack::Disjoin(double t0, double t1)
 void WaveTrack::Join(
    double t0, double t1, const ProgressReporter& reportProgress)
 {
-   assert(IsLeader());
    // Merge all WaveClips overlapping selection into one
    const auto &intervals = Intervals();
 
@@ -3073,7 +3042,6 @@ bool WaveTrack::Append(size_t iChannel,
    constSamplePtr buffer, sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
-   assert(IsLeader());
    assert(iChannel < NChannels());
    // TODO wide wave tracks -- there will be only one clip, and its `Append`
    // (or an overload) must take iChannel
@@ -3144,7 +3112,6 @@ size_t WaveTrack::GetIdealBlockSize()
 clip gets appended; no previously saved contents are lost. */
 void WaveTrack::Flush()
 {
-   assert(IsLeader());
    if (NIntervals() == 0)
       return;
    // After appending, presumably.  Do this to the clip that gets appended.
@@ -3174,11 +3141,6 @@ void WaveTrack::CopyClipEnvelopes()
       }
       (*it2)->SetEnvelope(std::make_unique<Envelope>(*(*it)->GetEnvelope()));
    }
-}
-
-bool WaveTrack::IsLeader() const
-{
-   return Track::IsLeader();
 }
 
 const ChannelGroup *WaveTrack::FindChannelGroup() const
@@ -3323,7 +3285,6 @@ XMLTagHandler *WaveTrack::HandleXMLChild(const std::string_view& tag)
 void WaveTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    const auto channels = Channels();
    size_t iChannel = 0,
       nChannels = channels.size();
@@ -3392,7 +3353,6 @@ void WaveTrack::WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
 
 std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
 {
-   assert(IsLeader());
    const auto width = NChannels();
    for (const auto &clip : Intervals())
       // TODO wide wave clip -- inner loop over GetSequence() argument
@@ -3438,7 +3398,6 @@ auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
 
 ClipConstHolders WaveTrack::GetClipInterfaces() const
 {
-   assert(IsLeader());
    auto clips = Intervals();
    return { clips.begin(), clips.end() };
 }
@@ -3589,7 +3548,6 @@ bool WaveTrack::GetOne(const WaveClipHolders &clips,
 ChannelGroupSampleView
 WaveTrack::GetSampleView(double t0, double t1, bool mayThrow) const
 {
-   assert(IsLeader());
    ChannelGroupSampleView result;
    for (const auto& channel : Channels()) {
       result.push_back(channel->GetSampleView(t0, t1, mayThrow));
@@ -3707,10 +3665,6 @@ bool WaveChannel::HasTrivialEnvelope() const
 bool WaveTrack::HasTrivialEnvelope() const
 {
    auto pTrack = this;
-   if (pTrack->GetOwner())
-      // Substitute the leader track
-      pTrack =
-         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
    if (!pTrack)
       return false;
    auto clips = pTrack->Intervals();
@@ -3728,11 +3682,6 @@ void WaveTrack::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
    auto pTrack = this;
-   if (pTrack->GetOwner())
-      // Substitute the leader track
-      pTrack =
-         dynamic_cast<const WaveTrack*>(*pTrack->GetOwner()->Find(pTrack));
-
    if (!pTrack)
       return;
 
@@ -4061,7 +4010,6 @@ bool WaveTrack::CanInsertClip(
 /*! @excsafety{Weak} */
 void WaveTrack::Split(double t0, double t1)
 {
-   assert(IsLeader());
    SplitAt(t0);
    if (t0 != t1)
       SplitAt(t1);
@@ -4070,7 +4018,6 @@ void WaveTrack::Split(double t0, double t1)
 /*! @excsafety{Weak} */
 auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 {
-   assert(IsLeader());
    for (const auto &&c : Intervals()) {
       if (c->SplitsPlayRegion(t)) {
          t = SnapToSample(t);
@@ -4146,7 +4093,6 @@ void WaveTrack::InsertInterval(const IntervalHolder& interval,
 
 void WaveTrack::RemoveInterval(const IntervalHolder& interval)
 {
-   assert(IsLeader());
    const auto clips = Intervals();
    const auto begin = clips.begin();
    const auto pred = [pClip = interval->GetClip(0)](const auto &pInterval){
@@ -4164,7 +4110,6 @@ void WaveTrack::RemoveInterval(const IntervalHolder& interval)
 void WaveTrack::ReplaceInterval(
    const IntervalHolder& oldOne, const IntervalHolder& newOne)
 {
-   assert(IsLeader());
    assert(oldOne->NChannels() == newOne->NChannels());
    RemoveInterval(oldOne);
    InsertInterval(newOne, false);
@@ -4269,12 +4214,8 @@ void WaveTrack::ZipClips(bool mustAlign)
    assert(NChannels() == 1); // pre
 
    // If deserializing, first un-link the track, so iterator finds the partner.
-   // Unusual remaining use of TrackList::Channels
-   auto range = TrackList::Channels(this);
-   if (NChannels() == 1 && range.size() == 2) {
-      (*range.rbegin())->DestroyGroupData();
-      this->SetLinkType(LinkType::None);
-   }
+   SetLinkType(LinkType::None);
+
    auto iter = pOwner->Find(this);
    assert(this == *iter);
    ++iter;

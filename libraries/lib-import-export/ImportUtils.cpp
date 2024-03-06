@@ -31,7 +31,7 @@ sampleFormat ImportUtils::ChooseFormat(sampleFormat effectiveFormat)
    return format;
 }
 
-TrackListHolder
+WaveTrack::Holder
 ImportUtils::NewWaveTrack(WaveTrackFactory &trackFactory,
                           unsigned nChannels,
                           sampleFormat effectiveFormat,
@@ -46,21 +46,28 @@ void ImportUtils::ShowMessageBox(const TranslatableString &message, const Transl
                            BasicUI::MessageBoxOptions().Caption(caption));
 }
 
-void ImportUtils::FinalizeImport(TrackHolders& outTracks, const std::vector<TrackListHolder>& importedStreams)
+void ImportUtils::FinalizeImport(TrackHolders& outTracks, const std::vector<WaveTrack::Holder>& importedStreams)
 {
    for(auto& stream : importedStreams)
-      FinalizeImport(outTracks, stream);
+      FinalizeImport(outTracks, *stream);
 }
 
-void ImportUtils::FinalizeImport(TrackHolders& outTracks, TrackListHolder trackList)
+void ImportUtils::FinalizeImport(TrackHolders& outTracks, TrackList &&trackList)
 {
-   if(trackList->empty())
+   if(trackList.empty())
       return;
 
-   for(const auto track : trackList->Any<WaveTrack>())
+   for(const auto track : trackList.Any<WaveTrack>())
       track->Flush();
    
-   outTracks.push_back(std::move(trackList));
+   while (!trackList.empty())
+      outTracks.push_back(trackList.DetachFirst());
+}
+
+void ImportUtils::FinalizeImport(TrackHolders& outTracks, WaveTrack &track)
+{
+   track.Flush();
+   outTracks.push_back(track.shared_from_this());
 }
 
 void ImportUtils::ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op)
@@ -71,5 +78,13 @@ void ImportUtils::ForEachChannel(TrackList& trackList, const std::function<void(
       {
          op(*channel);
       }
+   }
+}
+
+void ImportUtils::ForEachChannel(WaveTrack &track, const std::function<void(WaveChannel&)>& op)
+{
+   for(auto channel : track.Channels())
+   {
+      op(*channel);
    }
 }

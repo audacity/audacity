@@ -824,17 +824,13 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
                assert(false);
                continue;
             }
-            if (!wt->IsLeader())
-               continue;
             auto endTime = wt->GetEndTime();
 
             // If the track was chosen for recording and playback both,
             // remember the original in preroll tracks, before making the
             // pending replacement.
             const auto shared = wt->SharedPointer<WaveTrack>();
-            // playbackSequences contains only leaders; prerollSequences should
-            // be a subset of it.  Non-leader might not be found, but that is
-            // all right.
+            // prerollSequences should be a subset of playbackSequences.
             const auto &range = transportSequences.playbackSequences;
             bool prerollTrack = any_of(range.begin(), range.end(),
                [&](const auto &pSequence){
@@ -846,8 +842,6 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             // wave tracks; in case the track recorded to changes scale
             // type (for instance), during the recording.
             auto updater = [](Track &d, const Track &s){
-               assert(d.IsLeader());
-               assert(s.IsLeader());
                assert(d.NChannels() == s.NChannels());
                auto &dst = static_cast<WaveTrack&>(d);
                auto &src = static_cast<const WaveTrack&>(s);
@@ -913,7 +907,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 
          wxString baseTrackName = recordingNameCustom? defaultRecordingTrackName : defaultTrackName;
 
-         auto newTracks = WaveTrackFactory::Get(*p).Create(recordingChannels);
+         auto newTracks =
+            WaveTrackFactory::Get(*p).CreateMany(recordingChannels);
          const auto first = *newTracks->begin();
          int trackCounter = 0;
          const auto minimizeChannelView = recordingChannels > 2

@@ -103,8 +103,7 @@ UIHandle::Result HighlitClipButtonHandle::UpdateTrackSelection(
    {
       auto& selectionState = SelectionState::Get(*pProject);
       selectionState.SelectNone(trackList);
-      if (auto pTrack = *trackList.Find(track.get()))
-         selectionState.SelectTrack(*pTrack, true, true);
+      selectionState.SelectTrack(*track, true, true);
 
       auto& viewInfo = ViewInfo::Get(*pProject);
       viewInfo.selectedRegion.setTimes(

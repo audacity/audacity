@@ -373,8 +373,6 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
    DoProjectTempoChange(*t, tempo);
 
-   assert(t->IsLeader()); // because it's new and not grouped
-
    t->SetRate(1);
 
    srand(randSeed);
@@ -455,7 +453,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
-      TrackListHolder tmp;
+      Track::Holder tmp;
       try {
          tmp =
             t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));

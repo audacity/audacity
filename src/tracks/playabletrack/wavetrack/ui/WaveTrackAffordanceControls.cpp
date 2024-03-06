@@ -181,8 +181,6 @@ std::vector<UIHandlePtr> WaveTrackAffordanceControls::HitTest(const TrackPanelMo
     auto track = std::static_pointer_cast<WaveTrack>(FindTrack());
     if (!track)
        return {};
-    // Assume only leader channels have affordance areas
-    assert(track->IsLeader());
 
     {
         auto handle = WaveClipAdjustBorderHandle::HitAnywhere(
@@ -281,7 +279,7 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
       const auto &pendingTracks = *artist->pPendingTracks;
       
       // Color the background of the affordance rectangle (only one per track)
-      // as for the leader channel
+      // as for the topmost channel
       TrackArt::DrawBackgroundWithSelection(context,
          rect, **track->Channels().begin(),
          artist->blankSelectedBrush, artist->blankBrush);

@@ -142,7 +142,6 @@ bool TimeTrack::SupportsBasicEditing() const
 Track::Holder TimeTrack::PasteInto(AudacityProject &project, TrackList &list)
    const
 {
-   assert(IsLeader());
    // Maintain uniqueness of the time track!
    std::shared_ptr<TimeTrack> pNewTrack;
    if (auto pTrack = *TrackList::Get(project).Any<TimeTrack>().begin())
@@ -164,20 +163,19 @@ Track::Holder TimeTrack::PasteInto(AudacityProject &project, TrackList &list)
    return pNewTrack;
 }
 
-TrackListHolder TimeTrack::Cut(double t0, double t1)
+Track::Holder TimeTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    auto result = Copy(t0, t1, false);
    Clear(t0, t1);
    return result;
 }
 
-TrackListHolder TimeTrack::Copy(double t0, double t1, bool) const
+Track::Holder TimeTrack::Copy(double t0, double t1, bool) const
 {
    auto track =
       std::make_shared<TimeTrack>(*this, ProtectedCreationArg{}, &t0, &t1);
    track->Init(*this);
-   return TrackList::Temporary(nullptr, track);
+   return track;
 }
 
 namespace {
@@ -192,7 +190,6 @@ double GetRate(const Track &track) {
 
 void TimeTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
    auto sampleTime = 1.0 / GetRate(*this);
    mEnvelope->CollapseRegion( t0, t1, sampleTime );
 }
@@ -213,21 +210,18 @@ void TimeTrack::Paste(double t, const Track &src)
 void TimeTrack::Silence(
    double WXUNUSED(t0), double WXUNUSED(t1), ProgressReporter)
 {
-   assert(IsLeader());
 }
 
 void TimeTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    mEnvelope->InsertSpace(t, len);
 }
 
-TrackListHolder TimeTrack::Clone(bool) const
+Track::Holder TimeTrack::Clone(bool) const
 {
-   assert(IsLeader());
    auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg{});
    result->Init(*this);
-   return TrackList::Temporary(nullptr, result);
+   return result;
 }
 
 bool TimeTrack::GetInterpolateLog() const
@@ -304,7 +298,6 @@ XMLTagHandler *TimeTrack::HandleXMLChild(const std::string_view& tag)
 void TimeTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    xmlFile.StartTag(wxT("timetrack"));
    this->Track::WriteCommonXMLAttributes( xmlFile );
 

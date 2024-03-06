@@ -53,8 +53,7 @@ public:
    void SetCallbacks(std::unique_ptr<TrackFocusCallbacks> pCallbacks);
 
    /*!
-    @return the currently focused track, which may be null, otherwise is
-    a leader track
+    @return the currently focused track, which may be null
    
     This function is not const, because it may have a side effect of setting
     a focus if none was already set
