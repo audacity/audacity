@@ -21,7 +21,7 @@
 #include "ui/dialogs/CloudProjectPropertiesDialog.h"
 #include "ui/dialogs/LinkFailedDialog.h"
 #include "ui/dialogs/MixdownPropertiesDialog.h"
-#include "ui/dialogs/SelectSaveLocationDialog.h"
+#include "ui/dialogs/CloudLocationDialog.h"
 #include "ui/dialogs/SyncInBackroundDialog.h"
 #include "ui/dialogs/SyncSucceededDialog.h"
 
@@ -134,13 +134,13 @@ class IOExtension final : public ProjectFileIOExtension
       // Check location first
       if (isTemporary && !pendingCloudSave)
       {
-         SelectSaveLocationDialog selectSaveLocationDialog { parent };
-         const auto saveAction = selectSaveLocationDialog.ShowDialog();
+         CloudLocationDialog cloudLocationDialog { parent, LocationDialogType::Save };
+         const auto saveAction = cloudLocationDialog.ShowDialog();
 
          // Not doing a cloud save
-         if (saveAction == SaveLocationDialogResult::Local)
+         if (saveAction == LocationDialogResult::Local)
             return OnSaveAction::Continue;
-         else if (saveAction == SaveLocationDialogResult::Cancel)
+         else if (saveAction == LocationDialogResult::Cancel)
             return OnSaveAction::Cancelled;
       }
 

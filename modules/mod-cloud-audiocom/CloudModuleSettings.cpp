@@ -13,12 +13,20 @@
 
 namespace audacity::cloud::audiocom::sync
 {
-BoolSetting ShowCloudSyncDialog {
-   "/cloud/audiocom/ShowCloudSyncDialog", true
+EnumSetting<CloudLocationMode> SaveLocationMode {
+   "/cloud/audiocom/SaveLocationMode",
+   EnumValueSymbols { L"ask", L"local", L"cloud" },
+   0,
+   { CloudLocationMode::Ask, CloudLocationMode::Local,
+     CloudLocationMode::Cloud }
 };
 
-BoolSetting SaveToCloudByDefault {
-   "/cloud/audiocom/SaveToCloudByDefault", false
+EnumSetting<CloudLocationMode> ExportLocationMode {
+   "/cloud/audiocom/ExportLocationMode",
+   EnumValueSymbols { L"ask", L"local", L"cloud" },
+   0,
+   { CloudLocationMode::Ask, CloudLocationMode::Local,
+     CloudLocationMode::Cloud }
 };
 
 BoolSetting MixdownDialogShown {

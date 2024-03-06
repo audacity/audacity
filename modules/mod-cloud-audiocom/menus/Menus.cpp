@@ -17,9 +17,13 @@
 #include "ProjectWindow.h"
 
 #include "ui/dialogs/ProjectsListDialog.h"
+#include "ui/dialogs/ShareAudioDialog.h"
+
+#include "CommonCommandFlags.h"
 
 namespace
 {
+using namespace audacity::cloud::audiocom;
 using namespace audacity::cloud::audiocom::sync;
 
 void OnSaveToCloud(const CommandContext& context)
@@ -40,6 +44,17 @@ void OnUpdateMixdown(const CommandContext& context)
    ProjectCloudExtension::Get(context.project).MarkNeedsMixdownSync();
    SaveToCloud(context.project, UploadMode::Normal);
 }
+
+void OnShareAudio(const CommandContext& context)
+{
+   ShareAudioDialog dialog {
+      context.project,
+      ProjectWindow::Find(&context.project),
+   };
+
+   dialog.ShowModal();
+}
+
 const ReservedCommandFlag& IsCloudProjectFlag()
 {
    static ReservedCommandFlag flag {
@@ -71,5 +86,10 @@ AttachedItem sOpenAttachment { Command(
                                   XXO("Open From Cloud..."), OnOpenFromCloud,
                                   AlwaysEnabledFlag),
                                wxT("File/Basic") };
+
+AttachedItem sShareAttachment { Command(
+                                   wxT("ShareAudio"), XXO("Share Audio..."),
+                                   OnShareAudio, WaveTracksExistFlag()),
+                                wxT("File/Import-Export") };
 
 } // namespace

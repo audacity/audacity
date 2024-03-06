@@ -14,7 +14,15 @@
 
 namespace audacity::cloud::audiocom::sync
 {
-extern BoolSetting ShowCloudSyncDialog;
-extern BoolSetting SaveToCloudByDefault;
+enum class CloudLocationMode
+{
+   Ask,
+   Local,
+   Cloud,
+};
+
+extern EnumSetting<CloudLocationMode> SaveLocationMode;
+extern EnumSetting<CloudLocationMode> ExportLocationMode;
+
 extern BoolSetting MixdownDialogShown;
 } // namespace audacity::cloud::audiocom::sync

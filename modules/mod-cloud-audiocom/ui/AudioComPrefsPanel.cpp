@@ -13,6 +13,8 @@
 
 #include <wx/button.h>
 #include <wx/textctrl.h>
+#include <wx/checkbox.h>
+#include <wx/radiobut.h>
 
 #include "prefs/PrefsPanel.h"
 
@@ -51,8 +53,9 @@ public:
       MixdownGenerationFrequency.Invalidate();
       DaysToKeepFiles.Invalidate();
 
-      sync::ShowCloudSyncDialog.Invalidate();
-      sync::SaveToCloudByDefault.Invalidate();
+      // Enum settings are not cacheable, so we need to invalidate them
+      //sync::SaveLocationMode.Invalidate();
+      //sync::ExportLocationMode.Invalidate();
       sync::MixdownDialogShown.Invalidate();
 
       return true;
@@ -89,12 +92,62 @@ public:
          }
          S.EndStatic();
 
-         S.StartStatic(XO("On save behavior"));
+         S.StartStatic(XO("Export behavior"));
          {
             S.SetBorder(8);
-            S.TieCheckBox(
-               XXO("Show 'How would you like to save?' modal"),
-               sync::ShowCloudSyncDialog);
+            auto checkBox = S.AddCheckBox(
+               XO("Show 'How would you like to export?' dialog"),
+               sync::ExportLocationMode.ReadEnum() ==
+                  sync::CloudLocationMode::Ask);
+
+            checkBox->Bind(
+                  wxEVT_CHECKBOX,
+                  [this](auto& event)
+                  {
+                     sync::ExportLocationMode.WriteEnum(
+                        event.IsChecked() ? sync::CloudLocationMode::Ask :
+                                            sync::CloudLocationMode::Local);
+                  });
+         }
+         S.EndStatic();
+
+         S.StartStatic(XO("Save behavior"));
+         {
+            S.SetBorder(4);
+
+            const auto initialMode =
+               static_cast<int>(sync::SaveLocationMode.ReadEnum());
+
+            auto BindRadioButton = [](auto* button, auto mode)
+            {
+               button->Bind(
+                  wxEVT_RADIOBUTTON,
+                  [mode](auto& event)
+                  {
+                     sync::SaveLocationMode.WriteEnum(
+                        static_cast<sync::CloudLocationMode>(mode));
+                  });
+            };
+
+            S.StartInvisiblePanel(4);
+            {
+               BindRadioButton(S.AddRadioButton(
+                  XO("Always ask"),
+                     static_cast<int>(sync::CloudLocationMode::Ask),
+                     initialMode),
+                  sync::CloudLocationMode::Ask);
+               BindRadioButton(S.AddRadioButtonToGroup(
+                  XO("Always save to cloud"),
+                  static_cast<int>(sync::CloudLocationMode::Cloud),
+                     initialMode),
+                  sync::CloudLocationMode::Cloud);
+               BindRadioButton(S.AddRadioButtonToGroup(
+                  XO("Always save to the computer"),
+                  static_cast<int>(sync::CloudLocationMode::Local),
+                     initialMode),
+                  sync::CloudLocationMode::Local);
+            }
+            S.EndInvisiblePanel();
          }
          S.EndStatic();
 

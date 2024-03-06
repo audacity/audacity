@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  SelectSaveLocationDialog.h
+  CloudLocationDialog.h
 
   Dmitry Vedenko
 
@@ -14,19 +14,29 @@
 
 namespace audacity::cloud::audiocom::sync
 {
-enum class SaveLocationDialogResult
+enum class LocationDialogResult
 {
    Local,
    Cloud,
    Cancel,
 };
 
-class SelectSaveLocationDialog final : private wxDialogWrapper
+enum class LocationDialogType
+{
+   Save,
+   Export,
+};
+
+class CloudLocationDialog final : private wxDialogWrapper
 {
 public:
-   explicit SelectSaveLocationDialog(wxWindow* parent);
-   ~SelectSaveLocationDialog() override;
+   CloudLocationDialog(wxWindow* parent, LocationDialogType type);
+   ~CloudLocationDialog() override;
 
-   SaveLocationDialogResult ShowDialog();
+   LocationDialogResult ShowDialog();
+
+private:
+   LocationDialogType mType;
+   bool mDoNotShow;
 };
 } // namespace audacity::cloud::audiocom::sync

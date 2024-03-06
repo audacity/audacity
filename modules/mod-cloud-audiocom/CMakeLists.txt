@@ -8,6 +8,8 @@ set( SOURCES
 
    ui/dialogs/AudioComDialogBase.cpp
    ui/dialogs/AudioComDialogBase.h
+   ui/dialogs/CloudLocationDialog.cpp
+   ui/dialogs/CloudLocationDialog.h
    ui/dialogs/CloudProjectPropertiesDialog.cpp
    ui/dialogs/CloudProjectPropertiesDialog.h
    ui/dialogs/ConnectionIssuesDialog.cpp
@@ -30,8 +32,6 @@ set( SOURCES
    ui/dialogs/ProjectsListDialog.h
    ui/dialogs/ProjectVersionConflictDialog.cpp
    ui/dialogs/ProjectVersionConflictDialog.h
-   ui/dialogs/SelectSaveLocationDialog.cpp
-   ui/dialogs/SelectSaveLocationDialog.h
    ui/dialogs/ShareAudioDialog.cpp
    ui/dialogs/ShareAudioDialog.h
    ui/dialogs/SyncFailedDialog.cpp
