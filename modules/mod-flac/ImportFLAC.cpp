@@ -237,13 +237,13 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                }
             }
 
-            channel.AppendBuffer((samplePtr)tmp.get(),
+            channel.AppendBufferUnsafe((samplePtr)tmp.get(),
                      int16Sample,
                      frame->header.blocksize, 1,
                      int16Sample);
          }
          else {
-            channel.AppendBuffer((samplePtr)buffer[chn],
+            channel.AppendBufferUnsafe((samplePtr)buffer[chn],
                      int24Sample,
                      frame->header.blocksize, 1,
                      int24Sample);

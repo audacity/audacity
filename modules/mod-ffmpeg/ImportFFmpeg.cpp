@@ -596,7 +596,7 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
          if(chn >= nChannels)
             return;
 
-         channel.AppendBuffer(
+         channel.AppendBufferUnsafe(
             reinterpret_cast<samplePtr>(data.data() + chn),
             sc->SampleFormat,
             samplesPerChannel,
@@ -618,7 +618,7 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
          if(channelIndex >= nChannels)
             return;
 
-         channel.AppendBuffer(
+         channel.AppendBufferUnsafe(
             reinterpret_cast<samplePtr>(data.data() + channelIndex),
             sc->SampleFormat,
             samplesPerChannel,

@@ -205,7 +205,7 @@ void WavPackImportFileHandle::Import(
             unsigned chn = 0;
             ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
             {
-               channel.AppendBuffer(
+               channel.AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
                   mFormat,
                   samplesRead,
@@ -218,7 +218,7 @@ void WavPackImportFileHandle::Import(
             unsigned chn = 0;
             ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
             {
-               channel.AppendBuffer(
+               channel.AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + chn),
                   mFormat,
                   samplesRead,
@@ -234,7 +234,7 @@ void WavPackImportFileHandle::Import(
             unsigned chn = 0;
             ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
             {
-               channel.AppendBuffer(
+               channel.AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + chn),
                   mFormat,
                   samplesRead,

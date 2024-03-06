@@ -323,7 +323,7 @@ void MP3ImportFileHandle::Import(
       unsigned chn = 0;
       ImportUtils::ForEachChannel(*mTrackList, [&](auto& channel)
       {
-         channel.AppendBuffer(
+         channel.AppendBufferUnsafe(
             samples + sizeof(float) * chn,
             floatSample, samplesCount,
             mNumChannels,

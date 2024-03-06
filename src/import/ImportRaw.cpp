@@ -231,7 +231,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
                      ((float *)srcbuffer.ptr())[numChannels * j + c];
                }
 
-               channel.AppendBuffer(buffer.ptr(),
+               channel.AppendBufferUnsafe(buffer.ptr(),
                   ((format == int16Sample) ? int16Sample : floatSample), block,
                   1, sf_subtype_to_effective_format(encoding));
                ++c;

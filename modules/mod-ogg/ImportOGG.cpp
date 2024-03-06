@@ -304,7 +304,7 @@ void OggImportFileHandle::Import(
             unsigned chn = 0;
             ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
             {
-               channel.AppendBuffer(
+               channel.AppendBufferUnsafe(
                   (char *)(mainBuffer.get() + chn),
                   int16Sample,
                   samplesRead,

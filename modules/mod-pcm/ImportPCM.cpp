@@ -366,7 +366,7 @@ void PCMImportFileHandle::Import(
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channel.AppendBuffer(
+               channel.AppendBufferUnsafe(
                   buffer.ptr(),
                   (mFormat == int16Sample) ? int16Sample : floatSample,
                   block, 1, mEffectiveFormat
