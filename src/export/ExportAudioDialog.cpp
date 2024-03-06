@@ -14,6 +14,8 @@
 
 #include <numeric>
 
+#include <wx/frame.h>
+
 #include "Export.h"
 #include "ExportUtils.h"
 #include "WaveTrack.h"
@@ -34,6 +36,7 @@
 
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
+#include "ProjectWindows.h"
 #include "Theme.h"
 #include "HelpSystem.h"
 #include "TagsEditor.h"
@@ -48,6 +51,17 @@
 
 namespace
 {
+const bool hookRegistered = [] {
+   ExportUtils::RegisterExportHook(
+      [](AudacityProject& project, const FileExtension& format)
+      {
+         ExportAudioDialog dialog { &GetProjectFrame(project), project,
+                                    project.GetProjectName(), format };
+         dialog.ShowModal();
+         return ExportUtils::ExportHookResult::Handled;
+      });
+   return true;
+}();
 
 ChoiceSetting ExportAudioExportRange { L"/ExportAudioDialog/ExportRange",
    {
