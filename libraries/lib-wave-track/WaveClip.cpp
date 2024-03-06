@@ -536,6 +536,22 @@ bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
    return appended;
 }
 
+bool WaveClip::AppendUnsafe(constSamplePtr buffers[], sampleFormat format, size_t len, unsigned stride,
+   sampleFormat effectiveFormat)
+{
+   size_t ii = 0;
+   bool appended = false;
+   for (auto &pSequence : mSequences)
+      appended =
+         pSequence->Append(buffers[ii++], format, len, stride, effectiveFormat)
+         || appended;
+
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
+
+   return appended;
+}
+
 void WaveClip::Flush()
 {
    //wxLogDebug(wxT("WaveClip::Flush"));

@@ -189,6 +189,8 @@ public:
    );
 
    bool AppendBuffer(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
+   bool AppendBufferUnsafe(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride, sampleFormat effectiveFormat);
+
 
    /*!
     If there is an existing WaveClip in the WaveTrack that owns the channel,
@@ -197,6 +199,9 @@ public:
     @return true if at least one complete block was created
     */
    bool Append(constSamplePtr buffer, sampleFormat format, size_t len);
+
+   //! Same as WaveChannel::Append but less safety guarantees, see WaveClip::Unsafe
+   bool AppendUnsafe(constSamplePtr buffer, sampleFormat format, size_t len);
 
    // Get signed min and max sample values
    /*!
@@ -517,6 +522,11 @@ public:
       size_t len, unsigned int stride = 1,
       sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0)
    override;
+
+   //! Same as WaveTrack::Append but less safety guarantees, see WaveClip::Unsafe
+   bool AppendUnsafe(constSamplePtr buffer, sampleFormat format,
+      size_t len, unsigned int stride = 1,
+      sampleFormat effectiveFormat = widestSampleFormat, size_t iChannel = 0);
 
    void Flush() override;
 

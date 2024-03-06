@@ -2692,6 +2692,12 @@ bool WaveChannel::AppendBuffer(constSamplePtr buffer, sampleFormat format,
    return GetTrack().Append(buffer, format, len, stride, effectiveFormat);
 }
 
+bool WaveChannel::AppendBufferUnsafe(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride,
+   sampleFormat effectiveFormat)
+{
+   return GetTrack().AppendUnsafe(buffer, format, len, stride, effectiveFormat);
+}
+
 /*! @excsafety{Partial}
 -- Some prefix (maybe none) of the buffer is appended,
 and no content already flushed to disk is lost. */
@@ -2699,6 +2705,11 @@ bool WaveChannel::Append(constSamplePtr buffer, sampleFormat format,
    size_t len)
 {
    return GetTrack().Append(buffer, format, len, 1, widestSampleFormat);
+}
+
+bool WaveChannel::AppendUnsafe(constSamplePtr buffer, sampleFormat format, size_t len)
+{
+   return GetTrack().AppendUnsafe(buffer, format, len, 1, widestSampleFormat);
 }
 
 /*! @excsafety{Partial}
@@ -2716,6 +2727,19 @@ bool WaveTrack::Append(constSamplePtr buffer, sampleFormat format,
    constSamplePtr buffers[]{ buffer };
    return pTrack->RightmostOrNewClip()
       ->Append(buffers, format, len, stride, effectiveFormat);
+}
+
+bool WaveTrack::AppendUnsafe(constSamplePtr buffer, sampleFormat format, size_t len, unsigned stride,
+   sampleFormat effectiveFormat, size_t iChannel)
+{
+   // TODO wide wave tracks -- there will be only one clip, and its `Append`
+   // (or an overload) must take iChannel
+   auto pTrack = this;
+   if (GetOwner() && iChannel == 1)
+      pTrack = *TrackList::Channels(this).rbegin();
+   constSamplePtr buffers[]{ buffer };
+   return pTrack->RightmostOrNewClip()
+      ->AppendUnsafe(buffers, format, len, stride, effectiveFormat);
 }
 
 size_t WaveTrack::GetBestBlockSize(sampleCount s) const

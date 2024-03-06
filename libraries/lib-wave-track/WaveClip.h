@@ -488,6 +488,14 @@ public:
       */
    );
 
+   //! Same as Append but less guarantees on preserving original data
+   //! in case of emergencies like memory allocation failures. Useful
+   //! when clip is being piece-wise constructed and intermediate
+   //! states are not meaningful.
+   bool AppendUnsafe(constSamplePtr buffers[], sampleFormat format,
+      size_t len, unsigned int stride,
+      sampleFormat effectiveFormat);
+
    //! Flush must be called after last Append
    /*!
     In case of exceptions, the clip contents are unchanged but
