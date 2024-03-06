@@ -4080,17 +4080,28 @@ void WaveTrack::ApplyPitchAndSpeedOnIntervals(
       ReplaceInterval(srcIntervals[i], dstIntervals[i]);
 }
 
+namespace {
+bool ClipsAreUnique(const WaveClipHolders &clips)
+{
+   // This is used only in assertions
+   using Set = std::unordered_set<WaveClipHolder>;
+   return clips.size() == Set{ clips.begin(), clips.end() }.size();
+}
+}
+
 void WaveTrack::InsertInterval(const IntervalHolder& interval,
    bool newClip, bool allowEmpty)
 {
    auto channel = 0;
    for (const auto pChannel : Channels()) {
-      const auto clip = interval->GetClip(channel++);
+      const auto clip = interval->GetClip(channel);
       if (clip) {
          pChannel->InsertClip(clip, newClip, false, allowEmpty);
          // Detect errors resulting in duplicate shared pointers to clips
-         assert(pChannel->ClipsAreUnique());
+         auto &clips = (channel == 0) ? mChannel.mClips : mRightChannel->mClips;
+         assert(ClipsAreUnique(clips));
       }
+      ++channel;
    }
 }
 
@@ -4184,20 +4195,6 @@ auto WaveTrack::SortedIntervalArray() const -> IntervalConstHolders
    sort(result.begin(), result.end(), [](const auto &pA, const auto &pB){
       return pA->GetPlayStartTime() < pB->GetPlayStartTime(); });
    return result;
-}
-
-bool WaveChannel::ClipsAreUnique() const
-{
-   // This is used only in assertions
-   auto intervals = Intervals();
-   // Do not rely on pointer identity of intervals
-   // TODO wide wave clip -- that may change
-   std::vector<const WaveClip*> narrowClips;
-   transform(intervals.begin(), intervals.end(), back_inserter(narrowClips),
-      [](auto pInterval){ return &pInterval->GetClip(); });
-   using Set = std::unordered_set<const WaveClip *>;
-   return narrowClips.size() ==
-      Set{ narrowClips.begin(), narrowClips.end() }.size();
 }
 
 WaveClipHolders &WaveChannel::Clips()
