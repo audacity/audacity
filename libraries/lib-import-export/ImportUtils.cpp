@@ -63,13 +63,11 @@ void ImportUtils::FinalizeImport(TrackHolders& outTracks, TrackListHolder trackL
    outTracks.push_back(std::move(trackList));
 }
 
-void ImportUtils::ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op)
+std::vector<std::shared_ptr<WaveChannel>> ImportUtils::GetAllChannels(TrackList& trackList)
 {
-   for(auto track : trackList.Any<WaveTrack>())
-   {
+   std::vector<std::shared_ptr<WaveChannel>> channels;
+   for(const auto track : trackList.Any<WaveTrack>())
       for(auto channel : track->Channels())
-      {
-         op(*channel);
-      }
-   }
+         channels.push_back(std::move(channel));
+   return channels;
 }

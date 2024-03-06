@@ -191,6 +191,7 @@ void WavPackImportFileHandle::Import(
          floatBuffer.reinit(bufferSize);
       }
 
+      auto channels = ImportUtils::GetAllChannels(*trackList);
       do {
          samplesRead = WavpackUnpackSamples(mWavPackContext, wavpackBuffer.get(), SAMPLES_TO_READ);
 
@@ -203,9 +204,9 @@ void WavPackImportFileHandle::Import(
                   int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
-               channel.AppendBufferUnsafe(
+               channel->AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
                   mFormat,
                   samplesRead,
@@ -216,9 +217,9 @@ void WavPackImportFileHandle::Import(
             });
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
-               channel.AppendBufferUnsafe(
+               channel->AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + chn),
                   mFormat,
                   samplesRead,
@@ -232,9 +233,9 @@ void WavPackImportFileHandle::Import(
                floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
-               channel.AppendBufferUnsafe(
+               channel->AppendBufferUnsafe(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + chn),
                   mFormat,
                   samplesRead,

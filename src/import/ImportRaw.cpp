@@ -197,6 +197,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       ProgressDialog progress(XO("Import Raw"), msg);
 
       size_t block;
+      auto channels = ImportUtils::GetAllChannels(*trackList);
       do {
          block =
             limitSampleBufferSize( maxBlockSize, totalFrames - framescompleted );
@@ -218,7 +219,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
 
          if (block) {
             size_t c = 0;
-            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
                if (format == int16Sample) {
                   for (size_t j = 0; j < block; ++j)
@@ -231,7 +232,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
                      ((float *)srcbuffer.ptr())[numChannels * j + c];
                }
 
-               channel.AppendBufferUnsafe(buffer.ptr(),
+               channel->AppendBufferUnsafe(buffer.ptr(),
                   ((format == int16Sample) ? int16Sample : floatSample), block,
                   1, sf_subtype_to_effective_format(encoding));
                ++c;

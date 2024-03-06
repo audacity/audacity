@@ -268,7 +268,14 @@ void OggImportFileHandle::Import(
       // causes them to be read correctly.  Otherwise they have lots of
       // zeros inserted at the beginning
       ov_pcm_seek(mVorbisFile.get(), 0);
-
+      std::vector<std::vector<std::shared_ptr<WaveChannel>>> streamChannels;
+      std::transform(
+         mStreams.begin(),
+         mStreams.end(),
+         std::back_inserter(streamChannels),
+         [](auto& stream){
+            return ImportUtils::GetAllChannels(*stream);
+         });
       do {
          /* get data from the decoder */
          bytesRead = ov_read(mVorbisFile.get(), (char *)mainBuffer.get(),
@@ -302,9 +309,10 @@ void OggImportFileHandle::Import(
          {
             /* give the data to the wavetracks */
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
+            auto& channels = *std::next(streamChannels.begin(), bitstream);
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
-               channel.AppendBufferUnsafe(
+               channel->AppendBufferUnsafe(
                   (char *)(mainBuffer.get() + chn),
                   int16Sample,
                   samplesRead,

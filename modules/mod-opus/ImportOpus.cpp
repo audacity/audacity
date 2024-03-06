@@ -196,6 +196,7 @@ void OpusImportFileHandle::Import(
 
    uint64_t samplesRead = 0;
 
+   auto channels = ImportUtils::GetAllChannels(*trackList);
    do
    {
       int linkIndex { -1 };
@@ -216,9 +217,9 @@ void OpusImportFileHandle::Import(
       }
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+      std::for_each(channels.begin(), channels.end(), [&](auto& channel)
       {
-         channel.AppendBufferUnsafe(
+         channel->AppendBufferUnsafe(
             reinterpret_cast<constSamplePtr>(floatBuffer.get() +
             chn), mFormat, samplesRead, mNumChannels, mFormat
          );

@@ -337,6 +337,7 @@ void PCMImportFileHandle::Import(
       decltype(fileTotalFrames) framescompleted = 0;
 
       long block;
+      auto channels = ImportUtils::GetAllChannels(*trackList);
       do {
          block = maxBlock;
 
@@ -353,7 +354,7 @@ void PCMImportFileHandle::Import(
 
          if (block) {
             unsigned c = 0;
-            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
+            std::for_each(channels.begin(), channels.end(), [&](auto& channel)
             {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
@@ -366,7 +367,7 @@ void PCMImportFileHandle::Import(
                         ((float *)srcbuffer.ptr())[mInfo.channels*j+c];
                }
 
-               channel.AppendBufferUnsafe(
+               channel->AppendBufferUnsafe(
                   buffer.ptr(),
                   (mFormat == int16Sample) ? int16Sample : floatSample,
                   block, 1, mEffectiveFormat

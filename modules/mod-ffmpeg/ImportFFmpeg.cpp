@@ -582,6 +582,7 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
    auto stream = mStreams[std::distance(mStreamContexts.begin(), streamIt)];
 
    const auto nChannels = std::min(sc->CodecContext->GetChannels(), sc->InitialChannels);
+   auto channels = ImportUtils::GetAllChannels(*stream);
 
    // Write audio into WaveTracks
    if (sc->SampleFormat == int16Sample)
@@ -591,12 +592,12 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
       const auto samplesPerChannel = data.size() / channelsCount;
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
+      std::for_each(channels.begin(), channels.end(), [&](auto& channel)
       {
          if(chn >= nChannels)
             return;
 
-         channel.AppendBufferUnsafe(
+         channel->AppendBufferUnsafe(
             reinterpret_cast<samplePtr>(data.data() + chn),
             sc->SampleFormat,
             samplesPerChannel,
@@ -613,12 +614,12 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
       const auto samplesPerChannel = data.size() / channelsCount;
 
       auto channelIndex = 0;
-      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
+      std::for_each(channels.begin(), channels.end(), [&](auto& channel)
       {
          if(channelIndex >= nChannels)
             return;
 
-         channel.AppendBufferUnsafe(
+         channel->AppendBufferUnsafe(
             reinterpret_cast<samplePtr>(data.data() + channelIndex),
             sc->SampleFormat,
             samplesPerChannel,

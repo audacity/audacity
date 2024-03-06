@@ -41,9 +41,8 @@ public:
    
    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
 
-   //! Iterates over channels in each wave track from the list
    static
-   void ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op);
+   std::vector<std::shared_ptr<WaveChannel>> GetAllChannels(TrackList& trackList);
 
    //! Flushes the given channels and moves them to \p outTracks
    static

@@ -288,6 +288,8 @@ void MP3ImportFileHandle::Import(
 
    int ret = MPG123_OK;
 
+   auto channels = ImportUtils::GetAllChannels(*mTrackList);
+
    while ((ret = mpg123_decode_frame(mHandle, &frameIndex, &data, &dataSize)) ==
                  MPG123_OK)
    {
@@ -321,9 +323,9 @@ void MP3ImportFileHandle::Import(
       }
       // Just copy the interleaved data to the channels
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mTrackList, [&](auto& channel)
+      std::for_each(channels.begin(), channels.end(), [&](auto& channel)
       {
-         channel.AppendBufferUnsafe(
+         channel->AppendBufferUnsafe(
             samples + sizeof(float) * chn,
             floatSample, samplesCount,
             mNumChannels,
