@@ -521,6 +521,8 @@ public:
 
 protected:
    //! Retrieve a channel
+   //! For fixed iChannel, resulting address must be unchanging, if there has
+   //! been no other mutation of this ChannelGroup
    /*!
     @post result: `!(iChannel < NChannels()) || result`
     */

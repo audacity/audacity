@@ -217,16 +217,7 @@ class WAVE_TRACK_API WaveChannel final
 {
 public:
    explicit WaveChannel(WaveTrack &owner);
-   WaveChannel(WaveTrack &owner, WaveChannel &&other);
-   WaveChannel& operator=(WaveChannel &&other);
-   void Swap(WaveChannel &other);
    ~WaveChannel() override;
-
-   void CopyClips(SampleBlockFactoryPtr pFactory,
-      const WaveChannel &orig, bool backup);
-   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup = false);
-
-   void RemoveClip(size_t iClip);
 
    inline WaveTrack &GetTrack();
    inline const WaveTrack &GetTrack() const;
@@ -338,30 +329,8 @@ public:
 
    inline sampleFormat GetSampleFormat() const;
 
-   //! Adds clip to the channel. Clip should not be empty or a placeholder.
-   /*!
-    Sets project tempo on clip upon push. Use this instead of
-    `NarrowClips().push_back`
-    @returns true on success
-    @param backup whether the duplication is for backup purposes while opening
-    a project, instead of other editing operations
-    */
-   bool InsertClip(WaveClipHolder clip, bool newClip, bool backup,
-      bool allowEmpty);
-
 private:
-   const WaveClipHolders &Clips() const;
-   WaveClipHolders &Clips();
-
    WaveTrack &mOwner;
-
-   /*!
-    * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
-    * @invariant all are non-null
-    */
-   WaveClipHolders mClips;
-
-   friend WaveTrack;
 };
 
 class WAVE_TRACK_API WaveTrack final
@@ -1156,6 +1125,19 @@ public:
    void SetLegacyFormat(sampleFormat format);
 
 private:
+   /*!
+     Sets project tempo on clip upon push. Use this instead of
+     `NarrowClips().push_back`
+     @returns true on success
+     @param backup whether the duplication is for backup purposes while opening
+     a project, instead of other editing operations
+     */
+   bool InsertClip(WaveClipHolders &clips, WaveClipHolder clip,
+      bool newClip, bool backup, bool allowEmpty);
+
+   void CopyClips(WaveClipHolders &clips,
+      SampleBlockFactoryPtr pFactory, const WaveClipHolders &orig, bool backup);
+
    //! Steal channel attachments from other, then destroy the track attachment
    //! slot
    void MergeChannelAttachments(WaveTrack &&other);
@@ -1220,6 +1202,13 @@ private:
    WaveChannel mChannel;
    //! may be null
    std::optional<WaveChannel> mRightChannel;
+
+   /*!
+    * Do not call `mClips.push_back` directly. Use `InsertClip` instead.
+    * @invariant all are non-null
+    */
+   WaveClipHolders mClips;
+   std::optional<WaveClipHolders> mRightClips;
 
    mutable int  mLegacyRate{ 0 }; //!< used only during deserialization
    sampleFormat mLegacyFormat{ undefinedSample }; //!< used only during deserialization
