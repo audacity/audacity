@@ -1422,19 +1422,10 @@ auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
    if (iInterval < NIntervals()) {
       WaveClipHolder pClip = NarrowClips()[iInterval],
          pClip1;
-
-      // TODO wide wave tracks
-      // Empty clip creation is needed, transitionally, to fix the peculiar
-      // case of Nyquist generators
       if (NChannels() > 1) {
          auto &rightClips = RightClips();
-         while (iInterval >= rightClips.size())
-            CreateClip(*this, &rightClips,
-               WaveTrackData::Get(*this).GetOrigin(),
-               MakeNewClipName());
          pClip1 = rightClips[iInterval];
       }
-
       return std::make_shared<Interval>(*this, pClip, pClip1);
    }
    return {};
