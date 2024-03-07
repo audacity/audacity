@@ -38,6 +38,10 @@ struct WaveClipWaveformCache final : WaveClipListener
    /** Getting high-level data for screen display */
    bool GetWaveDisplay(const WaveChannelInterval &clip,
       WaveDisplay &display, double t0, double pixelsPerSecond);
+
+   void MakeStereo(WaveClipListener &&other, bool aligned) override;
+   void SwapChannels() override;
+   void Erase(size_t index) override;
 };
 
 #endif

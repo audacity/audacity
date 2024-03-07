@@ -613,3 +613,27 @@ void WaveClipSpectrumCache::Invalidate()
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
 }
+
+void WaveClipSpectrumCache::MakeStereo(WaveClipListener &&other, bool)
+{
+   auto pOther = dynamic_cast<WaveClipSpectrumCache *>(&other);
+   assert(pOther); // precondition
+   mSpecCaches.push_back(move(pOther->mSpecCaches[0]));
+   mSpecPxCaches.push_back(move(pOther->mSpecPxCaches[0]));
+}
+
+void WaveClipSpectrumCache::SwapChannels()
+{
+   mSpecCaches.resize(2);
+   std::swap(mSpecCaches[0], mSpecCaches[1]);
+   mSpecPxCaches.resize(2);
+   std::swap(mSpecPxCaches[0], mSpecPxCaches[1]);
+}
+
+void WaveClipSpectrumCache::Erase(size_t index)
+{
+   if (index < mSpecCaches.size())
+      mSpecCaches.erase(mSpecCaches.begin() + index);
+   if (index < mSpecPxCaches.size())
+      mSpecPxCaches.erase(mSpecPxCaches.begin() + index);
+}
