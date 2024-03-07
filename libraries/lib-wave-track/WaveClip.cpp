@@ -206,6 +206,7 @@ void WaveClip::SetSamples(size_t ii,
    constSamplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, sampleFormat effectiveFormat)
 {
+   StrongInvariantScope scope{ *this };
    assert(ii < GetWidth());
    // use Strong-guarantee
    mSequences[ii]->SetSamples(buffer, format,
@@ -232,10 +233,18 @@ const BlockArray* WaveClip::GetSequenceBlockArray(size_t ii) const
    return &mSequences[ii]->GetBlockArray();
 }
 
-size_t WaveClip::GetAppendBufferLen() const
+size_t WaveClip::GetAppendBufferLen(size_t iChannel) const
 {
-   // All append buffers have equal lengths by class invariant
-   return mSequences[0]->GetAppendBufferLen();
+   assert(iChannel < GetWidth());
+   return mSequences[iChannel]->GetAppendBufferLen();
+}
+
+size_t WaveClip::GreatestAppendBufferLen() const
+{
+   size_t result = 0;
+   for (size_t iChannel = 0; iChannel < GetWidth(); ++iChannel)
+      result = std::max(result, mSequences[iChannel]->GetAppendBufferLen());
+   return result;
 }
 
 void WaveClip::OnProjectTempoChange(
@@ -354,8 +363,11 @@ bool WaveClip::StretchRatioEquals(double value) const
 
 sampleCount WaveClip::GetNumSamples() const
 {
-   // All sequences have equal lengths by class invariant
-   return mSequences[0]->GetNumSamples();
+   // Assume only the weak invariant
+   sampleCount result = 0;
+   for (auto &pSequence: mSequences)
+      result = std::max(result, pSequence->GetNumSamples());
+   return result;
 }
 
 SampleFormats WaveClip::GetSampleFormats() const
@@ -364,7 +376,7 @@ SampleFormats WaveClip::GetSampleFormats() const
    return mSequences[0]->GetSampleFormats();
 }
 
-const SampleBlockFactoryPtr &WaveClip::GetFactory()
+const SampleBlockFactoryPtr &WaveClip::GetFactory() const
 {
    // All sequences have the same factory by class invariant
    return mSequences[0]->GetFactory();
@@ -436,6 +448,9 @@ float WaveClip::GetRMS(size_t ii, double t0, double t1, bool mayThrow) const
 void WaveClip::ConvertToSampleFormat(sampleFormat format,
    const std::function<void(size_t)> & progressReport)
 {
+   // This mutator does not require the strong invariant.  It leaves sample
+   // counts unchanged in each sequence.
+
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get converted as needed when they are expanded.
 
@@ -467,17 +482,25 @@ void WaveClip::UpdateEnvelopeTrackLen()
 std::shared_ptr<SampleBlock>
 WaveClip::AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len)
 {
+   return mSequences[0]->AppendNewBlock( buffer, format, len );
+}
+
+/*! @excsafety{Strong} */
+std::shared_ptr<SampleBlock>
+WaveClip::AppendLegacyNewBlock(constSamplePtr buffer, sampleFormat format, size_t len)
+{
    // This is a special use function for legacy files only and this assertion
-   // does not need to be relaxed
+   // does not need to be relaxed.  The clip is in a still unzipped track.
    assert(GetWidth() == 1);
    return mSequences[0]->AppendNewBlock( buffer, format, len );
 }
 
 /*! @excsafety{Strong} */
-void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
+void WaveClip::AppendLegacySharedBlock(
+   const std::shared_ptr<SampleBlock> &pBlock)
 {
    // This is a special use function for legacy files only and this assertion
-   // does not need to be relaxed
+   // does not need to be relaxed.  The clip is in a still unzipped track.
    assert(GetWidth() == 1);
    mSequences[0]->AppendSharedBlock( pBlock );
 }
@@ -485,7 +508,7 @@ void WaveClip::AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock)
 bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
-   Finally Do{ [this]{ assert(CheckInvariants()); } };
+   StrongInvariantScope scope{ *this };
 
    Transaction transaction{ *this };
 
@@ -508,11 +531,13 @@ bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
 
 void WaveClip::Flush()
 {
+   // Does not require or guarantee the strong invariant
+
    //wxLogDebug(wxT("WaveClip::Flush"));
    //wxLogDebug(wxT("   mAppendBufferLen=%lli"), (long long) mAppendBufferLen);
    //wxLogDebug(wxT("   previous sample count %lli"), (long long) mSequence->GetNumSamples());
 
-   if (GetAppendBufferLen() > 0) {
+   if (GreatestAppendBufferLen() > 0) {
 
       Transaction transaction{ *this };
 
@@ -527,6 +552,26 @@ void WaveClip::Flush()
    }
 
    //wxLogDebug(wxT("now sample count %lli"), (long long) mSequence->GetNumSamples());
+}
+
+void WaveClip::RepairChannels()
+{
+   if (GetWidth() < 2)
+      return;
+   // Be sure of consistency of sample counts
+   // We may be here because the drive can't hold another megabyte, but
+   // note that InsertSilence makes silent blocks that don't occupy
+   // space in the database table of blocks.
+   // (However autosave may want to rewrite the document blob, so this solution
+   // may yet not be perfect.)
+   Transaction transaction{ *this };
+   const auto maxSamples = GetNumSamples();
+   for (const auto &pSequence: mSequences) {
+      const auto numSamples = pSequence->GetNumSamples();
+      if (pSequence->GetNumSamples() != maxSamples)
+         pSequence->InsertSilence(numSamples, maxSamples - numSamples);
+   }
+   transaction.Commit();
 }
 
 static constexpr auto Offset_attr = "offset";
@@ -682,8 +727,19 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
 }
 
 /*! @excsafety{Strong} */
-bool WaveClip::Paste(double t0, const WaveClip& other)
+bool WaveClip::Paste(double t0, const WaveClip& o)
 {
+   const WaveClip *pOther = &o;
+   WaveClipHolder dup;
+   if (!o.StrongInvariant()) {
+      assert(false); // precondition not honored
+      // But try to repair it and continue in release
+      dup = std::make_shared<WaveClip>(o, o.GetFactory(), true);
+      dup->RepairChannels();
+      pOther = dup.get();
+   }
+   auto &other = *pOther;
+
    if (GetWidth() != other.GetWidth())
       return false;
 
@@ -697,7 +753,7 @@ bool WaveClip::Paste(double t0, const WaveClip& other)
    else if (GetStretchRatio() != other.GetStretchRatio())
       return false;
 
-   Finally Do{ [this]{ assert(CheckInvariants()); } };
+   StrongInvariantScope scope{ *this };
 
    Transaction transaction{ *this };
 
@@ -792,6 +848,7 @@ bool WaveClip::Paste(double t0, const WaveClip& other)
 /*! @excsafety{Strong} */
 void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 {
+   StrongInvariantScope scope{ *this };
    Transaction transaction{ *this };
 
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
@@ -843,25 +900,25 @@ void WaveClip::AppendSilence( double len, double envelopeValue )
 /*! @excsafety{Strong} */
 void WaveClip::Clear(double t0, double t1)
 {
-    auto st0 = t0;
-    auto st1 = t1;
-    auto offset = .0;
-    if (st0 <= GetPlayStartTime())
-    {
-        offset = (t0 - GetPlayStartTime()) + GetTrimLeft();
-        st0 = GetSequenceStartTime();
-
-        SetTrimLeft(.0);
-    }
-    if (st1 >= GetPlayEndTime())
-    {
-        st1 = GetSequenceEndTime();
-        SetTrimRight(.0);
-    }
-    ClearSequence(st0, st1);
-
-    if (offset != .0)
-       ShiftBy(offset);
+   auto st0 = t0;
+   auto st1 = t1;
+   auto offset = .0;
+   if (st0 <= GetPlayStartTime())
+   {
+      offset = (t0 - GetPlayStartTime()) + GetTrimLeft();
+      st0 = GetSequenceStartTime();
+      
+      SetTrimLeft(.0);
+   }
+   if (st1 >= GetPlayEndTime())
+   {
+      st1 = GetSequenceEndTime();
+      SetTrimRight(.0);
+   }
+   ClearSequence(st0, st1);
+   
+   if (offset != .0)
+      ShiftBy(offset);
 }
 
 void WaveClip::ClearLeft(double t)
@@ -885,62 +942,63 @@ void WaveClip::ClearRight(double t)
 
 void WaveClip::ClearSequence(double t0, double t1)
 {
+   StrongInvariantScope scope{ *this };
    Transaction transaction{ *this };
 
-    auto clip_t0 = std::max(t0, GetSequenceStartTime());
-    auto clip_t1 = std::min(t1, GetSequenceEndTime());
-
-    auto s0 = TimeToSequenceSamples(clip_t0);
-    auto s1 = TimeToSequenceSamples(clip_t1);
-
-    if (s0 != s1)
-    {
-        // use Strong-guarantee
-        for (auto &pSequence : mSequences)
-           pSequence->Delete(s0, s1 - s0);
-
-        // use No-fail-guarantee in the remaining
-
-        // msmeyer
-        //
-        // Delete all cutlines that are within the given area, if any.
-        //
-        // Note that when cutlines are active, two functions are used:
-        // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
-        // whenever the user directly calls a command that removes some audio, e.g.
-        // "Cut" or "Clear" from the menu. This command takes care about recursive
-        // preserving of cutlines within clips. Clear() is called when internal
-        // operations want to remove audio. In the latter case, it is the right
-        // thing to just remove all cutlines within the area.
-        //
-
-        // May DELETE as we iterate, so don't use range-for
-        for (auto it = mCutLines.begin(); it != mCutLines.end();)
-        {
-            WaveClip* clip = it->get();
-            double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
-            if (cutlinePosition >= t0 && cutlinePosition <= t1)
+   auto clip_t0 = std::max(t0, GetSequenceStartTime());
+   auto clip_t1 = std::min(t1, GetSequenceEndTime());
+   
+   auto s0 = TimeToSequenceSamples(clip_t0);
+   auto s1 = TimeToSequenceSamples(clip_t1);
+   
+   if (s0 != s1)
+   {
+      // use Strong-guarantee
+      for (auto &pSequence : mSequences)
+         pSequence->Delete(s0, s1 - s0);
+      
+      // use No-fail-guarantee in the remaining
+      
+      // msmeyer
+      //
+      // Delete all cutlines that are within the given area, if any.
+      //
+      // Note that when cutlines are active, two functions are used:
+      // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
+      // whenever the user directly calls a command that removes some audio, e.g.
+      // "Cut" or "Clear" from the menu. This command takes care about recursive
+      // preserving of cutlines within clips. Clear() is called when internal
+      // operations want to remove audio. In the latter case, it is the right
+      // thing to just remove all cutlines within the area.
+      //
+      
+      // May DELETE as we iterate, so don't use range-for
+      for (auto it = mCutLines.begin(); it != mCutLines.end();)
+      {
+         WaveClip* clip = it->get();
+         double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
+         if (cutlinePosition >= t0 && cutlinePosition <= t1)
+         {
+            // This cutline is within the area, DELETE it
+            it = mCutLines.erase(it);
+         }
+         else
+         {
+            if (cutlinePosition >= t1)
             {
-                // This cutline is within the area, DELETE it
-                it = mCutLines.erase(it);
+               clip->ShiftBy(clip_t0 - clip_t1);
             }
-            else
-            {
-                if (cutlinePosition >= t1)
-                {
-                    clip->ShiftBy(clip_t0 - clip_t1);
-                }
-                ++it;
-            }
-        }
+            ++it;
+         }
+      }
+      
+      // Collapse envelope
+      auto sampleTime = 1.0 / GetRate();
+      GetEnvelope()->CollapseRegion(t0, t1, sampleTime);
+   }
 
-        // Collapse envelope
-        auto sampleTime = 1.0 / GetRate();
-        GetEnvelope()->CollapseRegion(t0, t1, sampleTime);
-    }
-
-    transaction.Commit();
-    MarkChanged();
+   transaction.Commit();
+   MarkChanged();
 }
 
 /*! @excsafety{Weak}
@@ -948,6 +1006,7 @@ void WaveClip::ClearSequence(double t0, double t1)
 But some cutlines may be deleted */
 void WaveClip::ClearAndAddCutLine(double t0, double t1)
 {
+   StrongInvariantScope scope{ *this };
    if (t0 > GetPlayEndTime() || t1 < GetPlayStartTime() || CountSamples(t0, t1) == 0)
       return; // no samples to remove
 
@@ -1139,6 +1198,8 @@ bool WaveClip::SetCentShift(int cents)
 /*! @excsafety{Strong} */
 void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 {
+   // This mutator does not require the strong invariant.
+
    // Note:  it is not necessary to do this recursively to cutlines.
    // They get resampled as needed when they are expanded.
 
@@ -1262,6 +1323,7 @@ double WaveClip::SnapToTrackSample(double t) const noexcept
 
 void WaveClip::SetSilence(sampleCount offset, sampleCount length)
 {
+   StrongInvariantScope scope{ *this };
    const auto start = TimeToSamples(mTrimLeft) + offset;
    Transaction transaction{ *this };
    for (auto &pSequence : mSequences)
@@ -1289,7 +1351,7 @@ double WaveClip::GetPlayEndTime() const
 {
     const auto numSamples = GetNumSamples();
     double maxLen = mSequenceOffset +
-                    ((numSamples + GetAppendBufferLen()).as_double()) *
+                    ((numSamples + GreatestAppendBufferLen()).as_double()) *
                        GetStretchRatio() / mRate -
                     mTrimRight;
     // JS: calculated value is not the length;
@@ -1502,26 +1564,66 @@ bool WaveClip::CheckInvariants() const
       // All pointers mut be non-null
       auto &pFirst = *iter++;
       if (pFirst) {
-         // All sequences must have the same lengths, append buffer lengths,
-         // sample formats, and sample block factory
+         // All sequences must have the same sample formats, and sample block
+         // factory
          return
          std::all_of(iter, end, [&](decltype(pFirst) pSequence) {
             return pSequence &&
-               pSequence->GetNumSamples() == pFirst->GetNumSamples() &&
-               pSequence->GetAppendBufferLen() == pFirst->GetAppendBufferLen()
-                  &&
                pSequence->GetSampleFormats() == pFirst->GetSampleFormats() &&
                pSequence->GetFactory() == pFirst->GetFactory();
          }) &&
          // All cut lines are non-null, satisfy the invariants, and match width
          std::all_of(mCutLines.begin(), mCutLines.end(),
          [width](const WaveClipHolder &pCutLine) {
-            return pCutLine && pCutLine->GetWidth() == width &&
-               pCutLine->CheckInvariants();
+            if (!(pCutLine && pCutLine->GetWidth() == width))
+                return false;
+            if (!pCutLine->StrongInvariant()) {
+               pCutLine->AssertOrRepairStrongInvariant();
+               return false;
+            }
+            return true;
          });
       }
    }
    return false;
+}
+
+bool WaveClip::StrongInvariant() const
+{
+   if (!CheckInvariants())
+      return false;
+   const auto width = GetWidth();
+   auto iter = mSequences.begin(),
+      end = mSequences.end();
+   assert(iter != end); // because CheckInvariants is true
+   auto &pFirst = *iter++;
+   assert(pFirst); // likewise
+   // All sequences must have the same lengths
+   return all_of(iter, end, [&](decltype(pFirst) pSequence) {
+      assert(pSequence); // likewise
+      return pSequence->GetNumSamples() == pFirst->GetNumSamples();
+   });
+   return false;
+}
+
+void WaveClip::AssertOrRepairStrongInvariant()
+{
+   if (!StrongInvariant()) {
+      assert(false);
+      RepairChannels();
+      assert(StrongInvariant());
+   }
+}
+
+WaveClip::StrongInvariantScope::StrongInvariantScope(WaveClip &clip)
+   : mClip{ clip }
+{
+   mClip.AssertOrRepairStrongInvariant();
+}
+
+WaveClip::StrongInvariantScope::~StrongInvariantScope()
+{
+   assert(mClip.StrongInvariant());
 }
 
 WaveClip::Transaction::Transaction(WaveClip &clip)

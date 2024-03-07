@@ -2138,6 +2138,8 @@ void AudioIO::DrainRecordBuffers()
       // boxes.
       StopStream();
       DefaultDelayedHandlerAction( pException );
+      for (auto &pSequence: mCaptureSequences)
+         pSequence->RepairChannels();
    };
 
    GuardedCall( [&] {

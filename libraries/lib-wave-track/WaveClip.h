@@ -164,8 +164,35 @@ public:
 
    virtual ~WaveClip();
 
-   //! Check invariant conditions on mSequences and mCutlines
+   //! Check weak invariant conditions on mSequences and mCutlines
+   /*! Conditions are
+    `mSequences.size() > 0`
+    all sequences are non-null
+    all sequences have the same sample formats
+       and sample block factory
+    all cutlines satisfy the strong invariant
+    */
    bool CheckInvariants() const;
+
+   /*!
+    A precondition for some mutating operations
+    CheckInvariants() is true, and also all sequences have the same length
+    */
+   bool StrongInvariant() const;
+
+   //! When `StrongInvariant()` is false, violate an assertion in debug, but
+   //! in release, establish it (or fail, propagating an exception)
+   /*! @excsafety{Strong} */
+   void AssertOrRepairStrongInvariant();
+
+   //! Assert or repair strong invariant before mutating the sequence;
+   //! assert the strong invariant again at exit
+   struct StrongInvariantScope {
+      explicit StrongInvariantScope(WaveClip &clip);
+      ~StrongInvariantScope();
+   private:
+      WaveClip &mClip;
+   };
 
    //! How many Sequences the clip contains.
    //! Set at construction time; changes only if increased by deserialization
@@ -206,8 +233,8 @@ public:
    [[nodiscard]] Observer::Subscription
    SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
-   // Resample clip. This also will set the rate, but without changing
-   // the length of the clip
+   //! Resample clip. This also will set the rate, but without changing
+   //! the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
    double GetSequenceStartTime() const noexcept;
@@ -367,6 +394,8 @@ public:
    //! @param ii identifies the channel
    /*!
     @pre `ii < GetWidth()`
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
     @param start relative to clip play start sample
     */
    void SetSamples(size_t ii, constSamplePtr buffer, sampleFormat format,
@@ -428,14 +457,21 @@ public:
     * function to tell the envelope about it. */
    void UpdateEnvelopeTrackLen();
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks; no dithering applied
-   //! @pre `GetWidth() == 1`
    std::shared_ptr<SampleBlock>
    AppendNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
-   //! For use in importing pre-version-3 projects to preserve sharing of blocks
+   //! For use in importing pre-version-3 projects to preserve sharing of
+   //! blocks; no dithering applied
    //! @pre `GetWidth() == 1`
-   void AppendSharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
+   std::shared_ptr<SampleBlock>
+   AppendLegacyNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
+
+   //! For use in importing pre-version-3 projects to preserve sharing of
+   //! blocks
+   /*!
+    @pre `GetWidth() == 1`
+    */
+   void AppendLegacySharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
    //! Append (non-interleaved) samples to all channels
    //! You must call Flush after the last Append
@@ -444,6 +480,9 @@ public:
     assume as many buffers available as GetWidth()
     In case of failure or exceptions, the clip contents are unchanged but
     un-flushed data are lost
+
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
     */
    bool Append(constSamplePtr buffers[], sampleFormat format,
       size_t len, unsigned int stride,
@@ -462,6 +501,9 @@ public:
     */
    void Flush();
 
+   //! Ensure that all sequences have the same sample count
+   void RepairChannels();
+
    /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
    /// operation (but without putting the cut audio to the clipboard)
    void Clear(double t0, double t1);
@@ -476,8 +518,12 @@ public:
    /// data, if present. Destructive operation.
    void ClearRight(double t);
 
-   /// Clear, and add cut line that starts at t0 and contains everything until t1
-   /// if there is at least one clip sample between t0 and t1, noop otherwise.
+   //! Clear, and add cut line that starts at t0 and contains everything until t1
+   //! if there is at least one clip sample between t0 and t1, noop otherwise.
+   /*!
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
+    */
    void ClearAndAddCutLine(double t0, double t1);
 
    //! @pre `GetWidth() == pClip->GetWidth()`
@@ -487,11 +533,19 @@ public:
     * @return true and succeed if and only if `this->GetWidth() ==
     * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
     * other.GetStretchRatio()`.
+
+    @pre `StrongInvariant()`
+    @pre `other.StrongInvariant()`
+    @post `StrongInvariant()`
     */
    bool Paste(double t0, const WaveClip& other);
 
-   /** Insert silence - note that this is an efficient operation for large
-    * amounts of silence */
+   //! Insert silence - note that this is an efficient operation for large
+   //! amounts of silence
+   /*!
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
+    */
    void InsertSilence( double t, double len, double *pEnvelopeValue = nullptr );
 
    /** Insert silence at the end, and causes the envelope to ramp
@@ -555,6 +609,10 @@ public:
    double SamplesToTime(sampleCount s) const noexcept;
 
    //! Silences the 'length' amount of samples starting from 'offset'(relative to the play start)
+   /*!
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
+    */
    void SetSilence(sampleCount offset, sampleCount length);
 
    //! Get one channel of the append buffer
@@ -563,7 +621,11 @@ public:
     @pre `ii < GetWidth()`
     */
    constSamplePtr GetAppendBuffer(size_t ii) const;
-   size_t GetAppendBufferLen() const;
+   /*!
+    @param ii identifies the channel
+    @pre `ii < GetWidth()`
+    */
+   size_t GetAppendBufferLen(size_t ii) const;
 
    void
    OnProjectTempoChange(const std::optional<double>& oldTempo, double newTempo);
@@ -571,6 +633,8 @@ public:
    SampleFormats GetSampleFormats() const;
 
 private:
+   size_t GreatestAppendBufferLen() const;
+
    //! Called by mutating operations; notifies listeners
    /*! @excsafety{No-fail} */
    void MarkChanged();
@@ -580,13 +644,17 @@ private:
    sampleCount TimeToSequenceSamples(double t) const;
    bool StretchRatioEquals(double value) const;
    sampleCount GetNumSamples() const;
-   const SampleBlockFactoryPtr &GetFactory();
+   const SampleBlockFactoryPtr &GetFactory() const;
    std::vector<std::unique_ptr<Sequence>> GetEmptySequenceCopies() const;
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 
-   /// This name is consistent with WaveTrack::Clear. It performs a "Cut"
-   /// operation (but without putting the cut audio to the clipboard)
+   //! This name is consistent with WaveTrack::Clear. It performs a "Cut"
+   //! operation (but without putting the cut audio to the clipboard)
+   /*!
+    @pre `StrongInvariant()`
+    @post `StrongInvariant()`
+    */
    void ClearSequence(double t0, double t1);
 
    //! Restores state when an update loop over mSequences fails midway
@@ -621,11 +689,7 @@ private:
    int mRate;
 
    /*!
-    @invariant `mSequences.size() > 0`
-    @invariant all are non-null
-    @invariant all sequences have the same lengths, append buffer lengths,
-      sample formats, and sample block factory
-    @invariant all cutlines have the same width
+    @invariant `CheckInvariants()`
     */
    std::vector<std::unique_ptr<Sequence>> mSequences;
    //! Envelope is unique, not per-sequence
@@ -641,7 +705,6 @@ private:
    // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
    bool mIsPlaceholder { false };
 
-private:
    wxString mName;
 };
 

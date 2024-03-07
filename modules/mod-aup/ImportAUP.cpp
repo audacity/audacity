@@ -1460,7 +1460,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
       // Replicate the sharing of blocks
       if (pClip->GetWidth() != 1)
          return false;
-      pClip->AppendSharedBlock( pBlock );
+      pClip->AppendLegacySharedBlock( pBlock );
       return true;
    }
 
@@ -1653,7 +1653,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    {
       if (pClip->GetWidth() != 1)
          return false;
-      pBlock = pClip->AppendNewBlock(bufptr, format, cnt);
+      pBlock = pClip->AppendLegacyNewBlock(bufptr, format, cnt);
    }
 
    // Let the finally block know everything is good
