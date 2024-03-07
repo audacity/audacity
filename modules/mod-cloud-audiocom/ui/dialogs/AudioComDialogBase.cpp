@@ -83,18 +83,24 @@ audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
    Show();
    Raise();
 
-   wxWindowDisabler disabler(this);
-
-   if (!poller)
-      poller = [] { return DialogButtonIdentifier {}; };
-
-   while (IsShown())
    {
-      wxYield();
+      wxWindowDisabler disabler { this };
 
-      if (auto result = poller(); !result.empty())
-         return result;
+      if (!poller)
+         poller = [] { return DialogButtonIdentifier {}; };
+
+      while (IsShown())
+      {
+         wxYield();
+
+         if (auto result = poller(); !result.empty())
+            return result;
+      }
    }
+
+   // On Windows, parent window will lose focus after the wxWindowDisabler is destroyed
+   if (auto parent = GetParent())
+      parent->Raise();
 
    // mResultButtonIdentifier is empty if the dialog was closed using the
    // cross button
