@@ -234,6 +234,8 @@ class WAVE_TRACK_API WaveClip final :
     public Observer::Publisher<CentShiftChange>
 {
 private:
+   struct CreateToken{ bool emptyCopy = false; };
+
    // It is an error to copy a WaveClip without specifying the
    // sample block factory.
 
@@ -260,10 +262,13 @@ public:
    //! from one project to another
    /*!
     @post `GetWidth() == orig.GetWidth()`
+    @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
     */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
-            bool copyCutlines);
+            bool copyCutlines)
+      : WaveClip{ orig, factory, copyCutlines, {} }
+   {}
 
    //! @brief Copy only a range from the given WaveClip
    /*!
@@ -765,6 +770,24 @@ public:
    // These return a nonnegative number of samples meant to size a memory buffer
    size_t GetBestBlockSize(sampleCount t) const;
    size_t GetMaxBlockSize() const;
+
+   //! essentially a copy constructor - but you must pass in the
+   //! current sample block factory, because we might be copying
+   //! from one project to another
+   /*!
+    This is effectively private because CreateToken is private, but must be
+    public to cooperate with make_shared.
+
+    The clip so constructed does NOT (yet) satisfy the class invariants!
+
+    @param emptyCopy if true, don't make sequences
+
+    @post `GetWidth() == (token.emptyCopy ? 0 : orig.GetWidth())`
+    @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
+    */
+   WaveClip(const WaveClip& orig,
+            const SampleBlockFactoryPtr &factory,
+            bool copyCutlines, CreateToken token);
 
 private:
    size_t GreatestAppendBufferLen() const;

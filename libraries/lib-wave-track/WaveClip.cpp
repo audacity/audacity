@@ -225,7 +225,7 @@ WaveClip::WaveClip(size_t width,
 
 WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
-   bool copyCutlines)
+   bool copyCutlines, CreateToken token)
    : mCentShift { orig.mCentShift }
    , mClipStretchRatio { orig.mClipStretchRatio }
    , mRawAudioTempo { orig.mRawAudioTempo }
@@ -245,9 +245,9 @@ WaveClip::WaveClip(
    attachments = orig;
 
    mSequences.reserve(orig.GetWidth());
-   for (auto &pSequence : orig.mSequences)
-      mSequences.push_back(
-         std::make_unique<Sequence>(*pSequence, factory));
+   if (!token.emptyCopy)
+      for (auto &pSequence : orig.mSequences)
+         mSequences.push_back(std::make_unique<Sequence>(*pSequence, factory));
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
@@ -255,12 +255,14 @@ WaveClip::WaveClip(
 
    if (copyCutlines)
       for (const auto &clip: orig.mCutLines)
-         mCutLines.push_back(std::make_shared<WaveClip>(*clip, factory, true));
+         mCutLines.push_back(
+            std::make_shared<WaveClip>(*clip, factory, true, token));
 
    mIsPlaceholder = orig.GetIsPlaceholder();
 
-   assert(GetWidth() == orig.GetWidth());
-   assert(CheckInvariants());
+   assert(GetWidth() == (token.emptyCopy ? 0 : orig.GetWidth()));
+   assert(token.emptyCopy || CheckInvariants());
+   assert(!copyCutlines || NumCutLines() == orig.NumCutLines());
 }
 
 WaveClip::WaveClip(
