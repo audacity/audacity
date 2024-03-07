@@ -308,3 +308,22 @@ void WaveClipWaveformCache::Invalidate()
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
 }
+
+void WaveClipWaveformCache::MakeStereo(WaveClipListener &&other, bool)
+{
+   auto pOther = dynamic_cast<WaveClipWaveformCache *>(&other);
+   assert(pOther); // precondition
+   mWaveCaches.push_back(move(pOther->mWaveCaches[0]));
+}
+
+void WaveClipWaveformCache::SwapChannels()
+{
+   mWaveCaches.resize(2);
+   std::swap(mWaveCaches[0], mWaveCaches[1]);
+}
+
+void WaveClipWaveformCache::Erase(size_t index)
+{
+   if (index < mWaveCaches.size())
+      mWaveCaches.erase(mWaveCaches.begin() + index);
+}

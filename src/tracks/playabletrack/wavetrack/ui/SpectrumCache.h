@@ -128,6 +128,10 @@ struct WaveClipSpectrumCache final : WaveClipListener
       SpectrogramSettings &spectrogramSettings,
       const sampleCount *&where, size_t numPixels,
       double t0 /*absolute time*/, double pixelsPerSecond);
+
+   void MakeStereo(WaveClipListener &&other, bool aligned) override;
+   void SwapChannels() override;
+   void Erase(size_t index) override;
 };
 
 #endif

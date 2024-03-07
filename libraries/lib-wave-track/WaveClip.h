@@ -102,6 +102,26 @@ struct WaveClipListener : WaveClipListenerBase {
    // Default implementation just returns false
    virtual bool HandleXMLAttribute(
       const std::string_view &attr, const XMLAttributeValueView &valueView);
+
+   //! Append the other's attachments to this, assuming concrete subclasses are
+   //! the same
+   /*!
+    Default implementation does nothing
+    @param aligned whether the strong invariant condition on the clip may be
+    assumed
+    @pre `typeid(*this) == typeid(other)`
+    */
+   virtual void MakeStereo(WaveClipListener &&other, bool aligned);
+
+   //! Default implementation does nothing
+   virtual void SwapChannels();
+
+   //! Erase attachment at a given index, if it existed, moving later-indexed
+   //! attachments to earlier indices
+   /*!
+    Default implementation does nothing
+    */
+   virtual void Erase(size_t index);
 };
 
 class WAVE_TRACK_API WaveClipChannel

@@ -47,6 +47,18 @@ bool WaveClipListener::HandleXMLAttribute(
    return false;
 }
 
+void WaveClipListener::MakeStereo(WaveClipListener &&, bool)
+{
+}
+
+void WaveClipListener::SwapChannels()
+{
+}
+
+void WaveClipListener::Erase(size_t)
+{
+}
+
 WaveClipChannel::~WaveClipChannel() = default;
 
 Envelope &WaveClipChannel::GetEnvelope()
