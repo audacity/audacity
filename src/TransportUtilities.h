@@ -12,11 +12,18 @@
 #ifndef __AUDACITY_TRANSPORT_UTILITIES__
 #define __AUDACITY_TRANSPORT_UTILITIES__
 
+#include "GlobalVariable.h"
+#include <memory>
+
 struct AudioIOStartStreamOptions;
 class CommandContext;
 class SelectedRegion;
+class Meter;
+using MeterPtr = std::weak_ptr<Meter>;
+using MeterPtrs = std::vector<MeterPtr>;
 class TrackList;
 class TransportSequences;
+class WaveTrack;
 enum class PlayMode : int;
 
 struct AUDACITY_DLL_API TransportUtilities
@@ -37,12 +44,16 @@ struct AUDACITY_DLL_API TransportUtilities
       const CommandContext &context, bool newDefault = false);
    static bool DoStopPlaying(const CommandContext &context);
 
+   struct AUDACITY_DLL_API GetTrackMeters : GlobalHook<GetTrackMeters,
+      MeterPtrs(WaveTrack &)
+   >{};
+
+   /*!
+    @param nonWaveToo if true, collect all PlayableTracks
+    */
+   static TransportSequences MakeTransportTracks(
+      TrackList &trackList, bool selectedOnly, bool nonWaveToo = false);
 };
 
-/*!
- @param nonWaveToo if true, collect all PlayableTracks
- */
-TransportSequences MakeTransportTracks(
-   TrackList &trackList, bool selectedOnly, bool nonWaveToo = false);
 
 #endif

@@ -89,8 +89,7 @@ private:
    void OnMenu(wxCommandEvent & evt);
    void OnEnable(wxCommandEvent & evt);
    void OnPlay(wxCommandEvent & evt);
-   void OnPlayback(AudioIOEvent);
-   void OnCapture(AudioIOEvent);
+   void OnCapture(const AudioIOEvent &evt);
    void OnUserPreset(wxCommandEvent & evt);
    void OnFactoryPreset(wxCommandEvent & evt);
    void OnDeletePreset(wxCommandEvent & evt);

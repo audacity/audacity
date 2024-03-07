@@ -768,15 +768,11 @@ void EffectUIHost::OnPlay(wxCommandEvent & WXUNUSED(evt))
    return;
 }
 
-void EffectUIHost::OnCapture(AudioIOEvent evt)
+void EffectUIHost::OnCapture(const AudioIOEvent &evt)
 {
-   if (evt.on) {
-      if (evt.pProject == &mProject)
-         mCapturing = true;
-   }
-   else {
-      mCapturing = false;
-   }
+   if (!evt.Capturing())
+      return;
+   mCapturing = evt.Starting() && evt.wProject.lock().get() == &mProject;
    UpdateControls();
 }
 
@@ -1069,14 +1065,8 @@ std::shared_ptr<EffectInstance> EffectUIHost::InitializeInstance()
       }
 
       if (!priorState) {
-         mAudioIOSubscription = AudioIO::Get()->Subscribe([this](AudioIOEvent event){
-            switch (event.type) {
-            case AudioIOEvent::CAPTURE:
-               OnCapture(event); break;
-            default:
-               break;
-            }
-         });
+         mAudioIOSubscription =
+            AudioIO::Get()->Subscribe(*this, &EffectUIHost::OnCapture);
       }
       
       mInitialized = true;
