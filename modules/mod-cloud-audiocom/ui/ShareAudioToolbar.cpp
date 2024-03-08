@@ -159,7 +159,8 @@ void ShareAudioToolbar::ReCreateButtons()
 void ShareAudioToolbar::MakeShareAudioButton()
 {
    mShareAudioButton = safenew AButton(this, ID_SHARE_AUDIO_BUTTON);
-   //i18n-hint: Share audio button text, keep as short as possible
+   /* i18n-hint: Share audio button text, keep as short as possible.
+     Not to be confused with Cloud saving. */
    mShareAudioButton->SetLabel(XO("Share Audio"));
    mShareAudioButton->SetButtonType(AButton::FrameButton);
    mShareAudioButton->SetImages(
@@ -221,7 +222,7 @@ namespace
 {
 AttachedToolBarMenuItem sAttachment {
    /* i18n-hint: Clicking this menu item shows the toolbar
-      that opens Share Audio dialog */
+      that opens Share Audio dialog. Not to be confused with Cloud saving. */
    ShareAudioToolbar::ID(), wxT("ShareAudioTB"), XXO("&Share Audio Toolbar")
 };
 }
