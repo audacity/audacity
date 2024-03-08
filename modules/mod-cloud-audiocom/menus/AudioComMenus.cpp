@@ -85,6 +85,9 @@ const ReservedCommandFlag& IsCloudProjectFlag()
 using namespace MenuRegistry;
 
 AttachedItem sSaveAttachment { Command(
+                                 /* i18n-hint: Save to Cloud can be thought of as 
+                                   uploading an Audacity project to the cloud. 
+                                   It's not to be confused with Share Audio. */
                                   wxT("SaveToCloud"), XXO("Save To Cloud..."),
                                   OnSaveToCloud, AlwaysEnabledFlag),
                                wxT("File/Save") };
@@ -102,6 +105,9 @@ AttachedItem sOpenAttachment { Command(
                                wxT("File/Basic") };
 
 AttachedItem sShareAttachment { Command(
+                                   /* i18n-hint: Share Audio can be thought of as 
+                                   uploading an MP3 to the cloud. It's not to be
+                                    confused with Cloud saving. */
                                    wxT("ShareAudio"), XXO("Share Audio..."),
                                    OnShareAudio, WaveTracksExistFlag()),
                                 wxT("File/Import-Export") };
