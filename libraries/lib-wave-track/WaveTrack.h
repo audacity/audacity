@@ -347,9 +347,6 @@ public:
    using IntervalConstHolder = std::shared_ptr<const Interval>;
    using IntervalConstHolders = std::vector<IntervalConstHolder>;
 
-   // Resolve ambiguous lookup
-   using SampleTrack::GetFloats;
-
    /// \brief Structure to hold region of a wavetrack and a comparison function
    /// for sortability.
    struct Region
