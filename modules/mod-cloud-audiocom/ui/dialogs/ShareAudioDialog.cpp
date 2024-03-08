@@ -166,6 +166,7 @@ private:
 
 ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
     : wxDialogWrapper(
+         /* i18n-hint: Header of a dialog. Not to be confused with Cloud saving. */
          parent, wxID_ANY, XO("Share Audio"), wxDefaultPosition, { 480, 250 },
          wxDEFAULT_DIALOG_STYLE)
     , mProject(project)
