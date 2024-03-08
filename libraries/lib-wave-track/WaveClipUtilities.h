@@ -42,19 +42,6 @@ WAVE_TRACK_API void SetFloatsFromTime(WaveClip &clip,
    double t, size_t iChannel, const float* buffer, size_t numSamples,
    sampleFormat effectiveFormat);
 
-/*!
- @brief Same as `SetFloatsFromTime`, but with `buffer` starting at
- `TimeToSamples(t0 -  SamplesToTime(numSideSamples))`.
- `[buffer, buffer + 2 * numSizeSamples + 1)` is assumed to be a valid span
- of addresses.
- */
-WAVE_TRACK_API void SetFloatsCenteredAroundTime(WaveClip &clip,
-   double t, size_t iChannel, const float* buffer, size_t numSideSamples,
-   sampleFormat effectiveFormat);
-
-WAVE_TRACK_API void SetFloatAtTime(WaveClip &clip,
-   double t, size_t iChannel, float value, sampleFormat effectiveFormat);
-
 //! used by commands which interact with clips using the keyboard
 /*!
  When two clips are immediately next to each other, the GetPlayEndTime()
