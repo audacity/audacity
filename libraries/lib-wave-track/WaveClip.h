@@ -46,48 +46,6 @@ using WaveClipHolders = std::vector <WaveClipHolder>;
 using WaveClipConstHolders = std::vector<WaveClipConstHolder>;
 using ProgressReporter = std::function<void(double)>;
 
-// A bundle of arrays needed for drawing waveforms.  The object may or may not
-// own the storage for those arrays.  If it does, it destroys them.
-class WaveDisplay
-{
-public:
-   int width;
-   sampleCount *where;
-   float *min, *max, *rms;
-
-   std::vector<sampleCount> ownWhere;
-   std::vector<float> ownMin, ownMax, ownRms;
-
-public:
-   WaveDisplay(int w)
-      : width(w), where(0), min(0), max(0), rms(0)
-   {
-   }
-
-   // Create "own" arrays.
-   void Allocate()
-   {
-      ownWhere.resize(width + 1);
-      ownMin.resize(width);
-      ownMax.resize(width);
-      ownRms.resize(width);
-
-      where = &ownWhere[0];
-      if (width > 0) {
-         min = &ownMin[0];
-         max = &ownMax[0];
-         rms = &ownRms[0];
-      }
-      else {
-         min = max = rms = 0;
-      }
-   }
-
-   ~WaveDisplay()
-   {
-   }
-};
-
 struct WAVE_TRACK_API WaveClipListener;
 CRTP_BASE(WaveClipListenerBase, struct,
    ClientData::Cloneable<WaveClipListener>);
