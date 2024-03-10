@@ -673,6 +673,10 @@ public:
     @pre `StrongInvariant()`
     @pre `other.StrongInvariant()`
     @post `StrongInvariant()`
+
+    This says, same widths and ratios are sufficient for success
+    @post result: `this->NChannels() != other.NChannels() ||
+       this->GetStretchRatio() != other.GetStretchRatio() || result`
     */
    bool Paste(double t0, const WaveClip& other);
 
