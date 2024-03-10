@@ -691,6 +691,14 @@ public:
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);
 
+   //! Apply a function to each channel, avoiding std::function and iterator
+   //! overheads
+   template<typename Op> void ForEachChannel(const Op& op) {
+      op(mChannel);
+      if (mRightChannel)
+         op(*mRightChannel);
+   }
+
 private:
    /*!
      Sets project tempo on clip upon push. Use this instead of

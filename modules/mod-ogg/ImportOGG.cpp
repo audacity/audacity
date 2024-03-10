@@ -302,7 +302,8 @@ void OggImportFileHandle::Import(
          {
             /* give the data to the wavetracks */
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(**std::next(mStreams.begin(), bitstream), [&](auto& channel)
+            (*std::next(mStreams.begin(), bitstream))
+               ->ForEachChannel([&](auto& channel)
             {
                channel.AppendBuffer(
                   (char *)(mainBuffer.get() + chn),

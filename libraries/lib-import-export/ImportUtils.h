@@ -18,13 +18,12 @@
 #include "Import.h"
 #include "SampleFormat.h"
 #include "Internat.h"
-#include "Track.h"
+#include "WaveTrack.h"
 
 class wxString;
 
 class TrackList;
 class WaveTrackFactory;
-class WaveTrack;
 class WaveChannel;
 
 class IMPORT_EXPORT_API ImportUtils final
@@ -43,12 +42,11 @@ public:
    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
 
    //! Iterates over channels in each wave track from the list
-   static
-   void ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op);
-
-   //! Iterates over channels in one wave track
-   static
-   void ForEachChannel(WaveTrack &track, const std::function<void(WaveChannel&)>& op);
+   template<typename Op>
+   static void ForEachChannel(TrackList& trackList, const Op& op) {
+      for(auto track : trackList.Any<WaveTrack>())
+         track->ForEachChannel(op);
+   }
 
    //! Flushes the given channels and moves them to \p outTracks
    static

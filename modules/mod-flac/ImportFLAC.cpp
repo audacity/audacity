@@ -224,7 +224,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
       auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mFile->mTrack, [&](auto& channel)
+      mFile->mTrack->ForEachChannel([&](auto& channel)
       {
          if (frame->header.bits_per_sample <= 16) {
             if (frame->header.bits_per_sample == 8) {

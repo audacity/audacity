@@ -321,7 +321,7 @@ void MP3ImportFileHandle::Import(
       }
       // Just copy the interleaved data to the channels
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mTrack, [&](auto& channel)
+      mTrack->ForEachChannel([&](auto& channel)
       {
          channel.AppendBuffer(
             samples + sizeof(float) * chn,

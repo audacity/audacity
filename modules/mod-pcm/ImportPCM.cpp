@@ -353,7 +353,7 @@ void PCMImportFileHandle::Import(
 
          if (block) {
             unsigned c = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            track->ForEachChannel([&](auto& channel)
             {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
