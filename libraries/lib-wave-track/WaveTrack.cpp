@@ -522,11 +522,6 @@ void WaveTrack::CopyClips(WaveClipHolders &clips,
          false, backup, false);
 }
 
-size_t WaveTrack::GetWidth() const
-{
-   return NChannels();
-}
-
 size_t WaveChannel::NChannels() const
 {
    return 1;
@@ -2973,7 +2968,7 @@ auto WaveTrack::DoCreateClip(double offset, const wxString& name) const
    const auto& tempo = GetProjectTempo(*this);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
-   assert(clip->GetWidth() == GetWidth());
+   assert(clip->NChannels() == NChannels());
    return clip;
 }
 

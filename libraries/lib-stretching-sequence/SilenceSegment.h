@@ -20,7 +20,7 @@ public:
    SilenceSegment(size_t numChannels, sampleCount numSamples);
    size_t GetFloats(float *const *buffers, size_t numSamples) override;
    bool Empty() const override;
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
 private:
    const size_t mNumChannels;

@@ -229,7 +229,7 @@ public:
    /*!
     @param width how many sequences
     @pre `width > 0`
-    @post `GetWidth() == width`
+    @post `NChannels() == width`
     */
    WaveClip(size_t width,
       const SampleBlockFactoryPtr &factory, sampleFormat format,
@@ -239,7 +239,7 @@ public:
    //! current sample block factory, because we might be copying
    //! from one project to another
    /*!
-    @post `GetWidth() == orig.GetWidth()`
+    @post `NChannels() == orig.NChannels()`
     @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
     */
    WaveClip(const WaveClip& orig,
@@ -251,7 +251,7 @@ public:
    //! @brief Copy only a range from the given WaveClip
    /*!
     @pre CountSamples(t1, t0) > 0
-    @post `GetWidth() == orig.GetWidth()`
+    @post `NChannels() == orig.NChannels()`
     */
    WaveClip(const WaveClip& orig,
             const SampleBlockFactoryPtr &factory,
@@ -304,7 +304,6 @@ public:
    };
 
    //! How many Sequences the clip contains.
-   size_t GetWidth() const override;
    size_t NChannels() const override;
 
    void ConvertToSampleFormat(sampleFormat format,
@@ -463,7 +462,7 @@ public:
     * `AudioSegmentSampleView::GetSampleCount()`.
     *
     * @param start index of first clip sample from play start
-    * @pre `iChannel < GetWidth()`
+    * @pre `iChannel < NChannels()`
     */
    AudioSegmentSampleView GetSampleView(
       size_t iChannel, sampleCount start, size_t length,
@@ -477,7 +476,7 @@ public:
     * actual number of samples available from the returned view is queried
     * through `AudioSegmentSampleView::GetSampleCount()`.
     *
-    * @pre `iChannel < GetWidth()`
+    * @pre `iChannel < NChannels()`
     * @pre stretched samples in [t0, t1) can be counted in a `size_t`
     */
    AudioSegmentSampleView GetSampleView(
@@ -487,14 +486,14 @@ public:
    /*!
     @param ii identifies the channel
     @param start relative to clip play start sample
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    bool GetSamples(size_t ii, samplePtr buffer, sampleFormat format,
                    sampleCount start, size_t len, bool mayThrow = true) const;
 
    //! Get (non-interleaved) samples from all channels
    /*!
-    assume as many buffers available as GetWidth()
+    assume as many buffers available as NChannels()
     @param start relative to clip play start sample
     */
    bool GetSamples(samplePtr buffers[], sampleFormat format,
@@ -502,7 +501,7 @@ public:
 
    //! @param ii identifies the channel
    /*!
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     @pre `StrongInvariant()`
     @post `StrongInvariant()`
     @param start relative to clip play start sample
@@ -527,7 +526,7 @@ public:
 
    //! @param ii identifies the channel
    /*!
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    const BlockArray* GetSequenceBlockArray(size_t ii) const;
 
@@ -535,10 +534,10 @@ public:
    //! but use more high-level functions inside WaveClip (or add them if you
    //! think they are useful for general use)
    /*!
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    Sequence* GetSequence(size_t ii) {
-      assert(ii < GetWidth());
+      assert(ii < NChannels());
       return mSequences[ii].get();
    }
    /*!
@@ -550,7 +549,7 @@ public:
     * calculations and Contrast */
    /*!
     @param ii identifies the channel
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    std::pair<float, float> GetMinMax(size_t ii,
       double t0, double t1, bool mayThrow) const;
@@ -565,7 +564,7 @@ public:
    void UpdateEnvelopeTrackLen();
 
    /*!
-    * @pre `iChannel < GetWidth()`
+    * @pre `iChannel < NChannels()`
     */
    std::shared_ptr<SampleBlock>
    AppendToChannel(size_t iChannel,
@@ -573,14 +572,14 @@ public:
 
    //! For use in importing pre-version-3 projects to preserve sharing of
    //! blocks; no dithering applied
-   //! @pre `GetWidth() == 1`
+   //! @pre `NChannels() == 1`
    std::shared_ptr<SampleBlock>
    AppendLegacyNewBlock(constSamplePtr buffer, sampleFormat format, size_t len);
 
    //! For use in importing pre-version-3 projects to preserve sharing of
    //! blocks
    /*!
-    @pre `GetWidth() == 1`
+    @pre `NChannels() == 1`
     */
    void AppendLegacySharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
@@ -614,7 +613,7 @@ public:
    //! You must call Flush after the last Append
    /*!
     @return true if at least one complete block was created
-    assume as many buffers available as GetWidth()
+    assume as many buffers available as NChannels()
     In case of failure or exceptions, the clip contents are unchanged but
     un-flushed data are lost
 
@@ -663,12 +662,12 @@ public:
     */
    void ClearAndAddCutLine(double t0, double t1);
 
-   //! @pre `GetWidth() == pClip->GetWidth()`
+   //! @pre `NChannels() == pClip->NChannels()`
    void AddCutLine(WaveClipHolder pClip);
 
    /*!
-    * @return true and succeed if and only if `this->GetWidth() ==
-    * other.GetWidth()` and either this is empty or `this->GetStretchRatio() ==
+    * @return true and succeed if and only if `this->NChannels() ==
+    * other.NChannels()` and either this is empty or `this->GetStretchRatio() ==
     * other.GetStretchRatio()`.
 
     @pre `StrongInvariant()`
@@ -729,7 +728,7 @@ public:
    //! is still done so for compatibility.  Therefore, the first argument.
    /*!
     @param ii identifies the channel
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    void WriteXML(size_t ii, XMLWriter &xmlFile) const;
 
@@ -755,12 +754,12 @@ public:
    //! Get one channel of the append buffer
    /*!
     @param ii identifies the channel
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    constSamplePtr GetAppendBuffer(size_t ii) const;
    /*!
     @param ii identifies the channel
-    @pre `ii < GetWidth()`
+    @pre `ii < NChannels()`
     */
    size_t GetAppendBufferLen(size_t ii) const;
 
@@ -773,19 +772,19 @@ public:
 
    //! Reduce width
    /*!
-    @post `GetWidth() == 1`
+    @post `NChannels() == 1`
     */
    void DiscardRightChannel();
 
-   //! @pre `GetWidth() == 2`
+   //! @pre `NChannels() == 2`
    void SwapChannels();
 
    //! A stereo WaveClip becomes mono, keeping the left side and returning a
    //! new clip with the right side samples
    /*!
-    @pre `GetWidth() == 2`
-    @post `GetWidth() == 1`
-    @post result: `result->GetWidth() == 1`
+    @pre `NChannels() == 2`
+    @post `NChannels() == 1`
+    @post result: `result->NChannels() == 1`
     */
    std::shared_ptr<WaveClip> SplitChannels();
 
@@ -795,8 +794,8 @@ public:
     Stating sufficient preconditions for the postondition.  Even stronger
     preconditions on matching offset, trims, and rates could be stated.
 
-    @pre `GetWidth() == 1`
-    @pre `other.GetWidth() == 1`
+    @pre `NChannels() == 1`
+    @pre `other.NChannels() == 1`
     @pre `GetSampleFormats() == other.GetSampleFormats()`
     @pre `GetSampleBlockFactory() == other.GetSampleBlockFactory()`
     @pre `!mustAlign || GetNumSamples() == other.GetNumSamples()`
@@ -820,7 +819,7 @@ public:
 
     @param emptyCopy if true, don't make sequences
 
-    @post `GetWidth() == (token.emptyCopy ? 0 : orig.GetWidth())`
+    @post `NChannels() == (token.emptyCopy ? 0 : orig.NChannels())`
     @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
     */
    WaveClip(const WaveClip& orig,
