@@ -999,7 +999,6 @@ WaveTrack::Holder WaveTrack::EmptyCopy(size_t nChannels,
    // channel group data.  The copy is not yet in a TrackList.  Reassign rate
    // in case the track needs to make WaveClips before it is properly joined
    // with the opposite channel in a TrackList.
-   // TODO wide wave tracks -- all of the comment above will be irrelevant!
    result->DoSetRate(rate);
    result->mpFactory = pFactory ? pFactory : mpFactory;
    WaveTrackData::Get(*result).SetOrigin(0);
