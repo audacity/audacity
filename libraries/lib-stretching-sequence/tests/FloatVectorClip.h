@@ -28,7 +28,7 @@ public:
 
    sampleCount GetVisibleSampleCount() const override;
 
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
    int GetRate() const override;
 

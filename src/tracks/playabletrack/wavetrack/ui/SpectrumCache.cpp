@@ -591,7 +591,7 @@ std::unique_ptr<WaveClipListener> WaveClipSpectrumCache::Clone() const
 }
 
 static WaveClip::Attachments::RegisteredFactory sKeyS{ [](WaveClip &clip){
-   return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
+   return std::make_unique<WaveClipSpectrumCache>(clip.NChannels());
 } };
 
 WaveClipSpectrumCache &

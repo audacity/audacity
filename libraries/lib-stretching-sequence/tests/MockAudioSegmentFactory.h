@@ -21,7 +21,7 @@ public:
       return numSamples;
    }
 
-   size_t GetWidth() const override
+   size_t NChannels() const override
    {
       return 1u;
    }

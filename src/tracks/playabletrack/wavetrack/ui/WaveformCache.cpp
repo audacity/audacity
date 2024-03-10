@@ -286,7 +286,7 @@ std::unique_ptr<WaveClipListener> WaveClipWaveformCache::Clone() const
 }
 
 static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip &clip) {
-   return std::make_unique<WaveClipWaveformCache>(clip.GetWidth());
+   return std::make_unique<WaveClipWaveformCache>(clip.NChannels());
 } };
 
 WaveClipWaveformCache &

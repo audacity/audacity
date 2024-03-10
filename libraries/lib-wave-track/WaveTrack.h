@@ -253,8 +253,6 @@ public:
    const SampleBlockFactoryPtr &GetSampleBlockFactory() const
    { return mpFactory; }
 
-   size_t GetWidth() const;
-
    size_t NChannels() const override;
 
    auto GetChannel(size_t iChannel) {
@@ -585,7 +583,7 @@ private:
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided
 
-    @post result: `result->GetWidth() == track.GetWidth()`
+    @post result: `result->NChannels() == track.NChannels()`
     */
    WaveClipHolder CreateClip(
       double offset = .0, const wxString& name = wxEmptyString) const;

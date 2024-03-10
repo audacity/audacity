@@ -1457,7 +1457,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks
-      if (pClip->GetWidth() != 1)
+      if (pClip->NChannels() != 1)
          return false;
       pClip->AppendLegacySharedBlock( pBlock );
       return true;
@@ -1650,7 +1650,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    // Add the samples to the clip/track
    if (pClip)
    {
-      if (pClip->GetWidth() != 1)
+      if (pClip->NChannels() != 1)
          return false;
       pBlock = pClip->AppendLegacyNewBlock(bufptr, format, cnt);
    }

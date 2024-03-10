@@ -39,7 +39,7 @@ void ClipMirAudioReader::ReadFloats(
 {
    std::fill(buffer, buffer + numFrames, 0.f);
    AddChannel(0, buffer, where, numFrames);
-   if (mWideClip->GetWidth() == 1)
+   if (mWideClip->NChannels() == 1)
       return;
    AddChannel(1, buffer, where, numFrames);
    std::transform(
