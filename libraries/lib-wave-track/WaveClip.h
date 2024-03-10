@@ -584,6 +584,32 @@ public:
     */
    void AppendLegacySharedBlock(const std::shared_ptr<SampleBlock> &pBlock);
 
+   //! Append (non-interleaved) samples to some or all channels
+   //! You must call Flush after the last Append
+   /*!
+    For stereo clips, typically this is invoked on left, then right channels,
+    either alternating (as when recording) or in two batches (channel-major
+    pattern of effect processing), which violates the strong invariant
+    condition, then restores it (either repeatedly, or once).
+
+    @return true if at least one complete block was created
+    In case of failure or exceptions, the clip contents are unchanged but
+    un-flushed data are lost
+
+    @pre `iChannel < NChannels()`
+    @pre `iChannel + nChannels <= NChannels()`
+    */
+   bool Append(size_t iChannel, size_t nChannels,
+      constSamplePtr buffers[], sampleFormat format,
+      size_t len, unsigned int stride,
+      sampleFormat effectiveFormat /*!<
+         Make the effective format of the data at least the minumum of this
+         value and `format`.  (Maybe wider, if merging with preexistent data.)
+         If the data are later narrowed from stored format, but not narrower
+         than the effective, then no dithering will occur.
+      */
+   );
+
    //! Append (non-interleaved) samples to all channels
    //! You must call Flush after the last Append
    /*!
