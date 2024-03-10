@@ -690,7 +690,7 @@ public:
    void AppendSilence( double len, double envelopeValue );
 
    /// Get access to cut lines list
-   WaveClipHolders &GetCutLines() { return mCutLines; }
+   const WaveClipHolders &GetCutLines() { return mCutLines; }
    const WaveClipConstHolders &GetCutLines() const
       { return reinterpret_cast< const WaveClipConstHolders& >( mCutLines ); }
    size_t NumCutLines() const { return mCutLines.size(); }
