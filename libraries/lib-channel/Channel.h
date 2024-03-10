@@ -508,7 +508,6 @@ public:
       @}
    */
 
-   // TODO wide wave tracks -- remove this
    //! For two tracks describes the type of the linkage
    enum class LinkType : int {
        None = 0, //!< No linkage
