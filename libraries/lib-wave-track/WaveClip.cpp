@@ -1081,6 +1081,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    auto &other = *pOther;
 
    if (NChannels() != other.NChannels())
+      // post is satisfied
       return false;
 
    if (GetSequenceSamplesCount() == 0)
@@ -1091,6 +1092,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
       mProjectTempo = other.mProjectTempo;
    }
    else if (GetStretchRatio() != other.GetStretchRatio())
+      // post is satisfied
       return false;
 
    StrongInvariantScope scope{ *this };

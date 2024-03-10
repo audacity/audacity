@@ -1837,12 +1837,12 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
                // This branch only gets executed in `singleClipMode` - we've
                // already made sure that stretch ratios are equal, satisfying
                // `WaveClip::Paste`'s precondition.
+               assert(insideClip->GetStretchRatio() == pClip->GetStretchRatio());
+               // This too should follow from the assertion of the same number
+               // of channels in the tracks, near the top
+               assert(insideClip->NChannels() == pClip->NChannels());
                bool success = insideClip->Paste(t0, *pClip);
-               // TODO wide wave tracks -- prove success, or propagate failure,
-               // or we might throw a MessageBoxException
-               // (which would require a change in base class Track)
-               // for now it would be quiet failure if clip widths mismatched
-               // Can't yet assert(success);
+               assert(success);
             }
             return;
         }
