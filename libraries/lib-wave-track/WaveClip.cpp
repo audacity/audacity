@@ -825,6 +825,31 @@ void WaveClip::AppendLegacySharedBlock(
    mSequences[0]->AppendSharedBlock( pBlock );
 }
 
+bool WaveClip::Append(size_t iChannel, const size_t nChannels,
+   constSamplePtr buffers[], sampleFormat format,
+   size_t len, unsigned int stride, sampleFormat effectiveFormat)
+{
+   assert(iChannel < NChannels());
+   assert(iChannel + nChannels <= NChannels());
+
+   // No requirement or promise of the strong invariant, and therefore no
+   // need for Transaction
+
+   //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
+
+   bool appended = false;
+   for (size_t ii = 0; ii < nChannels; ++ii)
+      appended = mSequences[iChannel + ii]->Append(
+         buffers[ii], format, len, stride, effectiveFormat)
+            || appended;
+
+   // use No-fail-guarantee
+   UpdateEnvelopeTrackLen();
+   MarkChanged();
+
+   return appended;
+}
+
 bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
    size_t len, unsigned int stride, sampleFormat effectiveFormat)
 {
