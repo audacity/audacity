@@ -717,14 +717,15 @@ private:
 
    void CreateRight();
 
-   //! Create new clip and add it to the clip array; publish on the track.
+   //! Create a new clip that can be inserted later into the track
    /*!
     Returns a pointer to the newly created clip. Optionally initial offset and
     clip name may be provided
 
     @post result: `result->GetWidth() == track.GetWidth()`
     */
-   static WaveClipHolder CreateClip(WaveTrack &track, double offset = .0, const wxString& name = wxEmptyString);
+   WaveClipHolder DoCreateClip(
+      double offset = .0, const wxString& name = wxEmptyString) const;
 
 public:
    /** @brief Get access to the most recently added clip, or create a clip,

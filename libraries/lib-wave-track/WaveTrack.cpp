@@ -3021,7 +3021,7 @@ void WaveTrack::Join(
 
       // wxPrintf("Pasting at %.6f\n", t);
       bool success = newClip->Paste(t, *clip);
-      assert(success); // promise of CreateClip
+      assert(success); // promise of DoCreateClip
 
       t = newClip->GetPlayEndTime();
 
@@ -3802,9 +3802,9 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
          holders[iChannel++] = pNewClip;
       });
    else {
-      holders[iChannel++] = CreateClip(*this, offset, name);
+      holders[iChannel++] = DoCreateClip(offset, name);
       if (mRightChannel.has_value())
-         holders[iChannel++] = CreateClip(*this, offset, name);
+         holders[iChannel++] = DoCreateClip(offset, name);
    }
 
    return std::make_shared<Interval>(holders[0], holders[1]);
@@ -3823,22 +3823,21 @@ void WaveTrack::CreateRight()
    mRightClips.emplace();
 }
 
-auto WaveTrack::CreateClip(WaveTrack &track,
-   double offset, const wxString& name)
-      -> WaveClipHolder
+auto WaveTrack::DoCreateClip(double offset, const wxString& name) const
+   -> WaveClipHolder
 {
    // TODO wide wave tracks -- choose clip width correctly for the track
    auto clip = std::make_shared<WaveClip>(1,
-      track.mpFactory, track.GetSampleFormat(), track.GetRate());
+      mpFactory, GetSampleFormat(), GetRate());
    clip->SetName(name);
    clip->SetSequenceStartTime(offset);
 
-   const auto& tempo = GetProjectTempo(track);
+   const auto& tempo = GetProjectTempo(*this);
    if (tempo.has_value())
       clip->OnProjectTempoChange(std::nullopt, *tempo);
    // TODO wide wave tracks -- for now assertion is correct because widths are
    // always 1
-   assert(clip->GetWidth() == track.GetWidth());
+   assert(clip->GetWidth() == GetWidth());
    return clip;
 }
 
