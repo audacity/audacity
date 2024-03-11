@@ -1180,8 +1180,8 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
 
    finisher.Commit();
    transaction.Commit();
-
    MarkChanged();
+
    const auto sampleTime = 1.0 / GetRate();
    const auto timeOffsetInEnvelope =
       s0.as_double() * GetStretchRatio() / mRate + GetSequenceStartTime();
@@ -1269,7 +1269,8 @@ void WaveClip::Clear(double t0, double t1)
    }
    ClearSequence(st0, st1)
       .Commit();
-   
+   MarkChanged();
+
    if (offset != .0)
       ShiftBy(offset);
 }
@@ -1282,6 +1283,7 @@ void WaveClip::ClearLeft(double t)
          .Commit();
       SetTrimLeft(.0);
       SetSequenceStartTime(t);
+      MarkChanged();
    }
 }
 
@@ -1292,6 +1294,7 @@ void WaveClip::ClearRight(double t)
       ClearSequence(t, GetSequenceEndTime())
          .Commit();
       SetTrimRight(.0);
+      MarkChanged();
    }
 }
 
@@ -1361,7 +1364,6 @@ WaveClip::ClearSequenceFinisher::~ClearSequenceFinisher() noexcept
    // Collapse envelope
    auto sampleTime = 1.0 / pClip->GetRate();
    pClip->GetEnvelope().CollapseRegion(t0, t1, sampleTime);
-   pClip->MarkChanged();
 }
 
 /*! @excsafety{Weak}
