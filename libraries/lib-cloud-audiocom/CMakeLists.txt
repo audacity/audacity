@@ -35,6 +35,7 @@ set( SOURCES
    sync/MissingBlocksUploader.h
    sync/MixdownUploader.cpp
    sync/MixdownUploader.h
+   sync/ProjectUploadOperation.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
