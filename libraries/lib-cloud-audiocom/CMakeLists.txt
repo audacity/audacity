@@ -20,6 +20,9 @@ set( SOURCES
    UploadService.h
    UserService.cpp
    UserService.h
+
+   sync/BlockHasher.cpp
+   sync/BlockHasher.h
    sync/CloudProjectsDatabase.cpp
    sync/CloudProjectsDatabase.h
    sync/CloudSyncDTO.cpp
@@ -28,13 +31,15 @@ set( SOURCES
 
 
 set ( LIBRARIES
-   lib-network-manager-interface # Required for the networking
-   lib-files-interface # FileNames
-   lib-strings-interface # Languages
-   PUBLIC
+PUBLIC
+      lib-network-manager-interface # Required for the networking
+      lib-files-interface # FileNames
+      lib-strings-interface # Languages
+      lib-wave-track-interface
       rapidjson::rapidjson # Protocol is JSON based
    PRIVATE
       lib-sqlite-helpers-interface
+      lib-crypto-interface
       wxBase # Required to retrieve the OS information
 )
 
