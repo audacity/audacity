@@ -27,6 +27,8 @@ set( SOURCES
    sync/CloudProjectsDatabase.h
    sync/CloudSyncDTO.cpp
    sync/CloudSyncDTO.h
+   sync/CloudSyncError.cpp
+   sync/CloudSyncError.h
 )
 
 
