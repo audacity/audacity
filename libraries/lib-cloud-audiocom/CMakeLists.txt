@@ -31,6 +31,8 @@ set( SOURCES
    sync/CloudSyncError.h
    sync/DataUploader.cpp
    sync/DataUploader.h
+   sync/WavPackCompressor.cpp
+   sync/WavPackCompressor.h
 )
 
 
@@ -45,6 +47,8 @@ PUBLIC
    PRIVATE
       lib-sqlite-helpers-interface
       lib-crypto-interface
+      lib-import-export-interface
+      wavpack::wavpack # Required for the WavPackCompressor
       wxBase # Required to retrieve the OS information
 )
 
