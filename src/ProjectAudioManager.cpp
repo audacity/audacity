@@ -802,7 +802,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             break;
       }
 
-      auto clip = track.CreateWideClip(t0, name);
+      auto clip = track.CreateClip(t0, name);
       // So that the empty clip is not skipped for insertion:
       clip->SetIsPlaceholder(true);
       track.InsertInterval(clip, true);

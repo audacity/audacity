@@ -677,7 +677,7 @@ Track::Holder WaveTrack::PasteInto(
 {
    auto &trackFactory = WaveTrackFactory::Get(project);
    auto &pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-   auto pFirstTrack = WideEmptyCopy(pSampleBlockFactory);
+   auto pFirstTrack = EmptyCopy(pSampleBlockFactory);
    list.Add(pFirstTrack->SharedPointer());
    pFirstTrack->Paste(0.0, *this);
    return pFirstTrack->SharedPointer();
@@ -688,14 +688,14 @@ size_t WaveTrack::NIntervals() const
    return NarrowClips().size();
 }
 
-auto WaveTrack::GetWideClip(size_t iInterval) -> IntervalHolder
+auto WaveTrack::GetClip(size_t iInterval) -> IntervalHolder
 {
    return std::static_pointer_cast<Interval>(DoGetInterval(iInterval));
 }
 
-auto WaveTrack::GetWideClip(size_t iInterval) const -> IntervalConstHolder
+auto WaveTrack::GetClip(size_t iInterval) const -> IntervalConstHolder
 {
-   return const_cast<WaveTrack&>(*this).GetWideClip(iInterval);
+   return const_cast<WaveTrack&>(*this).GetClip(iInterval);
 }
 
 std::shared_ptr<WideChannelGroupInterval>
@@ -1005,7 +1005,7 @@ WaveTrack::Holder WaveTrack::EmptyCopy(size_t nChannels,
    return result;
 }
 
-auto WaveTrack::WideEmptyCopy(
+auto WaveTrack::EmptyCopy(
    const SampleBlockFactoryPtr &pFactory) const -> Holder
 {
    return EmptyCopy(NChannels(), pFactory);
@@ -1124,7 +1124,7 @@ void WaveTrack::FinishCopy(
    // PRL:  Only if we want the track for pasting into other tracks.  Not if
    // it goes directly into a project as in the Duplicate command.
    if (forClipboard && endTime + 1.0 / GetRate() < t1 - t0) {
-      auto placeholder = CreateWideClip();
+      auto placeholder = CreateClip();
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - GetEndTime());
       placeholder->ShiftBy(GetEndTime());
@@ -1505,7 +1505,7 @@ void WaveTrack::SplitDelete(double t0, double t1)
    HandleClear(t0, t1, addCutLines, split);
 }
 
-std::ptrdiff_t WaveTrack::FindWideClip(const Interval &clip)
+std::ptrdiff_t WaveTrack::FindClip(const Interval &clip)
 {
    auto clips = Intervals();
    const auto begin = clips.begin();
@@ -1514,7 +1514,7 @@ std::ptrdiff_t WaveTrack::FindWideClip(const Interval &clip)
    return std::distance(begin, iter);
 }
 
-void WaveTrack::RemoveWideClip(std::ptrdiff_t distance)
+void WaveTrack::RemoveClip(std::ptrdiff_t distance)
 {
    auto &clips = NarrowClips();
    if (distance < clips.size())
@@ -1671,7 +1671,7 @@ void WaveTrack::SyncLockAdjust(double oldT1, double newT1)
          // AWD: Could just use InsertSilence() on its own here, but it doesn't
          // follow EditClipCanMove rules (Paste() does it right)
          const auto duration = newT1 - oldT1;
-         auto tmp = WideEmptyCopy(mpFactory);
+         auto tmp = EmptyCopy(mpFactory);
          tmp->InsertSilence(0.0, duration);
          tmp->Flush();
          Paste(oldT1, *tmp);
@@ -1832,7 +1832,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
                         throw notEnoughSpaceException;
                 }
             }
-            if (auto pClip = other.GetWideClip(0)) {
+            if (auto pClip = other.GetClip(0)) {
                // This branch only gets executed in `singleClipMode` - we've
                // already made sure that stretch ratios are equal, satisfying
                // `WaveClip::Paste`'s precondition.
@@ -1868,8 +1868,7 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
             const auto oldPlayStart = clip->GetPlayStartTime();
             const auto newSequenceStart =
                (oldPlayStart + t0) - clip->GetTrimLeft();
-            const auto newClip =
-               CreateWideClip(newSequenceStart, name, clip.get());
+            const auto newClip = CreateClip(newSequenceStart, name, clip.get());
             newClip->Resample(rate);
             track.InsertInterval(move(newClip), false);
         }
@@ -2010,7 +2009,7 @@ void WaveTrack::InsertSilence(double t, double len)
    auto &&clips = Intervals();
    if (clips.empty()) {
       // Special case if there is no clip yet
-      auto clip = CreateWideClip(0);
+      auto clip = CreateClip(0);
       clip->InsertSilence(0, len);
       // use No-fail-guarantee
       InsertInterval(move(clip), true);
@@ -2167,7 +2166,7 @@ void WaveTrack::Join(
    const auto firstToDelete = clipsToDelete[0].get();
    auto t = firstToDelete->GetPlayStartTime();
    //preserve left trim data if any
-   newClip = CreateWideClip(
+   newClip = CreateClip(
       firstToDelete->GetSequenceStartTime(),
       firstToDelete->GetName());
 
@@ -2192,7 +2191,7 @@ void WaveTrack::Join(
 
       t = newClip->GetPlayEndTime();
 
-      RemoveWideClip(FindWideClip(*clip));
+      RemoveClip(FindClip(*clip));
    }
 
    InsertInterval(move(newClip), false);
@@ -2538,7 +2537,7 @@ auto WaveTrack::GetLeftmostClip() -> IntervalHolder {
           [](const auto& a, const auto b) {
              return a->GetPlayStartTime() < b->GetPlayStartTime();
           });
-   return GetWideClip(std::distance(begin, iter));
+   return GetClip(std::distance(begin, iter));
 }
 
 auto WaveTrack::GetLeftmostClip() const -> IntervalConstHolder {
@@ -2554,7 +2553,7 @@ auto WaveTrack::GetRightmostClip() -> IntervalHolder {
           [](const auto& a, const auto b) {
              return a->GetPlayEndTime() < b->GetPlayEndTime();
           });
-   return GetWideClip(std::distance(begin, iter));
+   return GetClip(std::distance(begin, iter));
 }
 
 auto WaveTrack::GetRightmostClip() const -> IntervalConstHolder {
@@ -2930,7 +2929,7 @@ auto WaveTrack::GetClipAtTime(double time) const -> IntervalConstHolder
    return p != clips.rend() ? *p : nullptr;
 }
 
-auto WaveTrack::CreateWideClip(double offset, const wxString& name,
+auto WaveTrack::CreateClip(double offset, const wxString& name,
    const Interval *pToCopy, bool copyCutlines) -> IntervalHolder
 {
    if (pToCopy) {
@@ -2947,7 +2946,7 @@ auto WaveTrack::CreateWideClip(double offset, const wxString& name,
 auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
    -> IntervalHolder
 {
-   return CreateWideClip(toCopy.GetSequenceStartTime(),
+   return CreateClip(toCopy.GetSequenceStartTime(),
       toCopy.GetName(), &toCopy, copyCutlines);
 }
 
@@ -2977,7 +2976,7 @@ auto WaveTrack::NewestOrNewClip() -> IntervalHolder
    if (intervals.empty()) {
       const auto origin = WaveTrackData::Get(*this).GetOrigin();
       const auto name = MakeNewClipName();
-      auto pInterval = CreateWideClip(origin, name);
+      auto pInterval = CreateClip(origin, name);
       InsertInterval(pInterval, true, true);
       return pInterval;
    }
@@ -2989,7 +2988,7 @@ auto WaveTrack::NewestOrNewClip() -> IntervalHolder
 auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
 {
    if (mClips.empty()) {
-      auto pInterval = CreateWideClip(
+      auto pInterval = CreateClip(
          WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
       InsertInterval(pInterval, true, true);
       return pInterval;
@@ -3156,8 +3155,8 @@ auto WaveTrack::SplitAt(double t) -> std::pair<IntervalHolder, IntervalHolder>
 // Can't promise strong exception safety for a pair of tracks together
 bool WaveTrack::MergeClips(int clipidx1, int clipidx2)
 {
-   const auto clip1 = GetWideClip(clipidx1);
-   const auto clip2 = GetWideClip(clipidx2);
+   const auto clip1 = GetClip(clipidx1);
+   const auto clip2 = GetClip(clipidx2);
 
    if (!clip1 || !clip2)
       return false; // Don't throw, just do nothing.
@@ -3226,7 +3225,7 @@ void WaveTrack::RemoveInterval(const IntervalHolder& interval)
 void WaveTrack::ReplaceInterval(
    const IntervalHolder& oldOne, const IntervalHolder& newOne)
 {
-   assert(newOne == oldOne || FindWideClip(*newOne) == Intervals().size());
+   assert(newOne == oldOne || FindClip(*newOne) == Intervals().size());
    assert(oldOne->NChannels() == newOne->NChannels());
    RemoveInterval(oldOne);
    InsertInterval(newOne, false);

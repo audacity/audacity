@@ -427,11 +427,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    // as we're about to do).
    t->GetEndTime();
 
-   if (t->GetWideClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
+   if (t->GetClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
       Printf( XO("Expected len %lld, track len %lld.\n")
          .Format(
             nChunks * chunkSize,
-            t->GetWideClip(0)->GetVisibleSampleCount()
+            t->GetClip(0)->GetVisibleSampleCount()
                .as_long_long() ) );
       goto fail;
    }
@@ -465,7 +465,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetWideClip(0)->GetVisibleSampleCount()
+               t->GetClip(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }
@@ -485,12 +485,12 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          goto fail;
       }
 
-      if (t->GetWideClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
+      if (t->GetClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
          Printf( XO("Trial %d\n").Format( z ) );
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetWideClip(0)->GetVisibleSampleCount()
+               t->GetClip(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }
@@ -506,7 +506,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
 
    if (mBlockDetail) {
       // One remaining old direct use of narrow clips, only for debugging
-      auto seq = t->GetWideClip(0)->GetSequence(0);
+      auto seq = t->GetClip(0)->GetSequence(0);
       seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }

@@ -59,7 +59,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
          if (duration > 0.0) {
             // Create a temporary track
-            auto copy = track.WideEmptyCopy();
+            auto copy = track.EmptyCopy();
             // Fill with data
             if (!GenerateTrack(settings, *copy))
                bGoodResult = false;
