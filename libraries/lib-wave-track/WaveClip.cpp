@@ -1105,13 +1105,14 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    std::shared_ptr<WaveClip> newClip;
 
    t0 = std::clamp(t0, GetPlayStartTime(), GetPlayEndTime());
+   // Delay the finish of the clearing of this clip
+   ClearSequenceFinisher finisher;
 
    //seems like edge cases cannot happen, see WaveTrack::PasteWaveTrack
    auto &factory = GetFactory();
    if (t0 == GetPlayStartTime())
    {
-      ClearSequence(GetSequenceStartTime(), t0)
-         .Commit();
+      finisher = ClearSequence(GetSequenceStartTime(), t0);
       SetTrimLeft(other.GetTrimLeft());
 
       auto copy = std::make_shared<WaveClip>(other, factory, true);
@@ -1121,8 +1122,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    }
    else if (t0 == GetPlayEndTime())
    {
-      ClearSequence(GetPlayEndTime(), GetSequenceEndTime())
-         .Commit();
+      finisher = ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
       SetTrimRight(other.GetTrimRight());
       
       auto copy = std::make_shared<WaveClip>(other, factory, true);
@@ -1176,9 +1176,11 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    for (size_t ii = 0, width = NChannels(); ii < width; ++ii)
       mSequences[ii]->Paste(s0, newClip->mSequences[ii].get());
 
+   // Assume No-fail-guarantee in the remaining
+
+   finisher.Commit();
    transaction.Commit();
 
-   // Assume No-fail-guarantee in the remaining
    MarkChanged();
    const auto sampleTime = 1.0 / GetRate();
    const auto timeOffsetInEnvelope =
@@ -1198,13 +1200,12 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
 {
    StrongInvariantScope scope{ *this };
    Transaction transaction{ *this };
+   ClearSequenceFinisher finisher;
 
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
-      ClearSequence(GetSequenceStartTime(), t)
-         .Commit();
+      finisher = ClearSequence(GetSequenceStartTime(), t);
    else if (t == GetPlayEndTime() && t < GetSequenceEndTime()) {
-      ClearSequence(t, GetSequenceEndTime())
-         .Commit();
+      finisher = ClearSequence(t, GetSequenceEndTime());
       SetTrimRight(.0);
    }
 
@@ -1215,9 +1216,10 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    for (auto &pSequence : mSequences)
       pSequence->InsertSilence(s0, slen);
 
+   // use No-fail-guarantee in the rest
+   finisher.Commit();
    transaction.Commit();
 
-   // use No-fail-guarantee
    OffsetCutLines(t, len);
 
    const auto sampleTime = 1.0 / GetRate();
