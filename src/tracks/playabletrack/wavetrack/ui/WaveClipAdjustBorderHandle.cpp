@@ -273,7 +273,7 @@ public:
       {
          if (mIsStretchMode)
          {
-            PushClipSpeedChangedUndoState(
+            WaveClipUtilities::PushClipSpeedChangedUndoState(
                project, 100.0 / mInterval->GetStretchRatio());
          }
          else if (mAdjustingLeftBorder)

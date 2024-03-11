@@ -9,21 +9,20 @@
 **********************************************************************/
 
 #include "WaveClipUtilities.h"
-
+#include "PitchAndSpeedDialog.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "ProjectWindows.h"
 #include "SampleCount.h"
+#include "UndoManager.h"
+#include "ViewInfo.h"
+#include "WaveTrack.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 
-#include "PitchAndSpeedDialog.h"
-#include "ProjectAudioIO.h"
-#include "ProjectHistory.h"
-#include "ProjectWindows.h"
-#include "UndoManager.h"
-#include "ViewInfo.h"
-#include "WaveTrack.h"
-
-void findCorrection(
+void WaveClipUtilities::findCorrection(
    const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel,
    int& oldX0, double& correction)
@@ -66,7 +65,7 @@ void findCorrection(
    }
 }
 
-void fillWhere(
+void WaveClipUtilities::fillWhere(
    std::vector<sampleCount>& where, size_t len, bool addBias, double correction,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel)
 {
@@ -78,7 +77,8 @@ void fillWhere(
       where[x] = sampleCount(floor(w0 + double(x) * samplesPerPixel));
 }
 
-std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
+std::vector<CommonTrackPanelCell::MenuItem>
+WaveClipUtilities::GetWaveClipMenuItems()
 {
    return {
       { L"Cut", XO("Cut") },
@@ -96,7 +96,7 @@ std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems()
    ;
 }
 
-void PushClipSpeedChangedUndoState(
+void WaveClipUtilities::PushClipSpeedChangedUndoState(
    AudacityProject& project, double speedInPercent)
 {
    ProjectHistory::Get(project).PushState(
@@ -109,15 +109,23 @@ void PushClipSpeedChangedUndoState(
       UndoPush::CONSOLIDATE);
 }
 
-void ShowClipPitchAndSpeedDialog(
+void WaveClipUtilities::ShowClipPitchAndSpeedDialog(
    AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval,
    std::optional<PitchAndSpeedDialogFocus> focus)
 {
    PitchAndSpeedDialog dlg(
-      ProjectAudioIO::Get(project).IsAudioActive(), track, interval,
-      &GetProjectFrame(project), focus);
+      project.weak_from_this(), ProjectAudioIO::Get(project).IsAudioActive(),
+      track, interval, &GetProjectFrame(project), focus);
    if (wxID_OK == dlg.ShowModal())
       ProjectHistory::Get(project).PushState(
          XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
          UndoPush::CONSOLIDATE);
+}
+
+void WaveClipUtilities::SelectClip(
+   AudacityProject& project, const WaveTrack::Interval& clip)
+{
+   auto& viewInfo = ViewInfo::Get(project);
+   viewInfo.selectedRegion.setTimes(
+      clip.GetPlayStartTime(), clip.GetPlayEndTime());
 }

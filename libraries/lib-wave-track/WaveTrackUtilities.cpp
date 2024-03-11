@@ -12,7 +12,6 @@
 #include "BasicUI.h"
 #include "UserException.h"
 #include "WaveClip.h"
-#include "WaveTrack.h"
 #include <algorithm>
 
 const TranslatableString WaveTrackUtilities::defaultStretchRenderingTitle =
@@ -40,4 +39,26 @@ void WaveTrackUtilities::WithClipRenderingProgress(
          throw UserException {};
    };
    action(reportProgress);
+}
+
+bool WaveTrackUtilities::SetClipStretchRatio(
+   const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio)
+{
+   const auto nextClip =
+      track.GetNextInterval(interval, PlaybackDirection::forward);
+   const auto maxEndTime = nextClip != nullptr ?
+                              nextClip->Start() :
+                              std::numeric_limits<double>::infinity();
+
+   const auto start = interval.Start();
+   const auto end = interval.End();
+
+   const auto expectedEndTime =
+      start + (end - start) * stretchRatio / interval.GetStretchRatio();
+
+   if (expectedEndTime > maxEndTime)
+      return false;
+
+   interval.StretchRightTo(expectedEndTime);
+   return true;
 }
