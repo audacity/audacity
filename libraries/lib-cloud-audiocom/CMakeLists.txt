@@ -20,6 +20,8 @@ set( SOURCES
    UploadService.h
    UserService.cpp
    UserService.h
+   sync/CloudSyncDTO.cpp
+   sync/CloudSyncDTO.h
 )
 
 
@@ -31,6 +33,7 @@ set ( LIBRARIES
       rapidjson::rapidjson # Protocol is JSON based
    PRIVATE
       wxwidgets::base # Required to retrieve the OS information
+      wxBase # Required to retrieve the OS information
 )
 
 set ( DEFINES
