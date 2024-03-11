@@ -601,7 +601,7 @@ WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
       .Attachments::Get< WaveClipSpectrumCache >( sKeyS );
 }
 
-void WaveClipSpectrumCache::MarkChanged()
+void WaveClipSpectrumCache::MarkChanged() noexcept
 {
    ++mDirty;
 }

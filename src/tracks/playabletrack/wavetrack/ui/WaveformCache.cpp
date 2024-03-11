@@ -296,7 +296,7 @@ WaveClipWaveformCache::Get(const WaveChannelInterval &clip)
       .Attachments::Get< WaveClipWaveformCache >( sKeyW );
 }
 
-void WaveClipWaveformCache::MarkChanged()
+void WaveClipWaveformCache::MarkChanged() noexcept
 {
    ++mDirty;
 }

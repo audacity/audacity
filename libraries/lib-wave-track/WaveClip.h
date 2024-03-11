@@ -51,7 +51,7 @@ CRTP_BASE(WaveClipListenerBase, struct,
    ClientData::Cloneable<WaveClipListener>);
 struct WaveClipListener : WaveClipListenerBase {
    virtual ~WaveClipListener() = 0;
-   virtual void MarkChanged() = 0;
+   virtual void MarkChanged() noexcept = 0;
    virtual void Invalidate() = 0;
 
    // Default implementation does nothing
@@ -518,8 +518,8 @@ public:
 
    //! @}
 
-   Envelope &GetEnvelope() { return *mEnvelope; }
-   const Envelope &GetEnvelope() const { return *mEnvelope; }
+   Envelope &GetEnvelope() noexcept { return *mEnvelope; }
+   const Envelope &GetEnvelope() const noexcept { return *mEnvelope; }
 
    //! @pre `p`
    void SetEnvelope(std::unique_ptr<Envelope> p);
@@ -839,7 +839,7 @@ private:
 
    //! Called by mutating operations; notifies listeners
    /*! @excsafety{No-fail} */
-   void MarkChanged();
+   void MarkChanged() noexcept;
 
    // Always gives non-negative answer, not more than sample sequence length
    // even if t0 really falls outside that range
@@ -858,6 +858,16 @@ private:
     @post `StrongInvariant()`
     */
    void ClearSequence(double t0, double t1);
+
+   //! Fix consistency of cutlines and envelope after deleting from Sequences
+   /*!
+    @param t0 start of deleted range
+    @param t1 end of deleted range
+    @param clip_t0 t0 clamped to previous play region
+    @param clip_t1 t1 clamped to previous play region
+    */
+   void FinishClearSequence(
+      double t0, double t1, double clip_t0, double clip_t1) noexcept;
 
    //! Restores state when an update loop over mSequences fails midway
    struct Transaction {

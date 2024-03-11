@@ -116,7 +116,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
 
    static WaveClipSpectrumCache &Get(const WaveChannelInterval &clip);
 
-   void MarkChanged() override; // NOFAIL-GUARANTEE
+   void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    /** Getting high-level data for screen display */
