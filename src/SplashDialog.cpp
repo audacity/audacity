@@ -129,7 +129,7 @@ wxString MakeWhatsNewText()
      << wxT(R"(</h3><p><a href=")") << WhatsNewURL << wxT(R"(">)")
      << wxT(
            R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /></a></p>)")
-     << XO("<p>In this release we added Beats & Measures, Time Stretching and more.<br/>")
+     << XO("<p>In this release we added Cloud saving, tempo detection and more.<br/>")
      << XO("Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>").Format(WhatsNewURL)
 #endif
      << wxT("<h3>") << XO("How to get help") << wxT("</h3></center>")
