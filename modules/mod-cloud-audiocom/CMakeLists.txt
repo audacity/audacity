@@ -20,6 +20,8 @@ set( SOURCES
    AudioComModule.cpp
    AuthorizationHandler.cpp
    AuthorizationHandler.h
+   CloudModuleSettings.cpp
+   CloudModuleSettings.h
 )
 
 if(${_OPT}has_url_schemes_support)
