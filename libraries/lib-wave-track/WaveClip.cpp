@@ -1110,27 +1110,33 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    auto &factory = GetFactory();
    if (t0 == GetPlayStartTime())
    {
-       ClearSequence(GetSequenceStartTime(), t0);
-       SetTrimLeft(other.GetTrimLeft());
+      ClearSequence(GetSequenceStartTime(), t0)
+         .Commit();
+      SetTrimLeft(other.GetTrimLeft());
 
-       auto copy = std::make_shared<WaveClip>(other, factory, true);
-       copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime());
-       newClip = std::move(copy);
+      auto copy = std::make_shared<WaveClip>(other, factory, true);
+      copy->ClearSequence(copy->GetPlayEndTime(), copy->GetSequenceEndTime())
+         .Commit();
+      newClip = std::move(copy);
    }
    else if (t0 == GetPlayEndTime())
    {
-       ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
-       SetTrimRight(other.GetTrimRight());
-
-       auto copy = std::make_shared<WaveClip>(other, factory, true);
-       copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime());
-       newClip = std::move(copy);
+      ClearSequence(GetPlayEndTime(), GetSequenceEndTime())
+         .Commit();
+      SetTrimRight(other.GetTrimRight());
+      
+      auto copy = std::make_shared<WaveClip>(other, factory, true);
+      copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime())
+         .Commit();
+      newClip = std::move(copy);
    }
    else
    {
       newClip = std::make_shared<WaveClip>(other, factory, true);
-      newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime());
-      newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime());
+      newClip->ClearSequence(newClip->GetPlayEndTime(), newClip->GetSequenceEndTime())
+         .Commit();
+      newClip->ClearSequence(newClip->GetSequenceStartTime(), newClip->GetPlayStartTime())
+         .Commit();
       newClip->SetTrimLeft(0);
       newClip->SetTrimRight(0);
    }
@@ -1194,9 +1200,11 @@ void WaveClip::InsertSilence( double t, double len, double *pEnvelopeValue )
    Transaction transaction{ *this };
 
    if (t == GetPlayStartTime() && t > GetSequenceStartTime())
-      ClearSequence(GetSequenceStartTime(), t);
+      ClearSequence(GetSequenceStartTime(), t)
+         .Commit();
    else if (t == GetPlayEndTime() && t < GetSequenceEndTime()) {
-      ClearSequence(t, GetSequenceEndTime());
+      ClearSequence(t, GetSequenceEndTime())
+         .Commit();
       SetTrimRight(.0);
    }
 
@@ -1257,7 +1265,8 @@ void WaveClip::Clear(double t0, double t1)
       st1 = GetSequenceEndTime();
       SetTrimRight(.0);
    }
-   ClearSequence(st0, st1);
+   ClearSequence(st0, st1)
+      .Commit();
    
    if (offset != .0)
       ShiftBy(offset);
@@ -1267,7 +1276,8 @@ void WaveClip::ClearLeft(double t)
 {
    if (t > GetPlayStartTime() && t < GetPlayEndTime())
    {
-      ClearSequence(GetSequenceStartTime(), t);
+      ClearSequence(GetSequenceStartTime(), t)
+         .Commit();
       SetTrimLeft(.0);
       SetSequenceStartTime(t);
    }
@@ -1277,12 +1287,13 @@ void WaveClip::ClearRight(double t)
 {
    if (t > GetPlayStartTime() && t < GetPlayEndTime())
    {
-      ClearSequence(t, GetSequenceEndTime());
+      ClearSequence(t, GetSequenceEndTime())
+         .Commit();
       SetTrimRight(.0);
    }
 }
 
-void WaveClip::ClearSequence(double t0, double t1)
+auto WaveClip::ClearSequence(double t0, double t1) -> ClearSequenceFinisher
 {
    StrongInvariantScope scope{ *this };
    Transaction transaction{ *this };
@@ -1294,19 +1305,21 @@ void WaveClip::ClearSequence(double t0, double t1)
    auto s1 = TimeToSequenceSamples(clip_t1);
 
    if (s0 == s1)
-      return;
+      return {};
    
    // use Strong-guarantee
    for (auto &pSequence : mSequences)
       pSequence->Delete(s0, s1 - s0);
    
    transaction.Commit();
-   FinishClearSequence(t0, t1, clip_t0, clip_t1);
+   return { this, t0, t1, clip_t0, clip_t1 };
 }
 
-void WaveClip::FinishClearSequence(
-    double t0, double t1, double clip_t0, double clip_t1) noexcept
+WaveClip::ClearSequenceFinisher::~ClearSequenceFinisher() noexcept
 {
+   if (!pClip || !committed)
+      return;
+
    // use No-fail-guarantee in the remaining
    
    // msmeyer
@@ -1323,14 +1336,15 @@ void WaveClip::FinishClearSequence(
    //
    
    // May DELETE as we iterate, so don't use range-for
-   for (auto it = mCutLines.begin(); it != mCutLines.end();)
+   for (auto it = pClip->mCutLines.begin(); it != pClip->mCutLines.end();)
    {
       WaveClip* clip = it->get();
-      double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
+      double cutlinePosition =
+         pClip->GetSequenceStartTime() + clip->GetSequenceStartTime();
       if (cutlinePosition >= t0 && cutlinePosition <= t1)
       {
          // This cutline is within the area, DELETE it
-         it = mCutLines.erase(it);
+         it = pClip->mCutLines.erase(it);
       }
       else
       {
@@ -1343,9 +1357,9 @@ void WaveClip::FinishClearSequence(
    }
 
    // Collapse envelope
-   auto sampleTime = 1.0 / GetRate();
-   GetEnvelope().CollapseRegion(t0, t1, sampleTime);
-   MarkChanged();
+   auto sampleTime = 1.0 / pClip->GetRate();
+   pClip->GetEnvelope().CollapseRegion(t0, t1, sampleTime);
+   pClip->MarkChanged();
 }
 
 /*! @excsafety{Weak}
@@ -1366,12 +1380,14 @@ void WaveClip::ClearAndAddCutLine(double t0, double t1)
       *this, GetFactory(), true, clip_t0, clip_t1);
    if(t1 < GetPlayEndTime())
    {
-      newClip->ClearSequence(t1, newClip->GetSequenceEndTime());
+      newClip->ClearSequence(t1, newClip->GetSequenceEndTime())
+         .Commit();
       newClip->SetTrimRight(.0);
    }
    if(t0 > GetPlayStartTime())
    {
-      newClip->ClearSequence(newClip->GetSequenceStartTime(), t0);
+      newClip->ClearSequence(newClip->GetSequenceStartTime(), t0)
+         .Commit();
       newClip->SetTrimLeft(.0);
    }
 
