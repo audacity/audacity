@@ -851,23 +851,48 @@ private:
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 
+   //! Fix consistency of cutlines and envelope after deleting from Sequences
+   /*!
+    This is like a finally object
+    */
+   class ClearSequenceFinisher {
+   public:
+      ClearSequenceFinisher() noexcept = default;
+      /*
+       @param t0 start of deleted range
+       @param t1 end of deleted range
+       @param clip_t0 t0 clamped to previous play region
+       @param clip_t1 t1 clamped to previous play region
+       */
+      ClearSequenceFinisher(WaveClip *pClip,
+         double t0, double t1, double clip_t0, double clip_t1) noexcept
+         : pClip{ pClip }
+         , t0{ t0 }, t1{ t1 }, clip_t0{ clip_t0 }, clip_t1{ clip_t1 }
+      {}
+      ClearSequenceFinisher &operator =(ClearSequenceFinisher &&other)
+      {
+         *this = other;
+         other.pClip = nullptr;
+         return *this;
+      }
+      ~ClearSequenceFinisher() noexcept;
+      void Commit() noexcept { committed = true; }
+
+   private:
+      ClearSequenceFinisher&
+         operator =(const ClearSequenceFinisher &other) = default;
+      WaveClip *pClip{};
+      double t0{}, t1{}, clip_t0{}, clip_t1{};
+      bool committed = false;
+   };
+
    //! This name is consistent with WaveTrack::Clear. It performs a "Cut"
    //! operation (but without putting the cut audio to the clipboard)
    /*!
     @pre `StrongInvariant()`
     @post `StrongInvariant()`
     */
-   void ClearSequence(double t0, double t1);
-
-   //! Fix consistency of cutlines and envelope after deleting from Sequences
-   /*!
-    @param t0 start of deleted range
-    @param t1 end of deleted range
-    @param clip_t0 t0 clamped to previous play region
-    @param clip_t1 t1 clamped to previous play region
-    */
-   void FinishClearSequence(
-      double t0, double t1, double clip_t0, double clip_t1) noexcept;
+   [[nodiscard]] ClearSequenceFinisher ClearSequence(double t0, double t1);
 
    //! Restores state when an update loop over mSequences fails midway
    struct Transaction {
