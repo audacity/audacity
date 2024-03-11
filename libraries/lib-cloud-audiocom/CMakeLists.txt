@@ -31,6 +31,8 @@ set( SOURCES
    sync/CloudSyncError.h
    sync/DataUploader.cpp
    sync/DataUploader.h
+   sync/MissingBlocksUploader.cpp
+   sync/MissingBlocksUploader.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
