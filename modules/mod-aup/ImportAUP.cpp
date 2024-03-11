@@ -1016,7 +1016,7 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    {
       WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
 
-      const auto pInterval = wavetrack->CreateWideClip();
+      const auto pInterval = wavetrack->CreateClip();
       wavetrack->InsertInterval(pInterval, true, true);
       handler = pInterval.get();
    }

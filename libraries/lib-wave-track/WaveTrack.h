@@ -271,9 +271,9 @@ public:
    //! settings
    void Init(const WaveTrack &orig);
  private:
-   std::ptrdiff_t FindWideClip(const Interval &clip);
+   std::ptrdiff_t FindClip(const Interval &clip);
 
-   void RemoveWideClip(std::ptrdiff_t distance);
+   void RemoveClip(std::ptrdiff_t distance);
 
    Track::Holder Clone(bool backup) const override;
 
@@ -353,7 +353,7 @@ public:
     another project or the clipboard.  For copies within one project, the
     default will do.
     */
-   Holder WideEmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
+   Holder EmptyCopy(const SampleBlockFactoryPtr &pFactory = {})
    const;
 
    //! Simply discard any right channel
@@ -555,7 +555,7 @@ public:
     @param offset desired sequence (not play) start time
     */
    IntervalHolder
-   CreateWideClip(double offset = .0, const wxString& name = wxEmptyString,
+   CreateClip(double offset = .0, const wxString& name = wxEmptyString,
       const Interval *pToCopy = nullptr, bool copyCutlines = true);
 
    //! Create new clip and add it to this track.
@@ -607,9 +607,9 @@ public:
    int GetNumClips() const;
 
 public:
-   //! Return all (wide) WaveClips sorted by clip play start time.
+   //! Return all WaveClips sorted by clip play start time.
    IntervalHolders SortedIntervalArray();
-   //! Return all (wide) WaveClips sorted by clip play start time.
+   //! Return all WaveClips sorted by clip play start time.
    IntervalConstHolders SortedIntervalArray() const;
 
    //! Decide whether the clips could be offset (and inserted) together without overlapping other clips
@@ -686,8 +686,8 @@ public:
 
    size_t NIntervals() const override;
 
-   IntervalHolder GetWideClip(size_t iInterval);
-   IntervalConstHolder GetWideClip(size_t iInterval) const;
+   IntervalHolder GetClip(size_t iInterval);
+   IntervalConstHolder GetClip(size_t iInterval) const;
 
    //!< used only during deserialization
    void SetLegacyFormat(sampleFormat format);

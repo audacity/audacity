@@ -264,9 +264,10 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));
 
          // Make "wide" or "narrow" copy of the track if generating
-         // For now EmptyCopy and WideEmptyCopy still return different types
+         // Old generator code may still proceed "interval-major" and later
+         // join mono into stereo
          auto wideTrack =
-            (pRight && isGenerator) ? wt.WideEmptyCopy() : nullptr;
+            (pRight && isGenerator) ? wt.EmptyCopy() : nullptr;
          auto narrowTrack =
             (!pRight && isGenerator) ? wt.EmptyCopy(1) : nullptr;
          const auto pGenerated = wideTrack

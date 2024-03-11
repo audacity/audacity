@@ -418,7 +418,7 @@ bool EffectEqualization::Process(EffectInstance &, EffectSettings &)
          auto end = track->TimeToLongSamples(t1);
          auto len = end - start;
 
-         auto pTempTrack = track->WideEmptyCopy();
+         auto pTempTrack = track->EmptyCopy();
          pTempTrack->ConvertToSampleFormat(floatSample);
          auto iter0 = pTempTrack->Channels().begin();
 
