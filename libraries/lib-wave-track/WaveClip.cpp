@@ -1267,8 +1267,10 @@ void WaveClip::Clear(double t0, double t1)
       st1 = GetSequenceEndTime();
       SetTrimRight(.0);
    }
+   Transaction transaction{ *this };
    ClearSequence(st0, st1)
       .Commit();
+   transaction.Commit();
    MarkChanged();
 
    if (offset != .0)
@@ -1279,8 +1281,10 @@ void WaveClip::ClearLeft(double t)
 {
    if (t > GetPlayStartTime() && t < GetPlayEndTime())
    {
+      Transaction transaction{ *this };
       ClearSequence(GetSequenceStartTime(), t)
          .Commit();
+      transaction.Commit();
       SetTrimLeft(.0);
       SetSequenceStartTime(t);
       MarkChanged();
@@ -1291,8 +1295,10 @@ void WaveClip::ClearRight(double t)
 {
    if (t > GetPlayStartTime() && t < GetPlayEndTime())
    {
+      Transaction transaction{ *this };
       ClearSequence(t, GetSequenceEndTime())
          .Commit();
+      transaction.Commit();
       SetTrimRight(.0);
       MarkChanged();
    }
@@ -1301,7 +1307,6 @@ void WaveClip::ClearRight(double t)
 auto WaveClip::ClearSequence(double t0, double t1) -> ClearSequenceFinisher
 {
    StrongInvariantScope scope{ *this };
-   Transaction transaction{ *this };
 
    auto clip_t0 = std::max(t0, GetSequenceStartTime());
    auto clip_t1 = std::min(t1, GetSequenceEndTime());
@@ -1316,7 +1321,6 @@ auto WaveClip::ClearSequence(double t0, double t1) -> ClearSequenceFinisher
    for (auto &pSequence : mSequences)
       pSequence->Delete(s0, s1 - s0);
    
-   transaction.Commit();
    return { this, t0, t1, clip_t0, clip_t1 };
 }
 
