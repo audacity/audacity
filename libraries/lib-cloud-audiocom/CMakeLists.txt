@@ -10,6 +10,8 @@ def_vars()
 set( SOURCES
    CloudLibrarySettings.cpp
    CloudLibrarySettings.h
+   NetworkUtils.cpp
+   NetworkUtils.h
    OAuthService.cpp
    OAuthService.h
    ServiceConfig.cpp
