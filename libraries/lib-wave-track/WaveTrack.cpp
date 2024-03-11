@@ -1058,7 +1058,7 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
 void WaveTrack::SwapChannels()
 {
    assert(NChannels() == 2);
-   for (auto &pClip: mClips)
+   for (const auto &pClip: mClips)
       pClip->SwapChannels();
    this->AttachedTrackObjects::ForEach([this](TrackAttachment &attachment){
       if (const auto pAttachments =
