@@ -33,6 +33,8 @@ set( SOURCES
    sync/DataUploader.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
+   sync/MixdownUploader.cpp
+   sync/MixdownUploader.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
