@@ -36,6 +36,8 @@ set( SOURCES
    sync/MixdownUploader.cpp
    sync/MixdownUploader.h
    sync/ProjectUploadOperation.h
+   sync/RemoteProjectSnapshot.cpp
+   sync/RemoteProjectSnapshot.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
