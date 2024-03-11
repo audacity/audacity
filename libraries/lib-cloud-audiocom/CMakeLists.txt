@@ -29,6 +29,8 @@ set( SOURCES
    sync/CloudSyncDTO.h
    sync/CloudSyncError.cpp
    sync/CloudSyncError.h
+   sync/DataUploader.cpp
+   sync/DataUploader.h
 )
 
 
@@ -39,6 +41,7 @@ PUBLIC
       lib-strings-interface # Languages
       lib-wave-track-interface
       rapidjson::rapidjson # Protocol is JSON based
+      lib-concurrency-interface
    PRIVATE
       lib-sqlite-helpers-interface
       lib-crypto-interface
