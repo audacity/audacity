@@ -20,6 +20,8 @@ set( SOURCES
    UploadService.h
    UserService.cpp
    UserService.h
+   sync/CloudProjectsDatabase.cpp
+   sync/CloudProjectsDatabase.h
    sync/CloudSyncDTO.cpp
    sync/CloudSyncDTO.h
 )
@@ -32,7 +34,7 @@ set ( LIBRARIES
    PUBLIC
       rapidjson::rapidjson # Protocol is JSON based
    PRIVATE
-      wxwidgets::base # Required to retrieve the OS information
+      lib-sqlite-helpers-interface
       wxBase # Required to retrieve the OS information
 )
 
