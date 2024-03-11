@@ -1015,7 +1015,7 @@ void WaveTrack::MakeMono()
 {
    mRightChannel.reset();
    for (auto &pClip : mClips)
-      pClip->MakeNarrow();
+      pClip->DiscardRightChannel();
    EraseChannelAttachments(1);
 }
 

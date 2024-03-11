@@ -424,14 +424,14 @@ size_t WaveClip::GetAppendBufferLen(size_t iChannel) const
    return mSequences[iChannel]->GetAppendBufferLen();
 }
 
-void WaveClip::MakeNarrow()
+void WaveClip::DiscardRightChannel()
 {
    mSequences.resize(1);
    this->Attachments::ForEach([](WaveClipListener &attachment){
       attachment.Erase(1);
    });
    for (auto &pCutline : mCutLines)
-      pCutline->MakeNarrow();
+      pCutline->DiscardRightChannel();
    assert(NChannels() == 1);
    assert(CheckInvariants());
 }
@@ -499,7 +499,7 @@ std::shared_ptr<WaveClip> WaveClip::SplitChannels()
    assert(result->CheckInvariants());
 
    // This call asserts invariants for this clip
-   MakeNarrow();
+   DiscardRightChannel();
 
    // Assert postconditions
    assert(NChannels() == 1);

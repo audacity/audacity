@@ -778,7 +778,7 @@ public:
    /*!
     @post `NChannels() == 1`
     */
-   void MakeNarrow();
+   void DiscardRightChannel();
 
    //! @pre `NChannels() == 2`
    void SwapChannels();
