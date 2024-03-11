@@ -1511,41 +1511,6 @@ void WaveTrack::SplitDelete(double t0, double t1)
    HandleClear(t0, t1, addCutLines, split);
 }
 
-namespace
-{
-   WaveClipHolders::const_iterator
-      FindClip(const WaveClipHolders &list, const WaveClip *clip, int *distance = nullptr)
-   {
-      if (distance)
-         *distance = 0;
-      auto it = list.begin();
-      for (const auto end = list.end(); it != end; ++it)
-      {
-         if (it->get() == clip)
-            break;
-         if (distance)
-            ++*distance;
-      }
-      return it;
-   }
-
-   WaveClipHolders::iterator
-      FindClip(WaveClipHolders &list, const WaveClip *clip, int *distance = nullptr)
-   {
-      if (distance)
-         *distance = 0;
-      auto it = list.begin();
-      for (const auto end = list.end(); it != end; ++it)
-      {
-         if (it->get() == clip)
-            break;
-         if (distance)
-            ++*distance;
-      }
-      return it;
-   }
-}
-
 std::ptrdiff_t WaveTrack::FindWideClip(const Interval &clip)
 {
    auto clips = Intervals();
