@@ -711,7 +711,7 @@ constSamplePtr WaveClip::GetAppendBuffer(size_t ii) const
    return mSequences[ii]->GetAppendBuffer();
 }
 
-void WaveClip::MarkChanged() // NOFAIL-GUARANTEE
+void WaveClip::MarkChanged() noexcept // NOFAIL-GUARANTEE
 {
    Attachments::ForEach(std::mem_fn(&WaveClipListener::MarkChanged));
 }
@@ -1292,54 +1292,59 @@ void WaveClip::ClearSequence(double t0, double t1)
    
    auto s0 = TimeToSequenceSamples(clip_t0);
    auto s1 = TimeToSequenceSamples(clip_t1);
+
+   if (s0 == s1)
+      return;
    
-   if (s0 != s1)
+   // use Strong-guarantee
+   for (auto &pSequence : mSequences)
+      pSequence->Delete(s0, s1 - s0);
+   
+   transaction.Commit();
+   FinishClearSequence(t0, t1, clip_t0, clip_t1);
+}
+
+void WaveClip::FinishClearSequence(
+    double t0, double t1, double clip_t0, double clip_t1) noexcept
+{
+   // use No-fail-guarantee in the remaining
+   
+   // msmeyer
+   //
+   // Delete all cutlines that are within the given area, if any.
+   //
+   // Note that when cutlines are active, two functions are used:
+   // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
+   // whenever the user directly calls a command that removes some audio, e.g.
+   // "Cut" or "Clear" from the menu. This command takes care about recursive
+   // preserving of cutlines within clips. Clear() is called when internal
+   // operations want to remove audio. In the latter case, it is the right
+   // thing to just remove all cutlines within the area.
+   //
+   
+   // May DELETE as we iterate, so don't use range-for
+   for (auto it = mCutLines.begin(); it != mCutLines.end();)
    {
-      // use Strong-guarantee
-      for (auto &pSequence : mSequences)
-         pSequence->Delete(s0, s1 - s0);
-      
-      // use No-fail-guarantee in the remaining
-      
-      // msmeyer
-      //
-      // Delete all cutlines that are within the given area, if any.
-      //
-      // Note that when cutlines are active, two functions are used:
-      // Clear() and ClearAndAddCutLine(). ClearAndAddCutLine() is called
-      // whenever the user directly calls a command that removes some audio, e.g.
-      // "Cut" or "Clear" from the menu. This command takes care about recursive
-      // preserving of cutlines within clips. Clear() is called when internal
-      // operations want to remove audio. In the latter case, it is the right
-      // thing to just remove all cutlines within the area.
-      //
-      
-      // May DELETE as we iterate, so don't use range-for
-      for (auto it = mCutLines.begin(); it != mCutLines.end();)
+      WaveClip* clip = it->get();
+      double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
+      if (cutlinePosition >= t0 && cutlinePosition <= t1)
       {
-         WaveClip* clip = it->get();
-         double cutlinePosition = GetSequenceStartTime() + clip->GetSequenceStartTime();
-         if (cutlinePosition >= t0 && cutlinePosition <= t1)
-         {
-            // This cutline is within the area, DELETE it
-            it = mCutLines.erase(it);
-         }
-         else
-         {
-            if (cutlinePosition >= t1)
-            {
-               clip->ShiftBy(clip_t0 - clip_t1);
-            }
-            ++it;
-         }
+         // This cutline is within the area, DELETE it
+         it = mCutLines.erase(it);
       }
-      
-      // Collapse envelope
-      auto sampleTime = 1.0 / GetRate();
-      GetEnvelope().CollapseRegion(t0, t1, sampleTime);
+      else
+      {
+         if (cutlinePosition >= t1)
+         {
+            clip->ShiftBy(clip_t0 - clip_t1);
+         }
+         ++it;
+      }
    }
 
-   transaction.Commit();
+   // Collapse envelope
+   auto sampleTime = 1.0 / GetRate();
+   GetEnvelope().CollapseRegion(t0, t1, sampleTime);
    MarkChanged();
 }
 

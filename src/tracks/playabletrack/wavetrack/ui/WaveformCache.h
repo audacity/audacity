@@ -71,7 +71,7 @@ struct WaveClipWaveformCache final : WaveClipListener
 
    static WaveClipWaveformCache &Get(const WaveChannelInterval &clip);
 
-   void MarkChanged() override; // NOFAIL-GUARANTEE
+   void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    ///Delete the wave cache - force redraw.  Thread-safe
