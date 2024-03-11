@@ -11,8 +11,16 @@
 
 #include "ModuleConstants.h"
 
+#include "ui/images/CloudImages.hpp"
+
 DEFINE_VERSION_CHECK
 extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 {
+   static auto cloudImages = []
+   {
+      bin2c_init_CLOUDIMAGES_HPP();
+      return true;
+   }();
+
    return 1;
 }
