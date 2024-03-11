@@ -158,7 +158,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Options"));
    {
       // Start wording of options with a verb, if possible.
-      S.TieCheckBox(XXO("Show 'How to Get &Help' at launch"),
+      S.TieCheckBox(XXO("Show 'W&hat's new' dialog at launch"),
                     {wxT("/GUI/ShowSplashScreen"),
                      true});
       S.TieCheckBox(XXO("Show e&xtra menus"),
