@@ -642,16 +642,6 @@ void WaveTrackAffordanceControls::StartEditSelectedClipName(AudacityProject& pro
    StartEditClipName(project, it);
 }
 
-namespace
-{
-void SelectInterval(AudacityProject& project, const WaveTrack::Interval& interval)
-{
-   auto& viewInfo = ViewInfo::Get(project);
-   viewInfo.selectedRegion.setTimes(interval.GetPlayStartTime(), interval.GetPlayEndTime());
-   ProjectHistory::Get(project).ModifyState(false);
-}
-}
-
 void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    AudacityProject& project)
 {
@@ -665,7 +655,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   ShowClipPitchAndSpeedDialog(project, *track, *interval);
+   WaveClipUIUtilities::ShowClipPitchAndSpeedDialog(project, *track, *interval);
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(
@@ -692,7 +682,7 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
    ProjectHistory::Get(project).PushState(
       XO("Rendered time-stretched audio"), XO("Render"));
 
-   SelectInterval(project, *interval);
+   WaveClipUIUtilities::SelectClip(project, *interval);
 }
 
 std::shared_ptr<TextEditHelper> WaveTrackAffordanceControls::MakeTextEditHelper(const wxString& text)
@@ -707,7 +697,7 @@ auto WaveTrackAffordanceControls::GetMenuItems(
    const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
       -> std::vector<MenuItem>
 {
-   return GetWaveClipMenuItems();
+   return WaveClipUIUtilities::GetWaveClipMenuItems();
 }
 
 // Register a menu item

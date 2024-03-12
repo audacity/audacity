@@ -15,11 +15,16 @@
 #include "LowlitClipButton.h"
 #include "PitchAndSpeedDialog.h"
 #include "Project.h"
+#include "ProjectHistory.h"
 #include "RefreshCode.h"
 #include "Theme.h"
+#include "TimeStretching.h"
 #include "TimeAndPitchInterface.h"
+#include "TrackPanelMouseEvent.h"
 #include "WaveClip.h"
 #include "WaveClipUIUtilities.h"
+#include "WaveTrackUtilities.h"
+#include "wxWidgetsWindowPlacement.h"
 #include <wx/dc.h>
 
 namespace
@@ -114,23 +119,59 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
    const TrackPanelMouseEvent& event, AudacityProject* pProject,
    wxWindow* pParent)
 {
-   const auto focus = mType == Type::Pitch ? PitchAndSpeedDialogFocus::Pitch :
-                                             PitchAndSpeedDialogFocus::Speed;
-   BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
-                       clip = mClip, focus] {
-      if (auto pProject = project.lock())
-         ShowClipPitchAndSpeedDialog(*pProject, *track, *clip, focus);
-   });
+   if (event.event.CmdDown())
+   {
+      if (mType == Type::Pitch)
+      {
+         mClip->SetCentShift(0);
+         ProjectHistory::Get(*pProject).PushState(
+            XO("Reset Clip Pitch"), XO("Reset Clip Pitch"));
+      }
+      else if (!TimeStretching::SetClipStretchRatio(*mTrack, *mClip, 1))
+      {
+         BasicUI::ShowErrorDialog(
+            wxWidgetsWindowPlacement { pParent }, XO("Not enough space"),
+            XO("There is not enough space to expand the clip to its original speed."),
+            {});
+         return RefreshCode::RefreshNone;
+      }
+      else
+      {
+         WaveClipUIUtilities::SelectClip(*pProject, *mClip);
+         ProjectHistory::Get(*pProject).PushState(
+            XO("Reset Clip Speed"), XO("Reset Clip Speed"));
+      }
+   }
+   else
+   {
+      const auto focus = mType == Type::Pitch ?
+                            PitchAndSpeedDialogFocus::Pitch :
+                            PitchAndSpeedDialogFocus::Speed;
+      BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
+                          clip = mClip, focus] {
+         if (auto pProject = project.lock())
+            WaveClipUIUtilities::ShowClipPitchAndSpeedDialog(
+               *pProject, *track, *clip, focus);
+      });
+   }
    return RefreshCode::RefreshNone;
 }
 
 HitTestPreview ClipPitchAndSpeedButtonHandle::Preview(
    const TrackPanelMouseState& state, AudacityProject* pProject)
 {
+   const auto ctrlDown = state.state.CmdDown();
+   const bool macOs = wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_MAC;
    if (mType == Type::Pitch)
-      return { XO("Click to change clip pitch."), nullptr };
+      return { ctrlDown ? XO("Click to reset clip pitch.") :
+               macOs ? XO("Click to change clip pitch, Cmd + click to reset.") :
+                       XO("Click to change clip pitch, Ctrl + click to reset."),
+               nullptr };
    else
-      return { XO("Click to change clip speed."), nullptr };
+      return { ctrlDown ? XO("Click to reset clip speed.") :
+               macOs ? XO("Click to change clip speed, Cmd + click to reset.") :
+                       XO("Click to change clip speed, Ctrl + click to reset."),
+               nullptr };
 }
 
 void ClipPitchAndSpeedButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)

@@ -24,8 +24,7 @@
 
 HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
 {
-    static auto disabledCursor =
-        MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
+    static wxCursor arrowCursor{ wxCURSOR_ARROW };
     static auto handOpenCursor =
         MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
     static auto handClosedCursor =
@@ -35,7 +34,7 @@ HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe,
         " Hold Shift and drag to move all clips on the same track.");
 
     if (unsafe)
-        return { message, &*disabledCursor };
+        return { message, &arrowCursor };
     return {
         message,
         (moving

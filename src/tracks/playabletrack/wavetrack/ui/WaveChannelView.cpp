@@ -899,7 +899,7 @@ auto WaveChannelSubView::GetMenuItems(
          ||
          track.GetClipAtTime(t))
       {
-         return GetWaveClipMenuItems();
+         return WaveClipUIUtilities::GetWaveClipMenuItems();
       }
    }
    return {

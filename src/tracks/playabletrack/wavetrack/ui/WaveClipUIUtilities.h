@@ -22,6 +22,8 @@ class sampleCount;
 class AudacityProject;
 enum class PitchAndSpeedDialogFocus;
 
+namespace WaveClipUIUtilities
+{
 AUDACITY_DLL_API
 void findCorrection(
    const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
@@ -41,4 +43,6 @@ void ShowClipPitchAndSpeedDialog(
    AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval,
    std::optional<PitchAndSpeedDialogFocus> focus = {});
 
+void SelectClip(AudacityProject& project, const WaveTrack::Interval& clip);
+} // namespace WaveClipUtilities
 #endif

@@ -13,6 +13,7 @@
 #include "WaveTrack.h"
 #include "wxPanelWrapper.h"
 
+class AudacityProject;
 class ShuttleGui;
 
 enum class PitchAndSpeedDialogFocus
@@ -25,8 +26,8 @@ class PitchAndSpeedDialog final : public wxDialogWrapper
 {
 public:
    PitchAndSpeedDialog(
-      bool playbackOngoing, WaveTrack& track, WaveTrack::Interval& interval,
-      wxWindow* parent,
+      std::weak_ptr<AudacityProject> project, bool playbackOngoing,
+      WaveTrack& track, WaveTrack::Interval& interval, wxWindow* parent,
       const std::optional<PitchAndSpeedDialogFocus>& focus = {});
 
    ~PitchAndSpeedDialog() override;
@@ -45,6 +46,7 @@ private:
    void SetSemitoneShift();
    void UpdateDialog();
 
+   std::weak_ptr<AudacityProject> mProject;
    const bool mPlaybackOngoing;
    WaveTrack& mTrack;
    WaveTrack::Interval& mTrackInterval;
