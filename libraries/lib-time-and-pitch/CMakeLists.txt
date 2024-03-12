@@ -37,6 +37,7 @@ set( SOURCES
 set( LIBRARIES
 PUBLIC
    lib-files-interface
+   lib-utility-interface
    pffft
 )
 audacity_library( lib-time-and-pitch "${SOURCES}" "${LIBRARIES}"

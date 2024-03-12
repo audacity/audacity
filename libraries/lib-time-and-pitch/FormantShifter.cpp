@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "FormantShifter.h"
 #include "FormantShifterLoggerInterface.h"
+#include "MathApprox.h"
 #include <algorithm>
 #include <cassert>
 #include <fstream>
@@ -32,23 +33,6 @@ constexpr auto MapToPositiveHalfIndex(int index, int fullSize)
 
 static_assert(MapToPositiveHalfIndex(-7, 4) == 1);
 static_assert(MapToPositiveHalfIndex(9, 4) == 1);
-
-constexpr float GetLog2(float x)
-{
-   // https://stackoverflow.com/a/28730362
-   // Precise up to two decimal places. If given unnormalized power, this
-   // shouldn't be a problem.
-   union
-   {
-      float val;
-      int32_t x;
-   } u = { x };
-   auto log_2 = (float)(((u.x >> 23) & 255) - 128);
-   u.x &= ~(255 << 23);
-   u.x += 127 << 23;
-   log_2 += ((-0.3358287811f) * u.val + 2.0f) * u.val - 0.65871759316667f;
-   return log_2;
-}
 
 // `x` has length `fftSize/2+1`.
 // Returns the last bin that wasn't zeroed.
@@ -111,9 +95,9 @@ void FormantShifter::Process(
    // Take the log of the normalized magnitude. (This assumes that
    // the window averages to 1.)
    std::complex<float>* pEnv = mEnvelope.getPtr(0);
-   const float normalizer = GetLog2(fftSize);
+   const float normalizer = FastLog2(fftSize);
    std::transform(powSpec, powSpec + numBins, pEnv, [&](float power) {
-      return .5f * GetLog2(power) - normalizer;
+      return .5f * FastLog2(power) - normalizer;
    });
 
    // Get the cosine transform of the log magnitude, aka the cepstrum.

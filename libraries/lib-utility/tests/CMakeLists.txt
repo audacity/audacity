@@ -6,6 +6,7 @@ add_unit_test(
    SOURCES
       CallableTest.cpp
       CompositeTest.cpp
+      MathApproxTest.cpp
       TupleTest.cpp
       TypeEnumeratorTest.cpp
       VariantTest.cpp
