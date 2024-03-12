@@ -20,6 +20,7 @@
 
 #include "ShuttleGui.h"
 #include "SpinControl.h"
+#include "WaveClip.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include <regex>

@@ -17,7 +17,7 @@ class Envelope;
 enum class PlaybackDirection;
 enum class sampleFormat : unsigned;
 class WaveChannel;
-class WaveChannelInterval;
+class WaveClipChannel;
 
 #include <algorithm>
 #include <functional>
@@ -27,7 +27,7 @@ class WaveChannelInterval;
 
 namespace WaveChannelUtilities {
 
-using Clip = WaveChannelInterval;
+using Clip = WaveClipChannel;
 using ClipPointer = std::shared_ptr<Clip>;
 using ClipPointers = std::vector<ClipPointer>;
 using ClipConstPointer = std::shared_ptr<const Clip>;
@@ -111,7 +111,7 @@ WAVE_TRACK_API bool GetFloatAtTime(const WaveChannel &channel,
 /*!
  @copydoc GetFloatAtTime(const WaveChannel &, double, size_t, float &, bool)
  */
-WAVE_TRACK_API bool GetFloatAtTime(const WaveChannelInterval &clip,
+WAVE_TRACK_API bool GetFloatAtTime(const Clip &clip,
    double t, float& value, bool mayThrow);
 
 /*!
@@ -167,7 +167,7 @@ WAVE_TRACK_API void SetFloatsFromTime(WaveChannel &channel,
  @copydoc SetFloatsFromTime(WaveChannel &, double, const float *, size_t,
     sampleFormat, PlaybackDirection)
  */
-WAVE_TRACK_API void SetFloatsFromTime(WaveChannelInterval &channel,
+WAVE_TRACK_API void SetFloatsFromTime(Clip &channel,
    double t, const float* buffer, size_t numSamples,
    sampleFormat effectiveFormat, PlaybackDirection direction);
 

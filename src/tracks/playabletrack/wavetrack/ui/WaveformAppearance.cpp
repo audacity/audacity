@@ -149,7 +149,7 @@ const WaveColorAttachment &WaveColorAttachment::Get(const WaveChannelInterval &c
    return Get(clip.GetClip());
 }
 
-void WaveColorAttachment::MarkChanged() {}
+void WaveColorAttachment::MarkChanged() noexcept {}
 
 void WaveColorAttachment::Invalidate() {}
 

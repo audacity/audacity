@@ -30,7 +30,7 @@ public:
    // TimeAndPitchSource
    void Pull(float* const*, size_t samplesPerChannel) override;
 
-   size_t GetWidth() const;
+   size_t NChannels() const;
 
 private:
    const ClipInterface& mClip;

@@ -33,7 +33,7 @@ public:
                // y coordinates in this HitTest come from the third argument
                // The channel of the interval is used only for times
                params && WaveChannelView::HitTest(
-                  *clip->GetClip(0), viewInfo, params->rect, { params->xx, params->yy })
+                  *clip, viewInfo, params->rect, { params->xx, params->yy })
             ) || (
                // WithinPlayRegion misses first sample, which breaks moving
                // "selected" clip. Probable WithinPlayRegion should be fixed
@@ -41,7 +41,7 @@ public:
                 clip->GetPlayStartTime() <= time &&
                  time < clip->GetPlayEndTime()
             ))
-               return clip->GetClip(0);
+               return clip;
          return {};
       }();
 
@@ -58,8 +58,7 @@ public:
 
       // Select just one interval
       UnfixIntervals([&](const auto &interval){
-         return static_cast<const WaveTrack::Interval&>(interval).GetClip(0)
-           == pClip;
+         return &interval == pClip.get();
       });
 
       return HitTestResult::Intervals;
@@ -70,10 +69,9 @@ public:
       UnfixIntervals([&](auto &myInterval){
          // Use a slightly different test from CommonSelectInterval, rounding times
          // to exact samples according to the clip's rate
-         auto &data = static_cast<const WaveTrack::Interval&>(myInterval);
-         auto clip = data.GetClip(0).get();
-         const auto c0 = mpTrack->TimeToLongSamples(clip->GetPlayStartTime());
-         const auto c1 = mpTrack->TimeToLongSamples(clip->GetPlayEndTime());
+         auto &clip = static_cast<const WaveTrack::Interval&>(myInterval);
+         const auto c0 = mpTrack->TimeToLongSamples(clip.GetPlayStartTime());
+         const auto c1 = mpTrack->TimeToLongSamples(clip.GetPlayEndTime());
          return
              mpTrack->TimeToLongSamples(interval.Start()) < c1 &&
              mpTrack->TimeToLongSamples(interval.End()) > c0;
@@ -123,15 +121,10 @@ public:
    Intervals Detach() override
    {
       for (auto &interval: mMoving) {
-         auto data = std::static_pointer_cast<WaveTrack::Interval>(interval);
-         auto pClip = data->GetClip(0).get();
-         mpTrack->RemoveInterval(data);
-         // Don't rely on pointer identity of WaveTrack::Interval
-         // TODO wide wave clip -- that may change
+         auto pClip = std::static_pointer_cast<WaveTrack::Interval>(interval);
+         mpTrack->RemoveInterval(pClip);
          mMigrated.erase(
-            std::remove_if(mMigrated.begin(), mMigrated.end(),
-               [&](auto &pWideClip){
-                  return pClip == pWideClip->GetClip(0).get(); }),
+            std::remove(mMigrated.begin(), mMigrated.end(), pClip),
             mMigrated.end());
       }
       return std::move(mMoving);
@@ -178,10 +171,8 @@ public:
    void DoHorizontalOffset(double offset) override
    {
       for (auto &interval : MovingIntervals()) {
-         auto &data = static_cast<WaveTrack::Interval&>(*interval);
-         data.GetClip(0)->ShiftBy(offset);
-         if (const auto pClip1 = data.GetClip(1))
-            pClip1->ShiftBy(offset);
+         auto &clip = static_cast<WaveTrack::Interval&>(*interval);
+         clip.ShiftBy(offset);
       }
    }
 
@@ -193,10 +184,9 @@ public:
       if (MovingIntervals().empty())
          return t0;
       else {
-         auto &data =
+         auto &clip =
             static_cast<WaveTrack::Interval&>(*MovingIntervals()[0]);
-         auto& clip = data.GetClip(0);
-         t0 = std::clamp(t0, clip->GetPlayStartTime(), clip->GetPlayEndTime());
+         t0 = std::clamp(t0, clip.GetPlayStartTime(), clip.GetPlayEndTime());
       }
       return t0;
    }

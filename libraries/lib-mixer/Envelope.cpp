@@ -364,7 +364,7 @@ void Envelope::Delete( int point )
    mEnv.erase(mEnv.begin() + point);
 }
 
-void Envelope::Insert(int point, const EnvPoint &p)
+void Envelope::Insert(int point, const EnvPoint &p) noexcept
 {
    mEnv.insert(mEnv.begin() + point, p);
 }
@@ -375,7 +375,7 @@ void Envelope::Insert(double when, double value)
 }
 
 /*! @excsafety{No-fail} */
-void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
+void Envelope::CollapseRegion(double t0, double t1, double sampleDur) noexcept
 {
    if ( t1 <= t0 )
       return;
@@ -392,7 +392,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    bool leftPoint = true, rightPoint = true;
 
    // Determine the start of the range of points to remove from the array.
-   auto range0 = EqualRange( t0, 0 );
+   auto range0 = EqualRange(t0, 0);
    auto begin = range0.first;
    if ( begin == range0.second ) {
       if ( t0 > epsilon ) {
@@ -546,14 +546,14 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
 }
 
 /*! @excsafety{No-fail} */
-void Envelope::RemoveUnneededPoints
-   ( size_t startAt, bool rightward, bool testNeighbors )
+void Envelope::RemoveUnneededPoints(
+   size_t startAt, bool rightward, bool testNeighbors) noexcept
 {
    // startAt is the index of a recently inserted point which might make no
    // difference in envelope evaluation, or else might cause nearby points to
    // make no difference.
 
-   auto isDiscontinuity = [this]( size_t index ) {
+   auto isDiscontinuity = [this]( size_t index ) noexcept {
       // Assume array accesses are in-bounds
       const EnvPoint &point1 = mEnv[ index ];
       const EnvPoint &point2 = mEnv[ index + 1 ];
@@ -561,7 +561,7 @@ void Envelope::RemoveUnneededPoints
          fabs( point1.GetVal() - point2.GetVal() ) > VALUE_TOLERANCE;
    };
 
-   auto remove = [this]( size_t index, bool leftLimit ) {
+   auto remove = [this]( size_t index, bool leftLimit ) noexcept {
       // Assume array accesses are in-bounds
       const auto &point = mEnv[ index ];
       auto when = point.GetT();
@@ -726,7 +726,7 @@ void Envelope::Cap( double sampleDur )
  * @param value the envelope value to use at the given point.
  * @return the index of the NEW envelope point within array of envelope points.
  */
-int Envelope::InsertOrReplaceRelative(double when, double value)
+int Envelope::InsertOrReplaceRelative(double when, double value) noexcept
 {
 #if defined(_DEBUG)
    // in debug builds, do a spot of argument checking
@@ -760,7 +760,8 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    return index;
 }
 
-std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const
+std::pair<int, int> Envelope::EqualRange(double when, double sampleDur)
+   const noexcept
 {
    // Find range of envelope points matching the given time coordinate
    // (within an interval of length sampleDur)
@@ -843,7 +844,7 @@ double Envelope::GetValue( double t, double sampleDur ) const
    return temp;
 }
 
-double Envelope::GetValueRelative(double t, bool leftLimit) const
+double Envelope::GetValueRelative(double t, bool leftLimit) const noexcept
 {
    double temp;
 
@@ -854,7 +855,7 @@ double Envelope::GetValueRelative(double t, bool leftLimit) const
 // relative time
 /// @param Lo returns last index at or before this time, maybe -1
 /// @param Hi returns first index after this time, maybe past the end
-void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
+void Envelope::BinarySearchForTime(int &Lo, int &Hi, double t) const noexcept
 {
    // Optimizations for the usual pattern of repeated calls with
    // small increases of t.
@@ -901,7 +902,8 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 // relative time
 /// @param Lo returns last index before this time, maybe -1
 /// @param Hi returns first index at or after this time, maybe past the end
-void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
+void Envelope::BinarySearchForTime_LeftLimit(int &Lo, int &Hi, double t)
+   const noexcept
 {
    Lo = -1;
    Hi = mEnv.size();
@@ -925,7 +927,7 @@ void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
 /// or log interpolation.
 /// @param iPoint index in env array to look at.
 /// @return value there, or its (safe) log10.
-double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
+double Envelope::GetInterpolationStartValueAtPoint(int iPoint) const noexcept
 {
    double v = mEnv[ iPoint ].GetVal();
    if( !mDB )
@@ -944,7 +946,7 @@ void Envelope::GetValues( double *buffer, int bufferLen,
 
 void Envelope::GetValuesRelative
    (double *buffer, int bufferLen, double t0, double tstep, bool leftLimit)
-   const
+   const noexcept
 {
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
    // wxASSERT( bufferLen > 0 );

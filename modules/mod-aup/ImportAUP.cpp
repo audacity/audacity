@@ -1016,9 +1016,9 @@ bool AUPImportFileHandle::HandleWaveClip(XMLTagHandler *&handler)
    {
       WaveTrack *wavetrack = static_cast<WaveTrack *>(node.handler);
 
-      const auto pInterval = wavetrack->CreateWideClip();
+      const auto pInterval = wavetrack->CreateClip();
       wavetrack->InsertInterval(pInterval, true, true);
-      handler = pInterval->GetClip(0).get();
+      handler = pInterval.get();
    }
    else if (mParentTag == WaveClip::WaveClip_tag)
    {
@@ -1061,7 +1061,7 @@ bool AUPImportFileHandle::HandleEnvelope(XMLTagHandler *&handler)
    {
       WaveClip *waveclip = static_cast<WaveClip *>(node.handler);
 
-      handler = waveclip->GetEnvelope();
+      handler = &waveclip->GetEnvelope();
    }
 
    return true;
@@ -1453,12 +1453,11 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
                                      sampleCount origin /* = 0 */,
                                      int channel /* = 0 */)
 {
-   auto pClip = mClip ? mClip
-      : &(*mWaveTrack->RightmostOrNewClip()->Channels().begin())->GetClip();
+   auto pClip = mClip ? mClip : mWaveTrack->RightmostOrNewClip().get();
    auto &pBlock = mFileMap[wxFileNameFromPath(blockFilename)].second;
    if (pBlock) {
       // Replicate the sharing of blocks
-      if (pClip->GetWidth() != 1)
+      if (pClip->NChannels() != 1)
          return false;
       pClip->AppendLegacySharedBlock( pBlock );
       return true;
@@ -1651,7 +1650,7 @@ bool AUPImportFileHandle::AddSamples(const FilePath &blockFilename,
    // Add the samples to the clip/track
    if (pClip)
    {
-      if (pClip->GetWidth() != 1)
+      if (pClip->NChannels() != 1)
          return false;
       pBlock = pClip->AppendLegacyNewBlock(bufptr, format, cnt);
    }

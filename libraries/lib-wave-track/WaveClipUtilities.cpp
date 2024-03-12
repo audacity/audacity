@@ -46,21 +46,6 @@ void WaveClipUtilities::SetFloatsFromTime(WaveClip &clip,
       effectiveFormat);
 }
 
-void WaveClipUtilities::SetFloatsCenteredAroundTime(WaveClip &clip,
-   double t, size_t iChannel, const float* buffer, size_t numSideSamples,
-   sampleFormat effectiveFormat)
-{
-   SetFloatsFromTime(clip,
-      t - clip.SamplesToTime(numSideSamples), iChannel, buffer,
-      2 * numSideSamples + 1, effectiveFormat);
-}
-
-void WaveClipUtilities::SetFloatAtTime(WaveClip &clip,
-   double t, size_t iChannel, float value, sampleFormat effectiveFormat)
-{
-   SetFloatsCenteredAroundTime(clip, t, iChannel, &value, 0u, effectiveFormat);
-}
-
 bool WaveClipUtilities::SharesBoundaryWithNextClip(
    const WaveTrack::Interval &prev, const WaveTrack::Interval& next)
 {

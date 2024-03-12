@@ -38,7 +38,7 @@ bool SilenceSegment::Empty() const
    return mNumRemainingSamples == 0u;
 }
 
-size_t SilenceSegment::GetWidth() const
+size_t SilenceSegment::NChannels() const
 {
    return mNumChannels;
 }

@@ -158,7 +158,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
       double t0 = mT0 < trackStart ? trackStart : mT0;
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
       if (t1 > t0) {
-         auto tempTrack = track->WideEmptyCopy();
+         auto tempTrack = track->EmptyCopy();
          const auto channels = track->Channels();
          auto iter = tempTrack->Channels().begin();
          for (const auto pChannel : channels) {

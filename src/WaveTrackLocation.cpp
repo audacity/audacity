@@ -35,7 +35,7 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
    int curpos = 0;
 
    for (const auto clip: clips) {
-      for (const auto &cc : clip->GetCutLines(track)) {
+      for (const auto &cc : clip->GetCutLines()) {
          auto cutlinePosition =
             clip->GetSequenceStartTime() + cc->GetSequenceStartTime();
          if (clip->WithinPlayRegion(cutlinePosition)) {

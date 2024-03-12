@@ -11,6 +11,7 @@
 #include "AnalyzedWaveClip.h"
 
 #include "ClipMirAudioReader.h"
+#include "WaveClip.h"
 
 AnalyzedWaveClip::AnalyzedWaveClip(
    std::shared_ptr<ClipMirAudioReader> reader,

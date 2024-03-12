@@ -762,7 +762,7 @@ bool EffectNoiseReduction::Worker::Process(
          std::optional<ChannelGroup::ChannelIterator<WaveChannel>> pIter;
          WaveTrack *pFirstTrack{};
          if (!mSettings.mDoProfile) {
-            ppTempTrack.emplace(track->WideEmptyCopy());
+            ppTempTrack.emplace(track->EmptyCopy());
             pFirstTrack = ppTempTrack->get();
             pIter.emplace(pFirstTrack->Channels().begin());
          }

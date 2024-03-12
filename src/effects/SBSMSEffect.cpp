@@ -350,7 +350,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             const auto warper = createTimeWarper(
                mT0, mT1, maxDuration, rateStart, rateEnd, rateSlideType);
 
-            WaveTrack::Holder outputTrack = track.WideEmptyCopy();
+            WaveTrack::Holder outputTrack = track.EmptyCopy();
             auto iter = outputTrack->Channels().begin();
             rb.outputTrack = outputTrack.get();
             rb.outputLeftChannel = (*iter++).get();

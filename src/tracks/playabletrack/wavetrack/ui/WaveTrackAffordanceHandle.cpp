@@ -20,7 +20,7 @@
 
 #include <wx/event.h>
 
-WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target)
+WaveTrackAffordanceHandle::WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<ClipTimes>& target)
    : AffordanceHandle(track), mTarget(target)
 { }
 

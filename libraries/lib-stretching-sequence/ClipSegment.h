@@ -36,7 +36,7 @@ public:
    // AudioSegment
    size_t GetFloats(float* const* buffers, size_t numSamples) override;
    bool Empty() const override;
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
 private:
    const sampleCount mTotalNumSamplesToProduce;

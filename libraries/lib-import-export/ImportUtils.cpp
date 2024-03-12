@@ -69,22 +69,3 @@ void ImportUtils::FinalizeImport(TrackHolders& outTracks, WaveTrack &track)
    track.Flush();
    outTracks.push_back(track.shared_from_this());
 }
-
-void ImportUtils::ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op)
-{
-   for(auto track : trackList.Any<WaveTrack>())
-   {
-      for(auto channel : track->Channels())
-      {
-         op(*channel);
-      }
-   }
-}
-
-void ImportUtils::ForEachChannel(WaveTrack &track, const std::function<void(WaveChannel&)>& op)
-{
-   for(auto channel : track.Channels())
-   {
-      op(*channel);
-   }
-}

@@ -57,7 +57,7 @@ struct WaveColorAttachment final : WaveClipListener
    static WaveColorAttachment &Get(WaveChannelInterval &clip);
    static const WaveColorAttachment &Get(const WaveChannelInterval &clip);
 
-   void MarkChanged() override; // NOFAIL-GUARANTEE
+   void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    // Write color

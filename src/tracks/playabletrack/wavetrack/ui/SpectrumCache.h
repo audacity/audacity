@@ -13,7 +13,8 @@
 
 class sampleCount;
 class SpectrogramSettings;
-class WaveChannelInterval;
+class WaveClipChannel;
+using WaveChannelInterval = WaveClipChannel;
 class WideSampleSequence;
 
 #include <vector>
@@ -115,7 +116,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
 
    static WaveClipSpectrumCache &Get(const WaveChannelInterval &clip);
 
-   void MarkChanged() override; // NOFAIL-GUARANTEE
+   void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    /** Getting high-level data for screen display */
@@ -128,6 +129,10 @@ struct WaveClipSpectrumCache final : WaveClipListener
       SpectrogramSettings &spectrogramSettings,
       const sampleCount *&where, size_t numPixels,
       double t0 /*absolute time*/, double pixelsPerSecond);
+
+   void MakeStereo(WaveClipListener &&other, bool aligned) override;
+   void SwapChannels() override;
+   void Erase(size_t index) override;
 };
 
 #endif

@@ -1710,7 +1710,7 @@ bool NyquistEffect::ProcessOne(
       return false;
    }
 
-   nyxContext.mOutputTrack = mCurChannelGroup->WideEmptyCopy();
+   nyxContext.mOutputTrack = mCurChannelGroup->EmptyCopy();
    auto out = nyxContext.mOutputTrack;
 
    // Now fully evaluate the sound

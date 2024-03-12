@@ -12,14 +12,14 @@
 
 #include "../../../ui/AffordanceHandle.h"
 
-class WaveClip;
+class ClipTimes;
 
 //! Implements some features which are specific to Wave Clips
 class WaveTrackAffordanceHandle final : public AffordanceHandle
 {
-   std::shared_ptr<WaveClip> mTarget;
+   std::shared_ptr<ClipTimes> mTarget;
 public:
-   WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<WaveClip>& target);
+   WaveTrackAffordanceHandle(const std::shared_ptr<Track>& track, const std::shared_ptr<ClipTimes>& target);
 
    Result Click(const TrackPanelMouseEvent& event, AudacityProject* project) override;
 

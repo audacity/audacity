@@ -45,7 +45,7 @@ public:
       size_t iChannel, sampleCount start, size_t length,
       bool mayThrow = true) const = 0;
 
-   virtual size_t GetWidth() const = 0;
+   virtual size_t NChannels() const = 0;
 
    virtual int GetCentShift() const = 0;
 

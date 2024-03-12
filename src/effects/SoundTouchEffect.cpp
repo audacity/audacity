@@ -121,7 +121,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             const auto start = orig.TimeToLongSamples(mT0);
             const auto end = orig.TimeToLongSamples(mT1);
 
-            const auto tempTrack = orig.WideEmptyCopy();
+            const auto tempTrack = orig.EmptyCopy();
             auto &out = *tempTrack;
 
             const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
@@ -144,8 +144,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                pSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(
-                  pSoundTouch.get(), orig, out, start, end, warper))
+               if (!ProcessOne(pSoundTouch.get(), **channels.begin(),
+                     out, start, end, warper))
                   bGoodResult = false;
             }
             // pSoundTouch is destroyed here
@@ -167,7 +167,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
 bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
-   WaveTrack &orig, WaveTrack &out,
+   WaveChannel &orig, WaveTrack &out,
    sampleCount start, sampleCount end,
    const TimeWarper &warper)
 {
@@ -232,7 +232,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    }
 
    // Transfer output samples to the original
-   Finalize(orig, out, warper);
+   Finalize(orig.GetTrack(), out, warper);
 
    double newLength = out.GetEndTime();
    m_maxNewLength = std::max(m_maxNewLength, newLength);

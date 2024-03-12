@@ -30,6 +30,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../TrackPanel.h"
 #include "TrackFocus.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
 #include "RealtimeEffectManager.h"

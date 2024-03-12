@@ -91,8 +91,7 @@ SONFNS(AutoSave)
 
 
 NoteTrack::Interval::Interval(const NoteTrack &track)
-   : WideChannelGroupInterval(track)
-   , mpTrack{ track.SharedPointer<const NoteTrack>() }
+   : mpTrack{ track.SharedPointer<const NoteTrack>() }
 {}
 
 NoteTrack::Interval::~Interval() = default;
@@ -105,6 +104,11 @@ double NoteTrack::Interval::Start() const
 double NoteTrack::Interval::End() const
 {
    return Start() + mpTrack->GetSeq().get_real_dur();
+}
+
+size_t NoteTrack::Interval::NChannels() const
+{
+   return 1;
 }
 
 std::shared_ptr<ChannelInterval>

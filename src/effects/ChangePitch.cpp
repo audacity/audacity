@@ -454,7 +454,8 @@ void EffectChangePitch::DeduceFrequencies()
       Floats freq{ windowSize / 2 };
       Floats freqa{ windowSize / 2, true };
 
-      track->GetFloats(buffer.get(), start, analyzeSize);
+      // Always used only the left channel for this deduction of initial pitch
+      (*track->Channels().begin())->GetFloats(buffer.get(), start, analyzeSize);
       for(unsigned i = 0; i < numWindows; i++) {
          ComputeSpectrum(
             buffer.get() + i * windowSize, windowSize, windowSize, freq.get(),

@@ -143,7 +143,7 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
       track.GetRate(),
       floatSample);
 
-   // Always make mono output; don't use WideEmptyCopy
+   // Always make mono output; don't use EmptyCopy
    auto outTrack = track.EmptyCopy(1);
    auto tempList = TrackList::Temporary(nullptr, outTrack);
    outTrack->ConvertToSampleFormat(floatSample);

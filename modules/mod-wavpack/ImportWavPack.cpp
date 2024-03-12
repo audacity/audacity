@@ -203,7 +203,7 @@ void WavPackImportFileHandle::Import(
                   int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            track->ForEachChannel([&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
@@ -216,7 +216,7 @@ void WavPackImportFileHandle::Import(
             });
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            track->ForEachChannel([&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + chn),
@@ -232,7 +232,7 @@ void WavPackImportFileHandle::Import(
                floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            track->ForEachChannel([&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + chn),

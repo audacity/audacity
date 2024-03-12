@@ -55,19 +55,13 @@ class ChannelGroup;
  */
 class CHANNEL_API WideChannelGroupInterval : public ChannelGroupInterval {
 public:
-   //! Initialize immutable properties, constraining number of channels to
-   //! equal that of the containing group
-   /*!
-    @post `NChannels() == group.NChannels()`
-    */
-   explicit WideChannelGroupInterval(const ChannelGroup &group);
    ~WideChannelGroupInterval() override;
 
    //! Report the number of channels
    /*!
     @post result: `result >= 1`
     */
-   size_t NChannels() const { return mNChannels; }
+   virtual size_t NChannels() const = 0;
 
    //! Retrieve a channel, cast to the given type
    /*!
@@ -159,9 +153,6 @@ protected:
     @post result: `!(iChannel < NChannels()) || result`
     */
    virtual std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) = 0;
-
-private:
-   const size_t mNChannels;
 };
 
 class CHANNEL_API Channel
@@ -517,7 +508,6 @@ public:
       @}
    */
 
-   // TODO wide wave tracks -- remove this
    //! For two tracks describes the type of the linkage
    enum class LinkType : int {
        None = 0, //!< No linkage
@@ -530,6 +520,8 @@ public:
 
 protected:
    //! Retrieve a channel
+   //! For fixed iChannel, resulting address must be unchanging, if there has
+   //! been no other mutation of this ChannelGroup
    /*!
     @post result: `!(iChannel < NChannels()) || result`
     */

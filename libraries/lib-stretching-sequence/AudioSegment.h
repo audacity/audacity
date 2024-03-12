@@ -37,7 +37,7 @@ public:
    /**
     * @brief The number of channels in the segment.
     */
-   virtual size_t GetWidth() const = 0;
+   virtual size_t NChannels() const = 0;
 
    /**
     * @brief Whether the segment has no more samples to provide.

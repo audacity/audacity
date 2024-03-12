@@ -29,12 +29,12 @@ class ZoomInfo;
 class EnvPoint final : public XMLTagHandler {
 
 public:
-   EnvPoint() {}
-   inline EnvPoint( double t, double val ) : mT{ t }, mVal{ val } {}
+   EnvPoint() noexcept {}
+   inline EnvPoint( double t, double val ) noexcept : mT{ t }, mVal{ val } {}
 
-   double GetT() const { return mT; }
-   void SetT(double t) { mT = t; }
-   double GetVal() const { return mVal; }
+   double GetT() const noexcept { return mT; }
+   void SetT(double t) noexcept { mT = t; }
+   double GetVal() const noexcept { return mVal; }
    inline void SetVal( Envelope *pEnvelope, double val );
 
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override
@@ -111,7 +111,7 @@ public:
    // Handling Cut/Copy/Paste events
    // sampleDur determines when the endpoint of the collapse is near enough
    // to an endpoint of the domain, that an extra control point is not needed.
-   void CollapseRegion(double t0, double t1, double sampleDur);
+   void CollapseRegion(double t0, double t1, double sampleDur) noexcept;
 
    // Envelope has no notion of rate and control point times are not quantized;
    // but a tolerance is needed in the Paste routine, and better to inform it
@@ -147,12 +147,12 @@ private:
       ( double t0, double tlen, double *pLeftVal, double *pRightVal );
 
    void RemoveUnneededPoints
-      ( size_t startAt, bool rightward, bool testNeighbors = true );
+      ( size_t startAt, bool rightward, bool testNeighbors = true ) noexcept;
 
-   double GetValueRelative(double t, bool leftLimit = false) const;
+   double GetValueRelative(double t, bool leftLimit = false) const noexcept;
    void GetValuesRelative
       (double *buffer, int len, double t0, double tstep, bool leftLimit = false)
-      const;
+      const noexcept;
    // relative time
    int NumberOfPointsAfter(double t) const;
    // relative time
@@ -185,7 +185,7 @@ public:
    void Delete(int point);
 
    /** \brief insert a point */
-   void Insert(int point, const EnvPoint &p);
+   void Insert(int point, const EnvPoint &p) noexcept;
 
    // Insert a point (without replacement)
    // for now assumed sequential.
@@ -201,9 +201,9 @@ public:
    }
 
 private:
-   int InsertOrReplaceRelative(double when, double value);
+   int InsertOrReplaceRelative(double when, double value) noexcept;
 
-   std::pair<int, int> EqualRange( double when, double sampleDur ) const;
+   std::pair<int, int> EqualRange(double when, double sampleDur) const noexcept;
 
 public:
    /** \brief Returns the sets of when and value pairs */
@@ -229,9 +229,10 @@ private:
    void AddPointAtEnd( double t, double val );
    void CopyRange(const Envelope &orig, size_t begin, size_t end);
    // relative time
-   void BinarySearchForTime( int &Lo, int &Hi, double t ) const;
-   void BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const;
-   double GetInterpolationStartValueAtPoint( int iPoint ) const;
+   void BinarySearchForTime(int &Lo, int &Hi, double t) const noexcept;
+   void BinarySearchForTime_LeftLimit(int &Lo, int &Hi, double t)
+      const noexcept;
+   double GetInterpolationStartValueAtPoint(int iPoint) const noexcept;
 
    // The list of envelope control points.
    EnvArray mEnv;

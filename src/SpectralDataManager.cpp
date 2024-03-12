@@ -78,7 +78,7 @@ bool SpectralDataManager::ProcessTracks(AudacityProject &project){
       const auto t0 = wt->LongSamplesToTime(startSample);
       const auto len = endSample - startSample;
       const auto tLen = wt->LongSamplesToTime(len);
-      auto tempTrack = wt->WideEmptyCopy();
+      auto tempTrack = wt->EmptyCopy();
       auto iter = tempTrack->Channels().begin();
       long long processed{};
       for (auto pChannel : wt->Channels()) {

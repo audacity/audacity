@@ -20,7 +20,7 @@ class wxMouseState;
 class Track;
 class ViewInfo;
 class WaveChannel;
-class WaveChannelInterval;
+class WaveClipChannel;
 
 class SampleHandle final : public UIHandle
 {
@@ -71,7 +71,7 @@ private:
       (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0);
 
    std::shared_ptr<WaveChannel> mClickedTrack;
-   std::shared_ptr<WaveChannelInterval> mClickedClip {};
+   std::shared_ptr<WaveClipChannel> mClickedClip {};
    wxRect mRect{};
 
    int mClickedStartPixel {};

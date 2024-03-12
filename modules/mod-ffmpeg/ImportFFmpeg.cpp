@@ -590,7 +590,7 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
       const auto samplesPerChannel = data.size() / channelsCount;
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
+      stream->ForEachChannel([&](auto& channel)
       {
          if(chn >= nChannels)
             return;
@@ -612,7 +612,7 @@ void FFmpegImportFileHandle::WriteData(StreamContext *sc, const AVPacketWrapper*
       const auto samplesPerChannel = data.size() / channelsCount;
 
       auto channelIndex = 0;
-      ImportUtils::ForEachChannel(*stream, [&](auto& channel)
+      stream->ForEachChannel([&](auto& channel)
       {
          if(channelIndex >= nChannels)
             return;

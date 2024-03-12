@@ -216,7 +216,7 @@ void OpusImportFileHandle::Import(
       }
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*track, [&](auto& channel)
+      track->ForEachChannel([&](auto& channel)
       {
          channel.AppendBuffer(
             reinterpret_cast<constSamplePtr>(floatBuffer.get() +

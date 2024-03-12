@@ -249,7 +249,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-            auto pNewTrack = outWaveTrack.WideEmptyCopy();
+            auto pNewTrack = outWaveTrack.EmptyCopy();
             auto iter = pNewTrack->Channels().begin();
             for (const auto pChannel : outWaveTrack.Channels()) {
                // ProcessOne() (implemented below) processes a single channel

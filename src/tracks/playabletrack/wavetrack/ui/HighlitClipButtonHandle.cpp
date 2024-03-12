@@ -45,7 +45,7 @@ void HighlitClipButtonHandle::Draw(
    const auto artist = TrackArtist::Get(context);
    const auto& zoomInfo = *artist->pZoomInfo;
    const auto rect = LowlitClipButton::Detail::GetButtonInnerRectangle(
-      mButtonId, { *mClip->GetClip(0), zoomInfo, affordanceRect });
+      mButtonId, { *mClip, zoomInfo, affordanceRect });
    if (!rect)
       return;
    Highlight(*rect, context.dc);
@@ -68,7 +68,7 @@ UIHandle::Result HighlitClipButtonHandle::Drag(
 
    // It's the right cell; check that the mouse is still over the button.
    const auto buttonRect = LowlitClipButton::Detail::GetButtonRectangle(
-      mButtonId, { *mClip->GetClip(0), ViewInfo::Get(*pProject), event.rect });
+      mButtonId, { *mClip, ViewInfo::Get(*pProject), event.rect });
    if (!buttonRect.has_value())
       return cancelCode;
 
