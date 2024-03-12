@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "FormantShifter.h"
 #include "FormantShifterLoggerInterface.h"
+#include "MapToPositiveHalfIndex.h"
 #include "MathApprox.h"
 #include <algorithm>
 #include <cassert>
@@ -17,23 +18,6 @@
 
 namespace
 {
-constexpr auto MapToPositiveHalfIndex(int index, int fullSize)
-{
-   const auto inputIsValid = fullSize > 0 && fullSize % 2 == 0;
-   if (!inputIsValid)
-      return 0;
-   if (index >= 0)
-      index = index % fullSize;
-   else
-      index = fullSize - (-index % fullSize);
-   if (index > fullSize / 2)
-      index = fullSize - index;
-   return index;
-}
-
-static_assert(MapToPositiveHalfIndex(-7, 4) == 1);
-static_assert(MapToPositiveHalfIndex(9, 4) == 1);
-
 // `x` has length `fftSize/2+1`.
 // Returns the last bin that wasn't zeroed.
 size_t ResampleFreqDomain(float* x, size_t fftSize, double factor)
