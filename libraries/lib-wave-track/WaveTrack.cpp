@@ -2940,7 +2940,7 @@ auto WaveTrack::CreateClip(double offset, const wxString& name,
       return pNewClip;
    }
    else
-      return CreateClip(offset, name);
+      return DoCreateClip(offset, name);
 }
 
 auto WaveTrack::CopyClip(const Interval &toCopy, bool copyCutlines)
@@ -2955,7 +2955,7 @@ void WaveTrack::CreateRight()
    mRightChannel.emplace(*this);
 }
 
-auto WaveTrack::CreateClip(double offset, const wxString& name) const
+auto WaveTrack::DoCreateClip(double offset, const wxString& name) const
    -> WaveClipHolder
 {
    auto clip = std::make_shared<WaveClip>(NChannels(),

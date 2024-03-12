@@ -585,8 +585,7 @@ private:
 
     @post result: `result->NChannels() == track.NChannels()`
     */
-   WaveClipHolder CreateClip(
-      double offset = .0, const wxString& name = wxEmptyString) const;
+   WaveClipHolder DoCreateClip(double offset, const wxString& name) const;
 
 public:
    /** @brief Get access to the most recently added clip, or create a clip,
