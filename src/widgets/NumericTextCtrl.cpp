@@ -171,7 +171,7 @@ NumericTextCtrl::NumericTextCtrl(
 
    mReadOnly = options.readOnly;
    mMenuEnabled = options.menuEnabled;
-   mButtonWidth = mMenuEnabled ? 9 : 0;
+   mButtonWidth = mMenuEnabled ? 16 : 0;
 
    SetLayoutDirection(wxLayout_LeftToRight);
    Layout();
@@ -452,7 +452,7 @@ bool NumericTextCtrl::Layout()
 
    // Draw the background bitmap - it contains black boxes where
    // all of the digits go and all of the other text
-
+   wxPen Pen;
    wxBrush Brush;
 
    mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight,24);
@@ -483,14 +483,17 @@ bool NumericTextCtrl::Layout()
       memDC.DrawText(fields[i].label, mFieldPositions[i].labelX, labelTop);
 
    if (mMenuEnabled) {
-      wxRect r(mWidth, 0, mButtonWidth - 1, mHeight - 1);
-      AColor::Bevel(memDC, true, r);
-      memDC.SetBrush(*wxBLACK_BRUSH);
-      memDC.SetPen(*wxBLACK_PEN);
+      theTheme.SetPenColour( Pen, clrTimeFont );
+      theTheme.SetBrushColour( Brush, clrTimeFont );
+      memDC.SetPen(Pen);
+      memDC.SetBrush(Brush);
+      AColor::Line(memDC, 
+                   mWidth + 2, 4, 
+                   mWidth + 2, mHeight - 4 );
       AColor::Arrow(memDC,
-                    mWidth + 1,
+                    mWidth + 5,
                     (mHeight / 2) - 2,
-                    mButtonWidth - 2);
+                    mButtonWidth - 7);
    }
    return true;
 }
