@@ -57,13 +57,13 @@ public:
       std::function<void(double)> progressCallback = {});
 
 private:
-   struct Response;
+   struct UploadOperation;
 
-   void RemoveResponse(Response& response);
+   void RemoveResponse(UploadOperation& response);
 
    std::mutex mResponseMutex;
 
-   using ResponsesList = std::vector<std::unique_ptr<Response>>;
+   using ResponsesList = std::vector<std::shared_ptr<UploadOperation>>;
    ResponsesList mResponses;
 };
 
