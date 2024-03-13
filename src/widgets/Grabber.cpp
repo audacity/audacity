@@ -145,10 +145,13 @@ void Grabber::DrawGrabber( wxDC & dc )
    if( mAsSpacer )
       return;
    // Calculate the bump rectangle
-   r.Deflate(3, 3);
+   r.Deflate(2, 2);
    if ((r.GetHeight() % 4) < 2) {
       r.Offset(0, 1);
    }
+
+   // 2-bar toolbars and larger get padding
+   int padding = r.GetHeight() > 32 ? 16 : 4;
 
    // Cache
    left = r.GetLeft();
@@ -156,19 +159,7 @@ void Grabber::DrawGrabber( wxDC & dc )
    top = r.GetTop();
    bottom = r.GetBottom();
 
-   // Draw the raised bumps
-   if (mPressed) {
-      AColor::Dark(&dc, false);
-   }
-   else {
-      AColor::Light(&dc, false);
-   }
-
-   for (y = top; y < bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
-   }
-
-   // Draw the pushed bumps
+   // Draw the bumps
    if (mPressed) {
       AColor::Light(&dc, false);
    }
@@ -176,8 +167,12 @@ void Grabber::DrawGrabber( wxDC & dc )
       AColor::Dark(&dc, false);
    }
 
-   for (y = top + 1; y <= bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
+   for (y = top + padding; y < bottom - padding; y += 4) {
+      dc.DrawRectangle(left, y, 2, 2);
+      dc.DrawRectangle(right, y, 2, 2);
+      //AColor::Line(dc, left, y, left, y + 1);
+      //AColor::Line(dc, right, y, right, y+1);
+
    }
 }
 
