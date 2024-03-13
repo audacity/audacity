@@ -14,6 +14,7 @@
 #include <variant>
 
 #include <wx/file.h>
+#include <wx/log.h>
 
 #include "CodeConversions.h"
 
@@ -29,17 +30,17 @@ using namespace audacity::network_manager;
 
 namespace audacity::cloud::audiocom::sync
 {
+constexpr int RetriesCount { 3 };
+
 using UploadData = std::variant<std::vector<uint8_t>, std::string>;
 
-struct DataUploader::Response final
+struct DataUploader::UploadOperation final :
+    std::enable_shared_from_this<DataUploader::UploadOperation>
 {
    DataUploader& Uploader;
    UploadUrls Target;
    std::function<void(ResponseResult)> Callback;
    std::function<void(double)> ProgressCallback;
-
-   int RetriesCount { 3 };
-   int RetriesLeft { 3 };
 
    std::string MimeType;
    UploadData Data;
@@ -50,7 +51,7 @@ struct DataUploader::Response final
 
    std::atomic<bool> UploadFailed { false };
 
-   Response(
+   UploadOperation(
       DataUploader& uploader, CancellationContextPtr cancellationContex,
       const UploadUrls& target, UploadData data, std::string mimeType,
       std::function<void(ResponseResult)> callback,
@@ -59,16 +60,17 @@ struct DataUploader::Response final
        , Target { target }
        , Callback { std::move(callback) }
        , ProgressCallback { std::move(progressCallback) }
-       , RetriesLeft { RetriesCount }
        , MimeType { std::move(mimeType) }
        , Data { std::move(data) }
        , CancelContext { std::move(cancellationContex) }
    {
-      PerformUpload();
    }
 
-   void PerformUpload()
+   void PerformUpload(int retriesLeft)
    {
+      wxLogDebug(
+         "Performing upload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
+
       Request request { Target.UploadUrl };
       request.setHeader(common_headers::ContentType, MimeType);
 
@@ -90,24 +92,30 @@ struct DataUploader::Response final
       }
 
       NetworkResponse->setRequestFinishedCallback(
-         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
+         [this, retriesLeft, operation = weak_from_this()](auto)
          {
-            auto strongResponse = weakResponse.lock();
-            if (!strongResponse)
+            auto strongThis = operation.lock();
+            if (!strongThis)
                return;
 
-            if (NetworkResponse->getError() == NetworkError::NoError)
-               OnUploadSucceeded();
+            CurrentResult = GetResponseResult(*NetworkResponse, false);
+
+            if (CurrentResult.Code == SyncResultCode::Success)
+               ConfirmUpload(RetriesCount);
+            else if (
+               CurrentResult.Code == SyncResultCode::ConnectionFailed &&
+               retriesLeft > 0)
+               PerformUpload(retriesLeft - 1);
             else
-               OnUploadFailed();
+               FailUpload(RetriesCount);
          });
 
       NetworkResponse->setUploadProgressCallback(
-         [this, weakResponse = std::weak_ptr { NetworkResponse }](
+         [this, operation = weak_from_this()](
             int64_t current, int64_t total)
          {
-            auto strongResponse = weakResponse.lock();
-            if (!strongResponse)
+            auto strongThis = operation.lock();
+            if (!strongThis)
                return;
 
             if (total <= 0)
@@ -120,31 +128,11 @@ struct DataUploader::Response final
          });
    }
 
-   void OnUploadSucceeded()
+   void ConfirmUpload(int retriesLeft)
    {
-      RetriesLeft = RetriesCount;
-      ConfirmUpload();
-   }
+      wxLogDebug(
+         "ConfirmUpload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
 
-   void OnUploadFailed()
-   {
-      CurrentResult = GetResponseResult(*NetworkResponse, false);
-
-      if (
-         CurrentResult.Code == SyncResultCode::ConnectionFailed &&
-         --RetriesLeft > 0)
-      {
-         PerformUpload();
-      }
-      else
-      {
-         RetriesLeft = RetriesCount;
-         FailUpload();
-      }
-   }
-
-   void ConfirmUpload()
-   {
       Data = {};
       Request request { Target.SuccessUrl };
 
@@ -153,10 +141,10 @@ struct DataUploader::Response final
       CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
-         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
+         [this, retriesLeft, operation = weak_from_this()](auto)
          {
-            auto strongResponse = weakResponse.lock();
-            if (!strongResponse)
+            auto strongThis = operation.lock();
+            if (!strongThis)
                return;
 
             CurrentResult = GetResponseResult(*NetworkResponse, false);
@@ -168,24 +156,30 @@ struct DataUploader::Response final
             }
             else if (
                CurrentResult.Code == SyncResultCode::ConnectionFailed &&
-               --RetriesLeft > 0)
+               retriesLeft > 0)
             {
-               ConfirmUpload();
+               ConfirmUpload(retriesLeft - 1);
             }
             else
             {
-               RetriesLeft = RetriesCount;
-               FailUpload();
+               FailUpload(RetriesCount);
             }
          });
    }
 
-   void FailUpload()
+   void FailUpload(int retriesLeft)
    {
+      wxLogDebug(
+         "FailUpload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
+
       if (!UploadFailed.exchange(true))
       {
          Data = {};
          Callback(CurrentResult);
+
+         wxLogDebug(
+            "FailUpload signalled to %s: %s", Target.UploadUrl.c_str(),
+            CurrentResult.Content.c_str());
       }
 
       Request request { Target.FailUrl };
@@ -195,18 +189,18 @@ struct DataUploader::Response final
       CancelContext->OnCancelled(NetworkResponse);
 
       NetworkResponse->setRequestFinishedCallback(
-         [this, weakResponse = std::weak_ptr { NetworkResponse }](auto)
+         [this, retriesLeft, operation = weak_from_this()](auto)
          {
-            auto strongResponse = weakResponse.lock();
-            if (!strongResponse)
+            auto strongThis = operation.lock();
+            if (!strongThis)
                return;
 
             const auto result = GetResponseResult(*NetworkResponse, false);
 
             if (
                result.Code == SyncResultCode::ConnectionFailed &&
-               --RetriesLeft > 0)
-               FailUpload();
+               retriesLeft > 0)
+               FailUpload(retriesLeft - 1);
             else
                CleanUp();
 
@@ -248,10 +242,12 @@ void DataUploader::Upload(
 
    auto lock = std::lock_guard { mResponseMutex };
 
-   mResponses.emplace_back(std::make_unique<Response>(
+   mResponses.emplace_back(std::make_unique<UploadOperation>(
       *this, cancellationContex, target, std::move(data),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
+
+   mResponses.back()->PerformUpload(RetriesCount);
 }
 
 void DataUploader::Upload(
@@ -281,13 +277,13 @@ void DataUploader::Upload(
 
    auto lock = std::lock_guard { mResponseMutex };
 
-   mResponses.emplace_back(std::make_unique<Response>(
+   mResponses.emplace_back(std::make_shared<UploadOperation>(
       *this, cancellationContex, target, std::move(filePath),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
 }
 
-void DataUploader::RemoveResponse(Response& response)
+void DataUploader::RemoveResponse(UploadOperation& response)
 {
    auto lock = std::lock_guard { mResponseMutex };
 
