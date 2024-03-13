@@ -517,7 +517,8 @@ bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
 {
    Finally Do{ [this]{ assert(CheckInvariants()); } };
 
-   Transaction transaction{ *this };
+   // There is not a transaction to enforce consistency of lengths of sequences
+   // (And there is as yet always just one sequence).
 
    //wxLogDebug(wxT("Append: len=%lli"), (long long) len);
 
@@ -528,7 +529,6 @@ bool WaveClip::Append(constSamplePtr buffers[], sampleFormat format,
          pSequence->Append(buffers[ii++], format, len, stride, effectiveFormat)
          || appended;
 
-   transaction.Commit();
    // use No-fail-guarantee
    UpdateEnvelopeTrackLen();
    MarkChanged();
@@ -1528,14 +1528,10 @@ bool WaveClip::CheckInvariants() const
       // All pointers mut be non-null
       auto &pFirst = *iter++;
       if (pFirst) {
-         // All sequences must have the same lengths, append buffer lengths,
-         // sample formats, and sample block factory
+         // All sequences must have the sample formats, and sample block factory
          return
          std::all_of(iter, end, [&](decltype(pFirst) pSequence) {
             return pSequence &&
-               pSequence->GetNumSamples() == pFirst->GetNumSamples() &&
-               pSequence->GetAppendBufferLen() == pFirst->GetAppendBufferLen()
-                  &&
                pSequence->GetSampleFormats() == pFirst->GetSampleFormats() &&
                pSequence->GetFactory() == pFirst->GetFactory();
          }) &&
