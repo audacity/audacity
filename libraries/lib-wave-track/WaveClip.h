@@ -645,8 +645,8 @@ private:
    /*!
     @invariant `mSequences.size() > 0`
     @invariant all are non-null
-    @invariant all sequences have the same lengths, append buffer lengths,
-      sample formats, and sample block factory
+    @invariant all sequences have the same sample formats, and sample block
+    factory
     @invariant all cutlines have the same width
     */
    std::vector<std::unique_ptr<Sequence>> mSequences;
