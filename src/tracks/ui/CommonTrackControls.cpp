@@ -376,35 +376,6 @@ void CommonTrackControls::Draw(
 
       //mTrackInfo.DrawBordersWithin( dc, rect, *t );
    }
-
-   // Some old cut-and-paste legacy from TrackPanel.cpp here:
-#undef USE_BEVELS
-#ifdef USE_BEVELS
-   // This branch is not now used
-   // PRL:  todo:  banish magic numbers.
-   // PRL: vrul was the x coordinate of left edge of the vertical ruler.
-   // PRL: bHasMuteSolo was true iff the track was WaveTrack.
-   if( bHasMuteSolo )
-   {
-      int ylast = rect.height-20;
-      int ybutton = wxMin(32,ylast-17);
-      int ybuttonEnd = 67;
-
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, ybutton);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   
-      if( ybuttonEnd < ylast ){
-         fill=wxRect( rect.x+1, rect.y+ybuttonEnd, fill.width, ylast - ybuttonEnd);
-         AColor::BevelTrackInfo( *dc, true, fill );
-      }
-   }
-   else
-   {
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   }
-#endif
-
 }
 
 wxRect CommonTrackControls::DrawingArea(

@@ -112,13 +112,7 @@ void ShareAudioToolbar::Populate()
 
 void ShareAudioToolbar::Repaint(wxDC* dc)
 {
-#ifndef USE_AQUA_THEME
-   const auto s = mSizer->GetSize();
-   const auto p = mSizer->GetPosition();
-
-   wxRect bevelRect(p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1);
-   AColor::Bevel(*dc, true, bevelRect);
-#endif
+   // this was used to add a bevel and can be removed
 }
 
 void ShareAudioToolbar::EnableDisableButtons()

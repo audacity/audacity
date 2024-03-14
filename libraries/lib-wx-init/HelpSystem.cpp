@@ -178,7 +178,7 @@ void HelpSystem::ShowHtmlText(wxWindow *pParent,
       html = safenew LinkingHtmlWindow(S.GetParent(), wxID_ANY,
                                    wxDefaultPosition,
                                    bIsFile ? wxSize(500, 400) : wxSize(480, 240),
-                                   wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
+                                   wxHW_SCROLLBAR_AUTO);
 
       html->SetRelatedFrame( pFrame, wxT("Help: %s") );
       if( bIsFile )

@@ -130,17 +130,6 @@ void Grabber::DrawGrabber( wxDC & dc )
    if( mAsSpacer )
       r.width -= 1;
 
-#ifndef __WXMAC__
-
-   // Add a box
-   r.width -= 1;
-   r.height -= 1;
-   AColor::Bevel(dc, !mPressed, r);
-   r.width += 1;
-   r.height += 1;
-
-#endif
-
    // No bumps in a spacer grabber.
    if( mAsSpacer )
       return;

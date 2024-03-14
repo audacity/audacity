@@ -503,16 +503,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // Draw the meter bars at maximum levels
       for (unsigned int i = 0; i < mNumBars; i++)
       {
-         // Give it a recessed look
-         AColor::Bevel(dc, false, mBar[i].b);
-
-         // Draw the clip indicator bevel
-         if (mClip)
-         {
-            AColor::Bevel(dc, false, mBar[i].rClip);
-         }
-
-         // Cache bar rect
+                  // Cache bar rect
          wxRect r = mBar[i].r;
 
          if (mGradient)

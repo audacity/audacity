@@ -426,13 +426,7 @@ void ControlToolBar::ReCreateButtons()
 
 void ControlToolBar::Repaint( wxDC *dc )
 {
-#ifndef USE_AQUA_THEME
-   wxSize s = mSizer->GetSize();
-   wxPoint p = mSizer->GetPosition();
-
-   wxRect bevelRect( p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1 );
-   AColor::Bevel( *dc, true, bevelRect );
-#endif
+   // this was used to draw a bevel and can be removed.
 }
 
 void ControlToolBar::EnableDisableButtons()

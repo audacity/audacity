@@ -83,11 +83,11 @@ enum : int {
    IndicatorMediumWidth = 13,
    IndicatorOffset = 1,
 
-   TopMargin = 1,
-   BottomMargin = 2, // for bottom bevel and bottom line
-   LeftMargin = 1,
+   TopMargin = 0,
+   BottomMargin = 1, // for bottom bevel and bottom line
+   LeftMargin = 0,
 
-   RightMargin = 1,
+   RightMargin = 0,
 };
 
 enum {
@@ -2444,11 +2444,6 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 {
-   wxRect r = mOuter;
-   r.width -= RightMargin;
-   r.height -= BottomMargin;
-   AColor::BevelTrackInfo( *dc, true, r );
-
    // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
    AColor::Line( *dc, mOuter.x,

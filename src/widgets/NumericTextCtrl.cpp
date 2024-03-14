@@ -151,7 +151,7 @@ NumericTextCtrl::NumericTextCtrl(
                            const Options &options,
                            const wxPoint &pos,
                            const wxSize &size):
-   wxControl(parent, id, pos, size, wxSUNKEN_BORDER | wxWANTS_CHARS),
+   wxControl(parent, id, pos, size, wxWANTS_CHARS),
    NumericConverter(context, type, formatName, timeValue),
    mBackgroundBitmap{},
    mDigitFont{},
@@ -457,7 +457,7 @@ bool NumericTextCtrl::Layout()
 
    mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight,24);
    memDC.SelectObject(*mBackgroundBitmap);
-
+   
    theTheme.SetBrushColour( Brush, clrTimeHours );
    memDC.SetBrush(Brush);
    memDC.SetPen(*wxTRANSPARENT_PEN);
@@ -487,9 +487,9 @@ bool NumericTextCtrl::Layout()
       theTheme.SetBrushColour( Brush, clrTimeFont );
       memDC.SetPen(Pen);
       memDC.SetBrush(Brush);
-      AColor::Line(memDC, 
-                   mWidth + 2, 4, 
-                   mWidth + 2, mHeight - 4 );
+      // AColor::Line(memDC, 
+      //              mWidth + 2, 4, 
+      //              mWidth + 2, mHeight - 4 );
       AColor::Arrow(memDC,
                     mWidth + 5,
                     (mHeight / 2) - 2,

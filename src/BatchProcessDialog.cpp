@@ -146,7 +146,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
    S.StartStatic(XO("Select Macro"), 1);
    {
       mMacros = S.Id(MacrosListID).Prop(1)
-         .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+         .Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
              wxLC_SINGLE_SEL)
               // i18n-hint: This is the heading for a column in the edit macros dialog
               .AddListControlReportMode( { XO("Macro") } );
@@ -392,7 +392,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          imageList->Add(wxIcon(arrow_xpm));
 
          fileList = S.Id(CommandsListID)
-            .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+            .Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                 wxLC_SINGLE_SEL)
             .AddListControlReportMode( { XO("File") } );
          // AssignImageList takes ownership
@@ -630,7 +630,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxEXPAND,1);
          {
             mMacros = S.Id(MacrosListID).Prop(1)
-               .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES
+               .Style( wxLC_REPORT | wxLC_HRULES
                       | wxLC_SINGLE_SEL | wxLC_EDIT_LABELS)
               // i18n-hint: This is the heading for a column in the edit macros dialog
               .AddListControlReportMode( { XO("Macro") } );
@@ -654,7 +654,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
          S.StartHorizontalLay(wxEXPAND,1);
          {
             mList = S.Id(CommandsListID)
-               .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
+               .Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES |
                    wxLC_SINGLE_SEL)
                .AddListControlReportMode({
                   /* i18n-hint: This is the number of the command in the list */
