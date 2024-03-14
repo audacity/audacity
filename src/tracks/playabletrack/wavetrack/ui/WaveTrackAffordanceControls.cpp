@@ -408,22 +408,31 @@ auto FindAffordance(WaveTrack &track)
       pAffordance );
 }
 
-std::pair<WaveTrack*, ChannelGroup::IntervalIterator<WaveTrack::Interval>>
-SelectedIntervalOfFocusedTrack(AudacityProject &project)
+std::pair<std::shared_ptr<WaveTrack>, ChannelGroup::IntervalIterator<WaveTrack::Interval>>
+SelectedIntervalOfFocusedTrack(AudacityProject &project, bool wholeInterval = true)
 {
    // Note that TrackFocus may change its state as a side effect, defining
    // a track focus if there was none
-   if (auto pWaveTrack =
-      dynamic_cast<WaveTrack *>(TrackFocus::Get(project).Get())) {
+   auto track = TrackFocus::Get(project).Get();
+   if (!track)
+      return {};
+   if (
+      auto pWaveTrack =
+         std::dynamic_pointer_cast<WaveTrack>(track->shared_from_this()))
+   {
       if (FindAffordance(*pWaveTrack)) {
          auto &viewInfo = ViewInfo::Get(project);
          auto intervals = pWaveTrack->Intervals();
 
-         auto it = std::find_if(intervals.begin(), intervals.end(), [&](const auto& interval)
-         {
-            return interval->Start() == viewInfo.selectedRegion.t0() &&
-               interval->End() == viewInfo.selectedRegion.t1();
-         });
+         auto it = std::find_if(
+            intervals.begin(), intervals.end(), [&](const auto& interval) {
+               if (wholeInterval)
+                  return interval->Start() == viewInfo.selectedRegion.t0() &&
+                         interval->End() == viewInfo.selectedRegion.t1();
+               else
+                  return interval->Start() <= viewInfo.selectedRegion.t0() &&
+                         interval->End() > viewInfo.selectedRegion.t0();
+            });
 
          if(it != intervals.end())
             return { pWaveTrack, it };
@@ -629,7 +638,7 @@ unsigned WaveTrackAffordanceControls::OnAffordanceClick(const TrackPanelMouseEve
 void WaveTrackAffordanceControls::StartEditSelectedClipName(AudacityProject& project)
 {
    auto [track, it] = SelectedIntervalOfFocusedTrack(project);
-   if(track != FindTrack().get())
+   if(track != FindTrack())
       return;
    StartEditClipName(project, it);
 }
@@ -637,9 +646,10 @@ void WaveTrackAffordanceControls::StartEditSelectedClipName(AudacityProject& pro
 void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    AudacityProject& project)
 {
-   auto [track, it] = SelectedIntervalOfFocusedTrack(project);
+   constexpr auto wholeInterval = false;
+   auto [track, it] = SelectedIntervalOfFocusedTrack(project, wholeInterval);
 
-   if (track != FindTrack().get())
+   if (track != FindTrack())
       return;
 
    auto interval = *it;
@@ -655,7 +665,7 @@ void WaveTrackAffordanceControls::OnRenderClipStretching(
 {
    const auto [track, it] = SelectedIntervalOfFocusedTrack(project);
 
-   if (track != FindTrack().get())
+   if (track != FindTrack())
       return;
 
    auto interval = *it;
@@ -776,7 +786,7 @@ AttachedItem sAttachment{
 AttachedItem sAttachment2 {
    Command(
       L"ChangePitchAndSpeed", XXO("&Pitch and Speed..."), OnChangePitchAndSpeed,
-      SomeClipIsSelectedFlag(), Options { wxT("Ctrl+Shift+P") }),
+      AlwaysEnabledFlag, Options { wxT("Ctrl+Shift+P") }),
    wxT("Edit/Other/Clip")
 };
 
