@@ -177,8 +177,6 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(XXO("Re&tain labels if selection snaps to a label"),
                     {wxT("/GUI/RetainLabels"),
                      false});
-      S.TieCheckBox(XXO("B&lend system and Audacity theme"),
-                     GUIBlendThemes);
 #ifndef __WXMAC__
       /* i18n-hint: RTL stands for 'Right to Left'  */
       S.TieCheckBox(XXO("Use mostly Left-to-Right layouts in RTL languages"),
@@ -219,7 +217,6 @@ bool GUIPrefs::Commit()
    }
    AColor::ApplyUpdatedImages();
 
-   GUIBlendThemes.Invalidate();
    DecibelScaleCutoff.Invalidate();
 
    return true;
