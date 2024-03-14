@@ -120,7 +120,7 @@ class TranscriptionToolBar final : public ToolBar {
    void SetEnabled(bool enabled);
    void SetPlaying(bool down, bool looped, bool cutPreview);
 
-   double GetPlaySpeed() const { return mPlaySpeed / 100.0; }
+   double GetPlaySpeed() const { return mPlaySpeed / 1000.0; }
 
  private:
 
