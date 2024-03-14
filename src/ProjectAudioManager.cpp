@@ -673,10 +673,12 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // Try to find wave tracks to record into.  (If any are selected,
          // try to choose only from them; else if wave tracks exist, may record into any.)
          existingTracks = ChooseExistingRecordingTracks(*p, true, rateOfSelected);
-         if (!existingTracks.empty())
+         if (!existingTracks.empty()) {
             t0 = std::max(t0,
                TrackList::Get(*p).Selected<const WaveTrack>()
-                  .max(&Track::GetEndTime));
+               .max(&Track::GetEndTime));
+            options.rate = rateOfSelected;
+         }
          else {
             if (anySelected && rateOfSelected != options.rate) {
                AudacityMessageBox(XO(
@@ -740,9 +742,6 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
 
       std::copy(existingTracks.begin(), existingTracks.end(),
          back_inserter(transportTracks.captureSequences));
-
-      if (rateOfSelected != RATE_NOT_SELECTED)
-         options.rate = rateOfSelected;
 
       DoRecord(*p, transportTracks, t0, t1, altAppearance, options);
    }
