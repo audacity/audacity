@@ -345,8 +345,8 @@ void CommonTrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &
    // to right of CloseBoxRect, plus a little more
    wxRect closeRect;
    GetCloseBoxHorizontalBounds( rect, closeRect );
-   dest.x = rect.x + closeRect.width + 1;
-   dest.width = rect.x + rect.width - dest.x + TitleSoloBorderOverlap;
+   dest.x = rect.x + closeRect.width + 2;
+   dest.width = rect.x + rect.width - dest.x;
 }
 
 void CommonTrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
