@@ -243,11 +243,12 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
       auto pos = start;
 
+      const auto pControlChannel = *pControlTrack->Channels().begin();
       while (pos < end)
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-         pControlTrack->GetFloats(buf.get(), pos, len);
+         pControlChannel->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
          {

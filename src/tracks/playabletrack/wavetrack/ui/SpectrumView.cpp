@@ -871,7 +871,7 @@ void SpectrumView::DoDraw(TrackPanelDrawingContext& context,
 
    for (const auto &pInterval : channel.Intervals()) {
       bool selected = selectedClip &&
-         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
+         selectedClip == &pInterval->GetClip();
       DrawClipSpectrum(context, channel, *pInterval, rect, mpSpectralData,
          selected);
    }

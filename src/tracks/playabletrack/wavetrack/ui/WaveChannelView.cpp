@@ -897,7 +897,7 @@ auto WaveChannelSubView::GetMenuItems(
             viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
                .empty())
          ||
-         track.GetClipAtTime(t))
+         WaveChannelUtilities::GetClipAtTime(**track.Channels().begin(), t))
       {
          return WaveClipUIUtilities::GetWaveClipMenuItems();
       }
@@ -1034,8 +1034,7 @@ WaveChannelView::DoDetailedHitTest(
          results.push_back(
             AssignUIHandlePtr(
                waveChannelView.mAffordanceHandle,
-               std::make_shared<WaveTrackAffordanceHandle>(
-                  pTrack, clip->GetClipPtr())
+               std::make_shared<WaveTrackAffordanceHandle>(pTrack, clip)
             )
          );
       }

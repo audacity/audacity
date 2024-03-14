@@ -976,7 +976,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
 
    for (const auto &pInterval : channel.Intervals()) {
       bool selected = selectedClip &&
-         WaveTrackUtilities::WideClipContains(*selectedClip, *pInterval);
+         selectedClip == &pInterval->GetClip();
       DrawClipWaveform(context, channel, *pInterval, rect, dB, muted, selected);
    }
    DrawBoldBoundaries(context, channel, rect);

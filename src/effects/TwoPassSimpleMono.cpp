@@ -32,7 +32,7 @@ bool EffectTwoPassSimpleMono::Process(
 
    mWorkTracks = TrackList::Create(const_cast<AudacityProject*>(FindProject()));
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      auto pNewTrack = track->WideEmptyCopy();
+      auto pNewTrack = track->EmptyCopy();
       mWorkTracks->Add(pNewTrack);
    }
    for (const auto pNewTrack : mWorkTracks->Any<WaveTrack>()) {

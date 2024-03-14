@@ -42,7 +42,7 @@ auto WaveTrackUtilities::AllClipsIterator::operator ++ () -> AllClipsIterator &
       if (++ii == intervals.size())
          mStack.pop_back();
       else
-         Push(intervals[ii]->GetCutLines(*mpTrack));
+         Push(intervals[ii]->GetCutLines());
    }
 
    return *this;
@@ -55,7 +55,7 @@ void WaveTrackUtilities::AllClipsIterator::Push(IntervalHolders clips)
 
    // Go depth first while there are cutlines
    while (!clips.empty()) {
-      auto nextClips = clips[0]->GetCutLines(*mpTrack);
+      auto nextClips = clips[0]->GetCutLines();
       mStack.push_back({ move(clips), 0 });
       clips = move(nextClips);
    }
@@ -397,14 +397,6 @@ void WaveTrackUtilities::InspectBlocks(const TrackList &tracks,
    BlockInspector inspector, SampleBlockIDSet *pIDs)
 {
    VisitBlocks(const_cast<TrackList &>(tracks), move(inspector), pIDs);
-}
-
-bool WaveTrackUtilities::WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveChannelInterval &clip)
-{
-   const auto &waveClip = clip.GetClip();
-   return &waveClip == wideClip.GetClip(0).get()
-      || &waveClip == wideClip.GetClip(1).get();
 }
 
 WaveTrack::IntervalConstHolders

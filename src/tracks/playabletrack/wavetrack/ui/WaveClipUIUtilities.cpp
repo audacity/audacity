@@ -18,7 +18,7 @@
 #include "SampleCount.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "WaveClip.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>

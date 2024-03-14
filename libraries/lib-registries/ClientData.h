@@ -458,32 +458,32 @@ protected:
          auto &pOtherObject = *otherIter;
          // These lines might lock weak pointers, depending on template
          // arguments of the class
-         auto deref = Dereferenceable(pObject);
-         auto otherDeref = Dereferenceable(pOtherObject);
-         if (!deref && !otherDeref)
+         auto deref = &Dereferenceable(pObject);
+         auto otherDeref = &Dereferenceable(pOtherObject);
+         if (!*deref && !*otherDeref)
             continue;
-         else if (!deref && create) {
+         else if (!*deref && create) {
             // creation on demand
             auto factories = GetFactories();
             auto &factory = factories.mObject[ii];
             pObject = factory
                ? factory(static_cast<Host&>(*this))
                : DataPointer{};
-            deref = Dereferenceable(pObject);
+            deref = &Dereferenceable(pObject);
          }
-         else if (!otherDeref && create) {
+         else if (!*otherDeref && create) {
             // creation on demand
             auto factories = GetFactories();
             auto &factory = factories.mObject[ii];
             pOtherObject = factory
                ? factory(static_cast<Host&>(other))
                : DataPointer{};
-            otherDeref = Dereferenceable(pOtherObject);
+            otherDeref = &Dereferenceable(pOtherObject);
          }
 
          function(
-            (deref ? &*deref : nullptr),
-            (otherDeref ? &*otherDeref : nullptr));
+            (*deref ? &**deref : nullptr),
+            (*otherDeref ? &**otherDeref : nullptr));
       }
    }
 

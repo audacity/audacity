@@ -179,9 +179,6 @@ WAVE_TRACK_API void VisitBlocks(TrackList &tracks, BlockVisitor visitor,
 WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
    BlockInspector inspector, SampleBlockIDSet *pIDs = nullptr);
 
-WAVE_TRACK_API bool WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveChannelInterval &clip);
-
 /*!
  @pre t0 <= t1
  */

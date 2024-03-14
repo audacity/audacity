@@ -573,9 +573,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 }
 
 WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
-   // TODO wide wave tracks -- won't need std::max here
-   : mSpecCaches(std::max<size_t>(2, nChannels))
-   , mSpecPxCaches(std::max<size_t>(2, nChannels))
+   : mSpecCaches(nChannels)
+   , mSpecPxCaches(nChannels)
 {
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
@@ -592,17 +591,17 @@ std::unique_ptr<WaveClipListener> WaveClipSpectrumCache::Clone() const
 }
 
 static WaveClip::Attachments::RegisteredFactory sKeyS{ [](WaveClip &clip){
-   return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
+   return std::make_unique<WaveClipSpectrumCache>(clip.NChannels());
 } };
 
 WaveClipSpectrumCache &
 WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
 {
-   return const_cast<WaveClip&>(clip.GetWideClip()) // Consider it mutable data
+   return const_cast<WaveClip&>(clip.GetClip()) // Consider it mutable data
       .Attachments::Get< WaveClipSpectrumCache >( sKeyS );
 }
 
-void WaveClipSpectrumCache::MarkChanged()
+void WaveClipSpectrumCache::MarkChanged() noexcept
 {
    ++mDirty;
 }
@@ -612,4 +611,28 @@ void WaveClipSpectrumCache::Invalidate()
    // Invalidate the spectrum display cache
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
+}
+
+void WaveClipSpectrumCache::MakeStereo(WaveClipListener &&other, bool)
+{
+   auto pOther = dynamic_cast<WaveClipSpectrumCache *>(&other);
+   assert(pOther); // precondition
+   mSpecCaches.push_back(move(pOther->mSpecCaches[0]));
+   mSpecPxCaches.push_back(move(pOther->mSpecPxCaches[0]));
+}
+
+void WaveClipSpectrumCache::SwapChannels()
+{
+   mSpecCaches.resize(2);
+   std::swap(mSpecCaches[0], mSpecCaches[1]);
+   mSpecPxCaches.resize(2);
+   std::swap(mSpecPxCaches[0], mSpecPxCaches[1]);
+}
+
+void WaveClipSpectrumCache::Erase(size_t index)
+{
+   if (index < mSpecCaches.size())
+      mSpecCaches.erase(mSpecCaches.begin() + index);
+   if (index < mSpecPxCaches.size())
+      mSpecPxCaches.erase(mSpecPxCaches.begin() + index);
 }

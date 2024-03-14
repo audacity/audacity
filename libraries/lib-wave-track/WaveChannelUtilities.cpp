@@ -135,7 +135,7 @@ template <typename BufferType> struct SampleAccessArgs
 
 template <typename BufferType>
 SampleAccessArgs<BufferType> GetSampleAccessArgs(
-   const WaveChannelInterval& clip, double startOrEndTime /*absolute*/,
+   const Clip& clip, double startOrEndTime /*absolute*/,
    BufferType buffer,
    size_t totalToRead, size_t alreadyRead, bool forward)
 {
@@ -209,11 +209,10 @@ bool WaveChannelUtilities::GetFloatAtTime(const WaveChannel &channel,
    return GetFloatAtTime(*clip, t, value, mayThrow);
 }
 
-bool WaveChannelUtilities::GetFloatAtTime(const WaveChannelInterval &clip,
+bool WaveChannelUtilities::GetFloatAtTime(const Clip &clip,
    double t, float& value, bool mayThrow)
 {
-   // TODO wide wave tracks -- clip.GetChannelIndex()
-   constexpr size_t iChannel = 0;
+   const size_t iChannel = clip.GetChannelIndex();
    WaveClipUtilities::GetFloatAtTime(clip.GetClip(),
       t - clip.GetPlayStartTime(), iChannel, value, mayThrow);
    return true;
@@ -295,7 +294,7 @@ void WaveChannelUtilities::SetFloatsWithinTimeRange(WaveChannel &channel,
       std::vector<float> values(numSamples);
       for (auto i = 0u; i < numSamples; ++i)
          values[i] = producer(tt0 + clip->SamplesToTime(i));
-      constexpr size_t iChannel = 0;
+      const size_t iChannel = clip->GetChannelIndex();
       WaveClipUtilities::SetFloatsFromTime(clip->GetClip(),
          tt0 - clipStartTime, iChannel, values.data(), numSamples,
          effectiveFormat);

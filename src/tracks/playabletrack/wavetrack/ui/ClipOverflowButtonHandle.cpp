@@ -48,7 +48,7 @@ ClipOverflowButtonHandle::ClipOverflowButtonHandle(
 
 void ClipOverflowButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
 {
-   const ClipInterface& clip = *mClip->GetClip(0);
+   const ClipInterface& clip = *mClip;
    ClipButtonDrawingArgs args { rect, clip, dc };
    ClipButtonSpecializations<ClipButtonId::Overflow>::DrawOnClip(args);
 }

@@ -176,7 +176,7 @@ HitTestPreview ClipPitchAndSpeedButtonHandle::Preview(
 
 void ClipPitchAndSpeedButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
 {
-   const ClipInterface& clip = *mClip->GetClip(0);
+   const ClipInterface& clip = *mClip;
    ClipButtonDrawingArgs args { rect, clip, dc };
    if (mType == Type::Pitch)
       ClipButtonSpecializations<ClipButtonId::Pitch>::DrawOnClip(args);
