@@ -52,6 +52,7 @@
 #include "ClipOverflowButtonHandle.h"
 #include "ClipPitchAndSpeedButtonHandle.h"
 #include "LowlitClipButton.h"
+#include "PitchAndSpeedDialog.h"
 #include "WaveClipAdjustBorderHandle.h"
 #include "WaveClipUtilities.h"
 
@@ -657,7 +658,10 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   WaveClipUtilities::ShowClipPitchAndSpeedDialog(project, *track, *interval);
+   PitchAndSpeedDialog::Get(project)
+      .Retarget(track, interval)
+      .Show()
+      .SetFocus({});
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(

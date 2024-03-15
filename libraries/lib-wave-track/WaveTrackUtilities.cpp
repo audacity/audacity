@@ -18,9 +18,9 @@ const TranslatableString WaveTrackUtilities::defaultStretchRenderingTitle =
    XO("Pre-processing");
 
 bool WaveTrackUtilities::HasPitchOrSpeed(
-   const WaveTrack &track, double t0, double t1)
+   const WaveTrack& track, double t0, double t1)
 {
-   auto &clips = track.GetClips();
+   auto& clips = track.GetClips();
    return any_of(clips.begin(), clips.end(), [&](auto& pClip) {
       return pClip->IntersectsPlayRegion(t0, t1) && pClip->HasPitchOrSpeed();
    });
@@ -61,4 +61,15 @@ bool WaveTrackUtilities::SetClipStretchRatio(
 
    interval.StretchRightTo(expectedEndTime);
    return true;
+}
+
+void WaveTrackUtilities::ExpandClipTillNextOne(
+   const WaveTrack& track, WaveTrack::Interval& interval)
+{
+   if (
+      const auto nextClip =
+         track.GetNextClip(*interval.GetClip(0), PlaybackDirection::forward))
+   {
+      interval.StretchRightTo(nextClip->GetPlayStartTime());
+   }
 }

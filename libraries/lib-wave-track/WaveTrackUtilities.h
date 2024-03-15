@@ -19,12 +19,13 @@
 class WaveTrack;
 using ProgressReporter = std::function<void(double)>;
 
-namespace WaveTrackUtilities {
+namespace WaveTrackUtilities
+{
 
 //! Whether any clips, whose play regions intersect the interval, have non-unit
 //! stretch ratio
 WAVE_TRACK_API
-bool HasPitchOrSpeed(const WaveTrack &track, double t0, double t1);
+bool HasPitchOrSpeed(const WaveTrack& track, double t0, double t1);
 
 extern WAVE_TRACK_API const TranslatableString defaultStretchRenderingTitle;
 
@@ -35,4 +36,7 @@ WAVE_TRACK_API void WithClipRenderingProgress(
 
 WAVE_TRACK_API bool SetClipStretchRatio(
    const WaveTrack& track, WaveTrack::Interval& interval, double stretchRatio);
+
+WAVE_TRACK_API void
+ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
 } // namespace WaveTrackUtilities
