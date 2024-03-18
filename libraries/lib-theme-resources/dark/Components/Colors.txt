@@ -79,7 +79,6 @@
                     SliderMain: #a0a0a0;
                     SliderDark: #141414;
                TrackBackground: #404040;
-                  Placeholder1: #ffff14;
                    GraphLabels: #000000;
              SpectroBackground: #ffff14;
                     ScrubRuler: #6a6a6a;
