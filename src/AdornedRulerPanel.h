@@ -84,7 +84,7 @@ public:
 private:
    void DoIdle();
    void OnIdle( wxIdleEvent &evt );
-   void OnAudioStartStop(AudioIOEvent);
+   void OnAudioStartStop(const AudioIOEvent &evt);
    void OnPaint(wxPaintEvent &evt);
    void OnSize(wxSizeEvent &evt);
    void OnLeave(wxMouseEvent &evt);

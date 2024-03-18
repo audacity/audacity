@@ -30,9 +30,10 @@ typedef void PxMixer;
 class AudioIOBase;
 
 class AudacityProject;
-class AudioIOListener;
 class BoundedEnvelope;
 class Meter;
+using MeterPtr = std::weak_ptr<Meter>;
+using MeterPtrs = std::vector<MeterPtr>;
 using PRCrossfadeData = std::vector< std::vector < float > >;
 
 #define BAD_STREAM_TIME (-DBL_MAX)
@@ -51,9 +52,8 @@ struct AudioIOStartStreamOptions
    {}
 
    std::shared_ptr<AudacityProject> pProject;
-   std::weak_ptr<Meter> captureMeter, playbackMeter;
+   MeterPtrs captureMeters, playbackMeters;
    const BoundedEnvelope *envelope{}; // for time warping
-   std::shared_ptr< AudioIOListener > listener;
    double rate;
    mutable std::optional<double> pStartTime;
    double preRoll{ 0.0 };
@@ -109,10 +109,12 @@ public:
    AudioIOBase(const AudioIOBase &) = delete;
    AudioIOBase &operator=(const AudioIOBase &) = delete;
 
-   void SetCaptureMeter(
-      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
-   void SetPlaybackMeter(
-      const std::shared_ptr<AudacityProject> &project, const std::weak_ptr<Meter> &meter);
+   void SetCaptureMeters(
+      const std::shared_ptr<AudacityProject> &project, double rate,
+      MeterPtrs meters);
+   void SetPlaybackMeters(
+      const std::shared_ptr<AudacityProject> &project, double rate,
+      MeterPtrs meters);
 
    /** \brief update state after changing what audio devices are selected
     *
@@ -250,14 +252,9 @@ protected:
    /*! Read by worker threads but unchanging during playback */
    int                 mStreamToken{ 0 };
 
-   /// Audio playback rate in samples per second
-   /*! Read by worker threads but unchanging during playback */
-   double              mRate;
-
    PaStream           *mPortStreamV19;
 
-   std::weak_ptr<Meter> mInputMeter{};
-   std::weak_ptr<Meter> mOutputMeter{};
+   MeterPtrs mMasterInputMeters, mMasterOutputMeters;
 
    #if USE_PORTMIXER
    PxMixer            *mPortMixer;
@@ -307,6 +304,8 @@ protected:
     * default device index.
     */
    static int getPlayDevIndex(const wxString &devName = {});
+
+   static void ResetMeters(MeterPtrs &meters, double rate, bool resetClipping);
 
    /** \brief Array of audio sample rates to try to use
     *

@@ -45,23 +45,10 @@ to the meters.
   occur before the buffer write due to out-of-order execution. Then A
   can see the flag and read the buffer before buffer writes complete.
 
-*//****************************************************************//**
-
-\class AudioIOListener
-\brief Monitors record play start/stop and new sample blocks.  Has
-callbacks for these events.
-
-*//****************************************************************//**
-
-\class AudioIOStartStreamOptions
-\brief struct holding stream options, including a pointer to the
-time warp info and AudioIOListener and whether the playback is looped.
-
 *//*******************************************************************/
 #include "AudioIO.h"
 
 #include "AudioIOExt.h"
-#include "AudioIOListener.h"
 
 #include "float_cast.h"
 #include "DeviceManager.h"
@@ -115,11 +102,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "Gain.h"
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   #define LOWER_BOUND 0.0
-   #define UPPER_BOUND 1.0
-#endif
-
 using std::max;
 using std::min;
 
@@ -130,7 +112,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const ConstPlayableSequences &playbackSequences,
+      const MeterablePlaybackSequences &playbackSequences,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -142,7 +124,7 @@ struct AudioIoCallback::TransportState {
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
             // An array only of non-null leaders should be given to us
-            const auto vt = playbackSequences[i].get();
+            const auto vt = playbackSequences[i].first.get();
             const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
             if (!(pGroup && pGroup->IsLeader())) {
                assert(false);
@@ -229,8 +211,12 @@ bool AudioIO::ValidateDeviceNames(const wxString &play, const wxString &rec)
    return pInfo != nullptr && rInfo != nullptr && pInfo->hostApi == rInfo->hostApi;
 }
 
+static constexpr auto kTimerInterval = std::chrono::milliseconds{ 50 };
+
 AudioIO::AudioIO()
 {
+   wxTimer::Start(kTimerInterval.count());
+
    if (!std::atomic<double>{}.is_lock_free()) {
       // If this check fails, then the atomic<double> members in AudioIO.h
       // might be changed to atomic<float> to be more efficient with some
@@ -257,17 +243,11 @@ AudioIO::AudioIO()
 
    mNumPauseFrames = 0;
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   mAILAActive = false;
-#endif
-
    mLastPaError = paNoError;
 
    mLastRecordingOffset = 0.0;
    mNumCaptureChannels = 0;
    mSilenceLevel = 0.0;
-
-   mOutputMeter.reset();
 
    PaError err = Pa_Initialize();
 
@@ -341,6 +321,8 @@ AudioIO::~AudioIO()
 
    mFinishAudioThread.store(true, std::memory_order_release);
    mAudioThread.join();
+
+   wxTimer::Stop();
 }
 
 std::shared_ptr<RealtimeEffectState>
@@ -379,9 +361,10 @@ void AudioIO::RemoveState(AudacityProject &project,
    RealtimeEffectManager::Get(project).RemoveState(pInit, pGroup, pState);
 }
 
-void AudioIO::SetMixer(int inputSource, float recordVolume,
-                       float playbackVolume)
+void AudioIO::SetMixer(MixerSettings settings)
 {
+   auto [recordDevice, recordVolume, playbackVolume] = settings;
+
    SetMixerOutputVol(playbackVolume);
    AudioIOPlaybackVolume.Write(playbackVolume);
 
@@ -392,38 +375,27 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
 
    float oldRecordVolume = Px_GetInputVolume(mixer);
 
-   AudioIoCallback::SetMixer(inputSource);
+   AudioIoCallback::SetMixer(recordDevice);
    if( oldRecordVolume != recordVolume )
       Px_SetInputVolume(mixer, recordVolume);
 
 #endif
 }
 
-void AudioIO::GetMixer(int *recordDevice, float *recordVolume,
-                       float *playbackVolume)
+auto AudioIO::GetMixer() -> MixerSettings
 {
-   *playbackVolume = GetMixerOutputVol();
-
+   int recordDevice = 0;
+   float recordVolume = 1.0f;
+   float playbackVolume = GetMixerOutputVol();
 #if defined(USE_PORTMIXER)
-
-   PxMixer *mixer = mPortMixer;
-
-   if( mixer )
-   {
-      *recordDevice = Px_GetCurrentInputSource(mixer);
+   if (mPortMixer) {
+      recordDevice = Px_GetCurrentInputSource(mPortMixer);
 
       if (mInputMixerWorks)
-         *recordVolume = Px_GetInputVolume(mixer);
-      else
-         *recordVolume = 1.0f;
-
-      return;
+         recordVolume = Px_GetInputVolume(mPortMixer);
    }
-
 #endif
-
-   *recordDevice = 0;
-   *recordVolume = 1.0f;
+   return { recordDevice, recordVolume, playbackVolume };
 }
 
 bool AudioIO::InputMixerWorks()
@@ -489,8 +461,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    if (mOwningProject.expired())
       return false;
 
-   mInputMeter.reset();
-   mOutputMeter.reset();
+   mMasterInputMeters.clear();
+   mMasterOutputMeters.clear();
 
    mLastPaError = paNoError;
    // pick a rate to do the audio I/O at, from those available. The project
@@ -592,7 +564,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
          playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration/1000.0;
       }
 
-      mOutputMeter = options.playbackMeter;
+      mMasterOutputMeters = move(options.playbackMeters);
    }
 
    if( numCaptureChannels > 0)
@@ -629,7 +601,8 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       else
          captureParameters.suggestedLatency = latencyDuration/1000.0;
 
-      SetCaptureMeter( mOwningProject.lock(), options.captureMeter );
+      SetCaptureMeters(mOwningProject.lock(), mRate,
+         move(options.captureMeters));
    }
 
    const auto deviceInfo = usePlayback ?
@@ -647,7 +620,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       }
    }
 
-   SetMeters();
+   ResetMasterMeters(true);
 
 #ifdef USE_PORTMIXER
 #ifdef __WXMSW__
@@ -808,8 +781,6 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
       return;
    }
 
-   Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
-
    // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
    // Now start the PortAudio stream!
    // TODO: ? Factor out and reuse error reporting code from end of
@@ -817,10 +788,10 @@ void AudioIO::StartMonitoring( const AudioIOStartStreamOptions &options )
    mLastPaError = Pa_StartStream( mPortStreamV19 );
 
    // Update UI display only now, after all possibilities for error are past.
-   auto pListener = GetListener();
-   if ((mLastPaError == paNoError) && pListener) {
+   if (mLastPaError == paNoError) {
       // advertise the chosen I/O sample rate to the UI
-      pListener->OnAudioIORate((int)mRate);
+      EmitEvent(AudioIOEvent::RateChange, static_cast<int>(mRate));
+      EmitEvent(AudioIOEvent::StartMonitoring);
    }
 }
 
@@ -831,7 +802,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // precondition
    assert(std::all_of(
       sequences.playbackSequences.begin(), sequences.playbackSequences.end(),
-      [](const auto &pSequence){
+      [](const auto &pair){
+         auto &[pSequence, _] = pair;
          const auto pGroup =
             pSequence ? pSequence->FindChannelGroup() : nullptr;
          return pGroup && pGroup->IsLeader(); }
@@ -903,7 +875,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    if (options.pCrossfadeData)
       mRecordingSchedule.mCrossfadeData.swap( *options.pCrossfadeData );
 
-   mListener = options.listener;
    mRate    = options.rate;
 
    mSeek    = 0;
@@ -915,6 +886,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    auto cleanupSequences = finally([&]{
       if (!commit) {
          // Don't keep unnecessary shared pointers to sequences
+         ResetTrackMeters();
          mPlaybackSequences.clear();
          mCaptureSequences.clear();
          for(auto &ext : Extensions())
@@ -941,8 +913,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    sampleFormat captureFormat = floatSample;
    double captureRate = 44100.0;
 
-   auto pListener = GetListener();
-
    if (sequences.playbackSequences.size() > 0
       || sequences.otherPlayableSequences.size() > 0)
       playbackChannels = 2;
@@ -967,10 +937,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       const auto &sequence0 = mCaptureSequences[0];
       captureFormat = sequence0->GetSampleFormat();
       captureRate = sequence0->GetRate();
-
-      // Tell project that we are about to start recording
-      if (pListener)
-         pListener->OnAudioIOStartRecording();
    }
 
    bool successAudio;
@@ -984,6 +950,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // previous call.
    mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
 
+   ResetTrackMeters();
+
 #ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
    successAudio = successAudio &&
@@ -996,10 +964,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 #endif
 
    if (!successAudio) {
-      if (pListener && numCaptureChannels > 0)
-         pListener->OnAudioIOStopRecording();
       mStreamToken = 0;
-
       return 0;
    }
 
@@ -1014,10 +979,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
       mPlaybackSequences, mNumPlaybackChannels, mRate);
-
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   AILASetStartTime();
-#endif
 
    if (pStartTime)
    {
@@ -1094,14 +1055,11 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       PaError err;
       err = Pa_StartStream( mPortStreamV19 );
 
-      if( err != paNoError )
-      {
+      if (err != paNoError) {
          mStreamToken = 0;
 
          StopAudioThread();
 
-         if (pListener && mNumCaptureChannels > 0)
-            pListener->OnAudioIOStopRecording();
          StartStreamCleanup();
          // PRL: PortAudio error messages are sadly not internationalized
          BasicUI::ShowMessageBox(
@@ -1111,16 +1069,13 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    }
 
    // Update UI display only now, after all possibilities for error are past.
-   if (pListener) {
-      // advertise the chosen I/O sample rate to the UI
-      pListener->OnAudioIORate((int)mRate);
-   }
+   // advertise the chosen I/O sample rate to the UI
+   EmitEvent(AudioIOEvent::RateChange, static_cast<int>(mRate));
 
-   auto pOwningProject = mOwningProject.lock();
    if (mNumPlaybackChannels > 0)
-      Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
+      EmitEvent(AudioIOEvent::StartPlayback);
    if (mNumCaptureChannels > 0)
-      Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
+      EmitEvent(AudioIOEvent::StartCapture);
 
    commit = true;
 
@@ -1165,6 +1120,11 @@ void AudioIO::CallAfterRecording(PostRecordingAction action)
    // (Recording might start between now and then, but won't go far before
    // the action is done.  So the system isn't bulletproof yet.)
    BasicUI::CallAfter(move(action));
+}
+
+void AudioIO::EmitEvent(AudioIOEvent::Type type, int rate)
+{
+   Publish({ type, mOwningProject, rate });
 }
 
 bool AudioIO::AllocateBuffers(
@@ -1232,7 +1192,7 @@ bool AudioIO::AllocateBuffers(
             const size_t totalWidth = std::accumulate(
                mPlaybackSequences.begin(), mPlaybackSequences.end(), 0,
                [](size_t acc, const auto &pSequence){
-                  return acc + pSequence->NChannels(); });
+                  return acc + pSequence.first->NChannels(); });
 
             // mPlaybackBuffers buffers correspond many-to-one with
             // mPlaybackSequences
@@ -1276,7 +1236,7 @@ bool AudioIO::AllocateBuffers(
             mOldChannelGains.resize(mPlaybackSequences.size());
             size_t iBuffer = 0;
             for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
-               const auto &pSequence = mPlaybackSequences[i];
+               const auto &pSequence = mPlaybackSequences[i].first;
                // Bug 1763 - We must fade in from zero to avoid a click on starting.
                mOldChannelGains[i][0] = 0.0;
                mOldChannelGains[i][1] = 0.0;
@@ -1411,18 +1371,32 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 }
 
+void AudioIO::Notify()
+{
+   const auto newBlocksCount = mNewBlocksCount.load(std::memory_order_acquire);
+   if (mLastNewBlocksCount != newBlocksCount) {
+      mLastNewBlocksCount = newBlocksCount;
+      EmitEvent(AudioIOEvent::NewBlocks);
+   }
+
+   const auto thresholdCrossings =
+      mSoundActivatedThresholdCrossings.load(std::memory_order_acquire);
+   if (mLastThresholdCrossings != thresholdCrossings) {
+      mLastThresholdCrossings = thresholdCrossings;
+      EmitEvent(AudioIOEvent::SoundActivationThresholdCrossed);
+   }
+}
+
 bool AudioIO::IsAvailable(AudacityProject &project) const
 {
    auto pOwningProject = mOwningProject.lock();
    return !pOwningProject || pOwningProject.get() == &project;
 }
 
-void AudioIO::SetMeters()
+void AudioIO::ResetMasterMeters(bool resetClipping)
 {
-   if (auto pInputMeter = mInputMeter.lock())
-      pInputMeter->Reset(mRate, true);
-   if (auto pOutputMeter = mOutputMeter.lock())
-      pOutputMeter->Reset(mRate, true);
+   ResetMeters(mMasterInputMeters, mRate, resetClipping);
+   ResetMeters(mMasterOutputMeters, mRate, resetClipping);
 }
 
 void AudioIO::StopStream()
@@ -1430,6 +1404,10 @@ void AudioIO::StopStream()
    auto cleanup = finally ( [this] {
       ClearRecordingException();
       mRecordingSchedule.mCrossfadeData.clear(); // free arrays
+      mNewBlocksCount.store(0);
+      mSoundActivatedThresholdCrossings.store(0);
+      mLastNewBlocksCount = 0;
+      mLastThresholdCrossings = 0;
    } );
 
    if( mPortStreamV19 == NULL )
@@ -1534,8 +1512,6 @@ void AudioIO::StopStream()
    for( auto &ext : Extensions() )
       ext.StopOtherStream();
 
-   auto pListener = GetListener();
-
    // If there's no token, we were just monitoring, so we can
    // skip this next part...
    if (mStreamToken > 0) {
@@ -1617,25 +1593,15 @@ void AudioIO::StopStream()
                pScope->Commit();
          }
 
-         if (pListener)
-            pListener->OnCommitRecording();
+         EmitEvent(AudioIOEvent::CommitRecording);
       }
    }
 
+   ResetMasterMeters(false);
 
-
-   if (auto pInputMeter = mInputMeter.lock())
-      pInputMeter->Reset(mRate, false);
-
-   if (auto pOutputMeter = mOutputMeter.lock())
-      pOutputMeter->Reset(mRate, false);
-
-   mInputMeter.reset();
-   mOutputMeter.reset();
+   mMasterInputMeters.clear();
+   mMasterOutputMeters.clear();
    ResetOwningProject();
-
-   if (pListener && mNumCaptureChannels > 0)
-      pListener->OnAudioIOStopRecording();
 
    BasicUI::CallAfter([this]{
       if (mPortStreamV19 && mNumCaptureChannels > 0)
@@ -1652,42 +1618,38 @@ void AudioIO::StopStream()
       DelayActions(false);
    });
 
-   //
-   // Only set token to 0 after we're totally finished with everything
-   //
-   bool wasMonitoring = mStreamToken == 0;
-   mStreamToken = 0;
+   const bool wasMonitoring{ mStreamToken == 0 };
 
    {
-      auto pOwningProject = mOwningProject.lock();
       if (mNumPlaybackChannels > 0)
-         Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
+         EmitEvent(AudioIOEvent::StopPlayback);
       if (mNumCaptureChannels > 0)
-         Publish({ pOwningProject.get(),
-            wasMonitoring
-               ? AudioIOEvent::MONITOR
-               : AudioIOEvent::CAPTURE,
-            false });
+         EmitEvent(wasMonitoring
+            ? AudioIOEvent::StopMonitoring
+            : AudioIOEvent::StopCapture);
    }
+
+   // Only set token to 0 after we're totally finished with everything,
+   // including observer callbacks
+   mStreamToken = 0;
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
 
+   ResetTrackMeters();
    mPlaybackSequences.clear();
    mCaptureSequences.clear();
 
    mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
 
-   if (pListener) {
-      // Tell UI to hide sample rate
-      pListener->OnAudioIORate(0);
-   }
+   // Tell UI to hide sample rate
+   EmitEvent(AudioIOEvent::RateChange, 0);
 
    // Don't cause a busy wait in the audio thread after stopping scrubbing
    mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::SetPaused(bool state)
+void AudioIoCallback::SetPaused(bool state)
 {
    if (state != IsPaused())
    {
@@ -2023,7 +1985,8 @@ bool AudioIO::ProcessPlaybackSlices(
                produced = mixer->Process(toProduce);
             //wxASSERT(produced <= toProduce);
             // Copy (non-interleaved) mixer outputs to one or more ring buffers
-            const auto nChannels = mPlaybackSequences[iSequence++]->NChannels();
+            const auto nChannels =
+               mPlaybackSequences[iSequence++].first->NChannels();
             for (size_t j = 0; j < nChannels; ++j) {
                auto warpedSamples = mixer->GetBuffer(j);
                const auto put = mPlaybackBuffers[iBuffer++]->Put(
@@ -2065,7 +2028,7 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackSequences = mPlaybackSequences.size();
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
-   for (const auto vt : mPlaybackSequences) {
+   for (const auto [vt, _] : mPlaybackSequences) {
       if (!vt)
          continue;
       const auto pGroup = vt->FindChannelGroup();
@@ -2301,10 +2264,8 @@ void AudioIO::DrainRecordBuffers()
          mRecordingSchedule.mPosition += avail / mRate;
          mRecordingSchedule.mLatencyCorrected = latencyCorrected;
 
-         auto pListener = GetListener();
-         if (pListener && newBlocks)
-            pListener->OnAudioIONewBlocks();
-
+         if (newBlocks)
+            mNewBlocksCount.fetch_add(1, std::memory_order_release);
       }
       // end of record buffering
    },
@@ -2323,184 +2284,9 @@ void AudioIO::DrainRecordBuffers()
    delayedHandler );
 }
 
-void AudioIoCallback::SetListener(
-   const std::shared_ptr< AudioIOListener > &listener)
-{
-   if (IsBusy())
-      return;
-
-   mListener = listener;
+double AudioIO::GetClockTime() const {
+   return Pa_GetStreamTime(mPortStreamV19);
 }
-
-// Automated Input Level Adjustment - Automatically tries to find an acceptable input volume
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-
-#include "ProjectStatus.h"
-
-void AudioIO::AILAInitialize() {
-   gPrefs->Read(wxT("/AudioIO/AutomatedInputLevelAdjustment"), &mAILAActive,         false);
-   gPrefs->Read(wxT("/AudioIO/TargetPeak"),            &mAILAGoalPoint,      AILA_DEF_TARGET_PEAK);
-   gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"),       &mAILAGoalDelta,      AILA_DEF_DELTA_PEAK);
-   gPrefs->Read(wxT("/AudioIO/AnalysisTime"),          &mAILAAnalysisTime,   AILA_DEF_ANALYSIS_TIME);
-   gPrefs->Read(wxT("/AudioIO/NumberAnalysis"),        &mAILATotalAnalysis,  AILA_DEF_NUMBER_ANALYSIS);
-   mAILAGoalDelta         /= 100.0;
-   mAILAGoalPoint         /= 100.0;
-   mAILAAnalysisTime      /= 1000.0;
-   mAILAMax                = 0.0;
-   mAILALastStartTime      = max(0.0, mPlaybackSchedule.mT0);
-   mAILAClipped            = false;
-   mAILAAnalysisCounter    = 0;
-   mAILAChangeFactor       = 1.0;
-   mAILALastChangeType     = 0;
-   mAILATopLevel           = 1.0;
-   mAILAAnalysisEndTime    = -1.0;
-}
-
-void AudioIO::AILADisable() {
-   mAILAActive = false;
-}
-
-bool AudioIO::AILAIsActive() {
-   return mAILAActive;
-}
-
-void AudioIO::AILASetStartTime() {
-   mAILAAbsolutStartTime = Pa_GetStreamTime(mPortStreamV19);
-   wxPrintf("START TIME %f\n\n", mAILAAbsolutStartTime);
-}
-
-double AudioIO::AILAGetLastDecisionTime() {
-   return mAILAAnalysisEndTime;
-}
-
-void AudioIO::AILAProcess(double maxPeak) {
-   const auto proj = mOwningProject.lock();
-   if (proj && mAILAActive) {
-      if (mInputMeter && mInputMeter->IsClipping()) {
-         mAILAClipped = true;
-         wxPrintf("clipped");
-      }
-
-      mAILAMax = max(mAILAMax, maxPeak);
-
-      if ((mAILATotalAnalysis == 0 || mAILAAnalysisCounter < mAILATotalAnalysis) && mPlaybackSchedule.GetSequenceTime() - mAILALastStartTime >= mAILAAnalysisTime) {
-         auto ToLinearIfDB = [](double value, int dbRange) {
-            if (dbRange >= 0)
-               value = pow(10.0, (-(1.0-value) * dbRange)/20.0);
-            return value;
-         };
-
-         putchar('\n');
-         mAILAMax = mInputMeter ? ToLinearIfDB(mAILAMax, mInputMeter->GetDBRange()) : 0.0;
-         double iv = (double) Px_GetInputVolume(mPortMixer);
-         unsigned short changetype = 0; //0 - no change, 1 - increase change, 2 - decrease change
-         wxPrintf("mAILAAnalysisCounter:%d\n", mAILAAnalysisCounter);
-         wxPrintf("\tmAILAClipped:%d\n", mAILAClipped);
-         wxPrintf("\tmAILAMax (linear):%f\n", mAILAMax);
-         wxPrintf("\tmAILAGoalPoint:%f\n", mAILAGoalPoint);
-         wxPrintf("\tmAILAGoalDelta:%f\n", mAILAGoalDelta);
-         wxPrintf("\tiv:%f\n", iv);
-         wxPrintf("\tmAILAChangeFactor:%f\n", mAILAChangeFactor);
-         if (mAILAClipped || mAILAMax > mAILAGoalPoint + mAILAGoalDelta) {
-            wxPrintf("too high:\n");
-            mAILATopLevel = min(mAILATopLevel, iv);
-            wxPrintf("\tmAILATopLevel:%f\n", mAILATopLevel);
-            //if clipped or too high
-            if (iv <= LOWER_BOUND) {
-               //we can't improve it more now
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(
-                     XO(
-"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.") );
-               }
-               wxPrintf("\talready min vol:%f\n", iv);
-            }
-            else {
-               float vol = (float) max(LOWER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
-               Px_SetInputVolume(mPortMixer, vol);
-               auto msg = XO(
-"Automated Recording Level Adjustment decreased the volume to %f.").Format( vol );
-               ProjectStatus::Get( *proj ).Set(msg);
-               changetype = 1;
-               wxPrintf("\tnew vol:%f\n", vol);
-               float check = Px_GetInputVolume(mPortMixer);
-               wxPrintf("\tverified %f\n", check);
-            }
-         }
-         else if ( mAILAMax < mAILAGoalPoint - mAILAGoalDelta ) {
-            //if too low
-            wxPrintf("too low:\n");
-            if (iv >= UPPER_BOUND || iv + 0.005 > mAILATopLevel) { //condition for too low volumes and/or variable volumes that cause mAILATopLevel to decrease too much
-               //we can't improve it more
-               if (mAILATotalAnalysis != 0) {
-                  mAILAActive = false;
-                  ProjectStatus::Get( *proj ).Set(
-                     XO(
-"Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.") );
-               }
-               wxPrintf("\talready max vol:%f\n", iv);
-            }
-            else {
-               float vol = (float) min(UPPER_BOUND, iv+(mAILAGoalPoint-mAILAMax)*mAILAChangeFactor);
-               if (vol > mAILATopLevel) {
-                  vol = (iv + mAILATopLevel)/2.0;
-                  wxPrintf("\tTruncated vol:%f\n", vol);
-               }
-               Px_SetInputVolume(mPortMixer, vol);
-               auto msg = XO(
-"Automated Recording Level Adjustment increased the volume to %.2f.")
-                  .Format( vol );
-               ProjectStatus::Get( *proj ).Set(msg);
-               changetype = 2;
-               wxPrintf("\tnew vol:%f\n", vol);
-               float check = Px_GetInputVolume(mPortMixer);
-               wxPrintf("\tverified %f\n", check);
-            }
-         }
-
-         mAILAAnalysisCounter++;
-         //const PaStreamInfo* info = Pa_GetStreamInfo(mPortStreamV19);
-         //double latency = 0.0;
-         //if (info)
-         //   latency = info->inputLatency;
-         //mAILAAnalysisEndTime = mTime+latency;
-         mAILAAnalysisEndTime = Pa_GetStreamTime(mPortStreamV19) - mAILAAbsolutStartTime;
-         mAILAMax             = 0;
-         wxPrintf("\tA decision was made @ %f\n", mAILAAnalysisEndTime);
-         mAILAClipped         = false;
-         mAILALastStartTime   = mPlaybackSchedule.GetSequenceTime();
-
-         if (changetype == 0)
-            mAILAChangeFactor *= 0.8; //time factor
-         else if (mAILALastChangeType == changetype)
-            mAILAChangeFactor *= 1.1; //concordance factor
-         else
-            mAILAChangeFactor *= 0.7; //discordance factor
-         mAILALastChangeType = changetype;
-         putchar('\n');
-      }
-
-      if (mAILAActive && mAILATotalAnalysis != 0 && mAILAAnalysisCounter >= mAILATotalAnalysis) {
-         mAILAActive = false;
-         if (mAILAMax > mAILAGoalPoint + mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(
-               XO(
-"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.") );
-         else if (mAILAMax < mAILAGoalPoint - mAILAGoalDelta)
-            ProjectStatus::Get( *proj ).Set(
-               XO(
-"Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.") );
-         else {
-            auto msg = XO(
-"Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.")
-               .Format( Px_GetInputVolume(mPortMixer) );
-            ProjectStatus::Get( *proj ).Set(msg);
-         }
-      }
-   }
-}
-#endif
 
 static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
                                   sampleFormat inputFormat,
@@ -2557,12 +2343,10 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
       }
    }
 
-   bool bShouldBePaused = maxPeak < mSilenceLevel;
-   if( bShouldBePaused != IsPaused() )
-   {
-      auto pListener = GetListener();
-      if ( pListener )
-         pListener->OnSoundActivationThreshold();
+   const bool bShouldBePaused = maxPeak < mSilenceLevel;
+   if (bShouldBePaused != IsPaused()) {
+      SetPaused(!IsPaused());
+      mSoundActivatedThresholdCrossings.fetch_add(1, std::memory_order_release);
    }
 }
 
@@ -2571,7 +2355,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
 void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    float * outputMeterFloats,
    float * outputFloats,
-   const float * tempBuf,
+   float * tempBuf,
    bool drop,
    const unsigned long len,
    const PlayableSequence &ps,
@@ -2606,8 +2390,11 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    // framesPerBuffer, which is influenced by the portAudio implementation in
    // opaque ways
    float deltaGain = (gain - oldGain) / len;
-   for (unsigned i = 0; i < len; i++)
-      outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBuf[i];
+   for (unsigned i = 0; i < len; ++i) {
+      auto &value = tempBuf[i];
+      value *= (oldGain + deltaGain * i);
+      outputFloats[numPlaybackChannels * i + chan] += value;
+   }
 };
 
 // Limit values to -1.0..+1.0
@@ -2659,8 +2446,11 @@ bool AudioIoCallback::FillOutputBuffers(
    const auto tempBufs = stackAllocate(float *, numPlaybackChannels);
 
    // And these are larger structures....
-   for (unsigned int c = 0; c < numPlaybackChannels; c++)
-      tempBufs[c] = stackAllocate(float, framesPerBuffer);
+   // One contiguous, non-interleaved buffer
+   const auto tempBuf =
+      stackAllocate(float, numPlaybackChannels * framesPerBuffer);
+   for (size_t c = 0; c < numPlaybackChannels; ++c)
+      tempBufs[c] = tempBuf + c * framesPerBuffer;
    // ------ End of MEMORY ALLOCATION ---------------
 
    // Choose a common size to take from all ring buffers
@@ -2685,13 +2475,8 @@ bool AudioIoCallback::FillOutputBuffers(
    // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
    for (unsigned tt = 0; tt < numPlaybackSequences; ++tt) {
-      auto vt = mPlaybackSequences[tt].get();
+      auto vt = mPlaybackSequences[tt].first.get();
       const auto width = vt->NChannels();
-
-      // IF mono THEN clear 'the other' channel.
-      if (width < numPlaybackChannels)
-         // TODO: more-than-two-channels
-         memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
 
       // Check for asynchronous user changes in mute, solo, pause status
       discardable = drop = SequenceShouldBeSilent(*vt);
@@ -2729,6 +2514,13 @@ bool AudioIoCallback::FillOutputBuffers(
          ++iBuffer;
       }
 
+      // IF mono THEN clear 'the other' channel.
+      if (width < numPlaybackChannels)
+         // TODO: more-than-two-channels
+         // Replicate left sample data for the right, before applying pan
+         // differences
+         memcpy(tempBufs[1], tempBufs[0], framesPerBuffer * sizeof(float));
+
       // PRL:  More recent rewrites of SequenceBufferExchange should guarantee a
       // padding out of the ring buffers so that equal lengths are
       // available, so maxLen ought to increase from 0 only once
@@ -2753,12 +2545,14 @@ bool AudioIoCallback::FillOutputBuffers(
          AddToOutputChannel(0, outputMeterFloats, outputFloats,
             tempBufs[0], drop, len, *vt, gains[0]);
 
-         // If one of mPlaybackSequences is mono, this replicates it in both
-         // device channels
-         const auto iBuffer = std::min<size_t>(1, width - 1);
          AddToOutputChannel(1, outputMeterFloats, outputFloats,
-            tempBufs[iBuffer], drop, len, *vt, gains[1]);
+            tempBufs[1], drop, len, *vt, gains[1]);
       }
+
+      for (const auto &wMeter : mPlaybackSequences[tt].second)
+         if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+            pMeter->Update(numPlaybackChannels,
+               framesPerBuffer, tempBuf, false); // non-interleaved
 
       CallbackCheckCompletion(mCallbackReturn, len);
       if (discardable) // no samples to process, they've been discarded
@@ -2999,14 +2793,13 @@ void AudioIoCallback::SendVuInputMeterData(
    unsigned long framesPerBuffer
    )
 {
+   if (!inputSamples)
+      return;
    const auto numCaptureChannels = mNumCaptureChannels;
-   auto pInputMeter = mInputMeter.lock();
-   if ( !pInputMeter )
-      return;
-   if( pInputMeter->IsMeterDisabled())
-      return;
-   pInputMeter->UpdateDisplay(
-      numCaptureChannels, framesPerBuffer, inputSamples);
+   for (const auto &wMeter : mMasterInputMeters)
+      if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+         pMeter->Update(numCaptureChannels,
+            framesPerBuffer, inputSamples, true);
 }
 
 /* Send data to playback VU meter if applicable */
@@ -3014,28 +2807,13 @@ void AudioIoCallback::SendVuOutputMeterData(
    const float *outputMeterFloats,
    unsigned long framesPerBuffer)
 {
+   if (!outputMeterFloats)
+      return;
    const auto numPlaybackChannels = mNumPlaybackChannels;
-
-   auto pOutputMeter = mOutputMeter.lock();
-   if (!pOutputMeter)
-      return;
-   if( pOutputMeter->IsMeterDisabled() )
-      return;
-   if( !outputMeterFloats)
-      return;
-   pOutputMeter->UpdateDisplay(
-      numPlaybackChannels, framesPerBuffer, outputMeterFloats);
-
-      //v Vaughan, 2011-02-25: Moved this update back to TrackPanel::OnTimer()
-      //    as it helps with playback issues reported by Bill and noted on Bug 258.
-      //    The problem there occurs if Software Playthrough is on.
-      //    Could conditionally do the update here if Software Playthrough is off,
-      //    and in TrackPanel::OnTimer() if Software Playthrough is on, but not now.
-      // PRL 12 Jul 2015: and what was in TrackPanel::OnTimer is now handled by means of track panel timer events
-      //MixerBoard* pMixerBoard = mOwningProject->GetMixerBoard();
-      //if (pMixerBoard)
-      //   pMixerBoard->UpdateMeters(GetStreamTime(),
-      //                              (pProj->GetControlToolBar()->GetLastPlayMode() == loopedPlay));
+   for (const auto &wMeter : mMasterOutputMeters)
+      if (const auto pMeter = wMeter.lock(); pMeter && !pMeter->IsDisabled())
+         pMeter->Update(numPlaybackChannels,
+            framesPerBuffer, outputMeterFloats, true);
 }
 
 unsigned AudioIoCallback::CountSoloingSequences(){
@@ -3044,7 +2822,7 @@ unsigned AudioIoCallback::CountSoloingSequences(){
    // MOVE_TO: CountSoloingSequences() function
    unsigned numSolo = 0;
    for (unsigned t = 0; t < numPlaybackSequences; t++ )
-      if (mPlaybackSequences[t]->GetSolo())
+      if (mPlaybackSequences[t].first->GetSolo())
          numSolo++;
    auto range = Extensions();
    numSolo += std::accumulate(range.begin(), range.end(), 0,
@@ -3078,7 +2856,7 @@ bool AudioIoCallback::SequenceHasBeenFadedOut(const OldChannelGains &gains)
 bool AudioIoCallback::AllSequencesAlreadySilent()
 {
    for (size_t ii = 0, nn = mPlaybackSequences.size(); ii < nn; ++ii) {
-      auto vt = mPlaybackSequences[ii];
+      auto vt = mPlaybackSequences[ii].first;
       const auto &oldGains = mOldChannelGains[ii];
       if (!(SequenceShouldBeSilent(*vt) && SequenceHasBeenFadedOut(oldGains)))
          return false;
@@ -3342,8 +3120,6 @@ void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
    }
 }
 
-
-
 bool AudioIO::IsCapturing() const
 {
    // Includes a test of mTime, used in the main thread
@@ -3351,6 +3127,12 @@ bool AudioIO::IsCapturing() const
       GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetSequenceTime() >=
          mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
+}
+
+void AudioIO::ResetTrackMeters()
+{
+   for (auto &[_, meters] : mPlaybackSequences)
+      ResetMeters(meters, GetRate(), true);
 }
 
 BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };

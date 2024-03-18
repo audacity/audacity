@@ -18,6 +18,7 @@ Paul Licameli split from AudacityProject.h
 
 #include <atomic>
 #include <memory>
+#include <vector>
 class AudacityProject;
 struct AudioIOStartStreamOptions;
 class Meter;
@@ -61,12 +62,18 @@ public:
    bool IsAudioActive() const;
    void SetAudioIOToken(int token);
 
-   const std::shared_ptr<Meter> &GetPlaybackMeter() const;
-   void SetPlaybackMeter(
-      const std::shared_ptr<Meter> &playback);
-   const std::shared_ptr<Meter> &GetCaptureMeter() const;
-   void SetCaptureMeter(
-      const std::shared_ptr<Meter> &capture);
+   using MeterPtr = std::shared_ptr< Meter >;
+   using Meters = std::vector< MeterPtr >;
+
+   const Meters &GetPlaybackMeters() const;
+   bool HasPlaybackMeter( Meter *pMeter ) const;
+   void AddPlaybackMeter(const MeterPtr &playback);
+   void RemovePlaybackMeter(Meter *playback);
+
+   const Meters &GetCaptureMeters() const;
+   bool HasCaptureMeter( Meter *pMeter ) const;
+   void AddCaptureMeter(const MeterPtr &capture);
+   void RemoveCaptureMeter(Meter *capture);
 
    // Speed play
    double GetPlaySpeed() const {
@@ -77,8 +84,8 @@ private:
    AudacityProject &mProject;
 
    // Project owned meters
-   std::shared_ptr<Meter> mPlaybackMeter;
-   std::shared_ptr<Meter> mCaptureMeter;
+   Meters mPlaybackMeters;
+   Meters mCaptureMeters;
 
    // This is atomic because scrubber may read it in a separate thread from
    // the main

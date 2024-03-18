@@ -207,29 +207,34 @@ void MeterToolBar::ReCreateButtons()
    MeterPanel::State playState{ false }, recordState{ false };
 
    auto &projectAudioIO = ProjectAudioIO::Get( mProject );
-   if (mPlayMeter &&
-      projectAudioIO.GetPlaybackMeter() == mPlayMeter->GetMeter())
-   {
-      playState = mPlayMeter->SaveState();
-      projectAudioIO.SetPlaybackMeter( nullptr );
+   if ( mPlayMeter ) {
+      auto pPlayMeter = mPlayMeter->GetMeter().get();
+      if ( projectAudioIO.HasPlaybackMeter( pPlayMeter ) )
+      {
+         playState = mPlayMeter->SaveState();
+         projectAudioIO.RemovePlaybackMeter( pPlayMeter );
+      }
    }
 
-   if (mRecordMeter &&
-      projectAudioIO.GetCaptureMeter() == mRecordMeter->GetMeter())
-   {
-      recordState = mRecordMeter->SaveState();
-      projectAudioIO.SetCaptureMeter( nullptr );
+   if ( mRecordMeter ) {
+      auto pRecordMeter = mRecordMeter->GetMeter().get();
+      if (mRecordMeter &&
+         projectAudioIO.HasCaptureMeter( pRecordMeter ) )
+      {
+         recordState = mRecordMeter->SaveState();
+         projectAudioIO.RemoveCaptureMeter( pRecordMeter );
+      }
    }
 
    ToolBar::ReCreateButtons();
 
-   mPlayMeter->RestoreState(playState);
    if( playState.mSaved  ){
-      projectAudioIO.SetPlaybackMeter( mPlayMeter->GetMeter() );
+      mPlayMeter->RestoreState(playState);
+      projectAudioIO.AddPlaybackMeter( mPlayMeter->GetMeter() );
    }
-   mRecordMeter->RestoreState(recordState);
    if( recordState.mSaved ){
-      projectAudioIO.SetCaptureMeter( mRecordMeter->GetMeter() );
+      mRecordMeter->RestoreState(recordState);
+      projectAudioIO.AddCaptureMeter( mRecordMeter->GetMeter() );
    }
 }
 
@@ -436,22 +441,21 @@ bool MeterToolBar::Expose( bool show )
    auto &projectAudioIO = ProjectAudioIO::Get( mProject );
    if( show ) {
       if( mPlayMeter ) {
-         projectAudioIO.SetPlaybackMeter( mPlayMeter->GetMeter() );
+         projectAudioIO.AddPlaybackMeter( mPlayMeter->GetMeter() );
       }
 
       if( mRecordMeter ) {
-         projectAudioIO.SetCaptureMeter( mRecordMeter->GetMeter() );
+         projectAudioIO.AddCaptureMeter( mRecordMeter->GetMeter() );
       }
    } else {
       if( mPlayMeter &&
-         projectAudioIO.GetPlaybackMeter() == mPlayMeter->GetMeter() ) {
-         projectAudioIO.SetPlaybackMeter( nullptr );
+         projectAudioIO.HasPlaybackMeter( mPlayMeter->GetMeter().get() ) ) {
+         projectAudioIO.RemovePlaybackMeter( mPlayMeter->GetMeter().get() );
       }
 
       if( mRecordMeter &&
-         projectAudioIO.GetCaptureMeter() == mRecordMeter->GetMeter() ) {
-         projectAudioIO.SetCaptureMeter( nullptr );
-      }
+         projectAudioIO.HasCaptureMeter( mRecordMeter->GetMeter().get() ) ) {
+         projectAudioIO.RemoveCaptureMeter( mRecordMeter->GetMeter().get() );      }
    }
 
    return ToolBar::Expose( show );

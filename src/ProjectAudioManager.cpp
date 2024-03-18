@@ -7,8 +7,6 @@ ProjectAudioManager.cpp
 Paul Licameli split from ProjectManager.cpp
 
 **********************************************************************/
-
-
 #include "ProjectAudioManager.h"
 
 #include <wx/app.h>
@@ -17,6 +15,7 @@ Paul Licameli split from ProjectManager.cpp
 #include <algorithm>
 #include <numeric>
 
+#include "AILA.h"
 #include "AudioIO.h"
 #include "BasicUI.h"
 #include "CommandManager.h"
@@ -67,11 +66,13 @@ const ProjectAudioManager &ProjectAudioManager::Get(
 
 ProjectAudioManager::ProjectAudioManager( AudacityProject &project )
    : mProject{ project }
+   , mAudioIOSubscription{ AudioIO::Get()
+      ->Subscribe(*this, &ProjectAudioManager::DispatchEvent) }
+   , mCheckpointFailureSubscription{ ProjectFileIO::Get(mProject)
+      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure) }
 {
    static ProjectStatus::RegisteredStatusWidthFunction
       registerStatusWidthFunction{ StatusWidthFunction };
-   mCheckpointFailureSubscription = ProjectFileIO::Get(project)
-      .Subscribe(*this, &ProjectAudioManager::OnCheckpointFailure);
 }
 
 ProjectAudioManager::~ProjectAudioManager() = default;
@@ -424,7 +425,8 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                return std::make_unique<CutPreviewPlaybackPolicy>(tless, diff);
             };
          token = gAudioIO->StartStream(
-            MakeTransportTracks(TrackList::Get(*p), false, nonWaveToo),
+            TransportUtilities::MakeTransportTracks(
+               TrackList::Get(*p), false, nonWaveToo),
             tcp0, tcp1, tcp1, myOptions);
       }
       else {
@@ -435,7 +437,7 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
                t1 = latestEnd;
          }
          token = gAudioIO->StartStream(
-            MakeTransportTracks(tracks, false, nonWaveToo),
+            TransportUtilities::MakeTransportTracks(tracks, false, nonWaveToo),
             t0, t1, mixerLimit, options);
       }
       if (token != 0) {
@@ -532,9 +534,9 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    projectAudioManager.SetLooping( false );
    projectAudioManager.SetCutting( false );
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      gAudioIO->AILADisable();
-   #endif
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   AILA::Get().Disable();
+#endif
 
    projectAudioManager.SetPausedOff();
    //Make sure you tell gAudioIO to unpause
@@ -544,15 +546,13 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    // also clean the MeterQueues
    if( project ) {
       auto &projectAudioIO = ProjectAudioIO::Get( *project );
-      auto meter = projectAudioIO.GetPlaybackMeter();
-      if( meter ) {
-         meter->Clear();
-      }
+      for ( auto &meter : projectAudioIO.GetPlaybackMeters() )
+         if( meter )
+            meter->Clear();
 
-      meter = projectAudioIO.GetCaptureMeter();
-      if( meter ) {
-         meter->Clear();
-      }
+      for ( auto &meter : projectAudioIO.GetCaptureMeters() )
+         if( meter )
+            meter->Clear();
    }
 }
 
@@ -724,16 +724,15 @@ void ProjectAudioManager::OnRecord(bool altAppearance)
          // playback.
          /* TODO: set up stereo tracks if that is how the user has set up
           * their preferences, and choose sample format based on prefs */
-         transportTracks =
-            MakeTransportTracks(TrackList::Get( *p ), false, true);
+         transportTracks = TransportUtilities::MakeTransportTracks(
+            TrackList::Get(*p), false, true);
          for (const auto &wt : existingTracks) {
+            auto begin = transportTracks.playbackSequences.begin();
             auto end = transportTracks.playbackSequences.end();
-            auto it = std::find_if(
-               transportTracks.playbackSequences.begin(), end,
-               [&wt](const auto& playbackSequence) {
-                  return playbackSequence->FindChannelGroup() ==
-                         wt->FindChannelGroup();
-               });
+            auto it = find_if(begin, end, [&wt](const auto& meterableSequence) {
+               return meterableSequence.first->FindChannelGroup() ==
+                  wt->FindChannelGroup();
+            });
             if (it != end)
                transportTracks.playbackSequences.erase(it);
          }
@@ -824,7 +823,7 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             const auto &range = transportSequences.playbackSequences;
             bool prerollTrack = any_of(range.begin(), range.end(),
                [&](const auto &pSequence){
-                  return shared.get() == pSequence->FindChannelGroup(); });
+                  return shared.get() == pSequence.first->FindChannelGroup(); });
             if (prerollTrack)
                transportSequences.prerollSequences.push_back(shared);
 
@@ -956,10 +955,10 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
             Viewport::Get(project).ShowTrack(**trackList.rbegin());
       }
 
+#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
       //Automated Input Level Adjustment Initialization
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         gAudioIO->AILAInitialize();
-      #endif
+      AILA::Get().Initialize(t0 - options.preRoll);
+#endif
 
       int token =
          gAudioIO->StartStream(transportSequences, t0, t1, t1, options);
@@ -1028,17 +1027,17 @@ void ProjectAudioManager::OnPause()
 
 void ProjectAudioManager::TogglePaused()
 {
-   mPaused.fetch_xor(1, std::memory_order::memory_order_relaxed);
+   mPaused = !mPaused;
 }
 
 void ProjectAudioManager::SetPausedOff()
 {
-   mPaused.store(0, std::memory_order::memory_order_relaxed);
+   mPaused = false;
 }
 
 bool ProjectAudioManager::Paused() const
 {
-   return mPaused.load(std::memory_order_relaxed) == 1;
+   return mPaused;
 }
 
 
@@ -1048,7 +1047,30 @@ void ProjectAudioManager::CancelRecording()
    TrackList::Get( *project ).ClearPendingTracks();
 }
 
-void ProjectAudioManager::OnAudioIORate(int rate)
+void ProjectAudioManager::DispatchEvent(const AudioIOEvent &event)
+{
+   if (event.wProject.lock().get() != &mProject)
+      return;
+
+   switch (event.type) {
+   case AudioIOEvent::RateChange:
+      return OnRate(event.rate);
+   case AudioIOEvent::StartCapture:
+      return OnStartRecording();
+   case AudioIOEvent::StopCapture:
+      return OnStopRecording();
+   case AudioIOEvent::NewBlocks:
+      return OnNewBlocks();
+   case AudioIOEvent::CommitRecording:
+      return OnCommitRecording();
+   case AudioIOEvent::SoundActivationThresholdCrossed:
+      return OnSoundActivationThreshold();
+   default:
+      break;
+   }
+}
+
+void ProjectAudioManager::OnRate(int rate)
 {
    auto &project = mProject;
 
@@ -1059,14 +1081,14 @@ void ProjectAudioManager::OnAudioIORate(int rate)
    ProjectStatus::Get( project ).Set( display, rateStatusBarField );
 }
 
-void ProjectAudioManager::OnAudioIOStartRecording()
+void ProjectAudioManager::OnStartRecording()
 {
    // Auto-save was done here before, but it is unnecessary, provided there
    // are sufficient autosaves when pushing or modifying undo states.
 }
 
 // This is called after recording has stopped and all tracks have flushed.
-void ProjectAudioManager::OnAudioIOStopRecording()
+void ProjectAudioManager::OnStopRecording()
 {
    auto &project = mProject;
    auto &projectAudioIO = ProjectAudioIO::Get( project );
@@ -1103,11 +1125,13 @@ void ProjectAudioManager::OnAudioIOStopRecording()
    }
 }
 
-void ProjectAudioManager::OnAudioIONewBlocks()
+void ProjectAudioManager::OnNewBlocks()
 {
    auto &project = mProject;
    auto &projectFileIO = ProjectFileIO::Get( project );
 
+   // Maybe the CallAfter is no longer needed, now that this is called
+   // only on the main thread
    wxTheApp->CallAfter( [&]{ projectFileIO.AutoSave(true); });
 }
 
@@ -1124,9 +1148,6 @@ void ProjectAudioManager::OnSoundActivationThreshold()
    if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
    {
       bool canStop =  CanStopAudioStream();
-
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-
       if (canStop)
       {
          // Instead of calling ::OnPause here, we can simply do the only thing it does (i.e. toggling the pause state),
@@ -1186,9 +1207,6 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
    //! Invoke the library default implemantation directly bypassing the hook
    auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
 
-   //! Decorate with more info
-   options.listener = ProjectAudioManager::Get(project).shared_from_this();
-
    bool loopEnabled = ViewInfo::Get(project).playRegion.Active();
    options.loopEnabled = loopEnabled;
 
@@ -1207,7 +1225,6 @@ static ProjectAudioIO::DefaultOptions::Scope sScope {
       // Start play from left edge of selection
       options.pStartTime.emplace(ViewInfo::Get(project).selectedRegion.t0());
    }
-
    return options;
 } };
 
