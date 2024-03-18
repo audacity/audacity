@@ -83,7 +83,6 @@
              SpectroBackground: #ffff14;
                     ScrubRuler: #6a6a6a;
                      TimeHours: #b0b0b0;
-                      FocusBox: #ffff14;
                  TrackNameText: #ffff14;
                      MidiZebra: #808080;
                      MidiLines: #3c3c98;
