@@ -69,10 +69,11 @@ UIHandle::Result ClipOverflowButtonHandle::DoRelease(
 HitTestPreview ClipOverflowButtonHandle::Preview(
    const TrackPanelMouseState& state, AudacityProject* pProject)
 {
-   return { XO("Click to open clip context menu."), nullptr};
+   return { XO("Click to open clip context menu."), nullptr };
 }
 
-int ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth()
+int ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth(
+   const ClipInterface&)
 {
    return 30;
 }

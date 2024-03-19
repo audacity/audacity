@@ -183,12 +183,15 @@ void ClipPitchAndSpeedButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
       ClipButtonSpecializations<ClipButtonId::Speed>::DrawOnClip(args);
 }
 
-int ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth()
+int ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth(
+   const ClipInterface& clip)
 {
-   return 30;
+   // If we are to show some decimals, reserve a bit more space.
+   return clip.GetCentShift() % 100 == 0 ? 30 : 50;
 }
 
-int ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth()
+int ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth(
+   const ClipInterface&)
 {
    return 60;
 }

@@ -36,7 +36,7 @@ template <ClipButtonId id> struct ClipButtonSpecializations
 {
    static bool NeedsDrawing(const ClipInterface&);
    static void DrawOnClip(ClipButtonDrawingArgs&);
-   static int GetWidth();
+   static int GetWidth(const ClipInterface& clip);
 };
 
 template<>
@@ -44,7 +44,7 @@ struct ClipButtonSpecializations<ClipButtonId::Overflow>
 {
    static bool NeedsDrawing(const ClipInterface& clip);
    static void DrawOnClip(ClipButtonDrawingArgs&);
-   static int GetWidth();
+   static int GetWidth(const ClipInterface& clip);
 };
 
 template<>
@@ -52,7 +52,7 @@ struct ClipButtonSpecializations<ClipButtonId::Pitch>
 {
    static bool NeedsDrawing(const ClipInterface& clip);
    static void DrawOnClip(ClipButtonDrawingArgs&);
-   static int GetWidth();
+   static int GetWidth(const ClipInterface& clip);
 };
 
 template<>
@@ -60,7 +60,7 @@ struct ClipButtonSpecializations<ClipButtonId::Speed>
 {
    static bool NeedsDrawing(const ClipInterface& clip);
    static void DrawOnClip(ClipButtonDrawingArgs&);
-   static int GetWidth();
+   static int GetWidth(const ClipInterface& clip);
 };
 
 namespace LowlitClipButton
