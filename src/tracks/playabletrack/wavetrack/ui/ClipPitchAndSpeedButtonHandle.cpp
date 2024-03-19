@@ -36,7 +36,7 @@ wxString GetPitchShiftText(int clipCentShift)
       pitchShiftText = wxString::Format("%.2f", std::abs(clipCentShift) / 100.);
       while (pitchShiftText.EndsWith("0"))
          pitchShiftText.RemoveLast();
-      if (pitchShiftText.EndsWith("."))
+      if (pitchShiftText.EndsWith(".") || pitchShiftText.EndsWith(","))
          pitchShiftText.RemoveLast();
    }
    return pitchShiftText;
