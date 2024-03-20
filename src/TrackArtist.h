@@ -57,14 +57,6 @@ public:
    ~TrackArtist();
    static TrackArtist *Get( TrackPanelDrawingContext & );
 
-   void SetBackgroundBrushes(wxBrush unselectedBrushIn, wxBrush selectedBrushIn,
-                             wxPen unselectedPenIn, wxPen selectedPenIn) {
-     this->unselectedBrush = unselectedBrushIn;
-     this->selectedBrush = selectedBrushIn;
-     this->unselectedPen = unselectedPenIn;
-     this->selectedPen = selectedPenIn;
-   }
-
    void SetColours(int iColorIndex);
 
    void UpdatePrefs() override;
