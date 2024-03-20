@@ -32,6 +32,7 @@ set( SOURCES
    GlobalVariable.h
    IteratorX.cpp
    IteratorX.h
+   MathApprox.h
    MemoryX.cpp
    MemoryX.h
    MessageBuffer.h

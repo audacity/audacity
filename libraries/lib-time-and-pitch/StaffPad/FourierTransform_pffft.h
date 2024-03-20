@@ -17,6 +17,8 @@ public:
   FourierTransform(int32_t newBlockSize);
   ~FourierTransform();
 
+  int getSize() const { return static_cast<int>(_blockSize); }
+
   void forwardReal(const SamplesReal& t, SamplesComplex& c);
   void inverseReal(const SamplesComplex& c, SamplesReal& t);
 
@@ -25,7 +27,7 @@ private:
   PFFFT_Setup* complexFftSpec = nullptr;
   float* _pffft_scratch = nullptr;
 
-  int32_t _blockSize = 0;
+  const int32_t _blockSize;
   int32_t _order = 0;
 };
 

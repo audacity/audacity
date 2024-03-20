@@ -35,12 +35,14 @@ public:
 
    struct Parameters
    {
-      std::optional<double> timeRatio;
-      std::optional<double> pitchRatio;
+      double timeRatio = 1.0;
+      double pitchRatio = 1.0;
+      bool preserveFormants = false;
    };
 
    virtual void GetSamples(float* const*, size_t) = 0;
    virtual void OnCentShiftChange(int cents) = 0;
+   virtual void OnFormantPreservationChange(bool preserve) = 0;
 
    virtual ~TimeAndPitchInterface();
 };

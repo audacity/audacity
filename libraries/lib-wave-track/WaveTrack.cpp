@@ -284,6 +284,12 @@ bool WaveTrack::Interval::SetCentShift(int cents)
    return true;
 }
 
+void WaveTrack::Interval::SetPitchAndSpeedPreset(PitchAndSpeedPreset preset)
+{
+   for (unsigned channel = 0; channel < NChannels(); ++channel)
+      GetClip(channel)->SetPitchAndSpeedPreset(preset);
+}
+
 WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    const std::function<void(double)>& reportProgress, const ChannelGroup& group,
    const SampleBlockFactoryPtr& factory, sampleFormat format)
@@ -327,6 +333,8 @@ WaveTrack::IntervalHolder WaveTrack::Interval::GetRenderedCopy(
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
    params.pitchRatio = std::pow(2., mpClip->GetCentShift() / 1200.);
+   params.preserveFormants =
+      mpClip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
    StaffPadTimeAndPitch stretcher { mpClip->GetRate(), numChannels,
                                     stretcherSource, std::move(params) };
 
@@ -449,6 +457,11 @@ double WaveTrack::Interval::GetStretchRatio() const
 int WaveTrack::Interval::GetCentShift() const
 {
    return mpClip->GetCentShift();
+}
+
+PitchAndSpeedPreset WaveTrack::Interval::GetPitchAndSpeedPreset() const
+{
+   return mpClip->GetPitchAndSpeedPreset();
 }
 
 void WaveTrack::Interval::SetRawAudioTempo(double tempo)

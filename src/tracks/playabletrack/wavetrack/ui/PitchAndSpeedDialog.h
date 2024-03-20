@@ -99,4 +99,6 @@ private:
    std::weak_ptr<WaveTrack> mTrack;
    bool mConsolidateHistory = true;
    bool mFirst = true;
+   bool mFormantPreservation = false;
+   bool mOldFormantPreservation = mFormantPreservation;
 };

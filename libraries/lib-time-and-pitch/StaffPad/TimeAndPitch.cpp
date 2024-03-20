@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <array>
 #include <cassert>
+#include <random>
+#include <stdlib.h>
 #include <utility>
 
 #include "CircularSampleBuffer.h"
@@ -43,16 +45,12 @@ inline float lagrange6(const float (&smp)[6], float t)
   return (c0 + c1 * t) + (c2 + c3 * t) * t2 + (c4 + c5 * t) * t2 * t2;
 }
 
-inline int getFftSize(int sampleRate)
+void generateRandomPhaseVector(float* dst, size_t size, std::mt19937& gen)
 {
-  // 44.1kHz maps to 4096 samples (i.e., 93ms).
-  // We grow the FFT size proportionally with the sample rate to keep the
-  // window duration roughly constant, with quantization due to the
-  // power-of-two constraint.
-  // If needed some time in the future, we can decouple analysis window and
-  // FFT sizes by zero-padding, allowing for very fine-grained window duration
-  // without compromising performance.
-  return 1 << (12 + (int)std::round(std::log2(sampleRate / 44100.)));
+   std::vector<std::complex<float>> v(size);
+   std::uniform_real_distribution<float> dis(
+      -3.14159265358979323846f, 3.14159265358979323846f);
+   std::for_each(dst, dst + size, [&dis, &gen](auto& a) { a = dis(gen); });
 }
 } // namespace
 
@@ -60,9 +58,11 @@ struct TimeAndPitch::impl
 {
   impl(int fft_size) : fft(fft_size)
   {
+    randomGenerator.seed(0);
   }
 
   FourierTransform fft;
+  std::mt19937 randomGenerator;
   CircularSampleBuffer<float> inResampleInputBuffer[2];
   CircularSampleBuffer<float> inCircularBuffer[2];
   CircularSampleBuffer<float> outCircularBuffer[2];
@@ -77,6 +77,7 @@ struct TimeAndPitch::impl
   SamplesReal cosWindow;
   SamplesReal sqWindow;
   SamplesReal last_norm;
+  SamplesReal random_phases;
 
   double exact_hop_a = 512.0, hop_a_err = 0.0;
   double exact_hop_s = 0.0;
@@ -86,8 +87,11 @@ struct TimeAndPitch::impl
   std::vector<int> peak_index, trough_index;
 };
 
-TimeAndPitch::TimeAndPitch(int sampleRate)
-    : fftSize(getFftSize(sampleRate))
+TimeAndPitch::TimeAndPitch(
+   int fftSize, bool reduceImaging, ShiftTimbreCb shiftTimbreCb)
+    : fftSize(fftSize)
+    , _reduceImaging(reduceImaging)
+    , _shiftTimbreCb(std::move(shiftTimbreCb))
 {
 }
 
@@ -124,6 +128,9 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
   d->phase.setSize(_numChannels, _numBins);
   d->last_phase.setSize(_numChannels, _numBins);
   d->phase_accum.setSize(_numChannels, _numBins);
+  d->random_phases.setSize(1, _numBins);
+  generateRandomPhaseVector(
+     d->random_phases.getPtr(0), _numBins, d->randomGenerator);
 
   _expectedPhaseChangePerBinPerSample = twoPi / double(fftSize);
 
@@ -234,7 +241,7 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
   auto alpha = a_s / a_a; // this is the real stretch factor based on integer hop sizes
 
   // Create a norm array
-  auto* norms = d->norm.getPtr(0); // for stereo, just use the mid-channel
+  const auto* norms = d->norm.getPtr(0); // for stereo, just use the mid-channel
   const auto* norms_last = d->last_norm.getPtr(0);
 
   d->peak_index.clear();
@@ -332,6 +339,34 @@ void TimeAndPitch::_time_stretch(float a_a, float a_s)
   d->last_phase.assignSamples(d->phase);
 }
 
+void TimeAndPitch::_applyImagingReduction()
+{
+   // Upsampling brings spectral components down, including those that were
+   // beyond the Nyquist. From `imagingBeginBin`, we have a mirroring of the
+   // spectrum, which, if not lowpass-filtered by the resampler, may yield
+   // an aliasing-like quality if what is mirrored is a harmonic series. A
+   // simple thing to do against that is to scramble the phase values there.
+   // This way we preserve natural energy fluctuations, but the artifact
+   // isn't noticeable as much anymore, because much more noise-like, which
+   // is what one typically gets at those frequencies.
+   constexpr auto alignment = 64 / sizeof(float);
+   const int imagingBeginBin =
+      std::ceil((fftSize / 2 * _pitchFactor + 1) / alignment) * alignment;
+
+   if (imagingBeginBin >= _numBins)
+      return;
+
+   const auto n = _numBins - imagingBeginBin;
+   auto pSpec = d->spectrum.getPtr(0);
+   auto pRand = d->random_phases.getPtr(0);
+   vo::rotate(nullptr, pRand, pSpec + imagingBeginBin, n);
+   // Just rotating the random phase vector to produce pseudo-random
+   // sequences of phases.
+   std::uniform_int_distribution<size_t> dis(0, n - 1);
+   const auto middle = dis(d->randomGenerator);
+   std::rotate(pRand, pRand + middle, pRand + n);
+}
+
 /// process one hop/chunk in _fft_timeSeries and add the result to output circular buffer
 void TimeAndPitch::_process_hop(int hop_a, int hop_s)
 {
@@ -353,6 +388,13 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
     vo::calcNorms(d->spectrum.getPtr(0), d->norm.getPtr(0), d->spectrum.getNumSamples());
     for (int ch = 0; ch < _numChannels; ++ch)
       vo::calcPhases(d->spectrum.getPtr(ch), d->phase.getPtr(ch), d->spectrum.getNumSamples());
+
+    if (_shiftTimbreCb)
+       _shiftTimbreCb(
+          1 / _pitchFactor, d->spectrum.getPtr(0), d->norm.getPtr(0));
+
+    if (_reduceImaging && _pitchFactor < 1.)
+       _applyImagingReduction();
 
     if (_numChannels == 1)
       _time_stretch<1>((float)hop_a, (float)hop_s);
