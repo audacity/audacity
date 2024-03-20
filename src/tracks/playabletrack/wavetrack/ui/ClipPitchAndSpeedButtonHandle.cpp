@@ -143,14 +143,16 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
    }
    else
    {
-      const auto focus = mType == Type::Pitch ?
-                            PitchAndSpeedDialogFocus::Pitch :
-                            PitchAndSpeedDialogFocus::Speed;
+      const auto focusedGroup = mType == Type::Pitch ?
+                                   PitchAndSpeedDialogGroup::Pitch :
+                                   PitchAndSpeedDialogGroup::Speed;
       BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
-                          clip = mClip, focus] {
+                          clip = mClip, focusedGroup] {
          if (auto pProject = project.lock())
-            WaveClipUtilities::ShowClipPitchAndSpeedDialog(
-               *pProject, *track, *clip, focus);
+            PitchAndSpeedDialog::Get(*pProject)
+               .Retarget(track, clip)
+               .SetFocus(focusedGroup)
+               .Show();
       });
    }
    return RefreshCode::RefreshNone;

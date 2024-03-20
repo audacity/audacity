@@ -209,9 +209,9 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
    const int pos = std::clamp<int>(floor(0.5 + unscaled * sbarScale), 0, max);
    mpCallbacks->SetHorizontalThumbPosition(pos);
    sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
-   sbarH = std::clamp<wxInt64>(sbarH,
-      -PixelWidthBeforeTime(0.0),
-      sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen);
+   sbarH = std::clamp<wxInt64>(
+      sbarH, -PixelWidthBeforeTime(0.0),
+      std::max(sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen, 0.));
 
    if (doScroll)
       DoScroll();

@@ -142,6 +142,7 @@ WaveClip::WaveClip(
 
 WaveClip::~WaveClip()
 {
+   Observer::Publisher<WaveClipDtorCalled>::Publish(WaveClipDtorCalled {});
 }
 
 AudioSegmentSampleView WaveClip::GetSampleView(
@@ -291,6 +292,8 @@ void WaveClip::OnProjectTempoChange(
       mEnvelope->RescaleTimesBy(ratioChange);
    }
    mProjectTempo = newTempo;
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchLeftTo(double to)
@@ -308,6 +311,8 @@ void WaveClip::StretchLeftTo(double to)
    mEnvelope->SetOffset(mSequenceOffset);
    mEnvelope->RescaleTimesBy(ratioChange);
    StretchCutLines(ratioChange);
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchRightTo(double to)
@@ -331,6 +336,8 @@ void WaveClip::StretchBy(double ratio)
    mEnvelope->SetOffset(mSequenceOffset);
    mEnvelope->RescaleTimesBy(ratio);
    StretchCutLines(ratio);
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchCutLines(double ratioChange)
@@ -362,7 +369,8 @@ int WaveClip::GetCentShift() const
 Observer::Subscription
 WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb)
 {
-   return Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
+   return Observer::Publisher<CentShiftChange>::Subscribe(
+      [cb](const CentShiftChange& cents) { cb(cents.newValue); });
 }
 
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
@@ -1145,7 +1153,7 @@ bool WaveClip::SetCentShift(int cents)
       cents > TimeAndPitchInterface::MaxCents)
       return false;
    mCentShift = cents;
-   Publish(CentShiftChange { cents });
+   Observer::Publisher<CentShiftChange>::Publish(CentShiftChange { cents });
    return true;
 }
 

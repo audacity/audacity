@@ -18,6 +18,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "CommandManager.h"
 #include "../../SpectrumAnalyst.h"
 #include "../../LabelTrack.h"
+#include "../playabletrack/wavetrack/ui/PitchAndSpeedDialog.h"
 #include "NumberScale.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -301,9 +302,9 @@ namespace
        TranslatableString &tip, wxCursor *&pCursor)
    {
 
-      static auto adjustLeftSelectionCursor = 
+      static auto adjustLeftSelectionCursor =
          ::MakeCursor(wxCURSOR_POINT_LEFT, SelectionLeftXpm, 16, 16);
-      static auto adjustRightSelectionCursor = 
+      static auto adjustRightSelectionCursor =
          ::MakeCursor(wxCURSOR_POINT_RIGHT, SelectionRightXpm, 16, 16);
       static auto bottomFrequencyCursor =
          ::MakeCursor(wxCURSOR_ARROW, BottomFrequencyCursorXpm, 16, 16);
@@ -567,7 +568,7 @@ UIHandle::Result SelectHandle::Click(
    if ( selectChange )
       // Do not start a drag
       return RefreshAll | Cancelled;
-   
+
    auto &selectionState = SelectionState::Get( *pProject );
    if (event.LeftDClick() && !event.ShiftDown()) {
       // Deselect all other tracks and select this one.
@@ -867,7 +868,7 @@ UIHandle::Result SelectHandle::Drag
                   static_cast<WaveTrack*>(pTrack.get()),
                   viewInfo, y, mRect.y, mRect.height);
    #endif
-         
+
          AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
       }
    }
@@ -931,7 +932,7 @@ HitTestPreview SelectHandle::Preview
             // No keyboard preference defined for opening Preferences dialog
             /* i18n-hint: These are the names of a menu and a command in that menu */
             keyStr = _("Edit, Preferences...");
-         
+
          /* i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac */
          tip = XO("Multi-Tool Mode: %s for Mouse and Keyboard Preferences.")
             .Format( keyStr );
@@ -995,10 +996,10 @@ HitTestPreview SelectHandle::Preview
    return { tip, pCursor };
 }
 
-UIHandle::Result SelectHandle::Release
-(const TrackPanelMouseEvent &, AudacityProject *pProject,
- wxWindow *)
+UIHandle::Result SelectHandle::Release(
+   const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow*)
 {
+   PitchAndSpeedDialog::Get(*pProject).TryRetarget(event);
    using namespace RefreshCode;
    ProjectHistory::Get( *pProject ).ModifyState(false);
    mFrequencySnapper.reset();
@@ -1007,7 +1008,7 @@ UIHandle::Result SelectHandle::Release
       mSelectionStateChanger->Commit();
       mSelectionStateChanger.reset();
    }
-   
+
    if (mUseSnap && (mSnapStart.outCoord != -1 || mSnapEnd.outCoord != -1))
       return RefreshAll;
    else

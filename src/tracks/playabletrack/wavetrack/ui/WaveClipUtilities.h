@@ -37,11 +37,8 @@ void fillWhere(
 
 std::vector<CommonTrackPanelCell::MenuItem> GetWaveClipMenuItems();
 
-void PushClipSpeedChangedUndoState(AudacityProject& project, double speedInPercent);
-
-void ShowClipPitchAndSpeedDialog(
-   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval,
-   std::optional<PitchAndSpeedDialogFocus> focus = {});
+void PushClipSpeedChangedUndoState(
+   AudacityProject& project, double speedInPercent);
 
 void SelectClip(AudacityProject& project, const WaveTrack::Interval& clip);
 } // namespace WaveClipUtilities

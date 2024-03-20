@@ -9,9 +9,21 @@
 
  **********************************************************************/
 #include "PitchAndSpeedDialog.h"
+#include "AudioIO.h"
+#include "Project.h"
+#include "ProjectAudioIO.h"
+#include "ProjectHistory.h"
+#include "ProjectWindow.h"
+#include "ProjectWindows.h"
 #include "TimeAndPitchInterface.h"
+#include "TrackPanel.h"
+#include "TrackPanelMouseEvent.h"
+#include "UndoManager.h"
+#include "ViewInfo.h"
+#include "WaveClip.h"
 #include "WaveClipUtilities.h"
 #include "WaveTrackUtilities.h"
+#include "WindowAccessible.h"
 
 #include <wx/button.h>
 #include <wx/layout.h>
@@ -19,6 +31,7 @@
 #include <wx/textctrl.h>
 
 #include "ShuttleGui.h"
+#include "ShuttleGuiScopedSizer.h"
 #include "SpinControl.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -26,148 +39,243 @@
 
 namespace
 {
-template <typename ReturnType, typename... Args> class ScopedSizer
+constexpr auto semitoneCtrlId = wxID_HIGHEST + 1;
+constexpr auto speedCtrlId = wxID_HIGHEST + 3;
+
+struct HitClip
 {
-public:
-   ScopedSizer(
-      ShuttleGui& s, ReturnType (ShuttleGui::*startFunc)(Args...),
-      void (ShuttleGui::*endFunc)(), Args... args)
-       : mShuttleGui(s)
-       , mStartFunction(startFunc)
-       , mEndFunction(endFunc)
-   {
-      (mShuttleGui.*mStartFunction)(std::forward<Args>(args)...);
-   }
-
-   ~ScopedSizer()
-   {
-      (mShuttleGui.*mEndFunction)();
-   }
-
-private:
-   ShuttleGui& mShuttleGui;
-   ReturnType (ShuttleGui::*mStartFunction)(Args...);
-   void (ShuttleGui::*mEndFunction)();
+   std::shared_ptr<WaveTrack> track;
+   std::shared_ptr<WaveTrack::Interval> clip;
 };
 
-class ScopedHorizontalLay : public ScopedSizer<void, int, int>
+std::optional<HitClip>
+GetHitClip(AudacityProject& project, const TrackPanelMouseEvent& event)
 {
-public:
-   ScopedHorizontalLay(
-      ShuttleGui& s, int PositionFlags = wxALIGN_CENTRE, int iProp = 1)
-       : ScopedSizer<void, int, int>(
-            s, &ShuttleGui::StartHorizontalLay, &ShuttleGui::EndHorizontalLay,
-            PositionFlags, iProp)
+   const auto pos = event.event.GetPosition();
+   const auto& viewInfo = ViewInfo::Get(project);
+   const auto t = viewInfo.PositionToTime(pos.x, event.rect.GetX());
+   auto& trackPanel = TrackPanel::Get(project);
+   for (auto leader : TrackList::Get(project).Any<WaveTrack>())
    {
-   }
-};
-
-class ScopedInvisiblePanel : public ScopedSizer<wxPanel*, int>
-{
-public:
-   ScopedInvisiblePanel(ShuttleGui& s, int border = 0)
-       : ScopedSizer<wxPanel*, int>(
-            s, &ShuttleGui::StartInvisiblePanel, &ShuttleGui::EndInvisiblePanel,
-            border)
-   {
-   }
-};
-
-class ScopedVerticalLay : public ScopedSizer<void, int>
-{
-public:
-   ScopedVerticalLay(ShuttleGui& s, int iProp = 1)
-       : ScopedSizer<void, int>(
-            s, &ShuttleGui::StartVerticalLay, &ShuttleGui::EndVerticalLay,
-            iProp)
-   {
-   }
-};
-
-class ScopedStatic :
-    public ScopedSizer<wxStaticBox*, const TranslatableString&, int>
-{
-public:
-   ScopedStatic(ShuttleGui& s, const TranslatableString& label, int iProp = 0)
-       : ScopedSizer<wxStaticBox*, const TranslatableString&, int>(
-            s, &ShuttleGui::StartStatic, &ShuttleGui::EndStatic, label, iProp)
-   {
-   }
-};
-
-//! Returns true if and only if `output` was updated.
-auto GetInt(const wxCommandEvent& event, int& output)
-{
-   try
-   {
-      const auto str = event.GetString().ToStdString();
-      if (str.empty() || str == "-")
+      const auto trackRect = trackPanel.FindTrackRect(leader);
+      if (!trackRect.Contains(pos))
+         continue;
+      auto [begin, end] = leader->Intervals();
+      while (begin != end)
       {
-         output = 0;
-         return true;
+         auto clip = *begin++;
+         if (clip->WithinPlayRegion(t))
+            return HitClip { std::static_pointer_cast<WaveTrack>(
+                                leader->SharedPointer()),
+                             clip };
       }
-      // Exact integer match
-      if (!std::regex_match(str, std::regex { "^-?[0-9]+$" }))
-         return false;
-      output = std::stoi(str);
-      return true;
    }
-   catch (const std::exception&)
-   {
-      return false;
-   }
+   return {};
 }
+
+PitchAndSpeedDialog::PitchShift ToSemitonesAndCents(int oldCents, int newCents)
+{
+   // Rules:
+   // 1. cents must be in the range [-100, 100]
+   // 2. on semitone updates, keep semitone and cent sign consistent
+
+   PitchAndSpeedDialog::PitchShift shift { 0, newCents };
+   while (shift.cents <= -100)
+   {
+      --shift.semis;
+      shift.cents += 100;
+   }
+   while (shift.cents >= 100)
+   {
+      ++shift.semis;
+      shift.cents -= 100;
+   }
+
+   const auto onlySemitonesChanged = [](int oldCents, int newCents) {
+      while (oldCents < 0)
+         oldCents += 100;
+      while (newCents < 0)
+         newCents += 100;
+      return oldCents / 100 != newCents / 100;
+   }(oldCents, newCents);
+
+   if (onlySemitonesChanged && shift.cents > 0 && shift.semis < 0)
+      return { shift.semis + 1, shift.cents - 100 };
+   else if (onlySemitonesChanged && shift.cents < 0 && shift.semis > 0)
+      return { shift.semis - 1, shift.cents + 100 };
+   else
+      return shift;
+}
+
+void ClampPitchShift(PitchAndSpeedDialog::PitchShift& shift)
+{
+   static_assert(TimeAndPitchInterface::MaxCents % 100 == 0);
+   static_assert(TimeAndPitchInterface::MinCents % 100 == 0);
+   const auto cents = shift.semis * 100 + shift.cents;
+   if (cents > TimeAndPitchInterface::MaxCents)
+      shift = { TimeAndPitchInterface::MaxCents / 100, 0 };
+   else if (cents < TimeAndPitchInterface::MinCents)
+      shift = { TimeAndPitchInterface::MinCents / 100, 0 };
+}
+
+PitchAndSpeedDialog::PitchShift GetClipShift(const WaveClip& clip)
+{
+   const auto totalShift = clip.GetCentShift();
+   return { totalShift / 100, totalShift % 100 };
+}
+
+static const AttachedWindows::RegisteredFactory key {
+   [](AudacityProject& project) -> wxWeakRef<wxWindow> {
+      return safenew PitchAndSpeedDialog(project);
+   }
+};
 } // namespace
 
-PitchAndSpeedDialog::PitchAndSpeedDialog(
-   std::weak_ptr<AudacityProject> project, bool playbackOngoing,
-   WaveTrack& waveTrack, WaveTrack::Interval& interval, wxWindow* parent,
-   const std::optional<PitchAndSpeedDialogFocus>& focus)
+PitchAndSpeedDialog& PitchAndSpeedDialog::Get(AudacityProject& project)
+{
+   return GetAttachedWindows(project).Get<PitchAndSpeedDialog>(key);
+}
+
+const PitchAndSpeedDialog&
+PitchAndSpeedDialog::Get(const AudacityProject& project)
+{
+   return Get(const_cast<AudacityProject&>(project));
+}
+
+void PitchAndSpeedDialog::Destroy(AudacityProject& project)
+{
+   auto& attachedWindows = GetAttachedWindows(project);
+   auto* pPanel = attachedWindows.Find(key);
+   if (pPanel)
+   {
+      pPanel->wxWindow::Destroy();
+      attachedWindows.Assign(key, nullptr);
+   }
+}
+
+PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
     : wxDialogWrapper(
-         parent, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
+         nullptr, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
          { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
     , mProject { project }
-    , mPlaybackOngoing { playbackOngoing }
-    , mTrack { waveTrack }
-    , mTrackInterval { interval }
-    , mClipSpeed { 100.0 / interval.GetStretchRatio() }
-    , mOldClipSpeed { mClipSpeed }
+    , mProjectCloseSubscription { ProjectWindow::Get(mProject).Subscribe(
+         [this](ProjectWindowDestroyedMessage) { Destroy(mProject); }) }
+    , mTitle { GetTitle() }
 {
-   const auto totalShift = mTrackInterval.GetCentShift();
-   mShift.cents = totalShift % 100;
-   mShift.semis = (totalShift - mShift.cents) / 100;
+   Bind(wxEVT_CLOSE_WINDOW, [this](const auto&) { Show(false); });
+
+   Bind(wxEVT_CHAR_HOOK, [this](wxKeyEvent& event) {
+      if (event.GetKeyCode() == WXK_ESCAPE)
+         Show(false);
+      else
+         event.Skip();
+   });
+
+   if (const auto audioIo = AudioIO::Get())
+   {
+      mAudioIOSubscription =
+         audioIo->Subscribe([this](const AudioIOEvent& event) {
+            if (event.pProject != &mProject)
+               return;
+            switch (event.type)
+            {
+            case AudioIOEvent::CAPTURE:
+            case AudioIOEvent::PLAYBACK:
+               if (const auto child = wxDialog::FindWindowById(speedCtrlId))
+                  child->Enable(!event.on);
+               break;
+            case AudioIOEvent::MONITOR:
+               break;
+            default:
+               // Unknown event type
+               assert(false);
+            }
+         });
+   }
+}
+
+void PitchAndSpeedDialog::TryRetarget(const TrackPanelMouseEvent& event)
+{
+   const auto target = GetHitClip(mProject, event);
+   if (!target.has_value() || target->clip->GetClip(0) == mLeftClip.lock())
+      return;
+   Retarget(target->track, target->clip);
+}
+
+PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
+   const std::shared_ptr<WaveTrack>& track,
+   const WaveTrack::IntervalHolder& clip)
+{
+   mConsolidateHistory = false;
+   wxDialog::SetTitle(mTitle + " - " + clip->GetName());
+   const auto leftClip = clip->GetClip(0);
+   mClipDeletedSubscription =
+      leftClip->Observer::Publisher<WaveClipDtorCalled>::Subscribe(
+         [this](WaveClipDtorCalled) { Show(false); });
+   mClipCentShiftChangeSubscription =
+      leftClip->Observer::Publisher<CentShiftChange>::Subscribe(
+         [this](const CentShiftChange& cents) {
+            mShift = ToSemitonesAndCents(
+               mShift.semis * 100 + mShift.cents, cents.newValue);
+            UpdateDialog();
+         });
+   mClipSpeedChangeSubscription =
+      leftClip->Observer::Publisher<StretchRatioChange>::Subscribe(
+         [this](const StretchRatioChange& stretchRatio) {
+            mClipSpeed = 100.0 / stretchRatio.newValue;
+            UpdateDialog();
+         });
+
+   mTrack = track;
+   mLeftClip = leftClip;
+   mRightClip = clip->GetClip(1);
+   mClipSpeed = 100.0 / leftClip->GetStretchRatio();
+   mOldClipSpeed = mClipSpeed;
+   mShift = GetClipShift(*leftClip);
    mOldShift = mShift;
 
-   ShuttleGui s(this, eIsCreating);
+   ShuttleGui s(this, mFirst ? eIsCreating : eIsSettingToDialog);
 
    {
       ScopedVerticalLay v { s };
-      PopulateOrExchange(s, focus);
+      PopulateOrExchange(s);
    }
 
-   // TODO: Tolerance?
-   // Stretch ratio of
-   assert(mOldClipSpeed > 0.0);
+   if (mFirst)
+   {
+      Layout();
+      Fit();
+      Centre();
+      mFirst = false;
+   }
 
-   Layout();
-   Fit();
-   Centre();
-
-   Bind(wxEVT_CHAR_HOOK, [this](auto& evt) {
-      if (!IsEscapeKey(evt))
-      {
-         evt.Skip();
-         return;
-      }
-
-      OnCancel();
-   });
+   return *this;
 }
 
-PitchAndSpeedDialog::~PitchAndSpeedDialog() = default;
+PitchAndSpeedDialog& PitchAndSpeedDialog::SetFocus(
+   const std::optional<PitchAndSpeedDialogGroup>& group)
+{
 
-void PitchAndSpeedDialog::PopulateOrExchange(
-   ShuttleGui& s, const std::optional<PitchAndSpeedDialogFocus>& focus)
+   const auto item =
+      group.has_value() ?
+         wxWindow::FindWindowById(
+            *group == PitchAndSpeedDialogGroup::Pitch ? semitoneCtrlId :
+                                                        speedCtrlId,
+            this) :
+         nullptr;
+   if (item)
+      item->SetFocus();
+   wxDialog::SetFocus();
+   return *this;
+}
+
+PitchAndSpeedDialog& PitchAndSpeedDialog::Show()
+{
+   Show(true);
+   return *this;
+}
+
+void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
 {
    {
       ScopedInvisiblePanel panel { s, 15 };
@@ -179,43 +287,36 @@ void PitchAndSpeedDialog::PopulateOrExchange(
             s.SetBorder(2);
             // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
             // instantly when `UpdateDialog` is called.
-            s.TieSpinCtrl(
-                XO("semitones:"), mShift.semis,
-                TimeAndPitchInterface::MaxCents / 100,
-                TimeAndPitchInterface::MinCents / 100)
-               ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
+            s.Id(semitoneCtrlId)
+               .TieSpinCtrl(
+                  XO("semitones:"), mShift.semis,
+                  TimeAndPitchInterface::MaxCents / 100,
+                  TimeAndPitchInterface::MinCents / 100)
+               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
                   const auto prevSemis = mShift.semis;
-                  if (GetInt(event, mShift.semis))
+                  mShift.semis = event.GetInt();
+                  // If we have e.g. -3 semi, -1 cents, and the user
+                  // changes the sign of the semitones, the logic in
+                  // `SetSemitoneShift` would result in 2 semi, 99
+                  // cents. If the user changes sign again, we would now
+                  // get 1 semi, -1 cents. Mirrorring (e.g. -3 semi, -1
+                  // cents -> 3 semi, 1 cents) is not a good idea because
+                  // that would ruin the work of users painstakingly
+                  // adjusting the cents of an instrument. So instead, we
+                  // map -3 semi, -1 cents to 3 semi, 99 cents.
+                  if (mShift.cents != 0)
                   {
-                     // If we have e.g. -3 semi, -1 cents, and the user changes
-                     // the sign of the semitones, the logic in
-                     // `OnPitchShiftChange` would result in 2 semi, 99 cents.
-                     // If the user changes sign again, we would now get 1 semi,
-                     // -1 cents. Mirrorring (e.g. -3 semi, -1 cents -> 3 semi,
-                     // 1 cents) is not a good idea because that would ruin the
-                     // work of users painstakingly adjusting the cents of an
-                     // instrument. So instead, we map -3 semi, -1 cents to 3
-                     // semi, 99 cents.
-                     if (mShift.cents != 0)
-                     {
-                        if (prevSemis < 0 && mShift.semis > 0)
-                           ++mShift.semis;
-                        else if (prevSemis > 0 && mShift.semis < 0)
-                           --mShift.semis;
-                     }
-                     OnPitchShiftChange(true);
+                     if (prevSemis < 0 && mShift.semis > 0)
+                        ++mShift.semis;
+                     else if (prevSemis > 0 && mShift.semis < 0)
+                        --mShift.semis;
                   }
-                  else
-                     // Something silly was entered; reset dialog
-                     UpdateDialog();
+                  SetSemitoneShift();
                });
             s.TieSpinCtrl(XO("cents:"), mShift.cents, 100, -100)
-               ->Bind(wxEVT_TEXT, [&](wxCommandEvent& event) {
-                  if (GetInt(event, mShift.cents))
-                     OnPitchShiftChange(false);
-                  else
-                     // Something silly was entered; reset dialog
-                     UpdateDialog();
+               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
+                  mShift.cents = event.GetInt();
+                  SetSemitoneShift();
                });
          }
       }
@@ -227,130 +328,46 @@ void PitchAndSpeedDialog::PopulateOrExchange(
          ScopedStatic scopedStatic { s, XO("Clip Speed") };
          {
             ScopedHorizontalLay h { s, wxLeft };
-            auto txtCtrl = s.Name(XO("Clip Speed"))
-                              .NameSuffix(Verbatim("%"))
-                              .TieNumericTextBox({}, mClipSpeed, 14, true);
-            txtCtrl->Enable(!mPlaybackOngoing);
-            if (focus.has_value() && *focus == PitchAndSpeedDialogFocus::Speed)
-               txtCtrl->SetFocus();
-            if (!mPlaybackOngoing)
-            {
-               txtCtrl->Bind(wxEVT_TEXT_ENTER, [this](auto&) { OnOk(); });
-               txtCtrl->Bind(wxEVT_TEXT, [this](wxCommandEvent& event) {
-                  try
-                  {
-                     mClipSpeed = std::stod(event.GetString().ToStdString());
-                  }
-                  catch (const std::exception&)
-                  {
-                     // Something silly was entered; reset dialog
-                     UpdateDialog();
-                  }
+            const auto txtCtrl =
+               s.Id(speedCtrlId)
+                  .Name(XO("Clip Speed"))
+                  .TieSpinControl(
+                     wxSize(60, -1), XO("speed %: "), mClipSpeed, 1000.0, 1.0);
+#if wxUSE_ACCESSIBILITY
+            txtCtrl->SetAccessible(safenew WindowAccessible(txtCtrl));
+#endif
+            const auto playbackOngoing =
+               ProjectAudioIO::Get(mProject).IsAudioActive();
+            txtCtrl->Enable(!playbackOngoing);
+            txtCtrl->Bind(
+               wxEVT_SPINCTRL, [this, txtCtrl](wxCommandEvent& event) {
+                  mClipSpeed = txtCtrl->GetValue();
+                  if (!SetClipSpeed())
+                     if (auto target = LockTarget())
+                     {
+                        WaveTrackUtilities::ExpandClipTillNextOne(
+                           *target->track, target->clip);
+                        UpdateDialog();
+                     }
                });
-            }
-            s.AddFixedText(Verbatim("%"));
          }
       }
    }
-
-   ScopedHorizontalLay h { s, wxEXPAND, 0 };
-   {
-      ScopedInvisiblePanel panel { s, 10 };
-      s.SetBorder(2);
-      {
-         ScopedHorizontalLay h { s, wxALIGN_RIGHT, 0 };
-         s.AddSpace(270, 0, 0);
-         s.AddButton(XXO("&Cancel"))->Bind(wxEVT_BUTTON, [this](auto&) {
-            OnCancel();
-         });
-         auto okBtn = s.AddButton(XXO("&Ok"));
-         okBtn->Bind(wxEVT_BUTTON, [this](auto&) { OnOk(); });
-         okBtn->SetDefault();
-      }
-   }
 }
 
-void PitchAndSpeedDialog::OnOk()
+bool PitchAndSpeedDialog::SetClipSpeed()
 {
-   SetSemitoneShift();
-   if (SetClipSpeedFromDialog())
-      EndModal(wxID_OK);
-}
-
-void PitchAndSpeedDialog::OnCancel()
-{
-   mShift = mOldShift;
-   SetSemitoneShift();
-   EndModal(wxID_CANCEL);
-}
-
-bool PitchAndSpeedDialog::SetClipSpeedFromDialog()
-{
-   {
-      ShuttleGui S(this, eIsGettingFromDialog);
-      PopulateOrExchange(S);
-   }
-
-   if (mClipSpeed <= 0.0)
-   {
-      BasicUI::ShowErrorDialog(
-         /* i18n-hint: Title of an error message shown, when invalid clip speed
-            is set */
-         wxWidgetsWindowPlacement { this }, XO("Invalid clip speed"),
-         XO("Clip speed must be a positive value"), {});
-
+   auto target = LockTarget();
+   if (!target)
       return false;
-   }
 
    if (!WaveTrackUtilities::SetClipStretchRatio(
-          mTrack, mTrackInterval, 100 / mClipSpeed))
-   {
-      BasicUI::ShowErrorDialog(
-         wxWidgetsWindowPlacement { this }, XO("Invalid clip speed"),
-         XO("There is not enough space to stretch the clip to the selected speed"),
-         {});
-
+          *target->track, target->clip, 100 / mClipSpeed))
       return false;
-   }
-   else if (const auto project = mProject.lock())
-      WaveClipUtilities::SelectClip(*project, mTrackInterval);
 
-   {
-      ShuttleGui S(this, eIsSettingToDialog);
-      PopulateOrExchange(S);
-   }
+   UpdateHistory(XO("Changed Speed"));
 
    return true;
-}
-
-void PitchAndSpeedDialog::OnPitchShiftChange(bool semitonesChanged)
-{
-   // Rules:
-   // 1. total shift is clipped to [minSemis, maxSemis]
-   // 2. cents must be in the range [-100, 100]
-   // 3. on semitone updates, keep semitone and cent sign consistent
-   const auto newCentShift = mShift.semis * 100 + mShift.cents;
-   static_assert(TimeAndPitchInterface::MaxCents % 100 == 0);
-   static_assert(TimeAndPitchInterface::MinCents % 100 == 0);
-   std::optional<PitchShift> correctedShift;
-   if (newCentShift > TimeAndPitchInterface::MaxCents)
-      correctedShift = PitchShift { TimeAndPitchInterface::MaxCents / 100, 0 };
-   else if (newCentShift < TimeAndPitchInterface::MinCents)
-      correctedShift = PitchShift { TimeAndPitchInterface::MinCents / 100, 0 };
-   else if (mShift.cents == 100)
-      correctedShift = PitchShift { mShift.semis + 1, 0 };
-   else if (mShift.cents == -100)
-      correctedShift = PitchShift { mShift.semis - 1, 0 };
-   else if (semitonesChanged && mShift.cents > 0 && mShift.semis < 0)
-      correctedShift = PitchShift { mShift.semis + 1, mShift.cents - 100 };
-   else if (semitonesChanged && mShift.cents < 0 && mShift.semis > 0)
-      correctedShift = PitchShift { mShift.semis - 1, mShift.cents + 100 };
-
-   if (correctedShift.has_value())
-      mShift = *correctedShift;
-   SetSemitoneShift();
-   if (correctedShift.has_value())
-      UpdateDialog();
 }
 
 void PitchAndSpeedDialog::UpdateDialog()
@@ -359,9 +376,33 @@ void PitchAndSpeedDialog::UpdateDialog()
    PopulateOrExchange(S);
 }
 
+void PitchAndSpeedDialog::UpdateHistory(const TranslatableString& desc)
+{
+   ProjectHistory::Get(mProject).PushState(
+      desc, desc, mConsolidateHistory ? UndoPush::CONSOLIDATE : UndoPush::NONE);
+   mConsolidateHistory = true;
+}
+
+std::optional<PitchAndSpeedDialog::StrongTarget>
+PitchAndSpeedDialog::LockTarget()
+{
+   if (const auto track = mTrack.lock())
+      if (const auto leftClip = mLeftClip.lock())
+         return StrongTarget {
+            track, WaveTrack::Interval { *track, leftClip, mRightClip.lock() }
+         };
+   return {};
+}
+
 void PitchAndSpeedDialog::SetSemitoneShift()
 {
+   auto target = LockTarget();
+   if (!target)
+      return;
+   ClampPitchShift(mShift);
    const auto success =
-      mTrackInterval.SetCentShift(mShift.semis * 100 + mShift.cents);
+      target->clip.SetCentShift(mShift.semis * 100 + mShift.cents);
    assert(success);
+   TrackPanel::Get(mProject).RefreshTrack(target->track.get());
+   UpdateHistory(XO("Changed Pitch"));
 }

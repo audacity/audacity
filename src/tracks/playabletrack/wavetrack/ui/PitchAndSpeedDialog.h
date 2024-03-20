@@ -10,53 +10,93 @@
  **********************************************************************/
 #pragma once
 
+#include "ClientData.h"
+#include "Observer.h"
 #include "WaveTrack.h"
 #include "wxPanelWrapper.h"
 
+struct TrackPanelMouseEvent;
 class AudacityProject;
 class ShuttleGui;
+class WaveClip;
 
-enum class PitchAndSpeedDialogFocus
+enum class PitchAndSpeedDialogGroup
 {
    Pitch,
    Speed
 };
 
-class PitchAndSpeedDialog final : public wxDialogWrapper
+class PitchAndSpeedDialog final :
+    public wxDialogWrapper,
+    public ClientData::Base
 {
 public:
-   PitchAndSpeedDialog(
-      std::weak_ptr<AudacityProject> project, bool playbackOngoing,
-      WaveTrack& track, WaveTrack::Interval& interval, wxWindow* parent,
-      const std::optional<PitchAndSpeedDialogFocus>& focus = {});
+   static PitchAndSpeedDialog& Get(AudacityProject& project);
+   static const PitchAndSpeedDialog& Get(const AudacityProject& project);
+   static void Destroy(AudacityProject& project);
 
-   ~PitchAndSpeedDialog() override;
+   PitchAndSpeedDialog(AudacityProject& project);
 
-private:
-   void PopulateOrExchange(
-      ShuttleGui& s, const std::optional<PitchAndSpeedDialogFocus>& focus = {});
+   PitchAndSpeedDialog& Retarget(
+      const std::shared_ptr<WaveTrack>& track,
+      const WaveTrack::IntervalHolder& wideClip);
+   PitchAndSpeedDialog&
+   SetFocus(const std::optional<PitchAndSpeedDialogGroup>& group);
+   PitchAndSpeedDialog& Show();
+   void TryRetarget(const TrackPanelMouseEvent& event);
 
-   void OnOk();
-
-   void OnCancel();
-
-   bool SetClipSpeedFromDialog();
-
-   void OnPitchShiftChange(bool semitonesChanged);
-   void SetSemitoneShift();
-   void UpdateDialog();
-
-   std::weak_ptr<AudacityProject> mProject;
-   const bool mPlaybackOngoing;
-   WaveTrack& mTrack;
-   WaveTrack::Interval& mTrackInterval;
-   double mClipSpeed;
-   const double mOldClipSpeed;
    struct PitchShift
    {
       int semis = 0;
       int cents = 0;
+      bool operator==(const PitchShift& other) const
+      {
+         return semis == other.semis && cents == other.cents;
+      }
+      bool operator!=(const PitchShift& other) const
+      {
+         return !(*this == other);
+      }
    };
+
+private:
+   bool Show(bool show) override
+   {
+      return wxDialogWrapper::Show(show);
+   }
+   void SetFocus() override
+   {
+      wxDialogWrapper::SetFocus();
+   }
+
+   void PopulateOrExchange(ShuttleGui& s);
+   void SetSemitoneShift();
+   bool SetClipSpeed();
+   void UpdateDialog();
+   void UpdateHistory(const TranslatableString& desc);
+
+   struct StrongTarget
+   {
+      const std::shared_ptr<WaveTrack> track;
+      WaveTrack::Interval clip;
+   };
+
+   std::optional<StrongTarget> LockTarget();
+
+   AudacityProject& mProject;
+   const wxString mTitle;
+   Observer::Subscription mProjectCloseSubscription;
+   Observer::Subscription mAudioIOSubscription;
+   Observer::Subscription mClipDeletedSubscription;
+   Observer::Subscription mClipCentShiftChangeSubscription;
+   Observer::Subscription mClipSpeedChangeSubscription;
+   double mClipSpeed = 100;
+   double mOldClipSpeed = mClipSpeed;
    PitchShift mShift;
    PitchShift mOldShift;
+   std::weak_ptr<WaveClip> mLeftClip;
+   std::weak_ptr<WaveClip> mRightClip;
+   std::weak_ptr<WaveTrack> mTrack;
+   bool mConsolidateHistory = true;
+   bool mFirst = true;
 };

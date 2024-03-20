@@ -105,11 +105,26 @@ struct CentShiftChange
    const int newValue;
 };
 
+struct StretchRatioChange
+{
+   explicit StretchRatioChange(double newValue)
+       : newValue(newValue)
+   {
+   }
+   const double newValue;
+};
+
+struct WaveClipDtorCalled
+{
+};
+
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public XMLTagHandler,
     public ClientData::Site<WaveClip, WaveClipListener>,
-    public Observer::Publisher<CentShiftChange>
+    public Observer::Publisher<CentShiftChange>,
+    public Observer::Publisher<StretchRatioChange>,
+    public Observer::Publisher<WaveClipDtorCalled>
 {
 private:
    // It is an error to copy a WaveClip without specifying the
