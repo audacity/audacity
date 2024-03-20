@@ -83,7 +83,6 @@
              SpectroBackground: #ffff14;
                     ScrubRuler: #8f5828;
                      TimeHours: #23386a;
-                 TrackNameText: #ffff14;
                      MidiZebra: #808080;
                      MidiLines: #ffff14;
            TextNegativeNumbers: #7fbeff;
