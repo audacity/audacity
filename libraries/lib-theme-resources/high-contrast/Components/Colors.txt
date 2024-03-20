@@ -65,7 +65,6 @@
                   ProgressDone: #3cf03c;
                 ProgressNotYet: #ffffff;
                    SyncLockSel: #00ffff;
-                SelTranslucent: #686894;
                  BlankSelected: #605d60;
                    SliderLight: #000000;
                     SliderMain: #eaffea;
