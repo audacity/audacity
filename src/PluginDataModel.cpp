@@ -46,7 +46,7 @@ PluginDataModel::PluginDataModel(int filterEffectCategory,
    auto& pm = PluginManager::Get();
    for(auto& desc : pm.AllPlugins())
    {
-      if (desc.GetPluginType() != PluginTypeEffect &&
+      if ((desc.GetPluginType() != PluginTypeEffect || desc.GetEffectType() == EffectTypeHidden) &&
          desc.GetPluginType() != PluginTypeStub)
       {
          continue;
