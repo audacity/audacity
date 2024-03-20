@@ -305,6 +305,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrMeterInputClipBrush,  wxColour(255, 53, 53),     wxT("MeterInputClipBrush") );
    DEFINE_COLOUR( clrMeterInputLightPen,   wxColour(255, 153, 153),   wxT("MeterInputLightPen") );
    DEFINE_COLOUR( clrMeterInputDarkPen,    wxColour(153, 61, 61),     wxT("MeterInputDarkPen") );
+   DEFINE_COLOUR( clrMeterBackground,      wxColour(153, 61, 61),     wxT("MeterBackground") );
 
    DEFINE_COLOUR( clrMeterOutputPen,       wxColour(70, 204, 70),     wxT("MeterOutputPen") );
    DEFINE_COLOUR( clrMeterOutputBrush,     wxColour(70, 204, 70),     wxT("MeterOutputBrush") );
@@ -312,7 +313,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrMeterOutputClipBrush, wxColour(255, 53, 53),     wxT("MeterOutputClipBrush") );
    DEFINE_COLOUR( clrMeterOutputLightPen,  wxColour(153, 255, 153),   wxT("MeterOutputLightPen") );
    DEFINE_COLOUR( clrMeterOutputDarkPen,   wxColour(61, 164, 61),     wxT("MeterOutputDarkPen") );
-   DEFINE_COLOUR( clrRulerBackground,      wxColour( 93,  65,  93),   wxT("RulerBackground") );
    DEFINE_COLOUR( clrAxisLines,            wxColour(0, 0, 255),       wxT("AxisLines") );
    DEFINE_COLOUR( clrGraphLines,           wxColour(110, 110, 220),   wxT("GraphLines") );
    DEFINE_COLOUR( clrResponseLines,        wxColour(24, 169, 153),    wxT("ResponseLines") );
@@ -320,6 +320,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrWavelengthPlot,       wxColour(200, 50, 150),    wxT("WavelengthPlot") );
 
    DEFINE_COLOUR( clrEnvelope,             wxColour( 110, 110, 220),  wxT("EnvelopeColour") );
+   DEFINE_COLOUR( clrEnvelopeBackground,   wxColour( 110, 110, 220),  wxT("EnvelopeBackground") );
 
    DEFINE_COLOUR( clrMuteButtonActive,     wxColour( 160, 170, 210),  wxT("MuteButtonActive") );
    DEFINE_COLOUR( clrMuteButtonVetoed,     wxColour( 180, 180, 185),  wxT("MuteButtonVetoed") );
@@ -400,6 +401,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrClipAffordanceInactiveBrush, wxColour(  219,  219,  219),  wxT("ClipAffordanceUnselectedBrush") );
    DEFINE_COLOUR( clrClipAffordanceActiveBrush,   wxColour(  237,  237,  237),  wxT("ClipAffordanceSelectedBrush") );
    DEFINE_COLOUR( clrClipAffordanceStroke,        wxColour(  255,  255,  255),  wxT("ClipAffordanceStroke") );
+   DEFINE_COLOUR( clrClipAffordanceBackground,    wxColour(  255,  255,  255),  wxT("ClipAffordanceBackground") );
 
    DEFINE_COLOUR( clrLabelTrackTextSelection, wxColour(183, 202, 226), wxT("LabelTrackTextSelection") );
 
@@ -416,3 +418,7 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrBeatFillWeakBrush, wxColour( 0xDC, 0xDC, 0xDC ), wxT("BeatFillWeakBrush") );
    DEFINE_COLOUR( clrBeatFillStrongSelBrush, wxColour( 0xD6, 0xD6, 0xD6 ), wxT("BeatFillStrongSelBrush") );
    DEFINE_COLOUR( clrBeatFillWeakSelBrush, wxColour( 0xDC, 0xDC, 0xDC ), wxT("BeatFillWeakSelBrush") );
+
+   DEFINE_COLOUR( clrLoopEnabled,          wxColour( 93,  65,  93),   wxT("LoopEnabled") );
+   DEFINE_COLOUR( clrLoopDisabled,         wxColour( 93,  65,  93),   wxT("LoopNotEnabled") );
+ 

@@ -403,9 +403,10 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
    const auto &blankBrush = artist->blankBrush;
    const auto &selectedBrush = artist->selectedBrush;
    const auto &unselectedBrush = artist->unselectedBrush;
+   const auto &envelopeBackgroundBrush = artist->envelopeBackgroundBrush;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(blankBrush);
+   dc.SetBrush(envelopeBackgroundBrush);
    dc.DrawRectangle(rect);
 
    // Bug 2389 - always draw at least one pixel of selection.
@@ -977,7 +978,7 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
    const bool dB = !WaveformSettings::Get(channel).isLinear();
 
    const auto &blankSelectedBrush = artist->blankSelectedBrush;
-   const auto &blankBrush = artist->blankBrush;
+   const auto &blankBrush = artist->beatWeakBrush;
    TrackArt::DrawBackgroundWithSelection(
       context, rect, channel, blankSelectedBrush, blankBrush );
 

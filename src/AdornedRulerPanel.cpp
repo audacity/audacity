@@ -2412,7 +2412,7 @@ inline ColorId TimelineLimitsColor()
 
 inline ColorId TimelineLoopRegionColor(bool isActive)
 {
-   return isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+   return isActive ? clrLoopEnabled : clrLoopDisabled;
 }
 
 static inline wxColour AlphaBlend(ColorId fg, ColorId bg, double alpha)

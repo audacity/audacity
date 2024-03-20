@@ -78,6 +78,7 @@ public:
    wxBrush dragsampleBrush;// for samples which are draggable.
    wxBrush muteSampleBrush;
    wxBrush blankSelectedBrush;
+   wxBrush envelopeBackgroundBrush;
    wxPen blankPen;
    wxPen unselectedPen;
    wxPen selectedPen;
