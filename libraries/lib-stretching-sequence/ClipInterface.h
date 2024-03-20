@@ -36,6 +36,12 @@ public:
    virtual double GetStretchRatio() const = 0;
 };
 
+enum class PitchAndSpeedPreset
+{
+   Default,
+   OptimizeForVoice,
+};
+
 class STRETCHING_SEQUENCE_API ClipInterface : public ClipTimes
 {
 public:
@@ -51,6 +57,12 @@ public:
 
    [[nodiscard]] virtual Observer::Subscription
    SubscribeToCentShiftChange(std::function<void(int)> cb) const = 0;
+
+   virtual PitchAndSpeedPreset GetPitchAndSpeedPreset() const = 0;
+
+   [[nodiscard]] virtual Observer::Subscription
+   SubscribeToPitchAndSpeedPresetChange(
+      std::function<void(PitchAndSpeedPreset)> cb) const = 0;
 };
 
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;

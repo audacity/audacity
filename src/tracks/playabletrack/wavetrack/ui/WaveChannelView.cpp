@@ -24,19 +24,20 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../../images/Cursors.h"
 #include "AllThemeResources.h"
 
-#include "CommandContext.h"
 #include "../../../../HitTestResult.h"
-#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "SyncLock.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
-#include "TrackFocus.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelResizeHandle.h"
-#include "ViewInfo.h"
 #include "../../../../prefs/TracksPrefs.h"
+#include "CommandContext.h"
+#include "PitchAndSpeedDialog.h"
+#include "ProjectHistory.h"
+#include "SyncLock.h"
+#include "TrackFocus.h"
+#include "ViewInfo.h"
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
@@ -1236,6 +1237,12 @@ bool WaveChannelView::SelectNextClip(
    // create and send message to screen reader
    auto it = std::find(clips.begin(), clips.end(), clip);
    auto index = std::distance(clips.begin(), it);
+
+   auto &waveTrack = pChannel->GetTrack();
+   auto wideClipIt = waveTrack.Intervals().first;
+   std::advance(wideClipIt, waveTrack.GetClipIndex(clip->GetClip()));
+   PitchAndSpeedDialog::Get(*project)
+      .Retarget(waveTrack.SharedPointer<WaveTrack>(), *wideClipIt);
 
    auto message = XP(
    /* i18n-hint:

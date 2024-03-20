@@ -13,10 +13,11 @@
 #include "WaveChannelView.h"
 #include "ViewInfo.h"
 
-#include "WaveClip.h"
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "PitchAndSpeedDialog.h"
 #include "ProjectHistory.h"
+#include "WaveClip.h"
 
 #include <wx/event.h>
 
@@ -66,6 +67,7 @@ bool WaveTrackAffordanceHandle::HandlesRightClick()
 UIHandle::Result WaveTrackAffordanceHandle::Release(const TrackPanelMouseEvent& event, AudacityProject* pProject, wxWindow* pParent)
 {
     auto result = AffordanceHandle::Release(event, pProject, pParent);
+    PitchAndSpeedDialog::Get(*pProject).TryRetarget(event);
 
     if (event.event.RightUp())
         result |= event.pCell->DoContextMenu(event.rect, pParent, nullptr, pProject);

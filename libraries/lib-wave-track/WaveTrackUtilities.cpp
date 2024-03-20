@@ -23,6 +23,7 @@ WaveTrackUtilities::AllClipsIterator::AllClipsIterator(WaveTrack &track)
    }
 }
 
+
 auto WaveTrackUtilities::AllClipsIterator::operator *() const -> value_type
 {
    if (mStack.empty())
@@ -441,4 +442,15 @@ ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
       return BaseProjectFormatVersion;
    }
 );
+}
+
+void WaveTrackUtilities::ExpandClipTillNextOne(
+   const WaveTrack& track, WaveTrack::Interval& interval)
+{
+   if (
+      const auto nextClip =
+         track.GetNextInterval(interval, PlaybackDirection::forward))
+   {
+      interval.StretchRightTo(nextClip->GetPlayStartTime());
+   }
 }

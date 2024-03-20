@@ -126,7 +126,7 @@ public:
    // Returns the rectangle for this object (id = 0) or a child element (id > 0).
    // rect is in screen coordinates.
    wxAccStatus GetLocation(wxRect& rect, int elementId) override;
-   
+
    // Returns a role constant.
    wxAccStatus GetRole(int childId, wxAccRole *role) override;
 
@@ -361,7 +361,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    wxColour backgroundColour = theTheme.Colour( clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
    SetBackgroundColour( backgroundColour );
-   
+
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
    mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
@@ -650,7 +650,7 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                   if( (i%7)<2 ){
                      AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
                   } else {
-                     // The LEDs have triangular ends.  
+                     // The LEDs have triangular ends.
                      // This code shapes the ends.
                      int j = abs( (i%7)-4);
                      AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
@@ -743,7 +743,7 @@ void MeterPanel::OnMouse(wxMouseEvent &evt)
       ShowMenu(evt.GetPosition());
    else
    {
-      
+
       if (mSlider)
          mSlider->OnMouseEvent(evt);
    }
@@ -1312,7 +1312,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
       {
          SetActiveStyle(width > height ? HorizontalStereo : VerticalStereo);
       }
-   
+
       if (mStyle == HorizontalStereoCompact || mStyle == HorizontalStereo)
       {
          SetActiveStyle(height < 50 ? HorizontalStereoCompact : HorizontalStereo);
@@ -1321,7 +1321,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
       {
          SetActiveStyle(width < 100 ? VerticalStereoCompact : VerticalStereo);
       }
-   
+
       if (mLeftSize.GetWidth() == 0)  // Not yet initialized to dc.
       {
          dc.GetTextExtent(mLeftText, &mLeftSize.x, &mLeftSize.y);
@@ -1471,7 +1471,7 @@ void MeterPanel::HandleLayout(wxDC &dc)
 
       // Add a gap between bottom of icon and bottom of window
       height -= gap;
-      
+
       left = gap;
 
       // Make sure there's room for icon and gap between the bottom of the meter and icon
@@ -1805,7 +1805,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // (w - 1) corresponds to the mRuler.SetBounds() in HandleLayout()
          wd = (int)(bar->rms * (w - 1) + 0.5);
 
-         // Draw the rms level 
+         // Draw the rms level
          // +1 to include the rms position
          dc.SetPen(*wxTRANSPARENT_PEN);
          dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
@@ -1863,7 +1863,7 @@ void MeterPanel::StartMonitoring()
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
-   } 
+   }
 
    if (start && !gAudioIO->IsBusy()){
       AudacityProject *p = mProject;
@@ -1881,7 +1881,7 @@ void MeterPanel::StopMonitoring(){
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsMonitoring()){
       gAudioIO->StopStream();
-   } 
+   }
 }
 
 void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
@@ -1907,7 +1907,9 @@ void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
 
 void MeterPanel::OnAudioCapture(AudioIOEvent event)
 {
-   if (event.type == AudioIOEvent::CAPTURE && event.pProject != mProject)
+   if (
+      event.type == AudioIOEvent::CAPTURE &&
+      (event.pProject != mProject || !event.on))
    {
       mEnabled = !event.on;
 
@@ -2083,7 +2085,7 @@ void MeterPanel::OnPreferences(wxCommandEvent & WXUNUSED(event))
 
       gPrefs->Flush();
 
-      // Currently, there are 2 playback meters and 2 record meters and any number of 
+      // Currently, there are 2 playback meters and 2 record meters and any number of
       // mixerboard meters, so we have to send out an preferences updated message to
       // ensure they all update themselves.
       PrefsListener::Broadcast(MeterPrefsID());

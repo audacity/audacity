@@ -203,13 +203,38 @@ struct CentShiftChange
    const int newValue;
 };
 
+struct PitchAndSpeedPresetChange
+{
+   explicit PitchAndSpeedPresetChange(PitchAndSpeedPreset newValue)
+       : newValue(newValue)
+   {
+   }
+   const PitchAndSpeedPreset newValue;
+};
+
+struct StretchRatioChange
+{
+   explicit StretchRatioChange(double newValue)
+       : newValue(newValue)
+   {
+   }
+   const double newValue;
+};
+
+struct WaveClipDtorCalled
+{
+};
+
 class WAVE_TRACK_API WaveClip final :
     public ClipInterface,
     public WideChannelGroupInterval,
     public XMLTagHandler,
     public ClientData::Site<
       WaveClip, WaveClipListener, ClientData::DeepCopying>,
-    public Observer::Publisher<CentShiftChange>
+    public Observer::Publisher<CentShiftChange>,
+    public Observer::Publisher<PitchAndSpeedPresetChange>,
+    public Observer::Publisher<StretchRatioChange>,
+    public Observer::Publisher<WaveClipDtorCalled>
 {
 private:
    struct CreateToken{ bool emptyCopy = false; };
@@ -318,6 +343,8 @@ public:
    void SetRate(int rate);
    void SetRawAudioTempo(double tempo);
 
+   PitchAndSpeedPreset GetPitchAndSpeedPreset() const;
+
    //! Stretches from left to the absolute time (if in expected range)
    void StretchLeftTo(double to);
    //! Sets from the right to the absolute time (if in expected range)
@@ -341,8 +368,13 @@ public:
    [[nodiscard]] Observer::Subscription
    SubscribeToCentShiftChange(std::function<void(int)> cb) const override;
 
-   //! Resample clip. This also will set the rate, but without changing
-   //! the length of the clip
+   void SetPitchAndSpeedPreset(PitchAndSpeedPreset preset);
+   [[nodiscard]] virtual Observer::Subscription
+   SubscribeToPitchAndSpeedPresetChange(
+      std::function<void(PitchAndSpeedPreset)> cb) const override;
+
+   // Resample clip. This also will set the rate, but without changing
+   // the length of the clip
    void Resample(int rate, BasicUI::ProgressDialog *progress = nullptr);
 
    double GetSequenceStartTime() const noexcept;
@@ -914,6 +946,7 @@ private:
    double mTrimRight { 0 };
    //! @}
 
+   PitchAndSpeedPreset mPitchAndSpeedPreset { PitchAndSpeedPreset::Default };
    int mCentShift { 0 };
 
    // Used in GetStretchRatio which computes the factor, by which the sample

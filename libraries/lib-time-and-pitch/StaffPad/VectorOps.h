@@ -140,7 +140,7 @@ inline void calcNorms(const std::complex<float>* src, float* dst, int32_t n)
 inline void rotate(const float* oldPhase, const float* newPhase, std::complex<float>* dst, int32_t n)
 {
   for (int32_t i = 0; i < n; i++) {
-    auto theta = newPhase[i] - oldPhase[i];
+    const auto theta = oldPhase ? newPhase[i] - oldPhase[i] : newPhase[i];
     dst[i] *= std::complex<float>(cosf(theta), sinf(theta));
   }
 }

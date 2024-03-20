@@ -119,6 +119,8 @@ WaveTrack::IntervalHolder GetRenderedCopy(
    TimeAndPitchInterface::Parameters params;
    params.timeRatio = stretchRatio;
    params.pitchRatio = std::pow(2., interval.GetCentShift() / 1200.);
+   params.preserveFormants =
+      interval.GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
    StaffPadTimeAndPitch stretcher { interval.GetRate(), numChannels,
                                     stretcherSource, std::move(params) };
 

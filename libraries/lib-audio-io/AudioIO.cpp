@@ -693,7 +693,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                (latencyDuration / 1000.0) :
                // Otherwise, use the (likely incorrect) latency reported by PA
                stream->outputLatency;
-         
+
          mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
 #ifdef __WXGTK__
          // DV: When using ALSA PortAudio does not report the buffer size.
@@ -1629,7 +1629,6 @@ void AudioIO::StopStream()
 
    mInputMeter.reset();
    mOutputMeter.reset();
-   ResetOwningProject();
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
@@ -1666,6 +1665,8 @@ void AudioIO::StopStream()
                : AudioIOEvent::CAPTURE,
             false });
    }
+
+   ResetOwningProject();
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;

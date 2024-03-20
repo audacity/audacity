@@ -1,5 +1,8 @@
 #include "StaffPadTimeAndPitch.h"
-
+#include "DummyFormantShifterLogger.h"
+#include "FormantShifterLogger.h"
+#include "StaffPad/FourierTransform_pffft.h"
+#include "TimeAndPitchExperimentalSettings.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
@@ -19,38 +22,85 @@ void GetOffsetBuffer(
       offsetBuffer[i] = buffer[i] + offset;
 }
 
-std::unique_ptr<staffpad::TimeAndPitch> MaybeCreateTimeAndPitch(
-   int sampleRate, size_t numChannels,
-   const TimeAndPitchInterface::Parameters& params)
+int GetFftSize(int sampleRate, bool formantPreservationOn)
 {
-   const auto timeRatio = params.timeRatio.value_or(1.);
-   const auto pitchRatio = params.pitchRatio.value_or(1.);
    if (
-      TimeAndPitchInterface::IsPassThroughMode(timeRatio) &&
-      TimeAndPitchInterface::IsPassThroughMode(pitchRatio))
-   {
-      return nullptr;
-   }
-   auto timeAndPitch = std::make_unique<staffpad::TimeAndPitch>(sampleRate);
+      const auto fftSize =
+         TimeAndPitchExperimentalSettings::GetFftSizeOverride())
+      return *fftSize;
+
+   // 44.1kHz maps to 4096 samples (i.e., 93ms) without formant preservation,
+   // and 2048 with.
+   // We grow the FFT size proportionally with the sample rate to keep the
+   // window duration roughly constant, with quantization due to the
+   // power-of-two constraint.
+   // If needed some time in the future, we can decouple analysis window and
+   // FFT sizes by zero-padding, allowing for very fine-grained window duration
+   // without compromising performance.
+   return 1 << (formantPreservationOn ? 11 : 12) +
+                  (int)std::round(std::log2(sampleRate / 44100.));
+}
+
+std::unique_ptr<staffpad::TimeAndPitch> CreateTimeAndPitch(
+   int sampleRate, size_t numChannels,
+   const TimeAndPitchInterface::Parameters& params, FormantShifter& shifter)
+{
+   const auto fftSize = GetFftSize(sampleRate, params.preserveFormants);
+   auto shiftTimbreCb = params.preserveFormants && params.pitchRatio != 1. ?
+                           [&](
+                              double factor, std::complex<float>* spectrum,
+                              const float* magnitude) {
+                              shifter.Process(magnitude, spectrum, factor);
+                           } :
+                           staffpad::TimeAndPitch::ShiftTimbreCb {};
+   auto timeAndPitch = std::make_unique<staffpad::TimeAndPitch>(
+      fftSize,
+      TimeAndPitchExperimentalSettings::GetReduceImagingOverride().value_or(
+         true),
+      std::move(shiftTimbreCb));
+
    timeAndPitch->setup(static_cast<int>(numChannels), maxBlockSize);
-   timeAndPitch->setTimeStretchAndPitchFactor(timeRatio, pitchRatio);
+   timeAndPitch->setTimeStretchAndPitchFactor(
+      params.timeRatio, params.pitchRatio);
+
    return timeAndPitch;
+}
+
+std::unique_ptr<FormantShifterLoggerInterface>
+GetFormantShifterLogger(int sampleRate)
+{
+   if (
+      const auto logSample =
+         TimeAndPitchExperimentalSettings::GetLogSample(sampleRate))
+      return std::make_unique<FormantShifterLogger>(sampleRate, *logSample);
+   return std::make_unique<DummyFormantShifterLogger>();
 }
 } // namespace
 
 StaffPadTimeAndPitch::StaffPadTimeAndPitch(
    int sampleRate, size_t numChannels, TimeAndPitchSource& audioSource,
    const Parameters& parameters)
-    : mAudioSource(audioSource)
+    : mSampleRate(sampleRate)
+    , mParameters(parameters)
+    , mFormantShifterLogger(GetFormantShifterLogger(sampleRate))
+    , mFormantShifter(
+         sampleRate,
+         TimeAndPitchExperimentalSettings::GetCutoffQuefrencyOverride()
+            .value_or(0.002),
+         *mFormantShifterLogger)
+    , mAudioSource(audioSource)
     , mReadBuffer(maxBlockSize, numChannels)
-    , mSampleRate(sampleRate)
     , mNumChannels(numChannels)
-    , mTimeRatio(parameters.timeRatio.value_or(1.))
-    , mPitchRatio(parameters.pitchRatio.value_or(1.))
-    , mTimeAndPitch(
-         MaybeCreateTimeAndPitch(sampleRate, numChannels, parameters))
 {
-   BootStretcher();
+   if (mParameters.preserveFormants)
+      mFormantShifter.Reset(
+         GetFftSize(sampleRate, parameters.preserveFormants));
+   if (
+      !TimeAndPitchInterface::IsPassThroughMode(mParameters.timeRatio) ||
+      // No need for sophisticated comparison for pitch ratio, as our UI doesn't
+      // allow changes smaller than a cent.
+      mParameters.pitchRatio != 1.)
+      InitializeStretcher();
 }
 
 void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
@@ -58,10 +108,6 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
    if (!mTimeAndPitch)
       // Pass-through
       return mAudioSource.Pull(output, outputLen);
-
-   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
-   // No need to re-check for `mTimeAndPitch`, because once set it's never
-   // unset.
 
    auto numOutputSamples = 0u;
    while (numOutputSamples < outputLen)
@@ -82,6 +128,7 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
          {
             const auto numSamplesToFeed = std::min(numRequired, maxBlockSize);
             mAudioSource.Pull(mReadBuffer.Get(), numSamplesToFeed);
+            mFormantShifterLogger->NewSamplesComing(numSamplesToFeed);
             mTimeAndPitch->feedAudio(mReadBuffer.Get(), numSamplesToFeed);
             numRequired -= numSamplesToFeed;
          }
@@ -106,32 +153,35 @@ void StaffPadTimeAndPitch::GetSamples(float* const* output, size_t outputLen)
 
 void StaffPadTimeAndPitch::OnCentShiftChange(int cents)
 {
-   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
-   // We don't unset `mTimeAndPitch` here, only reset it. If for some reason
-   // this needs to change, then `BootStretcher` and `GetSamples` need
-   // double-checked locking.
-
-   mPitchRatio = std::pow(2., cents / 1200.);
+   mParameters.pitchRatio = std::pow(2., cents / 1200.);
+   // If pitch shifing was zero before, now it isn't. If it was non-zero before,
+   // we don't unset the stretcher even if the new pitch shift is zero, or
+   // someone playing around with the effect could hear glitches.
    if (!mTimeAndPitch)
-      mTimeAndPitch = MaybeCreateTimeAndPitch(
-         mSampleRate, mNumChannels,
-         TimeAndPitchInterface::Parameters { mTimeRatio, mPitchRatio });
+      InitializeStretcher();
    else
-      mTimeAndPitch->setTimeStretchAndPitchFactor(mTimeRatio, mPitchRatio);
+      mTimeAndPitch->setTimeStretchAndPitchFactor(
+         mParameters.timeRatio, mParameters.pitchRatio);
 }
 
-void StaffPadTimeAndPitch::BootStretcher()
+void StaffPadTimeAndPitch::OnFormantPreservationChange(bool preserve)
 {
-   if (!mTimeAndPitch)
-      // Bypass
-      return;
+   mParameters.preserveFormants = preserve;
+   const auto fftSize = GetFftSize(mSampleRate, preserve);
+   preserve ? mFormantShifter.Reset(fftSize) : mFormantShifter.Reset();
+   // FFT size is a constant of the stretcher, so we need to reset it - if there
+   // is a stretcher.
+   if (mTimeAndPitch)
+      InitializeStretcher();
+}
 
-   std::lock_guard<std::mutex> lock(mTimeAndPitchMutex);
-   // No need to re-check for `mTimeAndPitch`, because once set it's never
-   // unset.
-
+void StaffPadTimeAndPitch::InitializeStretcher()
+{
+   mTimeAndPitch = CreateTimeAndPitch(
+      mSampleRate, mNumChannels, mParameters, mFormantShifter);
    auto numOutputSamplesToDiscard =
-      mTimeAndPitch->getLatencySamplesForStretchRatio(mTimeRatio * mPitchRatio);
+      mTimeAndPitch->getLatencySamplesForStretchRatio(
+         mParameters.timeRatio * mParameters.pitchRatio);
    AudioContainer container(maxBlockSize, mNumChannels);
    while (numOutputSamplesToDiscard > 0)
    {

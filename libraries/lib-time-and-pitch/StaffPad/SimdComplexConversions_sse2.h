@@ -332,10 +332,9 @@ inline void rotate_parallel_simd_aligned(
    for (int i = 0; i <= n - 4; i += 4)
    {
       auto [sin, cos] = sincos_ps(
-         _mm_sub_ps(
-            _mm_load_ps(newPhase + i),
-            _mm_load_ps(oldPhase + i)));
-
+         oldPhase ?
+            _mm_sub_ps(_mm_load_ps(newPhase + i), _mm_load_ps(oldPhase + i)) :
+            _mm_load_ps(newPhase + i));
 
       // Safe according to C++ standard
       auto p1 = _mm_load_ps(reinterpret_cast<float*>(output + i));
@@ -347,7 +346,7 @@ inline void rotate_parallel_simd_aligned(
       auto rp = _mm_shuffle_ps(p1, p2, _MM_SHUFFLE(2, 0, 2, 0));
       auto ip = _mm_shuffle_ps(p1, p2, _MM_SHUFFLE(3, 1, 3, 1));
 
-      
+
       // We need to calculate (rp, ip) * (cos, sin) -> (rp*cos - ip*sin, rp*sin + ip*cos)
 
       auto out_rp = _mm_sub_ps(_mm_mul_ps(rp, cos), _mm_mul_ps(ip, sin));
@@ -362,7 +361,7 @@ inline void rotate_parallel_simd_aligned(
    // deal with last partial packet
    for (int i = n & (~3); i < n; ++i)
    {
-      auto theta = newPhase[i] - oldPhase[i];
+      const auto theta = oldPhase ? newPhase[i] - oldPhase[i] : newPhase[i];
       output[i] *= std::complex<float>(cosf(theta), sinf(theta));
    }
 }

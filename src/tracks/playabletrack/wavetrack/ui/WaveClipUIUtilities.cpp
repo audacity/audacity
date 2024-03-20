@@ -11,10 +11,7 @@
 #include "WaveClipUIUtilities.h"
 
 #include "PitchAndSpeedDialog.h"
-#include "Project.h"
-#include "ProjectAudioIO.h"
 #include "ProjectHistory.h"
-#include "ProjectWindows.h"
 #include "SampleCount.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
@@ -108,19 +105,6 @@ void WaveClipUIUtilities::PushClipSpeedChangedUndoState(
          percent */
       XO("Changed Speed to %.01f%%").Format(speedInPercent),
       UndoPush::CONSOLIDATE);
-}
-
-void WaveClipUIUtilities::ShowClipPitchAndSpeedDialog(
-   AudacityProject& project, WaveTrack& track, WaveTrack::Interval& interval,
-   std::optional<PitchAndSpeedDialogFocus> focus)
-{
-   PitchAndSpeedDialog dlg(
-      project.weak_from_this(), ProjectAudioIO::Get(project).IsAudioActive(),
-      track, interval, &GetProjectFrame(project), focus);
-   if (wxID_OK == dlg.ShowModal())
-      ProjectHistory::Get(project).PushState(
-         XO("Changed Pitch and Speed"), XO("Changed Pitch and Speed"),
-         UndoPush::CONSOLIDATE);
 }
 
 void WaveClipUIUtilities::SelectClip(

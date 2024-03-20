@@ -184,6 +184,9 @@ WAVE_TRACK_API void InspectBlocks(const TrackList &tracks,
  */
 WAVE_TRACK_API WaveTrack::IntervalConstHolders
 GetClipsIntersecting(const WaveTrack &track, double t0, double t1);
-}
+
+WAVE_TRACK_API void
+ExpandClipTillNextOne(const WaveTrack& track, WaveTrack::Interval& interval);
+} // namespace WaveTrackUtilities
 
 #endif

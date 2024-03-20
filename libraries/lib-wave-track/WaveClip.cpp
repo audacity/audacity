@@ -239,6 +239,7 @@ WaveClip::WaveClip(
    const WaveClip& orig, const SampleBlockFactoryPtr& factory,
    bool copyCutlines, CreateToken token)
    : mCentShift { orig.mCentShift }
+   , mPitchAndSpeedPreset { orig.mPitchAndSpeedPreset }
    , mClipStretchRatio { orig.mClipStretchRatio }
    , mRawAudioTempo { orig.mRawAudioTempo }
    , mProjectTempo { orig.mProjectTempo }
@@ -333,6 +334,7 @@ WaveClip::WaveClip(
 
 WaveClip::~WaveClip()
 {
+   Observer::Publisher<WaveClipDtorCalled>::Publish(WaveClipDtorCalled {});
 }
 
 double WaveClip::Start() const
@@ -560,6 +562,8 @@ void WaveClip::OnProjectTempoChange(
       mEnvelope->RescaleTimesBy(ratioChange);
    }
    mProjectTempo = newTempo;
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchLeftTo(double to)
@@ -577,6 +581,8 @@ void WaveClip::StretchLeftTo(double to)
    mEnvelope->SetOffset(mSequenceOffset);
    mEnvelope->RescaleTimesBy(ratioChange);
    StretchCutLines(ratioChange);
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchRightTo(double to)
@@ -600,6 +606,8 @@ void WaveClip::StretchBy(double ratio)
    mEnvelope->SetOffset(mSequenceOffset);
    mEnvelope->RescaleTimesBy(ratio);
    StretchCutLines(ratio);
+   Observer::Publisher<StretchRatioChange>::Publish(
+      StretchRatioChange { GetStretchRatio() });
 }
 
 void WaveClip::StretchCutLines(double ratioChange)
@@ -633,8 +641,21 @@ WaveClip::SubscribeToCentShiftChange(std::function<void(int)> cb) const
 {
    // Consider the list of subcribers as a mutable member that doesn't change
    // real state
-   return const_cast<WaveClip*>(this)
-      ->Subscribe([cb](const CentShiftChange& cents) { cb(cents.newValue); });
+   return const_cast<WaveClip*>(this)->
+   Observer::Publisher<CentShiftChange>::Subscribe(
+      [cb](const CentShiftChange& cents) { cb(cents.newValue); });
+}
+
+Observer::Subscription WaveClip::SubscribeToPitchAndSpeedPresetChange(
+   std::function<void(PitchAndSpeedPreset)> cb) const
+{
+   // Consider the list of subcribers as a mutable member that doesn't change
+   // real state
+   return const_cast<WaveClip*>(this)->
+   Observer::Publisher<PitchAndSpeedPresetChange>::Subscribe(
+      [cb](const PitchAndSpeedPresetChange& formant) {
+         cb(formant.newValue);
+      });
 }
 
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
@@ -918,6 +939,7 @@ static constexpr auto Offset_attr = "offset";
 static constexpr auto TrimLeft_attr = "trimLeft";
 static constexpr auto TrimRight_attr = "trimRight";
 static constexpr auto CentShiftAttr = "centShift";
+static constexpr auto PitchAndSpeedPreset_attr = "pitchAndSpeedPreset";
 static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
 static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
 static constexpr auto Name_attr = "name";
@@ -956,6 +978,12 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             if (!value.TryGet(dblValue))
                return false;
             mCentShift = dblValue;
+         }
+         else if (attr == PitchAndSpeedPreset_attr)
+         {
+            if (!value.TryGet(longValue))
+               return false;
+            mPitchAndSpeedPreset = static_cast<PitchAndSpeedPreset>(longValue);
          }
          else if (attr == RawAudioTempo_attr)
          {
@@ -1050,6 +1078,8 @@ void WaveClip::WriteXML(size_t ii, XMLWriter &xmlFile) const
    xmlFile.WriteAttr(TrimLeft_attr, mTrimLeft, 8);
    xmlFile.WriteAttr(TrimRight_attr, mTrimRight, 8);
    xmlFile.WriteAttr(CentShiftAttr, mCentShift);
+   xmlFile.WriteAttr(PitchAndSpeedPreset_attr,
+      static_cast<long>(mPitchAndSpeedPreset));
    xmlFile.WriteAttr(RawAudioTempo_attr, mRawAudioTempo.value_or(0.), 8);
    xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
    xmlFile.WriteAttr(Name_attr, mName);
@@ -1562,8 +1592,20 @@ bool WaveClip::SetCentShift(int cents)
       cents > TimeAndPitchInterface::MaxCents)
       return false;
    mCentShift = cents;
-   Publish(CentShiftChange { cents });
+   Observer::Publisher<CentShiftChange>::Publish(CentShiftChange { cents });
    return true;
+}
+
+void WaveClip::SetPitchAndSpeedPreset(PitchAndSpeedPreset preset)
+{
+   mPitchAndSpeedPreset = preset;
+   Observer::Publisher<PitchAndSpeedPresetChange>::Publish(
+      PitchAndSpeedPresetChange { mPitchAndSpeedPreset });
+}
+
+PitchAndSpeedPreset WaveClip::GetPitchAndSpeedPreset() const
+{
+   return mPitchAndSpeedPreset;
 }
 
 /*! @excsafety{Strong} */

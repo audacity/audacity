@@ -24,13 +24,13 @@ wxRect RemoveSpaceReservedForTitle(const wxRect& rect)
    return { rect.x + toRemove, rect.y, rect.width - toRemove, rect.height };
 }
 
-int GetButtonWidth(ClipButtonId buttonId)
+int GetButtonWidth(ClipButtonId buttonId, const ClipInterface& clip)
 {
    return buttonId == ClipButtonId::Overflow ?
-             ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth() :
+             ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth(clip) :
           buttonId == ClipButtonId::Speed ?
-             ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth() :
-             ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth();
+             ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth(clip) :
+             ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth(clip);
 }
 } // namespace
 
@@ -46,17 +46,19 @@ std::optional<wxRect> LowlitClipButton::Detail::GetButtonRectangle(
    auto offset = 0;
    if (buttonId != ClipButtonId::Overflow)
    {
-      offset += ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth();
+      offset +=
+         ClipButtonSpecializations<ClipButtonId::Overflow>::GetWidth(args.clip);
       if (
          buttonId == ClipButtonId::Pitch &&
          ClipButtonSpecializations<ClipButtonId::Speed>::NeedsDrawing(
             args.clip))
       {
-         offset += ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth();
+         offset +=
+            ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth(args.clip);
       }
    }
 
-   const auto buttonWidth = GetButtonWidth(buttonId);
+   const auto buttonWidth = GetButtonWidth(buttonId, args.clip);
    if (rect.width < buttonWidth + offset)
       return {};
    const auto x = rect.x + rect.width - offset - buttonWidth;

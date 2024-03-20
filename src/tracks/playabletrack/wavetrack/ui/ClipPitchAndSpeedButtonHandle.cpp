@@ -37,7 +37,7 @@ wxString GetPitchShiftText(int clipCentShift)
       pitchShiftText = wxString::Format("%.2f", std::abs(clipCentShift) / 100.);
       while (pitchShiftText.EndsWith("0"))
          pitchShiftText.RemoveLast();
-      if (pitchShiftText.EndsWith("."))
+      if (pitchShiftText.EndsWith(".") || pitchShiftText.EndsWith(","))
          pitchShiftText.RemoveLast();
    }
    return pitchShiftText;
@@ -144,14 +144,16 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
    }
    else
    {
-      const auto focus = mType == Type::Pitch ?
-                            PitchAndSpeedDialogFocus::Pitch :
-                            PitchAndSpeedDialogFocus::Speed;
+      const auto focusedGroup = mType == Type::Pitch ?
+                                   PitchAndSpeedDialogGroup::Pitch :
+                                   PitchAndSpeedDialogGroup::Speed;
       BasicUI::CallAfter([project = pProject->weak_from_this(), track = mTrack,
-                          clip = mClip, focus] {
+                          clip = mClip, focusedGroup] {
          if (auto pProject = project.lock())
-            WaveClipUIUtilities::ShowClipPitchAndSpeedDialog(
-               *pProject, *track, *clip, focus);
+            PitchAndSpeedDialog::Get(*pProject)
+               .Retarget(track, clip)
+               .SetFocus(focusedGroup)
+               .Show();
       });
    }
    return RefreshCode::RefreshNone;
@@ -184,12 +186,15 @@ void ClipPitchAndSpeedButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
       ClipButtonSpecializations<ClipButtonId::Speed>::DrawOnClip(args);
 }
 
-int ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth()
+int ClipButtonSpecializations<ClipButtonId::Pitch>::GetWidth(
+   const ClipInterface& clip)
 {
-   return 30;
+   // If we are to show some decimals, reserve a bit more space.
+   return clip.GetCentShift() % 100 == 0 ? 30 : 50;
 }
 
-int ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth()
+int ClipButtonSpecializations<ClipButtonId::Speed>::GetWidth(
+   const ClipInterface&)
 {
    return 60;
 }

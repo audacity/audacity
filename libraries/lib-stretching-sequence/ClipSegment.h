@@ -14,8 +14,8 @@
 #include "ClipTimeAndPitchSource.h"
 #include "Observer.h"
 #include "PlaybackDirection.h"
-
 #include <memory>
+#include <mutex>
 
 class ClipInterface;
 class TimeAndPitchInterface;
@@ -42,8 +42,11 @@ private:
    const sampleCount mTotalNumSamplesToProduce;
    sampleCount mTotalNumSamplesProduced = 0;
    ClipTimeAndPitchSource mSource;
-   // Careful that this guy is constructed last, as its ctor refers to *this.
+   std::mutex mStretcherMutex;
+   // Careful that this guy is constructed after `mSource`, which it refers to
+   // in its ctor.
    // todo(mhodgkinson) make this safe.
    std::unique_ptr<TimeAndPitchInterface> mStretcher;
    Observer::Subscription mOnSemitoneShiftChangeSubscription;
+   Observer::Subscription mOnFormantPreservationChangeSubscription;
 };

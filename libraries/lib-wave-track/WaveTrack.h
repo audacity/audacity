@@ -713,9 +713,11 @@ private:
    //! Erase all attachments for a given index
    void EraseChannelAttachments(size_t index);
 
+public:
    //! Get the linear index of a given clip (== number of clips if not found)
    int GetClipIndex(const Interval &clip) const;
 
+private:
    // May assume precondition: t0 <= t1
    void HandleClear(
       double t0, double t1, bool addCutLines, bool split,
