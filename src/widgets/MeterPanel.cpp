@@ -363,7 +363,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
    SetBackgroundColour( backgroundColour );
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
-   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
    mAudioIOStatusSubscription = AudioIO::Get()
       ->Subscribe(*this, &MeterPanel::OnAudioIOStatus);
