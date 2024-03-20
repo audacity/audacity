@@ -17,6 +17,7 @@ This class now lists
 - Clips
 - Labels
 - Boxes
+- Time
 
 *//*******************************************************************/
 
@@ -42,6 +43,8 @@ This class now lists
 #include "NoteTrack.h"
 #include "TimeTrack.h"
 #include "Envelope.h"
+#include "ProjectAudioIO.h"
+#include "AudioIO.h"
 
 #include "SelectCommand.h"
 #include "ShuttleGui.h"
@@ -71,6 +74,7 @@ enum {
    kEnvelopes,
    kLabels,
    kBoxes,
+   kTime,
    nTypes
 };
 
@@ -85,6 +89,7 @@ static const EnumValueSymbol kTypes[nTypes] =
    { XO("Envelopes") },
    { XO("Labels") },
    { XO("Boxes") },
+   { XO("Time") },
 };
 
 enum {
@@ -170,6 +175,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kEnvelopes    : return SendEnvelopes( context );
       case kLabels       : return SendLabels( context );
       case kBoxes        : return SendBoxes( context );
+      case kTime         : return SendTime( context );
       default:
          context.Status( "Command options not recognised" );
    }
@@ -617,6 +623,29 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
       // Per track numbering counts all tracks
       i++;
    }
+   context.EndArray();
+
+   return true;
+}
+
+bool GetInfoCommand::SendTime(const CommandContext &context)
+{
+   context.StartArray();
+   
+   double audioTime;
+
+   auto &projectAudioIO = ProjectAudioIO::Get( context.project );
+   if (projectAudioIO.IsAudioActive()) {
+      auto gAudioIO = AudioIO::Get();
+      audioTime = gAudioIO->GetStreamTime();
+   }
+   else {
+      const auto &playRegion = ViewInfo::Get( context.project ).playRegion;
+      audioTime = playRegion.GetStart();
+   }
+
+   context.AddItem(audioTime, "CurrentPosition"); // Send cursor position
+   
    context.EndArray();
 
    return true;
