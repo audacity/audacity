@@ -602,9 +602,6 @@ void AColor::Init()
    theTheme.SetBrushColour( indicatorBrush[1], clrPlaybackBrush);
 
    theTheme.SetBrushColour( playRegionBrush[0],clrRulerRecordingBrush);
-   // theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);
-   // theTheme.SetBrushColour( playRegionBrush[1],clrRulerPlaybackBrush);
-   // theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
 
    //Determine tooltip color
    tooltipPen.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOTEXT) );

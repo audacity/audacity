@@ -39,9 +39,6 @@
                 RecordingBrush: #e04948;
                  PlaybackBrush: #75d570;
            RulerRecordingBrush: #c4c4c4;
-             RulerRecordingPen: #808080;
-            RulerPlaybackBrush: #be8181;
-              RulerPlaybackPen: #b0001c;
                       TimeFont: #00ff00;
                       TimeBack: #000000;
                  TimeFontFocus: #000000;
