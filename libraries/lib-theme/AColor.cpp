@@ -58,8 +58,6 @@ wxBrush AColor::labelTextEditBrush;
 wxBrush AColor::labelUnselectedBrush;
 wxBrush AColor::labelSelectedBrush;
 wxBrush AColor::labelSyncLockSelBrush;
-wxPen AColor::labelUnselectedPen;
-wxPen AColor::labelSelectedPen;
 wxPen AColor::labelSyncLockSelPen;
 wxPen AColor::labelSurroundPen;
 wxPen AColor::trackFocusPens[3];
@@ -584,8 +582,6 @@ void AColor::Init()
    theTheme.SetBrushColour( labelUnselectedBrush,  clrLabelUnselectedBrush );
    theTheme.SetBrushColour( labelSelectedBrush,    clrLabelSelectedBrush );
    theTheme.SetBrushColour( labelSyncLockSelBrush, clrSyncLockSel );
-   theTheme.SetPenColour( labelUnselectedPen,   clrLabelUnselectedPen );
-   theTheme.SetPenColour( labelSelectedPen,     clrLabelSelectedPen );
    theTheme.SetPenColour( labelSyncLockSelPen,  clrSyncLockSel );
    theTheme.SetPenColour( labelSurroundPen,     clrLabelSurroundPen );
 

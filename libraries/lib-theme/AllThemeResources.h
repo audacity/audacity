@@ -333,8 +333,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrLabelTextEditBrush,   wxColour(   255,255,255),  wxT("LabelTextEditBrush") );
    DEFINE_COLOUR( clrLabelUnselectedBrush, wxColour(   192,192,192),  wxT("LabelUnselectedBrush") );
    DEFINE_COLOUR( clrLabelSelectedBrush,   wxColour(   148,148,170),  wxT("LabelSelectedBrush") );
-   DEFINE_COLOUR( clrLabelUnselectedPen,   wxColour(   192,192,192),  wxT("LabelUnselectedPen") );
-   DEFINE_COLOUR( clrLabelSelectedPen,     wxColour(   148,148,170),  wxT("LabelSelectedPen") );
    DEFINE_COLOUR( clrLabelSurroundPen,     wxColour(     0,  0,  0),  wxT("LabelSurroundPen") );
 
    DEFINE_COLOUR( clrTrackFocus0,          wxColour( 200, 200, 200),  wxT("TrackFocus0") );

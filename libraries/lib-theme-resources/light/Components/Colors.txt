@@ -47,8 +47,6 @@
             LabelTextEditBrush: #ffffff;
           LabelUnselectedBrush: #c0c0c0;
             LabelSelectedBrush: #ebf2ff;
-            LabelUnselectedPen: #c0c0c0;
-              LabelSelectedPen: #ebf2ff;
               LabelSurroundPen: #000000;
                    TrackFocus0: #ffff80;
                    TrackFocus1: #d7d78a;
