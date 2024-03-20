@@ -96,7 +96,6 @@ public:
    wxPen muteSamplePen;
    wxPen odProgressNotYetPen;
    wxPen odProgressDonePen;
-   wxPen shadowPen;
    wxPen clippedPen;
    wxPen muteClippedPen;
    wxPen blankSelectedPen;

@@ -8,7 +8,6 @@
                     MuteSample: #7e7e80;
                            Rms: #006d15;
                        MuteRms: #9b9b9d;
-                        Shadow: #101010;
                AboutBackground: #adadad;
                 TrackPanelText: #00ff00;
                 LabelTrackText: #000000;
