@@ -162,7 +162,6 @@ set( IMAGE_LIST
 # One custom command for each theme, invoking the image compiler if the
 # generated header file is out of date with its image and color definitions
 foreach( pair
-   "classic;ClassicThemeAsCeeCode"
    "dark;DarkThemeAsCeeCode"
    "high-contrast;HighContrastThemeAsCeeCode"
    "light;LightThemeAsCeeCode"
@@ -186,8 +185,6 @@ endforeach()
 
 # Now define a more conventional library, using the output of the image compiler
 set( SOURCES
-   ClassicThemeAsCeeCode.cpp
-   ClassicThemeAsCeeCode.h
    DarkThemeAsCeeCode.cpp
    DarkThemeAsCeeCode.h
    HighContrastThemeAsCeeCode.cpp
