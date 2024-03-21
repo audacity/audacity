@@ -231,6 +231,12 @@ int ShowClippingPrefsID()
    return value;
 }
 
+int ShowRMSPrefsID()
+{
+   static int value = wxNewId();
+   return value;
+}
+
 int ShowTrackNameInWaveformPrefsID()
 {
    static int value = wxNewId();

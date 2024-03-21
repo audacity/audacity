@@ -75,6 +75,7 @@ public:
    // Preference values
    float mdBrange;            // "/GUI/EnvdBRange"
    bool mShowClipping;        // "/GUI/ShowClipping"
+   bool mShowRMS;             // "/GUI/ShowRMS"
    int  mSampleDisplay;
    bool mbShowTrackNameInTrack;  // "/GUI/ShowTrackNameInWaveform"
 

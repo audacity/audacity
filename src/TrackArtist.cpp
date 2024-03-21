@@ -55,6 +55,7 @@ TrackArtist::TrackArtist( TrackPanel *parent_ )
 {
    mdBrange = DecibelScaleCutoff.GetDefault();
    mShowClipping = false;
+   mShowRMS = true;
    mSampleDisplay = 1;// Stem plots by default.
 
    SetColours(0);
@@ -101,13 +102,15 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetBrushColour( beatWeakBrush, clrBeatFillWeakBrush );
    theTheme.SetBrushColour( beatStrongSelBrush, clrBeatFillStrongSelBrush );
    theTheme.SetBrushColour( beatWeakSelBrush, clrBeatFillWeakSelBrush );
-   
+
+   mShowRMS = gPrefs->Read(wxT("/GUI/ShowRMS"), mShowRMS);
+
    switch( iColorIndex %4 )
    {
       default:
       case 0:
          theTheme.SetPenColour(   samplePen,       clrSample);
-         theTheme.SetPenColour(   rmsPen,          clrRms);
+         theTheme.SetPenColour(   rmsPen,          mShowRMS ? clrRms : clrSample);
          break;
       case 1: // RED
          samplePen.SetColour( wxColor( 160,10,10 ) );
@@ -129,6 +132,8 @@ void TrackArtist::UpdateSelectedPrefs( int id )
 {
    if( id == ShowClippingPrefsID())
       mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
+   if( id == ShowRMSPrefsID())
+      mShowRMS = gPrefs->Read(wxT("/GUI/ShowRMS"), mShowRMS);
    if( id == ShowTrackNameInWaveformPrefsID())
       mbShowTrackNameInTrack = gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
 }

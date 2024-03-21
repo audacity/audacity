@@ -276,6 +276,22 @@ void OnShowClipping(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
+void OnShowRMS(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &commandManager = CommandManager::Get( project );
+   auto &trackPanel = TrackPanel::Get( project );
+
+   bool checked = !gPrefs->Read(wxT("/GUI/ShowRMS"), true);
+   gPrefs->Write(wxT("/GUI/ShowRMS"), checked);
+   gPrefs->Flush();
+   commandManager.Check(wxT("ShowRMS"), checked);
+
+   PrefsListener::Broadcast(ShowRMSPrefsID());
+
+   trackPanel.Refresh(false);
+}
+
 void OnShowNameOverlay(const CommandContext &context)
 {
    auto &project = context.project;
@@ -349,7 +365,10 @@ auto ViewMenu()
             Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             OnShowClipping, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
+            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) ),
+         Command( wxT("ShowRMS"), XXO("Show &RMS in Waveform"),
+            OnShowRMS, AlwaysEnabledFlag,
+            Options{}.CheckTest( wxT("/GUI/ShowRMS"), true ) )
       )
    ) };
    return menu;
