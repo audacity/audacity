@@ -291,10 +291,14 @@ void AUControl::CreateCocoa()
             if (auto factoryClass = [bundle classNamed:viewClass])
                // Create an instance of the class
                if (id factoryInst = [[[factoryClass alloc] init] autorelease])
-                  // Create the view, suggesting a reasonable size
-                  if ((mView = [factoryInst uiViewForAudioUnit:mUnit
-                                                 withSize:NSSize{800, 600}]))
+                 // Create the view, suggesting a reasonable size
+                 try {
+                   if ((mView =
+                            [factoryInst uiViewForAudioUnit:mUnit
+                                                   withSize:NSSize{800, 600}]))
                      [mView retain];
+                 } catch (...) {
+                 }
    }
 
    if (!mView)
