@@ -12,7 +12,6 @@
 
 #include <cassert>
 
-#include "AppEvents.h"
 #include "CodeConversions.h"
 #include "FileNames.h"
 
@@ -92,10 +91,6 @@ CREATE TABLE IF NOT EXISTS project_users
 
 }
 
-CloudProjectsDatabase::CloudProjectsDatabase()
-{
-   AppEvents::OnAppInitialized([this] { OpenConnection(); });
-}
 
 CloudProjectsDatabase& CloudProjectsDatabase::Get()
 {
@@ -103,12 +98,10 @@ CloudProjectsDatabase& CloudProjectsDatabase::Get()
    return instance;
 }
 
-bool CloudProjectsDatabase::IsOpen() const
-{
-   return !!mConnection;
-}
 sqlite::SafeConnection::Lock CloudProjectsDatabase::GetConnection()
 {
+   auto lock = std::lock_guard { mConnectionMutex };
+
    if (!mConnection)
       OpenConnection();
 

@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include <mutex>
 #include <optional>
 #include <string>
 #include <vector>
@@ -74,13 +75,11 @@ struct PendingProjectBlockData final
 
 class CloudProjectsDatabase final
 {
-   CloudProjectsDatabase();
+   CloudProjectsDatabase() = default;
    ~CloudProjectsDatabase() = default;
 
 public:
    static CloudProjectsDatabase& Get();
-
-   bool IsOpen() const;
 
    sqlite::SafeConnection::Lock GetConnection();
    const sqlite::SafeConnection::Lock GetConnection() const;
@@ -134,6 +133,8 @@ private:
    std::optional<DBProjectData>
    DoGetProjectData(sqlite::RunResult result) const;
    bool OpenConnection();
+
+   std::mutex mConnectionMutex;
    std::shared_ptr<sqlite::SafeConnection> mConnection;
 };
 } // namespace audacity::cloud::audiocom::sync
