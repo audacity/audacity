@@ -81,6 +81,7 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetBrushColour( dragsampleBrush, clrDragSample);
    theTheme.SetBrushColour( blankSelectedBrush, clrBlankSelected);
    theTheme.SetBrushColour( envelopeBackgroundBrush, clrEnvelopeBackground);
+   theTheme.SetBrushColour( clipAffordanceBackgroundBrush, clrClipAffordanceBackground);
 
    theTheme.SetPenColour(   blankPen,        clrBlank);
    theTheme.SetPenColour(   unselectedPen,   clrUnselected);
