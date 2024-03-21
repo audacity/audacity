@@ -37,6 +37,7 @@ set( LIBRARIES
    lib-realtime-effects
    lib-audio-io
    lib-wave-track
+   lib-wave-track-paint
    lib-track-selection
    lib-project-file-io
    lib-command-parameters

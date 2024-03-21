@@ -167,6 +167,10 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # PRL 31 July 2018
    DRAGGABLE_PLAY_HEAD
+
+   # DV 26 December 2023
+   # Use lib-wave-track-paint for in-memory waveform image generation
+   # WAVEFORM_PAINT
 )
 
 # Some more flags that depend on other configuration options

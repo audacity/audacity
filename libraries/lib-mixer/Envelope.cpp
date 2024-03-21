@@ -697,6 +697,16 @@ size_t Envelope::GetNumberOfPoints() const
    return mEnv.size();
 }
 
+double Envelope::GetDefaultValue() const
+{
+   return mDefaultValue;
+}
+
+size_t Envelope::GetVersion() const
+{
+   return mVersion;
+}
+
 void Envelope::GetPoints(double *bufferWhen,
                          double *bufferValue,
                          int bufferLen) const
