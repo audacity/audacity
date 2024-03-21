@@ -82,8 +82,6 @@ void MissingBlocksUploader::Cancel()
 
    mConsumerThread.join();
 
-   // mProgressMutex can be held by the consumer thread, so we need to wait
-   // until it's released.
    std::lock_guard lock(mProgressDataMutex);
 }
 
@@ -219,14 +217,21 @@ void MissingBlocksUploader::ProducerThread()
 {
    while (mIsRunning.load(std::memory_order_consume))
    {
-      std::lock_guard<std::mutex> lock(mBlocksMutex);
+      BlockUploadTask task;
 
-      if (mFirstUnprocessedBlockIndex >= mUploadTasks.size())
-         return;
+      {
+         std::lock_guard<std::mutex> lock(mBlocksMutex);
 
-      auto item = ProduceBlock();
+         if (mFirstUnprocessedBlockIndex >= mUploadTasks.size())
+            return;
 
-      if (item.CompressedData.empty())
+         const auto index = mFirstUnprocessedBlockIndex++;
+         task = std::move(mUploadTasks[index]);
+      }
+
+      auto compressedData = CompressBlock(task.Block);
+
+      if (compressedData.empty())
       {
          MissingBlocksUploadProgress progressData;
          {
@@ -234,14 +239,16 @@ void MissingBlocksUploader::ProducerThread()
             mProgressData.FailedBlocks++;
             progressData = mProgressData;
          }
+
          mProgressCallback(
-            progressData, item.Task.Block,
+            progressData, task.Block,
             { SyncResultCode::InternalClientError, {} });
-
-         return;
       }
-
-      PushBlockToQueue(std::move(item));
+      else
+      {
+         PushBlockToQueue(
+            ProducedItem { std::move(task), std::move(compressedData) });
+      }
    }
 }
 
