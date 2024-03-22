@@ -202,6 +202,7 @@ RetVal<Val> InteractiveProvider::open(const UriQuery& q)
         openedRet = openQml(q);
         break;
     case ContainerType::Undefined: {
+#ifdef MU_BUILD_EXTENSIONS_MODULE
         //! NOTE Not found default, try extension
         extensions::Manifest ext = extensionsProvider()->manifest(q.uri());
         if (ext.isValid()) {
@@ -209,6 +210,9 @@ RetVal<Val> InteractiveProvider::open(const UriQuery& q)
         } else {
             openedRet.ret = make_ret(Ret::Code::UnknownError);
         }
+#else
+        openedRet.ret = make_ret(Ret::Code::UnknownError);
+#endif
     }
     }
 

@@ -25,6 +25,7 @@
 
 #include <optional>
 
+#include "global/types/val.h"
 #include "types/retval.h"
 #include "async/notification.h"
 

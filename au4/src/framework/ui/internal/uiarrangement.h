@@ -29,15 +29,21 @@
 #include <QJsonObject>
 #include <QMap>
 
+#include "global/async/asyncable.h"
+#include "global/async/notification.h"
+#include "uitypes.h"
+
+#ifdef MU_BUILD_WORKSPACE_MODULE
 #include "modularity/ioc.h"
 #include "workspace/iworkspacesdataprovider.h"
-#include "async/asyncable.h"
-#include "uitypes.h"
+#endif
 
 namespace mu::ui {
 class UiArrangement : public async::Asyncable
 {
+#ifdef MU_BUILD_WORKSPACE_MODULE
     INJECT(workspace::IWorkspacesDataProvider, workspacesDataProvider)
+#endif
 public:
     UiArrangement() = default;
 
@@ -59,8 +65,10 @@ private:
 
     using Notifications = QMap<QString, async::Notification>;
 
+#ifdef MU_BUILD_WORKSPACE_MODULE
     void updateData(workspace::DataKey key, QJsonObject& obj, Notifications& notifications) const;
     void saveData(workspace::DataKey key, const QJsonObject& obj);
+#endif
 
     QJsonObject m_settings;
     mutable Notifications m_valuesNotifications;

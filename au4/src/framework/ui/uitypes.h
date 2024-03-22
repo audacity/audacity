@@ -29,12 +29,8 @@
 #include <QMetaType>
 
 #include "actions/actiontypes.h"
-#include "context/shortcutcontext.h"
-#include "shortcuts/shortcutstypes.h"
 #include "types/mnemonicstring.h"
-#include "types/ret.h"
 #include "types/translatablestring.h"
-#include "types/val.h"
 #include "view/iconcodes.h"
 
 namespace mu::ui {

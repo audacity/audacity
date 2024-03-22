@@ -33,7 +33,9 @@
 #include "../view/interactiveprovider.h"
 #include "../view/qmlapi.h"
 
+#ifdef MU_BUILD_LANGUAGES_MODULE
 #include "languages/ilanguagesservice.h"
+#endif
 
 class QQmlEngine;
 
@@ -41,8 +43,9 @@ namespace mu::ui {
 class UiEngine : public QObject, public IUiEngine
 {
     Q_OBJECT
-
+#ifdef MU_BUILD_LANGUAGES_MODULE
     INJECT(languages::ILanguagesService, languagesService)
+#endif
 
     Q_PROPERTY(api::ThemeApi * theme READ theme NOTIFY themeChanged)
     Q_PROPERTY(QmlToolTip * tooltip READ tooltip CONSTANT)

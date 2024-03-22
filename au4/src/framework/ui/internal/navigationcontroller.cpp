@@ -23,14 +23,11 @@
 
 #include <algorithm>
 #include <limits>
-#include <utility>
 
 #include <QApplication>
 #include <QWindow>
 #include <QTextStream>
 
-#include "diagnostics/diagnosticutils.h"
-#include "async/async.h"
 #include "defer.h"
 #include "log.h"
 

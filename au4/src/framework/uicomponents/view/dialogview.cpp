@@ -25,6 +25,8 @@
 #include <QStyle>
 #include <QWindow>
 #include <QScreen>
+#include <QGuiApplication>
+#include <QApplication>
 
 #include "log.h"
 

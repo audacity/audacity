@@ -28,7 +28,10 @@
 
 #include "utils.h"
 #include "stringutils.h"
+
+#ifdef MU_BUILD_MIDI_MODULE
 #include "midi/midievent.h"
+#endif
 
 #include "translation.h"
 
@@ -77,6 +80,7 @@ struct Shortcut
 
 using ShortcutList = std::list<Shortcut>;
 
+#ifdef MU_BUILD_MIDI_MODULE
 enum RemoteEventType {
     Undefined = 0,
     Note,
@@ -157,6 +161,7 @@ inline RemoteEvent remoteEventFromMidiEvent(const midi::Event& midiEvent)
 
     return event;
 }
+#endif
 
 inline bool needIgnoreKey(Qt::Key key)
 {

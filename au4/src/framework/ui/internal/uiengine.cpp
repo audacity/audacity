@@ -182,7 +182,11 @@ Qt::KeyboardModifiers UiEngine::keyboardModifiers() const
 
 Qt::LayoutDirection UiEngine::currentLanguageLayoutDirection() const
 {
+#ifdef MU_BUILD_LANGUAGES_MODULE
     return languagesService()->currentLanguage().direction;
+#else
+    return Qt::LayoutDirection::LeftToRight;
+#endif
 }
 
 QQmlEngine* UiEngine::qmlEngine() const
