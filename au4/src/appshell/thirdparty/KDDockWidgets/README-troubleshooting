@@ -1,0 +1,3 @@
+# PySide: `ImportError: DLL load failed while importing KDDockWidgets`
+
+If you're getting this error with Python see issue #114 and the proposed solution there.

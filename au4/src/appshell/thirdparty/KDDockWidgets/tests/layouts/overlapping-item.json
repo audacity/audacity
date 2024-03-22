@@ -1,0 +1,184 @@
+{
+    "allDockWidgets": [
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 1,
+                        "mainWindowUniqueName": "MyMainWindow1"
+                    }
+                ],
+                "tabIndex": -1,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-0"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 0,
+                        "mainWindowUniqueName": "MyMainWindow1"
+                    }
+                ],
+                "tabIndex": -1,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-1"
+        }
+    ],
+    "closedDockWidgets": [
+    ],
+    "floatingWindows": [
+    ],
+    "mainWindows": [
+        {
+            "geometry": {
+                "height": 500,
+                "width": 800,
+                "x": 2,
+                "y": 2
+            },
+            "isVisible": true,
+            "multiSplitterLayout": {
+                "frames": {
+                    "106377750317632": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "dock-0"
+                        ],
+                        "geometry": {
+                            "height": 494,
+                            "width": 397,
+                            "x": 401,
+                            "y": 0
+                        },
+                        "id": "106377750317632",
+                        "isNull": false,
+                        "objectName": "dock-0",
+                        "options": 0
+                    },
+                    "106377750324352": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "dock-1"
+                        ],
+                        "geometry": {
+                            "height": 494,
+                            "width": 396,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": "106377750324352",
+                        "isNull": false,
+                        "objectName": "dock-1",
+                        "options": 0
+                    }
+                },
+                "layout": {
+                    "children": [
+                        {
+                            "guestId": "106377750324352",
+                            "isContainer": false,
+                            "isVisible": true,
+                            "objectName": "dock-1",
+                            "sizingInfo": {
+                                "geometry": {
+                                    "height": 494,
+                                    "width": 396,
+                                    "x": 0,
+                                    "y": 0
+                                },
+                                "maxSize": {
+                                    "height": 16777215,
+                                    "width": 16777215
+                                },
+                                "minSize": {
+                                    "height": 90,
+                                    "width": 84
+                                }
+                            }
+                        },
+                        {
+                            "guestId": "106377750317632",
+                            "isContainer": false,
+                            "isVisible": true,
+                            "objectName": "dock-0",
+                            "sizingInfo": {
+                                "geometry": {
+                                    "height": 494,
+                                    "width": 397,
+                                    "x": 400,
+                                    "y": 0
+                                },
+                                "maxSize": {
+                                    "height": 16777215,
+                                    "width": 16777215
+                                },
+                                "minSize": {
+                                    "height": 90,
+                                    "width": 84
+                                }
+                            }
+                        }
+                    ],
+                    "isContainer": true,
+                    "isVisible": false,
+                    "objectName": "",
+                    "orientation": 1,
+                    "sizingInfo": {
+                        "geometry": {
+                            "height": 494,
+                            "width": 798,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "maxSize": {
+                            "height": 16777215,
+                            "width": 16777215
+                        },
+                        "minSize": {
+                            "height": 90,
+                            "width": 80
+                        }
+                    }
+                }
+            },
+            "options": 0,
+            "screenIndex": 0,
+            "screenSize": {
+                "height": 600,
+                "width": 800
+            },
+            "uniqueName": "MyMainWindow1"
+        }
+    ],
+    "screenInfo": [
+        {
+            "devicePixelRatio": 1,
+            "geometry": {
+                "height": 600,
+                "width": 800,
+                "x": 0,
+                "y": 0
+            },
+            "index": 0,
+            "name": ""
+        }
+    ],
+    "serializationVersion": 3
+}

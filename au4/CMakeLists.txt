@@ -48,7 +48,7 @@ option(MU_BUILD_UI_MODULE "Build ui and uicomponets modules" ON)
 option(MU_BUILD_UI_MODULE "Build ui and uicomponets tests" ON)
 
 # Modules (alphabetical order please)
-option(MU_BUILD_APPSHELL_MODULE "Build appshell module" OFF)
+option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 
 # === Setup ===
 
@@ -139,17 +139,6 @@ endif() #MU_BUILD_UNIT_TESTS
 
 add_subdirectory(src/framework/global) # should be first to work pch
 add_subdirectory(src)
-
-###########################################
-# Setup the KDDockWidgets lib
-###########################################
-if (NOT BUILD_SHARED_LIBS)
-    set(KDDockWidgets_STATIC ON CACHE BOOL "Build static versions of the libraries" FORCE)
-endif()
-set(KDDockWidgets_QT6 ON CACHE BOOL "Build against Qt 6" FORCE)
-set(KDDockWidgets_QTQUICK ON CACHE BOOL "Build for QtQuick instead of QtWidgets" FORCE)
-set(KDDockWidgets_EXAMPLES OFF CACHE BOOL "Build the examples" FORCE)
-#add_subdirectory(thirdparty/KDDockWidgets)
 
 ###########################################
 # Setup Packaging
