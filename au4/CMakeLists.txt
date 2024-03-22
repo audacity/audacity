@@ -82,6 +82,8 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()
     #include(SetupConfigure)
+    add_definitions(-DQT_SUPPORT)
+    add_definitions(-DKORS_LOGGER_QT_SUPPORT)
 endif()
 
 set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
@@ -103,6 +105,18 @@ endif(MUE_COMPILE_USE_CCACHE)
 set(QT_MIN_VERSION "6.2.4")
 include(FindQt6)
 
+if (OS_IS_WIN)
+    include(FetchContent)
+    FetchContent_Declare(
+      muse_prebuild_win_deps
+      GIT_REPOSITORY https://github.com/musescore/musescore_prebuild_win_deps.git
+      GIT_TAG        HEAD
+    )
+    FetchContent_MakeAvailable(muse_prebuild_win_deps)
+    set(DEPENDENCIES_DIR ${muse_prebuild_win_deps_SOURCE_DIR})
+    set(DEPENDENCIES_LIB_DIR ${DEPENDENCIES_DIR}/libx64)
+    set(DEPENDENCIES_INC ${DEPENDENCIES_DIR}/include)
+endif(OS_IS_WIN)
 
 ###########################################
 # Add source tree

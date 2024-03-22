@@ -39,7 +39,7 @@ set(EXECUTABLE_NAME audacity)
 
 set(LINK_LIB
     ${QT_LIBRARIES}
-    #global
+    global
 
     )
 

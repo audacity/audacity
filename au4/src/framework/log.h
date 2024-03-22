@@ -1,5 +1,2 @@
 
-#include <QDebug>
-
-#define LOGE() qDebug()
-#define LOGI() qDebug()
+#include "global/log.h" // IWYU pragma: export
