@@ -32,8 +32,11 @@
 #include "../iinteractiveprovider.h"
 #include "../iinteractiveuriregister.h"
 #include "../imainwindow.h"
-#include "extensions/iextensionsprovider.h"
 #include "types/retval.h"
+
+#ifdef MU_BUILD_EXTENSIONS_MODULE
+#include "extensions/iextensionsprovider.h"
+#endif
 
 namespace mu::ui {
 class QmlLaunchData : public QObject
@@ -56,7 +59,10 @@ class InteractiveProvider : public QObject, public IInteractiveProvider
 
     Inject<IInteractiveUriRegister> uriRegister;
     Inject<IMainWindow> mainWindow;
+
+#ifdef MU_BUILD_EXTENSIONS_MODULE
     Inject<extensions::IExtensionsProvider> extensionsProvider;
+#endif
 
 public:
     explicit InteractiveProvider();

@@ -21,7 +21,36 @@
  */
 #include "navigationuiactions.h"
 
-#include "context/uicontext.h"
+//! TODO AU4
+// #include "context/uicontext.h"
+namespace mu::context {
+//! NOTE Determines where to be, what the user is doing
+
+// common ui (re declared for convenience)
+static constexpr ui::UiContext UiCtxUnknown = ui::UiCtxUnknown;
+static constexpr ui::UiContext UiCtxAny = ui::UiCtxAny;
+
+// pages
+static constexpr ui::UiContext UiCtxNotationOpened = "UiCtxNotationOpened";
+static constexpr ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
+
+// notation detail
+static constexpr ui::UiContext UiCtxNotationFocused = "UiCtxNotationFocused";
+
+static const std::string CTX_ANY("any");
+static const std::string CTX_NOTATION_OPENED("notation-opened");
+static const std::string CTX_NOTATION_FOCUSED("notation-focused");
+
+//! NOTE special context for navigation shortcuts because the notation has its own navigation system
+static const std::string CTX_NOT_NOTATION_FOCUSED("not-notation-focused");
+
+/// We're not [in note input on a TAB staff] (i.e. either not in note input mode, or in note input mode but not on a TAB staff)
+static const std::string CTX_NOTATION_NOT_NOTE_INPUT_STAFF_TAB("notation-not-note-input-staff-tab");
+/// We're in note input on a TAB staff
+static const std::string CTX_NOTATION_NOTE_INPUT_STAFF_TAB("notation-note-input-staff-tab");
+
+static const std::string CTX_NOTATION_TEXT_EDITING("notation-text-editing");
+}
 
 using namespace mu::ui;
 using namespace mu::actions;

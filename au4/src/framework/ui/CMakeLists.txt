@@ -151,9 +151,11 @@ set(MODULE_UI
     ${CMAKE_CURRENT_LIST_DIR}/dev/testdialog.ui
     )
 
+if (MU_BUILD_ACCESSIBILITY_MODULE)
 set(MODULE_LINK
     accessibility
     )
+endif()
 
 if (OS_IS_MAC)
     find_library(AppKit NAMES AppKit)

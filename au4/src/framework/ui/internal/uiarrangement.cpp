@@ -29,10 +29,12 @@
 #include "log.h"
 
 using namespace mu::ui;
+#ifdef MU_BUILD_WORKSPACE_MODULE
 using namespace mu::workspace;
-
+#endif
 void UiArrangement::load()
 {
+#ifdef MU_BUILD_WORKSPACE_MODULE
     workspacesDataProvider()->workspaceChanged().onNotify(this, [this]() {
         updateData(DataKey::UiSettings, m_settings, m_valuesNotifications);
         updateData(DataKey::UiStates, m_states, m_statesNotifications);
@@ -42,8 +44,11 @@ void UiArrangement::load()
     updateData(DataKey::UiSettings, m_settings, m_valuesNotifications);
     updateData(DataKey::UiStates, m_states, m_statesNotifications);
     updateData(DataKey::UiToolConfigs, m_toolconfigs, m_toolconfigsNotifications);
+
+#endif
 }
 
+#ifdef MU_BUILD_WORKSPACE_MODULE
 void UiArrangement::updateData(DataKey key, QJsonObject& obj, Notifications& notifications) const
 {
     RetVal<QByteArray> data = workspacesDataProvider()->rawData(key);
@@ -73,6 +78,8 @@ void UiArrangement::saveData(workspace::DataKey key, const QJsonObject& obj)
     workspacesDataProvider()->setRawData(key, data);
 }
 
+#endif
+
 QString UiArrangement::value(const QString& key) const
 {
     QJsonValue val = m_settings.value(key);
@@ -82,7 +89,9 @@ QString UiArrangement::value(const QString& key) const
 void UiArrangement::setValue(const QString& key, const QString& val)
 {
     m_settings[key] = val;
+#ifdef MU_BUILD_WORKSPACE_MODULE
     saveData(DataKey::UiSettings, m_settings);
+#endif
     if (m_valuesNotifications.contains(key)) {
         m_valuesNotifications[key].notify();
     }
@@ -103,7 +112,9 @@ QByteArray UiArrangement::state(const QString& key) const
 void UiArrangement::setState(const QString& key, const QByteArray& data)
 {
     m_states[key] = QString::fromLocal8Bit(data);
+#ifdef MU_BUILD_WORKSPACE_MODULE
     saveData(DataKey::UiStates, m_states);
+#endif
     if (m_statesNotifications.contains(key)) {
         m_statesNotifications[key].notify();
     }
@@ -156,7 +167,9 @@ void UiArrangement::setToolConfig(const QString& toolName, const ToolConfig& con
     confObj["items"] = itemsArr;
 
     m_toolconfigs[toolName] = confObj;
+#ifdef MU_BUILD_WORKSPACE_MODULE
     saveData(DataKey::UiToolConfigs, m_toolconfigs);
+#endif
     if (m_toolconfigsNotifications.contains(toolName)) {
         m_toolconfigsNotifications[toolName].notify();
     }
