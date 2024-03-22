@@ -1,0 +1,76 @@
+{
+    "initialLayout": {
+        "dockWidgets": [
+            {
+                "geometry": {
+                    "size": {
+                        "height": 818,
+                        "width": 425
+                    },
+                    "x": 146,
+                    "y": 436
+                },
+                "isFloating": true,
+                "isVisible": true,
+                "minSize": {
+                    "height": 425,
+                    "width": 259
+                },
+                "name": "DockWidget-1"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 698,
+                        "width": 614
+                    },
+                    "x": 438,
+                    "y": 291
+                },
+                "isFloating": false,
+                "isVisible": true,
+                "minSize": {
+                    "height": 410,
+                    "width": 363
+                },
+                "name": "DockWidget-2"
+            }
+        ],
+        "mainWindows": [
+            {
+                "geometry": {
+                    "size": {
+                        "height": 1400,
+                        "width": 457
+                    },
+                    "x": 91,
+                    "y": 388
+                },
+                "mainWindowOption": 0,
+                "name": "MainWindow-1"
+            }
+        ]
+    },
+    "operations": [
+        {
+            "comment": "AddDockWidget DockWidget-2 to top",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-2",
+                "location": 2,
+                "mainWindowName": "MainWindow-1"
+            },
+            "type": 4
+        },
+        {
+            "comment": "AddDockWidget DockWidget-1 to top",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-1",
+                "location": 2,
+                "mainWindowName": "MainWindow-1"
+            },
+            "type": 4
+        }
+    ]
+}

@@ -1,0 +1,1544 @@
+{
+    "allDockWidgets": [
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 1081,
+                    "width": 1057,
+                    "x": 4170,
+                    "y": 103
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 3,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-25"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 14,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-0"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 1189,
+                    "y": 429
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 15,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-1"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 4,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-2"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 1081,
+                    "width": 461,
+                    "x": 2077,
+                    "y": 185
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 11,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-3"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 0,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-24"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 2,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-4"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 645,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 1,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-5"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 423,
+                    "width": 1004,
+                    "x": 1091,
+                    "y": 837
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 7,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-6"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 359,
+                    "width": 157,
+                    "x": 412,
+                    "y": 205
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 5,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-7"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 12,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-8"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 10,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 1,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-9"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 21,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-10"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 16,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-11"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 620,
+                    "width": 461,
+                    "x": 2041,
+                    "y": 649
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 13,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-12"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 468,
+                    "width": 1738,
+                    "x": 370,
+                    "y": 272
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 9,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-13"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 587,
+                    "width": 453,
+                    "x": 2039,
+                    "y": 654
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 13,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-14"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 743,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 19,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-15"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 20,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-16"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 10,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-17"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 18,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-18"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 17,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-19"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 325,
+                    "y": 152
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 22,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-20"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 960,
+                    "y": 417
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 23,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-21"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 425,
+                    "width": 640,
+                    "x": 925,
+                    "y": 427
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 24,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": true
+            },
+            "uniqueName": "dock-22"
+        },
+        {
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 6,
+                        "mainWindowUniqueName": "MainWindow1"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "dock-23"
+        }
+    ],
+    "closedDockWidgets": [
+        "dock-0",
+        "dock-1",
+        "dock-2",
+        "dock-3",
+        "dock-4",
+        "dock-5",
+        "dock-6",
+        "dock-7",
+        "dock-8",
+        "dock-9",
+        "dock-10",
+        "dock-11",
+        "dock-12",
+        "dock-13",
+        "dock-14",
+        "dock-15",
+        "dock-16",
+        "dock-17",
+        "dock-18",
+        "dock-19",
+        "dock-20",
+        "dock-21",
+        "dock-22",
+        "dock-23"
+    ],
+    "floatingWindows": [
+    ],
+    "mainWindows": [
+        {
+            "affinities": [
+            ],
+            "geometry": {
+                "height": 809,
+                "width": 2560,
+                "x": 0,
+                "y": 194
+            },
+            "isVisible": true,
+            "multiSplitterLayout": {
+                "frames": {
+                    "2": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "dock-24"
+                        ],
+                        "geometry": {
+                            "height": 682,
+                            "width": 682,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": "2",
+                        "isNull": false,
+                        "objectName": "dock-24",
+                        "options": 1
+                    },
+                    "3": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "dock-25"
+                        ],
+                        "geometry": {
+                            "height": 682,
+                            "width": 1871,
+                            "x": 687,
+                            "y": 0
+                        },
+                        "id": "3",
+                        "isNull": false,
+                        "objectName": "dock-25",
+                        "options": 1
+                    }
+                },
+                "layout": {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "children": [
+                                        {
+                                            "children": [
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "guestId": "2",
+                                                            "isContainer": false,
+                                                            "isVisible": true,
+                                                            "objectName": "dock-24",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 682,
+                                                                    "width": 682,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 524316,
+                                                                    "width": 524291
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 138,
+                                                                    "width": 166
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "children": [
+                                                                {
+                                                                    "isContainer": false,
+                                                                    "isVisible": false,
+                                                                    "objectName": "hidden",
+                                                                    "sizingInfo": {
+                                                                        "geometry": {
+                                                                            "height": 682,
+                                                                            "width": 1251,
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        },
+                                                                        "maxSize": {
+                                                                            "height": 16777215,
+                                                                            "width": 16777215
+                                                                        },
+                                                                        "minSize": {
+                                                                            "height": 90,
+                                                                            "width": 80
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "isContainer": true,
+                                                            "isVisible": false,
+                                                            "objectName": "",
+                                                            "orientation": 2,
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 0,
+                                                                    "width": 0,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 524316,
+                                                                    "width": 524291
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 354,
+                                                                    "width": 574
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "isContainer": true,
+                                                    "isVisible": false,
+                                                    "objectName": "",
+                                                    "orientation": 1,
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 682,
+                                                            "width": 682,
+                                                            "x": 0,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 524316,
+                                                            "width": 524291
+                                                        },
+                                                        "minSize": {
+                                                            "height": 138,
+                                                            "width": 166
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 682,
+                                                                    "width": 647,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "isContainer": true,
+                                                    "isVisible": false,
+                                                    "objectName": "",
+                                                    "orientation": 2,
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 0,
+                                                            "width": 0,
+                                                            "x": 0,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 524316,
+                                                            "width": 524291
+                                                        },
+                                                        "minSize": {
+                                                            "height": 138,
+                                                            "width": 166
+                                                        }
+                                                    }
+                                                },
+                                                {
+                                                    "guestId": "3",
+                                                    "isContainer": false,
+                                                    "isVisible": true,
+                                                    "objectName": "dock-25",
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 682,
+                                                            "width": 1871,
+                                                            "x": 687,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 524287,
+                                                            "width": 524291
+                                                        },
+                                                        "minSize": {
+                                                            "height": 90,
+                                                            "width": 131
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "isContainer": true,
+                                            "isVisible": false,
+                                            "objectName": "",
+                                            "orientation": 1,
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 682,
+                                                    "width": 2558,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 524287,
+                                                    "width": 1048587
+                                                },
+                                                "minSize": {
+                                                    "height": 138,
+                                                    "width": 302
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "isContainer": true,
+                                    "isVisible": false,
+                                    "objectName": "",
+                                    "orientation": 1,
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 682,
+                                            "width": 2558,
+                                            "x": 0,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 524287,
+                                            "width": 1048587
+                                        },
+                                        "minSize": {
+                                            "height": 138,
+                                            "width": 302
+                                        }
+                                    }
+                                },
+                                {
+                                    "children": [
+                                        {
+                                            "children": [
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "children": [
+                                                                {
+                                                                    "isContainer": false,
+                                                                    "isVisible": false,
+                                                                    "objectName": "hidden",
+                                                                    "sizingInfo": {
+                                                                        "geometry": {
+                                                                            "height": 1082,
+                                                                            "width": 1471,
+                                                                            "x": 0,
+                                                                            "y": 0
+                                                                        },
+                                                                        "maxSize": {
+                                                                            "height": 16777215,
+                                                                            "width": 16777215
+                                                                        },
+                                                                        "minSize": {
+                                                                            "height": 90,
+                                                                            "width": 80
+                                                                        }
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "isContainer": true,
+                                                            "isVisible": false,
+                                                            "objectName": "",
+                                                            "orientation": 2,
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 0,
+                                                                    "width": 0,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 524316,
+                                                                    "width": 524291
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 338,
+                                                                    "width": 194
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 682,
+                                                                    "width": 156,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "isContainer": true,
+                                                    "isVisible": false,
+                                                    "objectName": "",
+                                                    "orientation": 1,
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 0,
+                                                            "width": 0,
+                                                            "x": 0,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 524316,
+                                                            "width": 157
+                                                        },
+                                                        "minSize": {
+                                                            "height": 351,
+                                                            "width": 80
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "isContainer": true,
+                                            "isVisible": false,
+                                            "objectName": "",
+                                            "orientation": 1,
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 0,
+                                                    "width": 0,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 524316,
+                                                    "width": 157
+                                                },
+                                                "minSize": {
+                                                    "height": 351,
+                                                    "width": 80
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 157,
+                                                    "width": 640,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 524287,
+                                                    "width": 524279
+                                                },
+                                                "minSize": {
+                                                    "height": 90,
+                                                    "width": 80
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 423,
+                                                    "width": 1004,
+                                                    "x": 0,
+                                                    "y": 659
+                                                },
+                                                "maxSize": {
+                                                    "height": 524316,
+                                                    "width": 524291
+                                                },
+                                                "minSize": {
+                                                    "height": 158,
+                                                    "width": 354
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 379,
+                                                    "width": 640,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 16777215,
+                                                    "width": 16777215
+                                                },
+                                                "minSize": {
+                                                    "height": 90,
+                                                    "width": 80
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "children": [
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 528,
+                                                                    "width": 1739,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 212
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 978,
+                                                                    "width": 1358,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 127
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "isContainer": true,
+                                                    "isVisible": false,
+                                                    "objectName": "",
+                                                    "orientation": 2,
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 0,
+                                                            "width": 0,
+                                                            "x": 0,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 16777215,
+                                                            "width": 16777215
+                                                        },
+                                                        "minSize": {
+                                                            "height": 193,
+                                                            "width": 205
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "isContainer": true,
+                                            "isVisible": false,
+                                            "objectName": "",
+                                            "orientation": 1,
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 0,
+                                                    "width": 0,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 16777215,
+                                                    "width": 16777215
+                                                },
+                                                "minSize": {
+                                                    "height": 90,
+                                                    "width": 127
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "isContainer": true,
+                                    "isVisible": false,
+                                    "objectName": "",
+                                    "orientation": 2,
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 0,
+                                            "width": 0,
+                                            "x": 0,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 524316,
+                                            "width": 157
+                                        },
+                                        "minSize": {
+                                            "height": 351,
+                                            "width": 80
+                                        }
+                                    }
+                                },
+                                {
+                                    "children": [
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 1082,
+                                                    "width": 462,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 524287,
+                                                    "width": 524291
+                                                },
+                                                "minSize": {
+                                                    "height": 90,
+                                                    "width": 103
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 229,
+                                                    "width": 369,
+                                                    "x": 0,
+                                                    "y": 533
+                                                },
+                                                "maxSize": {
+                                                    "height": 16777215,
+                                                    "width": 16777215
+                                                },
+                                                "minSize": {
+                                                    "height": 90,
+                                                    "width": 127
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "isContainer": false,
+                                            "isVisible": false,
+                                            "objectName": "hidden",
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 620,
+                                                    "width": 462,
+                                                    "x": 0,
+                                                    "y": 462
+                                                },
+                                                "maxSize": {
+                                                    "height": 524316,
+                                                    "width": 524334
+                                                },
+                                                "minSize": {
+                                                    "height": 135,
+                                                    "width": 127
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "children": [
+                                                {
+                                                    "children": [
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        },
+                                                        {
+                                                            "isContainer": false,
+                                                            "isVisible": false,
+                                                            "objectName": "hidden",
+                                                            "sizingInfo": {
+                                                                "geometry": {
+                                                                    "height": 90,
+                                                                    "width": 640,
+                                                                    "x": 0,
+                                                                    "y": 0
+                                                                },
+                                                                "maxSize": {
+                                                                    "height": 16777215,
+                                                                    "width": 16777215
+                                                                },
+                                                                "minSize": {
+                                                                    "height": 90,
+                                                                    "width": 80
+                                                                }
+                                                            }
+                                                        }
+                                                    ],
+                                                    "isContainer": true,
+                                                    "isVisible": false,
+                                                    "objectName": "",
+                                                    "orientation": 2,
+                                                    "sizingInfo": {
+                                                        "geometry": {
+                                                            "height": 0,
+                                                            "width": 0,
+                                                            "x": 0,
+                                                            "y": 0
+                                                        },
+                                                        "maxSize": {
+                                                            "height": 16777215,
+                                                            "width": 16777215
+                                                        },
+                                                        "minSize": {
+                                                            "height": 90,
+                                                            "width": 80
+                                                        }
+                                                    }
+                                                }
+                                            ],
+                                            "isContainer": true,
+                                            "isVisible": false,
+                                            "objectName": "",
+                                            "orientation": 1,
+                                            "sizingInfo": {
+                                                "geometry": {
+                                                    "height": 0,
+                                                    "width": 0,
+                                                    "x": 0,
+                                                    "y": 0
+                                                },
+                                                "maxSize": {
+                                                    "height": 16777215,
+                                                    "width": 16777215
+                                                },
+                                                "minSize": {
+                                                    "height": 134,
+                                                    "width": 127
+                                                }
+                                            }
+                                        }
+                                    ],
+                                    "isContainer": true,
+                                    "isVisible": false,
+                                    "objectName": "",
+                                    "orientation": 2,
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 0,
+                                            "width": 0,
+                                            "x": 0,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 1048608,
+                                            "width": 524291
+                                        },
+                                        "minSize": {
+                                            "height": 230,
+                                            "width": 127
+                                        }
+                                    }
+                                }
+                            ],
+                            "isContainer": true,
+                            "isVisible": false,
+                            "objectName": "",
+                            "orientation": 1,
+                            "sizingInfo": {
+                                "geometry": {
+                                    "height": 682,
+                                    "width": 2558,
+                                    "x": 0,
+                                    "y": 0
+                                },
+                                "maxSize": {
+                                    "height": 524287,
+                                    "width": 1048587
+                                },
+                                "minSize": {
+                                    "height": 138,
+                                    "width": 302
+                                }
+                            }
+                        }
+                    ],
+                    "isContainer": true,
+                    "isVisible": false,
+                    "objectName": "",
+                    "orientation": 2,
+                    "sizingInfo": {
+                        "geometry": {
+                            "height": 682,
+                            "width": 2558,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "maxSize": {
+                            "height": 16777215,
+                            "width": 16777215
+                        },
+                        "minSize": {
+                            "height": 90,
+                            "width": 80
+                        }
+                    }
+                }
+            },
+            "options": 0,
+            "screenIndex": 0,
+            "screenSize": {
+                "height": 1440,
+                "width": 2560
+            },
+            "uniqueName": "MainWindow1"
+        }
+    ],
+    "screenInfo": [
+        {
+            "devicePixelRatio": 1.5,
+            "geometry": {
+                "height": 1440,
+                "width": 2560,
+                "x": 0,
+                "y": 0
+            },
+            "index": 0,
+            "name": "DP-2"
+        },
+        {
+            "devicePixelRatio": 1.5,
+            "geometry": {
+                "height": 1440,
+                "width": 2560,
+                "x": 3840,
+                "y": 0
+            },
+            "index": 1,
+            "name": "DP-0"
+        }
+    ],
+    "serializationVersion": 3
+}

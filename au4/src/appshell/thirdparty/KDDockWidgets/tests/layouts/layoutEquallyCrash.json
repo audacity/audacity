@@ -1,0 +1,279 @@
+{
+    "allDockWidgets": [
+        {
+            "affinities": [
+                "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+            ],
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 2,
+                        "mainWindowUniqueName": "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "Favorite-481"
+        },
+        {
+            "affinities": [
+                "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+            ],
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 0,
+                        "mainWindowUniqueName": "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "Favorite-482"
+        },
+        {
+            "affinities": [
+                "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+            ],
+            "lastPosition": {
+                "lastFloatingGeometry": {
+                    "height": 0,
+                    "width": 0,
+                    "x": 0,
+                    "y": 0
+                },
+                "placeholders": [
+                    {
+                        "isFloatingWindow": false,
+                        "itemIndex": 1,
+                        "mainWindowUniqueName": "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+                    }
+                ],
+                "tabIndex": 0,
+                "wasFloating": false
+            },
+            "uniqueName": "Favorite-483"
+        }
+    ],
+    "closedDockWidgets": [
+    ],
+    "floatingWindows": [
+    ],
+    "mainWindows": [
+        {
+            "affinities": [
+                "{7829427d-88e3-402e-9120-50c628dfd0bc}"
+            ],
+            "geometry": {
+                "height": 1228,
+                "width": 1644,
+                "x": 501,
+                "y": 110
+            },
+            "isVisible": true,
+            "multiSplitterLayout": {
+                "frames": {
+                    "10": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "Favorite-483"
+                        ],
+                        "geometry": {
+                            "height": 1206,
+                            "width": 536,
+                            "x": 541,
+                            "y": 0
+                        },
+                        "id": "10",
+                        "isNull": false,
+                        "objectName": "Favorite-483",
+                        "options": 0
+                    },
+                    "12": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "Favorite-481"
+                        ],
+                        "geometry": {
+                            "height": 1206,
+                            "width": 540,
+                            "x": 1082,
+                            "y": 0
+                        },
+                        "id": "12",
+                        "isNull": false,
+                        "objectName": "Favorite-481",
+                        "options": 0
+                    },
+                    "9": {
+                        "currentTabIndex": 0,
+                        "dockWidgets": [
+                            "Favorite-482"
+                        ],
+                        "geometry": {
+                            "height": 1206,
+                            "width": 536,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "id": "9",
+                        "isNull": false,
+                        "objectName": "Favorite-482",
+                        "options": 0
+                    }
+                },
+                "layout": {
+                    "children": [
+                        {
+                            "children": [
+                                {
+                                    "guestId": "9",
+                                    "isContainer": false,
+                                    "isVisible": true,
+                                    "objectName": "Favorite-482",
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 1206,
+                                            "width": 536,
+                                            "x": 0,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 524315,
+                                            "width": 524432
+                                        },
+                                        "minSize": {
+                                            "height": 118,
+                                            "width": 233
+                                        }
+                                    }
+                                },
+                                {
+                                    "guestId": "10",
+                                    "isContainer": false,
+                                    "isVisible": true,
+                                    "objectName": "Favorite-483",
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 1206,
+                                            "width": 536,
+                                            "x": 541,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 524287,
+                                            "width": 524291
+                                        },
+                                        "minSize": {
+                                            "height": 90,
+                                            "width": 360
+                                        }
+                                    }
+                                },
+                                {
+                                    "guestId": "12",
+                                    "isContainer": false,
+                                    "isVisible": true,
+                                    "objectName": "Favorite-481",
+                                    "sizingInfo": {
+                                        "geometry": {
+                                            "height": 1206,
+                                            "width": 540,
+                                            "x": 1082,
+                                            "y": 0
+                                        },
+                                        "maxSize": {
+                                            "height": 524317,
+                                            "width": 524291
+                                        },
+                                        "minSize": {
+                                            "height": 438,
+                                            "width": 540
+                                        }
+                                    }
+                                }
+                            ],
+                            "isContainer": true,
+                            "isVisible": false,
+                            "objectName": "",
+                            "orientation": 1,
+                            "sizingInfo": {
+                                "geometry": {
+                                    "height": 1206,
+                                    "width": 1622,
+                                    "x": 0,
+                                    "y": 0
+                                },
+                                "maxSize": {
+                                    "height": 524287,
+                                    "width": 1048728
+                                },
+                                "minSize": {
+                                    "height": 118,
+                                    "width": 598
+                                }
+                            }
+                        }
+                    ],
+                    "isContainer": true,
+                    "isVisible": false,
+                    "objectName": "",
+                    "orientation": 2,
+                    "sizingInfo": {
+                        "geometry": {
+                            "height": 1206,
+                            "width": 1622,
+                            "x": 0,
+                            "y": 0
+                        },
+                        "maxSize": {
+                            "height": 16777215,
+                            "width": 16777215
+                        },
+                        "minSize": {
+                            "height": 90,
+                            "width": 80
+                        }
+                    }
+                }
+            },
+            "options": 0,
+            "screenIndex": 0,
+            "screenSize": {
+                "height": 1440,
+                "width": 2560
+            },
+            "uniqueName": "{7829427d-88e3-402e-9120-50c628dfd0bc}",
+            "windowState": 0
+        }
+    ],
+    "screenInfo": [
+        {
+            "devicePixelRatio": 1.5,
+            "geometry": {
+                "height": 1440,
+                "width": 2560,
+                "x": 0,
+                "y": 0
+            },
+            "index": 0,
+            "name": "DP-2"
+        }
+    ],
+    "serializationVersion": 3
+}

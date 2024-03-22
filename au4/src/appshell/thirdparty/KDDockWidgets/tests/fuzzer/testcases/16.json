@@ -1,0 +1,212 @@
+{
+    "initialLayout": {
+        "dockWidgets": [
+            {
+                "geometry": {
+                    "size": {
+                        "height": 757,
+                        "width": 748
+                    },
+                    "x": 352,
+                    "y": 17
+                },
+                "isFloating": false,
+                "isVisible": true,
+                "minSize": {
+                    "height": 302,
+                    "width": 541
+                },
+                "name": "DockWidget-1"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 930,
+                        "width": 1083
+                    },
+                    "x": 64,
+                    "y": 35
+                },
+                "isFloating": true,
+                "isVisible": true,
+                "minSize": {
+                    "height": 462,
+                    "width": 553
+                },
+                "name": "DockWidget-2"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 665,
+                        "width": 1031
+                    },
+                    "x": 207,
+                    "y": 178
+                },
+                "isFloating": true,
+                "isVisible": true,
+                "minSize": {
+                    "height": 402,
+                    "width": 523
+                },
+                "name": "DockWidget-3"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 525,
+                        "width": 962
+                    },
+                    "x": 118,
+                    "y": 157
+                },
+                "isFloating": false,
+                "isVisible": true,
+                "minSize": {
+                    "height": 322,
+                    "width": 460
+                },
+                "name": "DockWidget-4"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 920,
+                        "width": 618
+                    },
+                    "x": 199,
+                    "y": 154
+                },
+                "isFloating": true,
+                "isVisible": false,
+                "minSize": {
+                    "height": 425,
+                    "width": 249
+                },
+                "name": "DockWidget-5"
+            },
+            {
+                "geometry": {
+                    "size": {
+                        "height": 770,
+                        "width": 538
+                    },
+                    "x": 323,
+                    "y": 203
+                },
+                "isFloating": true,
+                "isVisible": true,
+                "minSize": {
+                    "height": 523,
+                    "width": 451
+                },
+                "name": "DockWidget-6"
+            }
+        ],
+        "mainWindows": [
+            {
+                "geometry": {
+                    "size": {
+                        "height": 1487,
+                        "width": 307
+                    },
+                    "x": 42,
+                    "y": 118
+                },
+                "mainWindowOption": 0,
+                "name": "MainWindow-17"
+            }
+        ]
+    },
+    "operations": [
+
+        {
+            "comment": "AddDockWidget DockWidget-4-[hidden] to top",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-4",
+                "location": 2,
+                "mainWindowName": "MainWindow-17"
+            },
+            "type": 4
+        },
+        {
+            "comment": "AddDockWidget DockWidget-1 to left",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-1",
+                "location": 1,
+                "mainWindowName": "MainWindow-17"
+            },
+            "type": 4
+        },
+        {
+            "comment": "AddDockWidgetAsTab DockWidget-6-[hidden] onto DockWidget-1",
+            "params": {
+                "dockWidgetName": "DockWidget-1",
+                "dockWidgetToAddName": "DockWidget-6"
+            },
+            "type": 5
+        },
+        {
+            "comment": "AddDockWidget DockWidget-1-[hidden] to right, relative to DockWidget-4",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-1",
+                "location": 3,
+                "mainWindowName": "MainWindow-17",
+                "relativeToName": "DockWidget-4"
+            },
+            "type": 4
+        },
+        {
+            "comment": "Closing DockWidget-6",
+            "params": {
+                "dockWidgetName": "DockWidget-6"
+            },
+            "type": 1
+        },
+
+        {
+            "comment": "AddDockWidget DockWidget-5 to left",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-5",
+                "location": 1,
+                "mainWindowName": "MainWindow-17"
+            },
+            "type": 4
+        },
+
+        {
+            "comment": "AddDockWidgetAsTab DockWidget-4-[hidden] onto DockWidget-3",
+            "params": {
+                "dockWidgetName": "DockWidget-3",
+                "dockWidgetToAddName": "DockWidget-4"
+            },
+            "type": 5
+        },
+        {
+            "comment": "AddDockWidget DockWidget-2 to left",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-2",
+                "location": 1,
+                "mainWindowName": "MainWindow-17"
+            },
+            "type": 4
+        },
+        {
+            "comment": "AddDockWidget DockWidget-4 to right, relative to DockWidget-5",
+            "params": {
+                "addingOption": 0,
+                "dockWidgetName": "DockWidget-4",
+                "location": 3,
+                "mainWindowName": "MainWindow-17",
+                "relativeToName": "DockWidget-5"
+            },
+            "type": 4
+        }
+    ]
+}

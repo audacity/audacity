@@ -154,4 +154,4 @@ if (NOT OS_IS_MAC)
     endif()
 endif(NOT OS_IS_MAC)
 
-include(${PROJECT_SOURCE_DIR}/build/module.cmake)
+include(SetupModule)
