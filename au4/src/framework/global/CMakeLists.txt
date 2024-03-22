@@ -181,14 +181,6 @@ else()
 
         ${CMAKE_CURRENT_LIST_DIR}/io/internal/filesystem.cpp
         ${CMAKE_CURRENT_LIST_DIR}/io/internal/filesystem.h
-
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/xmlreader.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/xmlreader.h
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/xmlwriter.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/xmlwriter.h
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/qzip.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/qzipreader_p.h
-        ${CMAKE_CURRENT_LIST_DIR}/deprecated/qzipwriter_p.h
         )
 
     include(GetPlatformInfo)
