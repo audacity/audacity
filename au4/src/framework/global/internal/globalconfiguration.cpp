@@ -61,10 +61,12 @@ io::path_t GlobalConfiguration::appDataPath() const
     return m_appDataPath;
 }
 
+//! TODO AU4
+#define APP_INSTALL_NAME "Audacity"
 QString GlobalConfiguration::resolveAppDataPath() const
 {
 #ifdef Q_OS_WIN
-    QDir dir(QCoreApplication::applicationDirPath() + QString("/../" MUSESCORE_INSTALL_NAME));
+    QDir dir(QCoreApplication::applicationDirPath() + QString("/../" APP_INSTALL_NAME));
     return dir.absolutePath() + "/";
 #elif defined(Q_OS_MAC)
     QDir dir(QCoreApplication::applicationDirPath() + QString("/../Resources"));
