@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="qml/MuseScore/GraphicalEffects/qmldir">qml/MuseScore/GraphicalEffects/qmldir_qt5</file>
+        <file>qml/MuseScore/GraphicalEffects/effects_qt5/EffectDropShadow.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/effects_qt5/EffectOpacityMask.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/effects_qt5/EffectRectangularGlow.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/effects_qt5/EffectFastBlur.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/effects_qt5/EffectColorOverlay.qml</file>
+    </qresource>
+</RCC>

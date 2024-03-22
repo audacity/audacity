@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/MuseScore/GraphicalEffects/qmldir</file>
+        <file>qml/MuseScore/GraphicalEffects/EffectDropShadow.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/EffectOpacityMask.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/EffectRectangularGlow.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/EffectFastBlur.qml</file>
+        <file>qml/MuseScore/GraphicalEffects/EffectColorOverlay.qml</file>
+    </qresource>
+</RCC>
