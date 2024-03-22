@@ -50,7 +50,9 @@
 #include "api/filesystemapi.h"
 #include "api/processapi.h"
 
+#ifdef MU_BUILD_DIAGNOSTICS_MODULE
 #include "diagnostics/idiagnosticspathsregister.h"
+#endif
 
 #include "log.h"
 
@@ -154,7 +156,8 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
     }
 
     LOGI() << "log path: " << logFilePath;
-    LOGI() << "=== Started MuseScore " << MUVersion::fullVersion() << ", build number " << MUSESCORE_BUILD_NUMBER << " ===";
+    //! TODO AU4
+    //LOGI() << "=== Started MuseScore " << MUVersion::fullVersion() << ", build number " << MUSESCORE_BUILD_NUMBER << " ===";
 
     //! --- Setup profiler ---
     using namespace mu::profiler;
@@ -182,6 +185,7 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
         s_asyncInvoker->invoke(f, isAlwaysQueued);
     });
 
+#ifdef MU_BUILD_DIAGNOSTICS_MODULE
     //! --- Diagnostics ---
     auto pr = ioc()->resolve<diagnostics::IDiagnosticsPathsRegister>(moduleName());
     if (pr) {
@@ -195,6 +199,7 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
         pr->reg("log file", logFilePath);
         pr->reg("settings file", settings()->filePath());
     }
+#endif
 }
 
 void GlobalModule::onInit(const IApplication::RunMode&)

@@ -19,30 +19,39 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_LOGREMOVER_H
-#define MU_LOGREMOVER_H
+#ifndef MU_UI_IMAINWINDOW_H
+#define MU_UI_IMAINWINDOW_H
 
-//#include <gtest/gtest_prod.h>
+#include "modularity/imoduleinterface.h"
+#include "async/notification.h"
 
-#include "types/string.h"
-#include "types/datetime.h"
-#include "io/path.h"
+class QWindow;
+class QScreen;
 
-namespace mu {
-class LogRemover
+namespace mu::ui {
+class MainWindowBridge;
+
+class IMainWindow : MODULE_EXPORT_INTERFACE
 {
+    INTERFACE_ID(IMainWindow)
+
 public:
+    virtual ~IMainWindow() = default;
 
-    static void removeLogs(const io::path_t& logsDir, int olderThanDays, const String& pattern);
+    virtual void init(MainWindowBridge* bridge) = 0;
+    virtual void deinit() = 0;
 
-private:
+    virtual QWindow* qWindow() const = 0;
 
-    //FRIEND_TEST(Global_LogRemoverTests, ParseDate);
+    virtual void requestShowOnBack() = 0;
+    virtual void requestShowOnFront() = 0;
 
-    static void scanDir(const io::path_t& logsDir, io::paths_t& files);
-    static Date parseDate(const String& fileName);
-    static void removeFiles(const io::paths_t& files);
+    virtual bool isFullScreen() const = 0;
+    virtual async::Notification isFullScreenChanged() const = 0;
+    virtual void toggleFullScreen() = 0;
+
+    virtual QScreen* screen() const = 0;
 };
 }
 
-#endif // MU_LOGREMOVER_H
+#endif // MU_UI_IMAINWINDOW_H

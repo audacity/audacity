@@ -36,24 +36,30 @@ bool MUVersion::unstable()
 
 mu::String MUVersion::version()
 {
-    return String::fromStdString(MUSESCORE_VERSION);
+    //! TODO AU4
+    return String();
+    //return String::fromStdString(MUSESCORE_VERSION);
 }
 
 mu::String MUVersion::fullVersion()
 {
-    Version res(version());
+    //! TODO AU4
+    return String();
+    // Version res(version());
 
-    String versionLabel = String::fromStdString(MUSESCORE_VERSION_LABEL);
-    if (!versionLabel.isEmpty()) {
-        res.setSuffix(versionLabel);
-    }
+    // String versionLabel = String::fromStdString(MUSESCORE_VERSION_LABEL);
+    // if (!versionLabel.isEmpty()) {
+    //     res.setSuffix(versionLabel);
+    // }
 
-    return res.toString();
+    // return res.toString();
 }
 
 mu::String MUVersion::revision()
 {
-    return String::fromStdString(MUSESCORE_REVISION);
+    //! TODO AU4
+    return String();
+    // return String::fromStdString(MUSESCORE_REVISION);
 }
 
 int MUVersion::majorVersion()
