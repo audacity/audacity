@@ -41,8 +41,11 @@ set(AUDACITY_BUILD_MODE "dev" CACHE STRING "Build mode")
 set(AUDACITY_REVISION "" CACHE STRING "Build revision")
 
 # Modules framework (alphabetical order please)
-option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" ON)
-option(MU_BUILD_ACCESSIBILITY_TESTS "Build accessibility tests" ON)
+option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" OFF)
+option(MU_BUILD_ACCESSIBILITY_TESTS "Build accessibility tests" OFF)
+
+option(MU_BUILD_UI_MODULE "Build ui and uicomponets modules" ON)
+option(MU_BUILD_UI_MODULE "Build ui and uicomponets tests" ON)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" OFF)

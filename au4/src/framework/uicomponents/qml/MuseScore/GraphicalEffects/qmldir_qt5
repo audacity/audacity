@@ -1,0 +1,6 @@
+module MuseScore.GraphicalEffects
+EffectOpacityMask 1.0 effects_qt5/EffectOpacityMask.qml
+EffectDropShadow 1.0 effects_qt5/EffectDropShadow.qml
+EffectRectangularGlow 1.0 effects_qt5/EffectRectangularGlow.qml
+EffectFastBlur 1.0 effects_qt5/EffectFastBlur.qml
+EffectColorOverlay 1.0 effects_qt5/EffectColorOverlay.qml

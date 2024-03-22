@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/MuseScore/Ui/qmldir</file>
+        <file>qml/MuseScore/Ui/InteractiveProvider.qml</file>
+        <file>qml/MuseScore/Ui/ToolTipProvider.qml</file>
+        <file>qml/MuseScore/Ui/internal/StandardDialog.qml</file>
+        <file>qml/MuseScore/Ui/internal/ProgressDialog.qml</file>
+        <file>qml/MuseScore/Ui/internal/ErrorDetailsView.qml</file>
+        <file>qml/MuseScore/Ui/StandardDialogPanel.qml</file>
+        <file>qml/MuseScore/Ui/internal/FileDialog.qml</file>
+        <file>qml/MuseScore/Ui/internal/FolderDialog.qml</file>
+    </qresource>
+</RCC>
