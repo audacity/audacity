@@ -16,6 +16,7 @@
 
 #define PANELBORDER 1   // only increase from '1' for testing purposes - MJS
 
+#include "PffftTransformer.h"
 #include "SampleFormat.h"
 #include "wxPanelWrapper.h"
 class EnvelopeEditor;
@@ -66,7 +67,7 @@ private:
 //   size_t mWindowSize;
 //   float *mFilterFuncR;
 //   float *mFilterFuncI;
-   Floats mOutr;
+   PffftFloatVector mOutr;
 
 //   double mLoFreq;
 //   double mHiFreq;

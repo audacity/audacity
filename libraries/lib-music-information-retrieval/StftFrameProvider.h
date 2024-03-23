@@ -11,7 +11,7 @@
 #pragma once
 
 #include <vector>
-#include "PowerSpectrumGetter.h"
+#include "PffftTransformer.h"
 
 namespace MIR
 {

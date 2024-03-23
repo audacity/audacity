@@ -3,9 +3,10 @@
 
   Audacity: A Digital Audio Editor
 
-  PowerSpectrumGetter.h
+  PffftTransformer.h
 
   Matthieu Hodgkinson
+  Paul Licameli
 
 **********************************************************************/
 #pragma once
@@ -15,14 +16,12 @@ struct PFFFT_Setup;
 #include <memory>
 #include <type_traits>
 #include <vector>
-#include "pffft.h"
 
 struct FFT_API PffftSetupDeleter {
    void operator ()(PFFFT_Setup *p){ if (p) Pffft_destroy_setup(p); }
 private:
   void Pffft_destroy_setup(PFFFT_Setup *);
 };
-using PffftSetupHolder = std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>;
 
 struct FFT_API PffftAllocatorBase {
    static void *Pffft_aligned_malloc(size_t nb_bytes);
@@ -57,26 +56,26 @@ struct PffftAlignedCount
    static constexpr size_t ByteAlignment = 64;
    static constexpr auto FloatAlignment = ByteAlignment / sizeof(float);
 
-   PffftAlignedCount() = default;
+   constexpr PffftAlignedCount() = default;
 
    //! Construct from some number of floats, rounding up as needed
-   explicit PffftAlignedCount(size_t nFloats)
+   constexpr explicit PffftAlignedCount(size_t nFloats)
       : value{
          ((nFloats + (FloatAlignment) - 1) / FloatAlignment) * FloatAlignment }
    {}
 
-   PffftAlignedCount(const PffftAlignedCount &) = default;
+   constexpr PffftAlignedCount(const PffftAlignedCount &) = default;
    PffftAlignedCount &operator =(const PffftAlignedCount &) = default;
 
    //! @invariant `result: result % FloatAlignment == 0`
-   operator size_t() const { return value; }
+   constexpr operator size_t() const noexcept { return value; }
 
 private:
    size_t value{};
 };
 
 template<typename Integral>
-inline auto operator * (PffftAlignedCount x, Integral y)
+constexpr inline auto operator * (PffftAlignedCount x, Integral y)
    -> std::enable_if_t<
       std::is_unsigned_v<Integral> && sizeof(Integral) <= sizeof(size_t),
       PffftAlignedCount>
@@ -85,7 +84,7 @@ inline auto operator * (PffftAlignedCount x, Integral y)
 }
 
 template<typename Integral>
-inline auto operator * (Integral x, PffftAlignedCount y)
+constexpr inline auto operator * (Integral x, PffftAlignedCount y)
    -> std::enable_if_t<
       std::is_unsigned_v<Integral> && sizeof(Integral) <= sizeof(size_t),
       PffftAlignedCount>
@@ -102,33 +101,31 @@ struct PffftFloatVector;
  It restricts pointer arithmetic to addition of well-aligned increments
  */
 struct PffftFloats {
-   PffftFloats() = default;
-   PffftFloats(const PffftFloats&) = default;
+   constexpr PffftFloats() = default;
+   constexpr PffftFloats(const PffftFloats&) = default;
    PffftFloats &operator=(const PffftFloats&) = default;
 
    /*!
     @invariant result is well aligned for pffft
     */
-   float *get() const noexcept { return p; }
+   constexpr float *get() const noexcept { return p; }
 
    PffftFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
    }
-   friend PffftFloats operator + (PffftFloats p, PffftAlignedCount c)
+   friend constexpr PffftFloats operator + (PffftFloats p, PffftAlignedCount c)
    {
-      PffftFloats result(p);
-      return result += c;
+      return PffftFloats{ p.p + c };
    }
-   friend PffftFloats operator + (PffftAlignedCount c, PffftFloats p)
+   friend constexpr PffftFloats operator + (PffftAlignedCount c, PffftFloats p)
    {
-      PffftFloats result(p);
-      return result += c;
+      return PffftFloats{ p.p + c };
    }
 
    explicit operator bool() const noexcept { return p != nullptr; }
 
 private:
-   explicit PffftFloats(float *p) : p{ p } {}
+   constexpr explicit PffftFloats(float *p) : p{ p } {}
    friend PffftFloatVector;
    float *p{};
 };
@@ -140,34 +137,34 @@ private:
  It restricts pointer arithmetic to addition of well-aligned increments.
  */
 struct PffftConstFloats {
-   PffftConstFloats() = default;
-   PffftConstFloats(const PffftConstFloats&) = default;
+   constexpr PffftConstFloats() = default;
+   constexpr PffftConstFloats(const PffftConstFloats&) = default;
    PffftConstFloats &operator=(const PffftConstFloats&) = default;
-   PffftConstFloats(PffftFloats p) : PffftConstFloats{ p.get() } {}
+   constexpr PffftConstFloats(PffftFloats p) : PffftConstFloats{ p.get() } {}
 
    /*!
     @invariant result is well aligned for pffft
     */
-   const float *get() const noexcept { return p; }
+   constexpr const float *get() const noexcept { return p; }
 
    PffftConstFloats operator +=(PffftAlignedCount c) {
       p += c; return *this;
    }
-   friend PffftConstFloats operator + (PffftConstFloats p, PffftAlignedCount c)
+   friend constexpr
+   PffftConstFloats operator + (PffftConstFloats p, PffftAlignedCount c)
    {
-      PffftConstFloats result(p);
-      return result += c;
+      return PffftConstFloats{ p.p + c };
    }
-   friend PffftConstFloats operator + (PffftAlignedCount c, PffftConstFloats p)
+   friend constexpr
+   PffftConstFloats operator + (PffftAlignedCount c, PffftConstFloats p)
    {
-      PffftConstFloats result(p);
-      return result += c;
+      return PffftConstFloats{ p.p + c };
    }
 
    explicit operator bool() const noexcept { return p != nullptr; }
 
 private:
-   explicit PffftConstFloats(const float *p) : p{ p } {}
+   explicit constexpr PffftConstFloats(const float *p) : p{ p } {}
    friend PffftFloatVector;
    const float *p{};
 };
@@ -199,6 +196,75 @@ struct FFT_API PffftFloatVector : std::vector<float, PffftAllocator<float>> {
    { return aligned(rowSize * nRow); }
 };
 
+//! Encapsulates allocation of setup and calls to pffft; like a smart pointer
+struct FFT_API PffftTransformer
+   : private std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>
+{
+   //! Return the minimum required buffer size
+   static size_t MinSize();
+
+   //! Return whether the size is allowable
+   //! Prime factors may only be 2, 3, or 5; and only 2, if N is less than
+   //! MinSize()
+   static bool IsAllowedSize(size_t N);
+
+   //! Round up a size for alignment and minimum window size
+   static PffftAlignedCount PaddedCount(size_t fftLen);
+
+   //! @post `!*this`
+   PffftTransformer() = default;
+
+   //! Make construction and resetting go through this non-inline call
+   /*!
+    @pre IsAllowedSize(N)
+    @post `*this`
+    */
+   explicit PffftTransformer(size_t N);
+
+   //! Free resources
+   //! @post `!*this`
+   void Reset();
+
+   //! Reinitialize resources
+   /*
+    @pre IsAllowedSize(N)
+    @post `*this`
+    */
+   void Reset(size_t N);
+
+   // Movable but not copyable
+   PffftTransformer(PffftTransformer&&) = default;
+   PffftTransformer & operator=(PffftTransformer&&) = default;
+
+   using std::unique_ptr<PFFFT_Setup, PffftSetupDeleter>::operator bool;
+
+   //! Invoke pffft_transform_ordered from time to frequency; real inputs only
+   /*!
+    The forward transform can work for small powers of two.
+    The length of the buffers is the larger of MinSize() or Size().  If Size()
+    is less than MinSize(), the excess floats in input do not need to be
+    initialized and are treated as "mutable."
+    @pre `*this`
+    */
+   void TransformOrdered(PffftConstFloats input,
+      PffftFloats output, PffftFloats work) const;
+
+   //! Invoke pffft_transform_ordered from frequency to time,
+   //! then optionally rescale values by 1/Size()
+   /*!
+    @pre `Size() >= MinSize()`
+    @pre `*this`
+    */
+   void InverseTransformOrdered(PffftConstFloats input,
+      PffftFloats output, PffftFloats work, bool renormalize = false) const;
+
+   //! return the size given to the constructor or Reset
+   size_t Size() const { return requestedSize; }
+
+private:
+   size_t requestedSize;
+};
+
 /*!
  * @brief Much faster that FFT.h's `PowerSpectrum`, at least in Short-Time
  * Fourier Transform-like situations, where many power spectra of the same size
@@ -222,6 +288,6 @@ public:
 
 private:
    const int mFftSize;
-   PffftSetupHolder mSetup;
+   PffftTransformer mSetup;
    PffftFloatVector mWork;
 };
