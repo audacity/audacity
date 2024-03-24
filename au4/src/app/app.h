@@ -25,24 +25,26 @@
 
 #include <QList>
 
-// #include "modularity/imodulesetup.h"
-// #include "modularity/ioc.h"
+#include "modularity/imodulesetup.h"
+#include "modularity/ioc.h"
 
 //#include "commandlineparser.h"
 
 namespace mu::app {
 class App
 {
+    Inject<IApplication> muapplication;
+
 public:
     App();
 
-    //void addModule(modularity::IModuleSetup* module);
+    void addModule(modularity::IModuleSetup* module);
 
     int run(int argc, char** argv);
 
 private:
 
-    //QList<modularity::IModuleSetup*> m_modules;
+    QList<modularity::IModuleSetup*> m_modules;
 };
 }
 

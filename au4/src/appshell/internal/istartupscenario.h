@@ -22,6 +22,8 @@
 #ifndef MU_APPSHELL_ISTARTUPSCENARIO_H
 #define MU_APPSHELL_ISTARTUPSCENARIO_H
 
+#include <optional>
+
 #include "modularity/imoduleinterface.h"
 
 #include "project/types/projecttypes.h"

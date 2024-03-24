@@ -28,12 +28,17 @@
 
 #include "log.h"
 
-//#include "framework/global/globalmodule.h"
+#ifdef MU_BUILD_UI_MODULE
+#include "framework/ui/uimodule.h"
+#include "framework/uicomponents/uicomponentsmodule.h"
+#endif
 
 #ifdef MU_BUILD_ACCESSIBILITY_MODULE
 #include "framework/accessibility/accessibilitymodule.h"
-#else
-//#include "stubs/framework/accessibility/accessibilitystubmodule.h"
+#endif
+
+#ifdef MU_BUILD_APPSHELL_MODULE
+#include "appshell/appshellmodule.h"
 #endif
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
@@ -91,7 +96,7 @@ int main(int argc, char** argv)
 #endif
 
     // modules
-#ifdef MUE_BUILD_APPSHELL_MODULE
+#ifdef MU_BUILD_APPSHELL_MODULE
     app.addModule(new mu::appshell::AppShellModule());
 #endif
 
