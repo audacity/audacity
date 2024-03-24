@@ -12,6 +12,8 @@
 #define __AUDACITY_TIME_TOOLBAR__
 
 #include <wx/defs.h>
+#include <wx/menu.h>
+#include <portmidi.h>
 
 #include "ToolBar.h"
 #include "../widgets/NumericTextCtrl.h"
@@ -63,6 +65,20 @@ private:
 
    Observer::Subscription mFormatChangedToFitValueSubscription;
    Observer::Subscription mFormatsSubscription;
+
+   wxMenu *timeToolBarMenu;
+   wxMenuItem *sendMTCCheckBox;
+   void CreateDropdownMenu();
+   void OnCheckboxItemSelected(wxCommandEvent &event);
+   void OnRightClick(wxMouseEvent &event);
+
+   PortMidiStream *portMidiStream;
+   PmError portMidiError;
+   bool isPortMidiInitialized = false;
+   void InitializePortMidi();
+   void TerminatePortMidi();
+   void UpdatePortMidiAccordingToPreferences();
+   void SendMTC(double audioTime);
 
 public:
    

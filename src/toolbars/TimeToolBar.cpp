@@ -41,7 +41,8 @@ IMPLEMENT_CLASS(TimeToolBar, ToolBar);
 // the Jaws screen reader script for Audacity.
 enum {
    TimeBarFirstID = 2800,
-   AudioPositionID
+   AudioPositionID,
+   SendMTCID
 };
 
 BEGIN_EVENT_TABLE(TimeToolBar, ToolBar)
@@ -58,18 +59,90 @@ Identifier TimeToolBar::ID()
 TimeToolBar::TimeToolBar(AudacityProject &project)
    :  ToolBar(project, XO("Time"), ID(), true)
    , mAudioTime{ nullptr }
+   , timeToolBarMenu(nullptr)
 {
    mFormatsSubscription = ProjectNumericFormats::Get(project)
       .Subscribe(*this, &TimeToolBar::OnFormatsChanged);
+   
+   if (gPrefs->Read("/AudioIO/SendMTC", true)) {
+      InitializePortMidi();
+   }
+   
+   CreateDropdownMenu();
 }
 
 TimeToolBar::~TimeToolBar()
 {
+   if (timeToolBarMenu)
+      delete timeToolBarMenu;
+   if (isPortMidiInitialized) {
+      TerminatePortMidi();
+   }
 }
 
 ToolBar::DockID TimeToolBar::DefaultDockID() const
 {
    return BotDockID;
+}
+
+void TimeToolBar::CreateDropdownMenu()
+{
+   timeToolBarMenu = new wxMenu;
+   sendMTCCheckBox = timeToolBarMenu->AppendCheckItem(SendMTCID, "Send MTC");
+
+   Bind(wxEVT_MENU, &TimeToolBar::OnCheckboxItemSelected, this, SendMTCID);
+   Bind(wxEVT_RIGHT_DOWN, &TimeToolBar::OnRightClick, this);
+}
+
+void TimeToolBar::OnRightClick(wxMouseEvent &event)
+{
+    PopupMenu(timeToolBarMenu, event.GetPosition());
+}
+
+void TimeToolBar::OnCheckboxItemSelected(wxCommandEvent &event)
+{
+   bool isChecked = timeToolBarMenu->IsChecked(event.GetId());
+   gPrefs->Write("/AudioIO/SendMTC", isChecked);
+   UpdatePortMidiAccordingToPreferences();
+}
+
+void TimeToolBar::UpdatePortMidiAccordingToPreferences() {
+   bool isChecked = gPrefs->Read("/AudioIO/SendMTC", true);
+   if (isChecked) {
+      if (!isPortMidiInitialized) {
+         InitializePortMidi();
+      }
+   } else {
+      if (isPortMidiInitialized) {
+         TerminatePortMidi();
+      }
+   }
+}
+
+void TimeToolBar::InitializePortMidi()
+{
+   portMidiError = Pm_Initialize();
+   if (portMidiError != pmNoError) {
+      wxLogError("Error initializing PortMidi: %s", Pm_GetErrorText(portMidiError));
+      return;
+   }
+
+   portMidiError = Pm_OpenOutput(&portMidiStream, Pm_GetDefaultOutputDeviceID(), NULL, 0, NULL, NULL, 0);
+   if (portMidiError != pmNoError) {
+      wxLogError("Error opening default MIDI output: %s", Pm_GetErrorText(portMidiError));
+      return;
+   }
+
+   isPortMidiInitialized = true;
+}
+
+void TimeToolBar::TerminatePortMidi()
+{
+   isPortMidiInitialized = false;
+   if (portMidiStream) {
+      Pm_Close(portMidiStream);
+   }
+   Pm_Terminate();
 }
 
 TimeToolBar &TimeToolBar::Get(AudacityProject &project)
@@ -319,6 +392,9 @@ void TimeToolBar::OnUpdate(wxCommandEvent &evt)
    // Go set the new size limits
    SetResizingLimits();
 
+   sendMTCCheckBox->Check(gPrefs->Read("/AudioIO/SendMTC", true));
+   UpdatePortMidiAccordingToPreferences();
+   
    // Inform others the toobar has changed
    Updated();
 }
@@ -386,6 +462,31 @@ void TimeToolBar::OnIdle(wxIdleEvent &evt)
    }
 
    mAudioTime->SetValue(wxMax(0.0, audioTime));
+
+   if (isPortMidiInitialized) {
+      SendMTC(audioTime);
+   }
+}
+
+void TimeToolBar::SendMTC(double audioTime) {
+   // Convert audio time to hours, minutes, seconds, and frames
+   int hours = static_cast<int>(audioTime / 3600); 
+   unsigned char hoursWithFPS = 0x00;
+   int frameRate = 2; // 29.97 hardcoded... TODO
+   hoursWithFPS |= (frameRate << 5);
+   hoursWithFPS |= hours;
+
+   int remainingSeconds = static_cast<int>(audioTime) % 3600;
+   int minutes = remainingSeconds / 60;
+   int seconds = remainingSeconds % 60;
+   int frames = static_cast<int>((audioTime - static_cast<int>(audioTime)) * 29.97); // 29.97 hardcoded... TODO
+
+   // Sending MIDI Time Code (MTC) message (Full Frame: 0xF0 0x7F 0x7F 0x01 0x01 hours minutes seconds frames 0xF7)
+   unsigned char message[] = {0xF0, 0x7F, 0x7F, 0x01, 0x01, static_cast<unsigned char>(hoursWithFPS), 
+                              static_cast<unsigned char>(minutes), static_cast<unsigned char>(seconds), 
+                              static_cast<unsigned char>(frames), 0xF7};
+   
+   Pm_WriteSysEx(portMidiStream, 0, message);
 }
 
 wxSize TimeToolBar::ComputeSizing(int digitH)

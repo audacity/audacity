@@ -152,6 +152,7 @@ void PlaybackPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieCheckBox(XXO("Always scrub un&pinned"),
             {UnpinnedScrubbingPreferenceKey(),
              UnpinnedScrubbingPreferenceDefault()});
+         S.TieCheckBox(XXO("Send MTC (MIDI Time Code)"), {"/AudioIO/SendMTC", true});
       }
       S.EndVerticalLay();
    }
