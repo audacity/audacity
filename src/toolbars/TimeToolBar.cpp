@@ -15,6 +15,7 @@
 
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+#include <wx/log.h>
 
 #include <wx/setup.h> // for wxUSE_* macros
 
