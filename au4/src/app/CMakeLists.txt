@@ -40,17 +40,23 @@ set(EXECUTABLE_NAME audacity)
 set(LINK_LIB
     ${QT_LIBRARIES}
     global
-
-    )
+    actions
+)
 
 if (MU_BUILD_UI_MODULE)
     list(APPEND LINK_LIB ui)
     list(APPEND LINK_LIB uicomponents)
 endif()
 
+if (MU_BUILD_SHORTCUTS_MODULE)
+    list(APPEND LINK_LIB shortcuts)
+endif()
+
 if (MU_BUILD_APPSHELL_MODULE)
     list(APPEND LINK_LIB appshell)
 endif()
+
+list(APPEND LINK_LIB context)
 
 ###########################################
 # Executable declaration

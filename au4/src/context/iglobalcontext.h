@@ -23,9 +23,8 @@
 #define MU_CONTEXT_IGLOBALCONTEXT_H
 
 #include "modularity/imoduleinterface.h"
-#include "project/inotationproject.h"
+#include "project/iaudacityproject.h"
 #include "async/notification.h"
-#include "io/path.h"
 
 namespace mu::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
@@ -35,16 +34,9 @@ class IGlobalContext : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IGlobalContext() = default;
 
-    virtual void setCurrentProject(const project::INotationProjectPtr& project) = 0;
-    virtual project::INotationProjectPtr currentProject() const = 0;
+    virtual void setCurrentProject(const project::IAudacityProjectPtr& project) = 0;
+    virtual project::IAudacityProjectPtr currentProject() const = 0;
     virtual async::Notification currentProjectChanged() const = 0;
-
-    virtual notation::IMasterNotationPtr currentMasterNotation() const = 0;
-    virtual async::Notification currentMasterNotationChanged() const = 0;
-
-    virtual void setCurrentNotation(const notation::INotationPtr& notation) = 0;
-    virtual notation::INotationPtr currentNotation() const = 0;
-    virtual async::Notification currentNotationChanged() const = 0;
 };
 }
 

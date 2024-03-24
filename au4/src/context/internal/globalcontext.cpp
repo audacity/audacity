@@ -21,29 +21,21 @@
  */
 #include "globalcontext.h"
 
-#include "notation/imasternotation.h"
-
 using namespace mu::context;
 using namespace mu::project;
-using namespace mu::notation;
 using namespace mu::async;
 
-void GlobalContext::setCurrentProject(const INotationProjectPtr& project)
+void GlobalContext::setCurrentProject(const IAudacityProjectPtr& project)
 {
     if (m_currentProject == project) {
         return;
     }
 
     m_currentProject = project;
-
-    INotationPtr notation = project ? project->masterNotation()->notation() : nullptr;
-    doSetCurrentNotation(notation);
-
     m_currentProjectChanged.notify();
-    m_currentNotationChanged.notify();
 }
 
-INotationProjectPtr GlobalContext::currentProject() const
+IAudacityProjectPtr GlobalContext::currentProject() const
 {
     return m_currentProject;
 }
@@ -51,48 +43,4 @@ INotationProjectPtr GlobalContext::currentProject() const
 Notification GlobalContext::currentProjectChanged() const
 {
     return m_currentProjectChanged;
-}
-
-IMasterNotationPtr GlobalContext::currentMasterNotation() const
-{
-    return m_currentProject ? m_currentProject->masterNotation() : nullptr;
-}
-
-Notification GlobalContext::currentMasterNotationChanged() const
-{
-    //! NOTE Same as project
-    return m_currentProjectChanged;
-}
-
-void GlobalContext::setCurrentNotation(const INotationPtr& notation)
-{
-    if (m_currentNotation == notation) {
-        return;
-    }
-
-    doSetCurrentNotation(notation);
-    m_currentNotationChanged.notify();
-}
-
-INotationPtr GlobalContext::currentNotation() const
-{
-    return m_currentNotation;
-}
-
-Notification GlobalContext::currentNotationChanged() const
-{
-    return m_currentNotationChanged;
-}
-
-void GlobalContext::doSetCurrentNotation(const INotationPtr& notation)
-{
-    if (m_currentNotation == notation) {
-        return;
-    }
-
-    m_currentNotation = notation;
-
-    if (m_currentNotation) {
-        m_currentNotation->setIsOpen(true);
-    }
 }

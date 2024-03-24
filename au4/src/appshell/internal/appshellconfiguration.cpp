@@ -26,13 +26,12 @@
 
 #include "settings.h"
 
-#include "multiinstances/resourcelockguard.h"
+// #include "multiinstances/resourcelockguard.h"
 
 #include "log.h"
 
 using namespace mu;
 using namespace mu::appshell;
-using namespace mu::notation;
 
 static const std::string module_name("appshell");
 
@@ -62,9 +61,9 @@ void AppShellConfiguration::init()
     settings()->setDefaultValue(HAS_COMPLETED_FIRST_LAUNCH_SETUP, Val(false));
 
     settings()->setDefaultValue(STARTUP_MODE_TYPE, Val(StartupModeType::StartEmpty));
-    settings()->setDefaultValue(STARTUP_SCORE_PATH, Val(projectConfiguration()->myFirstProjectPath().toStdString()));
+    // settings()->setDefaultValue(STARTUP_SCORE_PATH, Val(projectConfiguration()->myFirstProjectPath().toStdString()));
 
-    fileSystem()->makePath(sessionDataPath());
+    // fileSystem()->makePath(sessionDataPath());
 }
 
 bool AppShellConfiguration::hasCompletedFirstLaunchSetup() const
@@ -154,27 +153,31 @@ std::string AppShellConfiguration::musicXMLLicenseDeedUrl() const
 
 std::string AppShellConfiguration::museScoreVersion() const
 {
-    return MUSESCORE_VERSION + std::string(".") + MUSESCORE_BUILD_NUMBER;
+    return std::string();
+    //return MUSESCORE_VERSION + std::string(".") + MUSESCORE_BUILD_NUMBER;
 }
 
 std::string AppShellConfiguration::museScoreRevision() const
 {
-    return MUSESCORE_REVISION;
+    return std::string();
+    //return MUSESCORE_REVISION;
 }
 
 bool AppShellConfiguration::isNotationNavigatorVisible() const
 {
-    return uiConfiguration()->isVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, false);
+    return false;
+    //return uiConfiguration()->isVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, false);
 }
 
 void AppShellConfiguration::setIsNotationNavigatorVisible(bool visible) const
 {
-    uiConfiguration()->setIsVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, visible);
+    //uiConfiguration()->setIsVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, visible);
 }
 
 mu::async::Notification AppShellConfiguration::isNotationNavigatorVisibleChanged() const
 {
-    return uiConfiguration()->isVisibleChanged(NOTATION_NAVIGATOR_VISIBLE_KEY);
+    return mu::async::Notification();
+    //return uiConfiguration()->isVisibleChanged(NOTATION_NAVIGATOR_VISIBLE_KEY);
 }
 
 bool AppShellConfiguration::needShowSplashScreen() const
@@ -231,17 +234,19 @@ mu::Ret AppShellConfiguration::setSessionProjectsPaths(const mu::io::paths_t& pa
 
 std::string AppShellConfiguration::utmParameters(const std::string& utmMedium) const
 {
-    return "utm_source=desktop&utm_medium=" + utmMedium
-           + "&utm_content=" + MUSESCORE_REVISION
-           + "&utm_campaign=MuseScore" + MUSESCORE_VERSION;
+    return std::string();
+    // return "utm_source=desktop&utm_medium=" + utmMedium
+    //        + "&utm_content=" + MUSESCORE_REVISION
+    //        + "&utm_campaign=MuseScore" + MUSESCORE_VERSION;
 }
 
 std::string AppShellConfiguration::currentLanguageCode() const
 {
-    QString languageCode = languagesConfiguration()->currentLanguageCode().val;
-    QLocale locale(languageCode);
+    return std::string();
+    // QString languageCode = languagesConfiguration()->currentLanguageCode().val;
+    // QLocale locale(languageCode);
 
-    return locale.bcp47Name().toStdString();
+    // return locale.bcp47Name().toStdString();
 }
 
 mu::io::path_t AppShellConfiguration::sessionDataPath() const
@@ -256,14 +261,16 @@ mu::io::path_t AppShellConfiguration::sessionFilePath() const
 
 mu::RetVal<mu::ByteArray> AppShellConfiguration::readSessionState() const
 {
-    mi::ReadResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
-    return fileSystem()->readFile(sessionFilePath());
+    return mu::RetVal<mu::ByteArray>();
+    // mi::ReadResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
+    // return fileSystem()->readFile(sessionFilePath());
 }
 
 mu::Ret AppShellConfiguration::writeSessionState(const QByteArray& data)
 {
-    mi::WriteResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
-    return fileSystem()->writeFile(sessionFilePath(), ByteArray::fromQByteArrayNoCopy(data));
+    return mu::Ret();
+    // mi::WriteResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
+    // return fileSystem()->writeFile(sessionFilePath(), ByteArray::fromQByteArrayNoCopy(data));
 }
 
 mu::io::paths_t AppShellConfiguration::parseSessionProjectsPaths(const QByteArray& json) const

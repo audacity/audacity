@@ -29,21 +29,24 @@
 #include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
-#include "multiinstances/imultiinstancesprovider.h"
-#include "project/iprojectconfiguration.h"
 #include "iappshellconfiguration.h"
 
 #include "isessionsmanager.h"
+
+//! TODO AU4
+//#include "multiinstances/imultiinstancesprovider.h"
+//#include "project/iprojectconfiguration.h"
 
 namespace mu::appshell {
 class SessionsManager : public ISessionsManager, public async::Asyncable
 {
     INJECT(actions::IActionsDispatcher, dispatcher)
-    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     INJECT(context::IGlobalContext, globalContext)
-    INJECT(project::IProjectConfiguration, projectConfiguration)
     INJECT(IAppShellConfiguration, configuration)
 
+//! TODO AU4
+//     INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+//     INJECT(project::IProjectConfiguration, projectConfiguration)
 public:
     void init();
     void deinit();

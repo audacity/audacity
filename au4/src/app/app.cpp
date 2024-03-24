@@ -173,7 +173,7 @@ int App::run(int argc, char** argv)
 #ifdef MU_BUILD_APPSHELL_MODULE
     SplashScreen* splashScreen = nullptr;
     if (runMode == IApplication::RunMode::GuiApp) {
-        splashScreen = new SplashScreen(SplashScreen::Default);
+        //splashScreen = new SplashScreen(SplashScreen::Default);
 
         // if (multiInstancesProvider()->isMainInstance()) {
         //     splashScreen = new SplashScreen(SplashScreen::Default);
@@ -278,6 +278,7 @@ int App::run(int argc, char** argv)
 #elif defined(Q_OS_WASM)
         const QString mainQmlFile = "/Main.wasm.qml";
 #endif
+
         //! NOTE Move ownership to UiEngine
         ui::UiEngine::instance()->moveQQmlEngine(engine);
 
@@ -307,6 +308,7 @@ int App::run(int argc, char** argv)
                     }
 
                     // startupScenario()->run();
+                    interactive()->open("musescore://home");
                 }
             }, Qt::QueuedConnection);
 

@@ -39,9 +39,11 @@ void UiActionsRegister::init()
         updateEnabledAll();
     });
 
+#ifdef MU_BUILD_SHORTCUTS_MODULE
     shortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
         updateShortcutsAll();
     });
+#endif
 }
 
 void UiActionsRegister::reg(const IUiActionsModulePtr& module)
@@ -123,6 +125,8 @@ UiActionState UiActionsRegister::actionState(const ActionCode& code) const
 
 void UiActionsRegister::updateShortcuts(const ActionCodeList& codes)
 {
+    UNUSED(codes);
+#ifdef MU_BUILD_SHORTCUTS_MODULE
     auto screg = shortcutsRegister();
     for (const actions::ActionCode& code : codes) {
         Info& inf = info(code);
@@ -132,10 +136,12 @@ void UiActionsRegister::updateShortcuts(const ActionCodeList& codes)
 
         inf.action.shortcuts = screg->shortcut(inf.action.code).sequences;
     }
+#endif
 }
 
 void UiActionsRegister::updateShortcutsAll()
 {
+#ifdef MU_BUILD_SHORTCUTS_MODULE
     TRACEFUNC;
 
     auto screg = shortcutsRegister();
@@ -143,6 +149,7 @@ void UiActionsRegister::updateShortcutsAll()
         Info& inf = it->second;
         inf.action.shortcuts = screg->shortcut(inf.action.code).sequences;
     }
+#endif
 }
 
 void UiActionsRegister::doUpdateEnabled(Info& inf,

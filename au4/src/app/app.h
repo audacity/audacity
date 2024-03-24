@@ -27,6 +27,7 @@
 
 #include "modularity/imodulesetup.h"
 #include "modularity/ioc.h"
+#include "global/iinteractive.h"
 
 //#include "commandlineparser.h"
 
@@ -34,6 +35,7 @@ namespace mu::app {
 class App
 {
     Inject<IApplication> muapplication;
+    Inject<IInteractive> interactive;
 
 public:
     App();

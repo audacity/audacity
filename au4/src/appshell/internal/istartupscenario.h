@@ -26,7 +26,7 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "project/types/projecttypes.h"
+#include "project/projecttypes.h"
 
 namespace mu::appshell {
 class IStartupScenario : MODULE_EXPORT_INTERFACE

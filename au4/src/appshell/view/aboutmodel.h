@@ -26,8 +26,11 @@
 
 #include "modularity/ioc.h"
 #include "iappshellconfiguration.h"
-#include "update/iupdateconfiguration.h"
 #include "global/iglobalconfiguration.h"
+
+#ifdef MU_BUILD_UPDATE_MODULE
+#include "update/iupdateconfiguration.h"
+#endif
 
 class QUrl;
 
@@ -37,9 +40,11 @@ class AboutModel : public QObject
     Q_OBJECT
 
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(update::IUpdateConfiguration, updateConfiguration)
     INJECT(IGlobalConfiguration, globalConfiguration)
 
+#ifdef MU_BUILD_UPDATE_MODULE
+    INJECT(update::IUpdateConfiguration, updateConfiguration)
+#endif
 public:
     explicit AboutModel(QObject* parent = nullptr);
 

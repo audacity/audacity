@@ -66,8 +66,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/view/notationpagemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/notationpagemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.h
+    # TODO AU4
+    # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.h
 
@@ -117,12 +118,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/iappmenumodelhook.h
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
+
+    # TODO AU4
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.h
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
     ${DOCKWINDOW_SRC}
     )
 

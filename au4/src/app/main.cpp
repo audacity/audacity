@@ -28,6 +28,12 @@
 
 #include "log.h"
 
+#include "framework/actions/actionsmodule.h"
+
+#ifdef MU_BUILD_SHORTCUTS_MODULE
+#include "framework/shortcuts/shortcutsmodule.h"
+#endif
+
 #ifdef MU_BUILD_UI_MODULE
 #include "framework/ui/uimodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
@@ -40,6 +46,8 @@
 #ifdef MU_BUILD_APPSHELL_MODULE
 #include "appshell/appshellmodule.h"
 #endif
+
+#include "context/contextmodule.h"
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
 #include <vector>
@@ -89,16 +97,22 @@ int main(int argc, char** argv)
 
     // framework
     //app.addModule(new mu::accessibility::AccessibilityModule());
-    //app.addModule(new mu::actions::ActionsModule());
+    app.addModule(new mu::actions::ActionsModule());
 #ifdef MU_BUILD_UI_MODULE
     app.addModule(new mu::ui::UiModule());
     app.addModule(new mu::uicomponents::UiComponentsModule());
+#endif
+
+#ifdef MU_BUILD_SHORTCUTS_MODULE
+    app.addModule(new mu::shortcuts::ShortcutsModule());
 #endif
 
     // modules
 #ifdef MU_BUILD_APPSHELL_MODULE
     app.addModule(new mu::appshell::AppShellModule());
 #endif
+
+    app.addModule(new mu::context::ContextModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.

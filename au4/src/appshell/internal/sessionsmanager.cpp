@@ -77,9 +77,10 @@ void SessionsManager::update()
 {
     io::path_t newProjectPath;
 
-    if (auto project = globalContext()->currentProject()) {
-        newProjectPath = project->isNewlyCreated() ? projectConfiguration()->newProjectTemporaryPath() : project->path();
-    }
+    //! TODO AU4
+    // if (auto project = globalContext()->currentProject()) {
+    //     newProjectPath = project->isNewlyCreated() ? projectConfiguration()->newProjectTemporaryPath() : project->path();
+    // }
 
     if (newProjectPath == m_lastOpenedProjectPath) {
         return;

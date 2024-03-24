@@ -31,9 +31,12 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "workspace/iworkspacemanager.h"
 #include "ui/iuiconfiguration.h"
 #include "idockwindowprovider.h"
+
+#ifdef MU_BUILD_WORKSPACE_MODULE
+#include "workspace/iworkspacemanager.h"
+#endif
 
 #include "idockwindow.h"
 #include "internal/dockbase.h"
@@ -63,9 +66,11 @@ class DockWindow : public QQuickItem, public IDockWindow, public async::Asyncabl
     Q_PROPERTY(QQuickWindow * window READ windowProperty NOTIFY windowPropertyChanged)
 
     INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(workspace::IWorkspaceManager, workspaceManager)
     INJECT(IDockWindowProvider, dockWindowProvider)
 
+#ifdef MU_BUILD_WORKSPACE_MODULE
+    INJECT(workspace::IWorkspaceManager, workspaceManager)
+#endif
 public:
     explicit DockWindow(QQuickItem* parent = nullptr);
     ~DockWindow() override;

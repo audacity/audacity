@@ -18,29 +18,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-add_subdirectory(actions)
-#add_subdirectory(draw)
+# This module stores global state
+set(MODULE project)
 
-if (MU_BUILD_UI_MODULE)
-    add_subdirectory(ui)
-    add_subdirectory(uicomponents)
-endif()
+set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/projectmodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
+    ${CMAKE_CURRENT_LIST_DIR}/projecttypes.h
+    )
 
-if (MU_BUILD_NETWORK_MODULE)
-    add_subdirectory(network)
-endif()
-
-if (MU_BUILD_SHORTCUTS_MODULE)
-    add_subdirectory(shortcuts)
-endif()
-
-if (MU_BUILD_EXTENSIONS_MODULE)
-    add_subdirectory(extensions)
-endif()
-
-if (MU_BUILD_VST_MODULE)
-    add_subdirectory(vst)
-endif()
-
-
-
+include(SetupModule)

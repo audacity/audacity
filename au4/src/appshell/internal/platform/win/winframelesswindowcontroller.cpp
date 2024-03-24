@@ -31,6 +31,7 @@
 #include <dwmapi.h>
 
 #include <QScreen>
+#include <QApplication>
 
 #include "log.h"
 

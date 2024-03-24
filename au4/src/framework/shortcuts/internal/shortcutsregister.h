@@ -30,7 +30,10 @@
 #include "ui/iuiactionsregister.h"
 #include "async/asyncable.h"
 #include "io/ifilesystem.h"
+
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
 #include "multiinstances/imultiinstancesprovider.h"
+#endif
 
 namespace mu::deprecated {
 class XmlReader;
@@ -42,9 +45,11 @@ class ShortcutsRegister : public IShortcutsRegister, public async::Asyncable
 {
     INJECT(IShortcutsConfiguration, configuration)
     INJECT(io::IFileSystem, fileSystem)
-    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    INJECT(ui::IUiActionsRegister, uiactionsRegister)
 
+    INJECT(ui::IUiActionsRegister, uiactionsRegister)
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
+    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+#endif
 public:
     ShortcutsRegister() = default;
 

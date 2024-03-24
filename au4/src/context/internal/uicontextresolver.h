@@ -25,19 +25,24 @@
 #include "../iuicontextresolver.h"
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
-#include "playback/iplaybackcontroller.h"
 #include "iinteractive.h"
 #include "../iglobalcontext.h"
 #include "ui/inavigationcontroller.h"
+
+#ifdef MU_BUILD_PLAYBACK_MODULE
+#include "playback/iplaybackcontroller.h"
+#endif
 
 namespace mu::context {
 class UiContextResolver : public IUiContextResolver, public async::Asyncable
 {
     INJECT(IInteractive, interactive)
-    INJECT(playback::IPlaybackController, playbackController)
     INJECT(IGlobalContext, globalContext)
     INJECT(ui::INavigationController, navigationController)
 
+#ifdef MU_BUILD_PLAYBACK_MODULE
+    INJECT(playback::IPlaybackController, playbackController)
+#endif
 public:
     UiContextResolver() = default;
 

@@ -27,7 +27,9 @@
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
-#include "languages/ilanguagesservice.h"
+
+//! TODO AU4
+//#include "languages/ilanguagesservice.h"
 
 class QSvgRenderer;
 
@@ -37,7 +39,8 @@ class LoadingScreenView : public QWidget
     Q_OBJECT
 
     INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(languages::ILanguagesService, languagesService)
+//! TODO AU4
+//    INJECT(languages::ILanguagesService, languagesService)
 
 public:
     explicit LoadingScreenView(QWidget* parent = nullptr);

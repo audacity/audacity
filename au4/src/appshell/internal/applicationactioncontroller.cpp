@@ -87,102 +87,105 @@ void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
 
 void ApplicationActionController::onDropEvent(QDropEvent* event)
 {
-    const QMimeData* mime = event->mimeData();
-    QList<QUrl> urls = mime->urls();
-    if (urls.count() > 0) {
-        const QUrl& url = urls.front();
-        LOGD() << url;
+    //! TODO AU4
+    // const QMimeData* mime = event->mimeData();
+    // QList<QUrl> urls = mime->urls();
+    // if (urls.count() > 0) {
+    //     const QUrl& url = urls.front();
+    //     LOGD() << url;
 
-        bool shouldBeHandled = false;
+    //     bool shouldBeHandled = false;
 
-        if (projectFilesController()->isUrlSupported(url)) {
-            async::Async::call(this, [this, url]() {
-                Ret ret = projectFilesController()->openProject(url);
-                if (!ret) {
-                    LOGE() << ret.toString();
-                }
-            });
-            shouldBeHandled = true;
-        } else if (url.isLocalFile()) {
-            io::path_t filePath { url };
+    //     if (projectFilesController()->isUrlSupported(url)) {
+    //         async::Async::call(this, [this, url]() {
+    //             Ret ret = projectFilesController()->openProject(url);
+    //             if (!ret) {
+    //                 LOGE() << ret.toString();
+    //             }
+    //         });
+    //         shouldBeHandled = true;
+    //     } else if (url.isLocalFile()) {
+    //         io::path_t filePath { url };
 
-            if (audio::synth::isSoundFont(filePath)) {
-                async::Async::call(this, [this, filePath]() {
-                    Ret ret = soundFontRepository()->addSoundFont(filePath);
-                    if (!ret) {
-                        LOGE() << ret.toString();
-                    }
-                });
-                shouldBeHandled = true;
-            }
-        }
+    //         if (audio::synth::isSoundFont(filePath)) {
+    //             async::Async::call(this, [this, filePath]() {
+    //                 Ret ret = soundFontRepository()->addSoundFont(filePath);
+    //                 if (!ret) {
+    //                     LOGE() << ret.toString();
+    //                 }
+    //             });
+    //             shouldBeHandled = true;
+    //         }
+    //     }
 
-        if (shouldBeHandled) {
-            event->accept();
-        } else {
-            event->ignore();
-        }
-    }
+    //     if (shouldBeHandled) {
+    //         event->accept();
+    //     } else {
+    //         event->ignore();
+    //     }
+    // }
 }
 
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
-    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
-        || event->type() == QEvent::Quit) {
-        bool accepted = quit(false);
-        event->setAccepted(accepted);
+    //! TODO AU4
+    // if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
+    //     || event->type() == QEvent::Quit) {
+    //     bool accepted = quit(false);
+    //     event->setAccepted(accepted);
 
-        return true;
-    }
+    //     return true;
+    // }
 
-    if (event->type() == QEvent::FileOpen && watched == qApp) {
-        const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
-        const QUrl url = openEvent->url();
+    // if (event->type() == QEvent::FileOpen && watched == qApp) {
+    //     const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
+    //     const QUrl url = openEvent->url();
 
-        if (projectFilesController()->isUrlSupported(url)) {
-            if (startupScenario()->startupCompleted()) {
-                dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
-            } else {
-                startupScenario()->setStartupScoreFile(project::ProjectFile { url });
-            }
+    //     if (projectFilesController()->isUrlSupported(url)) {
+    //         if (startupScenario()->startupCompleted()) {
+    //             dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
+    //         } else {
+    //             startupScenario()->setStartupScoreFile(project::ProjectFile { url });
+    //         }
 
-            return true;
-        }
-    }
+    //         return true;
+    //     }
+    // }
 
     return QObject::eventFilter(watched, event);
 }
 
 bool ApplicationActionController::quit(bool isAllInstances, const io::path_t& installerPath)
 {
-    if (m_quiting) {
-        return false;
-    }
+    //! TODO AU4
+//     if (m_quiting) {
+//         return false;
+//     }
 
-    m_quiting = true;
-    DEFER {
-        m_quiting = false;
-    };
+//     m_quiting = true;
+//     DEFER {
+//         m_quiting = false;
+//     };
 
-    if (!projectFilesController()->closeOpenedProject()) {
-        return false;
-    }
+//     if (!projectFilesController()->closeOpenedProject()) {
+//         return false;
+//     }
 
-    if (isAllInstances) {
-        multiInstancesProvider()->quitForAll();
-    }
+//     if (isAllInstances) {
+//         multiInstancesProvider()->quitForAll();
+//     }
 
-    if (multiInstancesProvider()->instances().size() == 1 && !installerPath.empty()) {
-#if defined(Q_OS_LINUX)
-        interactive()->revealInFileBrowser(installerPath);
-#else
-        interactive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
-#endif
-    }
+//     if (multiInstancesProvider()->instances().size() == 1 && !installerPath.empty()) {
+// #if defined(Q_OS_LINUX)
+//         interactive()->revealInFileBrowser(installerPath);
+// #else
+//         interactive()->openUrl(QUrl::fromLocalFile(installerPath.toQString()));
+// #endif
+//     }
 
-    if (multiInstancesProvider()->instances().size() > 1) {
-        multiInstancesProvider()->notifyAboutInstanceWasQuited();
-    }
+//     if (multiInstancesProvider()->instances().size() > 1) {
+//         multiInstancesProvider()->notifyAboutInstanceWasQuited();
+//     }
 
     QCoreApplication::exit();
     return true;
@@ -190,15 +193,16 @@ bool ApplicationActionController::quit(bool isAllInstances, const io::path_t& in
 
 void ApplicationActionController::restart()
 {
-    if (projectFilesController()->closeOpenedProject()) {
-        if (multiInstancesProvider()->instances().size() == 1) {
-            application()->restart();
-        } else {
-            multiInstancesProvider()->quitAllAndRestartLast();
+    //! TODO AU4
+    // if (projectFilesController()->closeOpenedProject()) {
+    //     if (multiInstancesProvider()->instances().size() == 1) {
+    //         application()->restart();
+    //     } else {
+    //         multiInstancesProvider()->quitAllAndRestartLast();
 
-            QCoreApplication::exit();
-        }
-    }
+    //         QCoreApplication::exit();
+    //     }
+    // }
 }
 
 void ApplicationActionController::toggleFullScreen()
@@ -235,10 +239,11 @@ void ApplicationActionController::openAskForHelpPage()
 
 void ApplicationActionController::openPreferencesDialog()
 {
-    if (multiInstancesProvider()->isPreferencesAlreadyOpened()) {
-        multiInstancesProvider()->activateWindowWithOpenedPreferences();
-        return;
-    }
+    //! TODO AU4
+    // if (multiInstancesProvider()->isPreferencesAlreadyOpened()) {
+    //     multiInstancesProvider()->activateWindowWithOpenedPreferences();
+    //     return;
+    // }
 
     interactive()->open("musescore://preferences");
 }

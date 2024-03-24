@@ -23,6 +23,7 @@
 
 #include "ui/view/iconcodes.h"
 #include "context/uicontext.h"
+#include "context/shortcutcontext.h"
 
 #include "view/dockwindow/idockwindow.h"
 #include "async/notification.h"
@@ -224,9 +225,10 @@ void ApplicationUiActions::init()
         m_actionCheckedChanged.send({ TOGGLE_NAVIGATOR_ACTION_CODE });
     });
 
-    brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
-        m_actionCheckedChanged.send({ TOGGLE_BRAILLE_ACTION_CODE });
-    });
+    //! TODO AU4
+    // brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
+    //     m_actionCheckedChanged.send({ TOGGLE_BRAILLE_ACTION_CODE });
+    // });
 
     dockWindowProvider()->windowChanged().onNotify(this, [this]() {
         listenOpenedDocksChanged(dockWindowProvider()->window());
@@ -263,6 +265,9 @@ const mu::ui::UiActionList& ApplicationUiActions::actionsList() const
 
 bool ApplicationUiActions::actionEnabled(const UiAction& act) const
 {
+    if (!m_controller) {
+        return true;
+    }
     if (!m_controller->canReceiveAction(act.code)) {
         return false;
     }
@@ -287,9 +292,10 @@ bool ApplicationUiActions::actionChecked(const UiAction& act) const
         return configuration()->isNotationNavigatorVisible();
     }
 
-    if (dockName == NOTATION_BRAILLE_PANEL_NAME) {
-        return brailleConfiguration()->braillePanelEnabled();
-    }
+    //! TODO AU4
+    // if (dockName == NOTATION_BRAILLE_PANEL_NAME) {
+    //     return brailleConfiguration()->braillePanelEnabled();
+    // }
 
     const IDockWindow* window = dockWindowProvider()->window();
     return window ? window->isDockOpen(dockName) : false;
