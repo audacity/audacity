@@ -17,6 +17,7 @@ This class now lists
 - Clips
 - Labels
 - Boxes
+- Selection
 
 *//*******************************************************************/
 
@@ -43,6 +44,8 @@ This class now lists
 #include "NoteTrack.h"
 #include "TimeTrack.h"
 #include "Envelope.h"
+#include "ProjectAudioIO.h"
+#include "AudioIO.h"
 
 #include "SelectCommand.h"
 #include "ShuttleGui.h"
@@ -72,6 +75,7 @@ enum {
    kEnvelopes,
    kLabels,
    kBoxes,
+   kSelection,
    nTypes
 };
 
@@ -86,6 +90,7 @@ static const EnumValueSymbol kTypes[nTypes] =
    { XO("Envelopes") },
    { XO("Labels") },
    { XO("Boxes") },
+   { XO("Selection") },
 };
 
 enum {
@@ -171,6 +176,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kEnvelopes    : return SendEnvelopes( context );
       case kLabels       : return SendLabels( context );
       case kBoxes        : return SendBoxes( context );
+      case kSelection    : return SendSelection( context );
       default:
          context.Status( "Command options not recognised" );
    }
@@ -621,6 +627,20 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
       i++;
    }
    context.EndArray();
+
+   return true;
+}
+
+bool GetInfoCommand::SendSelection(const CommandContext &context)
+{
+   context.StartStruct();
+
+   const auto& selectedRegion = ViewInfo::Get( context.project ).selectedRegion;
+
+   context.AddItem(selectedRegion.t0(), "Start");  // Send selection start position
+   context.AddItem(selectedRegion.t1(), "End");    // Send cselection end position
+
+   context.EndStruct();
 
    return true;
 }
