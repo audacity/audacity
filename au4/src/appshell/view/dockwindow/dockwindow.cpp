@@ -210,11 +210,13 @@ void DockWindow::init()
         reloadCurrentPage();
     });
 
+#ifdef MU_BUILD_WORKSPACE_MODULE
     workspaceManager()->currentWorkspaceAboutToBeChanged().onNotify(this, [this]() {
         if (const DockPageView* page = currentPage()) {
             savePageState(page->objectName());
         }
     });
+#endif
 }
 
 void DockWindow::loadPage(const QString& uri, const QVariantMap& params)

@@ -96,11 +96,11 @@ DockWindow {
         },
 
         NotationPage {
-            topToolKeyNavSec: root.topToolKeyNavSec
+            //topToolKeyNavSec: root.topToolKeyNavSec
         },
 
         PublishPage {
-            topToolKeyNavSec: root.topToolKeyNavSec
+            //topToolKeyNavSec: root.topToolKeyNavSec
         },
 
         DevToolsPage {}

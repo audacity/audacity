@@ -29,4 +29,7 @@ if (MU_BUILD_APPSHELL_MODULE)
     add_subdirectory(appshell)
 endif()
 
+add_subdirectory(context)
+add_subdirectory(project)
+
 # ...

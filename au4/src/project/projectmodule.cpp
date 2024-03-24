@@ -5,7 +5,7 @@
  * MuseScore
  * Music Composition & Notation
  *
- * Copyright (C) 2022 MuseScore BVBA and others
+ * Copyright (C) 2021 MuseScore BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,33 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-#ifndef MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
-#define MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
-
-#include <QWidget>
+#include "projectmodule.h"
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
 
-namespace mu::appshell {
-class NewInstanceLoadingScreenView : public QWidget
+using namespace mu::project;
+
+std::string ProjectModule::moduleName() const
 {
-    Q_OBJECT
-
-    INJECT(ui::IUiConfiguration, uiConfiguration)
-
-public:
-    explicit NewInstanceLoadingScreenView(bool forNewScore, const QString& openingFileName, QWidget* parent = nullptr);
-
-private:
-    bool event(QEvent* event) override;
-    void draw(QPainter* painter);
-
-    QString m_message;
-
-    QSize m_dialogSize;
-};
+    return "project";
 }
 
-#endif // MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
+void ProjectModule::registerExports()
+{
+}
+
+void ProjectModule::onInit(const IApplication::RunMode& mode)
+{
+}
+
+void ProjectModule::onDeinit()
+{
+}

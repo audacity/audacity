@@ -29,21 +29,24 @@
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "actions/iactionsdispatcher.h"
-#include "multiinstances/imultiinstancesprovider.h"
 #include "iappshellconfiguration.h"
 #include "isessionsmanager.h"
-#include "project/iprojectautosaver.h"
+
+//! TODO AU4
+// #include "multiinstances/imultiinstancesprovider.h"
+// #include "project/iprojectautosaver.h"
 
 namespace mu::appshell {
 class StartupScenario : public IStartupScenario, public async::Asyncable
 {
     INJECT(IInteractive, interactive)
     INJECT(actions::IActionsDispatcher, dispatcher)
-    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(ISessionsManager, sessionsManager)
-    INJECT(project::IProjectAutoSaver, projectAutoSaver)
 
+//! TODO AU4
+    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+    // INJECT(project::IProjectAutoSaver, projectAutoSaver)
 public:
 
     void setStartupType(const std::optional<std::string>& type) override;

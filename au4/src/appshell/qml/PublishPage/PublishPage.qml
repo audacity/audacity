@@ -26,11 +26,7 @@ import MuseScore.UiComponents 1.0
 import MuseScore.AppShell 1.0
 import MuseScore.Dock 1.0
 
-import MuseScore.NotationScene 1.0
-import MuseScore.Playback 1.0
-
 import "../dockwindow"
-import "../NotationPage"
 
 DockPage {
     id: root
@@ -38,103 +34,8 @@ DockPage {
     objectName: "Publish"
     uri: "musescore://publish"
 
-    property var topToolKeyNavSec
-
-    property NavigationSection publishToolBarKeyNavSec: NavigationSection {
-        id: keynavSec
-        name: "PublishToolBarSection"
-        order: 2
+    central: Text {
+        text: "Publish"
     }
 
-    property NotationPageModel pageModel: NotationPageModel {}
-
-    mainToolBars: [
-        DockToolBar {
-            id: notationToolBar
-
-            objectName: root.objectName + "_notationToolBar"
-            title: qsTrc("appshell", "Notation toolbar")
-
-            floatable: false
-            closable: false
-            resizable: false
-            separatorsVisible: false
-
-            alignment: DockToolBarAlignment.Center
-            contentBottomPadding: 2
-
-            NotationToolBar {
-                navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 2
-
-                onActiveFocusRequested: {
-                    if (navigationPanel.active) {
-                        notationToolBar.forceActiveFocus()
-                    }
-                }
-            }
-        },
-
-        DockToolBar {
-            id: playbackToolBar
-
-            objectName: root.objectName + "_playbackToolBar"
-            title: qsTrc("appshell", "Playback controls")
-
-            separatorsVisible: false
-            alignment: DockToolBarAlignment.Right
-            contentBottomPadding: 2
-
-            PlaybackToolBar {
-                navigationPanelSection: root.topToolKeyNavSec
-                navigationPanelOrder: 3
-
-                floating: playbackToolBar.floating
-            }
-        },
-
-        DockToolBar {
-            id: undoRedoToolBar
-
-            objectName: root.objectName + "_undoRedoToolBar"
-            title: qsTrc("appshell", "Undo/redo toolbar")
-
-            floatable: false
-            closable: false
-            resizable: false
-            separatorsVisible: false
-
-            alignment: DockToolBarAlignment.Right
-            contentBottomPadding: 2
-
-            UndoRedoToolBar {
-                navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 4
-            }
-        }
-    ]
-
-    toolBars: [
-        DockToolBar {
-            objectName: "publishToolBar"
-
-            floatable: false
-
-            PublishToolBar {
-                navigation.section: root.publishToolBarKeyNavSec
-                navigation.order: 1
-            }
-        }
-    ]
-
-    central: NotationView {
-        name: "PublishNotationView"
-        publishMode: true
-    }
-
-    statusBar: DockStatusBar {
-        objectName: "publishStatusBar"
-
-        NotationStatusBar {}
-    }
 }

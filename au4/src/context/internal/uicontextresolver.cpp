@@ -21,8 +21,6 @@
  */
 #include "uicontextresolver.h"
 
-#include "diagnostics/diagnosticutils.h"
-
 #include "shortcutcontext.h"
 #include "log.h"
 
@@ -40,39 +38,42 @@ void UiContextResolver::init()
         notifyAboutContextChanged();
     });
 
+#ifdef MU_BUILD_PLAYBACK_MODULE
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();
     });
+#endif
 
-    globalContext()->currentNotationChanged().onNotify(this, [this]() {
-        auto notation = globalContext()->currentNotation();
-        if (notation) {
-            notation->interaction()->selectionChanged().onNotify(this, [this]() {
-                notifyAboutContextChanged();
-            });
+    //! TODO AU4
+    // globalContext()->currentNotationChanged().onNotify(this, [this]() {
+    //     auto notation = globalContext()->currentNotation();
+    //     if (notation) {
+    //         notation->interaction()->selectionChanged().onNotify(this, [this]() {
+    //             notifyAboutContextChanged();
+    //         });
 
-            notation->interaction()->textEditingStarted().onNotify(this, [this]() {
-                notifyAboutContextChanged();
-            });
+    //         notation->interaction()->textEditingStarted().onNotify(this, [this]() {
+    //             notifyAboutContextChanged();
+    //         });
 
-            notation->interaction()->textEditingEnded().onReceive(this, [this](engraving::TextBase*) {
-                notifyAboutContextChanged();
-            });
+    //         notation->interaction()->textEditingEnded().onReceive(this, [this](engraving::TextBase*) {
+    //             notifyAboutContextChanged();
+    //         });
 
-            notation->undoStack()->stackChanged().onNotify(this, [this]() {
-                notifyAboutContextChanged();
-            });
+    //         notation->undoStack()->stackChanged().onNotify(this, [this]() {
+    //             notifyAboutContextChanged();
+    //         });
 
-            notation->interaction()->noteInput()->noteInputStarted().onNotify(this, [this]() {
-                notifyAboutContextChanged();
-            });
+    //         notation->interaction()->noteInput()->noteInputStarted().onNotify(this, [this]() {
+    //             notifyAboutContextChanged();
+    //         });
 
-            notation->interaction()->noteInput()->noteInputEnded().onNotify(this, [this]() {
-                notifyAboutContextChanged();
-            });
-        }
-        notifyAboutContextChanged();
-    });
+    //         notation->interaction()->noteInput()->noteInputEnded().onNotify(this, [this]() {
+    //             notifyAboutContextChanged();
+    //         });
+    //     }
+    //     notifyAboutContextChanged();
+    // });
 
     navigationController()->navigationChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();
@@ -98,8 +99,8 @@ UiContext UiContextResolver::currentUiContext() const
     }
 
     if (currentUri == NOTATION_PAGE_URI) {
-        auto notation = globalContext()->currentNotation();
-        if (!notation) {
+        auto project = globalContext()->currentProject();
+        if (!project) {
             //! NOTE The notation page is open, but the notation itself is not loaded - we consider that the notation is not open.
             //! We need to think, maybe we need a separate value for this case.
             return context::UiCtxUnknown;
@@ -149,55 +150,59 @@ mu::async::Notification UiContextResolver::currentUiContextChanged() const
 
 bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) const
 {
-    //! NOTE If (when) there are many different contexts here,
-    //! then the implementation of this method will need to be changed
-    //! so that it does not become spaghetti-code.
-    //! It would be nice if this context as part of the UI context,
-    //! for this we should complicate the implementation of the UI context,
-    //! probably make a tree, for example:
-    //! NotationOpened
-    //!     NotationFocused
-    //!         NotationStaffTab
+    //! TODO AU4
+    UNUSED(scContext);
+    return false;
 
-    if (CTX_NOTATION_OPENED == scContext) {
-        return matchWithCurrent(context::UiCtxNotationOpened);
-    } else if (CTX_NOTATION_FOCUSED == scContext) {
-        return matchWithCurrent(context::UiCtxNotationFocused);
-    } else if (CTX_NOT_NOTATION_FOCUSED == scContext) {
-        return !matchWithCurrent(context::UiCtxNotationFocused);
-    } else if (CTX_NOTATION_NOT_NOTE_INPUT_STAFF_TAB == scContext) {
-        if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-            return false;
-        }
-        auto notation = globalContext()->currentNotation();
-        if (!notation) {
-            return false;
-        }
-        auto noteInput = notation->interaction()->noteInput();
-        return !noteInput->isNoteInputMode() || noteInput->state().staffGroup != mu::engraving::StaffGroup::TAB;
-    } else if (CTX_NOTATION_NOTE_INPUT_STAFF_TAB == scContext) {
-        if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-            return false;
-        }
-        auto notation = globalContext()->currentNotation();
-        if (!notation) {
-            return false;
-        }
-        auto noteInput = notation->interaction()->noteInput();
-        return noteInput->isNoteInputMode() && noteInput->state().staffGroup == mu::engraving::StaffGroup::TAB;
-    } else if (CTX_NOTATION_TEXT_EDITING == scContext) {
-        if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-            return false;
-        }
-        auto notation = globalContext()->currentNotation();
-        if (!notation) {
-            return false;
-        }
-        return notation->interaction()->isTextEditingStarted();
-    }
+    // //! NOTE If (when) there are many different contexts here,
+    // //! then the implementation of this method will need to be changed
+    // //! so that it does not become spaghetti-code.
+    // //! It would be nice if this context as part of the UI context,
+    // //! for this we should complicate the implementation of the UI context,
+    // //! probably make a tree, for example:
+    // //! NotationOpened
+    // //!     NotationFocused
+    // //!         NotationStaffTab
 
-    IF_ASSERT_FAILED(CTX_ANY == scContext) {
-        return true;
-    }
-    return true;
+    // if (CTX_NOTATION_OPENED == scContext) {
+    //     return matchWithCurrent(context::UiCtxNotationOpened);
+    // } else if (CTX_NOTATION_FOCUSED == scContext) {
+    //     return matchWithCurrent(context::UiCtxNotationFocused);
+    // } else if (CTX_NOT_NOTATION_FOCUSED == scContext) {
+    //     return !matchWithCurrent(context::UiCtxNotationFocused);
+    // } else if (CTX_NOTATION_NOT_NOTE_INPUT_STAFF_TAB == scContext) {
+    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
+    //         return false;
+    //     }
+    //     auto notation = globalContext()->currentNotation();
+    //     if (!notation) {
+    //         return false;
+    //     }
+    //     auto noteInput = notation->interaction()->noteInput();
+    //     return !noteInput->isNoteInputMode() || noteInput->state().staffGroup != mu::engraving::StaffGroup::TAB;
+    // } else if (CTX_NOTATION_NOTE_INPUT_STAFF_TAB == scContext) {
+    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
+    //         return false;
+    //     }
+    //     auto notation = globalContext()->currentNotation();
+    //     if (!notation) {
+    //         return false;
+    //     }
+    //     auto noteInput = notation->interaction()->noteInput();
+    //     return noteInput->isNoteInputMode() && noteInput->state().staffGroup == mu::engraving::StaffGroup::TAB;
+    // } else if (CTX_NOTATION_TEXT_EDITING == scContext) {
+    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
+    //         return false;
+    //     }
+    //     auto notation = globalContext()->currentNotation();
+    //     if (!notation) {
+    //         return false;
+    //     }
+    //     return notation->interaction()->isTextEditingStarted();
+    // }
+
+    // IF_ASSERT_FAILED(CTX_ANY == scContext) {
+    //     return true;
+    // }
+    // return true;
 }

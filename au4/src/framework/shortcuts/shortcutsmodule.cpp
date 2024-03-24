@@ -35,20 +35,23 @@
 
 #include "internal/shortcutsregister.h"
 #include "internal/shortcutscontroller.h"
-#include "internal/midiremote.h"
 #include "internal/shortcutsconfiguration.h"
 
 #include "view/shortcutsmodel.h"
 #include "view/editshortcutmodel.h"
+
+#ifdef MU_BUILD_MIDI_MODULE
+#include "internal/midiremote.h"
 #include "view/mididevicemappingmodel.h"
 #include "view/editmidimappingmodel.h"
+#endif
 
 #include "global/api/iapiregister.h"
 #include "api/shortcutsapi.h"
 
 #include "ui/iuiengine.h"
 
-#include "diagnostics/idiagnosticspathsregister.h"
+//#include "diagnostics/idiagnosticspathsregister.h"
 
 using namespace mu::shortcuts;
 using namespace mu::modularity;
@@ -69,12 +72,15 @@ void ShortcutsModule::registerExports()
     m_shortcutsController = std::make_shared<ShortcutsController>();
     m_shortcutsRegister = std::make_shared<ShortcutsRegister>();
     m_configuration = std::make_shared<ShortcutsConfiguration>();
-    m_midiRemote = std::make_shared<MidiRemote>();
 
     ioc()->registerExport<IShortcutsRegister>(moduleName(), m_shortcutsRegister);
     ioc()->registerExport<IShortcutsController>(moduleName(), m_shortcutsController);
-    ioc()->registerExport<IMidiRemote>(moduleName(), m_midiRemote);
     ioc()->registerExport<IShortcutsConfiguration>(moduleName(), m_configuration);
+
+#ifdef MU_BUILD_MIDI_MODULE
+    m_midiRemote = std::make_shared<MidiRemote>();
+    ioc()->registerExport<IMidiRemote>(moduleName(), m_midiRemote);
+#endif
 }
 
 void ShortcutsModule::registerApi()
@@ -102,9 +108,10 @@ void ShortcutsModule::registerUiTypes()
 
     qmlRegisterType<ShortcutsModel>("MuseScore.Shortcuts", 1, 0, "ShortcutsModel");
     qmlRegisterType<EditShortcutModel>("MuseScore.Shortcuts", 1, 0, "EditShortcutModel");
+#ifdef MU_BUILD_MIDI_MODULE
     qmlRegisterType<MidiDeviceMappingModel>("MuseScore.Shortcuts", 1, 0, "MidiDeviceMappingModel");
     qmlRegisterType<EditMidiMappingModel>("MuseScore.Shortcuts", 1, 0, "EditMidiMappingModel");
-
+#endif
     ioc()->resolve<IUiEngine>(moduleName())->addSourceImportPath(shortcuts_QML_IMPORT);
 }
 
@@ -117,12 +124,14 @@ void ShortcutsModule::onInit(const IApplication::RunMode& mode)
     m_configuration->init();
     m_shortcutsController->init();
     m_shortcutsRegister->init();
-    m_midiRemote->init();
 
-    auto pr = ioc()->resolve<diagnostics::IDiagnosticsPathsRegister>(moduleName());
-    if (pr) {
-        pr->reg("shortcutsUserAppDataPath", m_configuration->shortcutsUserAppDataPath());
-        pr->reg("shortcutsAppDataPath", m_configuration->shortcutsAppDataPath());
-        pr->reg("midiMappingUserAppDataPath", m_configuration->midiMappingUserAppDataPath());
-    }
+#ifdef MU_BUILD_MIDI_MODULE
+    m_midiRemote->init();
+#endif
+    // auto pr = ioc()->resolve<diagnostics::IDiagnosticsPathsRegister>(moduleName());
+    // if (pr) {
+    //     pr->reg("shortcutsUserAppDataPath", m_configuration->shortcutsUserAppDataPath());
+    //     pr->reg("shortcutsAppDataPath", m_configuration->shortcutsAppDataPath());
+    //     pr->reg("midiMappingUserAppDataPath", m_configuration->midiMappingUserAppDataPath());
+    // }
 }

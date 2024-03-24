@@ -22,6 +22,8 @@
 #ifndef MU_APPSHELL_APPMENUMODEL_H
 #define MU_APPSHELL_APPMENUMODEL_H
 
+#include <QWindow>
+
 #ifndef MU_QT5_COMPAT
 Q_MOC_INCLUDE(< QWindow >)
 #endif
@@ -34,13 +36,15 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "ui/inavigationcontroller.h"
 #include "ui/iuiconfiguration.h"
 #include "actions/iactionsdispatcher.h"
-#include "workspace/iworkspacemanager.h"
 #include "iappshellconfiguration.h"
-#include "project/irecentfilescontroller.h"
 #include "internal/iappmenumodelhook.h"
-#include "extensions/iextensionsprovider.h"
-#include "update/iupdateconfiguration.h"
 #include "global/iglobalconfiguration.h"
+
+//! TODO AU4
+// #include "workspace/iworkspacemanager.h"
+// #include "project/irecentfilescontroller.h"
+// #include "extensions/iextensionsprovider.h"
+// #include "update/iupdateconfiguration.h"
 
 namespace mu::appshell {
 class AppMenuModel : public uicomponents::AbstractMenuModel
@@ -52,13 +56,16 @@ class AppMenuModel : public uicomponents::AbstractMenuModel
     INJECT(ui::INavigationController, navigationController)
     INJECT(ui::IUiConfiguration, uiConfiguration)
     INJECT(actions::IActionsDispatcher, actionsDispatcher)
-    INJECT(workspace::IWorkspaceManager, workspacesManager)
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(project::IRecentFilesController, recentFilesController)
     INJECT(IAppMenuModelHook, appMenuModelHook)
-    INJECT(extensions::IExtensionsProvider, extensionsProvider)
-    INJECT(update::IUpdateConfiguration, updateConfiguration)
+
     INJECT(IGlobalConfiguration, globalConfiguration)
+
+//! TODO AU4
+    // INJECT(workspace::IWorkspaceManager, workspacesManager)
+    // INJECT(project::IRecentFilesController, recentFilesController)
+    // INJECT(extensions::IExtensionsProvider, extensionsProvider)
+    // INJECT(update::IUpdateConfiguration, updateConfiguration)
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);

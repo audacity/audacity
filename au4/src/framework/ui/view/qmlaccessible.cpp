@@ -376,8 +376,10 @@ void AccessibleItem::classBegin()
 
 void AccessibleItem::componentComplete()
 {
-    accessibilityController()->reg(this);
-    m_registred = true;
+    if (accessibilityController()) {
+        accessibilityController()->reg(this);
+        m_registred = true;
+    }
 }
 
 AccessibleItem* AccessibleItem::accessibleParent_property() const
@@ -673,7 +675,10 @@ void AccessibleItem::setWindow(QWindow* window)
 
 const IAccessible* AccessibleItem::accessibleRoot() const
 {
-    return accessibilityController()->accessibleRoot();
+    if (accessibilityController()) {
+        return accessibilityController()->accessibleRoot();
+    }
+    return nullptr;
 }
 
 void AccessibleItem::addChild(AccessibleItem* item)

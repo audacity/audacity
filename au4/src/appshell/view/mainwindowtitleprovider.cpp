@@ -23,7 +23,6 @@
 #include "translation.h"
 
 using namespace mu::appshell;
-using namespace mu::notation;
 
 MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
     : QObject(parent)
@@ -43,10 +42,6 @@ void MainWindowTitleProvider::load()
                 update();
             });
         }
-    });
-
-    context()->currentNotationChanged().onNotify(this, [this]() {
-        update();
     });
 }
 
@@ -97,7 +92,7 @@ void MainWindowTitleProvider::setFileModified(bool fileModified)
 
 void MainWindowTitleProvider::update()
 {
-    project::INotationProjectPtr project = context()->currentProject();
+    project::IAudacityProjectPtr project = context()->currentProject();
 
     if (!project) {
         setTitle(qtrc("appshell", "MuseScore 4"));
@@ -106,10 +101,8 @@ void MainWindowTitleProvider::update()
         return;
     }
 
-    INotationPtr notation = context()->currentNotation();
-    setTitle(notation->projectNameAndPartName());
+    setTitle(project->title());
 
-    setFilePath((project->isNewlyCreated() || project->isCloudProject())
-                ? "" : project->path().toQString());
+    setFilePath(project->filePath().toQString());
     setFileModified(project->needSave().val);
 }

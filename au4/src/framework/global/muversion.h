@@ -32,6 +32,7 @@ public:
     static String version();
     static String fullVersion();
     static String revision();
+    static String build();
 
     static int majorVersion();
     static int minorVersion();
