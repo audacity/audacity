@@ -176,3 +176,4 @@ appimagetool/*
 .build.*/
 .conan/
 .debug/
+build-*

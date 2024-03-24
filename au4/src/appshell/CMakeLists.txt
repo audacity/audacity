@@ -46,16 +46,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
+    # TODO AU4
+    #${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/istartupscenario.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.h
+    # TODO AU4
+    #${CMAKE_CURRENT_LIST_DIR}/internal/istartupscenario.h
+    #${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
+    #${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h
+    #${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.h
     ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/appmenumodel.cpp
@@ -68,40 +70,44 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/firstlaunchsetupmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/firstlaunchsetupmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
+
+    # TODO AU4
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
+    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/publish/publishtoolbarmodel.cpp

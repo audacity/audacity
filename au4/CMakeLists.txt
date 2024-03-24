@@ -84,9 +84,14 @@ option(MU_ENABLE_STRING_DEBUG_HACK "Enable string debug hack (only clang)" ON)
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()
+    # TODO AU4
     #include(SetupConfigure)
     add_definitions(-DQT_SUPPORT)
     add_definitions(-DKORS_LOGGER_QT_SUPPORT)
+
+    add_definitions(-DMU_BUILD_UI_MODULE)
+    add_definitions(-DMU_BUILD_APPSHELL_MODULE)
+
 endif()
 
 set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)

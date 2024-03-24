@@ -58,7 +58,7 @@ endif()
 
 add_executable(${EXECUTABLE_NAME}
     main.cpp
-    app_simple.cpp
+    app.cpp
     app.h
     #commandlineparser.cpp
     #commandlineparser.h

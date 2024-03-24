@@ -33,7 +33,6 @@ MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
 void MainWindowTitleProvider::load()
 {
     update();
-
     context()->currentProjectChanged().onNotify(this, [this]() {
         if (auto currentProject = context()->currentProject()) {
             currentProject->displayNameChanged().onNotify(this, [this]() {
