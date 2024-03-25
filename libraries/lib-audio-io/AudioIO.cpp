@@ -982,7 +982,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // previous call.
    mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
    successAudio = successAudio &&
       std::all_of(range.begin(), range.end(),
@@ -991,7 +990,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
               (mPortStreamV19 != NULL && mLastPaError == paNoError)
                  ? Pa_GetStreamInfo(mPortStreamV19) : nullptr,
               t0, mRate ); });
-#endif
 
    if (!successAudio) {
       if (pListener && numCaptureChannels > 0)

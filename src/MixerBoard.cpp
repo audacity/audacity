@@ -152,9 +152,7 @@ enum {
    ID_BITMAPBUTTON_MUSICAL_INSTRUMENT = 13000,
    ID_SLIDER_PAN,
    ID_SLIDER_GAIN,
-#ifdef EXPERIMENTAL_MIDI_OUT
    ID_SLIDER_VELOCITY,
-#endif
    ID_TOGGLEBUTTON_MUTE,
    ID_TOGGLEBUTTON_SOLO,
 };
@@ -166,9 +164,7 @@ BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanelWrapper)
    EVT_BUTTON(ID_BITMAPBUTTON_MUSICAL_INSTRUMENT, MixerTrackCluster::OnButton_MusicalInstrument)
    EVT_SLIDER(ID_SLIDER_PAN, MixerTrackCluster::OnSlider_Pan)
    EVT_SLIDER(ID_SLIDER_GAIN, MixerTrackCluster::OnSlider_Gain)
-#ifdef EXPERIMENTAL_MIDI_OUT
    EVT_SLIDER(ID_SLIDER_VELOCITY, MixerTrackCluster::OnSlider_Velocity)
-#endif
    //v EVT_COMMAND_SCROLL(ID_SLIDER_GAIN, MixerTrackCluster::OnSliderScroll_Gain)
    EVT_COMMAND(ID_TOGGLEBUTTON_MUTE, wxEVT_COMMAND_BUTTON_CLICKED, MixerTrackCluster::OnButton_Mute)
    EVT_COMMAND(ID_TOGGLEBUTTON_SOLO, wxEVT_COMMAND_BUTTON_CLICKED, MixerTrackCluster::OnButton_Solo)
@@ -226,7 +222,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                .Orientation( wxVERTICAL ));
    mSlider_Gain->SetName(_("Gain"));
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    mSlider_Velocity =
       safenew MixerTrackSlider(
             this, ID_SLIDER_VELOCITY,
@@ -237,7 +232,6 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
                .Style( VEL_SLIDER )
                .Orientation( wxVERTICAL ));
    mSlider_Velocity->SetName(_("Velocity"));
-#endif
 
    // other controls and meter at right
 
@@ -354,12 +348,10 @@ WaveChannel *MixerTrackCluster::GetRight() const
    return nullptr;
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 NoteTrack *MixerTrackCluster::GetNote() const
 {
    return dynamic_cast< NoteTrack * >( mTrack.get() );
 }
-#endif
 
 // Old approach modified things in situ.
 // However with a theme change there is so much to modify, it is easier
@@ -391,9 +383,7 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
          TRACK_NAME_HEIGHT + kDoubleInset) - // mStaticText_TrackName + margin
       kQuadrupleInset; // margin below gain slider
    mSlider_Gain->SetSize(-1, nGainSliderHeight);
-#ifdef EXPERIMENTAL_MIDI_OUT
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
-#endif
 
    const int nRequiredHeightAboveMeter =
       MUSICAL_INSTRUMENT_HEIGHT_AND_WIDTH + kDoubleInset +
@@ -421,7 +411,6 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
          .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE );
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false*/)
 {
    float fValue = mSlider_Velocity->Get();
@@ -435,7 +424,6 @@ void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false
          .PushState(XO("Moved velocity slider"), XO("Velocity"),
             UndoPush::CONSOLIDATE);
 }
-#endif
 
 void MixerTrackCluster::HandleSliderPan(const bool bWantPushState /*= false*/)
 {
@@ -499,12 +487,10 @@ void MixerTrackCluster::UpdateForStateChange()
    else
       mSlider_Gain->Set(GetWave()->GetGain());
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    if (!GetNote())
       mSlider_Velocity->Hide();
    else
       mSlider_Velocity->Set(GetNote()->GetVelocity());
-#endif
 }
 
 namespace {
@@ -567,11 +553,7 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //Floats maxRight{kFramesPerBuffer};
    //Floats rmsRight{kFramesPerBuffer};
    //
-   //#ifdef EXPERIMENTAL_MIDI_OUT
    //   bool bSuccess = (GetWave() != nullptr);
-   //#else
-   //   bool bSuccess = true;
-   //#endif
 
    //const double dFrameInterval = (t1 - t0) / (double)kFramesPerBuffer;
    //double dFrameT0 = t0;
@@ -754,12 +736,10 @@ void MixerTrackCluster::OnSlider_Gain(wxCommandEvent& WXUNUSED(event))
    this->HandleSliderGain();
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 void MixerTrackCluster::OnSlider_Velocity(wxCommandEvent& WXUNUSED(event))
 {
    this->HandleSliderVelocity();
 }
-#endif
 
 //v void MixerTrackCluster::OnSliderScroll_Gain(wxScrollEvent& WXUNUSED(event))
 //{
@@ -997,8 +977,8 @@ void MixerBoard::UpdatePrefs()
 
 // Reassign mixer input strips (MixerTrackClusters) to Track Clusters
 // both have the same order.
-// If EXPERIMENTAL_MIDI_OUT, then Note Tracks appear in the
-// mixer, and we must be able to convert and reuse a MixerTrackCluster
+// Note Tracks appear in the mixer,
+// and we must be able to convert and reuse a MixerTrackCluster
 // from audio to midi or midi to audio. This task is handled by
 // UpdateForStateChange().
 //
@@ -1534,10 +1514,8 @@ const ReservedCommandFlag&
       [](const AudacityProject &project){
          auto &tracks = TrackList::Get( project );
          return
-#ifdef EXPERIMENTAL_MIDI_OUT
             !tracks.Any<const NoteTrack>().empty()
          ||
-#endif
             !tracks.Any<const WaveTrack>().empty()
          ;
       }

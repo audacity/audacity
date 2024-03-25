@@ -47,14 +47,6 @@ class wxRect;
 
 class Alg_seq;   // from "allegro.h"
 
-using NoteTrackBase =
-#ifdef EXPERIMENTAL_MIDI_OUT
-   PlayableTrack
-#else
-   AudioTrack
-#endif
-   ;
-
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class NoteTrack;
@@ -80,7 +72,7 @@ using NoteTrackAttachments = ClientData::Site<
 >;
 
 class NOTE_TRACK_API NoteTrack final
-   : public UniqueChannelTrack<NoteTrackBase>
+   : public UniqueChannelTrack<PlayableTrack>
    , public OtherPlayableSequence
    , public NoteTrackAttachments
 {
@@ -129,11 +121,9 @@ public:
    void InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    float GetVelocity() const {
       return mVelocity.load(std::memory_order_relaxed); }
    void SetVelocity(float velocity);
-#endif
 
    QuantizedTimeAndBeat NearestBeatTime( double time ) const;
    bool StretchRegion
@@ -206,9 +196,7 @@ private:
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    void DoSetVelocity(float velocity);
-#endif
 
    void AddToDuration( double delta );
 
@@ -220,10 +208,8 @@ private:
    mutable std::unique_ptr<char[]> mSerializationBuffer;
    mutable long mSerializationLength;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mVelocity{ 0.0f }; // velocity offset
-#endif
 
    //! A bit set; atomic because it may be read by worker threads in playback
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };

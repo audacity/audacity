@@ -731,11 +731,9 @@ void NoteTrackView::Draw(
       const auto &nt = static_cast<const NoteTrack&>(
          pendingTracks.SubstitutePendingChangedChannel(*pChannel));
       bool muted = false;
-#ifdef EXPERIMENTAL_MIDI_OUT
       const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;
       muted = (hasSolo || nt.GetMute()) && !nt.GetSolo();
-#endif
 
       TrackArt::DrawBackgroundWithSelection(context,
          rect, nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
