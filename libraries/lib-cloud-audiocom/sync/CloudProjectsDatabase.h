@@ -88,6 +88,11 @@ public:
    GetProjectData(std::string_view projectId) const;
    std::optional<DBProjectData>
    GetProjectDataForPath(const std::string& projectPath) const;
+
+   std::vector<DBProjectData> GetCloudProjects() const;
+
+   void DeleteProject(std::string_view projectId);
+
    bool
    MarkProjectAsSynced(std::string_view projectId, std::string_view snapshotId);
 
@@ -123,7 +128,7 @@ public:
    void AddPendingProjectBlocks(
       const std::vector<PendingProjectBlockData>& blockData);
    void RemovePendingProjectBlock(
-      std::string_view projectId, std::string_view snapshotId, int64_t blockId);
+      std::string_view projectId, int64_t blockId);
    void RemovePendingProjectBlocks(
       std::string_view projectId, std::string_view snapshotId);
    std::vector<PendingProjectBlockData> GetPendingProjectBlocks(
@@ -131,7 +136,11 @@ public:
 
 private:
    std::optional<DBProjectData>
+   DoGetProjectData(const sqlite::Row& result) const;
+
+   std::optional<DBProjectData>
    DoGetProjectData(sqlite::RunResult result) const;
+
    bool OpenConnection();
 
    std::mutex mConnectionMutex;
