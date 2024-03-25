@@ -60,6 +60,8 @@ set( SOURCES
    CloudModuleSettings.h
    CloudProjectFileIOExtensions.cpp
    CloudProjectFileIOExtensions.h
+   CloudProjectMixdownUtils.cpp
+   CloudProjectMixdownUtils.h
    CloudProjectOpenUtils.cpp
    CloudProjectOpenUtils.h
 )
