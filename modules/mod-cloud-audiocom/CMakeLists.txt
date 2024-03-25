@@ -44,6 +44,8 @@ set( SOURCES
    ui/AudioComPrefsPanel.cpp
    ui/CloudSyncStatusField.cpp
    ui/CloudSyncStatusField.h
+   ui/ProjectCloudUIExtension.cpp
+   ui/ProjectCloudUIExtension.h
    ui/ShareAudioToolbar.cpp
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
