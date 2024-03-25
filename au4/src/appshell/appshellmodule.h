@@ -25,6 +25,8 @@
 
 #include <memory>
 
+#include <qglobal.h>
+
 #include "modularity/imodulesetup.h"
 
 namespace mu::appshell {

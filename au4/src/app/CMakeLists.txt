@@ -30,7 +30,22 @@ set(EXECUTABLE_NAME audacity)
 ###########################################
 # Platform specific
 ###########################################
+include(GetPlatformInfo)
 
+if(OS_IS_MAC)
+    set(EXECUTABLE_NAME audacity MACOSX_BUNDLE)
+    set(MACOSX_BUNDLE_ICON_FILE AppIcon.icns)
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER org.musescore.${MUSESCORE_NAME})
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSESCORE_NAME})
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSESCORE_VERSION})
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MUSESCORE_VERSION})
+    set(MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_BUILD_NUMBER})
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 1999-2024 MuseScore BVBA and others. Published under the GNU General Public License version 3.")
+
+    set(CMAKE_INSTALL_RPATH ${QT_INSTALL_LIBS})
+
+    message("MACOSX_BUNDLE_VERSION: ${MACOSX_BUNDLE_LONG_VERSION_STRING}.${MACOSX_BUNDLE_BUNDLE_VERSION}")
+endif()
 
 ###########################################
 # Dependency library declaration
@@ -62,7 +77,7 @@ list(APPEND LINK_LIB context)
 # Executable declaration
 ###########################################
 
-add_executable(${EXECUTABLE_NAME}
+add_executable(audacity
     main.cpp
     app.cpp
     app.h
@@ -70,7 +85,7 @@ add_executable(${EXECUTABLE_NAME}
     #commandlineparser.h
 )
 
-target_include_directories(${EXECUTABLE_NAME} PUBLIC
+target_include_directories(audacity PUBLIC
     ${PROJECT_SOURCE_DIR}/src
     ${PROJECT_SOURCE_DIR}/src/framework
 )
@@ -89,7 +104,7 @@ if (MSCORE_OUTPUT_NAME)
 endif (MSCORE_OUTPUT_NAME)
 
 if (OS_IS_MAC)
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/build/MacOSXBundleInfo.plist.in
+    set_target_properties(audacity PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/../cmake-proxies/cmake-modules/MacOSXBundleInfo.plist.in
                                             XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER})
 endif (OS_IS_MAC)
 
@@ -108,7 +123,7 @@ endif(CC_IS_MSVC)
 ###########################################
 # Link
 ###########################################
-target_link_libraries(${EXECUTABLE_NAME} ${LINK_LIB} )
+target_link_libraries(audacity ${LINK_LIB} )
 
 ###########################################
 # INSTALL
@@ -238,7 +253,7 @@ elseif(OS_IS_FBSD)
 ###########################################
 elseif(OS_IS_MAC)
 
-    install(TARGETS ${EXECUTABLE_NAME} BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
+    install(TARGETS audacity BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
 
     if(MU_COMPILE_INSTALL_QTQML_FILES)
         install(DIRECTORY
