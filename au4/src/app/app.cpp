@@ -307,8 +307,7 @@ int App::run(int argc, char** argv)
                         delete splashScreen;
                     }
 
-                    // startupScenario()->run();
-                    interactive()->open("musescore://home");
+                    startupScenario()->run();
                 }
             }, Qt::QueuedConnection);
 
