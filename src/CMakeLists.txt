@@ -145,6 +145,10 @@ list( APPEND SOURCES
       NoteTrackEditing.cpp
       PitchName.cpp
       PitchName.h
+      PluginDataModel.cpp
+      PluginDataModel.h
+      PluginDataViewCtrl.cpp
+      PluginDataViewCtrl.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp

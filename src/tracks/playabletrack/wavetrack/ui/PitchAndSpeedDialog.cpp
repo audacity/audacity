@@ -294,7 +294,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
             // instantly when `UpdateDialog` is called.
             s.Id(semitoneCtrlId)
                .TieSpinCtrl(
-                  XO("semitones:"), mShift.semis,
+                  XO("se&mitones:"), mShift.semis,
                   TimeAndPitchInterface::MaxCents / 100,
                   TimeAndPitchInterface::MinCents / 100)
                ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
@@ -318,7 +318,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   }
                   SetSemitoneShift();
                });
-            s.TieSpinCtrl(XO("cents:"), mShift.cents, 100, -100)
+            s.TieSpinCtrl(XO("&cents:"), mShift.cents, 100, -100)
                ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
                   mShift.cents = event.GetInt();
                   SetSemitoneShift();
@@ -337,7 +337,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                s.Id(speedCtrlId)
                   .Name(XO("Clip Speed"))
                   .TieSpinControl(
-                     wxSize(60, -1), XO("speed %: "), mClipSpeed, 1000.0, 1.0);
+                     wxSize(60, -1), XO("&speed %: "), mClipSpeed, 1000.0, 1.0);
 #if wxUSE_ACCESSIBILITY
             txtCtrl->SetAccessible(safenew WindowAccessible(txtCtrl));
 #endif
@@ -366,7 +366,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
          {
             ScopedHorizontalLay h { s, wxLeft };
             s.SetBorder(2);
-            s.TieCheckBox(XO("Optimize for Voice"), mFormantPreservation)
+            s.TieCheckBox(XO("&Optimize for Voice"), mFormantPreservation)
                ->Bind(wxEVT_CHECKBOX, [this](auto&) {
                   mFormantPreservation = !mFormantPreservation;
                   if (auto target = LockTarget())
