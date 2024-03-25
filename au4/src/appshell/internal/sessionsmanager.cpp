@@ -41,10 +41,12 @@ void SessionsManager::init()
 
 void SessionsManager::deinit()
 {
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
     bool isServer = multiInstancesProvider()->isMainInstance();
     if (!isServer) {
         return;
     }
+#endif
 
     if (configuration()->startupModeType() != StartupModeType::ContinueLastSession) {
         reset();
