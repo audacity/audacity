@@ -922,11 +922,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
          wxHSCROLL); // long style = wxHSCROLL | wxVSCROLL, const wxString& name = "scrolledWindow")
 
    // Set background color to same as TrackPanel background.
-//   #ifdef EXPERIMENTAL_THEMING
 //      mScrolledWindow->SetBackgroundColour(this->GetParent()->GetBackgroundColour());
-//   #else
-//      mScrolledWindow->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_3DSHADOW));
-//   #endif
    mScrolledWindow->SetBackgroundColour( theTheme.Colour( clrMedium ) );
    RTL_WORKAROUND(mScrolledWindow);
 

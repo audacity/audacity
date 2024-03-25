@@ -339,9 +339,6 @@ wxColour AColor::Blend( const wxColour & c1, const wxColour & c2 )
 
 void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight)
 {
-#ifndef EXPERIMENTAL_THEMING
-   Bevel( dc, up, r );
-#else
    // Note that the actually drawn rectangle extends one pixel right of and
    // below the given
 
@@ -361,7 +358,6 @@ void AColor::BevelTrackInfo(wxDC & dc, bool up, const wxRect & r, bool highlight
 
    dc.DrawLine(r.x + r.width, r.y, r.x + r.width, r.y + r.height);
    dc.DrawLine(r.x, r.y + r.height, r.x + r.width, r.y + r.height);
-#endif
 }
 
 // Set colour of and select brush and pen.
@@ -432,11 +428,7 @@ void AColor::Medium(wxDC * dc, bool selected)
 
 void AColor::MediumTrackInfo(wxDC * dc, bool selected)
 {
-#ifdef EXPERIMENTAL_THEMING
    UseThemeColour( dc, selected ? clrTrackInfoSelected : clrTrackInfo );
-#else
-   Medium( dc, selected );
-#endif
 }
 
 
@@ -453,11 +445,7 @@ void AColor::Dark(wxDC * dc, bool selected, bool highlight)
 
 void AColor::TrackPanelBackground(wxDC * dc, bool selected)
 {
-#ifdef EXPERIMENTAL_THEMING
    UseThemeColour( dc, selected ? clrMediumSelected : clrTrackBackground );
-#else
-   Dark( dc, selected );
-#endif
 }
 
 void AColor::CursorColor(wxDC * dc)

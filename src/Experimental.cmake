@@ -41,14 +41,8 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # This makes it use alpha blending, most transparent where least intense.
    #SPECTROGRAM_OVERLAY
 
-   # THEMING is mostly mainstream now.
-   # the define is still present to mark out old code before theming, that we might
-   # conceivably need.
-   # TODO: Agree on and then tidy this code.
-   THEMING
-
    #August 2009 - Theming not locked down enough for a stable release.
-   # This turns on the Theme panel in Prefs dialog. It is independent of THEMING.
+   # This turns on the Theme panel in Prefs dialog.
    #THEME_PREFS
 
    # This shows the zoom toggle button on the edit toolbar.

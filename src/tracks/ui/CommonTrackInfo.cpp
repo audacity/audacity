@@ -185,12 +185,8 @@ void CommonTrackInfo::DrawCloseButton(
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    AColor::Bevel2(*dc, !down, bev, selected, hit );
 
-#ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
    dc->SetPen( pen );
-#else
-   dc->SetPen(*wxBLACK_PEN);
-#endif
    bev.Inflate( -1, -1 );
    // Draw the "X"
    const int s = 6;
@@ -252,11 +248,7 @@ void CommonTrackInfo::CloseTitleDrawFunction
       }
 
       // Pop-up triangle
-   #ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour( clrTrackPanelText );
-   #else
-      wxColour c = *wxBLACK;
-   #endif
 
       // wxGTK leaves little scraps (antialiasing?) of the
       // characters if they are repeatedly drawn.  This
@@ -307,13 +299,9 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 
       AColor::Bevel2(*dc, !down, bev, selected, hit);
 
-#ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
       dc->SetBrush(c);
       dc->SetPen(c);
-#else
-      AColor::Dark(dc, selected);
-#endif
 
       AColor::Arrow(*dc,
                     bev.x - 5 + bev.width / 2,
@@ -332,13 +320,9 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 
       AColor::Bevel2(*dc, !down, bev, selected, hit);
 
-#ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
       dc->SetBrush(c);
       dc->SetPen(c);
-#else
-      AColor::Dark(dc, selected);
-#endif
 
       wxString str = _("Select");
       wxCoord textWidth;

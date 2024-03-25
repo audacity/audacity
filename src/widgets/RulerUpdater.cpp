@@ -90,11 +90,7 @@ void RulerUpdater::Label::Draw(
    if (text.has_value() && !text->empty()) {
       bool altColor = twoTone && value < 0.0;
 
-#ifdef EXPERIMENTAL_THEMING
       dc.SetTextForeground(altColor ? theTheme.Colour(clrTextNegativeNumbers) : c);
-#else
-      dc.SetTextForeground(altColor ? *wxBLUE : *wxBLACK);
-#endif
       dc.SetBackgroundMode(wxTRANSPARENT);
       if (dc.GetFont() == fonts->major) {
          // Do not draw units as bolded
