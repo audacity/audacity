@@ -38,6 +38,8 @@ set( SOURCES
    sync/MissingBlocksUploader.h
    sync/MixdownUploader.cpp
    sync/MixdownUploader.h
+   sync/ProjectCloudExtension.cpp
+   sync/ProjectCloudExtension.h
    sync/ProjectUploadOperation.h
    sync/RemoteProjectSnapshot.cpp
    sync/RemoteProjectSnapshot.h
