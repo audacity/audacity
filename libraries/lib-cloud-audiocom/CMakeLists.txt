@@ -31,6 +31,7 @@ set( SOURCES
    sync/CloudSyncDTO.h
    sync/CloudSyncError.cpp
    sync/CloudSyncError.h
+   sync/CloudSyncHousekeeper.cpp
    sync/DataUploader.cpp
    sync/DataUploader.h
    sync/MissingBlocksUploader.cpp
