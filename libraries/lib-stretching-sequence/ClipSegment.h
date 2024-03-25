@@ -14,8 +14,8 @@
 #include "ClipTimeAndPitchSource.h"
 #include "Observer.h"
 #include "PlaybackDirection.h"
+#include <atomic>
 #include <memory>
-#include <mutex>
 
 class ClipInterface;
 class TimeAndPitchInterface;
@@ -41,7 +41,10 @@ private:
    const sampleCount mTotalNumSamplesToProduce;
    sampleCount mTotalNumSamplesProduced = 0;
    ClipTimeAndPitchSource mSource;
-   std::mutex mStretcherMutex;
+   bool mPreserveFormants;
+   int mCentShift;
+   std::atomic<bool> mUpdateFormantPreservation = false;
+   std::atomic<bool> mUpdateCentShift = false;
    // Careful that this guy is constructed after `mSource`, which it refers to
    // in its ctor.
    // todo(mhodgkinson) make this safe.
