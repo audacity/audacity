@@ -26,6 +26,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
     ${CMAKE_CURRENT_LIST_DIR}/projecttypes.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.h
     )
 
 include(SetupModule)

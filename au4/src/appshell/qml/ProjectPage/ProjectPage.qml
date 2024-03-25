@@ -61,6 +61,32 @@ DockPage {
         }
     ]
 
+    panels: [
+        DockPanel {
+            id: tracksPanel
+
+            objectName: "tracksPanel"
+            title: qsTrc("appshell", "Tracks")
+
+            navigationSection: root.navigationPanelSec(tracksPanel.location)
+
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: root.verticalPanelDefaultWidth
+            maximumWidth: root.verticalPanelDefaultWidth
+
+            groupName: root.verticalPanelsGroup
+
+            dropDestinations: root.verticalPanelDropDestinations
+
+            TracksPanel {
+                navigationSection: tracksPanel.navigationSection
+
+                Component.onCompleted: {
+                    tracksPanel.contextMenuModel = contextMenuModel
+                }
+            }
+        }
+    ]
 
     central: Text {
         text: "Project View "

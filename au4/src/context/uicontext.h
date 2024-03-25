@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_UICONTEXT_H
-#define MU_CONTEXT_UICONTEXT_H
+#ifndef AU_CONTEXT_UICONTEXT_H
+#define AU_CONTEXT_UICONTEXT_H
 
 #include "ui/uitypes.h"
 
@@ -39,4 +39,4 @@ static constexpr ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
 static constexpr ui::UiContext UiCtxNotationFocused = "UiCtxNotationFocused";
 }
 
-#endif // MU_CONTEXT_UICONTEXT_H
+#endif // AU_CONTEXT_UICONTEXT_H

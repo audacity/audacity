@@ -35,9 +35,13 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackslistmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.h
     )
+
+set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 include(SetupModule)

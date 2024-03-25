@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_IGLOBALCONTEXT_H
-#define MU_CONTEXT_IGLOBALCONTEXT_H
+#ifndef AU_CONTEXT_IGLOBALCONTEXT_H
+#define AU_CONTEXT_IGLOBALCONTEXT_H
 
 #include "modularity/imoduleinterface.h"
 #include "project/iaudacityproject.h"
@@ -29,15 +29,15 @@
 namespace mu::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(mu::context::IGlobalContext)
+    INTERFACE_ID(au::context::IGlobalContext)
 
 public:
     virtual ~IGlobalContext() = default;
 
     virtual void setCurrentProject(const project::IAudacityProjectPtr& project) = 0;
     virtual project::IAudacityProjectPtr currentProject() const = 0;
-    virtual async::Notification currentProjectChanged() const = 0;
+    virtual mu::async::Notification currentProjectChanged() const = 0;
 };
 }
 
-#endif // MU_CONTEXT_IGLOBALCONTEXT_H
+#endif // AU_CONTEXT_IGLOBALCONTEXT_H

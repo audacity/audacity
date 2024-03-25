@@ -23,6 +23,7 @@
 #include "translation.h"
 
 using namespace mu::appshell;
+using namespace mu::project;
 
 MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
     : QObject(parent)
@@ -92,7 +93,7 @@ void MainWindowTitleProvider::setFileModified(bool fileModified)
 
 void MainWindowTitleProvider::update()
 {
-    project::IAudacityProjectPtr project = context()->currentProject();
+    IAudacityProjectPtr project = context()->currentProject();
 
     if (!project) {
         setTitle(qtrc("appshell", "Audacity 4"));
