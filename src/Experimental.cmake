@@ -90,9 +90,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   # Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
-   NYQUIST_SPLIT_CONTROL
-
    # Paul Licameli (PRL) 16 Apr 2015
    # Support for scrubbing in the AudioIO engine, without calls to it
    SCRUBBING_SUPPORT

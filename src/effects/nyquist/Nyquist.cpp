@@ -2243,7 +2243,6 @@ bool NyquistEffect::Parse(
       mMaxLen = (sampleCount) v;
    }
 
-#if defined(EXPERIMENTAL_NYQUIST_SPLIT_CONTROL)
    if (len >= 2 && tokens[0] == wxT("mergeclips")) {
       long v;
       // -1 = auto (default), 0 = don't merge clips, 1 = do merge clips
@@ -2259,7 +2258,6 @@ bool NyquistEffect::Parse(
       mRestoreSplits = !!v;
       return true;
    }
-#endif
 
    if (len >= 2 && tokens[0] == wxT("author")) {
       mAuthor = TranslatableString{ UnQuote(tokens[1]), {} };
