@@ -24,6 +24,8 @@ set( SOURCES
    ui/dialogs/NotCloudProjectDialog.h
    ui/dialogs/ProjectLimitDialog.cpp
    ui/dialogs/ProjectLimitDialog.h
+   ui/dialogs/ProjectsListDialog.cpp
+   ui/dialogs/ProjectsListDialog.h
    ui/dialogs/ProjectVersionConflictDialog.cpp
    ui/dialogs/ProjectVersionConflictDialog.h
    ui/dialogs/ShareAudioDialog.cpp
