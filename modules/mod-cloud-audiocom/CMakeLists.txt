@@ -42,6 +42,8 @@ set( SOURCES
    ui/dialogs/WaitForActionDialog.h
 
    ui/AudioComPrefsPanel.cpp
+   ui/CloudSyncStatusField.cpp
+   ui/CloudSyncStatusField.h
    ui/ShareAudioToolbar.cpp
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
