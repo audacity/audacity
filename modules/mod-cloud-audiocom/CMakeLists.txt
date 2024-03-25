@@ -56,6 +56,8 @@ set( SOURCES
    AuthorizationHandler.h
    CloudModuleSettings.cpp
    CloudModuleSettings.h
+   CloudProjectFileIOExtensions.cpp
+   CloudProjectFileIOExtensions.h
    CloudProjectOpenUtils.cpp
    CloudProjectOpenUtils.h
 )
