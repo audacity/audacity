@@ -27,6 +27,7 @@ import MuseScore.UiComponents 1.0
 import MuseScore.Dock 1.0
 import MuseScore.AppShell 1.0
 
+import Audacity.ProjectScene 1.0
 
 import "../dockwindow"
 
@@ -35,6 +36,34 @@ DockPage {
 
     objectName: "ProjecPage"
     uri: "musescore://project"
+
+    toolBars: [
+        DockToolBar {
+            id: playToolBar
+
+            objectName: "playToolBar"
+            title: qsTrc("appshell", "Play Tool Bar")
+
+            floatable: false
+            closable: false
+            resizable: false
+            separatorsVisible: false
+
+            alignment: DockToolBarAlignment.Center
+            contentBottomPadding: 2
+
+            PlayToolBar {
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 2
+
+                onActiveFocusRequested: {
+                    if (navigationPanel.active) {
+                        playToolBar.forceActiveFocus()
+                    }
+                }
+            }
+        }
+    ]
 
 
     central: Text {

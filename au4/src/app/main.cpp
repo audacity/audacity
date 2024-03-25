@@ -118,7 +118,7 @@ int main(int argc, char** argv)
 
     app.addModule(new mu::context::ContextModule());
 
-    app.addModule(new mu::projectscene::ProjectSceneModule());
+    app.addModule(new au::projectscene::ProjectSceneModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
