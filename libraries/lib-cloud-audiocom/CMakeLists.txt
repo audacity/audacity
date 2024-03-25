@@ -10,6 +10,8 @@ def_vars()
 set( SOURCES
    CloudLibrarySettings.cpp
    CloudLibrarySettings.h
+   CloudSyncService.cpp
+   CloudSyncService.h
    NetworkUtils.cpp
    NetworkUtils.h
    OAuthService.cpp
@@ -49,6 +51,7 @@ PUBLIC
       lib-files-interface # FileNames
       lib-strings-interface # Languages
       lib-wave-track-interface
+      lib-project-file-io-interface # ProjectFileIOExtension
       rapidjson::rapidjson # Protocol is JSON based
       lib-concurrency-interface
    PRIVATE
