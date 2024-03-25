@@ -6,14 +6,36 @@ set( SOURCES
 
    ui/dialogs/AudioComDialogBase.cpp
    ui/dialogs/AudioComDialogBase.h
+   ui/dialogs/ConnectionIssuesDialog.cpp
+   ui/dialogs/ConnectionIssuesDialog.h
+   ui/dialogs/LinkAccountDialog.cpp
+   ui/dialogs/LinkAccountDialog.h
    ui/dialogs/LinkFailedDialog.cpp
    ui/dialogs/LinkFailedDialog.h
    ui/dialogs/LinkSucceededDialog.cpp
    ui/dialogs/LinkSucceededDialog.h
    ui/dialogs/LinkWithTokenDialog.cpp
    ui/dialogs/LinkWithTokenDialog.h
+   ui/dialogs/NotCloudProjectDialog.cpp
+   ui/dialogs/NotCloudProjectDialog.h
+   ui/dialogs/ProjectLimitDialog.cpp
+   ui/dialogs/ProjectLimitDialog.h
+   ui/dialogs/ProjectVersionConflictDialog.cpp
+   ui/dialogs/ProjectVersionConflictDialog.h
    ui/dialogs/ShareAudioDialog.cpp
    ui/dialogs/ShareAudioDialog.h
+   ui/dialogs/SyncFailedDialog.cpp
+   ui/dialogs/SyncFailedDialog.h
+   ui/dialogs/SyncInBackroundDialog.cpp
+   ui/dialogs/SyncInBackroundDialog.h
+   ui/dialogs/SyncSucceededDialog.cpp
+   ui/dialogs/SyncSucceededDialog.h
+   ui/dialogs/UnsyncedProjectDialog.cpp
+   ui/dialogs/UnsyncedProjectDialog.h
+   ui/dialogs/UploadCanceledDialog.cpp
+   ui/dialogs/UploadCanceledDialog.h
+   ui/dialogs/WaitForActionDialog.cpp
+   ui/dialogs/WaitForActionDialog.h
 
    ui/AudioComPrefsPanel.cpp
    ui/ShareAudioToolbar.cpp
