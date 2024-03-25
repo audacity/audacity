@@ -34,6 +34,8 @@ set( SOURCES
    sync/CloudSyncHousekeeper.cpp
    sync/DataUploader.cpp
    sync/DataUploader.h
+   sync/LocalProjectSnapshot.cpp
+   sync/LocalProjectSnapshot.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
    sync/MixdownUploader.cpp
