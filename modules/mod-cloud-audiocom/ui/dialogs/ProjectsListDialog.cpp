@@ -79,7 +79,7 @@ public:
       if (time_passed < minutes(1))
          return XO("less than 1 minute").Translation();
       if (time_passed < hours(1))
-         return XP("one minutes ago", "%d minutes ago",
+         return XP("one minute ago", "%d minutes ago",
                    0)(static_cast<int>(
                          duration_cast<minutes>(time_passed).count()))
             .Translation();
