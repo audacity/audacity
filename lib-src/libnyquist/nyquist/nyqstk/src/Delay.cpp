@@ -72,14 +72,6 @@ void Delay :: setMaximumDelay(unsigned long delay)
 {
   if ( delay < inputs_.size() ) return;
 
-/*
-  if ( delay < 0 ) {
-    errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than zero!\n";
-    handleError( StkError::WARNING );
-    return;
-  }
-  else
-*/
   if (delay < delay_ ) {
     errorString_ << "Delay::setMaximumDelay: argument (" << delay << ") less than current delay setting (" << delay_ << ")!\n";
     handleError( StkError::WARNING );
