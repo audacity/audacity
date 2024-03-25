@@ -715,7 +715,7 @@ public:
 
    // Get mutative access to all clips (in some unspecified sequence),
    // including those hidden in cutlines.
-   class AllClipsIterator
+   class WAVE_TRACK_API AllClipsIterator
       : public ValueIterator< WaveClip * >
    {
    public:
