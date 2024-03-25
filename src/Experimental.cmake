@@ -36,10 +36,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # disabled.
    #CEE_NUMBERS_OPTION
 
-   # LLL, 01 Oct 2013:
-   # NEW key assignment view for preferences
-   KEY_VIEW
-
    # Define this so that sync-lock tiles shine through spectrogram.
    # The spectrogram pastes a bitmap over the tiles.
    # This makes it use alpha blending, most transparent where least intense.
