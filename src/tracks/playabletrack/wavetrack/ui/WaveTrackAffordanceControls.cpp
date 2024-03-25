@@ -658,10 +658,7 @@ void WaveTrackAffordanceControls::StartEditSelectedClipSpeed(
    if (!interval)
       return;
 
-   PitchAndSpeedDialog::Get(project)
-      .Retarget(track, interval)
-      .Show()
-      .SetFocus({});
+   PitchAndSpeedDialog::Get(project).Retarget(track, interval).SetFocus({});
 }
 
 void WaveTrackAffordanceControls::OnRenderClipStretching(
