@@ -4,6 +4,8 @@ set( SOURCES
    ui/images/CloudImages.cpp
    ui/images/CloudImages.hpp
 
+   ui/dialogs/AudioComDialogBase.cpp
+   ui/dialogs/AudioComDialogBase.h
    ui/dialogs/LinkFailedDialog.cpp
    ui/dialogs/LinkFailedDialog.h
    ui/dialogs/LinkSucceededDialog.cpp
