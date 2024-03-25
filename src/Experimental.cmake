@@ -45,9 +45,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # This turns on the Theme panel in Prefs dialog.
    #THEME_PREFS
 
-   # This shows the zoom toggle button on the edit toolbar.
-   ZOOM_TOGGLE_BUTTON
-
    #ROLL_UP_DIALOG
    #RIGHT_ALIGNED_TEXTBOXES
    #VOICE_DETECTION
