@@ -51,6 +51,8 @@ option(MU_BUILD_SHORTCUTS_TESTS "Build ui and shortcuts tests" ON)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
+option(MU_BUILD_PROJECTSCENE_MODULE "Build ui and projectscene modules" ON)
+option(MU_BUILD_PROJECTSCENE_TESTS "Build ui and projectscene tests" ON)
 
 # === Setup ===
 
@@ -94,6 +96,7 @@ else()
     add_definitions(-DMU_BUILD_UI_MODULE)
     add_definitions(-DMU_BUILD_SHORTCUTS_MODULE)
     add_definitions(-DMU_BUILD_APPSHELL_MODULE)
+    add_definitions(-DMU_BUILD_PROJECTSCENE_MODULE)
 
 endif()
 

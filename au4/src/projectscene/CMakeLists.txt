@@ -18,22 +18,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# App (main)
-add_subdirectory(app)
+# This module stores global state
+set(MODULE projectscene)
 
-# Framework
-add_subdirectory(framework)
+set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.h
+    )
 
-# Modules
-if (MU_BUILD_APPSHELL_MODULE)
-    add_subdirectory(appshell)
-endif()
-
-add_subdirectory(context)
-add_subdirectory(project)
-
-if (MU_BUILD_PROJECTSCENE_MODULE)
-   add_subdirectory(projectscene)
-endif()
-
-# ...
+include(SetupModule)
