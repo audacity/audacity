@@ -76,6 +76,8 @@ LinkWithTokenDialog::LinkWithTokenDialog(wxWindow* parent)
    Layout();
    Fit();
    Centre();
+
+   mToken->SetFocus();
 }
 
 LinkWithTokenDialog::~LinkWithTokenDialog()
