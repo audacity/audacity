@@ -19,24 +19,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_GLOBALCONTEXT_H
-#define MU_CONTEXT_GLOBALCONTEXT_H
+#ifndef AU_CONTEXT_GLOBALCONTEXT_H
+#define AU_CONTEXT_GLOBALCONTEXT_H
 
 #include "../iglobalcontext.h"
 
 namespace mu::context {
-class GlobalContext : public IGlobalContext
+class GlobalContext : public mu::context::IGlobalContext
 {
 public:
 
     void setCurrentProject(const project::IAudacityProjectPtr& project) override;
     project::IAudacityProjectPtr currentProject() const override;
-    async::Notification currentProjectChanged() const override;
+    mu::async::Notification currentProjectChanged() const override;
 
 private:
     project::IAudacityProjectPtr m_currentProject;
-    async::Notification m_currentProjectChanged;
+    mu::async::Notification m_currentProjectChanged;
 };
 }
 
-#endif // MU_CONTEXT_GLOBALCONTEXT_H
+#endif // AU_CONTEXT_GLOBALCONTEXT_H

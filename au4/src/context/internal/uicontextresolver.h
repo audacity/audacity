@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_UICONTEXTRESOLVER_H
-#define MU_CONTEXT_UICONTEXTRESOLVER_H
+#ifndef AU_CONTEXT_UICONTEXTRESOLVER_H
+#define AU_CONTEXT_UICONTEXTRESOLVER_H
 
 #include "../iuicontextresolver.h"
 #include "async/asyncable.h"
@@ -63,4 +63,4 @@ private:
 };
 }
 
-#endif // MU_CONTEXT_UICONTEXTRESOLVER_H
+#endif // AU_CONTEXT_UICONTEXTRESOLVER_H

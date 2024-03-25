@@ -26,6 +26,7 @@
 #include "internal/uicontextresolver.h"
 
 using namespace mu::context;
+using namespace mu::modularity;
 
 std::string ContextModule::moduleName() const
 {
@@ -37,8 +38,8 @@ void ContextModule::registerExports()
     m_globalContext = std::make_shared<GlobalContext>();
     m_uicontextResolver = std::make_shared<UiContextResolver>();
 
-    modularity::ioc()->registerExport<IGlobalContext>(moduleName(), m_globalContext);
-    modularity::ioc()->registerExport<IUiContextResolver>(moduleName(), m_uicontextResolver);
+    ioc()->registerExport<IGlobalContext>(moduleName(), m_globalContext);
+    ioc()->registerExport<IUiContextResolver>(moduleName(), m_uicontextResolver);
 }
 
 void ContextModule::onInit(const IApplication::RunMode& mode)

@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_CONTEXTMODULE_H
-#define MU_CONTEXT_CONTEXTMODULE_H
+#ifndef AU_CONTEXT_CONTEXTMODULE_H
+#define AU_CONTEXT_CONTEXTMODULE_H
 
 #include <memory>
 
@@ -29,13 +29,13 @@
 namespace mu::context {
 class GlobalContext;
 class UiContextResolver;
-class ContextModule : public modularity::IModuleSetup
+class ContextModule : public mu::modularity::IModuleSetup
 {
 public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void onInit(const IApplication::RunMode& mode) override;
+    void onInit(const mu::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
@@ -44,4 +44,4 @@ private:
 };
 }
 
-#endif // MU_CONTEXT_CONTEXTMODULE_H
+#endif // AU_CONTEXT_CONTEXTMODULE_H

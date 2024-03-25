@@ -19,15 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_IUICONTEXTRESOLVER_H
-#define MU_CONTEXT_IUICONTEXTRESOLVER_H
+#ifndef AU_CONTEXT_IUICONTEXTRESOLVER_H
+#define AU_CONTEXT_IUICONTEXTRESOLVER_H
 
 #include "ui/iuicontextresolver.h"
-#include "uicontext.h"
+#include "uicontext.h" // IWYU pragma: export
 
 namespace mu::context {
 //! NOTE only for convenience
-using IUiContextResolver = ui::IUiContextResolver;
+using IUiContextResolver = mu::ui::IUiContextResolver;
 }
 
-#endif // MU_CONTEXT_IUICONTEXTRESOLVER_H
+#endif // AU_CONTEXT_IUICONTEXTRESOLVER_H

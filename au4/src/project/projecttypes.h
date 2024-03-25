@@ -1,5 +1,5 @@
-#ifndef MU_PROJECT_PROJECTTYPES_H
-#define MU_PROJECT_PROJECTTYPES_H
+#ifndef AU_PROJECT_PROJECTTYPES_H
+#define AU_PROJECT_PROJECTTYPES_H
 
 #include <QUrl>
 #include <QString>
@@ -66,4 +66,4 @@ struct ProjectFile {
 };
 }
 
-#endif // MU_PROJECT_PROJECTTYPES_H
+#endif // AU_PROJECT_PROJECTTYPES_H

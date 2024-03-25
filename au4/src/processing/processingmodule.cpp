@@ -19,25 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+#include "processingmodule.h"
 
-#include <memory>
+#include "modularity/ioc.h"
 
-#include "modularity/imodulesetup.h"
+using namespace au::processing;
 
-namespace au::project {
-class ProjectModule : public mu::modularity::IModuleSetup
+//! NOTE This is essentially the core of the application;
+//! here is the application’s domain model and its main functions for audio processing.
+
+std::string ProcessingModule::moduleName() const
 {
-public:
-
-    std::string moduleName() const override;
-    void registerExports() override;
-    void onInit(const mu::IApplication::RunMode& mode) override;
-    void onDeinit() override;
-
-private:
-};
+    return "processing";
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+void ProcessingModule::registerExports()
+{
+}
+
+void ProcessingModule::onInit(const mu::IApplication::RunMode&)
+{
+}
+
+void ProcessingModule::onDeinit()
+{
+}

@@ -1,14 +1,16 @@
-#ifndef MU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H
-#define MU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H
+#ifndef AU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H
+#define AU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H
 
+#include "actions/actionable.h"
 #include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
+#include "../iplaybackcontroller.h"
 
 namespace au::projectscene {
 class ProjectSceneActionController : public mu::actions::Actionable
 {
     mu::Inject<mu::actions::IActionsDispatcher> dispatcher;
+    mu::Inject<IPlaybackController> playbackController;
 
 public:
     ProjectSceneActionController() = default;
@@ -23,4 +25,4 @@ private:
 };
 }
 
-#endif // MU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H
+#endif // AU_PROJECTSCENE_PROJECTSCENEACTIONCONTROLLER_H

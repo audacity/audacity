@@ -27,8 +27,10 @@
 #include "ui/iuiactionsregister.h"
 
 #include "internal/projectsceneactioncontroller.h"
+#include "internal/playbackcontroller.h"
 
 #include "view/projectsceneuiactions.h"
+#include "view/trackslistmodel.h"
 #include "view/toolbars/playtoolbarmodel.h"
 
 using namespace au::projectscene;
@@ -48,6 +50,8 @@ void ProjectSceneModule::registerExports()
 {
     m_actionController = std::make_shared<ProjectSceneActionController>();
     m_projectSceneUiActions = std::make_shared<ProjectSceneUiActions>();
+
+    ioc()->registerExport<IPlaybackController>(moduleName(), new PlaybackController());
 }
 
 void ProjectSceneModule::resolveImports()
@@ -61,6 +65,7 @@ void ProjectSceneModule::resolveImports()
 void ProjectSceneModule::registerUiTypes()
 {
     qmlRegisterType<PlayToolBarModel>("Audacity.ProjectScene", 1, 0, "PlayToolBarModel");
+    qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
 }
 
 void ProjectSceneModule::registerResources()

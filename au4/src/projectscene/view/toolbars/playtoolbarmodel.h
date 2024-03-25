@@ -1,8 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef MU_PROJECTSCENE_PLAYTOOLBARMODEL_H
-#define MU_PROJECTSCENE_PLAYTOOLBARMODEL_H
+#ifndef AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
+#define AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
 
 #include "uicomponents/view/abstractmenumodel.h"
 
@@ -24,4 +24,4 @@ private:
 };
 }
 
-#endif // MU_PROJECTSCENE_PLAYTOOLBARMODEL_H
+#endif // AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
