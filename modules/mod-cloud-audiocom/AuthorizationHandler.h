@@ -10,7 +10,10 @@
 **********************************************************************/
 #pragma once
 
+#include <string>
+
 #include "Observer.h"
+#include "TranslatableString.h"
 
 class AudacityProject;
 
@@ -36,4 +39,20 @@ private:
 
 AuthorizationHandler& GetAuthorizationHandler();
 
+struct AuthResult final
+{
+   enum class Status
+   {
+      Authorised,
+      Cancelled,
+      UseAlternative,
+      Failure
+   };
+
+   Status Result { Status::Cancelled };
+   std::string ErrorMessage;
+};
+
+AuthResult
+PerformBlockingAuth(AudacityProject* project, const TranslatableString& alternativeActionLabel = {});
 } // namespace audacity::cloud::audiocom
