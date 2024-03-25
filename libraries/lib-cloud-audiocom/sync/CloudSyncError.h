@@ -37,6 +37,7 @@ struct CLOUD_AUDIOCOM_API CloudSyncError final
       Network,
       Server,
       Cancelled,
+      Aborted,
       ClientFailure,
    };
 
