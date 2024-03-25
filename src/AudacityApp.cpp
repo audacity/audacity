@@ -2438,6 +2438,8 @@ int AudacityApp::OnExit()
       Dispatch();
    }
 
+   HandleAppClosing();
+
    Importer::Get().Terminate();
 
    if(gPrefs)
