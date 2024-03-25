@@ -11,6 +11,7 @@
 #include "RemoteProjectSnapshot.h"
 
 #include <algorithm>
+#include <unordered_set>
 
 #include <wx/datetime.h>
 
@@ -110,6 +111,9 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          return;
       }
    }
+
+   if (!mDownloadDetached)
+      CleanupOrphanBlocks();
 
    MarkProjectInDB(false);
 
@@ -695,6 +699,7 @@ void RemoteProjectSnapshot::ReportProgress()
 
    if (completed)
    {
+      CleanupOrphanBlocks();
       SetState(State::Succeeded);
       MarkProjectInDB(true);
    }
@@ -751,6 +756,47 @@ void RemoteProjectSnapshot::SetState(State state)
       mEndTime = Clock::now();
 
    mState.exchange(state);
+}
+
+void cloud::audiocom::sync::RemoteProjectSnapshot::CleanupOrphanBlocks()
+{
+   auto db = CloudProjectsDatabase::Get().GetConnection();
+
+   auto transaction = db->BeginTransaction("d_" + mProjectInfo.Id);
+
+   std::unordered_set<std::string> snaphotBlockHashes;
+
+   for (const auto& block : mSnapshotInfo.Blocks)
+      snaphotBlockHashes.insert(block.Hash);
+
+   auto inSnaphotFunction = db->CreateScalarFunction(
+      "inSnapshot",
+      [&snaphotBlockHashes](const std::string& hash) { return snaphotBlockHashes.find(hash) != snaphotBlockHashes.end(); });
+
+   // Delete blocks not in the snapshot
+   auto deleteBlocksStatement = db->CreateStatement(
+      "DELETE FROM " + mSnapshotDBName +
+      ".sampleblocks WHERE blockid NOT IN (SELECT block_id FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash))");
+
+   if (!deleteBlocksStatement)
+      return;
+
+   auto result = deleteBlocksStatement->Prepare(mProjectInfo.Id).Run();
+
+   if (!result.IsOk())
+      return;
+
+   auto deleteHashesStatement = db->CreateStatement ("DELETE FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash)");
+
+   if (!deleteHashesStatement)
+      return;
+
+   result = deleteHashesStatement->Prepare(mProjectInfo.Id).Run();
+
+   if (!result.IsOk())
+      return;
+
+   transaction.Commit();
 }
 
 bool RemoteProjectSnapshotState::IsComplete() const noexcept

@@ -118,6 +118,8 @@ private:
 
    void SetState(State state);
 
+   void CleanupOrphanBlocks();
+
    const std::string mSnapshotDBName;
    const ProjectInfo mProjectInfo;
    const SnapshotInfo mSnapshotInfo;
