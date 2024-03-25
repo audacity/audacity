@@ -587,6 +587,15 @@ For an audio file that will open in other apps, use 'Export'.\n");
    } while (bPrompt);
 
 
+   // Pretend that we are closing the project
+   if (!bOwnsNewName)
+   {
+      if (
+         ProjectFileIOExtensionRegistry::OnClose(mProject) ==
+         OnCloseAction::Veto)
+         return false;
+   }
+
    auto success = DoSave(fName, !bOwnsNewName);
    if (success) {
       FileHistory::Global().Append( projectFileIO.GetFileName() );
