@@ -25,10 +25,6 @@ StringSetting CloudProjectsSavePath {
    }
 };
 
-IntSetting MixdownGenerationFrequency {
-   "/cloud/audiocom/MixdownGenerationFrequency", 5
-};
-
 IntSetting DaysToKeepFiles {
    "/cloud/audiocom/DaysToKeepFiles", 30
 };
