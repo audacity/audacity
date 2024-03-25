@@ -60,6 +60,8 @@ public:
    std::string GetProjectInfoUrl(std::string_view projectId) const;
    std::string GetSnapshotInfoUrl(
       std::string_view projectId, std::string_view snapshotId) const;
+   std::string GetDeleteSnapshotUrl(
+      std::string_view projectId, std::string_view snapshotId) const;
 
    std::string GetNetworkStatsUrl(std::string_view projectId) const;
    std::string
