@@ -13,9 +13,9 @@
 
 #include <cassert>
 
-#include <wx/stattext.h>
 #include <wx/button.h>
 #include <wx/sizer.h>
+#include <wx/stattext.h>
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #   include "URLSchemesRegistry.h"
@@ -23,14 +23,14 @@
 
 #include "dialogs/LinkWithTokenDialog.h"
 
-#include "ServiceConfig.h"
 #include "OAuthService.h"
+#include "ServiceConfig.h"
 #include "UserService.h"
 
 #include "CodeConversions.h"
 
-#include "Theme.h"
 #include "AllThemeResources.h"
+#include "Theme.h"
 
 #include "UserImage.h"
 
@@ -43,7 +43,7 @@ namespace audacity::cloud::audiocom
 
 namespace
 {
-const wxSize avatarSize = { 32, 32 };
+const wxSize avatarSize  = { 32, 32 };
 const auto anonymousText = XO("Account not linked");
 } // namespace
 
@@ -55,15 +55,14 @@ UserPanel::UserPanel(
     , mServiceConfig { serviceConfig }
     , mAuthService { authService }
     , mUserService { userService }
-    , mUserDataChangedSubscription {
-       userService.Subscribe([this](const auto&) { UpdateUserData(); })
-    }
+    , mUserDataChangedSubscription { userService.Subscribe(
+         [this](const auto&) { UpdateUserData(); }) }
 {
-
    mUserImage = safenew UserImage(this, avatarSize);
    mUserName =
       safenew wxStaticText(this, wxID_ANY, anonymousText.Translation());
-   mLinkButton = safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
+   mLinkButton =
+      safenew wxButton(this, wxID_ANY, XXO("&Link Account").Translation());
    mLinkButton->Bind(wxEVT_BUTTON, [this](auto) { OnLinkButtonPressed(); });
    mLinkButton->Show(hasLinkButton);
 
@@ -107,7 +106,12 @@ void UserPanel::UpdateUserData()
          Layout();
          Thaw();
 
-         Refresh();
+         auto parent = GetParent();
+
+         if (parent != nullptr)
+            parent->Refresh();
+         else
+            Refresh();
       });
 
    auto& oauthService = GetOAuthService();
