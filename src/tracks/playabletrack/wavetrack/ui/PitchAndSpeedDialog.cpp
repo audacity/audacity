@@ -156,8 +156,8 @@ void PitchAndSpeedDialog::Destroy(AudacityProject& project)
 
 PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
     : wxDialogWrapper(
-         nullptr, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
-         { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
+         FindProjectFrame(&project), wxID_ANY, XO("Pitch and Speed"),
+         wxDefaultPosition, { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
     , mProject { project }
     , mProjectCloseSubscription { ProjectWindow::Get(mProject).Subscribe(
          [this](ProjectWindowDestroyedMessage) { Destroy(mProject); }) }
