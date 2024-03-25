@@ -41,6 +41,9 @@ selection range.
 #endif
 #include <wx/statline.h>
 #include <wx/menu.h>
+#include <wx/clipbrd.h>
+#include <wx/notifmsg.h>
+#include <wx/regex.h>
 
 
 #include "AudioIO.h"
@@ -206,7 +209,12 @@ void SelectionBar::AddTitle(
    auStaticText * pTitle = safenew auStaticText(this, translated );
    pTitle->SetBackgroundColour( theTheme.Colour( clrMedium ));
    pTitle->SetForegroundColour( theTheme.Colour( clrTrackPanelText ) );
+   pTitle->SetToolTip( XO("Right click copy timestamp").Translation() );
    pSizer->Add( pTitle, 0, wxEXPAND | wxRIGHT, 5 );
+
+   pTitle->Bind(
+      wxEVT_RIGHT_UP,
+      [this](auto& evt) { SelectionToClipboard(); });
 }
 
 
@@ -647,6 +655,30 @@ void SelectionBar::FitToTimeControls()
    Fit();
    Layout();
    Updated();
+}
+
+void SelectionBar::SelectionToClipboard()
+{
+   wxString timeRange = wxT("");
+   int i = 0;
+   for (auto ctrl : mTimeControls)
+   {
+      if (ctrl == nullptr)
+         continue;
+      auto tmStr = ctrl->GetString();
+      tmStr.Replace(wxT(" "), wxT(""));
+      timeRange += tmStr;
+      timeRange += (i == 0)? wxT("-"): wxT("");
+      ++i;
+   }
+
+   if (timeRange.Len() && wxTheClipboard->Open()) {
+      wxTheClipboard->SetData(safenew wxTextDataObject(timeRange));
+      wxTheClipboard->Close();
+      const auto message = XO("Selection %s Copied to Clipboard.").Format(timeRange).Translation();
+      wxNotificationMessage notification(wxT("Audacity"), message);
+      notification.Show();
+   }
 }
 
 static RegisteredToolbarFactory factory{
