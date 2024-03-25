@@ -33,8 +33,8 @@ import "../dockwindow"
 DockPage {
     id: root
 
-    objectName: "Notation"
-    uri: "musescore://notation"
+    objectName: "ProjecPage"
+    uri: "musescore://project"
 
 
     central: Text {

@@ -7,7 +7,6 @@
         <file>qml/DevTools/Interactive/InteractiveTests.qml</file>
         <file>qml/DevTools/DevToolsMenu.qml</file>
         <file>qml/DevTools/Preferences/SettingsPage.qml</file>
-        <file>qml/NotationPage/NotationStatusBar.qml</file>
         <file>qml/HomePage/PluginsPage.qml</file>
         <file>qml/DevTools/Gallery/GeneralComponentsGallery.qml</file>
         <file>qml/DevTools/CrashHandler/CrashHandlerDevTools.qml</file>
@@ -63,7 +62,6 @@
         <file>qml/DevTools/KeyNav/KeyNavSection.qml</file>
         <file>qml/DevTools/KeyNav/KeyNavSubSection.qml</file>
         <file>qml/HomePage/HomePage.qml</file>
-        <file>qml/NotationPage/NotationPage.qml</file>
         <file>qml/PublishPage/PublishPage.qml</file>
         <file>qml/PublishPage/PublishToolBar.qml</file>
         <file>qml/DevTools/DevToolsPage.qml</file>
@@ -112,5 +110,7 @@
         <file>qml/Preferences/internal/MixerSection.qml</file>
         <file>qml/DevTools/Extensions/ExtensionsListView.qml</file>
         <file>qml/platform/PlatformMenuBar.qml</file>
+        <file>qml/ProjectPage/ProjectPage.qml</file>
+        <file>qml/ProjectPage/ProjectStatusBar.qml</file>
     </qresource>
 </RCC>

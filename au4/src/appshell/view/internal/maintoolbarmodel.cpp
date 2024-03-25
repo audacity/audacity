@@ -27,7 +27,7 @@
 using namespace mu::appshell;
 
 static const QString HOME_PAGE("musescore://home");
-static const QString NOTATION_PAGE("musescore://notation");
+static const QString PROJECT_PAGE("musescore://project");
 static const QString PUBLISH_PAGE("musescore://publish");
 static const QString DEVTOOLS_PAGE("musescore://devtools");
 
@@ -88,7 +88,7 @@ void MainToolBarModel::load()
 
     m_items.clear();
     m_items << buildItem(mu::qtrc("appshell", "Home"), HOME_PAGE);
-    m_items << buildItem(mu::qtrc("appshell", "Score"), NOTATION_PAGE);
+    m_items << buildItem(mu::qtrc("appshell", "Project"), PROJECT_PAGE);
     m_items << buildItem(mu::qtrc("appshell", "Publish"), PUBLISH_PAGE);
 
     if (globalConfiguration()->devModeEnabled()) {
@@ -108,7 +108,7 @@ void MainToolBarModel::updateNotationPageItem()
     for (int i = 0; i < m_items.size(); ++i) {
         QVariantMap& item = m_items[i];
 
-        if (item[URI_KEY] == NOTATION_PAGE) {
+        if (item[URI_KEY] == PROJECT_PAGE) {
             item[IS_TITLE_BOLD_KEY] = context()->currentProject() != nullptr;
 
             QModelIndex modelIndex = index(i);
