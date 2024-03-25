@@ -68,8 +68,12 @@ QVariantMap AboutModel::museScoreContributionUrl() const
 
 QVariantMap AboutModel::museScorePrivacyPolicyUrl() const
 {
+#ifdef MU_BUILD_UPDATE_MODULE
     QUrl museScorePrivacyPolicyUrl(QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl()));
     return makeUrl(museScorePrivacyPolicyUrl);
+#else
+    return QVariantMap();
+#endif
 }
 
 QVariantMap AboutModel::musicXMLLicenseUrl() const
@@ -93,9 +97,9 @@ void AboutModel::copyRevisionToClipboard() const
                 ? " or later" : ""))
         .arg(QSysInfo::currentCpuArchitecture())
         .arg(QSysInfo::WordSize)
-        .arg(MUSESCORE_VERSION)
-        .arg(MUSESCORE_BUILD_NUMBER)
-        .arg(MUSESCORE_REVISION));
+        .arg(mu::MUVersion::version())
+        .arg(mu::MUVersion::build())
+        .arg(mu::MUVersion::revision()));
 }
 
 void AboutModel::toggleDevMode()

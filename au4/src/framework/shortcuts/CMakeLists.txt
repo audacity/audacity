@@ -40,17 +40,21 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/shortcutscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/shortcutsconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/shortcutsconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/midiremote.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/midiremote.h
+
 
     ${CMAKE_CURRENT_LIST_DIR}/view/shortcutsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/shortcutsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/editshortcutmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/editshortcutmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/mididevicemappingmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/mididevicemappingmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/editmidimappingmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/editmidimappingmodel.h
+
+    #TODO AU4
+    #${CMAKE_CURRENT_LIST_DIR}/view/mididevicemappingmodel.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/view/mididevicemappingmodel.h
+    #${CMAKE_CURRENT_LIST_DIR}/view/editmidimappingmodel.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/view/editmidimappingmodel.h
+
+    #${CMAKE_CURRENT_LIST_DIR}/internal/midiremote.cpp
+    #${CMAKE_CURRENT_LIST_DIR}/internal/midiremote.h
     )
 
 set(MODULE_QRC shortcuts.qrc)
@@ -83,5 +87,5 @@ if (OS_IS_MAC)
     endif()
 endif(OS_IS_MAC)
 
-include(${PROJECT_SOURCE_DIR}/build/module.cmake)
+include(SetupModule)
 

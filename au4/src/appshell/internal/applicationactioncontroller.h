@@ -32,14 +32,16 @@
 #include "ui/iuiactionsregister.h"
 #include "async/asyncable.h"
 #include "ui/imainwindow.h"
-#include "languages/ilanguagesservice.h"
 #include "iinteractive.h"
 #include "iappshellconfiguration.h"
-#include "multiinstances/imultiinstancesprovider.h"
-#include "project/iprojectfilescontroller.h"
-#include "audio/isoundfontrepository.h"
-#include "istartupscenario.h"
 #include "iapplication.h"
+
+//! TODO AU4
+// #include "languages/ilanguagesservice.h"
+// #include "multiinstances/imultiinstancesprovider.h"
+// #include "project/iprojectfilescontroller.h"
+// #include "audio/isoundfontrepository.h"
+// #include "istartupscenario.h"
 
 namespace mu::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public actions::Actionable, public async::Asyncable
@@ -47,15 +49,16 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     INJECT(actions::IActionsDispatcher, dispatcher)
     INJECT(ui::IUiActionsRegister, actionsRegister)
     INJECT(ui::IMainWindow, mainWindow)
-    INJECT(languages::ILanguagesService, languagesService)
+
     INJECT(IInteractive, interactive)
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    INJECT(project::IProjectFilesController, projectFilesController)
-    INJECT(audio::ISoundFontRepository, soundFontRepository)
-    INJECT(IStartupScenario, startupScenario)
     INJECT(IApplication, application)
-
+//! TODO AU4
+    // INJECT(languages::ILanguagesService, languagesService)
+    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+    // INJECT(project::IProjectFilesController, projectFilesController)
+    // INJECT(audio::ISoundFontRepository, soundFontRepository)
+    // INJECT(IStartupScenario, startupScenario)
 public:
     void preInit();
     void init();

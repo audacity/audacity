@@ -91,10 +91,11 @@ void StartupScenario::run()
     }
 
     StartupModeType modeType = resolveStartupModeType();
-    bool isMainInstance = multiInstancesProvider()->isMainInstance();
-    if (isMainInstance && sessionsManager()->hasProjectsForRestore()) {
-        modeType = StartupModeType::Recovery;
-    }
+//! TODO AU4
+    // bool isMainInstance = multiInstancesProvider()->isMainInstance();
+    // if (isMainInstance && sessionsManager()->hasProjectsForRestore()) {
+    //     modeType = StartupModeType::Recovery;
+    // }
 
     Uri startupUri = startupPageUri(modeType);
 
@@ -200,7 +201,8 @@ void StartupScenario::restoreLastSession()
 
 void StartupScenario::removeProjectsUnsavedChanges(const io::paths_t& projectsPaths)
 {
-    for (const io::path_t& path : projectsPaths) {
-        projectAutoSaver()->removeProjectUnsavedChanges(path);
-    }
+    //! TODO AU4
+    // for (const io::path_t& path : projectsPaths) {
+    //     projectAutoSaver()->removeProjectUnsavedChanges(path);
+    // }
 }

@@ -45,7 +45,9 @@ option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" OFF)
 option(MU_BUILD_ACCESSIBILITY_TESTS "Build accessibility tests" OFF)
 
 option(MU_BUILD_UI_MODULE "Build ui and uicomponets modules" ON)
-option(MU_BUILD_UI_MODULE "Build ui and uicomponets tests" ON)
+option(MU_BUILD_UI_TESTS "Build ui and uicomponets tests" ON)
+option(MU_BUILD_SHORTCUTS_MODULE "Build ui and shortcuts modules" ON)
+option(MU_BUILD_SHORTCUTS_TESTS "Build ui and shortcuts tests" ON)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
@@ -84,9 +86,15 @@ option(MU_ENABLE_STRING_DEBUG_HACK "Enable string debug hack (only clang)" ON)
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()
+    # TODO AU4
     #include(SetupConfigure)
     add_definitions(-DQT_SUPPORT)
     add_definitions(-DKORS_LOGGER_QT_SUPPORT)
+
+    add_definitions(-DMU_BUILD_UI_MODULE)
+    add_definitions(-DMU_BUILD_SHORTCUTS_MODULE)
+    add_definitions(-DMU_BUILD_APPSHELL_MODULE)
+
 endif()
 
 set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)

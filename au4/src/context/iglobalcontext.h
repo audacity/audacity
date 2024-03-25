@@ -19,28 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#ifndef MU_CONTEXT_IGLOBALCONTEXT_H
+#define MU_CONTEXT_IGLOBALCONTEXT_H
 
-#include "app.h"
+#include "modularity/imoduleinterface.h"
+#include "project/iaudacityproject.h"
+#include "async/notification.h"
 
-#include <QApplication>
-#include <QQmlApplicationEngine>
-#include <QQuickWindow>
-
-#include "log.h"
-
-using namespace mu::app;
-
-App::App()
+namespace mu::context {
+class IGlobalContext : MODULE_EXPORT_INTERFACE
 {
+    INTERFACE_ID(mu::context::IGlobalContext)
+
+public:
+    virtual ~IGlobalContext() = default;
+
+    virtual void setCurrentProject(const project::IAudacityProjectPtr& project) = 0;
+    virtual project::IAudacityProjectPtr currentProject() const = 0;
+    virtual async::Notification currentProjectChanged() const = 0;
+};
 }
 
-// void App::addModule(modularity::IModuleSetup* module)
-// {
-//     m_modules.push_back(module);
-// }
-
-int App::run(int argc, char** argv)
-{
-    LOGI() << "Hello world";
-    return 0;
-}
+#endif // MU_CONTEXT_IGLOBALCONTEXT_H

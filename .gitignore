@@ -175,3 +175,4 @@ appimagetool/*
 .build.arm64/
 .conan/
 .debug/
+build-*

@@ -23,9 +23,13 @@
 
 #include <QKeySequence>
 
-#include "global/deprecated/xmlreader.h"
-#include "global/deprecated/xmlwriter.h"
+//! TODO AU4
+// #include "global/deprecated/xmlreader.h"
+// #include "global/deprecated/xmlwriter.h"
+
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
 #include "multiinstances/resourcelockguard.h"
+#endif
 
 #include "log.h"
 
@@ -54,11 +58,13 @@ static const Shortcut& findShortcut(const ShortcutList& shortcuts, const std::st
 
 void ShortcutsRegister::init()
 {
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
     multiInstancesProvider()->resourceChanged().onReceive(this, [this](const std::string& resourceName) {
         if (resourceName == SHORTCUTS_RESOURCE_NAME) {
             reload();
         }
     });
+#endif
 
     reload();
 }
@@ -79,8 +85,10 @@ void ShortcutsRegister::reload(bool onlyDef)
         expandStandardKeys(m_defaultShortcuts);
 
         if (!onlyDef) {
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
             //! NOTE The user shortcut file may change, so we need to lock it
             mi::ReadResourceLockGuard(multiInstancesProvider(), SHORTCUTS_RESOURCE_NAME);
+#endif
             ok = readFromFile(m_shortcuts, userPath);
         } else {
             ok = false;
@@ -242,51 +250,56 @@ bool ShortcutsRegister::readFromFile(ShortcutList& shortcuts, const io::path_t& 
 {
     TRACEFUNC;
 
-    deprecated::XmlReader reader(path);
+    //! TODO AU4
+    return false;
 
-    reader.readNextStartElement();
-    if (reader.tagName() != SHORTCUTS_TAG) {
-        return false;
-    }
+    // deprecated::XmlReader reader(path);
 
-    while (reader.readNextStartElement()) {
-        if (reader.tagName() != SHORTCUT_TAG) {
-            reader.skipCurrentElement();
-            continue;
-        }
+    // reader.readNextStartElement();
+    // if (reader.tagName() != SHORTCUTS_TAG) {
+    //     return false;
+    // }
 
-        Shortcut shortcut = readShortcut(reader);
-        if (shortcut.isValid()) {
-            shortcuts.push_back(shortcut);
-        }
-    }
+    // while (reader.readNextStartElement()) {
+    //     if (reader.tagName() != SHORTCUT_TAG) {
+    //         reader.skipCurrentElement();
+    //         continue;
+    //     }
 
-    if (!reader.success()) {
-        LOGE() << "failed parse xml, error: " << reader.error() << ", path: " << path;
-    }
+    //     Shortcut shortcut = readShortcut(reader);
+    //     if (shortcut.isValid()) {
+    //         shortcuts.push_back(shortcut);
+    //     }
+    // }
 
-    return reader.success();
+    // if (!reader.success()) {
+    //     LOGE() << "failed parse xml, error: " << reader.error() << ", path: " << path;
+    // }
+
+    // return reader.success();
 }
 
 Shortcut ShortcutsRegister::readShortcut(deprecated::XmlReader& reader) const
 {
     Shortcut shortcut;
 
-    while (reader.readNextStartElement()) {
-        std::string tag(reader.tagName());
+    //! TODO AU4
 
-        if (tag == ACTION_CODE_TAG) {
-            shortcut.action = reader.readString();
-        } else if (tag == STANDARD_KEY_TAG) {
-            shortcut.standardKey = QKeySequence::StandardKey(reader.readInt());
-        } else if (tag == SEQUENCE_TAG) {
-            shortcut.sequences.push_back(reader.readString());
-        } else {
-            reader.skipCurrentElement();
-        }
-    }
+    // while (reader.readNextStartElement()) {
+    //     std::string tag(reader.tagName());
 
-    shortcut.context = uiactionsRegister()->action(shortcut.action).scCtx;
+    //     if (tag == ACTION_CODE_TAG) {
+    //         shortcut.action = reader.readString();
+    //     } else if (tag == STANDARD_KEY_TAG) {
+    //         shortcut.standardKey = QKeySequence::StandardKey(reader.readInt());
+    //     } else if (tag == SEQUENCE_TAG) {
+    //         shortcut.sequences.push_back(reader.readString());
+    //     } else {
+    //         reader.skipCurrentElement();
+    //     }
+    // }
+
+    // shortcut.context = uiactionsRegister()->action(shortcut.action).scCtx;
 
     return shortcut;
 }
@@ -320,7 +333,9 @@ mu::Ret ShortcutsRegister::setShortcuts(const ShortcutList& shortcuts)
 
 void ShortcutsRegister::resetShortcuts()
 {
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
     mi::WriteResourceLockGuard(multiInstancesProvider(), SHORTCUTS_RESOURCE_NAME);
+#endif
     fileSystem()->remove(configuration()->shortcutsUserAppDataPath());
 
     reload();
@@ -329,38 +344,43 @@ void ShortcutsRegister::resetShortcuts()
 bool ShortcutsRegister::writeToFile(const ShortcutList& shortcuts, const io::path_t& path) const
 {
     TRACEFUNC;
-
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
     mi::WriteResourceLockGuard(multiInstancesProvider(), SHORTCUTS_RESOURCE_NAME);
+#endif
 
-    deprecated::XmlWriter writer(path);
+    //! TODO AU4
+    return false;
 
-    writer.writeStartDocument();
-    writer.writeStartElement(SHORTCUTS_TAG);
+    // deprecated::XmlWriter writer(path);
 
-    for (const Shortcut& shortcut : shortcuts) {
-        writeShortcut(writer, shortcut);
-    }
+    // writer.writeStartDocument();
+    // writer.writeStartElement(SHORTCUTS_TAG);
 
-    writer.writeEndElement();
-    writer.writeEndDocument();
+    // for (const Shortcut& shortcut : shortcuts) {
+    //     writeShortcut(writer, shortcut);
+    // }
 
-    return writer.success();
+    // writer.writeEndElement();
+    // writer.writeEndDocument();
+
+    // return writer.success();
 }
 
 void ShortcutsRegister::writeShortcut(deprecated::XmlWriter& writer, const Shortcut& shortcut) const
 {
-    writer.writeStartElement(SHORTCUT_TAG);
-    writer.writeTextElement(ACTION_CODE_TAG, shortcut.action);
+    //! TODO AU4
+    // writer.writeStartElement(SHORTCUT_TAG);
+    // writer.writeTextElement(ACTION_CODE_TAG, shortcut.action);
 
-    if (shortcut.standardKey != QKeySequence::UnknownKey) {
-        writer.writeTextElement(STANDARD_KEY_TAG, QString("%1").arg(shortcut.standardKey).toStdString());
-    }
+    // if (shortcut.standardKey != QKeySequence::UnknownKey) {
+    //     writer.writeTextElement(STANDARD_KEY_TAG, QString("%1").arg(shortcut.standardKey).toStdString());
+    // }
 
-    for (const std::string& seq : shortcut.sequences) {
-        writer.writeTextElement(SEQUENCE_TAG, seq);
-    }
+    // for (const std::string& seq : shortcut.sequences) {
+    //     writer.writeTextElement(SEQUENCE_TAG, seq);
+    // }
 
-    writer.writeEndElement();
+    // writer.writeEndElement();
 }
 
 Notification ShortcutsRegister::shortcutsChanged() const
@@ -413,8 +433,9 @@ ShortcutList ShortcutsRegister::shortcutsForSequence(const std::string& sequence
 
 mu::Ret ShortcutsRegister::importFromFile(const io::path_t& filePath)
 {
+#ifdef MU_BUILD_MULTIINSTANCES_MODULE
     mi::ReadResourceLockGuard(multiInstancesProvider(), SHORTCUTS_RESOURCE_NAME);
-
+#endif
     Ret ret = fileSystem()->copy(filePath, configuration()->shortcutsUserAppDataPath(), true);
     if (!ret) {
         LOGE() << "failed import file: " << ret.toString();

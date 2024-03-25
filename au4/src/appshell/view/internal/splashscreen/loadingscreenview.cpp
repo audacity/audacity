@@ -84,8 +84,10 @@ void LoadingScreenView::draw(QPainter* painter)
 
     painter->drawText(messageRect, Qt::AlignTop | Qt::AlignHCenter | Qt::TextDontClip, m_message);
 
-    Qt::AlignmentFlag alignment = languagesService()->currentLanguage().direction == Qt::RightToLeft
-                                  ? Qt::AlignLeft : Qt::AlignRight;
+    //! TODO AU4
+    Qt::AlignmentFlag alignment = Qt::AlignLeft;
+    // Qt::AlignmentFlag alignment = languagesService()->currentLanguage().direction == Qt::RightToLeft
+    //                               ? Qt::AlignLeft : Qt::AlignRight;
 
     // Draw website URL
     QRectF websiteBoundingRect;

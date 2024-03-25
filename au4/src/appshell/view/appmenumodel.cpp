@@ -28,10 +28,12 @@
 using namespace mu::appshell;
 using namespace mu::ui;
 using namespace mu::uicomponents;
-using namespace mu::project;
-using namespace mu::workspace;
 using namespace mu::actions;
-using namespace mu::extensions;
+
+//! TODO AU4
+// using namespace mu::project;
+// using namespace mu::workspace;
+// using namespace mu::extensions;
 
 static QString makeId(const ActionCode& actionCode, int itemIndex)
 {
@@ -77,42 +79,43 @@ bool AppMenuModel::isGlobalMenuAvailable()
 
 void AppMenuModel::setupConnections()
 {
-    recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
-        MenuItem& recentScoreListItem = findMenu("menu-file-open");
+    //! TODO AU4
+    // recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
+    //     MenuItem& recentScoreListItem = findMenu("menu-file-open");
 
-        MenuItemList recentScoresList = makeRecentScoresItems();
-        bool openRecentEnabled = !recentScoresList.empty();
+    //     MenuItemList recentScoresList = makeRecentScoresItems();
+    //     bool openRecentEnabled = !recentScoresList.empty();
 
-        if (!recentScoresList.empty()) {
-            recentScoresList = appendClearRecentSection(recentScoresList);
-        }
+    //     if (!recentScoresList.empty()) {
+    //         recentScoresList = appendClearRecentSection(recentScoresList);
+    //     }
 
-        UiActionState state = recentScoreListItem.state();
-        state.enabled = openRecentEnabled;
-        recentScoreListItem.setState(state);
+    //     UiActionState state = recentScoreListItem.state();
+    //     state.enabled = openRecentEnabled;
+    //     recentScoreListItem.setState(state);
 
-        recentScoreListItem.setSubitems(recentScoresList);
-    });
+    //     recentScoreListItem.setSubitems(recentScoresList);
+    // });
 
-    workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
-        MenuItem& workspacesItem = findMenu("menu-workspaces");
-        workspacesItem.setSubitems(makeWorkspacesItems());
-    });
+    // workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
+    //     MenuItem& workspacesItem = findMenu("menu-workspaces");
+    //     workspacesItem.setSubitems(makeWorkspacesItems());
+    // });
 
-    workspacesManager()->workspacesListChanged().onNotify(this, [this]() {
-        MenuItem& workspacesItem = findMenu("menu-workspaces");
-        workspacesItem.setSubitems(makeWorkspacesItems());
-    });
+    // workspacesManager()->workspacesListChanged().onNotify(this, [this]() {
+    //     MenuItem& workspacesItem = findMenu("menu-workspaces");
+    //     workspacesItem.setSubitems(makeWorkspacesItems());
+    // });
 
-    extensionsProvider()->manifestListChanged().onNotify(this, [this]() {
-        MenuItem& pluginsMenu = findMenu("menu-plugins");
-        pluginsMenu.setSubitems(makePluginsMenuSubitems());
-    });
+    // extensionsProvider()->manifestListChanged().onNotify(this, [this]() {
+    //     MenuItem& pluginsMenu = findMenu("menu-plugins");
+    //     pluginsMenu.setSubitems(makePluginsMenuSubitems());
+    // });
 
-    extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
-        MenuItem& pluginsItem = findMenu("menu-plugins");
-        pluginsItem.setSubitems(makePluginsMenuSubitems());
-    });
+    // extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
+    //     MenuItem& pluginsItem = findMenu("menu-plugins");
+    //     pluginsItem.setSubitems(makePluginsMenuSubitems());
+    // });
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
@@ -335,11 +338,12 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenuItem("revert-factory")
     };
 
+    //! TODO AU4
     // put on top
-    if (updateConfiguration()->isAppUpdatable()) {
-        helpItems.push_front(makeSeparator());
-        helpItems.push_front(makeMenuItem("check-update"));
-    }
+    // if (updateConfiguration()->isAppUpdatable()) {
+    //     helpItems.push_front(makeSeparator());
+    //     helpItems.push_front(makeMenuItem("check-update"));
+    // }
 
     return makeMenu(TranslatableString("appshell/menu/help", "&Help"), helpItems, "menu-help");
 }
@@ -399,28 +403,29 @@ MenuItem* AppMenuModel::makeDiagnosticMenu()
 MenuItemList AppMenuModel::makeRecentScoresItems()
 {
     MenuItemList items;
-    const RecentFilesList& recentFiles = recentFilesController()->recentFilesList();
+    //! TODO AU4
+    // const RecentFilesList& recentFiles = recentFilesController()->recentFilesList();
 
-    int index = 0;
-    for (const RecentFile& file : recentFiles) {
-        MenuItem* item = new MenuItem(this);
+    // int index = 0;
+    // for (const RecentFile& file : recentFiles) {
+    //     MenuItem* item = new MenuItem(this);
 
-        UiAction action;
-        action.code = "file-open";
-        action.title = TranslatableString::untranslatable(file.displayName(/*includingExtension*/ true));
-        item->setAction(action);
+    //     UiAction action;
+    //     action.code = "file-open";
+    //     action.title = TranslatableString::untranslatable(file.displayName(/*includingExtension*/ true));
+    //     item->setAction(action);
 
-        item->setId(makeId(item->action().code, index++));
+    //     item->setId(makeId(item->action().code, index++));
 
-        UiActionState state;
-        state.enabled = true;
-        item->setState(state);
+    //     UiActionState state;
+    //     state.enabled = true;
+    //     item->setState(state);
 
-        item->setSelectable(true);
-        item->setArgs(ActionData::make_arg2<QUrl, QString>(file.path.toQUrl(), file.displayNameOverride));
+    //     item->setSelectable(true);
+    //     item->setArgs(ActionData::make_arg2<QUrl, QString>(file.path.toQUrl(), file.displayNameOverride));
 
-        items << item;
-    }
+    //     items << item;
+    // }
 
     return items;
 }
@@ -587,33 +592,34 @@ MenuItemList AppMenuModel::makeWorkspacesItems()
 {
     MenuItemList items;
 
-    IWorkspacePtrList workspaces = workspacesManager()->workspaces();
-    IWorkspacePtr currentWorkspace = workspacesManager()->currentWorkspace();
+    //! TODO AU4
+    // IWorkspacePtrList workspaces = workspacesManager()->workspaces();
+    // IWorkspacePtr currentWorkspace = workspacesManager()->currentWorkspace();
 
-    std::sort(workspaces.begin(), workspaces.end(), [](const IWorkspacePtr& workspace1, const IWorkspacePtr& workspace2) {
-        return workspace1->name() < workspace2->name();
-    });
+    // std::sort(workspaces.begin(), workspaces.end(), [](const IWorkspacePtr& workspace1, const IWorkspacePtr& workspace2) {
+    //     return workspace1->name() < workspace2->name();
+    // });
 
-    int index = 0;
-    for (const IWorkspacePtr& workspace : workspaces) {
-        MenuItem* item = new MenuItem(uiActionsRegister()->action("select-workspace"), this);
-        item->setId(makeId(item->action().code, index++));
+    // int index = 0;
+    // for (const IWorkspacePtr& workspace : workspaces) {
+    //     MenuItem* item = new MenuItem(uiActionsRegister()->action("select-workspace"), this);
+    //     item->setId(makeId(item->action().code, index++));
 
-        UiAction action = item->action();
-        action.title = TranslatableString::untranslatable(String::fromStdString(workspace->title()));
+    //     UiAction action = item->action();
+    //     action.title = TranslatableString::untranslatable(String::fromStdString(workspace->title()));
 
-        item->setAction(action);
-        item->setArgs(ActionData::make_arg1<std::string>(workspace->name()));
-        item->setSelectable(true);
-        item->setSelected(workspace == currentWorkspace);
+    //     item->setAction(action);
+    //     item->setArgs(ActionData::make_arg1<std::string>(workspace->name()));
+    //     item->setSelectable(true);
+    //     item->setSelected(workspace == currentWorkspace);
 
-        UiActionState state;
-        state.enabled = true;
-        state.checked = item->selected();
-        item->setState(state);
+    //     UiActionState state;
+    //     state.enabled = true;
+    //     state.checked = item->selected();
+    //     item->setState(state);
 
-        items << item;
-    }
+    //     items << item;
+    // }
 
     items << makeSeparator()
           << makeMenuItem("configure-workspaces");
@@ -639,50 +645,51 @@ MenuItemList AppMenuModel::makePluginsItems()
 {
     MenuItemList result;
 
-    KnownCategories categories = extensionsProvider()->knownCategories();
-    ManifestList enabledExtensions = extensionsProvider()->manifestList(Filter::Enabled);
+    //! TODO AU4
+    // KnownCategories categories = extensionsProvider()->knownCategories();
+    // ManifestList enabledExtensions = extensionsProvider()->manifestList(Filter::Enabled);
 
-    auto addMenuItems = [this](MenuItemList& items, const Manifest& m) {
-        if (m.actions.size() == 1) {
-            const extensions::Action& a = m.actions.at(0);
-            items << makeMenuItem(makeUriQuery(m.uri, a.code).toString(), TranslatableString::untranslatable(a.title));
-        } else {
-            MenuItemList sub;
-            for (const extensions::Action& a : m.actions) {
-                sub << makeMenuItem(makeUriQuery(m.uri, a.code).toString(), TranslatableString::untranslatable(a.title));
-            }
-            items << makeMenu(TranslatableString::untranslatable(m.title), sub);
-        }
-    };
+    // auto addMenuItems = [this](MenuItemList& items, const Manifest& m) {
+    //     if (m.actions.size() == 1) {
+    //         const extensions::Action& a = m.actions.at(0);
+    //         items << makeMenuItem(makeUriQuery(m.uri, a.code).toString(), TranslatableString::untranslatable(a.title));
+    //     } else {
+    //         MenuItemList sub;
+    //         for (const extensions::Action& a : m.actions) {
+    //             sub << makeMenuItem(makeUriQuery(m.uri, a.code).toString(), TranslatableString::untranslatable(a.title));
+    //         }
+    //         items << makeMenu(TranslatableString::untranslatable(m.title), sub);
+    //     }
+    // };
 
-    std::map<std::string, MenuItemList> categoriesMap;
-    MenuItemList pluginsWithoutCategories;
-    for (const Manifest& m : enabledExtensions) {
-        std::string categoryStr = m.category.toStdString();
-        if (mu::contains(categories, categoryStr)) {
-            MenuItemList& items = categoriesMap[categoryStr];
-            addMenuItems(items, m);
-        } else {
-            addMenuItems(pluginsWithoutCategories, m);
-        }
-    }
+    // std::map<std::string, MenuItemList> categoriesMap;
+    // MenuItemList pluginsWithoutCategories;
+    // for (const Manifest& m : enabledExtensions) {
+    //     std::string categoryStr = m.category.toStdString();
+    //     if (mu::contains(categories, categoryStr)) {
+    //         MenuItemList& items = categoriesMap[categoryStr];
+    //         addMenuItems(items, m);
+    //     } else {
+    //         addMenuItems(pluginsWithoutCategories, m);
+    //     }
+    // }
 
-    for (const auto& it : categoriesMap) {
-        TranslatableString categoryTitle = mu::value(categories, it.first, {});
-        result << makeMenu(categoryTitle, it.second);
-    }
+    // for (const auto& it : categoriesMap) {
+    //     TranslatableString categoryTitle = mu::value(categories, it.first, {});
+    //     result << makeMenu(categoryTitle, it.second);
+    // }
 
-    std::sort(result.begin(), result.end(), [](const MenuItem& l, const MenuItem& r) {
-        return l.translatedTitle() < r.translatedTitle();
-    });
+    // std::sort(result.begin(), result.end(), [](const MenuItem& l, const MenuItem& r) {
+    //     return l.translatedTitle() < r.translatedTitle();
+    // });
 
-    std::sort(pluginsWithoutCategories.begin(), pluginsWithoutCategories.end(), [](const MenuItem& l, const MenuItem& r) {
-        return l.translatedTitle() < r.translatedTitle();
-    });
+    // std::sort(pluginsWithoutCategories.begin(), pluginsWithoutCategories.end(), [](const MenuItem& l, const MenuItem& r) {
+    //     return l.translatedTitle() < r.translatedTitle();
+    // });
 
-    for (MenuItem* plugin : pluginsWithoutCategories) {
-        result << plugin;
-    }
+    // for (MenuItem* plugin : pluginsWithoutCategories) {
+    //     result << plugin;
+    // }
 
     return result;
 }

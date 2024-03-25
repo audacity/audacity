@@ -62,6 +62,13 @@ mu::String MUVersion::revision()
     // return String::fromStdString(MUSESCORE_REVISION);
 }
 
+mu::String MUVersion::build()
+{
+    //! TODO AU4
+    return String();
+    // return String::fromStdString(MUSESCORE_BUILD_NUMBER);
+}
+
 int MUVersion::majorVersion()
 {
     return Version(version()).majorVersion();

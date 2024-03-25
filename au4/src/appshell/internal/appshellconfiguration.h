@@ -27,12 +27,11 @@
 #include "modularity/ioc.h"
 #include "iglobalconfiguration.h"
 #include "io/ifilesystem.h"
-#include "multiinstances/imultiinstancesprovider.h"
+// #include "multiinstances/imultiinstancesprovider.h"
 #include "ui/iuiconfiguration.h"
-#include "project/iprojectconfiguration.h"
-#include "notation/inotationconfiguration.h"
-#include "playback/iplaybackconfiguration.h"
-#include "languages/ilanguagesconfiguration.h"
+// #include "project/iprojectconfiguration.h"
+// #include "playback/iplaybackconfiguration.h"
+// #include "languages/ilanguagesconfiguration.h"
 
 #include "iappshellconfiguration.h"
 
@@ -40,13 +39,13 @@ namespace mu::appshell {
 class AppShellConfiguration : public IAppShellConfiguration, public async::Asyncable
 {
     INJECT(IGlobalConfiguration, globalConfiguration)
-    INJECT(io::IFileSystem, fileSystem)
-    INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(project::IProjectConfiguration, projectConfiguration)
-    INJECT(notation::INotationConfiguration, notationConfiguration)
-    INJECT(playback::IPlaybackConfiguration, playbackConfiguration)
-    INJECT(languages::ILanguagesConfiguration, languagesConfiguration)
+    // INJECT(io::IFileSystem, fileSystem)
+    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+    // INJECT(ui::IUiConfiguration, uiConfiguration)
+    // INJECT(project::IProjectConfiguration, projectConfiguration)
+    // INJECT(notation::INotationConfiguration, notationConfiguration)
+    // INJECT(playback::IPlaybackConfiguration, playbackConfiguration)
+    // INJECT(languages::ILanguagesConfiguration, languagesConfiguration)
 
 public:
     void init();

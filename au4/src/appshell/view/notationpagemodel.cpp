@@ -27,7 +27,7 @@
 #include "log.h"
 
 using namespace mu::appshell;
-using namespace mu::notation;
+//using namespace mu::notation;
 using namespace mu::actions;
 
 NotationPageModel::NotationPageModel(QObject* parent)
@@ -42,7 +42,8 @@ bool NotationPageModel::isNavigatorVisible() const
 
 bool NotationPageModel::isBraillePanelVisible() const
 {
-    return brailleConfiguration()->braillePanelEnabled();
+    return false;
+    //return brailleConfiguration()->braillePanelEnabled();
 }
 
 void NotationPageModel::init()
@@ -54,13 +55,13 @@ void NotationPageModel::init()
         dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
     }
 
-    globalContext()->currentNotationChanged().onNotify(this, [this]() {
-        onNotationChanged();
-    });
+    // globalContext()->currentNotationChanged().onNotify(this, [this]() {
+    //     onNotationChanged();
+    // });
 
-    brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
-        emit isBraillePanelVisibleChanged();
-    });
+    // brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
+    //     emit isBraillePanelVisibleChanged();
+    // });
 
     onNotationChanged();
     updateDrumsetPanelVisibility();
@@ -133,15 +134,15 @@ QString NotationPageModel::statusBarName() const
 
 void NotationPageModel::onNotationChanged()
 {
-    INotationPtr notation = globalContext()->currentNotation();
-    if (!notation) {
-        return;
-    }
+    // INotationPtr notation = globalContext()->currentNotation();
+    // if (!notation) {
+    //     return;
+    // }
 
-    INotationNoteInputPtr noteInput = notation->interaction()->noteInput();
-    noteInput->stateChanged().onNotify(this, [this]() {
-        updateDrumsetPanelVisibility();
-    });
+    // INotationNoteInputPtr noteInput = notation->interaction()->noteInput();
+    // noteInput->stateChanged().onNotify(this, [this]() {
+    //     updateDrumsetPanelVisibility();
+    // });
 }
 
 void NotationPageModel::toggleDock(const QString& name)
@@ -152,11 +153,11 @@ void NotationPageModel::toggleDock(const QString& name)
         return;
     }
 
-    if (name == NOTATION_BRAILLE_PANEL_NAME) {
-        brailleConfiguration()->setBraillePanelEnabled(!isBraillePanelVisible());
-        emit isBraillePanelVisibleChanged();
-        return;
-    }
+    // if (name == NOTATION_BRAILLE_PANEL_NAME) {
+    //     brailleConfiguration()->setBraillePanelEnabled(!isBraillePanelVisible());
+    //     emit isBraillePanelVisibleChanged();
+    //     return;
+    // }
 
     dispatcher()->dispatch("dock-toggle", ActionData::make_arg1<QString>(name));
 }
@@ -165,27 +166,27 @@ void NotationPageModel::updateDrumsetPanelVisibility()
 {
     TRACEFUNC;
 
-    const dock::IDockWindow* window = dockWindowProvider()->window();
-    if (!window) {
-        return;
-    }
+    // const dock::IDockWindow* window = dockWindowProvider()->window();
+    // if (!window) {
+    //     return;
+    // }
 
-    auto setDrumsetPanelOpen = [this, window](bool open) {
-        if (open == window->isDockOpen(DRUMSET_PANEL_NAME)) {
-            return;
-        }
+    // auto setDrumsetPanelOpen = [this, window](bool open) {
+    //     if (open == window->isDockOpen(DRUMSET_PANEL_NAME)) {
+    //         return;
+    //     }
 
-        dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(DRUMSET_PANEL_NAME, open));
-    };
+    //     dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(DRUMSET_PANEL_NAME, open));
+    // };
 
-    const INotationPtr notation = globalContext()->currentNotation();
-    if (!notation) {
-        setDrumsetPanelOpen(false);
-        return;
-    }
+    // const INotationPtr notation = globalContext()->currentNotation();
+    // if (!notation) {
+    //     setDrumsetPanelOpen(false);
+    //     return;
+    // }
 
-    const INotationNoteInputPtr noteInput = notation->interaction()->noteInput();
-    bool isNeedOpen = noteInput->isNoteInputMode() && noteInput->state().drumset != nullptr;
+    // const INotationNoteInputPtr noteInput = notation->interaction()->noteInput();
+    // bool isNeedOpen = noteInput->isNoteInputMode() && noteInput->state().drumset != nullptr;
 
-    setDrumsetPanelOpen(isNeedOpen);
+    // setDrumsetPanelOpen(isNeedOpen);
 }

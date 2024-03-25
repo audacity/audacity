@@ -23,6 +23,7 @@
 #define MU_SHORTCUTS_EDITSHORTCUTMODEL_H
 
 #include <QObject>
+#include <QKeySequence>
 
 #include "modularity/ioc.h"
 #include "iinteractive.h"
