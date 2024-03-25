@@ -28,7 +28,7 @@ import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
 
 import "./HomePage"
-import "./NotationPage"
+import "./ProjectPage"
 import "./PublishPage"
 import "./DevTools"
 import "./dockwindow"
@@ -95,7 +95,7 @@ DockWindow {
             window: root.window
         },
 
-        NotationPage {
+        ProjectPage {
             //topToolKeyNavSec: root.topToolKeyNavSec
         },
 

@@ -34,7 +34,7 @@ import "../dockwindow"
 DockPage {
     id: root
 
-    property string section: "scores"
+    property string section: "projets"
     property string subSection: ""
 
     property var window: null
@@ -64,7 +64,7 @@ DockPage {
         section = name
 
         switch (name) {
-        case "scores": root.central = scoresComp; break
+        case "projets": root.central = projetsComp; break
         case "extensions": root.central = extensionsComp; break
         case "audio": root.central = audioComp; break
         case "learn": root.central = learnComp; break
@@ -103,7 +103,7 @@ DockPage {
         }
     ]
 
-    central: scoresComp
+    central: projetsComp
 
     Component {
         id: accountComp
@@ -114,11 +114,11 @@ DockPage {
     }
 
     Component {
-        id: scoresComp
+        id: projetsComp
 
-        //ScoresPage {}
+        //ProjectsPage {}
         Text {
-            text: "ScoresPage"
+            text: "ProjectsPage"
         }
     }
 

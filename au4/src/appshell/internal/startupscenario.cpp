@@ -31,7 +31,7 @@ using namespace mu::actions;
 
 static const mu::Uri FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup");
 static const mu::Uri HOME_URI("musescore://home");
-static const mu::Uri NOTATION_URI("musescore://notation");
+static const mu::Uri PROJECT_URI("musescore://project");
 
 static StartupModeType modeTypeTromString(const std::string& str)
 {
@@ -174,7 +174,7 @@ mu::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
         return HOME_URI;
     case StartupModeType::StartWithScore:
     case StartupModeType::ContinueLastSession:
-        return NOTATION_URI;
+        return PROJECT_URI;
     }
 
     return HOME_URI;

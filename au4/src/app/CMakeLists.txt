@@ -73,6 +73,10 @@ endif()
 
 list(APPEND LINK_LIB context)
 
+if (MU_BUILD_PROJECTSCENE_MODULE)
+    list(APPEND LINK_LIB projectscene)
+endif()
+
 ###########################################
 # Executable declaration
 ###########################################

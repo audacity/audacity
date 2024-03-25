@@ -19,26 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+#ifndef MU_PROJECTSCENE_PROJECTSCENEMODULE_H
+#define MU_PROJECTSCENE_PROJECTSCENEMODULE_H
 
-import MuseScore.Ui 1.0
-import MuseScore.UiComponents 1.0
-import MuseScore.Dock 1.0
-import MuseScore.AppShell 1.0
+#include <memory>
 
+#include "modularity/imodulesetup.h"
 
-import "../dockwindow"
+namespace mu::projectscene {
+class ProjectSceneModule : public modularity::IModuleSetup
+{
+public:
 
-DockPage {
-    id: root
+    std::string moduleName() const override;
+    void registerExports() override;
+    void onInit(const IApplication::RunMode& mode) override;
+    void onDeinit() override;
 
-    objectName: "Notation"
-    uri: "musescore://notation"
-
-
-    central: Text {
-        text: "Project View "
-    }
-
+private:
+};
 }
+
+#endif // MU_PROJECTSCENE_PROJECTSCENEMODULE_H

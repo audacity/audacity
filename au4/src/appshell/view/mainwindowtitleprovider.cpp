@@ -95,7 +95,7 @@ void MainWindowTitleProvider::update()
     project::IAudacityProjectPtr project = context()->currentProject();
 
     if (!project) {
-        setTitle(qtrc("appshell", "MuseScore 4"));
+        setTitle(qtrc("appshell", "Audacity 4"));
         setFilePath("");
         setFileModified(false);
         return;

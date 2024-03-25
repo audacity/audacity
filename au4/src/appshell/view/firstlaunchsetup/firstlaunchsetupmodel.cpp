@@ -30,8 +30,8 @@ FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
     : QObject(parent)
 {
     m_pages = {
-        Page { "ThemesPage.qml", "musescore://notation" },
-        Page { "PlaybackPage.qml", "musescore://notation" },
+        Page { "ThemesPage.qml", "musescore://project" },
+        Page { "PlaybackPage.qml", "musescore://project" },
         Page { "TutorialsPage.qml", "musescore://home?section=learn" }
     };
 }

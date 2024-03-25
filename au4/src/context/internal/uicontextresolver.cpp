@@ -28,7 +28,7 @@ using namespace mu::context;
 using namespace mu::ui;
 
 static const mu::Uri HOME_PAGE_URI("musescore://home");
-static const mu::Uri NOTATION_PAGE_URI("musescore://notation");
+static const mu::Uri PROJECT_PAGE_URI("musescore://project");
 
 static const QString NOTATION_NAVIGATION_PANEL("ScoreView");
 
@@ -98,7 +98,7 @@ UiContext UiContextResolver::currentUiContext() const
         return context::UiCtxHomeOpened;
     }
 
-    if (currentUri == NOTATION_PAGE_URI) {
+    if (currentUri == PROJECT_PAGE_URI) {
         auto project = globalContext()->currentProject();
         if (!project) {
             //! NOTE The notation page is open, but the notation itself is not loaded - we consider that the notation is not open.

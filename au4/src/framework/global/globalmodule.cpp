@@ -148,7 +148,7 @@ void GlobalModule::onPreInit(const IApplication::RunMode& mode)
     if (m_loggerLevel) {
         logger->setLevel(m_loggerLevel.value());
     } else {
-#ifdef MUE_ENABLE_LOGGER_DEBUGLEVEL
+#ifdef MU_ENABLE_LOGGER_DEBUGLEVEL
         logger->setLevel(mu::logger::Level::Debug);
 #else
         logger->setLevel(mu::logger::Level::Normal);
