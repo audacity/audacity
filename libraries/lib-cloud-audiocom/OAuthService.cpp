@@ -393,6 +393,7 @@ public:
 
    void OnSettingResetEnd() override
    {
+      GetOAuthService().UnlinkAccount();
       refreshToken.Invalidate();
    }
 };
