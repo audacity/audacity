@@ -21,9 +21,23 @@
  */
 #include "projectscenemodule.h"
 
-#include "modularity/ioc.h"
+#include <QtQml>
 
-using namespace mu::projectscene;
+#include "modularity/ioc.h"
+#include "ui/iuiactionsregister.h"
+
+#include "internal/projectsceneactioncontroller.h"
+
+#include "view/projectsceneuiactions.h"
+#include "view/toolbars/playtoolbarmodel.h"
+
+using namespace au::projectscene;
+using namespace mu::modularity;
+
+static void projectscene_init_qrc()
+{
+    Q_INIT_RESOURCE(projectscene);
+}
 
 std::string ProjectSceneModule::moduleName() const
 {
@@ -32,10 +46,31 @@ std::string ProjectSceneModule::moduleName() const
 
 void ProjectSceneModule::registerExports()
 {
+    m_actionController = std::make_shared<ProjectSceneActionController>();
+    m_projectSceneUiActions = std::make_shared<ProjectSceneUiActions>();
 }
 
-void ProjectSceneModule::onInit(const IApplication::RunMode& mode)
+void ProjectSceneModule::resolveImports()
 {
+    auto ar = ioc()->resolve<mu::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(m_projectSceneUiActions);
+    }
+}
+
+void ProjectSceneModule::registerUiTypes()
+{
+    qmlRegisterType<PlayToolBarModel>("Audacity.ProjectScene", 1, 0, "PlayToolBarModel");
+}
+
+void ProjectSceneModule::registerResources()
+{
+    projectscene_init_qrc();
+}
+
+void ProjectSceneModule::onInit(const mu::IApplication::RunMode&)
+{
+    m_actionController->init();
 }
 
 void ProjectSceneModule::onDeinit()
