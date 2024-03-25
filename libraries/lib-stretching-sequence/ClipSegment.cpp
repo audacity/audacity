@@ -65,6 +65,12 @@ ClipSegment::ClipSegment(
 {
 }
 
+ClipSegment::~ClipSegment()
+{
+   mOnSemitoneShiftChangeSubscription.Reset();
+   mOnFormantPreservationChangeSubscription.Reset();
+}
+
 size_t ClipSegment::GetFloats(float* const* buffers, size_t numSamples)
 {
    // Check if formant preservation of pitch shift needs to be updated.
