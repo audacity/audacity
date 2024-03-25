@@ -25,6 +25,10 @@ import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
 import MuseScore.Dock 1.0
 
+// import MuseScore.Project 1.0
+// import MuseScore.Cloud 1.0
+// import MuseScore.Learn 1.0
+
 import "../dockwindow"
 
 DockPage {
@@ -38,7 +42,114 @@ DockPage {
     objectName: "Home"
     uri: "musescore://home"
 
-    central: Text {
-        text: "Home"
+    onSetParamsRequested: function(params) {
+        if (Boolean(params["section"])) {
+            setCurrentCentral(params["section"])
+
+            if (Boolean(params["subSection"])) {
+                subSection = params["subSection"]
+            }
+        }
+    }
+
+    onSectionChanged: {
+        Qt.callLater(root.setCurrentCentral, section)
+    }
+
+    function setCurrentCentral(name) {
+        if (section === name || !Boolean(name)) {
+            return
+        }
+
+        section = name
+
+        switch (name) {
+        case "scores": root.central = scoresComp; break
+        case "extensions": root.central = extensionsComp; break
+        case "audio": root.central = audioComp; break
+        case "learn": root.central = learnComp; break
+        case "account": root.central = accountComp; break
+        }
+    }
+
+    panels: [
+        DockPanel {
+            id: menuPanel
+
+            objectName: "homeMenu"
+
+            readonly property int maxFixedWidth: 260
+            readonly property int minFixedWidth: 76
+            readonly property bool iconsOnly: root.window
+                                                ? root.window.width < (root.window.minimumWidth + maxFixedWidth - minFixedWidth)
+                                                : false
+            readonly property int currentFixedWidth: iconsOnly ? minFixedWidth : maxFixedWidth
+
+            width: currentFixedWidth
+            minimumWidth: currentFixedWidth
+            maximumWidth: currentFixedWidth
+
+            floatable: false
+            closable: false
+
+            HomeMenu {
+                currentPageName: root.section
+                iconsOnly: menuPanel.iconsOnly
+
+                onSelected: function(name) {
+                    root.setCurrentCentral(name)
+                }
+            }
+        }
+    ]
+
+    central: scoresComp
+
+    Component {
+        id: accountComp
+        //AccountPage {}
+        Text {
+            text: "AccountPage"
+        }
+    }
+
+    Component {
+        id: scoresComp
+
+        //ScoresPage {}
+        Text {
+            text: "ScoresPage"
+        }
+    }
+
+    Component {
+        id: extensionsComp
+
+        // PluginsPage {
+        //     section: root.subSection
+        // }
+        Text {
+            text: "ExtensionsPage"
+        }
+    }
+
+    Component {
+        id: audioComp
+
+        StyledTextLabel {
+            anchors.centerIn: parent
+            text: "Audio & VST"
+        }
+    }
+
+    Component {
+        id: learnComp
+
+        // LearnPage {
+        //     section: root.subSection
+        // }
+        Text {
+            text: "LearnPage"
+        }
     }
 }

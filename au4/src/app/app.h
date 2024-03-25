@@ -27,7 +27,7 @@
 
 #include "modularity/imodulesetup.h"
 #include "modularity/ioc.h"
-#include "global/iinteractive.h"
+#include "appshell/istartupscenario.h"
 
 //#include "commandlineparser.h"
 
@@ -35,7 +35,7 @@ namespace mu::app {
 class App
 {
     Inject<IApplication> muapplication;
-    Inject<IInteractive> interactive;
+    Inject<appshell::IStartupScenario> startupScenario;
 
 public:
     App();

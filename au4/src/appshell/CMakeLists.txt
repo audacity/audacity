@@ -41,6 +41,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/appshellmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iappshellconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iapplicationactioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/istartupscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/appshelltypes.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.h
@@ -51,13 +52,11 @@ set(MODULE_SRC
     #${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.h
-    # TODO AU4
-    #${CMAKE_CURRENT_LIST_DIR}/internal/istartupscenario.h
-    #${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
-    #${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h
-    #${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.h
     ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/appmenumodel.cpp
