@@ -87,7 +87,7 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
 else()
     # TODO AU4
-    #include(SetupConfigure)
+    include(SetupConfigure)
     add_definitions(-DQT_SUPPORT)
     add_definitions(-DKORS_LOGGER_QT_SUPPORT)
 
