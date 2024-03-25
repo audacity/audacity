@@ -74,6 +74,13 @@ GetHitClip(AudacityProject& project, const TrackPanelMouseEvent& event)
    return {};
 }
 
+bool IsExactlySelected(AudacityProject& project, const ClipTimes& clip)
+{
+   auto& viewInfo = ViewInfo::Get(project);
+   return clip.GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+          clip.GetPlayEndTime() == viewInfo.selectedRegion.t1();
+}
+
 PitchAndSpeedDialog::PitchShift ToSemitonesAndCents(int oldCents, int newCents)
 {
    // Rules:
@@ -385,9 +392,15 @@ bool PitchAndSpeedDialog::SetClipSpeed()
    if (!target)
       return false;
 
+   const auto wasExactlySelected =
+      IsExactlySelected(mProject, *mLeftClip.lock());
+
    if (!WaveTrackUtilities::SetClipStretchRatio(
           *target->track, target->clip, 100 / mClipSpeed))
       return false;
+
+   if (wasExactlySelected)
+      WaveClipUtilities::SelectClip(mProject, target->clip);
 
    UpdateHistory(XO("Changed Speed"));
 
