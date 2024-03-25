@@ -196,7 +196,7 @@ void UiModule::onInit(const IApplication::RunMode& mode)
         return;
     }
 
-    QFontDatabase::addApplicationFont(":/fonts/mscore/MusescoreIcon.ttf"); // icons
+    QFontDatabase::addApplicationFont(":/ui/fonts/MusescoreIcon.ttf"); // icons
 
     m_keyNavigationController->init();
 }
