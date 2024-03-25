@@ -44,13 +44,9 @@ DockPage {
             objectName: "playToolBar"
             title: qsTrc("appshell", "Play Tool Bar")
 
-            floatable: false
+            floatable: true
             closable: false
             resizable: false
-            separatorsVisible: false
-
-            alignment: DockToolBarAlignment.Center
-            contentBottomPadding: 2
 
             PlayToolBar {
                 navigationPanel.section: root.topToolKeyNavSec

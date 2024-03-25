@@ -13,15 +13,15 @@ void ProjectSceneActionController::init()
 
 void ProjectSceneActionController::play()
 {
-    NOT_IMPLEMENTED;
+    playbackController()->play();
 }
 
 void ProjectSceneActionController::stop()
 {
-    NOT_IMPLEMENTED;
+    playbackController()->stop();
 }
 
 void ProjectSceneActionController::rewind()
 {
-    NOT_IMPLEMENTED;
+    playbackController()->rewind();
 }
