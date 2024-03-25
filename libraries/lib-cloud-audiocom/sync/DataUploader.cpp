@@ -43,7 +43,6 @@ struct DataUploader::UploadOperation final :
 
    std::string MimeType;
    UploadData Data;
-   std::shared_ptr<IResponse> NetworkResponse;
 
    ResponseResult CurrentResult;
    CancellationContextPtr CancelContext;
@@ -70,31 +69,33 @@ struct DataUploader::UploadOperation final :
       Request request { Target.UploadUrl };
       request.setHeader(common_headers::ContentType, MimeType);
 
+      ResponsePtr networkResponse;
+
       if (std::holds_alternative<std::vector<uint8_t>>(Data))
       {
          auto data = *std::get_if<std::vector<uint8_t>>(&Data);
 
-         NetworkResponse = NetworkManager::GetInstance().doPut(
+         networkResponse = NetworkManager::GetInstance().doPut(
             request, data.data(), data.size());
-         CancelContext->OnCancelled(NetworkResponse);
       }
       else
       {
          auto filePath = *std::get_if<std::string>(&Data);
 
-         NetworkResponse = NetworkManager::GetInstance().doPut(
+         networkResponse = NetworkManager::GetInstance().doPut(
             request, CreateRequestPayloadStream(filePath));
-         CancelContext->OnCancelled(NetworkResponse);
       }
 
-      NetworkResponse->setRequestFinishedCallback(
-         [this, retriesLeft, operation = weak_from_this()](auto)
+      CancelContext->OnCancelled(networkResponse);
+
+      networkResponse->setRequestFinishedCallback(
+         [this, retriesLeft, networkResponse, operation = weak_from_this()](auto)
          {
             auto strongThis = operation.lock();
             if (!strongThis)
                return;
 
-            CurrentResult = GetResponseResult(*NetworkResponse, false);
+            CurrentResult = GetResponseResult(*networkResponse, false);
 
             if (CurrentResult.Code == SyncResultCode::Success)
                ConfirmUpload(RetriesCount);
@@ -106,7 +107,7 @@ struct DataUploader::UploadOperation final :
                FailUpload(RetriesCount);
          });
 
-      NetworkResponse->setUploadProgressCallback(
+      networkResponse->setUploadProgressCallback(
          [this, operation = weak_from_this()](
             int64_t current, int64_t total)
          {
@@ -129,18 +130,18 @@ struct DataUploader::UploadOperation final :
       Data = {};
       Request request { Target.SuccessUrl };
 
-      NetworkResponse =
+      auto networkResponse =
          NetworkManager::GetInstance().doPost(request, nullptr, 0);
-      CancelContext->OnCancelled(NetworkResponse);
+      CancelContext->OnCancelled(networkResponse);
 
-      NetworkResponse->setRequestFinishedCallback(
-         [this, retriesLeft, operation = weak_from_this()](auto)
+      networkResponse->setRequestFinishedCallback(
+         [this, retriesLeft, networkResponse, operation = weak_from_this()](auto)
          {
             auto strongThis = operation.lock();
             if (!strongThis)
                return;
 
-            CurrentResult = GetResponseResult(*NetworkResponse, false);
+            CurrentResult = GetResponseResult(*networkResponse, false);
 
             if (CurrentResult.Code == SyncResultCode::Success)
             {
@@ -170,18 +171,18 @@ struct DataUploader::UploadOperation final :
 
       Request request { Target.FailUrl };
 
-      NetworkResponse =
+      auto networkResponse =
          NetworkManager::GetInstance().doPost(request, nullptr, 0);
-      CancelContext->OnCancelled(NetworkResponse);
+      CancelContext->OnCancelled(networkResponse);
 
-      NetworkResponse->setRequestFinishedCallback(
-         [this, retriesLeft, operation = weak_from_this()](auto)
+      networkResponse->setRequestFinishedCallback(
+         [this, retriesLeft, networkResponse, operation = weak_from_this()](auto)
          {
             auto strongThis = operation.lock();
             if (!strongThis)
                return;
 
-            const auto result = GetResponseResult(*NetworkResponse, false);
+            const auto result = GetResponseResult(*networkResponse, false);
 
             if (
                result.Code == SyncResultCode::ConnectionFailed &&
