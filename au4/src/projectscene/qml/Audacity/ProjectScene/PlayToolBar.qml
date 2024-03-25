@@ -36,7 +36,7 @@ Item {
         id: view
 
         width: contentWidth
-        height: contentItem.childrenRect.height
+        height: 40
 
         orientation: Qt.Horizontal
         interactive: false
@@ -45,7 +45,9 @@ Item {
         model: toolbarModel
 
         delegate: FlatButton {
-            height: 30
+
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
 
             property var item: Boolean(model) ? model.itemRole : null
 

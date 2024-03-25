@@ -26,9 +26,12 @@ set(MODULE_QRC projectscene.qrc)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactioncontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.h

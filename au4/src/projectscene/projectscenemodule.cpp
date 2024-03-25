@@ -27,6 +27,7 @@
 #include "ui/iuiactionsregister.h"
 
 #include "internal/projectsceneactioncontroller.h"
+#include "internal/playbackcontroller.h"
 
 #include "view/projectsceneuiactions.h"
 #include "view/toolbars/playtoolbarmodel.h"
@@ -48,6 +49,8 @@ void ProjectSceneModule::registerExports()
 {
     m_actionController = std::make_shared<ProjectSceneActionController>();
     m_projectSceneUiActions = std::make_shared<ProjectSceneUiActions>();
+
+    ioc()->registerExport<IPlaybackController>(moduleName(), new PlaybackController());
 }
 
 void ProjectSceneModule::resolveImports()
