@@ -84,10 +84,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #Automatically tries to find an acceptable input volume
    #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
 
-   # Module prefs provides a panel in prefs where users can choose which modules
-   # to enable.
-   MODULE_PREFS
-
    # Define to make the meters look like a row of LEDs
    #METER_LED_STYLE
 

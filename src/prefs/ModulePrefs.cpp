@@ -150,7 +150,6 @@ bool ModulePrefs::Commit()
    return true;
 }
 
-#ifdef EXPERIMENTAL_MODULE_PREFS
 namespace{
 PrefsPanel::Registration sAttachment{ "Module",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
@@ -164,4 +163,3 @@ PrefsPanel::Registration sAttachment{ "Module",
    { "", { Registry::OrderingHint::After, "Mouse" } }
 };
 }
-#endif
