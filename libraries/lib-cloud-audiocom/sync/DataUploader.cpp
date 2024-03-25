@@ -14,7 +14,6 @@
 #include <variant>
 
 #include <wx/file.h>
-#include <wx/log.h>
 
 #include "CodeConversions.h"
 
@@ -68,9 +67,6 @@ struct DataUploader::UploadOperation final :
 
    void PerformUpload(int retriesLeft)
    {
-      wxLogDebug(
-         "Performing upload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
-
       Request request { Target.UploadUrl };
       request.setHeader(common_headers::ContentType, MimeType);
 
@@ -130,9 +126,6 @@ struct DataUploader::UploadOperation final :
 
    void ConfirmUpload(int retriesLeft)
    {
-      wxLogDebug(
-         "ConfirmUpload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
-
       Data = {};
       Request request { Target.SuccessUrl };
 
@@ -169,17 +162,10 @@ struct DataUploader::UploadOperation final :
 
    void FailUpload(int retriesLeft)
    {
-      wxLogDebug(
-         "FailUpload (%d) to %s", retriesLeft, Target.UploadUrl.c_str());
-
       if (!UploadFailed.exchange(true))
       {
          Data = {};
          Callback(CurrentResult);
-
-         wxLogDebug(
-            "FailUpload signalled to %s: %s", Target.UploadUrl.c_str(),
-            CurrentResult.Content.c_str());
       }
 
       Request request { Target.FailUrl };
@@ -281,6 +267,8 @@ void DataUploader::Upload(
       *this, cancellationContex, target, std::move(filePath),
       audacity::network_manager::common_content_types::ApplicationXOctetStream,
       std::move(callback), std::move(progressCallback)));
+
+   mResponses.back()->PerformUpload(RetriesCount);
 }
 
 void DataUploader::RemoveResponse(UploadOperation& response)

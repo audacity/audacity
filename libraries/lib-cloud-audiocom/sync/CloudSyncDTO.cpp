@@ -177,6 +177,9 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& snapshotInfo)
    if (!Deserialize(value, "id", tempSnapshot.Id))
       return {};
 
+   if (!Deserialize(value, "parent_id", tempSnapshot.ParentId))
+      return {};
+
    if (!Deserialize(value, "date_created", tempSnapshot.Created))
       return {};
 
@@ -402,6 +405,17 @@ std::string Serialize(const ProjectForm& form)
    document.Accept(writer);
 
    return buffer.GetString();
+}
+
+std::optional<ProjectSyncState>
+DeserializeProjectSyncState(const std::string& data)
+{
+   ProjectSyncState result;
+
+   if (Deserialize(data, result))
+      return std::move(result);
+
+   return {};
 }
 
 std::optional<CreateSnapshotResponse>

@@ -11,7 +11,8 @@
 
 #include "URLSchemesRegistry.h"
 
-#include "ServiceConfig.h"
+#include "CloudProjectMixdownUtils.h"
+#include "CloudProjectOpenUtils.h"
 #include "OAuthService.h"
 
 namespace
@@ -19,6 +20,15 @@ namespace
 auto subscription = URLSchemesRegistry::Get().Subscribe(
    [](URLschemeHandlerMessage message)
    {
-      audacity::cloud::audiocom::GetOAuthService().HandleLinkURI(message.url, {});
+      using namespace audacity::cloud::audiocom;
+
+      if (GetOAuthService().HandleLinkURI(message.url, {}))
+         return;
+
+      if (sync::HandleProjectLink(message.url))
+         return;
+
+      if (sync::HandleMixdownLink(message.url))
+         return;
    });
 }

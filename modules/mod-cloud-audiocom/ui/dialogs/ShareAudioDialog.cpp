@@ -17,6 +17,7 @@
 #include <wx/button.h>
 #include <wx/clipbrd.h>
 #include <wx/gauge.h>
+#include <wx/frame.h>
 #include <wx/stattext.h>
 #include <wx/statline.h>
 #include <wx/textctrl.h>
@@ -50,6 +51,9 @@
 #include "WindowAccessible.h"
 #include "HelpSystem.h"
 #include "ProjectRate.h"
+#include "ProjectWindows.h"
+
+#include "CloudLocationDialog.h"
 
 namespace audacity::cloud::audiocom
 {
@@ -727,4 +731,35 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
    elapsedTime->SetFont(font);
    remainingTime->SetFont(font);
 }
+
+namespace
+{
+auto hooked = []
+{
+   ExportUtils::RegisterExportHook(
+      [](AudacityProject& project, const FileExtension&)
+      {
+         const auto window = &GetProjectFrame(project);
+
+         sync::CloudLocationDialog locationDialog {
+            window, sync::LocationDialogType::Export
+         };
+
+         const auto result = locationDialog.ShowDialog();
+
+         if (result == sync::LocationDialogResult::Cancel)
+            return ExportUtils::ExportHookResult::Cancel;
+
+         if (result == sync::LocationDialogResult::Local)
+            return ExportUtils::ExportHookResult::Continue;
+
+         ShareAudioDialog shareDialog { project, window };
+         shareDialog.ShowModal();
+
+         return ExportUtils::ExportHookResult::Handled;
+      },
+      1000);
+   return true;
+}();
+} // namespace
 } // namespace audacity::cloud::audiocom

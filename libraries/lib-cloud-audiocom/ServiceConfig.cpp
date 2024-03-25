@@ -274,6 +274,18 @@ std::string ServiceConfig::GetSnapshotInfoUrl(
       });
 }
 
+std::string ServiceConfig::GetDeleteSnapshotUrl(
+   std::string_view projectId, std::string_view snapshotId) const
+{
+   return Substitute(
+      "{api_url}/project/{project_id}/snapshot/{snapshot_id}",
+      {
+         { "api_url", mApiEndpoint },
+         { "project_id", projectId },
+         { "snapshot_id", snapshotId },
+      });
+}
+
 std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
 {
    return Substitute(

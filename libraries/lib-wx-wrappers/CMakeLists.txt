@@ -7,6 +7,8 @@ Very much not toolkit-neutral!
 ]]
 
 set( SOURCES
+   AccessibilityUtils.cpp
+   AccessibilityUtils.h
    AudacityTextEntryDialog.cpp
    AudacityTextEntryDialog.h
    AudacityDontAskAgainMessageDialog.cpp

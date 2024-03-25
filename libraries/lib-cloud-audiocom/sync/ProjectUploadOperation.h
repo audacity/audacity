@@ -34,13 +34,12 @@ struct ProjectUploadData final
    std::shared_ptr<TrackList> Tracks;
 };
 
-class ProjectUploadOperation /* not final */ :
-    public concurrency::ICancellable
+class ProjectUploadOperation /* not final */ : public concurrency::ICancellable
 {
 public:
    virtual ~ProjectUploadOperation() = default;
 
-   virtual void Start(UploadMode mode)                       = 0;
+   virtual void Start()                                      = 0;
    virtual void SetUploadData(const ProjectUploadData& data) = 0;
    virtual bool IsCompleted() const                          = 0;
 }; // class AsynchronousOperation

@@ -75,6 +75,7 @@ struct SnapshotBlockInfo final
 struct SnapshotInfo final
 {
    std::string Id;
+   std::string ParentId;
 
    int64_t Created {};
    int64_t Updated {};
@@ -144,6 +145,9 @@ struct NetworkStats final
 }; // struct NetworkStats
 
 std::string Serialize(const ProjectForm& form);
+
+std::optional<ProjectSyncState>
+DeserializeProjectSyncState(const std::string& data);
 
 std::optional<CreateSnapshotResponse>
 DeserializeCreateSnapshotResponse(const std::string& data);
