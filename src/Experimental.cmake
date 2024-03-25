@@ -41,11 +41,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # This makes it use alpha blending, most transparent where least intense.
    #SPECTROGRAM_OVERLAY
 
-   # Define this so that sync-lock tiles shine through note/MIDI track.
-   # The note track then relies on the same code for drawing background as
-   # Wavetrack, and draws its notes and lines over the top.
-   NOTETRACK_OVERLAY
-
    # Define this, and the option to zoom to half wave is added in the VZoom menu.
    # Also we go to half wave on collapse, full wave on restore.
    HALF_WAVE
