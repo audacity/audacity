@@ -196,7 +196,6 @@ void SpectrumView::DoSetMinimized( bool minimized )
    if (!wt)
       return;
 
-#ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
    if( bHalfWave && minimized)
@@ -213,7 +212,6 @@ void SpectrumView::DoSetMinimized( bool minimized )
       SpectrogramBounds::Get(*wt)
          .SetBounds( spectrumLinear ? 0.0f : 1.0f, max );
    }
-#endif
 
    ChannelView::DoSetMinimized(minimized);
 }

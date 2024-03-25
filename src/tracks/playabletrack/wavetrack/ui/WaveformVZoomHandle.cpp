@@ -253,11 +253,9 @@ BEGIN_POPUP_MENU(WaveformVRulerMenuTable)
          AppendItem( "Reset", OnZoomFitVerticalID, XXO("Reset Zoom"), POPUP_MENU_FN( OnZoomReset ) );
       EndSection();
 
-   #ifdef EXPERIMENTAL_HALF_WAVE
       BeginSection( "InOut" );
          AppendItem( "HalfWave", OnZoomHalfWaveID, XXO("Half Wave"), POPUP_MENU_FN( OnZoomHalfWave ) );
       EndSection();
-   #endif
    EndSection();
 
 END_POPUP_MENU()

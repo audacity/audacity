@@ -41,10 +41,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # This makes it use alpha blending, most transparent where least intense.
    #SPECTROGRAM_OVERLAY
 
-   # Define this, and the option to zoom to half wave is added in the VZoom menu.
-   # Also we go to half wave on collapse, full wave on restore.
-   HALF_WAVE
-
    # THEMING is mostly mainstream now.
    # the define is still present to mark out old code before theming, that we might
    # conceivably need.
