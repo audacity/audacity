@@ -125,9 +125,7 @@ namespace
    enum SelectionBoundary {
       SBNone,
       SBLeft, SBRight,
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       SBBottom, SBTop, SBCenter, SBWidth,
-#endif
    };
 
    SelectionBoundary ChooseTimeBoundary
@@ -191,7 +189,6 @@ namespace
          ChooseTimeBoundary(t0,t1,viewInfo, selend, onlyWithinSnapDistance,
          &pixelDist, pPinValue);
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       //const double t0 = viewInfo.selectedRegion.t0();
       //const double t1 = viewInfo.selectedRegion.t1();
       const double f0 = viewInfo.selectedRegion.f0();
@@ -272,7 +269,6 @@ namespace
          }
       }
       else
-#endif
       {
          return boundary;
       }
@@ -321,7 +317,6 @@ namespace
          tip = XO("Click and drag to move right selection boundary.");
          pCursor = &*adjustRightSelectionCursor;
          break;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       case SBBottom:
          tip = XO("Click and drag to move bottom selection frequency.");
          pCursor = &*bottomFrequencyCursor;
@@ -353,7 +348,6 @@ namespace
          tip = XO("Click and drag to adjust frequency bandwidth.");
          pCursor = &*bandWidthCursor;
          break;
-#endif
       default:
          wxASSERT(false);
       } // switch
@@ -657,18 +651,15 @@ UIHandle::Result SelectHandle::Click(
          case SBLeft:
          case SBRight:
          {
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
             // If drag starts, change time selection only
             // (also exit frequency snapping)
             mFreqSelMode = FREQ_SEL_INVALID;
-#endif
             mSelStartValid = true;
             mSelStart = value;
             mSnapStart = SnapResults{};
             AdjustSelection(pProject, viewInfo, event.m_x, mRect.x, pTrack);
             break;
          }
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
          case SBBottom:
          case SBTop:
          {
@@ -695,7 +686,6 @@ UIHandle::Result SelectHandle::Click(
             HandleCenterFrequencyClick(viewInfo, true, pWc, value);
             break;
          }
-#endif
          default:
             wxASSERT(false);
       };
@@ -716,7 +706,6 @@ UIHandle::Result SelectHandle::Click(
    //Make sure you are within the selected track
    bool startNewSelection = true;
    if (pTrack && pTrack->GetSelected()) {
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
          isSpectralSelectionView(view)) {
          // This code is no longer reachable, but it had a place in the
@@ -743,7 +732,6 @@ UIHandle::Result SelectHandle::Click(
          return RefreshNone;
       }
       else
-#endif
       {
          // Not shift-down, choose boundary only within snapping
          double value;
@@ -758,15 +746,12 @@ UIHandle::Result SelectHandle::Click(
          case SBLeft:
          case SBRight:
             startNewSelection = false;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
             // Disable frequency selection
             mFreqSelMode = FREQ_SEL_INVALID;
-#endif
             mSelStartValid = true;
             mSelStart = value;
             mSnapStart = SnapResults{};
             break;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
          case SBBottom:
          case SBTop:
          case SBWidth: {
@@ -794,7 +779,6 @@ UIHandle::Result SelectHandle::Click(
             startNewSelection = false;
             break;
          }
-#endif
          default:
             wxASSERT(false);
          }
@@ -806,10 +790,8 @@ UIHandle::Result SelectHandle::Click(
    if (startNewSelection) {
       // If we didn't move a selection boundary, start a NEW selection
       selectionState.SelectNone(trackList);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       StartFreqSelection (viewInfo, event.m_y, mRect.y, mRect.height,
          view);
-#endif
       StartSelection(pProject);
       if (pTrack)
          selectionState.SelectTrack(*pTrack, true, true);
@@ -888,7 +870,6 @@ UIHandle::Result SelectHandle::Drag(const TrackPanelMouseEvent &evt,
             selectionState.SelectRangeOfTracks( trackList, *sTrack, *eTrack );
          }
 
-   #ifdef EXPERIMENTAL_SPECTRAL_EDITING
    #ifndef SPECTRAL_EDITING_ESC_KEY
          if (mFreqSelMode == FREQ_SEL_SNAPPING_CENTER &&
              !viewInfo.selectedRegion.isPoint())
@@ -901,7 +882,6 @@ UIHandle::Result SelectHandle::Drag(const TrackPanelMouseEvent &evt,
             )
                AdjustFreqSelection(*pWaveChannel,
                   viewInfo, y, mRect.y, mRect.height);
-   #endif
 
          AdjustSelection(pProject, viewInfo, x, mRect.x, clickedTrack.get());
       }
@@ -996,7 +976,6 @@ HitTestPreview SelectHandle::Preview
       // This is a vestige of an idea in the prototype version.
       // Center would snap without mouse button down, click would pin the center
       // and drag width.
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       if ((mFreqSelMode == FREQ_SEL_SNAPPING_CENTER) &&
          isSpectralSelectionView(view)) {
          // Not shift-down, but center frequency snapping toggle is on
@@ -1004,7 +983,6 @@ HitTestPreview SelectHandle::Preview
          pCursor = &*envelopeCursor;
          return {};
       }
-#endif
 #endif
 
       if (!pTrack->GetSelected())

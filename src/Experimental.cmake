@@ -66,9 +66,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Allow keyboard seeking before initial playback position
    #SEEK_BEHIND_CURSOR
 
-   # Paul Licameli (PRL) 5 Oct 2014
-   SPECTRAL_EDITING
-
    # Edward Hui 1 Jul 2021
    #BRUSH_TOOL
 

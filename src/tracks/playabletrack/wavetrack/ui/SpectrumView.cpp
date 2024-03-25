@@ -388,10 +388,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    freqLo = selectedRegion.f0();
    freqHi = selectedRegion.f1();
-#endif
 
    const int &colorScheme = settings.colorScheme;
    const int &range = settings.range;
@@ -1087,7 +1085,6 @@ unsigned SpectrumView::Char(
    return RefreshCode::RefreshNone;
 }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
 // Attach some related menu items
 #include "../../../ui/SelectHandle.h"
 #include "../../../../CommonCommandFlags.h"
@@ -1203,4 +1200,3 @@ AttachedItem sAttachment2{ Indirect(SpectralSelectionMenu()),
 };
 
 }
-#endif // EXPERIMENTAL_SPECTRAL_EDITING
