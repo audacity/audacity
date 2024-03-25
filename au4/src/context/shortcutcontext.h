@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_CONTEXT_SHORTCUTCONTEXT_H
-#define MU_CONTEXT_SHORTCUTCONTEXT_H
+#ifndef AU_CONTEXT_SHORTCUTCONTEXT_H
+#define AU_CONTEXT_SHORTCUTCONTEXT_H
 
 #include <array>
 #include <string>
@@ -64,4 +64,4 @@ inline bool shortcutContextHasLowerPriorityThan(const std::string& ctx1, const s
 }
 }
 
-#endif // MU_CONTEXT_SHORTCUTCONTEXT_H
+#endif // AU_CONTEXT_SHORTCUTCONTEXT_H

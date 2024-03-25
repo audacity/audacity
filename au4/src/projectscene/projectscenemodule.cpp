@@ -30,6 +30,7 @@
 #include "internal/playbackcontroller.h"
 
 #include "view/projectsceneuiactions.h"
+#include "view/trackslistmodel.h"
 #include "view/toolbars/playtoolbarmodel.h"
 
 using namespace au::projectscene;
@@ -64,6 +65,7 @@ void ProjectSceneModule::resolveImports()
 void ProjectSceneModule::registerUiTypes()
 {
     qmlRegisterType<PlayToolBarModel>("Audacity.ProjectScene", 1, 0, "PlayToolBarModel");
+    qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
 }
 
 void ProjectSceneModule::registerResources()

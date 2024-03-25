@@ -18,25 +18,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# App (main)
-add_subdirectory(app)
+set(MODULE processing)
 
-# Framework
-add_subdirectory(framework)
+set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/processingmodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/processingmodule.h
 
-# Modules
-if (MU_BUILD_APPSHELL_MODULE)
-    add_subdirectory(appshell)
-endif()
+    ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.h
+    ${CMAKE_CURRENT_LIST_DIR}/dom/track.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dom/track.h
 
-add_subdirectory(context)
-add_subdirectory(project)
+    )
 
-if (MU_BUILD_PROJECTSCENE_MODULE)
-   add_subdirectory(projectscene)
-endif()
-
-add_subdirectory(processing)
+include(SetupModule)
 
 
-# ...

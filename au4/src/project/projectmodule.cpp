@@ -23,7 +23,7 @@
 
 #include "modularity/ioc.h"
 
-using namespace mu::project;
+using namespace au::project;
 
 std::string ProjectModule::moduleName() const
 {
@@ -34,7 +34,7 @@ void ProjectModule::registerExports()
 {
 }
 
-void ProjectModule::onInit(const IApplication::RunMode& mode)
+void ProjectModule::onInit(const mu::IApplication::RunMode&)
 {
 }
 

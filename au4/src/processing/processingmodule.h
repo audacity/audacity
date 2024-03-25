@@ -19,15 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+#ifndef AU_PROСESSING_PROСESSINGMODULE_H
+#define AU_PROСESSING_PROСESSINGMODULE_H
 
 #include <memory>
 
 #include "modularity/imodulesetup.h"
 
-namespace au::project {
-class ProjectModule : public mu::modularity::IModuleSetup
+namespace au::processing {
+class ProcessingModule : public mu::modularity::IModuleSetup
 {
 public:
 
@@ -40,4 +40,4 @@ private:
 };
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+#endif // AU_PROСESSING_PROСESSINGMODULE_H
