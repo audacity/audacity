@@ -13,6 +13,7 @@ set( SOURCES
    ui/dialogs/ShareAudioDialog.cpp
    ui/dialogs/ShareAudioDialog.h
 
+   ui/AudioComPrefsPanel.cpp
    ui/ShareAudioToolbar.cpp
    ui/ShareAudioToolbar.h
    ui/UserImage.cpp
