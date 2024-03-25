@@ -49,6 +49,10 @@
 
 #include "context/contextmodule.h"
 
+#ifdef MU_BUILD_PROJECTSCENE_MODULE
+#include "projectscene/projectscenemodule.h"
+#endif
+
 #if (defined (_MSCVER) || defined (_MSC_VER))
 #include <vector>
 #include <algorithm>
@@ -113,6 +117,8 @@ int main(int argc, char** argv)
 #endif
 
     app.addModule(new mu::context::ContextModule());
+
+    app.addModule(new mu::projectscene::ProjectSceneModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
