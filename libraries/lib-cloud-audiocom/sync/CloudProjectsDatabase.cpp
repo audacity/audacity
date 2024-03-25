@@ -148,6 +148,68 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
    return DoGetProjectData(statement->Prepare(projectFilePath).Run());
 }
 
+std::vector<DBProjectData>
+cloud::audiocom::sync::CloudProjectsDatabase::GetCloudProjects() const
+{
+   std::vector<DBProjectData> result;
+
+   auto connection = GetConnection();
+
+   if (!connection)
+      return result;
+
+   auto statement = connection->CreateStatement(
+      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects");
+
+   if (!statement)
+      return result;
+
+   auto runResult = statement->Prepare().Run();
+
+   for (auto row : runResult)
+   {
+      auto data = DoGetProjectData(row);
+
+      if (data)
+         result.push_back(*data);
+   }
+
+   return result;
+}
+
+void cloud::audiocom::sync::CloudProjectsDatabase::DeleteProject(
+   std::string_view projectId)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   static const char* queries[] = {
+      "DELETE FROM projects WHERE project_id = ?",
+      "DELETE FROM block_hashes WHERE project_id = ?",
+      "DELETE FROM pending_snapshots WHERE project_id = ?",
+      "DELETE FROM pending_project_blobs WHERE project_id = ?",
+      "DELETE FROM pending_project_blocks WHERE project_id = ?",
+      "DELETE FROM project_users WHERE project_id = ?",
+   };
+
+   auto tx = connection->BeginTransaction("DeleteProject");
+
+   for (auto query : queries)
+   {
+      auto statement = connection->CreateStatement(query);
+
+      if (!statement)
+         return;
+
+      if (!statement->Prepare(projectId).Run().IsOk())
+         return;
+   }
+
+   tx.Commit();
+}
+
 bool CloudProjectsDatabase::MarkProjectAsSynced(
    std::string_view projectId, std::string_view snapshotId)
 {
@@ -478,19 +540,19 @@ CloudProjectsDatabase::GetPendingProjectBlob(
    {
       PendingProjectBlobData data;
 
-      if (!row.Get(1, data.ProjectId))
+      if (!row.Get(0, data.ProjectId))
          return {};
 
-      if (!row.Get(2, data.SnapshotId))
+      if (!row.Get(1, data.SnapshotId))
          return {};
 
-      if (!row.Get(3, data.UploadUrl))
+      if (!row.Get(2, data.UploadUrl))
          return {};
 
-      if (!row.Get(4, data.ConfirmUrl))
+      if (!row.Get(3, data.ConfirmUrl))
          return {};
 
-      if (!row.Get(5, data.FailUrl))
+      if (!row.Get(4, data.FailUrl))
          return {};
 
       const auto size = row.GetColumnBytes(6);
@@ -537,7 +599,7 @@ void CloudProjectsDatabase::AddPendingProjectBlocks(
 }
 
 void CloudProjectsDatabase::RemovePendingProjectBlock(
-   std::string_view projectId, std::string_view snapshotId, int64_t blockId)
+   std::string_view projectId, int64_t blockId)
 {
    auto connection = GetConnection();
 
@@ -545,12 +607,12 @@ void CloudProjectsDatabase::RemovePendingProjectBlock(
       return;
 
    auto statement = connection->CreateStatement(
-      "DELETE FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ? AND block_id = ?");
+      "DELETE FROM pending_project_blocks WHERE project_id = ? AND block_id = ?");
 
    if (!statement)
       return;
 
-   statement->Prepare(projectId, snapshotId, blockId).Run();
+   statement->Prepare(projectId, blockId).Run();
 }
 
 void CloudProjectsDatabase::RemovePendingProjectBlocks(
@@ -574,7 +636,7 @@ std::vector<PendingProjectBlockData>
 CloudProjectsDatabase::GetPendingProjectBlocks(
    std::string_view projectId, std::string_view snapshotId)
 {
-auto connection = GetConnection();
+   auto connection = GetConnection();
 
    if (!connection)
       return {};
@@ -624,40 +686,48 @@ auto connection = GetConnection();
 }
 
 std::optional<DBProjectData>
-CloudProjectsDatabase::DoGetProjectData(sqlite::RunResult result) const
+CloudProjectsDatabase::DoGetProjectData(const sqlite::Row& row) const
+{
+   DBProjectData data;
+
+   if (!row.Get(0, data.ProjectId))
+      return {};
+
+   if (!row.Get(1, data.SnapshotId))
+      return {};
+
+   if (!row.Get(2, data.SavesCount))
+      return {};
+
+   if (!row.Get(3, data.LastAudioPreview))
+      return {};
+
+   if (!row.Get(4, data.LocalPath))
+      return {};
+
+   if (!row.Get(5, data.LastModified))
+      return {};
+
+   if (!row.Get(6, data.LastRead))
+      return {};
+
+   int status;
+   if (!row.Get(7, status))
+      return {};
+
+   data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
+
+   return data;
+}
+
+std::optional<DBProjectData>
+cloud::audiocom::sync::CloudProjectsDatabase::DoGetProjectData(
+   sqlite::RunResult result) const
 {
    for (auto row : result)
    {
-      DBProjectData data;
-
-      if (!row.Get(0, data.ProjectId))
-         return {};
-
-      if (!row.Get(1, data.SnapshotId))
-         return {};
-
-      if (!row.Get(2, data.SavesCount))
-         return {};
-
-      if (!row.Get(3, data.LastAudioPreview))
-         return {};
-
-      if (!row.Get(4, data.LocalPath))
-         return {};
-
-      if (!row.Get(5, data.LastModified))
-         return {};
-
-      if (!row.Get(6, data.LastRead))
-         return {};
-
-      int status;
-      if (!row.Get(7, status))
-         return {};
-
-      data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
-
-      return data;
+      if (auto data = DoGetProjectData(row))
+         return data;
    }
 
    return {};
