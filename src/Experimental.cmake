@@ -32,9 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   # JKC (effect by Norm C, 02 Oct 2013)
-   SCIENCE_FILTERS
-
    # JKC an experiment to work around bug 2709
    # disabled.
    #CEE_NUMBERS_OPTION
