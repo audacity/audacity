@@ -10,7 +10,6 @@
 **********************************************************************/
 #include "ClipOverflowButtonHandle.h"
 #include "AllThemeResources.h"
-#include "ClipParameters.h"
 #include "HitTestResult.h"
 #include "LowlitClipButton.h"
 #include "ProjectHistory.h"
