@@ -19,11 +19,17 @@ namespace AppEvents
  */
 UTILITY_API void OnAppInitialized(std::function<void()> callback);
 
+
+/*! Register callback to be called when application is closing.
+ *  @param callback Callback to be called when application is initialized.
+ *  @pre `!!calback`
+ */
+UTILITY_API void OnAppClosing(std::function<void()> callback);
+
 /*! Register callback to be called when application is idle.
  *  @param callback Callback to be called when application is idle.
  *  @pre `!!calback`
  */
-
 UTILITY_API Observer::Subscription OnAppIdle(std::function<void()> callback);
 
 /*! Base class for application events providers.
@@ -39,6 +45,7 @@ protected:
 
    void HandleAppInitialized();
    void HandleAppIdle();
+   void HandleAppClosing();
 };
 
 } // namespace AppEvents
