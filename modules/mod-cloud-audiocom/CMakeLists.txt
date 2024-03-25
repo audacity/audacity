@@ -8,6 +8,8 @@ set( SOURCES
    ui/dialogs/AudioComDialogBase.h
    ui/dialogs/CloudLocationDialog.cpp
    ui/dialogs/CloudLocationDialog.h
+   ui/dialogs/CloudProjectPropertiesDialog.cpp
+   ui/dialogs/CloudProjectPropertiesDialog.h
    ui/dialogs/ConnectionIssuesDialog.cpp
    ui/dialogs/ConnectionIssuesDialog.h
    ui/dialogs/LinkAccountDialog.cpp
