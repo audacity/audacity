@@ -13,9 +13,14 @@
 
 #include <utility>
 #include "AudioIOSequences.h"
+#include "ConditionallyPresent.h"
 #include "CRTPBase.h"
 #include "Prefs.h"
 #include "PlayableTrack.h"
+
+namespace Experimental {
+constexpr bool MidiIn = false;
+}
 
 #if defined(USE_MIDI)
 
@@ -217,7 +222,8 @@ private:
 };
 
 extern NOTE_TRACK_API StringSetting MIDIPlaybackDevice;
-extern NOTE_TRACK_API StringSetting MIDIRecordingDevice;
+extern NOTE_TRACK_API
+ConditionallyPresent<StringSetting, Experimental::MidiIn> MIDIRecordingDevice;
 extern NOTE_TRACK_API IntSetting MIDISynthLatency_ms;
 
 ENUMERATE_TRACK_TYPE(NoteTrack);

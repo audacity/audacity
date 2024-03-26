@@ -46,17 +46,18 @@ class MidiIOPrefs final : public PrefsPanel
    wxArrayStringEx mHostLabels;
 
    wxString mPlayDevice;
-#ifdef EXPERIMENTAL_MIDI_IN
-   wxString mRecordDevice;
-#endif
+
+
 //   long mRecordChannels;
 
    wxChoice *mHost;
    wxChoice *mPlay;
    wxTextCtrl *mLatency;
-#ifdef EXPERIMENTAL_MIDI_IN
-   wxChoice *mRecord;
-#endif
+
+   // These two are for Experimental::MidiIn
+   wxString mRecordDevice;
+   wxChoice *mRecord{};
+
 //   wxChoice *mChannels;
 
    DECLARE_EVENT_TABLE()

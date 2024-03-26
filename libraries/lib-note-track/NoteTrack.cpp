@@ -880,7 +880,8 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 #include "AudioIOBase.h"
 #include "portmidi.h"
 
-// FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke
+// FIXME: When Experimental::MidiIn is added (eventually) this should also be
+// enabled -- Poke
 wxString GetMIDIDeviceInfo()
 {
    wxStringOutputStream o;
@@ -904,7 +905,8 @@ wxString GetMIDIDeviceInfo()
    s << XO("Default recording device number: %d\n").Format( recDeviceNum );
    s << XO("Default playback device number: %d\n").Format( playDeviceNum );
 
-   auto recDevice = MIDIRecordingDevice.Read();
+   const auto recDevice =
+      Experimental::MidiIn ? MIDIRecordingDevice->Read() : wxString{};
    auto playDevice = MIDIPlaybackDevice.Read();
 
    // This gets info on all available audio devices (input and output)
@@ -969,11 +971,10 @@ wxString GetMIDIDeviceInfo()
 
    // Not internationalizing these alpha-only messages
    s << wxT("==============================\n");
-#ifdef EXPERIMENTAL_MIDI_IN
-   s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
-#else
-   s << wxT("EXPERIMENTAL_MIDI_IN is NOT enabled\n");
-#endif
+   if constexpr (Experimental::MidiIn)
+      s << wxT("Experimental::MidiIn is enabled\n");
+   else
+      s << wxT("Experimental::MidiIn is NOT enabled\n");
 
 #endif
 
@@ -981,7 +982,8 @@ wxString GetMIDIDeviceInfo()
 }
 
 StringSetting MIDIPlaybackDevice{ L"/MidiIO/PlaybackDevice", L"" };
-StringSetting MIDIRecordingDevice{ L"/MidiIO/RecordingDevice", L"" };
+ConditionallyPresent<StringSetting, Experimental::MidiIn> MIDIRecordingDevice{
+   L"/MidiIO/RecordingDevice", L"" };
 IntSetting MIDISynthLatency_ms{ L"/MidiIO/SynthLatency", 5 };
 
 #endif // USE_MIDI

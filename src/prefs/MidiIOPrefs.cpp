@@ -22,8 +22,6 @@ other settings.
   whether or not to play other tracks while recording one (duplex).
 
 *//********************************************************************/
-
-
 #include "MidiIOPrefs.h"
 
 #include <wx/defs.h>
@@ -33,6 +31,7 @@ other settings.
 
 #include <portmidi.h>
 
+#include "Experimental.h"
 #include "NoteTrack.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
@@ -83,9 +82,10 @@ void MidiIOPrefs::Populate()
 
    // Get current setting for devices
    mPlayDevice = MIDIPlaybackDevice.Read();
-#ifdef EXPERIMENTAL_MIDI_IN
-   mRecordDevice = MIDIRecordingDevice.Read();
-#endif
+
+   if constexpr (Experimental::MidiIn)
+      mRecordDevice = MIDIRecordingDevice->Read();
+
 //   mRecordChannels = gPrefs->Read(wxT("/MidiIO/RecordChannels"), 2L);
 
    //------------------------- Main section --------------------
@@ -164,26 +164,26 @@ void MidiIOPrefs::PopulateOrExchange( ShuttleGui & S )
       S.EndMultiColumn();
    }
    S.EndStatic();
-#ifdef EXPERIMENTAL_MIDI_IN
-   S.StartStatic(XO("Recording"));
-   {
-      S.StartMultiColumn(2);
+   if constexpr (Experimental::MidiIn) {
+      S.StartStatic(XO("Recording"));
       {
-         S.Id(RecordID);
-         mRecord = S.AddChoice(XO("De&vice:"),
-                               {} );
+         S.StartMultiColumn(2);
+         {
+            S.Id(RecordID);
+            mRecord = S.AddChoice(XO("De&vice:"),
+                                  {} );
 
-         S.Id(ChannelsID);
-         /*
-         mChannels = S.AddChoice(XO("&Channels:"),
-                                 wxEmptyString,
-                                 {} );
-         */
+            S.Id(ChannelsID);
+            /*
+            mChannels = S.AddChoice(XO("&Channels:"),
+                                    wxEmptyString,
+                                    {} );
+            */
+         }
+         S.EndMultiColumn();
       }
-      S.EndMultiColumn();
+      S.EndStatic();
    }
-   S.EndStatic();
-#endif
    S.EndScroller();
 
 }
@@ -197,9 +197,8 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
    int nDevices = Pm_CountDevices();
 
    mPlay->Clear();
-#ifdef EXPERIMENTAL_MIDI_IN
-   mRecord->Clear();
-#endif
+   if constexpr (Experimental::MidiIn)
+      mRecord->Clear();
 
    wxArrayStringEx playnames;
    wxArrayStringEx recordnames;
@@ -219,15 +218,14 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
                mPlay->SetSelection(index);
             }
          }
-#ifdef EXPERIMENTAL_MIDI_IN
-         if (info->input) {
-            recordnames.push_back(name);
-            index = mRecord->Append(name, (void *) info);
-            if (device == mRecordDevice) {
-               mRecord->SetSelection(index);
+         if constexpr (Experimental::MidiIn)
+            if (info->input) {
+               recordnames.push_back(name);
+               index = mRecord->Append(name, (void *) info);
+               if (device == mRecordDevice) {
+                  mRecord->SetSelection(index);
+               }
             }
-         }
-#endif
       }
    }
 
@@ -235,24 +233,26 @@ void MidiIOPrefs::OnHost(wxCommandEvent & WXUNUSED(e))
       playnames.push_back(_("No devices found"));
       mPlay->Append(playnames[0], (void *) NULL);
    }
-#ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->GetCount() == 0) {
-      recordnames.push_back(_("No devices found"));
-      mRecord->Append(recordnames[0], (void *) NULL);
-   }
-#endif
+
+   if constexpr (Experimental::MidiIn)
+      if (mRecord->GetCount() == 0) {
+         recordnames.push_back(_("No devices found"));
+         mRecord->Append(recordnames[0], (void *) NULL);
+      }
+
    if (mPlay->GetCount() && mPlay->GetSelection() == wxNOT_FOUND) {
       mPlay->SetSelection(0);
    }
-#ifdef EXPERIMENTAL_MIDI_IN
-   if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
-      mRecord->SetSelection(0);
-   }
-#endif
+
+   if constexpr (Experimental::MidiIn)
+      if (mRecord->GetCount() && mRecord->GetSelection() == wxNOT_FOUND) {
+         mRecord->SetSelection(0);
+      }
+
    ShuttleGui::SetMinSize(mPlay, playnames);
-#ifdef EXPERIMENTAL_MIDI_IN
-   ShuttleGui::SetMinSize(mRecord, recordnames);
-#endif
+
+   if constexpr (Experimental::MidiIn)
+      ShuttleGui::SetMinSize(mRecord, recordnames);
 //   OnDevice(e);
 }
 
@@ -270,15 +270,15 @@ bool MidiIOPrefs::Commit()
             wxString(wxSafeConvertMB2WX(info->interf)),
             wxString(wxSafeConvertMB2WX(info->name))));
    }
-#ifdef EXPERIMENTAL_MIDI_IN
-   info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
-   if (info) {
-      MidiRecordingDevice.Write(
-         wxString::Format(wxT("%s: %s"),
-            wxString(wxSafeConvertMB2WX(info->interf)),
-            wxString(wxSafeConvertMB2WX(info->name))));
+   if constexpr (Experimental::MidiIn) {
+      info = (const PmDeviceInfo *) mRecord->GetClientData(mRecord->GetSelection());
+      if (info) {
+         MIDIRecordingDevice->Write(
+            wxString::Format(wxT("%s: %s"),
+               wxString(wxSafeConvertMB2WX(info->interf)),
+               wxString(wxSafeConvertMB2WX(info->name))));
+      }
    }
-#endif
    MIDISynthLatency_ms.Invalidate();
    return gPrefs->Flush();
 }

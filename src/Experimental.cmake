@@ -32,8 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   #MIDI_IN
-
    # JKC, 17 Aug 2017
    # Enables the MIDI note stretching feature, which currently
    # a) Is broken on Linux (Bug 1646)
