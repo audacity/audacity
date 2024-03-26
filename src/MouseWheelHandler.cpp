@@ -130,13 +130,11 @@ mutable -> unsigned {
    }
    else
    {
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
       if (scrubber.IsScrubbing()) {
          scrubber.HandleScrollWheel(steps);
          evt.event.Skip(false);
       }
       else
-#endif
       {
          // MM: Scroll up/down when used without modifier keys
          double lines = steps * 4 + mVertScrollRemainder;

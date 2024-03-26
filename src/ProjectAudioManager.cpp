@@ -1014,8 +1014,6 @@ void ProjectAudioManager::OnPause()
 
    auto gAudioIO = AudioIO::Get();
 
-#ifdef EXPERIMENTAL_SCRUBBING_SUPPORT
-
    auto project = &mProject;
    auto &scrubber = Scrubber::Get( *project );
 
@@ -1034,7 +1032,6 @@ void ProjectAudioManager::OnPause()
    if (ScrubState::IsScrubbing())
       scrubber.Pause(paused);
    else
-#endif
    {
       gAudioIO->SetPaused(paused);
    }

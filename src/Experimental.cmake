@@ -90,10 +90,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   # Paul Licameli (PRL) 16 Apr 2015
-   # Support for scrubbing in the AudioIO engine, without calls to it
-   SCRUBBING_SUPPORT
-
    #Define to include crash reporting, if available in wxWidgets build
    #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
    CRASH_REPORT
@@ -124,12 +120,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Poke 13 Nov 2019
    SUBRIP_LABEL_FORMATS
 )
-
-# Some more flags that depend on other configuration options
-
-if( "SCRUBBING_SUPPORT" IN_LIST EXPERIMENTAL_OPTIONS_LIST )
-   list( APPEND EXPERIMENTAL_OPTIONS_LIST SCRUBBING_SCROLL_WHEEL )
-endif()
 
 # Now define the flags
 list( TRANSFORM EXPERIMENTAL_OPTIONS_LIST PREPEND "EXPERIMENTAL_"  )
