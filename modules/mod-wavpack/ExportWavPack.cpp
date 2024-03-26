@@ -442,6 +442,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    else
       config.channel_mask = 0x3FFFF;
 
+   config.flags |= CONFIG_MD5_CHECKSUM;
    if (quality == 0) {
       config.flags |= CONFIG_FAST_FLAG;
    } else if (quality == 2) {
