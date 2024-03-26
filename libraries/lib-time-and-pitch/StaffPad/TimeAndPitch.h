@@ -89,6 +89,8 @@ private:
   static constexpr bool normalize_window = true; // compensate for ola window overlaps
   static constexpr bool modulate_synthesis_hop = true;
 
+  void feedAudioDirectly(const float* const* in_smp, int numSamples);
+
   void _process_hop(int hop_a, int hop_s);
   template <int num_channels>
   void _time_stretch(float hop_a, float hop_s);
@@ -108,6 +110,9 @@ private:
   double _overlap_a = overlap;
 
   int _analysis_hop_counter = 0;
+  static constexpr int leadingZeros = 4;
+  int _leading_zeros = leadingZeros;
+  bool _padded = false;
 
   double _expectedPhaseChangePerBinPerSample = 0.01;
   double _timeStretch = 1.0;

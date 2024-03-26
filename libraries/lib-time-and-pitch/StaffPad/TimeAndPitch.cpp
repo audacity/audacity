@@ -116,7 +116,7 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
   {
     d->inResampleInputBuffer[ch].setSize(_maxBlockSize +
                                          6); // needs additional history for resampling. more in the future
-    d->inCircularBuffer[ch].setSize(fftSize);
+    d->inCircularBuffer[ch].setSize(std::max(fftSize, _maxBlockSize));
     d->outCircularBuffer[ch].setSize(outBufferSize);
   }
   d->normalizationBuffer.setSize(outBufferSize);
@@ -158,7 +158,8 @@ void TimeAndPitch::setup(int numChannels, int maxBlockSize)
 int TimeAndPitch::getSamplesToNextHop() const
 {
   return std::max(0, int(std::ceil(d->exact_hop_a)) - _analysis_hop_counter +
-                         1); // 1 extra to counter pitch factor error accumulation
+                         1 // 1 extra to counter pitch factor error accumulation
+                  + ((_pitchFactor == 1) ? leadingZeros : 0));
 }
 
 int TimeAndPitch::getNumAvailableOutputSamples() const
@@ -169,6 +170,8 @@ int TimeAndPitch::getNumAvailableOutputSamples() const
 void TimeAndPitch::reset()
 {
   _analysis_hop_counter = 0;
+  _leading_zeros = leadingZeros;
+  _padded = false;
   _availableOutputSamples = 0;
   for (int ch = 0; ch < _numChannels; ++ch)
   {
@@ -469,9 +472,65 @@ void TimeAndPitch::setTimeStretchAndPitchFactor(double timeScale, double pitchFa
   }
 }
 
+// Alternative procedure writes inCircularBuffer directly without resampling
+void
+TimeAndPitch::feedAudioDirectly(const float* const* input_smp, int numSamples)
+{
+  assert(numSamples <= _maxBlockSize);
+
+  // determine integer hop size for the next hop.
+  // The error accumulators will make the value fluctuate by one to reach arbitrary scale
+  // ratios
+  if (d->exact_hop_s == 0.0) // this happens if feedAudio is called without setting up stretch factors
+    d->exact_hop_s = d->next_exact_hop_s;
+
+  const int hop_s = int(d->exact_hop_s + d->hop_s_err);
+  const int hop_a = int(d->exact_hop_a + d->hop_a_err);
+
+  int offset = 0;
+  while (numSamples > 0)
+  {
+    auto batch = std::clamp(numSamples, 0, hop_a - _analysis_hop_counter);
+    auto zeros = std::min(_leading_zeros, batch);
+    for (int ch = 0; ch < _numChannels; ++ch)
+    {
+      d->inCircularBuffer[ch].writeBlock(0, batch - zeros, input_smp[ch] + offset);
+      d->inCircularBuffer[ch].advance(batch - zeros);
+    }
+
+    _analysis_hop_counter += batch;
+    _leading_zeros -= zeros;
+    if (_analysis_hop_counter >= hop_a)
+    {
+      _analysis_hop_counter -= hop_a;
+      d->hop_s_err += d->exact_hop_s - hop_s;
+      d->hop_a_err += d->exact_hop_a - hop_a;
+      for (int ch = 0; ch < _numChannels; ++ch)
+      {
+        const auto timeseries = d->fft_timeseries.getPtr(ch);
+        auto fill = 0;
+        if (!_padded)
+        {
+          fill = leadingZeros;
+          assert(fill < fftSize);
+          std::fill(timeseries, timeseries + fill, 0);
+        }
+        d->inCircularBuffer[ch].readBlock(-(fftSize-fill), fftSize - fill, timeseries + fill);
+      }
+      _padded = true;
+      _process_hop(hop_a, hop_s);
+    }
+    offset += batch - zeros;
+    numSamples -= batch - zeros;
+  }
+}
+
 void TimeAndPitch::feedAudio(const float* const* input_smp, int numSamples)
 {
   assert(numSamples <= _maxBlockSize);
+  if (_pitchFactor == 1)
+    return feedAudioDirectly(input_smp, numSamples);
+
   for (int ch = 0; ch < _numChannels; ++ch)
   {
     d->inResampleInputBuffer[ch].writeBlock(0, numSamples, input_smp[ch]);
