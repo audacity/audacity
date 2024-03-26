@@ -7,8 +7,6 @@ LabelTrackView.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "LabelTrackView.h"
 
 #include "LabelTrackVRulerControls.h"
@@ -854,17 +852,11 @@ const
 
    // Draw the label boxes.
    {
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      bool highlightTrack = false;
-      auto target = dynamic_cast<LabelTextHandle*>(context.target.get());
-      highlightTrack = target &&
+      const auto target = context.HighlightedHandle<LabelTextHandle>();
+      const bool highlightTrack = target &&
          target->FindTrack().get() == FindTrack().get();
-#endif
       int i = -1; for (const auto &labelStruct : mLabels) { ++i;
-         bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-         highlight = highlightTrack && target->GetLabelNum() == i;
-#endif
+         const bool highlight = highlightTrack && target->GetLabelNum() == i;
          
          dc.SetBrush(mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i) 
             ? AColor::labelTextEditBrush : AColor::labelTextNormalBrush);

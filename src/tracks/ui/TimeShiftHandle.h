@@ -289,7 +289,7 @@ struct AUDACITY_DLL_API ClipMoveState {
    }
 };
 
-class AUDACITY_DLL_API TimeShiftHandle : public UIHandle
+class AUDACITY_DLL_API TimeShiftHandle : public HighlightingUIHandle
 {
    TimeShiftHandle(const TimeShiftHandle&) = delete;
    static HitTestPreview HitPreview
@@ -313,8 +313,6 @@ public:
    virtual ~TimeShiftHandle();
 
    std::shared_ptr<const Track> FindTrack() const override;
-
-   void Enter(bool forward, AudacityProject *) override;
 
    Result Click(
       const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

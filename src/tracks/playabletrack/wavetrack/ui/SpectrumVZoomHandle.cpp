@@ -40,13 +40,6 @@ std::shared_ptr<WaveChannel> SpectrumVZoomHandle::FindWaveChannel()
    return mpChannel.lock();
 }
 
-void SpectrumVZoomHandle::Enter( bool, AudacityProject* )
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   mChangeHighlight = RefreshCode::RefreshCell;
-#endif
-}
-
 bool SpectrumVZoomHandle::HandlesRightClick()
 {
    return true;

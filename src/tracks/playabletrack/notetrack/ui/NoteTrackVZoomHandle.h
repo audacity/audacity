@@ -16,7 +16,7 @@ class NoteTrack;
 
 #include "../../../../UIHandle.h"
 
-class NoteTrackVZoomHandle : public UIHandle
+class NoteTrackVZoomHandle : public HighlightingUIHandle
 {
    NoteTrackVZoomHandle(const NoteTrackVZoomHandle&);
    static HitTestPreview HitPreview(const wxMouseState &state);
@@ -35,8 +35,6 @@ public:
    virtual ~NoteTrackVZoomHandle();
 
    std::shared_ptr<const Track> FindTrack() const override;
-
-   void Enter(bool forward, AudacityProject *) override;
 
    bool HandlesRightClick() override;
 

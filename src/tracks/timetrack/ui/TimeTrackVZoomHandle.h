@@ -15,7 +15,7 @@ Paul Licameli split from TimeTrackVZoomHandle.h
 
 class TimeTrack;
 
-class TimeTrackVZoomHandle final : public UIHandle
+class TimeTrackVZoomHandle final : public HighlightingUIHandle
 {
    TimeTrackVZoomHandle(const TimeTrackVZoomHandle&);
 
@@ -28,8 +28,6 @@ public:
    ~TimeTrackVZoomHandle() override;
 
    std::shared_ptr<const Track> FindTrack() const override;
-
-   void Enter( bool forward, AudacityProject * ) override;
 
    bool HandlesRightClick() override;
 

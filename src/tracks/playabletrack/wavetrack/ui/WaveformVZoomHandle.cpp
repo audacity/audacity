@@ -35,13 +35,6 @@ std::shared_ptr<const Track> WaveformVZoomHandle::FindTrack() const
    return TrackFromChannel(mpChannel.lock());
 }
 
-void WaveformVZoomHandle::Enter( bool, AudacityProject* )
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   mChangeHighlight = RefreshCode::RefreshCell;
-#endif
-}
-
 bool WaveformVZoomHandle::HandlesRightClick()
 {
    return true;

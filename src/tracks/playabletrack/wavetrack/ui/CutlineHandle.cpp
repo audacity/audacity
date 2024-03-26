@@ -36,13 +36,6 @@ CutlineHandle::CutlineHandle(
 {
 }
 
-void CutlineHandle::Enter(bool, AudacityProject *)
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   mChangeHighlight = RefreshCode::RefreshCell;
-#endif
-}
-
 HitTestPreview CutlineHandle::HitPreview(bool unsafe)
 {
    static auto disabledCursor =

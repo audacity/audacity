@@ -67,3 +67,16 @@ UIHandle::TrackFromChannel(const std::shared_ptr<const Channel> &pChannel)
          .shared_from_this()
       : nullptr;
 }
+
+void UIHandle::ExperimentalRefresh()
+{
+   if constexpr (Experimental::TrackPanelHighlighting)
+      mChangeHighlight = RefreshCode::RefreshCell;
+}
+
+HighlightingUIHandle::~HighlightingUIHandle() = default;
+
+void HighlightingUIHandle::Enter(bool, AudacityProject *)
+{
+   ExperimentalRefresh();
+}

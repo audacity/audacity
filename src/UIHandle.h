@@ -29,6 +29,16 @@ class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
 
+namespace Experimental {
+/*
+ PRL 11 Jul 2017
+ Highlight more things in TrackPanel when the mouse moves over them,
+ using deliberately ugly pens and brushes until there is better cooperation
+ with themes
+ */
+constexpr bool TrackPanelHighlighting = false;
+}
+
 /// \brief Short-lived drawing and event-handling object associated with a TrackPanelCell
 // A TrackPanelCell reports a handle object of some subclass, in response to a
 // hit test at a mouse position; then this handle processes certain events,
@@ -146,11 +156,23 @@ public:
    TrackFromChannel(const std::shared_ptr<const Channel> &pChannel);
 
 protected:
+   // Set mChangeHighlight to RefreshCell,
+   // if Experimental::TrackPanelHighlighting is true
+   void ExperimentalRefresh();
+
    // Derived classes can set this nonzero in a constructor, which is enough
    // to cause repaint of the cell whenever the pointer hits the target,
    // or leaves it without clicking, or releases or escapes from a drag.
    Result mChangeHighlight { 0 };
+};
 
+//! Subclasses of handles that always change highlight when the mouse enters,
+//! if Experimental::TrackPanelHighlighting is true
+class AUDACITY_DLL_API HighlightingUIHandle : public UIHandle
+{
+public:
+   ~HighlightingUIHandle() override;
+   void Enter(bool forward, AudacityProject *pProject) override;
 };
 
 using UIHandlePtr = std::shared_ptr<UIHandle>;

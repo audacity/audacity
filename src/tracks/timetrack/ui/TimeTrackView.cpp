@@ -79,11 +79,9 @@ void DrawHorzRulerAndCurve
    const auto artist = TrackArtist::Get( context );
    const auto &zoomInfo = *artist->pZoomInfo;
    
-   bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlight = target && target->GetEnvelope() == track.GetEnvelope();
-#endif
+   const auto target = context.HighlightedHandle<EnvelopeHandle>();
+   const bool highlight = target &&
+      target->GetEnvelope() == track.GetEnvelope();
    
    double min = zoomInfo.PositionToTime(0);
    double max = zoomInfo.PositionToTime(r.width);

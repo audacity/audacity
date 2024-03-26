@@ -18,7 +18,7 @@ class wxMouseEvent;
 class wxMouseState;
 class WaveTrack;
 
-class CutlineHandle final : public UIHandle
+class CutlineHandle final : public HighlightingUIHandle
 {
    CutlineHandle(const CutlineHandle&) = delete;
    static HitTestPreview HitPreview(bool unsafe);
@@ -41,10 +41,9 @@ public:
 
    std::shared_ptr<const Track> FindTrack() const override;
 
-   const WaveTrackLocation &GetLocation() { return mLocation; }
+   const WaveTrackLocation &GetLocation() const { return mLocation; }
    std::shared_ptr<WaveTrack> GetTrack() { return mpTrack; }
-
-   void Enter(bool forward, AudacityProject *) override;
+   std::shared_ptr<const WaveTrack> GetTrack() const { return mpTrack; }
 
    bool HandlesRightClick() override;
 

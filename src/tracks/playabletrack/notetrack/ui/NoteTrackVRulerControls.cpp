@@ -7,9 +7,6 @@ NoteTrackVRulerControls.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
-
 #ifdef USE_MIDI
 #include "NoteTrackVRulerControls.h"
 
@@ -121,10 +118,7 @@ void NoteTrackVRulerControls::Draw(
       --rect.width;
       --rect.height;
 
-      bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      highlight = rect.Contains(context.lastState.GetPosition());
-#endif
+      const bool highlight = context.ShouldHighlight(rect);
 
       const auto artist = TrackArtist::Get( context );
       UpdateRuler(rect);

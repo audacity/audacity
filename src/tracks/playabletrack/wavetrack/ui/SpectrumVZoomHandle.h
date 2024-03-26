@@ -17,7 +17,7 @@ Paul Licameli split from WaveChannelVZoomHandle.h
 class WaveChannel;
 class WaveTrack;
 
-class SpectrumVZoomHandle final : public UIHandle
+class SpectrumVZoomHandle final : public HighlightingUIHandle
 {
    SpectrumVZoomHandle(const SpectrumVZoomHandle&);
 
@@ -37,8 +37,6 @@ public:
 
    std::shared_ptr<const Track> FindTrack() const override;
    std::shared_ptr<WaveChannel> FindWaveChannel();
-
-   void Enter(bool forward, AudacityProject*) override;
 
    bool HandlesRightClick() override;
 

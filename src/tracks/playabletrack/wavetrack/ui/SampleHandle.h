@@ -22,7 +22,7 @@ class ViewInfo;
 class WaveChannel;
 class WaveClipChannel;
 
-class SampleHandle final : public UIHandle
+class SampleHandle final : public HighlightingUIHandle
 {
    SampleHandle(const SampleHandle&) = delete;
    static HitTestPreview HitPreview
@@ -45,8 +45,6 @@ public:
    virtual ~SampleHandle();
 
    std::shared_ptr<const Track> FindTrack() const override;
-
-   void Enter(bool forward, AudacityProject *) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

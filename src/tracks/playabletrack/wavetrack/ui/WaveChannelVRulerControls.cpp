@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "../../../../RefreshCode.h"
 #include "../../../../TrackPanelMouseEvent.h"
+#include "../../../../UIHandle.h"
 #include "WaveTrack.h"
 
 #include "AColor.h"
@@ -54,10 +55,7 @@ void WaveChannelVRulerControls::DoDraw(ChannelVRulerControls &controls,
       bev.Inflate(-1, 0);
       bev.width += 1;
 
-      bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-      highlight = rect.Contains(context.lastState.GetPosition());
-#endif
+      const bool highlight = context.ShouldHighlight(rect);
    
       AColor::BevelTrackInfo(*dc, true, bev, highlight);
       

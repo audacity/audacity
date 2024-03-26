@@ -25,7 +25,7 @@ class ViewInfo;
 class TimeTrack;
 class WaveChannel;
 
-class AUDACITY_DLL_API EnvelopeHandle final : public UIHandle
+class AUDACITY_DLL_API EnvelopeHandle final : public HighlightingUIHandle
 {
    EnvelopeHandle(const EnvelopeHandle&) = delete;
    EnvelopeHandle &operator=(const EnvelopeHandle&) = delete;
@@ -59,8 +59,6 @@ public:
        const AudacityProject *pProject, const std::shared_ptr<WaveChannel> &wt);
 
    Envelope *GetEnvelope() const { return mEnvelope; }
-
-   void Enter(bool forward, AudacityProject *) override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;

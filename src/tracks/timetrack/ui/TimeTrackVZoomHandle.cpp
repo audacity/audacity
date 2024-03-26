@@ -33,13 +33,6 @@ std::shared_ptr<const Track> TimeTrackVZoomHandle::FindTrack() const
    return mpTrack.lock();
 }
 
-void TimeTrackVZoomHandle::Enter( bool, AudacityProject* )
-{
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   mChangeHighlight = RefreshCode::RefreshCell;
-#endif
-}
-
 bool TimeTrackVZoomHandle::HandlesRightClick()
 {
    return true;

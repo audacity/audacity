@@ -656,11 +656,8 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
 
    auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
-   bool highlightEnvelope = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-   highlightEnvelope = target && target->GetEnvelope() == &envelope;
-#endif
+   const auto target = context.HighlightedHandle<EnvelopeHandle>();
+   const bool highlightEnvelope = target && target->GetEnvelope() == &envelope;
 
    //If clip is "too small" draw a placeholder instead of
    //attempting to fit the contents into a few pixels
@@ -851,12 +848,9 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                useMin, useMax, useRms, muted);
          }
          else {
-            bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-            auto target = dynamic_cast<SampleHandle*>(context.target.get());
-            highlight = target && target->FindTrack().get() ==
+            const auto target = context.HighlightedHandle<SampleHandle>();
+            const bool highlight = target && target->FindTrack().get() ==
                &static_cast<const Track&>(channel.GetChannelGroup());
-#endif
             DrawIndividualSamples(
                context, leftOffset, rectPortion, zoomMin, zoomMax,
                dB, dBRange, clip, showPoints, muted, highlight);
@@ -957,14 +951,10 @@ void WaveformView::DoDraw(TrackPanelDrawingContext &context,
    auto &dc = context.dc;
    const auto artist = TrackArtist::Get( context );
 
-   bool highlight = false;
-   bool gripHit = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-   auto target = dynamic_cast<TimeShiftHandle*>(context.target.get());
-   gripHit = target && target->IsGripHit();
-   highlight = target && target->FindTrack().get() ==
+   const auto target = context.HighlightedHandle<TimeShiftHandle>();
+   const bool gripHit = target && target->IsGripHit();
+   const bool highlight = target && target->FindTrack().get() ==
       &static_cast<const Track &>(channel.GetChannelGroup());
-#endif
 
    const bool dB = !WaveformSettings::Get(channel).isLinear();
 
