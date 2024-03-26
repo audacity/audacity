@@ -1,6 +1,8 @@
 #include "AudioIO.h"
 #include "../CommonCommandFlags.h"
+#include "ConditionallyPresent.h"
 #include "DeviceManager.h"
+#include "Experimental.h"
 #include "../LabelTrack.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -435,18 +437,17 @@ void OnToggleSWPlaythrough(const CommandContext &WXUNUSED(context) )
    ToolManager::ModifyAllProjectToolbarMenus();
 }
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-void OnToggleAutomatedInputLevelAdjustment(
-   const CommandContext &WXUNUSED(context) )
+void OnToggleAutomatedInputLevelAdjustment(const CommandContext &)
 {
-   bool AVEnabled;
-   gPrefs->Read(
-      wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
-   gPrefs->Write(wxT("/AudioIO/AutomatedInputLevelAdjustment"), !AVEnabled);
-   gPrefs->Flush();
-   ToolManager::ModifyAllProjectToolbarMenus();
+   if constexpr (Experimental::AILA) {
+      bool AVEnabled;
+      gPrefs->Read(
+         wxT("/AudioIO/AutomatedInputLevelAdjustment"), &AVEnabled, false);
+      gPrefs->Write(wxT("/AudioIO/AutomatedInputLevelAdjustment"), !AVEnabled);
+      gPrefs->Flush();
+      ToolManager::ModifyAllProjectToolbarMenus();
+   }
 }
-#endif
 
 void OnStop(const CommandContext &context)
 {
@@ -826,17 +827,6 @@ auto TransportMenu()
                   OnToggleSWPlaythrough,
                   AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
                   Options{}.CheckTest( wxT("/AudioIO/SWPlaythrough"), false ) )
-
-
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-               ,
-               Command( wxT("AutomatedInputLevelAdjustmentOnOff"),
-                  XXO("A&utomated Recording Level Adjustment (on/off)"),
-                  OnToggleAutomatedInputLevelAdjustment,
-                  AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
-                  Options{}.CheckTest(
-                     wxT("/AudioIO/AutomatedInputLevelAdjustment"), false ) )
-      #endif
             )
          )
       )
@@ -845,6 +835,16 @@ auto TransportMenu()
 }
 
 AttachedItem sAttachment1{ Indirect(TransportMenu()) };
+
+ConditionallyPresent<AttachedItem, Experimental::AILA>
+sAttachment1_1{
+   Command(wxT("AutomatedInputLevelAdjustmentOnOff"),
+      XXO("A&utomated Recording Level Adjustment (on/off)"),
+      OnToggleAutomatedInputLevelAdjustment,
+      AudioIONotBusyFlag() | CanStopAudioStreamFlag(),
+      Options{}.CheckTest(L"/AudioIO/AutomatedInputLevelAdjustment", false)),
+   wxT("Transport/Other/Options/Part2")
+};
 
 auto ExtraTransportMenu()
 {

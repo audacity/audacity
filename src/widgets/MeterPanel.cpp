@@ -37,7 +37,6 @@
 \brief Queue of MeterUpdateMsg used to feed the MeterPanel.
 
 *//******************************************************************/
-
 #include "MeterPanel.h"
 
 #include <algorithm>
@@ -60,6 +59,7 @@
 #include "../widgets/BasicMenu.h"
 #include "ImageManipulation.h"
 #include "Decibels.h"
+#include "Experimental.h"
 #include "LinearUpdater.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -1026,10 +1026,9 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
 {
    MeterUpdateMsg msg;
    int numChanges = 0;
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+
    double maxPeak = 0.0;
    bool discarded = false;
-#endif
 
    // We shouldn't receive any events if the meter is disabled, but clear it to be safe
    if (mMeterDisabled) {
@@ -1094,27 +1093,27 @@ void MeterPanel::OnMeterUpdate(wxTimerEvent & WXUNUSED(event))
          }
 
          mBar[j].tailPeakCount = msg.tailPeakCount[j];
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (mT > gAudioIO->AILAGetLastDecisionTime()) {
-            discarded = false;
-            maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
-            wxPrintf("%f@%f ", msg.peak[j], mT);
+         if constexpr(Experimental::AILA) {
+            if (mT > AudioIO::Get()->AILAGetLastDecisionTime()) {
+               discarded = false;
+               maxPeak = msg.peak[j] > maxPeak ? msg.peak[j] : maxPeak;
+               wxPrintf("%f@%f ", msg.peak[j], mT);
+            }
+            else {
+               discarded = true;
+               wxPrintf("%f@%f discarded\n", msg.peak[j], mT);
+            }
          }
-         else {
-            discarded = true;
-            wxPrintf("%f@%f discarded\n", msg.peak[j], mT);
-         }
-#endif
       }
    } // while
 
    if (numChanges > 0) {
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-         if (gAudioIO->AILAIsActive() && mIsInput && !discarded) {
-            gAudioIO->AILAProcess(maxPeak);
+      if constexpr(Experimental::AILA) {
+         if (AudioIO::Get()->AILAIsActive() && mIsInput && !discarded) {
+            AudioIO::Get()->AILAProcess(maxPeak);
             putchar('\n');
          }
-      #endif
+      }
       RepaintBarsNow();
    }
 }

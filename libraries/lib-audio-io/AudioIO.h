@@ -29,6 +29,12 @@
 #include "SampleCount.h"
 #include "SampleFormat.h"
 
+// Constants for Experimental::AILA
+constexpr auto AILA_DEF_TARGET_PEAK = 92;
+constexpr auto AILA_DEF_DELTA_PEAK = 2;
+constexpr auto AILA_DEF_ANALYSIS_TIME = 1000;
+constexpr auto AILA_DEF_NUMBER_ANALYSIS = 5;
+
 class wxArrayString;
 class AudioIOBase;
 class AudioIO;
@@ -246,22 +252,20 @@ public:
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
 
-#ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-   bool           mAILAActive;
-   bool           mAILAClipped;
-   int            mAILATotalAnalysis;
-   int            mAILAAnalysisCounter;
-   double         mAILAMax;
-   double         mAILAGoalPoint;
-   double         mAILAGoalDelta;
-   double         mAILAAnalysisTime;
-   double         mAILALastStartTime;
-   double         mAILAChangeFactor;
-   double         mAILATopLevel;
-   double         mAILAAnalysisEndTime;
-   double         mAILAAbsolutStartTime;
-   unsigned short mAILALastChangeType;  //0 - no change, 1 - increase change, 2 - decrease change
-#endif
+   bool           mAILAActive{ false };
+   bool           mAILAClipped{};
+   int            mAILATotalAnalysis{};
+   int            mAILAAnalysisCounter{};
+   double         mAILAMax{};
+   double         mAILAGoalPoint{};
+   double         mAILAGoalDelta{};
+   double         mAILAAnalysisTime{};
+   double         mAILALastStartTime{};
+   double         mAILAChangeFactor{};
+   double         mAILATopLevel{};
+   double         mAILAAnalysisEndTime{};
+   double         mAILAAbsolutStartTime{};
+   unsigned short mAILALastChangeType{};  //0 - no change, 1 - increase change, 2 - decrease change
 
    std::thread mAudioThread;
    std::atomic<bool> mFinishAudioThread{ false };
@@ -548,14 +552,12 @@ public:
    /** \brief Function to automatically set an acceptable volume
     *
     */
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-      void AILAInitialize();
-      void AILADisable();
-      bool AILAIsActive();
-      void AILAProcess(double maxPeak);
-      void AILASetStartTime();
-      double AILAGetLastDecisionTime();
-   #endif
+   void AILAInitialize();
+   void AILADisable();
+   bool AILAIsActive();
+   void AILAProcess(double maxPeak);
+   void AILASetStartTime();
+   double AILAGetLastDecisionTime();
 
    bool IsAvailable(AudacityProject &project) const;
 

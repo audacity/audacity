@@ -35,9 +35,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   #Automatically tries to find an acceptable input volume
-   #AUTOMATED_INPUT_LEVEL_ADJUSTMENT
-
    # Define to make the meters look like a row of LEDs
    #METER_LED_STYLE
 

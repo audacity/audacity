@@ -22,6 +22,7 @@ Paul Licameli split from ProjectManager.cpp
 #include "CommandManager.h"
 #include "CommonCommandFlags.h"
 #include "DefaultPlaybackPolicy.h"
+#include "Experimental.h"
 #include "Meter.h"
 #include "Mix.h"
 #include "PendingTracks.h"
@@ -537,9 +538,8 @@ void ProjectAudioManager::Stop(bool stopStream /* = true*/)
    projectAudioManager.SetLooping( false );
    projectAudioManager.SetCutting( false );
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   if constexpr (Experimental::AILA)
       gAudioIO->AILADisable();
-   #endif
 
    projectAudioManager.SetPausedOff();
    //Make sure you tell gAudioIO to unpause
@@ -976,9 +976,8 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
       }
 
       //Automated Input Level Adjustment Initialization
-      #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+      if constexpr (Experimental::AILA)
          gAudioIO->AILAInitialize();
-      #endif
 
       int token =
          gAudioIO->StartStream(transportSequences, t0, t1, t1, options);

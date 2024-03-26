@@ -54,6 +54,9 @@ constexpr bool FftYGrid = false;
  Edward Hui 1 Jul 2021
  */
 constexpr bool SpectralBrushTool = false;
+
+// Automatic Input Level Adjustment tries to find an acceptable input volume
+constexpr bool AILA = false;
 }
 
 #endif

@@ -17,8 +17,6 @@
   like playthrough, latency correction, and others.
 
 *//********************************************************************/
-
-
 #include "RecordingPrefs.h"
 #include "AudioIO.h"
 
@@ -27,6 +25,7 @@
 #include <algorithm>
 
 #include "Decibels.h"
+#include "Experimental.h"
 #include "Prefs.h"
 #include "ShuttleGui.h"
 
@@ -184,7 +183,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
    }
    S.EndStatic();
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   if constexpr (Experimental::AILA) {
       S.StartStatic(XO("Automated Recording Level Adjustment"));
       {
          S.TieCheckBox(XXO("Enable Automated Recording Level Adjustment."),
@@ -227,7 +226,7 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
           S.EndThreeColumn();
       }
       S.EndStatic();
-   #endif
+   }
 
    S.StartStatic(XO("Punch and Roll Recording"));
    {
@@ -267,7 +266,7 @@ bool RecordingPrefs::Commit()
    if (AudioIOLatencyDuration.Read() < 0)
       AudioIOLatencyDuration.Reset();
 
-   #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
+   if constexpr(Experimental::AILA) {
       double targetpeak, deltapeak;
       gPrefs->Read(wxT("/AudioIO/TargetPeak"),  &targetpeak);
       gPrefs->Read(wxT("/AudioIO/DeltaPeakVolume"), &deltapeak);
@@ -284,7 +283,7 @@ bool RecordingPrefs::Commit()
       gPrefs->Read(wxT("/AudioIO/NumberAnalysis"), &value);
       if (value < 0)
          gPrefs->Write(wxT("/AudioIO/NumberAnalysis"), AILA_DEF_NUMBER_ANALYSIS);
-   #endif
+   }
    return true;
 }
 
