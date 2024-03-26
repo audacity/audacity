@@ -257,15 +257,18 @@ void ExpandingToolBar::TryAutoExpand()
    }
 }
 
+namespace Experimental {
+constexpr bool RollUpDialog = false;
+}
+
 void ExpandingToolBar::TryAutoCollapse()
 {
-#ifdef EXPERIMENTAL_ROLL_UP_DIALOG
-   if (mIsAutoExpanded == true && mIsManualExpanded == false) {
-      mToggleButton->PopUp();
-      mIsAutoExpanded = false;
-      Fit();
-   }
-#endif
+   if constexpr (Experimental::RollUpDialog)
+      if (mIsAutoExpanded == true && mIsManualExpanded == false) {
+         mToggleButton->PopUp();
+         mIsAutoExpanded = false;
+         Fit();
+      }
 }
 
 class ExpandingToolBarEvtHandler final : public wxEvtHandler
@@ -350,11 +353,10 @@ bool ExpandingToolBar::Layout()
 
 void ExpandingToolBar::Fit()
 {
-#ifdef EXPERIMENTAL_ROLL_UP_DIALOG
-   mIsExpanded = (mIsAutoExpanded || mIsManualExpanded);
-#else
-   mIsExpanded = true;// JKC - Wedge it open at all times.
-#endif
+   if constexpr (Experimental::RollUpDialog)
+      mIsExpanded = (mIsAutoExpanded || mIsManualExpanded);
+   else
+      mIsExpanded = true;// JKC - Wedge it open at all times.
 
    int width = mButtonSize.x + mGrabberSize.x;
 
