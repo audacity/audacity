@@ -29,6 +29,7 @@ set( SOURCES
    CommandLineArgs.h
    Composite.cpp
    Composite.h
+   Experimental.h
    GlobalVariable.h
    IteratorX.cpp
    IteratorX.h
