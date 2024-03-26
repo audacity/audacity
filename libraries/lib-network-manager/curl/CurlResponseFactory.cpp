@@ -153,8 +153,8 @@ ResponsePtr CurlResponseFactory::performRequest(
    RequestVerb verb, const Request& request,
    RequestPayloadStreamPtr payloadStream)
 {
-    if (!mThreadPool)
-       return {};
+   if (!mThreadPool)
+      return std::make_shared<StubResponse>(request);
 
     auto response =
        std::make_shared<CurlResponse>(verb, request, mHandleManager.get());
