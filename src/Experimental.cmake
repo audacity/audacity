@@ -90,9 +90,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   # Define for NEW noise reduction effect from Paul Licameli.
-   NOISE_REDUCTION
-
    # Define to enable Nyquist audio clip boundary control (Steve Daulton Dec 2014)
    NYQUIST_SPLIT_CONTROL
 
