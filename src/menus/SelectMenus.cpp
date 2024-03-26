@@ -152,17 +152,22 @@ struct SeekInfo
    double mSeekLong{ 0.0 };
 };
 
+namespace Experimental {
+// Paul Licameli (PRL) 29 Nov 2014
+constexpr bool ImprovedSeeking = false;
+}
+
 void SeekWhenAudioActive(double seekStep, wxLongLong &lastSelectionAdjustment)
 {
    auto gAudioIO = AudioIO::Get();
-#ifdef EXPERIMENTAL_IMPROVED_SEEKING
-   if (gAudioIO->GetLastPlaybackTime() < lastSelectionAdjustment) {
-      // Allow time for the last seek to output a buffer before
-      // discarding samples again
-      // Do not advance mLastSelectionAdjustment
-      return;
-   }
-#endif
+   if constexpr (Experimental::ImprovedSeeking)
+      if (gAudioIO->GetLastPlaybackTime() < lastSelectionAdjustment) {
+         // Allow time for the last seek to output a buffer before
+         // discarding samples again
+         // Do not advance mLastSelectionAdjustment
+         return;
+      }
+
    lastSelectionAdjustment = ::wxGetUTCTimeMillis();
 
    gAudioIO->SeekStream(seekStep);

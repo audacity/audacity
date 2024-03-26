@@ -32,9 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   # Paul Licameli (PRL) 29 Nov 2014
-   #IMPROVED_SEEKING
-
    #MIDI_IN
 
    # JKC, 17 Aug 2017
