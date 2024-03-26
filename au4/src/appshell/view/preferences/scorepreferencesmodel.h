@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_SCOREPREFERENCESMODEL_H
-#define MU_APPSHELL_SCOREPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_SCOREPREFERENCESMODEL_H
+#define AU_APPSHELL_SCOREPREFERENCESMODEL_H
 
 #include <QAbstractListModel>
 
@@ -30,7 +30,7 @@
 #include "notation/inotationconfiguration.h"
 #include "audio/iaudioconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class ScorePreferencesModel : public QAbstractListModel, public async::Asyncable
 {
     Q_OBJECT
@@ -100,4 +100,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_SCOREPREFERENCESMODEL_H
+#endif // AU_APPSHELL_SCOREPREFERENCESMODEL_H

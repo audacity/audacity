@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
-#define MU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
+#ifndef AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
+#define AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
 
 #include <QDragEnterEvent>
 #include <QDropEvent>
@@ -29,7 +29,7 @@
 
 #include "modularity/imoduleinterface.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class IApplicationActionController : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IApplicationActionController)
@@ -43,4 +43,4 @@ public:
 };
 }
 
-#endif // MU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H
+#endif // AU_APPSHELL_IAPPLICATIONACTIONCONTROLLER_H

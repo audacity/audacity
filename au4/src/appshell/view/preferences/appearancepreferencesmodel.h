@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
-#define MU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
+#define AU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
 
 #include <QObject>
 
@@ -29,7 +29,7 @@
 #include "notation/inotationconfiguration.h"
 #include "async/asyncable.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class AppearancePreferencesModel : public QObject, public async::Asyncable
 {
     Q_OBJECT
@@ -142,4 +142,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_APPEARANCEPREFERENCESMODEL_H
+#endif // AU_APPSHELL_APPEARANCEPREFERENCESMODEL_H

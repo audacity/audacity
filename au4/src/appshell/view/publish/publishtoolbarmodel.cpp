@@ -22,7 +22,7 @@
 
 #include "publishtoolbarmodel.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::uicomponents;
 
 PublishToolBarModel::PublishToolBarModel(QObject* parent)

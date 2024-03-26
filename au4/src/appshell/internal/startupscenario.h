@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_STARTUPSCENARIO_H
-#define MU_APPSHELL_STARTUPSCENARIO_H
+#ifndef AU_APPSHELL_STARTUPSCENARIO_H
+#define AU_APPSHELL_STARTUPSCENARIO_H
 
 #include "istartupscenario.h"
 
@@ -36,11 +36,11 @@
 // #include "multiinstances/imultiinstancesprovider.h"
 // #include "project/iprojectautosaver.h"
 
-namespace mu::appshell {
-class StartupScenario : public IStartupScenario, public async::Asyncable
+namespace au::appshell {
+class StartupScenario : public au::appshell::IStartupScenario, public mu::async::Asyncable
 {
-    INJECT(IInteractive, interactive)
-    INJECT(actions::IActionsDispatcher, dispatcher)
+    INJECT(mu::IInteractive, interactive)
+    INJECT(mu::actions::IActionsDispatcher, dispatcher)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(ISessionsManager, sessionsManager)
 
@@ -53,8 +53,8 @@ public:
 
     bool isStartWithNewFileAsSecondaryInstance() const override;
 
-    const project::ProjectFile& startupScoreFile() const override;
-    void setStartupScoreFile(const std::optional<project::ProjectFile>& file) override;
+    const au::project::ProjectFile& startupScoreFile() const override;
+    void setStartupScoreFile(const std::optional<au::project::ProjectFile>& file) override;
 
     void run() override;
     bool startupCompleted() const override;
@@ -63,17 +63,17 @@ private:
     void onStartupPageOpened(StartupModeType modeType);
 
     StartupModeType resolveStartupModeType() const;
-    Uri startupPageUri(StartupModeType modeType) const;
+    mu::Uri startupPageUri(StartupModeType modeType) const;
 
-    void openScore(const project::ProjectFile& file);
+    void openScore(const au::project::ProjectFile& file);
 
     void restoreLastSession();
-    void removeProjectsUnsavedChanges(const io::paths_t& projectsPaths);
+    void removeProjectsUnsavedChanges(const mu::io::paths_t& projectsPaths);
 
     std::string m_startupTypeStr;
-    project::ProjectFile m_startupScoreFile;
+    au::project::ProjectFile m_startupScoreFile;
     bool m_startupCompleted = false;
 };
 }
 
-#endif // MU_APPSHELL_STARTUPSCENARIO_H
+#endif // AU_APPSHELL_STARTUPSCENARIO_H

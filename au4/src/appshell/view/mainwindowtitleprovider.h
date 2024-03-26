@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
-#define MU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
+#ifndef AU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
+#define AU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
 
 #include <QObject>
 #include <QString>
@@ -30,12 +30,12 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-namespace mu::appshell {
-class MainWindowTitleProvider : public QObject, public async::Asyncable
+namespace au::appshell {
+class MainWindowTitleProvider : public QObject, public mu::async::Asyncable
 {
     Q_OBJECT
 
-    mu::Inject<context::IGlobalContext> context;
+    mu::Inject<mu::context::IGlobalContext> context;
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString filePath READ filePath NOTIFY filePathChanged)
@@ -68,4 +68,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_MAINWINDOWTITLEPROVIDER_H
+#endif // AU_APPSHELL_MAINWINDOWTITLEPROVIDER_H

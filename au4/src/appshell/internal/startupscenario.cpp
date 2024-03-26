@@ -26,8 +26,9 @@
 #include "translation.h"
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::actions;
+using namespace au::project;
 
 static const mu::Uri FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup");
 static const mu::Uri HOME_URI("musescore://home");
@@ -72,14 +73,14 @@ bool StartupScenario::isStartWithNewFileAsSecondaryInstance() const
     return false;
 }
 
-const mu::project::ProjectFile& StartupScenario::startupScoreFile() const
+const ProjectFile& StartupScenario::startupScoreFile() const
 {
     return m_startupScoreFile;
 }
 
-void StartupScenario::setStartupScoreFile(const std::optional<project::ProjectFile>& file)
+void StartupScenario::setStartupScoreFile(const std::optional<ProjectFile>& file)
 {
-    m_startupScoreFile = file ? file.value() : project::ProjectFile();
+    m_startupScoreFile = file ? file.value() : ProjectFile();
 }
 
 void StartupScenario::run()
@@ -97,10 +98,10 @@ void StartupScenario::run()
     //     modeType = StartupModeType::Recovery;
     // }
 
-    Uri startupUri = startupPageUri(modeType);
+    mu::Uri startupUri = startupPageUri(modeType);
 
-    async::Channel<Uri> opened = interactive()->opened();
-    opened.onReceive(this, [this, opened, modeType](const Uri&) {
+    mu::async::Channel<mu::Uri> opened = interactive()->opened();
+    opened.onReceive(this, [this, opened, modeType](const mu::Uri&) {
         static bool once = false;
         if (once) {
             return;
@@ -109,8 +110,8 @@ void StartupScenario::run()
 
         onStartupPageOpened(modeType);
 
-        async::Async::call(this, [this, opened]() {
-            async::Channel<Uri> mut = opened;
+        mu::async::Async::call(this, [this, opened]() {
+            mu::async::Channel<mu::Uri> mut = opened;
             mut.resetOnReceive(this);
             m_startupCompleted = true;
         });
@@ -154,8 +155,9 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
         restoreLastSession();
         break;
     case StartupModeType::StartWithScore: {
-        project::ProjectFile file
-            = m_startupScoreFile.isValid() ? m_startupScoreFile : project::ProjectFile(configuration()->startupScorePath());
+        ProjectFile file = m_startupScoreFile.isValid()
+                           ? m_startupScoreFile
+                           : ProjectFile(configuration()->startupScorePath());
         openScore(file);
     } break;
     }
@@ -180,18 +182,18 @@ mu::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
     return HOME_URI;
 }
 
-void StartupScenario::openScore(const project::ProjectFile& file)
+void StartupScenario::openScore(const ProjectFile& file)
 {
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(file.url, file.displayNameOverride));
 }
 
 void StartupScenario::restoreLastSession()
 {
-    IInteractive::Result result = interactive()->question(trc("appshell", "The previous session quit unexpectedly."),
-                                                          trc("appshell", "Do you want to restore the session?"),
-                                                          { IInteractive::Button::No, IInteractive::Button::Yes });
+    mu::IInteractive::Result result = interactive()->question(mu::trc("appshell", "The previous session quit unexpectedly."),
+                                                              mu::trc("appshell", "Do you want to restore the session?"),
+                                                              { mu::IInteractive::Button::No, mu::IInteractive::Button::Yes });
 
-    if (result.button() == static_cast<int>(IInteractive::Button::Yes)) {
+    if (result.button() == static_cast<int>(mu::IInteractive::Button::Yes)) {
         sessionsManager()->restore();
     } else {
         removeProjectsUnsavedChanges(configuration()->sessionProjectsPaths());
@@ -199,7 +201,7 @@ void StartupScenario::restoreLastSession()
     }
 }
 
-void StartupScenario::removeProjectsUnsavedChanges(const io::paths_t& projectsPaths)
+void StartupScenario::removeProjectsUnsavedChanges(const mu::io::paths_t& projectsPaths)
 {
     //! TODO AU4
     // for (const io::path_t& path : projectsPaths) {

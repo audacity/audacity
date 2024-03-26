@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_SESSIONSMANAGER_H
-#define MU_APPSHELL_SESSIONSMANAGER_H
+#ifndef AU_APPSHELL_SESSIONSMANAGER_H
+#define AU_APPSHELL_SESSIONSMANAGER_H
 
 #include "istartupscenario.h"
 
@@ -37,11 +37,11 @@
 //#include "multiinstances/imultiinstancesprovider.h"
 //#include "project/iprojectconfiguration.h"
 
-namespace mu::appshell {
-class SessionsManager : public ISessionsManager, public async::Asyncable
+namespace au::appshell {
+class SessionsManager : public ISessionsManager, public mu::async::Asyncable
 {
-    INJECT(actions::IActionsDispatcher, dispatcher)
-    INJECT(context::IGlobalContext, globalContext)
+    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(mu::context::IGlobalContext, globalContext)
     INJECT(IAppShellConfiguration, configuration)
 
 //! TODO AU4
@@ -59,11 +59,11 @@ public:
 private:
     void update();
 
-    void removeProjectFromSession(const io::path_t& projectPath);
-    void addProjectToSession(const io::path_t& projectPath);
+    void removeProjectFromSession(const mu::io::path_t& projectPath);
+    void addProjectToSession(const mu::io::path_t& projectPath);
 
-    io::path_t m_lastOpenedProjectPath;
+    mu::io::path_t m_lastOpenedProjectPath;
 };
 }
 
-#endif // MU_APPSHELL_SESSIONSMANAGER_H
+#endif // AU_APPSHELL_SESSIONSMANAGER_H

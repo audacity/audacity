@@ -20,13 +20,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
-#define MU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
+#ifndef AU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
+#define AU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
 
 #include <QAbstractNativeEventFilter>
 #include <QWindow>
 
-namespace mu::appshell {
+namespace au::appshell {
 class FramelessWindowController : public QAbstractNativeEventFilter
 {
 public:
@@ -47,4 +47,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H
+#endif // AU_APPSHELL_FRAMELESSWINDOWCONTROLLER_H

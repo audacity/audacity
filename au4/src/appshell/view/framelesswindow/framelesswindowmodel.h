@@ -20,14 +20,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_FREMELESSWINDOWMODEL_H
-#define MU_APPSHELL_FREMELESSWINDOWMODEL_H
+#ifndef AU_APPSHELL_FREMELESSWINDOWMODEL_H
+#define AU_APPSHELL_FREMELESSWINDOWMODEL_H
 
 #include <QObject>
 
 class QWindow;
 
-namespace mu::appshell {
+namespace au::appshell {
 class FramelessWindowController;
 class FramelessWindowModel : public QObject
 {
@@ -54,4 +54,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_FREMELESSWINDOWMODEL_H
+#endif // AU_APPSHELL_FREMELESSWINDOWMODEL_H

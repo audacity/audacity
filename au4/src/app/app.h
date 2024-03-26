@@ -31,22 +31,22 @@
 
 //#include "commandlineparser.h"
 
-namespace mu::app {
+namespace au::app {
 class App
 {
-    Inject<IApplication> muapplication;
-    Inject<appshell::IStartupScenario> startupScenario;
+    mu::Inject<mu::IApplication> muapplication;
+    mu::Inject<appshell::IStartupScenario> startupScenario;
 
 public:
     App();
 
-    void addModule(modularity::IModuleSetup* module);
+    void addModule(mu::modularity::IModuleSetup* module);
 
     int run(int argc, char** argv);
 
 private:
 
-    QList<modularity::IModuleSetup*> m_modules;
+    QList<mu::modularity::IModuleSetup*> m_modules;
 };
 }
 

@@ -25,13 +25,14 @@
 
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace mu;
+using namespace au::appshell;
 using namespace mu::ui;
 using namespace mu::uicomponents;
 using namespace mu::actions;
 
 //! TODO AU4
-// using namespace mu::project;
+// using namespace au::project;
 // using namespace mu::workspace;
 // using namespace mu::extensions;
 

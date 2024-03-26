@@ -41,8 +41,8 @@
 
 #include "log.h"
 
-using namespace mu::app;
-using namespace mu::appshell;
+using namespace au::app;
+using namespace au::appshell;
 
 //! NOTE Separately to initialize logger and profiler as early as possible
 static mu::GlobalModule globalModule;
@@ -51,7 +51,7 @@ App::App()
 {
 }
 
-void App::addModule(modularity::IModuleSetup* module)
+void App::addModule(mu::modularity::IModuleSetup* module)
 {
     m_modules.push_back(module);
 }
@@ -71,7 +71,7 @@ int App::run(int argc, char** argv)
 #endif
 
     const char* appName;
-    if (MUVersion::unstable()) {
+    if (mu::MUVersion::unstable()) {
         appName  = "Audacity4Development";
     } else {
         appName  = "Audacity4";
@@ -112,10 +112,10 @@ int App::run(int argc, char** argv)
     // commandLineParser.parse(argc, argv);
 
     // IApplication::RunMode runMode = commandLineParser.runMode();
-    IApplication::RunMode runMode = IApplication::RunMode::GuiApp;
+    mu::IApplication::RunMode runMode = mu::IApplication::RunMode::GuiApp;
     QCoreApplication* app = nullptr;
 
-    if (runMode == IApplication::RunMode::AudioPluginRegistration) {
+    if (runMode == mu::IApplication::RunMode::AudioPluginRegistration) {
         app = new QCoreApplication(argc, argv);
     } else {
         app = new QApplication(argc, argv);
@@ -124,7 +124,7 @@ int App::run(int argc, char** argv)
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("MuseScore");
     QCoreApplication::setOrganizationDomain("musescore.org");
-    QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
+    QCoreApplication::setApplicationVersion(QString::fromStdString(mu::MUVersion::fullVersion().toStdString()));
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
@@ -171,8 +171,8 @@ int App::run(int argc, char** argv)
     }
 
 #ifdef MU_BUILD_APPSHELL_MODULE
-    SplashScreen* splashScreen = nullptr;
-    if (runMode == IApplication::RunMode::GuiApp) {
+    au::appshell::SplashScreen* splashScreen = nullptr;
+    if (runMode == mu::IApplication::RunMode::GuiApp) {
         //splashScreen = new SplashScreen(SplashScreen::Default);
 
         // if (multiInstancesProvider()->isMainInstance()) {
@@ -229,7 +229,7 @@ int App::run(int argc, char** argv)
     // ====================================================
 
     switch (runMode) {
-    case IApplication::RunMode::ConsoleApp: {
+    case mu::IApplication::RunMode::ConsoleApp: {
         // // ====================================================
         // // Process Autobot
         // // ====================================================
@@ -260,14 +260,14 @@ int App::run(int argc, char** argv)
         //     }
         // }
     } break;
-    case IApplication::RunMode::GuiApp: {
+    case mu::IApplication::RunMode::GuiApp: {
 #ifdef MU_BUILD_APPSHELL_MODULE
         // ====================================================
         // Setup Qml Engine
         // ====================================================
         QQmlApplicationEngine* engine = new QQmlApplicationEngine();
 
-        dock::DockSetup::setup(engine);
+        mu::dock::DockSetup::setup(engine);
 
 #if defined(Q_OS_WIN)
         const QString mainQmlFile = "/platform/win/Main.qml";
@@ -280,7 +280,7 @@ int App::run(int argc, char** argv)
 #endif
 
         //! NOTE Move ownership to UiEngine
-        ui::UiEngine::instance()->moveQQmlEngine(engine);
+        mu::ui::UiEngine::instance()->moveQQmlEngine(engine);
 
         const QUrl url(QStringLiteral("qrc:/qml") + mainQmlFile);
 
@@ -328,7 +328,7 @@ int App::run(int argc, char** argv)
         engine->load(url);
 #endif // MUE_BUILD_APPSHELL_MODULE
     } break;
-    case IApplication::RunMode::AudioPluginRegistration: {
+    case mu::IApplication::RunMode::AudioPluginRegistration: {
         // CommandLineParser::AudioPluginRegistration pluginRegistration = commandLineParser.audioPluginRegistration();
 
         // QMetaObject::invokeMethod(qApp, [this, pluginRegistration]() {
@@ -360,7 +360,7 @@ int App::run(int argc, char** argv)
 
 #ifdef MU_BUILD_APPSHELL_MODULE
     // Engine quit
-    ui::UiEngine::instance()->quit();
+    mu::ui::UiEngine::instance()->quit();
 #endif
 
     // Deinit

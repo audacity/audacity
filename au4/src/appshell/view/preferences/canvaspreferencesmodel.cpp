@@ -24,7 +24,7 @@
 #include "log.h"
 #include "types/translatablestring.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::notation;
 
 CanvasPreferencesModel::CanvasPreferencesModel(QObject* parent)
