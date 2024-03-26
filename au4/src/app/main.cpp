@@ -48,6 +48,7 @@
 #endif
 
 #include "context/contextmodule.h"
+#include "project/projectmodule.h"
 
 #ifdef MU_BUILD_PROJECTSCENE_MODULE
 #include "projectscene/projectscenemodule.h"
@@ -117,6 +118,7 @@ int main(int argc, char** argv)
 #endif
 
     app.addModule(new mu::context::ContextModule());
+    app.addModule(new au::project::ProjectModule());
 
     app.addModule(new au::projectscene::ProjectSceneModule());
 

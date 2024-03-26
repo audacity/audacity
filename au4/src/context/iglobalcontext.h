@@ -37,6 +37,9 @@ public:
     virtual void setCurrentProject(const project::IAudacityProjectPtr& project) = 0;
     virtual project::IAudacityProjectPtr currentProject() const = 0;
     virtual mu::async::Notification currentProjectChanged() const = 0;
+
+    virtual au::processing::ProcessingProjectPtr currentProcessingProject() const = 0;
+    virtual mu::async::Notification currentProcessingProjectChanged() const = 0;
 };
 }
 

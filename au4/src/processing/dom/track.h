@@ -3,11 +3,20 @@
 
 #include <vector>
 
+#include "clip.h"
+
 namespace au::processing {
 class Track
 {
 public:
-    Track();
+    Track() = default;
+
+    const Clips& clips() const;
+    void setClips(const Clips& c);
+
+private:
+
+    Clips m_clips;
 };
 
 using TrackList = std::vector<Track>;
