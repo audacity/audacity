@@ -32,10 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   #August 2009 - Theming not locked down enough for a stable release.
-   # This turns on the Theme panel in Prefs dialog.
-   #THEME_PREFS
-
    #ROLL_UP_DIALOG
    #RIGHT_ALIGNED_TEXTBOXES
    #VOICE_DETECTION

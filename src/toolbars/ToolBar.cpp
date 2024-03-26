@@ -46,6 +46,7 @@ in which buttons can be placed.
 
 #include "AllThemeResources.h"
 #include "AColor.h"
+#include "Experimental.h"
 #include "ImageManipulation.h"
 #include "Project.h"
 #include "CommandManager.h"
@@ -813,9 +814,8 @@ void ToolBar:: MakeButtonBackgroundsLarge()
 
    bool bUseAqua = false;
 
-#ifdef EXPERIMENTAL_THEME_PREFS
-   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
-#endif
+   if constexpr (Experimental::ThemePrefs)
+      gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 
 #ifdef USE_AQUA_THEME
    bUseAqua = !bUseAqua;
@@ -839,9 +839,8 @@ void ToolBar::MakeButtonBackgroundsSmall()
 
    bool bUseAqua = false;
 
-#ifdef EXPERIMENTAL_THEME_PREFS
-   gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
-#endif
+   if constexpr (Experimental::ThemePrefs)
+      gPrefs->Read( wxT("/GUI/ShowMac"), &bUseAqua, false);
 
 #ifdef USE_AQUA_THEME
    bUseAqua = !bUseAqua;

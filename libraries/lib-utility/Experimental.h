@@ -33,6 +33,10 @@ namespace Experimental {
 
 // JKC an experiment to work around bug 2709
 constexpr bool CeeNumbersOption = false;
+
+// August 2009 - Theming not locked down enough for a stable release.
+// This turns on the Theme panel in Prefs dialog.
+constexpr bool ThemePrefs = false;
 }
 
 #endif

@@ -27,12 +27,12 @@ Provides:
 \see \ref Themability
 
 *//********************************************************************/
-
-
 #include "ThemePrefs.h"
 
 #include <wx/app.h>
 #include <wx/wxprec.h>
+#include "ConditionallyPresent.h"
+#include "Experimental.h"
 #include "Prefs.h"
 #include "Theme.h"
 #include "ShuttleGui.h"
@@ -257,9 +257,10 @@ void ThemePrefs::Cancel()
    AColor::ApplyUpdatedImages();
 }
 
-#ifdef EXPERIMENTAL_THEME_PREFS
 namespace{
-PrefsPanel::Registration sAttachment{ "Theme",
+ConditionallyPresent<
+   PrefsPanel::Registration, Experimental::ThemePrefs
+> sAttachment{ "Theme",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
    {
       wxASSERT(parent); // to justify safenew
@@ -268,7 +269,6 @@ PrefsPanel::Registration sAttachment{ "Theme",
    false,
    // Register with an explicit ordering hint because this one is
    // only conditionally compiled
-   { "", { Registry::OrderingHint::After, "Effects" } }
+   Registry::Placement{ "", { Registry::OrderingHint::After, "Effects" } }
 };
 }
-#endif
