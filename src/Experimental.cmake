@@ -32,7 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   #RIGHT_ALIGNED_TEXTBOXES
    #VOICE_DETECTION
 
    # Andreas Micheler, 20.Nov 2007:
