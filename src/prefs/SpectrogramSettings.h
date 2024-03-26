@@ -186,13 +186,6 @@ public:
    bool fftYGrid;
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   bool fftFindNotes;
-   double findNotesMinA;
-   int numberOfMaxima;
-   bool findNotesQuantize;
-#endif //EXPERIMENTAL_FIND_NOTES
-
    // Following fields are derived from preferences.
 
    // Variables used for computing the spectrum
@@ -202,6 +195,12 @@ public:
    // Two other windows for computing reassigned spectrogram
    Floats         tWindow; // Window times time parameter
    Floats         dWindow; // Derivative of window
+
+   // These are for Experimental::FindNotes
+   bool fftFindNotes{};
+   double findNotesMinA{};
+   int numberOfMaxima{};
+   bool findNotesQuantize{};
 };
 
 extern AUDACITY_DLL_API IntSetting SpectrumMaxFreq;

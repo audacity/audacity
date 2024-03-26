@@ -37,6 +37,13 @@ constexpr bool CeeNumbersOption = false;
 // August 2009 - Theming not locked down enough for a stable release.
 // This turns on the Theme panel in Prefs dialog.
 constexpr bool ThemePrefs = false;
+
+/* Andreas Micheler, 20.Nov 2007:
+ A spectrumLogF-like view mode with notes quantization.
+ Just select the "Find Notes" checkbox in the spectrum prefs
+ to activate it instead of the Spectrum log(f) mode.
+ */
+constexpr bool FindNotes = false;
 }
 
 #endif

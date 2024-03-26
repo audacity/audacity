@@ -13,8 +13,6 @@
 \brief A PrefsPanel for spectrum settings.
 
 *//*******************************************************************/
-
-
 #include "SpectrumPrefs.h"
 
 #include <wx/choice.h>
@@ -22,6 +20,7 @@
 #include <wx/checkbox.h>
 #include <wx/textctrl.h>
 
+#include "Experimental.h"
 #include "FFT.h"
 #include "Project.h"
 #include "ShuttleGui.h"
@@ -281,32 +280,32 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
             mTempSettings.fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-      /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
-      S.StartStatic(XO("FFT Find Notes"));
-      {
-         S.StartTwoColumn();
+      if constexpr (Experimental::FindNotes) {
+         /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/
+         S.StartStatic(XO("FFT Find Notes"));
          {
-            mFindNotesMinA =
-               S.TieNumericTextBox(XXO("Minimum Amplitude (dB):"),
-               mTempSettings.findNotesMinA,
-               8);
+            S.StartTwoColumn();
+            {
+               mFindNotesMinA =
+                  S.TieNumericTextBox(XXO("Minimum Amplitude (dB):"),
+                  mTempSettings.findNotesMinA,
+                  8);
 
-            mFindNotesN =
-               S.TieNumericTextBox(XXO("Max. Number of Notes (1..128):"),
-               mTempSettings.numberOfMaxima,
-               8);
+               mFindNotesN =
+                  S.TieNumericTextBox(XXO("Max. Number of Notes (1..128):"),
+                  mTempSettings.numberOfMaxima,
+                  8);
+            }
+            S.EndTwoColumn();
+
+            S.TieCheckBox(XXO("&Find Notes"),
+               mTempSettings.fftFindNotes);
+
+            S.TieCheckBox(XXO("&Quantize Notes"),
+               mTempSettings.findNotesQuantize);
          }
-         S.EndTwoColumn();
-
-         S.TieCheckBox(XXO("&Find Notes"),
-            mTempSettings.fftFindNotes);
-
-         S.TieCheckBox(XXO("&Quantize Notes"),
-            mTempSettings.findNotesQuantize);
+         S.EndStatic();
       }
-      S.EndStatic();
-#endif //EXPERIMENTAL_FIND_NOTES
    // S.EndStatic();
 
 #ifdef SPECTRAL_SELECTION_GLOBAL_SWITCH
@@ -363,24 +362,24 @@ bool SpectrumPrefs::Validate()
       return false;
    }
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   long findNotesMinA;
-   if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
-      AudacityMessageBox( XO("The minimum amplitude (dB) must be an integer") );
-      return false;
-   }
+   if constexpr (Experimental::FindNotes) {
+      long findNotesMinA;
+      if (!mFindNotesMinA->GetValue().ToLong(&findNotesMinA)) {
+         AudacityMessageBox( XO("The minimum amplitude (dB) must be an integer") );
+         return false;
+      }
 
-   long findNotesN;
-   if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
-      AudacityMessageBox( XO("The maximum number of notes must be an integer") );
-      return false;
+      long findNotesN;
+      if (!mFindNotesN->GetValue().ToLong(&findNotesN)) {
+         AudacityMessageBox( XO("The maximum number of notes must be an integer") );
+         return false;
+      }
+      if (findNotesN < 1 || findNotesN > 128) {
+         AudacityMessageBox( XO(
+   "The maximum number of notes must be in the range 1..128") );
+         return false;
+      }
    }
-   if (findNotesN < 1 || findNotesN > 128) {
-      AudacityMessageBox( XO(
-"The maximum number of notes must be in the range 1..128") );
-      return false;
-   }
-#endif //EXPERIMENTAL_FIND_NOTES
 
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);

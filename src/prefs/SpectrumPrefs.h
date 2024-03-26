@@ -90,10 +90,9 @@ class SpectrumPrefs final : public PrefsPanel
    wxChoice *mAlgorithmChoice;
 
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   wxTextCtrl *mFindNotesMinA;
-   wxTextCtrl *mFindNotesN;
-#endif
+   // These two are for Experimental::FindNotes
+   wxTextCtrl *mFindNotesMinA{};
+   wxTextCtrl *mFindNotesN{};
 
    wxCheckBox *mDefaultsCheckbox;
 

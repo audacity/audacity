@@ -12,11 +12,11 @@ Paul Licameli
 \brief Spectrogram settings, either for one track or as defaults.
 
 *//*******************************************************************/
-
-
 #include "SpectrogramSettings.h"
 
 #include "AColor.h"
+#include "ConditionallyPresent.h"
+#include "Experimental.h"
 #include "NumberScale.h"
 
 #include <algorithm>
@@ -61,16 +61,18 @@ IntSetting SpectrumRange{
 IntSetting SpectrumZeroPaddingFactor{
    L"/Spectrum/ZeroPaddingFactor", 2 };
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-BoolSetting SpectrumFindNotes{
+ConditionallyPresent<BoolSetting, Experimental::FindNotes>
+SpectrumFindNotes{
    L"/Spectrum/FFTFindNotes", false };
-DoubleSetting SpectrumFindNotesMinA{
+ConditionallyPresent<DoubleSetting, Experimental::FindNotes>
+SpectrumFindNotesMinA{
    L"/Spectrum/FindNotesMinA", -30.0 };
-IntSetting SpectrumFindNotesN{
+ConditionallyPresent<IntSetting, Experimental::FindNotes>
+SpectrumFindNotesN{
    L"/Spectrum/FindNotesN", 5 };
-BoolSetting SpectrumFindNotesQuantize{
+ConditionallyPresent<BoolSetting, Experimental::FindNotes>
+SpectrumFindNotesQuantize{
    L"/Spectrum/FindNotesQuantize", false };
-#endif //EXPERIMENTAL_FIND_NOTES
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
 BoolSetting SpectrumYGrid{
@@ -162,12 +164,11 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    , fftYGrid(other.fftYGrid)
 #endif
-#ifdef EXPERIMENTAL_FIND_NOTES
+
    , fftFindNotes(other.fftFindNotes)
    , findNotesMinA(other.findNotesMinA)
    , numberOfMaxima(other.numberOfMaxima)
    , findNotesQuantize(other.findNotesQuantize)
-#endif
 
    // Do not copy these!
    , hFFT{}
@@ -197,12 +198,11 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
 #ifdef EXPERIMENTAL_FFT_Y_GRID
       fftYGrid = other.fftYGrid;
 #endif
-#ifdef EXPERIMENTAL_FIND_NOTES
+
       fftFindNotes = other.fftFindNotes;
       findNotesMinA = other.findNotesMinA;
       numberOfMaxima = other.numberOfMaxima;
       findNotesQuantize = other.findNotesQuantize;
-#endif
 
       // Invalidate the caches
       DestroyWindows();
@@ -391,12 +391,12 @@ void SpectrogramSettings::LoadPrefs()
    fftYGrid = SpectrumYGrid.Read();
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   fftFindNotes = SpectrumFindNotes.Read();
-   findNotesMinA = SpectrumFindNotesMinA.Read();
-   numberOfMaxima = SpectrumFindNotesN.Read();
-   findNotesQuantize = SpectrumFindNotesQuantize.Read();
-#endif //EXPERIMENTAL_FIND_NOTES
+   if constexpr (Experimental::FindNotes) {
+      fftFindNotes = SpectrumFindNotes->Read();
+      findNotesMinA = SpectrumFindNotesMinA->Read();
+      numberOfMaxima = SpectrumFindNotesN->Read();
+      findNotesQuantize = SpectrumFindNotesQuantize->Read();
+   }
 
    // Enforce legal values
    Validate(true);
@@ -437,12 +437,12 @@ void SpectrogramSettings::SavePrefs()
    SpectrumYGrid.Write(fftYGrid);
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   SpectrumFindNotes.Write(fftFindNotes);
-   SpectrumFindNotesMinA.Write(findNotesMinA);
-   SpectrumFindNotesN.Write(numberOfMaxima);
-   SpectrumFindNotesQuantize.Write(findNotesQuantize);
-#endif //EXPERIMENTAL_FIND_NOTES
+   if constexpr (Experimental::FindNotes) {
+      SpectrumFindNotes->Write(fftFindNotes);
+      SpectrumFindNotesMinA->Write(findNotesMinA);
+      SpectrumFindNotesN->Write(numberOfMaxima);
+      SpectrumFindNotesQuantize->Write(findNotesQuantize);
+   }
 }
 
 // This is a temporary hack until SpectrogramSettings gets fully integrated
@@ -492,19 +492,19 @@ void SpectrogramSettings::UpdatePrefs()
       fftYGrid = SpectrumYGrid.Read();
 #endif //EXPERIMENTAL_FFT_Y_GRID
 
-#ifdef EXPERIMENTAL_FIND_NOTES
-   if (fftFindNotes == defaults().fftFindNotes)
-      fftFindNotes = SpectrumFindNotes.Read();
+   if constexpr (Experimental::FindNotes) {
+      if (fftFindNotes == defaults().fftFindNotes)
+         fftFindNotes = SpectrumFindNotes->Read();
 
-   if (findNotesMinA == defaults().findNotesMinA)
-      findNotesMinA = SpectrumFindNotesMinA.Read();
+      if (findNotesMinA == defaults().findNotesMinA)
+         findNotesMinA = SpectrumFindNotesMinA->Read();
 
-   if (numberOfMaxima == defaults().numberOfMaxima)
-      numberOfMaxima = SpectrumFindNotesN.Read();
+      if (numberOfMaxima == defaults().numberOfMaxima)
+         numberOfMaxima = SpectrumFindNotesN->Read();
 
-   if (findNotesQuantize == defaults().findNotesQuantize)
-      findNotesQuantize = SpectrumFindNotesQuantize.Read();
-#endif //EXPERIMENTAL_FIND_NOTES
+      if (findNotesQuantize == defaults().findNotesQuantize)
+         findNotesQuantize = SpectrumFindNotesQuantize->Read();
+   }
 
    // Enforce legal values
    Validate(true);
