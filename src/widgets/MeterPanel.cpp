@@ -495,6 +495,10 @@ void MeterPanel::OnErase(wxEraseEvent & WXUNUSED(event))
    // Ignore it to prevent flashing
 }
 
+namespace Experimental {
+constexpr bool MeterLEDStyle = false;
+}
+
 void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 {
 #if defined(__WXMAC__)
@@ -627,29 +631,29 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
                r.SetRight(mBar[i].r.GetRight());
                dc.GradientFillLinear(r, yellow, red);
             }
-#ifdef EXPERIMENTAL_METER_LED_STYLE
-            if (!mBar[i].vert)
-            {
-               wxRect r = mBar[i].r;
-               wxPen BackgroundPen;
-               BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
-               dc.SetPen( BackgroundPen );
-               int i;
-               for(i=0;i<r.width;i++)
+            if constexpr (Experimental::MeterLEDStyle) {
+               if (!mBar[i].vert)
                {
-                  // 2 pixel spacing between the LEDs
-                  if( (i%7)<2 ){
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
-                  } else {
-                     // The LEDs have triangular ends.
-                     // This code shapes the ends.
-                     int j = abs( (i%7)-4);
-                     AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
-                     AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                  wxRect r = mBar[i].r;
+                  wxPen BackgroundPen;
+                  BackgroundPen.SetColour( wxSystemSettings::GetColour(wxSYS_COLOUR_3DFACE) );
+                  dc.SetPen( BackgroundPen );
+                  int i;
+                  for(i=0;i<r.width;i++)
+                  {
+                     // 2 pixel spacing between the LEDs
+                     if( (i%7)<2 ){
+                        AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+r.height );
+                     } else {
+                        // The LEDs have triangular ends.
+                        // This code shapes the ends.
+                        int j = abs( (i%7)-4);
+                        AColor::Line( dc, i+r.x, r.y, i+r.x, r.y+j +1);
+                        AColor::Line( dc, i+r.x, r.y+r.height-j, i+r.x, r.y+r.height );
+                     }
                   }
                }
             }
-#endif
          }
       }
       mRuler.SetTickColour( clrText );

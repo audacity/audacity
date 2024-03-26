@@ -35,9 +35,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   # Define to make the meters look like a row of LEDs
-   #METER_LED_STYLE
-
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
