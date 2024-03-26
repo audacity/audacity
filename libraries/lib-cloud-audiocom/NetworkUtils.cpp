@@ -72,7 +72,8 @@ SyncResultCode GuessResultCode(IResponse& response) noexcept
       code == NetworkError::HostNotFound ||
       code == NetworkError::ProxyConnectionFailed ||
       code == NetworkError::ProxyNotFound ||
-      code == NetworkError::RemoteHostClosed)
+      code == NetworkError::RemoteHostClosed ||
+      code == NetworkError::Timeout)
       return SyncResultCode::ConnectionFailed;
 
    if (code == NetworkError::HTTPError)
