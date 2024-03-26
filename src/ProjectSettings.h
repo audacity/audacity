@@ -15,6 +15,7 @@ Paul Licameli split from AudacityProject.h
 #include <wx/event.h> // to declare custom event type
 
 #include "ClientData.h" // to inherit
+#include "Experimental.h"
 #include "Observer.h"
 #include "Prefs.h" // to inherit
 #include "audacity/Types.h"
@@ -30,12 +31,10 @@ enum : int {
    drawTool,
    multiTool,
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
    brushTool,
-#endif
 
-   numTools,
    firstTool = selectTool,
+   numTools = 1 + (Experimental::SpectralBrushTool ? brushTool : multiTool),
 };
 }
 

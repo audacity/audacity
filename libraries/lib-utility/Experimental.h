@@ -49,6 +49,11 @@ constexpr bool FindNotes = false;
  A Frequency Grid for the Spectrum Log(f) & Find Notes modes
  */
 constexpr bool FftYGrid = false;
+
+/*
+ Edward Hui 1 Jul 2021
+ */
+constexpr bool SpectralBrushTool = false;
 }
 
 #endif

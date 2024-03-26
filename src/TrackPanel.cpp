@@ -860,10 +860,8 @@ void TrackPanel::DrawTracks(wxDC * dc)
    bool bigPointsFlag  =
       bMultiToolDown || (ToolCodes::drawTool == settings.GetTool());
    bool sliderFlag     = bMultiToolDown;
-   bool brushFlag   = false;
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   brushFlag   = (ToolCodes::brushTool == settings.GetTool());
-#endif
+   const bool brushFlag = Experimental::SpectralBrushTool &&
+      (ToolCodes::brushTool == settings.GetTool());
 
    const bool hasSolo = GetTracks()->Any<PlayableTrack>()
       .any_of( [&](const PlayableTrack *pt) {

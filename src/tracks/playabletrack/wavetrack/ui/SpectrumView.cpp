@@ -181,17 +181,17 @@ std::vector<UIHandlePtr> SpectrumView::DetailedHitTest(
    const auto wt = FindWaveChannel();
    std::vector<UIHandlePtr> results;
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-   mOnBrushTool = (currentTool == ToolCodes::brushTool);
-   if(mOnBrushTool){
-      const auto result = BrushHandleHitTest(
-         mBrushHandle, state,
-         pProject, std::static_pointer_cast<SpectrumView>(shared_from_this()),
-         mpSpectralData);
-      results.push_back(result);
-      return results;
+   if constexpr (Experimental::SpectralBrushTool) {
+      mOnBrushTool = (currentTool == ToolCodes::brushTool);
+      if(mOnBrushTool){
+         const auto result = BrushHandleHitTest(
+            mBrushHandle, state,
+            pProject, std::static_pointer_cast<SpectrumView>(shared_from_this()),
+            mpSpectralData);
+         results.push_back(result);
+         return results;
+      }
    }
-#endif
 
    return WaveChannelSubView::DoDetailedHitTest(
       state, pProject, currentTool, bMultiTool, wt

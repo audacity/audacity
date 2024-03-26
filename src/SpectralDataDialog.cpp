@@ -13,8 +13,6 @@
 
 *//*******************************************************************/
 
-#ifdef EXPERIMENTAL_BRUSH_TOOL
-
 #include <type_traits>
 
 #include <wx/app.h>
@@ -43,6 +41,7 @@
 #include "Clipboard.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
+#include "ConditionallyPresent.h"
 #include "UndoManager.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -289,7 +288,7 @@ bool SpectralDataDialog::Show( bool show )
    if ( IsShown() && !show && IsBrushToolActive(mProject) )
       ProjectSettings::Get(mProject).SetTool(ToolCodes::selectTool);
    auto result = wxDialogWrapper::Show( show );
-   CommandManager::Get( mProject ).UpdateCheckmarks( mProject );
+   CommandManager::Get(mProject).UpdateCheckmarks();
    return result;
 }
 
@@ -483,8 +482,9 @@ void OnSpectralEditingPanel(const CommandContext &context)
 }
 
 using namespace MenuRegistry;
-MenuRegistry::AttachedItem sAttachment{
-   wxT("View/Other/Toolbars/Toolbars/Other"),
+ConditionallyPresent<
+   MenuRegistry::AttachedItem, Experimental::SpectralBrushTool
+> sAttachment{
    Command( wxT("ShowSpectralSelectionPanel"),
       XXO("Spectra&l Selection Panel"),
       OnSpectralEditingPanel,
@@ -494,9 +494,8 @@ MenuRegistry::AttachedItem sAttachment{
             // Find not Get to avoid creating the dialog if not yet done
             auto pDialog = SpectralDataDialog::Find(&project);
             return pDialog && pDialog->IsShown();
-         } ) )
+         } ) ),
+   L"View/Other/Toolbars/Toolbars/Other"
 };
 
 }
-
-#endif
