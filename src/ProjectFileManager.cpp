@@ -28,8 +28,10 @@ Paul Licameli split from AudacityProject.cpp
 #include "ImportPlugin.h"
 #include "ImportProgressListener.h"
 #include "Legacy.h"
+#include "MenuCreator.h"
 #include "MusicInformationRetrieval.h"
 #include "PlatformCompatibility.h"
+#include "PluginManager.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectHistory.h"
@@ -937,6 +939,14 @@ bool ProjectFileManager::IsAlreadyOpen(const FilePath &projPathName)
    return false;
 }
 
+namespace Experimental {
+/*
+ Paul Licameli (PRL) 28 Dec 2017
+ Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
+ */
+constexpr bool DragDropPlugins = false;
+}
+
 AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
    const FilePath &fileNameArg, bool addtohistory)
 {
@@ -1013,15 +1023,15 @@ AudacityProject *ProjectFileManager::OpenFile( const ProjectChooserFn &chooser,
       if (wxStrncmp(buf, "SQLite", 6) != 0)
       {
          // Not a database
-#ifdef EXPERIMENTAL_DRAG_DROP_PLUG_INS
-         // Is it a plug-in?
-         if (PluginManager::Get().DropFile(fileName)) {
-            MenuCreator::RebuildAllMenuBars();
-            // Plug-in installation happened, not really opening of a file,
-            // so return null
-            return nullptr;
+         if constexpr (Experimental::DragDropPlugins) {
+            // Is it a plug-in?
+            if (PluginManager::Get().DropFile(fileName)) {
+               MenuCreator::RebuildAllMenuBars();
+               // Plug-in installation happened, not really opening of a file,
+               // so return null
+               return nullptr;
+            }
          }
-#endif
          auto &project = chooser(false);
          // Undo history is incremented inside this:
          if (Get(project).Import(fileName))
