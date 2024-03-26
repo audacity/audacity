@@ -10,6 +10,7 @@ Paul Licameli split from GUIPrefs.cpp
 
 #include "GUISettings.h"
 
+#include "Experimental.h"
 #include "FileNames.h"
 #include "Languages.h"
 #include "AudacityMessageBox.h"
@@ -23,12 +24,12 @@ wxString GUISettings::SetLang( const wxString & lang )
       ::AudacityMessageBox(
          XO("Language \"%s\" is unknown").Format( lang ) );
 
-#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
-   bool forceCeeNumbers;
-   gPrefs->Read(wxT("/Locale/CeeNumberFormat"), &forceCeeNumbers, false);
-   if( forceCeeNumbers )
-      Internat::SetCeeNumberFormat();
-#endif
+   if constexpr (Experimental::CeeNumbersOption) {
+      bool forceCeeNumbers;
+      gPrefs->Read(wxT("/Locale/CeeNumberFormat"), &forceCeeNumbers, false);
+      if( forceCeeNumbers )
+         Internat::SetCeeNumberFormat();
+   }
 
 #ifdef __WXMAC__
       wxApp::s_macHelpMenuTitleName = _("&Help");

@@ -23,6 +23,7 @@
 #include <wx/defs.h>
 #include <mutex> // once_flag
 
+#include "Experimental.h"
 #include "FileNames.h"
 #include "Languages.h"
 #include "Theme.h"
@@ -185,11 +186,10 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
          {"/GUI/RtlWorkaround",
           true});
 #endif
-#ifdef EXPERIMENTAL_CEE_NUMBERS_OPTION
-      S.TieCheckBox(XXO("Never use comma as decimal point"),
-                    {wxT("/Locale/CeeNumberFormat"),
-                     false});
-#endif
+      if constexpr (Experimental::CeeNumbersOption)
+         S.TieCheckBox(XXO("Never use comma as decimal point"),
+                       {wxT("/Locale/CeeNumberFormat"),
+                        false});
    }
    S.EndStatic();
    

@@ -31,6 +31,9 @@
 
 namespace Experimental {
 
+// JKC an experiment to work around bug 2709
+constexpr bool CeeNumbersOption = false;
+
 }
 
 #endif
