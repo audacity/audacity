@@ -32,13 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   # JKC, 17 Aug 2017
-   # Enables the MIDI note stretching feature, which currently
-   # a) Is broken on Linux (Bug 1646)
-   # b) Crashes with Sync-Lock (Bug 1719)
-   # c) Needs UI design review.
-   #MIDI_STRETCHING
-
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 

@@ -41,6 +41,18 @@ NoteTrackView::~NoteTrackView()
 {
 }
 
+namespace Experimental {
+/*
+ JKC, 17 Aug 2017
+ Enables the MIDI note stretching feature, which currently
+ a) Is broken on Linux (Bug 1646)
+ b) Crashes with Sync-Lock (Bug 1719)
+ c) Needs UI design review.
+ PRL:  But treat this with respect.  It's one of Roger's!
+ */
+constexpr bool MidiStretching = false;
+}
+
 std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
    const TrackPanelMouseState &state, const AudacityProject *pProject,
    int, bool )
@@ -49,12 +61,12 @@ std::vector<UIHandlePtr> NoteTrackView::DetailedHitTest(
    UIHandlePtr result;
    std::vector<UIHandlePtr> results;
 #ifdef USE_MIDI
-#ifdef EXPERIMENTAL_MIDI_STRETCHING
-   result = StretchHandle::HitTest(
-      mStretchHandle, state, pProject, FindChannel<NoteTrack>());
-   if (result)
-      results.push_back(result);
-#endif
+   if constexpr (Experimental::MidiStretching) {
+      result = StretchHandle::HitTest(
+         mStretchHandle, state, pProject, FindChannel<NoteTrack>());
+      if (result)
+         results.push_back(result);
+   }
 #endif
 
    return results;
