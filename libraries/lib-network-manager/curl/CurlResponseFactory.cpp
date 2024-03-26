@@ -19,6 +19,109 @@ namespace audacity
 {
 namespace network_manager
 {
+namespace
+{
+class StubResponse final : public IResponse
+{
+public:
+   explicit StubResponse(const Request& request)
+       : mRequest { request }
+   {
+   }
+
+   bool isFinished() const noexcept override
+   {
+      return true;
+   }
+
+   unsigned getHTTPCode() const noexcept override
+   {
+      return 0;
+   }
+
+   NetworkError getError() const noexcept override
+   {
+      return NetworkError::OperationCancelled;
+   }
+
+   std::string getErrorString() const override
+   {
+      return {};
+   }
+
+   bool headersReceived() const noexcept override
+   {
+      return false;
+   }
+
+   bool hasHeader(const std::string& headerName) const noexcept override
+   {
+      return false;
+   }
+
+   std::string getHeader(const std::string& headerName) const override
+   {
+      return {};
+   }
+
+   const HeadersList& getHeaders() const noexcept override
+   {
+      static HeadersList empty;
+      return empty;
+   }
+
+   const CookiesList& getCookies() const noexcept override
+   {
+      static CookiesList empty;
+      return empty;
+   }
+
+   const Request& getRequest() const noexcept override
+   {
+      return mRequest;
+   }
+
+   std::string getURL() const override
+   {
+      return {};
+   }
+
+   void abort() noexcept override
+   {
+   }
+
+   void setOnDataReceivedCallback(RequestCallback) override
+   {
+   }
+
+   void setRequestFinishedCallback(RequestCallback callback) override
+   {
+      if (callback)
+         callback(this);
+   }
+
+   void setDownloadProgressCallback(ProgressCallback) override
+   {
+   }
+
+   void setUploadProgressCallback(ProgressCallback) override
+   {
+   }
+
+   uint64_t getBytesAvailable() const noexcept override
+   {
+      return 0;
+   }
+
+   uint64_t readData(void*, uint64_t) override
+   {
+      return 0;
+   }
+
+private:
+   Request mRequest;
+};
+} // namespace
 
 constexpr decltype(std::thread::hardware_concurrency ()) MIN_CURL_THREADS = 6;
 
@@ -73,7 +176,7 @@ ResponsePtr CurlResponseFactory::performRequest(
    std::unique_ptr<MultipartData> form)
 {
    if (!mThreadPool)
-      return {};
+      return std::make_shared<StubResponse>(request);
 
    std::shared_ptr<CurlResponse> response =
       std::make_shared<CurlResponse>(verb, request, mHandleManager.get());
