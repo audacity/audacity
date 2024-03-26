@@ -35,9 +35,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
 
-   # Define to enable the device change handler
-   #DEVICE_CHANGE_HANDLER
-
    # Paul Licameli (PRL) 28 Dec 2017
    # Easy drag-and-drop to add Nyquist, LADSPA, and VST plug-ins
    #DRAG_DROP_PLUG_INS

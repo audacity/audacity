@@ -3,6 +3,8 @@
    Audacity - A Digital Audio Editor
    Copyright 1999-2010 Audacity Team
    Michael Chinen
+ 
+   (Mostly) OS-neutral device management (but see IsInputDeviceAMapperDevice)
 
 ******************************************************************/
 
@@ -25,13 +27,10 @@
 
 #include "AudioIOBase.h"
 
-#include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
-
-DeviceManager DeviceManager::dm;
-
 /// Gets the singleton instance
 DeviceManager* DeviceManager::Instance()
 {
+   static DeviceManager dm;
    return &dm;
 }
 
@@ -297,13 +296,7 @@ std::chrono::duration<float> DeviceManager::GetTimeSinceRescan() {
 
 //private constructor - Singleton.
 DeviceManager::DeviceManager()
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
-#if defined(HAVE_DEVICE_CHANGE)
-:  DeviceChangeHandler()
-#endif
-#endif
 {
-   m_inited = false;
    mRescanTime = std::chrono::steady_clock::now();
 }
 
@@ -314,21 +307,14 @@ DeviceManager::~DeviceManager()
 
 void DeviceManager::Init()
 {
-    Rescan();
-
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
-#if defined(HAVE_DEVICE_CHANGE)
-   DeviceChangeHandler::Enable(true);
-#endif
-#endif
+   Rescan();
+   if constexpr (Experimental::DeviceChangeHandler)
+      DeviceChangeHandler::Enable(true);
 }
 
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
-#if defined(HAVE_DEVICE_CHANGE)
 void DeviceManager::DeviceChangeNotification()
 {
    Rescan();
    return;
 }
-#endif
-#endif
+

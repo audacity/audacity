@@ -40,11 +40,7 @@ AUDIO_DEVICES_API
 wxString MakeDeviceSourceString(const DeviceSourceMap *map);
 
 class AUDIO_DEVICES_API DeviceManager final
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER) && defined(HAVE_DEVICE_CHANGE)
 : public DeviceChangeHandler
-#else
-: public DeviceChangeMessagePublisher
-#endif
 {
  public:
    /// Gets the singleton instance
@@ -63,12 +59,7 @@ class AUDIO_DEVICES_API DeviceManager final
    const std::vector<DeviceSourceMap> &GetInputDeviceMaps();
    const std::vector<DeviceSourceMap> &GetOutputDeviceMaps();
 
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
-#if defined(HAVE_DEVICE_CHANGE)
-   // DeviceChangeHandler implementation
-   void DeviceChangeNotification();
-#endif
-#endif
+   void DeviceChangeNotification() override;
 
 private:
    std::chrono::time_point<std::chrono::steady_clock> mRescanTime;
@@ -83,12 +74,10 @@ private:
 
    DeviceSourceMap* GetDefaultDevice(int hostIndex, int isInput);
 
-   bool m_inited;
+   bool m_inited{ false };
 
    std::vector<DeviceSourceMap> mInputDeviceSourceMaps;
    std::vector<DeviceSourceMap> mOutputDeviceSourceMaps;
-
-   static DeviceManager dm;
 };
 
 #endif

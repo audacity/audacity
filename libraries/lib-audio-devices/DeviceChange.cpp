@@ -6,6 +6,8 @@
 
   Leland Lucius
 
+  @brief OS-specific details for detection of changes of available audio devices
+
 *******************************************************************//*!
 
 \file DeviceChange.cpp
@@ -16,10 +18,6 @@
 #include "DeviceChange.h"
 
 #include "BasicUI.h"
-
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
-
-#if defined(HAVE_DEVICE_CHANGE)
 
 #include <wx/module.h>
 #include <wx/thread.h>
@@ -39,7 +37,6 @@ public:
    {
       mRefCnt = 1;
       mEnumerator = NULL;
-      mEnabled = false;
       mHandler = NULL;
    }
 
@@ -117,8 +114,8 @@ public:
       if (mEnabled)
       {
          mEnabled = false;
-         BasicUI::CallAfter([This]{
-            This->mHandler->Publish(DeviceChangeMessage::Change);
+         BasicUI::CallAfter([this]{
+            mHandler->Publish(DeviceChangeMessage::Change);
          });
       }
 
@@ -130,7 +127,7 @@ public:
       return S_OK;
    }
 
-   bool SetHandler(DeviceChangeMessagePublisher *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler) override
    {
       mHandler = handler;
 
@@ -149,21 +146,18 @@ public:
       return hr == S_OK && mEnumerator;
    }
 
-   void Enable(bool enable)
-   {
-      mEnabled = enable;
-   }
-
 private:
    DeviceChangeMessagePublisher *mHandler;
-   bool mEnabled;
    ULONG mRefCnt;
    IMMDeviceEnumerator *mEnumerator;
 };
 
 #elif defined(__WXGTK__)
 
+#if defined(HAVE_LIBUDEV_H)
 #include <libudev.h>
+#endif
+
 #include <stdlib.h>
 #include <locale.h>
 #include <unistd.h>
@@ -173,7 +167,6 @@ class DeviceChangeListener final : public DeviceChangeInterface
 public:
    DeviceChangeListener()
    {
-      mEnabled = false;
       mHandler = NULL;
       mThread = 0;
    }
@@ -188,21 +181,21 @@ public:
    }
 
    // IUnknown implementation
-   bool SetHandler(DeviceChangeMessagePublisher *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler) override
    {
+#if defined(HAVE_LIBUDEV_H)
       mHandler = handler;
 
       return pthread_create(&mThread, NULL, DeviceChangeListener::Listener, this) == 0;
-   }
-
-   void Enable(bool enable)
-   {
-      mEnabled = enable;
+#else
+      return true;
+#endif
    }
 
    static void *Listener(void *parm)
    {
-      DeviceChangeListener *This = (DeviceChangeListener *) parm;
+#if defined(HAVE_LIBUDEV_H)
+      const auto This = static_cast<DeviceChangeListener *>(parm);
 
       // Instantiate the udev object
       struct udev *udev = udev_new();
@@ -260,11 +253,12 @@ public:
       udev_unref(udev);
 
       pthread_exit(NULL);
+#endif
+      return nullptr;
    }
 
 private:
    DeviceChangeMessagePublisher *mHandler;
-   bool mEnabled;
    pthread_t mThread;
 };
 
@@ -277,7 +271,6 @@ class DeviceChangeListener final : public DeviceChangeInterface
 public:
    DeviceChangeListener()
    {
-      mEnabled = false;
       mHandler = NULL;
       mListening = false;
    }
@@ -301,7 +294,7 @@ public:
    }
 
    // IUnknown implementation
-   bool SetHandler(DeviceChangeMessagePublisher *handler)
+   bool SetHandler(DeviceChangeMessagePublisher *handler) override
    {
       mHandler = handler;
 
@@ -318,17 +311,12 @@ public:
       return true;
    }
 
-   void Enable(bool enable)
-   {
-      mEnabled = enable;
-   }
-
    static OSStatus Listener(AudioObjectID objectID,
                             UInt32 numberAddresses,
                             const AudioObjectPropertyAddress inAddresses[],
                             void *clientData)
    {
-      DeviceChangeListener *This = (DeviceChangeListener *) clientData;
+      const auto This = static_cast<DeviceChangeListener *>(clientData);
 
       for (int i = 0; i < numberAddresses; i++)
       {
@@ -352,7 +340,6 @@ public:
 
 private:
    DeviceChangeMessagePublisher *mHandler;
-   bool mEnabled;
    bool mListening;
 };
 #endif
@@ -364,13 +351,15 @@ END_EVENT_TABLE()
 DeviceChangeHandler::DeviceChangeHandler()
 :  wxEvtHandler()
 {
-   mTimer.SetOwner(this);
-   mListener = std::make_unique<DeviceChangeListener>();
-   mListener->SetHandler(this);
-   mListener->Enable(true);
+   if constexpr (Experimental::DeviceChangeHandler) {
+      mTimer.SetOwner(this);
+      mListener = std::make_unique<DeviceChangeListener>();
+      mListener->SetHandler(this);
+      mListener->Enable(true);
 
-   // Subscribe to self!
-   mSubscription = this->Subscribe(*this, &DeviceChangeHandler::OnChange);
+      // Subscribe to self!
+      mSubscription = this->Subscribe(*this, &DeviceChangeHandler::OnChange);
+   }
 }
 
 DeviceChangeHandler::~DeviceChangeHandler()
@@ -395,7 +384,3 @@ void DeviceChangeHandler::OnTimer(wxTimerEvent & evt)
    DeviceChangeNotification();
    mListener->Enable(true);
 }
-
-#endif
-
-#endif

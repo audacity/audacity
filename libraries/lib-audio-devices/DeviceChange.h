@@ -12,19 +12,26 @@
 #define __AUDACITY_DEVICECHANGE_H__
 
 #include "Observer.h"
+#include <wx/event.h>
+#include <wx/timer.h>
 
 enum class DeviceChangeMessage : char { Rescan, Change };
-using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
-
-#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+struct DeviceChangeMessagePublisher : Observer::Publisher<DeviceChangeMessage>
+{
+   using Observer::Publisher<DeviceChangeMessage>::Publish;
+};
 
 #include <memory>
 
+namespace Experimental {
+constexpr bool DeviceChangeHandler = false &&
 #if defined(__WXMSW__) || defined(__WXMAC__) || defined(HAVE_LIBUDEV_H)
-#define HAVE_DEVICE_CHANGE
+   true
+#else
+   false
 #endif
-
-#if defined(HAVE_DEVICE_CHANGE)
+;
+}
 
 #include "Observer.h"
 
@@ -34,7 +41,9 @@ public:
    virtual ~DeviceChangeInterface() {};
 
    virtual bool SetHandler(DeviceChangeMessagePublisher *handler) = 0;
-   virtual void Enable(bool enable = true) = 0;
+   void Enable(bool enable = true) { mEnabled = enable; }
+protected:
+   bool mEnabled{ false };
 };
 
 class DeviceChangeHandler
@@ -60,9 +69,5 @@ private:
 
    DECLARE_EVENT_TABLE()
 };
-
-#endif
-
-#endif
 
 #endif
