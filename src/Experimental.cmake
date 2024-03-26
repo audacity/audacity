@@ -34,13 +34,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
 
    # USE_MIDI must be defined in order for SCOREALIGN to work
    #SCOREALIGN
-
-   # PRL 5 Jan 2018
-   # Easy change of keystroke bindings for menu items
-   #
-   # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
-   # preference dialog whenever any keystroke shortcuts with Shift+ are used
-   # EASY_CHANGE_KEY_BINDINGS
 )
 
 # Now define the flags
