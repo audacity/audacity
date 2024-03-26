@@ -37,18 +37,17 @@
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../ProjectAudioManager.h"
+#include "../ProjectWindow.h"
 #include "Envelope.h"
 #include "ViewInfo.h"
+#include "Viewport.h"
 #include "WaveTrack.h"
 #include "../widgets/AButton.h"
 #include "../widgets/ASlider.h"
 #include "../tracks/ui/Scrubbing.h"
 #include "Prefs.h"
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
 #include "../VoiceKey.h"
-
-#endif
 
 IMPLEMENT_CLASS(TranscriptionToolBar, ToolBar);
 
@@ -65,8 +64,8 @@ BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
                      wxEVT_COMMAND_BUTTON_CLICKED, TranscriptionToolBar::OnPlaySpeed)
    EVT_SLIDER(TTB_PlaySpeedSlider, TranscriptionToolBar::OnSpeedSlider)
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   EVT_COMMAND_RANGE(TTB_StartOn, TTB_StartOn,
+
+EVT_COMMAND_RANGE(TTB_StartOn, TTB_StartOn,
                      wxEVT_COMMAND_BUTTON_CLICKED, TranscriptionToolBar::OnStartOn)
    EVT_COMMAND_RANGE(TTB_StartOff, TTB_StartOff,
                      wxEVT_COMMAND_BUTTON_CLICKED, TranscriptionToolBar::OnStartOff)
@@ -87,7 +86,7 @@ BEGIN_EVENT_TABLE(TranscriptionToolBar, ToolBar)
    EVT_SLIDER(TTB_SensitivitySlider, TranscriptionToolBar::OnSensitivitySlider)
 
    EVT_CHOICE(TTB_KeyType, TranscriptionToolBar::SetKeyType)
-#endif
+
 END_EVENT_TABLE()
    ;   //semicolon enforces  proper automatic indenting in emacs.
 
@@ -101,9 +100,8 @@ TranscriptionToolBar::TranscriptionToolBar( AudacityProject &project )
 : ToolBar( project, XO("Play-at-Speed"), ID(), true )
 {
    SetPlaySpeed( 1.0 * 100.0 );
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   mVk = std::make_unique<VoiceKey>();
-#endif
+   if constexpr (Experimental::VoiceDetection)
+      mVk = std::make_unique<VoiceKey>();
 }
 
 TranscriptionToolBar::~TranscriptionToolBar()
@@ -138,17 +136,17 @@ void TranscriptionToolBar::Create(wxWindow * parent)
    mBackgroundHeight = 0;
    mBackgroundWidth = 0;
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   mButtons[TTB_StartOn]->Disable();
-   mButtons[TTB_StartOff]->Disable();
-   mButtons[TTB_EndOn]->Disable();
-   mButtons[TTB_EndOff]->Disable();
-   mButtons[TTB_SelectSound]->Disable();
-   mButtons[TTB_SelectSilence]->Disable();
-   mButtons[TTB_Calibrate]->Enable();
-   mButtons[TTB_AutomateSelection]->Disable();
-   mButtons[TTB_MakeLabel]->Enable();
-#endif
+   if constexpr (Experimental::VoiceDetection) {
+      mButtons[TTB_StartOn]->Disable();
+      mButtons[TTB_StartOff]->Disable();
+      mButtons[TTB_EndOn]->Disable();
+      mButtons[TTB_EndOff]->Disable();
+      mButtons[TTB_SelectSound]->Disable();
+      mButtons[TTB_SelectSilence]->Disable();
+      mButtons[TTB_Calibrate]->Enable();
+      mButtons[TTB_AutomateSelection]->Disable();
+      mButtons[TTB_MakeLabel]->Enable();
+   }
 
    //Old code...
    //Process a dummy event to set up mPlaySpeed
@@ -248,57 +246,57 @@ void TranscriptionToolBar::Populate()
                  &TranscriptionToolBar::OnFocus,
                  this);
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-// If we need these strings translated, then search and replace
-// YO by XO and remove this #define.
+   if constexpr (Experimental::VoiceDetection) {
+   // If we need these strings translated, then search and replace
+   // YO by XO and remove this #define.
 #define YO( x ) Verbatim( x )
-   AddButton(this, bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
-      YO("Adjust left selection to next onset"));
-   AddButton(this, bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
-      YO("Adjust right selection to previous offset"));
-   AddButton(this, bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
-      YO("Adjust left selection to next offset"));
-   AddButton(this, bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
-      YO("Adjust right selection to previous onset"));
-   AddButton(this, bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
-      YO("Select region of sound around cursor"));
-   AddButton(this, bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
-      YO("Select region of silence around cursor"));
-   AddButton(this, bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
-      YO("Automatically make labels from words"));
-   AddButton(this, bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
-      YO("Add label at selection"));
-   AddButton(this, bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
-      YO("Calibrate voicekey"));
+      AddButton(this, bmpTnStartOn,     bmpTnStartOnDisabled,  TTB_StartOn,
+         YO("Adjust left selection to next onset"));
+      AddButton(this, bmpTnEndOn,       bmpTnEndOnDisabled,   TTB_EndOn,
+         YO("Adjust right selection to previous offset"));
+      AddButton(this, bmpTnStartOff,    bmpTnStartOffDisabled,  TTB_StartOff,
+         YO("Adjust left selection to next offset"));
+      AddButton(this, bmpTnEndOff,      bmpTnEndOffDisabled,    TTB_EndOff,
+         YO("Adjust right selection to previous onset"));
+      AddButton(this, bmpTnSelectSound, bmpTnSelectSoundDisabled, TTB_SelectSound,
+         YO("Select region of sound around cursor"));
+      AddButton(this, bmpTnSelectSilence, bmpTnSelectSilenceDisabled, TTB_SelectSilence,
+         YO("Select region of silence around cursor"));
+      AddButton(this, bmpTnAutomateSelection,   bmpTnAutomateSelectionDisabled,  TTB_AutomateSelection,
+         YO("Automatically make labels from words"));
+      AddButton(this, bmpTnMakeTag, bmpTnMakeTagDisabled,  TTB_MakeLabel,
+         YO("Add label at selection"));
+      AddButton(this, bmpTnCalibrate, bmpTnCalibrateDisabled, TTB_Calibrate,
+         YO("Calibrate voicekey"));
 
-   mSensitivitySlider = safenew ASlider(this,
-                                    TTB_SensitivitySlider,
-                                    YO("Adjust Sensitivity"),
-                                    wxDefaultPosition,
-                                    wxSize(SliderWidth,25),
-                                    ASlider::Options{}
-                                       .Style( SPEED_SLIDER ));
-   mSensitivitySlider->Set(.5);
-   mSensitivitySlider->SetLabel(YO("Sensitivity").Translation());
-   Add( mSensitivitySlider, 0, wxALIGN_CENTER );
+      mSensitivitySlider = safenew ASlider(this,
+                                       TTB_SensitivitySlider,
+                                       YO("Adjust Sensitivity"),
+                                       wxDefaultPosition,
+                                       wxSize(SliderWidth,25),
+                                       ASlider::Options{}
+                                          .Style( SPEED_SLIDER ));
+      mSensitivitySlider->Set(.5);
+      mSensitivitySlider->SetLabel(YO("Sensitivity").Translation());
+      Add( mSensitivitySlider, 0, wxALIGN_CENTER );
 
-   TranslatableStrings choices {
-      YO("Energy"),
-      YO("Sign Changes (Low Threshold)"),
-      YO("Sign Changes (High Threshold)"),
-      YO("Direction Changes (Low Threshold)"),
-      YO("Direction Changes (High Threshold)")
-   };
+      TranslatableStrings choices {
+         YO("Energy"),
+         YO("Sign Changes (Low Threshold)"),
+         YO("Sign Changes (High Threshold)"),
+         YO("Direction Changes (Low Threshold)"),
+         YO("Direction Changes (High Threshold)")
+      };
 
-   mKeyTypeChoice = safenew wxChoice(this, TTB_KeyType,
-      wxDefaultPosition,
-      wxDefaultSize,
-      transform_container<wxArrayStringEx>( choices,
-         std::mem_fn( &TranslatableString::Translation ) ) );
-   mKeyTypeChoice->SetName(YO("Key type").Translation());
-   mKeyTypeChoice->SetSelection(0);
-   Add( mKeyTypeChoice, 0, wxALIGN_CENTER );
-#endif
+      mKeyTypeChoice = safenew wxChoice(this, TTB_KeyType,
+         wxDefaultPosition,
+         wxDefaultSize,
+         transform_container<wxArrayStringEx>( choices,
+            std::mem_fn( &TranslatableString::Translation ) ) );
+      mKeyTypeChoice->SetName(YO("Key type").Translation());
+      mKeyTypeChoice->SetSelection(0);
+      Add( mKeyTypeChoice, 0, wxALIGN_CENTER );
+   }
 
    // Add a little space
    Add(2, -1);
@@ -320,16 +318,16 @@ void TranscriptionToolBar::EnableDisableButtons()
    bool tracks = p && TrackList::Get(*p).Any<AudioTrack>(); // PRL:  PlayableTrack ?
    SetEnabled(canStopAudioStream && tracks && !recording);
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   if (!p)
-      return;
-   // Is anything selected?
-   const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
-   auto selection = !selectedRegion.isPoint() &&
-      !TrackList::Get( *p ).Selected().empty();
+   if constexpr (Experimental::VoiceDetection) {
+      if (!p)
+         return;
+      // Is anything selected?
+      const auto &selectedRegion = ViewInfo::Get( *p ).selectedRegion;
+      auto selection = !selectedRegion.isPoint() &&
+         !TrackList::Get( *p ).Selected().empty();
 
-   mButtons[TTB_Calibrate]->SetEnabled(selection);
-#endif
+      mButtons[TTB_Calibrate]->SetEnabled(selection);
+   }
 }
 
 void TranscriptionToolBar::UpdatePrefs()
@@ -370,20 +368,20 @@ void TranscriptionToolBar::RegenerateTooltips()
          *mButtons[entry.tool], commands, 2u );
    }
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   mButtons[TTB_StartOn]->SetToolTip(YO("Left-to-On"));
-   mButtons[TTB_EndOn]->SetToolTip(   YO("Right-to-Off"));
-   mButtons[TTB_StartOff]->SetToolTip(   YO("Left-to-Off"));
-   mButtons[TTB_EndOff]->SetToolTip(   YO("Right-to-On"));
-   mButtons[TTB_SelectSound]->SetToolTip(   YO("Select-Sound"));
-   mButtons[TTB_SelectSilence]->SetToolTip(   YO("Select-Silence"));
-   mButtons[TTB_AutomateSelection]->SetToolTip(   YO("Make Labels"));
-   mButtons[TTB_MakeLabel]->SetToolTip(   YO("Add Label"));
-   mButtons[TTB_Calibrate]->SetToolTip(   YO("Calibrate"));
+   if constexpr (Experimental::VoiceDetection) {
+      mButtons[TTB_StartOn]->SetToolTip(YO("Left-to-On"));
+      mButtons[TTB_EndOn]->SetToolTip(   YO("Right-to-Off"));
+      mButtons[TTB_StartOff]->SetToolTip(   YO("Left-to-Off"));
+      mButtons[TTB_EndOff]->SetToolTip(   YO("Right-to-On"));
+      mButtons[TTB_SelectSound]->SetToolTip(   YO("Select-Sound"));
+      mButtons[TTB_SelectSilence]->SetToolTip(   YO("Select-Silence"));
+      mButtons[TTB_AutomateSelection]->SetToolTip(   YO("Make Labels"));
+      mButtons[TTB_MakeLabel]->SetToolTip(   YO("Add Label"));
+      mButtons[TTB_Calibrate]->SetToolTip(   YO("Calibrate"));
 
-   mSensitivitySlider->SetToolTip(YO("Sensitivity").Translation());
-   mKeyTypeChoice->SetToolTip(YO("Key type").Translation());
-#endif
+      mSensitivitySlider->SetToolTip(YO("Sensitivity").Translation());
+      mKeyTypeChoice->SetToolTip(YO("Key type").Translation());
+   }
 }
 
 void TranscriptionToolBar::OnFocus(wxFocusEvent &event)
@@ -569,7 +567,7 @@ void TranscriptionToolBar::OnPlaySpeed(wxCommandEvent & event)
    PlayAtSpeed(looped, cutPreview);
 }
 
-void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
+void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent&)
 {
    SetPlaySpeed( (mPlaySpeedSlider->Get()) * 100 );
    RegenerateTooltips();
@@ -583,9 +581,9 @@ void TranscriptionToolBar::OnSpeedSlider(wxCommandEvent& WXUNUSED(event))
    //}
 }
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnStartOn(wxCommandEvent &)
 {
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -605,7 +603,8 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
       //if(len == 0)
       //len = wt->GetSequence()->GetNumSamples()-start;
 
-      auto newstart = mVk->OnForward(*wt, start, len);
+      // TODO: stereo?
+      auto newstart = mVk->OnForward(**wt->Channels().begin(), start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -615,9 +614,11 @@ void TranscriptionToolBar::OnStartOn(wxCommandEvent & WXUNUSED(event))
       SetButton(false, mButtons[TTB_StartOn]);
    }
 }
+}
 
-void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnStartOff(wxCommandEvent &)
 {
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -638,7 +639,8 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       //if(len == 0)
       //len = wt->GetSequence()->GetNumSamples()-start;
 
-      auto newstart = mVk->OffForward(*wt, start, len);
+      // TODO: stereo?
+      auto newstart = mVk->OffForward(**wt->Channels().begin(), start, len);
       double newpos = newstart.as_double() / wt->GetRate();
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -648,10 +650,11 @@ void TranscriptionToolBar::OnStartOff(wxCommandEvent & WXUNUSED(event))
       SetButton(false, mButtons[TTB_StartOn]);
    }
 }
+}
 
-void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnEndOn(wxCommandEvent &)
 {
-
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -673,7 +676,8 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
             len = start;
             start = 0;
          }
-      auto newEnd = mVk->OnBackward(*wt, start + len, len);
+      // TODO: stereo?
+      auto newEnd = mVk->OnBackward(**wt->Channels().begin(), start + len, len);
       double newpos = newEnd.as_double() / wt->GetRate();
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -683,12 +687,11 @@ void TranscriptionToolBar::OnEndOn(wxCommandEvent & WXUNUSED(event))
       SetButton(false, mButtons[TTB_EndOn]);
    }
 }
+}
 
-
-
-void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnEndOff(wxCommandEvent &)
 {
-
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -709,7 +712,8 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
          len = start;
          start = 0;
       }
-      auto newEnd = mVk->OffBackward(*wt, start + len, len);
+      // TODO: stereo?
+      auto newEnd = mVk->OffBackward(**wt->Channels().begin(), start + len, len);
       double newpos = newEnd.as_double() / wt->GetRate();
 
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -719,12 +723,11 @@ void TranscriptionToolBar::OnEndOff(wxCommandEvent & WXUNUSED(event))
       SetButton(false, mButtons[TTB_EndOff]);
    }
 }
+}
 
-
-
-void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnSelectSound(wxCommandEvent &)
 {
-
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -746,9 +749,10 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
       //len = wt->GetSequence()->GetNumSamples()-start;
 
       double rate =  wt->GetRate();
-      auto newstart = mVk->OffBackward(*wt, start, start);
+      // TODO: stereo?
+      auto newstart = mVk->OffBackward(**wt->Channels().begin(), start, start);
       auto newend   =
-      mVk->OffForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
+      mVk->OffForward(**wt->Channels().begin(), start + len, (int)(tl->GetEndTime() * rate));
 
       //reset the selection bounds.
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -760,10 +764,11 @@ void TranscriptionToolBar::OnSelectSound(wxCommandEvent & WXUNUSED(event))
 
    SetButton(false,mButtons[TTB_SelectSound]);
 }
+}
 
-void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnSelectSilence(wxCommandEvent &)
 {
-
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()) {
@@ -783,9 +788,10 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
       //if(len == 0)
       //len = wt->GetSequence()->GetNumSamples()-start;
       double rate =  wt->GetRate();
-      auto newstart = mVk->OnBackward(*wt, start, start);
+      // TODO: stereo?
+      auto newstart = mVk->OnBackward(**wt->Channels().begin(), start, start);
       auto newend   =
-      mVk->OnForward(*wt, start + len, (int)(tl->GetEndTime() * rate));
+      mVk->OnForward(**wt->Channels().begin(), start + len, (int)(tl->GetEndTime() * rate));
 
       //reset the selection bounds.
       auto &selectedRegion = ViewInfo::Get( mProject ).selectedRegion;
@@ -796,13 +802,12 @@ void TranscriptionToolBar::OnSelectSilence(wxCommandEvent & WXUNUSED(event))
    }
 
    SetButton(false,mButtons[TTB_SelectSilence]);
-
+}
 }
 
-
-
-void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnCalibrate(wxCommandEvent &)
 {
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy()){
@@ -816,7 +821,8 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
       sampleCount start, len;
       GetSamples(wt, &start, &len);
 
-      mVk->CalibrateNoise(*wt, start, len);
+      // TODO: stereo?
+      mVk->CalibrateNoise(**wt->Channels().begin(), start, len);
       mVk->AdjustThreshold(3);
 
       mButtons[TTB_StartOn]->Enable();
@@ -839,7 +845,7 @@ void TranscriptionToolBar::OnCalibrate(wxCommandEvent & WXUNUSED(event))
    //Make the sensitivity slider set the sensitivity by processing an event.
    wxCommandEvent dummy;
    OnSensitivitySlider(dummy);
-
+}
 }
 
 #include "../LabelTrack.h"
@@ -885,7 +891,7 @@ int DoAddLabel(
       .PushState(XO("Added label"), XO("Label"));
 
    TrackFocus::Get(project).Set(lt);
-   lt->EnsureVisible();
+   Viewport::Get(project).ShowTrack(*lt);
 
    trackPanel.SetFocus();
 
@@ -896,10 +902,9 @@ int DoAddLabel(
 //This automates selection through a selected region,
 //selecting its best guess for words and creating labels at those points.
 
-void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent &)
 {
-
-
+if constexpr (Experimental::VoiceDetection) {
    //If IO is busy, abort immediately
    auto gAudioIO = AudioIOBase::Get();
    if (gAudioIO->IsBusy())
@@ -935,7 +940,8 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
 
          lastlen = len;
 
-         auto newStart = mVk->OnForward(*wt, start, len);
+         // TODO: stereo?
+         auto newStart = mVk->OnForward(**wt->Channels().begin(), start, len);
 
          //JKC: If no start found then don't add any labels.
          if( newStart==start)
@@ -953,7 +959,7 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
          //50 ms long, so jump ahead minWordSize
 
          auto newEnd   =
-         mVk->OffForward(*wt, newStart + minWordSize, len);
+         mVk->OffForward(**wt->Channels().begin(), newStart + minWordSize, len);
 
          //If newEnd didn't move, we should give up, because
          // there isn't another end before the end of the selection.
@@ -978,11 +984,14 @@ void TranscriptionToolBar::OnAutomateSelection(wxCommandEvent & WXUNUSED(event))
       SetButton(false, mButtons[TTB_AutomateSelection]);
    }
 }
+}
 
-void TranscriptionToolBar::OnMakeLabel(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnMakeLabel(wxCommandEvent &)
 {
+if constexpr (Experimental::VoiceDetection) {
    SetButton(false, mButtons[TTB_MakeLabel]);
    DoAddLabel( mProject, ViewInfo::Get( mProject ).selectedRegion );
+}
 }
 
 //This returns a double z-score between 0 and 10.
@@ -991,12 +1000,12 @@ double TranscriptionToolBar::GetSensitivity()
    return (double)mSensitivity;
 }
 
-void TranscriptionToolBar::OnSensitivitySlider(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::OnSensitivitySlider(wxCommandEvent &)
 {
    mSensitivity = (mSensitivitySlider->Get());
 }
 
-void TranscriptionToolBar::SetKeyType(wxCommandEvent & WXUNUSED(event))
+void TranscriptionToolBar::SetKeyType(wxCommandEvent &)
 {
    int value = mKeyTypeChoice->GetSelection();
 
@@ -1021,7 +1030,6 @@ void TranscriptionToolBar::SetKeyType(wxCommandEvent & WXUNUSED(event))
       }
 
 }
-#endif
 
 void TranscriptionToolBar::ShowPlaySpeedDialog()
 {

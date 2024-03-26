@@ -29,19 +29,21 @@ class BoundedEnvelope;
 class sampleCount;
 class WaveTrack;
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
+namespace Experimental {
+constexpr bool VoiceDetection = false;
+}
+
 class VoiceKey;
 //TTB 0-8 are button-ids, which also correspond to their
 //position in mButtons.  9 & 10 are ids for sliders, which aren't
 //in the button array.
-#endif
 
 enum
 {
    TTB_PlaySpeed,
    TTB_PlaySpeedSlider,
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
+   // For Experimental::VoiceDetection
    TTB_StartOn,
    TTB_EndOn,
    TTB_StartOff,
@@ -53,9 +55,9 @@ enum
    TTB_Calibrate,
    TTB_SensitivitySlider,
    TTB_KeyType,
-#endif
 
-   TTBNumButtons
+   TTBNumButtons = 1 +
+      (Experimental::VoiceDetection ? TTB_KeyType : TTB_PlaySpeedSlider)
 };
 
 class TranscriptionToolBar final : public ToolBar {
@@ -90,7 +92,6 @@ class TranscriptionToolBar final : public ToolBar {
    void OnFocus(wxFocusEvent &event);
    void OnCaptureKey(wxCommandEvent &event);
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
    void OnStartOn(wxCommandEvent & event);
    void OnStartOff(wxCommandEvent & event);
    void OnEndOn(wxCommandEvent & event);
@@ -111,7 +112,6 @@ class TranscriptionToolBar final : public ToolBar {
 
    double GetSensitivity();
    void SetKeyType(wxCommandEvent & event);
-#endif
 
    void PlayAtSpeed(bool looped, bool cutPreview);
    void ShowPlaySpeedDialog();
@@ -146,16 +146,15 @@ class TranscriptionToolBar final : public ToolBar {
    double mPlaySpeed;
    ASlider *mSensitivitySlider;
 
-#ifdef EXPERIMENTAL_VOICE_DETECTION
-   double mSensitivity;
-   std::unique_ptr<VoiceKey> mVk;
-   wxChoice *mKeyTypeChoice;
-#endif
-
    int mBackgroundWidth;
    int mBackgroundHeight;
 
    std::shared_ptr<BoundedEnvelope> mEnvelope;
+
+   // These are for Experimental::VoiceDetection
+   double mSensitivity{};
+   std::unique_ptr<VoiceKey> mVk;
+   wxChoice *mKeyTypeChoice{};
 
  public:
 
