@@ -27,7 +27,7 @@
 #include "log.h"
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::notation;
 using namespace mu::ui;
 

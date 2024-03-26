@@ -35,7 +35,7 @@
 
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 static HWND s_hwnd = 0;
 

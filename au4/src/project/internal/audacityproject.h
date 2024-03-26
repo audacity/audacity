@@ -3,7 +3,7 @@
 
 #include "../iaudacityproject.h"
 
-namespace mu::project {
+namespace au::project {
 class AudacityProject : public IAudacityProject
 {
 public:

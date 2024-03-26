@@ -71,7 +71,9 @@
 #include "view/navigableappmenumodel.h"
 #endif
 
-using namespace mu::appshell;
+using namespace mu;
+using namespace au::appshell;
+using namespace au::appshell;
 using namespace mu::modularity;
 using namespace mu::ui;
 using namespace mu::dock;

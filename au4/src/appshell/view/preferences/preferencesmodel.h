@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_PREFERENCESMODEL_H
-#define MU_APPSHELL_PREFERENCESMODEL_H
+#ifndef AU_APPSHELL_PREFERENCESMODEL_H
+#define AU_APPSHELL_PREFERENCESMODEL_H
 
 #include <QAbstractItemModel>
 
@@ -32,7 +32,7 @@
 #include "iappshellconfiguration.h"
 #include "preferencepageitem.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class PreferencesModel : public QAbstractItemModel
 {
     Q_OBJECT
@@ -86,4 +86,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_PREFERENCESMODEL_H
+#endif // AU_APPSHELL_PREFERENCESMODEL_H

@@ -22,7 +22,7 @@
 
 #include "sessionsmanager.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 void SessionsManager::init()
 {
@@ -60,13 +60,13 @@ bool SessionsManager::hasProjectsForRestore()
 
 void SessionsManager::restore()
 {
-    io::paths_t projects = configuration()->sessionProjectsPaths();
+    mu::io::paths_t projects = configuration()->sessionProjectsPaths();
     if (projects.empty()) {
         return;
     }
 
-    for (const io::path_t& path : projects) {
-        dispatcher()->dispatch("file-open", actions::ActionData::make_arg1<QUrl>(path.toQUrl()));
+    for (const mu::io::path_t& path : projects) {
+        dispatcher()->dispatch("file-open", mu::actions::ActionData::make_arg1<QUrl>(path.toQUrl()));
     }
 }
 
@@ -77,7 +77,7 @@ void SessionsManager::reset()
 
 void SessionsManager::update()
 {
-    io::path_t newProjectPath;
+    mu::io::path_t newProjectPath;
 
     //! TODO AU4
     // if (auto project = globalContext()->currentProject()) {
@@ -99,9 +99,9 @@ void SessionsManager::update()
     m_lastOpenedProjectPath = newProjectPath;
 }
 
-void SessionsManager::removeProjectFromSession(const io::path_t& projectPath)
+void SessionsManager::removeProjectFromSession(const mu::io::path_t& projectPath)
 {
-    io::paths_t projects = configuration()->sessionProjectsPaths();
+    mu::io::paths_t projects = configuration()->sessionProjectsPaths();
     if (projects.empty()) {
         return;
     }
@@ -112,7 +112,7 @@ void SessionsManager::removeProjectFromSession(const io::path_t& projectPath)
 
 void SessionsManager::addProjectToSession(const mu::io::path_t& projectPath)
 {
-    io::paths_t projects = configuration()->sessionProjectsPaths();
+    mu::io::paths_t projects = configuration()->sessionProjectsPaths();
 
     if (std::find(projects.begin(), projects.end(), projectPath) == projects.end()) {
         projects.push_back(projectPath);

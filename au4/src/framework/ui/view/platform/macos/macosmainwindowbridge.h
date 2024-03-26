@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H
-#define MU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H
+#ifndef AU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H
+#define AU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H
 
 #include "async/asyncable.h"
 #include "modularity/ioc.h"
@@ -48,4 +48,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H
+#endif // AU_APPSHELL_MACOS_MAINWINDOWBRIDGE_H

@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_MACOSSCROLLINGHOOK_H
-#define MU_APPSHELL_MACOSSCROLLINGHOOK_H
+#ifndef AU_APPSHELL_MACOSSCROLLINGHOOK_H
+#define AU_APPSHELL_MACOSSCROLLINGHOOK_H
 
 #include <QObject>
 
-namespace mu::appshell {
+namespace au::appshell {
 class MacOSScrollingHook : public QObject
 {
 public:
@@ -35,4 +35,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_MACOSSCROLLINGHOOK_H
+#endif // AU_APPSHELL_MACOSSCROLLINGHOOK_H

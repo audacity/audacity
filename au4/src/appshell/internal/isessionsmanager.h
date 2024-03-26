@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_ISESSIONSMANAGER_H
-#define MU_APPSHELL_ISESSIONSMANAGER_H
+#ifndef AU_APPSHELL_ISESSIONSMANAGER_H
+#define AU_APPSHELL_ISESSIONSMANAGER_H
 
 #include "modularity/imoduleinterface.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class ISessionsManager : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(ISessionsManager)
@@ -39,4 +39,4 @@ public:
 };
 }
 
-#endif // MU_APPSHELL_ISESSIONSMANAGER_H
+#endif // AU_APPSHELL_ISESSIONSMANAGER_H

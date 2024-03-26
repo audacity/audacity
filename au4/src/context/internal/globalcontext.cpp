@@ -22,8 +22,7 @@
 #include "globalcontext.h"
 
 using namespace mu::context;
-using namespace mu::project;
-using namespace mu::async;
+using namespace au::project;
 
 void GlobalContext::setCurrentProject(const IAudacityProjectPtr& project)
 {
@@ -40,7 +39,7 @@ IAudacityProjectPtr GlobalContext::currentProject() const
     return m_currentProject;
 }
 
-Notification GlobalContext::currentProjectChanged() const
+mu::async::Notification GlobalContext::currentProjectChanged() const
 {
     return m_currentProjectChanged;
 }

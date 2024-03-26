@@ -29,15 +29,15 @@ class GlobalContext : public mu::context::IGlobalContext
 {
 public:
 
-    void setCurrentProject(const project::IAudacityProjectPtr& project) override;
-    project::IAudacityProjectPtr currentProject() const override;
+    void setCurrentProject(const au::project::IAudacityProjectPtr& project) override;
+    au::project::IAudacityProjectPtr currentProject() const override;
     mu::async::Notification currentProjectChanged() const override;
 
     au::processing::ProcessingProjectPtr currentProcessingProject() const override;
     mu::async::Notification currentProcessingProjectChanged() const override;
 
 private:
-    project::IAudacityProjectPtr m_currentProject;
+    au::project::IAudacityProjectPtr m_currentProject;
     mu::async::Notification m_currentProjectChanged;
 };
 }

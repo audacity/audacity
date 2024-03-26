@@ -2,13 +2,13 @@
 
 #include <cstdlib>
 
-using namespace mu::project;
+using namespace au::project;
 using namespace au::processing;
 
 // just for test at the moment
 static double SAMPLE_RATE = 44100.0;
 
-int myrand(int min, int max)
+static int myrand(int min, int max)
 {
     static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0);
     return static_cast<int>(std::rand() * fraction * (max - min + 1) + min);

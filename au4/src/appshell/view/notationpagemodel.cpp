@@ -26,7 +26,7 @@
 
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 //using namespace mu::notation;
 using namespace mu::actions;
 

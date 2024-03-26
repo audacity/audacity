@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_LOADINGSCREENVIEW_H
-#define MU_APPSHELL_LOADINGSCREENVIEW_H
+#ifndef AU_APPSHELL_LOADINGSCREENVIEW_H
+#define AU_APPSHELL_LOADINGSCREENVIEW_H
 
 #include <QWidget>
 
@@ -33,7 +33,7 @@
 
 class QSvgRenderer;
 
-namespace mu::appshell {
+namespace au::appshell {
 class LoadingScreenView : public QWidget
 {
     Q_OBJECT
@@ -54,4 +54,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_LOADINGSCREENVIEW_H
+#endif // AU_APPSHELL_LOADINGSCREENVIEW_H

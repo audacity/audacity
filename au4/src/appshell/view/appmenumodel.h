@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_APPMENUMODEL_H
-#define MU_APPSHELL_APPMENUMODEL_H
+#ifndef AU_APPSHELL_APPMENUMODEL_H
+#define AU_APPSHELL_APPMENUMODEL_H
 
 #include <QWindow>
 
@@ -46,20 +46,19 @@ Q_MOC_INCLUDE(< QWindow >)
 // #include "extensions/iextensionsprovider.h"
 // #include "update/iupdateconfiguration.h"
 
-namespace mu::appshell {
-class AppMenuModel : public uicomponents::AbstractMenuModel
+namespace au::appshell {
+class AppMenuModel : public mu::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
-    INJECT(ui::IMainWindow, mainWindow)
-    INJECT(ui::IUiActionsRegister, uiActionsRegister)
-    INJECT(ui::INavigationController, navigationController)
-    INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(actions::IActionsDispatcher, actionsDispatcher)
+    INJECT(mu::ui::IMainWindow, mainWindow)
+    INJECT(mu::ui::IUiActionsRegister, uiActionsRegister)
+    INJECT(mu::ui::INavigationController, navigationController)
+    INJECT(mu::ui::IUiConfiguration, uiConfiguration)
+    INJECT(mu::actions::IActionsDispatcher, actionsDispatcher)
+    INJECT(mu::IGlobalConfiguration, globalConfiguration)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(IAppMenuModelHook, appMenuModelHook)
-
-    INJECT(IGlobalConfiguration, globalConfiguration)
 
 //! TODO AU4
     // INJECT(workspace::IWorkspaceManager, workspacesManager)
@@ -76,35 +75,35 @@ public:
 private:
     void setupConnections();
 
-    using uicomponents::AbstractMenuModel::makeMenuItem;
-    uicomponents::MenuItem* makeMenuItem(const actions::ActionCode& actionCode, uicomponents::MenuItemRole role);
+    using mu::uicomponents::AbstractMenuModel::makeMenuItem;
+    mu::uicomponents::MenuItem* makeMenuItem(const mu::actions::ActionCode& actionCode, mu::uicomponents::MenuItemRole role);
 
-    uicomponents::MenuItem* makeFileMenu();
-    uicomponents::MenuItem* makeEditMenu();
-    uicomponents::MenuItem* makeViewMenu();
-    uicomponents::MenuItem* makeAddMenu();
-    uicomponents::MenuItem* makeFormatMenu();
-    uicomponents::MenuItem* makeToolsMenu();
-    uicomponents::MenuItem* makePluginsMenu();
-    uicomponents::MenuItemList makePluginsMenuSubitems();
-    uicomponents::MenuItem* makeHelpMenu();
-    uicomponents::MenuItem* makeDiagnosticMenu();
+    mu::uicomponents::MenuItem* makeFileMenu();
+    mu::uicomponents::MenuItem* makeEditMenu();
+    mu::uicomponents::MenuItem* makeViewMenu();
+    mu::uicomponents::MenuItem* makeAddMenu();
+    mu::uicomponents::MenuItem* makeFormatMenu();
+    mu::uicomponents::MenuItem* makeToolsMenu();
+    mu::uicomponents::MenuItem* makePluginsMenu();
+    mu::uicomponents::MenuItemList makePluginsMenuSubitems();
+    mu::uicomponents::MenuItem* makeHelpMenu();
+    mu::uicomponents::MenuItem* makeDiagnosticMenu();
 
-    uicomponents::MenuItemList makeRecentScoresItems();
-    uicomponents::MenuItemList appendClearRecentSection(const uicomponents::MenuItemList& recentScores);
+    mu::uicomponents::MenuItemList makeRecentScoresItems();
+    mu::uicomponents::MenuItemList appendClearRecentSection(const mu::uicomponents::MenuItemList& recentScores);
 
-    uicomponents::MenuItemList makeNotesItems();
-    uicomponents::MenuItemList makeIntervalsItems();
-    uicomponents::MenuItemList makeTupletsItems();
-    uicomponents::MenuItemList makeMeasuresItems();
-    uicomponents::MenuItemList makeFramesItems();
-    uicomponents::MenuItemList makeTextItems();
-    uicomponents::MenuItemList makeLinesItems();
-    uicomponents::MenuItemList makeToolbarsItems();
-    uicomponents::MenuItemList makeWorkspacesItems();
-    uicomponents::MenuItemList makeShowItems();
-    uicomponents::MenuItemList makePluginsItems();
+    mu::uicomponents::MenuItemList makeNotesItems();
+    mu::uicomponents::MenuItemList makeIntervalsItems();
+    mu::uicomponents::MenuItemList makeTupletsItems();
+    mu::uicomponents::MenuItemList makeMeasuresItems();
+    mu::uicomponents::MenuItemList makeFramesItems();
+    mu::uicomponents::MenuItemList makeTextItems();
+    mu::uicomponents::MenuItemList makeLinesItems();
+    mu::uicomponents::MenuItemList makeToolbarsItems();
+    mu::uicomponents::MenuItemList makeWorkspacesItems();
+    mu::uicomponents::MenuItemList makeShowItems();
+    mu::uicomponents::MenuItemList makePluginsItems();
 };
 }
 
-#endif // MU_APPSHELL_APPMENUMODEL_H
+#endif // AU_APPSHELL_APPMENUMODEL_H

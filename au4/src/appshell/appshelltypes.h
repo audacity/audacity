@@ -20,12 +20,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_APPSHELLTYPES_H
-#define MU_APPSHELL_APPSHELLTYPES_H
+#ifndef AU_APPSHELL_APPSHELLTYPES_H
+#define AU_APPSHELL_APPSHELLTYPES_H
 
 #include <QString>
 
-namespace mu::appshell {
+namespace au::appshell {
 using DockName = QString;
 
 // Panels:
@@ -61,4 +61,4 @@ enum class StartupModeType
 };
 }
 
-#endif // MU_APPSHELL_APPSHELLTYPES_H
+#endif // AU_APPSHELL_APPSHELLTYPES_H

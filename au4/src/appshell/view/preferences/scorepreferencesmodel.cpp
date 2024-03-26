@@ -24,7 +24,7 @@
 #include "log.h"
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 ScorePreferencesModel::ScorePreferencesModel(QObject* parent)
     : QAbstractListModel(parent)

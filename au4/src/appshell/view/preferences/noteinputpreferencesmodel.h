@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
-#define MU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
+#define AU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
 
 #include <QObject>
 
@@ -29,7 +29,7 @@
 #include "notation/inotationconfiguration.h"
 #include "playback/iplaybackconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class NoteInputPreferencesModel : public QObject
 {
     Q_OBJECT
@@ -89,4 +89,4 @@ signals:
 };
 }
 
-#endif // MU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H
+#endif // AU_APPSHELL_NOTEINPUTPREFERENCESMODEL_H

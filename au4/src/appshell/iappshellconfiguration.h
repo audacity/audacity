@@ -19,17 +19,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_IAPPSHELLCONFIGURATION_H
-#define MU_APPSHELL_IAPPSHELLCONFIGURATION_H
+#ifndef AU_APPSHELL_IAPPSHELLCONFIGURATION_H
+#define AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 
 #include "modularity/imoduleinterface.h"
-#include "types/retval.h"
+#include "types/ret.h"
 
 #include "io/path.h"
 #include "appshelltypes.h"
 #include "async/notification.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class IAppShellConfiguration : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IAppshellConfiguration)
@@ -43,10 +43,10 @@ public:
     virtual StartupModeType startupModeType() const = 0;
     virtual void setStartupModeType(StartupModeType type) = 0;
 
-    virtual io::path_t startupScorePath() const = 0;
-    virtual void setStartupScorePath(const io::path_t& scorePath) = 0;
+    virtual mu::io::path_t startupScorePath() const = 0;
+    virtual void setStartupScorePath(const mu::io::path_t& scorePath) = 0;
 
-    virtual io::path_t userDataPath() const = 0;
+    virtual mu::io::path_t userDataPath() const = 0;
 
     virtual std::string handbookUrl() const = 0;
     virtual std::string askForHelpUrl() const = 0;
@@ -61,7 +61,7 @@ public:
 
     virtual bool isNotationNavigatorVisible() const = 0;
     virtual void setIsNotationNavigatorVisible(bool visible) const = 0;
-    virtual async::Notification isNotationNavigatorVisibleChanged() const = 0;
+    virtual mu::async::Notification isNotationNavigatorVisibleChanged() const = 0;
 
     virtual bool needShowSplashScreen() const = 0;
     virtual void setNeedShowSplashScreen(bool show) = 0;
@@ -72,9 +72,9 @@ public:
 
     virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const = 0;
 
-    virtual io::paths_t sessionProjectsPaths() const = 0;
-    virtual Ret setSessionProjectsPaths(const io::paths_t& paths) = 0;
+    virtual mu::io::paths_t sessionProjectsPaths() const = 0;
+    virtual mu::Ret setSessionProjectsPaths(const mu::io::paths_t& paths) = 0;
 };
 }
 
-#endif // MU_APPSHELL_IAPPSHELLCONFIGURATION_H
+#endif // AU_APPSHELL_IAPPSHELLCONFIGURATION_H

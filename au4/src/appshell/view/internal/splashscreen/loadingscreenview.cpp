@@ -30,7 +30,7 @@
 #include "translation.h"
 #include "muversion.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 static const QString imagePath(":/resources/LoadingScreen.svg");
 

@@ -20,15 +20,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
-#define MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
+#ifndef AU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
+#define AU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
 
 #include <QWidget>
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class NewInstanceLoadingScreenView : public QWidget
 {
     Q_OBJECT
@@ -48,4 +48,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H
+#endif // AU_APPSHELL_NEWINSTANCELOADINSCREENVIEW_H

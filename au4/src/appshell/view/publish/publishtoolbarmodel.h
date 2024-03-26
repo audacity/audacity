@@ -19,14 +19,13 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_PUBLISHTOOLBARMODEL_H
-#define MU_APPSHELL_PUBLISHTOOLBARMODEL_H
+#ifndef AU_APPSHELL_PUBLISHTOOLBARMODEL_H
+#define AU_APPSHELL_PUBLISHTOOLBARMODEL_H
 
-#include "modularity/ioc.h"
 #include "uicomponents/view/abstractmenumodel.h"
 
-namespace mu::appshell {
-class PublishToolBarModel : public uicomponents::AbstractMenuModel
+namespace au::appshell {
+class PublishToolBarModel : public mu::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
@@ -37,4 +36,4 @@ public:
 };
 }
 
-#endif // MU_APPSHELL_PUBLISHTOOLBARMODEL_H
+#endif // AU_APPSHELL_PUBLISHTOOLBARMODEL_H

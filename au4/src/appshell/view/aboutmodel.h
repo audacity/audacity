@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_ABOUTMODEL_H
-#define MU_APPSHELL_ABOUTMODEL_H
+#ifndef AU_APPSHELL_ABOUTMODEL_H
+#define AU_APPSHELL_ABOUTMODEL_H
 
 #include <QObject>
 
@@ -34,13 +34,13 @@
 
 class QUrl;
 
-namespace mu::appshell {
+namespace au::appshell {
 class AboutModel : public QObject
 {
     Q_OBJECT
 
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(IGlobalConfiguration, globalConfiguration)
+    INJECT(mu::IGlobalConfiguration, globalConfiguration)
 
 #ifdef MU_BUILD_UPDATE_MODULE
     INJECT(update::IUpdateConfiguration, updateConfiguration)
@@ -67,4 +67,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_ABOUTMODEL_H
+#endif // AU_APPSHELL_ABOUTMODEL_H

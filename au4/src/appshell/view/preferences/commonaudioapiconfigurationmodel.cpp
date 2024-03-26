@@ -27,7 +27,7 @@
 #include "translation.h"
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::audio;
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)

@@ -21,7 +21,7 @@
  */
 #include "saveandpublishpreferencesmodel.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 SaveAndPublishPreferencesModel::SaveAndPublishPreferencesModel(QObject* parent)
     : QObject(parent)
