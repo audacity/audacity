@@ -90,10 +90,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # Define to enable the device change handler
    #DEVICE_CHANGE_HANDLER
 
-   #Define to include crash reporting, if available in wxWidgets build
-   #This flag is used only in CrashReport.h; elsewhere use HAS_CRASH_REPORT
-   CRASH_REPORT
-
    # PRL 11 Jul 2017
    # Highlight more things in TrackPanel when the mouse moves over them,
    # using deliberately ugly pens and brushes until there is better cooperation
