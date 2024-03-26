@@ -19,12 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_MACOSAPPMENUMODELHOOK_H
-#define MU_APPSHELL_MACOSAPPMENUMODELHOOK_H
+#ifndef AU_APPSHELL_MACOSAPPMENUMODELHOOK_H
+#define AU_APPSHELL_MACOSAPPMENUMODELHOOK_H
 
 #include "../../iappmenumodelhook.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class MacOSAppMenuModelHook : public IAppMenuModelHook
 {
 public:
@@ -32,4 +32,4 @@ public:
 };
 }
 
-#endif // MU_APPSHELL_MACOSAPPMENUMODELHOOK_H
+#endif // AU_APPSHELL_MACOSAPPMENUMODELHOOK_H

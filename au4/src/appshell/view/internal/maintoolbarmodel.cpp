@@ -24,7 +24,7 @@
 
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 static const QString HOME_PAGE("musescore://home");
 static const QString PROJECT_PAGE("musescore://project");

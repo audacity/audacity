@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_APPSHELLMODULE_H
-#define MU_APPSHELL_APPSHELLMODULE_H
+#ifndef AU_APPSHELL_APPSHELLMODULE_H
+#define AU_APPSHELL_APPSHELLMODULE_H
 
 #include <memory>
 
@@ -29,7 +29,7 @@
 
 #include "modularity/imodulesetup.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class ApplicationActionController;
 class ApplicationUiActions;
 class AppShellConfiguration;
@@ -37,7 +37,7 @@ class SessionsManager;
 #ifdef Q_OS_MAC
 class MacOSScrollingHook;
  #endif
-class AppShellModule : public modularity::IModuleSetup
+class AppShellModule : public mu::modularity::IModuleSetup
 {
 public:
     AppShellModule();
@@ -50,9 +50,9 @@ public:
     void registerResources() override;
     void registerUiTypes() override;
 
-    void onPreInit(const IApplication::RunMode& mode) override;
-    void onInit(const IApplication::RunMode& mode) override;
-    void onAllInited(const IApplication::RunMode& mode) override;
+    void onPreInit(const mu::IApplication::RunMode& mode) override;
+    void onInit(const mu::IApplication::RunMode& mode) override;
+    void onAllInited(const mu::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
@@ -67,4 +67,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_APPSHELLMODULE_H
+#endif // AU_APPSHELL_APPSHELLMODULE_H

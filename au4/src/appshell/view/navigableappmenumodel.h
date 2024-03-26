@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
-#define MU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
+#ifndef AU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
+#define AU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
 
 #include <optional>
 
@@ -28,7 +28,7 @@
 
 #include "appmenumodel.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class NavigableAppMenuModel : public AppMenuModel
 {
     Q_OBJECT
@@ -102,7 +102,7 @@ private:
     QString highlightedMenuId() const;
     QString openedMenuId() const;
 
-    QString menuItemId(const uicomponents::MenuItemList& items, const QSet<int>& activatePossibleKeys);
+    QString menuItemId(const mu::uicomponents::MenuItemList& items, const QSet<int>& activatePossibleKeys);
 
     QString m_highlightedMenuId;
     QString m_openedMenuId;
@@ -117,4 +117,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_NAVIGABLEAPPMENUMODEL_H
+#endif // AU_APPSHELL_NAVIGABLEAPPMENUMODEL_H

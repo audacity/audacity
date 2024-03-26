@@ -94,7 +94,7 @@ int main(int argc, char** argv)
     // would otherwise default to the local ANSI code page and cause corruption of any non-ANSI Unicode characters in command-line arguments.
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-    mu::app::App app;
+    au::app::App app;
 
     //! NOTE `diagnostics` must be first, because it installs the crash handler.
     //! For other modules, the order is (an should be) unimportant.
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
     // modules
 #ifdef MU_BUILD_APPSHELL_MODULE
-    app.addModule(new mu::appshell::AppShellModule());
+    app.addModule(new au::appshell::AppShellModule());
 #endif
 
     app.addModule(new mu::context::ContextModule());

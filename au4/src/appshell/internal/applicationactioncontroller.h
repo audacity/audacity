@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_APPLICATIONCONTROLLER_H
-#define MU_APPSHELL_APPLICATIONCONTROLLER_H
+#ifndef AU_APPSHELL_APPLICATIONCONTROLLER_H
+#define AU_APPSHELL_APPLICATIONCONTROLLER_H
 
 #include <QObject>
 
@@ -43,16 +43,18 @@
 // #include "audio/isoundfontrepository.h"
 // #include "istartupscenario.h"
 
-namespace mu::appshell {
-class ApplicationActionController : public QObject, public IApplicationActionController, public actions::Actionable, public async::Asyncable
+namespace au::appshell {
+class ApplicationActionController : public QObject, public IApplicationActionController,
+                                    public mu::actions::Actionable,
+                                    public mu::async::Asyncable
 {
-    INJECT(actions::IActionsDispatcher, dispatcher)
-    INJECT(ui::IUiActionsRegister, actionsRegister)
-    INJECT(ui::IMainWindow, mainWindow)
+    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(mu::ui::IUiActionsRegister, actionsRegister)
+    INJECT(mu::ui::IMainWindow, mainWindow)
 
-    INJECT(IInteractive, interactive)
+    INJECT(mu::IInteractive, interactive)
+    INJECT(mu::IApplication, application)
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(IApplication, application)
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
@@ -63,7 +65,7 @@ public:
     void preInit();
     void init();
 
-    ValCh<bool> isFullScreen() const;
+    mu::ValCh<bool> isFullScreen() const;
 
     void onDragEnterEvent(QDragEnterEvent* event) override;
     void onDragMoveEvent(QDragMoveEvent* event) override;
@@ -74,7 +76,7 @@ private:
 
     void setupConnections();
 
-    bool quit(bool isAllInstances, const io::path_t& installerPath = io::path_t());
+    bool quit(bool isAllInstances, const mu::io::path_t& installerPath = mu::io::path_t());
     void restart();
 
     void toggleFullScreen();
@@ -90,8 +92,8 @@ private:
 
     bool m_quiting = false;
 
-    async::Channel<actions::ActionCodeList> m_actionsReceiveAvailableChanged;
+    mu::async::Channel<mu::actions::ActionCodeList> m_actionsReceiveAvailableChanged;
 };
 }
 
-#endif // MU_APPSHELL_APPLICATIONCONTROLLER_H
+#endif // AU_APPSHELL_APPLICATIONCONTROLLER_H

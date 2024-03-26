@@ -23,7 +23,7 @@
 
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 FoldersPreferencesModel::FoldersPreferencesModel(QObject* parent)
     : QAbstractListModel(parent)

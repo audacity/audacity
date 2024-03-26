@@ -25,7 +25,7 @@
 #include <QWheelEvent>
 #include <QApplication>
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 void MacOSScrollingHook::init()
 {

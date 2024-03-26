@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_APPLICATIONUIACTIONS_H
-#define MU_APPSHELL_APPLICATIONUIACTIONS_H
+#ifndef AU_APPSHELL_APPLICATIONUIACTIONS_H
+#define AU_APPSHELL_APPLICATIONUIACTIONS_H
 
 #include "ui/iuiactionsmodule.h"
 #include "applicationactioncontroller.h"
@@ -34,11 +34,11 @@
 
 #include "view/dockwindow/idockwindowprovider.h"
 
-namespace mu::appshell {
-class ApplicationUiActions : public ui::IUiActionsModule, public async::Asyncable
+namespace au::appshell {
+class ApplicationUiActions : public mu::ui::IUiActionsModule, public mu::async::Asyncable
 {
-    INJECT(ui::IMainWindow, mainWindow)
-    INJECT(dock::IDockWindowProvider, dockWindowProvider)
+    INJECT(mu::ui::IMainWindow, mainWindow)
+    INJECT(mu::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
@@ -48,25 +48,25 @@ public:
 
     void init();
 
-    const ui::UiActionList& actionsList() const override;
+    const mu::ui::UiActionList& actionsList() const override;
 
-    bool actionEnabled(const ui::UiAction& act) const override;
-    async::Channel<actions::ActionCodeList> actionEnabledChanged() const override;
+    bool actionEnabled(const mu::ui::UiAction& act) const override;
+    mu::async::Channel<mu::actions::ActionCodeList> actionEnabledChanged() const override;
 
-    bool actionChecked(const ui::UiAction& act) const override;
-    async::Channel<actions::ActionCodeList> actionCheckedChanged() const override;
+    bool actionChecked(const mu::ui::UiAction& act) const override;
+    mu::async::Channel<mu::actions::ActionCodeList> actionCheckedChanged() const override;
 
-    static const QMap<actions::ActionCode, DockName>& toggleDockActions();
+    static const QMap<mu::actions::ActionCode, DockName>& toggleDockActions();
 
 private:
-    void listenOpenedDocksChanged(dock::IDockWindow* window);
+    void listenOpenedDocksChanged(mu::dock::IDockWindow* window);
 
-    static const ui::UiActionList m_actions;
+    static const mu::ui::UiActionList m_actions;
 
     std::shared_ptr<ApplicationActionController> m_controller;
-    async::Channel<actions::ActionCodeList> m_actionEnabledChanged;
-    async::Channel<actions::ActionCodeList> m_actionCheckedChanged;
+    mu::async::Channel<mu::actions::ActionCodeList> m_actionEnabledChanged;
+    mu::async::Channel<mu::actions::ActionCodeList> m_actionCheckedChanged;
 };
 }
 
-#endif // MU_APPSHELL_APPLICATIONUIACTIONS_H
+#endif // AU_APPSHELL_APPLICATIONUIACTIONS_H

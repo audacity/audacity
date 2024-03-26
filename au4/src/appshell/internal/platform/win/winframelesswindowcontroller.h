@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
-#define MU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
+#ifndef AU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
+#define AU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
 
 #include <QObject>
 
@@ -33,11 +33,11 @@
 
 #include "windows.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class WinFramelessWindowController : public QObject, public FramelessWindowController
 {
-    INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(ui::IMainWindow, mainWindow)
+    INJECT(mu::ui::IUiConfiguration, uiConfiguration)
+    INJECT(mu::ui::IMainWindow, mainWindow)
 
 public:
     explicit WinFramelessWindowController();
@@ -78,4 +78,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H
+#endif // AU_APPSHELL_WINFRAMELESSWINDOWCONTROLLER_H

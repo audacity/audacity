@@ -3,7 +3,7 @@
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace mu::project;
+using namespace au::project;
 using namespace au::processing;
 
 void TracksListModel::load()

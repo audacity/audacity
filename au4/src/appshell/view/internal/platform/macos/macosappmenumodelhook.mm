@@ -24,7 +24,7 @@
 
 #include <Cocoa/Cocoa.h>
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 void MacOSAppMenuModelHook::onAppMenuInited()
 {

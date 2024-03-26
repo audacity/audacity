@@ -27,7 +27,7 @@
 #include "translation.h"
 #include "ui/view/iconcodes.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 using namespace mu::ui;
 
 PreferencesModel::PreferencesModel(QObject* parent)

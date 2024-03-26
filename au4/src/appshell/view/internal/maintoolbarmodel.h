@@ -31,13 +31,13 @@
 #include "iglobalconfiguration.h"
 #include "context/iglobalcontext.h"
 
-namespace mu::appshell {
-class MainToolBarModel : public QAbstractListModel, public async::Asyncable
+namespace au::appshell {
+class MainToolBarModel : public QAbstractListModel, public mu::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(context::IGlobalContext, context)
-    INJECT(IGlobalConfiguration, globalConfiguration)
+    INJECT(mu::context::IGlobalContext, context)
+    INJECT(mu::IGlobalConfiguration, globalConfiguration)
 
 public:
     explicit MainToolBarModel(QObject* parent = nullptr);

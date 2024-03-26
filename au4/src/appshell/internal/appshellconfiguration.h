@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_APPSHELLCONFIGURATION_H
-#define MU_APPSHELL_APPSHELLCONFIGURATION_H
+#ifndef AU_APPSHELL_APPSHELLCONFIGURATION_H
+#define AU_APPSHELL_APPSHELLCONFIGURATION_H
 
 #include "async/asyncable.h"
 
@@ -35,10 +35,10 @@
 
 #include "iappshellconfiguration.h"
 
-namespace mu::appshell {
-class AppShellConfiguration : public IAppShellConfiguration, public async::Asyncable
+namespace au::appshell {
+class AppShellConfiguration : public IAppShellConfiguration, public mu::async::Asyncable
 {
-    INJECT(IGlobalConfiguration, globalConfiguration)
+    INJECT(mu::IGlobalConfiguration, globalConfiguration)
     // INJECT(io::IFileSystem, fileSystem)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     // INJECT(ui::IUiConfiguration, uiConfiguration)
@@ -56,10 +56,10 @@ public:
     StartupModeType startupModeType() const override;
     void setStartupModeType(StartupModeType type) override;
 
-    io::path_t startupScorePath() const override;
-    void setStartupScorePath(const io::path_t& scorePath) override;
+    mu::io::path_t startupScorePath() const override;
+    void setStartupScorePath(const mu::io::path_t& scorePath) override;
 
-    io::path_t userDataPath() const override;
+    mu::io::path_t userDataPath() const override;
 
     std::string handbookUrl() const override;
     std::string askForHelpUrl() const override;
@@ -74,7 +74,7 @@ public:
 
     bool isNotationNavigatorVisible() const override;
     void setIsNotationNavigatorVisible(bool visible) const override;
-    async::Notification isNotationNavigatorVisibleChanged() const override;
+    mu::async::Notification isNotationNavigatorVisibleChanged() const override;
 
     bool needShowSplashScreen() const override;
     void setNeedShowSplashScreen(bool show) override;
@@ -85,22 +85,22 @@ public:
 
     void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
 
-    io::paths_t sessionProjectsPaths() const override;
-    Ret setSessionProjectsPaths(const io::paths_t& paths) override;
+    mu::io::paths_t sessionProjectsPaths() const override;
+    mu::Ret setSessionProjectsPaths(const mu::io::paths_t& paths) override;
 
 private:
     std::string utmParameters(const std::string& utmMedium) const;
 
     std::string currentLanguageCode() const;
 
-    io::path_t sessionDataPath() const;
-    io::path_t sessionFilePath() const;
+    mu::io::path_t sessionDataPath() const;
+    mu::io::path_t sessionFilePath() const;
 
-    RetVal<mu::ByteArray> readSessionState() const;
-    Ret writeSessionState(const QByteArray& data);
+    mu::RetVal<mu::ByteArray> readSessionState() const;
+    mu::Ret writeSessionState(const QByteArray& data);
 
-    io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
+    mu::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
 };
 }
 
-#endif // MU_APPSHELL_APPSHELLCONFIGURATION_H
+#endif // AU_APPSHELL_APPSHELLCONFIGURATION_H

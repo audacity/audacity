@@ -31,7 +31,7 @@
 #include "log.h"
 
 using namespace mu;
-using namespace mu::appshell;
+using namespace au::appshell;
 
 static const std::string module_name("appshell");
 

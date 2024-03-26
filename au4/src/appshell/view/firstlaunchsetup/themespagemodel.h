@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_THEMESPAGEMODEL_H
-#define MU_APPSHELL_THEMESPAGEMODEL_H
+#ifndef AU_APPSHELL_THEMESPAGEMODEL_H
+#define AU_APPSHELL_THEMESPAGEMODEL_H
 
 #include <QObject>
 
@@ -29,8 +29,8 @@
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
 
-namespace mu::appshell {
-class ThemesPageModel : public QObject, public async::Asyncable
+namespace au::appshell {
+class ThemesPageModel : public QObject, public mu::async::Asyncable
 {
     Q_OBJECT
 
@@ -45,7 +45,7 @@ class ThemesPageModel : public QObject, public async::Asyncable
     Q_PROPERTY(QString currentThemeCode READ currentThemeCode WRITE setCurrentThemeCode NOTIFY themesChanged)
     Q_PROPERTY(int currentAccentColorIndex READ currentAccentColorIndex WRITE setCurrentAccentColorIndex NOTIFY themesChanged)
 
-    INJECT(ui::IUiConfiguration, uiConfiguration)
+    INJECT(mu::ui::IUiConfiguration, uiConfiguration)
 
 public:
     explicit ThemesPageModel(QObject* parent = nullptr);
@@ -75,9 +75,9 @@ signals:
     void themesChanged();
 
 private:
-    ui::ThemeInfo currentTheme() const;
-    ui::ThemeList allThemes() const;
+    mu::ui::ThemeInfo currentTheme() const;
+    mu::ui::ThemeList allThemes() const;
 };
 }
 
-#endif // MU_APPSHELL_THEMESPAGEMODEL_H
+#endif // AU_APPSHELL_THEMESPAGEMODEL_H

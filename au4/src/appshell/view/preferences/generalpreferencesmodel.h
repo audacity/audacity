@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_GENERALPREFERENCESMODEL_H
-#define MU_APPSHELL_GENERALPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_GENERALPREFERENCESMODEL_H
+#define AU_APPSHELL_GENERALPREFERENCESMODEL_H
 
 #include <QObject>
 
@@ -36,7 +36,7 @@
 #include "shortcuts/ishortcutsconfiguration.h"
 #include "project/iprojectconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class GeneralPreferencesModel : public QObject, public async::Asyncable
 {
     Q_OBJECT
@@ -122,4 +122,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_GENERALPREFERENCESMODEL_H
+#endif // AU_APPSHELL_GENERALPREFERENCESMODEL_H

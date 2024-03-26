@@ -27,7 +27,7 @@
 #include "internal/audacityproject.h"
 
 using namespace au::project;
-using namespace mu::project;
+using namespace au::project;
 using namespace mu::modularity;
 
 std::string ProjectModule::moduleName() const

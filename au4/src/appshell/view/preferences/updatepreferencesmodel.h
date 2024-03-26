@@ -19,15 +19,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_UPDATEPREFERENCESMODEL_H
-#define MU_APPSHELL_UPDATEPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_UPDATEPREFERENCESMODEL_H
+#define AU_APPSHELL_UPDATEPREFERENCESMODEL_H
 
 #include <QObject>
 
 #include "modularity/ioc.h"
 #include "update/iupdateconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class UpdatePreferencesModel : public QObject
 {
     Q_OBJECT
@@ -53,4 +53,4 @@ signals:
 };
 }
 
-#endif // MU_APPSHELL_UPDATEPREFERENCESMODEL_H
+#endif // AU_APPSHELL_UPDATEPREFERENCESMODEL_H

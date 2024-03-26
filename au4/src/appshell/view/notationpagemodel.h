@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_NOTATIONPAGEMODEL_H
-#define MU_APPSHELL_NOTATIONPAGEMODEL_H
+#ifndef AU_APPSHELL_NOTATIONPAGEMODEL_H
+#define AU_APPSHELL_NOTATIONPAGEMODEL_H
 
 #include <QQuickItem>
 
@@ -35,15 +35,15 @@
 //! TODO AU4
 // #include "braille/ibrailleconfiguration.h"
 
-namespace mu::appshell {
-class NotationPageModel : public QObject, public async::Asyncable, public actions::Actionable
+namespace au::appshell {
+class NotationPageModel : public QObject, public mu::async::Asyncable, public mu::actions::Actionable
 {
     Q_OBJECT
 
-    INJECT(actions::IActionsDispatcher, dispatcher)
-    INJECT(context::IGlobalContext, globalContext)
+    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(mu::context::IGlobalContext, globalContext)
+    INJECT(mu::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(dock::IDockWindowProvider, dockWindowProvider)
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
@@ -89,4 +89,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_NOTATIONPAGEMODEL_H
+#endif // AU_APPSHELL_NOTATIONPAGEMODEL_H

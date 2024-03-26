@@ -20,15 +20,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_WINDOWDROPAREA_H
-#define MU_APPSHELL_WINDOWDROPAREA_H
+#ifndef AU_APPSHELL_WINDOWDROPAREA_H
+#define AU_APPSHELL_WINDOWDROPAREA_H
 
 #include <QQuickItem>
 
 #include "modularity/ioc.h"
 #include "iapplicationactioncontroller.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class WindowDropArea : public QQuickItem
 {
     INJECT(IApplicationActionController, applicationActionController)
@@ -42,4 +42,4 @@ protected:
 };
 }
 
-#endif // MU_APPSHELL_WINDOWDROPAREA_H
+#endif // AU_APPSHELL_WINDOWDROPAREA_H

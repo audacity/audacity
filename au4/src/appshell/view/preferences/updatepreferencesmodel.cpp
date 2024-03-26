@@ -25,7 +25,7 @@
 #include "log.h"
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 UpdatePreferencesModel::UpdatePreferencesModel(QObject* parent)
     : QObject(parent)

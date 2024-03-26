@@ -9,7 +9,7 @@
 #include "global/async/notification.h"
 #include "processing/dom/processingproject.h"
 
-namespace mu::project {
+namespace au::project {
 class IAudacityProject
 {
 public:

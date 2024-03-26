@@ -34,8 +34,8 @@ class IGlobalContext : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IGlobalContext() = default;
 
-    virtual void setCurrentProject(const project::IAudacityProjectPtr& project) = 0;
-    virtual project::IAudacityProjectPtr currentProject() const = 0;
+    virtual void setCurrentProject(const au::project::IAudacityProjectPtr& project) = 0;
+    virtual au::project::IAudacityProjectPtr currentProject() const = 0;
     virtual mu::async::Notification currentProjectChanged() const = 0;
 
     virtual au::processing::ProcessingProjectPtr currentProcessingProject() const = 0;

@@ -24,7 +24,7 @@
 
 #include "log.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 NoteInputPreferencesModel::NoteInputPreferencesModel(QObject* parent)
     : QObject(parent)

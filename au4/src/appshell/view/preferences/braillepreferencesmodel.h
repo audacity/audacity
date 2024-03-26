@@ -20,15 +20,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_BRAILLEPREFERENCESMODEL_H
-#define MU_APPSHELL_BRAILLEPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_BRAILLEPREFERENCESMODEL_H
+#define AU_APPSHELL_BRAILLEPREFERENCESMODEL_H
 
 #include <QObject>
 
 #include "modularity/ioc.h"
 #include "braille/ibrailleconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class BraillePreferencesModel : public QObject
 {
     Q_OBJECT
@@ -61,4 +61,4 @@ signals:
 };
 }
 
-#endif // MU_APPSHELL_BRAILLEPREFERENCESMODEL_H
+#endif // AU_APPSHELL_BRAILLEPREFERENCESMODEL_H

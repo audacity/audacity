@@ -19,14 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
-#define MU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
+#ifndef AU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
+#define AU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
 
 #include <QAbstractListModel>
 
 #include "settings.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class AdvancedPreferencesModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -60,4 +60,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_ADVANCEDPREFERENCESMODEL_H
+#endif // AU_APPSHELL_ADVANCEDPREFERENCESMODEL_H

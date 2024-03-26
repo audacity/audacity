@@ -20,14 +20,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_APPSHELL_SPLASHSCREEN_H
-#define MU_APPSHELL_SPLASHSCREEN_H
+#ifndef AU_APPSHELL_SPLASHSCREEN_H
+#define AU_APPSHELL_SPLASHSCREEN_H
 
 #include <QWidget>
 
 class QSvgRenderer;
 
-namespace mu::appshell {
+namespace au::appshell {
 class SplashScreen : public QWidget
 {
 public:
@@ -48,4 +48,4 @@ private:
 };
 }
 
-#endif // MU_APPSHELL_SPLASHSCREEN_H
+#endif // AU_APPSHELL_SPLASHSCREEN_H

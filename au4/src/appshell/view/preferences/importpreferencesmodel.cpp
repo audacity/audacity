@@ -27,7 +27,7 @@
 
 #include "translation.h"
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 ImportPreferencesModel::ImportPreferencesModel(QObject* parent)
     : QObject(parent)

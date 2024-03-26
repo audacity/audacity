@@ -5,7 +5,7 @@
 #include <QString>
 #include "global/io/path.h"
 
-namespace mu::project {
+namespace au::project {
 struct ProjectFile {
     QUrl url;
     QString displayNameOverride = {};
@@ -15,7 +15,7 @@ struct ProjectFile {
     ProjectFile(const QUrl& url, const QString& displayNameOverride = {})
         : url(url), displayNameOverride(displayNameOverride) {}
 
-    ProjectFile(const io::path_t& path, const QString& displayNameOverride = {})
+    ProjectFile(const mu::io::path_t& path, const QString& displayNameOverride = {})
         : url(path.toQUrl()), displayNameOverride(displayNameOverride) {}
 
     bool isNull() const
@@ -43,20 +43,18 @@ struct ProjectFile {
             return displayNameOverride;
         }
 
-        return io::filename(path(), includingExtension).toQString();
+        return mu::io::filename(path(), includingExtension).toQString();
     }
 
-    io::path_t path() const
+    mu::io::path_t path() const
     {
         assert(url.isEmpty() || url.isLocalFile());
-
-        return io::path_t(url);
+        return mu::io::path_t(url);
     }
 
     bool operator ==(const ProjectFile& other) const
     {
-        return url == other.url
-               && displayNameOverride == other.displayNameOverride;
+        return url == other.url && displayNameOverride == other.displayNameOverride;
     }
 
     bool operator !=(const ProjectFile& other) const

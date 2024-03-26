@@ -40,7 +40,7 @@
 
 #include "global/iglobalconfiguration.h"
 
-namespace mu::appshell {
+namespace au::appshell {
 class NotationStatusBarModel : public QObject, public async::Asyncable, public actions::Actionable
 {
     Q_OBJECT

@@ -30,7 +30,7 @@
 #include "internal/framelesswindowcontroller.h"
 #endif
 
-using namespace mu::appshell;
+using namespace au::appshell;
 
 FramelessWindowModel::FramelessWindowModel(QObject* parent)
     : QObject(parent)
