@@ -275,10 +275,9 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
       mTempSettings.spectralSelection);
 #endif
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
+      if constexpr(Experimental::FftYGrid)
          S.TieCheckBox(XO("Show a grid along the &Y-axis"),
             mTempSettings.fftYGrid);
-#endif //EXPERIMENTAL_FFT_Y_GRID
 
       if constexpr (Experimental::FindNotes) {
          /* i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated*/

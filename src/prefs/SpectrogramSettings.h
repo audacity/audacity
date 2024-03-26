@@ -182,9 +182,8 @@ public:
    };
    Algorithm algorithm;
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool fftYGrid;
-#endif //EXPERIMENTAL_FFT_Y_GRID
+   // Experimental::FftYGrid
+   bool fftYGrid{};
 
    // Following fields are derived from preferences.
 
@@ -226,6 +225,7 @@ public:
    PointerType Clone() const override;
 
    void GetBounds(const WaveChannel &wc, float &min, float &max) const;
+   std::pair<float, float> GetBounds(const WaveChannel &wt) const;
 
    void SetBounds(float min, float max)
    { mSpectrumMin = min, mSpectrumMax = max; }

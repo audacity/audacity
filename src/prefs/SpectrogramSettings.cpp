@@ -74,10 +74,9 @@ ConditionallyPresent<BoolSetting, Experimental::FindNotes>
 SpectrumFindNotesQuantize{
    L"/Spectrum/FindNotesQuantize", false };
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-BoolSetting SpectrumYGrid{
+ConditionallyPresent<BoolSetting, Experimental::FftYGrid>
+SpectrumYGrid{
    L"/Spectrum/FFTYGrid", false};
-#endif
 }
 
 SpectrogramSettings::Globals::Globals()
@@ -161,9 +160,8 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
    , spectralSelection(other.spectralSelection)
 #endif
    , algorithm(other.algorithm)
-#ifdef EXPERIMENTAL_FFT_Y_GRID
+
    , fftYGrid(other.fftYGrid)
-#endif
 
    , fftFindNotes(other.fftFindNotes)
    , findNotesMinA(other.findNotesMinA)
@@ -195,9 +193,8 @@ SpectrogramSettings &SpectrogramSettings::operator= (const SpectrogramSettings &
       spectralSelection = other.spectralSelection;
 #endif
       algorithm = other.algorithm;
-#ifdef EXPERIMENTAL_FFT_Y_GRID
+
       fftYGrid = other.fftYGrid;
-#endif
 
       fftFindNotes = other.fftFindNotes;
       findNotesMinA = other.findNotesMinA;
@@ -387,9 +384,8 @@ void SpectrogramSettings::LoadPrefs()
 
    algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   fftYGrid = SpectrumYGrid.Read();
-#endif //EXPERIMENTAL_FFT_Y_GRID
+   if constexpr(Experimental::FftYGrid)
+      fftYGrid = SpectrumYGrid->Read();
 
    if constexpr (Experimental::FindNotes) {
       fftFindNotes = SpectrumFindNotes->Read();
@@ -433,9 +429,8 @@ void SpectrogramSettings::SavePrefs()
 
    SpectrumAlgorithm.Write(static_cast<int>(algorithm));
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   SpectrumYGrid.Write(fftYGrid);
-#endif //EXPERIMENTAL_FFT_Y_GRID
+   if constexpr(Experimental::FftYGrid)
+      SpectrumYGrid->Write(fftYGrid);
 
    if constexpr (Experimental::FindNotes) {
       SpectrumFindNotes->Write(fftFindNotes);
@@ -487,10 +482,9 @@ void SpectrogramSettings::UpdatePrefs()
    if (algorithm == defaults().algorithm)
       algorithm = static_cast<Algorithm>(SpectrumAlgorithm.Read());
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   if (fftYGrid == defaults().fftYGrid)
-      fftYGrid = SpectrumYGrid.Read();
-#endif //EXPERIMENTAL_FFT_Y_GRID
+   if constexpr(Experimental::FftYGrid)
+      if (fftYGrid == defaults().fftYGrid)
+         fftYGrid = SpectrumYGrid->Read();
 
    if constexpr (Experimental::FindNotes) {
       if (fftFindNotes == defaults().fftFindNotes)
@@ -770,4 +764,11 @@ void SpectrogramBounds::GetBounds(
       else
          min = std::clamp(spectrumMin, bottom, top);
    }
+}
+
+std::pair<float, float> SpectrogramBounds::GetBounds(const WaveChannel &wt) const
+{
+   float min, max;
+   GetBounds(wt, min, max);
+   return { min, max };
 }

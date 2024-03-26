@@ -44,6 +44,11 @@ constexpr bool ThemePrefs = false;
  to activate it instead of the Spectrum log(f) mode.
  */
 constexpr bool FindNotes = false;
+
+/* AM, 22.Nov 2007:
+ A Frequency Grid for the Spectrum Log(f) & Find Notes modes
+ */
+constexpr bool FftYGrid = false;
 }
 
 #endif

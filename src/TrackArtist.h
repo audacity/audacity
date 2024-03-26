@@ -109,9 +109,8 @@ public:
    wxBrush beatStrongSelBrush;
    wxBrush beatWeakSelBrush;
 
-#ifdef EXPERIMENTAL_FFT_Y_GRID
-   bool fftYGridOld;
-#endif //EXPERIMENTAL_FFT_Y_GRID
+   // Experimental::FftYGrid
+   bool fftYGridOld{};
 
    const SelectedRegion *pSelectedRegion{};
    ZoomInfo *pZoomInfo{};
