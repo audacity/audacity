@@ -32,11 +32,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # EQ accelerated code
    #EQ_SSE_THREADED
 
-   # Define this so that sync-lock tiles shine through spectrogram.
-   # The spectrogram pastes a bitmap over the tiles.
-   # This makes it use alpha blending, most transparent where least intense.
-   #SPECTROGRAM_OVERLAY
-
    #August 2009 - Theming not locked down enough for a stable release.
    # This turns on the Theme panel in Prefs dialog.
    #THEME_PREFS

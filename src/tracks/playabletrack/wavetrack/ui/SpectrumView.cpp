@@ -42,6 +42,15 @@ Paul Licameli split from WaveChannelView.cpp
 
 #include "float_cast.h"
 
+namespace Experimental {
+/*
+ Define this so that sync-lock tiles shine through spectrogram.
+ The spectrogram pastes a bitmap over the tiles.
+ This makes it use alpha blending, most transparent where least intense.
+ */
+constexpr bool SpectrogramOverlay = false;
+}
+
 class BrushHandle;
 class SpectralData;
 
@@ -414,10 +423,11 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
    wxImage image((int)mid.width, (int)mid.height);
    if (!image.IsOk())
       return;
-#ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
-   image.SetAlpha();
-   unsigned char *alpha = image.GetAlpha();
-#endif
+   unsigned char *alpha{};
+   if constexpr (Experimental::SpectrogramOverlay) {
+      image.SetAlpha();
+      alpha = image.GetAlpha();
+   }
    unsigned char *data = image.GetData();
 
    const auto half = settings.GetFFTLength() / 2;
@@ -826,10 +836,9 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
          }
 #endif //EXPERIMENTAL_FFT_Y_GRID
          int px = ((mid.height - 1 - yy) * mid.width + xx);
-#ifdef EXPERIMENTAL_SPECTROGRAM_OVERLAY
-         // More transparent the closer to zero intensity.
-         alpha[px]= wxMin( 200, (value+0.3) * 500) ;
-#endif
+         if constexpr (Experimental::SpectrogramOverlay)
+            // More transparent the closer to zero intensity.
+            alpha[px]= wxMin( 200, (value+0.3) * 500) ;
          px *=3;
          data[px++] = rv;
          data[px++] = gv;
