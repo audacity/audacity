@@ -23,7 +23,12 @@
 
 #include "modularity/ioc.h"
 
+#include "context/iglobalcontext.h"
+#include "internal/audacityproject.h"
+
 using namespace au::project;
+using namespace mu::project;
+using namespace mu::modularity;
 
 std::string ProjectModule::moduleName() const
 {
@@ -36,6 +41,10 @@ void ProjectModule::registerExports()
 
 void ProjectModule::onInit(const mu::IApplication::RunMode&)
 {
+    //! NOTE Make mock project for tests
+    IAudacityProjectPtr p = AudacityProject::makeMock();
+    auto context = ioc()->resolve<mu::context::IGlobalContext>(moduleName());
+    context->setCurrentProject(p);
 }
 
 void ProjectModule::onDeinit()

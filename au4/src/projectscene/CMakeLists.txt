@@ -35,13 +35,29 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackslistmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavesource.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavesource.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackclipsitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackclipsitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipitem.h
     )
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
+set(MODULE_LINK processing)
+
 include(SetupModule)
+
+

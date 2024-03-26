@@ -7,12 +7,14 @@ namespace mu::project {
 class AudacityProject : public IAudacityProject
 {
 public:
-    AudacityProject() = default;
+    AudacityProject();
 
-    const au::processing::ProcessingProject& processingProject() const override;
+    static IAudacityProjectPtr makeMock();
+
+    const au::processing::ProcessingProjectPtr processingProject() const override;
 
 private:
-    au::processing::ProcessingProject m_processingProject;
+    au::processing::ProcessingProjectPtr m_processingProject;
 };
 }
 

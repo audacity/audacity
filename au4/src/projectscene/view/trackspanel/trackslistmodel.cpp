@@ -4,16 +4,16 @@
 
 using namespace au::projectscene;
 using namespace mu::project;
+using namespace au::processing;
 
 void TracksListModel::load()
 {
-    IAudacityProjectPtr prj = globalContext()->currentProject();
+    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     if (!prj) {
         return;
     }
 
-    processing::ProcessingProject proc = prj->processingProject();
-    const processing::TrackList& tracks = proc.trackList();
+    const TrackList& tracks = prj->trackList();
     UNUSED(tracks);
 
     //! TODO Make view items

@@ -72,6 +72,7 @@ if (MU_BUILD_APPSHELL_MODULE)
 endif()
 
 list(APPEND LINK_LIB context)
+list(APPEND LINK_LIB project)
 
 if (MU_BUILD_PROJECTSCENE_MODULE)
     list(APPEND LINK_LIB projectscene)
