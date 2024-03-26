@@ -107,9 +107,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # preference dialog whenever any keystroke shortcuts with Shift+ are used
    # EASY_CHANGE_KEY_BINDINGS
 
-   # PRL 31 July 2018
-   DRAGGABLE_PLAY_HEAD
-
    # Poke 13 Nov 2019
    SUBRIP_LABEL_FORMATS
 )
