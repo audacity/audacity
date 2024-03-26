@@ -24,11 +24,19 @@ set(MODULE project)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
     ${CMAKE_CURRENT_LIST_DIR}/projecttypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectconfiguration.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
     )
 
 include(SetupModule)
+

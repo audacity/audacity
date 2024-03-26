@@ -23,6 +23,11 @@
 
 #include "modularity/ioc.h"
 
+#include "internal/projectconfiguration.h"
+#include "internal/projectuiactions.h"
+
+#include "ui/iuiactionsregister.h"
+
 #include "context/iglobalcontext.h"
 #include "internal/audacityproject.h"
 
@@ -37,10 +42,23 @@ std::string ProjectModule::moduleName() const
 
 void ProjectModule::registerExports()
 {
+    m_actionsController = std::make_shared<ProjectActionsController>();
+
+    ioc()->registerExport<IProjectConfiguration>(moduleName(), new ProjectConfiguration());
+}
+
+void ProjectModule::resolveImports()
+{
+    auto ar = ioc()->resolve<mu::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(std::make_shared<ProjectUiActions>(m_actionsController));
+    }
 }
 
 void ProjectModule::onInit(const mu::IApplication::RunMode&)
 {
+    m_actionsController->init();
+
     //! NOTE Make mock project for tests
     IAudacityProjectPtr p = AudacityProject::makeMock();
     auto context = ioc()->resolve<mu::context::IGlobalContext>(moduleName());

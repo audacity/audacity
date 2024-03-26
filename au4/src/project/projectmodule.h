@@ -27,16 +27,20 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::project {
+class ProjectActionsController;
 class ProjectModule : public mu::modularity::IModuleSetup
 {
 public:
 
     std::string moduleName() const override;
     void registerExports() override;
+    void resolveImports() override;
     void onInit(const mu::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
+
+    std::shared_ptr<ProjectActionsController> m_actionsController;
 };
 }
 
