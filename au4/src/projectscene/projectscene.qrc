@@ -3,5 +3,6 @@
         <file>qml/Audacity/ProjectScene/qmldir</file>
         <file>qml/Audacity/ProjectScene/PlayToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/TracksPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/ClipsView.qml</file>
     </qresource>
 </RCC>

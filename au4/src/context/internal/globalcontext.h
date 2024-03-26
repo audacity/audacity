@@ -33,6 +33,9 @@ public:
     project::IAudacityProjectPtr currentProject() const override;
     mu::async::Notification currentProjectChanged() const override;
 
+    au::processing::ProcessingProjectPtr currentProcessingProject() const override;
+    mu::async::Notification currentProcessingProjectChanged() const override;
+
 private:
     project::IAudacityProjectPtr m_currentProject;
     mu::async::Notification m_currentProjectChanged;

@@ -44,3 +44,14 @@ Notification GlobalContext::currentProjectChanged() const
 {
     return m_currentProjectChanged;
 }
+
+au::processing::ProcessingProjectPtr GlobalContext::currentProcessingProject() const
+{
+    return m_currentProject ? m_currentProject->processingProject() : nullptr;
+}
+
+mu::async::Notification GlobalContext::currentProcessingProjectChanged() const
+{
+    //! NOTE Same as main project
+    return m_currentProjectChanged;
+}

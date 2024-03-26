@@ -30,8 +30,15 @@
 #include "internal/playbackcontroller.h"
 
 #include "view/projectsceneuiactions.h"
-#include "view/trackslistmodel.h"
+
 #include "view/toolbars/playtoolbarmodel.h"
+
+#include "view/trackspanel/trackslistmodel.h"
+
+#include "view/clipsview/waveview.h"
+#include "view/clipsview/clipsmodel.h"
+#include "view/clipsview/trackclipsitem.h"
+#include "view/clipsview/clipitem.h"
 
 using namespace au::projectscene;
 using namespace mu::modularity;
@@ -64,8 +71,18 @@ void ProjectSceneModule::resolveImports()
 
 void ProjectSceneModule::registerUiTypes()
 {
+    // toolbars
     qmlRegisterType<PlayToolBarModel>("Audacity.ProjectScene", 1, 0, "PlayToolBarModel");
+
+    // tracks panel
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
+
+    // clips view
+    qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
+    qmlRegisterType<ClipsModel>("Audacity.ProjectScene", 1, 0, "ClipsModel");
+    qmlRegisterUncreatableType<WaveSource>("Audacity.ProjectScene", 1, 0, "WaveSource", "Not creatable from QML");
+    qmlRegisterUncreatableType<TrackClipsItem>("Audacity.ProjectScene", 1, 0, "TrackClipsItem", "Not creatable from QML");
+    qmlRegisterUncreatableType<ClipItem>("Audacity.ProjectScene", 1, 0, "ClipItem", "Not creatable from QML");
 }
 
 void ProjectSceneModule::registerResources()

@@ -23,7 +23,7 @@ public:
     mu::async::Notification displayNameChanged() const { return mu::async::Notification(); }
     mu::async::Notification needSaveChanged() const { return mu::async::Notification(); }
 
-    virtual const au::processing::ProcessingProject& processingProject() const = 0;
+    virtual const au::processing::ProcessingProjectPtr processingProject() const = 0;
 };
 
 using IAudacityProjectPtr = std::shared_ptr<IAudacityProject>;

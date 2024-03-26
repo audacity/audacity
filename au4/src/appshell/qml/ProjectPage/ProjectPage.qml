@@ -49,8 +49,8 @@ DockPage {
             resizable: false
 
             PlayToolBar {
-                navigationPanel.section: root.topToolKeyNavSec
-                navigationPanel.order: 2
+                //navigationPanel.section: root.topToolKeyNavSec
+                //navigationPanel.order: 2
 
                 onActiveFocusRequested: {
                     if (navigationPanel.active) {
@@ -68,15 +68,15 @@ DockPage {
             objectName: "tracksPanel"
             title: qsTrc("appshell", "Tracks")
 
-            navigationSection: root.navigationPanelSec(tracksPanel.location)
+            //navigationSection: root.navigationPanelSec(tracksPanel.location)
 
-            width: root.verticalPanelDefaultWidth
-            minimumWidth: root.verticalPanelDefaultWidth
-            maximumWidth: root.verticalPanelDefaultWidth
+            width: 240//root.verticalPanelDefaultWidth
+            minimumWidth: 240//root.verticalPanelDefaultWidth
+            maximumWidth: 480//root.verticalPanelDefaultWidth
 
-            groupName: root.verticalPanelsGroup
+            //groupName: root.verticalPanelsGroup
 
-            dropDestinations: root.verticalPanelDropDestinations
+            //dropDestinations: root.verticalPanelDropDestinations
 
             TracksPanel {
                 navigationSection: tracksPanel.navigationSection
@@ -88,8 +88,7 @@ DockPage {
         }
     ]
 
-    central: Text {
-        text: "Project View "
+    central: ClipsView {
+        id: clipsView
     }
-
 }
