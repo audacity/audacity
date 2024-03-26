@@ -107,9 +107,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # preference dialog whenever any keystroke shortcuts with Shift+ are used
    # EASY_CHANGE_KEY_BINDINGS
 
-   # PRL 1 Jun 2018
-   PUNCH_AND_ROLL
-
    # PRL 31 July 2018
    DRAGGABLE_PLAY_HEAD
 
