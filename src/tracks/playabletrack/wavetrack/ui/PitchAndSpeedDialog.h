@@ -43,7 +43,6 @@ public:
       const WaveTrack::IntervalHolder& wideClip);
    PitchAndSpeedDialog&
    SetFocus(const std::optional<PitchAndSpeedDialogGroup>& group);
-   PitchAndSpeedDialog& Show();
    void TryRetarget(const TrackPanelMouseEvent& event);
 
    struct PitchShift

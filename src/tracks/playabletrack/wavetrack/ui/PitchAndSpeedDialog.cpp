@@ -76,6 +76,13 @@ GetHitClip(AudacityProject& project, const TrackPanelMouseEvent& event)
    return {};
 }
 
+bool IsExactlySelected(AudacityProject& project, const ClipTimes& clip)
+{
+   auto& viewInfo = ViewInfo::Get(project);
+   return clip.GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+          clip.GetPlayEndTime() == viewInfo.selectedRegion.t1();
+}
+
 PitchAndSpeedDialog::PitchShift ToSemitonesAndCents(int oldCents, int newCents)
 {
    // Rules:
@@ -158,7 +165,7 @@ void PitchAndSpeedDialog::Destroy(AudacityProject& project)
 
 PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
     : wxDialogWrapper(
-         nullptr, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
+         FindProjectFrame(&project), wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
          { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
     , mProject { project }
     , mProjectCloseSubscription { ProjectWindow::Get(mProject).Subscribe(
@@ -270,13 +277,9 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::SetFocus(
          nullptr;
    if (item)
       item->SetFocus();
+   wxDialog::Show(true);
+   wxDialog::Raise();
    wxDialog::SetFocus();
-   return *this;
-}
-
-PitchAndSpeedDialog& PitchAndSpeedDialog::Show()
-{
-   Show(true);
    return *this;
 }
 
@@ -386,9 +389,15 @@ bool PitchAndSpeedDialog::SetClipSpeed()
    if (!target)
       return false;
 
+   const auto wasExactlySelected =
+      IsExactlySelected(mProject, *mLeftClip.lock());
+
    if (!TimeStretching::SetClipStretchRatio(
           *target->track, *target->clip, 100 / mClipSpeed))
       return false;
+
+   if (wasExactlySelected)
+      WaveClipUIUtilities::SelectClip(mProject, *target->clip);
 
    UpdateHistory(XO("Changed Speed"));
 

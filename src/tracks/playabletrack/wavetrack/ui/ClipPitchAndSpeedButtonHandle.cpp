@@ -152,8 +152,7 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
          if (auto pProject = project.lock())
             PitchAndSpeedDialog::Get(*pProject)
                .Retarget(track, clip)
-               .SetFocus(focusedGroup)
-               .Show();
+               .SetFocus(focusedGroup);
       });
    }
    return RefreshCode::RefreshNone;
