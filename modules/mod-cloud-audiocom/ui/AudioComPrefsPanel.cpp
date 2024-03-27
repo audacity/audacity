@@ -12,9 +12,9 @@
 #include <cassert>
 
 #include <wx/button.h>
-#include <wx/textctrl.h>
 #include <wx/checkbox.h>
 #include <wx/radiobut.h>
+#include <wx/textctrl.h>
 
 #include "prefs/PrefsPanel.h"
 
@@ -23,8 +23,8 @@
 #include "ShuttleGui.h"
 #include "UserPanel.h"
 
-#include "ServiceConfig.h"
 #include "OAuthService.h"
+#include "ServiceConfig.h"
 #include "UserService.h"
 
 #include "TempDirectory.h"
@@ -41,6 +41,9 @@ public:
    {
       ShuttleGui S(this, eIsCreatingFromPrefs);
       PopulateOrExchange(S);
+
+      mSaveLocationMode   = sync::SaveLocationMode.ReadEnum();
+      mExportLocationMode = sync::ExportLocationMode.ReadEnum();
    }
 
    bool Commit() override
@@ -52,11 +55,18 @@ public:
       DaysToKeepFiles.Invalidate();
 
       // Enum settings are not cacheable, so we need to invalidate them
-      //sync::SaveLocationMode.Invalidate();
-      //sync::ExportLocationMode.Invalidate();
+      // sync::SaveLocationMode.Invalidate();
+      // sync::ExportLocationMode.Invalidate();
       sync::MixdownDialogShown.Invalidate();
 
       return true;
+   }
+
+   void Cancel() override
+   {
+      // ChoiceSetting ignores transactions, so we need to reset the values
+      sync::SaveLocationMode.WriteEnum(mSaveLocationMode);
+      sync::ExportLocationMode.WriteEnum(mExportLocationMode);
    }
 
    void PopulateOrExchange(ShuttleGui& S) override
@@ -69,9 +79,10 @@ public:
          S.StartStatic(XO("Account"));
          {
             S.SetBorder(8);
-            S.AddWindow(safenew UserPanel { GetServiceConfig(),
-                                            GetOAuthService(), GetUserService(),
-                                            true, S.GetParent() }, wxEXPAND);
+            S.AddWindow(
+               safenew UserPanel { GetServiceConfig(), GetOAuthService(),
+                                   GetUserService(), true, S.GetParent() },
+               wxEXPAND);
          }
          S.EndStatic();
 
@@ -84,13 +95,13 @@ public:
                   sync::CloudLocationMode::Ask);
 
             checkBox->Bind(
-                  wxEVT_CHECKBOX,
-                  [this](auto& event)
-                  {
-                     sync::ExportLocationMode.WriteEnum(
-                        event.IsChecked() ? sync::CloudLocationMode::Ask :
-                                            sync::CloudLocationMode::Local);
-                  });
+               wxEVT_CHECKBOX,
+               [this](auto& event)
+               {
+                  sync::ExportLocationMode.WriteEnum(
+                     event.IsChecked() ? sync::CloudLocationMode::Ask :
+                                         sync::CloudLocationMode::Local);
+               });
          }
          S.EndStatic();
 
@@ -114,19 +125,22 @@ public:
 
             S.StartInvisiblePanel(4);
             {
-               BindRadioButton(S.AddRadioButton(
-                  XO("Always ask"),
+               BindRadioButton(
+                  S.AddRadioButton(
+                     XO("Always ask"),
                      static_cast<int>(sync::CloudLocationMode::Ask),
                      initialMode),
                   sync::CloudLocationMode::Ask);
-               BindRadioButton(S.AddRadioButtonToGroup(
-                  XO("Always save to cloud"),
-                  static_cast<int>(sync::CloudLocationMode::Cloud),
+               BindRadioButton(
+                  S.AddRadioButtonToGroup(
+                     XO("Always save to cloud"),
+                     static_cast<int>(sync::CloudLocationMode::Cloud),
                      initialMode),
                   sync::CloudLocationMode::Cloud);
-               BindRadioButton(S.AddRadioButtonToGroup(
-                  XO("Always save to the computer"),
-                  static_cast<int>(sync::CloudLocationMode::Local),
+               BindRadioButton(
+                  S.AddRadioButtonToGroup(
+                     XO("Always save to the computer"),
+                     static_cast<int>(sync::CloudLocationMode::Local),
                      initialMode),
                   sync::CloudLocationMode::Local);
             }
@@ -141,7 +155,8 @@ public:
             {
                S.SetStretchyCol(1);
 
-               mCloudProjectsSavePath = S.TieTextBox(XXO("&Location:"), CloudProjectsSavePath, 30);
+               mCloudProjectsSavePath =
+                  S.TieTextBox(XXO("&Location:"), CloudProjectsSavePath, 30);
                S.AddButton(XXO("Brow&se..."))
                   ->Bind(wxEVT_BUTTON, [this](auto&) { Browse(); });
             }
@@ -206,6 +221,9 @@ public:
 private:
    wxTextCtrl* mCloudProjectsSavePath {};
    Observer::Subscription mFrequencySubscription;
+
+   sync::CloudLocationMode mSaveLocationMode;
+   sync::CloudLocationMode mExportLocationMode;
 
 }; // class AudioComPrefsPanel
 
