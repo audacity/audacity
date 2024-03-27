@@ -31,9 +31,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # ACH 08 Jan 2014
    # EQ accelerated code
    #EQ_SSE_THREADED
-
-   # USE_MIDI must be defined in order for SCOREALIGN to work
-   #SCOREALIGN
 )
 
 # Now define the flags

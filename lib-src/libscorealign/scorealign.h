@@ -60,10 +60,10 @@ enum {
 
 
 #define SA_DFT_FRAME_PERIOD 0.2
-#define SA_DFT_FRAME_PERIOD_TEXT wxT("0.20 secs")
+#define SA_DFT_FRAME_PERIOD_TEXT XO("0.20 secs")
 
 #define SA_DFT_WINDOW_SIZE 0.2
-#define SA_DFT_WINDOW_SIZE_TEXT wxT("0.20 secs")
+#define SA_DFT_WINDOW_SIZE_TEXT XO("0.20 secs")
 
 #define SA_DFT_FORCE_FINAL_ALIGNMENT true
 #define SA_DFT_FORCE_FINAL_ALIGNMENT_STRING wxT("true")
@@ -72,16 +72,16 @@ enum {
 #define SA_DFT_IGNORE_SILENCE_STRING wxT("true")
 
 #define SA_DFT_SILENCE_THRESHOLD 0.1
-#define SA_DFT_SILENCE_THRESHOLD_TEXT wxT("0.100")
+#define SA_DFT_SILENCE_THRESHOLD_TEXT XO("0.100")
 
 #define SA_DFT_PRESMOOTH_TIME 0
-#define SA_DFT_PRESMOOTH_TIME_TEXT wxT("(off)")
+#define SA_DFT_PRESMOOTH_TIME_TEXT XO("(off)")
 
 #define SA_DFT_LINE_TIME 0
-#define SA_DFT_LINE_TIME_TEXT wxT("(off)")
+#define SA_DFT_LINE_TIME_TEXT XO("(off)")
 
 #define SA_DFT_SMOOTH_TIME 1.75
-#define SA_DFT_SMOOTH_TIME_TEXT wxT("1.75 secs")
+#define SA_DFT_SMOOTH_TIME_TEXT XO("1.75 secs")
 
 
 class Scorealign {

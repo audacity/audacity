@@ -57,6 +57,9 @@ constexpr bool SpectralBrushTool = false;
 
 // Automatic Input Level Adjustment tries to find an acceptable input volume
 constexpr bool AILA = false;
+
+// USE_MIDI must be defined in order for ScoreAlign to work
+constexpr bool ScoreAlign = false;
 }
 
 #endif

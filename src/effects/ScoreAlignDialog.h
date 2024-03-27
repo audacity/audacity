@@ -9,8 +9,6 @@
 #ifndef __AUDACITY_SCORE_ALIGN_DIALOG__
 #define __AUDACITY_SCORE_ALIGN_DIALOG__
 
-#ifdef EXPERIMENTAL_SCOREALIGN
-
 #include "wxPanelWrapper.h"
 
 #if 1
@@ -126,7 +124,5 @@ private:
    DECLARE_EVENT_TABLE()
 
 };
-
-#endif
 
 #endif

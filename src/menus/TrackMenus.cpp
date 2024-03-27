@@ -2,6 +2,8 @@
 #include "../LabelTrack.h"
 #include "MixAndRender.h"
 
+#include "ExportPluginHelpers.h"
+#include "NoteTrack.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -33,13 +35,12 @@
 #include "ProgressDialog.h"
 
 #include <wx/combobox.h>
+#include <wx/wxcrtvararg.h>
 
-#ifdef EXPERIMENTAL_SCOREALIGN
 #include "../effects/ScoreAlignDialog.h"
 #include "audioreader.h"
 #include "scorealign.h"
 #include "scorealign-glue.h"
-#endif /* EXPERIMENTAL_SCOREALIGN */
 
 // private helper classes and functions
 namespace {
@@ -293,8 +294,6 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    ProjectHistory::Get( project ).PushState(action, shortAction);
 }
 
-#ifdef EXPERIMENTAL_SCOREALIGN
-
 #ifdef USE_MIDI
 static const ReservedCommandFlag&
    NoteTracksSelectedFlag() { static ReservedCommandFlag flag{
@@ -449,8 +448,6 @@ long mixer_process(void *mixer, float **buffer, long n)
    *buffer = (float *) mix->GetBuffer();
    return frame_count;
 }
-
-#endif // EXPERIMENTAL_SCOREALIGN
 
 enum{
    kAudacitySortByTime = (1 << 1),
@@ -767,29 +764,30 @@ void OnMoveSelectionWithTracks(const CommandContext &WXUNUSED(context) )
 
 }
 
-#ifdef EXPERIMENTAL_SCOREALIGN
 void OnScoreAlign(const CommandContext &context)
 {
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
-   const auto rate = ProjectSettings::Get( project ).GetRate();
+   const auto rate = ProjectRate::Get( project ).GetRate();
 
    int numWaveTracksSelected = 0;
    int numNoteTracksSelected = 0;
    int numOtherTracksSelected = 0;
+   NoteTrack *nt{};
    double endTime = 0.0;
 
    // Iterate through once to make sure that there is exactly
    // one WaveTrack and one NoteTrack selected.
    tracks.Selected().Visit(
-      [&](WaveTrack *wt) {
+      [&](WaveTrack &wt) {
          numWaveTracksSelected++;
-         endTime = endTime > wt->GetEndTime() ? endTime : wt->GetEndTime();
+         endTime = endTime > wt.GetEndTime() ? endTime : wt.GetEndTime();
       },
-      [&](NoteTrack *) {
+      [&](NoteTrack &n) {
          numNoteTracksSelected++;
+         nt = &n;
       },
-      [&](Track*) {
+      [&](Track&) {
          numOtherTracksSelected++;
       }
    );
@@ -798,7 +796,7 @@ void OnScoreAlign(const CommandContext &context)
       numNoteTracksSelected != 1 ||
       numOtherTracksSelected != 0){
       AudacityMessageBox(
-         XO("Please select at least one audio track and one MIDI track.") );
+         XO("Please select at least one audio track and exactly one MIDI track.") );
       return;
    }
 
@@ -822,32 +820,21 @@ void OnScoreAlign(const CommandContext &context)
    auto alignedNoteTrack = static_cast<NoteTrack*>(holder.get());
    // Remove offset from NoteTrack because audio is
    // mixed starting at zero and incorporating clip offsets.
-   if (alignedNoteTrack->GetOffset() < 0) {
+   if (alignedNoteTrack->GetStartTime() < 0) {
       // remove the negative offset data before alignment
-      nt->Clear(alignedNoteTrack->GetOffset(), 0);
-   } else if (alignedNoteTrack->GetOffset() > 0) {
-      alignedNoteTrack->Shift(alignedNoteTrack->GetOffset());
+      nt->Clear(alignedNoteTrack->GetStartTime(), 0);
+   } else if (alignedNoteTrack->GetStartTime() > 0) {
+      alignedNoteTrack->Shift(alignedNoteTrack->GetStartTime());
    }
    alignedNoteTrack->MoveTo(0);
 
-   WaveTrackConstArray waveTracks =
-      tracks->GetWaveTrackConstArray(true /* selectionOnly */);
 
    int result;
    {
-      Mixer mix(
-         waveTracks,              // const WaveTrackConstArray &inputTracks
-         false, // mayThrow -- is this right?
-         Mixer::WarpOptions{ *tracks },
-         0.0,                     // double startTime
-         endTime,                 // double stopTime
-         2,                       // int numOutChannels
-         44100u,                   // size_t outBufferSize
-         true,                    // bool outInterleaved
-         rate,                   // double outRate
-         floatSample,             // sampleFormat outFormat
-         true,                    // bool highQuality = true
-         NULL);                   // MixerSpec *mixerSpec = NULL
+      auto pMixer = ExportPluginHelpers::CreateMixer(
+         tracks, true, 0.0, endTime, 2, 44100u, true, rate, floatSample,
+         nullptr);
+      auto &mix = *pMixer;
 
       ASAProgress progress;
 
@@ -867,7 +854,8 @@ void OnScoreAlign(const CommandContext &context)
    }
 
    if (result == SA_SUCCESS) {
-      tracks->Replace(nt, holder);
+      const auto list = TrackList::Temporary(nullptr, holder);
+      tracks.ReplaceOne(*nt, std::move(*list));
       AudacityMessageBox(
          XO("Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.")
             .Format(
@@ -891,7 +879,6 @@ void OnScoreAlign(const CommandContext &context)
       AudacityMessageBox( XO("Internal error reported by alignment process.") );
    }
 }
-#endif /* EXPERIMENTAL_SCOREALIGN */
 
 void OnSortTime(const CommandContext &context)
 {
@@ -1195,7 +1182,7 @@ auto TracksMenu()
          )
       ),
 
-      Section( "",
+      Section( "Align",
          Menu( wxT("Align"), XXO("&Align Tracks"), // XO("Just Move Tracks"),
             Section( "",
                // Mutual alignment of tracks independent of selection or zero
@@ -1234,14 +1221,6 @@ auto TracksMenu()
 
          //////////////////////////////////////////////////////////////////////////
 
-   #ifdef EXPERIMENTAL_SCOREALIGN
-         Command( wxT("ScoreAlign"), XXO("Synchronize MIDI with Audio"),
-            OnScoreAlign,
-            AudioIONotBusyFlag() | NoteTracksSelectedFlag() | WaveTracksSelectedFlag() ),
-   #endif // EXPERIMENTAL_SCOREALIGN
-
-         //////////////////////////////////////////////////////////////////////////
-
          Menu( wxT("Sort"), XXO("S&ort Tracks"),
             Command( wxT("SortByTime"), XXO("By &Start Time"), OnSortTime,
                TracksExistFlag(),
@@ -1265,6 +1244,14 @@ auto TracksMenu()
 }
 
 AttachedItem sAttachment1{ Indirect(TracksMenu()) };
+
+ConditionallyPresent<AttachedItem, Experimental::ScoreAlign>
+sAttachment1_1{
+   Command( wxT("ScoreAlign"), XXO("Synchronize MIDI with Audio"),
+      OnScoreAlign,
+      AudioIONotBusyFlag() | NoteTracksSelectedFlag() | WaveTracksSelectedFlag() ),
+   wxT("Tracks/Align")
+};
 
 auto ExtraTrackMenu()
 {

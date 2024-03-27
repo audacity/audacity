@@ -19,8 +19,6 @@ It \TODO: description
 
 #include "ScoreAlignDialog.h"
 
-#ifdef EXPERIMENTAL_SCOREALIGN
-
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
 
@@ -30,6 +28,8 @@ It \TODO: description
 
 #ifndef WX_PRECOMP
 #include <wx/brush.h>
+#include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/choice.h>
 #include <wx/file.h>
 #include <wx/stattext.h>
@@ -56,21 +56,21 @@ ScoreAlignDialog::ScoreAlignDialog(ScoreAlignParams &params)
    gScoreAlignDialog.reset(this); // Allows anyone to close dialog by calling
                              // CloseScoreAlignDialog()
    gPrefs->Read(wxT("/Tracks/Synchronize/FramePeriod"), &p.mFramePeriod,
-                float(SA_DFT_FRAME_PERIOD));
+                double(SA_DFT_FRAME_PERIOD));
    gPrefs->Read(wxT("/Tracks/Synchronize/WindowSize"), &p.mWindowSize,
-                float(SA_DFT_WINDOW_SIZE));
+                double(SA_DFT_WINDOW_SIZE));
    gPrefs->Read(wxT("/Tracks/Synchronize/SilenceThreshold"),
-                &p.mSilenceThreshold, float(SA_DFT_SILENCE_THRESHOLD));
+                &p.mSilenceThreshold, double(SA_DFT_SILENCE_THRESHOLD));
    gPrefs->Read(wxT("/Tracks/Synchronize/ForceFinalAlignment"),
-                &p.mForceFinalAlignment, float(SA_DFT_FORCE_FINAL_ALIGNMENT));
+                &p.mForceFinalAlignment, double(SA_DFT_FORCE_FINAL_ALIGNMENT));
    gPrefs->Read(wxT("/Tracks/Synchronize/IgnoreSilence"),
-                &p.mIgnoreSilence, float(SA_DFT_IGNORE_SILENCE));
+                &p.mIgnoreSilence, double(SA_DFT_IGNORE_SILENCE));
    gPrefs->Read(wxT("/Tracks/Synchronize/PresmoothTime"), &p.mPresmoothTime,
-                float(SA_DFT_PRESMOOTH_TIME));
+                double(SA_DFT_PRESMOOTH_TIME));
    gPrefs->Read(wxT("/Tracks/Synchronize/LineTime"), &p.mLineTime,
-                float(SA_DFT_LINE_TIME));
+                double(SA_DFT_LINE_TIME));
    gPrefs->Read(wxT("/Tracks/Synchronize/SmoothTime"), &p.mSmoothTime,
-                float(SA_DFT_SMOOTH_TIME));
+                double(SA_DFT_SMOOTH_TIME));
 
    //wxButton *ok = safenew wxButton(this, wxID_OK, _("OK"));
    //wxButton *cancel = safenew wxButton(this, wxID_CANCEL, _("Cancel"));
@@ -277,10 +277,11 @@ bool ScoreAlignDialog::TransferDataFromWindow()
                                                     p.mSilenceThreshold));
    mPresmoothText->SetLabel(p.mPresmoothTime > 0 ?
                             wxString::Format(_("%.2f secs"),
-                                             p.mPresmoothTime) : wxT("(off)"));
+                                             p.mPresmoothTime)
+                            : wxString{ "(off)" });
    mLineTimeText->SetLabel(p.mLineTime > 0 ?
                            wxString::Format(_("%.2f secs"), p.mLineTime) :
-                           wxT("(off)"));
+                           wxString{ "(off)" });
    mSmoothTimeText->SetLabel(wxString::Format(_("%.2f secs"), p.mSmoothTime));
    return true;
 }
@@ -305,5 +306,3 @@ BEGIN_EVENT_TABLE(ScoreAlignDialog, wxDialogWrapper)
    EVT_SLIDER(ID_LINETIME, ScoreAlignDialog::OnSlider)
    EVT_SLIDER(ID_SMOOTHTIME, ScoreAlignDialog::OnSlider)
 END_EVENT_TABLE()
-
-#endif

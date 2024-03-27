@@ -151,9 +151,7 @@ constexpr bool EasyChangeKeyBindings = false;
 #include "CrashpadConfigurer.h"
 #endif
 
-#ifdef EXPERIMENTAL_SCOREALIGN
 #include "effects/ScoreAlignDialog.h"
-#endif
 
 #if 0
 #ifdef _DEBUG
@@ -574,9 +572,8 @@ static void QuitAudacity(bool bForce)
 
    ModuleManager::Get().Dispatch(AppQuiting);
 
-#ifdef EXPERIMENTAL_SCOREALIGN
-   CloseScoreAlignDialog();
-#endif
+   if constexpr (Experimental::ScoreAlign)
+      CloseScoreAlignDialog();
 
    // Logger window is always destroyed on macOS,
    // on other platforms - it prevents the runloop
