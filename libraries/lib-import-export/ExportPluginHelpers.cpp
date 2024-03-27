@@ -41,7 +41,8 @@ std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(const TrackList &tracks,
                   startTime, stopTime,
                   numOutChannels, outBufferSize, outInterleaved,
                   outRate, outFormat,
-                  true, mixerSpec);
+                  true, mixerSpec,
+                  mixerSpec ? Mixer::ApplyGain::MapChannels : Mixer::ApplyGain::Mixdown);
 }
 
 namespace

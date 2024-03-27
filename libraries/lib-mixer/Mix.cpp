@@ -76,11 +76,11 @@ Mixer::Mixer(Inputs inputs,
    const size_t outBufferSize, const bool outInterleaved,
    double outRate, sampleFormat outFormat,
    const bool highQuality, MixerSpec *const mixerSpec,
-   const bool applyTrackGains
+   ApplyGain applyGain
 )  : mNumChannels{ numOutChannels }
    , mInputs{ move(inputs) }
    , mBufferSize{ FindBufferSize(mInputs, outBufferSize) }
-   , mApplyTrackGains{ applyTrackGains }
+   , mApplyGain{ applyGain }
    , mHighQuality{ highQuality }
    , mFormat{ outFormat }
    , mInterleaved{ outInterleaved }
@@ -125,6 +125,7 @@ Mixer::Mixer(Inputs inputs,
       mixerSpec->GetNumChannels() == mNumChannels &&
       mixerSpec->GetNumTracks() == nChannelsIn
    ) ? mixerSpec : nullptr;
+   mHasMixerSpec = pMixerSpec != nullptr;
 
    // Reserve vectors first so we can take safe references to pushed elements
    mSources.reserve(nChannelsIn);
@@ -182,9 +183,7 @@ Mixer::Mixer(Inputs inputs,
    std::tie(mNeedsDither, mEffectiveFormat) = NeedsDither(needsDither, outRate);
 }
 
-Mixer::~Mixer()
-{
-}
+Mixer::~Mixer() = default;
 
 std::pair<bool, sampleFormat>
 Mixer::NeedsDither(bool needsDither, double rate) const
@@ -201,15 +200,19 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       // We will call MixVariableRates(), so we need nontrivial resampling
       needsDither = true;
 
-   for (const auto &input : mInputs) {
-      auto &pSequence = input.pSequence;
-      if (!pSequence)
-         continue;
-      auto &sequence = *pSequence;
+   for (const auto &input : mSources) {
+      auto &sequence = input.GetSequence();
+      
       if (sequence.GetRate() != rate)
          // Also leads to MixVariableRates(), needs nontrivial resampling
          needsDither = true;
-      if (mApplyTrackGains) {
+      else if (mApplyGain == ApplyGain::Mixdown &&
+         !mHasMixerSpec &&
+         sequence.NChannels() > 1 && mNumChannels == 1)
+      {
+         needsDither = true;
+      }
+      else if (mApplyGain != ApplyGain::Discard) {
          /// TODO: more-than-two-channels
          for (auto c : {0, 1}) {
             const auto gain = sequence.GetChannelGain(c);
@@ -218,7 +221,6 @@ Mixer::NeedsDither(bool needsDither, double rate) const
                needsDither = true;
          }
       }
-
       // Examine all tracks.  (This ignores the time bounds for the mixer.
       // If it did not, we might avoid dither in more cases.  But if we fix
       // that, remember that some mixers change their time bounds after
@@ -259,10 +261,8 @@ static void MixBuffers(unsigned numChannels,
    for (unsigned int c = 0; c < numChannels; c++) {
       if (!channelFlags[c])
          continue;
-      float *dest = dests[c].data();
-      float gain = gains[c];
       for (int j = 0; j < len; ++j)
-         *dest++ += pSrc[j] * gain;   // the actual mixing process
+         dests[c][j] += pSrc[j] * gains[c];   // the actual mixing process
    }
 }
 
@@ -280,7 +280,7 @@ size_t Mixer::Process(const size_t maxToProcess)
    size_t maxOut = 0;
    const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
    const auto gains = stackAllocate(float, mNumChannels);
-   if (!mApplyTrackGains)
+   if (mApplyGain == ApplyGain::Discard)
       std::fill(gains, gains + mNumChannels, 1.0f);
 
    // Decides which output buffers an input channel accumulates into
@@ -329,14 +329,17 @@ size_t Mixer::Process(const size_t maxToProcess)
       for (size_t j = 0; j < limit; ++j) {
          const auto pFloat = (const float *)mFloatBuffers.GetReadPosition(j);
          auto &sequence = upstream.GetSequence();
-         if (mApplyTrackGains) {
+         if (mApplyGain != ApplyGain::Discard) {
             for (size_t c = 0; c < mNumChannels; ++c) {
                if (mNumChannels > 1)
                   gains[c] = sequence.GetChannelGain(c);
                else
                   gains[c] = sequence.GetChannelGain(j);
             }
+            if(mApplyGain == ApplyGain::Mixdown && !mHasMixerSpec && mNumChannels == 1)
+               gains[0] /= static_cast<float>(limit);
          }
+         
          const auto flags =
             findChannelFlags(upstream.MixerSpec(j), sequence, j);
          MixBuffers(mNumChannels, flags, gains, *pFloat, mTemp, result);

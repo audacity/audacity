@@ -44,6 +44,13 @@ class MIXER_API Mixer {
    };
    using Inputs = std::vector<Input>;
 
+   enum class ApplyGain
+   {
+      Discard,//< No source gain is applied
+      MapChannels, //< Apply gains per source's channel
+      Mixdown, //< Average gains from all channels in the source, numOutChannels should be 1
+   };
+
    //
    // Constructor / Destructor
    //
@@ -62,7 +69,7 @@ class MIXER_API Mixer {
          bool highQuality = true,
          //! Null or else must have a lifetime enclosing this object's
          MixerSpec *mixerSpec = nullptr,
-         bool applytTrackGains = true);
+         ApplyGain applyGain = ApplyGain::MapChannels);
 
    Mixer(const Mixer&) = delete;
    Mixer &operator=(const Mixer&) = delete;
@@ -130,7 +137,7 @@ class MIXER_API Mixer {
  private:
 
    // Output
-   const bool       mApplyTrackGains;
+   const ApplyGain  mApplyGain;
    const bool       mHighQuality; // dithering
    const sampleFormat mFormat; // output format also influences dithering
    const bool       mInterleaved;
@@ -138,6 +145,7 @@ class MIXER_API Mixer {
    // INPUT
    sampleFormat     mEffectiveFormat;
    bool             mNeedsDither;
+   bool             mHasMixerSpec{false};
 
    const std::shared_ptr<TimesAndSpeed> mTimesAndSpeed;
 

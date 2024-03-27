@@ -662,26 +662,6 @@ void ExportAudioDialog::UpdateExportSettings()
    }
 }
 
-namespace {
-
-unsigned GetNumExportChannels( const TrackList &tracks )
-{
-   bool anySolo =
-      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
-
-   // Want only unmuted wave tracks.
-   const auto range = tracks.Any<const WaveTrack>() -
-      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
-   return std::all_of(range.begin(), range.end(),
-      [](auto *pTrack){ return IsMono(*pTrack); }
-   )
-      ? 1
-      : 2;
-}
-
-}
-
-
 void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, int formatIndex, bool byName, bool addNumber, const wxString& prefix)
 {
    const auto& tracks = TrackList::Get(mProject);
@@ -705,7 +685,7 @@ void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, in
    // don't duplicate them
    ExportSetting setting;   // the current batch of settings
    setting.filename.SetPath(mExportOptionsPanel->GetPath());
-   setting.channels = GetNumExportChannels(tracks);
+   setting.channels = mExportOptionsPanel->GetChannels();
    setting.filename.SetFullName(mExportOptionsPanel->GetFullName());
    
    wxString name;    // used to hold file name whilst we mess with it

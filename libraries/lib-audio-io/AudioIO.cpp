@@ -1321,7 +1321,7 @@ bool AudioIO::AllocateBuffers(
                   mRate, floatSample,
                   false, // low quality dithering and resampling
                   nullptr, // no custom mix-down
-                  false // don't apply gains
+                  Mixer::ApplyGain::Discard // don't apply gains
                ));
             }
 
