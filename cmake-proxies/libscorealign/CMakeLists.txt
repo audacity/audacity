@@ -11,7 +11,11 @@ def_vars()
 list( APPEND SOURCES
       ${TARGET_ROOT}/audioreader.h
       ${TARGET_ROOT}/scorealign.h
+      ${TARGET_ROOT}/scorealign-glue.h
+      ${TARGET_ROOT}/ScoreAlignParams.h
    PRIVATE
+      ${TARGET_ROOT}/audiomixerreader.cpp
+      ${TARGET_ROOT}/audiomixerreader.h
       ${TARGET_ROOT}/audioreader.cpp
       ${TARGET_ROOT}/comp_chroma.cpp
       ${TARGET_ROOT}/comp_chroma.h
@@ -26,6 +30,7 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/sautils.cpp
       ${TARGET_ROOT}/sautils.h
       ${TARGET_ROOT}/scorealign.cpp
+      ${TARGET_ROOT}/scorealign-glue.cpp
       ${TARGET_ROOT}/fft3/FFT3.cpp
       ${TARGET_ROOT}/fft3/FFT3.h
 )
