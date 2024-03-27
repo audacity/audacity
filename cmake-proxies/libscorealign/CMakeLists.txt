@@ -1,5 +1,10 @@
+# libscorealign depends on portsmf
+if( NOT TARGET portsmf )
+   addlib( portsmf            portsmf     PORTSMF     NO    YES   "portSMF >= 0.1" )
+endif()
 
 add_library( ${TARGET} STATIC )
+target_link_libraries( ${TARGET} PRIVATE "portsmf" )
 
 def_vars()
 
