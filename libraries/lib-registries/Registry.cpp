@@ -726,7 +726,7 @@ void detail::Visit(VisitorBase &visitor,
    const GroupItemBase *pTopItem,
    const GroupItemBase *pRegistry, void *pComputedItemContext)
 {
-   assert(pComputedItemContext);
+   assert(pComputedItemContext && pRegistry);
    std::vector< BaseItemSharedPtr > computedItems;
    bool doFlush = false;
    CollectedItems collection{ {}, computedItems };
