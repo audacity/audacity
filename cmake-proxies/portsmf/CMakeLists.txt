@@ -4,7 +4,11 @@ add_library( ${TARGET} STATIC )
 def_vars()
 
 set( SOURCES
+      ${TARGET_ROOT}/allegro.h
+      ${TARGET_ROOT}/mfmidi.h
    PRIVATE
+      ${TARGET_ROOT}/algrd_internal.h
+      ${TARGET_ROOT}/algsmfrd_internal.h
       ${TARGET_ROOT}/allegro.cpp
       ${TARGET_ROOT}/allegrord.cpp
       ${TARGET_ROOT}/allegroserial.cpp
@@ -13,6 +17,8 @@ set( SOURCES
       ${TARGET_ROOT}/allegrowr.cpp
       ${TARGET_ROOT}/mfmidi.cpp
       ${TARGET_ROOT}/strparse.cpp
+      ${TARGET_ROOT}/strparse.h
+      ${TARGET_ROOT}/trace.h
 )
 
 set( INCLUDES
