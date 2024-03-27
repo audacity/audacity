@@ -1,6 +1,7 @@
 # Required libraries
 #
 #       directory          option      symbol      req   chk   version
+addlib( pffft              pffft       PFFFT       YES   NO    "" )
 
 
 # Optional libraries
@@ -18,4 +19,3 @@ endif ()
 addlib( libsbsms           sbsms       SBSMS       NO    YES   "sbsms >= 2.2.0" )
 addlib( soundtouch         soundtouch  SOUNDTOUCH  NO    YES   "soundtouch >= 1.7.1" )
 addlib( twolame            twolame     LIBTWOLAME  NO    YES   "twolame >= 0.3.13" )
-addlib( pffft              pffft       PFFFT       YES   NO    "" )
