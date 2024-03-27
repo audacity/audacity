@@ -2,6 +2,9 @@
 
 #include <cstdlib>
 
+#include "log.h"
+
+using namespace mu;
 using namespace au::project;
 using namespace au::processing;
 
@@ -88,6 +91,62 @@ IAudacityProjectPtr AudacityProject::makeMock()
 AudacityProject::AudacityProject()
 {
     m_processingProject = std::make_shared<ProcessingProject>();
+}
+
+mu::Ret AudacityProject::load(const mu::io::path_t& path, bool forceMode, const std::string& format_)
+{
+    TRACEFUNC;
+
+    std::string format = format_.empty() ? io::suffix(path) : format_;
+
+    LOGD() << "try load: " << path << ", format: " << format;
+
+    //setupProject();
+    setPath(path);
+
+    //! TODO AU4
+    // if (!isAudacityFile(format)) {
+    //     Ret ret = doImport(path, forceMode);
+    //     if (ret) {
+    //         listenIfNeedSaveChanges();
+    //     }
+
+    //     return ret;
+    // }
+
+    Ret ret = doLoad(path, forceMode, format);
+    if (!ret) {
+        LOGE() << "failed load, err: " << ret.toString();
+        return ret;
+    }
+
+    //! TODO AU4
+    // listenIfNeedSaveChanges();
+
+    return ret;
+}
+
+mu::Ret AudacityProject::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
+{
+    TRACEFUNC;
+
+    UNUSED(path);
+    UNUSED(forceMode);
+    UNUSED(format);
+
+    NOT_IMPLEMENTED;
+
+    return make_ret(Ret::Code::NotImplemented);
+}
+
+void AudacityProject::setPath(const io::path_t& path)
+{
+    if (m_path == path) {
+        return;
+    }
+
+    m_path = path;
+    m_pathChanged.notify();
 }
 
 const ProcessingProjectPtr AudacityProject::processingProject() const

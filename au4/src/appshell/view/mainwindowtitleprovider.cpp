@@ -103,7 +103,7 @@ void MainWindowTitleProvider::update()
     }
 
     setTitle(project->title());
-
-    setFilePath(project->filePath().toQString());
+    
+    setFilePath(project->path().toQString());
     setFileModified(project->needSave().val);
 }
