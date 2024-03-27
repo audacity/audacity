@@ -929,8 +929,6 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.h
           update/NoUpdatesAvailableDialog.cpp
       >
-
-      Experimental.cmake
 )
 
 #

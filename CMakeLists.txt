@@ -578,9 +578,6 @@ set( AUDACITY_INFO_VERSION ${AUDACITY_VERSION}.${AUDACITY_RELEASE}.${AUDACITY_RE
 
 include( AudacityDependencies )
 include( AudacityTesting )
-# define EXPERIMENTAL flags
-# Do this before consistency checks for added third-party libraries
-include( "src/Experimental.cmake" )
 
 cmd_option( ${_OPT}use_ffmpeg
    "Use ffmpeg library [loaded, off]"
