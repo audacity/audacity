@@ -352,6 +352,9 @@ std::unordered_set<std::string> RemoteProjectSnapshot::CalculateKnownBlocks(
 
 void RemoteProjectSnapshot::DoCancel()
 {
+   if (mState.load(std::memory_order_acquire) != State::Downloading)
+      return;
+
    SetState(State::Cancelled);
 
    mRequestsCV.notify_one();
@@ -745,16 +748,16 @@ void cloud::audiocom::sync::RemoteProjectSnapshot::CleanupOrphanBlocks()
    std::unordered_set<std::string> snaphotBlockHashes;
 
    for (const auto& block : mSnapshotInfo.Blocks)
-      snaphotBlockHashes.insert(block.Hash);
+      snaphotBlockHashes.insert(ToUpper(block.Hash));
 
    auto inSnaphotFunction = db->CreateScalarFunction(
-      "inSnapshot",
-      [&snaphotBlockHashes](const std::string& hash) { return snaphotBlockHashes.find(hash) != snaphotBlockHashes.end(); });
+      "inSnapshot", [&snaphotBlockHashes](const std::string& hash)
+      { return snaphotBlockHashes.find(hash) != snaphotBlockHashes.end(); });
 
    // Delete blocks not in the snapshot
    auto deleteBlocksStatement = db->CreateStatement(
       "DELETE FROM " + mSnapshotDBName +
-      ".sampleblocks WHERE blockid NOT IN (SELECT block_id FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash))");
+      ".sampleblocks WHERE blockid NOT IN (SELECT block_id FROM block_hashes WHERE project_id = ? AND inSnapshot(hash))");
 
    if (!deleteBlocksStatement)
       return;
@@ -764,7 +767,8 @@ void cloud::audiocom::sync::RemoteProjectSnapshot::CleanupOrphanBlocks()
    if (!result.IsOk())
       return;
 
-   auto deleteHashesStatement = db->CreateStatement ("DELETE FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash)");
+   auto deleteHashesStatement = db->CreateStatement(
+      "DELETE FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash)");
 
    if (!deleteHashesStatement)
       return;
