@@ -34,7 +34,6 @@ list( APPEND SOURCES
    sample-data-import.ny
    spectral-delete.ny
    tremolo.ny
-   vocalrediso.ny
    vocoder.ny
 )
 
