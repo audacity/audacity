@@ -210,6 +210,10 @@ class IOExtension final : public ProjectFileIOExtension
       AudacityProject& project, const ProjectSerializer& serializer) override
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
+
+      if (!projectCloudExtension.IsCloudProject())
+         return;
+
       projectCloudExtension.OnUpdateSaved(serializer);
 
       const int savesCount = projectCloudExtension.GetSavesCount();
