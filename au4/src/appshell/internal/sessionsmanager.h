@@ -30,11 +30,10 @@
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
-
+#include "multiinstances/imultiinstancesprovider.h"
 #include "isessionsmanager.h"
 
 //! TODO AU4
-//#include "multiinstances/imultiinstancesprovider.h"
 //#include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
@@ -43,9 +42,9 @@ class SessionsManager : public ISessionsManager, public mu::async::Asyncable
     INJECT(mu::actions::IActionsDispatcher, dispatcher)
     INJECT(mu::context::IGlobalContext, globalContext)
     INJECT(IAppShellConfiguration, configuration)
+    INJECT(mu::mi::IMultiInstancesProvider, multiInstancesProvider)
 
 //! TODO AU4
-//     INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
 //     INJECT(project::IProjectConfiguration, projectConfiguration)
 public:
     void init();

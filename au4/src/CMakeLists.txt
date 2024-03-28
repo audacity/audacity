@@ -22,7 +22,7 @@
 add_subdirectory(app)
 
 # Framework
-add_subdirectory(framework)
+#add_subdirectory(framework)
 
 # Modules
 if (MU_BUILD_APPSHELL_MODULE)

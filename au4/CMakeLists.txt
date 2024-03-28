@@ -15,9 +15,25 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+set(FETCHCONTENT_QUIET OFF)
+set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
+include(FetchContent)
+FetchContent_Declare(
+  muse_framework
+  GIT_REPOSITORY git@github.com:musescore/framework_tmp.git
+  GIT_TAG        HEAD
+)
+
+FetchContent_GetProperties(muse_framework)
+if(NOT muse_framework_POPULATED)
+  FetchContent_Populate(muse_framework)
+endif()
+
+set(MUSE_FRAMEWORK_PATH ${muse_framework_SOURCE_DIR})
+
 set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
-    ${CMAKE_CURRENT_LIST_DIR}/build/cmake
+    ${MUSE_FRAMEWORK_PATH}/build/cmake
     ${CMAKE_MODULE_PATH}
     )
 
@@ -41,12 +57,26 @@ set(AUDACITY_BUILD_MODE "dev" CACHE STRING "Build mode")
 set(AUDACITY_REVISION "" CACHE STRING "Build revision")
 
 # Modules framework (alphabetical order please)
-option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" OFF)
+option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" ON)
 option(MU_BUILD_ACCESSIBILITY_TESTS "Build accessibility tests" OFF)
+option(MU_BUILD_ACTIONS_MODULE "Build actions module" ON)
+option(MU_BUILD_ACTIONS_TESTS "Build actions tests" OFF)
+option(MU_BUILD_EXTENSIONS_MODULE "Build extensions module" OFF)
+option(MU_BUILD_EXTENSIONS_TESTS "Build extensions tests" OFF)
+option(MU_BUILD_LANGUAGES_MODULE "Build languages module" OFF)
+option(MU_BUILD_LANGUAGES_TESTS "Build languages tests" OFF)
+option(MU_BUILD_MIDI_MODULE "Build midi module" OFF)
+option(MU_BUILD_MIDI_TESTS "Build midi tests" OFF)
+option(MU_BUILD_MULTIINSTANCES_MODULE "Build multiinstances module" ON)
+option(MU_BUILD_MULTIINSTANCES_TESTS "Build multiinstances tests" OFF)
+option(MU_BUILD_NETWORK_MODULE "Build network module" OFF)
+option(MU_BUILD_NETWORK_TESTS "Build network tests" OFF)
+option(MU_BUILD_SHORTCUTS_MODULE "Build shortcuts module" ON)
+option(MU_BUILD_SHORTCUTS_TESTS "Build shortcuts tests" OFF)
 option(MU_BUILD_UI_MODULE "Build ui and uicomponets modules" ON)
-option(MU_BUILD_UI_TESTS "Build ui and uicomponets tests" ON)
-option(MU_BUILD_SHORTCUTS_MODULE "Build ui and shortcuts modules" ON)
-option(MU_BUILD_SHORTCUTS_TESTS "Build ui and shortcuts tests" ON)
+option(MU_BUILD_UI_TESTS "Build ui and uicomponets tests" OFF)
+option(MU_BUILD_WORKSPACE_MODULE "Build workspace module" ON)
+option(MU_BUILD_WORKSPACE_TESTS "Build workspace tests" OFF)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
@@ -140,7 +170,8 @@ if (MU_BUILD_UNIT_TESTS)
     add_subdirectory(thirdparty/googletest)
 endif() #MU_BUILD_UNIT_TESTS
 
-add_subdirectory(src/framework/global) # should be first to work pch
+#add_subdirectory(src/framework/global) # should be first to work pch
+add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
 
 ###########################################

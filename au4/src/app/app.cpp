@@ -35,7 +35,6 @@
 
 #include "modularity/ioc.h"
 #include "ui/internal/uiengine.h"
-#include "muversion.h"
 
 #include "framework/global/globalmodule.h"
 
@@ -71,7 +70,7 @@ int App::run(int argc, char** argv)
 #endif
 
     const char* appName;
-    if (mu::MUVersion::unstable()) {
+    if (true /*mu::MUVersion::unstable()*/) {
         appName  = "Audacity4Development";
     } else {
         appName  = "Audacity4";
@@ -124,7 +123,7 @@ int App::run(int argc, char** argv)
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("MuseScore");
     QCoreApplication::setOrganizationDomain("musescore.org");
-    QCoreApplication::setApplicationVersion(QString::fromStdString(mu::MUVersion::fullVersion().toStdString()));
+    // QCoreApplication::setApplicationVersion(QString::fromStdString(mu::MUVersion::fullVersion().toStdString()));
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
