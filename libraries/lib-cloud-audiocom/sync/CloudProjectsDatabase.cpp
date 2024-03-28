@@ -492,13 +492,26 @@ void CloudProjectsDatabase::RemovePendingSnapshot(
    if (!connection)
       return;
 
-   auto statement = connection->CreateStatement(
-      "DELETE FROM pending_snapshots WHERE project_id = ? AND snapshot_id = ?");
+   static const char* queries[] = {
+      "DELETE FROM pending_snapshots WHERE project_id = ? AND snapshot_id = ?",
+      "DELETE FROM pending_project_blobs WHERE project_id = ? AND snapshot_id = ?",
+      "DELETE FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ?",
+   };
 
-   if (!statement)
-      return;
+   auto tx = connection->BeginTransaction("RemovePendingSnapshot");
 
-   statement->Prepare(projectId, snapshotId).Run();
+   for (auto query : queries)
+   {
+      auto statement = connection->CreateStatement(query);
+
+      if (!statement)
+         return;
+
+      if (!statement->Prepare(projectId, snapshotId).Run().IsOk())
+         return;
+   }
+
+   tx.Commit();
 }
 
 std::vector<PendingSnapshotData>
