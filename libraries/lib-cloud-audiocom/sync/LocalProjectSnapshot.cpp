@@ -551,8 +551,7 @@ void LocalProjectSnapshot::StorePendingSnapshot(
    CloudProjectsDatabase::Get().AddPendingSnapshot(
       { response.Project.Id, response.Snapshot.Id,
         mServiceConfig.GetSnapshotSyncUrl(
-           mProjectCloudExtension.GetCloudProjectId(),
-           mProjectCloudExtension.GetSnapshotId()) });
+           response.Project.Id, response.Snapshot.Id) });
 
    CloudProjectsDatabase::Get().AddPendingProjectBlob(
       { response.Project.Id, response.Snapshot.Id,
@@ -581,8 +580,8 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
 {
    using namespace network_manager;
    Request request(mServiceConfig.GetSnapshotSyncUrl(
-      mProjectCloudExtension.GetCloudProjectId(),
-      mProjectCloudExtension.GetSnapshotId()));
+      mCreateSnapshotResponse->Project.Id,
+      mCreateSnapshotResponse->Snapshot.Id));
 
    SetCommonHeaders(request);
 
