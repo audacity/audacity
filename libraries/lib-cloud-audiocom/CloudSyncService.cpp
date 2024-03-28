@@ -566,7 +566,9 @@ void CloudSyncService::SyncCloudSnapshot(
       // 1. Local snapshot ID matches the remote snapshot ID. Just complete the
       // sync right away. If the project was modified locally, but not saved,
       // the user will be prompted about the autosave.
-      if (localProjectInfo->SnapshotId == snapshotInfo.Id)
+      if (
+         localProjectInfo->SnapshotId == snapshotInfo.Id &&
+         localProjectInfo->SyncStatus != sync::DBProjectData::SyncStatusDownloading)
       {
          CompleteSync(
             { sync::ProjectSyncResult::StatusCode::Succeeded, {}, utf8Path });
@@ -575,7 +577,7 @@ void CloudSyncService::SyncCloudSnapshot(
       // 2. Project sync was interrupted.
       if (
          mode == SyncMode::Normal &&
-         localProjectInfo->SyncStatus != sync::DBProjectData::SyncStatusSynced)
+         localProjectInfo->SyncStatus == sync::DBProjectData::SyncStatusUploading)
       {
          // There is not enough information to decide if the project has
          // diverged. Just open it, so the sync can resume. If the project has
