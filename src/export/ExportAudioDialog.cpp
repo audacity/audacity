@@ -472,7 +472,7 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
    const auto path = mExportOptionsPanel->GetPath();
 
    if(!wxDirExists(path))
-      wxMkdir(path);
+      wxFileName::Mkdir(path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
    
    if(!wxDirExists(path))
    {
