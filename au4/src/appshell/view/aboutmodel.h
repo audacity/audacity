@@ -19,18 +19,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_APPSHELL_ABOUTMODEL_H
-#define AU_APPSHELL_ABOUTMODEL_H
+#ifndef MU_APPSHELL_ABOUTMODEL_H
+#define MU_APPSHELL_ABOUTMODEL_H
 
 #include <QObject>
 
 #include "modularity/ioc.h"
 #include "iappshellconfiguration.h"
 #include "global/iglobalconfiguration.h"
+#include "global/iapplication.h"
 
-#ifdef MU_BUILD_UPDATE_MODULE
-#include "update/iupdateconfiguration.h"
-#endif
+//! TODO AU4
+//#include "update/iupdateconfiguration.h"
 
 class QUrl;
 
@@ -39,12 +39,13 @@ class AboutModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(mu::IGlobalConfiguration, globalConfiguration)
+    mu::Inject<IAppShellConfiguration> configuration;
+    mu::Inject<mu::IGlobalConfiguration> globalConfiguration;
+    mu::Inject<mu::IApplication> application;
 
-#ifdef MU_BUILD_UPDATE_MODULE
-    INJECT(update::IUpdateConfiguration, updateConfiguration)
-#endif
+//! TODO AU4
+//     mu::Inject<update::IUpdateConfiguration> updateConfiguration;
+
 public:
     explicit AboutModel(QObject* parent = nullptr);
 
@@ -67,4 +68,4 @@ private:
 };
 }
 
-#endif // AU_APPSHELL_ABOUTMODEL_H
+#endif // MU_APPSHELL_ABOUTMODEL_H

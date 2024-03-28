@@ -69,3 +69,5 @@ VERSION
 temp_*
 
 *.local.cmake
+
+*_deps/*

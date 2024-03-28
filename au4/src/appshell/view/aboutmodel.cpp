@@ -22,12 +22,12 @@
 #include "aboutmodel.h"
 
 #include "translation.h"
-#include "muversion.h"
 
 #include <QApplication>
 #include <QClipboard>
 #include <QUrl>
 
+using namespace mu;
 using namespace au::appshell;
 
 AboutModel::AboutModel(QObject* parent)
@@ -38,8 +38,8 @@ AboutModel::AboutModel(QObject* parent)
 QString AboutModel::museScoreVersion() const
 {
     QString version = QString::fromStdString(configuration()->museScoreVersion());
-    return mu::MUVersion::unstable()
-           ? mu::qtrc("appshell/about", "Unstable prerelease for %1").arg(version)
+    return application()->unstable()
+           ? qtrc("appshell/about", "Unstable prerelease for %1").arg(version)
            : version;
 }
 
@@ -68,12 +68,10 @@ QVariantMap AboutModel::museScoreContributionUrl() const
 
 QVariantMap AboutModel::museScorePrivacyPolicyUrl() const
 {
-#ifdef MU_BUILD_UPDATE_MODULE
-    QUrl museScorePrivacyPolicyUrl(QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl()));
-    return makeUrl(museScorePrivacyPolicyUrl);
-#else
+//! TODO AU4
+    // QUrl museScorePrivacyPolicyUrl(QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl()));
+    // return makeUrl(museScorePrivacyPolicyUrl);
     return QVariantMap();
-#endif
 }
 
 QVariantMap AboutModel::musicXMLLicenseUrl() const
@@ -97,9 +95,9 @@ void AboutModel::copyRevisionToClipboard() const
                 ? " or later" : ""))
         .arg(QSysInfo::currentCpuArchitecture())
         .arg(QSysInfo::WordSize)
-        .arg(mu::MUVersion::version())
-        .arg(mu::MUVersion::build())
-        .arg(mu::MUVersion::revision()));
+        .arg(application()->version().toString())
+        .arg(application()->build())
+        .arg(application()->revision()));
 }
 
 void AboutModel::toggleDevMode()
