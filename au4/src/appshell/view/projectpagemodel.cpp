@@ -1,25 +1,7 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
- *
- * MuseScore
- * Music Composition & Notation
- *
- * Copyright (C) 2021 MuseScore BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-#include "notationpagemodel.h"
+* Audacity: A Digital Audio Editor
+*/
+#include "projectpagemodel.h"
 
 #include "internal/applicationuiactions.h"
 #include "dockwindow/idockwindow.h"
@@ -27,26 +9,25 @@
 #include "log.h"
 
 using namespace au::appshell;
-//using namespace mu::notation;
 using namespace mu::actions;
 
-NotationPageModel::NotationPageModel(QObject* parent)
+ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent)
 {
 }
 
-bool NotationPageModel::isNavigatorVisible() const
+bool ProjectPageModel::isNavigatorVisible() const
 {
     return configuration()->isNotationNavigatorVisible();
 }
 
-bool NotationPageModel::isBraillePanelVisible() const
+bool ProjectPageModel::isBraillePanelVisible() const
 {
     return false;
     //return brailleConfiguration()->braillePanelEnabled();
 }
 
-void NotationPageModel::init()
+void ProjectPageModel::init()
 {
     TRACEFUNC;
 
@@ -67,72 +48,72 @@ void NotationPageModel::init()
     updateDrumsetPanelVisibility();
 }
 
-QString NotationPageModel::notationToolBarName() const
+QString ProjectPageModel::projectToolBarName() const
 {
-    return NOTATION_TOOLBAR_NAME;
+    return PROJECT_TOOLBAR_NAME;
 }
 
-QString NotationPageModel::playbackToolBarName() const
+QString ProjectPageModel::playbackToolBarName() const
 {
     return PLAYBACK_TOOLBAR_NAME;
 }
 
-QString NotationPageModel::undoRedoToolBarName() const
+QString ProjectPageModel::undoRedoToolBarName() const
 {
     return UNDO_REDO_TOOLBAR_NAME;
 }
 
-QString NotationPageModel::noteInputBarName() const
+QString ProjectPageModel::noteInputBarName() const
 {
     return NOTE_INPUT_BAR_NAME;
 }
 
-QString NotationPageModel::palettesPanelName() const
+QString ProjectPageModel::tracksPanelName() const
 {
-    return PALETTES_PANEL_NAME;
+    return TRACKS_PANEL_NAME;
 }
 
-QString NotationPageModel::instrumentsPanelName() const
+QString ProjectPageModel::instrumentsPanelName() const
 {
     return INSTRUMENTS_PANEL_NAME;
 }
 
-QString NotationPageModel::inspectorPanelName() const
+QString ProjectPageModel::inspectorPanelName() const
 {
     return INSPECTOR_PANEL_NAME;
 }
 
-QString NotationPageModel::selectionFiltersPanelName() const
+QString ProjectPageModel::selectionFiltersPanelName() const
 {
     return SELECTION_FILTERS_PANEL_NAME;
 }
 
-QString NotationPageModel::mixerPanelName() const
+QString ProjectPageModel::mixerPanelName() const
 {
     return MIXER_PANEL_NAME;
 }
 
-QString NotationPageModel::pianoKeyboardPanelName() const
+QString ProjectPageModel::pianoKeyboardPanelName() const
 {
     return PIANO_KEYBOARD_PANEL_NAME;
 }
 
-QString NotationPageModel::timelinePanelName() const
+QString ProjectPageModel::timelinePanelName() const
 {
     return TIMELINE_PANEL_NAME;
 }
 
-QString NotationPageModel::drumsetPanelName() const
+QString ProjectPageModel::drumsetPanelName() const
 {
     return DRUMSET_PANEL_NAME;
 }
 
-QString NotationPageModel::statusBarName() const
+QString ProjectPageModel::statusBarName() const
 {
     return NOTATION_STATUSBAR_NAME;
 }
 
-void NotationPageModel::onNotationChanged()
+void ProjectPageModel::onNotationChanged()
 {
     // INotationPtr notation = globalContext()->currentNotation();
     // if (!notation) {
@@ -145,7 +126,7 @@ void NotationPageModel::onNotationChanged()
     // });
 }
 
-void NotationPageModel::toggleDock(const QString& name)
+void ProjectPageModel::toggleDock(const QString& name)
 {
     if (name == NOTATION_NAVIGATOR_PANEL_NAME) {
         configuration()->setIsNotationNavigatorVisible(!isNavigatorVisible());
@@ -162,7 +143,7 @@ void NotationPageModel::toggleDock(const QString& name)
     dispatcher()->dispatch("dock-toggle", ActionData::make_arg1<QString>(name));
 }
 
-void NotationPageModel::updateDrumsetPanelVisibility()
+void ProjectPageModel::updateDrumsetPanelVisibility()
 {
     TRACEFUNC;
 

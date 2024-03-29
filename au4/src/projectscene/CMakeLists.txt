@@ -36,8 +36,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectsceneuiactions.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playtoolbarmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomiseitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomiseitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h

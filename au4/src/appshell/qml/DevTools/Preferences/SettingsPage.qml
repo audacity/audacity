@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.15
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
-import MuseScore.Dock 1.0
+import Audacity.Dock 1.0
 import MuseScore.Preferences 1.0
 
 ColumnLayout {

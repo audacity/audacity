@@ -182,7 +182,15 @@ MenuItem* AbstractMenuModel::makeMenu(const TranslatableString& title, const Men
 {
     MenuItem* item = new MenuItem(this);
     item->setId(menuId);
-    item->setSubitems(items);
+
+    //todo: remove
+    MenuItemList existsSubitems;
+    for (MenuItem* menuItem : items) {
+        if (menuItem) {
+            existsSubitems << menuItem;
+        }
+    }
+    item->setSubitems(existsSubitems);
 
     UiAction action;
     action.title = title;

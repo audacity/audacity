@@ -105,17 +105,17 @@ static std::shared_ptr<DockWindowActionsController> s_actionsController = std::m
 
 void DockSetup::registerQmlTypes()
 {
-    qmlRegisterType<DockWindow>("MuseScore.Dock", 1, 0, "DockWindow");
-    qmlRegisterType<DockPanelView>("MuseScore.Dock", 1, 0, "DockPanelView");
-    qmlRegisterType<DockStatusBarView>("MuseScore.Dock", 1, 0, "DockStatusBar");
-    qmlRegisterType<DockToolBarView>("MuseScore.Dock", 1, 0, "DockToolBarView");
-    qmlRegisterType<DockingHolderView>("MuseScore.Dock", 1, 0, "DockingHolderView");
-    qmlRegisterType<DockCentralView>("MuseScore.Dock", 1, 0, "DockCentralView");
-    qmlRegisterType<DockPageView>("MuseScore.Dock", 1, 0, "DockPageView");
-    qmlRegisterType<DockFrameModel>("MuseScore.Dock", 1, 0, "DockFrameModel");
+    qmlRegisterType<DockWindow>("Audacity.Dock", 1, 0, "DockWindow");
+    qmlRegisterType<DockPanelView>("Audacity.Dock", 1, 0, "DockPanelView");
+    qmlRegisterType<DockStatusBarView>("Audacity.Dock", 1, 0, "DockStatusBar");
+    qmlRegisterType<DockToolBarView>("Audacity.Dock", 1, 0, "DockToolBarView");
+    qmlRegisterType<DockingHolderView>("Audacity.Dock", 1, 0, "DockingHolderView");
+    qmlRegisterType<DockCentralView>("Audacity.Dock", 1, 0, "DockCentralView");
+    qmlRegisterType<DockPageView>("Audacity.Dock", 1, 0, "DockPageView");
+    qmlRegisterType<DockFrameModel>("Audacity.Dock", 1, 0, "DockFrameModel");
 
-    qmlRegisterUncreatableType<DockToolBarAlignment>("MuseScore.Dock", 1, 0, "DockToolBarAlignment", "Not creatable from QML");
-    qmlRegisterUncreatableType<DockLocation>("MuseScore.Dock", 1, 0, "Location", "Not creatable from QML");
+    qmlRegisterUncreatableType<DockToolBarAlignment>("Audacity.Dock", 1, 0, "DockToolBarAlignment", "Not creatable from QML");
+    qmlRegisterUncreatableType<DockLocation>("Audacity.Dock", 1, 0, "Location", "Not creatable from QML");
 }
 
 void DockSetup::registerExports()

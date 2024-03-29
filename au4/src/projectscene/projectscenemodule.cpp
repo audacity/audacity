@@ -31,7 +31,10 @@
 
 #include "view/projectsceneuiactions.h"
 
-#include "view/toolbars/playtoolbarmodel.h"
+#include "view/toolbars/playbacktoolbarmodel.h"
+#include "view/toolbars/playbacktoolbarcustomisemodel.h"
+#include "view/toolbars/playbacktoolbarcustomiseitem.h"
+#include "view/toolbars/projecttoolbarmodel.h"
 
 #include "view/trackspanel/trackslistmodel.h"
 
@@ -72,7 +75,11 @@ void ProjectSceneModule::resolveImports()
 void ProjectSceneModule::registerUiTypes()
 {
     // toolbars
-    qmlRegisterType<PlayToolBarModel>("Audacity.ProjectScene", 1, 0, "PlayToolBarModel");
+    qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
+    qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
+    qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseItem",
+                                                             "Cannot create");
+    qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
 
     // tracks panel
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");

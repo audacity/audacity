@@ -21,7 +21,7 @@
  */
 import QtQuick 2.15
 
-import MuseScore.Dock 1.0
+import Audacity.Dock 1.0
 
 DockPageView {
     id: root

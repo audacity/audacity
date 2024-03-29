@@ -1,4 +1,5 @@
 module Audacity.ProjectScene
-PlayToolBar 1.0 PlayToolBar.qml
+PlaybackToolBar 1.0 PlaybackToolBar.qml
+ProjectToolBar 1.0 ProjectToolBar.qml
 TracksPanel 1.0 TracksPanel.qml
 ClipsView 1.0 ClipsView.qml

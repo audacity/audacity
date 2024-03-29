@@ -24,9 +24,9 @@ import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
-import MuseScore.Dock 1.0
-import MuseScore.AppShell 1.0
 
+import Audacity.Dock 1.0
+import Audacity.AppShell 1.0
 import Audacity.ProjectScene 1.0
 
 import "../dockwindow"
@@ -37,26 +37,124 @@ DockPage {
     objectName: "ProjecPage"
     uri: "musescore://project"
 
-    toolBars: [
+    property var topToolKeyNavSec
+
+    property ProjectPageModel pageModel: ProjectPageModel {}
+
+    property NavigationSection playbackToolBarKeyNavSec: NavigationSection {
+        id: keynavSec
+        name: "PlaybackSection"
+        order: 2
+    }
+
+    property NavigationSection keynavTopPanelSec: NavigationSection {
+        name: "NavigationTopPanel"
+        enabled: root.visible
+        order: 3
+    }
+
+    property NavigationSection keynavLeftPanelSec: NavigationSection {
+        name: "NavigationLeftPanel"
+        enabled: root.visible
+        order: 4
+    }
+
+    property NavigationSection keynavRightPanelSec: NavigationSection {
+        name: "NavigationRightPanel"
+        enabled: root.visible
+        order: 6
+    }
+
+    property NavigationSection keynavBottomPanelSec: NavigationSection {
+        name: "NavigationBottomPanel"
+        enabled: root.visible
+        order: 7
+    }
+
+    function navigationPanelSec(location) {
+        switch(location) {
+        case Location.Top: return keynavTopPanelSec
+        case Location.Left: return keynavLeftPanelSec
+        case Location.Right: return keynavRightPanelSec
+        case Location.Bottom: return keynavBottomPanelSec
+        }
+
+        return null
+    }
+
+    onInited: {
+        Qt.callLater(pageModel.init)
+    }
+
+    readonly property int verticalPanelDefaultWidth: 300
+
+    readonly property int horizontalPanelMinHeight: 100
+    readonly property int horizontalPanelMaxHeight: 520
+
+    readonly property string verticalPanelsGroup: "VERTICAL_PANELS"
+    readonly property string horizontalPanelsGroup: "HORIZONTAL_PANELS"
+
+    readonly property var verticalPanelDropDestinations: [
+        { "dock": root.centralDock, "dropLocation": Location.Left, "dropDistance": root.verticalPanelDefaultWidth },
+        { "dock": root.centralDock, "dropLocation": Location.Right, "dropDistance": root.verticalPanelDefaultWidth }
+    ]
+
+    readonly property var horizontalPanelDropDestinations: [
+        root.panelTopDropDestination,
+        root.panelBottomDropDestination
+    ]
+
+    mainToolBars: [
         DockToolBar {
-            id: playToolBar
+            id: projectToolBar
 
-            objectName: "playToolBar"
-            title: qsTrc("appshell", "Play Tool Bar")
+            objectName: pageModel.projectToolBarName()
+            title: qsTrc("appshell", "Project toolbar")
 
-            floatable: true
+            floatable: false
             closable: false
             resizable: false
+            separatorsVisible: false
 
-            PlayToolBar {
-                //navigationPanel.section: root.topToolKeyNavSec
-                //navigationPanel.order: 2
+            alignment: DockToolBarAlignment.Center
+            contentBottomPadding: 2
+
+            ProjectToolBar {
+                navigationPanel.section: root.topToolKeyNavSec
+                navigationPanel.order: 2
 
                 onActiveFocusRequested: {
                     if (navigationPanel.active) {
-                        playToolBar.forceActiveFocus()
+                        projectToolBar.forceActiveFocus()
                     }
                 }
+            }
+        }
+    ]
+
+    toolBars: [
+        DockToolBar {
+            id: playbackToolBar
+
+            objectName: pageModel.playbackToolBarName()
+            title: qsTrc("appshell", "Play Tool Bar")
+
+            dropDestinations: [
+                root.toolBarTopDropDestination,
+                root.toolBarBottomDropDestination,
+                root.toolBarLeftDropDestination,
+                root.toolBarRightDropDestination
+            ]
+
+            PlaybackToolBar {
+                orientation: playbackToolBar.orientation
+                floating: playbackToolBar.floating
+
+                maximumWidth: playbackToolBar.width
+                maximumHeight: playbackToolBar.height
+
+                navigationPanel.section: root.playbackToolBarKeyNavSec
+                navigationPanel.order: 1
             }
         }
     ]
@@ -65,18 +163,18 @@ DockPage {
         DockPanel {
             id: tracksPanel
 
-            objectName: "tracksPanel"
+            objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
 
-            //navigationSection: root.navigationPanelSec(tracksPanel.location)
+            navigationSection: root.navigationPanelSec(tracksPanel.location)
 
-            width: 240//root.verticalPanelDefaultWidth
-            minimumWidth: 240//root.verticalPanelDefaultWidth
-            maximumWidth: 480//root.verticalPanelDefaultWidth
+            width: root.verticalPanelDefaultWidth
+            minimumWidth: root.verticalPanelDefaultWidth
+            maximumWidth: root.verticalPanelDefaultWidth
 
-            //groupName: root.verticalPanelsGroup
+            groupName: root.verticalPanelsGroup
 
-            //dropDestinations: root.verticalPanelDropDestinations
+            dropDestinations: root.verticalPanelDropDestinations
 
             TracksPanel {
                 navigationSection: tracksPanel.navigationSection

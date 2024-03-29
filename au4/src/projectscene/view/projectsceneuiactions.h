@@ -16,6 +16,8 @@ public:
     bool actionChecked(const mu::ui::UiAction& act) const override;
     mu::async::Channel<mu::actions::ActionCodeList> actionCheckedChanged() const override;
 
+    static const mu::ui::ToolConfig& defaultPlaybackToolBarConfig();
+
 private:
     const mu::ui::UiActionList& mainActions() const;
 };
