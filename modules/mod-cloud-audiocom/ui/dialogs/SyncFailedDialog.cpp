@@ -137,7 +137,7 @@ SyncFailedDialog::SyncFailedDialog(
    if (!log.empty())
       AddParagraph(XO("Error details:\n%s").Format(ToWXString(log)));
 
-   AddButton(CancellButtonIdentifier(), XO("OK"), DefaultButton | EscButton);
+   AddButton(CancelButtonIdentifier(), XO("OK"), DefaultButton | EscButton);
 }
 
 } // namespace audacity::cloud::audiocom::sync
