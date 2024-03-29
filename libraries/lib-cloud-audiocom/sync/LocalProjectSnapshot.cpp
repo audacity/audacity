@@ -521,9 +521,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
                if (!strongThis)
                   return;
 
-               if (
-                  uploadResult.Code != SyncResultCode::ConnectionFailed &&
-                  uploadResult.Code != SyncResultCode::Cancelled)
+               if (!IsUploadRecoverable(uploadResult.Code))
                   CloudProjectsDatabase::Get().RemovePendingProjectBlock(
                      mCreateSnapshotResponse->Project.Id, block.Id);
 
