@@ -165,23 +165,23 @@ void AppShellModule::registerUiTypes()
     // qmlRegisterType<BraillePreferencesModel>("MuseScore.Preferences", 1, 0, "BraillePreferencesModel");
 
 #if defined(Q_OS_MACOS)
-    qmlRegisterType<AppMenuModel>("MuseScore.AppShell", 1, 0, "PlatformAppMenuModel");
+    qmlRegisterType<AppMenuModel>("Audacity.AppShell", 1, 0, "PlatformAppMenuModel");
 #elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
-    qmlRegisterType<AppMenuModel>("MuseScore.AppShell", 1, 0, "PlatformAppMenuModel");
-    qmlRegisterType<NavigableAppMenuModel>("MuseScore.AppShell", 1, 0, "AppMenuModel");
+    qmlRegisterType<AppMenuModel>("Audacity.AppShell", 1, 0, "PlatformAppMenuModel");
+    qmlRegisterType<NavigableAppMenuModel>("Audacity.AppShell", 1, 0, "AppMenuModel");
 #else
-    qmlRegisterType<NavigableAppMenuModel>("MuseScore.AppShell", 1, 0, "AppMenuModel");
+    qmlRegisterType<NavigableAppMenuModel>("Audacity.AppShell", 1, 0, "AppMenuModel");
 #endif
 
-    qmlRegisterType<MainWindowTitleProvider>("MuseScore.AppShell", 1, 0, "MainWindowTitleProvider");
-    qmlRegisterType<NotationPageModel>("MuseScore.AppShell", 1, 0, "NotationPageModel");
-//    qmlRegisterType<NotationStatusBarModel>("MuseScore.AppShell", 1, 0, "NotationStatusBarModel");
-    qmlRegisterType<AboutModel>("MuseScore.AppShell", 1, 0, "AboutModel");
-    qmlRegisterType<FirstLaunchSetupModel>("MuseScore.AppShell", 1, 0, "FirstLaunchSetupModel");
-    qmlRegisterType<ThemesPageModel>("MuseScore.AppShell", 1, 0, "ThemesPageModel");
-    qmlRegisterType<FramelessWindowModel>("MuseScore.AppShell", 1, 0, "FramelessWindowModel");
-    qmlRegisterType<PublishToolBarModel>("MuseScore.AppShell", 1, 0, "PublishToolBarModel");
-    qmlRegisterType<MainToolBarModel>("MuseScore.AppShell", 1, 0, "MainToolBarModel");
+    qmlRegisterType<MainWindowTitleProvider>("Audacity.AppShell", 1, 0, "MainWindowTitleProvider");
+    qmlRegisterType<ProjectPageModel>("Audacity.AppShell", 1, 0, "ProjectPageModel");
+//    qmlRegisterType<NotationStatusBarModel>("Audacity.AppShell", 1, 0, "NotationStatusBarModel");
+    qmlRegisterType<AboutModel>("Audacity.AppShell", 1, 0, "AboutModel");
+    qmlRegisterType<FirstLaunchSetupModel>("Audacity.AppShell", 1, 0, "FirstLaunchSetupModel");
+    qmlRegisterType<ThemesPageModel>("Audacity.AppShell", 1, 0, "ThemesPageModel");
+    qmlRegisterType<FramelessWindowModel>("Audacity.AppShell", 1, 0, "FramelessWindowModel");
+    qmlRegisterType<PublishToolBarModel>("Audacity.AppShell", 1, 0, "PublishToolBarModel");
+    qmlRegisterType<MainToolBarModel>("Audacity.AppShell", 1, 0, "MainToolBarModel");
 
     qmlRegisterType<WindowDropArea>("MuseScore.Ui", 1, 0, "WindowDropArea");
 }

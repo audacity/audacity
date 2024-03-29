@@ -23,7 +23,7 @@
 import QtQuick 2.15
 
 import MuseScore.Ui 1.0
-import MuseScore.Dock 1.0
+import Audacity.Dock 1.0
 
 DockingHolderView {
     Item {}

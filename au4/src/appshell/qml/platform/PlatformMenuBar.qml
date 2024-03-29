@@ -22,7 +22,7 @@
 import QtQuick 2.15
 import Qt.labs.platform 1.1 as PLATFORM
 
-import MuseScore.AppShell 1.0
+import Audacity.AppShell 1.0
 
 Item {
     readonly property bool available: menuModel.isGlobalMenuAvailable()

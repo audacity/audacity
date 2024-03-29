@@ -24,9 +24,9 @@ import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
-import MuseScore.Dock 1.0
-import MuseScore.AppShell 1.0
 
+import Audacity.Dock 1.0
+import Audacity.AppShell 1.0
 import Audacity.ProjectScene 1.0
 
 import "../dockwindow"
