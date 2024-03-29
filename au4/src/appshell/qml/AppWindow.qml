@@ -24,7 +24,7 @@ import QtQuick.Controls 2.15
 
 import MuseScore.Ui 1.0
 import MuseScore.Shortcuts 1.0
-import MuseScore.AppShell 1.0
+import Audacity.AppShell 1.0
 
 ApplicationWindow {
     id: root

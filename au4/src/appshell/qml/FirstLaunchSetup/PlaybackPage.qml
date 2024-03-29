@@ -25,7 +25,7 @@ import QtQuick.Window 2.15
 import MuseScore.Ui 1.0
 import MuseScore.UiComponents 1.0
 import MuseScore.GraphicalEffects 1.0
-import MuseScore.AppShell 1.0
+import Audacity.AppShell 1.0
 
 Page {
     title: qsTrc("appshell/gettingstarted", "Playback")
