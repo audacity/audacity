@@ -153,7 +153,7 @@ private:
             if (!strongThis)
                return;
 
-            if (result.Code != SyncResultCode::ConnectionFailed)
+            if (!IsUploadRecoverable(result.Code))
                CloudProjectsDatabase::Get().RemovePendingProjectBlob(
                   mProjectId, mSnapshotId);
 
@@ -169,14 +169,14 @@ private:
 
    void CompleteSync()
    {
-      mCompleted.store(true);
-      mProjectCloudExtension.OnSyncCompleted(this, {});
+      if (!mCompleted.exchange(true))
+         mProjectCloudExtension.OnSyncCompleted(this, {});
    }
 
    void FailSync(CloudSyncError error)
    {
-      mCompleted.store(true);
-      mProjectCloudExtension.OnSyncCompleted(this, error);
+      if (!mCompleted.exchange(true))
+         mProjectCloudExtension.OnSyncCompleted(this, error);
    }
 
    void FailSync(ResponseResult result)
@@ -401,6 +401,7 @@ private:
    void Cancel() override
    {
       mCancellationContext->Cancel();
+      FailSync(CloudSyncError { CloudSyncError::Cancelled });
    }
 
    ProjectCloudExtension& mProjectCloudExtension;
