@@ -145,7 +145,7 @@ private:
    std::mutex mUploadQueueMutex;
    std::vector<std::shared_ptr<UploadQueueElement>> mUploadQueue;
 
-   std::mutex mStatusMutex;
+   mutable std::mutex mStatusMutex;
    CloudStatusChangedMessage mLastStatus;
 
    std::unique_ptr<CloudStatusChangedNotifier> mAsyncStateNotifier;

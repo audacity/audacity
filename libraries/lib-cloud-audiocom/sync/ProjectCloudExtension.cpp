@@ -82,7 +82,7 @@ struct ProjectCloudExtension::CloudStatusChangedNotifier final :
          std::swap(queue, Queue);
       }
 
-      auto lock = std::lock_guard { OberverMutex };
+      auto lock = std::lock_guard { ObserverMutex };
 
       for (const auto& [message, _] : queue)
          Publish(message);
@@ -91,7 +91,7 @@ struct ProjectCloudExtension::CloudStatusChangedNotifier final :
    Observer::Subscription
    SubscribeSafe(std::function<void(const CloudStatusChangedMessage&)> callback)
    {
-      auto lock = std::lock_guard { OberverMutex };
+      auto lock = std::lock_guard { ObserverMutex };
       return Subscribe(std::move(callback));
    }
 
@@ -99,7 +99,7 @@ struct ProjectCloudExtension::CloudStatusChangedNotifier final :
 
    std::mutex QueueMutex;
    QueueType Queue;
-   std::recursive_mutex OberverMutex;
+   std::recursive_mutex ObserverMutex;
 };
 
 ProjectCloudExtension::ProjectCloudExtension(AudacityProject& project)
@@ -212,12 +212,12 @@ void ProjectCloudExtension::OnSnapshotCreated(
    const auto projectFilePath =
       audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-   auto previosDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+   auto previousDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
 
    DBProjectData dbData;
 
-   if (previosDbData)
-      dbData = *previosDbData;
+   if (previousDbData)
+      dbData = *previousDbData;
 
    dbData.ProjectId    = response.Project.Id;
    dbData.SnapshotId   = response.Snapshot.Id;
@@ -302,13 +302,13 @@ void ProjectCloudExtension::OnSyncCompleted(
          const auto projectFilePath =
             audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-         auto previosDbData =
+         auto previousDbData =
             cloudDatabase.GetProjectDataForPath(projectFilePath);
 
          DBProjectData dbData;
 
-         if (previosDbData)
-            dbData = *previosDbData;
+         if (previousDbData)
+            dbData = *previousDbData;
 
          const auto parentId = element->SnapshotResponse->Snapshot.ParentId;
 
@@ -317,7 +317,7 @@ void ProjectCloudExtension::OnSyncCompleted(
          cloudDatabase.UpdateProjectData(dbData);
 
          {
-            auto lock = std::lock_guard { mIdentifiersMutex };
+            auto lock   = std::lock_guard { mIdentifiersMutex };
             mSnapshotId = parentId;
          }
       }
@@ -370,9 +370,7 @@ void ProjectCloudExtension::CancelSync()
 
 bool ProjectCloudExtension::IsSyncing() const
 {
-   auto lock = std::lock_guard {
-      const_cast<ProjectCloudExtension*>(this)->mStatusMutex
-   };
+   auto lock = std::lock_guard { mStatusMutex };
 
    return mLastStatus.Status == ProjectSyncStatus::Syncing;
 }
@@ -558,12 +556,12 @@ void ProjectCloudExtension::MarkProjectSynced(bool success)
    const auto projectFilePath =
       audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-   auto previosDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+   auto previousDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
 
    DBProjectData dbData;
 
-   if (previosDbData)
-      dbData = *previosDbData;
+   if (previousDbData)
+      dbData = *previousDbData;
 
    dbData.LastModified = wxDateTime::Now().GetTicks();
    dbData.LastRead     = dbData.LastModified;
