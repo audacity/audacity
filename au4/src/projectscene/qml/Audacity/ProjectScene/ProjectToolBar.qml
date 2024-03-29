@@ -1,8 +1,11 @@
-import QtQuick
+/*
+* Audacity: A Digital Audio Editor
+*/
+import QtQuick 2.15
 
-import MuseScore.Ui
-import MuseScore.UiComponents
-import Audacity.ProjectScene
+import MuseScore.Ui 1.0
+import MuseScore.UiComponents 1.0
+import Audacity.ProjectScene 1.0
 
 Item {
     id: root
@@ -17,9 +20,9 @@ Item {
     }
 
     property NavigationPanel navigationPanel: NavigationPanel {
-        name: "ProjectSomeToolBar"
+        name: "ProjectToolBar"
         enabled: root.enabled && root.visible
-        accessible.name: qsTrc("projectscene", "Some toolbar")
+        accessible.name: qsTrc("projectscene", "Project toolbar")
         onActiveChanged: function(active) {
             if (active) {
                 root.activeFocusRequested()
@@ -28,7 +31,7 @@ Item {
         }
     }
 
-    PlayToolBarModel {
+    ProjectToolBarModel {
         id: toolbarModel
     }
 
@@ -36,7 +39,7 @@ Item {
         id: view
 
         width: contentWidth
-        height: 40
+        height: contentItem.childrenRect.height
 
         orientation: Qt.Horizontal
         interactive: false
@@ -45,13 +48,11 @@ Item {
         model: toolbarModel
 
         delegate: FlatButton {
-
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            height: 30
 
             property var item: Boolean(model) ? model.itemRole : null
 
-            //text: Boolean(item) ? item.title : ""
+            text: Boolean(item) ? item.title : ""
             icon: Boolean(item) ? item.icon : IconCode.NONE
             iconFont: ui.theme.toolbarIconsFont
 

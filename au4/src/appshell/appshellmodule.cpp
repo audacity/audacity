@@ -37,7 +37,7 @@
 
 #include "view/devtools/settingslistmodel.h"
 #include "view/mainwindowtitleprovider.h"
-#include "view/notationpagemodel.h"
+#include "view/projectpagemodel.h"
 //#include "view/notationstatusbarmodel.h"
 #include "view/aboutmodel.h"
 #include "view/firstlaunchsetup/firstlaunchsetupmodel.h"

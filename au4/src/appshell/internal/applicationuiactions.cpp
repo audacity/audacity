@@ -117,11 +117,11 @@ const UiActionList ApplicationUiActions::m_actions = {
              ),
 
     // Vertical panels
-    UiAction("toggle-palettes",
+    UiAction("toggle-tracks",
              mu::context::UiCtxNotationOpened,
              mu::context::CTX_ANY,
-             TranslatableString("action", "&Palettes"),
-             TranslatableString("action", "Show/hide palettes"),
+             TranslatableString("action", "&Tracks"),
+             TranslatableString("action", "Show/hide tracks"),
              Checkable::Yes
              ),
     UiAction("toggle-instruments",
@@ -318,7 +318,7 @@ const QMap<mu::actions::ActionCode, DockName>& ApplicationUiActions::toggleDockA
         { "toggle-transport", PLAYBACK_TOOLBAR_NAME },
         { "toggle-noteinput", NOTE_INPUT_BAR_NAME },
 
-        { "toggle-palettes", PALETTES_PANEL_NAME },
+        { "toggle-tracks", TRACKS_PANEL_NAME },
         { "toggle-instruments", INSTRUMENTS_PANEL_NAME },
         { "inspector", INSPECTOR_PANEL_NAME },
         { "toggle-selection-filter", SELECTION_FILTERS_PANEL_NAME },

@@ -34,6 +34,8 @@ DockPage {
     objectName: "Publish"
     uri: "musescore://publish"
 
+    property var topToolKeyNavSec
+
     central: Text {
         text: "Publish"
     }

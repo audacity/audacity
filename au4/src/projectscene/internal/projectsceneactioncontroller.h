@@ -22,6 +22,8 @@ private:
     void play();
     void stop();
     void rewind();
+
+    void openAudioSetup();
 };
 }
 

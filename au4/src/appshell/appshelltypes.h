@@ -29,7 +29,7 @@ namespace au::appshell {
 using DockName = QString;
 
 // Panels:
-static const DockName PALETTES_PANEL_NAME("palettesPanel");
+static const DockName TRACKS_PANEL_NAME("tracksPanel");
 static const DockName INSTRUMENTS_PANEL_NAME("instrumentsPanel");
 static const DockName INSPECTOR_PANEL_NAME("inspectorPanel");
 static const DockName SELECTION_FILTERS_PANEL_NAME("selectionFiltersPanel");
@@ -43,7 +43,7 @@ static const DockName TIMELINE_PANEL_NAME("timelinePanel");
 static const DockName DRUMSET_PANEL_NAME("drumsetPanel");
 
 // Toolbars:
-static const DockName NOTATION_TOOLBAR_NAME("notationToolBar");
+static const DockName PROJECT_TOOLBAR_NAME("projectToolBar");
 static const DockName UNDO_REDO_TOOLBAR_NAME("undoRedoToolBar");
 static const DockName NOTE_INPUT_BAR_NAME("noteInputBar");
 static const DockName PLAYBACK_TOOLBAR_NAME("playbackToolBar");

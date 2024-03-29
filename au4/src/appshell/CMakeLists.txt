@@ -63,8 +63,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/appmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/notationpagemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/notationpagemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/projectpagemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/projectpagemodel.h
     # TODO AU4
     # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.h

@@ -1,19 +1,21 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
-#define AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
+#ifndef AU_PROJECTSCENE_PROJECTTOOLBARMODEL_H
+#define AU_PROJECTSCENE_PROJECTTOOLBARMODEL_H
 
 #include "uicomponents/view/abstractmenumodel.h"
 
 #include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "ui/iuiactionsregister.h"
 
 namespace au::projectscene {
-class PlayToolBarModel : public mu::uicomponents::AbstractMenuModel
+class ProjectToolBarModel : public mu::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
+    mu::Inject<mu::context::IGlobalContext> context;
     mu::Inject<mu::ui::IUiActionsRegister> actionsRegister;
 
 public:
@@ -24,4 +26,4 @@ private:
 };
 }
 
-#endif // AU_PROJECTSCENE_PLAYTOOLBARMODEL_H
+#endif // AU_PROJECTSCENE_PROJECTTOOLBARMODEL_H
