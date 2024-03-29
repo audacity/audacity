@@ -9,6 +9,8 @@ void ProjectSceneActionController::init()
     dispatcher()->reg(this, "play", this, &ProjectSceneActionController::play);
     dispatcher()->reg(this, "stop", this, &ProjectSceneActionController::stop);
     dispatcher()->reg(this, "rewind", this, &ProjectSceneActionController::rewind);
+
+    dispatcher()->reg(this, "audio-setup", this, &ProjectSceneActionController::openAudioSetup);
 }
 
 void ProjectSceneActionController::play()
@@ -24,4 +26,9 @@ void ProjectSceneActionController::stop()
 void ProjectSceneActionController::rewind()
 {
     playbackController()->rewind();
+}
+
+void ProjectSceneActionController::openAudioSetup()
+{
+    NOT_IMPLEMENTED;
 }

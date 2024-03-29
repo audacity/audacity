@@ -33,7 +33,15 @@ const UiActionList& ProjectSceneUiActions::mainActions() const
                  TranslatableString("action", "Rewind"),
                  TranslatableString("action", "Rewind"),
                  IconCode::Code::REWIND
-                 )
+                 ),
+        UiAction("audio-setup",
+                 mu::context::UiCtxNotationOpened,
+                 mu::context::CTX_ANY,
+                 TranslatableString("action", "Audio setup"),
+                 TranslatableString("action", "Audio setup"),
+                 IconCode::Code::CONFIGURE,
+                 Checkable::Yes
+                 ),
     };
     return list;
 }
@@ -63,4 +71,17 @@ mu::async::Channel<mu::actions::ActionCodeList> ProjectSceneUiActions::actionEna
 mu::async::Channel<mu::actions::ActionCodeList> ProjectSceneUiActions::actionCheckedChanged() const
 {
     return mu::async::Channel<mu::actions::ActionCodeList>();
+}
+
+const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
+{
+    static ToolConfig config;
+    if (!config.isValid()) {
+        config.items = {
+            { "play", true },
+            { "stop", true },
+            { "rewind", true },
+        };
+    }
+    return config;
 }
