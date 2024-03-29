@@ -295,14 +295,17 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
             s.SetBorder(2);
             // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
             // instantly when `UpdateDialog` is called.
-            s.Id(semitoneCtrlId)
-               .TieSpinCtrl(
-                  XO("se&mitones:"), mShift.semis,
-                  TimeAndPitchInterface::MaxCents / 100,
-                  TimeAndPitchInterface::MinCents / 100)
-               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
+            const auto semiSpin = s.Id(semitoneCtrlId)
+                                     .TieSpinCtrl(
+                                        XO("se&mitones:"), mShift.semis,
+                                        TimeAndPitchInterface::MaxCents / 100,
+                                        TimeAndPitchInterface::MinCents / 100);
+            semiSpin->Bind(wxEVT_SPINCTRL, [this, semiSpin](const auto&) {
+               // The widget's value isn't updated yet on macos, so we need
+               // to asynchronously query it later.
+               CallAfter([this, semiSpin] {
                   const auto prevSemis = mShift.semis;
-                  mShift.semis = event.GetInt();
+                  mShift.semis = semiSpin->GetValue();
                   // If we have e.g. -3 semi, -1 cents, and the user
                   // changes the sign of the semitones, the logic in
                   // `SetSemitoneShift` would result in 2 semi, 99
@@ -321,11 +324,15 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   }
                   SetSemitoneShift();
                });
-            s.TieSpinCtrl(XO("&cents:"), mShift.cents, 100, -100)
-               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
-                  mShift.cents = event.GetInt();
+            });
+            const auto centSpin =
+               s.TieSpinCtrl(XO("&cents:"), mShift.cents, 100, -100);
+            centSpin->Bind(wxEVT_SPINCTRL, [this, centSpin](const auto&) {
+               CallAfter([this, centSpin] {
+                  mShift.cents = centSpin->GetValue();
                   SetSemitoneShift();
                });
+            });
          }
       }
 

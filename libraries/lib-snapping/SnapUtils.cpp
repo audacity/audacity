@@ -26,7 +26,7 @@ const wxString SelectionFormatKey = L"/SelectionFormat";
 const auto PathStart = L"SnapFunctions";
 } // namespace
 
-StringSetting SnapToSetting { SnapToKey, "seconds" };
+StringSetting SnapToSetting { SnapToKey, "bar_1_8" };
 
 EnumSetting<SnapMode> SnapModeSetting {
    SnapModeKey,
@@ -188,7 +188,7 @@ SnapResult SnapWithMultiplier (double value, double multiplier, bool nearest)
 {
    if (multiplier <= 0.0)
       return SnapResult { value, false };
-   
+
    auto result = nearest ? std::round(value * multiplier) / multiplier :
                            std::floor(value * multiplier) / multiplier;
 
@@ -209,7 +209,7 @@ public:
 
    SnapResult
    Snap(const AudacityProject&, double time, bool nearest) const override
-   {      
+   {
       return SnapWithMultiplier(time, mMultiplier, nearest);
    }
 
@@ -221,7 +221,7 @@ public:
 
       if (result < 0.0)
          return { 0.0, false };
-      
+
       return SnapWithMultiplier(result, mMultiplier, true);
    }
 
@@ -254,7 +254,7 @@ public:
    {
       if (!mMultiplierFunctor)
          return { time, false };
-      
+
       const auto multiplier = mMultiplierFunctor(project);
 
       const auto eps =

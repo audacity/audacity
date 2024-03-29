@@ -321,12 +321,18 @@ void OnExportLabels(const CommandContext &context)
       wxEmptyString,
       fName,
       wxT("txt"),
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
+#else
       { FileNames::TextFiles },
+#endif
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       &window);
 
    if (fName.empty())
       return;
+
+   LabelFormat format = LabelTrack::FormatForFileName(fName);
 
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
@@ -354,7 +360,7 @@ void OnExportLabels(const CommandContext &context)
    }
 
    for (auto lt : trackRange)
-      lt->Export(f);
+      lt->Export(f, format);
 
    f.Write();
    f.Close();
@@ -377,12 +383,17 @@ void OnImportLabels(const CommandContext &context)
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
-         wxT("txt"),   // Extension
+         wxT("txt"),    // Extension
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+         { FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
+#else
          { FileNames::TextFiles, FileNames::AllFiles },
+#endif
          wxRESIZE_BORDER,        // Flags
          &window);    // Parent
 
    if (!fileName.empty()) {
+      LabelFormat format = LabelTrack::FormatForFileName(fileName);
       wxTextFile f;
 
       f.Open(fileName);
@@ -397,7 +408,7 @@ void OnImportLabels(const CommandContext &context)
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
 
-      newTrack->Import(f);
+      newTrack->Import(f, format);
 
       SelectUtilities::SelectNone( project );
       newTrack->SetSelected(true);

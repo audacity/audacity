@@ -37,6 +37,7 @@ for drawing different aspects of the label and its text box.
 
 #include <wx/log.h>
 #include <wx/tokenzr.h>
+#include <wx/datetime.h>
 
 #include "Prefs.h"
 #include "Project.h"
@@ -44,6 +45,11 @@ for drawing different aspects of the label and its text box.
 
 #include "TimeWarper.h"
 #include "AudacityMessageBox.h"
+
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
+const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
+#endif
 
 LabelTrack::Interval::~Interval() = default;
 
@@ -420,85 +426,171 @@ ImportExportPrefs::RegisteredControls reg{ wxT("LabelStyle"), AddControls };
 
 }
 
-LabelStruct LabelStruct::Import(wxTextFile &file, int &index)
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+static double SubRipTimestampToDouble(const wxString &ts)
+{
+   wxString::const_iterator end;
+   wxDateTime dt;
+
+   if (!dt.ParseFormat(ts, wxT("%H:%M:%S,%l"), &end) || end != ts.end())
+      throw LabelStruct::BadFormatException{};
+
+   return dt.GetHour() * 3600 + dt.GetMinute() * 60 + dt.GetSecond()
+      + dt.GetMillisecond() / 1000.0;
+}
+#endif
+
+LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format)
 {
    SelectedRegion sr;
    wxString title;
-   static const wxString continuation{ wxT("\\") };
 
    wxString firstLine = file.GetLine(index++);
 
+   switch (format) {
+   case LabelFormat::TEXT:
    {
-      // Assume tab is an impossible character within the exported text
-      // of the label, so can be only a delimiter.  But other white space may
-      // be part of the label text.
-      wxStringTokenizer toker { firstLine, wxT("\t") };
+      static const wxString continuation{ wxT("\\") };
 
-      //get the timepoint of the left edge of the label.
-      auto token = toker.GetNextToken();
+      {
+         // Assume tab is an impossible character within the exported text
+         // of the label, so can be only a delimiter.  But other white space may
+         // be part of the label text.
+         wxStringTokenizer toker { firstLine, wxT("\t") };
 
-      double t0;
-      if (!Internat::CompatibleToDouble(token, &t0))
-         throw BadFormatException{};
+         //get the timepoint of the left edge of the label.
+         auto token = toker.GetNextToken();
 
-      token = toker.GetNextToken();
+         double t0;
+         if (!Internat::CompatibleToDouble(token, &t0))
+            throw BadFormatException{};
 
-      double t1;
-      if (!Internat::CompatibleToDouble(token, &t1))
-         //s1 is not a number.
-         t1 = t0;  //This is a one-sided label; t1 == t0.
-      else
          token = toker.GetNextToken();
 
-      sr.setTimes( t0, t1 );
+         double t1;
+         if (!Internat::CompatibleToDouble(token, &t1))
+            //s1 is not a number.
+            t1 = t0;  //This is a one-sided label; t1 == t0.
+         else
+            token = toker.GetNextToken();
 
-      title = token;
+         sr.setTimes( t0, t1 );
+
+         title = token;
+      }
+
+      // Newer selection fields are written on additional lines beginning with
+      // '\' which is an impossible numerical character that older versions of
+      // audacity will ignore.  Test for the presence of such a line and then
+      // parse it if we can.
+
+      // There may also be additional continuation lines from future formats that
+      // we ignore.
+
+      // Advance index over all continuation lines first, before we might throw
+      // any exceptions.
+      int index2 = index;
+      while (index < (int)file.GetLineCount() &&
+             file.GetLine(index).StartsWith(continuation))
+         ++index;
+
+      if (index2 < index) {
+         wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
+         auto token = toker.GetNextToken();
+         if (token != continuation)
+            throw BadFormatException{};
+
+         token = toker.GetNextToken();
+         double f0;
+         if (!Internat::CompatibleToDouble(token, &f0))
+            throw BadFormatException{};
+
+         token = toker.GetNextToken();
+         double f1;
+         if (!Internat::CompatibleToDouble(token, &f1))
+            throw BadFormatException{};
+
+         sr.setFrequencies(f0, f1);
+      }
+      break;
    }
-
-   // Newer selection fields are written on additional lines beginning with
-   // '\' which is an impossible numerical character that older versions of
-   // audacity will ignore.  Test for the presence of such a line and then
-   // parse it if we can.
-
-   // There may also be additional continuation lines from future formats that
-   // we ignore.
-
-   // Advance index over all continuation lines first, before we might throw
-   // any exceptions.
-   int index2 = index;
-   while (index < (int)file.GetLineCount() &&
-          file.GetLine(index).StartsWith(continuation))
-      ++index;
-
-   if (index2 < index) {
-      wxStringTokenizer toker { file.GetLine(index2++), wxT("\t") };
-      auto token = toker.GetNextToken();
-      if (token != continuation)
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   case LabelFormat::SUBRIP:
+   {
+      if ((int)file.GetLineCount() < index + 2)
          throw BadFormatException{};
 
-      token = toker.GetNextToken();
-      double f0;
-      if (!Internat::CompatibleToDouble(token, &f0))
+      long identifier;
+      // The first line should be a numeric counter; we can ignore it otherwise
+      if (!firstLine.ToLong(&identifier))
          throw BadFormatException{};
 
-      token = toker.GetNextToken();
-      double f1;
-      if (!Internat::CompatibleToDouble(token, &f1))
+      wxString timestamp = file.GetLine(index++);
+      // Parsing data of the form 'HH:MM:SS,sss --> HH:MM:SS,sss'
+      // Assume that the line is in exactly that format, with no extra whitespace
+      // and less than 24 hours.
+      if (timestamp.length() != 29)
+         throw BadFormatException{};
+      if (!timestamp.substr(12, 5).IsSameAs(" --> "))
          throw BadFormatException{};
 
-      sr.setFrequencies(f0, f1);
+      double t0 = SubRipTimestampToDouble(timestamp.substr(0, 12));
+      double t1 = SubRipTimestampToDouble(timestamp.substr(17, 12));
+
+      sr.setTimes(t0, t1);
+
+      // Assume that if there is an empty subtitle, there still is a second
+      // blank line after it
+      title = file[index++];
+
+      // Labels in audacity should be only one line, so join multiple lines
+      // with spaces.  This is not reversed on export.
+      while (index < (int)file.GetLineCount() &&
+             !file.GetLine(index).IsEmpty())
+         title += " " + file.GetLine(index);
+
+      index++; // Skip over empty line
+
+      break;
+   }
+#endif
+   default:
+      throw BadFormatException{};
    }
 
    return LabelStruct{ sr, title };
 }
 
-void LabelStruct::Export(wxTextFile &file) const
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
 {
-   file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
-      Internat::ToString(getT0(), FLT_DIG),
-      Internat::ToString(getT1(), FLT_DIG),
-      title
-   ));
+   // Note that the SubRip format always uses the comma as its separator...
+   static constexpr auto subripFormat = wxT("%H:%M:%S,%l");
+   // ... while WebVTT always used the period.
+   // WebVTT also allows skipping the hour part, but doesn't require doing so.
+   static constexpr auto webvttFormat = wxT("%H:%M:%S.%l");
+
+   // dt is the datetime that is timestamp seconds after Jan 1, 1970 UTC.
+   wxDateTime dt { (time_t) timestamp };
+   dt.SetMillisecond(wxRound(timestamp * 1000) % 1000);
+
+   // As such, we need to use UTC when formatting it, or else the time will
+   // be shifted (assuming the user is not in the UTC timezone).
+   return dt.Format(webvtt ? webvttFormat : subripFormat, wxDateTime::UTC);
+}
+#endif
+
+void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
+{
+   switch (format) {
+   case LabelFormat::TEXT:
+   default:
+   {
+      file.AddLine(wxString::Format(wxT("%s\t%s\t%s"),
+         Internat::ToString(getT0(), FLT_DIG),
+         Internat::ToString(getT1(), FLT_DIG),
+         title
+      ));
 
    // Do we need more lines?
    auto f0 = selectedRegion.f0();
@@ -508,14 +600,35 @@ void LabelStruct::Export(wxTextFile &file) const
       LabelStyleSetting.ReadEnum())
       return;
 
-   // Write a \ character at the start of a second line,
-   // so that earlier versions of Audacity ignore it.
-   file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
-      Internat::ToString(f0, FLT_DIG),
-      Internat::ToString(f1, FLT_DIG)
-   ));
+      // Write a \ character at the start of a second line,
+      // so that earlier versions of Audacity ignore it.
+      file.AddLine(wxString::Format(wxT("\\\t%s\t%s"),
+         Internat::ToString(f0, FLT_DIG),
+         Internat::ToString(f1, FLT_DIG)
+      ));
 
-   // Additional lines in future formats should also start with '\'.
+      // Additional lines in future formats should also start with '\'.
+      break;
+   }
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   case LabelFormat::SUBRIP:
+   case LabelFormat::WEBVTT:
+   {
+      // Note that the identifier is optional in WebVTT, but required in SubRip.
+      // We include it for both.
+      file.AddLine(wxString::Format(wxT("%d"), index + 1));
+
+      file.AddLine(wxString::Format(wxT("%s --> %s"),
+         SubRipTimestampFromDouble(getT0(), format == LabelFormat::WEBVTT),
+         SubRipTimestampFromDouble(getT1(), format == LabelFormat::WEBVTT)));
+
+      file.AddLine(title);
+      file.AddLine(wxT(""));
+
+      break;
+   }
+#endif
+   }
 }
 
 auto LabelStruct::RegionRelation(
@@ -585,16 +698,44 @@ auto LabelStruct::RegionRelation(
 }
 
 /// Export labels including label start and end-times.
-void LabelTrack::Export(wxTextFile & f) const
+void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 {
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (format == LabelFormat::WEBVTT) {
+      f.AddLine(wxT("WEBVTT"));
+      f.AddLine(wxT(""));
+   }
+#endif
+
    // PRL: to do: export other selection fields
+   int index = 0;
    for (auto &labelStruct: mLabels)
-      labelStruct.Export(f);
+      labelStruct.Export(f, format, index++);
+}
+
+LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
+{
+   LabelFormat format = LabelFormat::TEXT;
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
+      format = LabelFormat::SUBRIP;
+   } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
+      format = LabelFormat::WEBVTT;
+   }
+#endif
+   return format;
 }
 
 /// Import labels, handling files with or without end-times.
-void LabelTrack::Import(wxTextFile & in)
+void LabelTrack::Import(wxTextFile & in, LabelFormat format)
 {
+#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
+   if (format == LabelFormat::WEBVTT) {
+      ::AudacityMessageBox( XO("Importing WebVTT files is not currently supported.") );
+      return;
+   }
+#endif
+
    int lines = in.GetLineCount();
 
    mLabels.clear();
@@ -607,7 +748,7 @@ void LabelTrack::Import(wxTextFile & in)
    for (int index = 0; index < lines;) {
       try {
          // Let LabelStruct::Import advance index
-         LabelStruct l { LabelStruct::Import(in, index) };
+         LabelStruct l { LabelStruct::Import(in, index, format) };
          mLabels.push_back(l);
       }
       catch(const LabelStruct::BadFormatException&) { error = true; }
