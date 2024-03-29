@@ -113,6 +113,17 @@ void SetCommonHeaders(Request& request)
          common_headers::Authorization, oauthService.GetAccessToken());
 }
 
+bool IsUploadRecoverable(SyncResultCode code)
+{
+   return code == SyncResultCode::Cancelled ||
+          code == SyncResultCode::ConnectionFailed ||
+          code == SyncResultCode::PaymentRequired ||
+          code == SyncResultCode::Unauthorized ||
+          code == SyncResultCode::Forbidden ||
+          code == SyncResultCode::InternalClientError ||
+          code == SyncResultCode::InternalServerError;
+}
+
 TransferStats& TransferStats::SetBytesTransferred(int64_t bytesTransferred)
 {
    BytesTransferred = bytesTransferred;
