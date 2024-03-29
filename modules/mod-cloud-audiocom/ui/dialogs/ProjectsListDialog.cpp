@@ -769,7 +769,7 @@ void ProjectsListDialog::OnOpen()
             return;
          }
 
-         if (result == UnsyncedProjectDialog::CancellButtonIdentifier())
+         if (result == UnsyncedProjectDialog::CancelButtonIdentifier())
             return;
       }
    }

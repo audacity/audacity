@@ -21,7 +21,7 @@ WaitForActionDialog::WaitForActionDialog(
    AddTitle(title);
    AddParagraph(message);
    AddButton(
-      CancellButtonIdentifier(), retryButton ? XO("Retry") : XO("Cancel"),
+      CancelButtonIdentifier(), retryButton ? XO("Retry") : XO("Cancel"),
       EscButton | DefaultButton);
 }
 

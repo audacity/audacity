@@ -24,7 +24,7 @@ UnsyncedProjectDialog::UnsyncedProjectDialog(
       AddParagraph(XO(
          "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."));
       AddButton(
-         CancellButtonIdentifier(), XO("Cancel"), DefaultButton | EscButton);
+         CancelButtonIdentifier(), XO("Cancel"), DefaultButton | EscButton);
       AddButton(VisitAudioComButtonIdentifier(), XO("Visit audio.com"));
       AddButton(LoadLatestButtonIdentifier(), XO("Load latest"));
    }
@@ -34,7 +34,7 @@ UnsyncedProjectDialog::UnsyncedProjectDialog(
          "No version of this project has been fully uploaded to audio.com. It cannot be loaded."));
       AddButton(VisitAudioComButtonIdentifier(), XO("Visit audio.com"));
       AddButton(
-         CancellButtonIdentifier(), XO("OK"), DefaultButton | EscButton);
+         CancelButtonIdentifier(), XO("OK"), DefaultButton | EscButton);
    }
 }
 

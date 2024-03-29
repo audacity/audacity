@@ -59,7 +59,7 @@ std::optional<AuthResult> WaitForAuth(
                   return { L"done" };
                });
 
-      if (waitResult == WaitForActionDialog::CancellButtonIdentifier())
+      if (waitResult == WaitForActionDialog::CancelButtonIdentifier())
          return AuthResult { AuthResult::Status::Cancelled, {} };
    }
 
@@ -104,7 +104,7 @@ AuthResult PerformBlockingAuth(
    auto linkResult =
       sync::LinkAccountDialog { project, alternativeActionLabel }.ShowDialog();
 
-   if (linkResult == LinkAccountDialog::CancellButtonIdentifier())
+   if (linkResult == LinkAccountDialog::CancelButtonIdentifier())
       return { AuthResult::Status::Cancelled, {} };
 
    if (linkResult == LinkAccountDialog::AlternativeButtonIdentifier())

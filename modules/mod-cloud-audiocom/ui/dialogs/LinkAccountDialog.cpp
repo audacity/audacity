@@ -31,7 +31,7 @@ LinkAccountDialog::LinkAccountDialog(
    AddTitle(XO("You are not signed in"));
    AddParagraph(XO("Log in to audio.com to proceed."));
    AddButton(
-      CancellButtonIdentifier(), XO("Cancel"), AudioComDialogBase::EscButton);
+      CancelButtonIdentifier(), XO("Cancel"), AudioComDialogBase::EscButton);
 
    if (!alternativeButtonText.empty())
       AddButton(AlternativeButtonIdentifier(), alternativeButtonText);

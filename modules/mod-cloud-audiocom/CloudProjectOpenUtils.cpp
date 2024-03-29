@@ -106,7 +106,7 @@ GetConfilctResolution(AudacityProject* project, const ProjectSyncResult& result)
    };
    const auto resolution = dialog.ShowDialog();
 
-   if (resolution == ProjectVersionConflictDialog::CancellButtonIdentifier())
+   if (resolution == ProjectVersionConflictDialog::CancelButtonIdentifier())
       return ConflictResolution::Stop;
 
    if (resolution == ProjectVersionConflictDialog::UseLocalIdentifier())
