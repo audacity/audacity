@@ -65,7 +65,7 @@ public:
    LocalProjectSnapshot(
       Tag, const ServiceConfig& config, const OAuthService& oauthService,
       ProjectCloudExtension& extension, std::string name, UploadMode mode);
-   ~LocalProjectSnapshot();
+   ~LocalProjectSnapshot() override;
 
    static Future Create(
       const ServiceConfig& config, const OAuthService& oauthService,
