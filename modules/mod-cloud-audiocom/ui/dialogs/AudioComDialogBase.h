@@ -40,7 +40,7 @@ public:
    DialogButtonIdentifier
    ShowDialog(std::function<DialogButtonIdentifier()> poller = {});
 
-   static DialogButtonIdentifier CancellButtonIdentifier();
+   static DialogButtonIdentifier CancelButtonIdentifier();
 
 protected:
    enum class DialogMode
@@ -83,7 +83,7 @@ private:
    wxBoxSizer* mDialogSizer;
    wxBoxSizer* mButtonSizer;
 
-   DialogButtonIdentifier mEscButtonIdentifier { CancellButtonIdentifier() };
+   DialogButtonIdentifier mEscButtonIdentifier { CancelButtonIdentifier() };
    DialogButtonIdentifier mResultButtonIdentifier;
 }; // class AudioComDialogBase
 

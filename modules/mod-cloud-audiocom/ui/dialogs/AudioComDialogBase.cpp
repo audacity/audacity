@@ -110,7 +110,7 @@ audacity::cloud::audiocom::sync::AudioComDialogBase::ShowDialog(
                                             mResultButtonIdentifier;
 }
 
-DialogButtonIdentifier AudioComDialogBase::CancellButtonIdentifier()
+DialogButtonIdentifier AudioComDialogBase::CancelButtonIdentifier()
 {
    return { L"Cancel" };
 }

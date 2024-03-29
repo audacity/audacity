@@ -47,7 +47,7 @@ ProjectVersionConflictDialog::ProjectVersionConflictDialog(
    AddParagraph(properties.Message);
 
    if (properties.HasCancelButton)
-      AddButton(CancellButtonIdentifier(), XO("Cancel"), EscButton);
+      AddButton(CancelButtonIdentifier(), XO("Cancel"), EscButton);
 
    AddButton(
       UseLocalIdentifier(), properties.LocalButtonText,
