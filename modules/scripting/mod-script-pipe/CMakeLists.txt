@@ -13,5 +13,9 @@ set( DEFINES
       # debug versions of wxWidgets...even if the build is for Release.
       wxDEBUG_LEVEL=0
 )
-audacity_module( mod-script-pipe "${SOURCES}" "Audacity"
+set( LIBRARIES
+   PRIVATE
+      Audacity
+)
+audacity_module( mod-script-pipe "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" "" )

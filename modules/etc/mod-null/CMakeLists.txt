@@ -12,7 +12,11 @@ set( SOURCES
       ModNullCallback.cpp
       ModNullCallback.h
 )
-audacity_module( ${TARGET} "${SOURCES}" "Audacity"
+set ( LIBRARIES
+   PRIVATE
+      Audacity
+)
+audacity_module( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "${DEFINES}" "" )
 
 set_target_properties( ${TARGET} PROPERTIES EXCLUDE_FROM_ALL YES )
