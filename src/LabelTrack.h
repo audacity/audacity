@@ -15,9 +15,7 @@
 
 #include "SelectedRegion.h"
 #include "Track.h"
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
 #include "FileNames.h"
-#endif
 
 class wxTextFile;
 
@@ -31,10 +29,8 @@ struct TrackPanelDrawingContext;
 enum class LabelFormat
 {
    TEXT,
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    SUBRIP,
    WEBVTT,
-#endif
 };
 
 class AUDACITY_DLL_API LabelStruct
@@ -128,10 +124,8 @@ class AUDACITY_DLL_API LabelTrack final
 
    using Holder = std::shared_ptr<LabelTrack>;
 
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    static const FileNames::FileType SubripFiles;
    static const FileNames::FileType WebVTTFiles;
-#endif
 
 private:
    Track::Holder Clone(bool backup) const override;

@@ -106,9 +106,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
    # preference dialog whenever any keystroke shortcuts with Shift+ are used
    # EASY_CHANGE_KEY_BINDINGS
-
-   # Poke 13 Nov 2019
-   SUBRIP_LABEL_FORMATS
 )
 
 # Now define the flags
