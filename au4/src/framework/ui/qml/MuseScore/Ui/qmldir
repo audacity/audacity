@@ -1,4 +1,0 @@
-module MuseScore.Ui
-InteractiveProvider 1.0 InteractiveProvider.qml
-ToolTipProvider 1.0 ToolTipProvider.qml
-StandardDialogPanel 1.0 StandardDialogPanel.qml
