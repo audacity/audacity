@@ -24,6 +24,8 @@
 
 #include <csignal>
 
+#include <wx/string.h>
+
 #include "app.h"
 
 #include "log.h"
@@ -118,6 +120,12 @@ int main(int argc, char** argv)
     signal(SIGILL, crashCallback);
     signal(SIGFPE, crashCallback);
 #endif
+
+    // check wx
+    {
+        wxString wx_str = "Hello World! I amd wxString";
+        std::cout << wx_str.c_str() << std::endl;
+    }
 
     // Force the 8-bit text encoding to UTF-8. This is the default encoding on all supported platforms except for MSVC under Windows, which
     // would otherwise default to the local ANSI code page and cause corruption of any non-ANSI Unicode characters in command-line arguments.
