@@ -29,6 +29,8 @@ if (MU_BUILD_APPSHELL_MODULE)
     add_subdirectory(appshell)
 endif()
 
+add_subdirectory(au3wrap)
+
 add_subdirectory(context)
 add_subdirectory(project)
 

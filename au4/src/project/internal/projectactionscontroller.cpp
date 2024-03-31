@@ -211,7 +211,7 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // IF_ASSERT_FAILED(project) {
     //     return make_ret(Ret::Code::InternalError);
     // }
-    IAudacityProjectPtr project = std::make_shared<AudacityProject>();
+    IAudacityProjectPtr project = std::make_shared<Audacity4Project>();
 
     //! TODO AU4
     // bool hasUnsavedChanges = projectAutoSaver()->projectHasUnsavedChanges(filePath);

@@ -123,8 +123,8 @@ int main(int argc, char** argv)
 
     // check wx
     {
-        wxString wx_str = "Hello World! I amd wxString";
-        std::cout << wx_str.c_str() << std::endl;
+        // wxString wx_str = "Hello World! I amd wxString";
+        // std::cout << wx_str.c_str() << std::endl;
     }
 
     // Force the 8-bit text encoding to UTF-8. This is the default encoding on all supported platforms except for MSVC under Windows, which

@@ -102,6 +102,7 @@ if (MU_BUILD_APPSHELL_MODULE)
     list(APPEND LINK_LIB appshell)
 endif()
 
+list(APPEND LINK_LIB au3wrap)
 list(APPEND LINK_LIB context)
 list(APPEND LINK_LIB project)
 
