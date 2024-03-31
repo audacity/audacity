@@ -77,7 +77,7 @@ void ProjectActionsController::openProject(const mu::actions::ActionData& args)
 mu::io::path_t ProjectActionsController::selectOpeningFile()
 {
     //! TODO AU4
-    std::string allExt = "*.mscz *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
+    std::string allExt = "*.aup3 *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
                          "*.ove *.scw *.bmw *.bww *.gtp *.gp3 *.gp4 *.gp5 *.gpx *.gp *.ptb *.mei *.mscx *.mscs *.mscz~";
 
     std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")",

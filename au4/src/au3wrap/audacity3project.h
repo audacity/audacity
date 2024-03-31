@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "global/io/path.h"
+
 namespace au::au3 {
 struct Audacity3ProjectData;
 class Audacity3Project
@@ -12,6 +14,8 @@ public:
     Audacity3Project();
 
     static std::shared_ptr<Audacity3Project> create();
+
+    bool load(const mu::io::path_t& filePath);
 
 private:
 
