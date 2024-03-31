@@ -54,6 +54,7 @@ endif()
 set(LINK_LIB
     ${QT_LIBRARIES}
     muse::global
+    wxwidgets::wxwidgets
 )
 
 if (MU_BUILD_ACCESSIBILITY_MODULE)

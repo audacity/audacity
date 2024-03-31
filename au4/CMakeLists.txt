@@ -15,6 +15,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+###########################################
+# Muse Framework
+###########################################
 set(FETCHCONTENT_QUIET OFF)
 set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
 include(FetchContent)
@@ -36,6 +39,54 @@ set(CMAKE_MODULE_PATH
     ${MUSE_FRAMEWORK_PATH}/build/cmake
     ${CMAKE_MODULE_PATH}
     )
+
+###########################################
+# AudacityDependencies
+###########################################
+set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${AUDACITY_CMAKE_MODULE_PATH}
+    )
+
+include(AudacityFunctions)
+include(CMakeDependentOption)
+
+# Define option() prefix
+set( _OPT "audacity_" )
+cmd_option(${_OPT}conan_enabled "Use Conan package manager for 3d party dependencies" On)
+cmd_option(${_OPT}use_zlib "" "local")
+cmd_option(${_OPT}use_png "" "local")
+cmd_option(${_OPT}use_jpeg "" "local")
+cmd_option(${_OPT}use_expat "" "local")
+cmd_option(${_OPT}use_wxwidgets "" "local")
+cmd_option(${_OPT}use_libmp3lame "" "local")
+cmd_option(${_OPT}use_libmpg123 "" "local")
+cmd_option(${_OPT}use_libid3tag "" "local")
+cmd_option(${_OPT}use_wavpack "" "local")
+cmd_option(${_OPT}use_libogg "" "local")
+cmd_option(${_OPT}use_libflac "" "local")
+cmd_option(${_OPT}use_libopus "" "local")
+cmd_option(${_OPT}use_opusfile "" "local")
+cmd_option(${_OPT}use_libvorbis "" "local")
+cmd_option(${_OPT}use_libsndfile "" "local")
+cmd_option(${_OPT}use_portaudio "" "local")
+cmd_option(${_OPT}use_rapidjson "" "local")
+cmd_option(${_OPT}use_midi "" "local")
+
+find_package(Python3)
+if( Python3_FOUND )
+   set(PYTHON "${Python3_EXECUTABLE}")
+endif()
+
+set( CMAKE_PREFIX_PATH
+   "${CMAKE_BINARY_DIR}/generators"
+   ${CMAKE_PREFIX_PATH}
+)
+
+set(CONAN_RUNNER_DIR ${AUDACITY_ROOT}/conan)
+include(AudacityDependencies)
 
 ###########################################
 # Setup option and build settings
