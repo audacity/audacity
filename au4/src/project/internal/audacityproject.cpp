@@ -2,6 +2,8 @@
 
 #include <cstdlib>
 
+#include "au3wrap/audacity3project.h"
+
 #include "log.h"
 
 using namespace mu;
@@ -33,9 +35,9 @@ static void sinus(double freq, double intensity, uint32_t sampleNumber, std::vec
     }
 }
 
-IAudacityProjectPtr AudacityProject::makeMock()
+IAudacityProjectPtr Audacity4Project::makeMock()
 {
-    AudacityProject* a = new AudacityProject();
+    Audacity4Project* a = new Audacity4Project();
 
     ProcessingProjectPtr proc = a->m_processingProject;
 
@@ -88,12 +90,12 @@ IAudacityProjectPtr AudacityProject::makeMock()
     return std::shared_ptr<IAudacityProject>(a);
 }
 
-AudacityProject::AudacityProject()
+Audacity4Project::Audacity4Project()
 {
     m_processingProject = std::make_shared<ProcessingProject>();
 }
 
-mu::Ret AudacityProject::load(const mu::io::path_t& path, bool forceMode, const std::string& format_)
+mu::Ret Audacity4Project::load(const mu::io::path_t& path, bool forceMode, const std::string& format_)
 {
     TRACEFUNC;
 
@@ -126,7 +128,7 @@ mu::Ret AudacityProject::load(const mu::io::path_t& path, bool forceMode, const 
     return ret;
 }
 
-mu::Ret AudacityProject::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
+mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
 {
     TRACEFUNC;
 
@@ -134,12 +136,14 @@ mu::Ret AudacityProject::doLoad(const io::path_t& path, bool forceMode, const st
     UNUSED(forceMode);
     UNUSED(format);
 
+    m_au3Project = au3::Audacity3Project::create();
+
     NOT_IMPLEMENTED;
 
     return make_ret(Ret::Code::NotImplemented);
 }
 
-void AudacityProject::setPath(const io::path_t& path)
+void Audacity4Project::setPath(const io::path_t& path)
 {
     if (m_path == path) {
         return;
@@ -149,7 +153,7 @@ void AudacityProject::setPath(const io::path_t& path)
     m_pathChanged.notify();
 }
 
-const ProcessingProjectPtr AudacityProject::processingProject() const
+const ProcessingProjectPtr Audacity4Project::processingProject() const
 {
     return m_processingProject;
 }
