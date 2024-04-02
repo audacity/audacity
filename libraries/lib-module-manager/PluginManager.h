@@ -107,8 +107,9 @@ public:
 
    static PluginManager & Get();
 
-   static PluginID GetID(PluginProvider *provider);
-   static PluginID GetID(ComponentInterface *command);
+   
+   static PluginID GetID(const PluginProvider *provider);
+   static PluginID GetID(const ComponentInterface *command);
    static PluginID OldGetID(const EffectDefinitionInterface* effect);
    static PluginID GetID(const EffectDefinitionInterface* effect);
    //! Parse English effect name from the result of

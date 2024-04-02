@@ -1220,12 +1220,12 @@ std::map<wxString, std::vector<wxString>> PluginManager::CheckPluginUpdates()
    return newPaths;
 }
 
-PluginID PluginManager::GetID(PluginProvider *provider)
+PluginID PluginManager::GetID(const PluginProvider *provider)
 {
    return ModuleManager::GetID(provider);
 }
 
-PluginID PluginManager::GetID(ComponentInterface *command)
+PluginID PluginManager::GetID(const ComponentInterface *command)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(PluginTypeAudacityCommand),
