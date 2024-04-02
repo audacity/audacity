@@ -50,6 +50,11 @@ set(CMAKE_MODULE_PATH
     ${AUDACITY_CMAKE_MODULE_PATH}
     )
 
+set( AUDACITY_VERSION 4 )
+set( AUDACITY_RELEASE 0 )
+set( AUDACITY_REVISION 0 )
+set( AUDACITY_MODLEVEL 0 )
+
 include(AudacityFunctions)
 include(CMakeDependentOption)
 
@@ -87,6 +92,21 @@ set( CMAKE_PREFIX_PATH
 
 set(CONAN_RUNNER_DIR ${AUDACITY_ROOT}/conan)
 include(AudacityDependencies)
+include(dependencies/wxwidgets)
+include(dependencies/expat)
+
+include(AudacityTesting)
+
+# Generate config file
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   configure_file( ${AUDACITY_ROOT}/src/audacity_config.h.in src/private/configwin.h )
+elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+   set( HAVE_VISIBILITY 0 )
+   configure_file( ${AUDACITY_ROOT}/src/audacity_config.h.in src/private/configmac.h )
+else()
+   set( HAVE_VISIBILITY 0 )
+   configure_file( ${AUDACITY_ROOT}/src/audacity_config.h.in src/private/configunix.h )
+endif()
 
 ###########################################
 # Setup option and build settings
@@ -105,7 +125,7 @@ set(AUDACITY_BUILD_MODE "dev" CACHE STRING "Build mode")
 # - testing - for testing versions (alpha, beta, RC)
 # - release - for stable release builds
 
-set(AUDACITY_REVISION "" CACHE STRING "Build revision")
+set(AU_REVISION "" CACHE STRING "Build revision")
 
 # Modules framework (alphabetical order please)
 option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" ON)

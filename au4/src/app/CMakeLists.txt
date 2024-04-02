@@ -102,6 +102,7 @@ if (MU_BUILD_APPSHELL_MODULE)
     list(APPEND LINK_LIB appshell)
 endif()
 
+list(APPEND LINK_LIB au3wrap)
 list(APPEND LINK_LIB context)
 list(APPEND LINK_LIB project)
 
@@ -190,7 +191,7 @@ if (OS_IS_WIN)
     foreach (QtLibrary ${QT_LIBRARIES})
         #message(STATUS "Library ${QtLibrary}")
         # always use release libs
-        set_target_properties(${QtLibrary} PROPERTIES MAP_IMPORTED_CONFIG_DEBUG "RELEASE")
+        # set_target_properties(${QtLibrary} PROPERTIES MAP_IMPORTED_CONFIG_DEBUG "RELEASE")
         get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_RELEASE)
         if (EXISTS ${QtSharedLibrary})
             list (APPEND QtInstallLibraries ${QtSharedLibrary})

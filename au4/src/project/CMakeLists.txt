@@ -38,5 +38,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
     )
 
+set(MODULE_LINK au3wrap)
+
 include(SetupModule)
 
