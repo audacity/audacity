@@ -359,7 +359,9 @@ double WaveClip::GetStretchRatio() const
       mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
          *mRawAudioTempo / *mProjectTempo :
          1.0;
-   return mClipStretchRatio * dstSrcRatio;
+   double stretchRatio = mClipStretchRatio * dstSrcRatio;
+   double lowestStretchRatio = 100 / (double)99999;
+   return std::max(stretchRatio, lowestStretchRatio);
 }
 
 int WaveClip::GetCentShift() const
