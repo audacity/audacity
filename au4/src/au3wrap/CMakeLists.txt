@@ -25,6 +25,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.h
     )
@@ -73,6 +74,8 @@ set(AU3_DEF
     -DPROJECT_RATE_API=
     -DTRACK_SELECTION_API=
     -DAUDIO_DEVICES_API=
+    -DAUDIO_IO_API=
+    -DREALTIME_EFFECTS_API=
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
@@ -115,6 +118,9 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-project-rate
     ${AU3_LIBRARIES}/lib-track-selection
     ${AU3_LIBRARIES}/lib-audio-devices
+
+    # compile lib-audio-io
+    ${AU3_LIBRARIES}/lib-realtime-effects
 )
 
 if (AU3_ADD_AS_LIBS)
@@ -354,6 +360,10 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.h
 
     # end dependencies of project-file-io
+
+    # When creating a project, audio devices are accessed, so we need to initialize the audio
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.h
     )
 
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)

@@ -21,6 +21,10 @@
  */
 #include "au3wrapmodule.h"
 
+#include "libraries/lib-audio-io/AudioIO.h"
+
+#include "log.h"
+
 using namespace au::au3;
 
 std::string Au3WrapModule::moduleName() const
@@ -30,4 +34,15 @@ std::string Au3WrapModule::moduleName() const
 
 void Au3WrapModule::registerExports()
 {
+}
+
+void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
+{
+    AudioIO* audio = AudioIO::Get();
+    UNUSED(audio);
+}
+
+void Au3WrapModule::onDeinit()
+{
+
 }
