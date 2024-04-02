@@ -80,6 +80,7 @@
                    GraphLabels: #000000;
              SpectroBackground: #ffff14;
                     ScrubRuler: #8f5828;
+                 RulerSelected: #9295a6;
                      TimeHours: #23386a;
                      MidiZebra: #808080;
                      MidiLines: #ffff14;

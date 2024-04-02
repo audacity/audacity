@@ -80,6 +80,7 @@
                    GraphLabels: #14151a;
              SpectroBackground: #ffff14;
                     ScrubRuler: #e4e4e4;
+                 RulerSelected: #B9DCFF; /* becomes #cedcea;*/
                      TimeHours: #f0f1f5;
                      MidiZebra: #808080;
                      MidiLines: #3c3c98;
@@ -98,7 +99,7 @@
  ClipAffordanceUnselectedBrush: #cfd6f4; 
    ClipAffordanceSelectedBrush: #aeb6db;
           ClipAffordanceStroke: #ffffff;
-      ClipAffordanceBackground: #14151a;
+      ClipAffordanceBackground: #494952;
        LabelTrackTextSelection: #b7cae2;
                   ClipNameText: #14151a;
          ClipNameTextSelection: #b7cae2;

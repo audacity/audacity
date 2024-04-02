@@ -2410,6 +2410,11 @@ inline ColorId TimelineLimitsColor()
    return TimelineTextColor();
 }
 
+inline ColorId TimelineSelectionColor()
+{
+   return clrRulerSelected;
+}
+
 inline ColorId TimelineLoopRegionColor(bool isActive)
 {
    return isActive ? clrLoopEnabled : clrLoopDisabled;
@@ -2566,12 +2571,12 @@ void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
    }
 }
 
-constexpr double SelectionOpacity = 0.2;
+constexpr double SelectionOpacity = 0.4;
 
 void AdornedRulerPanel::DoDrawOverlap(wxDC * dc, const wxRect &rect)
 {
    dc->SetBrush( wxBrush{ AlphaBlend(
-      TimelineLimitsColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
+      TimelineSelectionColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
       SelectionOpacity) } );
    dc->SetPen( *wxTRANSPARENT_PEN );
    dc->DrawRectangle( rect );
@@ -2581,7 +2586,7 @@ void AdornedRulerPanel::DoDrawSelection(
    wxDC * dc, const wxRect &rectS, const wxRect &rectL, const wxRect &rectR)
 {
    dc->SetBrush( wxBrush{ AlphaBlend(
-      TimelineLimitsColor(), TimelineBackgroundColor(), SelectionOpacity) } );
+      TimelineSelectionColor(), TimelineBackgroundColor(), SelectionOpacity) } );
    dc->SetPen( *wxTRANSPARENT_PEN );
    dc->DrawRectangle( rectS.Intersect(rectL) );
    dc->DrawRectangle( rectS.Intersect(rectR) );

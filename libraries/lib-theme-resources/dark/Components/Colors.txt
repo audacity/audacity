@@ -83,6 +83,7 @@
                    GraphLabels: #000000;
              SpectroBackground: #ffff14;
                     ScrubRuler: #6a6a6a;
+                 RulerSelected: #9295a6;
                      TimeHours: #000000;
                       FocusBox: #ffff14;
                  TrackNameText: #ffff14;
