@@ -13,11 +13,11 @@
 
 static const std::vector<unsigned char> ImageCacheAsData {
 // Include the generated file full of numbers
-#include "ModernThemeAsCeeCode.h"
+#include "ClassicThemeAsCeeCode.h"
 };
 
 static ThemeBase::RegisteredTheme theme{
    /* i18n-hint: describing the "classic" or traditional
       appearance of older versions of Audacity */
-   { "modern", XO("Modern") }, PreferredSystemAppearance::Light, ImageCacheAsData
+   { "classic", XO("Classic") }, PreferredSystemAppearance::Light, ImageCacheAsData
 };
