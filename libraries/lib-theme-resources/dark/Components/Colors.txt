@@ -30,14 +30,14 @@
           MeterOutputClipBrush: #ff3535;
            MeterOutputLightPen: #99ff99;
             MeterOutputDarkPen: #3da43d;
-               MeterBackground: #ff6900;
+               MeterBackground: #404040;
                      AxisLines: #0000ff;
                     GraphLines: #6e6edc;
                  ResponseLines: #00ff00;
                         HzPlot: #8c3cbe;
                 WavelengthPlot: #c83296;
                 EnvelopeColour: #fedfb2;
-            EnvelopeBackground: #ff6900;
+            EnvelopeBackground: #303030;
               MuteButtonActive: #a0aad2;
               MuteButtonVetoed: #b4b4b9;
                      CursorPen: #000000;
@@ -103,7 +103,7 @@
  ClipAffordanceUnselectedBrush: #626262;
    ClipAffordanceSelectedBrush: #797979;
           ClipAffordanceStroke: #ffffff;
-      ClipAffordanceBackground: #ff6900;
+      ClipAffordanceBackground: #141414;
        LabelTrackTextSelection: #b7cae2;
                   ClipNameText: #fedfb2;
          ClipNameTextSelection: #b7cae2;

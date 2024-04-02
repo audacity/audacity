@@ -1,7 +1,7 @@
 .modernTheme {
                          Blank: #585963;
-                    Unselected: #d3d7ef;
-                      Selected: #e5e7f5;
+                    Unselected: #dee1ef;
+                      Selected: #e7f3ff;
                         Sample: #677ce4;
                        Sample2: #4A88E4;
                        Sample3: #CA614A;
@@ -60,7 +60,7 @@
                    TrackFocus2: #677ce4;
                      SnapGuide: #ffff00;
                      TrackInfo: #f0f1f5;
-             TrackInfoSelected: #f8f8f9;
+             TrackInfoSelected: #dceeff;
                          Light: #f0f1f5;
                         Medium: #f8f8f9;
                           Dark: #dfdfe4;
@@ -72,7 +72,7 @@
                   ProgressDone: #677ce4;
                 ProgressNotYet: #dddee4;
                    SyncLockSel: #c0c0c0;
-                 BlankSelected: #6c869e;
+                 BlankSelected: #9cb7d2;
                    SliderLight: #f8f8f9;
                     SliderMain: #dfe0e5;
                     SliderDark: #dfe0e5;
@@ -95,7 +95,7 @@
                    Spectro4Sel: #bf0000;
                    Spectro5Sel: #bfbfbf;
       ClipAffordanceOutlinePen: #14151a;
- ClipAffordanceUnselectedBrush: #c2cbf4; 
+ ClipAffordanceUnselectedBrush: #cfd6f4; 
    ClipAffordanceSelectedBrush: #aeb6db;
           ClipAffordanceStroke: #ffffff;
       ClipAffordanceBackground: #14151a;
@@ -109,8 +109,8 @@
                BarSeparatorPen: #6b6d75;
            BeatFillStrongBrush: #585963;
              BeatFillWeakBrush: #5E606a;
-        BeatFillStrongSelBrush: #6c869e;
-          BeatFillWeakSelBrush: #708aa2;
+        BeatFillStrongSelBrush: #9cb7d2;
+          BeatFillWeakSelBrush: #b4cfe9;
                    LoopEnabled: #E0E1E5; 
                 LoopNotEnabled: #c2cbf4;
 }
