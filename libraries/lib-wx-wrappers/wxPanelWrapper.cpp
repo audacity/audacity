@@ -10,6 +10,8 @@
 
 #include <wx/grid.h>
 
+const TranslatableString wxDirDialogWrapper::DefaultDialogPrompt = XO("Select a directory");
+
 void wxTabTraversalWrapperCharHook(wxKeyEvent &event)
 {
 //#ifdef __WXMAC__

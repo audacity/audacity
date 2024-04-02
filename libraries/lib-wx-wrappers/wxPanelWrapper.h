@@ -124,10 +124,12 @@ class WX_WRAPPERS_API wxDirDialogWrapper
    : public wxTabTraversalWrapper<wxDirDialog>
 {
 public:
+   static const TranslatableString DefaultDialogPrompt;
+
    // Constructor with no modal flag - the new convention.
    wxDirDialogWrapper(
       wxWindow *parent,
-      const TranslatableString& message = XO("Select a directory"),
+      const TranslatableString& message = DefaultDialogPrompt,
       const wxString& defaultPath = {},
       long style = wxDD_DEFAULT_STYLE,
       const wxPoint& pos = wxDefaultPosition,
