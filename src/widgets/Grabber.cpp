@@ -153,7 +153,8 @@ void Grabber::DrawGrabber( wxDC & dc )
       AColor::Light(&dc, false);
    }
    else {
-      AColor::Dark(&dc, false);
+      //dc.SetBrush(wxBrush(theTheme.Colour(clrGrabber), wxBRUSHSTYLE_SOLID));
+      dc.SetPen(wxPen(theTheme.Colour(clrGrabber), 1, wxPENSTYLE_SOLID));
    }
 
    for (y = top + padding; y < bottom - padding; y += 4) {

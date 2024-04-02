@@ -113,4 +113,5 @@
           BeatFillWeakSelBrush: #b4cfe9;
                    LoopEnabled: #E0E1E5; 
                 LoopNotEnabled: #c2cbf4;
+                       Grabber: #9295a6;
 }
