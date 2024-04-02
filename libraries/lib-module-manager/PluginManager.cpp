@@ -48,6 +48,7 @@ for shared and private configs - which need to move out.
 // Registry has the list of plug ins
 #define REGVERKEY wxString(wxT("/pluginregistryversion"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
+#define REGCUSTOMPATHS wxString(wxT("/providercustompaths"))
 
 // Settings has the values of the plug in settings.
 #define SETVERKEY wxString(wxT("/pluginsettingsversion"))
@@ -905,6 +906,25 @@ void PluginManager::NotifyPluginsChanged()
 const PluginRegistryVersion &PluginManager::GetRegistryVersion() const
 {
    return mRegver;
+}
+
+
+PluginPaths PluginManager::ReadCustomPaths(const PluginProvider& provider)
+{
+   auto group = mSettings->BeginGroup(REGCUSTOMPATHS);
+   const auto key = GetID(&provider);
+   const auto paths = mSettings->Read(key, wxString{});
+   const auto wxarr = wxSplit(paths, ';');
+   return PluginPaths(wxarr.begin(), wxarr.end());
+}
+
+void PluginManager::StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths)
+{
+   auto group = mSettings->BeginGroup(REGCUSTOMPATHS);
+   const auto key = GetID(&provider);
+   wxArrayString wxarr;
+   std::copy(paths.begin(), paths.end(), std::back_inserter(wxarr));
+   mSettings->Write(key, wxJoin(wxarr, ';'));
 }
 
 void PluginManager::SaveGroup(audacity::BasicSettings *pRegistry, PluginType type)

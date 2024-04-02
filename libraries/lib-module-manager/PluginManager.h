@@ -191,6 +191,9 @@ public:
    //! (Save() updates it)
    const PluginRegistryVersion &GetRegistryVersion() const override;
 
+   PluginPaths ReadCustomPaths(const PluginProvider& provider) override;
+   void StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths) override;
+
 private:
    // private! Use Get()
    PluginManager();
