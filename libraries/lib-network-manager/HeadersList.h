@@ -28,6 +28,7 @@ extern NETWORK_MANAGER_API const std::string AcceptLanguage;
 extern NETWORK_MANAGER_API const std::string Authorization;
 extern NETWORK_MANAGER_API const std::string CacheControl;
 extern NETWORK_MANAGER_API const std::string Connection;
+extern NETWORK_MANAGER_API const std::string ContentEncoding;
 extern NETWORK_MANAGER_API const std::string ContentLength;
 extern NETWORK_MANAGER_API const std::string ContentType;
 extern NETWORK_MANAGER_API const std::string ContentDisposition;
@@ -47,6 +48,7 @@ extern NETWORK_MANAGER_API const std::string ApplicationXml;
 extern NETWORK_MANAGER_API const std::string ApplicationXWwwFormUrlencoded;
 extern NETWORK_MANAGER_API const std::string ApplicationXOctetStream;
 extern NETWORK_MANAGER_API const std::string ApplicationXGzip;
+extern NETWORK_MANAGER_API const std::string MultipartFormData;
 } // namespace common_content_types
 struct NETWORK_MANAGER_API Header final
 {

@@ -15,6 +15,9 @@
 #include "ExportTypes.h"
 #include "ExportPlugin.h"
 
+#include <functional>
+
+class AudacityProject;
 class TrackList;
 class WaveTrack;
 
@@ -27,5 +30,20 @@ public:
    static TrackIterRange<const WaveTrack> FindExportWaveTracks(const TrackList& tracks, bool selectedOnly);
 
    static ExportProcessor::Parameters ParametersFromEditor(const ExportOptionsEditor& editor);
+
+   enum class ExportHookResult
+   {
+      Handled, 
+      Continue,
+      Cancel,
+   };
+
+   using ExportHook = std::function<ExportHookResult(AudacityProject&, const FileExtension&)>;
+
+   using Priority = unsigned;
+   static constexpr Priority DEFAULT_EXPORT_HOOK_PRIORITY = 0;
+
+   static void RegisterExportHook(ExportHook hook, Priority = DEFAULT_EXPORT_HOOK_PRIORITY);
+   static void PerformInteractiveExport(AudacityProject& project, const FileExtension& format);
 };
 

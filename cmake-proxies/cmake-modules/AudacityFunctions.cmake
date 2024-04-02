@@ -10,6 +10,33 @@ macro( def_vars )
    set( _PUBDIR "${CMAKE_CURRENT_BINARY_DIR}/public" )
 endmacro()
 
+### Based on
+### https://github.com/alandefreitas/moderncpp/blob/master/cmake/functions/sanitizers.cmake
+macro(add_sanitizer flag)
+    #[add_sanitizer Add sanitizer flag to all targets
+    include(CheckCXXCompilerFlag)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+        message("Looking for -fsanitize=${flag}")
+        set(CMAKE_REQUIRED_FLAGS "-Werror -fsanitize=${flag}")
+        check_cxx_compiler_flag(-fsanitize=${flag} HAVE_FLAG_SANITIZER)
+        if (HAVE_FLAG_SANITIZER)
+            message("Adding -fsanitize=${flag}")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=${flag} -fno-omit-frame-pointer")
+            set(DCMAKE_C_FLAGS "${DCMAKE_C_FLAGS} -fsanitize=${flag} -fno-omit-frame-pointer")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${flag}")
+            set(DCMAKE_MODULE_LINKER_FLAGS "${DCMAKE_MODULE_LINKER_FLAGS} -fsanitize=${flag}")
+        else ()
+            message("-fsanitize=${flag} unavailable")
+        endif ()
+    endif ()
+    #]
+endmacro()
+
+if ( ${_OPT}thread_sanitizer )
+      add_sanitizer("thread")
+endif()
+
+
 # Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
    set( cleaned )

@@ -91,7 +91,15 @@ VersionPatch UpdateManager::GetVersionPatch() const
 
 void UpdateManager::GetUpdates(bool ignoreNetworkErrors, bool configurableNotification)
 {
-    const audacity::network_manager::Request request("https://updates.audacityteam.org/feed/latest.xml");
+#if AUDACITY_BUILD_LEVEL == 0
+   const auto url = "https://updates.audacityteam.org/builds/alpha.xml";
+#elif AUDACITY_BUILD_LEVEL == 1
+   const auto url = "https://updates.audacityteam.org/builds/beta.xml";
+#else
+   const auto url = "https://updates.audacityteam.org/feed/latest.xml";
+#endif
+
+    const audacity::network_manager::Request request(url);
     auto response = audacity::network_manager::NetworkManager::GetInstance().doGet(request);
 
     response->setRequestFinishedCallback([response, ignoreNetworkErrors, configurableNotification, this](audacity::network_manager::IResponse*) {

@@ -912,7 +912,8 @@ void ToolManager::ReadConfig()
    {
       const auto &ndx = entry.barID;
       const auto bar = GetToolBar(ndx);
-      bar->SetPreferredNeighbors(entry.rightOf, entry.below);
+      if (bar != nullptr)
+         bar->SetPreferredNeighbors(entry.rightOf, entry.below);
    }
 
    if (!someFound)

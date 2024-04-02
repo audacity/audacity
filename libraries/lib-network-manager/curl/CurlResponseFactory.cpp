@@ -7,13 +7,13 @@
 
  Dmitry Vedenko
  **********************************************************************/
-
 #include "CurlResponseFactory.h"
-
-#include <algorithm>
 
 #include "CurlResponse.h"
 #include "MultipartData.h"
+#include "RequestPayload.h"
+
+#include "ThreadPool/ThreadPool.h"
 
 namespace audacity
 {
@@ -32,6 +32,10 @@ CurlResponseFactory::CurlResponseFactory ()
 
 }
 
+CurlResponseFactory::~CurlResponseFactory ()
+{
+}
+
 void CurlResponseFactory::setProxy (const std::string& proxy)
 {
     mHandleManager->setProxy (proxy);
@@ -39,34 +43,27 @@ void CurlResponseFactory::setProxy (const std::string& proxy)
 
 ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request& request)
 {
-    return performRequest (verb, request, nullptr, 0);
+    return performRequest(verb, request, RequestPayloadStreamPtr {});
 }
 
-ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request& request, const void* data, size_t size)
+ResponsePtr CurlResponseFactory::performRequest(
+   RequestVerb verb, const Request& request,
+   RequestPayloadStreamPtr payloadStream)
 {
     if (!mThreadPool)
-        return {};
+       return {};
 
-    std::shared_ptr<CurlResponse> response = std::make_shared<CurlResponse> (
-        verb, request, mHandleManager.get ()
-    );
+    auto response =
+       std::make_shared<CurlResponse>(verb, request, mHandleManager.get());
 
-    std::vector<uint8_t> buffer;
+    mThreadPool->enqueue(
+       [response, payloadStream = std::move(payloadStream)]()
+       {
+          if (payloadStream)
+             response->setPayload(payloadStream);
 
-    if (data != nullptr && size != 0)
-    {
-        const uint8_t* start = static_cast<const uint8_t*>(data);
-        const uint8_t* end = static_cast<const uint8_t*>(data) + size;
-
-        buffer.insert (buffer.begin (), start, end);
-    }
-
-    mThreadPool->enqueue ([response, dataBuffer = std::move (buffer)]() {
-        if (!dataBuffer.empty())
-            response->setPayload (dataBuffer.data (), dataBuffer.size ());
-        
-        response->perform ();
-    });
+          response->perform();
+       });
 
     return response;
 }

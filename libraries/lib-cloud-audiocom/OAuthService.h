@@ -13,11 +13,12 @@
 #include <chrono>
 #include <functional>
 #include <string_view>
+#include <string>
 #include <mutex>
 
 #include "Observer.h"
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
 
@@ -30,6 +31,7 @@ struct CLOUD_AUDIOCOM_API AuthStateChangedMessage final
    std::string_view errorMessage;
    //! Flag that indicates if user is authorised.
    bool authorised;
+   bool silent;
 };
 
 //! Service responsible for OAuth authentication against the audio.com service.
@@ -50,10 +52,11 @@ public:
 
       Otherwise, the service will attempt to authorize the user and invoke
       \p completedHandler (if valid). Callback is invoked from the network thread.
+      \p silent indicates, that the service should not attempt to show any UI.
 
       Callback argument will contain an access token, if any, or an empty view.
    */
-   void ValidateAuth(std::function<void(std::string_view)> completedHandler);
+   void ValidateAuth(std::function<void(std::string_view)> completedHandler, bool silent);
 
    //! Handle the OAuth callback
    /*
@@ -64,8 +67,10 @@ public:
 
       This method will attempt to perform OAuth2 authorization and invoke \p completedHandler (if valid).
       Callback is potentially called from the network thread.
+
+      \returns true if the URL was handled, false otherwise.
    */
-   void HandleLinkURI(
+   bool HandleLinkURI(
       std::string_view uri,
       std::function<void(std::string_view)> completedHandler);
 
@@ -83,11 +88,11 @@ private:
 
    void AuthoriseRefreshToken(
       const ServiceConfig& config, std::string_view refreshToken,
-      std::function<void(std::string_view)> completedHandler);
+      std::function<void(std::string_view)> completedHandler, bool silent);
 
    void AuthoriseRefreshToken(
       const ServiceConfig& config,
-      std::function<void(std::string_view)> completedHandler);
+      std::function<void(std::string_view)> completedHandler, bool silent);
 
    void AuthoriseCode(
       const ServiceConfig& config, std::string_view authorizationCode,
@@ -95,7 +100,7 @@ private:
 
    void DoAuthorise(
       const ServiceConfig& config, std::string_view payload,
-      std::function<void(std::string_view)> completedHandler);
+      std::function<void(std::string_view)> completedHandler, bool silent);
 
    void SafePublish(const AuthStateChangedMessage& message);
 
@@ -111,4 +116,4 @@ private:
 //! Returns the instance of the OAuthService
 CLOUD_AUDIOCOM_API OAuthService& GetOAuthService();
 
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

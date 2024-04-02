@@ -54,7 +54,7 @@ most commonly asked questions about Audacity.
 #include "MemoryX.h"
 #include <wx/fs_mem.h>
 
-const char* WhatsNewURL = "https://audacityteam.org/3.4.0-video";
+const char* WhatsNewURL = "https://audacityteam.org/3.5.0-video";
 
 namespace
 {

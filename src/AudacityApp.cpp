@@ -412,6 +412,12 @@ void PopulatePreferences()
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
 
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 5 })
+   {
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
    // write out the version numbers to the prefs file for future checking
    gPrefs->Write(wxT("/Version/Major"), AUDACITY_VERSION);
    gPrefs->Write(wxT("/Version/Minor"), AUDACITY_RELEASE);
@@ -1751,6 +1757,8 @@ void AudacityApp::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
    try {
+      HandleAppIdle();
+
       if ( Journal::Dispatch() )
          evt.RequestMore();
    }
@@ -2429,6 +2437,8 @@ int AudacityApp::OnExit()
    {
       Dispatch();
    }
+
+   HandleAppClosing();
 
    Importer::Get().Terminate();
 

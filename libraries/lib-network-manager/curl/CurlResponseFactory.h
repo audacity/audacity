@@ -10,15 +10,13 @@
 
 #pragma once
 
-#include <thread>
-#include <vector>
 #include <memory>
-#include <mutex>
 
 #include "../IResponseFactory.h"
 
 #include "CurlHandleManager.h"
-#include "ThreadPool/ThreadPool.h"
+
+class ThreadPool;
 
 namespace audacity
 {
@@ -29,11 +27,14 @@ class CurlResponseFactory final : public IResponseFactory
 {
 public:
 	CurlResponseFactory ();
+   ~CurlResponseFactory ();
 
 	void setProxy (const std::string& proxy) override;
 
 	ResponsePtr performRequest (RequestVerb verb, const Request& request) override;
-	ResponsePtr performRequest (RequestVerb verb, const Request& request, const void* data, size_t size) override;
+   ResponsePtr performRequest(
+      RequestVerb verb, const Request& request,
+      RequestPayloadStreamPtr payloadStream) override;
 	ResponsePtr performRequest (RequestVerb verb, const Request& request, std::unique_ptr<MultipartData> form) override;
 
 	void terminate () override;

@@ -53,6 +53,8 @@ protected:
    void DoSetFocus(const BasicUI::WindowPlacement &focus) override;
 
    bool IsUsingRtlLayout() const override;
+
+   bool IsUiThread() const override;
 };
 
 #endif
