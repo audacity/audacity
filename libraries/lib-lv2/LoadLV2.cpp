@@ -14,6 +14,7 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 #include "LV2Wrapper.h"
+#include "PluginInterface.h"
 #if defined(USE_LV2)
 
 #if defined(__GNUC__)
@@ -109,9 +110,41 @@ TranslatableString LV2EffectsModule::GetDescription() const
 
 bool LV2EffectsModule::Initialize()
 {
-   if (!LV2Symbols::InitializeGWorld())
+   if(!LV2Symbols::InitializeGWorld())
       return false;
 
+   wxGetEnv(wxT("LV2_PATH"), &mStartupPathVar);
+
+   return true;
+}
+
+void LV2EffectsModule::Terminate()
+{
+   LV2Symbols::FinalizeGWorld();
+}
+
+bool LV2EffectsModule::SupportsCustomModulePaths() const
+{
+   return true;
+}
+
+EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
+{
+#if USE_LV2
+   return LV2EFFECTS_FAMILY;
+#else
+   return {};
+#endif
+}
+
+const FileExtensions &LV2EffectsModule::GetFileExtensions()
+{
+   static FileExtensions empty;
+   return empty;
+}
+
+void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &pluginManager)
+{
    wxString newVar;
 
 #if defined(__WXMAC__)
@@ -156,47 +189,24 @@ bool LV2EffectsModule::Initialize()
    wxSetEnv(wxT("SUIL_MODULE_DIR"), wxT(PKGLIBDIR));
 #endif
 
+   {
+      auto customPaths = pluginManager.ReadCustomPaths(*this);
+      if(!customPaths.empty())
+      {
+         wxArrayString wxarr;
+         std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(wxarr));
+         newVar += wxString::Format(";%s", wxJoin(wxarr, ';'));
+      }
+   }
    // Start with the LV2_PATH environment variable (if any)
    wxString pathVar;
-   wxGetEnv(wxT("LV2_PATH"), &pathVar);
-
-   if (pathVar.empty())
-   {
+   if (mStartupPathVar.empty())
       pathVar = newVar.Mid(1);
-   }
    else
-   {
       pathVar += newVar;
-   }
 
    wxSetEnv(wxT("LV2_PATH"), pathVar);
    lilv_world_load_all(LV2Symbols::gWorld);
-
-   return true;
-}
-
-void LV2EffectsModule::Terminate()
-{
-   LV2Symbols::FinalizeGWorld();
-}
-
-EffectFamilySymbol LV2EffectsModule::GetOptionalFamilySymbol()
-{
-#if USE_LV2
-   return LV2EFFECTS_FAMILY;
-#else
-   return {};
-#endif
-}
-
-const FileExtensions &LV2EffectsModule::GetFileExtensions()
-{
-   static FileExtensions empty;
-   return empty;
-}
-
-void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
-{
 }
 
 PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface &)
@@ -308,7 +318,6 @@ std::unique_ptr<PluginProvider::Validator> LV2EffectsModule::MakeValidator() con
 {
    return std::make_unique<LV2PluginValidator>();
 }
-
 
 // ============================================================================
 // LV2EffectsModule implementation
