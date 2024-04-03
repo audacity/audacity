@@ -18,9 +18,6 @@ using namespace au::au3;
 struct au::au3::Audacity3ProjectData
 {
     std::shared_ptr<AudacityProject> project;
-
-    static std::map< SampleBlockID, std::shared_ptr<SqliteSampleBlock> >
-        sSilentBlocks;
 };
 
 Audacity3Project::Audacity3Project()
@@ -40,11 +37,14 @@ bool Audacity3Project::load(const mu::io::path_t& filePath)
     auto &projectFileIO = ProjectFileIO::Get( *m_data->project.get() );
     std::string sstr = filePath.toStdString();
     FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
-    auto parseResult = projectFileIO.LoadProject(fileName, true);
-    const bool bParseSuccess = parseResult.has_value();
+    auto conn = projectFileIO.LoadProject(fileName, true);
+    const bool bParseSuccess = conn.has_value();
     if (!bParseSuccess) {
         LOGE() << "failed load project: " << filePath;
     }
+
+    conn->Commit();
+
     return bParseSuccess;
 }
 
@@ -55,4 +55,6 @@ std::string Audacity3Project::title() const
     }
 
     return wxToStdSting(m_data->project->GetProjectName());
+    // auto &projectFileIO = ProjectFileIO::Get( *m_data->project.get() );
+    // return wxToStdSting(projectFileIO.GetProjectTitle());
 }

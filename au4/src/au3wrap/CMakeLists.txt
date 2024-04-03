@@ -28,6 +28,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
     )
 
 # ==================================
@@ -77,6 +80,7 @@ set(AU3_DEF
     -DAUDIO_IO_API=
     -DREALTIME_EFFECTS_API=
     -DMODULE_MANAGER_API=
+    -DWX_INIT_API=
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
@@ -419,6 +423,10 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-components/ComponentInterface.h
 
     # end dependencies of lib-audio-io
+
+    # Requires wxApp, so we won't use it
+    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp
+    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.h
     )
 
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
