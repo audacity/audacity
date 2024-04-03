@@ -59,7 +59,6 @@ PUBLIC
       lib-strings-interface # Languages
       lib-wave-track-interface
       lib-project-file-io-interface # ProjectFileIOExtension
-      rapidjson::rapidjson # Protocol is JSON based
       lib-concurrency-interface
    PRIVATE
       lib-sqlite-helpers-interface
