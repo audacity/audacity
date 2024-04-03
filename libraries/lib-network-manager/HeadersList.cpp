@@ -40,6 +40,7 @@ const std::string AcceptLanguage = "Accept-Language";
 const std::string Authorization = "Authorization";
 const std::string CacheControl = "Cache-Control";
 const std::string Connection = "Connection";
+const std::string ContentEncoding = "Content-Encoding";
 const std::string ContentLength = "Content-Length";
 const std::string ContentType = "Content-Type";
 const std::string ContentDisposition = "Content-Disposition";
@@ -59,6 +60,7 @@ const std::string ApplicationXml = "application/xml";
 const std::string ApplicationXWwwFormUrlencoded = "application/x-www-form-urlencoded";
 const std::string ApplicationXOctetStream = "application/x-octet-stream";
 const std::string ApplicationXGzip = "application/x-gzip";
+const std::string MultipartFormData = "multipart/form-data";
 } // namespace common_content_types
 
 bool Header::hasSameName (const Header& header) const

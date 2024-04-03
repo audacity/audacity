@@ -65,6 +65,8 @@ Paul Licameli split from AudacityProject.cpp
 #include "wxFileNameWrapper.h"
 #include "wxPanelWrapper.h"
 
+#include "ProjectFileIOExtension.h"
+
 #include <optional>
 #include <wx/frame.h>
 #include <wx/log.h>
@@ -266,6 +268,8 @@ auto ProjectFileManager::ReadProjectFile(
                &window);
          }
       }
+
+      ProjectFileIOExtensionRegistry::OnLoad(mProject);
    }
 
    return {
@@ -279,6 +283,13 @@ auto ProjectFileManager::ReadProjectFile(
 bool ProjectFileManager::Save()
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
+
+   
+   if (auto action = ProjectFileIOExtensionRegistry::OnSave(
+          mProject, [this](auto& path, bool rename)
+          { return DoSave(audacity::ToWXString(path), rename); });
+      action != OnSaveAction::Continue)
+      return action == OnSaveAction::Handled;
 
    // Prompt for file name?
    if (projectFileIO.IsTemporary())
@@ -597,6 +608,15 @@ For an audio file that will open in other apps, use 'Export'.\n");
       break;
    } while (bPrompt);
 
+
+   // Pretend that we are closing the project
+   if (!bOwnsNewName)
+   {
+      if (
+         ProjectFileIOExtensionRegistry::OnClose(mProject) ==
+         OnCloseAction::Veto)
+         return false;
+   }
 
    auto success = DoSave(fName, !bOwnsNewName);
    if (success) {
@@ -1099,6 +1119,11 @@ void ProjectFileManager::FixTracks(TrackList& tracks,
 AudacityProject *ProjectFileManager::OpenProjectFile(
    const FilePath &fileName, bool addtohistory)
 {
+   // Allow extensions to update the project before opening it.
+   if (ProjectFileIOExtensionRegistry::OnOpen(
+          mProject, audacity::ToUTF8(fileName)) == OnOpenAction::Cancel)
+      return nullptr;
+
    auto &project = mProject;
    auto &history = ProjectHistory::Get( project );
    auto &tracks = TrackList::Get( project );

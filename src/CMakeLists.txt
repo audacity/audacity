@@ -553,8 +553,6 @@ list( APPEND SOURCES
       export/ExportMixerDialog.h
       export/ExportOptionsHandler.cpp
       export/ExportOptionsHandler.h
-      export/ExportProgressUI.cpp
-      export/ExportProgressUI.h
 
       # Import
 
@@ -936,27 +934,6 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.cpp
       >
 
-      # Audio.com
-      $<$<BOOL:${${_OPT}has_audiocom_upload}>:
-         cloud/ShareAudioToolbar.cpp
-         cloud/ShareAudioToolbar.h
-         cloud/audiocom/AuthorizationHandler.cpp
-         cloud/audiocom/AuthorizationHandler.h
-         cloud/audiocom/LinkAccountDialog.cpp
-         cloud/audiocom/LinkAccountDialog.h
-         cloud/audiocom/LinkFailedDialog.cpp
-         cloud/audiocom/LinkFailedDialog.h
-         cloud/audiocom/LinkSucceededDialog.cpp
-         cloud/audiocom/LinkSucceededDialog.h
-         cloud/audiocom/ShareAudioDialog.cpp
-         cloud/audiocom/ShareAudioDialog.h
-         cloud/audiocom/UserImage.cpp
-         cloud/audiocom/UserImage.h
-      >
-
-      $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
-         cloud/audiocom/LinkUrlHandler.cpp
-      >
       Experimental.cmake
 )
 

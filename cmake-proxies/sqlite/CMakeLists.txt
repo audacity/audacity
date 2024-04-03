@@ -1,5 +1,5 @@
 
-add_library( ${TARGET} STATIC )
+add_library( ${TARGET} SHARED )
 
 def_vars()
 
@@ -18,6 +18,7 @@ set( INCLUDES
 )
 
 set( DEFINES
+
    PRIVATE
       #
       # Recommended in SQLite docs
@@ -39,10 +40,38 @@ set( DEFINES
       $<$<BOOL:${HAVE_LOCALTIME_S}>:HAVE_LOCALTIME_S>
 )
 
+if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
+   set(DEFINES ${DEFINES}
+      INTERFACE
+         "SQLITE_API=__declspec(dllimport)"
+      PRIVATE
+         "SQLITE_API=__declspec(dllexport)"
+   )
+else()
+   set(DEFINES ${DEFINES}
+      INTERFACE
+         "SQLITE_API=__attribute__((visibility(\"default\")))"
+   )
+endif()
+
 organize_source( "${TARGET_ROOT}" "" "${SOURCES}" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_compile_definitions( ${TARGET} PRIVATE ${DEFINES} )
 target_include_directories( ${TARGET} PRIVATE ${INCLUDES} )
 
 set_target_properties(${TARGET} PROPERTIES POSITION_INDEPENDENT_CODE On)
+
+if (CMAKE_SYSTEM_NAME MATCHES "Windows")
+   set( DIRECTORY_PROPERTY RUNTIME_OUTPUT_DIRECTORY )
+else ()
+   set( DIRECTORY_PROPERTY LIBRARY_OUTPUT_DIRECTORY )
+endif ()
+
+set_target_property_all( ${TARGET} ${DIRECTORY_PROPERTY} "${_DESTDIR}/${_PKGLIB}" )
+
+if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
+   set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN")
+   set_target_property_all(${TARGET} BUILD_RPATH "$ORIGIN")
+   install(TARGETS ${TARGET} DESTINATION ${_PKGLIB} )
+endif()
 

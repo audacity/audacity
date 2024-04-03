@@ -56,6 +56,16 @@ SampleBlockPtr SampleBlockFactory::CreateFromXML(
    return result;
 }
 
+SampleBlockPtr SampleBlockFactory::CreateFromId(
+   sampleFormat srcformat, SampleBlockID id)
+{
+   auto result = DoCreateFromId(srcformat, id);
+   if (!result)
+      THROW_INCONSISTENCY_EXCEPTION;
+   Publisher<SampleBlockCreateMessage>::Publish({});
+   return result;
+}
+
 SampleBlock::~SampleBlock() = default;
 
 size_t SampleBlock::GetSamples(samplePtr dest,

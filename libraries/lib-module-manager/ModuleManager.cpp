@@ -52,6 +52,14 @@ Module::Module(const FilePath & name)
 
 Module::~Module()
 {
+   // DV: The current Registry code makes unloading of the modules
+   // impossible. The order in which static objects are destroyed
+   // may result in the Registry instance being destroyed after the ModuleManager.
+   // The way Audacity is currently implemented, it is not possible to
+   // guarantee that the ModuleManager instance is initialized before
+   // any of the Registry instances.
+   if (mLib != nullptr && mLib->IsLoaded())
+      mLib->Detach();
 }
 
 static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString &msg)

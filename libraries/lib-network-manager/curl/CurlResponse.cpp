@@ -15,6 +15,8 @@
 #include <algorithm>
 
 #include "MultipartData.h"
+#include "RequestPayload.h"
+
 #include "MemoryX.h"
 
 namespace audacity
@@ -61,48 +63,20 @@ static const std::map<CURLcode, NetworkError> errorsMap = {
     { CURLE_PARTIAL_FILE, NetworkError::RemoteHostClosed }
 };
 
-struct DataStream final
+size_t DataStreamRead (char* ptr, size_t size, size_t nmemb, RequestPayloadStream* stream)
 {
-    const char* Buffer;
-    size_t Size;
-
-    size_t Offset { 0 };
-};
-
-size_t DataStreamRead (char* ptr, size_t size, size_t nmemb, DataStream* stream) noexcept
-{
-    size = std::min (size * nmemb, stream->Size - stream->Offset);
-
-    const char* start = stream->Buffer + stream->Offset;
-    const char* end = start + size;
-
-    std::copy (start, end, ptr);
-
-    stream->Offset += size;
-
-    return size;
+    return stream->Read (ptr, size * nmemb);
 }
 
-int DataStreamSeek (DataStream* stream, curl_off_t offs, int origin) noexcept
+int DataStreamSeek(RequestPayloadStream* stream, curl_off_t offs, int origin)
 {
-    int64_t offset = offs;
+    const auto direction =
+       origin == SEEK_SET ? RequestPayloadStream::SeekDirection::Start :
+       origin == SEEK_CUR ? RequestPayloadStream::SeekDirection::Current :
+                            RequestPayloadStream::SeekDirection::End;
 
-    switch (origin)
-    {
-    case SEEK_CUR:
-        offset += stream->Offset;
-        break;
-    case SEEK_END:
-        offset += stream->Size;
-        break;
-    }
-
-    if (offset < 0 || offset >= stream->Size)
-        return CURL_SEEKFUNC_FAIL;
-
-    stream->Offset = offset;
-
-    return CURL_SEEKFUNC_OK;
+    return stream->Seek(offs, direction) ? CURL_SEEKFUNC_OK :
+                                           CURL_SEEKFUNC_FAIL;
 }
 
 size_t MimePartRead(char* ptr, size_t size, size_t nmemb, MultipartData::Part* stream)
@@ -256,10 +230,9 @@ uint64_t CurlResponse::readData (void* buffer, uint64_t maxBytesCount)
     return maxBytesCount;
 }
 
-void CurlResponse::setPayload(const void* ptr, size_t size)
+void CurlResponse::setPayload(RequestPayloadStreamPtr payload)
 {
-   mPayload = ptr;
-   mPayloadSize = size;
+    mPayload = std::move(payload);
 }
 
 void CurlResponse::setForm(std::unique_ptr<MultipartData> form)
@@ -291,7 +264,6 @@ void CurlResponse::perform ()
 
     handle.appendCookies (mRequest.getCookies ());
 
-    DataStream ds { reinterpret_cast<const char*>(mPayload), mPayloadSize };
     curl_mime* mimeList = nullptr;
 
     if (mForm != nullptr)
@@ -326,21 +298,25 @@ void CurlResponse::perform ()
 
        curl_easy_setopt(handle.getCurlHandle(), CURLOPT_MIMEPOST, mimeList);
     }
-    else if (mPayload != nullptr && mPayloadSize != 0)
+    else if (mPayload != nullptr && mPayload->HasData())
     {
-        handle.appendHeader ({ "Transfer-Encoding", std::string () });
-        handle.appendHeader({ "Content-Length", std::to_string(mPayloadSize) });
+       if (const auto payloadSize = mPayload->GetDataSize(); payloadSize > 0)
+       {
+          handle.appendHeader({ "Transfer-Encoding", std::string() });
+          handle.appendHeader(
+             { "Content-Length", std::to_string(payloadSize) });
 
-        if (mVerb == RequestVerb::Post)
-           handle.setOption(CURLOPT_POSTFIELDSIZE_LARGE, mPayloadSize);
-        else
-           handle.setOption(CURLOPT_INFILESIZE_LARGE, mPayloadSize);
+          if (mVerb == RequestVerb::Post)
+             handle.setOption(CURLOPT_POSTFIELDSIZE_LARGE, payloadSize);
+          else
+             handle.setOption(CURLOPT_INFILESIZE_LARGE, payloadSize);
+       }
 
         handle.setOption (CURLOPT_READFUNCTION, DataStreamRead);
-        handle.setOption (CURLOPT_READDATA, &ds);
+        handle.setOption (CURLOPT_READDATA, mPayload.get());
 
         handle.setOption (CURLOPT_SEEKFUNCTION, DataStreamSeek);
-        handle.setOption (CURLOPT_SEEKDATA, &ds);
+        handle.setOption (CURLOPT_SEEKDATA, mPayload.get());
     }
     else if (mVerb == RequestVerb::Post || mVerb == RequestVerb::Put || mVerb == RequestVerb::Patch)
     {
@@ -374,6 +350,8 @@ void CurlResponse::perform ()
         {
             if (mHttpCode == 0)
                 mHttpCode = handle.getHTTPCode ();
+            if (mHttpCode >= 400)
+               mNetworkError = NetworkError::HTTPError;
         }
 
         mRequestFinished = true;

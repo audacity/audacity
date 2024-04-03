@@ -15,7 +15,7 @@
 #include <vector>
 #include <rapidjson/fwd.h>
 
-namespace cloud::audiocom
+namespace audacity::cloud::audiocom
 {
 
 //! Configuration for the audio.com
@@ -42,7 +42,7 @@ public:
    //! Timeout between progress callbacks
    std::chrono::milliseconds GetProgressCallbackTimeout() const;
    //! Preferred audio format
-   std::vector<std::string> GetPreferredAudioFormats() const;
+   std::vector<std::string> GetPreferredAudioFormats(bool preferLossless = true) const;
    //! Export configuration suitable for the mime type provided
    rapidjson::Document GetExportConfig(const std::string& exporterName) const;
    //! Return the mime type server should store the file. This is a requirement
@@ -51,6 +51,24 @@ public:
    //! Returns the preferred language
    std::string GetAcceptLanguageValue() const;
 
+   std::string GetCreateProjectUrl() const;
+   std::string GetCreateSnapshotUrl(std::string_view projectId) const;
+   std::string GetSnapshotSyncUrl(
+      std::string_view projectId, std::string_view snapshotId) const;
+   std::string GetProjectsUrl(int page, int pageSize, std::string_view searchTerm) const;
+
+   std::string GetProjectInfoUrl(std::string_view projectId) const;
+   std::string GetSnapshotInfoUrl(
+      std::string_view projectId, std::string_view snapshotId) const;
+   std::string GetDeleteSnapshotUrl(
+      std::string_view projectId, std::string_view snapshotId) const;
+
+   std::string GetNetworkStatsUrl(std::string_view projectId) const;
+   std::string
+   GetProjectPageUrl(std::string_view userId, std::string_view projectId) const;
+   std::string
+   GetProjectsPageUrl(std::string_view userId) const;
+
 private:
    std::string mApiEndpoint;
    std::string mOAuthClientID;
@@ -58,10 +76,10 @@ private:
    std::string mOAuthRedirectURL;
    std::string mOAuthLoginPage;
    std::string mFinishUploadPage;
-   std::string mAudioURL;
+   std::string mFrontendURL;
    std::string mPreferredMimeType;
 };
 
 //! Returns the instance of the ServiceConfig
 CLOUD_AUDIOCOM_API const ServiceConfig& GetServiceConfig();
-} // namespace cloud::audiocom
+} // namespace audacity::cloud::audiocom

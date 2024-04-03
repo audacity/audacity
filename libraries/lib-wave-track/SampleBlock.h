@@ -144,6 +144,9 @@ public:
       sampleFormat srcformat,
       const AttributesList &attrs);
 
+   // Potentially returns a null pointer
+   SampleBlockPtr CreateFromId(sampleFormat srcformat, SampleBlockID id);
+
    using SampleBlockIDs = std::unordered_set<SampleBlockID>;
    /*! @return ids of all sample blocks created by this factory and still extant */
    virtual SampleBlockIDs GetActiveBlockIDs() = 0;
@@ -166,6 +169,9 @@ protected:
    virtual SampleBlockPtr DoCreateFromXML(
       sampleFormat srcformat,
       const AttributesList &attrs) = 0;
+
+   virtual SampleBlockPtr
+   DoCreateFromId(sampleFormat srcformat, SampleBlockID id) = 0;
 };
 
 #endif

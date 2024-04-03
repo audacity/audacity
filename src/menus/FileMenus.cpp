@@ -28,8 +28,7 @@
 #include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
-#include "export/ExportProgressUI.h"
-#include "export/ExportAudioDialog.h"
+#include "ExportProgressUI.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -61,11 +60,8 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             false);
          return;
       }
-      ExportAudioDialog dialog(&GetProjectFrame(project),
-                               project,
-                               project.GetProjectName(),
-                               format);
-      dialog.ShowModal();
+
+      ExportUtils::PerformInteractiveExport(project, format);
    }
    else {
       // We either use a configured output path,
@@ -496,12 +492,7 @@ auto FileMenu()
                      recentFilesMenu->GetParent()->SetHelpString( 0, "" );
                } );
             } )
-         ),
-
-   /////////////////////////////////////////////////////////////////////////////
-
-         Command( wxT("Close"), XXO("&Close"), OnClose,
-            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+         )
       ),
 
       Section( "Save",
@@ -521,6 +512,10 @@ auto FileMenu()
          // approach to this P1 bug is to not provide the 'Compact' menu item.
          //Command( wxT("Compact"), XXO("Co&mpact Project"), OnCompact,
          //   AudioIONotBusyFlag(), wxT("Shift+A") )
+      ),
+
+      Section( "Close", Command( wxT("Close"), XXO("&Close"), OnClose,
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
       Section( "Import-Export",
