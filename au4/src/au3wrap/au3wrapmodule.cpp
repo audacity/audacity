@@ -21,11 +21,17 @@
  */
 #include "au3wrapmodule.h"
 
+#include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
+#include "libraries/lib-project-file-io/ProjectFileIO.h"
+
+#include "mocks/au3settingsmock.h"
 
 #include "log.h"
 
 using namespace au::au3;
+
+
 
 std::string Au3WrapModule::moduleName() const
 {
@@ -38,7 +44,16 @@ void Au3WrapModule::registerExports()
 
 void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
 {
+    std::unique_ptr<Au3SettingsMock> auset = std::make_unique<Au3SettingsMock>();
+    InitPreferences(std::move(auset));
+
     AudioIO::Init();
+
+    bool ok = ProjectFileIO::InitializeSQL();
+    if (!ok) {
+        LOGE() << "failed init sql";
+    }
+
 }
 
 void Au3WrapModule::onDeinit()

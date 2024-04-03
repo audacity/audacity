@@ -144,8 +144,7 @@ mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const s
 
     LOGI() << "success loaded: " << m_au3Project->title();
 
-
-    return make_ret(Ret::Code::NotImplemented);
+    return mu::make_ret(Ret::Code::Ok);
 }
 
 void Audacity4Project::setPath(const io::path_t& path)

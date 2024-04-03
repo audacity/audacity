@@ -11,7 +11,7 @@
 *******************************************************************//*!
 
 \file ModuleManager.cpp
-\brief Based on LoadLadspa, this code loads pluggable Audacity 
+\brief Based on LoadLadspa, this code loads pluggable Audacity
 extension modules.  It also has the code to
 invoke a function returning a replacement window,
 i.e. an alternative to the usual interface, for Audacity.
@@ -31,6 +31,7 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "MemoryX.h"
 
 #include "PluginInterface.h"
+#include "ModuleSettings.h"
 
 #ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
@@ -120,7 +121,7 @@ bool Module::Load(wxString &deferredErrorMessage)
       return true;
    }
 
-   // However if we do have it and it does not work, 
+   // However if we do have it and it does not work,
    // then the module is bad.
    bool res = ((mDispatch(ModuleInitialize))!=0);
    if (res) {
@@ -441,7 +442,7 @@ bool ModuleManager::DiscoverProviders()
    InitializeBuiltins();
 
 // The commented out code loads modules whether or not they are enabled.
-// none of our modules is a 'provider' of effects, so this code commented out. 
+// none of our modules is a 'provider' of effects, so this code commented out.
 #if 0
    FilePaths provList;
    FilePaths pathList;
@@ -478,13 +479,13 @@ void ModuleManager::InitializeBuiltins()
    for (const auto& pluginProviderFactory : builtinProviderList())
    {
       auto pluginProvider = pluginProviderFactory();
-      
+
       if (pluginProvider && pluginProvider->Initialize()) {
          PluginProviderUniqueHandle handle { std::move(pluginProvider) };
-         
+
          auto id = GetID(handle.get());
 
-         // Need to remember it 
+         // Need to remember it
          mProviders[id] = std::move(handle);
       }
    }
@@ -538,7 +539,7 @@ bool ModuleManager::IsProviderValid(const PluginID & WXUNUSED(providerID),
    // Builtin modules do not have a path
    if (path.empty())
    {
-      return true;  
+      return true;
    }
 
    wxFileName lib(path);
