@@ -65,6 +65,8 @@ public:
 
    virtual BlockSampleView GetFloatSampleView(bool mayThrow) = 0;
 
+   virtual sampleFormat GetSampleFormat() const = 0;
+
    virtual size_t GetSampleCount() const = 0;
 
    //! Non-throwing, should fill with zeroes on failure

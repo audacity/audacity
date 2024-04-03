@@ -63,7 +63,7 @@ public:
                        sampleFormat destformat,
                        size_t sampleoffset,
                        size_t numsamples) override;
-   sampleFormat GetSampleFormat() const;
+   sampleFormat GetSampleFormat() const override;
    size_t GetSampleCount() const override;
 
    bool GetSummary256(float *dest, size_t frameoffset, size_t numframes) override;
