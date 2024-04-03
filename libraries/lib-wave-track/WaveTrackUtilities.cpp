@@ -388,7 +388,7 @@ void WaveTrackUtilities::VisitBlocks(TrackList &tracks, BlockVisitor visitor,
                   if (pIDs && !pIDs->insert(pBlock->GetBlockID()).second)
                      continue;
                   if (visitor)
-                     visitor(*pBlock);
+                     visitor(pBlock);
                }
             }
          }

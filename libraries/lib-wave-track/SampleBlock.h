@@ -26,6 +26,7 @@ class XMLWriter;
 
 class SampleBlock;
 using SampleBlockPtr = std::shared_ptr<SampleBlock>;
+using SampleBlockConstPtr = std::shared_ptr<const SampleBlock>;
 class SampleBlockFactory;
 using SampleBlockFactoryPtr = std::shared_ptr<SampleBlockFactory>;
 
@@ -103,11 +104,11 @@ protected:
 };
 
 // Makes a useful function object
-inline std::function< void(const SampleBlock&) >
+inline std::function< void(SampleBlockConstPtr) >
 BlockSpaceUsageAccumulator (unsigned long long &total)
 {
-   return [&total]( const SampleBlock &block ){
-      total += block.GetSpaceUsage();
+   return [&total](SampleBlockConstPtr pBlock){
+      total += pBlock->GetSpaceUsage();
    };
 };
 

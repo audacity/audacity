@@ -1085,8 +1085,8 @@ static size_t EstimateRemovedBlocks(
    manager.VisitStates([&](const UndoStackElem &elem) {
       if (auto pTracks = UndoTracks::Find(elem)) {
          InspectBlocks(*pTracks,
-            [&](const SampleBlock &block){
-               auto id = block.GetBlockID();
+            [&](SampleBlockConstPtr pBlock){
+               auto id = pBlock->GetBlockID();
                if (id > 0 && !wontDelete.count(id))
                   mayDelete.insert(id);
             },

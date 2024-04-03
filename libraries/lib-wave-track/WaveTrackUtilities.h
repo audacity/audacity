@@ -32,8 +32,10 @@ namespace WaveTrackUtilities {
 
 using SampleBlockID = long long;
 using SampleBlockIDSet = std::unordered_set<SampleBlockID>;
-using BlockVisitor = std::function<void(SampleBlock&)>;
-using BlockInspector = std::function<void(const SampleBlock&)>;
+using BlockVisitor =
+   std::function<void(const std::shared_ptr<SampleBlock> &)>;
+using BlockInspector =
+   std::function<void(std::shared_ptr<const SampleBlock>)>;
 
 using IntervalHolder = std::shared_ptr<WaveTrack::Interval>;
 using IntervalHolders = std::vector<IntervalHolder>;
