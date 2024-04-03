@@ -79,7 +79,7 @@ public:
          {
             S.SetBorder(8);
             auto checkBox = S.AddCheckBox(
-               XO("Show 'How would you like to export?' dialog"),
+               XO("S&how 'How would you like to export?' dialog"),
                sync::ExportLocationMode.ReadEnum() ==
                   sync::CloudLocationMode::Ask);
 
@@ -115,17 +115,17 @@ public:
             S.StartInvisiblePanel(4);
             {
                BindRadioButton(S.AddRadioButton(
-                  XO("Always ask"),
+                  XO("Always &ask"),
                      static_cast<int>(sync::CloudLocationMode::Ask),
                      initialMode),
                   sync::CloudLocationMode::Ask);
                BindRadioButton(S.AddRadioButtonToGroup(
-                  XO("Always save to cloud"),
+                  XO("Always &save to cloud"),
                   static_cast<int>(sync::CloudLocationMode::Cloud),
                      initialMode),
                   sync::CloudLocationMode::Cloud);
                BindRadioButton(S.AddRadioButtonToGroup(
-                  XO("Always save to the computer"),
+                  XO("Always save to the co&mputer"),
                   static_cast<int>(sync::CloudLocationMode::Local),
                      initialMode),
                   sync::CloudLocationMode::Local);
@@ -142,7 +142,7 @@ public:
                S.SetStretchyCol(1);
 
                mCloudProjectsSavePath = S.TieTextBox(XXO("&Location:"), CloudProjectsSavePath, 30);
-               S.AddButton(XXO("Brow&se..."))
+               S.AddButton(XXO("&Browse..."))
                   ->Bind(wxEVT_BUTTON, [this](auto&) { Browse(); });
             }
             S.EndMultiColumn();
@@ -150,8 +150,9 @@ public:
             S.SetBorder(8);
             S.StartMultiColumn(3);
             {
-               S.TieIntegerTextBox(
-                  XXO("Remove temporary files after:"), DaysToKeepFiles, 10);
+               S.NameSuffix(XO("days"))
+                  .TieIntegerTextBox(
+                  XXO("&Remove temporary files after:"), DaysToKeepFiles, 10);
                S.AddFixedText(XO("days"), true);
             }
             S.EndMultiColumn();

@@ -59,6 +59,7 @@ UserPanel::UserPanel(
          [this](const auto&) { UpdateUserData(); }) }
 {
    mUserImage = safenew UserImage(this, avatarSize);
+   mUserImage->SetLabel(anonymousText);      // for screen readers
    mUserName =
       safenew wxStaticText(this, wxID_ANY, anonymousText.Translation());
    mLinkButton =
@@ -135,8 +136,10 @@ void UserPanel::UpdateUserData()
 
    const auto displayName = userService.GetDisplayName();
 
-   if (!displayName.empty())
+   if (!displayName.empty()) {
       mUserName->SetLabel(displayName);
+      mUserImage->wxPanel::SetLabel(displayName);  // for screen readers
+   }
 
    const auto avatarPath = userService.GetAvatarPath();
 
@@ -175,6 +178,7 @@ void UserPanel::SetAnonymousState()
 {
    mUserName->SetLabel(anonymousText.Translation());
    mUserImage->SetBitmap(theTheme.Bitmap(bmpAnonymousUser));
+   mUserImage->SetLabel(anonymousText);   // for screen readers
    mLinkButton->SetLabel(XXO("&Link Account").Translation());
 
    OnStateChaged(false);
