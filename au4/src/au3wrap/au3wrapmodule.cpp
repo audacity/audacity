@@ -38,8 +38,7 @@ void Au3WrapModule::registerExports()
 
 void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
 {
-    AudioIO* audio = AudioIO::Get();
-    UNUSED(audio);
+    AudioIO::Init();
 }
 
 void Au3WrapModule::onDeinit()
