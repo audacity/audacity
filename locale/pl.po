@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2024-02-28 20:00+0000\n"
+"PO-Revision-Date: 2024-03-30 20:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -4217,7 +4217,7 @@ msgstr "Nie można zainicjować biblioteki kodowania MP3!"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
-msgstr "Nieaktualna lub niewspierana biblioteka kodowania MP3!"
+msgstr "Nieaktualna lub nieobsługiwana biblioteka kodowania MP3!"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
