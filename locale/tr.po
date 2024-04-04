@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2023-10-22 00:00+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/klyok/teams/690/tr/)\n"
@@ -3383,7 +3383,7 @@ msgstr "Dışa aktarma sorunu"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr "Sesi nasıl yapıştırmak istersiniz?"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3392,17 +3392,18 @@ msgid "Save behavior"
 msgstr "Davranışlar"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "&Dalga Rengi"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Günlük kayıtlarını kaydeder."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3415,18 +3416,18 @@ msgid "&Location:"
 msgstr "&Konum:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "&Gözat..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Geçici dosyalar klasörü"
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "&Göz at..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Geçici dosyalar klasörü"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3513,7 +3514,7 @@ msgid "Save to the Cloud"
 msgstr "Günlüğün kaydedileceği dosya:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3526,7 +3527,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14258,10 +14259,6 @@ msgstr "Dosya &adı:"
 msgid "Fo&lder:"
 msgstr "&Klasör:"
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "&Göz at..."
-
 #: src/export/ExportFilePanel.cpp
 msgid "&Format:"
 msgstr "&Biçim:"
@@ -16412,6 +16409,10 @@ msgid "Temporary files directory"
 msgstr "Geçici dosyalar klasörü"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "&Gözat..."
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "&Boş Alan:"
 
@@ -17011,6 +17012,10 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Bu ayarlarda yapılan değişiklikler yalnızca Audacity başlatılırken geçerli olur."
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

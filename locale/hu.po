@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2020-11-02 10:15+0000\n"
 "Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2024\n"
 "Language-Team: Hungarian (https://app.transifex.com/klyok/teams/690/hu/)\n"
@@ -3387,7 +3387,7 @@ msgstr "Importálási hiba"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr "Hogyan illeszted ne a hangot?"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3396,17 +3396,19 @@ msgid "Save behavior"
 msgstr "Viselkedések"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+#, fuzzy
+msgid "Always &ask"
 msgstr "Mindig kérdezzen"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Hullám&szín"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Naplótartalom mentése."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3419,18 +3421,18 @@ msgid "&Location:"
 msgstr "&Hely:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
 msgstr "&Tallózás…"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Ideiglenes fájlok mappája"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Ideiglenes fájlok mappája"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3517,7 +3519,7 @@ msgid "Save to the Cloud"
 msgstr "Napló mentése ide:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3530,7 +3532,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14273,10 +14275,6 @@ msgstr "Fájl &neve:"
 msgid "Fo&lder:"
 msgstr "&Mappa:"
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "&Tallózás…"
-
 #: src/export/ExportFilePanel.cpp
 msgid "&Format:"
 msgstr "&Formátum:"
@@ -16429,6 +16427,10 @@ msgid "Temporary files directory"
 msgstr "Ideiglenes fájlok mappája"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "&Tallózás…"
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "&Szabad hely:"
 
@@ -17026,6 +17028,10 @@ msgstr ""
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Az új beállítások csak az Audacity újraindítása után lépnek életbe.\n"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr "Mindig kérdezzen"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2010-04-19 16:57+0300\n"
 "Last-Translator: FatCow <zhr@tut.by>\n"
 "Language-Team: Patricia Clausnitzer <by.marcis@gmail.com>\n"
@@ -3381,7 +3381,7 @@ msgid "Export behavior"
 msgstr "Экспарт MIDI"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3390,17 +3390,18 @@ msgid "Save behavior"
 msgstr "Паводзіны"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Хваля"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Захаваць праект &як..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3413,19 +3414,19 @@ msgid "&Location:"
 msgstr "&Размяшчэнне:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
-msgid "Brow&se..."
+msgid "&Browse..."
 msgstr "Агляд..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Каталог для часавых файлаў"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Каталог для часавых файлаў"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3513,7 +3514,7 @@ msgid "Save to the Cloud"
 msgstr "Захоўваць здымкі ў:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3526,7 +3527,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14664,11 +14665,6 @@ msgstr "Фільтры"
 msgid "Fo&lder:"
 msgstr "Тэчка з наладамі: "
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Агляд..."
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "&Format:"
@@ -17103,6 +17099,11 @@ msgstr "Каталог для часавых файлаў"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
+msgid "Brow&se..."
+msgstr "Агляд..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
 msgid "&Free Space:"
 msgstr "Вольнага месца:"
 
@@ -17719,6 +17720,10 @@ msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr ""
 "Змены датычна каталога для захоўвання часавых файлаў \n"
 "не падзейнічаюць эфекту, пакуль праграма Audacity не будзе перазагружана."
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

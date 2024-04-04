@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2019-09-30 13:51+0200\n"
 "Last-Translator: Alfredo vicente <alviboi@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -3385,7 +3385,7 @@ msgid "Export behavior"
 msgstr "Exporta MIDI"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3394,17 +3394,18 @@ msgid "Save behavior"
 msgstr "Comportaments"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Color de l'&ona"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Guarda el projecte..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3417,19 +3418,19 @@ msgid "&Location:"
 msgstr " &Ubicació:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
-msgid "Brow&se..."
+msgid "&Browse..."
 msgstr "Navega..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Directori per a fitxers temporals"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Directori per a fitxers temporals"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3519,7 +3520,7 @@ msgid "Save to the Cloud"
 msgstr "Guarda el fitxer de registre en:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3532,7 +3533,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14480,11 +14481,6 @@ msgstr "Nom del fitxer:"
 msgid "Fo&lder:"
 msgstr "Carpeta:"
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Navega..."
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "&Format:"
@@ -16699,6 +16695,11 @@ msgstr "Directori per a fitxers temporals"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
+msgid "Brow&se..."
+msgstr "Navega..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
 msgid "&Free Space:"
 msgstr "Espai lliure:"
 
@@ -17300,6 +17301,10 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Els canvis en el directori temporal tindran efecte en reiniciar l'Audacity."
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

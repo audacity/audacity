@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2007-08-30 07:25-0400\n"
 "Last-Translator: Victor Ibragimov <youth_opportunities@tajikngo.org>\n"
 "Language-Team: Tajik Language\n"
@@ -3314,7 +3314,7 @@ msgid "Export behavior"
 msgstr "Берунсозии файл"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3323,17 +3323,18 @@ msgid "Save behavior"
 msgstr "Рафтор"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Мавҷшакл"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Сабти Лоиҳа &Ҳамчун..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3346,19 +3347,19 @@ msgid "&Location:"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
-msgid "Brow&se..."
+msgid "&Browse..."
 msgstr "Баррасии..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Рӯйхатҳои файлҳои муваққатӣ"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Рӯйхатҳои файлҳои муваққатӣ"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3445,7 +3446,7 @@ msgid "Save to the Cloud"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3458,7 +3459,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14417,11 +14418,6 @@ msgstr "Навъи хаш:"
 msgid "Fo&lder:"
 msgstr "Танзимоти пӯша: "
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Баррасии..."
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "&Format:"
@@ -16832,6 +16828,11 @@ msgstr "Рӯйхатҳои файлҳои муваққатӣ"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
+msgid "Brow&se..."
+msgstr "Баррасии..."
+
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
 msgid "&Free Space:"
 msgstr "Фазои холӣ:"
 
@@ -17436,6 +17437,10 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Тағиротҳо ба рӯйхати муваққатӣ то аз навборкунии Audacity натиҷагирӣ намешаванд"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

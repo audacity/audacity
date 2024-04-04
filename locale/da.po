@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2023-10-23 17:53+0200\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
@@ -3380,7 +3380,7 @@ msgstr "Fejl ved eksport"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr "Hvordan ønsker du at indsætte din lyd?"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3389,17 +3389,18 @@ msgid "Save behavior"
 msgstr "Indstillinger"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "&Bølgefarve"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Gemmer indholdet af loggen."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3412,18 +3413,18 @@ msgid "&Location:"
 msgstr "P&lacering:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "G&ennemse..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "Mappe til midlertidige filer"
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "&Gennemse..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Mappe til midlertidige filer"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3510,7 +3511,7 @@ msgid "Save to the Cloud"
 msgstr "Gem log som:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3523,7 +3524,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14256,10 +14257,6 @@ msgstr "Fil&navn:"
 msgid "Fo&lder:"
 msgstr "Mappe:"
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "&Gennemse..."
-
 #: src/export/ExportFilePanel.cpp
 msgid "&Format:"
 msgstr "&Format:"
@@ -16412,6 +16409,10 @@ msgid "Temporary files directory"
 msgstr "Mappe til midlertidige filer"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "G&ennemse..."
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Ledig &plads:"
 
@@ -17011,6 +17012,10 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Ændringen af disse indstillinger træder først i kraft, når Audacity starter næste gang."
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"

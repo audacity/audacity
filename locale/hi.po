@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2023-05-24 19:13+0530\n"
 "Last-Translator: Bashishtha Narayan Singh <bashishtha.singh@gmail.com>, 2023\n"
 "Language-Team: Hindi (https://app.transifex.com/klyok/teams/690/hi/)\n"
@@ -3379,7 +3379,7 @@ msgstr "निर्यात त्रुटि"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
-msgid "Show 'How would you like to export?' dialog"
+msgid "S&how 'How would you like to export?' dialog"
 msgstr "आप अपना ऑडियो कैसे पेस्ट करना चाहेंगे?"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -3388,17 +3388,18 @@ msgid "Save behavior"
 msgstr "व्यवहार"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/ModulePrefs.cpp
-msgid "Always ask"
+msgid "Always &ask"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to cloud"
-msgstr ""
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "तरंग का रंग"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always save to the computer"
-msgstr ""
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "लॉग सामग्री संचित करता है."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3411,18 +3412,18 @@ msgid "&Location:"
 msgstr "स्थान:(&L)"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "ब्राउज(&s)..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Remove temporary files after:"
-msgstr "क्षणिक फ़ाईल डायरेक्टरी"
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "ब्राउज़ करें (&B)..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
 msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "क्षणिक फ़ाईल डायरेक्टरी"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3509,7 +3510,7 @@ msgid "Save to the Cloud"
 msgstr "लॉग यहाँ संचित करें :"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -3522,7 +3523,7 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device"
+msgid "Files are saved on your device."
 msgstr ""
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -14303,10 +14304,6 @@ msgstr "फ़ाइल का नाम :"
 msgid "Fo&lder:"
 msgstr "निर्देशिका:"
 
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "ब्राउज़ करें (&B)..."
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "&Format:"
@@ -16480,6 +16477,10 @@ msgid "Temporary files directory"
 msgstr "क्षणिक फ़ाईल डायरेक्टरी"
 
 #: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "ब्राउज(&s)..."
+
+#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "रिक्त स्थान(&F) :"
 
@@ -17080,6 +17081,10 @@ msgstr ""
 #, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "इन परिवर्तनों को प्रभावी करने के  लिए Audacity को दुबारा शुरू करना होगा."
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
