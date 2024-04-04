@@ -31,9 +31,9 @@ endif()
 # Increment as appropriate after release of a new version, and set back
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 5 )
+set( AUDACITY_RELEASE 6 )
 set( AUDACITY_REVISION 0 )
-set( AUDACITY_MODLEVEL 2 )
+set( AUDACITY_MODLEVEL 0 )
 
 string( TIMESTAMP __TDATE__ "%Y%m%d" )
 if( AUDACITY_BUILD_LEVEL EQUAL 0 )
