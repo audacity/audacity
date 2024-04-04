@@ -6,6 +6,8 @@
 
 #include "global/io/path.h"
 
+#include "processing/dom/track.h"
+
 namespace au::au3 {
 struct Audacity3ProjectData;
 class Audacity3Project
@@ -17,8 +19,11 @@ public:
     static std::shared_ptr<Audacity3Project> create();
 
     bool load(const mu::io::path_t& filePath);
+    void close();
 
     std::string title() const;
+
+    processing::TrackList tracks() const;
 
 private:
 
