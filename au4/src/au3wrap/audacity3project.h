@@ -2,6 +2,7 @@
 #define AU_AU3WRAP_AUDACITY3PROJECT_H
 
 #include <memory>
+#include <string>
 
 #include "global/io/path.h"
 
@@ -16,6 +17,8 @@ public:
     static std::shared_ptr<Audacity3Project> create();
 
     bool load(const mu::io::path_t& filePath);
+
+    std::string title() const;
 
 private:
 

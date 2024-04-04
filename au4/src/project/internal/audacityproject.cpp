@@ -132,15 +132,19 @@ mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const s
 {
     TRACEFUNC;
 
-    UNUSED(path);
     UNUSED(forceMode);
     UNUSED(format);
 
     m_au3Project = au3::Audacity3Project::create();
+    bool isLoaded = m_au3Project->load(path);
+    if (!isLoaded) {
+        LOGE() << "Failed load:" << path;
+        return mu::make_ret(mu::Ret::Code::UnknownError);
+    }
 
-    NOT_IMPLEMENTED;
+    LOGI() << "success loaded: " << m_au3Project->title();
 
-    return make_ret(Ret::Code::NotImplemented);
+    return mu::make_ret(Ret::Code::Ok);
 }
 
 void Audacity4Project::setPath(const io::path_t& path)

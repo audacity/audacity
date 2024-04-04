@@ -83,6 +83,8 @@
 #include "projectscene/projectscenemodule.h"
 #endif
 
+#include "au3wrap/au3wrapmodule.h"
+
 #if (defined (_MSCVER) || defined (_MSC_VER))
 #include <vector>
 #include <algorithm>
@@ -180,6 +182,8 @@ int main(int argc, char** argv)
     app.addModule(new au::project::ProjectModule());
 
     app.addModule(new au::projectscene::ProjectSceneModule());
+
+    app.addModule(new au::au3::Au3WrapModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.

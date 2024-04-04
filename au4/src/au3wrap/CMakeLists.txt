@@ -25,8 +25,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
     )
 
 # ==================================
@@ -73,6 +77,10 @@ set(AU3_DEF
     -DPROJECT_RATE_API=
     -DTRACK_SELECTION_API=
     -DAUDIO_DEVICES_API=
+    -DAUDIO_IO_API=
+    -DREALTIME_EFFECTS_API=
+    -DMODULE_MANAGER_API=
+    -DWX_INIT_API=
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
@@ -115,6 +123,10 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-project-rate
     ${AU3_LIBRARIES}/lib-track-selection
     ${AU3_LIBRARIES}/lib-audio-devices
+
+    # compile lib-audio-io
+    ${AU3_LIBRARIES}/lib-realtime-effects
+    ${AU3_LIBRARIES}/lib-module-manager
 )
 
 if (AU3_ADD_AS_LIBS)
@@ -217,6 +229,8 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-strings/TranslatableString.h
     ${AU3_LIBRARIES}/lib-strings/Internat.cpp
     ${AU3_LIBRARIES}/lib-strings/Internat.h
+    ${AU3_LIBRARIES}/lib-strings/Base64.cpp
+    ${AU3_LIBRARIES}/lib-strings/Base64.h
 
     ${AU3_LIBRARIES}/lib-exceptions/AudacityException.cpp
     ${AU3_LIBRARIES}/lib-exceptions/AudacityException.h
@@ -336,6 +350,10 @@ if (AU3_ADD_AS_SRC)
 
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.h
+    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphBuffers.cpp
+    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphBuffers.h
+    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSource.cpp
+    ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphSource.h
 
     ${AU3_LIBRARIES}/lib-math/SampleFormat.cpp
     ${AU3_LIBRARIES}/lib-math/SampleFormat.h
@@ -354,6 +372,61 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.h
 
     # end dependencies of project-file-io
+
+    # When creating a project, audio devices are accessed, so we need to initialize the audio
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIO.h
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIOExt.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIOExt.h
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIOListener.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/AudioIOListener.h
+    ${AU3_LIBRARIES}/lib-audio-io/PlaybackSchedule.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/PlaybackSchedule.h
+    ${AU3_LIBRARIES}/lib-audio-io/ProjectAudioIO.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/ProjectAudioIO.h
+    ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.cpp
+    ${AU3_LIBRARIES}/lib-audio-io/RingBuffer.h
+
+    # begin dependencies of lib-audio-io
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.cpp
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectList.h
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.cpp
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectManager.h
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.cpp
+    ${AU3_LIBRARIES}/lib-realtime-effects/RealtimeEffectState.h
+
+    ${AU3_LIBRARIES}/lib-mixer/Mix.cpp
+    ${AU3_LIBRARIES}/lib-mixer/Mix.h
+    ${AU3_LIBRARIES}/lib-mixer/MixerSource.cpp
+    ${AU3_LIBRARIES}/lib-mixer/MixerSource.h
+    ${AU3_LIBRARIES}/lib-mixer/EffectStage.cpp
+    ${AU3_LIBRARIES}/lib-mixer/EffectStage.h
+    ${AU3_LIBRARIES}/lib-mixer/MixerOptions.cpp
+    ${AU3_LIBRARIES}/lib-mixer/MixerOptions.h
+
+    ${AU3_LIBRARIES}/lib-module-manager/PluginManager.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginManager.h
+    ${AU3_LIBRARIES}/lib-module-manager/ModuleManager.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/ModuleManager.h
+    ${AU3_LIBRARIES}/lib-module-manager/PluginDescriptor.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginDescriptor.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginInterface.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/PluginInterface.h
+    ${AU3_LIBRARIES}/lib-module-manager/ModuleSettings.cpp
+    ${AU3_LIBRARIES}/lib-module-manager/ModuleSettings.h
+
+    ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.cpp
+    ${AU3_LIBRARIES}/lib-components/EffectAutomationParameters.h
+    ${AU3_LIBRARIES}/lib-components/EffectInterface.cpp
+    ${AU3_LIBRARIES}/lib-components/EffectInterface.h
+    ${AU3_LIBRARIES}/lib-components/ComponentInterface.cpp
+    ${AU3_LIBRARIES}/lib-components/ComponentInterface.h
+
+    # end dependencies of lib-audio-io
+
+    # Requires wxApp, so we won't use it
+    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp
+    # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.h
     )
 
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)

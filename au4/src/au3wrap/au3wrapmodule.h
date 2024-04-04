@@ -31,7 +31,6 @@ public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void resolveImports() override;
     void onInit(const mu::IApplication::RunMode& mode) override;
     void onDeinit() override;
 };
