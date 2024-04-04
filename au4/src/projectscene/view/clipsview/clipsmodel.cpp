@@ -6,22 +6,22 @@ using namespace au::processing;
 void ClipsModel::load()
 {
     ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
-    if (!prj) {
-        return;
-    }
-    for (const Track& t : prj->trackList()) {
-        TrackClipsItem* titem = new TrackClipsItem(this);
-        QList<ClipItem*> clips;
-        for (const Clip& c : t.clips()) {
-            ClipItem* citem = new ClipItem(titem);
-            citem->setWaveSource(WaveSource(c.wave()));
-            clips << citem;
-        }
+    // if (!prj) {
+    //     return;
+    // }
+    // for (const Track& t : prj->trackList()) {
+    //     TrackClipsItem* titem = new TrackClipsItem(this);
+    //     QList<ClipItem*> clips;
+    //     for (const Clip& c : t.clips()) {
+    //         ClipItem* citem = new ClipItem(titem);
+    //         citem->setWaveSource(WaveSource(c.wave()));
+    //         clips << citem;
+    //     }
 
-        titem->setClips(clips);
+    //     titem->setClips(clips);
 
-        m_tracks << titem;
-    }
+    //     m_tracks << titem;
+    // }
 
     emit tracksChanged();
 }

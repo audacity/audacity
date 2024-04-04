@@ -58,11 +58,6 @@ void ProjectModule::resolveImports()
 void ProjectModule::onInit(const mu::IApplication::RunMode&)
 {
     m_actionsController->init();
-
-    //! NOTE Make mock project for tests
-    // IAudacityProjectPtr p = Audacity4Project::makeMock();
-    // auto context = ioc()->resolve<mu::context::IGlobalContext>(moduleName());
-    // context->setCurrentProject(p);
 }
 
 void ProjectModule::onDeinit()

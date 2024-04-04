@@ -3,20 +3,15 @@
 
 #include <vector>
 
+#include "global/types/id.h"
+#include "global/types/string.h"
+
 #include "clip.h"
 
 namespace au::processing {
-class Track
-{
-public:
-    Track() = default;
-
-    const Clips& clips() const;
-    void setClips(const Clips& c);
-
-private:
-
-    Clips m_clips;
+struct Track {
+    mu::ID id;
+    mu::String title;
 };
 
 using TrackList = std::vector<Track>;
