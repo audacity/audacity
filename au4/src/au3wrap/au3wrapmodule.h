@@ -25,6 +25,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::au3 {
+class WxLogWrap;
 class Au3WrapModule : public mu::modularity::IModuleSetup
 {
 public:
@@ -33,6 +34,10 @@ public:
     void registerExports() override;
     void onInit(const mu::IApplication::RunMode& mode) override;
     void onDeinit() override;
+
+private:
+
+    WxLogWrap* m_wxLog = nullptr;
 };
 }
 

@@ -30,6 +30,8 @@
 
 #include "mocks/au3settingsmock.h"
 
+#include "internal/wxlogwrap.h"
+
 #include "log.h"
 
 using namespace au::au3;
@@ -45,8 +47,8 @@ void Au3WrapModule::registerExports()
 
 void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
 {
-    wxLog* logger = new wxLogStream(&std::cout);
-    wxLog::SetActiveTarget(logger);
+    m_wxLog = new WxLogWrap();
+    wxLog::SetActiveTarget(m_wxLog);
 
     std::unique_ptr<Au3SettingsMock> auset = std::make_unique<Au3SettingsMock>();
     InitPreferences(std::move(auset));
@@ -61,4 +63,6 @@ void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
 
 void Au3WrapModule::onDeinit()
 {
+    wxLog::SetActiveTarget(nullptr);
+    delete m_wxLog;
 }
