@@ -31,6 +31,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h
     )
 
 # ==================================

@@ -367,7 +367,6 @@ int App::run(int argc, char** argv)
     globalModule.invokeQueuedCalls();
 
     for (mu::modularity::IModuleSetup* m : m_modules) {
-        LOGI() << m->moduleName();
         m->onDeinit();
     }
 
