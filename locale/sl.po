@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
+"POT-Creation-Date: 2024-04-04 16:26+0300\n"
 "PO-Revision-Date: 2023-04-06 15:56+0000\n"
 "Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2023\n"
 "Language-Team: Slovenian (https://app.transifex.com/klyok/teams/690/sl/)\n"
@@ -21,40 +21,48 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "Tok je aktiven … ni mogoče zbrati informacij.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "Privzeto število snemalne naprave: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "Številka privzete naprave za predvajanje: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "Ni najdenih naprav\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "Podatki o napravi niso na voljo za: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "ID naprave: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "Ime naprave: %s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "Ime gostitelja: %s\n"
@@ -164,8 +172,8 @@ msgstr ""
 "Ne boste mogli predvajati ali snemati zvoka.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Napaka:  %s"
@@ -198,7 +206,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Napaka"
 
@@ -346,8 +353,53 @@ msgstr "Sporočilo"
 msgid "Cannot proceed to upload."
 msgstr "Ni možno nadaljevati z nalaganjem na strežnik."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File not found"
+msgstr "Datoteke »%s« ni mogoče najti."
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, fuzzy, c-format
+msgid "Invalid Response: %s"
+msgstr "Neveljavna mera vzorčenja"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#, fuzzy
+msgid "Export failed"
+msgstr "Izvozi datoteke v:"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "Napaka pri izvozu"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to attach to the Cloud project database"
+msgstr "Zbirke podatkov projekta ni mogoče odpreti"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to decompress the Cloud project block"
+msgstr "Zbirke podatkov projekta ni mogoče odpreti"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+#, fuzzy
+msgid "Failed to deserialize the response"
+msgstr "Pridobivanje vsebine prednastavitve je spodletelo"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -379,7 +431,7 @@ msgstr "Izvajanje %s ..."
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "Vgrajeni učinki"
 
@@ -421,6 +473,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Notranja napaka"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "Pravokotno"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "Bartlett"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "Hamming"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "Hann"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "Blackman"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Blackman-Harris"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "Welch"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "Po Gaussu (a=2,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "Po Gaussu (a=3,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "Po Gaussu (a=4,5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
@@ -456,9 +557,8 @@ msgstr ""
 msgid "File Error"
 msgstr "Datotečna napaka"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "Vse datoteke"
 
@@ -533,6 +633,7 @@ msgstr ""
 "Za namige o primernih pogonih kliknite gumb za pomoč."
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -540,10 +641,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Opozorilo"
 
@@ -556,22 +656,19 @@ msgstr ""
 "Izvoz ni možen.\n"
 "Napaka %s"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "Izvozi"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#, fuzzy
+msgid "Export completed with error."
+msgstr "Izvozi izbrani zvok"
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "Vse podprte datoteke"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"»%s« \n"
-"je datoteka MIDI in ne zvočna datoteka. \n"
-"Audacity te vrste datotek ne more odpreti za predvajanje ali urejanje,\n"
-"lahko pa jo prikaže, če kliknete Datoteka > Uvozi > MIDI."
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -831,8 +928,7 @@ msgstr "Učinki LV2"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Zagotavlja podporo učinkom LV2 v Audacity."
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -850,55 +946,6 @@ msgstr "Trikotnik"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Oblikovano"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "Pravokotno"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "Bartlett"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "Hamming"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "Hann"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "Blackman"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Blackman-Harris"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "Welch"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "Po Gaussu (a=2,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "Po Gaussu (a=3,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "Po Gaussu (a=4,5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -935,6 +982,57 @@ msgstr "32-bitno plavajoče"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "Neznan zapis"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "Ukaz"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Ponovi %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, ker ste tipke za bližnjico %s dodelili %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+"Z zadnjim vašim dejanjem so težave. Če mislite,\n"
+"da gre za hrošča, nam natanko poročajte, kje in kako se je zgodilo."
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "Onemogočeno"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "Razveljavi %s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Razveljavi"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "P&onovi %s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Ponovi"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1074,6 +1172,74 @@ msgstr "Ukazna vrstica Nyquist"
 #, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "Neuspelo odpiranje datoteke za prenos na strežnik: %s"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "Pri inicializaciji V/I ravni MIDI je prišlo do napake.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"Ne boste mogli predvajati MIDI.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "Napaka pri inicializaciji za MIDI"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "Notiraj stezo"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "&sekunde"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "&udarce"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "Podpira izhod: %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "Podpira vhod: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "Odprto: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Izbrana snemalna naprava MIDI: %d – %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "Nobene snemalne naprave MIDI ni mogoče najti za »%s«.\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Izbrana predvajalna naprava: %d – %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "Nobene predvajalne naprave MIDI ni mogoče najti za »%s«.\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -2065,6 +2231,156 @@ msgstr "milisekunde"
 msgid "Samples"
 msgstr "vzorcev"
 
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "SQLite3 error"
+msgstr "Notranja napaka"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "No error"
+msgstr "Napaka pri nalaganju"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Generic error"
+msgstr "Splošno"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Internal logic error in SQLite"
+msgstr "Notranja logična napaka"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr ""
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr ""
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Operation terminated"
+msgstr "nedoločljivo"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Unable to open the database file"
+msgstr ""
+"Odpiranje datoteke zbirke podatkov je spodletelo:\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Not used"
+msgstr "(ni v rabi):"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File opened that is not a database file "
+msgstr ""
+"Odpiranje datoteke zbirke podatkov je spodletelo:\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#, fuzzy
+msgid "Unknown error"
+msgstr "Neznan zapis"
+
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr "Izreži/Kopiraj/Prilepi"
@@ -2447,8 +2763,9 @@ msgid "Pre-processing"
 msgstr "Obdelovanje: %s"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr ""
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "Preimenuj posnetek ..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2483,7 +2800,6 @@ msgid "Problem details"
 msgstr "Podrobnosti o težavi"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "Komentarji"
 
@@ -2517,7 +2833,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "Zapri"
 
@@ -2601,10 +2917,6 @@ msgid "You can also read our help on importing [[https://manual.audacityteam.org
 msgstr "Preberete si lahko tudi pomoč pri uvažanju [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|datotek MIDI]] in posnetkov z [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd|zvočnih zgoščenk]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Priročnik ni nameščen. [[*URL*|Oglejte si priročnik na spletu (v angl.)]].<br><br>Če želite priročnik vedno brskati prek spleta, spremenite »Mesto priročnika« nastavitvah vmesnika na »Z interneta«."
-
-#: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr "Priročnik ni nameščen. [[*URL*|Oglejte si priročnik na spletu (v angl.)]] ali [[https://manual.audacityteam.org/man/unzipping_the_manual.html| ga prenesite]].<br><br>Če želite priročnik vedno brskati prek spleta, spremenite »Mesto priročnika« nastavitvah vmesnika na »Z interneta«."
 
@@ -2640,18 +2952,24 @@ msgid "Show Log for Details"
 msgstr "Pokaži dnevnik za podrobnosti"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "V redu"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Pretekli čas:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Preostali čas:"
 
@@ -2660,7 +2978,13 @@ msgstr "Preostali čas:"
 msgid "Stop"
 msgstr "Ustavi"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "Prekliči"
 
@@ -2695,6 +3019,11 @@ msgstr "Navedenega imena datoteke ni mogoče pretvoriti zaradi uporabljenih znak
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "Določite novo ime datoteke:"
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+#, fuzzy
+msgid "Don't ask me again"
+msgstr "&Ne pošlji"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -2978,13 +3307,722 @@ msgid "Command Output"
 msgstr "Izhod ukaza"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "V &redu"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "Izbrali ste ime datoteke brez končnice datoteke. Ali ste prepričani?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Pripravljanje zvoka ..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Open from audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "Shranjevanje projekta"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save To Cloud..."
+msgstr "Shrani kot ..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open From Cloud..."
+msgstr "Odpri meni ..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Share Audio..."
+msgstr "Zvok v skupno rabo"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "Poveži &račun"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Napaka pri izvozu"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Show 'How would you like to export?' dialog"
+msgstr "Kako želite prilepiti zvok?"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Vedenja"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to the computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Mapa začasnih datotek"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "&Kraj:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "Prebr&skaj ..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Remove temporary files after:"
+msgstr "Mapa začasnih datotek"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Nastavitve miške"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Izberite lokacijo, kjer bo začasna mapa"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Mapa začasnih datotek ne sme biti na pogonu FAT."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "Nastavitve ni mogoče določiti."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "Neuspešno"
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "Zvok v skupno rabo"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "Vrstica skupne ra&be zvoka"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "Account not linked"
+msgstr "Račun je uspešno povezan!"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "Poveži &račun"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "&Odveži račun"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Tega opozorila ne prikaži več"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to save?"
+msgstr "Kako želite prilepiti zvok?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "Shrani zapisnik v:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "&Barva signalne oblike"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to &computer"
+msgstr "Shrani vsebino zapisnika."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Remember my choice and don't show again"
+msgstr "Pomni moj izbor in ne vprašaj več"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to export?"
+msgstr "Kako želite prilepiti zvok?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Zvok v skupno rabo"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Zvok v skupno rabo"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Napaka pri izvozu"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Tega opozorila ne prikaži več"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "Neizpostavljeno"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "Javno"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "Shrani"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Shrani projekt ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Projekt"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "Temu vnosu ne morete dodeliti tipk"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Poravnaj konec"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "Poveži račun"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "Vašega računa nismo mogli povezati. Prosimo, poskusite znova."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "Pre&kliči"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "Poskusi &znova"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Račun je uspešno povezan!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "V &redu"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "Vnesite žeton za povezavo s svojim računom"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Žeton"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "N&adaljuj"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "Povež&i račun audio.com ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#, fuzzy
+msgid "Save to computer"
+msgstr "Shrani vsebino zapisnika."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Shrani zapisnik v:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "Shrani projekt."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Odpre projekt."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Strnjena projektna datoteka"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "Pretvorba frekvence vzorčenja"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "less than 1 minute"
+msgstr "Manj kot 1 minuta"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Trajanje tona:"
+msgstr[1] "Trajanje tona:"
+msgstr[2] "Trajanje tona:"
+msgstr[3] "Trajanje tona:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Spremenjena oznaka"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Povezave ni mogoče obnoviti"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "Pri shranjevanju &projektov"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Projekta ni mogoče uvoziti"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Strnjena projektna datoteka"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "I&šči:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "Pre&dogled"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "Naprej"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "Odpri"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "View in audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "%s %d od %d"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "Vsak bo lahko prisluhnil temu posnetku."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "Samo vi in osebe, s katerimi delite povezavo, bodo lahko prisluhnili temu posnetku."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "Ali ste prepričani, da želite preklicati?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Prekliči prenos na Audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "Nalaganje zvoka ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "Te datoteke ni mogoče naložiti na strežnik. Poskusite znova in preverite povezavo na svoj račun audio.com pred nalaganjem."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "Napaka pri nalaganju"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "Te datoteke ni moč pripraviti za prenos na strežnik."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "Dokončevanje nalaganja na strežnik ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Naslov steze"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Pritisnite \"Nadaljuj\", da jo naložite na audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "Pripravljanje zvoka ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "Ciljnega projekta ni mogoče odpeti."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Prilagoditvena napaka Audacity"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr "Sinhronost zaklenjena"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Podrobnosti o težavi"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "Varnostno kopiranje projekta"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Nadaljuj"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "Success!"
+msgstr "Uspešno"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Časovnica"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Komponente ni mogoče najti"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Naloži datoteke"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#, fuzzy
+msgid "You have canceled this upload to audio.com"
+msgstr "Prekliči prenos na Audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#, fuzzy
+msgid "Retry"
+msgstr "Poskusi &znova"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3080,7 +4118,8 @@ msgid "Cutoff"
 msgstr "Porezava:"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Onemogočeno"
 
@@ -3369,6 +4408,16 @@ msgstr "Pokaži vse vrste datotek"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Pokaži vse kodeke"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Formats"
+msgstr "Zapis:"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Codecs"
+msgstr "Kodek:"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4001,6 +5050,90 @@ msgstr "MIDI stez ne morete zamakniti posamično, le zvočne datoteke."
 msgid "Invalid track offset in LOF file."
 msgstr "Neveljaven zamik steze v datoteki LOF."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "Pri izvozu v datoteke Allegro (.gro) shrani čas kot:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Merite lahko le eno notno stezo naenkrat."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "Izberite notno stezo."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Izvozi MIDI kot:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "Datoteka MIDI"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Datoteka Allegro"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Izbrali ste ime datoteke z nerazpoznano končnico datoteke.\n"
+"Želite nadaljevati?"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Izvozi MIDI"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "Izvozi MI&DI ..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Uvožen MIDI iz '%s'"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Uvozi MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Datoteke %s ni mogoče odpreti: ime datoteke je prekratko."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Datoteke %s ni mogoče odpreti: nepravilna vrsta datoteke."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "Napaka pri odpiranju datoteke %s."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "Izberite datoteko MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "Datoteke MIDI in Allegro"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "Datoteke MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Datoteke Allegro"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI ..."
+
 #: modules/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
@@ -4198,7 +5331,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "Samo libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
+#, fuzzy
+msgid "Only libmp3lame.so"
 msgstr "Samo libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
@@ -4208,6 +5342,10 @@ msgstr "Primarne predmetne datoteke v skupni rabi"
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "Razširjene knjižnice"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "Samo libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4482,8 +5620,7 @@ msgstr "Neimenovano"
 msgid "Nyquist Effect Workbench - "
 msgstr "Delovni pult učinkov Nyquist - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "Nov"
 
@@ -4492,16 +5629,8 @@ msgid "New script"
 msgstr "Nov skript"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "Odpri"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "Odpri skript"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "Shrani"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4620,10 +5749,6 @@ msgstr "Prejšnji"
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr "Pojdi na prejšnji S-izraz"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "Naprej"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
@@ -4745,11 +5870,6 @@ msgstr "Ustvarjanje mape je spodletelo."
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
-msgid "Unknown error"
-msgstr "Neznan zapis"
-
-#: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Auto"
 msgstr "Samodejno spusti"
 
@@ -4856,7 +5976,7 @@ msgid "Opus files"
 msgstr "%s datotek"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
+msgid "File has changed the number of channels in the middle."
 msgstr ""
 
 #: modules/mod-opus/ImportOpus.cpp
@@ -5379,8 +6499,8 @@ msgstr "Spletišče %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2024 %s Team."
 msgstr "Programje %s je avtorsko zaščitilo %s 1999-2023 ekipa %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -5393,8 +6513,8 @@ msgstr "Ime %s je registrirana blagovna znamka Dominca Mazzonija."
 msgid "Build Information"
 msgstr "Informacije o gradnji"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "Omogočeno"
 
@@ -5588,10 +6708,11 @@ msgstr "Kliknite in povlecite za prilagajanje, dvokliknite za ponastavitev."
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
+#, fuzzy
+msgid "Record/Playhead"
 msgstr "Glava snemanja/predvajanja"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "Časovnica"
 
@@ -5673,10 +6794,6 @@ msgstr ""
 msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "Posodobi zaslon med predvajanjem"
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
@@ -5687,13 +6804,12 @@ msgid "Set Loop To Selection"
 msgstr "Določi zankanje izbora"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "Pripeta glava predvajanja"
+msgid "Scroll view to playhead"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
-msgid "Enable pinned play &head"
-msgstr "Pripeta glava predvajanja"
+msgid "Continuous scrolling"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5703,20 +6819,6 @@ msgstr "Odstranjevanje datoteke %s je spodletelo"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "Spodletelo!"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr ""
-"Želite ponastaviti možnosti?\n"
-"\n"
-"To je enkratno vprašanje po 'namestitvi', kjer ste zahtevali ponastavitev možnosti."
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Ponastavi nastavitve Audacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6000,6 +7102,34 @@ msgstr "&Zapri Audacity"
 msgid "&Retry"
 msgstr "Poskusi &znova"
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Automatic Music Configuration"
+msgstr "Prilagoditvena napaka Audacity"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Music Import"
+msgstr "Uvažanje MP3"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -6036,10 +7166,6 @@ msgstr "Zvokovni podatki znašajo %s. Več podatkov potrebuje več časa za lepl
 msgid "Remember my choice and don't ask again"
 msgstr "Pomni moj izbor in ne vprašaj več"
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Nadaljuj"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Samodejna obnovitev po sesutju"
@@ -6059,14 +7185,14 @@ msgid "Recoverable &projects"
 msgstr "O&bnovljivi projekti"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Izberi"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "Ime"
 
@@ -6145,7 +7271,7 @@ msgstr "Makro %s že obstaja. Ali ga želite zamenjati?"
 msgid "Export Macro"
 msgstr "Izvozi makro"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "Učinek"
 
@@ -6278,14 +7404,6 @@ msgstr "Izvajanje ..."
 msgid "File"
 msgstr "Datoteka"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "Pre&kliči"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "O&dstrani"
@@ -6397,14 +7515,6 @@ msgstr "Ste prepričani, da želite izbrisati %s?"
 #, c-format
 msgid "&Repeat %s"
 msgstr "&Ponovi %s"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Ponovi %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
@@ -6603,18 +7713,6 @@ msgstr "PRESKUS JE SPODLETEL!!!\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "Preizkus hitrosti uspešno zaključen.\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
-"Najprej morate izbrati nek zvok za izvedbo »%s«.\n"
-"\n"
-"S krmilko+A izberete vse zvoke."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -6891,7 +7989,7 @@ msgstr "dB"
 msgid "Scroll"
 msgstr "Drsi"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "Povečava"
 
@@ -6938,7 +8036,7 @@ msgstr "Za risanje spektra morajo imeti vse izbrane steze enako mero vzorčenja.
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 
@@ -7020,7 +8118,7 @@ msgstr "Zgodovina"
 msgid "&Manage History"
 msgstr "&Upravljaj z zgodovino"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "Dejanje"
 
@@ -7079,11 +8177,6 @@ msgstr "najdenih nezdružljivih vstavkov"
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "&Upravljaj vstavke"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "N&adaljuj"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7176,10 +8269,36 @@ msgstr "Vnesite ime steze"
 msgid "Label Track"
 msgstr "Steza z oznakami"
 
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "Besedilna datoteka"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "Datoteka HTML"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "Oznake"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "S&tandardno"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Ra&zširjeno (s frekvenčnimi obsegi)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Slog izvoženih oznak:"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7219,60 +8338,13 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Odpiranje projekta Audacity"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Karaoke Audacity%s"
+#: src/MenuCreator.cpp
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
+msgstr "Naslednjim ukazom so odstranjene tipke za bližnjice, ker je njihova privzeta kombinacija tipk nova ali spremenjena ter je enaka kombinaciji tipk, ki je že dodeljena drugemu ukazu."
 
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "&Karaoke"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Pri inicializaciji V/I ravni MIDI je prišlo do napake.\n"
-
-#: src/MIDIPlay.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-"Ne boste mogli predvajati MIDI.\n"
-"\n"
-
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "Napaka pri inicializaciji za MIDI"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "Razveljavi %s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "&Razveljavi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "P&onovi %s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "&Ponovi"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Z zadnjim vašim dejanjem so težave. Če mislite,\n"
-"da gre za hrošča, nam natanko poročajte, kje in kako se je zgodilo."
-
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "Onemogočeno"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "Tipke za bližnjico so odstranjene"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7342,49 +8414,6 @@ msgstr "Premaknjeni drsnik zasuka"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Mešalnik"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "Notiraj stezo"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "Podpira izhod: %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "Podpira vhod: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "Odprto: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Izbrana snemalna naprava MIDI: %d – %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "Nobene snemalne naprave MIDI ni mogoče najti za »%s«.\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Izbrana predvajalna naprava: %d – %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "Nobene predvajalne naprave MIDI ni mogoče najti za »%s«.\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7496,110 +8525,7 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "Upravljaj vstavke"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "Izberite učinke, kliknite gumb Omogoči ali Onemogoči, nato kliknite V redu."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "Pokaži:"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "Pokaži vse"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "&Vse"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "Pokaži onemogočeno"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "O&nemogočeno"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "Pokaži omogočeno"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "O&mogočeno"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "Pokaži novo"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "No&v"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "Stanje"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "Pot"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "Iz&beri vse"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "Po&čisti vse"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "Ponovno preišči"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "&Omogoči"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "&Onemogoči"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"Omogočanje učinkov ali ukazov:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"Omogočanje učinka ali ukaza:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7608,26 +8534,82 @@ msgstr ""
 "Učinek ali ukaz pri %s se ni uspešno registriral:\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Disable"
+msgstr "Onemogočeno"
+
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Enable"
+msgstr "Omogočeno"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "Vrsta"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "Pot"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Vse"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "Generator"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Analyzer"
+msgstr "Analiziraj"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "Orodje"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "Upravljaj vstavke"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Native Audacity"
+msgstr "Posodobi Audacity"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Show:"
+msgstr "Pokaži:"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Type:"
+msgstr "Vrsta:"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "C&ategory:"
+msgstr "Kategorija"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "I&šči:"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Plugin"
+msgstr "Vstavek"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Rescan"
+msgstr "Ponovno preišči"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "Iskanje vstavkov"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "Pri tiskanju je prišlo do težav."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "Natisni"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "&Priprava strani ..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "&Natisni ..."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -7946,7 +8928,7 @@ msgstr ""
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr "Projekt presega največjo velikost 4GB za pisanje na datotečni sistem v zapisu FAT32."
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "Shranjeno %s"
@@ -8130,6 +9112,15 @@ msgstr "Izberite toke za uvoz"
 #, c-format
 msgid "Importing %s"
 msgstr "Uvažanje datoteke %s"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Music Information Retrieval"
+msgstr "Informacije o gradnji"
+
+#: src/ProjectFileManager.cpp
+msgid "Analyzing imported audio"
+msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8345,7 +9336,7 @@ msgstr "Brez učinkov"
 msgid "Get more effects..."
 msgstr "Dobi dodatne učinke ..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "Analiziraj"
 
@@ -8393,164 +9384,6 @@ msgstr "Učinki v realnem času"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "Učinki v realnem času za %s"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "Zajemi sliko zaslona"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "Izberite mesto, kjer bodo shranjene datoteke."
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "Shrani slike v:"
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "Izberi ..."
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "Zajemi celotno okno ali zaslon"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "Spremeni velikost na majhno"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "Spremeni velikost na veliko"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "Modro ozadje"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "Belo ozadje"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "Zajemi le okno"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "Zajemi celo okno"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "Zajemi okno z ostalim"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "Zajemi cel zaslon"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "Počakaj 5 sekund in zajemi okno, ki je v ospredju"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "Zajami del projektnega okna"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "Vse orodne vrstice"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "Vsi učinki"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "Vsi skriptajoči"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "Vse nastavitve"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "Podokno stez"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "Ravnilo"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "Steze"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "Prva steza"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "Druga steza"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "Raztegovanje"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "Ena sekunda"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "Deset sekund"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "Ena minuta"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "Pet minut"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "Ena ura"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "Nizke steze"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "Srednje steze"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "Visoke steze"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "Izberite mesto, kjer bodo shranjene zaslonske podobe."
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "Zajem je spodletel!"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Dolgo sporočilo"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "Posnetek &namizja ..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8688,10 +9521,6 @@ msgstr "Tega ob zagonu ne prikaži več"
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Ime izvajalca"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "Naslov steze"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9180,6 +10009,10 @@ msgstr "Izvožene značke"
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999999Hz"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "Podokno stez"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9346,131 +10179,6 @@ msgstr "Spremembe smeri    -- sr.vred.: %1.4f  st.dev.: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Kalibracija zaključena"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "Zvok v skupno rabo"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "Vrstica skupne ra&be zvoka"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "Poveži račun"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "Vnesite žeton za povezavo s svojim računom"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "Žeton"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "Povež&i račun audio.com ..."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "Vašega računa nismo mogli povezati. Prosimo, poskusite znova."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "Poskusi &znova"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "Račun je uspešno povezan!"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "V &redu"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "Javno"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "Vsak bo lahko prisluhnil temu posnetku."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "Neizpostavljeno"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Samo vi in osebe, s katerimi delite povezavo, bodo lahko prisluhnili temu posnetku."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "Ali ste prepričani, da želite preklicati?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Prekliči prenos na Audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "Nalaganje zvoka ..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Te datoteke ni mogoče naložiti na strežnik. Poskusite znova in preverite povezavo na svoj račun audio.com pred nalaganjem."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "Napaka pri nalaganju"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "Napaka pri izvozu"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "Te datoteke ni moč pripraviti za prenos na strežnik."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "Dokončevanje nalaganja na strežnik ..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "Anonimno"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "Poveži &račun"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Pritisnite \"Nadaljuj\", da jo naložite na audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "&Odveži račun"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "Pripravljanje zvoka ..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9499,28 +10207,6 @@ msgstr "%s ni parameter, ki ga sprejema %s"
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "Neveljavna vrednost parametra %s: biti mora %s"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "Ukaz"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-"\n"
-"* %s, ker ste tipke za bližnjico %s dodelili %s"
-
-#: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "Naslednjim ukazom so odstranjene tipke za bližnjice, ker je njihova privzeta kombinacija tipk nova ali spremenjena ter je enaka kombinaciji tipk, ki je že dodeljena drugemu ukazu."
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "Tipke za bližnjico so odstranjene"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9615,9 +10301,18 @@ msgstr "Ukazi"
 msgid "Menus"
 msgstr "Meniji"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "Nastavitve"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "Steze"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -9837,113 +10532,6 @@ msgstr "Pridobi vrednost posamezne nastavitve."
 msgid "Sets the value of a single preference."
 msgstr "Določi vrednost posamezne nastavitve."
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "Posnetek namizja"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "Okno"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "Celo okno"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "Okno z ostalim"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "Celozaslonski način"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "Orodne vrstice"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "Učinki"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "Skriptajoči"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "Podokno stez"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "Prvi dve stezi"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "Prve tri steze"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "Prve štiri steze"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "Steze plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "Prva steza plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "Vse steze"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "Vse steze plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "Modra"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "belo"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "Pot:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "Zajeti želim:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "Ozadje:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "Postavi na vrh"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "Napaka pri shranjevanju datoteke: %s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "Posnetek namizja (kratek zapis) ..."
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "Naredi posnetke zaslona."
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "Izberite čas"
@@ -10108,8 +10696,7 @@ msgid "Edited Envelope"
 msgstr "Urejena ovojnica"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "Ovojnica"
 
@@ -10301,6 +10888,10 @@ msgstr "Določi stezo ..."
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
 msgstr "Določa različne vrednosti za stezo."
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "Dolgo sporočilo"
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
@@ -11535,10 +12126,6 @@ msgid "Preview effect"
 msgstr "Predogled učinka"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "Ustavi &predposlušanje"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "&Uporabi"
 
@@ -11610,13 +12197,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "Izenačevanje"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Krivulja filtra EQ"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafični izenačevalnik"
 
@@ -13322,10 +13908,6 @@ msgstr "Nastavitve učinka LADSPA"
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr "Kot del svoje obdelave so nekateri učinki LADSPA z vračanjem zvoka Audacity v časovnem zamiku. Če ne kompenzirajo za to zamudo, boste opazili krajša obdobja tišine, vstavljena v zvok. Če to možnost omogočite, boste dovolili to kompenzacijo, vendar morda ne bo delovala za vse učinke LADSPA."
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "Generator"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Učinka ni mogoče vzpostaviti"
@@ -13606,7 +14188,7 @@ msgstr ""
 
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "Trenutna dolžina izbora: %s"
 
 #: src/export/ExportAudioDialog.cpp
@@ -13713,10 +14295,6 @@ msgstr "Ves izbrani zvok je nastavljen na nemo."
 msgid "Continue to export remaining files?"
 msgstr "Ali želite nadaljevati z izvažanjem preostalih datotek?"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "Izvozi"
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "Custom Sample Rate"
@@ -13803,42 +14381,6 @@ msgstr ""
 msgid "Other..."
 msgstr "Drugo ..."
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Merite lahko le eno notno stezo naenkrat."
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "Izberite notno stezo."
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Izvozi MIDI kot:"
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "Datoteka MIDI"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Datoteka Allegro"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Izbrali ste ime datoteke z nerazpoznano končnico datoteke.\n"
-"Želite nadaljevati?"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Izvozi MIDI"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "Izvozi MI&DI ..."
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -13868,55 +14410,6 @@ msgstr "Kanal: %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "Ni posebnih možnosti za to vrsto zapisa"
-
-#: src/export/ExportProgressUI.cpp
-#, fuzzy
-msgid "Export completed with error."
-msgstr "Izvozi izbrani zvok"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Uvožen MIDI iz '%s'"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Uvozi MIDI"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Datoteke %s ni mogoče odpreti: ime datoteke je prekratko."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Datoteke %s ni mogoče odpreti: nepravilna vrsta datoteke."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "Napaka pri odpiranju datoteke %s."
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "Izberite datoteko MIDI"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "Datoteke MIDI in Allegro"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "Datoteke MIDI"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Datoteke Allegro"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI ..."
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14435,14 +14928,6 @@ msgid "E&xit"
 msgstr "&Izhod"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "Skriti meni Datoteka"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "Izvozi kot FLAC"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "Izvozi kot MP&3"
 
@@ -14453,6 +14938,10 @@ msgstr "Izvozi kot &WAV"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "Izvozi kot &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "Izvozi kot FLAC"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14493,18 +14982,6 @@ msgstr "Nespremenljivo"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Podatki o zvočni napravi"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "&Hitra pomoč …"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "&Prvi koraki"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "Priročnik za A&udacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14888,6 +15365,10 @@ msgid "&Select"
 msgstr "Iz&beri"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Vse"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "Praz&no"
 
@@ -15137,7 +15618,7 @@ msgstr "Poišči desno dolg&o periodo med predvajanjem"
 
 #: src/menus/TimelineMenus.cpp
 #, fuzzy
-msgid "&Timeline"
+msgid "Tim&eline"
 msgstr "Časovnica"
 
 #: src/menus/ToolbarMenus.cpp
@@ -15776,10 +16257,6 @@ msgid "Zoom &Toggle"
 msgstr "Preklopi pove&čavo"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "Napredno &navpično povečevanje"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "Velik&ost steze"
 
@@ -15817,7 +16294,7 @@ msgstr "Preskoči na konec izbora"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "Omogoči &črte rezov"
 
 #: src/menus/ViewMenus.cpp
@@ -16021,28 +16498,8 @@ msgid "Temporary files directory"
 msgstr "Mapa začasnih datotek"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "&Kraj:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Mapa začasnih datotek ne sme biti na pogonu FAT."
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "Prebr&skaj ..."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "&Prostor na voljo:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Izberite lokacijo, kjer bo začasna mapa"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "Nastavitve ni mogoče določiti."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16120,6 +16577,12 @@ msgstr "Mape »Izvozi« ni mogoče nastaviti."
 msgid "'Macro Output' directory cannot be set."
 msgstr "Mape »Izhod makra« ni mogoče nastaviti."
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "Učinki"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "Nastavitve učinkov"
@@ -16165,6 +16628,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "Or&ganizacija učinkov v realnem času:"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "Nabor ukazov"
 
@@ -16173,7 +16640,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Uporabi SSE/SSE2/…/AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
+#, fuzzy
+msgid "Open Plugin &Manager"
 msgstr "Odpri Upravitelja vstavkov"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16345,14 +16813,6 @@ msgstr "V jezikih RTL uporabljaj večinoma postavitve od leve proti desni"
 msgid "Never use comma as decimal point"
 msgstr "Nikoli ne uporabi vejice kot ločila decimalk"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "Pokaži namige na časovnici"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "Pokaži ravnilo drsenja"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "Uporabniški vmesnik"
@@ -16371,29 +16831,26 @@ msgid "Preferences for ImportExport"
 msgstr "Nastavitve za uvoz/izvoz"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "S&tandardno"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Ra&zširjeno (s frekvenčnimi obsegi)"
+msgid "&Ask me each time"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "&sekunde"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "&udarce"
+#, fuzzy
+msgid "Do &nothing"
+msgstr "Ne naredi ničesar"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "Slog izvoženih oznak:"
+#, fuzzy
+msgid "Music Imports"
+msgstr "Uvažanje MP3"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "Pri izvozu v datoteke Allegro (.gro) shrani čas kot:"
+msgid "When Audacity detects music in file imported on empty project"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16451,10 +16908,6 @@ msgstr "Pokaži po imenu"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "Pokaži po tipkah"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "I&šči:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -16637,258 +17090,30 @@ msgstr "Nastavitve modula"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
-"To so poskusni moduli. Omogočite jih le, če ste prebrali priročnik za Audacity\n"
-"in veste, kaj počnete."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr " »Vprašaj« pomeni, da vas program povpraša, če želite naložiti modul, vsakič ko se zažene."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr " »Neuspelo« pomeni, da je program mnenja, da je modul okvarjen in se ne bo zagnal."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr " »Nov« pomeni, da izbor še ni bil opravljen."
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+#, fuzzy
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Spremembe teh nastavitev se uveljavijo šele po vnovičnem zagonu Audacity."
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Vprašaj"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "Neuspešno"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "Ni najdenih modulov"
+msgid "No choice made"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "Modul"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Krmilka"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "Miška"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "Nastavitve miške"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "Dejanja miške (privzete vrednosti, niso nastavljive)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "Orodje"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "Akcija ukaza"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "Gumbi"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "Levi klik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "Nastavi točko izbora"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "Levi povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "Nastavi obseg izbora"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Dvigalka-levi-klik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "Razpostri razpon izbora"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "Levi dvoklik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "Izberite posnetek ali celotno stezo"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "Rotacija koleščka"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "Spremeni hitrost drsenja"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "Povečaj na točko"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "Povečaj na območje"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "enako kot desni-povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "Desni klik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "Pomanjšaj za eno stopnjo"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "Desni-povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "enako kot levi-povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "Dvigalka-povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "Pomanjšaj z območja"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "Srednji klik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "Privzeta povečava"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "Spremeni ojačevalno ovojnico"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "Pisalo"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "Spremeni vzorec"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Izmenjalka-levi-klik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "Zgladi pri vzorcu"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "Spremeni več vzorcev"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "-levi povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "Spremeni samo EN vzorec"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "Večkratno"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "enako kot orodje za izbiranje"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "enako kot orodje za povečavo"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "Kar koli"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "Pomakni steze navzgor/navzdol"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Dvigalka-zasuk koleščka"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "Drsaj po signalni obliki"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "-zasuk koleščka"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "Povečaj/pomanjšaj signalno obliko"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "-dvigalka-zasuk koleščka"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "Obseg navpičnega merilnika signalnih oblik (dB)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Dvigalka-levi-povlek"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "Premakni vse posnetke na stezi levo/desno"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "Premakni posnetek gor/dol med stezami"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "Premakni posnetek levo/desno med stezami"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -17006,6 +17231,10 @@ msgstr "Zaznaj izpuščene dele"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr "Z zvokom aktivirano snemanje"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "&Omogoči"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17189,6 +17418,10 @@ msgstr "Nastavitve za Spekter"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "&Uporabi nastavitve"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "Raztegovanje"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17412,12 +17645,12 @@ msgid "Enable cut &lines"
 msgstr "Omogoči &črte rezov"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
-msgstr "Omogoči v&leko robov izbora"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
 msgstr "Urejanje &posnetka lahko premakne druge posnetke"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "&Always paste audio as new clips"
+msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17430,14 +17663,6 @@ msgstr "S &tipkanjem ustvari oznako"
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr "Uporabi pogovorno okno za &ime nove oznake"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr "Omogoči drsenje levo od &nič"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "Napredno &navpično povečevanje"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -17596,22 +17821,6 @@ msgstr "Tega opozorila ne prikaži pri izvažanju zvoka"
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
 msgstr "Pri s&hranjevanju praznega projekta"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr "Pri mešanju v &mono ob izvozu"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr "Pri mešanju v &stereo ob izvozu"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Zmešaj zvok ob izvozu (&FFmpeg po meri ali zunanji program)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr "Manjkajoča &končnica imena datoteke pri izvozu"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -17935,64 +18144,6 @@ msgstr "Zvi&šaj glasnost snemanja"
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "Zniža&j glasnost snemanja"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "Drsaj"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "Išči"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "Merilo drsenja"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "Drsenje"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "Končaj drseti"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "Začni drseti"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "Ustavi iskanje"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "Začni iskati"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "Skrij ravnilo drsenja"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "Vrstica &drsenja"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18332,33 +18483,24 @@ msgid "&MIDI Device Info..."
 msgstr "Podatki o napravi &MIDI ..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "Kliknite za navpično približanje, kliknite z dvigalko za odmik, povlecite za ustvarjanje določenega področja za povečavo."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "Desno kliknite za meni."
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "Ponastavi povečavo"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "Dvigalka+desni klik"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "Levi klik/levi povlek"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "Dvigalka-levi-klik"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18378,30 +18520,57 @@ msgstr "Raztegni notno stezo (MIDI)"
 msgid "Stretch"
 msgstr "Raztegni"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "Spremeni hitrost"
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed"
+msgid "Click to open clip context menu."
+msgstr "Kliknite za urejanje besedila oznake"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Not enough space"
+msgstr "Oznaka je premajhna."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "There is not enough space to expand the clip to its original speed."
+msgstr "Ni dovolj prostora, da bi prilepili izbor"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Reset Clip Speed"
 msgstr " Porezano "
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Invalid clip speed"
-msgstr "Neveljavna mera vzorčenja"
+msgid "Click to reset clip pitch."
+msgstr "Z levim klikom spojite posnetke"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed must be a positive value"
-msgstr "Obseg mora biti celo število"
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "Kliknite in povlecite za prilagajanje, dvokliknite za ponastavitev."
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "Ni dovolj prostora, da bi prilepili izbor"
+msgid "Click to reset clip speed."
+msgstr "Z levim klikom spojite posnetke"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "Kliknite in povlecite za prilagajanje, dvokliknite za ponastavitev."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18419,6 +18588,53 @@ msgstr "Razpostri"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "Črta reza odstranjena"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Pitch and Speed"
+msgstr "Višina tona in tempo"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Pitch"
+msgstr "Višina tona"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "se&mitones:"
+msgstr "poltoni + centi"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Speed"
+msgstr " Porezano "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "General"
+msgstr "&Tvori"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Speed"
+msgstr "Spremeni hitrost"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Pitch"
+msgstr "Spremeni višino tona"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18444,6 +18660,12 @@ msgstr "k"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "Povečaj na prostor"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Reset Zoom"
+msgstr "Ponastavi"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18480,6 +18702,15 @@ msgstr "Naslednja &višja frekvenca vrha"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "Naslednja &nižja frekvenca vrha"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+#, fuzzy
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "Desno kliknite za meni."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
@@ -18562,20 +18793,22 @@ msgstr "Preimenuj posnetek ..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy
-msgid "Change Speed..."
+msgid "Pitch and Speed..."
 msgstr "Spremeni hitrost"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
+msgid "Render Pitch and Speed"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
@@ -18604,17 +18837,37 @@ msgstr "Obrne izbrani zvok"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
+msgid "Pitch Shift"
+msgstr "Končni zamik višine tona"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Changed Pitch Shift"
+msgstr "Spremeni višino tona"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
 msgid "&Rename Clip..."
 msgstr "Preimenuj posnetek ..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
-msgid "Change &Speed..."
+msgid "&Pitch and Speed..."
 msgstr "Spremeni hitrost"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
+msgid "Render Pitch and &Speed"
 msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Up"
+msgstr "Višina tona"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Down"
+msgstr "Višina tona"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -18833,14 +19086,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% Desno"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "Povečaj x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "Povečava x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "Polvalovno"
 
@@ -18939,6 +19184,10 @@ msgstr "Ustvarjena nova časovna steza"
 msgid "&Time Track"
 msgstr "&Časovna steza"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "Desno kliknite za meni."
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
@@ -18973,8 +19222,9 @@ msgid "Brush tool selection"
 msgstr "Izbor z orodjem čopiča"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "I&me …"
+#, fuzzy
+msgid "Re&name Track..."
+msgstr "Prevzorči stezo"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19025,6 +19275,10 @@ msgstr "Optimirana kuverta."
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "&Drsaj"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
+msgstr "Drsenje"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19156,6 +19410,11 @@ msgstr "Izberite stezo"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "Krmilka+klik za preklic izbora"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Delete Track"
+msgstr "Izberite steze"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19566,8 +19825,7 @@ msgstr ""
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19577,7 +19835,7 @@ msgstr "Steve Daulton"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "Splošno javno dovoljenje GNU GPL v2.0"
 
@@ -19701,9 +19959,8 @@ msgstr "Police za urejanje spektra"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19994,50 +20251,6 @@ msgstr "Število odmevov"
 msgid "Allow duration to change"
 msgstr "Dovoli spremembo trajanja"
 
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "Pretvornik EQ XML v TXT"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "Izberite ciljni učinek izenačevanja"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "Datoteka izenačevanja XML"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "Datoteka XML"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "Če obstaja izhodna besedilna datoteka"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "Dodaj številko"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "Prepiši"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "Napaka.~%Datoteke ~%~s ni mogoče odpreti."
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "Napaka.~%FPrepis datoteke ni dovoljen:~%\"~a.txt\""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Napaka.~%Datoteke ni mogoče zapisati:~%»~a.txt«"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "Oznake v rednih intervalih"
@@ -20299,10 +20512,6 @@ msgstr "Označevanje regij med zvoki zahteva~%ah, no, vsaj dva zvoka.~%Zaznan je
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Omejevalnik"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Vrsta"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -20767,10 +20976,6 @@ msgid "Minimal"
 msgstr "Najmanjše"
 
 #: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "Vse"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr "Neobvezno besedilo glave"
 
@@ -21092,150 +21297,6 @@ msgstr "Začetna faza (stopinje)"
 msgid "Wet level (percent)"
 msgstr "Raven vlažnega (odstotek)"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "Redukcija in izolacija vokalov"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "Robert Haenggi"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "Odstrani vokale: v mono"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "Odstrani vokale"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "Izoliraj vokale"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "Izoliraj vokale in preobrni"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "Odstrani sredino: v mono"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "Odstrani sredino"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "Izoliraj sredino"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "Izoliraj sredino in preobrni"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "Moč"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr "Nizka porezava za vokale (Hz)"
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr "Visoka porezava za vokale (Hz)"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-"Povprečen x: ~a, y: ~a\n"
-"                    Kovarianca x y: ~a\n"
-"                    Povprečna varianca x: ~a, y: ~a\n"
-"                    Standardni odklon x: ~a, y: ~a\n"
-"                    Koeficient korelacije: ~a\n"
-"                    Koeficient določenosti: ~a\n"
-"                    Variacija ostanka: ~a\n"
-"                    y je enak ~a + ~a * x~%"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "Položaj zasuka: ~a~%Tako sta levi in desni kanal v korelaciji za približno ~a %. To pomeni:~%~a~%"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-" - Dva kanala sta identična, t.j. dvojni mono.\n"
-"                Sredine ni možno odstraniti.\n"
-"                Vse preostale razlike lahko povzročajo izgube ob kodiranju."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-" - Kanala sta močno sorodna, t.j. skoraj mono ali skrajno L-D.\n"
-"                Najverjetneje bo izvlek sredine skromen."
-
-#: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - Razmeroma dobra vrednost, vsaj stereo je povprečen in ni preveč široko postavljen."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
-msgstr ""
-" - Idealna vrednost za stereo.\n"
-"                Vendar pa je izvlek sredine odvisen tudi od uporabljenega odmeva."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-" - Kanala sta skoraj brez sorodnosti.\n"
-"                Morda imate zgolj šum ali pa je posnetek masteriran na neuravnotežen način.\n"
-"                Izvlek sredine je lahko kljub temu še vedno dober."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-" - Čeprav je steza stereo, je prvo polje očitno zelo široko.\n"
-"                To lahko povzroča čudne učinke.\n"
-"                Še posebej, ko se predvaja zgolj na enem zvočniku."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-" - Kanala sta skorajda identična.\n"
-"                  Očitno je uporabljen psevdo stereo učinek,\n"
-"                  ki razširi signal če fizično razdaljo med zvočnikoma.\n"
-"                  Od odstranitve centra ne pričakujte dobrih rezultatov."
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr "Ta vstavek deluje le s stereo stezami."
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "Vocoder"
@@ -21321,12 +21382,731 @@ msgid "Special"
 msgstr "Posebno"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "Redukcija in izolacija vokalov"
+
+#: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
 msgstr "Odstranjevalec glasu"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Spektralna orodja"
+
+#, c-format
+#~ msgid ""
+#~ "\"%s\" \n"
+#~ "is a MIDI file, not an audio file. \n"
+#~ "Audacity cannot open this type of file for playing, but you can\n"
+#~ "edit it by clicking File > Import > MIDI."
+#~ msgstr ""
+#~ "»%s« \n"
+#~ "je datoteka MIDI in ne zvočna datoteka. \n"
+#~ "Audacity te vrste datotek ne more odpreti za predvajanje ali urejanje,\n"
+#~ "lahko pa jo prikaže, če kliknete Datoteka > Uvozi > MIDI."
+
+#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+#~ msgstr "Priročnik ni nameščen. [[*URL*|Oglejte si priročnik na spletu (v angl.)]].<br><br>Če želite priročnik vedno brskati prek spleta, spremenite »Mesto priročnika« nastavitvah vmesnika na »Z interneta«."
+
+#~ msgid "You've specified a file name without an extension. Are you sure?"
+#~ msgstr "Izbrali ste ime datoteke brez končnice datoteke. Ali ste prepričani?"
+
+#~ msgid "Update display while playing"
+#~ msgstr "Posodobi zaslon med predvajanjem"
+
+#~ msgid "Pinned Play Head"
+#~ msgstr "Pripeta glava predvajanja"
+
+#, fuzzy
+#~ msgid "Enable pinned play &head"
+#~ msgstr "Pripeta glava predvajanja"
+
+#~ msgid ""
+#~ "Reset Preferences?\n"
+#~ "\n"
+#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
+#~ msgstr ""
+#~ "Želite ponastaviti možnosti?\n"
+#~ "\n"
+#~ "To je enkratno vprašanje po 'namestitvi', kjer ste zahtevali ponastavitev možnosti."
+
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "Ponastavi nastavitve Audacity"
+
+#, c-format
+#~ msgid ""
+#~ "You must first select some audio for '%s' to act on.\n"
+#~ "\n"
+#~ "Ctrl + A selects all audio."
+#~ msgstr ""
+#~ "Najprej morate izbrati nek zvok za izvedbo »%s«.\n"
+#~ "\n"
+#~ "S krmilko+A izberete vse zvoke."
+
+#, c-format
+#~ msgid "Audacity Karaoke%s"
+#~ msgstr "Karaoke Audacity%s"
+
+#~ msgid "&Karaoke"
+#~ msgstr "&Karaoke"
+
+#~ msgid "Select effects, click the Enable or Disable button, then click OK."
+#~ msgstr "Izberite učinke, kliknite gumb Omogoči ali Onemogoči, nato kliknite V redu."
+
+#~ msgid "Show all"
+#~ msgstr "Pokaži vse"
+
+#~ msgid "Show disabled"
+#~ msgstr "Pokaži onemogočeno"
+
+#~ msgid "D&isabled"
+#~ msgstr "O&nemogočeno"
+
+#~ msgid "Show enabled"
+#~ msgstr "Pokaži omogočeno"
+
+#~ msgid "E&nabled"
+#~ msgstr "O&mogočeno"
+
+#~ msgid "Show new"
+#~ msgstr "Pokaži novo"
+
+#~ msgid "Ne&w"
+#~ msgstr "No&v"
+
+#~ msgid "State"
+#~ msgstr "Stanje"
+
+#~ msgid "&Select All"
+#~ msgstr "Iz&beri vse"
+
+#~ msgid "C&lear All"
+#~ msgstr "Po&čisti vse"
+
+#~ msgid "&Disable"
+#~ msgstr "&Onemogoči"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Omogočanje učinkov ali ukazov:\n"
+#~ "\n"
+#~ "%s"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Omogočanje učinka ali ukaza:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "Pri tiskanju je prišlo do težav."
+
+#~ msgid "Print"
+#~ msgstr "Natisni"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "&Priprava strani ..."
+
+#~ msgid "&Print..."
+#~ msgstr "&Natisni ..."
+
+#~ msgid "Screen Capture Frame"
+#~ msgstr "Zajemi sliko zaslona"
+
+#~ msgid "Choose location to save files"
+#~ msgstr "Izberite mesto, kjer bodo shranjene datoteke."
+
+#~ msgid "Save images to:"
+#~ msgstr "Shrani slike v:"
+
+#~ msgid "Choose..."
+#~ msgstr "Izberi ..."
+
+#~ msgid "Capture entire window or screen"
+#~ msgstr "Zajemi celotno okno ali zaslon"
+
+#~ msgid "Resize Small"
+#~ msgstr "Spremeni velikost na majhno"
+
+#~ msgid "Resize Large"
+#~ msgstr "Spremeni velikost na veliko"
+
+#~ msgid "Blue Bkgnd"
+#~ msgstr "Modro ozadje"
+
+#~ msgid "White Bkgnd"
+#~ msgstr "Belo ozadje"
+
+#~ msgid "Capture Window Only"
+#~ msgstr "Zajemi le okno"
+
+#~ msgid "Capture Full Window"
+#~ msgstr "Zajemi celo okno"
+
+#~ msgid "Capture Window Plus"
+#~ msgstr "Zajemi okno z ostalim"
+
+#~ msgid "Capture Full Screen"
+#~ msgstr "Zajemi cel zaslon"
+
+#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
+#~ msgstr "Počakaj 5 sekund in zajemi okno, ki je v ospredju"
+
+#~ msgid "Capture part of a project window"
+#~ msgstr "Zajami del projektnega okna"
+
+#~ msgid "All Toolbars"
+#~ msgstr "Vse orodne vrstice"
+
+#~ msgid "All Effects"
+#~ msgstr "Vsi učinki"
+
+#~ msgid "All Scriptables"
+#~ msgstr "Vsi skriptajoči"
+
+#~ msgid "All Preferences"
+#~ msgstr "Vse nastavitve"
+
+#~ msgid "Ruler"
+#~ msgstr "Ravnilo"
+
+#~ msgid "First Track"
+#~ msgstr "Prva steza"
+
+#~ msgid "Second Track"
+#~ msgstr "Druga steza"
+
+#~ msgid "One Sec"
+#~ msgstr "Ena sekunda"
+
+#~ msgid "Ten Sec"
+#~ msgstr "Deset sekund"
+
+#~ msgid "One Min"
+#~ msgstr "Ena minuta"
+
+#~ msgid "Five Min"
+#~ msgstr "Pet minut"
+
+#~ msgid "One Hour"
+#~ msgstr "Ena ura"
+
+#~ msgid "Short Tracks"
+#~ msgstr "Nizke steze"
+
+#~ msgid "Medium Tracks"
+#~ msgstr "Srednje steze"
+
+#~ msgid "Tall Tracks"
+#~ msgstr "Visoke steze"
+
+#~ msgid "Choose a location to save screenshot images"
+#~ msgstr "Izberite mesto, kjer bodo shranjene zaslonske podobe."
+
+#~ msgid "Capture failed!"
+#~ msgstr "Zajem je spodletel!"
+
+#~ msgid "&Screenshot..."
+#~ msgstr "Posnetek &namizja ..."
+
+#~ msgid "Anonymous"
+#~ msgstr "Anonimno"
+
+#~ msgid "Screenshot"
+#~ msgstr "Posnetek namizja"
+
+#~ msgid "Window"
+#~ msgstr "Okno"
+
+#~ msgid "Full Window"
+#~ msgstr "Celo okno"
+
+#~ msgid "Window Plus"
+#~ msgstr "Okno z ostalim"
+
+#~ msgid "Fullscreen"
+#~ msgstr "Celozaslonski način"
+
+#~ msgid "Toolbars"
+#~ msgstr "Orodne vrstice"
+
+#~ msgid "Scriptables"
+#~ msgstr "Skriptajoči"
+
+#~ msgid "Trackpanel"
+#~ msgstr "Podokno stez"
+
+#~ msgid "First Two Tracks"
+#~ msgstr "Prvi dve stezi"
+
+#~ msgid "First Three Tracks"
+#~ msgstr "Prve tri steze"
+
+#~ msgid "First Four Tracks"
+#~ msgstr "Prve štiri steze"
+
+#~ msgid "Tracks Plus"
+#~ msgstr "Steze plus"
+
+#~ msgid "First Track Plus"
+#~ msgstr "Prva steza plus"
+
+#~ msgid "All Tracks"
+#~ msgstr "Vse steze"
+
+#~ msgid "All Tracks Plus"
+#~ msgstr "Vse steze plus"
+
+#~ msgid "Blue"
+#~ msgstr "Modra"
+
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "belo"
+
+#~ msgid "Path:"
+#~ msgstr "Pot:"
+
+#~ msgid "Capture What:"
+#~ msgstr "Zajeti želim:"
+
+#~ msgid "Background:"
+#~ msgstr "Ozadje:"
+
+#~ msgid "Bring To Top"
+#~ msgstr "Postavi na vrh"
+
+#, c-format
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "Napaka pri shranjevanju datoteke: %s"
+
+#~ msgid "Screenshot (short format)..."
+#~ msgstr "Posnetek namizja (kratek zapis) ..."
+
+#~ msgid "Takes screenshots."
+#~ msgstr "Naredi posnetke zaslona."
+
+#~ msgid "Stop &Preview"
+#~ msgstr "Ustavi &predposlušanje"
+
+#~ msgid "Hidden File Menu"
+#~ msgstr "Skriti meni Datoteka"
+
+#~ msgid "&Quick Fix..."
+#~ msgstr "&Hitra pomoč …"
+
+#~ msgid "&Getting Started"
+#~ msgstr "&Prvi koraki"
+
+#~ msgid "Audacity &Manual"
+#~ msgstr "Priročnik za A&udacity"
+
+#, fuzzy
+#~ msgid "&Timeline"
+#~ msgstr "Časovnica"
+
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "Napredno &navpično povečevanje"
+
+#~ msgid "Show Timeline Tooltips"
+#~ msgstr "Pokaži namige na časovnici"
+
+#~ msgid "Show Scrub Ruler"
+#~ msgstr "Pokaži ravnilo drsenja"
+
+#~ msgid ""
+#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+#~ "and know what you are doing."
+#~ msgstr ""
+#~ "To so poskusni moduli. Omogočite jih le, če ste prebrali priročnik za Audacity\n"
+#~ "in veste, kaj počnete."
+
+#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+#~ msgstr " »Vprašaj« pomeni, da vas program povpraša, če želite naložiti modul, vsakič ko se zažene."
+
+#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+#~ msgstr " »Neuspelo« pomeni, da je program mnenja, da je modul okvarjen in se ne bo zagnal."
+
+#~ msgid "  'New' means no choice has been made yet."
+#~ msgstr " »Nov« pomeni, da izbor še ni bil opravljen."
+
+#~ msgid "Ask"
+#~ msgstr "Vprašaj"
+
+#~ msgid "No modules were found"
+#~ msgstr "Ni najdenih modulov"
+
+#~ msgid "Ctrl"
+#~ msgstr "Krmilka"
+
+#~ msgid "Mouse"
+#~ msgstr "Miška"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "Dejanja miške (privzete vrednosti, niso nastavljive)"
+
+#~ msgid "Command Action"
+#~ msgstr "Akcija ukaza"
+
+#~ msgid "Buttons"
+#~ msgstr "Gumbi"
+
+#~ msgid "Left-Click"
+#~ msgstr "Levi klik"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "Nastavi točko izbora"
+
+#~ msgid "Left-Drag"
+#~ msgstr "Levi povlek"
+
+#~ msgid "Set Selection Range"
+#~ msgstr "Nastavi obseg izbora"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "Razpostri razpon izbora"
+
+#~ msgid "Left-Double-Click"
+#~ msgstr "Levi dvoklik"
+
+#~ msgid "Select Clip or Entire Track"
+#~ msgstr "Izberite posnetek ali celotno stezo"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "Rotacija koleščka"
+
+#~ msgid "Change scrub speed"
+#~ msgstr "Spremeni hitrost drsenja"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "Povečaj na točko"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "Povečaj na območje"
+
+#~ msgid "same as right-drag"
+#~ msgstr "enako kot desni-povlek"
+
+#~ msgid "Right-Click"
+#~ msgstr "Desni klik"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "Pomanjšaj za eno stopnjo"
+
+#~ msgid "Right-Drag"
+#~ msgstr "Desni-povlek"
+
+#~ msgid "same as left-drag"
+#~ msgstr "enako kot levi-povlek"
+
+#~ msgid "Shift-Drag"
+#~ msgstr "Dvigalka-povlek"
+
+#~ msgid "Zoom out on a Range"
+#~ msgstr "Pomanjšaj z območja"
+
+#~ msgid "Middle-Click"
+#~ msgstr "Srednji klik"
+
+#~ msgid "Zoom default"
+#~ msgstr "Privzeta povečava"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "Spremeni ojačevalno ovojnico"
+
+#~ msgid "Pencil"
+#~ msgstr "Pisalo"
+
+#~ msgid "Change Sample"
+#~ msgstr "Spremeni vzorec"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Izmenjalka-levi-klik"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "Zgladi pri vzorcu"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "Spremeni več vzorcev"
+
+#~ msgid "-Left-Drag"
+#~ msgstr "-levi povlek"
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "Spremeni samo EN vzorec"
+
+#~ msgid "Multi"
+#~ msgstr "Večkratno"
+
+#~ msgid "same as select tool"
+#~ msgstr "enako kot orodje za izbiranje"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "enako kot orodje za povečavo"
+
+#~ msgid "Any"
+#~ msgstr "Kar koli"
+
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "Pomakni steze navzgor/navzdol"
+
+#~ msgid "Shift-Wheel-Rotate"
+#~ msgstr "Dvigalka-zasuk koleščka"
+
+#~ msgid "Scroll waveform"
+#~ msgstr "Drsaj po signalni obliki"
+
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "-zasuk koleščka"
+
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "Povečaj/pomanjšaj signalno obliko"
+
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "-dvigalka-zasuk koleščka"
+
+#~ msgid "Vertical Scale Waveform (dB) range"
+#~ msgstr "Obseg navpičnega merilnika signalnih oblik (dB)"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "Dvigalka-levi-povlek"
+
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "Premakni vse posnetke na stezi levo/desno"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "Premakni posnetek gor/dol med stezami"
+
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "Premakni posnetek levo/desno med stezami"
+
+#~ msgid "Enable &dragging selection edges"
+#~ msgstr "Omogoči v&leko robov izbora"
+
+#~ msgid "Enable scrolling left of &zero"
+#~ msgstr "Omogoči drsenje levo od &nič"
+
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "Napredno &navpično povečevanje"
+
+#~ msgid "Mixing down to &mono during export"
+#~ msgstr "Pri mešanju v &mono ob izvozu"
+
+#~ msgid "Mixing down to &stereo during export"
+#~ msgstr "Pri mešanju v &stereo ob izvozu"
+
+#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
+#~ msgstr "Zmešaj zvok ob izvozu (&FFmpeg po meri ali zunanji program)"
+
+#~ msgid "Missing file &name extension during export"
+#~ msgstr "Manjkajoča &končnica imena datoteke pri izvozu"
+
+#~ msgid "Scrub"
+#~ msgstr "Drsaj"
+
+#~ msgid "Seek"
+#~ msgstr "Išči"
+
+#~ msgid "Scrub Ruler"
+#~ msgstr "Merilo drsenja"
+
+#~ msgid "Stop Scrubbing"
+#~ msgstr "Končaj drseti"
+
+#~ msgid "Start Scrubbing"
+#~ msgstr "Začni drseti"
+
+#~ msgid "Stop Seeking"
+#~ msgstr "Ustavi iskanje"
+
+#~ msgid "Start Seeking"
+#~ msgstr "Začni iskati"
+
+#~ msgid "Hide Scrub Ruler"
+#~ msgstr "Skrij ravnilo drsenja"
+
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "Vrstica &drsenja"
+
+#, fuzzy
+#~ msgid "Invalid clip speed"
+#~ msgstr "Neveljavna mera vzorčenja"
+
+#, fuzzy
+#~ msgid "Clip speed must be a positive value"
+#~ msgstr "Obseg mora biti celo število"
+
+#, fuzzy
+#~ msgid "Change &Speed..."
+#~ msgstr "Spremeni hitrost"
+
+#~ msgid "Zoom x1/2"
+#~ msgstr "Povečaj x1/2"
+
+#~ msgid "Zoom x2"
+#~ msgstr "Povečava x2"
+
+#~ msgid "&Name..."
+#~ msgstr "I&me …"
+
+#~ msgid "EQ XML to TXT Converter"
+#~ msgstr "Pretvornik EQ XML v TXT"
+
+#~ msgid "Select target EQ effect"
+#~ msgstr "Izberite ciljni učinek izenačevanja"
+
+#~ msgid "Equalization XML file"
+#~ msgstr "Datoteka izenačevanja XML"
+
+#~ msgid "XML file"
+#~ msgstr "Datoteka XML"
+
+#~ msgid "If output text file exists"
+#~ msgstr "Če obstaja izhodna besedilna datoteka"
+
+#~ msgid "Append number"
+#~ msgstr "Dodaj številko"
+
+#~ msgid "Overwrite"
+#~ msgstr "Prepiši"
+
+#, lisp-format
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "Napaka.~%Datoteke ~%~s ni mogoče odpreti."
+
+#, lisp-format
+#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
+#~ msgstr "Napaka.~%FPrepis datoteke ni dovoljen:~%\"~a.txt\""
+
+#, lisp-format
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "Napaka.~%Datoteke ni mogoče zapisati:~%»~a.txt«"
+
+#~ msgid "Robert Haenggi"
+#~ msgstr "Robert Haenggi"
+
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "Odstrani vokale: v mono"
+
+#~ msgid "Remove Vocals"
+#~ msgstr "Odstrani vokale"
+
+#~ msgid "Isolate Vocals"
+#~ msgstr "Izoliraj vokale"
+
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "Izoliraj vokale in preobrni"
+
+#~ msgid "Remove Center: to mono"
+#~ msgstr "Odstrani sredino: v mono"
+
+#~ msgid "Remove Center"
+#~ msgstr "Odstrani sredino"
+
+#~ msgid "Isolate Center"
+#~ msgstr "Izoliraj sredino"
+
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "Izoliraj sredino in preobrni"
+
+#~ msgid "Strength"
+#~ msgstr "Moč"
+
+#~ msgid "Low Cut for Vocals (Hz)"
+#~ msgstr "Nizka porezava za vokale (Hz)"
+
+#~ msgid "High Cut for Vocals (Hz)"
+#~ msgstr "Visoka porezava za vokale (Hz)"
+
+#, lisp-format
+#~ msgid ""
+#~ "Average x: ~a, y: ~a\n"
+#~ "                    Covariance x y: ~a\n"
+#~ "                    Average variance x: ~a, y: ~a\n"
+#~ "                    Standard deviation x: ~a, y: ~a\n"
+#~ "                    Coefficient of correlation: ~a\n"
+#~ "                    Coefficient of determination: ~a\n"
+#~ "                    Variation of residuals: ~a\n"
+#~ "                    y equals ~a plus ~a times x~%"
+#~ msgstr ""
+#~ "Povprečen x: ~a, y: ~a\n"
+#~ "                    Kovarianca x y: ~a\n"
+#~ "                    Povprečna varianca x: ~a, y: ~a\n"
+#~ "                    Standardni odklon x: ~a, y: ~a\n"
+#~ "                    Koeficient korelacije: ~a\n"
+#~ "                    Koeficient določenosti: ~a\n"
+#~ "                    Variacija ostanka: ~a\n"
+#~ "                    y je enak ~a + ~a * x~%"
+
+#, lisp-format
+#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+#~ msgstr "Položaj zasuka: ~a~%Tako sta levi in desni kanal v korelaciji za približno ~a %. To pomeni:~%~a~%"
+
+#~ msgid ""
+#~ " - The two channels are identical, i.e. dual mono.\n"
+#~ "                The center can't be removed.\n"
+#~ "                Any remaining difference may be caused by lossy encoding."
+#~ msgstr ""
+#~ " - Dva kanala sta identična, t.j. dvojni mono.\n"
+#~ "                Sredine ni možno odstraniti.\n"
+#~ "                Vse preostale razlike lahko povzročajo izgube ob kodiranju."
+
+#~ msgid ""
+#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+#~ "                Most likely, the center extraction will be poor."
+#~ msgstr ""
+#~ " - Kanala sta močno sorodna, t.j. skoraj mono ali skrajno L-D.\n"
+#~ "                Najverjetneje bo izvlek sredine skromen."
+
+#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
+#~ msgstr " - Razmeroma dobra vrednost, vsaj stereo je povprečen in ni preveč široko postavljen."
+
+#~ msgid ""
+#~ " - An ideal value for Stereo.\n"
+#~ "                However, the center extraction depends also on the used reverb."
+#~ msgstr ""
+#~ " - Idealna vrednost za stereo.\n"
+#~ "                Vendar pa je izvlek sredine odvisen tudi od uporabljenega odmeva."
+
+#~ msgid ""
+#~ " - The two channels are almost not related.\n"
+#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+#~ "                The center extraction can still be good though."
+#~ msgstr ""
+#~ " - Kanala sta skoraj brez sorodnosti.\n"
+#~ "                Morda imate zgolj šum ali pa je posnetek masteriran na neuravnotežen način.\n"
+#~ "                Izvlek sredine je lahko kljub temu še vedno dober."
+
+#~ msgid ""
+#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
+#~ "                This can cause strange effects.\n"
+#~ "                Especially when played by only one speaker."
+#~ msgstr ""
+#~ " - Čeprav je steza stereo, je prvo polje očitno zelo široko.\n"
+#~ "                To lahko povzroča čudne učinke.\n"
+#~ "                Še posebej, ko se predvaja zgolj na enem zvočniku."
+
+#~ msgid ""
+#~ " - The two channels are nearly identical.\n"
+#~ "                  Obviously, a pseudo stereo effect has been used\n"
+#~ "                  to spread the signal over the physical distance between the speakers.\n"
+#~ "                  Don't expect good results from a center removal."
+#~ msgstr ""
+#~ " - Kanala sta skorajda identična.\n"
+#~ "                  Očitno je uporabljen psevdo stereo učinek,\n"
+#~ "                  ki razširi signal če fizično razdaljo med zvočnikoma.\n"
+#~ "                  Od odstranitve centra ne pričakujte dobrih rezultatov."
+
+#~ msgid "This plug-in works only with stereo tracks."
+#~ msgstr "Ta vstavek deluje le s stereo stezami."
 
 #, c-format
 #~ msgid ""
@@ -21500,9 +22280,6 @@ msgstr "Spektralna orodja"
 #~ "Imate samo en vklopljeno zvočno stezo in nobene uporabne \n"
 #~ "oznake, tako da ne more izvažati ločenih zvočnih datotek."
 
-#~ msgid "Export files to:"
-#~ msgstr "Izvozi datoteke v:"
-
 #~ msgid "Create"
 #~ msgstr "Ustvari"
 
@@ -21557,9 +22334,6 @@ msgstr "Spektralna orodja"
 #~ "Oznaka ali ime steze »%s« ni veljavno ime datoteke. Ne morete uporabiti »%s«.\n"
 #~ "\n"
 #~ "Predlagana zamenjava:"
-
-#~ msgid "Save As..."
-#~ msgstr "Shrani kot ..."
 
 #~ msgid "Unable to export - problem with metadata"
 #~ msgstr "Ni mogoče izvoziti - težava z metapodatki."
@@ -21720,12 +22494,6 @@ msgstr "Spektralna orodja"
 
 #~ msgid "1024 - default"
 #~ msgstr "1024 - privzeto"
-
-#~ msgid "Saving &projects"
-#~ msgstr "Pri shranjevanju &projektov"
-
-#~ msgid "Left-Click to merge clips"
-#~ msgstr "Z levim klikom spojite posnetke"
 
 #~ msgid "Merged Clips"
 #~ msgstr "Spojeni posnetki"
