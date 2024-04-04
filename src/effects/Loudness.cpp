@@ -26,6 +26,7 @@
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
@@ -209,7 +210,10 @@ bool EffectLoudness::Process(EffectInstance &, EffectSettings &)
                goto done;
       }
       else {
-         if (!(bGoodResult = processOne(*pTrack)))
+         // processOne captured nChannels which is 2 and is passed to
+         // LoadBufferBlock, StoreBufferBlock which find the track from the
+         // channel and iterate channels
+         if (!(bGoodResult = processOne(**pTrack->Channels().begin())))
             break;
       }
    }
@@ -360,7 +364,7 @@ void EffectLoudness::AllocBuffers(TrackList &outputs)
       maxSampleRate = std::max(maxSampleRate, track->GetRate());
 
       // There is a stereo track
-      if(track->IsLeader())
+      if(track->NChannels() == 2)
          stereoTrackFound = true;
    }
 
@@ -382,7 +386,7 @@ bool EffectLoudness::GetTrackRMS(WaveChannel &track,
    const double curT0, const double curT1, float &rms)
 {
    // set mRMS.  No progress bar here as it's fast.
-   float _rms = track.GetRMS(curT0, curT1); // may throw
+   float _rms = WaveChannelUtilities::GetRMS(track, curT0, curT1); // may throw
    rms = _rms;
    return true;
 }
@@ -500,8 +504,7 @@ bool EffectLoudness::StoreBufferBlock(WaveChannel &track, size_t nChannels,
    size_t idx = 0;
    const auto setOne = [&](WaveChannel &channel){
       // Copy the newly-changed samples back onto the track.
-      return channel.Set(
-         (samplePtr) mTrackBuffer[idx].get(), floatSample, pos, len);
+      return channel.SetFloats(mTrackBuffer[idx].get(), pos, len);
    };
 
    if (nChannels == 1)

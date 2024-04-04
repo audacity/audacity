@@ -34,7 +34,7 @@ public:
    {
    public:
       AudacityProject &project;
-      Track *pTrack;
+      Track &track;
       wxWindow *pParent;
       unsigned result;
    };

@@ -38,7 +38,7 @@ protected:
 
    virtual ~ButtonHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    // This NEW abstract virtual simplifies the duties of further subclasses.
    // This class will decide whether to refresh the clicked cell for button state

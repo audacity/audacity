@@ -31,6 +31,7 @@
 #include "Track.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 #include "IResponse.h"
 #include "NetworkManager.h"
@@ -88,35 +89,13 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 
    void VisitBlocks(TrackList& tracks)
    {
-      for (auto wt : tracks.Any<const WaveTrack>())
-      {
-         for (const auto pChannel : TrackList::Channels(wt))
-         {
-            for (const auto& clip : pChannel->GetAllClips())
-            {
-               for (size_t ii = 0, width = clip->GetWidth(); ii < width; ++ii)
-               {
-                  auto blocks = clip->GetSequenceBlockArray(ii);
-
-                  for (const auto& block : *blocks)
-                  {
-                     if (block.sb)
-                     {
-                        const auto id = block.sb->GetBlockID();
-
-                        if (!BlockIds.insert(id).second)
-                           continue;
-
-                        Blocks.push_back(
-                           { id, wt->GetSampleFormat(), block.sb });
-
-                        BlockIdToIndex[id] = Blocks.size() - 1;
-                     }
-                  }
-               }
-            }
-         }
-      }
+      const auto visitor = [this](const SampleBlockPtr &pBlock){
+         const auto id = pBlock->GetBlockID();
+         Blocks.push_back({
+            id, pBlock->GetSampleFormat(), pBlock });
+         BlockIdToIndex[id] = Blocks.size() - 1;
+      };
+      WaveTrackUtilities::VisitBlocks(tracks, visitor, &BlockIds);
    }
 
    void CollectHashes()

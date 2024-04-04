@@ -758,12 +758,12 @@ bool EffectNoiseReduction::Worker::Process(
 
          auto t0 = track->LongSamplesToTime(start);
          auto tLen = track->LongSamplesToTime(len);
-         std::optional<TrackListHolder> ppTempList;
+         std::optional<WaveTrack::Holder> ppTempTrack;
          std::optional<ChannelGroup::ChannelIterator<WaveChannel>> pIter;
          WaveTrack *pFirstTrack{};
          if (!mSettings.mDoProfile) {
-            ppTempList.emplace(track->WideEmptyCopy());
-            pFirstTrack = *(*ppTempList)->Any<WaveTrack>().begin();
+            ppTempTrack.emplace(track->EmptyCopy());
+            pFirstTrack = ppTempTrack->get();
             pIter.emplace(pFirstTrack->Channels().begin());
          }
          for (const auto pChannel : track->Channels()) {
@@ -778,12 +778,12 @@ bool EffectNoiseReduction::Worker::Process(
                return false;
             ++mProgressTrackCount;
          }
-         if (ppTempList) {
+         if (ppTempTrack) {
             TrackSpectrumTransformer::PostProcess(*pFirstTrack, len);
             constexpr auto preserveSplits = true;
             constexpr auto merge = true;
             track->ClearAndPaste(
-               t0, t0 + tLen, **ppTempList, preserveSplits, merge);
+               t0, t0 + tLen, **ppTempTrack, preserveSplits, merge);
          }
       }
    }

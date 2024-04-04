@@ -37,6 +37,7 @@
 #include "CommonCommandFlags.h"
 #include "KeyboardCapture.h"
 #include "prefs/GUISettings.h" // for RTL_WORKAROUND
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "ProjectAudioManager.h"
@@ -174,16 +175,16 @@ BEGIN_EVENT_TABLE(MixerTrackCluster, wxPanelWrapper)
 END_EVENT_TABLE()
 
 MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
-                                       MixerBoard* grandParent, AudacityProject* project,
-                                       const std::shared_ptr<PlayableTrack> &pTrack,
-                                       const wxPoint& pos /*= wxDefaultPosition*/,
-                                       const wxSize& size /*= wxDefaultSize*/)
+   MixerBoard* grandParent, AudacityProject* project,
+   PlayableTrack &track,
+   const wxPoint& pos /*= wxDefaultPosition*/,
+   const wxSize& size /*= wxDefaultSize*/)
 : wxPanelWrapper(parent, -1, pos, size)
-, mTrack{ pTrack }
+, mTrack{ track.SharedPointer<PlayableTrack>() }
 {
    mMixerBoard = grandParent;
    mProject = project;
-   wxASSERT( pTrack );
+   assert(mTrack);
 
    SetName( Verbatim( mTrack->GetName() ) );
 
@@ -783,7 +784,7 @@ void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 {
    TrackUtilities::DoTrackMute(
-      *mProject, mTrack.get(), mToggleButton_Mute->WasShiftDown());
+      *mProject, *mTrack, mToggleButton_Mute->WasShiftDown());
    mToggleButton_Mute->SetAlternateIdx(mTrack->GetSolo() ? 1 : 0);
 
    // Update the TrackPanel correspondingly.
@@ -797,7 +798,7 @@ void MixerTrackCluster::OnButton_Mute(wxCommandEvent& WXUNUSED(event))
 void MixerTrackCluster::OnButton_Solo(wxCommandEvent& WXUNUSED(event))
 {
    TrackUtilities::DoTrackSolo(
-      *mProject, mTrack.get(), mToggleButton_Solo->WasShiftDown());
+      *mProject, *mTrack, mToggleButton_Solo->WasShiftDown());
    bool bIsSolo = mTrack->GetSolo();
    mToggleButton_Mute->SetAlternateIdx(bIsSolo ? 1 : 0);
 
@@ -950,7 +951,7 @@ MixerBoard::MixerBoard(AudacityProject* pProject,
       .Subscribe(*this, &MixerBoard::OnTimer);
 
    mTrackPanelSubscription =
-   mTracks->Subscribe([this](const TrackListEvent &event){
+   PendingTracks::Get(*mProject).Subscribe([this](const TrackListEvent &event){
       switch (event.mType) {
       case TrackListEvent::SELECTION_CHANGE:
       case TrackListEvent::TRACK_DATA_CHANGE:
@@ -1018,6 +1019,9 @@ void MixerBoard::UpdateTrackClusters()
    for (auto pPlayableTrack: mTracks->Any<PlayableTrack>()) {
       // TODO: more-than-two-channels
       auto spTrack = pPlayableTrack->SharedPointer<PlayableTrack>();
+      // Track iterations always yield non-null pointers; maintain invariant
+      // when reassigning
+      assert(spTrack);
       if (nClusterIndex < nClusterCount)
       {
          // Already showing it.
@@ -1037,8 +1041,7 @@ void MixerBoard::UpdateTrackClusters()
          wxSize clusterSize(kMixerTrackClusterWidth, nClusterHeight);
          pMixerTrackCluster =
             safenew MixerTrackCluster(mScrolledWindow, this, mProject,
-                                    spTrack,
-                                    clusterPos, clusterSize);
+               *spTrack, clusterPos, clusterSize);
          if (pMixerTrackCluster)
             mMixerTrackClusters.push_back(pMixerTrackCluster);
       }

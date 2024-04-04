@@ -13,7 +13,7 @@
 #include <cmath>
 #include "Sequence.h"
 #include "GetWaveDisplay.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 
 class WaveCache {
@@ -124,7 +124,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       double correction = 0.0;
       size_t copyBegin = 0, copyEnd = 0;
       if (match) {
-         WaveClipUtilities::findCorrection(
+         WaveClipUIUtilities::findCorrection(
             oldCache->where, oldCache->len, numPixels, t0, sampleRate,
             stretchRatio, samplesPerPixel, oldX0, correction);
          // Remember our first pixel maps to oldX0 in the old cache,
@@ -146,7 +146,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
       pWhere = &waveCache->where;
 
       constexpr auto addBias = false;
-      WaveClipUtilities::fillWhere(
+      WaveClipUIUtilities::fillWhere(
          *pWhere, numPixels, addBias, correction, t0, sampleRate, stretchRatio,
          samplesPerPixel);
 
@@ -269,8 +269,7 @@ bool WaveClipWaveformCache::GetWaveDisplay(
 }
 
 WaveClipWaveformCache::WaveClipWaveformCache(size_t nChannels)
-   // TODO wide wave tracks -- won't need std::max here
-   : mWaveCaches(std::max<size_t>(2, nChannels))
+   : mWaveCaches(nChannels)
 {
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
@@ -280,17 +279,24 @@ WaveClipWaveformCache::~WaveClipWaveformCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyW{ [](WaveClip &clip) {
-   return std::make_unique<WaveClipWaveformCache>(clip.GetWidth());
-} };
-
-WaveClipWaveformCache &WaveClipWaveformCache::Get( const WaveClip &clip )
+std::unique_ptr<WaveClipListener> WaveClipWaveformCache::Clone() const
 {
-   return const_cast< WaveClip& >( clip ) // Consider it mutable data
-      .Caches::Get< WaveClipWaveformCache >( sKeyW );
+   // Don't need to copy contents
+   return std::make_unique<WaveClipWaveformCache>(mWaveCaches.size());
 }
 
-void WaveClipWaveformCache::MarkChanged()
+static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip &clip) {
+   return std::make_unique<WaveClipWaveformCache>(clip.NChannels());
+} };
+
+WaveClipWaveformCache &
+WaveClipWaveformCache::Get(const WaveChannelInterval &clip)
+{
+   return const_cast<WaveClip&>(clip.GetClip()) // Consider it mutable data
+      .Attachments::Get< WaveClipWaveformCache >( sKeyW );
+}
+
+void WaveClipWaveformCache::MarkChanged() noexcept
 {
    ++mDirty;
 }
@@ -300,4 +306,23 @@ void WaveClipWaveformCache::Invalidate()
    // Invalidate wave display caches
    for (auto &pCache : mWaveCaches)
       pCache = std::make_unique<WaveCache>();
+}
+
+void WaveClipWaveformCache::MakeStereo(WaveClipListener &&other, bool)
+{
+   auto pOther = dynamic_cast<WaveClipWaveformCache *>(&other);
+   assert(pOther); // precondition
+   mWaveCaches.push_back(move(pOther->mWaveCaches[0]));
+}
+
+void WaveClipWaveformCache::SwapChannels()
+{
+   mWaveCaches.resize(2);
+   std::swap(mWaveCaches[0], mWaveCaches[1]);
+}
+
+void WaveClipWaveformCache::Erase(size_t index)
+{
+   if (index < mWaveCaches.size())
+      mWaveCaches.erase(mWaveCaches.begin() + index);
 }

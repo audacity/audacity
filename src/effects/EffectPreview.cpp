@@ -120,24 +120,23 @@ void EffectPreview(EffectBase &effect,
    // Linear Effect preview optimised by pre-mixing to one track.
    // Generators need to generate per track.
    if (isLinearEffect && !isGenerator) {
-      auto newTracks = MixAndRender(
+      auto newTrack = MixAndRender(
          saveTracks->Selected<const WaveTrack>(),
          Mixer::WarpOptions{ saveTracks->GetOwner() },
          wxString{}, // Don't care about the name of the temporary tracks
          factory, rate, floatSample, mT0, t1);
-      if (!newTracks)
+      if (!newTrack)
          return;
-      mTracks->Append(std::move(*newTracks));
+      mTracks->Add(newTrack);
 
-      auto newTrack = *mTracks->Any<WaveTrack>().rbegin();
       newTrack->MoveTo(0);
       newTrack->SetSelected(true);
    }
    else {
       for (auto src : saveTracks->Selected<const WaveTrack>()) {
          auto dest = src->Copy(mT0, t1);
-         (*dest->begin())->SetSelected(true);
-         mTracks->Append(std::move(*dest));
+         dest->SetSelected(true);
+         mTracks->Add(dest);
       }
    }
 

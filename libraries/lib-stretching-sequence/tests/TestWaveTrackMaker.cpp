@@ -28,11 +28,11 @@ TestWaveTrackMaker::TestWaveTrackMaker(
 std::shared_ptr<WaveTrack>
 TestWaveTrackMaker::Track(const WaveClipHolders& clips) const
 {
-   const auto track =
-      std::make_shared<WaveTrack>(mFactory, floatSample, mSampleRate);
+   const auto track = WaveTrack::Create(
+         mFactory, floatSample, mSampleRate);
    tracks->Add(track);
    for (const auto& clip : clips)
-      track->AddClip(clip);
+      track->InsertInterval(clip, true);
    return track;
 }
 

@@ -152,7 +152,7 @@ private:
    wxFileOffset mFileLen { 0 };
 
    WaveTrackFactory* mTrackFactory { nullptr };
-   TrackListHolder mTrackList;
+   WaveTrack::Holder mTrack;
    unsigned mNumChannels { 0 };
 
    mpg123_handle* mHandle { nullptr };
@@ -321,7 +321,7 @@ void MP3ImportFileHandle::Import(
       }
       // Just copy the interleaved data to the channels
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mTrackList, [&](auto& channel)
+      ImportUtils::ForEachChannel(*mTrack, [&](auto& channel)
       {
          channel.AppendBuffer(
             samples + sizeof(float) * chn,
@@ -341,7 +341,7 @@ void MP3ImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, mTrackList);
+   ImportUtils::FinalizeImport(outTracks, *mTrack);
 
    ReadTags(tags);
 
@@ -366,7 +366,7 @@ bool MP3ImportFileHandle::SetupOutputFormat()
 
    mFloat64Output = encoding == MPG123_ENC_FLOAT_64;
 
-   mTrackList = ImportUtils::NewWaveTrack(
+   mTrack = ImportUtils::NewWaveTrack(
       *mTrackFactory,
       mNumChannels,
       floatSample,

@@ -36,7 +36,7 @@
 
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "AudacityMessageBox.h"
 
 const EffectParameterMethods& EffectAutoDuck::Parameters() const
@@ -188,29 +188,24 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
    if (end <= start)
       return false;
 
-   TrackListHolder tempTracks;
+   WaveTrack::Holder pFirstTrack;
    auto pControlTrack = mControlTrack;
    // If there is any stretch in the control track, substitute a temporary
    // rendering before trying to use GetFloats
    {
-      auto &clips = pControlTrack->GetClips();
       const auto t0 = pControlTrack->LongSamplesToTime(start);
       const auto t1 = pControlTrack->LongSamplesToTime(end);
-      if (WaveTrackUtilities::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
-         tempTracks = pControlTrack->Duplicate();
-         if (tempTracks) {
-            const auto pFirstTrack = *tempTracks->Any<WaveTrack>().begin();
-            if (pFirstTrack)
-            {
-               WaveTrackUtilities::WithClipRenderingProgress(
-                  [&](const ProgressReporter& reportProgress) {
-                     pFirstTrack->ApplyPitchAndSpeed(
-                        { { t0, t1 } }, reportProgress);
-                  },
-                  WaveTrackUtilities::defaultStretchRenderingTitle,
-                  XO("Rendering Control-Track Time-Stretched Audio"));
-               pControlTrack = pFirstTrack;
-            }
+      if (TimeStretching::HasPitchOrSpeed(*pControlTrack, t0, t1)) {
+         pFirstTrack = pControlTrack->Duplicate()->SharedPointer<WaveTrack>();
+         if (pFirstTrack) {
+            UserException::WithCancellableProgress(
+               [&](const ProgressReporter& reportProgress) {
+                  pFirstTrack->ApplyPitchAndSpeed(
+                     { { t0, t1 } }, reportProgress);
+               },
+               TimeStretching::defaultStretchRenderingTitle,
+               XO("Rendering Control-Track Time-Stretched Audio"));
+            pControlTrack = pFirstTrack.get();
          }
       }
    }
@@ -248,11 +243,12 @@ bool EffectAutoDuck::Process(EffectInstance &, EffectSettings &)
 
       auto pos = start;
 
+      const auto pControlChannel = *pControlTrack->Channels().begin();
       while (pos < end)
       {
          const auto len = limitSampleBufferSize( kBufSize, end - pos );
 
-         pControlTrack->GetFloats(buf.get(), pos, len);
+         pControlChannel->GetFloats(buf.get(), pos, len);
 
          for (auto i = pos; i < pos + len; i++)
          {
@@ -503,7 +499,7 @@ bool EffectAutoDuck::ApplyDuckFade(int trackNum, WaveChannel &track,
          buf[ ( i - pos ).as_size_t() ] *= DB_TO_LINEAR(gain);
       }
 
-      if (!track.Set((samplePtr)buf.get(), floatSample, pos, len)) {
+      if (!track.SetFloats(buf.get(), pos, len)) {
          cancel = true;
          break;
       }

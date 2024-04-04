@@ -75,7 +75,7 @@ bool SetEnvelopeCommand::ApplyInner(const CommandContext &context, Track &t)
    //   - delete deletes any envelope in selected tracks.
    //   - value is not set for any clip
    t.TypeSwitch([&](WaveTrack &waveTrack) {
-      for (const auto pClip : waveTrack.SortedClipArray()) {
+      for (const auto pClip : waveTrack.SortedIntervalArray()) {
          bool bFound =
             !bHasT || (
                (pClip->GetPlayStartTime() <= mT) &&
@@ -83,12 +83,12 @@ bool SetEnvelopeCommand::ApplyInner(const CommandContext &context, Track &t)
             );
          if (bFound) {
             // Inside this IF is where we actually apply the command
-            Envelope* pEnv = pClip->GetEnvelope();
+            auto &env = pClip->GetEnvelope();
             bool didSomething = false;
             if (bHasDelete && mbDelete)
-               pEnv->Clear(), didSomething = true;
+               env.Clear(), didSomething = true;
             if (bHasT && bHasV)
-               pEnv->InsertOrReplace(mT, pEnv->ClampValue(mV)),
+               env.InsertOrReplace(mT, env.ClampValue(mV)),
                didSomething = true;
 
             if (didSomething)

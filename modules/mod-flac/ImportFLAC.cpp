@@ -149,7 +149,7 @@ private:
    FLAC__uint64          mNumSamples;
    FLAC__uint64          mSamplesDone;
    bool                  mStreamInfoDone;
-   TrackListHolder       mTrackList;
+   WaveTrack::Holder     mTrack;
 };
 
 
@@ -224,7 +224,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
       auto tmp = ArrayOf< short >{ frame->header.blocksize };
 
       unsigned chn = 0;
-      ImportUtils::ForEachChannel(*mFile->mTrackList, [&](auto& channel)
+      ImportUtils::ForEachChannel(*mFile->mTrack, [&](auto& channel)
       {
          if (frame->header.bits_per_sample <= 16) {
             if (frame->header.bits_per_sample == 8) {
@@ -405,7 +405,7 @@ void FLACImportFileHandle::Import(
 
    wxASSERT(mStreamInfoDone);
 
-   mTrackList = ImportUtils::NewWaveTrack(*trackFactory, mNumChannels, mFormat, mSampleRate);
+   mTrack = ImportUtils::NewWaveTrack(*trackFactory, mNumChannels, mFormat, mSampleRate);
 
    mFile->mImportProgressListener = &progressListener;
 
@@ -423,7 +423,7 @@ void FLACImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, mTrackList);
+   ImportUtils::FinalizeImport(outTracks, *mTrack);
 
    wxString comment;
    wxString description;

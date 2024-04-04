@@ -82,10 +82,10 @@ class MixerTrackCluster final : public wxPanelWrapper
 {
 public:
    MixerTrackCluster(wxWindow* parent,
-                     MixerBoard* grandParent, AudacityProject* project,
-                     const std::shared_ptr<PlayableTrack> &pTrack,
-                     const wxPoint& pos = wxDefaultPosition,
-                     const wxSize& size = wxDefaultSize);
+      MixerBoard* grandParent, AudacityProject* project,
+      PlayableTrack &track,
+      const wxPoint& pos = wxDefaultPosition,
+      const wxSize& size = wxDefaultSize);
    virtual ~MixerTrackCluster() {}
 
    WaveTrack *GetWave() const;
@@ -131,7 +131,8 @@ private:
 
 
 public:
-   std::shared_ptr<PlayableTrack>   mTrack;
+   //! Invariant not null
+   std::shared_ptr<PlayableTrack> mTrack;
 
 private:
    MixerBoard* mMixerBoard;

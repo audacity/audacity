@@ -23,6 +23,7 @@ struct FFTParam;
 class NumberScale;
 class SpectrumPrefs;
 class wxArrayStringEx;
+class WaveChannel;
 class WaveTrack;
 
 class AUDACITY_DLL_API SpectrogramSettings
@@ -74,15 +75,20 @@ public:
    static const EnumValueSymbols &GetColorSchemeNames();
    static const TranslatableStrings &GetAlgorithmNames();
 
-   // Return either the track's independent settings or global defaults
+   //! Return either the track's independent settings or global defaults
    //! Mutative access to attachment even if the track argument is const
    static SpectrogramSettings &Get(const WaveTrack &track);
 
-   // Force creation of track's independent settings
-   static SpectrogramSettings &Own(WaveTrack &track);
+   /*!
+    @copydoc Get(const WaveTrack &)
+    */
+   static SpectrogramSettings &Get(const WaveChannel &channel);
 
-   //! Make track lose indpendent settings and use defaults
-   static void Reset(WaveTrack &track);
+   // Force creation of channels's independent settings
+   static SpectrogramSettings &Own(WaveChannel &wc);
+
+   //! Make channel lose indpendent settings and use defaults
+   static void Reset(WaveChannel &channel);
 
    static SpectrogramSettings &defaults();
    SpectrogramSettings();
@@ -206,15 +212,21 @@ class AUDACITY_DLL_API SpectrogramBounds
 public:
 
    //! Get either the global default settings, or the track's own if previously created
-   static SpectrogramBounds &Get( WaveTrack &track );
+   static SpectrogramBounds &Get(WaveTrack &track);
 
-   //! @copydoc Get
-   static const SpectrogramBounds &Get( const WaveTrack &track );
+   //! @copydoc Get(WaveTrack&)
+   static const SpectrogramBounds &Get(const WaveTrack &track);
+
+   //! @copydoc Get(WaveTrack&)
+   static SpectrogramBounds &Get(WaveChannel &channel);
+
+   //! @copydoc Get(WaveTrack&)
+   static const SpectrogramBounds &Get(const WaveChannel &channel);
 
    ~SpectrogramBounds() override;
    PointerType Clone() const override;
 
-   void GetBounds(const WaveTrack &wt, float &min, float &max) const;
+   void GetBounds(const WaveChannel &wc, float &min, float &max) const;
 
    void SetBounds(float min, float max)
    { mSpectrumMin = min, mSpectrumMax = max; }

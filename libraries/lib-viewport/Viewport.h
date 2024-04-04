@@ -147,9 +147,6 @@ public:
    //! visible
    void ZoomFitHorizontallyAndShowTrack(Track *pTrack);
 
-   /*!
-    @pre `track.IsLeader()`
-    */
    void ShowTrack(const Track &track);
 
    //! Find pixels-per-second that would fit all tracks on the timeline

@@ -100,7 +100,7 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 
 public:
    void MoveTo(double origin) override { mOrigin = origin; }
@@ -118,8 +118,8 @@ public:
    bool ExportAllegro(const wxString &f) const;
 
    // High-level editing
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
    bool Trim (double t0, double t1) /* not override */;
    void Clear(double t0, double t1) override;
@@ -190,10 +190,16 @@ public:
 
    size_t NIntervals() const override;
 
-   struct Interval : WideChannelGroupInterval {
-      using WideChannelGroupInterval::WideChannelGroupInterval;
+   struct Interval final : WideChannelGroupInterval {
+      explicit Interval(const NoteTrack &track);
       ~Interval() override;
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+      double Start() const override;
+      double End() const override;
+      size_t NChannels() const override;
+   private:
+      //! @invariant not null
+      const std::shared_ptr<const NoteTrack> mpTrack;
    };
 
 private:
@@ -205,8 +211,6 @@ private:
 #endif
 
    void AddToDuration( double delta );
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
 
    // These are mutable to allow NoteTrack to switch details of representation
    // in logically const methods

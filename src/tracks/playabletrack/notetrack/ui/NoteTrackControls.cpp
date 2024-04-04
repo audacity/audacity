@@ -107,13 +107,13 @@ enum {
 /// Scrolls the note track up or down by an octave
 void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 {
-   NoteTrack *const pTrack = static_cast<NoteTrack*>(mpData->pTrack);
+   auto &track = static_cast<NoteTrack&>(mpData->track);
 
    wxASSERT(event.GetId() == OnUpOctaveID
       || event.GetId() == OnDownOctaveID);
 
    const bool bDown = (OnDownOctaveID == event.GetId());
-   NoteTrackRange::Get(*pTrack).ShiftNoteRange((bDown) ? -12 : 12);
+   NoteTrackRange::Get(track).ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )

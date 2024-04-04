@@ -2,24 +2,25 @@
 
   Audacity: A Digital Audio Editor
 
-  @file WaveClipUtilities.cpp
+  @file WaveClipUIUtilities.cpp
 
   Paul Licameli split from WaveClip.cpp
 
 **********************************************************************/
 
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
+
 #include "PitchAndSpeedDialog.h"
 #include "ProjectHistory.h"
 #include "SampleCount.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "WaveTrack.h"
+#include "WaveClip.h"
 #include <algorithm>
 #include <cassert>
 #include <cmath>
 
-void WaveClipUtilities::findCorrection(
+void WaveClipUIUtilities::findCorrection(
    const std::vector<sampleCount>& oldWhere, size_t oldLen, size_t newLen,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel,
    int& oldX0, double& correction)
@@ -62,7 +63,7 @@ void WaveClipUtilities::findCorrection(
    }
 }
 
-void WaveClipUtilities::fillWhere(
+void WaveClipUIUtilities::fillWhere(
    std::vector<sampleCount>& where, size_t len, bool addBias, double correction,
    double t0, double sampleRate, double stretchRatio, double samplesPerPixel)
 {
@@ -75,7 +76,7 @@ void WaveClipUtilities::fillWhere(
 }
 
 std::vector<CommonTrackPanelCell::MenuItem>
-WaveClipUtilities::GetWaveClipMenuItems()
+WaveClipUIUtilities::GetWaveClipMenuItems()
 {
    return {
       { L"Cut", XO("Cut") },
@@ -93,7 +94,7 @@ WaveClipUtilities::GetWaveClipMenuItems()
    ;
 }
 
-void WaveClipUtilities::PushClipSpeedChangedUndoState(
+void WaveClipUIUtilities::PushClipSpeedChangedUndoState(
    AudacityProject& project, double speedInPercent)
 {
    ProjectHistory::Get(project).PushState(
@@ -106,7 +107,7 @@ void WaveClipUtilities::PushClipSpeedChangedUndoState(
       UndoPush::CONSOLIDATE);
 }
 
-void WaveClipUtilities::SelectClip(
+void WaveClipUIUtilities::SelectClip(
    AudacityProject& project, const WaveTrack::Interval& clip)
 {
    auto& viewInfo = ViewInfo::Get(project);

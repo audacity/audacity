@@ -32,11 +32,10 @@ const SelectionState &SelectionState::Get( const AudacityProject &project )
 void SelectionState::SelectTrackLength(
    ViewInfo &viewInfo, Track &track, bool syncLocked)
 {
-   assert(track.IsLeader());
    auto trackRange = syncLocked
    // If we have a sync-lock group and sync-lock linking is on,
    // check the sync-lock group tracks.
-   ? SyncLock::Group(&track)
+   ? SyncLock::Group(track)
 
    // Otherwise, check for one track
    : TrackList::SingletonRange(&track);
@@ -52,7 +51,6 @@ void SelectionState::SelectTrackLength(
 void SelectionState::SelectTrack(
    Track &track, bool selected, bool updateLastPicked)
 {
-   assert(track.IsLeader());
    //bool wasCorrect = (selected == track.GetSelected());
 
    track.SetSelected(selected);
@@ -85,9 +83,6 @@ void SelectionState::SelectRangeOfTracks(
    auto begin = tracks.begin(),
       iterS = tracks.Find(sTrack),
       iterE = tracks.Find(eTrack);
-   // Be sure to substitute the leaders for given tracks
-   sTrack = *iterS;
-   eTrack = *iterE;
    auto indS = std::distance(begin, iterS),
       indE = std::distance(begin, iterE);
    if (indE < indS)
@@ -129,9 +124,6 @@ void SelectionState::ChangeSelectionOnShiftClick(
       if (!pExtendFrom)
          pExtendFrom = Track::SharedPointer(*trackRange.rbegin());
    }
-   // Either it's null, or mLastPickedTrack, or the first or last of
-   // Selected()
-   assert(!pExtendFrom || pExtendFrom->IsLeader());
 
    SelectNone(tracks);
    if (pExtendFrom)
@@ -144,7 +136,6 @@ void SelectionState::ChangeSelectionOnShiftClick(
 void SelectionState::HandleListSelection(TrackList &tracks, ViewInfo &viewInfo,
   Track &track, bool shift, bool ctrl, bool syncLocked)
 {
-   assert(track.IsLeader());
    // AS: If the shift button is being held down, invert
    //  the selection on this track.
    if (ctrl)

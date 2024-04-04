@@ -39,7 +39,8 @@ GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 } // namespace
 
 ClipSegment::ClipSegment(
-   ClipInterface& clip, double durationToDiscard, PlaybackDirection direction)
+   const ClipInterface& clip, double durationToDiscard,
+   PlaybackDirection direction)
     : mTotalNumSamplesToProduce { GetTotalNumSamplesToProduce(
          clip, durationToDiscard) }
     , mSource { clip, durationToDiscard, direction }
@@ -47,7 +48,7 @@ ClipSegment::ClipSegment(
                           PitchAndSpeedPreset::OptimizeForVoice }
     , mCentShift { clip.GetCentShift() }
     , mStretcher { std::make_unique<StaffPadTimeAndPitch>(
-         clip.GetRate(), clip.GetWidth(), mSource,
+         clip.GetRate(), clip.NChannels(), mSource,
          GetStretchingParameters(clip)) }
     , mOnSemitoneShiftChangeSubscription { clip.SubscribeToCentShiftChange(
          [this](int cents) {
@@ -96,7 +97,7 @@ bool ClipSegment::Empty() const
    return mTotalNumSamplesProduced == mTotalNumSamplesToProduce;
 }
 
-size_t ClipSegment::GetWidth() const
+size_t ClipSegment::NChannels() const
 {
-   return mSource.GetWidth();
+   return mSource.NChannels();
 }

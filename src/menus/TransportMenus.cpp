@@ -261,12 +261,10 @@ void OnPunchAndRoll(const CommandContext &context)
    bool error = (t1 == 0.0);
 
    double newt1 = t1;
-   using Iterator =
-      ChannelGroup::IntervalIterator<const WideChannelGroupInterval>;
    for (const auto &wt : tracks) {
       auto rate = wt->GetRate();
       sampleCount testSample(floor(t1 * rate));
-      const auto intervals = as_const(*wt).Intervals();
+      const auto &intervals = as_const(*wt).Intervals();
       auto pred = [rate](sampleCount testSample){ return
          [rate, testSample](const auto &pInterval){
             auto start = floor(pInterval->Start() * rate + 0.5);

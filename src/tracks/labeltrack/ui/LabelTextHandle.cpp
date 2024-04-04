@@ -70,7 +70,7 @@ LabelTextHandle::~LabelTextHandle()
 {
 }
 
-std::shared_ptr<const Channel> LabelTextHandle::FindChannel() const
+std::shared_ptr<const Track> LabelTextHandle::FindTrack() const
 {
    return mpLT.lock();
 }

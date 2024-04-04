@@ -24,6 +24,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "CodeConversions.h"
 #include "DBConnection.h"
 #include "FileNames.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectFileIOExtension.h"
 #include "ProjectHistory.h"
@@ -33,6 +34,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "TempDirectory.h"
 #include "TransactionScope.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "BasicUI.h"
 #include "wxFileNameWrapper.h"
 #include "XMLFileReader.h"
@@ -926,14 +928,14 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
    // Get access to the active tracklist
    auto pProject = &mProject;
 
-   SampleBlockIDSet blockids;
+   WaveTrackUtilities::SampleBlockIDSet blockids;
 
    // Collect all active blockids
    if (prune)
    {
       for (auto trackList : tracks)
          if (trackList)
-            InspectBlocks( *trackList, {}, &blockids );
+            WaveTrackUtilities::InspectBlocks(*trackList, {}, &blockids);
    }
    // Collect ALL blockids
    else
@@ -1175,14 +1177,14 @@ bool ProjectFileIO::CopyTo(const FilePath &destpath,
 
 bool ProjectFileIO::ShouldCompact(const std::vector<const TrackList *> &tracks)
 {
-   SampleBlockIDSet active;
+   WaveTrackUtilities::SampleBlockIDSet active;
    unsigned long long current = 0;
 
    {
       auto fn = BlockSpaceUsageAccumulator( current );
       for (auto pTracks : tracks)
          if (pTracks)
-            InspectBlocks( *pTracks, fn,
+            WaveTrackUtilities::InspectBlocks(*pTracks, fn,
                &active // Visit unique blocks only
             );
    }
@@ -1758,6 +1760,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
 
    ProjectFileIORegistry::Get().CallWriters(proj, xmlFile);
 
+   auto &pendingTracks = PendingTracks::Get(proj);
    tracklist.Any().Visit([&](const Track &t) {
       auto useTrack = &t;
       if (recording) {
@@ -1766,7 +1769,7 @@ void ProjectFileIO::WriteXML(XMLWriter &xmlFile,
          // regular track list.  That is the one that we want to back up.
          // SubstitutePendingChangedTrack() fetches the shadow, if the track has
          // one, else it gives the same track back.
-         useTrack = t.SubstitutePendingChangedTrack().get();
+         useTrack = &pendingTracks.SubstitutePendingChangedTrack(t);
       }
       else if (useTrack->GetId() == TrackId{}) {
          // This is a track added during a non-appending recording that is
@@ -2303,10 +2306,11 @@ bool ProjectFileIO::SaveProject(
       }
 
       if (lastSaved) {
+         using namespace WaveTrackUtilities;
          // Bug2605: Be sure not to save orphan blocks
          bool recovered = mRecovered;
          SampleBlockIDSet blockids;
-         InspectBlocks( *lastSaved, {}, &blockids );
+         InspectBlocks(*lastSaved, {}, &blockids);
          // TODO: Not sure what to do if the deletion fails
          DeleteBlocks(blockids, true);
          // Don't set mRecovered if any were deleted
@@ -2545,6 +2549,7 @@ int64_t ProjectFileIO::GetBlockUsage(SampleBlockID blockid)
 int64_t ProjectFileIO::GetCurrentUsage(
    const std::vector<const TrackList*> &trackLists) const
 {
+   using namespace WaveTrackUtilities;
    unsigned long long current = 0;
    const auto fn = BlockSpaceUsageAccumulator(current);
 

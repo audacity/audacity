@@ -39,7 +39,7 @@ public:
        const std::shared_ptr<NoteTrack> &pTrack);
 
    std::shared_ptr<NoteTrack> GetTrack() const { return mpTrack.lock(); }
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
    int GetChannel() const { return mChannel; }
 
    static UIHandle::Result NeedChangeHighlight

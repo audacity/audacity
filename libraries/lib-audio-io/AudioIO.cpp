@@ -141,10 +141,10 @@ struct AudioIoCallback::TransportState {
             move(wOwningProject), sampleRate, numPlaybackChannels);
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
-            // An array only of non-null leaders should be given to us
+            // An array only of non-null pointers should be given to us
             const auto vt = playbackSequences[i].get();
             const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
-            if (!(pGroup && pGroup->IsLeader())) {
+            if (!pGroup) {
                assert(false);
                continue;
             }
@@ -347,7 +347,6 @@ std::shared_ptr<RealtimeEffectState>
 AudioIO::AddState(AudacityProject &project,
    ChannelGroup *pGroup, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
@@ -359,7 +358,6 @@ std::shared_ptr<RealtimeEffectState>
 AudioIO::ReplaceState(AudacityProject &project,
    ChannelGroup *pGroup, size_t index, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
@@ -834,7 +832,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       [](const auto &pSequence){
          const auto pGroup =
             pSequence ? pSequence->FindChannelGroup() : nullptr;
-         return pGroup && pGroup->IsLeader(); }
+         return pGroup; }
    ));
 
    const auto &pStartTime = options.pStartTime;
@@ -1290,7 +1288,6 @@ bool AudioIO::AllocateBuffers(
                // By the precondition of StartStream which is sole caller of
                // this function:
                assert(pSequence->FindChannelGroup());
-               assert(pSequence->FindChannelGroup()->IsLeader());
                // use sequence time for the end time, not real time!
                double startTime, endTime;
                if (!sequences.prerollSequences.empty())
@@ -2142,6 +2139,8 @@ void AudioIO::DrainRecordBuffers()
       // boxes.
       StopStream();
       DefaultDelayedHandlerAction( pException );
+      for (auto &pSequence: mCaptureSequences)
+         pSequence->RepairChannels();
    };
 
    GuardedCall( [&] {
@@ -2186,9 +2185,9 @@ void AudioIO::DrainRecordBuffers()
                   size_t size = floor( correction * mRate * mFactor);
                   SampleBuffer temp(size, mCaptureFormat);
                   ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
-                  (*iter)->Append(temp.ptr(), mCaptureFormat, size, 1,
+                  (*iter)->Append(iChannel, temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
-                     narrowestSampleFormat, iChannel);
+                     narrowestSampleFormat);
                }
                else {
                   // Leftward shift
@@ -2291,10 +2290,10 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = (*iter)->Append(
+            newBlocks = (*iter)->Append(iChannel,
                temp.ptr(), format, size, 1,
                // Do not dither recordings
-               narrowestSampleFormat, iChannel
+               narrowestSampleFormat
             ) || newBlocks;
          } // end loop over capture channels
 

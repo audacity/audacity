@@ -47,6 +47,9 @@
 
 size_t Sequence::sMaxDiskBlockSize = 1048576;
 
+const char *Sequence::Sequence_tag = "sequence";
+const char *Sequence::WaveBlock_tag = "waveblock";
+
 // Sequence methods
 Sequence::Sequence(
    const SampleBlockFactoryPtr &pFactory, SampleFormats formats)
@@ -810,12 +813,18 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
    return result;
 }
 
+static constexpr auto Start_attr = "start";
+static constexpr auto MaxSamples_attr = "maxsamples";
+static constexpr auto SampleFormat_attr = "sampleformat";
+static constexpr auto EffectiveSampleFormat_attr = "effectivesampleformat";
+static constexpr auto NumSamples_attr = "numsamples";
+
 bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &attrs)
 {
    auto &factory = *mpFactory;
 
    /* handle waveblock tag and its attributes */
-   if (tag == "waveblock")
+   if (tag == WaveBlock_tag)
    {
       SeqBlock wb;
 
@@ -833,7 +842,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
          auto attr = pair.first;
          auto value = pair.second;
 
-         if (attr == "start")
+         if (attr == Start_attr)
          {
             // This attribute is a sample offset, so can be 64bit
             sampleCount::type start;
@@ -854,7 +863,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
    }
 
    /* handle sequence tag and its attributes */
-   if (tag == "sequence")
+   if (tag == Sequence_tag)
    {
       std::optional<sampleFormat> effective;
       sampleFormat stored = floatSample;
@@ -865,7 +874,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
 
          long long nValue = 0;
 
-         if (attr == "maxsamples")
+         if (attr == MaxSamples_attr)
          {
             // This attribute is a sample count, so can be 64bit
             if (!value.TryGet(nValue))
@@ -886,7 +895,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             // nValue is now safe for size_t
             mMaxSamples = nValue;
          }
-         else if (attr == "sampleformat")
+         else if (attr == SampleFormat_attr)
          {
             // This attribute is a sample format, normal int
             long fValue;
@@ -898,7 +907,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             }
             stored = static_cast<sampleFormat>( fValue );
          }
-         else if (attr == "effectivesampleformat")
+         else if (attr == EffectiveSampleFormat_attr)
          {
             // This attribute is a sample format, normal int
             long fValue;
@@ -910,7 +919,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
             }
             effective.emplace(static_cast<sampleFormat>(fValue));
          }
-         else if (attr == "numsamples")
+         else if (attr == NumSamples_attr)
          {
             // This attribute is a sample count, so can be 64bit
             if (!value.TryGet(nValue) || (nValue < 0))
@@ -941,7 +950,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
 
 void Sequence::HandleXMLEndTag(const std::string_view& tag)
 {
-   if (tag != "sequence" != 0)
+   if ((tag != Sequence_tag) != 0)
    {
       return;
    }
@@ -983,7 +992,7 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
 
 XMLTagHandler *Sequence::HandleXMLChild(const std::string_view& tag)
 {
-   if (tag == "waveblock")
+   if (tag == WaveBlock_tag)
    {
       return this;
    }
@@ -997,15 +1006,15 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
 {
    unsigned int b;
 
-   xmlFile.StartTag(wxT("sequence"));
+   xmlFile.StartTag(Sequence_tag);
 
-   xmlFile.WriteAttr(wxT("maxsamples"), mMaxSamples);
-   xmlFile.WriteAttr(wxT("sampleformat"),
+   xmlFile.WriteAttr(MaxSamples_attr, mMaxSamples);
+   xmlFile.WriteAttr(SampleFormat_attr,
       static_cast<size_t>( mSampleFormats.Stored() ) );
    // This attribute was added in 3.0.3:
-   xmlFile.WriteAttr( wxT("effectivesampleformat"),
+   xmlFile.WriteAttr(EffectiveSampleFormat_attr,
       static_cast<size_t>( mSampleFormats.Effective() ));
-   xmlFile.WriteAttr(wxT("numsamples"), mNumSamples.as_long_long() );
+   xmlFile.WriteAttr(NumSamples_attr, mNumSamples.as_long_long() );
 
    for (b = 0; b < mBlock.size(); b++) {
       const SeqBlock &bb = mBlock[b];
@@ -1032,15 +1041,15 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
 //         bb.sb->SetLength(mMaxSamples);
       }
 
-      xmlFile.StartTag(wxT("waveblock"));
-      xmlFile.WriteAttr(wxT("start"), bb.start.as_long_long() );
+      xmlFile.StartTag(WaveBlock_tag);
+      xmlFile.WriteAttr(Start_attr, bb.start.as_long_long());
 
       bb.sb->SaveXML(xmlFile);
 
-      xmlFile.EndTag(wxT("waveblock"));
+      xmlFile.EndTag(WaveBlock_tag);
    }
 
-   xmlFile.EndTag(wxT("sequence"));
+   xmlFile.EndTag(Sequence_tag);
 }
 
 int Sequence::FindBlock(sampleCount pos) const
@@ -1137,19 +1146,40 @@ AudioSegmentSampleView Sequence::GetFloatSampleView(
 bool Sequence::Get(samplePtr buffer, sampleFormat format,
    sampleCount start, size_t len, bool mayThrow) const
 {
-   if (start == mNumSamples) {
-      return len == 0;
+   const auto sampleSize = SAMPLE_SIZE(format);
+   bool outOfBounds = false;
+   
+   if (start < 0) {
+      const auto fillLen = limitSampleBufferSize(len, -start);
+      ClearSamples(buffer, format, 0, fillLen);
+      if (len == fillLen)
+         return false;
+      start = 0;
+      buffer += fillLen * sampleSize;
+      len -= fillLen;
+      outOfBounds = true;
    }
 
-   if (start < 0 || start + len > mNumSamples) {
-      if (mayThrow)
-         THROW_INCONSISTENCY_EXCEPTION;
-      ClearSamples( buffer, floatSample, 0, len );
+   if (start >= mNumSamples) {
+      ClearSamples(buffer, format, 0, len);
       return false;
+   }
+   
+   assert(start >= 0);  // Returned already if this is false
+   assert(start < mNumSamples);  // Returned already if this is false
+   if (start + len > mNumSamples) {
+      // Previous assertions justify as_size_t
+      const auto excess = (start + len - mNumSamples).as_size_t();
+      ClearSamples(buffer, format, len - excess, excess);
+      if (len == excess)
+         return true;
+      len -= excess;
+      outOfBounds = true;
    }
    int b = FindBlock(start);
 
-   return Get(b, buffer, format, start, len, mayThrow);
+   return Get(b, buffer, format, start, len, mayThrow) &&
+      !outOfBounds;
 }
 
 bool Sequence::Get(int b, samplePtr buffer, sampleFormat format,

@@ -14,6 +14,7 @@ Paul Licameli split from WaveChannelVZoomHandle.h
 #include "../../../../UIHandle.h" // to inherit
 #include "WaveChannelViewConstants.h"
 
+class WaveChannel;
 class WaveTrack;
 
 class WaveformVZoomHandle final : public UIHandle
@@ -21,20 +22,20 @@ class WaveformVZoomHandle final : public UIHandle
    WaveformVZoomHandle(const WaveformVZoomHandle&);
 
 public:
-   explicit WaveformVZoomHandle
-      (const std::shared_ptr<WaveTrack> &pTrack, const wxRect &rect, int y);
+   explicit WaveformVZoomHandle(
+      const std::shared_ptr<WaveChannel> &pChannel, const wxRect &rect, int y);
 
    WaveformVZoomHandle &operator=(const WaveformVZoomHandle&) = default;
 
    static void DoZoom(
-      AudacityProject *pProject, WaveTrack *pTrack,
+      AudacityProject *pProject, WaveChannel &wc,
       WaveChannelViewConstants::ZoomActions ZoomKind,
       const wxRect &rect, int zoomStart, int zoomEnd,
       bool fixedMousePoint);
 
    ~WaveformVZoomHandle() override;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    void Enter( bool forward, AudacityProject * ) override;
 
@@ -67,7 +68,7 @@ private:
       TrackPanelDrawingContext &,
       const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override;
 
-   std::weak_ptr<WaveTrack> mpTrack;
+   std::weak_ptr<WaveChannel> mpChannel;
 
    int mZoomStart{}, mZoomEnd{};
    wxRect mRect{};
@@ -75,10 +76,10 @@ private:
 
 #include "WaveChannelVZoomHandle.h" // to inherit
 
-class WaveformVRulerMenuTable : public WaveTrackVRulerMenuTable
+class WaveformVRulerMenuTable : public WaveChannelVRulerMenuTable
 {
    WaveformVRulerMenuTable()
-      : WaveTrackVRulerMenuTable{ "WaveFormVRuler" }
+      : WaveChannelVRulerMenuTable{ "WaveFormVRuler" }
    {}
    virtual ~WaveformVRulerMenuTable() {}
    DECLARE_POPUP_MENU(WaveformVRulerMenuTable);

@@ -23,6 +23,8 @@ public:
 
    SampleBlockID GetBlockID() const override;
 
+   sampleFormat GetSampleFormat() const override;
+
    size_t GetSampleCount() const override;
 
    bool

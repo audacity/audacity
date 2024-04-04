@@ -12,11 +12,12 @@ Paul Licameli split from TrackPanel.cpp
 #define __AUDACITY_COMMON_TRACK_PANEL_CELL__
 
 #include "TrackPanelCell.h"
-#include "TrackAttachment.h" // to inherit
+#include "ChannelAttachments.h" // to inherit
 
 #include <stdlib.h>
 #include <memory>
 #include <functional>
+#include <type_traits>
 #include "ComponentInterfaceSymbol.h"
 #include "GlobalVariable.h"
 
@@ -101,32 +102,52 @@ class AUDACITY_DLL_API CommonTrackCell /* not final */
    : public CommonTrackPanelCell, public TrackAttachment
 {
 public:
-   //! Construct from a track and a channel index
-   CommonTrackCell(const std::shared_ptr<Track> &pTrack, size_t iChannel);
-
-   //! Construct from a channel group and a channel index
-   /*!
-    @pre `dynamic_cast<Track&>(&group) != nullptr`
-    */
-   CommonTrackCell(ChannelGroup &group, size_t iChannel);
+   //! Construct from a track
+   CommonTrackCell(const std::shared_ptr<Track> &pTrack);
 
   ~CommonTrackCell();
 
    std::shared_ptr<Track> DoFindTrack() override;
 
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
-
-   size_t GetChannelIndex() const { return miChannel; }
-
-   //! May return null
-   std::shared_ptr<Channel> FindChannel();
-
-   //! May return null
-   std::shared_ptr<const Channel> FindChannel() const;
+   void Reparent(const std::shared_ptr<Track> &parent) override;
 
 private:
-   std::weak_ptr< Track > mwTrack;
-   const size_t miChannel;
+   std::weak_ptr<Track> mwTrack;
+};
+
+class AUDACITY_DLL_API CommonChannelCell /* not final */
+   : public CommonTrackPanelCell, public ChannelAttachment
+{
+public:
+   //! Construct from a channel
+   CommonChannelCell(const std::shared_ptr<Channel> &pChannel);
+
+  ~CommonChannelCell();
+
+   std::shared_ptr<Track> DoFindTrack() override;
+
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
+
+   //! May return null
+   template<typename Subtype = Channel>
+   auto FindChannel()
+      -> std::shared_ptr<Subtype>
+         { return std::dynamic_pointer_cast<Subtype>(DoFindChannel()); }
+
+   //! May return null
+   template<typename Subtype = const Channel>
+   auto FindChannel() const
+      -> std::enable_if_t<std::is_const_v<Subtype>,
+         std::shared_ptr<Subtype>
+      >
+         { return std::dynamic_pointer_cast<Subtype>(DoFindChannel()); }
+
+private:
+   std::shared_ptr<Channel> DoFindChannel();
+   std::shared_ptr<const Channel> DoFindChannel() const;
+
+   std::weak_ptr<Channel> mwChannel;
 };
 
 #endif

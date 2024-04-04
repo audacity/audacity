@@ -126,6 +126,7 @@ list( APPEND SOURCES
       LabelDialog.h
       LabelTrack.cpp
       LabelTrack.h
+      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -141,6 +142,7 @@ list( APPEND SOURCES
       MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
+      NoteTrackEditing.cpp
       PitchName.cpp
       PitchName.h
       PluginDataModel.cpp
@@ -199,6 +201,7 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeDisplayMode.cpp
       TimeDisplayMode.h
+      TimeTrackEditing.cpp
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp
@@ -752,8 +755,10 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.cpp
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
@@ -772,8 +777,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
-      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
-      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackMenuItems.cpp

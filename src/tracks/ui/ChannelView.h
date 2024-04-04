@@ -19,9 +19,8 @@ class Channel;
 class ChannelGroup;
 class TrackList;
 class ChannelVRulerControls;
-class TrackPanelResizerCell;
 
-class AUDACITY_DLL_API ChannelView /* not final */ : public CommonTrackCell
+class AUDACITY_DLL_API ChannelView /* not final */ : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelView>
 {
    ChannelView(const ChannelView&) = delete;
@@ -48,9 +47,11 @@ public:
     */
    static const ChannelView *Find(const Channel *pChannel);
 
-   //! Construct from a track and a channel index
-   ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel);
+   explicit ChannelView(const std::shared_ptr<Channel> &pChannel);
    virtual ~ChannelView() = 0;
+
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+   override;
 
    // some static conveniences, useful for summation over track iterator
    // ranges
@@ -63,7 +64,7 @@ public:
    static int GetTotalHeight(const TrackList &list);
 
    // Copy view state, for undo/redo purposes
-   void CopyTo(Track &track) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
    bool GetMinimized() const { return mMinimized; }
    void SetMinimized( bool minimized );
@@ -108,10 +109,10 @@ public:
    // meaning that track has no such area.
    virtual std::shared_ptr<CommonTrackCell> GetAffordanceControls();
 
-   void WriteXMLAttributes( XMLWriter & ) const override;
+   void WriteXMLAttributes(XMLWriter &writer, size_t iChannel) const override;
    bool HandleXMLAttribute(
-      const std::string_view& attr, const XMLAttributeValueView& valueView )
-   override;
+      const std::string_view& attr, const XMLAttributeValueView& valueView,
+      size_t iChannel) override;
 
    // New virtual function.  The default just returns a one-element array
    // containing this.  Overrides might refine the Y axis.
@@ -128,6 +129,7 @@ public:
    mutable std::pair<int, int> vrulerSize;
 
 private:
+   void AdjustPositions();
 
    // No need yet to make this virtual
    void DoSetY(int y);
@@ -135,7 +137,6 @@ private:
    void DoSetHeight(int h);
 
 protected:
-
    // Private factory to make appropriate object; class ChannelView handles
    // memory management thereafter
    virtual std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() = 0;
@@ -147,12 +148,7 @@ private:
     @pre `iChannel < group.NChannels()`
     */
    static ChannelView &GetFromChannelGroup(
-      ChannelGroup &group, size_t iChannel = 0);
-   /*!
-    @copydoc Get(ChannelGroup&, size_t)
-    */
-   static const ChannelView &GetFromChannelGroup(
-      const ChannelGroup &group, size_t iChannel = 0);
+      ChannelGroup &group, size_t iChannel);
    /*!
     @pre `!pGroup || iChannel < pGroup->NChannels()`
     */
@@ -187,7 +183,7 @@ using GetDefaultTrackHeight =
 AttachedVirtualFunction<
    GetDefaultTrackHeightTag,
    int,
-   Track
+   Channel
 >;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, GetDefaultTrackHeight);
 

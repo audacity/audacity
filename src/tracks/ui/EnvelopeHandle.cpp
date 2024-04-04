@@ -25,6 +25,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../TrackArt.h"
 #include "../../TrackPanelMouseEvent.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../../../images/Cursors.h"
 
@@ -47,9 +48,9 @@ void EnvelopeHandle::Enter(bool, AudacityProject *)
 EnvelopeHandle::~EnvelopeHandle()
 {}
 
-std::shared_ptr<const Channel> EnvelopeHandle::FindChannel() const
+std::shared_ptr<const Track> EnvelopeHandle::FindTrack() const
 {
-   return mwChannel.lock();
+   return TrackFromChannel(mwChannel.lock());
 }
 
 UIHandlePtr EnvelopeHandle::HitAnywhere(std::weak_ptr<EnvelopeHandle> &holder,
@@ -95,32 +96,30 @@ UIHandlePtr EnvelopeHandle::TimeTrackHitTest(
       zoomMin, zoomMax, dB, dBRange, true);
 }
 
-UIHandlePtr EnvelopeHandle::WaveTrackHitTest
+UIHandlePtr EnvelopeHandle::WaveChannelHitTest
 (std::weak_ptr<EnvelopeHandle> &holder,
  const wxMouseState &state, const wxRect &rect,
- const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt)
+ const AudacityProject *pProject, const std::shared_ptr<WaveChannel> &wc)
 {
    /// method that tells us if the mouse event landed on an
    /// envelope boundary.
    auto &viewInfo = ViewInfo::Get(*pProject);
    auto time = viewInfo.PositionToTime(state.m_x, rect.GetX());
-   Envelope *const envelope = wt->GetEnvelopeAtTime(time);
-
+   const auto envelope = WaveChannelUtilities::GetEnvelopeAtTime(*wc, time);
    if (!envelope)
       return {};
 
    // Get envelope point, range 0.0 to 1.0
-   const bool dB = !WaveformSettings::Get(*wt).isLinear();
+   const bool dB = !WaveformSettings::Get(*wc).isLinear();
 
    float zoomMin, zoomMax;
-   auto &cache = WaveformScale::Get(*wt);
+   auto &cache = WaveformScale::Get(*wc);
    cache.GetDisplayBounds(zoomMin, zoomMax);
 
-   const float dBRange = WaveformSettings::Get(*wt).dBRange;
+   const float dBRange = WaveformSettings::Get(*wc).dBRange;
 
    return EnvelopeHandle::HitEnvelope(holder, state, rect, pProject, envelope,
-      std::dynamic_pointer_cast<const Channel>(wt),
-      zoomMin, zoomMax, dB, dBRange, false);
+      wc, zoomMin, zoomMax, dB, dBRange, false);
 }
 
 UIHandlePtr EnvelopeHandle::HitEnvelope(std::weak_ptr<EnvelopeHandle> &holder,
@@ -190,36 +189,35 @@ UIHandle::Result EnvelopeHandle::Click
    const wxMouseEvent &event = evt.event;
    const auto &viewInfo = ViewInfo::Get( *pProject );
    const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto pTrack = pView ? pView->FindTrack().get() : nullptr;
+   const auto pChannel = pView ? pView->FindChannel().get() : nullptr;
 
    mpEnvelopeEditor.reset();
 
    unsigned result = Cancelled;
-   if (pTrack)
-      result = pTrack->TypeSwitch< decltype(RefreshNone) >(
-      [&](WaveTrack &wt) {
-         if (!mEnvelope)
-            return Cancelled;
-
+   if (const auto pWt = dynamic_cast<WaveChannel*>(pChannel)) {
+      auto &wt = *pWt;
+      if (!mEnvelope)
+         result = Cancelled;
+      else {
          mLog = !WaveformSettings::Get(wt).isLinear();
          auto &cache = WaveformScale::Get(wt);
          cache.GetDisplayBounds(mLower, mUpper);
          mdBRange = WaveformSettings::Get(wt).dBRange;
          mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, true);
-         return RefreshNone;
-      },
-      [&](TimeTrack &tt) {
-         if (!mEnvelope)
-            return Cancelled;
+         result = RefreshNone;
+      }
+   }
+   else if (const auto pTt = dynamic_cast<TimeTrack*>(pChannel)) {
+      auto &tt = *pTt;
+      if (!mEnvelope)
+         result = Cancelled;
+      else {
          GetTimeTrackData( *pProject, tt, mdBRange, mLog, mLower, mUpper);
          mpEnvelopeEditor = std::make_unique<EnvelopeEditor>(*mEnvelope, false);
 
-         return RefreshNone;
-      },
-      [](Track &) {
-         return Cancelled;
+         result = RefreshNone;
       }
-   );
+   }
 
    if (result & Cancelled)
       return result;

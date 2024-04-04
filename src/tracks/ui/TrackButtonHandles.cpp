@@ -11,6 +11,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "TrackButtonHandles.h"
 
+#include "PendingTracks.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
 #include "../../ProjectAudioManager.h"
@@ -146,20 +147,20 @@ CloseButtonHandle::~CloseButtonHandle()
 {
 }
 
-UIHandle::Result CloseButtonHandle::CommitChanges
-(const wxMouseEvent &, AudacityProject *pProject, wxWindow*)
+UIHandle::Result CloseButtonHandle::CommitChanges(const wxMouseEvent &,
+   AudacityProject *pProject, wxWindow*)
 {
    using namespace RefreshCode;
    Result result = RefreshNone;
 
    auto pTrack = mpTrack.lock();
-   if (pTrack)
-   {
-      auto toRemove = pTrack->SubstitutePendingChangedTrack();
+   if (pTrack) {
+      auto &toRemove = PendingTracks::Get(*pProject)
+         .SubstitutePendingChangedTrack(*pTrack);
       ProjectAudioManager::Get( *pProject ).StopIfPaused();
       if (!ProjectAudioIO::Get( *pProject ).IsAudioActive()) {
          // This pushes an undo item:
-         TrackUtilities::DoRemoveTrack(*pProject, toRemove.get());
+         TrackUtilities::DoRemoveTrack(*pProject, toRemove);
          // Redraw all tracks when any one of them closes
          // (Could we invent a return code that draws only those at or below
          // the affected track?)

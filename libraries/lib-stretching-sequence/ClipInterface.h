@@ -51,19 +51,18 @@ public:
       size_t iChannel, sampleCount start, size_t length,
       bool mayThrow = true) const = 0;
 
-   virtual size_t GetWidth() const = 0;
+   virtual size_t NChannels() const = 0;
 
    virtual int GetCentShift() const = 0;
 
    [[nodiscard]] virtual Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) = 0;
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const = 0;
 
    virtual PitchAndSpeedPreset GetPitchAndSpeedPreset() const = 0;
 
    [[nodiscard]] virtual Observer::Subscription
    SubscribeToPitchAndSpeedPresetChange(
-      std::function<void(PitchAndSpeedPreset)> cb) = 0;
+      std::function<void(PitchAndSpeedPreset)> cb) const = 0;
 };
 
-using ClipHolders = std::vector<std::shared_ptr<ClipInterface>>;
 using ClipConstHolders = std::vector<std::shared_ptr<const ClipInterface>>;

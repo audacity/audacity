@@ -134,17 +134,15 @@ class AUDACITY_DLL_API LabelTrack final
 #endif
 
 private:
-   TrackListHolder Clone(bool backup) const override;
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
+   Track::Holder Clone(bool backup) const override;
 
 public:
    bool HandleXMLTag(const std::string_view& tag, const AttributesList& attrs) override;
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const override;
 
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
    void Clear(double t0, double t1) override;
    void Paste(double t, const Track &src) override;
@@ -196,16 +194,21 @@ public:
       const override;
 
    struct Interval final : WideChannelGroupInterval {
-      Interval(const ChannelGroup &group,
-         double start, double end, size_t index
-      )  : WideChannelGroupInterval{ group, start, end }
+      Interval(const LabelTrack &track, size_t index
+      )  : mpTrack{ track.SharedPointer<const LabelTrack>() }
          , index{ index }
       {}
 
       ~Interval() override;
+      double Start() const override;
+      double End() const override;
+      size_t NChannels() const override;
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
 
       size_t index;
+   private:
+      //! @invariant not null
+      const std::shared_ptr<const LabelTrack> mpTrack;
    };
    std::shared_ptr<Interval> MakeInterval(size_t index);
 

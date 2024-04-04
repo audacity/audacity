@@ -130,7 +130,7 @@ public:
       , mChoice( menuChoice )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    bool Clicked() const { return mClicked != Button::None; }
@@ -923,7 +923,7 @@ public:
       , mX( xx )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    static UIHandle::Result NeedChangeHighlight(

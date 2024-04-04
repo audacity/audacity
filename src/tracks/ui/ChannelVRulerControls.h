@@ -20,7 +20,7 @@ class wxDC;
 const int kGuard = 5; // 5 pixels to reduce risk of VZooming accidentally
 
 class AUDACITY_DLL_API ChannelVRulerControls /* not final */
-   : public CommonTrackPanelCell
+   : public CommonChannelCell
    , public std::enable_shared_from_this<ChannelVRulerControls>
 {
 public:

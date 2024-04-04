@@ -23,6 +23,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../../../../../images/Cursors.h"
 
 CutlineHandle::CutlineHandle(
@@ -85,14 +86,6 @@ UIHandlePtr CutlineHandle::HitTest(
    const AudacityProject *pProject,
    std::shared_ptr<WaveTrack> pTrack)
 {
-   // Substitute the leader
-   if (!pTrack->GetOwner())
-      return {};
-   auto iter = pTrack->GetOwner()->Find(pTrack.get());
-   if (!*iter)
-      return {};
-   pTrack = (*iter)->SharedPointer<WaveTrack>();
-
    auto &viewInfo = ViewInfo::Get(*pProject);
    /// method that tells us if the mouse event landed on an
    /// editable Cutline
@@ -112,7 +105,7 @@ CutlineHandle::~CutlineHandle()
 {
 }
 
-std::shared_ptr<const Channel> CutlineHandle::FindChannel() const
+std::shared_ptr<const Track> CutlineHandle::FindTrack() const
 {
    return mpTrack;
 }
@@ -153,12 +146,13 @@ UIHandle::Result CutlineHandle::Click
 
       // When user presses left button on cut line, expand the line again
       double cutlineStart = 0, cutlineEnd = 0;
-      mpTrack->ExpandCutLine(mLocation.pos, &cutlineStart, &cutlineEnd);
+      WaveTrackUtilities::ExpandCutLine(*mpTrack,
+         mLocation.pos, &cutlineStart, &cutlineEnd);
       viewInfo.selectedRegion.setTimes(cutlineStart, cutlineEnd);
    }
    else if (event.RightDown())
    {
-      bool removed = mpTrack->RemoveCutLine(mLocation.pos);
+      bool removed = WaveTrackUtilities::RemoveCutLine(*mpTrack, mLocation.pos);
       if (!removed)
          // Nothing happened, make no Undo item
          return Cancelled;

@@ -34,9 +34,9 @@ SliderHandle::~SliderHandle()
 {
 }
 
-std::shared_ptr<const Channel> SliderHandle::FindChannel() const
+std::shared_ptr<const Track> SliderHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+   return mpTrack.lock();
 }
 
 bool SliderHandle::IsDragging() const

@@ -28,7 +28,7 @@
 #include "ViewInfo.h"
 #include "ProjectHistory.h"
 #include "UndoManager.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 namespace {
 
@@ -63,8 +63,6 @@ namespace {
     virtual UIHandle::Result Drag(const TrackPanelMouseEvent& event, AudacityProject& project) = 0;
     virtual void Finish(AudacityProject& project) = 0;
     virtual void Cancel() = 0;
-
-    virtual std::shared_ptr<Track> FindTrack() const = 0;
 
     virtual void Draw(
         TrackPanelDrawingContext &context,
@@ -178,8 +176,7 @@ private:
                continue;
             }
 
-            for(const auto& interval : track->Intervals())
-            {
+            for (const auto &interval : track->Intervals()) {
                addSnapPoint(interval->Start(), track);
                if(interval->Start() != interval->End())
                   addSnapPoint(interval->End(), track);
@@ -215,11 +212,6 @@ public:
             FindSnapPoints(mTrack.get(), mRange),
             zoomInfo);
       }
-   }
-
-   std::shared_ptr<Track> FindTrack() const override
-   {
-      return mTrack;
    }
 
    bool Init(const TrackPanelMouseEvent& event) override
@@ -273,7 +265,7 @@ public:
       {
          if (mIsStretchMode)
          {
-            WaveClipUtilities::PushClipSpeedChangedUndoState(
+            WaveClipUIUtilities::PushClipSpeedChangedUndoState(
                project, 100.0 / mInterval->GetStretchRatio());
          }
          else if (mAdjustingLeftBorder)
@@ -366,7 +358,7 @@ WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(
 
 WaveClipAdjustBorderHandle::~WaveClipAdjustBorderHandle() = default;
 
-std::shared_ptr<const Channel> WaveClipAdjustBorderHandle::FindChannel() const
+std::shared_ptr<const Track> WaveClipAdjustBorderHandle::FindTrack() const
 {
    return mpTrack;
 }
@@ -388,8 +380,6 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    const AudacityProject* pProject,
    const TrackPanelMouseState& state)
 {
-   assert(waveTrack->IsLeader());
-
    const auto rect = state.rect;
 
    const auto px = state.state.m_x;
@@ -402,9 +392,8 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    //Test left and right boundaries of each clip
    //to determine which kind of adjustment is
    //more appropriate
-   for(const auto& interval : waveTrack->Intervals())
-   {
-      const auto& clip = *interval->GetClip(0);
+   for (const auto &interval : waveTrack->Intervals()) {
+      const auto& clip = *interval;
       if(!WaveChannelView::ClipDetailsVisible(clip, zoomInfo, rect))
          continue;
 
@@ -420,7 +409,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
    if (leftInterval && rightInterval)
    {
       //between adjacent clips
-      if(ClipParameters::GetClipRect(*leftInterval->GetClip(0), zoomInfo, rect).GetRight() > px)
+      if(ClipParameters::GetClipRect(*leftInterval, zoomInfo, rect).GetRight() > px)
       {
          adjustedInterval = leftInterval;
          adjustLeftBorder = false;
@@ -439,7 +428,7 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitAnywhere(
          //single clip case, determine the border,
          //hit testing area differs from one
          //used for general case
-         const auto clipRect = ClipParameters::GetClipRect(*adjustedInterval->GetClip(0), zoomInfo, rect);
+         const auto clipRect = ClipParameters::GetClipRect(*adjustedInterval, zoomInfo, rect);
          if (std::abs(px - clipRect.GetLeft()) <= BoundaryThreshold)
             adjustLeftBorder = true;
          else if (std::abs(px - clipRect.GetRight()) <= BoundaryThreshold)
@@ -474,9 +463,10 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     WaveChannelView& view, const AudacityProject* pProject,
     const TrackPanelMouseState& state)
 {
-    auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(view.FindTrack());
-    //For multichannel tracks, show adjustment handle only for the leader track
-    if (!waveTrack->IsLeader())
+    auto waveChannel = view.FindWaveChannel();
+    // For multichannel tracks, show adjustment handle only for the topmost
+    // channel
+    if (waveChannel->GetChannelIndex() != 0)
         return {};
 
     std::vector<UIHandlePtr> results;
@@ -488,7 +478,9 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     if (py >= rect.GetTop() &&
         py <= (rect.GetTop() + static_cast<int>(rect.GetHeight() * 0.3)))
     {
-        return HitAnywhere(holder, waveTrack, pProject, state);
+        return HitAnywhere(holder,
+            waveChannel->GetTrack().SharedPointer<WaveTrack>(),
+            pProject, state);
     }
     return {};
 }

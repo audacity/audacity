@@ -152,7 +152,7 @@ void ProjectCloudExtension::OnSyncStarted()
       if (pTrack->GetId() == TrackId {})
          // Don't copy a pending added track
          continue;
-      element->Data.Tracks->Append(std::move(*pTrack->Duplicate()));
+      element->Data.Tracks->Add(pTrack->Duplicate());
    }
 
    auto lock = std::lock_guard { mUploadQueueMutex };

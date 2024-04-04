@@ -28,7 +28,7 @@ public:
 
    sampleCount GetVisibleSampleCount() const override;
 
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
    int GetRate() const override;
 
@@ -55,7 +55,7 @@ public:
    }
 
    Observer::Subscription
-   SubscribeToCentShiftChange(std::function<void(int)> cb) override
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override
    {
       return {};
    }
@@ -66,7 +66,7 @@ public:
    }
 
    Observer::Subscription SubscribeToPitchAndSpeedPresetChange(
-      std::function<void(PitchAndSpeedPreset)> cb) override
+      std::function<void(PitchAndSpeedPreset)> cb) const override
    {
       return {};
    }

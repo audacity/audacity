@@ -269,7 +269,7 @@ void ExportFilePanel::Init(const wxFileName& filename,
                false);
          for(const auto track : waveTracks)
          {
-            if(TrackList::NChannels(*track) >= 2 || track->GetPan() != .0f)
+            if(track->NChannels() >= 2 || track->GetPan() != .0f)
             {
                numChannels = 2;
                break;

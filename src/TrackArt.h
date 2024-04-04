@@ -10,6 +10,7 @@
 #ifndef __AUDACITY_TRACK_ART__
 #define __AUDACITY_TRACK_ART__
 
+class Channel;
 class Track;
 struct TrackPanelDrawingContext;
 class wxBrush;
@@ -49,7 +50,7 @@ namespace TrackArt {
    // Helper: draws background with selection rect
    AUDACITY_DLL_API
    void DrawBackgroundWithSelection(TrackPanelDrawingContext &context,
-         const wxRect &rect, const Track *track,
+         const wxRect &rect, const Channel &channel,
          const wxBrush &selBrush, const wxBrush &unselBrush,
          bool useSelection = true);
 

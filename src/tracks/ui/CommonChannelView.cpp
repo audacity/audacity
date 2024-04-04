@@ -17,6 +17,7 @@ Paul Licameli split from class TrackView (now called ChannelView)
 #include "ZoomHandle.h"
 #include "../ui/SelectHandle.h"
 #include "AColor.h"
+#include "PendingTracks.h"
 #include "../../ProjectSettings.h"
 #include "Track.h"
 #include "../../TrackArtist.h"
@@ -75,18 +76,30 @@ std::vector<UIHandlePtr> CommonChannelView::HitTest
 
 std::shared_ptr<TrackPanelCell> CommonChannelView::ContextMenuDelegate()
 {
-   return TrackControls::Get( *FindTrack() ).shared_from_this();
+   const auto pTrack = FindTrack();
+   if (pTrack)
+      return TrackControls::Get(*pTrack).shared_from_this();
+   return nullptr;
 }
 
 int CommonChannelView::GetMinimizedHeight() const
 {
-   auto height = CommonTrackInfo::MinimumTrackHeight();
-   const auto pTrack = FindTrack();
-   auto channels = TrackList::Channels(pTrack->SubstituteOriginalTrack().get());
-   auto nChannels = channels.size();
-   auto begin = channels.begin();
-   auto index =
-      std::distance(begin, std::find(begin, channels.end(), pTrack.get()));
+   const auto height = CommonTrackInfo::MinimumTrackHeight();
+   auto pChannel = FindChannel().get();
+   if (!pChannel)
+      return height;
+   const auto pTrack =
+      dynamic_cast<const Track *>(&pChannel->GetChannelGroup());
+   if (!pTrack)
+      return 0;
+   if (const auto pList = pTrack->GetOwner())
+      if (const auto p = pList->GetOwner())
+          pChannel =
+            &PendingTracks::Get(*p).SubstituteOriginalChannel(*pChannel);
+
+   // Find index of the channel in its group and use that to round off correctly
+   const auto index = pChannel->GetChannelIndex();
+   const auto nChannels = pChannel->GetChannelGroup().Channels().size();
    return (height * (index + 1) / nChannels) - (height * index / nChannels);
 }
 

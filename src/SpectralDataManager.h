@@ -27,7 +27,7 @@ public:
    static int FindFrequencySnappingBin(const WaveChannel &channel,
       long long startSC, int hopSize, double threshold, int targetFreqBin);
 
-   static std::vector<int> FindHighestFrequencyBins(WaveTrack *wt,
+   static std::vector<int> FindHighestFrequencyBins(WaveChannel &wc,
                                           long long int startSC,
                                           int hopSize,
                                           double threshold,

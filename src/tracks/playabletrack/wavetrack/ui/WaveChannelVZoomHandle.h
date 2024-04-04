@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 class wxMouseState;
 class PopupMenuTable;
+class WaveChannel;
 class WaveTrack;
 #include "WaveChannelViewConstants.h"
 #include "../../../../UIHandle.h"
@@ -30,7 +31,7 @@ namespace WaveChannelVZoomHandle
    bool IsDragZooming(int zoomStart, int zoomEnd, bool hasDragZoom);
 
    using DoZoomFunction = void (*)(AudacityProject *pProject,
-       WaveTrack *pTrack,
+       WaveChannel &wc,
        WaveChannelViewConstants::ZoomActions ZoomKind,
        const wxRect &rect, int zoomStart, int zoomEnd,
        bool fixedMousePoint);
@@ -43,7 +44,7 @@ namespace WaveChannelVZoomHandle
    AUDACITY_DLL_API
    Result DoRelease(
       const TrackPanelMouseEvent &event, AudacityProject *pProject,
-      wxWindow *pParent, WaveTrack *pTrack, const wxRect &mRect,
+      wxWindow *pParent, WaveChannel &wc, const wxRect &mRect,
       DoZoomFunction doZoom, PopupMenuTable &table,
       int zoomStart, int zoomEnd );
 
@@ -59,7 +60,7 @@ namespace WaveChannelVZoomHandle
 
 #include "../../../../widgets/PopupMenuTable.h" // to inherit
 
-class AUDACITY_DLL_API WaveTrackVRulerMenuTable
+class AUDACITY_DLL_API WaveChannelVRulerMenuTable
    : public PopupMenuTable
    , private PrefsListener
 {
@@ -68,7 +69,7 @@ public:
    {
    public:
       AudacityProject &project;
-      WaveTrack *pTrack;
+      WaveChannel &wc;
       wxRect rect;
       unsigned result;
       int yy;
@@ -76,7 +77,7 @@ public:
    };
 
 protected:
-   WaveTrackVRulerMenuTable( const Identifier &id )
+   WaveChannelVRulerMenuTable( const Identifier &id )
       : PopupMenuTable{ id }
    {}
 

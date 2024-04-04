@@ -23,10 +23,13 @@ set( SOURCES
    StretchingSequence.h
    ClipTimeAndPitchSource.cpp
    ClipTimeAndPitchSource.h
+   TempoChange.cpp
+   TempoChange.h
 )
 set( LIBRARIES
-   lib-time-and-pitch
+   lib-channel
    lib-mixer
+   lib-time-and-pitch
 )
 audacity_library( lib-stretching-sequence "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -12,6 +12,7 @@
 
 #include "ClientData.h"
 #include "Observer.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "wxPanelWrapper.h"
 
@@ -77,7 +78,7 @@ private:
    struct StrongTarget
    {
       const std::shared_ptr<WaveTrack> track;
-      WaveTrack::Interval clip;
+      WaveClipHolder clip;
    };
 
    std::optional<StrongTarget> LockTarget();

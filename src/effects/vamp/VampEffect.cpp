@@ -339,9 +339,9 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
    std::vector<std::shared_ptr<AddedAnalysisTrack>> addedTracks;
 
-   for (auto leader : inputTracks()->Any<const WaveTrack>())
+   for (auto pTrack : inputTracks()->Any<const WaveTrack>())
    {
-      auto channelGroup = leader->Channels();
+      auto channelGroup = pTrack->Channels();
       auto left = *channelGroup.first++;
 
       unsigned channels = 1;
@@ -354,7 +354,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
 
       sampleCount start = 0;
       sampleCount len = 0;
-      GetBounds(*leader, &start, &len);
+      GetBounds(*pTrack, &start, &len);
 
       // TODO: more-than-two-channels
 
@@ -411,7 +411,7 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       const auto effectName = GetSymbol().Translation();
       addedTracks.push_back(AddAnalysisTrack(*this,
          multiple
-         ? wxString::Format( _("%s: %s"), leader->GetName(), effectName )
+         ? wxString::Format( _("%s: %s"), pTrack->GetName(), effectName )
          : effectName
       ));
       LabelTrack *ltrack = addedTracks.back()->get();

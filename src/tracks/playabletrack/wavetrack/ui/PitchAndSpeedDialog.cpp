@@ -16,12 +16,13 @@
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "TimeAndPitchInterface.h"
+#include "TimeStretching.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrackUtilities.h"
 #include "WindowAccessible.h"
 
@@ -34,6 +35,7 @@
 #include "ShuttleGui.h"
 #include "ShuttleGuiScopedSizer.h"
 #include "SpinControl.h"
+#include "WaveClip.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include <regex>
@@ -205,7 +207,7 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
 void PitchAndSpeedDialog::TryRetarget(const TrackPanelMouseEvent& event)
 {
    const auto target = GetHitClip(mProject, event);
-   if (!target.has_value() || target->clip->GetClip(0) == mLeftClip.lock())
+   if (!target.has_value() || target->clip == mLeftClip.lock())
       return;
    Retarget(target->track, target->clip);
 }
@@ -216,7 +218,7 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
 {
    mConsolidateHistory = false;
    wxDialog::SetTitle(mTitle + " - " + clip->GetName());
-   const auto leftClip = clip->GetClip(0);
+   const auto leftClip = clip;
    mClipDeletedSubscription =
       leftClip->Observer::Publisher<WaveClipDtorCalled>::Subscribe(
          [this](WaveClipDtorCalled) { Show(false); });
@@ -236,7 +238,6 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
 
    mTrack = track;
    mLeftClip = leftClip;
-   mRightClip = clip->GetClip(1);
    mClipSpeed = 100.0 / leftClip->GetStretchRatio();
    mOldClipSpeed = mClipSpeed;
    mShift = GetClipShift(*leftClip);
@@ -360,7 +361,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                      if (auto target = LockTarget())
                      {
                         WaveTrackUtilities::ExpandClipTillNextOne(
-                           *target->track, target->clip);
+                           *target->track, *target->clip);
                         UpdateDialog();
                      }
                });
@@ -379,7 +380,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                ->Bind(wxEVT_CHECKBOX, [this](auto&) {
                   mFormantPreservation = !mFormantPreservation;
                   if (auto target = LockTarget())
-                     target->clip.SetPitchAndSpeedPreset(
+                     target->clip->SetPitchAndSpeedPreset(
                         mFormantPreservation ?
                            PitchAndSpeedPreset::OptimizeForVoice :
                            PitchAndSpeedPreset::Default);
@@ -398,12 +399,12 @@ bool PitchAndSpeedDialog::SetClipSpeed()
    const auto wasExactlySelected =
       IsExactlySelected(mProject, *mLeftClip.lock());
 
-   if (!WaveTrackUtilities::SetClipStretchRatio(
-          *target->track, target->clip, 100 / mClipSpeed))
+   if (!TimeStretching::SetClipStretchRatio(
+          *target->track, *target->clip, 100 / mClipSpeed))
       return false;
 
    if (wasExactlySelected)
-      WaveClipUtilities::SelectClip(mProject, target->clip);
+      WaveClipUIUtilities::SelectClip(mProject, *target->clip);
 
    UpdateHistory(XO("Changed Speed"));
 
@@ -429,7 +430,7 @@ PitchAndSpeedDialog::LockTarget()
    if (const auto track = mTrack.lock())
       if (const auto leftClip = mLeftClip.lock())
          return StrongTarget {
-            track, WaveTrack::Interval { *track, leftClip, mRightClip.lock() }
+            track, leftClip
          };
    return {};
 }
@@ -441,7 +442,7 @@ void PitchAndSpeedDialog::SetSemitoneShift()
       return;
    ClampPitchShift(mShift);
    const auto success =
-      target->clip.SetCentShift(mShift.semis * 100 + mShift.cents);
+      target->clip->SetCentShift(mShift.semis * 100 + mShift.cents);
    assert(success);
    TrackPanel::Get(mProject).RefreshTrack(target->track.get());
    UpdateHistory(XO("Changed Pitch"));

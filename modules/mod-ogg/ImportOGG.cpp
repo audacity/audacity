@@ -131,7 +131,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
-   std::vector<TrackListHolder> mStreams;
+   std::vector<WaveTrack::Holder> mStreams;
 };
 
 

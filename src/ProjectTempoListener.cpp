@@ -2,6 +2,7 @@
 #include "Observer.h"
 #include "Project.h"
 #include "ProjectTimeSignature.h"
+#include "TempoChange.h"
 #include "Track.h"
 
 #include <cassert>
@@ -41,11 +42,8 @@ ProjectTempoListener::ProjectTempoListener(
             if (event.mType == TrackListEvent::ADDITION)
             {
                const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
-               if (const auto track = event.mpTrack.lock()) {
-                  // TODO wide wave tracks: just call on the track itself
-                  if (auto pLeader = *mTrackList.Find(track.get()))
-                     pLeader->OnProjectTempoChange(tempo);
-               }
+               if (const auto track = event.mpTrack.lock())
+                  DoProjectTempoChange(*track, tempo);
             }
          }) }
 {
@@ -60,7 +58,7 @@ ProjectTempoListener::ProjectTempoListener(
 void ProjectTempoListener::OnProjectTempoChange(double newTempo)
 {
    for (auto track : mTrackList)
-      track->OnProjectTempoChange(newTempo);
+      DoProjectTempoChange(*track, newTempo);
    
    if(!mViewInfo.playRegion.Empty() && mTempo > 0 && newTempo > 0)
    {

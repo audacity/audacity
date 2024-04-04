@@ -2,14 +2,14 @@
 
   Audacity: A Digital Audio Editor
 
-  @file WaveClipUtilities.h
+  @file WaveClipUIUtilities.h
 
   Paul Licameli split from WaveClip.h
 
 *******************************************************************/
 
-#ifndef __AUDACITY_WAVE_CLIP_UTILITIES__
-#define __AUDACITY_WAVE_CLIP_UTILITIES__
+#ifndef __AUDACITY_WAVE_CLIP_UI_UTILITIES__
+#define __AUDACITY_WAVE_CLIP_UI_UTILITIES__
 
 #include <cstddef>
 #include <vector>
@@ -22,7 +22,7 @@ class sampleCount;
 class AudacityProject;
 enum class PitchAndSpeedDialogFocus;
 
-namespace WaveClipUtilities
+namespace WaveClipUIUtilities
 {
 AUDACITY_DLL_API
 void findCorrection(

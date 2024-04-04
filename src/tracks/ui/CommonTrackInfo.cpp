@@ -173,12 +173,14 @@ void CommonTrackInfo::DrawItems
 
 void CommonTrackInfo::DrawCloseButton(
    TrackPanelDrawingContext &context, const wxRect &bev,
-   const Track *pTrack, UIHandle *target)
+   const Channel *pChannel, UIHandle *target)
 {
    auto dc = &context.dc;
+   auto pTrack = pChannel
+      ? dynamic_cast<const Track*>(&pChannel->GetChannelGroup())
+      : nullptr;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool hit = target &&
-      target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+   bool hit = target && target->FindTrack().get() == pTrack;
    bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    AColor::Bevel2(*dc, !down, bev, selected, hit );
@@ -215,7 +217,8 @@ void CommonTrackInfo::CloseTitleDrawFunction
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
       auto target = context.target.get();
-      DrawCloseButton( context, bev, pTrack, target );
+      DrawCloseButton(context, bev,
+         (*pTrack->Channels().begin()).get(), target);
    }
 
    {
@@ -223,7 +226,7 @@ void CommonTrackInfo::CloseTitleDrawFunction
       GetTitleBarHorizontalBounds( rect, bev );
       auto target = context.target.get();
       bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+         target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       wxString titleStr =
@@ -286,15 +289,15 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 {
    auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
+   bool syncLockSelected =
+      pTrack ? SyncLock::IsSyncLockSelected(*pTrack) : true;
    bool minimized =
       pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
    {
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
       auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+      bool hit = target && target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 
@@ -323,8 +326,7 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
       wxRect bev = rect;
       GetSelectButtonHorizontalBounds(rect, bev);
       auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+      bool hit = target && target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 

@@ -35,20 +35,20 @@
 #include "AudacityMessageBox.h"
 
 SpectrumPrefs::SpectrumPrefs(wxWindow * parent, wxWindowID winid,
-   AudacityProject *pProject, WaveTrack *wt)
-:  PrefsPanel(parent, winid, wt ? XO("Spectrogram Settings") : XO("Spectrograms"))
+   AudacityProject *pProject, WaveChannel *wc)
+:  PrefsPanel(parent, winid, wc ? XO("Spectrogram Settings") : XO("Spectrograms"))
 , mProject{ pProject }
-, mWt(wt)
+, mWc(wc)
 , mPopulating(false)
 {
-   if (mWt) {
-      auto &settings = SpectrogramSettings::Get(*wt);
+   if (mWc) {
+      auto &settings = SpectrogramSettings::Get(*wc);
       mOrigDefaulted = mDefaulted = (&SpectrogramSettings::defaults() == &settings);
       mTempSettings = mOrigSettings = settings;
-      SpectrogramBounds::Get(*wt).GetBounds(*wt, mOrigMin, mOrigMax);
+      SpectrogramBounds::Get(*wc).GetBounds(*wc, mOrigMin, mOrigMax);
       mTempSettings.maxFreq = mOrigMax;
       mTempSettings.minFreq = mOrigMin;
-      mOrigPlacements = WaveChannelView::Get(*mWt).SavePlacements();
+      mOrigPlacements = WaveChannelView::Get(*mWc).SavePlacements();
    }
    else  {
       mTempSettings = mOrigSettings = SpectrogramSettings::defaults();
@@ -83,7 +83,7 @@ ManualPageID SpectrumPrefs::HelpPageName()
    // We do so when it is configuring spectrums for a track.
    // Because this happens, we want to visit a different help page.
    // So we change the page name in the case of a page on its own.
-   return mWt
+   return mWc
       ? "Spectrogram_Settings"
       : "Spectrograms_Preferences";
 }
@@ -168,7 +168,7 @@ void SpectrumPrefs::PopulateOrExchange(ShuttleGui & S)
 
 
    mDefaultsCheckbox = 0;
-   if (mWt) {
+   if (mWc) {
       /* i18n-hint: use is a verb */
       mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XXO("&Use Preferences"), mDefaulted);
    }
@@ -394,26 +394,26 @@ bool SpectrumPrefs::Validate()
 
 void SpectrumPrefs::Rollback()
 {
-   if (mWt) {
+   if (mWc) {
       if (mOrigDefaulted) {
-         SpectrogramSettings::Reset(*mWt);
-         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
+         SpectrogramSettings::Reset(*mWc);
+         SpectrogramBounds::Get(*mWc).SetBounds(-1, -1);
       }
       else {
-         auto &settings = SpectrogramSettings::Own(*mWt);
-         SpectrogramBounds::Get(*mWt).SetBounds(mOrigMin, mOrigMax);
+         auto &settings = SpectrogramSettings::Own(*mWc);
+         SpectrogramBounds::Get(*mWc).SetBounds(mOrigMin, mOrigMax);
          settings = mOrigSettings;
       }
    }
 
-   if (!mWt || mOrigDefaulted) {
+   if (!mWc || mOrigDefaulted) {
       SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       *pSettings = mOrigSettings;
    }
 
    const bool isOpenPage = this->IsShown();
-   if (mWt && isOpenPage) {
-      WaveChannelView::Get(*mWt).RestorePlacements(mOrigPlacements);
+   if (mWc && isOpenPage) {
+      WaveChannelView::Get(*mWc).RestorePlacements(mOrigPlacements);
    }
 
    if (isOpenPage) {
@@ -438,21 +438,21 @@ void SpectrumPrefs::Preview()
 
    mTempSettings.ConvertToActualWindowSizes();
 
-   if (mWt) {
+   if (mWc) {
       if (mDefaulted) {
-         SpectrogramSettings::Reset(*mWt);
+         SpectrogramSettings::Reset(*mWc);
          // ... and so that the vertical scale also defaults:
-         SpectrogramBounds::Get(*mWt).SetBounds(-1, -1);
+         SpectrogramBounds::Get(*mWc).SetBounds(-1, -1);
       }
       else {
-         SpectrogramSettings &settings = SpectrogramSettings::Own(*mWt);
-         SpectrogramBounds::Get(*mWt)
+         SpectrogramSettings &settings = SpectrogramSettings::Own(*mWc);
+         SpectrogramBounds::Get(*mWc)
             .SetBounds(mTempSettings.minFreq, mTempSettings.maxFreq);
          settings = mTempSettings;
       }
    }
 
-   if (!mWt || mDefaulted) {
+   if (!mWc || mDefaulted) {
       SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
       *pSettings = mTempSettings;
    }
@@ -463,7 +463,7 @@ void SpectrumPrefs::Preview()
    // Commenting it out as it seems not to be needed.
    /*
    if (mWt && isOpenPage) {
-      for (auto channel : TrackList::Channels(mWt))
+      for (auto &&channel : mWt->Channels())
          WaveChannelView::Get(*channel)
             .SetDisplay(WaveChannelViewConstants::Spectrum);
    }
@@ -486,7 +486,7 @@ bool SpectrumPrefs::Commit()
    mCommitted = true;
    SpectrogramSettings::Globals::Get().SavePrefs(); // always
    SpectrogramSettings *const pSettings = &SpectrogramSettings::defaults();
-   if (!mWt || mDefaulted) {
+   if (!mWc || mDefaulted) {
       pSettings->SavePrefs();
    }
    pSettings->LoadPrefs(); // always; in case Globals changed
@@ -573,19 +573,18 @@ BEGIN_EVENT_TABLE(SpectrumPrefs, PrefsPanel)
 
 END_EVENT_TABLE()
 
-PrefsPanel::Factory
-SpectrumPrefsFactory( WaveTrack *wt )
+PrefsPanel::Factory SpectrumPrefsFactory(WaveChannel *wc)
 {
    return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
-      return safenew SpectrumPrefs(parent, winid, pProject, wt);
+      return safenew SpectrumPrefs(parent, winid, pProject, wc);
    };
 }
 
 namespace{
 PrefsPanel::Registration sAttachment{ "Spectrum",
-   SpectrumPrefsFactory( nullptr ),
+   SpectrumPrefsFactory(nullptr),
    false,
    // Place it at a lower tree level
    { "Tracks" }

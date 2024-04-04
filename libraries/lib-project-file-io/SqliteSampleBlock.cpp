@@ -20,7 +20,9 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 
 #include "SampleBlock.h" // to inherit
 #include "UndoManager.h"
+#include "UndoTracks.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 #include "SentryHelper.h"
 #include <wx/log.h>
@@ -61,7 +63,7 @@ public:
                        sampleFormat destformat,
                        size_t sampleoffset,
                        size_t numsamples) override;
-   sampleFormat GetSampleFormat() const;
+   sampleFormat GetSampleFormat() const override;
    size_t GetSampleCount() const override;
 
    bool GetSummary256(float *dest, size_t frameoffset, size_t numframes) override;
@@ -1054,12 +1056,14 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
 static size_t EstimateRemovedBlocks(
    AudacityProject &project, size_t begin, size_t end)
 {
+   using namespace WaveTrackUtilities;
    auto &manager = UndoManager::Get(project);
 
    // Collect ids that survive
+   using namespace WaveTrackUtilities;
    SampleBlockIDSet wontDelete;
    auto f = [&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem))
+      if (auto pTracks = UndoTracks::Find(elem))
          InspectBlocks(*pTracks, {}, &wontDelete);
    };
    manager.VisitStates(f, 0, begin);
@@ -1071,10 +1075,10 @@ static size_t EstimateRemovedBlocks(
    // Collect ids that won't survive (and are not negative pseudo ids)
    SampleBlockIDSet seen, mayDelete;
    manager.VisitStates([&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem)) {
+      if (auto pTracks = UndoTracks::Find(elem)) {
          InspectBlocks(*pTracks,
-            [&](const SampleBlock &block){
-               auto id = block.GetBlockID();
+            [&](SampleBlockConstPtr pBlock){
+               auto id = pBlock->GetBlockID();
                if (id > 0 && !wontDelete.count(id))
                   mayDelete.insert(id);
             },
