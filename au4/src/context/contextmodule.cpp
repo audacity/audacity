@@ -53,5 +53,9 @@ void ContextModule::onInit(const IApplication::RunMode& mode)
 
 void ContextModule::onDeinit()
 {
+    au::project::IAudacityProjectPtr prj = m_globalContext->currentProject();
+    if (prj) {
+        prj->close();
+    }
     m_globalContext->setCurrentProject(nullptr);
 }

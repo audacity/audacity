@@ -21,17 +21,20 @@
  */
 #include "au3wrapmodule.h"
 
+#include <iostream>
+#include <wx/log.h>
+
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
 #include "mocks/au3settingsmock.h"
 
+#include "internal/wxlogwrap.h"
+
 #include "log.h"
 
 using namespace au::au3;
-
-
 
 std::string Au3WrapModule::moduleName() const
 {
@@ -44,6 +47,9 @@ void Au3WrapModule::registerExports()
 
 void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
 {
+    m_wxLog = new WxLogWrap();
+    wxLog::SetActiveTarget(m_wxLog);
+
     std::unique_ptr<Au3SettingsMock> auset = std::make_unique<Au3SettingsMock>();
     InitPreferences(std::move(auset));
 
@@ -53,10 +59,10 @@ void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
     if (!ok) {
         LOGE() << "failed init sql";
     }
-
 }
 
 void Au3WrapModule::onDeinit()
 {
-
+    wxLog::SetActiveTarget(nullptr);
+    delete m_wxLog;
 }

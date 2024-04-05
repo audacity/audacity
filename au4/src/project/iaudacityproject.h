@@ -16,6 +16,7 @@ public:
     virtual ~IAudacityProject() = default;
 
     virtual mu::Ret load(const mu::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
+    virtual void close() = 0;
 
     virtual mu::String title() const { return mu::String(); }
     virtual mu::io::path_t path() const = 0;

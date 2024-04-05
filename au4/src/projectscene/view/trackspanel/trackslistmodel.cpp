@@ -6,37 +6,63 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::processing;
 
-void TracksListModel::load()
+void TracksListModel::init()
 {
+    globalContext()->currentProcessingProjectChanged().onNotify(this, [this]() {
+        reload();
+    });
+}
+
+void TracksListModel::reload()
+{
+    //! NOTE Implimentation just for test
+
+    beginResetModel();
+
     ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     if (!prj) {
         return;
     }
 
     const TrackList& tracks = prj->trackList();
-    UNUSED(tracks);
 
-    //! TODO Make view items
-    //! TODO subscribe on changes
+    m_items.clear();
+
+    for (const Track& t : tracks) {
+        QVariantMap it;
+        it["id"] = t.id.toUint64();
+        it["title"] = t.title.toQString();
+
+        m_items << it;
+    }
+
+    endResetModel();
 }
 
 QHash<int, QByteArray> TracksListModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
-        { TitleRole, "titleRole" }
+        { rItemData, "itemData" }
     };
+
     return roles;
 }
 
 QVariant TracksListModel::data(const QModelIndex& index, int role) const
 {
-    UNUSED(index);
-    UNUSED(role);
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    switch (role) {
+    case rItemData: return m_items.at(index.row());
+    }
+
     return QVariant();
 }
 
 int TracksListModel::rowCount(const QModelIndex& parent) const
 {
     UNUSED(parent);
-    return 0;
+    return m_items.count();
 }

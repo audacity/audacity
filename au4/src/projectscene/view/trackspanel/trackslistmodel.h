@@ -3,11 +3,13 @@
 
 #include <QAbstractListModel>
 
+#include "global/async/asyncable.h"
+
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
 namespace au::projectscene {
-class TracksListModel : public QAbstractListModel
+class TracksListModel : public QAbstractListModel, public mu::async::Asyncable
 {
     Q_OBJECT;
 
@@ -20,12 +22,15 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
 
-    Q_INVOKABLE void load();
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void reload();
 
 private:
     enum Roles {
-        TitleRole = Qt::UserRole + 1,
+        rItemData = Qt::UserRole + 1
     };
+
+    QVariantList m_items;
 };
 }
 

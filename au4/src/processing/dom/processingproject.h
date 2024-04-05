@@ -5,17 +5,27 @@
 
 #include "track.h"
 
+namespace au::au3 {
+class Audacity3Project;
+}
+
 namespace au::processing {
+//! NOTE See description of Audacity4Project
 class ProcessingProject
 {
 public:
     ProcessingProject();
 
-    const TrackList& trackList() const { return m_trackList; }
-    void setTrackList(const TrackList& l) { m_trackList = l; }
+    void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
+
+    TrackList trackList() const;
+
+    //! NOTE Just for debug
+    void dump();
 
 private:
-    TrackList m_trackList;
+
+    std::shared_ptr<au::au3::Audacity3Project> m_au3;
 };
 
 using ProcessingProjectPtr = std::shared_ptr<ProcessingProject>;
