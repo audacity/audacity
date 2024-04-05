@@ -54,6 +54,7 @@
 #include "ProjectWindows.h"
 
 #include "CloudLocationDialog.h"
+#include "ExportUtils.h"
 
 namespace audacity::cloud::audiocom
 {
@@ -737,8 +738,11 @@ namespace
 auto hooked = []
 {
    ExportUtils::RegisterExportHook(
-      [](AudacityProject& project, const FileExtension&)
+      [](AudacityProject& project, const FileExtension&, bool selectedOnly)
       {
+         if(selectedOnly)
+            return ExportUtils::ExportHookResult::Continue;
+
          const auto window = &GetProjectFrame(project);
 
          sync::CloudLocationDialog locationDialog {

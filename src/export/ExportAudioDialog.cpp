@@ -53,10 +53,15 @@ namespace
 {
 const bool hookRegistered = [] {
    ExportUtils::RegisterExportHook(
-      [](AudacityProject& project, const FileExtension& format)
+      [](AudacityProject& project, const FileExtension& format, bool selectedOnly)
       {
          ExportAudioDialog dialog { &GetProjectFrame(project), project,
-                                    project.GetProjectName(), format };
+                                    project.GetProjectName(), format,
+                                    selectedOnly
+                                       ? ExportAudioDialog::ExportMode::SelectedOnly
+                                       : ExportAudioDialog::ExportMode::Auto
+         };
+
          dialog.ShowModal();
          return ExportUtils::ExportHookResult::Handled;
       });
@@ -155,7 +160,8 @@ END_EVENT_TABLE()
 ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
                                      AudacityProject& project,
                                      const wxString& defaultName,
-                                     const wxString& defaultFormat)
+                                     const wxString& defaultFormat,
+                                     ExportMode mode)
    : wxDialogWrapper(parent, wxID_ANY, XO("Export Audio"))
    , mProject(project)
 {
@@ -199,43 +205,38 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    const auto hasLabels = !labelTracks.empty() &&
       (*labelTracks.begin())->GetNumLabels() > 0;
    const auto hasMultipleWaveTracks = tracks.Any<WaveTrack>().size() > 1;
+   const auto hasSelectedAudio = ExportUtils::HasSelectedAudio(mProject);
 
-   if(ExportUtils::FindExportWaveTracks(tracks, true).empty() ||
-      ViewInfo::Get(mProject).selectedRegion.isPoint())
+   mRangeSelection->Enable(hasSelectedAudio);
+   mRangeSplit->Enable(hasLabels || hasMultipleWaveTracks);
+
+   mSplitByLabels->Enable(hasLabels);
+   mSplitByTracks->Enable(hasMultipleWaveTracks);
+
+   if(mRangeSelection->IsEnabled() && mode == ExportMode::SelectedOnly)
    {
-      //All selected audio is muted
-      mRangeSelection->Disable();
-      if(ExportAudioExportRange.Read() == "selection")
+      mRangeSelection->SetValue(true);
+   }
+   else
+   {
+      if(!mRangeSelection->IsEnabled() && ExportAudioExportRange.Read() == "selection")
          mRangeProject->SetValue(true);
-   }
-   else if (!hasLabels && !hasMultipleWaveTracks)
-      mRangeSelection->MoveAfterInTabOrder(mRangeProject);
-   
-   if(!hasLabels)
-   {
-      mSplitByLabels->Disable();
-      if (hasMultipleWaveTracks)
-         mSplitByTracks->SetValue(true);
-   }
 
-   if (!hasMultipleWaveTracks)
-   {
-      mSplitByTracks->Disable();
-      if (hasLabels)
+      if(!mRangeSplit->IsEnabled() && ExportAudioExportRange.Read() == "split")
+         mRangeProject->SetValue(true);
+
+      if(!hasLabels && hasMultipleWaveTracks)
+         mSplitByTracks->SetValue(true);
+      if (!hasMultipleWaveTracks && hasLabels)
          mSplitByLabels->SetValue(true);
    }
 
-   if (!hasLabels && !hasMultipleWaveTracks)
-   {
-      mRangeSplit->Disable();
-      if (ExportAudioExportRange.Read() == "split")
-         mRangeProject->SetValue(true);
-      mSplitsPanel->Hide();
-   }
+   if (mRangeSelection->IsEnabled() && !hasLabels && !hasMultipleWaveTracks)
+      mRangeSelection->MoveAfterInTabOrder(mRangeProject);
 
-   if (ExportAudioExportRange.Read() != "split")
+   if (ExportAudioExportRange.Read() != "split" || (!hasLabels && !hasMultipleWaveTracks))
       mSplitsPanel->Hide();
-   
+
    mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
 
    mIncludeAudioBeforeFirstLabel->Enable(mSplitByLabels->GetValue());

@@ -52,10 +52,17 @@ class ExportAudioDialog final : public wxDialogWrapper
    };
 
 public:
+   enum class ExportMode
+   {
+      Auto,
+      SelectedOnly
+   };
+
    ExportAudioDialog(wxWindow* parent,
                      AudacityProject& project,
                      const wxString& defaultName,
-                     const wxString& defaultFormat);
+                     const wxString& defaultFormat,
+                     ExportMode mode = ExportMode::Auto);
    ~ExportAudioDialog() override;
 
    bool Show(bool show = true) override;

@@ -36,6 +36,7 @@
 
 #include "ExportPluginRegistry.h"
 #include "ProjectRate.h"
+#include "export/ExportAudioDialog.h"
 
 // private helper classes and functions
 namespace {
@@ -61,7 +62,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
          return;
       }
 
-      ExportUtils::PerformInteractiveExport(project, format);
+      ExportUtils::PerformInteractiveExport(project, format, false);
    }
    else {
       // We either use a configured output path,
@@ -427,6 +428,14 @@ void OnExportFLAC(const CommandContext &context)
    DoExport(context.project, "FLAC");
 }
 
+void OnExportSelectedAudio(const CommandContext &context)
+{
+   if(!ExportUtils::HasSelectedAudio(context.project))
+      return;
+   
+   ExportUtils::PerformInteractiveExport(context.project, "", true);
+}
+
 // Menu definitions
 
 using namespace MenuRegistry;
@@ -557,7 +566,9 @@ auto ExtraExportMenu()
             Command( wxT("ExportOgg"), XXO("Export as &OGG"), OnExportOgg,
                AudioIONotBusyFlag() | WaveTracksExistFlag() ),
             Command( wxT("ExportFLAC"), XXO("Export as FLAC"), OnExportFLAC,
-               AudioIONotBusyFlag() | WaveTracksExistFlag() )
+               AudioIONotBusyFlag() | WaveTracksExistFlag() ),
+            Command( wxT("ExportSel"), XXO("Expo&rt Selected Audio..."), OnExportSelectedAudio,
+               AudioIONotBusyFlag() | WaveTracksSelectedFlag() | TimeSelectedFlag() )
         ))};
    return menu;
 }
