@@ -523,7 +523,7 @@ auto FileMenu()
          Command( wxT("Export"), XXO("&Export Audio..."), OnExportAudio,
             AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
 
-         Menu( wxT("ExportOther"), XXO("Export Other"),
+         Menu( wxT("ExportOther"), XXO("Expo&rt Other"),
             Command( wxT("ExportLabels"), XXO("Export &Labels..."),
                OnExportLabels,
                AudioIONotBusyFlag() | LabelTracksExistFlag() )

@@ -85,24 +85,24 @@ const ReservedCommandFlag& IsCloudProjectFlag()
 using namespace MenuRegistry;
 
 AttachedItem sSaveAttachment { Command(
-                                  wxT("SaveToCloud"), XXO("Save To Cloud..."),
+                                  wxT("SaveToCloud"), XXO("Save &To Cloud..."),
                                   OnSaveToCloud, AlwaysEnabledFlag),
                                wxT("File/Save") };
 
 AttachedItem sMixdownAttachment { Command(
                                      wxT("UpdateMixdown"),
-                                     XXO("Update Cloud Audio Preview"),
+                                     XXO("&Update Cloud Audio Preview"),
                                      OnUpdateMixdown, IsCloudProjectFlag()),
                                   wxT("File/Save") };
 
 AttachedItem sOpenAttachment { Command(
                                   wxT("OpenFromCloud"),
-                                  XXO("Open From Cloud..."), OnOpenFromCloud,
+                                  XXO("Open Fro&m Cloud..."), OnOpenFromCloud,
                                   AlwaysEnabledFlag),
                                wxT("File/Basic") };
 
 AttachedItem sShareAttachment { Command(
-                                   wxT("ShareAudio"), XXO("Share Audio..."),
+                                   wxT("ShareAudio"), XXO("S&hare Audio..."),
                                    OnShareAudio, WaveTracksExistFlag()),
                                 wxT("File/Import-Export") };
 
