@@ -46,10 +46,8 @@ for drawing different aspects of the label and its text box.
 #include "TimeWarper.h"
 #include "AudacityMessageBox.h"
 
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
-#endif
 
 LabelTrack::Interval::~Interval() = default;
 
@@ -426,7 +424,6 @@ ImportExportPrefs::RegisteredControls reg{ wxT("LabelStyle"), AddControls };
 
 }
 
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
 static double SubRipTimestampToDouble(const wxString &ts)
 {
    wxString::const_iterator end;
@@ -438,7 +435,6 @@ static double SubRipTimestampToDouble(const wxString &ts)
    return dt.GetHour() * 3600 + dt.GetMinute() * 60 + dt.GetSecond()
       + dt.GetMillisecond() / 1000.0;
 }
-#endif
 
 LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format)
 {
@@ -514,7 +510,6 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
       }
       break;
    }
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    case LabelFormat::SUBRIP:
    {
       if ((int)file.GetLineCount() < index + 2)
@@ -553,7 +548,6 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
 
       break;
    }
-#endif
    default:
       throw BadFormatException{};
    }
@@ -561,7 +555,6 @@ LabelStruct LabelStruct::Import(wxTextFile &file, int &index, LabelFormat format
    return LabelStruct{ sr, title };
 }
 
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
 static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
 {
    // Note that the SubRip format always uses the comma as its separator...
@@ -578,7 +571,6 @@ static wxString SubRipTimestampFromDouble(double timestamp, bool webvtt)
    // be shifted (assuming the user is not in the UTC timezone).
    return dt.Format(webvtt ? webvttFormat : subripFormat, wxDateTime::UTC);
 }
-#endif
 
 void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
 {
@@ -610,7 +602,6 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
       // Additional lines in future formats should also start with '\'.
       break;
    }
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    case LabelFormat::SUBRIP:
    case LabelFormat::WEBVTT:
    {
@@ -627,7 +618,6 @@ void LabelStruct::Export(wxTextFile &file, LabelFormat format, int index) const
 
       break;
    }
-#endif
    }
 }
 
@@ -700,12 +690,10 @@ auto LabelStruct::RegionRelation(
 /// Export labels including label start and end-times.
 void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 {
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    if (format == LabelFormat::WEBVTT) {
       f.AddLine(wxT("WEBVTT"));
       f.AddLine(wxT(""));
    }
-#endif
 
    // PRL: to do: export other selection fields
    int index = 0;
@@ -716,25 +704,21 @@ void LabelTrack::Export(wxTextFile & f, LabelFormat format) const
 LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
 {
    LabelFormat format = LabelFormat::TEXT;
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    if (fileName.Right(4).CmpNoCase(wxT(".srt")) == 0) {
       format = LabelFormat::SUBRIP;
    } else if (fileName.Right(4).CmpNoCase(wxT(".vtt")) == 0) {
       format = LabelFormat::WEBVTT;
    }
-#endif
    return format;
 }
 
 /// Import labels, handling files with or without end-times.
 void LabelTrack::Import(wxTextFile & in, LabelFormat format)
 {
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
    if (format == LabelFormat::WEBVTT) {
       ::AudacityMessageBox( XO("Importing WebVTT files is not currently supported.") );
       return;
    }
-#endif
 
    int lines = in.GetLineCount();
 

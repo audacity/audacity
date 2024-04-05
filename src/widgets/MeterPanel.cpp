@@ -527,12 +527,10 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // Start with a clean background
       // LLL:  Should research USE_AQUA_THEME usefulness...
 //#ifndef USE_AQUA_THEME
-#ifdef EXPERIMENTAL_THEMING
       //if( !mMeterDisabled )
       //{
       //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
       //}
-#endif
       mBkgndBrush.SetColour( GetBackgroundColour() );
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);

@@ -213,9 +213,7 @@ Track::Holder NoteTrack::Clone(bool) const
 
    duplicate->SetVisibleChannels(GetVisibleChannels());
    duplicate->MoveTo(mOrigin);
-#ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
-#endif
    return duplicate;
 }
 
@@ -507,7 +505,6 @@ void NoteTrack::InsertSilence(double t, double len)
    // AddToDuration( len );
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 void NoteTrack::SetVelocity(float velocity)
 {
    if (GetVelocity() != velocity) {
@@ -520,7 +517,6 @@ void NoteTrack::DoSetVelocity(float velocity)
 {
    mVelocity.store(velocity, std::memory_order_relaxed);
 }
-#endif
 
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.
@@ -821,7 +817,7 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
             return attachment.HandleAttribute(pair);
          }))
             ;
-         else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
+         else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
          {}
          else if (attr == "offset" && value.TryGet(dblValue))
             MoveTo(dblValue);
@@ -831,10 +827,8 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
                  return false;
              SetVisibleChannels(nValue);
          }
-#ifdef EXPERIMENTAL_MIDI_OUT
          else if (attr == "velocity" && value.TryGet(dblValue))
             DoSetVelocity(static_cast<float>(dblValue));
-#endif
          else if (attr == "data") {
              std::string s(value.ToWString());
              std::istringstream data(s);
@@ -866,15 +860,13 @@ void NoteTrack::WriteXML(XMLWriter &xmlFile) const
    saveme->GetSeq().write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
    saveme->Track::WriteCommonXMLAttributes( xmlFile );
-   this->NoteTrackBase::WriteXMLAttributes(xmlFile);
+   this->PlayableTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("offset"), saveme->mOrigin);
    xmlFile.WriteAttr(wxT("visiblechannels"),
       static_cast<int>(saveme->GetVisibleChannels()));
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    xmlFile.WriteAttr(wxT("velocity"),
       static_cast<double>(saveme->GetVelocity()));
-#endif
    saveme->Attachments::ForEach([&](auto &attachment){
       attachment.WriteXML(xmlFile);
    });
@@ -977,11 +969,6 @@ wxString GetMIDIDeviceInfo()
 
    // Not internationalizing these alpha-only messages
    s << wxT("==============================\n");
-#ifdef EXPERIMENTAL_MIDI_OUT
-   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled\n");
-#else
-   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled\n");
-#endif
 #ifdef EXPERIMENTAL_MIDI_IN
    s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
 #else

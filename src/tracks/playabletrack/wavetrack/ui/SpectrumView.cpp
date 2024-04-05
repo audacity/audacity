@@ -196,7 +196,6 @@ void SpectrumView::DoSetMinimized( bool minimized )
    if (!wt)
       return;
 
-#ifdef EXPERIMENTAL_HALF_WAVE
    bool bHalfWave;
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
    if( bHalfWave && minimized)
@@ -213,7 +212,6 @@ void SpectrumView::DoSetMinimized( bool minimized )
       SpectrogramBounds::Get(*wt)
          .SetBounds( spectrumLinear ? 0.0f : 1.0f, max );
    }
-#endif
 
    ChannelView::DoSetMinimized(minimized);
 }
@@ -390,10 +388,8 @@ void DrawClipSpectrum(TrackPanelDrawingContext &context,
 
    double freqLo = SelectedRegion::UndefinedFrequency;
    double freqHi = SelectedRegion::UndefinedFrequency;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    freqLo = selectedRegion.f0();
    freqHi = selectedRegion.f1();
-#endif
 
    const int &colorScheme = settings.colorScheme;
    const int &range = settings.range;
@@ -1089,7 +1085,6 @@ unsigned SpectrumView::Char(
    return RefreshCode::RefreshNone;
 }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
 // Attach some related menu items
 #include "../../../ui/SelectHandle.h"
 #include "../../../../CommonCommandFlags.h"
@@ -1205,4 +1200,3 @@ AttachedItem sAttachment2{ Indirect(SpectralSelectionMenu()),
 };
 
 }
-#endif // EXPERIMENTAL_SPECTRAL_EDITING

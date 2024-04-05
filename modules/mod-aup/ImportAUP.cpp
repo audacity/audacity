@@ -170,10 +170,8 @@ private:
       field(zoom, double);
       field(sel0, double);
       field(sel1, double);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       field(selLow, double) = SelectedRegion::UndefinedFrequency;
       field(selHigh, double) = SelectedRegion::UndefinedFrequency;
-#endif
       field(rate, double);
       field(snapto, bool);
       field(selectionformat, wxString);
@@ -483,7 +481,6 @@ void AUPImportFileHandle::Import(
       viewInfo.selectedRegion.setT1(mProjectAttrs.sel1);
    }
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if (mProjectAttrs.haveselLow)
    {
       viewInfo.selectedRegion.setF0(mProjectAttrs.selLow);
@@ -493,7 +490,6 @@ void AUPImportFileHandle::Import(
    {
       viewInfo.selectedRegion.setF1(mProjectAttrs.selHigh);
    }
-#endif
 
    progressListener.OnImportResult(ImportProgressListener::ImportResult::Success);
 }
@@ -742,7 +738,6 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
          set(sel1, dValue);
       }
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       else if (attr == "selLow")
       {
          if (!value.TryGet(dValue) || (dValue < 0.0))
@@ -761,7 +756,6 @@ bool AUPImportFileHandle::HandleProject(XMLTagHandler *&handler)
 
          set(selHigh, dValue);
       }
-#endif
       else if (attr == "version")
       {
          requiredTags++;

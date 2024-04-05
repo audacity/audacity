@@ -633,11 +633,7 @@ void LabelDialog::OnImport(wxCommandEvent & WXUNUSED(event))
          wxEmptyString,     // Path
          wxT(""),       // Name
          wxT("txt"),   // Extension
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
          { FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
-#else
-         { FileNames::TextFiles, FileNames::AllFiles },
-#endif
          wxRESIZE_BORDER, // Flags
          this);    // Parent
 
@@ -688,11 +684,7 @@ void LabelDialog::OnExport(wxCommandEvent & WXUNUSED(event))
       wxEmptyString,
       fName,
       wxT("txt"),
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
       { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
-#else
-      { FileNames::TextFiles },
-#endif
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       this);
 

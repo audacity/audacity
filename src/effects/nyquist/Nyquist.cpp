@@ -999,7 +999,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
             wxString centerHz = wxT("nil");
             wxString bandwidth = wxT("nil");
 
-#if defined(EXPERIMENTAL_SPECTRAL_EDITING)
             if (mF0 >= 0.0) {
                lowHz.Printf(wxT("(float %s)"), Internat::ToString(mF0));
             }
@@ -1021,7 +1020,6 @@ bool NyquistEffect::Process(EffectInstance &, EffectSettings &settings)
                }
             }
 
-#endif
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'LOW-HZ)\n"), lowHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'CENTER-HZ)\n"), centerHz);
             mPerTrackProps += wxString::Format(wxT("(putprop '*SELECTION* %s 'HIGH-HZ)\n"), highHz);
@@ -2245,7 +2243,6 @@ bool NyquistEffect::Parse(
       mMaxLen = (sampleCount) v;
    }
 
-#if defined(EXPERIMENTAL_NYQUIST_SPLIT_CONTROL)
    if (len >= 2 && tokens[0] == wxT("mergeclips")) {
       long v;
       // -1 = auto (default), 0 = don't merge clips, 1 = do merge clips
@@ -2261,7 +2258,6 @@ bool NyquistEffect::Parse(
       mRestoreSplits = !!v;
       return true;
    }
-#endif
 
    if (len >= 2 && tokens[0] == wxT("author")) {
       mAuthor = TranslatableString{ UnQuote(tokens[1]), {} };

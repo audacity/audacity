@@ -317,11 +317,7 @@ void OnExportLabels(const CommandContext &context)
       wxEmptyString,
       fName,
       wxT("txt"),
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
       { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
-#else
-      { FileNames::TextFiles },
-#endif
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       &window);
 
@@ -380,11 +376,7 @@ void OnImportLabels(const CommandContext &context)
          wxEmptyString,     // Path
          wxT(""),       // Name
          wxT("txt"),    // Extension
-#ifdef EXPERIMENTAL_SUBRIP_LABEL_FORMATS
          { FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
-#else
-         { FileNames::TextFiles, FileNames::AllFiles },
-#endif
          wxRESIZE_BORDER,        // Flags
          &window);    // Parent
 

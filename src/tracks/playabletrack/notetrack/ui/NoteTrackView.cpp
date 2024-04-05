@@ -270,9 +270,6 @@ void DrawNoteBackground(TrackPanelDrawingContext &context,
 
    dc.SetBrush(wb);
    dc.SetPen(wp);
-#ifndef EXPERIMENTAL_NOTETRACK_OVERLAY
-   dc.DrawRectangle(sel); // fill rectangle with white keys background
-#endif
 
    int left = TIME_TO_X(track.GetStartTime());
    if (left < sel.x) left = sel.x; // clip on left
@@ -734,16 +731,12 @@ void NoteTrackView::Draw(
       const auto &nt = static_cast<const NoteTrack&>(
          pendingTracks.SubstitutePendingChangedChannel(*pChannel));
       bool muted = false;
-#ifdef EXPERIMENTAL_MIDI_OUT
       const auto artist = TrackArtist::Get( context );
       const auto hasSolo = artist->hasSolo;
       muted = (hasSolo || nt.GetMute()) && !nt.GetSolo();
-#endif
 
-#ifdef EXPERIMENTAL_NOTETRACK_OVERLAY
       TrackArt::DrawBackgroundWithSelection(context,
          rect, nt, AColor::labelSelectedBrush, AColor::labelUnselectedBrush);
-#endif
       bool selected{ false };
       if (auto affordance = std::dynamic_pointer_cast<NoteTrackAffordanceControls>(GetAffordanceControls()))
       {

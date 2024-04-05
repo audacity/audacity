@@ -91,10 +91,8 @@ protected:
    const TrackList *inputTracks() const { return mTracks.get(); }
    const AudacityProject *FindProject() const;
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    double         mF0{};
    double         mF1{};
-#endif
 
    wxArrayString  mPresetNames;
    unsigned       mUIFlags{ 0 };

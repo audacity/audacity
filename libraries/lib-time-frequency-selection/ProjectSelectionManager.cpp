@@ -147,7 +147,6 @@ void ProjectSelectionManager::SetBandwidthSelectionFormatName(
 void ProjectSelectionManager::ModifySpectralSelection(double nyquist,
    double &bottom, double &top, bool done)
 {
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    auto &project = mProject;
    auto &history = ProjectHistory::Get(project);
    auto &viewInfo = ViewInfo::Get(project);
@@ -158,8 +157,5 @@ void ProjectSelectionManager::ModifySpectralSelection(double nyquist,
    viewInfo.selectedRegion.setFrequencies(bottom, top);
    if (done)
       history.ModifyState(false);
-#else
-   bottom; top; done;
-#endif
 }
 

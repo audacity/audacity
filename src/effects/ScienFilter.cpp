@@ -125,10 +125,8 @@ const EffectParameterMethods& EffectScienFilter::Parameters() const
 const ComponentInterfaceSymbol EffectScienFilter::Symbol
 { XO("Classic Filters") };
 
-#ifdef EXPERIMENTAL_SCIENCE_FILTERS
 // true argument means don't automatically enable this effect
 namespace{ BuiltinEffectsModule::Registration< EffectScienFilter > reg( true ); }
-#endif
 
 BEGIN_EVENT_TABLE(EffectScienFilter, wxEvtHandler)
    EVT_SIZE(EffectScienFilter::OnSize)

@@ -122,8 +122,8 @@ std::vector<UIHandlePtr> WaveformView::DetailedHitTest(
 
 void WaveformView::DoSetMinimized( bool minimized )
 {
-#ifdef EXPERIMENTAL_HALF_WAVE
    auto wt = FindWaveChannel();
+
    bool bHalfWave;
    gPrefs->Read(wxT("/GUI/CollapseToHalfWave"), &bHalfWave, false);
    if (wt &&  bHalfWave) {
@@ -135,7 +135,6 @@ void WaveformView::DoSetMinimized( bool minimized )
          // Zoom out full
          cache.SetDisplayBounds( -1.0f, 1.0f );
    }
-#endif
 
    ChannelView::DoSetMinimized(minimized);
 }

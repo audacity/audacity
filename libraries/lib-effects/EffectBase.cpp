@@ -145,7 +145,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    if (pAccess)
       pAccess->ModifySettings(updater);
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
    mF1 = selectedRegion.f1();
    if( mF0 != SelectedRegion::UndefinedFrequency )
@@ -153,7 +152,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    if( mF1 != SelectedRegion::UndefinedFrequency )
       mPresetNames.push_back(L"control-f1");
 
-#endif
    CountWaveTracks();
 
    // Allow the dialog factory to fill this in, but it might not

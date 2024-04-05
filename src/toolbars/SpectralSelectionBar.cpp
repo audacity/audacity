@@ -59,8 +59,6 @@ frequency selection range.
 
 #include "../widgets/NumericTextCtrl.h"
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
-
 IMPLEMENT_CLASS(SpectralSelectionBar, ToolBar);
 
 enum {
@@ -524,5 +522,3 @@ AttachedToolBarMenuItem sAttachment{
    wxT("ShowSpectralSelectionTB"), XXO("Spe&ctral Selection Toolbar")
 };
 }
-
-#endif // #ifdef EXPERIMENTAL_SPECTRAL_EDITING

@@ -229,34 +229,32 @@ void RecordingPrefs::PopulateOrExchange(ShuttleGui & S)
       S.EndStatic();
    #endif
 
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
-      S.StartStatic(XO("Punch and Roll Recording"));
+   S.StartStatic(XO("Punch and Roll Recording"));
+   {
+      S.StartThreeColumn();
       {
-         S.StartThreeColumn();
-         {
-            auto w = S
-               .NameSuffix(XO("seconds"))
-               .TieNumericTextBox(XXO("Pre-ro&ll:"),
-                  {AUDIO_PRE_ROLL_KEY,
-                   DEFAULT_PRE_ROLL_SECONDS},
-                  9);
-            S.AddUnits(XO("seconds"));
-         }
-         {
-            auto w = S
-               .NameSuffix(XO("milliseconds"))
-               .TieNumericTextBox(XXO("Cross&fade:"),
-                  {AUDIO_ROLL_CROSSFADE_KEY,
-                   DEFAULT_ROLL_CROSSFADE_MS},
-                  9);
-            S.AddUnits(XO("milliseconds"));
-         }
-         S.EndThreeColumn();
+         auto w = S
+            .NameSuffix(XO("seconds"))
+            .TieNumericTextBox(XXO("Pre-ro&ll:"),
+               {AUDIO_PRE_ROLL_KEY,
+                DEFAULT_PRE_ROLL_SECONDS},
+               9);
+         S.AddUnits(XO("seconds"));
       }
-      S.EndStatic();
-#endif
+      {
+         auto w = S
+            .NameSuffix(XO("milliseconds"))
+            .TieNumericTextBox(XXO("Cross&fade:"),
+               {AUDIO_ROLL_CROSSFADE_KEY,
+                DEFAULT_ROLL_CROSSFADE_MS},
+               9);
+         S.AddUnits(XO("milliseconds"));
+      }
+      S.EndThreeColumn();
+   }
+   S.EndStatic();
 
-      S.EndScroller();
+   S.EndScroller();
 }
 
 bool RecordingPrefs::Commit()

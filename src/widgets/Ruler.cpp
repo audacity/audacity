@@ -452,11 +452,7 @@ void Ruler::Draw(wxDC& dc, const Envelope* envelope) const
    auto &cache = *mpCache;
 
    dc.SetTextForeground( mTickColour );
-#ifdef EXPERIMENTAL_THEMING
    dc.SetPen(mPen);
-#else
-   dc.SetPen(*wxBLACK_PEN);
-#endif
 
    // Draws a long line the length of the ruler.
    if( !mbTicksOnly )
