@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "Track.h"
+#include "ViewInfo.h"
 #include "WaveTrack.h"
 
 //TODO: used in many places in anticipation that Exporter yields same result, fix that
@@ -27,6 +28,12 @@ TrackIterRange<const WaveTrack> ExportUtils::FindExportWaveTracks(const TrackLis
    return tracks.Any<const WaveTrack>()
       + (selectedOnly ? &Track::IsSelected : &Track::Any)
       - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
+}
+
+bool ExportUtils::HasSelectedAudio(const AudacityProject& project)
+{
+   return !FindExportWaveTracks(TrackList::Get(project), true).empty() &&
+      !ViewInfo::Get(project).selectedRegion.isPoint();
 }
 
 ExportProcessor::Parameters ExportUtils::ParametersFromEditor(const ExportOptionsEditor& editor)
@@ -69,12 +76,12 @@ void ExportUtils::RegisterExportHook(ExportHook hook, Priority priority)
 }
 
 void ExportUtils::PerformInteractiveExport(
-   AudacityProject& project, const FileExtension& format)
+   AudacityProject& project, const FileExtension& format, bool selectedOnly)
 {
    auto& hooks = ExportHooks();
    for (auto& hook : hooks)
    {
-      if(hook.hook(project, format) != ExportHookResult::Continue)
+      if(hook.hook(project, format, selectedOnly) != ExportHookResult::Continue)
          return;
    }
 }
