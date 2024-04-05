@@ -1,5 +1,7 @@
 #include "wave.h"
 
+#include <cstring>
+
 using namespace au::processing;
 Wave::Wave(const int16_t* data, size_t size)
 {
