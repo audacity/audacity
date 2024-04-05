@@ -108,6 +108,8 @@ else()
    configure_file( ${AUDACITY_ROOT}/src/audacity_config.h.in src/private/configunix.h )
 endif()
 
+add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
 ###########################################
 # Setup option and build settings
 ###########################################

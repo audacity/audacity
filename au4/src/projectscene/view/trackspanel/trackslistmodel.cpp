@@ -30,7 +30,7 @@ void TracksListModel::reload()
 
     for (const Track& t : tracks) {
         QVariantMap it;
-        it["id"] = t.id.toUint64();
+        it["id"] = t.id.toQString();
         it["title"] = t.title.toQString();
 
         m_items << it;
