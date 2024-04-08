@@ -12,6 +12,8 @@
 
 #include "FFmpegFunctions.h"
 
+#include "AVChannelLayoutWrapper.h"
+
 AVFrameWrapper::AVFrameWrapper(const FFmpegFunctions& ffmpeg) noexcept
     : mFFmpeg(ffmpeg)
 {

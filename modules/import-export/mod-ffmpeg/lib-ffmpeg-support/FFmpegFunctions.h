@@ -30,7 +30,7 @@
 #include "wrappers/AVOutputFormatWrapper.h"
 #include "wrappers/AVCodecWrapper.h"
 #include "wrappers/AVCodecContextWrapper.h"
-#include "wrappers/AVFifoBufferWrapper.h"
+#include "wrappers/AVChannelLayoutWrapper.h"
 
 class StringSetting;
 
@@ -115,7 +115,11 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapperFromCodec(std::unique_ptr<AVCodecWrapper> codec) const;
 
    std::unique_ptr<AVOutputFormatWrapper> GuessOutputFormat(const char* short_name, const char* filename, const char* mime_type);
-   
+
+   std::unique_ptr<AVChannelLayoutWrapper> CreateDefaultChannelLayout(int channelsCount) const;
+   std::unique_ptr<AVChannelLayoutWrapper> CreateLegacyChannelLayout(uint64_t layout, int channelsCount) const;
+   std::unique_ptr<AVChannelLayoutWrapper> CreateAVChannelLayout(const AVChannelLayout* layout) const;
+
    const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
    const std::vector<const AVCodecWrapper*>& GetCodecs() const;
 

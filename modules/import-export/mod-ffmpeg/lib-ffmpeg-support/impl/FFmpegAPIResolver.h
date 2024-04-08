@@ -22,6 +22,7 @@ class FFmpegLog;
 class AVCodecContextWrapper;
 class AVCodecWrapper;
 class AVPacketWrapper;
+class AVChannelLayoutWrapper;
 
 struct AVCodecIDResolver final
 {
@@ -61,6 +62,10 @@ struct AVUtilFactories final
    //! @post return value is not null
    std::unique_ptr<AVFrameWrapper> (*CreateAVFrameWrapper)(const FFmpegFunctions&) = nullptr;
    std::unique_ptr<FFmpegLog> (*CreateLogCallbackSetter)(const FFmpegFunctions&) = nullptr;
+
+   std::unique_ptr<AVChannelLayoutWrapper> (*CreateDefaultChannelLayout)(const FFmpegFunctions&, int channelsCount) = nullptr;
+   std::unique_ptr<AVChannelLayoutWrapper> (*CreateLegacyChannelLayout)(const FFmpegFunctions&, uint64_t layout, int channelsCount) = nullptr;
+   std::unique_ptr<AVChannelLayoutWrapper> (*CreateAVChannelLayout)(const FFmpegFunctions&, const AVChannelLayout* layout) = nullptr;
 };
 
 class FFmpegAPIResolver final

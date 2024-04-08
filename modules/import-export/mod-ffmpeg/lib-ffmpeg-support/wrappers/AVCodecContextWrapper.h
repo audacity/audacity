@@ -25,6 +25,7 @@ class AVCodecWrapper;
 class AVDictionaryWrapper;
 class AVFrameWrapper;
 class AVPacketWrapper;
+class AVChannelLayoutWrapper;
 
 class FFMPEG_SUPPORT_API AVCodecContextWrapper
 {
@@ -53,11 +54,10 @@ public:
    virtual int GetBitRate() const noexcept = 0;
    virtual void SetBitRate(int value) noexcept = 0;
 
-   virtual uint64_t GetChannelLayout() const noexcept = 0;
-   virtual void SetChannelLayout(uint64_t value) noexcept = 0;
+   virtual const AVChannelLayoutWrapper* GetChannelLayout() const noexcept = 0;
+   virtual void SetChannelLayout(const AVChannelLayoutWrapper* value) noexcept = 0;
 
    virtual int GetChannels() const noexcept = 0;
-   virtual void SetChannels(int value) noexcept = 0;
 
    virtual const AVCodecWrapper* GetCodec() const noexcept = 0;
 
@@ -83,7 +83,6 @@ public:
    virtual void SetFlags2(int value) noexcept = 0;
 
    virtual int GetFrameNumber() const noexcept = 0;
-   virtual void SetFrameNumber(int value) noexcept = 0;
 
    virtual int GetFrameSize() const noexcept = 0;
    virtual void SetFrameSize(int value) noexcept = 0;

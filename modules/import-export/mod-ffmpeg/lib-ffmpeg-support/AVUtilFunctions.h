@@ -37,5 +37,5 @@ struct FFMPEG_SUPPORT_API AVUtilFunctions
    int                (*av_samples_get_buffer_size) (int *linesize, int nb_channels, int nb_samples, AVSampleFormatFwd sample_fmt, int align) = nullptr;
    int64_t            (*av_get_default_channel_layout) (int nb_channels) = nullptr;
    int                (*av_strerror) (int errnum, char *errbuf, size_t errbuf_size) = nullptr;
-   int                (*av_get_channel_layout_nb_channels)(uint64_t channel_layout) = nullptr;
+   void               (*av_channel_layout_default)(AVChannelLayout *layout, int nb_channels) = nullptr;
 };

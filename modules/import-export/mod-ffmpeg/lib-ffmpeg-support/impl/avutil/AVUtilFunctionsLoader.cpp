@@ -34,9 +34,10 @@ bool LoadAVUtilFunctions(
    RESOLVE(av_frame_alloc);
    RESOLVE(av_frame_free);
    RESOLVE(av_samples_get_buffer_size);
-   RESOLVE(av_get_default_channel_layout);
    RESOLVE(av_strerror);
-   RESOLVE(av_get_channel_layout_nb_channels);
+
+   GET_SYMBOL(av_get_default_channel_layout);
+   GET_SYMBOL(av_channel_layout_default);
 
    return GetAVVersion(lib, "avutil_version", functions.AVUtilVersion);
 }

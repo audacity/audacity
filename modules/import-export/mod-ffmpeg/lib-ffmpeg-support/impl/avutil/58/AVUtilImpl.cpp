@@ -18,6 +18,7 @@ extern "C"
 
 #include "FFmpegFunctions.h"
 
+#include "wrappers/AVChannelLayoutWrapper.h"
 #include "wrappers/AVFrameWrapper.h"
 
 #include "../../FFmpegAPIResolver.h"
@@ -25,13 +26,17 @@ extern "C"
 
 namespace avutil_58
 {
+#include "../AVChannelLayoutWrapperImpl.inl"
 #include "../AVFrameWrapperImpl.inl"
 #include "../FFmpegLogImpl.inl"
 
 const bool registered = ([]() {
    FFmpegAPIResolver::Get().AddAVUtilFactories(58, {
       &CreateAVFrameWrapper,
-      &CreateLogCallbackSetter
+      &CreateLogCallbackSetter,
+      &CreateDefaultChannelLayout,
+      &CreateLegacyChannelLayout,
+      &CreateAVChannelLayout
    });
 
    return true;

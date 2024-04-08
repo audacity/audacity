@@ -1151,8 +1151,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
 
    mEncAudioCodecCtx->SetGlobalQuality(mEncAudioCodecCtx->GetGlobalQuality() * AUDACITY_FF_QP2LAMBDA);
    mEncAudioCodecCtx->SetSampleRate(mSampleRate);
-   mEncAudioCodecCtx->SetChannels(mChannels);
-   mEncAudioCodecCtx->SetChannelLayout(mFFmpeg->av_get_default_channel_layout(mChannels));
+   mEncAudioCodecCtx->SetChannelLayout(mFFmpeg->CreateDefaultChannelLayout(mChannels).get());
    mEncAudioCodecCtx->SetTimeBase({ 1, mSampleRate });
    mEncAudioCodecCtx->SetSampleFmt(static_cast<AVSampleFormatFwd>(AUDACITY_AV_SAMPLE_FMT_S16));
    mEncAudioCodecCtx->SetStrictStdCompliance(

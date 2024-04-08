@@ -91,14 +91,6 @@ public:
       return {};
    }
 
-   const uint64_t* GetChannelLayouts() const noexcept override
-   {
-      if (mAVCodec != nullptr)
-         return mAVCodec->channel_layouts;
-
-      return {};
-   }
-
    uint8_t GetMaxLowres() const noexcept override
    {
       if (mAVCodec != nullptr)

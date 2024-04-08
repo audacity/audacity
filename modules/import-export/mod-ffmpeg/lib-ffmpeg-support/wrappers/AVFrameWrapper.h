@@ -11,8 +11,11 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 
 #include "FFmpegTypes.h"
+
+class AVChannelLayoutWrapper;
 
 struct FFmpegFunctions;
 class AVDictionaryWrapper;
@@ -57,8 +60,7 @@ public:
    virtual int64_t GetPresentationTimestamp() const noexcept = 0;
    virtual int64_t GetPacketPresentationTimestamp() const noexcept = 0;
    virtual int64_t GetPacketDecompressionTimestamp() const noexcept = 0;
-   virtual int GetCodedPictureNumber() const noexcept = 0;
-   virtual int GetDisplayPictureNumber() const noexcept = 0;
+
    virtual int GetQuality() const noexcept = 0;
 
    virtual void* GetOpaque() const noexcept = 0;
@@ -68,17 +70,14 @@ public:
    virtual int GetInterlacedFrame() const noexcept = 0;
    virtual int GetTopFieldFirst() const noexcept = 0;
    virtual int GetPaletteHasChanged() const noexcept = 0;
-   virtual int64_t GetReorderedOpaque() const noexcept = 0;
    virtual int GetSampleRate() const noexcept = 0;
 
-   virtual uint64_t GetChannelLayout() const noexcept = 0;
-   virtual void SetChannelLayout(uint64_t layout) noexcept = 0;
+   virtual const AVChannelLayoutWrapper* GetChannelLayout() const noexcept = 0;
+   virtual void  SetChannelLayout(const AVChannelLayoutWrapper* layout) noexcept = 0;
 
    virtual int GetSideDataCount() const noexcept = 0;
    virtual int GetFlags() const noexcept = 0;
    virtual int64_t GetBestEffortTimestamp() const noexcept = 0;
-   virtual int64_t GetPacketPos() const noexcept = 0;
-   virtual int64_t GetPacketDuration() const noexcept = 0;
    virtual AVDictionaryWrapper GetMetadata() const noexcept = 0;
    virtual int GetDecodeErrorFlags() const noexcept = 0;
    virtual int GetChannels() const noexcept = 0;
@@ -86,4 +85,6 @@ public:
 protected:
    const FFmpegFunctions& mFFmpeg;
    AVFrame* mAVFrame { nullptr };
+
+   std::unique_ptr<AVChannelLayoutWrapper> mChannelLayoutWrapper;
 };
