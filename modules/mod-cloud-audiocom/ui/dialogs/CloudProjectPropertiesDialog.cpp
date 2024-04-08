@@ -42,6 +42,7 @@ CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    mProjectName = new wxTextCtrl { this,          wxID_ANY,
                                    projectName,   wxDefaultPosition,
                                    wxDefaultSize, wxTE_PROCESS_ENTER };
+   mProjectName->SetName(XO("Project Name").Translation());
 
    mAnonStateText = safenew wxStaticText {
       this, wxID_ANY,
