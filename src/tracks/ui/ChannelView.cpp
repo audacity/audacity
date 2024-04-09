@@ -17,7 +17,6 @@ Paul Licameli split from TrackPanel.cpp
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
 
-#include <sstream>
 
 ChannelView::ChannelView(const std::shared_ptr<Channel> &pChannel)
    : CommonChannelCell{ pChannel }
@@ -121,10 +120,11 @@ void ChannelView::AdjustPositions()
 
 namespace {
 // Append a channel number to a base attribute name unless it is 0
-std::string AttributeName(std::string name, size_t index) {
-   std::stringstream stream{ name };
-   stream << index;
-   return stream.str();
+std::string AttributeName(const std::string& name, size_t index) {
+   if (index == 0)
+      return name;
+
+   return name + std::to_string(index);
 }
 std::string HeightAttributeName(size_t index) {
    return AttributeName("height", index);
