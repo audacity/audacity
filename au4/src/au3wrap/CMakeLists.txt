@@ -350,6 +350,8 @@ if (AU3_ADD_AS_SRC)
 
     ${AU3_LIBRARIES}/lib-audio-devices/AudioIOBase.cpp
     ${AU3_LIBRARIES}/lib-audio-devices/AudioIOBase.h
+    ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.cpp
+    ${AU3_LIBRARIES}/lib-audio-devices/DeviceManager.h
 
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.cpp
     ${AU3_LIBRARIES}/lib-audio-graph/AudioGraphChannel.h
