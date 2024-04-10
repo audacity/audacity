@@ -693,6 +693,29 @@ void ProjectsListDialog::SetupHandlers()
          }
       });
 
+   mProjectsTable->Bind(
+      wxEVT_GRID_TABBING,
+      [this](auto& evt)
+      {
+         // needed for correct tabbing - see issue #6190
+         NavigateIn(evt.ShiftDown() ? wxNavigationKeyEvent::IsBackward :
+            wxNavigationKeyEvent::IsForward);
+      });
+
+   mProjectsTable->Bind(
+      wxEVT_SET_FOCUS,
+      [this](auto& evt)
+      {
+         // needed so that for screen readers a row rather than the whole
+         // table is the initial focus - see issue #6190
+#if wxUSE_ACCESSIBILITY
+         int row = mProjectsTable->GetGridCursorRow();
+         if (row != -1)
+            mAccessible->SetSelectedRow(row);
+#endif
+         evt.Skip();
+      });
+
    mSearchCtrl->Bind(wxEVT_TEXT, [this](auto&) { OnSearchTextChanged(); });
 
    mSearchCtrl->Bind(
