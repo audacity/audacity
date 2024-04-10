@@ -29,13 +29,13 @@
 namespace mu::context {
 class GlobalContext;
 class UiContextResolver;
-class ContextModule : public mu::modularity::IModuleSetup
+class ContextModule : public muse::modularity::IModuleSetup
 {
 public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void onInit(const mu::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:

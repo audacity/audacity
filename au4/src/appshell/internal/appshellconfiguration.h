@@ -36,9 +36,9 @@
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
-class AppShellConfiguration : public IAppShellConfiguration, public mu::async::Asyncable
+class AppShellConfiguration : public IAppShellConfiguration, public muse::async::Asyncable
 {
-    INJECT(mu::IGlobalConfiguration, globalConfiguration)
+    INJECT(muse::IGlobalConfiguration, globalConfiguration)
     // INJECT(io::IFileSystem, fileSystem)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
     // INJECT(ui::IUiConfiguration, uiConfiguration)
@@ -56,10 +56,10 @@ public:
     StartupModeType startupModeType() const override;
     void setStartupModeType(StartupModeType type) override;
 
-    mu::io::path_t startupScorePath() const override;
-    void setStartupScorePath(const mu::io::path_t& scorePath) override;
+    muse::io::path_t startupScorePath() const override;
+    void setStartupScorePath(const muse::io::path_t& scorePath) override;
 
-    mu::io::path_t userDataPath() const override;
+    muse::io::path_t userDataPath() const override;
 
     std::string handbookUrl() const override;
     std::string askForHelpUrl() const override;
@@ -74,7 +74,7 @@ public:
 
     bool isNotationNavigatorVisible() const override;
     void setIsNotationNavigatorVisible(bool visible) const override;
-    mu::async::Notification isNotationNavigatorVisibleChanged() const override;
+    muse::async::Notification isNotationNavigatorVisibleChanged() const override;
 
     bool needShowSplashScreen() const override;
     void setNeedShowSplashScreen(bool show) override;
@@ -85,21 +85,21 @@ public:
 
     void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
 
-    mu::io::paths_t sessionProjectsPaths() const override;
-    mu::Ret setSessionProjectsPaths(const mu::io::paths_t& paths) override;
+    muse::io::paths_t sessionProjectsPaths() const override;
+    muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
 
 private:
     std::string utmParameters(const std::string& utmMedium) const;
 
     std::string currentLanguageCode() const;
 
-    mu::io::path_t sessionDataPath() const;
-    mu::io::path_t sessionFilePath() const;
+    muse::io::path_t sessionDataPath() const;
+    muse::io::path_t sessionFilePath() const;
 
-    mu::RetVal<mu::ByteArray> readSessionState() const;
-    mu::Ret writeSessionState(const QByteArray& data);
+    muse::RetVal<muse::ByteArray> readSessionState() const;
+    muse::Ret writeSessionState(const QByteArray& data);
 
-    mu::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
+    muse::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
 };
 }
 

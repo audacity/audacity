@@ -7,11 +7,11 @@
 
 #include "log.h"
 
-using namespace mu;
+using namespace muse;
 using namespace au::project;
 
-static const mu::Uri PROJECT_PAGE_URI("musescore://project");
-static const mu::Uri NEW_PROJECT_URI("musescore://project/new");
+static const muse::Uri PROJECT_PAGE_URI("musescore://project");
+static const muse::Uri NEW_PROJECT_URI("musescore://project/new");
 
 void ProjectActionsController::init()
 {
@@ -55,7 +55,7 @@ void ProjectActionsController::newProject()
         return;
     }
 
-    mu::Ret ret = interactive()->open(NEW_PROJECT_URI).ret;
+    muse::Ret ret = interactive()->open(NEW_PROJECT_URI).ret;
 
     if (ret) {
         ret = openPageIfNeed(PROJECT_PAGE_URI);
@@ -66,15 +66,15 @@ void ProjectActionsController::newProject()
     }
 }
 
-void ProjectActionsController::openProject(const mu::actions::ActionData& args)
+void ProjectActionsController::openProject(const muse::actions::ActionData& args)
 {
     UNUSED(args);
-    mu::io::path_t askedPath = selectOpeningFile();
+    muse::io::path_t askedPath = selectOpeningFile();
 
     openProject(askedPath);
 }
 
-mu::io::path_t ProjectActionsController::selectOpeningFile()
+muse::io::path_t ProjectActionsController::selectOpeningFile()
 {
     //! TODO AU4
     std::string allExt = "*.aup3 *.mxl *.musicxml *.xml *.mid *.midi *.kar *.md *.mgu *.sgu *.cap *.capx "
@@ -115,7 +115,7 @@ mu::io::path_t ProjectActionsController::selectOpeningFile()
     return filePath;
 }
 
-mu::Ret ProjectActionsController::openProject(const mu::io::path_t& givenPath, const String& displayNameOverride)
+muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, const String& displayNameOverride)
 {
     //! NOTE This method is synchronous,
     //! but inside `multiInstancesProvider` there can be an event loop
@@ -165,7 +165,7 @@ mu::Ret ProjectActionsController::openProject(const mu::io::path_t& givenPath, c
         multiInstancesProvider()->openNewAppInstance(args);
         return make_ret(Ret::Code::Ok);
 #else
-        return mu::make_ret(mu::Ret::Code::NotSupported);
+        return muse::make_ret(muse::Ret::Code::NotSupported);
 #endif
     }
 
@@ -254,7 +254,7 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     return RetVal<IAudacityProjectPtr>::make_ok(project);
 }
 
-bool ProjectActionsController::isProjectOpened(const mu::io::path_t& projectPath) const
+bool ProjectActionsController::isProjectOpened(const muse::io::path_t& projectPath) const
 {
     auto project = globalContext()->currentProject();
     if (!project) {
@@ -269,10 +269,10 @@ bool ProjectActionsController::isProjectOpened(const mu::io::path_t& projectPath
     return false;
 }
 
-mu::Ret ProjectActionsController::openPageIfNeed(mu::Uri pageUri)
+muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)
 {
     if (interactive()->isOpened(pageUri).val) {
-        return mu::make_ret(mu::Ret::Code::Ok);
+        return muse::make_ret(muse::Ret::Code::Ok);
     }
 
     return interactive()->open(pageUri).ret;

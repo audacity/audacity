@@ -37,12 +37,12 @@
 //#include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
-class SessionsManager : public ISessionsManager, public mu::async::Asyncable
+class SessionsManager : public ISessionsManager, public muse::async::Asyncable
 {
-    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(mu::context::IGlobalContext, globalContext)
     INJECT(IAppShellConfiguration, configuration)
-    INJECT(mu::mi::IMultiInstancesProvider, multiInstancesProvider)
+    INJECT(muse::mi::IMultiInstancesProvider, multiInstancesProvider)
 
 //! TODO AU4
 //     INJECT(project::IProjectConfiguration, projectConfiguration)
@@ -58,10 +58,10 @@ public:
 private:
     void update();
 
-    void removeProjectFromSession(const mu::io::path_t& projectPath);
-    void addProjectToSession(const mu::io::path_t& projectPath);
+    void removeProjectFromSession(const muse::io::path_t& projectPath);
+    void addProjectToSession(const muse::io::path_t& projectPath);
 
-    mu::io::path_t m_lastOpenedProjectPath;
+    muse::io::path_t m_lastOpenedProjectPath;
 };
 }
 

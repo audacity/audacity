@@ -14,9 +14,10 @@
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace mu::ui;
-using namespace mu::uicomponents;
-using namespace mu::actions;
+using namespace muse;
+using namespace muse::ui;
+using namespace muse::uicomponents;
+using namespace muse::actions;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
@@ -214,7 +215,7 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeItem(const UiAc
 PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeSeparatorItem()
 {
     PlaybackToolBarCustomiseItem* item = new PlaybackToolBarCustomiseItem(PlaybackToolBarCustomiseItem::ItemType::SEPARATOR, this);
-    item->setTitle(QString("-------  %1  -------").arg(mu::qtrc("projectscene", "Separator line")));
+    item->setTitle(QString("-------  %1  -------").arg(muse::qtrc("projectscene", "Separator line")));
     item->setChecked(true); //! NOTE Can't be unchecked
     return item;
 }

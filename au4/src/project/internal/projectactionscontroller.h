@@ -12,30 +12,30 @@
 #include "../iaudacityproject.h"
 
 namespace au::project {
-class ProjectActionsController : public mu::actions::Actionable
+class ProjectActionsController : public muse::actions::Actionable
 {
-    mu::Inject<mu::actions::IActionsDispatcher> dispatcher;
-    mu::Inject<mu::context::IGlobalContext> globalContext;
-    mu::Inject<mu::IInteractive> interactive;
-    mu::Inject<IProjectConfiguration> configuration;
-    mu::Inject<mu::io::IFileSystem> fileSystem;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<mu::context::IGlobalContext> globalContext;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<IProjectConfiguration> configuration;
+    muse::Inject<muse::io::IFileSystem> fileSystem;
 
 public:
     ProjectActionsController() = default;
 
     void init();
 
-    bool isProjectOpened(const mu::io::path_t& projectPath) const;
+    bool isProjectOpened(const muse::io::path_t& projectPath) const;
 
 private:
     void newProject();
-    void openProject(const mu::actions::ActionData& args);
-    mu::Ret openProject(const mu::io::path_t& givenPath, const mu::String& displayNameOverride = mu::String());
-    mu::Ret doOpenProject(const mu::io::path_t& filePath);
-    mu::RetVal<IAudacityProjectPtr> loadProject(const mu::io::path_t& filePath);
-    mu::io::path_t selectOpeningFile();
+    void openProject(const muse::actions::ActionData& args);
+    muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
+    muse::Ret doOpenProject(const muse::io::path_t& filePath);
+    muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
+    muse::io::path_t selectOpeningFile();
 
-    mu::Ret openPageIfNeed(mu::Uri pageUri);
+    muse::Ret openPageIfNeed(muse::Uri pageUri);
 
     bool m_isProjectProcessing = false;
 };

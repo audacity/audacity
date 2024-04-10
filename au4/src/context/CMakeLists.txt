@@ -19,7 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This module stores global state
-set(MODULE context)
+declare_module(context)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/contextmodule.cpp
@@ -34,5 +34,5 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/uicontextresolver.h
     )
 
-include(SetupModule)
+setup_module()
 

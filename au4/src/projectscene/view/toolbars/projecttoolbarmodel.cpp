@@ -4,7 +4,7 @@
 #include "projecttoolbarmodel.h"
 
 using namespace au::projectscene;
-using namespace mu::uicomponents;
+using namespace muse::uicomponents;
 
 void ProjectToolBarModel::load()
 {
@@ -22,11 +22,11 @@ void ProjectToolBarModel::load()
     AbstractMenuModel::load();
 }
 
-MenuItem* ProjectToolBarModel::makeItem(const mu::actions::ActionCode& actionCode)
+MenuItem* ProjectToolBarModel::makeItem(const muse::actions::ActionCode& actionCode)
 {
     MenuItem* item = new MenuItem(actionsRegister()->action(actionCode), this);
 
-    mu::ui::UiActionState state;
+    muse::ui::UiActionState state;
     state.enabled = context()->currentProject() != nullptr;
     item->setState(state);
 

@@ -44,7 +44,7 @@
 #include "view/clipsview/clipitem.h"
 
 using namespace au::projectscene;
-using namespace mu::modularity;
+using namespace muse::modularity;
 
 static void projectscene_init_qrc()
 {
@@ -66,7 +66,7 @@ void ProjectSceneModule::registerExports()
 
 void ProjectSceneModule::resolveImports()
 {
-    auto ar = ioc()->resolve<mu::ui::IUiActionsRegister>(moduleName());
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
         ar->reg(m_projectSceneUiActions);
     }
@@ -97,7 +97,7 @@ void ProjectSceneModule::registerResources()
     projectscene_init_qrc();
 }
 
-void ProjectSceneModule::onInit(const mu::IApplication::RunMode&)
+void ProjectSceneModule::onInit(const muse::IApplication::RunMode&)
 {
     m_actionController->init();
 }

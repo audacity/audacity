@@ -7,10 +7,10 @@
 #include "../iplaybackcontroller.h"
 
 namespace au::projectscene {
-class ProjectSceneActionController : public mu::actions::Actionable
+class ProjectSceneActionController : public muse::actions::Actionable
 {
-    mu::Inject<mu::actions::IActionsDispatcher> dispatcher;
-    mu::Inject<IPlaybackController> playbackController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<IPlaybackController> playbackController;
 
 public:
     ProjectSceneActionController() = default;

@@ -10,8 +10,8 @@
 
 namespace au::processing {
 struct Track {
-    mu::ID id;
-    mu::String title;
+    muse::ID id;
+    muse::String title;
 };
 
 using TrackList = std::vector<Track>;

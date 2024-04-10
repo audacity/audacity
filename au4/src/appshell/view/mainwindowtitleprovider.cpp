@@ -96,14 +96,14 @@ void MainWindowTitleProvider::update()
     IAudacityProjectPtr project = context()->currentProject();
 
     if (!project) {
-        setTitle(mu::qtrc("appshell", "Audacity 4"));
+        setTitle(muse::qtrc("appshell", "Audacity 4"));
         setFilePath("");
         setFileModified(false);
         return;
     }
 
     setTitle(project->title());
-    
+
     setFilePath(project->path().toQString());
     setFileModified(project->needSave().val);
 }

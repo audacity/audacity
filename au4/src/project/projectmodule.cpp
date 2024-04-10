@@ -33,7 +33,7 @@
 
 using namespace au::project;
 using namespace au::project;
-using namespace mu::modularity;
+using namespace muse::modularity;
 
 std::string ProjectModule::moduleName() const
 {
@@ -49,13 +49,13 @@ void ProjectModule::registerExports()
 
 void ProjectModule::resolveImports()
 {
-    auto ar = ioc()->resolve<mu::ui::IUiActionsRegister>(moduleName());
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
         ar->reg(std::make_shared<ProjectUiActions>(m_actionsController));
     }
 }
 
-void ProjectModule::onInit(const mu::IApplication::RunMode&)
+void ProjectModule::onInit(const muse::IApplication::RunMode&)
 {
     m_actionsController->init();
 }

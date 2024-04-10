@@ -19,7 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This module stores global state
-set(MODULE projectscene)
+declare_module(projectscene)
 
 set(MODULE_QRC projectscene.qrc)
 
@@ -64,6 +64,6 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_LINK processing)
 
-include(SetupModule)
+setup_module()
 
 

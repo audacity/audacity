@@ -25,6 +25,7 @@
 #include "settings.h"
 
 using namespace mu;
+using namespace muse;
 
 SettingListModel::SettingListModel(QObject* parent)
     : QAbstractListModel(parent)

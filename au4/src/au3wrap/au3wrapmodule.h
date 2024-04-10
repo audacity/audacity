@@ -26,13 +26,13 @@
 
 namespace au::au3 {
 class WxLogWrap;
-class Au3WrapModule : public mu::modularity::IModuleSetup
+class Au3WrapModule : public muse::modularity::IModuleSetup
 {
 public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void onInit(const mu::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:

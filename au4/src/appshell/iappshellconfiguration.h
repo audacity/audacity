@@ -43,10 +43,10 @@ public:
     virtual StartupModeType startupModeType() const = 0;
     virtual void setStartupModeType(StartupModeType type) = 0;
 
-    virtual mu::io::path_t startupScorePath() const = 0;
-    virtual void setStartupScorePath(const mu::io::path_t& scorePath) = 0;
+    virtual muse::io::path_t startupScorePath() const = 0;
+    virtual void setStartupScorePath(const muse::io::path_t& scorePath) = 0;
 
-    virtual mu::io::path_t userDataPath() const = 0;
+    virtual muse::io::path_t userDataPath() const = 0;
 
     virtual std::string handbookUrl() const = 0;
     virtual std::string askForHelpUrl() const = 0;
@@ -61,7 +61,7 @@ public:
 
     virtual bool isNotationNavigatorVisible() const = 0;
     virtual void setIsNotationNavigatorVisible(bool visible) const = 0;
-    virtual mu::async::Notification isNotationNavigatorVisibleChanged() const = 0;
+    virtual muse::async::Notification isNotationNavigatorVisibleChanged() const = 0;
 
     virtual bool needShowSplashScreen() const = 0;
     virtual void setNeedShowSplashScreen(bool show) = 0;
@@ -72,8 +72,8 @@ public:
 
     virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const = 0;
 
-    virtual mu::io::paths_t sessionProjectsPaths() const = 0;
-    virtual mu::Ret setSessionProjectsPaths(const mu::io::paths_t& paths) = 0;
+    virtual muse::io::paths_t sessionProjectsPaths() const = 0;
+    virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
 };
 }
 

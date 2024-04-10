@@ -1,22 +1,21 @@
-# SPDX-License-Identifier: GPL-3.0-only
-# MuseScore-CLA-applies
+#=============================================================================
+#  MuseScore
+#  Linux Music Score Editor
 #
-# MuseScore
-# Music Composition & Notation
+#  Copyright (C) 2023 MuseScore BVBA and others
 #
-# Copyright (C) 2024 MuseScore BVBA and others
+#  This program is free software; you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License version 2.
 #
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 3 as
-# published by the Free Software Foundation.
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
 #
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#  You should have received a copy of the GNU General Public License
+#  along with this program; if not, write to the Free Software
+#  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+#=============================================================================
 
 include(GetBuildType)
 include(GetPlatformInfo)
@@ -31,8 +30,8 @@ if (NOT MUSESCORE_BUILD_MODE)
 endif()
 
 # Set revision for local builds
-# TODO AU4
-#include(TryUseLocalRevision)
+# Before need run 'make revision' or 'msvc_build.bat revision'
+include(TryUseLocalRevision)
 
 message(STATUS "MUSESCORE_BUILD_CONFIGURATION: ${MUSESCORE_BUILD_CONFIGURATION}")
 message(STATUS "MUSESCORE_BUILD_MODE: ${MUSESCORE_BUILD_MODE}")
@@ -84,59 +83,106 @@ endif()
 ###########################################
 # CONFIGURE: Desktop App
 ###########################################
-set(MU_GENERAL_APP OFF)
+set(MUE_GENERAL_APP OFF)
 if(BUILD_CONFIGURE MATCHES "APP")
-    set(MU_GENERAL_APP ON)
+    set(MUE_GENERAL_APP ON)
 endif()
 
 if(BUILD_CONFIGURE MATCHES "APP-PORTABLE")
-    set(MU_GENERAL_APP ON)
+    set(MUE_GENERAL_APP ON)
     set(WIN_PORTABLE ON)
 endif()
 
-if (MU_GENERAL_APP)
+if (MUE_GENERAL_APP)
     if (BUILD_IS_DEBUG)
-        set(MUE_ENABLE_LOGGER_DEBUGLEVEL ON)
+        set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
     else()
-        set(MUE_ENABLE_LOGGER_DEBUGLEVEL OFF)
+        set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL OFF)
     endif()
 endif()
 
 if (WIN_PORTABLE)
-    set(MU_BUILD_UPDATE_MODULE OFF)
+    set(MUSE_MODULE_UPDATE OFF)
 endif()
 if (OS_IS_FBSD)
     message(WARNING "Not building unsupported chrashpad client on FreeBSD")
-    set(MU_BUILD_CRASHPAD_CLIENT OFF)
+    set(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT OFF)
+endif()
+
+###########################################
+# CONFIGURE: VTest
+###########################################
+if(BUILD_CONFIGURE MATCHES "VTEST")
+    set(MUSE_BUILD_UNIT_TESTS OFF)
+    set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
+    set(MUE_BUILD_ASAN ON)
+
+    set(MUE_BUILD_IMAGESEXPORT_MODULE ON)
+    set(MUE_BUILD_CONVERTER_MODULE ON)
+    set(MUE_BUILD_PROJECT_MODULE ON)
+    set(MUE_BUILD_NOTATION_MODULE ON)
+    set(MUSE_MODULE_UI ON)
+
+    set(MUSE_MODULE_ACCESSIBILITY OFF)
+    set(MUSE_MODULE_AUDIO OFF)
+    set(MUE_BUILD_BRAILLE_MODULE OFF)
+    set(MUSE_MODULE_MIDI OFF)
+    set(MUSE_MODULE_MPE OFF)
+    set(MUSE_MODULE_MUSESAMPLER OFF)
+    set(MUSE_MODULE_NETWORK OFF)
+    set(MUSE_MODULE_SHORTCUTS OFF)
+    set(MUSE_MODULE_VST OFF)
+    set(MUE_BUILD_APPSHELL_MODULE OFF)
+    set(MUSE_MODULE_AUTOBOT OFF)
+    set(MUSE_MODULE_CLOUD OFF)
+    set(MUE_BUILD_INSPECTOR_MODULE OFF)
+    set(MUE_BUILD_INSTRUMENTSSCENE_MODULE OFF)
+    set(MUSE_MODULE_LANGUAGES OFF)
+    set(MUSE_MODULE_LEARN OFF)
+    set(MUSE_MODULE_MULTIINSTANCES OFF)
+    set(MUE_BUILD_PALETTE_MODULE OFF)
+    set(MUE_BUILD_PLAYBACK_MODULE OFF)
+    set(MUSE_MODULE_EXTENSIONS OFF)
+    set(MUSE_MODULE_UPDATE OFF)
+    set(MUSE_MODULE_WORKSPACE OFF)
+
+    set(MUE_BUILD_IMPORTEXPORT_MODULE OFF)
+    set(MUE_BUILD_VIDEOEXPORT_MODULE OFF)
+
+    set(MUE_INSTALL_SOUNDFONT OFF)
+
+    set(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT OFF)
+
 endif()
 
 ###########################################
 # CONFIGURE: UTest
 ###########################################
 if(BUILD_CONFIGURE MATCHES "UTEST")
-    set(MU_BUILD_UNIT_TESTS ON)
-    set(MU_ENABLE_LOGGER_DEBUGLEVEL ON)
-    set(MU_BUILD_ASAN ON)
+    set(MUSE_BUILD_UNIT_TESTS ON)
+    set(MUSE_MODULE_GLOBAL_LOGGER_DEBUGLEVEL ON)
+    set(MUSE_MODULE_AUDIO ON)
+    set(MUE_BUILD_ASAN ON)
 
     message(STATUS "If you added tests to a module that didn't have them yet, make sure that this module is enabled, see SetupConfigure.cmake")
-    set(MUE_BUILD_MIDI_MODULE OFF)
-    set(MUE_BUILD_MUSESAMPLER_MODULE OFF)
-    set(MUE_BUILD_NETWORK_MODULE OFF)
-    set(MUE_BUILD_SHORTCUTS_MODULE OFF)
+    set(MUSE_MODULE_MIDI OFF)
+    set(MUSE_MODULE_MUSESAMPLER OFF)
+    set(MUSE_MODULE_NETWORK OFF)
+    set(MUSE_MODULE_SHORTCUTS OFF)
 
     set(MUE_BUILD_APPSHELL_MODULE OFF)
-    set(MUE_BUILD_AUTOBOT_MODULE OFF)
-    set(MUE_BUILD_CLOUD_MODULE OFF)
+    set(MUSE_MODULE_AUTOBOT OFF)
+    set(MUSE_MODULE_CLOUD OFF)
     set(MUE_BUILD_CONVERTER_MODULE OFF)
     set(MUE_BUILD_INSPECTOR_MODULE OFF)
     set(MUE_BUILD_INSTRUMENTSSCENE_MODULE OFF)
-    set(MUE_BUILD_LANGUAGES_MODULE OFF)
-    set(MUE_BUILD_LEARN_MODULE OFF)
-    set(MUE_BUILD_MULTIINSTANCES_MODULE OFF)
+    set(MUSE_MODULE_LANGUAGES OFF)
+    set(MUSE_MODULE_LEARN OFF)
+    set(MUSE_MODULE_MULTIINSTANCES OFF)
     set(MUE_BUILD_PALETTE_MODULE OFF)
     set(MUE_BUILD_PLAYBACK_MODULE OFF)
-    set(MU_BUILD_UPDATE_MODULE OFF)
-    set(MUE_BUILD_WORKSPACE_MODULE OFF)
+    set(MUSE_MODULE_UPDATE OFF)
+    set(MUSE_MODULE_WORKSPACE OFF)
 endif()
 
 ###########################################
@@ -145,21 +191,16 @@ endif()
 
 set(QT_SUPPORT ON)
 
-if (NOT MUE_BUILD_AUDIO_MODULE)
-    set(MUE_BUILD_MUSESAMPLER_MODULE OFF)
-    set(MUE_BUILD_VST_MODULE OFF)
-endif()
-
-if (MUE_ENABLE_AUDIO_JACK)
-    add_definitions(-DJACK_AUDIO)
+if (MUSE_MODULE_AUDIO_JACK)
+    if (OS_IS_LIN OR MINGW)
+        add_definitions(-DJACK_AUDIO)
+    else()
+        set(MUSE_MODULE_AUDIO_JACK OFF)
+    endif()
 endif()
 
 if (NOT MUE_BUILD_IMPORTEXPORT_MODULE)
     set(MUE_BUILD_VIDEOEXPORT_MODULE OFF)
-endif()
-
-if (NOT MUE_BUILD_DIAGNOSTICS_MODULE)
-    set(MU_BUILD_CRASHPAD_CLIENT OFF)
 endif()
 
 if (MUE_BUILD_ASAN)
@@ -171,87 +212,59 @@ if (NOT MUE_BUILD_NOTATION_MODULE)
     set(MUE_BUILD_PALETTE_MODULE OFF) # hard dependency
 endif()
 
-if (NOT MUE_BUILD_UI_MODULE)
+if (NOT MUSE_MODULE_UI)
     set(MUE_BUILD_APPSHELL_MODULE OFF) # hard dependency
 endif()
 
 ###########################################
 # Unit tests
 ###########################################
-if (NOT MU_BUILD_UNIT_TESTS)
+if (NOT MUSE_BUILD_UNIT_TESTS)
 
-    set(MU_BUILD_ACCESSIBILITY_TESTS OFF)
-    set(MU_BUILD_AUDIO_TESTS OFF)
-    set(MU_BUILD_DRAW_TESTS OFF)
-    set(MU_BUILD_GLOBAL_TESTS OFF)
-    set(MU_BUILD_NETWORK_TESTS OFF)
-    set(MU_BUILD_UI_TESTS OFF)
-
-    set(MU_BUILD_DIAGNOSTICS_TESTS OFF)
-    set(MU_BUILD_EXTENSIONS_TESTS OFF)
-    set(MU_BUILD_PROJECT_TESTS OFF)
-    set(MU_BUILD_UPDATE_TESTS OFF)
+    set(MUE_BUILD_BRAILLE_TESTS OFF)
+    set(MUE_BUILD_ENGRAVING_TESTS OFF)
+    set(MUE_BUILD_IMPORTEXPORT_TESTS OFF)
+    set(MUE_BUILD_NOTATION_TESTS OFF)
+    set(MUE_BUILD_PLAYBACK_TESTS OFF)
+    set(MUE_BUILD_PROJECT_TESTS OFF)
 
 endif()
+
+###########################################
+# Configure framework
+###########################################
+set(MUSE_APP_NAME ${MUSESCORE_NAME})
+set(MUSE_APP_UNSTABLE ${MUSESCORE_UNSTABLE})
+set(MUSE_APP_REVISION ${MUSESCORE_REVISION})
+set(MUSE_APP_BUILD_NUMBER ${CMAKE_BUILD_NUMBER})
+set(MUSE_APP_VERSION ${MUSESCORE_VERSION})
+set(MUSE_APP_VERSION_LABEL "\"${MUSESCORE_VERSION_LABEL}\"")
+set(MUSE_APP_INSTALL_SUFFIX "\"${MUSESCORE_INSTALL_SUFFIX}\"")
+set(MUSE_APP_INSTALL_PREFIX "\"${CMAKE_INSTALL_PREFIX}\"")
+set(MUSE_APP_INSTALL_NAME "\"${Mscore_INSTALL_NAME}\"")
+
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/SetupMuseConfigure.cmake)
 
 ###########################################
 # Global definitions
 ###########################################
 
-add_definitions(-DMU_APP_NAME="${MUSESCORE_NAME}")
-add_definitions(-DMU_APP_REVISION="${MUSESCORE_REVISION}")
-add_definitions(-DMU_APP_BUILD_NUMBER="${CMAKE_BUILD_NUMBER}")
-add_definitions(-DMU_APP_VERSION="${MUSESCORE_VERSION}")
-add_definitions(-DMU_APP_VERSION_LABEL="${MUSESCORE_VERSION_LABEL}")
-add_definitions(-DMU_APP_INSTALL_SUFFIX="${MUSESCORE_INSTALL_SUFFIX}")
-add_definitions(-DMU_APP_INSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
-add_definitions(-DMU_APP_INSTALL_NAME="${Mscore_INSTALL_NAME}")
-
-if (MUSESCORE_UNSTABLE)
-    add_definitions(-DMUSESCORE_UNSTABLE)
-endif()
 
 # modules config
-add_definitions(-DMU_LANGUAGES_SERVER_URL="http://extensions.musescore.org/4.2/languages/")
 
 if (MUSESCORE_ALLOW_UPDATE_ON_PRERELEASE)
     add_definitions(-DMUSESCORE_ALLOW_UPDATE_ON_PRERELEASE)
 endif()
 
-function(def_opt name val)
-    if (${val})
-        add_definitions(-D${name})
-    endif()
-endfunction()
-
-# framework
-def_opt(MU_BUILD_ACCESSIBILITY_MODULE ${MU_BUILD_ACCESSIBILITY_MODULE})
-def_opt(MU_BUILD_ACTIONS_MODULE ${MU_BUILD_ACTIONS_MODULE})
-def_opt(MU_BUILD_EXTENSIONS_MODULE ${MU_BUILD_EXTENSIONS_MODULE})
-def_opt(MU_BUILD_LANGUAGES_MODULE ${MU_BUILD_LANGUAGES_MODULE})
-def_opt(MU_BUILD_MIDI_MODULE ${MU_BUILD_MIDI_MODULE})
-def_opt(MU_BUILD_MULTIINSTANCES_MODULE ${MU_BUILD_MULTIINSTANCES_MODULE})
-def_opt(MU_BUILD_NETWORK_MODULE ${MU_BUILD_NETWORK_MODULE})
-def_opt(MU_BUILD_SHORTCUTS_MODULE ${MU_BUILD_SHORTCUTS_MODULE})
-def_opt(MU_BUILD_UI_MODULE ${MU_BUILD_UI_MODULE})
-def_opt(MU_BUILD_WORKSPACE_MODULE ${MU_BUILD_WORKSPACE_MODULE})
-
-
-#def_opt(MU_BUILD_VST_MODULE ${MU_BUILD_VST_MODULE})
-# modules
-def_opt(MU_BUILD_APPSHELL_MODULE ${MU_BUILD_APPSHELL_MODULE})
-#def_opt(MU_BUILD_CLOUD_MODULE ${MU_BUILD_CLOUD_MODULE})
-#def_opt(MU_BUILD_CONVERTER_MODULE ${MU_BUILD_CONVERTER_MODULE})
-#def_opt(MU_BUILD_DIAGNOSTICS_MODULE ${MU_BUILD_DIAGNOSTICS_MODULE})
-#def_opt(MU_BUILD_LEARN_MODULE ${MU_BUILD_LEARN_MODULE})
-def_opt(MU_BUILD_PROJECTSCENE_MODULE ${MU_BUILD_PROJECTSCENE_MODULE})
-def_opt(MU_BUILD_UPDATE_MODULE ${MU_BUILD_UPDATE_MODULE})
-#def_opt(MU_BUILD_IMPORTEXPORT_MODULE ${MU_BUILD_IMPORTEXPORT_MODULE})
-#def_opt(MU_BUILD_CRASHPAD_CLIENT ${MU_BUILD_CRASHPAD_CLIENT})
-
 if (QT_SUPPORT)
     add_definitions(-DQT_SUPPORT)
     add_definitions(-DKORS_LOGGER_QT_SUPPORT)
+    add_definitions(-DSCRIPT_INTERFACE)
+
+    if (MUE_COMPILE_QT5_COMPAT)
+        add_definitions(-DMU_QT5_COMPAT)
+    endif()
+
 else()
     add_definitions(-DNO_QT_SUPPORT)
 endif()
@@ -261,3 +274,7 @@ if (WIN_PORTABLE)
 endif()
 
 add_definitions(-DKORS_PROFILER_ENABLED)
+
+if (MUE_ENABLE_LOAD_QML_FROM_SOURCE)
+    add_definitions(-DMUE_ENABLE_LOAD_QML_FROM_SOURCE)
+endif()

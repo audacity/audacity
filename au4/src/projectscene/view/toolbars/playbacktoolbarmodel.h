@@ -14,13 +14,13 @@
 #include "uicomponents/view/abstractmenumodel.h"
 
 namespace au::projectscene {
-class PlaybackToolBarModel : public mu::uicomponents::AbstractMenuModel
+class PlaybackToolBarModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
-    mu::Inject<mu::context::IGlobalContext> context;
-    mu::Inject<mu::ui::IUiActionsRegister> actionsRegister;
-    mu::Inject<mu::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<mu::context::IGlobalContext> context;
+    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
@@ -41,10 +41,10 @@ private:
 
     void updateState();
 
-    bool isMenuSecondary(const mu::actions::ActionCode& actionCode) const;
+    bool isMenuSecondary(const muse::actions::ActionCode& actionCode) const;
 
-    mu::uicomponents::MenuItem* makeActionItem(const mu::ui::UiAction& action, const QString& section,
-                                               const mu::uicomponents::MenuItemList& subitems = {});
+    muse::uicomponents::MenuItem* makeActionItem(const muse::ui::UiAction& action, const QString& section,
+                                                 const muse::uicomponents::MenuItemList& subitems = {});
 };
 }
 

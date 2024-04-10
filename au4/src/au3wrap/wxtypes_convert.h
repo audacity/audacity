@@ -11,9 +11,9 @@ inline std::string wxToStdSting(const wxString& s)
     return s.ToStdString(wxConvUTF8);
 }
 
-inline mu::String wxToSting(const wxString& s)
+inline muse::String wxToSting(const wxString& s)
 {
-    return mu::String::fromStdString(wxToStdSting(s));
+    return muse::String::fromStdString(wxToStdSting(s));
 }
 }
 

@@ -4,7 +4,7 @@
 
 #include "log.h"
 
-using namespace mu;
+using namespace muse;
 using namespace au::project;
 using namespace au::processing;
 
@@ -13,7 +13,7 @@ Audacity4Project::Audacity4Project()
     m_processingProject = std::make_shared<ProcessingProject>();
 }
 
-mu::Ret Audacity4Project::load(const mu::io::path_t& path, bool forceMode, const std::string& format_)
+muse::Ret Audacity4Project::load(const muse::io::path_t& path, bool forceMode, const std::string& format_)
 {
     TRACEFUNC;
 
@@ -46,7 +46,7 @@ mu::Ret Audacity4Project::load(const mu::io::path_t& path, bool forceMode, const
     return ret;
 }
 
-mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
+muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const std::string& format)
 {
     TRACEFUNC;
 
@@ -57,7 +57,7 @@ mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const s
     bool isLoaded = m_au3Project->load(path);
     if (!isLoaded) {
         LOGE() << "Failed load:" << path;
-        return mu::make_ret(mu::Ret::Code::UnknownError);
+        return muse::make_ret(muse::Ret::Code::UnknownError);
     }
 
     LOGI() << "success loaded au3 project: " << m_au3Project->title();
@@ -67,7 +67,7 @@ mu::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const s
 
     m_processingProject->dump();
 
-    return mu::make_ret(Ret::Code::Ok);
+    return muse::make_ret(Ret::Code::Ok);
 }
 
 void Audacity4Project::close()

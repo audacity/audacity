@@ -27,14 +27,15 @@
 
 using namespace mu;
 using namespace au::appshell;
-using namespace mu::ui;
-using namespace mu::uicomponents;
-using namespace mu::actions;
+using namespace muse;
+using namespace muse::ui;
+using namespace muse::uicomponents;
+using namespace muse::actions;
 
 //! TODO AU4
 // using namespace au::project;
-// using namespace mu::workspace;
-// using namespace mu::extensions;
+// using namespace muse::workspace;
+// using namespace muse::extensions;
 
 static QString makeId(const ActionCode& actionCode, int itemIndex)
 {
@@ -668,7 +669,7 @@ MenuItemList AppMenuModel::makePluginsItems()
     // MenuItemList pluginsWithoutCategories;
     // for (const Manifest& m : enabledExtensions) {
     //     std::string categoryStr = m.category.toStdString();
-    //     if (mu::contains(categories, categoryStr)) {
+    //     if (muse::contains(categories, categoryStr)) {
     //         MenuItemList& items = categoriesMap[categoryStr];
     //         addMenuItems(items, m);
     //     } else {
@@ -677,7 +678,7 @@ MenuItemList AppMenuModel::makePluginsItems()
     // }
 
     // for (const auto& it : categoriesMap) {
-    //     TranslatableString categoryTitle = mu::value(categories, it.first, {});
+    //     TranslatableString categoryTitle = muse::value(categories, it.first, {});
     //     result << makeMenu(categoryTitle, it.second);
     // }
 

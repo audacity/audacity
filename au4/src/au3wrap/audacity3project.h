@@ -18,7 +18,7 @@ public:
 
     static std::shared_ptr<Audacity3Project> create();
 
-    bool load(const mu::io::path_t& filePath);
+    bool load(const muse::io::path_t& filePath);
     void close();
 
     std::string title() const;

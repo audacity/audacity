@@ -4,10 +4,10 @@
 #include "playbacktoolbarcustomiseitem.h"
 
 using namespace au::projectscene;
-using namespace mu::uicomponents;
+using namespace muse::uicomponents;
 
 PlaybackToolBarCustomiseItem::PlaybackToolBarCustomiseItem(const ItemType& type, QObject* parent)
-    : mu::uicomponents::SelectableItemListModel::Item(parent), m_type(type)
+    : SelectableItemListModel::Item(parent), m_type(type)
 {
 }
 
@@ -51,7 +51,7 @@ bool PlaybackToolBarCustomiseItem::checked() const
     return m_checked;
 }
 
-void PlaybackToolBarCustomiseItem::setIcon(mu::ui::IconCode::Code icon)
+void PlaybackToolBarCustomiseItem::setIcon(muse::ui::IconCode::Code icon)
 {
     if (m_icon == icon) {
         return;

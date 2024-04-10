@@ -33,12 +33,15 @@ if(NOT muse_framework_POPULATED)
 endif()
 
 set(MUSE_FRAMEWORK_PATH ${muse_framework_SOURCE_DIR})
+set(MUSE_FRAMEWORK_SRC_PATH ${muse_framework_SOURCE_DIR}/framework)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
     ${MUSE_FRAMEWORK_PATH}/build/cmake
     ${CMAKE_MODULE_PATH}
     )
+
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/DeclareMuseOptions.cmake)
 
 ###########################################
 # AudacityDependencies
@@ -129,34 +132,33 @@ set(AUDACITY_BUILD_MODE "dev" CACHE STRING "Build mode")
 
 set(AU_REVISION "" CACHE STRING "Build revision")
 
-# Modules framework (alphabetical order please)
-option(MU_BUILD_ACCESSIBILITY_MODULE "Build accessibility module" ON)
-option(MU_BUILD_ACCESSIBILITY_TESTS "Build accessibility tests" OFF)
-option(MU_BUILD_ACTIONS_MODULE "Build actions module" ON)
-option(MU_BUILD_ACTIONS_TESTS "Build actions tests" OFF)
-option(MU_BUILD_EXTENSIONS_MODULE "Build extensions module" OFF)
-option(MU_BUILD_EXTENSIONS_TESTS "Build extensions tests" OFF)
-option(MU_BUILD_LANGUAGES_MODULE "Build languages module" OFF)
-option(MU_BUILD_LANGUAGES_TESTS "Build languages tests" OFF)
-option(MU_BUILD_MIDI_MODULE "Build midi module" OFF)
-option(MU_BUILD_MIDI_TESTS "Build midi tests" OFF)
-option(MU_BUILD_MULTIINSTANCES_MODULE "Build multiinstances module" ON)
-option(MU_BUILD_MULTIINSTANCES_TESTS "Build multiinstances tests" OFF)
-option(MU_BUILD_NETWORK_MODULE "Build network module" OFF)
-option(MU_BUILD_NETWORK_TESTS "Build network tests" OFF)
-option(MU_BUILD_SHORTCUTS_MODULE "Build shortcuts module" ON)
-option(MU_BUILD_SHORTCUTS_TESTS "Build shortcuts tests" OFF)
-option(MU_BUILD_UI_MODULE "Build ui and uicomponets modules" ON)
-option(MU_BUILD_UI_TESTS "Build ui and uicomponets tests" OFF)
-option(MU_BUILD_WORKSPACE_MODULE "Build workspace module" ON)
-option(MU_BUILD_WORKSPACE_TESTS "Build workspace tests" OFF)
+set(MUSE_BUILD_UNIT_TESTS OFF)
+set(MUSE_MODULE_ACCESSIBILITY OFF)
+set(MUSE_MODULE_ACTIONS ON)
+set(MUSE_MODULE_AUDIO OFF)
+set(MUSE_MODULE_AUTOBOT OFF)
+set(MUSE_MODULE_CLOUD ON)
+set(MUSE_MODULE_DIAGNOSTICS OFF)
+set(MUSE_MODULE_DRAW OFF)
+set(MUSE_MODULE_EXTENSIONS OFF)
+set(MUSE_MODULE_GLOBAL ON)
+set(MUSE_MODULE_LANGUAGES OFF)
+set(MUSE_MODULE_LEARN ON)
+set(MUSE_MODULE_MIDI OFF)
+set(MUSE_MODULE_MPE OFF)
+set(MUSE_MODULE_MULTIINSTANCES OFF)
+set(MUSE_MODULE_MUSESAMPLER OFF)
+set(MUSE_MODULE_NETWORK ON)
+set(MUSE_MODULE_SHORTCUTS OFF)
+set(MUSE_MODULE_UI ON)
+set(MUSE_MODULE_UPDATE OFF)
+set(MUSE_MODULE_VST OFF)
+set(MUSE_MODULE_WORKSPACE OFF)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(MU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
 option(MU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
-option(MU_BUILD_UPDATE_MODULE "Build update modules" OFF)
-option(MU_BUILD_UPDATE_TESTS "Build update tests" OFF)
 
 # === Setup ===
 
@@ -164,11 +166,7 @@ option(MU_BUILD_UPDATE_TESTS "Build update tests" OFF)
 option(MU_RUN_LRELEASE "Generate .qm files" ON)
 
 # === Tests ===
-option(MU_BUILD_UNIT_TESTS "Build unit tests" OFF)
 option(MU_BUILD_ASAN "Enable Address Sanitizer" OFF)
-option(MU_BUILD_CRASHPAD_CLIENT "Build crashpad client" ON)
-set(MU_CRASH_REPORT_URL "" CACHE STRING "URL where to send crash reports")
-option(MU_CRASHPAD_HANDLER_PATH "Path to custom crashpad_handler executable (optional)" "")
 
 # === Tools ===
 
@@ -180,9 +178,6 @@ option(MU_COMPILE_USE_UNITY "Use unity build." ON)
 option(MU_COMPILE_USE_CCACHE "Try use ccache" ON)
 
 # === Debug ===
-option(MU_ENABLE_LOGGER_DEBUGLEVEL "Enable logging debug level" ON)
-option(MU_ENABLE_ACCESSIBILITY_TRACE "Enable accessibility logging" OFF)
-option(MU_DISABLE_UI_MODALITY "Disable dialogs modality for testing purpose" OFF)
 option(MU_ENABLE_STRING_DEBUG_HACK "Enable string debug hack (only clang)" ON)
 
 
@@ -194,8 +189,6 @@ if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
 else()
     include(SetupConfigure)
 endif()
-
-set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/thirdparty)
 
 ###########################################
 # Setup compiler and build environment
@@ -231,19 +224,6 @@ endif(OS_IS_WIN)
 # Add source tree
 ###########################################
 
-if (MU_BUILD_UNIT_TESTS)
-    enable_testing()
-    message(STATUS "Enabled testing")
-
-    define_property(TARGET PROPERTY OUTPUT_XML
-        BRIEF_DOCS "List XML files outputted by google test."
-        FULL_DOCS "List XML files outputted by google test."
-    )
-
-    add_subdirectory(thirdparty/googletest)
-endif() #MU_BUILD_UNIT_TESTS
-
-#add_subdirectory(src/framework/global) # should be first to work pch
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)
 

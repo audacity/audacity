@@ -30,8 +30,8 @@
 #include "log.h"
 
 using namespace au::appshell;
-using namespace mu::ui;
-using namespace mu::uicomponents;
+using namespace muse::ui;
+using namespace muse::uicomponents;
 
 QSet<int> possibleKeys(QKeyEvent* keyEvent)
 {

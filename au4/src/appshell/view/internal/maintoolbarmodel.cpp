@@ -87,12 +87,12 @@ void MainToolBarModel::load()
     beginResetModel();
 
     m_items.clear();
-    m_items << buildItem(mu::qtrc("appshell", "Home"), HOME_PAGE);
-    m_items << buildItem(mu::qtrc("appshell", "Project"), PROJECT_PAGE);
-    m_items << buildItem(mu::qtrc("appshell", "Publish"), PUBLISH_PAGE);
+    m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE);
+    m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE);
+    m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE);
 
     if (globalConfiguration()->devModeEnabled()) {
-        m_items << buildItem(mu::qtrc("appshell", "DevTools"), DEVTOOLS_PAGE);
+        m_items << buildItem(muse::qtrc("appshell", "DevTools"), DEVTOOLS_PAGE);
     }
 
     endResetModel();

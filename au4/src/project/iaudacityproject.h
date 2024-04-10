@@ -15,16 +15,16 @@ class IAudacityProject
 public:
     virtual ~IAudacityProject() = default;
 
-    virtual mu::Ret load(const mu::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
+    virtual muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
     virtual void close() = 0;
 
-    virtual mu::String title() const { return mu::String(); }
-    virtual mu::io::path_t path() const = 0;
-    virtual mu::async::Notification pathChanged() const = 0;
-    virtual mu::ValNt<bool> needSave() const { return mu::ValNt<bool>(); }
+    virtual muse::String title() const { return muse::String(); }
+    virtual muse::io::path_t path() const = 0;
+    virtual muse::async::Notification pathChanged() const = 0;
+    virtual muse::ValNt<bool> needSave() const { return muse::ValNt<bool>(); }
 
-    virtual mu::async::Notification displayNameChanged() const { return mu::async::Notification(); }
-    virtual mu::async::Notification needSaveChanged() const { return mu::async::Notification(); }
+    virtual muse::async::Notification displayNameChanged() const { return muse::async::Notification(); }
+    virtual muse::async::Notification needSaveChanged() const { return muse::async::Notification(); }
 
     virtual const au::processing::ProcessingProjectPtr processingProject() const = 0;
 };
