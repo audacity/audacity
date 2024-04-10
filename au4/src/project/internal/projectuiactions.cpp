@@ -3,8 +3,8 @@
 #include "types/translatablestring.h"
 #include "context/shortcutcontext.h"
 
-using namespace mu;
-using namespace mu::ui;
+using namespace muse;
+using namespace muse::ui;
 using namespace au::project;
 
 const UiActionList ProjectUiActions::m_actions = {
@@ -133,12 +133,12 @@ bool ProjectUiActions::actionChecked(const UiAction&) const
     return false;
 }
 
-mu::async::Channel<mu::actions::ActionCodeList> ProjectUiActions::actionEnabledChanged() const
+muse::async::Channel<muse::actions::ActionCodeList> ProjectUiActions::actionEnabledChanged() const
 {
     return m_actionEnabledChanged;
 }
 
-mu::async::Channel<mu::actions::ActionCodeList> ProjectUiActions::actionCheckedChanged() const
+muse::async::Channel<muse::actions::ActionCodeList> ProjectUiActions::actionCheckedChanged() const
 {
     return m_actionCheckedChanged;
 }

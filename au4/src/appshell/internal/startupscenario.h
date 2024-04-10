@@ -37,10 +37,10 @@
 // #include "project/iprojectautosaver.h"
 
 namespace au::appshell {
-class StartupScenario : public au::appshell::IStartupScenario, public mu::async::Asyncable
+class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable
 {
-    INJECT(mu::IInteractive, interactive)
-    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(muse::IInteractive, interactive)
+    INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(ISessionsManager, sessionsManager)
 
@@ -63,12 +63,12 @@ private:
     void onStartupPageOpened(StartupModeType modeType);
 
     StartupModeType resolveStartupModeType() const;
-    mu::Uri startupPageUri(StartupModeType modeType) const;
+    muse::Uri startupPageUri(StartupModeType modeType) const;
 
     void openScore(const au::project::ProjectFile& file);
 
     void restoreLastSession();
-    void removeProjectsUnsavedChanges(const mu::io::paths_t& projectsPaths);
+    void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupScoreFile;

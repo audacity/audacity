@@ -19,7 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This module stores global state
-set(MODULE au3wrap)
+declare_module(au3wrap)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
@@ -454,5 +454,5 @@ set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 
 set(MODULE_USE_PCH_NONE ON)
 set(MODULE_USE_UNITY_NONE ON)
-include(SetupModule)
+setup_module()
 

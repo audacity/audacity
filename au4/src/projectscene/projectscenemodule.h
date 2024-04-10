@@ -11,7 +11,7 @@
 namespace au::projectscene {
 class ProjectSceneUiActions;
 class ProjectSceneActionController;
-class ProjectSceneModule : public mu::modularity::IModuleSetup
+class ProjectSceneModule : public muse::modularity::IModuleSetup
 {
 public:
 
@@ -20,7 +20,7 @@ public:
     void resolveImports() override;
     void registerUiTypes() override;
     void registerResources() override;
-    void onInit(const mu::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:

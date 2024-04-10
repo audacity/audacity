@@ -7,7 +7,7 @@
 
 #include "log.h"
 
-using namespace mu::uicomponents;
+using namespace muse::uicomponents;
 using namespace au::projectscene;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
@@ -28,10 +28,11 @@ void PlaybackToolBarModel::load()
 {
     MenuItemList items;
 
-    mu::ui::ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    muse::ui::ToolConfig noteInputConfig
+        = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     int section = 0;
-    for (const mu::ui::ToolConfig::Item& citem : noteInputConfig.items) {
+    for (const muse::ui::ToolConfig::Item& citem : noteInputConfig.items) {
         if (!citem.show) {
             continue;
         }
@@ -91,21 +92,21 @@ void PlaybackToolBarModel::updateState()
 {
     for (int i = 0; i < rowCount(); ++i) {
         MenuItem& item = this->item(i);
-        mu::ui::UiActionState state = item.state();
+        muse::ui::UiActionState state = item.state();
         state.checked = false;
         item.setState(state);
     }
 }
 
-bool PlaybackToolBarModel::isMenuSecondary(const mu::actions::ActionCode& actionCode) const
+bool PlaybackToolBarModel::isMenuSecondary(const muse::actions::ActionCode& actionCode) const
 {
     UNUSED(actionCode);
 
     return false;
 }
 
-MenuItem* PlaybackToolBarModel::makeActionItem(const mu::ui::UiAction& action, const QString& section,
-                                               const mu::uicomponents::MenuItemList& subitems)
+MenuItem* PlaybackToolBarModel::makeActionItem(const muse::ui::UiAction& action, const QString& section,
+                                               const muse::uicomponents::MenuItemList& subitems)
 {
     MenuItem* item = new MenuItem(action, this);
     item->setSection(section);

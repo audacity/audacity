@@ -15,7 +15,7 @@ struct ProjectFile {
     ProjectFile(const QUrl& url, const QString& displayNameOverride = {})
         : url(url), displayNameOverride(displayNameOverride) {}
 
-    ProjectFile(const mu::io::path_t& path, const QString& displayNameOverride = {})
+    ProjectFile(const muse::io::path_t& path, const QString& displayNameOverride = {})
         : url(path.toQUrl()), displayNameOverride(displayNameOverride) {}
 
     bool isNull() const
@@ -43,13 +43,13 @@ struct ProjectFile {
             return displayNameOverride;
         }
 
-        return mu::io::filename(path(), includingExtension).toQString();
+        return muse::io::filename(path(), includingExtension).toQString();
     }
 
-    mu::io::path_t path() const
+    muse::io::path_t path() const
     {
         assert(url.isEmpty() || url.isLocalFile());
-        return mu::io::path_t(url);
+        return muse::io::path_t(url);
     }
 
     bool operator ==(const ProjectFile& other) const

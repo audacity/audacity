@@ -27,7 +27,7 @@
 #include <QClipboard>
 #include <QUrl>
 
-using namespace mu;
+using namespace muse;
 using namespace au::appshell;
 
 AboutModel::AboutModel(QObject* parent)

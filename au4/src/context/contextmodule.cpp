@@ -26,7 +26,8 @@
 #include "internal/uicontextresolver.h"
 
 using namespace mu::context;
-using namespace mu::modularity;
+using namespace muse;
+using namespace muse::modularity;
 
 std::string ContextModule::moduleName() const
 {

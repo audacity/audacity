@@ -39,7 +39,7 @@ IAudacityProjectPtr GlobalContext::currentProject() const
     return m_currentProject;
 }
 
-mu::async::Notification GlobalContext::currentProjectChanged() const
+muse::async::Notification GlobalContext::currentProjectChanged() const
 {
     return m_currentProjectChanged;
 }
@@ -49,7 +49,7 @@ au::processing::ProcessingProjectPtr GlobalContext::currentProcessingProject() c
     return m_currentProject ? m_currentProject->processingProject() : nullptr;
 }
 
-mu::async::Notification GlobalContext::currentProcessingProjectChanged() const
+muse::async::Notification GlobalContext::currentProcessingProjectChanged() const
 {
     //! NOTE Same as main project
     return m_currentProjectChanged;

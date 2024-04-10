@@ -15,13 +15,13 @@ public:
 
     virtual ~IProjectConfiguration() = default;
 
-    virtual mu::io::path_t userProjectsPath() const = 0;
-    virtual void setUserProjectsPath(const mu::io::path_t& path) = 0;
-    virtual mu::async::Channel<mu::io::path_t> userProjectsPathChanged() const = 0;
-    virtual mu::io::path_t defaultUserProjectsPath() const = 0;
+    virtual muse::io::path_t userProjectsPath() const = 0;
+    virtual void setUserProjectsPath(const muse::io::path_t& path) = 0;
+    virtual muse::async::Channel<muse::io::path_t> userProjectsPathChanged() const = 0;
+    virtual muse::io::path_t defaultUserProjectsPath() const = 0;
 
-    virtual mu::io::path_t lastOpenedProjectsPath() const = 0;
-    virtual void setLastOpenedProjectsPath(const mu::io::path_t& path) = 0;
+    virtual muse::io::path_t lastOpenedProjectsPath() const = 0;
+    virtual void setLastOpenedProjectsPath(const muse::io::path_t& path) = 0;
 };
 }
 

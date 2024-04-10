@@ -36,8 +36,8 @@
 namespace au::appshell {
 class WinFramelessWindowController : public QObject, public FramelessWindowController
 {
-    INJECT(mu::ui::IUiConfiguration, uiConfiguration)
-    INJECT(mu::ui::IMainWindow, mainWindow)
+    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
+    INJECT(muse::ui::IMainWindow, mainWindow)
 
 public:
     explicit WinFramelessWindowController();

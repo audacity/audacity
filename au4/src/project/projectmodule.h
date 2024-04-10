@@ -28,14 +28,14 @@
 
 namespace au::project {
 class ProjectActionsController;
-class ProjectModule : public mu::modularity::IModuleSetup
+class ProjectModule : public muse::modularity::IModuleSetup
 {
 public:
 
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
-    void onInit(const mu::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:

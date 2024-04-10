@@ -18,23 +18,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-set(MODULE appshell)
+declare_module(appshell)
 
 set(MODULE_QRC appshell.qrc)
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
-
-###########################################
-# Setup the KDDockWidgets lib
-###########################################
-if (NOT BUILD_SHARED_LIBS)
-    set(KDDockWidgets_STATIC ON CACHE BOOL "Build static versions of the libraries" FORCE)
-endif()
-set(KDDockWidgets_QT6 ON CACHE BOOL "Build against Qt 6" FORCE)
-set(KDDockWidgets_QTQUICK ON CACHE BOOL "Build for QtQuick instead of QtWidgets" FORCE)
-set(KDDockWidgets_EXAMPLES OFF CACHE BOOL "Build the examples" FORCE)
-add_subdirectory(thirdparty/KDDockWidgets)
-
-include(${CMAKE_CURRENT_LIST_DIR}/view/dockwindow/dockwindow.cmake)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/appshellmodule.cpp
@@ -125,14 +112,13 @@ set(MODULE_SRC
     #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
     #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
     #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
-    ${DOCKWINDOW_SRC}
     )
 
 
 set(MODULE_LINK
-    uicomponents
-    ui
-    ${DOCK_LIBS}
+    muse::uicomponents
+    muse::ui
+    muse::dockwindow
     )
 
 if (OS_IS_MAC)
@@ -173,4 +159,4 @@ if (NOT OS_IS_MAC)
     endif()
 endif(NOT OS_IS_MAC)
 
-include(SetupModule)
+setup_module()

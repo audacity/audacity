@@ -37,7 +37,7 @@ void ProcessingModule::registerExports()
 {
 }
 
-void ProcessingModule::onInit(const mu::IApplication::RunMode&)
+void ProcessingModule::onInit(const muse::IApplication::RunMode&)
 {
 }
 

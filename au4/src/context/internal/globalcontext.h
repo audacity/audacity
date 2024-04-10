@@ -31,14 +31,14 @@ public:
 
     void setCurrentProject(const au::project::IAudacityProjectPtr& project) override;
     au::project::IAudacityProjectPtr currentProject() const override;
-    mu::async::Notification currentProjectChanged() const override;
+    muse::async::Notification currentProjectChanged() const override;
 
     au::processing::ProcessingProjectPtr currentProcessingProject() const override;
-    mu::async::Notification currentProcessingProjectChanged() const override;
+    muse::async::Notification currentProcessingProjectChanged() const override;
 
 private:
     au::project::IAudacityProjectPtr m_currentProject;
-    mu::async::Notification m_currentProjectChanged;
+    muse::async::Notification m_currentProjectChanged;
 };
 }
 

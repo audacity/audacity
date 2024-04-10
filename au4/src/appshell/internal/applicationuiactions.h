@@ -32,13 +32,13 @@
 //! TODO AU4
 // #include "view/preferences/braillepreferencesmodel.h"
 
-#include "view/dockwindow/idockwindowprovider.h"
+#include "dockwindow/idockwindowprovider.h"
 
 namespace au::appshell {
-class ApplicationUiActions : public mu::ui::IUiActionsModule, public mu::async::Asyncable
+class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    INJECT(mu::ui::IMainWindow, mainWindow)
-    INJECT(mu::dock::IDockWindowProvider, dockWindowProvider)
+    INJECT(muse::ui::IMainWindow, mainWindow)
+    INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
@@ -48,24 +48,24 @@ public:
 
     void init();
 
-    const mu::ui::UiActionList& actionsList() const override;
+    const muse::ui::UiActionList& actionsList() const override;
 
-    bool actionEnabled(const mu::ui::UiAction& act) const override;
-    mu::async::Channel<mu::actions::ActionCodeList> actionEnabledChanged() const override;
+    bool actionEnabled(const muse::ui::UiAction& act) const override;
+    muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const override;
 
-    bool actionChecked(const mu::ui::UiAction& act) const override;
-    mu::async::Channel<mu::actions::ActionCodeList> actionCheckedChanged() const override;
+    bool actionChecked(const muse::ui::UiAction& act) const override;
+    muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
 
-    static const QMap<mu::actions::ActionCode, DockName>& toggleDockActions();
+    static const QMap<muse::actions::ActionCode, DockName>& toggleDockActions();
 
 private:
-    void listenOpenedDocksChanged(mu::dock::IDockWindow* window);
+    void listenOpenedDocksChanged(muse::dock::IDockWindow* window);
 
-    static const mu::ui::UiActionList m_actions;
+    static const muse::ui::UiActionList m_actions;
 
     std::shared_ptr<ApplicationActionController> m_controller;
-    mu::async::Channel<mu::actions::ActionCodeList> m_actionEnabledChanged;
-    mu::async::Channel<mu::actions::ActionCodeList> m_actionCheckedChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
 }
 

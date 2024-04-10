@@ -23,7 +23,7 @@
 
 #include "translation.h"
 
-using namespace mu;
+using namespace muse;
 using namespace au::appshell;
 
 FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)

@@ -1,7 +1,7 @@
 import QtQuick
 
-import MuseScore.Ui
-import MuseScore.UiComponents
+import Muse.Ui
+import Muse.UiComponents
 
 import Audacity.ProjectScene
 

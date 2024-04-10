@@ -22,12 +22,12 @@ class QItemSelectionModel;
 
 namespace au::projectscene {
 class PlaybackToolBarCustomiseItem;
-class PlaybackToolBarCustomiseModel : public mu::uicomponents::SelectableItemListModel, public mu::async::Asyncable
+class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    mu::Inject<mu::ui::IUiConfiguration> uiConfiguration;
-    mu::Inject<mu::ui::IUiActionsRegister> actionsRegister;
+    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
 
     Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
     Q_PROPERTY(bool isAddSeparatorAvailable READ isAddSeparatorAvailable NOTIFY isAddSeparatorAvailableChanged)
@@ -62,7 +62,7 @@ private:
     void updateAddSeparatorAvailability();
     void setIsAddSeparatorAvailable(bool isAddSeparatorAvailable);
 
-    PlaybackToolBarCustomiseItem* makeItem(const mu::ui::UiAction& action, bool checked);
+    PlaybackToolBarCustomiseItem* makeItem(const muse::ui::UiAction& action, bool checked);
     PlaybackToolBarCustomiseItem* makeSeparatorItem();
 
     void saveActions();

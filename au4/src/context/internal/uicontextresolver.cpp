@@ -25,10 +25,11 @@
 #include "log.h"
 
 using namespace mu::context;
-using namespace mu::ui;
+using namespace muse;
+using namespace muse::ui;
 
-static const mu::Uri HOME_PAGE_URI("musescore://home");
-static const mu::Uri PROJECT_PAGE_URI("musescore://project");
+static const Uri HOME_PAGE_URI("musescore://home");
+static const Uri PROJECT_PAGE_URI("musescore://project");
 
 static const QString NOTATION_NAVIGATION_PANEL("ScoreView");
 
@@ -143,7 +144,7 @@ bool UiContextResolver::matchWithCurrent(const UiContext& ctx) const
     return match(currentCtx, ctx);
 }
 
-mu::async::Notification UiContextResolver::currentUiContextChanged() const
+async::Notification UiContextResolver::currentUiContextChanged() const
 {
     return m_currentUiContextChanged;
 }
@@ -179,7 +180,7 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
     //         return false;
     //     }
     //     auto noteInput = notation->interaction()->noteInput();
-    //     return !noteInput->isNoteInputMode() || noteInput->state().staffGroup != mu::engraving::StaffGroup::TAB;
+    //     return !noteInput->isNoteInputMode() || noteInput->state().staffGroup != engraving::StaffGroup::TAB;
     // } else if (CTX_NOTATION_NOTE_INPUT_STAFF_TAB == scContext) {
     //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
     //         return false;
@@ -189,7 +190,7 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
     //         return false;
     //     }
     //     auto noteInput = notation->interaction()->noteInput();
-    //     return noteInput->isNoteInputMode() && noteInput->state().staffGroup == mu::engraving::StaffGroup::TAB;
+    //     return noteInput->isNoteInputMode() && noteInput->state().staffGroup == engraving::StaffGroup::TAB;
     // } else if (CTX_NOTATION_TEXT_EDITING == scContext) {
     //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
     //         return false;

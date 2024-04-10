@@ -18,13 +18,13 @@
 // #include "braille/ibrailleconfiguration.h"
 
 namespace au::appshell {
-class ProjectPageModel : public QObject, public mu::async::Asyncable, public mu::actions::Actionable
+class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
-    INJECT(mu::actions::IActionsDispatcher, dispatcher)
+    INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(mu::context::IGlobalContext, globalContext)
-    INJECT(mu::dock::IDockWindowProvider, dockWindowProvider)
+    INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
 
 //! TODO AU4

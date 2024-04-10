@@ -52,9 +52,9 @@ private:
         MaxValueRole
     };
 
-    QString typeToString(Val::Type t) const;
+    QString typeToString(muse::Val::Type t) const;
 
-    QList<Settings::Item> m_items;
+    QList<muse::Settings::Item> m_items;
 };
 }
 
