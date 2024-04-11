@@ -9,11 +9,11 @@
 #include "context/iglobalcontext.h"
 
 namespace au::projectscene {
-class TracksListModel : public QAbstractListModel, public mu::async::Asyncable
+class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
 {
-    Q_OBJECT;
+    Q_OBJECT
 
-    mu::Inject<mu::context::IGlobalContext> globalContext;
+    muse::Inject<mu::context::IGlobalContext> globalContext;
 
 public:
     TracksListModel() = default;

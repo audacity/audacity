@@ -36,10 +36,10 @@ public:
 
     virtual void setCurrentProject(const au::project::IAudacityProjectPtr& project) = 0;
     virtual au::project::IAudacityProjectPtr currentProject() const = 0;
-    virtual mu::async::Notification currentProjectChanged() const = 0;
+    virtual muse::async::Notification currentProjectChanged() const = 0;
 
     virtual au::processing::ProcessingProjectPtr currentProcessingProject() const = 0;
-    virtual mu::async::Notification currentProcessingProjectChanged() const = 0;
+    virtual muse::async::Notification currentProcessingProjectChanged() const = 0;
 };
 }
 

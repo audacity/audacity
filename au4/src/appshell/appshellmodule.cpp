@@ -61,8 +61,6 @@
 #include "view/windowdroparea.h"
 #include "view/internal/maintoolbarmodel.h"
 
-#include "view/dockwindow/docksetup.h"
-
 #ifdef Q_OS_MAC
 #include "view/appmenumodel.h"
 #include "view/internal/platform/macos/macosappmenumodelhook.h"
@@ -71,12 +69,12 @@
 #include "view/navigableappmenumodel.h"
 #endif
 
+using namespace au::appshell;
+using namespace au::appshell;
 using namespace mu;
-using namespace au::appshell;
-using namespace au::appshell;
-using namespace mu::modularity;
-using namespace mu::ui;
-using namespace mu::dock;
+using namespace muse;
+using namespace muse::modularity;
+using namespace muse::ui;
 
 static void appshell_init_qrc()
 {
@@ -102,8 +100,6 @@ void AppShellModule::registerExports()
     #ifdef Q_OS_MAC
     m_scrollingHook = std::make_shared<MacOSScrollingHook>();
     #endif
-
-    DockSetup::registerExports();
 
     ioc()->registerExport<IAppShellConfiguration>(moduleName(), m_appShellConfiguration);
     //ioc()->registerExport<IApplicationActionController>(moduleName(), m_applicationActionController);
@@ -146,8 +142,6 @@ void AppShellModule::registerResources()
 
 void AppShellModule::registerUiTypes()
 {
-    DockSetup::registerQmlTypes();
-
     qmlRegisterType<SettingListModel>("MuseScore.Preferences", 1, 0, "SettingListModel");
     // qmlRegisterType<PreferencesModel>("MuseScore.Preferences", 1, 0, "PreferencesModel");
     // qmlRegisterType<GeneralPreferencesModel>("MuseScore.Preferences", 1, 0, "GeneralPreferencesModel");
@@ -183,7 +177,7 @@ void AppShellModule::registerUiTypes()
     qmlRegisterType<PublishToolBarModel>("Audacity.AppShell", 1, 0, "PublishToolBarModel");
     qmlRegisterType<MainToolBarModel>("Audacity.AppShell", 1, 0, "MainToolBarModel");
 
-    qmlRegisterType<WindowDropArea>("MuseScore.Ui", 1, 0, "WindowDropArea");
+    qmlRegisterType<WindowDropArea>("Muse.Ui", 1, 0, "WindowDropArea");
 }
 
 void AppShellModule::onPreInit(const IApplication::RunMode& mode)
@@ -200,8 +194,6 @@ void AppShellModule::onInit(const IApplication::RunMode& mode)
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
         return;
     }
-
-    DockSetup::onInit();
 
     m_appShellConfiguration->init();
     //m_applicationActionController->init();

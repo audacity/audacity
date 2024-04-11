@@ -102,7 +102,7 @@ private:
     QString highlightedMenuId() const;
     QString openedMenuId() const;
 
-    QString menuItemId(const mu::uicomponents::MenuItemList& items, const QSet<int>& activatePossibleKeys);
+    QString menuItemId(const muse::uicomponents::MenuItemList& items, const QSet<int>& activatePossibleKeys);
 
     QString m_highlightedMenuId;
     QString m_openedMenuId;

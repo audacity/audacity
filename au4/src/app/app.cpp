@@ -31,7 +31,6 @@
 #endif
 
 #include "appshell/view/internal/splashscreen/splashscreen.h"
-#include "appshell/view/dockwindow/docksetup.h"
 
 #include "modularity/ioc.h"
 #include "ui/internal/uiengine.h"
@@ -40,17 +39,20 @@
 
 #include "log.h"
 
+#define MU_BUILD_APPSHELL_MODULE
+
+using namespace muse;
 using namespace au::app;
 using namespace au::appshell;
 
 //! NOTE Separately to initialize logger and profiler as early as possible
-static mu::GlobalModule globalModule;
+static GlobalModule globalModule;
 
 App::App()
 {
 }
 
-void App::addModule(mu::modularity::IModuleSetup* module)
+void App::addModule(modularity::IModuleSetup* module)
 {
     m_modules.push_back(module);
 }
@@ -70,7 +72,7 @@ int App::run(int argc, char** argv)
 #endif
 
     const char* appName;
-    if (true /*mu::MUVersion::unstable()*/) {
+    if (true /*MUVersion::unstable()*/) {
         appName  = "Audacity4Development";
     } else {
         appName  = "Audacity4";
@@ -111,10 +113,10 @@ int App::run(int argc, char** argv)
     // commandLineParser.parse(argc, argv);
 
     // IApplication::RunMode runMode = commandLineParser.runMode();
-    mu::IApplication::RunMode runMode = mu::IApplication::RunMode::GuiApp;
+    IApplication::RunMode runMode = IApplication::RunMode::GuiApp;
     QCoreApplication* app = nullptr;
 
-    if (runMode == mu::IApplication::RunMode::AudioPluginRegistration) {
+    if (runMode == IApplication::RunMode::AudioPluginRegistration) {
         app = new QCoreApplication(argc, argv);
     } else {
         app = new QApplication(argc, argv);
@@ -123,7 +125,7 @@ int App::run(int argc, char** argv)
     QCoreApplication::setApplicationName(appName);
     QCoreApplication::setOrganizationName("MuseScore");
     QCoreApplication::setOrganizationDomain("musescore.org");
-    // QCoreApplication::setApplicationVersion(QString::fromStdString(mu::MUVersion::fullVersion().toStdString()));
+    // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
@@ -139,17 +141,17 @@ int App::run(int argc, char** argv)
     globalModule.registerExports();
     globalModule.registerUiTypes();
 
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->registerResources();
     }
 
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->registerExports();
     }
 
     globalModule.resolveImports();
     globalModule.registerApi();
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->registerUiTypes();
         m->resolveImports();
         m->registerApi();
@@ -165,13 +167,13 @@ int App::run(int argc, char** argv)
     // Setup modules: onPreInit
     // ====================================================
     globalModule.onPreInit(runMode);
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->onPreInit(runMode);
     }
 
 #ifdef MU_BUILD_APPSHELL_MODULE
     au::appshell::SplashScreen* splashScreen = nullptr;
-    if (runMode == mu::IApplication::RunMode::GuiApp) {
+    if (runMode == IApplication::RunMode::GuiApp) {
         //splashScreen = new SplashScreen(SplashScreen::Default);
 
         // if (multiInstancesProvider()->isMainInstance()) {
@@ -201,7 +203,7 @@ int App::run(int argc, char** argv)
     // Setup modules: onInit
     // ====================================================
     globalModule.onInit(runMode);
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->onInit(runMode);
     }
 
@@ -209,7 +211,7 @@ int App::run(int argc, char** argv)
     // Setup modules: onAllInited
     // ====================================================
     globalModule.onAllInited(runMode);
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->onAllInited(runMode);
     }
 
@@ -218,7 +220,7 @@ int App::run(int argc, char** argv)
     // ====================================================
     QMetaObject::invokeMethod(qApp, [this]() {
         globalModule.onStartApp();
-        for (mu::modularity::IModuleSetup* m : m_modules) {
+        for (modularity::IModuleSetup* m : m_modules) {
             m->onStartApp();
         }
     }, Qt::QueuedConnection);
@@ -228,7 +230,7 @@ int App::run(int argc, char** argv)
     // ====================================================
 
     switch (runMode) {
-    case mu::IApplication::RunMode::ConsoleApp: {
+    case IApplication::RunMode::ConsoleApp: {
         // // ====================================================
         // // Process Autobot
         // // ====================================================
@@ -259,14 +261,12 @@ int App::run(int argc, char** argv)
         //     }
         // }
     } break;
-    case mu::IApplication::RunMode::GuiApp: {
+    case IApplication::RunMode::GuiApp: {
 #ifdef MU_BUILD_APPSHELL_MODULE
         // ====================================================
         // Setup Qml Engine
         // ====================================================
-        QQmlApplicationEngine* engine = new QQmlApplicationEngine();
-
-        mu::dock::DockSetup::setup(engine);
+        QQmlApplicationEngine* engine = modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
 #if defined(Q_OS_WIN)
         const QString mainQmlFile = "/platform/win/Main.qml";
@@ -277,9 +277,6 @@ int App::run(int argc, char** argv)
 #elif defined(Q_OS_WASM)
         const QString mainQmlFile = "/Main.wasm.qml";
 #endif
-
-        //! NOTE Move ownership to UiEngine
-        mu::ui::UiEngine::instance()->moveQQmlEngine(engine);
 
         const QUrl url(QStringLiteral("qrc:/qml") + mainQmlFile);
 
@@ -297,7 +294,7 @@ int App::run(int argc, char** argv)
                     // ====================================================
 
                     globalModule.onDelayedInit();
-                    for (mu::modularity::IModuleSetup* m : m_modules) {
+                    for (modularity::IModuleSetup* m : m_modules) {
                         m->onDelayedInit();
                     }
 
@@ -327,7 +324,7 @@ int App::run(int argc, char** argv)
         engine->load(url);
 #endif // MUE_BUILD_APPSHELL_MODULE
     } break;
-    case mu::IApplication::RunMode::AudioPluginRegistration: {
+    case IApplication::RunMode::AudioPluginRegistration: {
         // CommandLineParser::AudioPluginRegistration pluginRegistration = commandLineParser.audioPluginRegistration();
 
         // QMetaObject::invokeMethod(qApp, [this, pluginRegistration]() {
@@ -359,20 +356,20 @@ int App::run(int argc, char** argv)
 
 #ifdef MU_BUILD_APPSHELL_MODULE
     // Engine quit
-    mu::ui::UiEngine::instance()->quit();
+    modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
 #endif
 
     // Deinit
 
     globalModule.invokeQueuedCalls();
 
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->onDeinit();
     }
 
     globalModule.onDeinit();
 
-    for (mu::modularity::IModuleSetup* m : m_modules) {
+    for (modularity::IModuleSetup* m : m_modules) {
         m->onDestroy();
     }
 
@@ -381,7 +378,7 @@ int App::run(int argc, char** argv)
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
-    mu::modularity::ioc()->reset();
+    modularity::ioc()->reset();
 
     delete app;
 

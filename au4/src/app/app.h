@@ -34,19 +34,19 @@
 namespace au::app {
 class App
 {
-    mu::Inject<mu::IApplication> muapplication;
-    mu::Inject<appshell::IStartupScenario> startupScenario;
+    muse::Inject<muse::IApplication> muapplication;
+    muse::Inject<appshell::IStartupScenario> startupScenario;
 
 public:
     App();
 
-    void addModule(mu::modularity::IModuleSetup* module);
+    void addModule(muse::modularity::IModuleSetup* module);
 
     int run(int argc, char** argv);
 
 private:
 
-    QList<mu::modularity::IModuleSetup*> m_modules;
+    QList<muse::modularity::IModuleSetup*> m_modules;
 };
 }
 

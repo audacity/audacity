@@ -22,21 +22,21 @@
 #ifndef AU_CONTEXT_UICONTEXT_H
 #define AU_CONTEXT_UICONTEXT_H
 
-#include "ui/uitypes.h"
+#include "ui/uiaction.h"
 
 namespace mu::context {
 //! NOTE Determines where to be, what the user is doing
 
 // common ui (re declared for convenience)
-static constexpr ui::UiContext UiCtxUnknown = ui::UiCtxUnknown;
-static constexpr ui::UiContext UiCtxAny = ui::UiCtxAny;
+static constexpr muse::ui::UiContext UiCtxUnknown = muse::ui::UiCtxUnknown;
+static constexpr muse::ui::UiContext UiCtxAny = muse::ui::UiCtxAny;
 
 // pages
-static constexpr ui::UiContext UiCtxNotationOpened = "UiCtxNotationOpened";
-static constexpr ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
+static constexpr muse::ui::UiContext UiCtxNotationOpened = "UiCtxNotationOpened";
+static constexpr muse::ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
 
 // notation detail
-static constexpr ui::UiContext UiCtxNotationFocused = "UiCtxNotationFocused";
+static constexpr muse::ui::UiContext UiCtxNotationFocused = "UiCtxNotationFocused";
 }
 
 #endif // AU_CONTEXT_UICONTEXT_H

@@ -34,11 +34,11 @@
 #endif
 
 namespace mu::context {
-class UiContextResolver : public IUiContextResolver, public async::Asyncable
+class UiContextResolver : public IUiContextResolver, public muse::async::Asyncable
 {
-    INJECT(IInteractive, interactive)
+    INJECT(muse::IInteractive, interactive)
     INJECT(IGlobalContext, globalContext)
-    INJECT(ui::INavigationController, navigationController)
+    INJECT(muse::ui::INavigationController, navigationController)
 
 #ifdef MU_BUILD_PLAYBACK_MODULE
     INJECT(playback::IPlaybackController, playbackController)
@@ -48,18 +48,18 @@ public:
 
     void init();
 
-    ui::UiContext currentUiContext() const override;
-    async::Notification currentUiContextChanged() const override;
+    muse::ui::UiContext currentUiContext() const override;
+    muse::async::Notification currentUiContextChanged() const override;
 
-    bool match(const ui::UiContext& currentCtx, const ui::UiContext& actCtx) const override;
-    bool matchWithCurrent(const ui::UiContext& ctx) const override;
+    bool match(const muse::ui::UiContext& currentCtx, const muse::ui::UiContext& actCtx) const override;
+    bool matchWithCurrent(const muse::ui::UiContext& ctx) const override;
 
     bool isShortcutContextAllowed(const std::string& scContext) const override;
 
 private:
     void notifyAboutContextChanged();
 
-    async::Notification m_currentUiContextChanged;
+    muse::async::Notification m_currentUiContextChanged;
 };
 }
 

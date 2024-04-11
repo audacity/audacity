@@ -34,7 +34,7 @@ std::shared_ptr<Audacity3Project> Audacity3Project::create()
     return p;
 }
 
-bool Audacity3Project::load(const mu::io::path_t& filePath)
+bool Audacity3Project::load(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
@@ -73,7 +73,7 @@ au::processing::TrackList Audacity3Project::tracks() const
     for (const Track* t : tracks) {
         TrackId id = t->GetId();
         au::processing::Track au4t;
-        au4t.id = mu::ID(*(reinterpret_cast<long*>(&id)));
+        au4t.id = muse::ID(*(reinterpret_cast<long*>(&id)));
         au4t.title = wxToSting(t->GetName());
 
         au4tracks.push_back(std::move(au4t));

@@ -18,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-set(MODULE processing)
+declare_module(processing)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/processingmodule.cpp
@@ -33,7 +33,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dom/wave.h
     )
 
-include(SetupModule)
+setup_module()
 
 
 

@@ -6,27 +6,27 @@
 #include "projectactionscontroller.h"
 
 namespace au::project {
-class ProjectUiActions : public mu::ui::IUiActionsModule
+class ProjectUiActions : public muse::ui::IUiActionsModule
 {
-    mu::Inject<mu::context::IUiContextResolver> uicontextResolver;
+    muse::Inject<mu::context::IUiContextResolver> uicontextResolver;
 
 public:
 
     ProjectUiActions(std::shared_ptr<ProjectActionsController> controller);
 
-    const mu::ui::UiActionList& actionsList() const override;
+    const muse::ui::UiActionList& actionsList() const override;
 
-    bool actionEnabled(const mu::ui::UiAction& act) const override;
-    mu::async::Channel<mu::actions::ActionCodeList> actionEnabledChanged() const override;
+    bool actionEnabled(const muse::ui::UiAction& act) const override;
+    muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const override;
 
-    bool actionChecked(const mu::ui::UiAction& act) const override;
-    mu::async::Channel<mu::actions::ActionCodeList> actionCheckedChanged() const override;
+    bool actionChecked(const muse::ui::UiAction& act) const override;
+    muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
 
 private:
-    static const mu::ui::UiActionList m_actions;
+    static const muse::ui::UiActionList m_actions;
     std::shared_ptr<ProjectActionsController> m_controller;
-    mu::async::Channel<mu::actions::ActionCodeList> m_actionEnabledChanged;
-    mu::async::Channel<mu::actions::ActionCodeList> m_actionCheckedChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
+    muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
 }
 

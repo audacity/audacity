@@ -19,7 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # This module stores global state
-set(MODULE project)
+declare_module(project)
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.cpp
@@ -40,5 +40,5 @@ set(MODULE_SRC
 
 set(MODULE_LINK au3wrap)
 
-include(SetupModule)
+setup_module()
 

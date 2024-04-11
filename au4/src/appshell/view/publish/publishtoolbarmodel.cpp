@@ -23,7 +23,7 @@
 #include "publishtoolbarmodel.h"
 
 using namespace au::appshell;
-using namespace mu::uicomponents;
+using namespace muse::uicomponents;
 
 PublishToolBarModel::PublishToolBarModel(QObject* parent)
     : AbstractMenuModel(parent)

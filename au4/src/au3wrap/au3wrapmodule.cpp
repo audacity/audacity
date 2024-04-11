@@ -45,7 +45,7 @@ void Au3WrapModule::registerExports()
 {
 }
 
-void Au3WrapModule::onInit(const mu::IApplication::RunMode&)
+void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 {
     m_wxLog = new WxLogWrap();
     wxLog::SetActiveTarget(m_wxLog);

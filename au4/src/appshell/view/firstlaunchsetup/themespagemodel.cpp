@@ -24,7 +24,7 @@
 #include "ui/internal/themeconverter.h"
 
 using namespace au::appshell;
-using namespace mu::ui;
+using namespace muse::ui;
 
 ThemesPageModel::ThemesPageModel(QObject* parent)
     : QObject(parent)
@@ -156,5 +156,5 @@ void ThemesPageModel::setCurrentAccentColorIndex(int index)
     }
 
     QColor color = accentColors().at(index);
-    uiConfiguration()->setCurrentThemeStyleValue(ThemeStyleKey::ACCENT_COLOR, mu::Val(color));
+    uiConfiguration()->setCurrentThemeStyleValue(ThemeStyleKey::ACCENT_COLOR, muse::Val(color));
 }

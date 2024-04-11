@@ -29,59 +29,21 @@
 #include "log.h"
 
 // Framework
-#ifdef MU_BUILD_ACCESSIBILITY_MODULE
-#include "framework/accessibility/accessibilitymodule.h"
-#endif
-
-#ifdef MU_BUILD_ACTIONS_MODULE
 #include "framework/actions/actionsmodule.h"
-#endif
-
-#ifdef MU_BUILD_EXTENSIONS_MODULE
-#include "framework/extensions/extensionsmodule.h"
-#endif
-
-#ifdef MU_BUILD_LANGUAGES_MODULE
-#include "framework/languages/languagesmodule.h"
-#endif
-
-#ifdef MU_BUILD_MIDI_MODULE
-#include "framework/midi/midimodule.h"
-#endif
-
-#ifdef MU_BUILD_MULTIINSTANCES_MODULE
-#include "framework/multiinstances/multiinstancesmodule.h"
-#endif
-
-#ifdef MU_BUILD_NETWORK_MODULE
-#include "framework/network/networkmodule.h"
-#endif
-
-#ifdef MU_BUILD_SHORTCUTS_MODULE
-#include "framework/shortcuts/shortcutsmodule.h"
-#endif
-
-#ifdef MU_BUILD_UI_MODULE
 #include "framework/ui/uimodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
-#endif
+#include "framework/dockwindow/dockmodule.h"
 
-#ifdef MU_BUILD_WORKSPACE_MODULE
-#include "framework/workspace/workspacemodule.h"
-#endif
+// need stubs
+#include "framework/stubs/shortcuts/shortcutsstubmodule.h"
+#include "framework/stubs/workspace/workspacestubmodule.h"
+#include "framework/stubs/accessibility/accessibilitystubmodule.h"
 
 // -----
-
-#ifdef MU_BUILD_APPSHELL_MODULE
 #include "appshell/appshellmodule.h"
-#endif
-
 #include "context/contextmodule.h"
 #include "project/projectmodule.h"
-
-#ifdef MU_BUILD_PROJECTSCENE_MODULE
 #include "projectscene/projectscenemodule.h"
-#endif
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -129,60 +91,22 @@ int main(int argc, char** argv)
 
 //! NOTE `diagnostics` must be first, because it installs the crash handler.
 //! For other modules, the order is (an should be) unimportant.
-//app.addModule(new mu::diagnostics::DiagnosticsModule());
+//app.addModule(new muse::diagnostics::DiagnosticsModule());
 
 // framework
-#ifdef MU_BUILD_ACCESSIBILITY_MODULE
-    app.addModule(new mu::accessibility::AccessibilityModule());
-#endif
-
-#ifdef MU_BUILD_ACTIONS_MODULE
-    app.addModule(new mu::actions::ActionsModule());
-#endif
-
-#ifdef MU_BUILD_EXTENSIONS_MODULE
-    app.addModule(new mu::extensions::ExtensionsModule());
-#endif
-
-#ifdef MU_BUILD_LANGUAGES_MODULE
-    app.addModule(new mu::languages::LanguagesModule());
-#endif
-
-#ifdef MU_BUILD_MIDI_MODULE
-    app.addModule(new mu::midi::MidiModule());
-#endif
-
-#ifdef MU_BUILD_MULTIINSTANCES_MODULE
-    app.addModule(new mu::mi::MultiInstancesModule());
-#endif
-
-#ifdef MU_BUILD_NETWORK_MODULE
-    app.addModule(new mu::network::NetworkModule());
-#endif
-
-#ifdef MU_BUILD_SHORTCUTS_MODULE
-    app.addModule(new mu::shortcuts::ShortcutsModule());
-#endif
-
-#ifdef MU_BUILD_UI_MODULE
-    app.addModule(new mu::ui::UiModule());
-    app.addModule(new mu::uicomponents::UiComponentsModule());
-#endif
-
-#ifdef MU_BUILD_WORKSPACE_MODULE
-    app.addModule(new mu::workspace::WorkspaceModule());
-#endif
+    app.addModule(new muse::actions::ActionsModule());
+    app.addModule(new muse::ui::UiModule());
+    app.addModule(new muse::uicomponents::UiComponentsModule());
+    app.addModule(new muse::dock::DockModule());
+    app.addModule(new muse::shortcuts::ShortcutsModule());
+    app.addModule(new muse::workspace::WorkspaceModule());
+    app.addModule(new muse::accessibility::AccessibilityModule());
 
     // modules
-#ifdef MU_BUILD_APPSHELL_MODULE
     app.addModule(new au::appshell::AppShellModule());
-#endif
-
     app.addModule(new mu::context::ContextModule());
     app.addModule(new au::project::ProjectModule());
-
     app.addModule(new au::projectscene::ProjectSceneModule());
-
     app.addModule(new au::au3::Au3WrapModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))

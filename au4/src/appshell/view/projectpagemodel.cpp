@@ -9,7 +9,7 @@
 #include "log.h"
 
 using namespace au::appshell;
-using namespace mu::actions;
+using namespace muse::actions;
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent)

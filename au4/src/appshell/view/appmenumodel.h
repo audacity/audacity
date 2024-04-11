@@ -47,16 +47,16 @@ Q_MOC_INCLUDE(< QWindow >)
 // #include "update/iupdateconfiguration.h"
 
 namespace au::appshell {
-class AppMenuModel : public mu::uicomponents::AbstractMenuModel
+class AppMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
-    INJECT(mu::ui::IMainWindow, mainWindow)
-    INJECT(mu::ui::IUiActionsRegister, uiActionsRegister)
-    INJECT(mu::ui::INavigationController, navigationController)
-    INJECT(mu::ui::IUiConfiguration, uiConfiguration)
-    INJECT(mu::actions::IActionsDispatcher, actionsDispatcher)
-    INJECT(mu::IGlobalConfiguration, globalConfiguration)
+    INJECT(muse::ui::IMainWindow, mainWindow)
+    INJECT(muse::ui::IUiActionsRegister, uiActionsRegister)
+    INJECT(muse::ui::INavigationController, navigationController)
+    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
+    INJECT(muse::actions::IActionsDispatcher, actionsDispatcher)
+    INJECT(muse::IGlobalConfiguration, globalConfiguration)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(IAppMenuModelHook, appMenuModelHook)
 
@@ -75,34 +75,34 @@ public:
 private:
     void setupConnections();
 
-    using mu::uicomponents::AbstractMenuModel::makeMenuItem;
-    mu::uicomponents::MenuItem* makeMenuItem(const mu::actions::ActionCode& actionCode, mu::uicomponents::MenuItemRole role);
+    using muse::uicomponents::AbstractMenuModel::makeMenuItem;
+    muse::uicomponents::MenuItem* makeMenuItem(const muse::actions::ActionCode& actionCode, muse::uicomponents::MenuItemRole role);
 
-    mu::uicomponents::MenuItem* makeFileMenu();
-    mu::uicomponents::MenuItem* makeEditMenu();
-    mu::uicomponents::MenuItem* makeViewMenu();
-    mu::uicomponents::MenuItem* makeAddMenu();
-    mu::uicomponents::MenuItem* makeFormatMenu();
-    mu::uicomponents::MenuItem* makeToolsMenu();
-    mu::uicomponents::MenuItem* makePluginsMenu();
-    mu::uicomponents::MenuItemList makePluginsMenuSubitems();
-    mu::uicomponents::MenuItem* makeHelpMenu();
-    mu::uicomponents::MenuItem* makeDiagnosticMenu();
+    muse::uicomponents::MenuItem* makeFileMenu();
+    muse::uicomponents::MenuItem* makeEditMenu();
+    muse::uicomponents::MenuItem* makeViewMenu();
+    muse::uicomponents::MenuItem* makeAddMenu();
+    muse::uicomponents::MenuItem* makeFormatMenu();
+    muse::uicomponents::MenuItem* makeToolsMenu();
+    muse::uicomponents::MenuItem* makePluginsMenu();
+    muse::uicomponents::MenuItemList makePluginsMenuSubitems();
+    muse::uicomponents::MenuItem* makeHelpMenu();
+    muse::uicomponents::MenuItem* makeDiagnosticMenu();
 
-    mu::uicomponents::MenuItemList makeRecentScoresItems();
-    mu::uicomponents::MenuItemList appendClearRecentSection(const mu::uicomponents::MenuItemList& recentScores);
+    muse::uicomponents::MenuItemList makeRecentScoresItems();
+    muse::uicomponents::MenuItemList appendClearRecentSection(const muse::uicomponents::MenuItemList& recentScores);
 
-    mu::uicomponents::MenuItemList makeNotesItems();
-    mu::uicomponents::MenuItemList makeIntervalsItems();
-    mu::uicomponents::MenuItemList makeTupletsItems();
-    mu::uicomponents::MenuItemList makeMeasuresItems();
-    mu::uicomponents::MenuItemList makeFramesItems();
-    mu::uicomponents::MenuItemList makeTextItems();
-    mu::uicomponents::MenuItemList makeLinesItems();
-    mu::uicomponents::MenuItemList makeToolbarsItems();
-    mu::uicomponents::MenuItemList makeWorkspacesItems();
-    mu::uicomponents::MenuItemList makeShowItems();
-    mu::uicomponents::MenuItemList makePluginsItems();
+    muse::uicomponents::MenuItemList makeNotesItems();
+    muse::uicomponents::MenuItemList makeIntervalsItems();
+    muse::uicomponents::MenuItemList makeTupletsItems();
+    muse::uicomponents::MenuItemList makeMeasuresItems();
+    muse::uicomponents::MenuItemList makeFramesItems();
+    muse::uicomponents::MenuItemList makeTextItems();
+    muse::uicomponents::MenuItemList makeLinesItems();
+    muse::uicomponents::MenuItemList makeToolbarsItems();
+    muse::uicomponents::MenuItemList makeWorkspacesItems();
+    muse::uicomponents::MenuItemList makeShowItems();
+    muse::uicomponents::MenuItemList makePluginsItems();
 };
 }
 

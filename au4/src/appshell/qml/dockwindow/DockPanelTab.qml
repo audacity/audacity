@@ -23,8 +23,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
-import MuseScore.Ui 1.0
-import MuseScore.UiComponents 1.0
+import Muse.Ui 1.0
+import Muse.UiComponents 1.0
 
 StyledTabButton {
     id: root

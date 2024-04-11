@@ -7,8 +7,8 @@
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace mu::ui;
-using namespace mu;
+using namespace muse;
+using namespace muse::ui;
 
 const UiActionList& ProjectSceneUiActions::mainActions() const
 {
@@ -63,14 +63,14 @@ bool ProjectSceneUiActions::actionChecked(const UiAction& act) const
     return false;
 }
 
-mu::async::Channel<mu::actions::ActionCodeList> ProjectSceneUiActions::actionEnabledChanged() const
+muse::async::Channel<muse::actions::ActionCodeList> ProjectSceneUiActions::actionEnabledChanged() const
 {
-    return mu::async::Channel<mu::actions::ActionCodeList>();
+    return muse::async::Channel<muse::actions::ActionCodeList>();
 }
 
-mu::async::Channel<mu::actions::ActionCodeList> ProjectSceneUiActions::actionCheckedChanged() const
+muse::async::Channel<muse::actions::ActionCodeList> ProjectSceneUiActions::actionCheckedChanged() const
 {
-    return mu::async::Channel<mu::actions::ActionCodeList>();
+    return muse::async::Channel<muse::actions::ActionCodeList>();
 }
 
 const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
