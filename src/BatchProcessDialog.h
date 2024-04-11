@@ -139,6 +139,7 @@ private:
    wxButton *mRestore;
    wxButton *mImport;
    wxButton *mExport;
+   wxButton *mEdit;
    wxButton *mSave;
 
    int mSelectedCommand;

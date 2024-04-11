@@ -47,6 +47,7 @@
 #include "Track.h"
 #include "CommandManager.h"
 #include "Effect.h"
+#include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
@@ -665,7 +666,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
                S.Id(InsertButtonID).AddButton(XXO("&Insert"), wxALIGN_LEFT);
-               S.Id(EditButtonID).AddButton(XXO("&Edit..."), wxALIGN_LEFT);
+               mEdit = S.Id(EditButtonID).AddButton(XXO("&Edit..."), wxALIGN_LEFT);
                S.Id(DeleteButtonID).AddButton(XXO("De&lete"), wxALIGN_LEFT);
                S.Id(UpButtonID).AddButton(XXO("Move &Up"), wxALIGN_LEFT);
                S.Id(DownButtonID).AddButton(XXO("Move &Down"), wxALIGN_LEFT);
@@ -888,8 +889,19 @@ void MacrosWindow::ShowActiveMacro()
 }
 
 /// An item in the macros list has been selected.
-void MacrosWindow::OnListSelected(wxListEvent & WXUNUSED(event))
+void MacrosWindow::OnListSelected(wxListEvent &event)
 {
+   const auto &command = mCatalog.ByTranslation(mList->GetItemText(event.GetIndex(), ActionColumn));
+
+   if (command != mCatalog.end())
+   {
+      EffectManager &em = EffectManager::Get();
+      PluginID ID = em.GetEffectByIdentifier(command->name.Internal());
+
+      mEdit->Enable(!ID.empty());
+   }
+
+
    FitColumns();
 }
 
