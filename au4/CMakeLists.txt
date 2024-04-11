@@ -41,7 +41,7 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
-include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/DeclareMuseOptions.cmake)
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 
 ###########################################
 # AudacityDependencies
@@ -129,21 +129,21 @@ add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 ###########################################
 include(GetPaths)
 
-set(AUDACITY_BUILD_CONFIGURATION "app" CACHE STRING "Build configuration")
+set(AU4_BUILD_CONFIGURATION "app" CACHE STRING "Build configuration")
 # Possible values:
 # - app             - for desktop app
 # - app-portable    - for desktop portable app (Windows build for PortableApps.com)
 # - utest           - for unit tests (for CI)
 
-set(AUDACITY_BUILD_MODE "dev" CACHE STRING "Build mode")
+set(AU4_BUILD_MODE "dev" CACHE STRING "Build mode")
 # Possible values:
 # - dev     - for development/nightly builds
 # - testing - for testing versions (alpha, beta, RC)
 # - release - for stable release builds
 
-set(AU_REVISION "" CACHE STRING "Build revision")
+set(AU4_REVISION "" CACHE STRING "Build revision")
 
-set(MUSE_BUILD_UNIT_TESTS OFF)
+set(MUSE_ENABLE_UNIT_TESTS OFF)
 set(MUSE_MODULE_ACCESSIBILITY OFF)
 set(MUSE_MODULE_ACTIONS ON)
 set(MUSE_MODULE_AUDIO OFF)
@@ -176,20 +176,12 @@ option(MU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 # === Pack ===
 option(MU_RUN_LRELEASE "Generate .qm files" ON)
 
-# === Tests ===
-option(MU_BUILD_ASAN "Enable Address Sanitizer" OFF)
-
-# === Tools ===
-
 # === Compile ===
 option(MU_COMPILE_BUILD_MACOS_APPLE_SILICON "Build for Apple Silicon architecture. Only applicable on Macs with Apple Silicon, and requires suitable Qt version." OFF)
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
 option(MU_COMPILE_USE_PCH "Use precompiled headers." ON)
 option(MU_COMPILE_USE_UNITY "Use unity build." ON)
 option(MU_COMPILE_USE_CCACHE "Try use ccache" ON)
-
-# === Debug ===
-option(MU_ENABLE_STRING_DEBUG_HACK "Enable string debug hack (only clang)" ON)
 
 
 ###########################################
@@ -217,19 +209,6 @@ endif(MUE_COMPILE_USE_CCACHE)
 ###########################################
 set(QT_MIN_VERSION "6.2.4")
 include(FindQt6)
-
-if (OS_IS_WIN)
-    include(FetchContent)
-    FetchContent_Declare(
-      muse_prebuild_win_deps
-      GIT_REPOSITORY https://github.com/musescore/musescore_prebuild_win_deps.git
-      GIT_TAG        HEAD
-    )
-    FetchContent_MakeAvailable(muse_prebuild_win_deps)
-    set(DEPENDENCIES_DIR ${muse_prebuild_win_deps_SOURCE_DIR})
-    set(DEPENDENCIES_LIB_DIR ${DEPENDENCIES_DIR}/libx64)
-    set(DEPENDENCIES_INC ${DEPENDENCIES_DIR}/include)
-endif(OS_IS_WIN)
 
 ###########################################
 # Add source tree
