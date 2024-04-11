@@ -157,6 +157,11 @@ RunContext::Bind(int index, long long value)
    return DoBind([&] { return sqlite3_bind_int64(*mStatement, index, value); });
 }
 
+RunContext& sqlite::RunContext::Bind(int index, std::size_t value)
+{
+   return DoBind([&] { return sqlite3_bind_int64(*mStatement, index, value); });
+}
+
 RunContext&
 RunContext::Bind(int index, float value)
 {

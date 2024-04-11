@@ -151,6 +151,7 @@ public:
    RunContext& Bind(int index, int value);
    RunContext& Bind(int index, long value);
    RunContext& Bind(int index, long long value);
+   RunContext& Bind(int index, std::size_t value);
    RunContext& Bind(int index, float value);
    RunContext& Bind(int index, double value);
 
