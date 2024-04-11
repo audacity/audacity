@@ -19,7 +19,7 @@ namespace audacity::cloud::audiocom::sync
 {
 namespace
 {
-const auto createTableQuery = R"(
+const char* createTableQuery = R"(
 CREATE TABLE IF NOT EXISTS projects
 (
    project_id TEXT,
@@ -87,10 +87,23 @@ CREATE TABLE IF NOT EXISTS project_users
    user_name TEXT,
    PRIMARY KEY (project_id)
 );
+
+CREATE TABLE IF NOT EXISTS migration
+(
+   version INTEGER
+);
+
+INSERT OR IGNORE INTO migration (version) VALUES (0);
 )";
 
-}
+const auto addProjectSyncedDialogShownColumn = R"(
+ALTER TABLE projects ADD COLUMN synced_dialog_shown INTEGER DEFAULT 1;
+)";
 
+const char* migrations[] = {
+   addProjectSyncedDialogShownColumn,
+};
+} // namespace
 
 CloudProjectsDatabase& CloudProjectsDatabase::Get()
 {
@@ -123,7 +136,7 @@ CloudProjectsDatabase::GetProjectData(std::string_view projectId) const
       return {};
 
    auto statement = connection->CreateStatement(
-      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects WHERE project_id = ? LIMIT 1");
+      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown FROM projects WHERE project_id = ? LIMIT 1");
 
    if (!statement)
       return {};
@@ -140,7 +153,7 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
       return {};
 
    auto statement = connection->CreateStatement(
-      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects WHERE local_path = ? LIMIT 1");
+      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown FROM projects WHERE local_path = ? LIMIT 1");
 
    if (!statement)
       return {};
@@ -159,7 +172,7 @@ cloud::audiocom::sync::CloudProjectsDatabase::GetCloudProjects() const
       return result;
 
    auto statement = connection->CreateStatement(
-      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status FROM projects");
+      "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown FROM projects");
 
    if (!statement)
       return result;
@@ -319,7 +332,7 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
       return false;
 
    auto statement = connection->CreateStatement(
-      "INSERT OR REPLACE INTO projects (project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+      "INSERT OR REPLACE INTO projects (project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
    if (!statement)
       return false;
@@ -329,10 +342,57 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
                        projectData.ProjectId, projectData.SnapshotId,
                        projectData.SavesCount, projectData.LastAudioPreview,
                        projectData.LocalPath, projectData.LastModified,
-                       projectData.LastRead, projectData.SyncStatus)
+                       projectData.LastRead, projectData.SyncStatus,
+                       projectData.FirstSyncDialogShown)
                     .Run();
 
    return result.IsOk();
+}
+
+bool cloud::audiocom::sync::CloudProjectsDatabase::IsFirstSyncDialogShown(
+   std::string_view projectId) const
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return false;
+
+   auto statement = connection->CreateStatement (
+      "SELECT synced_dialog_shown FROM projects WHERE project_id = ? LIMIT 1");
+
+   if (!statement)
+      return false;
+
+   auto result = statement->Prepare(projectId).Run();
+
+   for (auto row : result)
+   {
+      bool shown;
+
+      if (!row.Get(0, shown))
+         return false;
+
+      return shown;
+   }
+
+   return false;
+}
+
+void cloud::audiocom::sync::CloudProjectsDatabase::SetFirstSyncDialogShown(
+   std::string_view projectId, bool shown)
+{
+   auto connection = GetConnection();
+
+   if (!connection)
+      return;
+
+   auto statement = connection->CreateStatement (
+      "UPDATE projects SET synced_dialog_shown = ? WHERE project_id = ?");
+
+   if (!statement)
+      return;
+
+   statement->Prepare(shown, projectId).Run();
 }
 
 std::string
@@ -717,6 +777,9 @@ CloudProjectsDatabase::DoGetProjectData(const sqlite::Row& row) const
 
    data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
 
+   if (!row.Get(8, data.FirstSyncDialogShown))
+      return {};
+
    return data;
 }
 
@@ -746,7 +809,9 @@ bool CloudProjectsDatabase::OpenConnection()
    if (!mConnection)
       return false;
 
-   auto result = mConnection->Acquire()->Execute(createTableQuery);
+   auto connection = mConnection->Acquire();
+
+   auto result = connection->Execute(createTableQuery);
 
    if (!result)
    {
@@ -754,6 +819,58 @@ bool CloudProjectsDatabase::OpenConnection()
       return false;
    }
 
-   return true;
+   return RunMigrations();
 }
+
+bool CloudProjectsDatabase::RunMigrations()
+{
+   auto connection = mConnection->Acquire();
+
+   auto getMigrationVersion =
+      connection->CreateStatement("SELECT version FROM migration LIMIT 1");
+
+   if (!getMigrationVersion)
+      return false;
+
+   auto versionResult = getMigrationVersion->Prepare().Run();
+
+   if (!versionResult.IsOk())
+      return false;
+
+   int version = 0;
+
+   for (auto row : versionResult)
+   {
+      if (!row.Get(0, version))
+         return false;
+      break;
+   }
+
+   const auto migrationsCount = std::size(migrations);
+
+   if (version >= migrationsCount)
+      return true;
+
+   auto tx = connection->BeginTransaction("RunMigrations");
+
+   for (int i = version; i < migrationsCount; ++i)
+   {
+      auto result = connection->Execute(migrations[i]);
+
+      if (!result)
+         return false;
+   }
+
+   auto updateVersion =
+      connection->CreateStatement("UPDATE migration SET version = ?");
+
+   if (!updateVersion)
+      return false;
+
+   if (!updateVersion->Prepare(migrationsCount).Run().IsOk())
+      return false;
+
+   return tx.Commit().IsOk();
+}
+
 } // namespace audacity::cloud::audiocom::sync

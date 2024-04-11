@@ -116,6 +116,9 @@ public:
 
    ProjectSyncStatus GetCurrentSyncStatus() const;
 
+   bool IsFirstSyncDialogShown() const;
+   void SetFirstSyncDialogShown(bool shown = true);
+
 private:
    struct UploadQueueElement;
    struct CloudStatusChangedNotifier;

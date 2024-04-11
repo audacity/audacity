@@ -645,6 +645,26 @@ ProjectSyncStatus ProjectCloudExtension::GetCurrentSyncStatus() const
    return mLastStatus.Status;
 }
 
+bool ProjectCloudExtension::IsFirstSyncDialogShown() const
+{
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
+      return false;
+
+   return CloudProjectsDatabase::Get().IsFirstSyncDialogShown(mProjectId);
+}
+
+void ProjectCloudExtension::SetFirstSyncDialogShown(bool shown)
+{
+   auto lock = std::lock_guard { mIdentifiersMutex };
+
+   if (mProjectId.empty())
+      return;
+
+   CloudProjectsDatabase::Get().SetFirstSyncDialogShown(mProjectId, shown);
+}
+
 bool CloudStatusChangedMessage::IsSyncing() const noexcept
 {
    return Status == ProjectSyncStatus::Syncing;
