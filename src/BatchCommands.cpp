@@ -427,6 +427,15 @@ auto MacroCommandsCatalog::ByCommandId( const CommandID &commandId ) const
          { return entry.name.Internal() == commandId; });
 }
 
+// linear search
+auto MacroCommandsCatalog::ByTranslation( const wxString &translation ) const
+   -> Entries::const_iterator
+{
+   return std::find_if(begin(), end(),
+      [&](const Entry &entry)
+      { return entry.name.Translation() == translation; });
+}
+
 wxString MacroCommands::GetCurrentParamsFor(const CommandID & command)
 {
    const PluginID & ID =

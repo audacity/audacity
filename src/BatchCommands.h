@@ -41,6 +41,8 @@ public:
    Entries::const_iterator ByFriendlyName( const TranslatableString &friendlyName ) const;
    // linear search
    Entries::const_iterator ByCommandId( const CommandID &commandId ) const;
+   // linear search
+   Entries::const_iterator ByTranslation( const wxString &translation ) const;
 
    // Lookup by position as sorted by friendly name
    const Entry &operator[] ( size_t index ) const { return mCommands[index]; }
