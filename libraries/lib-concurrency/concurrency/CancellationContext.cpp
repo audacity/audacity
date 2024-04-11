@@ -4,8 +4,6 @@
  * SPDX-FileContributor: Dmitry Vedenko
  */
 
-#pragma once
-
 #include "CancellationContext.h"
 
 #include <algorithm>
