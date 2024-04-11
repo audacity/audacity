@@ -63,6 +63,9 @@ set(LINK_LIB
     muse::shortcuts
     muse::workspace
     muse::accessibility
+    muse::cloud
+    muse::network
+    muse::multiinstances
 
     appshell
     au3wrap
