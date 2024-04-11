@@ -127,10 +127,10 @@ int App::run(int argc, char** argv)
     QCoreApplication::setOrganizationDomain("musescore.org");
     // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
 
-#if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
-    // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
-    QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
-#endif
+// #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
+//     // Any OS that uses Freedesktop.org Desktop Entry Specification (e.g. Linux, BSD)
+//     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
+// #endif
 
     // commandLineParser.processBuiltinArgs(*app);
 
