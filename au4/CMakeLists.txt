@@ -92,6 +92,17 @@ set( CMAKE_PREFIX_PATH
    "${CMAKE_BINARY_DIR}/generators"
    ${CMAKE_PREFIX_PATH}
 )
+if( APPLE )
+   # CMAKE_HOST_SYSTEM_PROCESSOR is empty before the project() command
+   execute_process(
+      COMMAND uname -m
+      OUTPUT_VARIABLE HOST_SYSTEM_PROCESSOR
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+   )
+
+   set( MACOS_ARCHITECTURE "${HOST_SYSTEM_PROCESSOR}" CACHE STRING "Target architecture for macOS builds. One of x86_64/arm64" )
+
+endif()
 
 set(CONAN_RUNNER_DIR ${AUDACITY_ROOT}/conan)
 include(AudacityDependencies)
