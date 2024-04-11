@@ -33,11 +33,14 @@
 #include "framework/ui/uimodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
 #include "framework/dockwindow/dockmodule.h"
+#include "framework/cloud/cloudmodule.h"
+#include "framework/network/networkmodule.h"
 
 // need stubs
 #include "framework/stubs/shortcuts/shortcutsstubmodule.h"
 #include "framework/stubs/workspace/workspacestubmodule.h"
 #include "framework/stubs/accessibility/accessibilitystubmodule.h"
+#include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
 
 // -----
 #include "appshell/appshellmodule.h"
@@ -101,6 +104,9 @@ int main(int argc, char** argv)
     app.addModule(new muse::shortcuts::ShortcutsModule());
     app.addModule(new muse::workspace::WorkspaceModule());
     app.addModule(new muse::accessibility::AccessibilityModule());
+    app.addModule(new muse::cloud::CloudModule());
+    app.addModule(new muse::network::NetworkModule());
+    app.addModule(new muse::mi::MultiInstancesModule());
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
