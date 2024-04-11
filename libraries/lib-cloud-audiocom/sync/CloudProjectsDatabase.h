@@ -31,6 +31,8 @@ struct DBProjectData final
    int64_t LastModified = 0;
    int64_t LastRead     = 0;
 
+   bool FirstSyncDialogShown { false };
+
    enum SyncStatusType
    {
       SyncStatusSynced      = 0,
@@ -108,6 +110,9 @@ public:
 
    bool UpdateProjectData(const DBProjectData& projectData);
 
+   bool IsFirstSyncDialogShown(std::string_view projectId) const;
+   void SetFirstSyncDialogShown(std::string_view projectId, bool shown = true);
+
    std::string GetProjectUserSlug(std::string_view projectId);
    void SetProjectUserSlug(std::string_view projectId, std::string_view slug);
 
@@ -142,6 +147,7 @@ private:
    DoGetProjectData(sqlite::RunResult result) const;
 
    bool OpenConnection();
+   bool RunMigrations();
 
    std::mutex mConnectionMutex;
    std::shared_ptr<sqlite::SafeConnection> mConnection;
