@@ -648,6 +648,9 @@ void RemoteProjectSnapshot::MarkProjectInDB(bool successfulDownload)
    if (data.SavesCount == 0)
       data.SavesCount = 1;
 
+   // For the downloaded projects - we don't need to show the dialog
+   data.FirstSyncDialogShown = true;
+
    db.UpdateProjectData(data);
 
    if (successfulDownload)

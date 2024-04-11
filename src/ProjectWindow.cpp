@@ -890,11 +890,6 @@ wxStatusBar* ProjectWindow::CreateProjectStatusBar()
    // be an event handler to send them to the appropriate field.
    statusBar = CreateStatusBar(
          1 + ProjectStatusFieldsRegistry::Count(pProject.get()));
-#if wxUSE_ACCESSIBILITY
-   // so that name can be set on a standard control
-   statusBar->SetAccessible(safenew WindowAccessible(statusBar));
-#endif
-   statusBar->SetName(wxT("status_line")); // not localized
 
    statusBar->Bind(
       wxEVT_SIZE,

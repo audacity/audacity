@@ -5,10 +5,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-17 22:42+0200\n"
+"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"PO-Revision-Date: 2024-04-05 04:27+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <(nothing)>\n"
 "Language: ka\n"
@@ -16,42 +16,50 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.4\n"
+"X-Generator: Poedit 3.3.2\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "ნაკადი აქტიურია... ინფორმაციის შეგროვება შეუძლებელია.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "ჩამწერი მოწყობილობების ნაგულსხმევი რაოდენობა: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "დამკვრელი მოწყობილობების ნაგულსხმევი რაოდენობა: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "მოწყობილობები ნაპოვნი არაა\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "ინფორმაცია მოწყობილობაზე: %d ხელმიუწვდომელია\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "მოწყობილობის ID: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "მოწყობილობის სახელი: %s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "ჰოსტის სახელი: %s\n"
@@ -161,8 +169,8 @@ msgstr ""
 "ვერ შეძლებთ აუდიოს დაკვრას ან ჩაწერას.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "შეცდომა: %s"
@@ -195,7 +203,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "შეცდომა"
 
@@ -361,8 +368,48 @@ msgstr "შეტყობინება"
 msgid "Cannot proceed to upload."
 msgstr "ატვირთვის დაწყება შეუძლებელია."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File not found"
+msgstr "ფაილი ვერ მოიძებნა"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr "პროექტი დაიხურა სწრაფი ასლის შექმნამდე"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, c-format
+msgid "Invalid Response: %s"
+msgstr "არასწორი პასუხი: %s"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+msgid "Export failed"
+msgstr "გატანის შეცდომა"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "გატანის შეცდომა"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to attach to the Cloud project database"
+msgstr "ღრუბლოვანი პროექტის ბაზასთან მიმაგრების შეცდომა"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to decompress the Cloud project block"
+msgstr "ღრუბლოვანი პროექტის ბლოკის გაშლა ჩავარდა"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Failed to deserialize the response"
+msgstr "პასუხის დესერიალიზაციის შეცდომა"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -395,7 +442,7 @@ msgstr "%s-ის გამოყენება..."
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "ჩაშენებული ეფექტები"
 
@@ -437,6 +484,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "შიდა შეცდომა"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "მართკუთხედი"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "ბარტლეტის"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "ჰამინგის"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "ჰანის"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "ბლექმანის"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "ბლექმან-ჰარისის"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "უელჩის"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "გაუსის(a=2.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "გაუსის(a=3.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "გაუსის(a=4.5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
@@ -473,9 +569,8 @@ msgstr ""
 msgid "File Error"
 msgstr "ფაილის შეცდომა"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "ყველა ფაილი"
 
@@ -551,6 +646,7 @@ msgstr ""
 "მინიშნებებისათვის დააწკაპუნეთ დახმარების ღილაკს."
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -558,10 +654,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "გაფრთხილება"
 
@@ -574,22 +669,18 @@ msgstr ""
 "გატანა შეუძლებელია.\n"
 "შეცდომა %s"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "გატანა"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+msgid "Export completed with error."
+msgstr "გატანა შეცდომით დასრულდა."
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "ყველა მხარდაჭერილი ფაილი"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
-"არის არა აუდიო ფაილი, არამედ MIDI. \n"
-"Audacity-ს არ შეუძლია ამ ტიპის ფაილის გახსნა და დაკვრა, მაგრამ\n"
-"მისი შემოტანა შეგიძლიათ შემდეგნაირად ფაილი > შემოტანა > MIDI."
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -856,8 +947,7 @@ msgstr "LV2 ეფ&ექტები"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Audacity-ში LV2 ეფექტების მხარდაჭერა"
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -875,55 +965,6 @@ msgstr "სამკუთხედი"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "ჩამოყალიბებული"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "მართკუთხედი"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "ბარტლეტის"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "ჰამინგის"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "ჰანის"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "ბლექმანის"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "ბლექმან-ჰარისის"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "უელჩის"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "გაუსის(a=2.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "გაუსის(a=3.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "გაუსის(a=4.5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -960,6 +1001,57 @@ msgstr "32-ბიტიანი მცოცავი"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "უცნობი ფორმატი"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "ბრძანება"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "გამეორება %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, რადგან კლავიატურის მალსახმობი %s %s-ზე დააყენეთ"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+"აღმოჩენილია პრობლემა თქვენს ბოლო ქმედებასთან.\n"
+"თუ გგონიათ, რომ ეს შეცდომაა, გვითხარით ზუსტად, რა მოხდა."
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "გაუქმებული"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "%s &დაბრუნება"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&დაბრუნება"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "&გამეორება %s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&გამეორება"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1098,6 +1190,74 @@ msgstr "Nyquist-ის ბრძანებები"
 msgid "Failed to open the file for upload: %s"
 msgstr "ასატვირთად ფაილის გახსნის შეცდომა: %s"
 
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "MIDI შეტანა/გამოტანის ინიციალიზაციის შეცდომა.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"MIDI ფაილებს ვერ დაუკრავთ.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "MIDI-ის ინიციალიზაციის შეცდომა"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "შენიშვნების ბილიკი"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "წამი"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "&ტაქტი"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "გაცემის მხარდაჭერა: %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "შემოტანის მხარდაჭერა: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "ჩაიტვირთა: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "არჩეული MIDI ჩამწერი მოწყობილობა: %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "MIDI ჩამწერი მოწყობილობა ნაპოვნი ვერ იქნა \"%s\"-თვის.\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "არჩეული MIDI დამკვრელი მოწყობილობა: %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "MIDI დამკვრელი მოწყობილობა ნაპოვნი ვერ იქნა \"%s\"-თვის\n"
+
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
 #: libraries/lib-numeric-formats/NumericConverterFormats.cpp
@@ -1163,7 +1323,7 @@ msgstr "ტაქტი:დარტყმა"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr ""
+msgstr "bar:beat:tick"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -1184,7 +1344,6 @@ msgstr "წამები + მილიწამები"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#| msgid "01000,01000 seconds"
 msgid "01000,01000>01000 seconds"
 msgstr "01000,01000>01000 წამი"
 
@@ -1994,7 +2153,6 @@ msgid "Bar"
 msgstr "ტაქტი"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#| msgid "128"
 msgid "1/2"
 msgstr "1/2"
 
@@ -2003,7 +2161,6 @@ msgid "1/4"
 msgstr "1/4"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#| msgid "128"
 msgid "1/8"
 msgstr "1/8"
 
@@ -2101,6 +2258,141 @@ msgstr "მილიწამი"
 #: src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "სემპლები"
+
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "SQLite3 error"
+msgstr "SQLite3-ის შეცდომა"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "No error"
+msgstr "შეცდომის გარეშე"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Generic error"
+msgstr "ზოგადი შეცდომა"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Internal logic error in SQLite"
+msgstr "შიდა ლოგიკის შეცდომა SQLite-ში"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr "წვდომა აკრძალულია"
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr "ბაზის ფაილი დაბლოკილია"
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr "ცხრილი ბაზაში დაბლოკილია"
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr "Malloc() ჩავარდა"
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr "ჩაწერის მცდელობა მხოლოდ წაკითხვად ბაზაში"
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Operation terminated"
+msgstr "ოპერაცია შეწყდა"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr "შეყვანა/გამოტანის შეცდომა"
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr "მონაცემთა ბაზის დისკის ასლი შეცდომებს შეიცავს"
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr "ჩასმა ჩავარდა, რადგან დისკი სავსეა"
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Unable to open the database file"
+msgstr "ბაზის ფაილის გახსნა შეუძლებელია"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr "ბაზის დაბლოკვის პროტოკოლის შეცდომა"
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr "ბაზის სქემა შეიცვალა"
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr "სტრიქონი ან ბლობი ზომის ზღვარს სცდება"
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr "გაუქმდა შეზღუდვის დარღვევის გამო"
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr "მონაცემების ტიპი არ ემთხვევა"
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr "ბიბლიოთეკა არასწორად გამოიყენება"
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr "დიდი ფაილების მხარდაჭერა გათიშულია"
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr "ავტორიზაცია აკრძალულია"
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Not used"
+msgstr "არ გამოიყენება"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr "sqlite3_bind-ის მეორე პარამეტრი დაშვებული შუალედის გარეთაა"
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File opened that is not a database file "
+msgstr "გახსნილი ფაილი ბაზის ფაილი არაა "
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+msgid "Unknown error"
+msgstr "უცნობი შეცდომა"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -2480,8 +2772,8 @@ msgid "Pre-processing"
 msgstr "წინასწარი დამუშავება"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr ""
+msgid "Rendering Clip"
+msgstr "კლიპის რენდერი"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2517,7 +2809,6 @@ msgid "Problem details"
 msgstr "პრობლემის დეტალები"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "კომენტარები"
 
@@ -2551,7 +2842,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "დაკეტვა"
 
@@ -2644,13 +2935,6 @@ msgstr ""
 #: libraries/lib-wx-init/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
@@ -2688,18 +2972,24 @@ msgid "Show Log for Details"
 msgstr "დეტალებისთვის ჟურნალის ჩვენება"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "დიახ"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "გასული დრო:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "დარჩენილი დრო:"
 
@@ -2708,7 +2998,13 @@ msgstr "დარჩენილი დრო:"
 msgid "Stop"
 msgstr "გაჩერება"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "გუქმება"
 
@@ -2744,6 +3040,10 @@ msgstr ""
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "მიუთითეთ ფაილის ახალი სახელი:"
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+msgid "Don't ask me again"
+msgstr "აღარ მკითხო"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -2901,14 +3201,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"აკლია პროექტის ფაილი %s\n"
+"\n"
+"ჩაისმება სიჩუმე."
 
 #: modules/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
-msgstr ""
+msgstr "არასწორი ან მიუთითებელი simpleblockfile-ის ატრიბუტი 'len'."
 
 #: modules/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
-msgstr ""
+msgstr "არასწორი ან მიუთითებელი silentblockfile-ის ატრიბუტი 'len'."
 
 #: modules/mod-aup/ImportAUP.cpp
 #, c-format
@@ -2917,14 +3220,17 @@ msgid ""
 "\n"
 "Inserting silence instead."
 msgstr ""
+"აკლია ფსევდონიმის ფაილი %s\n"
+"\n"
+"ჩაისმება სიჩუმე."
 
 #: modules/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
-msgstr ""
+msgstr "არასწორი ან მიუთითებელი pcmaliasblockfile-ის ატრიბუტი 'aliasstart'."
 
 #: modules/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
-msgstr ""
+msgstr "არასწორი ან მიუთითებელი pcmaliasblockfile-ის ატრიბუტი 'aliaslen'."
 
 #: modules/mod-aup/ImportAUP.cpp
 #, c-format
@@ -3022,13 +3328,706 @@ msgid "Command Output"
 msgstr "ბრძანების გამონატანი"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&დიახ"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "თქვენ მონიშნული გაქვთ ფაილის სახელი გაფართოების გარეშე. გავაგრძელო?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "Waiting for audio.com"
+msgstr "Audio.com-ის მოლოდინი"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid ""
+"An action on audio.com is required before you can continue. You can cancel "
+"this operation."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr "შენახვა audio.com-ზე"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#| msgid "Preparing audio..."
+msgid "Generating audio preview..."
+msgstr "აუდიომინიატურის შექმნა..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "გახსნა audio.com-დან"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+msgid "Synchronizing project"
+msgstr "პროექტის სინქრონიზაცია"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Save To Cloud..."
+msgstr "შენახვა ღრუბელში..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Update Cloud Audio Preview"
+msgstr "აუდიოს მინიატურის განახლება ღრუბელში"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open From Cloud..."
+msgstr "გახსნა ღრუბლიდან..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Share Audio..."
+msgstr "აუდიოს გაზიარება..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr "ღრუბელი"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Account"
+msgstr "ანგარიში"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Export behavior"
+msgstr "გატანის ქცევა"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Show 'How would you like to export?' dialog"
+msgstr "'როგორ გნებავთ, გაიტანოთ?' დიალოგის ჩვენება"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Save behavior"
+msgstr "ქცევის შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr "ყოველთვის კითხვა"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to cloud"
+msgstr "შენახვა ყოველთვის ღრუბელში"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to the computer"
+msgstr "შენახვა ყოველთვის კომპიუტერში"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Temporary Cloud files directory"
+msgstr "დროებითი ღრუბლოვანი ფაილების საქაღალდე"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "&მდებარეობა:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "არჩევა..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Remove temporary files after:"
+msgstr "დროებითი ფაილების წაშლა დროის შემდეგ:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr "დღე"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Preferences for Cloud"
+msgstr "პარამეტრები ღრუბლისთვის"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "დროებითი საქაღალდის მოსათავსებელი მდებარეობის შერჩევა"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "დროებითი ფაილების საქაღალდე არ შეიძლება FAT დისკზე იყოს."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "პარამეტრების გამოყენება შეუძლებელია."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+msgid "Failed."
+msgstr "ჩავარდა."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr "სინქრონიზაცია audio.com-თან... (%d%%)"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid ""
+"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr "ადგილის გათავისუფლების მოლოდინი"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr "როცა audio.com-ზე ადგილი გექნებათ, დააწექით თავიდან ცდას."
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "აუდიოს გაზიარება"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "აუდიოს &გაზიარების ხელსაწყოთა ზოლი"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr "ანგარიში მიბმული არაა"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "ანგარიშის &მიბმა"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "&მიბმის მოხსნა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Don't show this again"
+msgstr "ეს აღარ მაჩვენო"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr "როგორ გნებავთ შენახვა?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to the Cloud"
+msgstr "შენახვა ღრუბელში"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Your project is backed up privately on audio.com. You can access your work "
+"from any device and collaborate on your project with others"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Save to Cloud"
+msgstr "ღ&რუბელში შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr "თქვენს კომპიუტერზე"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device"
+msgstr "ფაილები თქვენს მოწყობილობაზე იქნება შენახული"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr "&კომპიუტერზე შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr "დაიმახსოვ&რე ჩემი არჩევანი და აღარ მკითხო"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr "როგორ გნებავთ გატანა?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Share to audio.com"
+msgstr "გაზიარება audio.com-ზე"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Uploads an uncompressed audio file and generates a shareable link. This link "
+"allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Share to audio.com"
+msgstr "გა&ზიარება audio.com-ზე"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export to &computer"
+msgstr "&კომპიუტერზე გატანა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Don't show again"
+msgstr "&აღარ მაჩვენო"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid ""
+"Cloud saving requires a free audio.com account linked to Audacity. Press "
+"\"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr "პირადი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "სიაში არაა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "საჯარო"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to computer..."
+msgstr "შენახვა კომპიუტერზე..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Project Name"
+msgstr "პროექტის სახელი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr "აღმოჩენილია შეცდომა თქვენი ფაილის სინქრონიზაციისას"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid ""
+"Don't worry, your changes will be saved to a temporary location and will be "
+"synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "შესული არ ბრძანდებით"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr "გასაგრძელებლად შედით audio.com-ზე."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "შესვლა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "ანგარიშის მიბმა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "თქვენ ანგარიშის მიბმა ვერ შევძელით. კიდევ სცადეთ."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&გაუქმება"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "კიდევ &ცდა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "ანგარიში წარმატებით მიება!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "&დიახ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "ანგარიშის მისაბმელად შეიყვანეთ კოდი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "ტოკენი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "გაგრ&ძელება"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "Audio.com-ის ანგარიშის მიბმა..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr "ეს პროექტი ღრუბელში შენახული აღარ იქნება"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"This project was removed from audio.com and therefore cannot be saved at "
+"this time. "
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"You can either save it to the Cloud as a new project, or save it to your "
+"computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr "კომპიუტერზე შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "Save to Cloud"
+msgstr "ღრუბელში შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid ""
+"You may need to remove older projects to make space available. For more "
+"options, visit audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Visit audio.com"
+msgstr "ეწვიეთ Audio.com-ს"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr "აღმოჩენილია პროექტის ვერსიის შეუსაბამობა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"There's a newer version of this Audacity project on Audio.com. Saving this "
+"project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Save this project"
+msgstr "ამ პროექტის შენახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr "მოცილება და უკანასკნელი ვერსიის გახსნა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"Project contains unsaved changes. There's a newer version of this Audacity "
+"project on Audio.com. Discarding changes will open the latest version "
+"instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open local project"
+msgstr "ლოკალური პროექტის გახსნა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Cloud project conflict"
+msgstr "ღრუბლოვანი პროექტის შეუსაბამობა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"You are attempting to open a new active version of this project when there "
+"is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr "ამჟამად ღია ვერსიის შენარჩუნება"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open new version"
+msgstr "ახალი ვერსიის გახსნა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr "გახსნა ღრუბლიდან"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "წუთზე ნაკლები"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "1 წუთის წინ"
+msgstr[1] "%d წუთის წინ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "1 საათის წინ"
+msgstr[1] "%d საათის წინ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Modified"
+msgstr "შეცვლილია"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "ანგარიშის ავტორიზაცია ჩავარდა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Loading projects list..."
+msgstr "პროექტების სიის ჩატვირთვა..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to get projects list"
+msgstr "პროექტების სიის მიღება ჩავარდა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Cloud saved projects"
+msgstr "ღრუბელში შენახული პროექტები"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "ძებნა:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "წინა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "შემდეგი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "გახსნა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "ნახვა audio.com-ზე"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "%d-ე გვერდი %d-დან"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "ყველას შეეძლება მოუსმინოს ამ აუდიოს."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"Only you and people you share a link with will be able to listen to this "
+"audio."
+msgstr "ამ ხმის მოსმენა შეგიძლიათ მხოლოდ თქვენ და მათ, ვისაც ბმული გაუზიარეთ."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "დარწმუნებული ხართ, რომ გსურთ გაუქმება?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Audio.com-ზე ატვირთვის შეცდომა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "აუდიოს ატვირთვა..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to "
+"your audio.com account before uploading."
+msgstr ""
+"ამ ფაილის ატვირთვის შეცდომა. კიდევ სცადეთ და დარწმუნდით, რომ ატვირთვამდე "
+"თქვენი audio.com-ის ანგარიში მიაბით."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "ატვირთვის შეცდომა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "ამ ფაილის ასატვირთად მომზადება შეუძლებელია."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "ატვირთვის დასრულება..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "აუდიობილიკი სახელი"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
+"account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Audio.com-ზე ასატვირთად დააჭირეთ \"გაგრძელებას\""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "აუდიოს მომზადება..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr "ამ პროექტთან წვდომისტვის ავტორიზაცია არ გაგაჩნიათ."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr "წვდომის მცდელობა პროექტთან, რომელიც ვადაგასულია."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr "Audacity-ს სერვერთან მიერთების პრობლემა აქვს."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid ""
+"The project is too large to upload. Please save it to your computer instead."
+msgstr "პროექტი მეტისმეტად დიდია ასატვირთად. შეინახეთ ის თქვენს კომპიუტერში."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr "ამ პროექტთან წვდომა არ გაქვთ."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project could not be found."
+msgstr "პროექტი ვერ ვიპოვე."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr "სერვერმა გვიპასუხა რაღაც, რაც Audacity-მა ვერ გაიგო."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr "Audacity-მა აღმოაჩინა შიდა შეცდომა."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr "Audio.com-ის შიდა შეცდომა."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an unknown error."
+msgstr "Audacity-მა უცნობი შეცდომა აღმოაჩინა."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Sync failed"
+msgstr "სინქრონიზაცია ჩავარდა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr ""
+"შეცდომის დეტალები:\n"
+"%s"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "Syncing your project"
+msgstr "მიმდინარეობს თქვენი პროექტის სინქი"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid ""
+"The project will sync in background while you work. You can check the sync "
+"status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "გაგრძელება"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr "წარმატება!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid ""
+"All saved changes will now update to the cloud. You can manage this file "
+"from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "View online"
+msgstr "ინტერნეტში ნახვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr "მზადაა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Cloud project incomplete"
+msgstr "ღრუბლოვანი პროექტი დაუსრულებელია"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"The latest version of this project was not fully uploaded to audio.com. You "
+"can load the last complete version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Load latest"
+msgstr "უკანასკნელის ჩატვირთვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"No version of this project has been fully uploaded to audio.com. It cannot "
+"be loaded."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr "თქვენ გააუქმეთ Audio.com-ზე ატვირთვა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr "თავიდან ცდა"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid ""
+"An action on audio.com is required before you can continue. Once you are "
+"done with it, click Retry"
+msgstr ""
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3119,7 +4118,8 @@ msgid "Cutoff"
 msgstr "ამოჭრა"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "გამორთულია"
 
@@ -3423,6 +4423,14 @@ msgstr "ყველა ფორმატის ჩვენება"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "ყველა კოდეკის ჩვენება"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Formats"
+msgstr "ფორმატები"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Codecs"
+msgstr "კოდეკები"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4049,6 +5057,90 @@ msgstr "MIDI ბილიკები ინდივიდუალურად
 msgid "Invalid track offset in LOF file."
 msgstr "LOF ფაილში ტრეკის არასწორი წანაცვლება."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "აირჩიეთ შენიშვნების ბილიკი."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI გატანა როგორც:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "MIDI ფაილი"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Allegro ფაილი"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"თქვენ მონიშნული გაქვთ ფაილის სახელი ფაილის უცნობი გაფართოებით.\n"
+"გავაგრძელო?"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "MIDI-ის გატანა"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "გატანა (MI&DI)"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "შემოტანილია MIDI '%s'-დან"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "MIDI შემოტანა"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "შეუძლებელია ფაილ %s-ის გახსნა: სახელი მეტისმეტად მოკლეა."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "შეუძლებელია ფაილ %s-ის გახსნა: არასწორი ტიპი."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "შეუძლებელია ფაილ %s-ის გახსნა."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "აირჩიეთ MIDI ფაილი"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "MIDI და Allegro ფაილები"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "MIDI ფაილები"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Allegro ფაილები"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
 #: modules/mod-mp2/ExportMP2.cpp
 msgid "Version"
 msgstr "ვერსია"
@@ -4243,8 +5335,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "მხოლოდ libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
-msgstr "მხოლოდ libmp3lame.so.0"
+msgid "Only libmp3lame.so"
+msgstr "მხოლოდ libmp3lame.so"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -4253,6 +5345,10 @@ msgstr "ძირითადი გაზიარებული ობიე�
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "სხვა ბიბლიოთეკები"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "მხოლოდ libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4533,8 +5629,7 @@ msgstr "უსახელო"
 msgid "Nyquist Effect Workbench - "
 msgstr "Nyquist ეფექტის სამუშაო მაგიდა - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "ახალი"
 
@@ -4543,16 +5638,8 @@ msgid "New script"
 msgstr "ახალი სკრიპტი"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "გახსნა"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "სკრიპტის გახსნა"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "შენახვა"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4673,10 +5760,6 @@ msgid "Go to previous S-expr"
 msgstr "წინა S-expr-ზე გადასვლა"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "შემდეგი"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "შემდეგ S-expr-ზე გადასვლა"
 
@@ -4788,10 +5871,6 @@ msgid "memory allocation has failed"
 msgstr "მეხსიერების გამოყოფის შეცდომა"
 
 #: modules/mod-opus/ExportOpus.cpp
-msgid "Unknown error"
-msgstr "უცნობი შეცდომა"
-
-#: modules/mod-opus/ExportOpus.cpp
 msgid "Auto"
 msgstr "ავტო"
 
@@ -4880,7 +5959,7 @@ msgid "Opus files"
 msgstr "Opus ფაილები"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
+msgid "File has changed the number of channels in the middle."
 msgstr ""
 
 #: modules/mod-opus/ImportOpus.cpp
@@ -5397,9 +6476,9 @@ msgstr "%s ვებსაიტი: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
+msgid "%s software is copyright %s 1999-2024 %s Team."
 msgstr ""
-"%s პროგრამულ უზრუნველყოფაზე ყველა უფლება გააჩნია %s-ს 1999-2023 %s-ის გუნდი."
+"%s პროგრამულ უზრუნველყოფაზე ყველა უფლება გააჩნია %s-ს 1999-2024 %s-ის გუნდი."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -5411,8 +6490,8 @@ msgstr "%s რეგისტრირებული სავაჭრო ნ�
 msgid "Build Information"
 msgstr "აგების ინფორმაცია"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "ჩაირთო"
 
@@ -5608,10 +6687,10 @@ msgstr ""
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
+msgid "Record/Playhead"
 msgstr "ჩაწერა/დაკვრის მიმდინარე ადგილიდან დაწყება"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "თაიმლაინი"
 
@@ -5695,10 +6774,6 @@ msgstr "ტაქტი და გაზომვები"
 msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "დაკვრისას &ეკრანის განახლება"
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
@@ -5709,12 +6784,12 @@ msgid "Set Loop To Selection"
 msgstr "მონიშნულზე მარყუჟის დასმა"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "მიმაგრებული დასაკრავი ადგილი"
+msgid "Scroll view to playhead"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
-msgid "Enable pinned play &head"
-msgstr "მიმაგრებული &თავის დაკვრის ჩართვა"
+msgid "Continuous scrolling"
+msgstr "უწყვეტი დაქაჩვა"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5724,21 +6799,6 @@ msgstr "შეუძლებელია '%s'-ის წაშლა"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "წარუმატებელი!"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
-msgstr ""
-"გნებავთ საწყისი მნიშვნელობებზე დაბრუნება?\n"
-"\n"
-"ეს ერთჯერადი კითხვაა, სად შეინახეთ საწყისი კონფიგურაცია \"დაყენების\" დროს."
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Audacity პარამეტრების საწყისი მნიშვნელობებზე დაბრუნება"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6023,6 +7083,32 @@ msgstr "Audacity-დან გამოსვლა"
 msgid "&Retry"
 msgstr "&თავიდან ცდა"
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr "პროექტის მორგება მუსიკის ფაილიდან"
+
+#: src/AudacityMirProject.cpp
+msgid "Automatic Music Configuration"
+msgstr "ავტომატური მუსიკის კონფიგურაცია"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+msgid "Music Import"
+msgstr "მუსიკის შემოტანა"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -6055,10 +7141,6 @@ msgstr ""
 msgid "Remember my choice and don't ask again"
 msgstr "დაიმახსოვრე ჩემი ხმა და აღარ მკითხო"
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "გაგრძელება"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "ავტომატური აღდგენა ავარიის შემდეგ"
@@ -6079,14 +7161,14 @@ msgid "Recoverable &projects"
 msgstr "აღდგენადი პროექტები"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "აირჩიეთ საქაღალდე"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "სახელი"
 
@@ -6165,7 +7247,7 @@ msgstr "მაკრო \"%s\" უკვე არსებობს. გსუ�
 msgid "Export Macro"
 msgstr "მაკროს გატანა"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "ეფექტი"
 
@@ -6298,14 +7380,6 @@ msgstr "გააქტიურება..."
 msgid "File"
 msgstr "ფაილი"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "&გაუქმება"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "&წაშლა"
@@ -6416,14 +7490,6 @@ msgstr "დარწმუნებული ხართ, რომ გსუ�
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "&Repeat %s"
-msgstr "გამეორება %s"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
 msgstr "გამეორება %s"
 
 #: src/BatchProcessDialog.cpp
@@ -6623,15 +7689,6 @@ msgstr "ტესტის წარუმატებელია!!!\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "ტესტირება წარმატებით დასრულდა\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -6894,7 +7951,7 @@ msgstr "დბ"
 msgid "Scroll"
 msgstr "ჩამოქაჩვა"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "გადიდება"
 
@@ -6943,7 +8000,8 @@ msgstr ""
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted "
+"clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before "
 "analyzing"
 msgstr ""
@@ -7029,7 +8087,7 @@ msgstr "ისტორია"
 msgid "&Manage History"
 msgstr "&ისტორიის მართვა"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "პარამეტრები"
 
@@ -7088,11 +8146,6 @@ msgstr "ნაპოვნია შეუთავსებელი დამ�
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "&დამატებების მართვა"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "გაგრ&ძელება"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7192,10 +8245,36 @@ msgstr "შეიყვანეთ ტრეკის სახელი"
 msgid "Label Track"
 msgstr "ჭდე-ბილიკი"
 
+#: src/LabelTrack.cpp
+#| msgid "Text file"
+msgid "SubRip text file"
+msgstr "SubRip-ის რექსტური ფაილი"
+
+#: src/LabelTrack.cpp
+#| msgid "HTML file"
+msgid "WebVTT file"
+msgstr "WebVTT ფაილი"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "ჭდეები"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "სტანდარტული"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "გაფართოებული (სიხშირის ინტერვალებით)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "ჭდის სტილი გატანილია, როგორც:"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7237,58 +8316,16 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Audacity პროექტის გახსნა"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity კარაოკე%s"
-
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "&კარაოკე"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "MIDI შეტანა/გამოტანის ინიციალიზაციის შეცდომა.\n"
-
-#: src/MIDIPlay.cpp
+#: src/MenuCreator.cpp
 msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-"MIDI ფაილებს ვერ დაუკრავთ.\n"
-"\n"
-
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "MIDI-ის ინიციალიზაციის შეცდომა"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "%s &დაბრუნება"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "&დაბრუნება"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "&გამეორება %s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "&გამეორება"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
 msgstr ""
 
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "გაუქმებული"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "მალსახმობები წაიშალა"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7358,49 +8395,6 @@ msgstr "გადაადგილებული პანინგის ც�
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&მიქსერი"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "შენიშვნების ბილიკი"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "გაცემის მხარდაჭერა: %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "შემოტანის მხარდაჭერა: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "ჩაიტვირთა: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "არჩეული MIDI ჩამწერი მოწყობილობა: %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "MIDI ჩამწერი მოწყობილობა ნაპოვნი ვერ იქნა \"%s\"-თვის.\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "არჩეული MIDI დამკვრელი მოწყობილობა: %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "MIDI დამკვრელი მოწყობილობა ნაპოვნი ვერ იქნა \"%s\"-თვის\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7512,112 +8506,7 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "დამატებების მართვა"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"აირჩიეთ ეფექტები, დააწკაპუნეთ ჩართვის ან გამორთვის ღილაკს, შემდეგ კი "
-"დააჭირეთ დიახს."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "ჩვენება:"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "ყველას ჩვენება"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "&All"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "გამორთულების ჩვენება"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "გამორთუ&ლი"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "ჩართულების ჩვენება"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "ჩართულ&ი"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "ახლების ჩვენება"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "ახა&ლი"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "მდგომარეობა"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "გეზი"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "&ყველას არჩევა"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "ყველა&ფრის გასუფთავება"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "თავიდან სკანირება"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "ჩარ&თვა"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "გამო&რთვა"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"ეფექტები ან ბრძანებების ჩართვა:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"ეფექტის ან ბრძანების ჩართვა:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7626,26 +8515,73 @@ msgstr ""
 "ეფექტის ან ბრძანების ჩატვირთვის შეცდომა %s-dan:\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+msgid "Disable"
+msgstr "გამორთვა"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Enable"
+msgstr "ჩართვა"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "ტიპი"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "გეზი"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "ყველა"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "გენერატორი"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Analyzer"
+msgstr "ანალიზატორი"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "ხელსაწყო"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "დამატებების მართვა"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Native Audacity"
+msgstr "Audacity-ის საკუთარი"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Show:"
+msgstr "&ჩვენება:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Type:"
+msgstr "&ტიპი:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&ategory:"
+msgstr "კ&ატეგორია:"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "&ძებნა:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Plugin"
+msgstr "დამატება"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Rescan"
+msgstr "თავიდან სკანირე&ბა"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "დამატებების ძებნა"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "ამობეჭდვის შეცდომა."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "ამობეჭდვა"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "გვერ&დის გამართვა..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "&ბეჭდვა..."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -7915,7 +8851,7 @@ msgid ""
 "formatted filesystem."
 msgstr ""
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "შენახულია %s"
@@ -8084,6 +9020,14 @@ msgstr "აირჩიეთ შემოსატანი ნაკადე�
 #, c-format
 msgid "Importing %s"
 msgstr "შემოტანა - %s"
+
+#: src/ProjectFileManager.cpp
+msgid "Music Information Retrieval"
+msgstr "მუსიკის ინფორმაციის მიღება"
+
+#: src/ProjectFileManager.cpp
+msgid "Analyzing imported audio"
+msgstr "შემოტანილი აუდიოს ანალიზი"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8290,7 +9234,7 @@ msgstr "ეფექტის გარეშე"
 msgid "Get more effects..."
 msgstr "მიიღეთ მეტი ეფექტი..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "&ანალიზი"
 
@@ -8337,164 +9281,6 @@ msgstr "რეალური დროის ეფექტები"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "რეალური დროის ეფექტები %s-სთვის"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "ეკრანის კადრის ჩჭერა"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "აირჩიეთ ფაილების შესანახი ადგილი"
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "გამოსახულებების ჩაწერა:"
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "აირჩიეთ..."
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "მთლიანი ფანჯრის ან ეკრანის სურათი"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "პატარის ზომის შეცვლა"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "დიდის ზომის შეცვლა"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "ლურჯი ფონი"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "თეთრი ფონი"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "მხოლოდ ფანჯარა"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "მთლიანი ფანჯარა"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "ფანჯარა პლუს"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "მთელი ეკრანი"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "5 წამი პაუზის შემდეგ აქტიური ფანჯრის სურათი"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "პროექტის ფანჯრის ნაწილის სურათი"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "ყველა ხელსაწყოს ზოლი"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "ყველა ეფექტი"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "ყველა სკრიპტი"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "ყველა პარამეტრი"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "ტრეკის ზოლი"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "სახაზავი"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "ტრეკი"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "პირველი ტრეკი"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "მეორე ტრეკი"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "გადიდება"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "1 წმ"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "10 წმ"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "1 წთ"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "5 წთ"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "1 საათი"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "მოკლე ტრეკები"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "საშუალო ტრეკები"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "მაღალი ტრეკები"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "აირჩიეთ ეკრანის ანაბეჭდების შესანახი საქაღალდე"
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "ეკრანის ანაბეჭდის აღების შეცდომა!"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "გრძელი შეტყობინება"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8642,10 +9428,6 @@ msgstr "აღარ აჩვენო გაშვებისას"
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "შემსრულებლის სახელი"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "აუდიობილიკი სახელი"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9118,6 +9900,10 @@ msgstr "გატანილი ჭდეები"
 msgid "Stereo, 999999Hz"
 msgstr "სტერეო, 9999999ჰც"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "ტრეკის ზოლი"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9286,139 +10072,6 @@ msgstr "მიმართულების ცვლილებები  -- 
 msgid "Calibration Complete"
 msgstr "კალიბრაცია დასრულებულია"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "აუდიოს გაზიარება"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "აუდიოს &გაზიარების ხელსაწყოთა ზოლი"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "ანგარიშის მიბმა"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "ანგარიშის მისაბმელად შეიყვანეთ კოდი"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "ტოკენი"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "Audio.com-ის ანგარიშის მიბმა..."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "თქვენ ანგარიშის მიბმა ვერ შევძელით. კიდევ სცადეთ."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "კიდევ &ცდა"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "ანგარიში წარმატებით მიება!"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "&დიახ"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "საჯარო"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "ყველას შეეძლება მოუსმინოს ამ აუდიოს."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "სიაში არაა"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
-msgstr "ამ ხმის მოსმენა შეგიძლიათ მხოლოდ თქვენ და მათ, ვისაც ბმული გაუზიარეთ."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "დარწმუნებული ხართ, რომ გსურთ გაუქმება?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Audio.com-ზე ატვირთვის შეცდომა"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "აუდიოს ატვირთვა..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to "
-"your audio.com account before uploading."
-msgstr ""
-"ამ ფაილის ატვირთვის შეცდომა. კიდევ სცადეთ და დარწმუნდით, რომ ატვირთვამდე "
-"თქვენი audio.com-ის ანგარიში მიაბით."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "ატვირთვის შეცდომა"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "გატანის შეცდომა"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "ამ ფაილის ასატვირთად მომზადება შეუძლებელია."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "ატვირთვის დასრულება..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "ანონიმურად"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "ანგარიშის &მიბმა"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid ""
-"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
-"account\" above to proceed."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Audio.com-ზე ასატვირთად დააჭირეთ \"გაგრძელებას\""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "&მიბმის მოხსნა"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "აუდიოს მომზადება..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9447,29 +10100,6 @@ msgstr "%s -ი %s-ის მიერ მიღებულ პარამე�
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "პარამეტრი %s-ის არასწორი მნიშვნელობა: უნდა იყოს %s"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "ბრძანება"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "მალსახმობები წაიშალა"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9564,9 +10194,18 @@ msgstr "ბრძანებები"
 msgid "Menus"
 msgstr "მენიუები"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "მორგება"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "ტრეკი"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -9786,113 +10425,6 @@ msgstr "ერთი არჩევანის მნიშვნელობ�
 msgid "Sets the value of a single preference."
 msgstr "ერთი არჩევანის მნიშვნელობის დაყენება."
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "ეკრანის ანაბეჭდი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "ფანჯარა"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "მთლიანი ფანჯარა"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "დიდი ფანჯარა"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "მთელ ეკრანზე"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "&ხელსაწყოთა ზოლები"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "ეფექტები"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "სკრიპტები"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "ტრეკის ზოლი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "პირველი ორი ტრეკი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "პირველი სამი ტრეკი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "პირველი ოთხი ტრეკი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "ტრეკები და სხვა"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "პირველი ტრეკი და სხვა"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "ყველა აუდიობილიკი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "ყველა ტრეკი და დამატებით"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "ლურჯი"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "თეთრი"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "ბილიკი:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "რა ჩავიჭირო:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "ფონი:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "წინ გამოტანა"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "ფაილის შენახვის შეცდომა: %s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "&ეკრანის ანაბეჭდი..."
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "ეკრანის ანაბეჭდების გადამღები."
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "აირჩიეთ დრო"
@@ -10057,8 +10589,7 @@ msgid "Edited Envelope"
 msgstr "ჩასწორებული კონვერტი"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "კონვერტი"
 
@@ -10250,6 +10781,10 @@ msgstr "ტრეკის დაყენება..."
 msgid "Sets various values for a track."
 msgstr "ტრეკის სხვადასხვა მნიშვნელობების დაყენება."
 
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "გრძელი შეტყობინება"
+
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
 msgstr "გაძლიერება"
@@ -10433,7 +10968,7 @@ msgstr ""
 #. i18n-hint: (noun) Musical pitch.
 #: src/effects/ChangePitch.cpp
 msgid "Pitch"
-msgstr "Pitch"
+msgstr "ტონი"
 
 #. i18n-hint: changing musical pitch "from" one value "to" another
 #: src/effects/ChangePitch.cpp
@@ -11491,10 +12026,6 @@ msgid "Preview effect"
 msgstr "ეფექტის გადახედვა"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "&გადახედვის შეჩერება"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "გამოყენება"
 
@@ -11566,13 +12097,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "ეკვალიზაცია"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "მრუდის EQ-ის ფილტრი"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "გრაფიკული EQ"
 
@@ -11960,7 +12490,6 @@ msgstr "კლიპინგი"
 #.
 #: src/effects/FindClipping.cpp
 #, c-format
-#| msgid "%s %d of %d"
 msgctxt "find clipping"
 msgid "%lld of %lld"
 msgstr "%lld %lld-დან"
@@ -13304,10 +13833,6 @@ msgid ""
 "provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "გენერატორი"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "ეფექტის გამოძახების შეცდომა"
@@ -13581,7 +14106,7 @@ msgid "M&ultiple Files"
 msgstr "&ბევრი ფაილი"
 
 #: src/export/ExportAudioDialog.cpp
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "&მიმდინარე მონიშნული"
 
 #: src/export/ExportAudioDialog.cpp
@@ -13682,10 +14207,6 @@ msgstr "ყველა მონიშნული ტრეკი დადუ
 msgid "Continue to export remaining files?"
 msgstr "გავაგრძელო დარჩენილი ფაილებს გატანა?"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "გატანა"
-
 #: src/export/ExportFilePanel.cpp
 msgid "Custom Sample Rate"
 msgstr "მომხმარებლის სემპლის სიხშირე"
@@ -13762,42 +14283,6 @@ msgstr "%d ჰც (ხელით)"
 msgid "Other..."
 msgstr "სხვა..."
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr ""
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "აირჩიეთ შენიშვნების ბილიკი."
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI გატანა როგორც:"
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "MIDI ფაილი"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Allegro ფაილი"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"თქვენ მონიშნული გაქვთ ფაილის სახელი ფაილის უცნობი გაფართოებით.\n"
-"გავაგრძელო?"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "MIDI-ის გატანა"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "გატანა (MI&DI)"
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -13827,54 +14312,6 @@ msgstr "არხი: %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "ფორმატს დამატებითი პარამეტრები არ გააჩნია"
-
-#: src/export/ExportProgressUI.cpp
-msgid "Export completed with error."
-msgstr "გატანა შეცდომით დასრულდა."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "შემოტანილია MIDI '%s'-დან"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "MIDI შემოტანა"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "შეუძლებელია ფაილ %s-ის გახსნა: სახელი მეტისმეტად მოკლეა."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "შეუძლებელია ფაილ %s-ის გახსნა: არასწორი ტიპი."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "შეუძლებელია ფაილ %s-ის გახსნა."
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "აირჩიეთ MIDI ფაილი"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "MIDI და Allegro ფაილები"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "MIDI ფაილები"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Allegro ფაილები"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14386,14 +14823,6 @@ msgid "E&xit"
 msgstr "&გამოსვლა"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "მენიუ ფაილის დამალვა"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "გატანა (FLAC)"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "გატანა (MP&3)"
 
@@ -14404,6 +14833,10 @@ msgstr "გატანა (&WAV)"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "გატანა (&OGG)"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "გატანა (FLAC)"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14444,18 +14877,6 @@ msgstr "ფიქსირებული"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "ინფორმაცია აუდიომოწყობილობებზე"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "&სწრაფი გასწორება..."
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "სწავლის დაწყება"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "Audacity-ის სახელმძღვანელო"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14837,6 +15258,10 @@ msgid "&Select"
 msgstr "&მონიშვნა"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&All"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "&არაფერი"
 
@@ -15085,8 +15510,8 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr ""
 
 #: src/menus/TimelineMenus.cpp
-msgid "&Timeline"
-msgstr "&დროის ხაზი"
+msgid "Tim&eline"
+msgstr "დრ&ოის ხაზი"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -15618,7 +16043,6 @@ msgid "Transport &Options"
 msgstr "გადატანის გამართვა"
 
 #: src/menus/TransportMenus.cpp
-#| msgid "Sound Activation Le&vel..."
 msgid "Set sound activation le&vel..."
 msgstr "ხმით გააქტიურების &დონის დაყენება..."
 
@@ -15725,10 +16149,6 @@ msgid "Zoom &Toggle"
 msgstr "გადიდების ჩართ/გამორთ"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "ვერტიკალური გადიდების დეტალები"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "ტრეკის ზომა"
 
@@ -15765,7 +16185,7 @@ msgid "Skip to Selection End"
 msgstr "მონიშნულის დასასრულზე გადახტომა"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "&დამატებითი მენიუების ჩართვა"
 
 #: src/menus/ViewMenus.cpp
@@ -15968,32 +16388,12 @@ msgid "Temporary files directory"
 msgstr "დროებითი ფაილების საქაღალდე"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "&მდებარეობა:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "დროებითი ფაილების საქაღალდე არ შეიძლება FAT დისკზე იყოს."
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "არჩევა..."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "თავისუფალი ადგილი:"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "დროებითი საქაღალდის მოსათავსებელი მდებარეობის შერჩევა"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "პარამეტრების გამოყენება შეუძლებელია."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
-msgstr ""
+msgstr "ხელმიუწვდომელია - ზედა მდებარეობა არ არსებობს"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location"
@@ -16071,6 +16471,12 @@ msgstr "\"გატანის\" საქაღლდის დაყენე
 msgid "'Macro Output' directory cannot be set."
 msgstr "\"მაკროების ჟურნალის\" საქაღალდის დაყენება შეუძლებელია."
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "ეფექტები"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "ეფექტების გამართვა"
@@ -16109,11 +16515,15 @@ msgstr "ეფექტის პარამეტრები"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "ეფექტების მენიუს &ორგანიზაცია:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Realtime effect o&rganization:"
 msgstr "რეალური დროის ეფექტის &ორგანიზაცია:"
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16124,8 +16534,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "SSE/SSE2/.../AVX-ის გამოყენება"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
-msgstr "დამატებების მმართველის გახსნა"
+msgid "Open Plugin &Manager"
+msgstr "დამატებების &მმართველის გახსნა"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16300,14 +16710,6 @@ msgstr ""
 msgid "Never use comma as decimal point"
 msgstr "ათობითების განმასხვავებლად მძიმე გამოყენებული არ იქნება"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "თაიმლაინის ხელსაწყოების მინიშნებების ჩვენება"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "სკრაბის სანიშნის ჩვენება"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "ინტერფეისი"
@@ -16326,29 +16728,24 @@ msgid "Preferences for ImportExport"
 msgstr "შეტანა/გატანის პარამეტრები"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "სტანდარტული"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "გაფართოებული (სიხშირის ინტერვალებით)"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "წამი"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "&ტაქტი"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "ჭდის სტილი გატანილია, როგორც:"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
+msgid "S&witch view to Beats and Measures and align with musical grid"
 msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "&Ask me each time"
+msgstr "ყოველ ჯერზე კითხვ&ა"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Do &nothing"
+msgstr "&არაფრის გაკეთება"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Music Imports"
+msgstr "მუსიკის შემოტანები"
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "When Audacity detects music in file imported on empty project"
+msgstr "როცა Audacity აღმოაჩენს მუსიკას ცარიელ პროექტზე შემოტანილ ფაილშ"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16368,7 +16765,7 @@ msgstr "კლავიატურის პარამეტრები ა�
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Open a new project to modify keyboard shortcuts."
-msgstr ""
+msgstr "გახსენით ახალი პროექტი კლავიატურის მალსახმობების შესაცვლელად."
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "&Hotkey:"
@@ -16405,10 +16802,6 @@ msgstr "სახელის მიხედვით ჩვენება"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "გასაღების მიხედვით ჩვენება"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "&ძებნა:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -16579,259 +16972,32 @@ msgstr "მოდულების გამართვა"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, "
+"such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
 
-#. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
-msgstr ""
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr "   'ახალი' ნიშნავს, რომ ჯერ არჩევანი გაკეთებული არაა."
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
-msgstr "ამ პარამეტრების შეცვლა ძალაში მხოლოდ Audacity-ის გაშვებისას შევა."
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "კითხვა"
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
+msgstr "ამ პარამეტრების შეცვლა ძალაში მხოლოდ Audacity-ის გაშვებისას შევა.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "ჩაიშალა"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "მოდულები აღმოჩენილი არაა"
+msgid "No choice made"
+msgstr "არჩევანი გაკეთებული არაა"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
+"შეცდომა: მოდულები აღმოჩენილი არაა. ეს, შეძლება, ჩავარდნილ დაყენებაზე "
+"მიუთითებდეს."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "მოდული"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "თაგუნა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "თაგუნის გამართვა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "მაუსის ბმები (ნაგულისხმები მნიშვნელობები, ვერ კონფიგურირდება)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "ხელსაწყო"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "ბრძანების ქმედება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "ღილაკები"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "მარცხენა-წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "მონიშვნის წერტილის დაყენება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "მარცხენა გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "მონიშვნის დიაპაზონის დაყენება"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Shift-მარცხენა-წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "მონიშვნის დიაპაზონის გაფართოება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "მარცხენა ორმაგი წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "კლიპის ან მთლიანი ტრეკის მონიშვნა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "ბორბალი-ტრიალი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "სკრაბის სიჩქარის შეცვლა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "წერტილზე მასშტაბირება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "დიაპაზონზე მასშტაბირება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "იგივე, რაც მარჯვენა გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "მარჯვენა წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "ერთი ნაბიჯის შემცირება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "მარჯვენა გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "იგივე, რაც მარცხენა გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "Shift-გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "დიაპაზონზე გადიდება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "შუა-წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "ნაგულისხმები მასშტაბირება"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "გაძლიერების კონვერტის შეცვლა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "ფანქარი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "სემპლის შეცვლა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt-მარცხნივ-წკაპი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "დაგლუვება სემპლზე"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "რამდენიმე სემპლის შეცვლა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "მარცხენა გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "მხოლოდ ერთი სემპლის შეცვლა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "მრავალი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "იგივე რაც მონიშვნის ხელსაწყო"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "იგივე რაც მასშტაბირების ხელსაწყო"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "ნებისმიერი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "ტრეკების აწევა ან ჩამოწევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Shift-ბორბალი-ტრიალი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "ტალღის ფორმის გადახვევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "ბორბალი-ტრიალი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "ტალღის ფორმის გადიდება ან დაპატარავება"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "Shift-ბორბალი-ტრიალი"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Shift-მარცხენა-გადათრევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "ტრეკში ყველა კლიპის მარცხნივ/მარჯვნივ გაწევა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "სანიშნის ტრეკებს შორის ატანა/ჩამოტანა"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "სანიშნის ტრეკებს შორის ატანა/ჩამოტანა"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -16930,7 +17096,7 @@ msgstr "ჩაწერისას &სხვა ტრეკების მ�
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
-msgstr ""
+msgstr "&აპარატურის გამოყენება სხვა ტრეკების დასაკრავად"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Audible input &monitoring"
@@ -16948,6 +17114,10 @@ msgstr "სიგნალის კარგვის აღმოჩენა"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr "ჩაწერის ხმით დაწყება"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "ჩარ&თვა"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17130,6 +17300,10 @@ msgstr "ხმის სპექტრის გამართვა"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "შენახული პარამეტრების გამოყენება"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "გადიდება"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17346,11 +17520,11 @@ msgid "Enable cut &lines"
 msgstr "გაჭრილი &ხაზების ჩართვა"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
+msgid "Editing a clip can &move other clips"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Editing a clip can &move other clips"
+msgid "&Always paste audio as new clips"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -17364,14 +17538,6 @@ msgstr "ჭდის შესაქმნელად &აკრიფეთ"
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr ""
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr ""
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "ვერტიკალური გადიდების დეტალები"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -17529,22 +17695,6 @@ msgstr "&პროექტების შენახვა აუდიოს
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
 msgstr "ცარიელი პროექტის შენახვა"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr ""
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -17868,64 +18018,6 @@ msgstr "ჩაწერის ხმის გაზრდა"
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "ჩაწერის ხმის შემცირება"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "სკრაბინგი"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "გადახვევა"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "სკრაბის სანიშნი"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "სკრაბინგი"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "სკრაბინგის დასრულება"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "სკრაბინგის დაწყება"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "გადახვევის დასრულება"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "გადახვევის დაწყება"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "სკრაბინგის სანიშნის დამალვა"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "სკრაბინგის ზოლი"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18264,7 +18356,6 @@ msgid "&MIDI Device Info..."
 msgstr "ინფორმაცია MIDI-მოწყობილობებზე..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
 "region."
@@ -18273,28 +18364,20 @@ msgstr ""
 "გადაათრიეთ გადიდების რეგიონის მოსანიშნად."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "მარჯვენა წკაპი მენიუსთვის."
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "გადიდების გაუქმება"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "Shift-მარცხენა-წკაპი"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "მარცხენა-წკაპი/მარცხენა-გადათრევა"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "Shift-მარცხენა-წკაპი"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18314,26 +18397,49 @@ msgstr ""
 msgid "Stretch"
 msgstr "გაწელვა"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "სიჩქარის შეცვლა"
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
+msgid "Click to open clip context menu."
+msgstr "დააწკაპუნეთ კლიპის კონტექსტური მენიუს გასახსნელად."
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed"
-msgstr "კლიპის სიჩქარე"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr ""
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Invalid clip speed"
-msgstr "არასწორი კლიპის სიჩქარე"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Not enough space"
+msgstr "ადგილი საკმარისი არაა"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed must be a positive value"
-msgstr "კლიპის სიჩქარე დადებითი რიცხვი უნდა იყოს"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "There is not enough space to expand the clip to its original speed."
+msgstr "საკმარისი ადგილი, რომ კლიპი მონიშნულ სიჩქარემდე გავწელო, არაა."
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "საკმარისი ადგილი, რომ კლიპი მონიშნულ სიჩქარემდე გავწელო, არაა"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Speed"
+msgstr "კლიპის სიჩქარის ჩამოყრა"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip pitch."
+msgstr "დააწკაპუნეთ კლიპის ტონის ჩამოსაყრელად."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "დააწკაპუნეთ კლიპის ტონის შესაცვლელად. Cmd + წკაპი ჩამოსაყრელად."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip speed."
+msgstr "დააწკაპუნეთ კლიპის სიჩქარის ჩამოსაყრელად."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "დააწკაპუნეთ კლიპის სიჩქარის შესაცვლელად. Cmd + წკაპი ჩამოსაყრელად."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18351,6 +18457,46 @@ msgstr "გაფართოება"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "წაშლილი ამოჭრის ხაზი"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Pitch and Speed"
+msgstr "ტონი და სიჩქარე"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Pitch"
+msgstr "კლიპის ტონი"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "se&mitones:"
+msgstr "ნა&ხევარტონები:"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Speed"
+msgstr "კლიპის სიჩქარე"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr "&სიჩქარე %: "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "General"
+msgstr "საერთო"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr "&ოპტიმიზაცია ხმისთვის"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Speed"
+msgstr "სიჩქარე შეცვლილია"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Pitch"
+msgstr "შეცვლილი ტონი"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18378,6 +18524,11 @@ msgstr "k"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "გადიდება მოსარგებად"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Reset Zoom"
+msgstr "გადიდების ჩამოყრა"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18412,6 +18563,15 @@ msgstr "შემდეგი პიკური სიხშირე (ჰც)"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "შემდეგი უმდაბლესი სიხშირე (ჰც)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid ""
+"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "მარჯვენა წკაპი მენიუსთვის. Ctrl+გადახვევა გადასადიდებლად."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid ""
@@ -18490,20 +18650,22 @@ msgid "Rename Clip..."
 msgstr "სახელის გადარქმევა..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Change Speed..."
-msgstr "სიჩქარის შეცვლა..."
+msgid "Pitch and Speed..."
+msgstr "ტონი და სიჩქარე..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
+msgid "Render Pitch and Speed"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Speed to %.01f%%"
@@ -18530,16 +18692,32 @@ msgid "Rendered time-stretched audio"
 msgstr "დარენდერებული დროში-გაწელილი ხმა"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch Shift"
+msgstr "ტონის წანაცვლება"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Changed Pitch Shift"
+msgstr "შეცვლილ ტონის წანაცვლება"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
 msgstr "&კლიპის სახელის გადარქმევა..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Change &Speed..."
-msgstr "&სიჩქარის შეცვლა..."
+msgid "&Pitch and Speed..."
+msgstr "&ტონი და სიჩქარე..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
+msgid "Render Pitch and &Speed"
 msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Up"
+msgstr "ტონის &აწევა"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Down"
+msgstr "ტონის &დაწევა"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -18757,14 +18935,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% მარჯვენა"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "შემცირება x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "გადიდება x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "ნახევარი ტალღა"
 
@@ -18864,6 +19034,10 @@ msgstr "შექმნილი ახალი დროის ტრეკი
 msgid "&Time Track"
 msgstr "&დროის ტრეკი"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "მარჯვენა წკაპი მენიუსთვის."
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid ""
@@ -18900,8 +19074,8 @@ msgid "Brush tool selection"
 msgstr "ფუნჯის ხელსაწყოს არჩევანი"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "სახელი..."
+msgid "Re&name Track..."
+msgstr "ტრეკის სახელ&ის გადარქმევა..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -18951,6 +19125,10 @@ msgstr "მორგებული კონვერტი."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
+msgstr "სკრაბინგი"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
 msgstr "სკრაბინგი"
 
 #: src/tracks/ui/Scrubbing.cpp
@@ -19083,6 +19261,10 @@ msgstr "აირჩიეთ ტრეკი"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "მონიშვნის მოსახსნელად Ctrl +წკაპი"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Delete Track"
+msgstr "ტრეკის წაშლა"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19500,8 +19682,7 @@ msgstr "Shelf ფილტრი"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19511,7 +19692,7 @@ msgstr "სტივ დოლტონი"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "GNU GPL v2.0"
 
@@ -19624,9 +19805,8 @@ msgstr "სპექტრალის ჩასწორების უჯრ�
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19913,50 +20093,6 @@ msgstr "ექოს რაოდენობა"
 msgid "Allow duration to change"
 msgstr "ხანგრძლივობის შეცვლის დაშვება"
 
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "EQ XML-დან TXT-ში გადამყვანი"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "აირჩიეთ სამიზნე EQ ეფექტი"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "XML ფაილის ეკვალიზაცია"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "XML ფაილი"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "თუ გამოსატანი ფაილი უკვე არსებობს"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "მიწერილი რიცხვი"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "თავზე გადაწერა"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "შეცდომა.~%ფაილის გახსნის შეცდომა~%~s"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr ""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "შეცდომა.~%ფაილის ჩაწერის შეცდომა:~%\"~a.txt\""
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "რეგულარული ჭდეები"
@@ -20215,10 +20351,6 @@ msgstr ""
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "შემზღუდველი"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "ტიპი"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -20673,10 +20805,6 @@ msgid "Minimal"
 msgstr "მინიმალური"
 
 #: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "ყველა"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr "არასავალდებულო თავსართის ტექსტი"
 
@@ -20986,132 +21114,6 @@ msgstr "საწყისი ფაზა(გრადუსებში)"
 msgid "Wet level (percent)"
 msgstr "სისველის დონე(%)"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "ვოკალის შემცირება და იზოლაცია"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "რობერტ ჰაენგგი"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "ვოკალის მოცილება: მონომდე"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "ვოკალის მოცილება"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "ვოკალის გამოყოფა"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "ვოკალის გამოყოფა და ინვერსია"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "ცენტრის მოცილება - მონომდე"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "ცენტრის მოცილება"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "ცენტრის გამყოფა"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "ცენტრის გამოყოფა და ინვერსია"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "სიძლიერე"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr ""
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "ვოკოდერი"
@@ -21197,12 +21199,591 @@ msgid "Special"
 msgstr "სპეციალური"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "ვოკალის შემცირება და იზოლაცია"
+
+#: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
 msgstr "ვოკალის წამშლელი"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "სპექტრალური ხელსაწყობი"
+
+#, c-format
+#~ msgid ""
+#~ "\"%s\" \n"
+#~ "is a MIDI file, not an audio file. \n"
+#~ "Audacity cannot open this type of file for playing, but you can\n"
+#~ "edit it by clicking File > Import > MIDI."
+#~ msgstr ""
+#~ "\"%s\" \n"
+#~ "არის არა აუდიო ფაილი, არამედ MIDI. \n"
+#~ "Audacity-ს არ შეუძლია ამ ტიპის ფაილის გახსნა და დაკვრა, მაგრამ\n"
+#~ "მისი შემოტანა შეგიძლიათ შემდეგნაირად ფაილი > შემოტანა > MIDI."
+
+#~ msgid "You've specified a file name without an extension. Are you sure?"
+#~ msgstr "თქვენ მონიშნული გაქვთ ფაილის სახელი გაფართოების გარეშე. გავაგრძელო?"
+
+#~ msgid "Update display while playing"
+#~ msgstr "დაკვრისას &ეკრანის განახლება"
+
+#~ msgid "Pinned Play Head"
+#~ msgstr "მიმაგრებული დასაკრავი ადგილი"
+
+#~ msgid "Enable pinned play &head"
+#~ msgstr "მიმაგრებული &თავის დაკვრის ჩართვა"
+
+#~ msgid ""
+#~ "Reset Preferences?\n"
+#~ "\n"
+#~ "This is a one-time question, after an 'install' where you asked to have "
+#~ "the Preferences reset."
+#~ msgstr ""
+#~ "გნებავთ საწყისი მნიშვნელობებზე დაბრუნება?\n"
+#~ "\n"
+#~ "ეს ერთჯერადი კითხვაა, სად შეინახეთ საწყისი კონფიგურაცია \"დაყენების\" "
+#~ "დროს."
+
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "Audacity პარამეტრების საწყისი მნიშვნელობებზე დაბრუნება"
+
+#, c-format
+#~ msgid "Audacity Karaoke%s"
+#~ msgstr "Audacity კარაოკე%s"
+
+#~ msgid "&Karaoke"
+#~ msgstr "&კარაოკე"
+
+#~ msgid "Select effects, click the Enable or Disable button, then click OK."
+#~ msgstr ""
+#~ "აირჩიეთ ეფექტები, დააწკაპუნეთ ჩართვის ან გამორთვის ღილაკს, შემდეგ კი "
+#~ "დააჭირეთ დიახს."
+
+#~ msgid "Show all"
+#~ msgstr "ყველას ჩვენება"
+
+#~ msgid "Show disabled"
+#~ msgstr "გამორთულების ჩვენება"
+
+#~ msgid "D&isabled"
+#~ msgstr "გამორთუ&ლი"
+
+#~ msgid "Show enabled"
+#~ msgstr "ჩართულების ჩვენება"
+
+#~ msgid "E&nabled"
+#~ msgstr "ჩართულ&ი"
+
+#~ msgid "Show new"
+#~ msgstr "ახლების ჩვენება"
+
+#~ msgid "Ne&w"
+#~ msgstr "ახა&ლი"
+
+#~ msgid "State"
+#~ msgstr "მდგომარეობა"
+
+#~ msgid "&Select All"
+#~ msgstr "&ყველას არჩევა"
+
+#~ msgid "C&lear All"
+#~ msgstr "ყველა&ფრის გასუფთავება"
+
+#~ msgid "&Disable"
+#~ msgstr "გამო&რთვა"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "ეფექტები ან ბრძანებების ჩართვა:\n"
+#~ "\n"
+#~ "%s"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "ეფექტის ან ბრძანების ჩართვა:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "ამობეჭდვის შეცდომა."
+
+#~ msgid "Print"
+#~ msgstr "ამობეჭდვა"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "გვერ&დის გამართვა..."
+
+#~ msgid "&Print..."
+#~ msgstr "&ბეჭდვა..."
+
+#~ msgid "Screen Capture Frame"
+#~ msgstr "ეკრანის კადრის ჩჭერა"
+
+#~ msgid "Choose location to save files"
+#~ msgstr "აირჩიეთ ფაილების შესანახი ადგილი"
+
+#~ msgid "Save images to:"
+#~ msgstr "გამოსახულებების ჩაწერა:"
+
+#~ msgid "Choose..."
+#~ msgstr "აირჩიეთ..."
+
+#~ msgid "Capture entire window or screen"
+#~ msgstr "მთლიანი ფანჯრის ან ეკრანის სურათი"
+
+#~ msgid "Resize Small"
+#~ msgstr "პატარის ზომის შეცვლა"
+
+#~ msgid "Resize Large"
+#~ msgstr "დიდის ზომის შეცვლა"
+
+#~ msgid "Blue Bkgnd"
+#~ msgstr "ლურჯი ფონი"
+
+#~ msgid "White Bkgnd"
+#~ msgstr "თეთრი ფონი"
+
+#~ msgid "Capture Window Only"
+#~ msgstr "მხოლოდ ფანჯარა"
+
+#~ msgid "Capture Full Window"
+#~ msgstr "მთლიანი ფანჯარა"
+
+#~ msgid "Capture Window Plus"
+#~ msgstr "ფანჯარა პლუს"
+
+#~ msgid "Capture Full Screen"
+#~ msgstr "მთელი ეკრანი"
+
+#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
+#~ msgstr "5 წამი პაუზის შემდეგ აქტიური ფანჯრის სურათი"
+
+#~ msgid "Capture part of a project window"
+#~ msgstr "პროექტის ფანჯრის ნაწილის სურათი"
+
+#~ msgid "All Toolbars"
+#~ msgstr "ყველა ხელსაწყოს ზოლი"
+
+#~ msgid "All Effects"
+#~ msgstr "ყველა ეფექტი"
+
+#~ msgid "All Scriptables"
+#~ msgstr "ყველა სკრიპტი"
+
+#~ msgid "All Preferences"
+#~ msgstr "ყველა პარამეტრი"
+
+#~ msgid "Ruler"
+#~ msgstr "სახაზავი"
+
+#~ msgid "First Track"
+#~ msgstr "პირველი ტრეკი"
+
+#~ msgid "Second Track"
+#~ msgstr "მეორე ტრეკი"
+
+#~ msgid "One Sec"
+#~ msgstr "1 წმ"
+
+#~ msgid "Ten Sec"
+#~ msgstr "10 წმ"
+
+#~ msgid "One Min"
+#~ msgstr "1 წთ"
+
+#~ msgid "Five Min"
+#~ msgstr "5 წთ"
+
+#~ msgid "One Hour"
+#~ msgstr "1 საათი"
+
+#~ msgid "Short Tracks"
+#~ msgstr "მოკლე ტრეკები"
+
+#~ msgid "Medium Tracks"
+#~ msgstr "საშუალო ტრეკები"
+
+#~ msgid "Tall Tracks"
+#~ msgstr "მაღალი ტრეკები"
+
+#~ msgid "Choose a location to save screenshot images"
+#~ msgstr "აირჩიეთ ეკრანის ანაბეჭდების შესანახი საქაღალდე"
+
+#~ msgid "Capture failed!"
+#~ msgstr "ეკრანის ანაბეჭდის აღების შეცდომა!"
+
+#~ msgid "&Screenshot..."
+#~ msgstr "&ეკრანის ანაბეჭდის ხელსაწყოები..."
+
+#~ msgid "Anonymous"
+#~ msgstr "ანონიმურად"
+
+#~ msgid "Screenshot"
+#~ msgstr "ეკრანის ანაბეჭდი"
+
+#~ msgid "Window"
+#~ msgstr "ფანჯარა"
+
+#~ msgid "Full Window"
+#~ msgstr "მთლიანი ფანჯარა"
+
+#~ msgid "Window Plus"
+#~ msgstr "დიდი ფანჯარა"
+
+#~ msgid "Fullscreen"
+#~ msgstr "მთელ ეკრანზე"
+
+#~ msgid "Toolbars"
+#~ msgstr "&ხელსაწყოთა ზოლები"
+
+#~ msgid "Scriptables"
+#~ msgstr "სკრიპტები"
+
+#~ msgid "Trackpanel"
+#~ msgstr "ტრეკის ზოლი"
+
+#~ msgid "First Two Tracks"
+#~ msgstr "პირველი ორი ტრეკი"
+
+#~ msgid "First Three Tracks"
+#~ msgstr "პირველი სამი ტრეკი"
+
+#~ msgid "First Four Tracks"
+#~ msgstr "პირველი ოთხი ტრეკი"
+
+#~ msgid "Tracks Plus"
+#~ msgstr "ტრეკები და სხვა"
+
+#~ msgid "First Track Plus"
+#~ msgstr "პირველი ტრეკი და სხვა"
+
+#~ msgid "All Tracks"
+#~ msgstr "ყველა აუდიობილიკი"
+
+#~ msgid "All Tracks Plus"
+#~ msgstr "ყველა ტრეკი და დამატებით"
+
+#~ msgid "Blue"
+#~ msgstr "ლურჯი"
+
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "თეთრი"
+
+#~ msgid "Path:"
+#~ msgstr "ბილიკი:"
+
+#~ msgid "Capture What:"
+#~ msgstr "რა ჩავიჭირო:"
+
+#~ msgid "Background:"
+#~ msgstr "ფონი:"
+
+#~ msgid "Bring To Top"
+#~ msgstr "წინ გამოტანა"
+
+#, c-format
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "ფაილის შენახვის შეცდომა: %s"
+
+#~ msgid "Screenshot (short format)..."
+#~ msgstr "&ეკრანის ანაბეჭდი..."
+
+#~ msgid "Takes screenshots."
+#~ msgstr "ეკრანის ანაბეჭდების გადამღები."
+
+#~ msgid "Stop &Preview"
+#~ msgstr "&გადახედვის შეჩერება"
+
+#~ msgid "Hidden File Menu"
+#~ msgstr "მენიუ ფაილის დამალვა"
+
+#~ msgid "&Quick Fix..."
+#~ msgstr "&სწრაფი გასწორება..."
+
+#~ msgid "&Getting Started"
+#~ msgstr "სწავლის დაწყება"
+
+#~ msgid "Audacity &Manual"
+#~ msgstr "Audacity-ის სახელმძღვანელო"
+
+#~ msgid "&Timeline"
+#~ msgstr "&დროის ხაზი"
+
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "ვერტიკალური გადიდების დეტალები"
+
+#~ msgid "Show Timeline Tooltips"
+#~ msgstr "თაიმლაინის ხელსაწყოების მინიშნებების ჩვენება"
+
+#~ msgid "Show Scrub Ruler"
+#~ msgstr "სკრაბის სანიშნის ჩვენება"
+
+#~ msgid "  'New' means no choice has been made yet."
+#~ msgstr "   'ახალი' ნიშნავს, რომ ჯერ არჩევანი გაკეთებული არაა."
+
+#~ msgid "Ask"
+#~ msgstr "კითხვა"
+
+#~ msgid "No modules were found"
+#~ msgstr "მოდულები აღმოჩენილი არაა"
+
+#~ msgid "Ctrl"
+#~ msgstr "Ctrl"
+
+#~ msgid "Mouse"
+#~ msgstr "თაგუნა"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "მაუსის ბმები (ნაგულისხმები მნიშვნელობები, ვერ კონფიგურირდება)"
+
+#~ msgid "Command Action"
+#~ msgstr "ბრძანების ქმედება"
+
+#~ msgid "Buttons"
+#~ msgstr "ღილაკები"
+
+#~ msgid "Left-Click"
+#~ msgstr "მარცხენა-წკაპი"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "მონიშვნის წერტილის დაყენება"
+
+#~ msgid "Left-Drag"
+#~ msgstr "მარცხენა გადათრევა"
+
+#~ msgid "Set Selection Range"
+#~ msgstr "მონიშვნის დიაპაზონის დაყენება"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "მონიშვნის დიაპაზონის გაფართოება"
+
+#~ msgid "Left-Double-Click"
+#~ msgstr "მარცხენა ორმაგი წკაპი"
+
+#~ msgid "Select Clip or Entire Track"
+#~ msgstr "კლიპის ან მთლიანი ტრეკის მონიშვნა"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "ბორბალი-ტრიალი"
+
+#~ msgid "Change scrub speed"
+#~ msgstr "სკრაბის სიჩქარის შეცვლა"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "წერტილზე მასშტაბირება"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "დიაპაზონზე მასშტაბირება"
+
+#~ msgid "same as right-drag"
+#~ msgstr "იგივე, რაც მარჯვენა გადათრევა"
+
+#~ msgid "Right-Click"
+#~ msgstr "მარჯვენა წკაპი"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "ერთი ნაბიჯის შემცირება"
+
+#~ msgid "Right-Drag"
+#~ msgstr "მარჯვენა გადათრევა"
+
+#~ msgid "same as left-drag"
+#~ msgstr "იგივე, რაც მარცხენა გადათრევა"
+
+#~ msgid "Shift-Drag"
+#~ msgstr "Shift-გადათრევა"
+
+#~ msgid "Zoom out on a Range"
+#~ msgstr "დიაპაზონზე გადიდება"
+
+#~ msgid "Middle-Click"
+#~ msgstr "შუა-წკაპი"
+
+#~ msgid "Zoom default"
+#~ msgstr "ნაგულისხმები მასშტაბირება"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "გაძლიერების კონვერტის შეცვლა"
+
+#~ msgid "Pencil"
+#~ msgstr "ფანქარი"
+
+#~ msgid "Change Sample"
+#~ msgstr "სემპლის შეცვლა"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Alt-მარცხნივ-წკაპი"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "დაგლუვება სემპლზე"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "რამდენიმე სემპლის შეცვლა"
+
+#~ msgid "-Left-Drag"
+#~ msgstr "მარცხენა გადათრევა"
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "მხოლოდ ერთი სემპლის შეცვლა"
+
+#~ msgid "Multi"
+#~ msgstr "მრავალი"
+
+#~ msgid "same as select tool"
+#~ msgstr "იგივე რაც მონიშვნის ხელსაწყო"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "იგივე რაც მასშტაბირების ხელსაწყო"
+
+#~ msgid "Any"
+#~ msgstr "ნებისმიერი"
+
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "ტრეკების აწევა ან ჩამოწევა"
+
+#~ msgid "Shift-Wheel-Rotate"
+#~ msgstr "Shift-ბორბალი-ტრიალი"
+
+#~ msgid "Scroll waveform"
+#~ msgstr "ტალღის ფორმის გადახვევა"
+
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "ბორბალი-ტრიალი"
+
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "ტალღის ფორმის გადიდება ან დაპატარავება"
+
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "Shift-ბორბალი-ტრიალი"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "Shift-მარცხენა-გადათრევა"
+
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "ტრეკში ყველა კლიპის მარცხნივ/მარჯვნივ გაწევა"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "სანიშნის ტრეკებს შორის ატანა/ჩამოტანა"
+
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "სანიშნის ტრეკებს შორის ატანა/ჩამოტანა"
+
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "ვერტიკალური გადიდების დეტალები"
+
+#~ msgid "Scrub"
+#~ msgstr "სკრაბინგი"
+
+#~ msgid "Seek"
+#~ msgstr "გადახვევა"
+
+#~ msgid "Scrub Ruler"
+#~ msgstr "სკრაბის სანიშნი"
+
+#~ msgid "Stop Scrubbing"
+#~ msgstr "სკრაბინგის დასრულება"
+
+#~ msgid "Start Scrubbing"
+#~ msgstr "სკრაბინგის დაწყება"
+
+#~ msgid "Stop Seeking"
+#~ msgstr "გადახვევის დასრულება"
+
+#~ msgid "Start Seeking"
+#~ msgstr "გადახვევის დაწყება"
+
+#~ msgid "Hide Scrub Ruler"
+#~ msgstr "სკრაბინგის სანიშნის დამალვა"
+
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "სკრაბინგის ზოლი"
+
+#~ msgid "Invalid clip speed"
+#~ msgstr "არასწორი კლიპის სიჩქარე"
+
+#~ msgid "Clip speed must be a positive value"
+#~ msgstr "კლიპის სიჩქარე დადებითი რიცხვი უნდა იყოს"
+
+#~ msgid "Change &Speed..."
+#~ msgstr "&სიჩქარის შეცვლა..."
+
+#~ msgid "Zoom x1/2"
+#~ msgstr "შემცირება x1/2"
+
+#~ msgid "Zoom x2"
+#~ msgstr "გადიდება x2"
+
+#~ msgid "&Name..."
+#~ msgstr "სახელი..."
+
+#~ msgid "EQ XML to TXT Converter"
+#~ msgstr "EQ XML-დან TXT-ში გადამყვანი"
+
+#~ msgid "Select target EQ effect"
+#~ msgstr "აირჩიეთ სამიზნე EQ ეფექტი"
+
+#~ msgid "Equalization XML file"
+#~ msgstr "XML ფაილის ეკვალიზაცია"
+
+#~ msgid "XML file"
+#~ msgstr "XML ფაილი"
+
+#~ msgid "If output text file exists"
+#~ msgstr "თუ გამოსატანი ფაილი უკვე არსებობს"
+
+#~ msgid "Append number"
+#~ msgstr "მიწერილი რიცხვი"
+
+#~ msgid "Overwrite"
+#~ msgstr "თავზე გადაწერა"
+
+#, lisp-format
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "შეცდომა.~%ფაილის გახსნის შეცდომა~%~s"
+
+#, lisp-format
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "შეცდომა.~%ფაილის ჩაწერის შეცდომა:~%\"~a.txt\""
+
+#~ msgid "Robert Haenggi"
+#~ msgstr "რობერტ ჰაენგგი"
+
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "ვოკალის მოცილება: მონომდე"
+
+#~ msgid "Remove Vocals"
+#~ msgstr "ვოკალის მოცილება"
+
+#~ msgid "Isolate Vocals"
+#~ msgstr "ვოკალის გამოყოფა"
+
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "ვოკალის გამოყოფა და ინვერსია"
+
+#~ msgid "Remove Center: to mono"
+#~ msgstr "ცენტრის მოცილება - მონომდე"
+
+#~ msgid "Remove Center"
+#~ msgstr "ცენტრის მოცილება"
+
+#~ msgid "Isolate Center"
+#~ msgstr "ცენტრის გამყოფა"
+
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "ცენტრის გამოყოფა და ინვერსია"
+
+#~ msgid "Strength"
+#~ msgstr "სიძლიერე"
 
 #, c-format
 #~ msgid "Exception code 0x%x"
@@ -21324,9 +21905,6 @@ msgstr "სპექტრალური ხელსაწყობი"
 #~ msgid "Change Tempo without Changing Pitch"
 #~ msgstr "ტემპის შეცვლა Pitch-ის შეცვლის გარეშე"
 
-#~ msgid "Enable"
-#~ msgstr "ჩართვა"
-
 #~ msgid "Start and stop preview"
 #~ msgstr "გადახედვის დაწყება და დამთავრება"
 
@@ -21447,9 +22025,6 @@ msgstr "სპექტრალური ხელსაწყობი"
 #~ msgid "Cannot Export Multiple"
 #~ msgstr "მრავალჯერადი გატანა შეუძლებელია"
 
-#~ msgid "Export files to:"
-#~ msgstr "საქაღალდე ფაილების გასატანად:"
-
 #~ msgid "Create"
 #~ msgstr "შექმნა"
 
@@ -21478,9 +22053,6 @@ msgstr "სპექტრალური ხელსაწყობი"
 #~ "\"%s\" არ არსებობს,\n"
 #~ "\n"
 #~ "გსურთ შექმნა?"
-
-#~ msgid "Save As..."
-#~ msgstr "შენახვა, როგორც..."
 
 #~ msgid "Unable to export - problem with metadata"
 #~ msgstr "გატანა შეუძლებელია - მეტამონაცემების პრობლემა"
@@ -21684,9 +22256,6 @@ msgstr "სპექტრალური ხელსაწყობი"
 #~ msgid "1024 - default"
 #~ msgstr "1024- ნაგულისხმები"
 
-#~ msgid "Saving &projects"
-#~ msgstr "პროექტების შენახვა"
-
 #~ msgid "Project Rate (Hz)"
 #~ msgstr "პროექტის სიხშირე (ჰც):"
 
@@ -21700,9 +22269,6 @@ msgstr "სპექტრალური ხელსაწყობი"
 #, c-format
 #~ msgid "Selection %s. %s won't change."
 #~ msgstr "არჩეულია %s. %s არ შეიცვლება."
-
-#~ msgid "Left-Click to merge clips"
-#~ msgstr "მარჯვენა -წკაპი კლიპების შესაერთებლად"
 
 #~ msgid "Merged Clips"
 #~ msgstr "შერწყმული სანიშნები"

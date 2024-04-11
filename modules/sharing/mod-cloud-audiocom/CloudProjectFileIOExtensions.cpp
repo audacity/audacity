@@ -210,14 +210,21 @@ class IOExtension final : public ProjectFileIOExtension
       AudacityProject& project, const ProjectSerializer& serializer) override
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
+
+      if (!projectCloudExtension.IsCloudProject())
+         return;
+
       projectCloudExtension.OnUpdateSaved(serializer);
 
       const int savesCount = projectCloudExtension.GetSavesCount();
 
-      if (savesCount > 1)
-         return;
+      if (savesCount < 2)
+      {
+         SyncInBackroundDialog { &project }.ShowDialog();
+      }
 
-      SyncInBackroundDialog { &project }.ShowDialog();
+      if (projectCloudExtension.IsFirstSyncDialogShown())
+         return;
 
       ShowDialogOn(
          [weakProject = project.weak_from_this()]
@@ -227,7 +234,8 @@ class IOExtension final : public ProjectFileIOExtension
             if (!project)
                return true;
 
-            return !ProjectCloudExtension::Get(*project).IsSyncing();
+            return ProjectCloudExtension::Get(*project)
+                      .GetCurrentSyncStatus() == ProjectSyncStatus::Synced;
          },
          [weakProject = project.weak_from_this()]
          {
@@ -236,13 +244,10 @@ class IOExtension final : public ProjectFileIOExtension
             if (!project)
                return;
 
-            if (
-               ProjectCloudExtension::Get(*project).GetCurrentSyncStatus() !=
-               ProjectSyncStatus::Synced)
-               return;
-
             const auto result =
                SyncSucceededDialog { project.get() }.ShowDialog();
+
+            ProjectCloudExtension::Get(*project).SetFirstSyncDialogShown(true);
 
             if (result == SyncSucceededDialog::ViewOnlineIdentifier())
                BasicUI::OpenInDefaultBrowser(audacity::ToWXString(
