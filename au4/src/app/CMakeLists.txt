@@ -260,7 +260,7 @@ elseif(OS_IS_MAC)
     if(MU_COMPILE_INSTALL_QTQML_FILES)
         install(DIRECTORY
                 ${QT_INSTALL_QML}
-                DESTINATION ${Mscore_SHARE_NAME}${Mscore_INSTALL_NAME}
+                DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}
                 REGEX ".*QtWebkit.*" EXCLUDE
                 REGEX ".*QtTest.*" EXCLUDE
                 REGEX ".*QtSensors.*" EXCLUDE

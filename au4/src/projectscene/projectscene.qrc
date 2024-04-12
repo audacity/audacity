@@ -9,5 +9,9 @@
         <file>qml/Audacity/ProjectScene/internal/CustomiseView.qml</file>
         <file>qml/Audacity/ProjectScene/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/ProjectScene/internal/PlaybackToolBarCustomisePopup.qml</file>
+        <file>qml/Audacity/ProjectScene/internal/TrackItem.qml</file>
+        <file>qml/Audacity/ProjectScene/internal/audio/KnobControl.qml</file>
+        <file>qml/Audacity/ProjectScene/internal/audio/VolumePressureMeter.qml</file>
+        <file>qml/Audacity/ProjectScene/internal/TracksControlPanel.qml</file>
     </qresource>
 </RCC>
