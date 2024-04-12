@@ -41,7 +41,7 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
-include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/DeclareMuseOptions.cmake)
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 
 ###########################################
 # AudacityDependencies

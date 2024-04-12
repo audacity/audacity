@@ -243,7 +243,7 @@ set(MUSE_APP_INSTALL_SUFFIX "\"${MUSESCORE_INSTALL_SUFFIX}\"")
 set(MUSE_APP_INSTALL_PREFIX "\"${CMAKE_INSTALL_PREFIX}\"")
 set(MUSE_APP_INSTALL_NAME "\"${Mscore_INSTALL_NAME}\"")
 
-include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/SetupMuseConfigure.cmake)
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake)
 
 ###########################################
 # Global definitions
