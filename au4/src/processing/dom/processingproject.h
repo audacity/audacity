@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "async/notifylist.h"
+
 #include "track.h"
 
 namespace au::au3 {
@@ -18,7 +20,7 @@ public:
 
     void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
 
-    TrackList trackList() const;
+    muse::async::NotifyList<const Track> trackList() const;
 
     //! NOTE Just for debug
     void dump();

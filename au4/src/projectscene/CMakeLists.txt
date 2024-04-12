@@ -47,6 +47,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h

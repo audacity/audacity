@@ -13,14 +13,14 @@ void ProcessingProject::setAudacity3Project(std::shared_ptr<au::au3::Audacity3Pr
     m_au3 = au3;
 }
 
-TrackList ProcessingProject::trackList() const
+muse::async::NotifyList<const Track> ProcessingProject::trackList() const
 {
-    return m_au3->tracks();
+    return m_au3->trackList();
 }
 
 void ProcessingProject::dump()
 {
-    TrackList tracks = trackList();
+    muse::async::NotifyList<const Track> tracks = trackList();
     LOGDA() << "tracks: " << tracks.size();
     for (const Track& t : tracks) {
         LOGDA() << "id: " << t.id << ", title: " << t.title;

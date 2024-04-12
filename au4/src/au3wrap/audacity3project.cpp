@@ -15,6 +15,22 @@
 
 using namespace au::au3;
 
+static au::processing::TrackType trackType(const Track* track)
+{
+    switch (track->NChannels()) {
+    case 0:
+        return au::processing::TrackType::Label;
+    case 1:
+        return au::processing::TrackType::Mono;
+    case 2:
+        return au::processing::TrackType::Stereo;
+    default:
+        break;
+    }
+
+    return au::processing::TrackType::Undefined;
+}
+
 struct au::au3::Audacity3ProjectData
 {
     std::shared_ptr<AudacityProject> project;
@@ -65,9 +81,11 @@ std::string Audacity3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
-au::processing::TrackList Audacity3Project::tracks() const
+muse::async::NotifyList<const au::processing::Track> Audacity3Project::trackList() const
 {
-    au::processing::TrackList au4tracks;
+    muse::async::NotifyList<const au::processing::Track> au4tracks;
+    au4tracks.setNotify(m_trackChangedNotifier.notify());
+
     TrackList& tracks = TrackList::Get(m_data->projectRef());
 
     for (const Track* t : tracks) {
@@ -75,6 +93,7 @@ au::processing::TrackList Audacity3Project::tracks() const
         au::processing::Track au4t;
         au4t.id = muse::ID(*(reinterpret_cast<long*>(&id)));
         au4t.title = wxToSting(t->GetName());
+        au4t.type = trackType(t);
 
         au4tracks.push_back(std::move(au4t));
     }

@@ -9,9 +9,17 @@
 #include "clip.h"
 
 namespace au::processing {
+enum class TrackType {
+    Undefined,
+    Mono,
+    Stereo,
+    Label
+};
+
 struct Track {
     muse::ID id;
     muse::String title;
+    TrackType type = TrackType::Undefined;
 };
 
 using TrackList = std::vector<Track>;
