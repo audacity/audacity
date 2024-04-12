@@ -82,19 +82,21 @@ struct Exporter final
 
       if (sampleFormat == int16Sample)
       {
-         constexpr size_t conversionSamplesCount = 1024;
+         constexpr size_t conversionSamplesCount = 4096;
 
+         const int16_t* int16Data = reinterpret_cast<const int16_t*>(sampleData.data());
          std::vector<int32_t> buffer;
          buffer.resize(conversionSamplesCount);
 
-         for (size_t firstSample = 0; firstSample < samplesRead; ++firstSample)
+         for (size_t firstSample = 0; firstSample < samplesRead;
+              firstSample += conversionSamplesCount)
          {
             const auto samplesThisRun =
                std::min(conversionSamplesCount, samplesRead - firstSample);
 
             for (size_t i = 0; i < samplesThisRun; ++i)
                buffer[i] =
-                  (static_cast<int32_t>(sampleData[firstSample + i]) * 65536) >>
+                  (static_cast<int32_t>(int16Data[firstSample + i]) * 65536) >>
                   16;
 
             WavpackPackSamples(Context, buffer.data(), samplesThisRun);
