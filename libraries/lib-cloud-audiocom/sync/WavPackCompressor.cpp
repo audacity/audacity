@@ -420,7 +420,7 @@ float GetFloatValue(int16_t value) noexcept
 
 float GetFloatValue(int32_t value) noexcept
 {
-   return static_cast<float>(value) / std::numeric_limits<int32_t>::max();
+   return static_cast<float>(value) / ((1 << 23) - 1);
 }
 
 float GetFloatValue(float value) noexcept
