@@ -80,6 +80,11 @@ struct Exporter final
       const size_t samplesRead = Block.Block->GetSamples(
          sampleData.data(), Block.Format, 0, sampleCount, false);
 
+      // Reserve 1.5 times the size of the original data
+      // The compressed data will be smaller than the original data,
+      // but we overallocate just in case
+      CompressedData.reserve(sampleData.size() * 3 / 2);
+
       if (sampleFormat == int16Sample)
       {
          constexpr size_t conversionSamplesCount = 4096;
