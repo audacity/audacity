@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.3
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 Column {
     id: root
@@ -45,7 +45,7 @@ Column {
         name: "NavPanel"
         direction: NavigationPanel.Horizontal
         enabled: root.visible
-        accessible.name: qsTrc("project/newscore", "General score info")
+        accessible.name: qsTrc("project/newscore", "General project info")
     }
 
     Row {
@@ -67,7 +67,7 @@ Column {
 
             title: qsTrc("project", "Title")
 
-            info: qsTrc("project", "Untitled score")
+            info: qsTrc("project", "Untitled project")
 
             navigation.panel: root.navigationPanel
             navigation.column: 0

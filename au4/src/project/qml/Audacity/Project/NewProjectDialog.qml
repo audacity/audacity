@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,20 +24,20 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
-import "internal/NewScore"
+import "internal/NewProject"
 
 StyledDialogView {
     id: root
 
-    title: qsTrc("project", "New score")
+    title: qsTrc("project", "New project")
 
     contentHeight: 600
     contentWidth: 1024
     resizable: true
 
-    objectName: "NewScoreDialog"
+    objectName: "NewProjectDialog"
 
     function onDone() {
         var result = {}
@@ -47,12 +47,12 @@ StyledDialogView {
             result[key] = instrumentsAndTemplatePageResult[key]
         }
 
-        var scoreInfoPageResult = scoreInfoPage.result()
-        for (key in scoreInfoPageResult) {
-            result[key] = scoreInfoPageResult[key]
+        var projectInfoPageResult = projectInfoPage.result()
+        for (key in projectInfoPageResult) {
+            result[key] = projectInfoPageResult[key]
         }
 
-        if (newScoreModel.createScore(result)) {
+        if (newProjectModel.createProject(result)) {
             root.activateParentOnClose = false
             root.accept()
         }
@@ -62,8 +62,8 @@ StyledDialogView {
         chooseInstrumentsAndTemplatePage.focusOnSelected()
     }
 
-    NewScoreModel {
-        id: newScoreModel
+    NewProjectModel {
+        id: newProjectModel
     }
 
     Item {
@@ -84,22 +84,8 @@ StyledDialogView {
         anchors.bottom: footer.top
         anchors.bottomMargin: 20
 
-        ChooseInstrumentsAndTemplatesPage {
-            id: chooseInstrumentsAndTemplatePage
-
-            navigationSection: root.navigationSection
-
-            Component.onCompleted: {
-                preferredScoreCreationMode = newScoreModel.preferredScoreCreationMode()
-            }
-
-            onDone: {
-                root.onDone()
-            }
-        }
-
-        ScoreInfoPage {
-            id: scoreInfoPage
+        ProjectInfoPage {
+            id: projectInfoPage
 
             navigationSection: root.navigationSection
             popupsAnchorItem: popupsAnchorItem

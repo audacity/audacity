@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,16 +25,16 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
-import "internal/ScoresPage"
+import "internal/ProjectsPage"
 
 Item {
     id: root
 
-    property AbstractScoresModel model
+    property AbstractProjectsModel model
     property list<ColumnItem> columns
-    property alias showNewScoreItem: newScoreItem.visible
+    property alias showNewProjectItem: newProjectItem.visible
     property string searchText
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
@@ -44,8 +44,8 @@ Item {
 
     property alias navigation: navPanel
 
-    signal createNewScoreRequested()
-    signal openScoreRequested(var scorePath, var displayName)
+    signal createNewProjectRequested()
+    signal openProjectRequested(var projectPath, var displayName)
 
     component ColumnItem : QtObject {
         property string header
@@ -61,7 +61,7 @@ Item {
         id: searchFilterModel
         sourceModel: root.model
 
-        alwaysExcludeIndices: root.model.nonScoreItemIndices
+        alwaysExcludeIndices: root.model.nonProjectItemIndices
 
         filters: [
             FilterValue {
@@ -74,9 +74,9 @@ Item {
 
     NavigationPanel {
         id: navPanel
-        name: "ScoresListView"
+        name: "ProjectsListView"
         direction: NavigationPanel.Both
-        accessible.name: qsTrc("project", "Scores list")
+        accessible.name: qsTrc("project", "Projects list")
     }
 
     ColumnLayout {
@@ -86,8 +86,8 @@ Item {
 
         spacing: 12
 
-        ScoreListItem {
-            id: newScoreItem
+        ProjectListItem {
+            id: newProjectItem
 
             Layout.fillWidth: true
             Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
@@ -101,8 +101,8 @@ Item {
             navigation.row: 0
             navigation.column: 0
 
-            score: {
-                "name": qsTrc("project", "New score")
+            project: {
+                "name": qsTrc("project", "New project")
             }
 
             thumbnailComponent: Rectangle {
@@ -119,7 +119,7 @@ Item {
                 }
             }
 
-            onClicked: root.createNewScoreRequested()
+            onClicked: root.createNewProjectRequested()
         }
 
         Item {
@@ -204,7 +204,7 @@ Item {
 
                     model: searchFilterModel
 
-                    delegate: ScoreListItem {
+                    delegate: ProjectListItem {
                         required property int index
 
                         columns: root.columns
@@ -218,7 +218,7 @@ Item {
                         navigation.column: 0
 
                         onClicked: {
-                            root.openScoreRequested(score.path, score.name)
+                            root.openProjectRequested(project.path, project.name)
                         }
                     }
                 }

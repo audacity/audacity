@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,21 +19,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_ABSTRACTSCORESMODEL_H
-#define MU_PROJECT_ABSTRACTSCORESMODEL_H
+#ifndef AU_PROJECT_ABSTRACTPROJECTSMODEL_H
+#define AU_PROJECT_ABSTRACTPROJECTSMODEL_H
 
 #include <QAbstractListModel>
 
-namespace mu::project {
-class AbstractScoresModel : public QAbstractListModel
+namespace au::project {
+class AbstractProjectsModel : public QAbstractListModel
 {
     Q_OBJECT
 
     Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
-    Q_PROPERTY(QList<int> nonScoreItemIndices READ nonScoreItemIndices NOTIFY rowCountChanged)
+    Q_PROPERTY(QList<int> nonProjectItemIndices READ nonProjectItemIndices NOTIFY rowCountChanged)
 
 public:
-    explicit AbstractScoresModel(QObject* parent = nullptr);
+    explicit AbstractProjectsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE virtual void load() = 0;
 
@@ -41,7 +41,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    virtual QList<int> nonScoreItemIndices() const;
+    virtual QList<int> nonProjectItemIndices() const;
 
 signals:
     void rowCountChanged();
@@ -50,7 +50,7 @@ protected:
     enum Roles {
         NameRole = Qt::UserRole + 1,
         IsNoResultsFoundRole,
-        ScoreRole
+        ProjectRole
     };
 
     static const QString NAME_KEY;
@@ -62,7 +62,7 @@ protected:
     static const QString IS_CREATE_NEW_KEY;
     static const QString IS_NO_RESULTS_FOUND_KEY;
     static const QString IS_CLOUD_KEY;
-    static const QString CLOUD_SCORE_ID_KEY;
+    static const QString CLOUD_PROJECT_ID_KEY;
     static const QString CLOUD_VISIBILITY_KEY;
     static const QString CLOUD_VIEW_COUNT_KEY;
 
@@ -70,4 +70,4 @@ protected:
 };
 }
 
-#endif // MU_PROJECT_ABSTRACTSCORESMODEL_H
+#endif // AU_PROJECT_ABSTRACTPROJECTSMODEL_H

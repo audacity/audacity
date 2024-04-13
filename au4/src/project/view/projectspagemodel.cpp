@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,7 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "scorespagemodel.h"
+#include "projectspagemodel.h"
 
 #include <QString>
 
@@ -28,60 +28,60 @@
 
 #include "types/projecttypes.h"
 
-using namespace mu::project;
+using namespace au::project;
 using namespace muse::actions;
 
-ScoresPageModel::ScoresPageModel(QObject* parent)
+ProjectsPageModel::ProjectsPageModel(QObject* parent)
     : QObject(parent)
 {
 }
 
-void ScoresPageModel::createNewScore()
+void ProjectsPageModel::createNewScore()
 {
     dispatcher()->dispatch("file-new");
 }
 
-void ScoresPageModel::openOther()
+void ProjectsPageModel::openOther()
 {
     dispatcher()->dispatch("file-open");
 }
 
-void ScoresPageModel::openScore(const QString& scorePath, const QString& displayNameOverride)
+void ProjectsPageModel::openScore(const QString& scorePath, const QString& displayNameOverride)
 {
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(QUrl::fromLocalFile(scorePath), displayNameOverride));
 }
 
-void ScoresPageModel::openScoreManager()
+void ProjectsPageModel::openScoreManager()
 {
     interactive()->openUrl(museScoreComService()->scoreManagerUrl());
 }
 
-int ScoresPageModel::tabIndex() const
+int ProjectsPageModel::tabIndex() const
 {
-    return configuration()->homeScoresPageTabIndex();
+    // return configuration()->homeScoresPageTabIndex();
 }
 
-void ScoresPageModel::setTabIndex(int index)
+void ProjectsPageModel::setTabIndex(int index)
 {
     if (index == tabIndex()) {
         return;
     }
 
-    configuration()->setHomeScoresPageTabIndex(index);
+    // configuration()->setHomeScoresPageTabIndex(index);
     emit tabIndexChanged();
 }
 
-ScoresPageModel::ViewType ScoresPageModel::viewType() const
+ProjectsPageModel::ViewType ProjectsPageModel::viewType() const
 {
-    return static_cast<ViewType>(configuration()->homeScoresPageViewType());
+    // return static_cast<ViewType>(configuration()->homeScoresPageViewType());
 }
 
-void ScoresPageModel::setViewType(ViewType type)
+void ProjectsPageModel::setViewType(ViewType type)
 {
     if (viewType() == type) {
         return;
     }
 
-    configuration()->setHomeScoresPageViewType(IProjectConfiguration::HomeScoresPageViewType(type));
+    // configuration()->setHomeScoresPageViewType(IProjectConfiguration::HomeScoresPageViewType(type));
     emit viewTypeChanged();
 }

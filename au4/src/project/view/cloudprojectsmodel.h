@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,10 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_CLOUDSCORESMODEL_H
-#define MU_PROJECT_CLOUDSCORESMODEL_H
+#ifndef AU_PROJECT_CLOUDPROJECTSMODEL_H
+#define AU_PROJECT_CLOUDPROJECTSMODEL_H
 
-#include "abstractscoresmodel.h"
+#include "abstractprojectsmodel.h"
 
 #include "async/asyncable.h"
 
@@ -30,12 +30,12 @@
 #include "iprojectconfiguration.h"
 #include "cloud/musescorecom/imusescorecomservice.h"
 
-namespace mu::project {
-class CloudScoresModel : public AbstractScoresModel, public muse::async::Asyncable
+namespace au::project {
+class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(IProjectConfiguration, configuration)
+    INJECT(au::project::IProjectConfiguration, configuration)
     INJECT(muse::cloud::IMuseScoreComService, museScoreComService)
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
@@ -44,7 +44,7 @@ class CloudScoresModel : public AbstractScoresModel, public muse::async::Asyncab
     Q_PROPERTY(int desiredRowCount READ desiredRowCount WRITE setDesiredRowCount NOTIFY desiredRowCountChanged)
 
 public:
-    CloudScoresModel(QObject* parent = nullptr);
+    CloudProjectsModel(QObject* parent = nullptr);
 
     enum class State {
         Fine,
@@ -85,4 +85,4 @@ private:
 };
 }
 
-#endif // MU_PROJECT_CLOUDSCORESMODEL_H
+#endif // AU_PROJECT_CLOUDPROJECTSMODEL_H

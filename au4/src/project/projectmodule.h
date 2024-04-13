@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -35,6 +35,8 @@ public:
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
+    void registerResources() override;
+    void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 

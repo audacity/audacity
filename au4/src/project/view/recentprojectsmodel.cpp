@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,34 +19,32 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "recentscoresmodel.h"
+#include "recentprojectsmodel.h"
 
 #include "translation.h"
 #include "dataformatter.h"
 #include "io/fileinfo.h"
 
-#include "engraving/infrastructure/mscio.h"
-
 #include "log.h"
 
 using namespace muse;
-using namespace mu::project;
+using namespace au::project;
 
-RecentScoresModel::RecentScoresModel(QObject* parent)
-    : AbstractScoresModel(parent)
+RecentProjectsModel::RecentProjectsModel(QObject* parent)
+    : AbstractProjectsModel(parent)
 {
 }
 
-void RecentScoresModel::load()
+void RecentProjectsModel::load()
 {
-    updateRecentScores();
+    updateRecentProjects();
 
-    recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
-        updateRecentScores();
-    });
+    // recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
+    //     updateRecentProjects();
+    // });
 }
 
-void RecentScoresModel::setRecentScores(const std::vector<QVariantMap>& items)
+void RecentProjectsModel::setRecentProjects(const std::vector<QVariantMap>& items)
 {
     if (m_items == items) {
         return;
@@ -57,41 +55,41 @@ void RecentScoresModel::setRecentScores(const std::vector<QVariantMap>& items)
     endResetModel();
 }
 
-void RecentScoresModel::updateRecentScores()
+void RecentProjectsModel::updateRecentProjects()
 {
-    const RecentFilesList& recentScores = recentFilesController()->recentFilesList();
+    // const RecentFilesList& recentProjects = recentFilesController()->recentFilesList();
 
     std::vector<QVariantMap> items;
-    items.reserve(recentScores.size());
+    // items.reserve(recentProjects.size());
 
     QVariantMap addItem;
-    addItem[NAME_KEY] = muse::qtrc("project", "New score");
+    addItem[NAME_KEY] = muse::qtrc("project", "New project");
     addItem[IS_CREATE_NEW_KEY] = true;
     addItem[IS_NO_RESULTS_FOUND_KEY] = false;
     addItem[IS_CLOUD_KEY] = false;
     items.push_back(addItem);
 
-    for (const RecentFile& file : recentScores) {
-        QVariantMap obj;
+    // for (const RecentFile& file : recentProjects) {
+    //     QVariantMap obj;
 
-        std::string suffix = io::suffix(file.path);
-        bool isSuffixInteresting = suffix != engraving::MSCZ;
+    //     std::string suffix = io::suffix(file.path);
+    //     bool isSuffixInteresting = suffix != engraving::MSCZ;
 
-        RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
-        QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
+    //     RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
+    //     QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
-        obj[NAME_KEY] = file.displayName(isSuffixInteresting);
-        obj[PATH_KEY] = file.path.toQString();
-        obj[SUFFIX_KEY] = QString::fromStdString(suffix);
-        obj[FILE_SIZE_KEY] = fileSizeString;
-        obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
-        obj[CLOUD_SCORE_ID_KEY] = configuration()->cloudScoreIdFromPath(file.path);
-        obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
-        obj[IS_CREATE_NEW_KEY] = false;
-        obj[IS_NO_RESULTS_FOUND_KEY] = false;
+    //     obj[NAME_KEY] = file.displayName(isSuffixInteresting);
+    //     obj[PATH_KEY] = file.path.toQString();
+    //     obj[SUFFIX_KEY] = QString::fromStdString(suffix);
+    //     obj[FILE_SIZE_KEY] = fileSizeString;
+    //     obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
+    //     obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
+    //     obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
+    //     obj[IS_CREATE_NEW_KEY] = false;
+    //     obj[IS_NO_RESULTS_FOUND_KEY] = false;
 
-        items.push_back(obj);
-    }
+    //     items.push_back(obj);
+    // }
 
     QVariantMap noResultsFoundItem;
     noResultsFoundItem[NAME_KEY] = "";
@@ -100,10 +98,10 @@ void RecentScoresModel::updateRecentScores()
     noResultsFoundItem[IS_CLOUD_KEY] = false;
     items.push_back(noResultsFoundItem);
 
-    setRecentScores(items);
+    setRecentProjects(items);
 }
 
-QList<int> RecentScoresModel::nonScoreItemIndices() const
+QList<int> RecentProjectsModel::nonProjectItemIndices() const
 {
     return { 0, rowCount() - 1 };
 }

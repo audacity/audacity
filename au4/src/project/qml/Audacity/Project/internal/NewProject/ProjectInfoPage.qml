@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 Item {
     id: root
@@ -77,17 +77,17 @@ Item {
 
         spacing: 30
 
-        AdditionalInfoView {
-            id: additionalInfo
+        // AdditionalInfoView {
+        //     id: additionalInfo
 
-            Layout.preferredHeight: 150
-            Layout.fillWidth: true
+        //     Layout.preferredHeight: 150
+        //     Layout.fillWidth: true
 
-            popupsAnchorItem: root.popupsAnchorItem
+        //     popupsAnchorItem: root.popupsAnchorItem
 
-            navigationPanel.section: root.navigationSection
-            navigationPanel.order: 1
-        }
+        //     navigationPanel.section: root.navigationSection
+        //     navigationPanel.order: 1
+        // }
 
         SeparatorLine {}
 

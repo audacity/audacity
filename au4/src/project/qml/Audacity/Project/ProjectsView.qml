@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -23,14 +23,14 @@ import QtQuick 2.15
 
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 Loader {
     id: root
 
     property string searchText
 
-    property int viewType: ScoresPageModel.Grid
+    property int viewType: ProjectsPageModel.Grid
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
     property real sideMargin: 46
@@ -38,6 +38,6 @@ Loader {
     property NavigationSection navigationSection
     property int navigationOrder
 
-    signal createNewScoreRequested()
-    signal openScoreRequested(var scorePath, var displayName)
+    signal createNewProjectRequested()
+    signal openProjectRequested(var projectPath, var displayName)
 }

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_CLOUDSCORESTATUSWATCHER_H
-#define MU_PROJECT_CLOUDSCORESTATUSWATCHER_H
+#ifndef AU_PROJECT_CLOUDSCORESTATUSWATCHER_H
+#define AU_PROJECT_CLOUDSCORESTATUSWATCHER_H
 
 #include <QObject>
 
@@ -29,7 +29,7 @@
 #include "modularity/ioc.h"
 #include "iprojectfilescontroller.h"
 
-namespace mu::project {
+namespace au::project {
 class CloudScoreStatusWatcher : public QObject, muse::async::Asyncable
 {
     Q_OBJECT
@@ -69,4 +69,4 @@ private:
 };
 }
 
-#endif // MU_PROJECT_CLOUDSCORESTATUSWATCHER_H
+#endif // AU_PROJECT_CLOUDSCORESTATUSWATCHER_H

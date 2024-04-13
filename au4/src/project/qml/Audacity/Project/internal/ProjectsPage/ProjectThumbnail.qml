@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 Item {
     id: root
@@ -32,11 +32,11 @@ Item {
     property string suffix: ""
     property string thumbnailUrl: ""
 
-    ScoreThumbnailLoader {
-        id: thumbnailLoader
+    // ProjectThumbnailLoader {
+    //     id: thumbnailLoader
 
-        scorePath: root.path
-    }
+    //     projectPath: root.path
+    // }
 
     Image {
         id: image
@@ -52,20 +52,20 @@ Item {
 
         sourceComponent: {
             if (thumbnailLoader.isThumbnailValid) {
-                return scoreThumbnailComp
+                return projectThumbnailComp
             }
 
             return genericThumbnailComp
         }
 
-        Component {
-            id: scoreThumbnailComp
+        // Component {
+        //     id: projectThumbnailComp
 
-            PixmapScoreThumbnailView {
-                anchors.fill: parent
-                thumbnail: thumbnailLoader.thumbnail
-            }
-        }
+        //     PixmapProjectThumbnailView {
+        //         anchors.fill: parent
+        //         thumbnail: thumbnailLoader.thumbnail
+        //     }
+        // }
 
         Component {
             id: genericThumbnailComp

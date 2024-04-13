@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,12 +25,12 @@ import QtQuick.Layouts 1.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 import Muse.GraphicalEffects 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 ListItemBlank {
     id: root
 
-    required property var score
+    required property var project
     property alias columns: columnsRepeater.model
 
     property alias thumbnailComponent: thumbnailLoader.sourceComponent
@@ -41,7 +41,7 @@ ListItemBlank {
 
     implicitHeight: 64
 
-    navigation.accessible.name: root.score.name ?? ""
+    navigation.accessible.name: root.project.name ?? ""
     navigation.onActiveChanged: {
         if (navigation.active) {
             root.scrollIntoView()
@@ -66,10 +66,10 @@ ListItemBlank {
                 Layout.preferredWidth: 30
                 Layout.preferredHeight: 40
 
-                sourceComponent: ScoreThumbnail {
-                    path: root.score.path ?? ""
-                    suffix: root.score.suffix ?? ""
-                    thumbnailUrl: root.score.thumbnailUrl ?? ""
+                sourceComponent: ProjectThumbnail {
+                    path: root.project.path ?? ""
+                    suffix: root.project.suffix ?? ""
+                    thumbnailUrl: root.project.thumbnailUrl ?? ""
                 }
 
                 layer.enabled: true
@@ -85,36 +85,36 @@ ListItemBlank {
             StyledTextLabel {
                 Layout.fillWidth: true
 
-                text: root.score.name ?? ""
+                text: root.project.name ?? ""
                 font: ui.theme.largeBodyFont
                 horizontalAlignment: Text.AlignLeft
             }
 
             Loader {
-                active: root.score.isCloud ?? false
+                active: root.project.isCloud ?? false
 
                 sourceComponent: RowLayout {
-                    visible: root.score.isCloud
+                    visible: root.project.isCloud
 
                     spacing: 24
 
-                    CloudScoreStatusWatcher {
-                        id: cloudScoreStatusWatcher
-                    }
+                    // CloudProjectStatusWatcher {
+                    //     id: cloudProjectStatusWatcher
+                    // }
 
                     Component.onCompleted: {
-                        cloudScoreStatusWatcher.load(root.score.scoreId)
+                        cloudProjectStatusWatcher.load(root.project.projectId)
                     }
 
                     ProgressBar {
                         Layout.preferredWidth: 118
                         Layout.preferredHeight: 16
 
-                        visible: cloudScoreStatusWatcher.isProgress
+                        visible: cloudProjectStatusWatcher.isProgress
 
                         from: 0
-                        to: cloudScoreStatusWatcher.progressTotal
-                        value: cloudScoreStatusWatcher.progressCurrent
+                        to: cloudProjectStatusWatcher.progressTotal
+                        value: cloudProjectStatusWatcher.progressCurrent
 
                         navigation.panel: root.navigation.panel
                         navigation.row: root.navigation.row
@@ -126,11 +126,11 @@ ListItemBlank {
                         }
                     }
 
-                    CloudScoreIndicatorButton {
+                    CloudProjectIndicatorButton {
                         Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
-                        isProgress: cloudScoreStatusWatcher.isProgress
-                        isDownloadedAndUpToDate: cloudScoreStatusWatcher.isDownloadedAndUpToDate
+                        isProgress: cloudProjectStatusWatcher.isProgress
+                        isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
 
                         navigation.panel: root.navigation.panel
                         navigation.row: root.navigation.row
@@ -143,7 +143,7 @@ ListItemBlank {
 
                         onClicked: {
                             if (isProgress) {
-                                cloudScoreStatusWatcher.cancel()
+                                cloudProjectStatusWatcher.cancel()
                             } else {
                                 root.clicked(null)
                             }
@@ -160,8 +160,8 @@ ListItemBlank {
                 Layout.preferredWidth: modelData.width(parent.width)
 
                 // These properties are here to give the delegate access to them
-                readonly property ScoreListItem listItem: root
-                readonly property var score: root.score
+                readonly property ProjectListItem listItem: root
+                readonly property var project: root.project
                 readonly property NavigationPanel navigationPanel: root.navigation.panel
                 readonly property int navigationRow: root.navigation.row
                 readonly property int navigationColumnStart: 100 * (model.index + 1)

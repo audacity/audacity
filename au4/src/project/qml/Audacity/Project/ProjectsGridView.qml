@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,14 +24,14 @@ import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
-import "internal/ScoresPage"
+import "internal/ProjectsPage"
 
 Item {
     id: root
 
-    property AbstractScoresModel model
+    property AbstractProjectsModel model
     property string searchText
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
@@ -41,8 +41,8 @@ Item {
 
     property alias navigation: navPanel
 
-    signal createNewScoreRequested()
-    signal openScoreRequested(var scorePath, var displayName)
+    signal createNewProjectRequested()
+    signal openProjectRequested(var projectPath, var displayName)
 
     clip: true
 
@@ -50,7 +50,7 @@ Item {
         id: searchFilterModel
         sourceModel: root.model
 
-        alwaysIncludeIndices: root.model.nonScoreItemIndices
+        alwaysIncludeIndices: root.model.nonProjectItemIndices
 
         filters: [
             FilterValue {
@@ -70,7 +70,7 @@ Item {
                 roleName: "isNoResultsFound"
                 roleValue: true
                 compareType: CompareType.NotEqual
-                enabled: !Boolean(root.searchText) || searchFilterModel.rowCount > root.model.nonScoreItemIndices.length
+                enabled: !Boolean(root.searchText) || searchFilterModel.rowCount > root.model.nonProjectItemIndices.length
                 async: true
             }
         ]
@@ -78,9 +78,9 @@ Item {
 
     NavigationPanel {
         id: navPanel
-        name: "ScoresGridView"
+        name: "ProjectsGridView"
         direction: NavigationPanel.Both
-        accessible.name: qsTrc("project", "Scores grid")
+        accessible.name: qsTrc("project", "Projects grid")
     }
 
     GradientRectangle {
@@ -137,7 +137,7 @@ Item {
             width: view.cellWidth
             height: view.cellHeight
 
-            ScoreGridItem {
+            ProjectGridItem {
                 anchors.centerIn: parent
 
                 width: view.actualCellWidth
@@ -145,28 +145,28 @@ Item {
 
                 navigation.panel: navPanel
                 navigation.row: view.columns === 0 ? 0 : Math.floor(model.index / view.columns)
-                navigation.column: (model.index - (navigation.row * view.columns)) * 3 // * 3 because of controls inside ScoreItem
+                navigation.column: (model.index - (navigation.row * view.columns)) * 3 // * 3 because of controls inside ProjectItem
                 navigation.onActiveChanged: {
                     if (navigation.active) {
                         view.positionViewAtIndex(index, GridView.Contain)
                     }
                 }
 
-                name: score.name
-                path: score.path ?? ""
-                suffix: score.suffix ?? ""
-                thumbnailUrl: score.thumbnailUrl ?? ""
-                isCreateNew: score.isCreateNew
-                isNoResultsFound: score.isNoResultsFound
-                isCloud: score.isCloud
-                cloudScoreId: score.scoreId ?? 0
-                timeSinceModified: score.timeSinceModified ?? ""
+                name: project.name
+                path: project.path ?? ""
+                suffix: project.suffix ?? ""
+                thumbnailUrl: project.thumbnailUrl ?? ""
+                isCreateNew: project.isCreateNew
+                isNoResultsFound: project.isNoResultsFound
+                isCloud: project.isCloud
+                cloudProjectId: project.projectId ?? 0
+                timeSinceModified: project.timeSinceModified ?? ""
 
                 onClicked: {
                     if (isCreateNew) {
-                        root.createNewScoreRequested()
+                        root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
-                        root.openScoreRequested(score.path, score.name)
+                        root.openProjectRequested(project.path, project.name)
                     }
                 }
             }

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_NEWSCOREMODEL_H
-#define MU_PROJECT_NEWSCOREMODEL_H
+#ifndef MU_PROJECT_NEWPROJECTMODEL_H
+#define MU_PROJECT_NEWPROJECTMODEL_H
 
 #include <QObject>
 
@@ -28,31 +28,26 @@
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectcreator.h"
-#include "notation/notationtypes.h"
 #include "context/iglobalcontext.h"
-#include "notation/iinstrumentsrepository.h"
+#include "types/projecttypes.h"
 
-namespace mu::project {
-class NewScoreModel : public QObject
+namespace au::project {
+class NewProjectModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(IProjectConfiguration, configuration)
-    INJECT(IProjectCreator, notationCreator)
-    INJECT(context::IGlobalContext, globalContext)
-    INJECT(notation::IInstrumentsRepository, instrumentsRepository)
+    INJECT(au::project::IProjectConfiguration, configuration)
 
 public:
-    explicit NewScoreModel(QObject* parent = nullptr);
+    explicit NewProjectModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE QString preferredScoreCreationMode() const;
-    Q_INVOKABLE bool createScore(const QVariant& info);
+    Q_INVOKABLE QString preferredProjectCreationMode() const;
+    Q_INVOKABLE bool createProject(const QVariant& info);
 
 private:
     project::ProjectCreateOptions parseOptions(const QVariantMap& info) const;
-    notation::DurationType noteIconToDurationType(int noteIconCode) const;
-    void updatePreferredScoreCreationMode(bool isScoreCreatedFromInstruments);
+    void updatePreferredProjectCreationMode(bool isProjectCreatedFromInstruments);
 };
 }
 
-#endif // MU_PROJECT_NEWSCOREMODEL_H
+#endif // MU_PROJECT_NEWPROJECTMODEL_H

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_SCORESPAGEMODEL_H
-#define MU_PROJECT_SCORESPAGEMODEL_H
+#ifndef AU_PROJECT_PROJECTSPAGEMODEL_H
+#define AU_PROJECT_PROJECTSPAGEMODEL_H
 
 #include <QObject>
 
@@ -32,12 +32,12 @@
 
 class QString;
 
-namespace mu::project {
-class ScoresPageModel : public QObject
+namespace au::project {
+class ProjectsPageModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(IProjectConfiguration, configuration)
+    INJECT(au::project::IProjectConfiguration, configuration)
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(muse::IInteractive, interactive)
     INJECT(muse::cloud::IMuseScoreComService, museScoreComService)
@@ -46,14 +46,14 @@ class ScoresPageModel : public QObject
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)
 
 public:
-    explicit ScoresPageModel(QObject* parent = nullptr);
+    explicit ProjectsPageModel(QObject* parent = nullptr);
 
     int tabIndex() const;
     void setTabIndex(int index);
 
     enum ViewType {
-        Grid = int(IProjectConfiguration::HomeScoresPageViewType::Grid),
-        List = int(IProjectConfiguration::HomeScoresPageViewType::List),
+        Grid = int(au::project::IProjectConfiguration::HomeProjectsPageViewType::Grid),
+        List = int(au::project::IProjectConfiguration::HomeProjectsPageViewType::List),
     };
     Q_ENUM(ViewType);
 
@@ -71,4 +71,4 @@ signals:
 };
 }
 
-#endif // MU_PROJECT_SCORESPAGEMODEL_H
+#endif // AU_PROJECT_PROJECTSPAGEMODEL_H

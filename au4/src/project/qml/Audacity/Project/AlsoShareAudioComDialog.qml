@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -123,7 +123,7 @@ StyledDialogView {
 
                 Layout.fillWidth: true
 
-                text: qsTrc("project/cloud", "Share your score’s audio with millions of listeners on this free streaming platform")
+                text: qsTrc("project/cloud", "Share your project’s audio with millions of listeners on this free streaming platform")
                 font: ui.theme.bodyFont
             }
         }

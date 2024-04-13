@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 import Muse.GraphicalEffects 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
 FocusScope {
     id: root
@@ -38,7 +38,7 @@ FocusScope {
     property bool isCreateNew: false
     property bool isNoResultsFound: false
     property bool isCloud: false
-    property int cloudScoreId: 0
+    property int cloudProjectId: 0
 
     property alias navigation: navCtrl
 
@@ -105,7 +105,7 @@ FocusScope {
                             return noResultFoundComp
                         }
 
-                        return scoreItemComp
+                        return projectItemComp
                     }
 
                     layer.enabled: true
@@ -192,34 +192,34 @@ FocusScope {
 
                     spacing: 8
 
-                    CloudScoreStatusWatcher {
-                        id: cloudScoreStatusWatcher
-                    }
+                    // CloudProjectStatusWatcher {
+                    //     id: cloudProjectStatusWatcher
+                    // }
 
-                    Component.onCompleted: {
-                        cloudScoreStatusWatcher.load(root.cloudScoreId)
-                    }
+                    // Component.onCompleted: {
+                    //     cloudProjectStatusWatcher.load(root.cloudProjectId)
+                    // }
 
                     ProgressBar {
                         Layout.fillWidth: true
                         Layout.preferredHeight: 16
 
-                        visible: cloudScoreStatusWatcher.isProgress
+                        visible: cloudProjectStatusWatcher.isProgress
 
                         from: 0
-                        to: cloudScoreStatusWatcher.progressTotal
-                        value: cloudScoreStatusWatcher.progressCurrent
+                        to: cloudProjectStatusWatcher.progressTotal
+                        value: cloudProjectStatusWatcher.progressCurrent
 
                         navigation.panel: root.navigation.panel
                         navigation.row: root.navigation.row
                         navigation.column: root.navigation.column + 1
                     }
 
-                    CloudScoreIndicatorButton {
+                    CloudProjectIndicatorButton {
                         Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
-                        isProgress: cloudScoreStatusWatcher.isProgress
-                        isDownloadedAndUpToDate: cloudScoreStatusWatcher.isDownloadedAndUpToDate
+                        isProgress: cloudProjectStatusWatcher.isProgress
+                        isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
 
                         navigation.panel: root.navigation.panel
                         navigation.row: root.navigation.row
@@ -227,7 +227,7 @@ FocusScope {
 
                         onClicked: {
                             if (isProgress) {
-                                cloudScoreStatusWatcher.cancel()
+                                cloudProjectStatusWatcher.cancel()
                             } else {
                                 root.clicked()
                             }
@@ -300,9 +300,9 @@ FocusScope {
     }
 
     Component {
-        id: scoreItemComp
+        id: projectItemComp
 
-        ScoreThumbnail {
+        ProjectThumbnail {
             path: root.path
             suffix: root.suffix
             thumbnailUrl: root.thumbnailUrl

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -33,7 +33,7 @@ StyledDialogView {
 
     objectName: "ProjectUploadedDialog"
 
-    property string scoreManagerUrl: ""
+    property string projectManagerUrl: ""
 
     onNavigationActivateRequested: {
         watchVideoButton.navigation.requestActive()
@@ -65,7 +65,7 @@ StyledDialogView {
 
             width: 300
 
-            source: "qrc:/resources/PublishScores.png"
+            source: "qrc:/resources/PublishProjects.png"
         }
 
         ColumnLayout {
@@ -159,7 +159,7 @@ StyledDialogView {
 
                             Layout.fillWidth: true
 
-                            text: qsTrc("project", "Publish your finished scores on MuseScore.com")
+                            text: qsTrc("project", "Publish your finished projects on Audio.com")
                             font: ui.theme.largeBodyBoldFont
                             horizontalAlignment: Text.AlignLeft
                             wrapMode: Text.Wrap
@@ -185,7 +185,7 @@ StyledDialogView {
 
                                 model: [
                                     qsTrc("project", "Create a portfolio to showcase your music"),
-                                    qsTrc("project", "Gain followers and receive score comments and ratings"),
+                                    qsTrc("project", "Gain followers and receive project comments and ratings"),
                                     qsTrc("project", "Share your projects and collaborate with other musicians")
                                 ]
 
@@ -248,14 +248,14 @@ StyledDialogView {
                 spacing: 10
 
                 FlatButton {
-                    text: qsTrc("project", "View score online")
+                    text: qsTrc("project", "View project online")
 
                     navigation.panel: buttonsNavPanel
                     navigation.column: 2
 
                     onClicked: {
                         Qt.callLater(function() {
-                            api.launcher.openUrl(root.scoreManagerUrl)
+                            api.launcher.openUrl(root.projectManagerUrl)
                         })
 
                         root.hide()

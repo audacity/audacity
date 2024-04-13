@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_PROJECTTYPES_H
-#define MU_PROJECT_PROJECTTYPES_H
+#ifndef AU_PROJECT_PROJECTTYPES_H
+#define AU_PROJECT_PROJECTTYPES_H
 
 #include <variant>
 
@@ -34,11 +34,8 @@
 #include "projectmeta.h"
 
 #include "cloud/cloudtypes.h"
-#include "notation/inotation.h"
-#include "notation/notationtypes.h"
-#include "../inotationwriter.h"
 
-namespace mu::project {
+namespace au::project {
 struct ProjectCreateOptions
 {
     QString title;
@@ -48,21 +45,6 @@ struct ProjectCreateOptions
     QString copyright;
 
     muse::io::path_t templatePath;
-
-    notation::ScoreCreateOptions scoreOptions;
-};
-
-struct MigrationOptions
-{
-    // common
-    int appVersion = 0;
-    bool isApplyMigration = false;
-    bool isAskAgain = true;
-
-    bool isApplyLeland = true;
-    bool isApplyEdwin = true;
-
-    bool isValid() const { return appVersion != 0; }
 };
 
 enum class SaveMode
@@ -103,28 +85,6 @@ struct CloudAudioInfo {
     bool isValid() const
     {
         return !name.isEmpty();
-    }
-};
-
-struct ExportInfo {
-    QString id;
-    muse::io::path_t projectPath;
-    muse::io::path_t exportPath;
-    INotationWriter::UnitType unitType;
-    std::vector<notation::INotationPtr> notations;
-
-    bool operator==(const ExportInfo& other) const
-    {
-        return id == other.id
-               && projectPath == other.projectPath
-               && exportPath == other.exportPath
-               && unitType == other.unitType
-               && notations == other.notations;
-    }
-
-    bool operator!=(const ExportInfo other) const
-    {
-        return !(*this == other);
     }
 };
 
@@ -319,32 +279,6 @@ public:
 };
 
 using GenerateAudioTimePeriodType = GenerateAudioTimePeriod::Type;
-
-class Migration
-{
-    Q_GADGET
-
-public:
-    enum class Type
-    {
-        Unknown,
-        Pre_3_6,
-        Ver_3_6
-    };
-    Q_ENUM(Type)
-};
-
-using MigrationType = Migration::Type;
-
-inline std::vector<MigrationType> allMigrationTypes()
-{
-    static const std::vector<MigrationType> types {
-        MigrationType::Pre_3_6,
-        MigrationType::Ver_3_6
-    };
-
-    return types;
-}
 }
 
-#endif // MU_PROJECT_PROJECTTYPES_H
+#endif // AU_PROJECT_PROJECTTYPES_H
