@@ -26,7 +26,7 @@ import Muse.UiComponents 1.0
 import Muse.Dock 1.0
 
 import Audacity.Project 1.0
-// import MuseScore.Cloud 1.0
+import Muse.Cloud 1.0
 // import MuseScore.Learn 1.0
 
 import "../dockwindow"
@@ -107,10 +107,7 @@ DockPage {
 
     Component {
         id: accountComp
-        //AccountPage {}
-        Text {
-            text: "AccountPage"
-        }
+        AccountPage {}
     }
 
     Component {
