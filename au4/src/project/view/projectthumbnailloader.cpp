@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,59 +19,59 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "scorethumbnailloader.h"
+#include "projectthumbnailloader.h"
 
-using namespace mu::project;
+using namespace au::project;
 
-ScoreThumbnailLoader::ScoreThumbnailLoader(QObject* parent)
+ProjectThumbnailLoader::ProjectThumbnailLoader(QObject* parent)
     : QObject(parent)
 {
 }
 
-QString ScoreThumbnailLoader::scorePath() const
+QString ProjectThumbnailLoader::projectPath() const
 {
-    return m_scorePath;
+    return m_projectPath;
 }
 
-void ScoreThumbnailLoader::setScorePath(const QString& scorePath)
+void ProjectThumbnailLoader::setProjectPath(const QString& projectPath)
 {
-    if (m_scorePath == scorePath) {
+    if (m_projectPath == projectPath) {
         return;
     }
 
-    m_scorePath = scorePath;
-    emit scorePathChanged();
+    m_projectPath = projectPath;
+    emit projectPathChanged();
 
     loadThumbnail();
 }
 
-bool ScoreThumbnailLoader::isThumbnailValid() const
+bool ProjectThumbnailLoader::isThumbnailValid() const
 {
     return !m_thumbnail.isNull();
 }
 
-QPixmap ScoreThumbnailLoader::thumbnail() const
+QPixmap ProjectThumbnailLoader::thumbnail() const
 {
     return m_thumbnail;
 }
 
-void ScoreThumbnailLoader::loadThumbnail()
+void ProjectThumbnailLoader::loadThumbnail()
 {
-    if (m_scorePath.isEmpty()) {
+    if (m_projectPath.isEmpty()) {
         setThumbnail(QPixmap());
         return;
     }
 
-    recentFilesController()->thumbnail(m_scorePath)
-    .onResolve(this, [this](const QPixmap& thumbnail) {
-        setThumbnail(thumbnail);
-    }).onReject(this, [this](int code, const std::string& error) {
-        LOGE() << "Could not load thumbnail for " << m_scorePath << ": [" << code << "] " << error;
-        setThumbnail(QPixmap());
-    });
+    // recentFilesController()->thumbnail(m_scorePath)
+    // .onResolve(this, [this](const QPixmap& thumbnail) {
+    //     setThumbnail(thumbnail);
+    // }).onReject(this, [this](int code, const std::string& error) {
+    //     LOGE() << "Could not load thumbnail for " << m_scorePath << ": [" << code << "] " << error;
+    //     setThumbnail(QPixmap());
+    // });
 }
 
-void ScoreThumbnailLoader::setThumbnail(const QPixmap& thumbnail)
+void ProjectThumbnailLoader::setThumbnail(const QPixmap& thumbnail)
 {
     m_thumbnail = thumbnail;
     emit thumbnailChanged();

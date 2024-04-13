@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,22 +19,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_PIXMAPSCORETHUMBNAILVIEW_H
-#define MU_PROJECT_PIXMAPSCORETHUMBNAILVIEW_H
+#ifndef AU_PROJECT_PIXMAPPROJECTTHUMBNAILVIEW_H
+#define AU_PROJECT_PIXMAPPROJECTTHUMBNAILVIEW_H
 
 #include <QPainter>
 
 #include "uicomponents/view/quickpaintedview.h"
 
-namespace mu::project {
-class PixmapScoreThumbnailView : public muse::uicomponents::QuickPaintedView
+namespace au::project {
+class PixmapProjectThumbnailView : public muse::uicomponents::QuickPaintedView
 {
     Q_OBJECT
 
     Q_PROPERTY(QPixmap thumbnail READ thumbnail WRITE setThumbnail NOTIFY thumbnailChanged)
 
 public:
-    PixmapScoreThumbnailView(QQuickItem* parent = nullptr);
+    PixmapProjectThumbnailView(QQuickItem* parent = nullptr);
 
     QPixmap thumbnail() const;
     void setThumbnail(QPixmap pixmap);
@@ -50,4 +50,4 @@ private:
 };
 }
 
-#endif // MU_PROJECT_PIXMAPSCORETHUMBNAILVIEW_H
+#endif // AU_PROJECT_PIXMAPPROJECTTHUMBNAILVIEW_H

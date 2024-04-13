@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,11 +20,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "cloudscorestatuswatcher.h"
+#include "cloudprojectstatuswatcher.h"
 
 #include "log.h"
 
-using namespace mu::project;
+using namespace au::project;
 
 CloudScoreStatusWatcher::CloudScoreStatusWatcher(QObject* parent)
     : QObject(parent)

@@ -24,10 +24,10 @@ import QtQuick.Layouts 1.3
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 import Muse.Cloud 1.0
 
-import "internal/ScoresPage"
+import "internal/ProjectsPage"
 
 FocusScope {
     id: root
@@ -40,7 +40,7 @@ FocusScope {
 
     NavigationSection {
         id: navSec
-        name: "RecentScores"
+        name: "RecentProjects"
         enabled: root.enabled && root.visible
         order: 3
         onActiveChanged: {
@@ -50,12 +50,12 @@ FocusScope {
         }
     }
 
-    ScoresPageModel {
-        id: scoresPageModel
+    ProjectsPageModel {
+        id: projectsPageModel
     }
 
     Component.onCompleted: {
-        tabBar.currentIndex = scoresPageModel.tabIndex
+        tabBar.currentIndex = projectsPageModel.tabIndex
         tabBar.completed = true
     }
 
@@ -81,18 +81,18 @@ FocusScope {
 
         NavigationPanel {
             id: navSearchPanel
-            name: "HomeScoresSearch"
+            name: "HomeProjectsSearch"
             enabled: topLayout.enabled && topLayout.visible
             section: navSec
             order: 1
-            accessible.name: qsTrc("project", "Scores")
+            accessible.name: qsTrc("project", "Projects")
         }
 
         StyledTextLabel {
             id: pageTitle
             Layout.fillWidth: true
 
-            text: qsTrc("project", "Scores")
+            text: qsTrc("project", "Projects")
             font: ui.theme.titleBoldFont
             horizontalAlignment: Text.AlignLeft
         }
@@ -102,10 +102,10 @@ FocusScope {
 
             Layout.preferredWidth: 220
 
-            navigation.name: "Scores Search"
+            navigation.name: "Projects Search"
             navigation.panel: navSearchPanel
             navigation.order: 1
-            accessible.name: qsTrc("project", "Search recent scores")
+            accessible.name: qsTrc("project", "Search recent projects")
         }
     }
 
@@ -130,17 +130,17 @@ FocusScope {
 
             onCurrentIndexChanged: {
                 if (completed) {
-                    scoresPageModel.tabIndex = currentIndex
+                    projectsPageModel.tabIndex = currentIndex
                 }
             }
 
             NavigationPanel {
                 id: navTabPanel
-                name: "HomeScoresTabs"
+                name: "HomeProjectsTabs"
                 section: navSec
                 direction: NavigationPanel.Horizontal
                 order: 2
-                accessible.name: qsTrc("project", "Scores tab bar")
+                accessible.name: qsTrc("project", "Projects tab bar")
                 enabled: tabBar.enabled && tabBar.visible
 
                 onNavigationEvent: function(event) {
@@ -159,9 +159,9 @@ FocusScope {
             }
 
             StyledTabButton {
-                text: qsTrc("project", "My online scores")
+                text: qsTrc("project", "My online projects")
 
-                navigation.name: "MyOnlineScores"
+                navigation.name: "MyOnlineProjects"
                 navigation.panel: navTabPanel
                 navigation.column: 2
             }
@@ -198,15 +198,15 @@ FocusScope {
             implicitHeight: ui.theme.defaultButtonSize
 
             model: [
-                { "icon": IconCode.GRID, "title": qsTrc("project", "Grid view"), "value": ScoresPageModel.Grid },
-                { "icon": IconCode.LIST, "title": qsTrc("project", "List view"), "value": ScoresPageModel.List }
+                { "icon": IconCode.GRID, "title": qsTrc("project", "Grid view"), "value": ProjectsPageModel.Grid },
+                { "icon": IconCode.LIST, "title": qsTrc("project", "List view"), "value": ProjectsPageModel.List }
             ]
 
             delegate: FlatRadioButton {
                 implicitWidth: ui.theme.defaultButtonSize
                 implicitHeight: ui.theme.defaultButtonSize
 
-                checked: scoresPageModel.viewType === modelData.value
+                checked: projectsPageModel.viewType === modelData.value
 
                 iconCode: modelData.icon
                 transparent: true
@@ -218,7 +218,7 @@ FocusScope {
                 navigation.accessible.name: modelData.title
 
                 onToggled: {
-                    scoresPageModel.viewType = modelData.value
+                    projectsPageModel.viewType = modelData.value
                 }
             }
         }
@@ -238,17 +238,17 @@ FocusScope {
                 return null
             }
 
-            return [newAndRecentComp, onlineScoresComp][tabBar.currentIndex]
+            return [newAndRecentComp, onlineProjectsComp][tabBar.currentIndex]
         }
     }
 
     Component {
         id: newAndRecentComp
 
-        RecentScoresView {
+        RecentProjectsView {
             anchors.fill: parent
 
-            viewType: scoresPageModel.viewType
+            viewType: projectsPageModel.viewType
             searchText: searchField.searchText
 
             backgroundColor: background.color
@@ -257,48 +257,52 @@ FocusScope {
             navigationSection: navSec
             navigationOrder: 4
 
-            onCreateNewScoreRequested: {
-                scoresPageModel.createNewScore()
+            onCreateNewProjectRequested: {
+                projectsPageModel.createNewProject()
             }
 
-            onOpenScoreRequested: function(scorePath, displayName) {
-                Qt.callLater(scoresPageModel.openScore, scorePath, displayName)
+            onOpenProjectRequested: function(projectPath, displayName) {
+                Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             }
         }
     }
 
     Component {
-        id: onlineScoresComp
+        id: onlineProjectsComp
 
-        CloudScoresView {
-            id: cloudScoresView
-            anchors.fill: parent
-
-            viewType: scoresPageModel.viewType
-            searchText: searchField.searchText
-
-            backgroundColor: background.color
-            sideMargin: prv.sideMargin
-
-            navigationSection: navSec
-            navigationOrder: 4
-
-            onCreateNewScoreRequested: {
-                scoresPageModel.createNewScore()
-            }
-
-            onOpenScoreRequested: function(scorePath, displayName) {
-                Qt.callLater(scoresPageModel.openScore, scorePath, displayName)
-            }
-
-            Connections {
-                target: refreshButton
-
-                function onClicked() {
-                    cloudScoresView.refresh()
-                }
-            }
+        Text {
+            text: "onlineProjectsComp"
         }
+
+        // CloudProjectsView {
+        //     id: cloudProjectsView
+        //     anchors.fill: parent
+
+        //     viewType: projectsPageModel.viewType
+        //     searchText: searchField.searchText
+
+        //     backgroundColor: background.color
+        //     sideMargin: prv.sideMargin
+
+        //     navigationSection: navSec
+        //     navigationOrder: 4
+
+        //     onCreateNewProjectRequested: {
+        //         projectsPageModel.createNewProject()
+        //     }
+
+        //     onOpenProjectRequested: function(projectPath, displayName) {
+        //         Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
+        //     }
+
+        //     Connections {
+        //         target: refreshButton
+
+        //         function onClicked() {
+        //             cloudProjectsView.refresh()
+        //         }
+        //     }
+        // }
     }
 
     Rectangle {
@@ -313,13 +317,13 @@ FocusScope {
 
         NavigationPanel {
             id: navBottomPanel
-            name: "RecentScoresBottom"
+            name: "RecentProjectsBottom"
             section: navSec
             direction: NavigationPanel.Horizontal
             order: 5
 
-            //: accessibility name for the panel at the bottom of the "Scores" page
-            accessible.name: qsTrc("project", "Scores actions")
+            //: accessibility name for the panel at the bottom of the "Projects" page
+            accessible.name: qsTrc("project", "Projects actions")
         }
 
         FlatButton {
@@ -327,15 +331,15 @@ FocusScope {
             anchors.leftMargin: prv.sideMargin
             anchors.verticalCenter: parent.verticalCenter
 
-            navigation.name: "ScoreManager"
+            navigation.name: "ProjectManager"
             navigation.panel: navBottomPanel
             navigation.column: 1
 
             minWidth: 216
-            text: qsTrc("project", "Score manager (online)")
+            text: qsTrc("project", "Project manager (online)")
 
             onClicked: {
-                scoresPageModel.openScoreManager()
+                projectsPageModel.openProjectManager()
             }
         }
 
@@ -347,26 +351,26 @@ FocusScope {
             spacing: 22
 
             FlatButton {
-                navigation.name: "NewScore"
+                navigation.name: "NewProject"
                 navigation.panel: navBottomPanel
                 navigation.column: 2
 
                 text: qsTrc("project", "New")
 
                 onClicked: {
-                    scoresPageModel.createNewScore()
+                    projectsPageModel.createNewProject()
                 }
             }
 
             FlatButton {
-                navigation.name: "Open other Score"
+                navigation.name: "Open other Project"
                 navigation.panel: navBottomPanel
                 navigation.column: 3
 
                 text: qsTrc("project", "Open other…")
 
                 onClicked: {
-                    scoresPageModel.openOther()
+                    projectsPageModel.openOther()
                 }
             }
         }

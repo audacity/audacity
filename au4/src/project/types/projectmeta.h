@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2023 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_PROJECTMETA_H
-#define MU_PROJECT_PROJECTMETA_H
+#ifndef AU_PROJECT_PROJECTMETA_H
+#define AU_PROJECT_PROJECTMETA_H
 
 #include <QDate>
 #include <QPixmap>
@@ -29,7 +29,7 @@
 
 #include "io/path.h"
 
-namespace mu::project {
+namespace au::project {
 struct ProjectMeta
 {
     muse::io::path_t filePath;
@@ -49,8 +49,8 @@ struct ProjectMeta
     QString source;
     QString audioComUrl;
     QString platform;
-    QString musescoreVersion;
-    int musescoreRevision = 0;
+    QString audacityVersion;
+    int audacityRevision = 0;
     int mscVersion = 0;
 
     QVariantMap additionalTags;
@@ -78,8 +78,8 @@ struct ProjectMeta
         equal &= source == other.source;
         equal &= audioComUrl == other.audioComUrl;
         equal &= platform == other.platform;
-        equal &= musescoreVersion == other.musescoreVersion;
-        equal &= musescoreRevision == other.musescoreRevision;
+        equal &= audacityVersion == other.audacityVersion;
+        equal &= audacityRevision == other.audacityRevision;
         equal &= mscVersion == other.mscVersion;
 
         equal &= additionalTags == other.additionalTags;
@@ -162,4 +162,4 @@ inline bool isRepresentedInProjectMeta(const QString& tag)
 }
 }
 
-#endif // MU_PROJECT_PROJECTMETA_H
+#endif // AU_PROJECT_PROJECTMETA_H

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,28 +24,28 @@ import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Project 1.0
+import Audacity.Project 1.0
 
-ScoresView {
+ProjectsView {
     id: root
 
-    RecentScoresModel {
-        id: recentScoresModel
+    RecentProjectsModel {
+        id: recentProjectsModel
     }
 
     Component.onCompleted: {
-        recentScoresModel.load()
+        recentProjectsModel.load()
     }
 
-    sourceComponent: root.viewType === ScoresPageModel.List ? listComp : gridComp
+    sourceComponent: root.viewType === ProjectsPageModel.List ? listComp : gridComp
 
     Component {
         id: gridComp
 
-        ScoresGridView {
+        ProjectsGridView {
             anchors.fill: parent
 
-            model: recentScoresModel
+            model: recentProjectsModel
             searchText: root.searchText
 
             backgroundColor: root.backgroundColor
@@ -53,15 +53,15 @@ ScoresView {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
-            navigation.name: "RecentScoresGrid"
-            navigation.accessible.name: qsTrc("project", "Recent scores grid")
+            navigation.name: "RecentProjectsGrid"
+            navigation.accessible.name: qsTrc("project", "Recent projects grid")
 
-            onCreateNewScoreRequested: {
-                root.createNewScoreRequested()
+            onCreateNewProjectRequested: {
+                root.createNewProjectRequested()
             }
 
-            onOpenScoreRequested: function(scorePath, displayName) {
-                root.openScoreRequested(scorePath, displayName)
+            onOpenProjectRequested: function(projectPath, displayName) {
+                root.openProjectRequested(projectPath, displayName)
             }
         }
     }
@@ -69,34 +69,34 @@ ScoresView {
     Component {
         id: listComp
 
-        ScoresListView {
+        ProjectsListView {
             id: list
 
             anchors.fill: parent
 
-            model: recentScoresModel
+            model: recentProjectsModel
             searchText: root.searchText
 
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
-            showNewScoreItem: true
+            showNewProjectItem: true
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
-            navigation.name: "RecentScoresList"
-            navigation.accessible.name: qsTrc("project", "Recent scores list")
+            navigation.name: "RecentProjectsList"
+            navigation.accessible.name: qsTrc("project", "Recent projects list")
 
-            onCreateNewScoreRequested: {
-                root.createNewScoreRequested()
+            onCreateNewProjectRequested: {
+                root.createNewProjectRequested()
             }
 
-            onOpenScoreRequested: function(scorePath, displayName) {
-                root.openScoreRequested(scorePath, displayName)
+            onOpenProjectRequested: function(projectPath, displayName) {
+                root.openProjectRequested(projectPath, displayName)
             }
 
             columns: [
-                ScoresListView.ColumnItem {
+                ProjectsListView.ColumnItem {
                     id: modifiedColumn
 
                     //: Stands for "Last time that this score was modified".
@@ -110,7 +110,7 @@ ScoresView {
 
                     delegate: StyledTextLabel {
                         id: modifiedLabel
-                        text: score.timeSinceModified ?? ""
+                        text: project.timeSinceModified ?? ""
 
                         font.capitalization: Font.AllUppercase
                         horizontalAlignment: Text.AlignLeft
@@ -138,7 +138,7 @@ ScoresView {
                     }
                 },
 
-                ScoresListView.ColumnItem {
+                ProjectsListView.ColumnItem {
                     id: sizeColumn
                     header: qsTrc("global", "Size", "file size")
 
@@ -149,7 +149,7 @@ ScoresView {
 
                     delegate: StyledTextLabel {
                         id: sizeLabel
-                        text: Boolean(score.fileSize) ? score.fileSize : "-"
+                        text: Boolean(project.fileSize) ? project.fileSize : "-"
 
                         font: ui.theme.largeBodyFont
                         horizontalAlignment: Text.AlignLeft
@@ -161,7 +161,7 @@ ScoresView {
                                 row: navigationRow
                                 column: navigationColumnStart
                                 enabled: sizeLabel.visible && sizeLabel.enabled && !sizeLabel.isEmpty
-                                accessible.name: sizeColumn.header + ": " + (Boolean(score.fileSize) ? score.fileSize : qsTrc("global", "Unknown"))
+                                accessible.name: sizeColumn.header + ": " + (Boolean(project.fileSize) ? project.fileSize : qsTrc("global", "Unknown"))
                                 accessible.role: MUAccessible.StaticText
 
                                 onActiveChanged: {

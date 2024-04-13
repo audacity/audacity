@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -33,7 +33,7 @@ StyledDialogView {
     property bool isPublishShare: false
     property string name
     property int visibility: CloudVisibility.Private
-    property string existingScoreOrAudioUrl
+    property string existingProjectOrAudioUrl
     property bool replaceExisting: true
     property string cloudCode: ""
 
@@ -118,7 +118,7 @@ StyledDialogView {
                                 load()
 
                                 contentItem.cloudInfo = cloudsModel.cloudInfo(root.cloudCode)
-                                contentItem.dialogText = cloudsModel.dialogText(root.cloudCode, existingScoreOrAudioUrl)
+                                contentItem.dialogText = cloudsModel.dialogText(root.cloudCode, existingProjectOrAudioUrl)
                                 contentItem.visibilityModel = cloudsModel.visibilityModel(root.cloudCode)
                             }
                         }
@@ -178,7 +178,7 @@ StyledDialogView {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        //: visibility of a score on MuseScore.com: private, public or unlisted
+                        //: visibility of a project on Audio.com: private, public or unlisted
                         text: qsTrc("project/cloud", "Visibility")
                         horizontalAlignment: Text.AlignLeft
                     }
@@ -206,7 +206,7 @@ StyledDialogView {
                     orientation: ListView.Vertical
                     spacing: 8
 
-                    visible: root.isPublishShare && Boolean(root.existingScoreOrAudioUrl)
+                    visible: root.isPublishShare && Boolean(root.existingProjectOrAudioUrl)
 
                     model: [
                         { text: Boolean(contentItem.dialogText) ? contentItem.dialogText.replaceButtonText

@@ -22,6 +22,11 @@ public:
 
     virtual muse::io::path_t lastOpenedProjectsPath() const = 0;
     virtual void setLastOpenedProjectsPath(const muse::io::path_t& path) = 0;
+
+    enum class HomeProjectsPageViewType {
+        Grid,
+        List
+    };
 };
 }
 
