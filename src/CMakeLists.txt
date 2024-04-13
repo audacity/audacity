@@ -1355,6 +1355,12 @@ if( ${_OPT}has_url_schemes_support )
    )
 endif()
 
+if( ${_OPT}has_audiocom_upload )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-cloud-audiocom-interface
+   )
+endif()
+
 if( ${_OPT}has_crashreports )
    if( ${_OPT}crashreport_backend STREQUAL "crashpad" )
       list(APPEND DEFINES
