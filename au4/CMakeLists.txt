@@ -37,7 +37,7 @@ set(MUSE_FRAMEWORK_SRC_PATH ${muse_framework_SOURCE_DIR}/framework)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
-    ${MUSE_FRAMEWORK_PATH}/build/cmake
+    ${MUSE_FRAMEWORK_PATH}/buildscripts/cmake
     ${CMAKE_MODULE_PATH}
     )
 
