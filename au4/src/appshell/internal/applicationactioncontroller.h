@@ -44,9 +44,8 @@
 // #include "istartupscenario.h"
 
 namespace au::appshell {
-class ApplicationActionController : public QObject, public IApplicationActionController,
-                                    public muse::actions::Actionable,
-                                    public muse::async::Asyncable
+class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
+    public muse::async::Asyncable
 {
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(muse::ui::IUiActionsRegister, actionsRegister)
