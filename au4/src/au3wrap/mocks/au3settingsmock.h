@@ -12,7 +12,6 @@ class Au3SettingsMock : public audacity::BasicSettings
 public:
     Au3SettingsMock();
 
-
     wxString GetGroup() const override { return wxString("mock_group"); }
     wxArrayString GetChildGroups() const override { return {}; }
     wxArrayString GetChildKeys() const override { return {}; }
