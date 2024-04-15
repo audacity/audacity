@@ -1,8 +1,0 @@
-People who have signed the CLA:
-
-Christian Riggenbach <criggenbach@magahugu.ch>
-Jacob Young <amazingjacob@gmail.com>
-Matthew Waltz <matthewwaltzis@gmail.com>
-Roman Pudashkin <r.pudashkin@gmail.com>
-Elnur Ismailzada <eismailzada@gmail.com>
-Daniel Price <danielp@nvidia.com>
