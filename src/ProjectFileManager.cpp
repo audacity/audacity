@@ -284,7 +284,6 @@ bool ProjectFileManager::Save()
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
-   
    if (auto action = ProjectFileIOExtensionRegistry::OnSave(
           mProject, [this](auto& path, bool rename)
           { return DoSave(audacity::ToWXString(path), rename); });
@@ -1363,6 +1362,18 @@ private:
 bool ProjectFileManager::Import(const FilePath& fileName, bool addToHistory)
 {
    return Import(std::vector<FilePath> { fileName }, addToHistory);
+}
+
+bool ProjectFileManager::ImportAndArrange(wxArrayString fileNames)
+{
+   fileNames.Sort(FileNames::CompareNoCase);
+   if (!ProjectFileManager::Get(mProject).Import(
+          std::vector<wxString> { fileNames.begin(), fileNames.end() }))
+      return false;
+   auto& viewport = Viewport::Get(mProject);
+   viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
+   viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
+   return true;
 }
 
 namespace
