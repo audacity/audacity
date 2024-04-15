@@ -406,6 +406,7 @@ function (propagate_interesting_dependencies target direct_dependencies )
       if ( NOT TARGET "${direct_dependency}" )
          continue()
       endif ()
+      canonicalize_node_name( direct_dependency "${direct_dependency}" )
       get_target_property( more_dependencies
          ${direct_dependency} AUDACITY_GRAPH_DEPENDENCIES )
       if ( more_dependencies )
