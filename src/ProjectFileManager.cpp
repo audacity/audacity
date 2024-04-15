@@ -53,6 +53,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "TrackPanel.h"
 #include "UndoTracks.h"
 #include "UserException.h"
+#include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
@@ -1370,9 +1371,21 @@ bool ProjectFileManager::ImportAndArrange(wxArrayString fileNames)
    if (!ProjectFileManager::Get(mProject).Import(
           std::vector<wxString> { fileNames.begin(), fileNames.end() }))
       return false;
-   auto& viewport = Viewport::Get(mProject);
-   viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
-   viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
+   auto& viewPort = Viewport::Get(mProject);
+   // Last track in the project is the one that was just added. Use it for
+   // focus, selection, etc.
+   Track* lastTrack = nullptr;
+   const auto range = TrackList::Get(mProject).Any<Track>();
+   assert(!range.empty());
+   if(range.empty())
+      return false;
+   lastTrack = *(range.rbegin());
+   TrackFocus::Get(mProject).Set(lastTrack, true);
+   viewPort.ZoomFitHorizontally();
+   viewPort.ShowTrack(*lastTrack);
+   viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
+   ViewInfo::Get(mProject).selectedRegion.setTimes(
+      lastTrack->GetStartTime(), lastTrack->GetEndTime());
    return true;
 }
 
