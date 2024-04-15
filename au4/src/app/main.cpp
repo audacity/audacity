@@ -35,6 +35,7 @@
 #include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
 #include "framework/network/networkmodule.h"
+#include "framework/learn/learnmodule.h"
 
 // need stubs
 #include "framework/stubs/shortcuts/shortcutsstubmodule.h"
@@ -107,6 +108,7 @@ int main(int argc, char** argv)
     app.addModule(new muse::cloud::CloudModule());
     app.addModule(new muse::network::NetworkModule());
     app.addModule(new muse::mi::MultiInstancesModule());
+    app.addModule(new muse::learn::LearnModule());
 
     // modules
     app.addModule(new au::appshell::AppShellModule());

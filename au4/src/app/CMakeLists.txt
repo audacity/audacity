@@ -66,6 +66,7 @@ set(LINK_LIB
     muse::cloud
     muse::network
     muse::multiinstances
+    muse::learn
 
     appshell
     au3wrap
