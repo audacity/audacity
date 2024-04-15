@@ -27,7 +27,7 @@ import Muse.Dock 1.0
 
 import Audacity.Project 1.0
 import Muse.Cloud 1.0
-// import MuseScore.Learn 1.0
+import Muse.Learn 1.0
 
 import "../dockwindow"
 
@@ -65,8 +65,6 @@ DockPage {
 
         switch (name) {
         case "projects": root.central = projetsComp; break
-        case "extensions": root.central = extensionsComp; break
-        case "audio": root.central = audioComp; break
         case "learn": root.central = learnComp; break
         case "account": root.central = accountComp; break
         }
@@ -114,26 +112,6 @@ DockPage {
         id: projetsComp
 
         ProjectsPage {}
-    }
-
-    Component {
-        id: extensionsComp
-
-        // PluginsPage {
-        //     section: root.subSection
-        // }
-        Text {
-            text: "ExtensionsPage"
-        }
-    }
-
-    Component {
-        id: audioComp
-
-        StyledTextLabel {
-            anchors.centerIn: parent
-            text: "Audio & VST"
-        }
     }
 
     Component {
