@@ -413,10 +413,28 @@ void RemoteProjectSnapshot::DownloadBlob(
       });
 }
 
+namespace
+{
+std::vector<uint8_t>
+ReadResponseData(audacity::network_manager::IResponse& response)
+{
+   const auto size = response.getBytesAvailable();
+
+   if (size == 0)
+      return response.readAll<std::vector<uint8_t>>();
+
+   std::vector<uint8_t> data(size);
+   response.readData(data.data(), size);
+
+   return data;
+}
+} // namespace
+
+
 void RemoteProjectSnapshot::OnProjectBlobDownloaded(
    audacity::network_manager::ResponsePtr response)
 {
-   const std::vector<uint8_t> data = response->readAll();
+   const std::vector<uint8_t> data = ReadResponseData(*response);
    uint64_t dictSize               = 0;
 
    if (data.size() < sizeof(uint64_t))
@@ -511,7 +529,8 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 void RemoteProjectSnapshot::OnBlockDownloaded(
    std::string blockHash, audacity::network_manager::ResponsePtr response)
 {
-   const auto compressedData = response->readAll<std::vector<uint8_t>>();
+   const auto compressedData = ReadResponseData(*response);
+
    const auto blockData =
       DecompressBlock(compressedData.data(), compressedData.size());
 

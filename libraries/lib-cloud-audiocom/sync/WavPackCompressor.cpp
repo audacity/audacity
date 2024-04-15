@@ -80,21 +80,28 @@ struct Exporter final
       const size_t samplesRead = Block.Block->GetSamples(
          sampleData.data(), Block.Format, 0, sampleCount, false);
 
+      // Reserve 1.5 times the size of the original data
+      // The compressed data will be smaller than the original data,
+      // but we overallocate just in case
+      CompressedData.reserve(sampleData.size() * 3 / 2);
+
       if (sampleFormat == int16Sample)
       {
-         constexpr size_t conversionSamplesCount = 1024;
+         constexpr size_t conversionSamplesCount = 4096;
 
+         const int16_t* int16Data = reinterpret_cast<const int16_t*>(sampleData.data());
          std::vector<int32_t> buffer;
          buffer.resize(conversionSamplesCount);
 
-         for (size_t firstSample = 0; firstSample < samplesRead; ++firstSample)
+         for (size_t firstSample = 0; firstSample < samplesRead;
+              firstSample += conversionSamplesCount)
          {
             const auto samplesThisRun =
                std::min(conversionSamplesCount, samplesRead - firstSample);
 
             for (size_t i = 0; i < samplesThisRun; ++i)
                buffer[i] =
-                  (static_cast<int32_t>(sampleData[firstSample + i]) * 65536) >>
+                  (static_cast<int32_t>(int16Data[firstSample + i]) * 65536) >>
                   16;
 
             WavpackPackSamples(Context, buffer.data(), samplesThisRun);
@@ -418,7 +425,7 @@ float GetFloatValue(int16_t value) noexcept
 
 float GetFloatValue(int32_t value) noexcept
 {
-   return static_cast<float>(value) / std::numeric_limits<int32_t>::max();
+   return static_cast<float>(value) / ((1 << 23) - 1);
 }
 
 float GetFloatValue(float value) noexcept
