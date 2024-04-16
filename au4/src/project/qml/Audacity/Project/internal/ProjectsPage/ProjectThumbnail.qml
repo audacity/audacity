@@ -82,24 +82,6 @@ Item {
 
                     source: {
                         switch (root.suffix) {
-                        case "gtp":
-                        case "gp3":
-                        case "gp4":
-                        case "gp5":
-                        case "gpx":
-                        case "gp":
-                        case "ptb":
-                            return "qrc:/resources/Placeholder_GP.png"
-                        case "mid":
-                        case "midi":
-                        case "kar":
-                            return "qrc:/resources/Placeholder_MIDI.png"
-                        case "mxl":
-                        case "musicxml":
-                        case "xml":
-                            return "qrc:/resources/Placeholder_MXML.png"
-                        case "mei":
-                            return "qrc:/resources/Placeholder_MEI.png"
                         default:
                             return "qrc:/resources/Placeholder_Other.png"
                         }
