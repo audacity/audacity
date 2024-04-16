@@ -19,31 +19,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+#ifndef AU_PROJECT_IPROJECTCREATOR_H
+#define AU_PROJECT_IPROJECTCREATOR_H
 
-#include <memory>
+#include "iaudacityproject.h"
 
-#include "modularity/imodulesetup.h"
+#include "modularity/imoduleinterface.h"
 
 namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
+class IProjectCreator : MODULE_EXPORT_INTERFACE
 {
+    INTERFACE_ID(IProjectCreator)
+
 public:
+    virtual ~IProjectCreator() = default;
 
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
-
-private:
-
-    std::shared_ptr<ProjectActionsController> m_actionsController;
+    virtual IAudacityProjectPtr newProject() const = 0;
 };
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+#endif // AU_PROJECT_IPROJECTCREATOR_H

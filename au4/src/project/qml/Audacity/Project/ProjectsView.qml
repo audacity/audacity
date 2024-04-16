@@ -19,31 +19,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+import QtQuick 2.15
 
-#include <memory>
+import Muse.UiComponents 1.0
+import Muse.Ui 1.0
+import Audacity.Project 1.0
 
-#include "modularity/imodulesetup.h"
+Loader {
+    id: root
 
-namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
-{
-public:
+    property string searchText
 
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    property int viewType: ProjectsPageModel.Grid
 
-private:
+    property color backgroundColor: ui.theme.backgroundSecondaryColor
+    property real sideMargin: 46
 
-    std::shared_ptr<ProjectActionsController> m_actionsController;
-};
+    property NavigationSection navigationSection
+    property int navigationOrder
+
+    signal createNewProjectRequested()
+    signal openProjectRequested(var projectPath, var displayName)
 }
-
-#endif // AU_PROJECT_PROJECTMODULE_H

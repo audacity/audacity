@@ -19,31 +19,38 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+import QtQuick 2.9
 
-#include <memory>
+import Muse.Ui 1.0
+import Muse.UiComponents 1.0
 
-#include "modularity/imodulesetup.h"
+Column {
+    id: root
 
-namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
-{
-public:
+    property string title: ""
+    property alias info: textField.hint
 
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    property alias navigation: textField.navigation
 
-private:
+    spacing: 10
 
-    std::shared_ptr<ProjectActionsController> m_actionsController;
-};
+    StyledTextLabel {
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        font: ui.theme.bodyBoldFont
+        horizontalAlignment: Text.AlignLeft
+        text: title
+    }
+
+    TextInputField {
+        id: textField
+
+        navigation.accessible.name: root.title + " " + currentText
+
+        onTextChanged: function(newTextValue) {
+            root.info = newTextValue
+        }
+    }
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H

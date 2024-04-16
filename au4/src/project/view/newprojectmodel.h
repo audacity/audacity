@@ -19,31 +19,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+#ifndef AU_PROJECT_NEWPROJECTMODEL_H
+#define AU_PROJECT_NEWPROJECTMODEL_H
 
-#include <memory>
+#include <QObject>
 
-#include "modularity/imodulesetup.h"
+#include "modularity/ioc.h"
+
+#include "project/iprojectconfiguration.h"
+#include "project/iprojectcreator.h"
+#include "context/iglobalcontext.h"
+#include "types/projecttypes.h"
 
 namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
+class NewProjectModel : public QObject
 {
-public:
+    Q_OBJECT
 
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    INJECT(au::project::IProjectConfiguration, configuration)
+
+public:
+    explicit NewProjectModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE QString preferredProjectCreationMode() const;
+    Q_INVOKABLE bool createProject(const QVariant& info);
 
 private:
-
-    std::shared_ptr<ProjectActionsController> m_actionsController;
+    project::ProjectCreateOptions parseOptions(const QVariantMap& info) const;
+    void updatePreferredProjectCreationMode(bool isProjectCreatedFromInstruments);
 };
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+#endif // AU_PROJECT_NEWPROJECTMODEL_H

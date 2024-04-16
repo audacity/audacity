@@ -19,31 +19,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
 
-#include <memory>
+import Muse.UiComponents 1.0
+import Audacity.Project 1.0
 
-#include "modularity/imodulesetup.h"
+StyledDialogView {
+    id: root
 
-namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
-{
-public:
+    contentWidth: 314
+    contentHeight: 52
+    margins: 12
 
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    modal: true
+    frameless: true
+    closeOnEscape: false
 
-private:
+    ColumnLayout {
+        anchors.fill: parent
 
-    std::shared_ptr<ProjectActionsController> m_actionsController;
-};
+        spacing: 8
+
+        StyledTextLabel {
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+
+            text: qsTrc("project", "Saving online…")
+            font: ui.theme.largeBodyBoldFont
+        }
+    }
 }
-
-#endif // AU_PROJECT_PROJECTMODULE_H

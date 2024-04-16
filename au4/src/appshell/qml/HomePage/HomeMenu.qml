@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,7 +25,7 @@ import QtQuick.Layouts 1.3
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-//import MuseScore.Cloud 1.0
+import Muse.Cloud 1.0
 
 Item {
     id: root
@@ -58,22 +58,22 @@ Item {
 
         spacing: 0
 
-        // AccountInfoButton {
-        //     Layout.fillWidth: true
-        //     Layout.preferredHeight: 60
-        //     Layout.topMargin: 20
+        AccountInfoButton {
+            Layout.fillWidth: true
+            Layout.preferredHeight: 60
+            Layout.topMargin: 20
 
-        //     navigation.name: "AccountInfo"
-        //     navigation.panel: navPanel
-        //     navigation.row: 1
+            navigation.name: "AccountInfo"
+            navigation.panel: navPanel
+            navigation.row: 1
 
-        //     checked: root.currentPageName === "account"
-        //     iconOnly: root.iconsOnly
+            checked: root.currentPageName === "account"
+            iconOnly: root.iconsOnly
 
-        //     onToggled: {
-        //         root.selected("account")
-        //     }
-        // }
+            onToggled: {
+                root.selected("account")
+            }
+        }
 
         RadioButtonGroup {
             id: radioButtonList
@@ -85,8 +85,8 @@ Item {
             spacing: 0
 
             model: [
-                { "name": "project", "title": qsTrc("appshell", "Project"), "icon": IconCode.MUSIC_NOTES },
-                { "name": "extensions", "title": qsTrc("appshell", "Plugins"), "icon":  IconCode.PLUGIN },
+                { "name": "projects", "title": qsTrc("appshell", "Project"), "icon": IconCode.MUSIC_NOTES },
+                // { "name": "extensions", "title": qsTrc("appshell", "Plugins"), "icon":  IconCode.PLUGIN },
                 // TODO: need to implement
                 // { "name": "audio", "title": qsTrc("appshell", "Audio"), "icon":  IconCode.AUDIO },
                 { "name": "learn", "title": qsTrc("appshell", "Learn"), "icon":  IconCode.MORTAR_BOARD }

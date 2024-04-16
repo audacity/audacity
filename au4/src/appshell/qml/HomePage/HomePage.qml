@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -25,16 +25,16 @@ import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 import Muse.Dock 1.0
 
-// import MuseScore.Project 1.0
-// import MuseScore.Cloud 1.0
-// import MuseScore.Learn 1.0
+import Audacity.Project 1.0
+import Muse.Cloud 1.0
+import Muse.Learn 1.0
 
 import "../dockwindow"
 
 DockPage {
     id: root
 
-    property string section: "projets"
+    property string section: "projects"
     property string subSection: ""
 
     property var window: null
@@ -64,9 +64,7 @@ DockPage {
         section = name
 
         switch (name) {
-        case "projets": root.central = projetsComp; break
-        case "extensions": root.central = extensionsComp; break
-        case "audio": root.central = audioComp; break
+        case "projects": root.central = projetsComp; break
         case "learn": root.central = learnComp; break
         case "account": root.central = accountComp; break
         }
@@ -107,39 +105,13 @@ DockPage {
 
     Component {
         id: accountComp
-        //AccountPage {}
-        Text {
-            text: "AccountPage"
-        }
+        AccountPage {}
     }
 
     Component {
         id: projetsComp
 
-        //ProjectsPage {}
-        Text {
-            text: "ProjectsPage"
-        }
-    }
-
-    Component {
-        id: extensionsComp
-
-        // PluginsPage {
-        //     section: root.subSection
-        // }
-        Text {
-            text: "ExtensionsPage"
-        }
-    }
-
-    Component {
-        id: audioComp
-
-        StyledTextLabel {
-            anchors.centerIn: parent
-            text: "Audio & VST"
-        }
+        ProjectsPage {}
     }
 
     Component {

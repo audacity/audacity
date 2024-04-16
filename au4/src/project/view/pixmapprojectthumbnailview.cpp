@@ -19,31 +19,28 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef AU_PROJECT_PROJECTMODULE_H
-#define AU_PROJECT_PROJECTMODULE_H
+#include "pixmapprojectthumbnailview.h"
 
-#include <memory>
+using namespace au::project;
 
-#include "modularity/imodulesetup.h"
-
-namespace au::project {
-class ProjectActionsController;
-class ProjectModule : public muse::modularity::IModuleSetup
+PixmapProjectThumbnailView::PixmapProjectThumbnailView(QQuickItem* parent)
+    : muse::uicomponents::QuickPaintedView(parent)
 {
-public:
-
-    std::string moduleName() const override;
-    void registerExports() override;
-    void resolveImports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
-
-private:
-
-    std::shared_ptr<ProjectActionsController> m_actionsController;
-};
 }
 
-#endif // AU_PROJECT_PROJECTMODULE_H
+QPixmap PixmapProjectThumbnailView::thumbnail() const
+{
+    return m_thumbnail;
+}
+
+void PixmapProjectThumbnailView::setThumbnail(QPixmap pixmap)
+{
+    m_thumbnail = std::move(pixmap);
+    emit thumbnailChanged();
+    update();
+}
+
+void PixmapProjectThumbnailView::paint(QPainter* painter)
+{
+    painter->drawPixmap(0, 0, width(), height(), m_thumbnail);
+}
