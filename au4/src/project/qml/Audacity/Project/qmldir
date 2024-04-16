@@ -1,0 +1,12 @@
+module MuseScore.Project
+ScoresPage 1.0 ScoresPage.qml
+NewScoreDialog 1.0 NewScoreDialog.qml
+AskSaveLocationTypeDialog 1.0 AskSaveLocationTypeDialog.qml
+ExportDialog 1.0 ExportDialog.qml
+MigrationDialog 1.0 MigrationDialog.qml
+ProjectPropertiesDialog 1.0 ProjectPropertiesDialog.qml
+AudioGenerationSettings 1.0 AudioGenerationSettings.qml
+ScoresView 1.0 ScoresView.qml
+ScoresListView 1.0 ScoresListView.qml
+ScoresGridView 1.0 ScoresGridView.qml
+Message 1.0 Message.qml
