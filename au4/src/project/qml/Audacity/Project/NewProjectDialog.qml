@@ -42,24 +42,10 @@ StyledDialogView {
     function onDone() {
         var result = {}
 
-        var instrumentsAndTemplatePageResult = chooseInstrumentsAndTemplatePage.result()
-        for (var key in instrumentsAndTemplatePageResult) {
-            result[key] = instrumentsAndTemplatePageResult[key]
-        }
-
-        var projectInfoPageResult = projectInfoPage.result()
-        for (key in projectInfoPageResult) {
-            result[key] = projectInfoPageResult[key]
-        }
-
         if (newProjectModel.createProject(result)) {
             root.activateParentOnClose = false
             root.accept()
         }
-    }
-
-    onNavigationActivateRequested: {
-        chooseInstrumentsAndTemplatePage.focusOnSelected()
     }
 
     NewProjectModel {
@@ -165,7 +151,6 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.Done
                 accentButton: true
-                enabled: chooseInstrumentsAndTemplatePage.hasSelection
 
                 onClicked: {
                     root.onDone()

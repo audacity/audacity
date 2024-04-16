@@ -37,7 +37,7 @@ class ProjectsPageModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(au::project::IProjectConfiguration, configuration)
+    INJECT(IProjectConfiguration, configuration)
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(muse::IInteractive, interactive)
     INJECT(muse::cloud::IMuseScoreComService, museScoreComService)
@@ -52,15 +52,15 @@ public:
     void setTabIndex(int index);
 
     enum ViewType {
-        Grid = int(au::project::IProjectConfiguration::HomeProjectsPageViewType::Grid),
-        List = int(au::project::IProjectConfiguration::HomeProjectsPageViewType::List),
+        Grid = int(IProjectConfiguration::HomeProjectsPageViewType::Grid),
+        List = int(IProjectConfiguration::HomeProjectsPageViewType::List),
     };
     Q_ENUM(ViewType);
 
     ViewType viewType() const;
     void setViewType(ViewType type);
 
-    Q_INVOKABLE void createNewScore();
+    Q_INVOKABLE void createNewProject();
     Q_INVOKABLE void openOther();
     Q_INVOKABLE void openScore(const QString& scorePath, const QString& displayNameOverride);
     Q_INVOKABLE void openScoreManager();

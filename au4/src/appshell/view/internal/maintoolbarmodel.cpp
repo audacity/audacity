@@ -27,7 +27,7 @@
 using namespace au::appshell;
 
 static const QString HOME_PAGE("musescore://home");
-static const QString PROJECT_PAGE("musescore://project");
+static const QString PROJECT_PAGE("audacity://project");
 static const QString PUBLISH_PAGE("musescore://publish");
 static const QString DEVTOOLS_PAGE("musescore://devtools");
 

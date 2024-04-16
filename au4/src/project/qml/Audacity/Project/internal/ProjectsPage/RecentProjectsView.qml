@@ -99,7 +99,7 @@ ProjectsView {
                 ProjectsListView.ColumnItem {
                     id: modifiedColumn
 
-                    //: Stands for "Last time that this score was modified".
+                    //: Stands for "Last time that this project was modified".
                     //: Used as the header of this column in the scores list.
                     header: qsTrc("project", "Modified")
 

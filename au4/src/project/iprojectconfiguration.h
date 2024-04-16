@@ -5,6 +5,7 @@
 
 #include "global/io/path.h"
 #include "global/async/channel.h"
+#include "async/notification.h"
 
 namespace au::project {
 class IProjectConfiguration : MODULE_EXPORT_INTERFACE
@@ -23,10 +24,16 @@ public:
     virtual muse::io::path_t lastOpenedProjectsPath() const = 0;
     virtual void setLastOpenedProjectsPath(const muse::io::path_t& path) = 0;
 
+    virtual int homeProjectsPageTabIndex() const = 0;
+    virtual void setHomeProjectsPageTabIndex(int index) = 0;
+
     enum class HomeProjectsPageViewType {
         Grid,
         List
     };
+
+    virtual HomeProjectsPageViewType homeProjectsPageViewType() const = 0;
+    virtual void setHomeProjectsPageViewType(HomeProjectsPageViewType type) = 0;
 };
 }
 
