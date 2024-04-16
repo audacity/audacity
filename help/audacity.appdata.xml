@@ -31,12 +31,14 @@
   <url type="help">https://support.audacityteam.org/</url>
   <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
   <releases>
-    <release version="3.4.0" date="2023-11-01">
+    <release version="3.5.0" date="2024-04-22">
      <description>
-        <p>New in Audacity 3.4: Our first dedicated music release, featuring beats &amp; bars, time stretching, a new exporter and more!</p>
-        <p>Watch the <a href="https://audacityteam.org/3.4.0-video">Release video</a> or read the <a href="https://support.audacityteam.org/additional-resources/changelog"> changelog</a> to learn more.</p>
-        <p>The changelog also contains information about subsequent 3.4.x patches, should any be available.</p>
+        <p>New in Audacity 3.5: Cloud saving, automatic tempo detection, pitch shifting and more!</p>
+        <p>Watch the release video or read the changelog to learn more.</p>
+        <p>The changelog also contains information about subsequent 3.5.x patches, should any be available.</p>
       </description>
+      <url>https://support.audacityteam.org/additional-resources/changelog/audacity-3.5</url>
+      <url>https://www.audacityteam.org/3.5.0-video</url>
     </release>
   </releases>
 </component>
