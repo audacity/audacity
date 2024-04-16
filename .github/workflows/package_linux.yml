@@ -1,7 +1,7 @@
 name: Build Audacity Linux Packages
 
 on:
-  push:
+  #push:
   workflow_dispatch:
     inputs:
       build_level:

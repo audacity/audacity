@@ -17,4 +17,4 @@ jobs:
         cmake -P ./au4/buildscripts/ci/checkcodestyle/ci_fetch.cmake
     - name: Test coding style
       run: |
-        bash ./au4/buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./au4
+        cmake -P ./au4/buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./au4
