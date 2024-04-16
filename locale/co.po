@@ -3449,20 +3449,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "E fighjulate ponu esse mudificate solu per i prughjetti in u Nivulu"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Arregistrà in u Nivulu…"
+msgid "Save &To Cloud..."
+msgstr "Arregis&trà in u Nivulu…"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Mudificà a fighjulata audio in u Nivulu"
+msgid "&Update Cloud Audio Preview"
+msgstr "M&udificà a fighjulata audio in u Nivulu"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Apre da u Nivulu…"
+msgid "Open Fro&m Cloud..."
+msgstr "Apre da u &Nivulu…"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Sparte l’audio…"
+msgid "S&hare Audio..."
+msgstr "S&parte l’audio…"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15346,8 +15346,8 @@ msgid "&Export Audio..."
 msgstr "Espurtà l’&audio…"
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Espurtà altrimente"
+msgid "Expo&rt Other"
+msgstr "Espu&rtà altrimente"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."

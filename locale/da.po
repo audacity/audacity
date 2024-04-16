@@ -3409,20 +3409,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Forhåndsvisninger kan kun opdateres for netdrevsprojekter"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Gem til netdrev..."
+msgid "Save &To Cloud..."
+msgstr "Gem &til netdrev..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Opdatér forhåndsvisning for lyd på netdrev"
+msgid "&Update Cloud Audio Preview"
+msgstr "&Opdatér forhåndsvisning for lyd på netdrev"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Åbn fra netdrev..."
+msgid "Open Fro&m Cloud..."
+msgstr "Åb&n fra netdrev..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Del lyd..."
+msgid "S&hare Audio..."
+msgstr "&Del lyd..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15204,8 +15204,8 @@ msgid "&Export Audio..."
 msgstr "&Eksportér lyd..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Eksportér andre"
+msgid "Expo&rt Other"
+msgstr "Ekspo&rtér andre"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
