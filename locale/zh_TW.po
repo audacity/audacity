@@ -3401,19 +3401,19 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "只有雲端專案才能更新預覽音檔"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
+msgid "Save &To Cloud..."
 msgstr "存檔到雲端.."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
+msgid "&Update Cloud Audio Preview"
 msgstr "上傳雲端音檔預覽"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
+msgid "Open Fro&m Cloud..."
 msgstr "從雲端開啟"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
+msgid "S&hare Audio..."
 msgstr "分享音檔"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -15028,7 +15028,7 @@ msgid "&Export Audio..."
 msgstr "匯出聲音(&E)..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "匯出其他"
 
 #: src/menus/FileMenus.cpp

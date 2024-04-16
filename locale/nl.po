@@ -3448,20 +3448,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Voorbeelden kunnen alleen worden bijgewerkt voor Cloud-projecten"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Opslaan naar Cloud..."
+msgid "Save &To Cloud..."
+msgstr "Op&slaan naar Cloud..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Cloud-audiovoorbeeld bijwerken"
+msgid "&Update Cloud Audio Preview"
+msgstr "Clo&ud-audiovoorbeeld bijwerken"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Openen van Cloud..."
+msgid "Open Fro&m Cloud..."
+msgstr "Ope&nen van Cloud..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Audio delen..."
+msgid "S&hare Audio..."
+msgstr "Aud&io delen..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15281,8 +15281,8 @@ msgid "&Export Audio..."
 msgstr "Audio exporteren..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Andere exporteren"
+msgid "Expo&rt Other"
+msgstr "Ande&re exporteren"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."

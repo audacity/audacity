@@ -3436,20 +3436,20 @@ msgstr ""
 "Las vistas previas sólo se pueden actualizar para los proyectos en la nube"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Guardar en la nube..."
+msgid "Save &To Cloud..."
+msgstr "&Guardar en la nube..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Actualizar vista previa de audio en la nube"
+msgid "&Update Cloud Audio Preview"
+msgstr "Act&ualizar vista previa de audio en la nube"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Abrir desde la nube..."
+msgid "Open Fro&m Cloud..."
+msgstr "Abrir desde la &nube..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Compartir audio..."
+msgid "S&hare Audio..."
+msgstr "Compart&ir audio..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15295,8 +15295,8 @@ msgid "&Export Audio..."
 msgstr "&Exportar audio..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Exportar otro"
+msgid "Expo&rt Other"
+msgstr "Expo&rtar otro"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
