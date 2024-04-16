@@ -41,7 +41,6 @@
 #include "view/newprojectmodel.h"
 
 using namespace au::project;
-using namespace au::project;
 using namespace muse::modularity;
 
 static void project_init_qrc()
@@ -69,7 +68,7 @@ void ProjectModule::resolveImports()
     }
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://project/newscore"), "Audacity/Project/NewProjectDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://project/new"), "Audacity/Project/NewProjectDialog.qml");
     }
 }
 
