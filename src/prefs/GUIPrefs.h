@@ -53,7 +53,5 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
 
 AUDACITY_DLL_API
 int ShowClippingPrefsID();
-AUDACITY_DLL_API
-int ShowTrackNameInWaveformPrefsID();
 
 #endif
