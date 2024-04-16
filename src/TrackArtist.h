@@ -69,7 +69,6 @@ public:
    float mdBrange;            // "/GUI/EnvdBRange"
    bool mShowClipping;        // "/GUI/ShowClipping"
    int  mSampleDisplay;
-   bool mbShowTrackNameInTrack;  // "/GUI/ShowTrackNameInWaveform"
 
    wxBrush blankBrush;
    wxBrush unselectedBrush;

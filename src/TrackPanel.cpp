@@ -1067,85 +1067,6 @@ wxRect GetTrackNameRect(
    };
 }
 
-// Draws the track name on the track, if it is needed.
-void DrawTrackName(int leftOffset, TrackPanelDrawingContext &context,
-   const Channel &channel, const wxRect & rect)
-{
-   if (!TrackArtist::Get(context)->mbShowTrackNameInTrack)
-      return;
-   const auto artist = TrackArtist::Get(context);
-   const auto &pendingTracks = *artist->pPendingTracks;
-   auto &track = pendingTracks.SubstitutePendingChangedTrack(GetTrack(channel));
-   auto name = track.GetName();
-   if (name.IsEmpty())
-      return;
-   auto &dc = context.dc;
-   wxBrush Brush;
-   wxCoord textWidth, textHeight;
-   GetTrackNameExtent(dc, channel, &textWidth, &textHeight);
-
-   // Logic for name background translucency (aka 'shields')
-   // Tracks less than kOpaqueHeight high will have opaque shields.
-   // Tracks more than kTranslucentHeight will have maximum translucency for shields.
-   const int kOpaqueHeight = 44;
-   const int kTranslucentHeight = 124;
-
-   // PRL:  to do:  reexamine this strange use of ChannelView::GetHeight,
-   // ultimately to compute an opacity
-   int h = ChannelView::Get(channel).GetHeight();
-
-   // f codes the opacity as a number between 0.0 and 1.0
-   float f = wxClip((h-kOpaqueHeight)/(float)(kTranslucentHeight-kOpaqueHeight),0.0,1.0);
-   // kOpaque is the shield's alpha for tracks that are not tall
-   // kTranslucent is the shield's alpha for tracks that are tall.
-   const int kOpaque = 255;
-   const int kTranslucent = 140;
-   // 0.0 maps to full opacity, 1.0 maps to full translucency.
-   int opacity = 255 - (255-140)*f;
-
-   const auto nameRect =
-      GetTrackNameRect( leftOffset, rect, textWidth, textHeight );
-
-#ifdef __WXMAC__
-   // Mac dc is a graphics dc already.
-   AColor::UseThemeColour( &dc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-   dc.DrawRoundedRectangle( nameRect, 8.0 );
-#else
-   // This little dance with wxImage in order to draw to a graphic dc
-   // which we can then paste as a translucent bitmap onto the real dc.
-   enum : int {
-      SecondMarginX = 1, SecondMarginY = 1,
-      SecondMarginsX = 2 * SecondMarginX, SecondMarginsY = 2 * SecondMarginY,
-   };
-   wxImage image(
-      textWidth + MarginsX + SecondMarginsX,
-      textHeight + MarginsY + SecondMarginsY );
-   image.InitAlpha();
-   unsigned char *alpha=image.GetAlpha();
-   memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth()*image.GetHeight());
-
-   {
-      std::unique_ptr< wxGraphicsContext >
-         pGc{ wxGraphicsContext::Create(image) };
-      auto &gc = *pGc;
-      // This is to a gc, not a dc.
-      AColor::UseThemeColour( &gc, clrTrackInfoSelected, clrTrackPanelText, opacity );
-      // Draw at 1,1, not at 0,0 to avoid clipping of the antialiasing.
-      gc.DrawRoundedRectangle(
-         SecondMarginX, SecondMarginY,
-         textWidth + MarginsX, textHeight + MarginsY, 8.0 );
-      // destructor of gc updates the wxImage.
-   }
-   wxBitmap bitmap( image );
-   dc.DrawBitmap( bitmap,
-      nameRect.x - SecondMarginX, nameRect.y - SecondMarginY );
-#endif
-   dc.SetTextForeground(theTheme.Colour( clrTrackPanelText ));
-   dc.DrawText(track.GetName(),
-      nameRect.x + MarginX,
-      nameRect.y + MarginY);
-}
-
 /*
 
   The following classes define the subdivision of the area of the TrackPanel
@@ -1254,9 +1175,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
    {
       // This overpaints the track area, but sometimes too the stereo channel
       // separator, so draw at least later than that
-      if ( iPass == TrackArtist::PassBorders ) {
-         DrawTrackName(mLeftOffset, context, *mpChannel, rect);
-      }
+
       if ( iPass == TrackArtist::PassControls ) {
          if (mRefinement.size() > 1) {
             // Draw lines separating sub-views

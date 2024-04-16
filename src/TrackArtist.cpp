@@ -128,8 +128,6 @@ void TrackArtist::UpdateSelectedPrefs( int id )
 {
    if( id == ShowClippingPrefsID())
       mShowClipping = gPrefs->Read(wxT("/GUI/ShowClipping"), mShowClipping);
-   if( id == ShowTrackNameInWaveformPrefsID())
-      mbShowTrackNameInTrack = gPrefs->ReadBool(wxT("/GUI/ShowTrackNameInWaveform"), false);
 }
 
 void TrackArtist::UpdatePrefs()
@@ -138,7 +136,6 @@ void TrackArtist::UpdatePrefs()
    mSampleDisplay = TracksPrefs::SampleViewChoice();
 
    UpdateSelectedPrefs( ShowClippingPrefsID() );
-   UpdateSelectedPrefs( ShowTrackNameInWaveformPrefsID() );
 
    SetColours(0);
 }
