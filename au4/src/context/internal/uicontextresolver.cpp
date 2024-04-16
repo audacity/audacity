@@ -29,7 +29,7 @@ using namespace muse;
 using namespace muse::ui;
 
 static const Uri HOME_PAGE_URI("musescore://home");
-static const Uri PROJECT_PAGE_URI("musescore://project");
+static const Uri PROJECT_PAGE_URI("audacity://project");
 
 static const QString NOTATION_NAVIGATION_PANEL("ScoreView");
 

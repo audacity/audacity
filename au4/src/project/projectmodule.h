@@ -27,6 +27,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::project {
+class ProjectConfiguration;
 class ProjectActionsController;
 class ProjectModule : public muse::modularity::IModuleSetup
 {
@@ -41,7 +42,7 @@ public:
     void onDeinit() override;
 
 private:
-
+    std::shared_ptr<ProjectConfiguration> m_configuration;
     std::shared_ptr<ProjectActionsController> m_actionsController;
 };
 }
