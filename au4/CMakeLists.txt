@@ -23,7 +23,7 @@ set(FETCHCONTENT_BASE_DIR ${CMAKE_CURRENT_LIST_DIR}/_deps)
 include(FetchContent)
 FetchContent_Declare(
   muse_framework
-  GIT_REPOSITORY git@github.com:musescore/framework_tmp.git
+  GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
   GIT_TAG        HEAD
 )
 
@@ -82,6 +82,7 @@ cmd_option(${_OPT}use_libsndfile "" "local")
 cmd_option(${_OPT}use_portaudio "" "local")
 cmd_option(${_OPT}use_rapidjson "" "local")
 cmd_option(${_OPT}use_midi "" "local")
+cmd_option(${_OPT}conan_allow_prebuilt_binaries "" On)
 
 find_package(Python3)
 if( Python3_FOUND )

@@ -1,0 +1,62 @@
+
+
+message(STATUS "Build Linux")
+
+# Config
+set(BUILD_TOOLS "$ENV{HOME}/build_tools")
+set(ARTIFACTS_DIR "build.artifacts")
+set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
+
+# Options
+set(BUILD_NUMBER "" CACHE STRING "Build number")
+set(BUILD_MODE "" CACHE STRING "Build mode")
+
+if (NOT BUILD_NUMBER)
+    file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
+endif()
+
+if (NOT BUILD_MODE)
+    file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
+endif()
+
+set(APP_BUILD_MODE "dev")
+set(APP_SUFFIX "dev")
+if (BUILD_MODE STREQUAL "devel_build")
+    set(APP_BUILD_MODE "dev")
+    set(APP_SUFFIX "dev")
+elseif(BUILD_MODE STREQUAL "nightly_build")
+    set(APP_BUILD_MODE "dev")
+    set(APP_SUFFIX "nightly")
+elseif(BUILD_MODE STREQUAL "testing_build")
+    set(APP_BUILD_MODE "testing")
+    set(APP_SUFFIX "testing")
+elseif(BUILD_MODE STREQUAL "stable_build")
+    set(APP_BUILD_MODE "release")
+    set(APP_SUFFIX "")
+endif()
+
+# cat $BUILD_TOOLS/environment.sh
+# source $BUILD_TOOLS/environment.sh
+
+# Build 
+set(CONFIG
+    -DBUILD_TYPE=debug
+    -DBUILD_MODE=${APP_BUILD_MODE}
+    -DBUILD_NUMBER=${BUILD_NUMBER}
+    -DINSTALL_SUFFIX=${APP_SUFFIX}
+)
+
+execute_process(
+    COMMAND cmake ${CONFIG} -P ${ROOT_DIR}/ci_build.cmake
+    RESULT_VARIABLE BUILD_RESULT
+)
+
+if (BUILD_RESULT GREATER 0) 
+    message(FATAL_ERROR "Failed build")
+endif()
+
+# bash ./buildscripts/ci/tools/make_release_channel_env.sh -c $AU4_BUILD_MODE
+# bash ./buildscripts/ci/tools/make_version_env.sh $BUILD_NUMBER
+# bash ./buildscripts/ci/tools/make_revision_env.sh $AU4_REVISION
+# bash ./buildscripts/ci/tools/make_branch_env.sh
+
