@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_NEWPROJECTMODEL_H
-#define MU_PROJECT_NEWPROJECTMODEL_H
+#ifndef AU_PROJECT_NEWPROJECTMODEL_H
+#define AU_PROJECT_NEWPROJECTMODEL_H
 
 #include <QObject>
 
@@ -50,4 +50,4 @@ private:
 };
 }
 
-#endif // MU_PROJECT_NEWPROJECTMODEL_H
+#endif // AU_PROJECT_NEWPROJECTMODEL_H

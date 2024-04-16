@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_IPROJECTCREATOR_H
-#define MU_PROJECT_IPROJECTCREATOR_H
+#ifndef AU_PROJECT_IPROJECTCREATOR_H
+#define AU_PROJECT_IPROJECTCREATOR_H
 
 #include "iaudacityproject.h"
 
@@ -38,4 +38,4 @@ public:
 };
 }
 
-#endif // MU_PROJECT_IPROJECTCREATOR_H
+#endif // AU_PROJECT_IPROJECTCREATOR_H
