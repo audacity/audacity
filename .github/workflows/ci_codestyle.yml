@@ -1,0 +1,20 @@
+name: CI_codestyle
+
+on:
+  pull_request:
+    paths: ["au4/**"]
+    branches:
+    - master
+
+jobs:
+  codestyle:    
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4  
+    - name: Fetch Muse CI scripts
+      run: |
+        cmake -P ./au4/buildscripts/ci/checkcodestyle/ci_fetch.cmake
+    - name: Test coding style
+      run: |
+        bash ./au4/buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./au4
