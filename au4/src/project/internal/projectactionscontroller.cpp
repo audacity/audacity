@@ -10,8 +10,8 @@
 using namespace muse;
 using namespace au::project;
 
-static const muse::Uri PROJECT_PAGE_URI("musescore://project");
-static const muse::Uri NEW_PROJECT_URI("musescore://project/new");
+static const muse::Uri PROJECT_PAGE_URI("audacity://project");
+static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 void ProjectActionsController::init()
 {

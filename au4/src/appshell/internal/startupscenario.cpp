@@ -32,7 +32,7 @@ using namespace au::project;
 
 static const muse::Uri FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup");
 static const muse::Uri HOME_URI("musescore://home");
-static const muse::Uri PROJECT_URI("musescore://project");
+static const muse::Uri PROJECT_URI("audacity://project");
 
 static StartupModeType modeTypeTromString(const std::string& str)
 {

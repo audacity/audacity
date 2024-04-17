@@ -123,7 +123,7 @@ void AppShellModule::resolveImports()
     auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerUri(Uri("musescore://home"), ContainerMeta(ContainerType::PrimaryPage));
-        ir->registerUri(Uri("musescore://project"), ContainerMeta(ContainerType::PrimaryPage));
+        ir->registerUri(Uri("audacity://project"), ContainerMeta(ContainerType::PrimaryPage));
         ir->registerUri(Uri("musescore://sequencer"), ContainerMeta(ContainerType::PrimaryPage));
         ir->registerUri(Uri("musescore://publish"), ContainerMeta(ContainerType::PrimaryPage));
         ir->registerUri(Uri("musescore://devtools"), ContainerMeta(ContainerType::PrimaryPage));

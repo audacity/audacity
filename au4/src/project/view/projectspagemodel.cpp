@@ -36,7 +36,7 @@ ProjectsPageModel::ProjectsPageModel(QObject* parent)
 {
 }
 
-void ProjectsPageModel::createNewScore()
+void ProjectsPageModel::createNewProject()
 {
     dispatcher()->dispatch("file-new");
 }
@@ -58,7 +58,7 @@ void ProjectsPageModel::openScoreManager()
 
 int ProjectsPageModel::tabIndex() const
 {
-    // return configuration()->homeScoresPageTabIndex();
+    return configuration()->homeProjectsPageTabIndex();
 }
 
 void ProjectsPageModel::setTabIndex(int index)
@@ -67,13 +67,13 @@ void ProjectsPageModel::setTabIndex(int index)
         return;
     }
 
-    // configuration()->setHomeScoresPageTabIndex(index);
+    configuration()->setHomeProjectsPageTabIndex(index);
     emit tabIndexChanged();
 }
 
 ProjectsPageModel::ViewType ProjectsPageModel::viewType() const
 {
-    // return static_cast<ViewType>(configuration()->homeScoresPageViewType());
+    return static_cast<ViewType>(configuration()->homeProjectsPageViewType());
 }
 
 void ProjectsPageModel::setViewType(ViewType type)
@@ -82,6 +82,6 @@ void ProjectsPageModel::setViewType(ViewType type)
         return;
     }
 
-    // configuration()->setHomeScoresPageViewType(IProjectConfiguration::HomeScoresPageViewType(type));
+    configuration()->setHomeProjectsPageViewType(IProjectConfiguration::HomeProjectsPageViewType(type));
     emit viewTypeChanged();
 }

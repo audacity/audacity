@@ -35,7 +35,7 @@ DockPage {
     id: root
 
     objectName: "ProjecPage"
-    uri: "musescore://project"
+    uri: "audacity://project"
 
     property var topToolKeyNavSec
 

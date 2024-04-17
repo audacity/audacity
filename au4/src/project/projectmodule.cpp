@@ -55,6 +55,7 @@ std::string ProjectModule::moduleName() const
 
 void ProjectModule::registerExports()
 {
+    m_configuration = std::make_shared<ProjectConfiguration>();
     m_actionsController = std::make_shared<ProjectActionsController>();
 
     ioc()->registerExport<IProjectConfiguration>(moduleName(), new ProjectConfiguration());
@@ -91,6 +92,7 @@ void ProjectModule::registerUiTypes()
 
 void ProjectModule::onInit(const muse::IApplication::RunMode&)
 {
+    m_configuration->init();
     m_actionsController->init();
 }
 
