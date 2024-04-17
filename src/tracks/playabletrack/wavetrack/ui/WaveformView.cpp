@@ -15,7 +15,6 @@ Paul Licameli split from WaveChannelView.cpp
 #include "ClipParameters.h"
 #include "WaveChannelView.h"
 #include "WaveChannelViewConstants.h"
-#include "WaveformCache.h"
 #include "WaveformVRulerControls.h"
 
 #include "SampleHandle.h"
@@ -45,12 +44,10 @@ Paul Licameli split from WaveChannelView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
-#ifdef EXPERIMENTAL_WAVEFORM_PAINT
 #include <wx/dcmemory.h>
 #include "waveform/WaveBitmapCache.h"
 #include "waveform/WaveDataCache.h"
 #include "waveform/WavePaintParameters.h"
-#endif
 
 
 static WaveChannelSubView::Type sType{
@@ -160,7 +157,6 @@ std::shared_ptr<ChannelVRulerControls> WaveformView::DoGetVRulerControls()
 namespace
 {
 
-#ifdef EXPERIMENTAL_WAVEFORM_PAINT
 
 graphics::Color ColorFromWXPen(const wxPen& pen)
 {
@@ -299,7 +295,7 @@ public:
 
    std::unique_ptr<WaveClipListener> Clone() const override
    {
-      return std::make_unique<WaveformPainter>(); 
+      return std::make_unique<WaveformPainter>();
    }
 
 private:
@@ -327,12 +323,12 @@ void DrawWaveform(
    const ZoomInfo zoomInfo(0.0, artist->pZoomInfo->GetZoom());
 
    auto& clipPainter = WaveformPainter::Get(clip);
-   
+
    const auto trimLeft = clip.GetTrimLeft();
    const auto sequenceStartTime = clip.GetSequenceStartTime();
 
    WavePaintParameters paintParameters;
-   
+
    paintParameters
       .SetDisplayParameters(
          rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
@@ -362,7 +358,7 @@ void DrawWaveform(
       t0 + trimLeft, t1 + trimLeft);
 }
 
-#endif
+
 
 void DrawWaveformBackground(TrackPanelDrawingContext &context,
                                          int leftOffset, const wxRect &rect,
@@ -541,121 +537,6 @@ void FindWavePortions
                         prev->averageZoom, prev->inFisheye)
          );
       left = right;
-   }
-}
-
-void DrawMinMaxRMS(
-   TrackPanelDrawingContext &context, const wxRect & rect, const double env[],
-   float zoomMin, float zoomMax,
-   bool dB, float dBRange,
-   const float *min, const float *max, const float *rms,
-   bool muted)
-{
-   auto &dc = context.dc;
-
-   // Display a line representing the
-   // min and max of the samples in this region
-   int lasth1 = std::numeric_limits<int>::max();
-   int lasth2 = std::numeric_limits<int>::min();
-   int h1;
-   int h2;
-   ArrayOf<int> r1{ size_t(rect.width) };
-   ArrayOf<int> r2{ size_t(rect.width) };
-   ArrayOf<int> clipped;
-   int clipcnt = 0;
-
-   const auto artist = TrackArtist::Get( context );
-   const auto bShowClipping = artist->mShowClipping;
-   if (bShowClipping) {
-      clipped.reinit( size_t(rect.width) );
-   }
-
-   long pixAnimOffset = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10)) +
-      wxDateTime::Now().GetMillisecond() / 100; //10 pixels a second
-
-   const auto ms = wxDateTime::Now().GetMillisecond();
-   const auto ticks = (long)fabs((double)(wxDateTime::Now().GetTicks() * -10));
-
-   const auto &muteSamplePen = artist->muteSamplePen;
-   const auto &samplePen = artist->samplePen;
-
-   dc.SetPen(muted ? muteSamplePen : samplePen);
-   for (int x0 = 0; x0 < rect.width; ++x0) {
-      int xx = rect.x + x0;
-      double v;
-      v = min[x0] * env[x0];
-      if (clipped && bShowClipping && (v <= -MAX_AUDIO))
-      {
-         if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
-            clipped[clipcnt++] = xx;
-         }
-      }
-      h1 = GetWaveYPos(v, zoomMin, zoomMax,
-                       rect.height, dB, true, dBRange, true);
-
-      v = max[x0] * env[x0];
-      if (clipped && bShowClipping && (v >= MAX_AUDIO))
-      {
-         if (clipcnt == 0 || clipped[clipcnt - 1] != xx) {
-            clipped[clipcnt++] = xx;
-         }
-      }
-      h2 = GetWaveYPos(v, zoomMin, zoomMax,
-                       rect.height, dB, true, dBRange, true);
-
-      // JKC: This adjustment to h1 and h2 ensures that the drawn
-      // waveform is continuous.
-      if (x0 > 0) {
-         if (h1 < lasth2) {
-            h1 = lasth2 - 1;
-         }
-         if (h2 > lasth1) {
-            h2 = lasth1 + 1;
-         }
-      }
-      lasth1 = h1;
-      lasth2 = h2;
-
-      r1[x0] = GetWaveYPos(-rms[x0] * env[x0], zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-      r2[x0] = GetWaveYPos(rms[x0] * env[x0], zoomMin, zoomMax,
-                          rect.height, dB, true, dBRange, true);
-      // Make sure the rms isn't larger than the waveform min/max
-      if (r1[x0] > h1 - 1) {
-         r1[x0] = h1 - 1;
-      }
-      if (r2[x0] < h2 + 1) {
-         r2[x0] = h2 + 1;
-      }
-      if (r2[x0] > r1[x0]) {
-         r2[x0] = r1[x0];
-      }
-
-      AColor::Line(dc, xx, rect.y + h2, xx, rect.y + h1);
-   }
-
-   // Stroke rms over the min-max
-   const auto &muteRmsPen = artist->muteRmsPen;
-   const auto &rmsPen = artist->rmsPen;
-
-   dc.SetPen(muted ? muteRmsPen : rmsPen);
-   for (int x0 = 0; x0 < rect.width; ++x0) {
-      int xx = rect.x + x0;
-      if (r1[x0] != r2[x0]) {
-         AColor::Line(dc, xx, rect.y + r2[x0], xx, rect.y + r1[x0]);
-      }
-   }
-
-   // Draw the clipping lines
-   if (clipcnt) {
-      const auto &muteClippedPen = artist->muteClippedPen;
-      const auto &clippedPen = artist->clippedPen;
-
-      dc.SetPen(muted ? muteClippedPen : clippedPen);
-      while (--clipcnt >= 0) {
-         int xx = clipped[clipcnt];
-         AColor::Line(dc, xx, rect.y, xx, rect.y + rect.height);
-      }
    }
 }
 
@@ -956,7 +837,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
       highlight = target && target->FindChannel().get() == &track;
 #endif
 
-#ifdef EXPERIMENTAL_WAVEFORM_PAINT
    const bool showIndividualSamples = zoomInfo.GetZoom() > threshold1;
    const bool showPoints = zoomInfo.GetZoom() > threshold2;
 
@@ -972,131 +852,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          context, leftOffset, rect, zoomMin, zoomMax, dB, dBRange, clip,
          showPoints, muted, highlight);
    }
-#else
-   WaveDisplay display(hiddenMid.width);
-
-   // For each portion separately, we will decide to draw
-   // it as min/max/rms or as individual samples.
-   std::vector<WavePortion> portions;
-   FindWavePortions(portions, rect, zoomInfo, params);
-   const unsigned nPortions = portions.size();
-
-   auto &clipCache = WaveClipWaveformCache::Get(clip);
-
-   {
-      bool showIndividualSamples = false;
-      for (unsigned ii = 0; !showIndividualSamples && ii < nPortions; ++ii) {
-         const WavePortion &portion = portions[ii];
-         showIndividualSamples =
-            !portion.inFisheye && portion.averageZoom > threshold1;
-      }
-
-      if (!showIndividualSamples) {
-         // The WaveClip class handles the details of computing the shape
-         // of the waveform.  The only way GetWaveDisplay will fail is if
-         // there's a serious error, like some of the waveform data can't
-         // be loaded.  So if the function returns false, we can just exit.
-
-         // Note that we compute the full width display even if there is a
-         // fisheye hiding part of it, because of the caching.  If the
-         // fisheye moves over the background, there is then less to do when
-         // redrawing.
-
-         if (!clipCache.GetWaveDisplay(clip,
-            display, t0, averagePixelsPerSecond))
-            return;
-      }
-   }
-
-   // TODO Add a comment to say what this loop does.
-   // Possibly make it into a subroutine.
-   for (unsigned ii = 0; ii < nPortions; ++ii) {
-      WavePortion &portion = portions[ii];
-      const bool showIndividualSamples = portion.averageZoom > threshold1;
-      const bool showPoints = portion.averageZoom > threshold2;
-      wxRect& rectPortion = portion.rect;
-      rectPortion.Intersect(mid);
-      wxASSERT(rectPortion.width >= 0);
-
-      float *useMin = 0, *useMax = 0, *useRms = 0;
-      WaveDisplay fisheyeDisplay(rectPortion.width);
-      int skipped = 0, skippedLeft = 0, skippedRight = 0;
-      if (portion.inFisheye) {
-         if (!showIndividualSamples) {
-            fisheyeDisplay.Allocate();
-            const auto numSamples = clip.GetVisibleSampleCount();
-            // Get wave display data for different magnification
-            int jj = 0;
-            for (; jj < rectPortion.width; ++jj) {
-               const double time =
-                  zoomInfo.PositionToTime(jj, -leftOffset) - playStartTime;
-               const auto sample = clip.TimeToSamples(time);
-               if (sample < 0) {
-                  ++rectPortion.x;
-                  ++skippedLeft;
-                  continue;
-               }
-               if (sample >= numSamples)
-                  break;
-               fisheyeDisplay.where[jj - skippedLeft] = sample;
-            }
-
-            skippedRight = rectPortion.width - jj;
-            skipped = skippedRight + skippedLeft;
-            rectPortion.width -= skipped;
-
-            // where needs a sentinel
-            if (jj > 0)
-               fisheyeDisplay.where[jj - skippedLeft] =
-               1 + fisheyeDisplay.where[jj - skippedLeft - 1];
-            fisheyeDisplay.width -= skipped;
-            // Get a wave display for the fisheye, uncached.
-            if (rectPortion.width > 0)
-               if (!clipCache.GetWaveDisplay(clip,
-                     fisheyeDisplay, t0, -1.0)) // ignored
-                  continue; // serious error.  just don't draw??
-            useMin = fisheyeDisplay.min;
-            useMax = fisheyeDisplay.max;
-            useRms = fisheyeDisplay.rms;
-         }
-      }
-      else {
-         const int pos = leftOffset - params.hiddenLeftOffset;
-         useMin = display.min + pos;
-         useMax = display.max + pos;
-         useRms = display.rms + pos;
-      }
-
-      leftOffset += skippedLeft;
-
-      if (rectPortion.width > 0) {
-         if (!showIndividualSamples) {
-            std::vector<double> vEnv2(rectPortion.width);
-            double *const env2 = &vEnv2[0];
-            CommonChannelView::GetEnvelopeValues(envelope, playStartTime,
-
-               // PRL: change back to make envelope evaluate only at sample
-               // times and then interpolate the display
-               0, // 1.0 / sampleRate,
-
-               env2, rectPortion.width, leftOffset, zoomInfo);
-
-            DrawMinMaxRMS(context, rectPortion, env2,
-               zoomMin, zoomMax,
-               dB, dBRange,
-               useMin, useMax, useRms, muted);
-         }
-         else {
-
-            DrawIndividualSamples(
-               context, leftOffset, rectPortion, zoomMin, zoomMax,
-               dB, dBRange, clip, showPoints, muted, highlight);
-         }
-      }
-
-      leftOffset += rectPortion.width + skippedRight;
-   }
-#endif
 
    const auto drawEnvelope = artist->drawEnvelope;
    if (drawEnvelope) {
@@ -1396,8 +1151,6 @@ PopupMenuTable::AttachedItem sAttachment{
 
 }
 
-#ifdef EXPERIMENTAL_WAVEFORM_PAINT
-
 static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip&) {
    return std::make_unique<WaveformPainter>();
 } };
@@ -1407,5 +1160,3 @@ WaveformPainter &WaveformPainter::Get( const WaveClip &clip )
    return const_cast< WaveClip& >( clip ) // Consider it mutable data
       .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
 }
-
-#endif

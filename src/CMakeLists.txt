@@ -724,8 +724,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.cpp
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.h
       tracks/playabletrack/wavetrack/ui/LowlitClipButton.cpp
@@ -771,8 +769,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
-      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
       tracks/timetrack/ui/TimeTrackControls.cpp
