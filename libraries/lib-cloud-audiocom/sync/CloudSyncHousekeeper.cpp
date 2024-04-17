@@ -60,7 +60,7 @@ private:
          if (!wxFileExists(path))
          {
             cloudProjectsDatabase.DeleteProject(project.ProjectId);
-            return;
+            continue;
          }
 
          const auto lastAccess =
