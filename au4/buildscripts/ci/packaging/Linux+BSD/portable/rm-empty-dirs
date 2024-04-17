@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Use this script to tidy up a directory tree after deleting files (e.g.
+# when uninstalling MuseScore). The script takes as argument a path (or
+# a space-delimited list of paths) to recently deleted files:
+#   e.g. "/usr/local/share/mscore-dev-2.1/manual/plugins/harmony.html"
+# If the file still exists nothing happens. If it's parent directory is
+# empty then that is deleted. The parent's parent is deleted if it is
+# now empty, and so on until all empty parents in the path are deleted.
+
+numempty=0
+
+for filepath in "$@" ; do
+  #echo "File: $filepath"
+  dirpath=$(dirname "$filepath")
+  while true ; do
+    #echo "Directory: $dirpath"
+    rmdir "$dirpath" 2>/dev/null || continue 2
+    # Note: this is safe because `rmdir` only removes empty directories.
+    #echo "Removed empty directory: $dirpath"
+    numempty=$(($numempty+1))
+    dirpath=$(dirname "$dirpath")
+  done
+done
+
+echo "$0: $numempty empty directories were removed."
