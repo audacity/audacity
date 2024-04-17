@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,7 +24,7 @@
 #include <Windows.h>
 #include <shlobj.h>
 
-using namespace mu::project;
+using namespace au::project;
 
 void WindowsRecentFilesController::prependPlatformRecentFile(const muse::io::path_t& path)
 {

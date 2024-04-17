@@ -40,6 +40,14 @@
 #include "view/pixmapprojectthumbnailview.h"
 #include "view/newprojectmodel.h"
 
+#ifdef Q_OS_MAC
+#include "internal/platform/macos/macosrecentfilescontroller.h"
+#elif defined (Q_OS_WIN)
+#include "internal/platform/windows/windowsrecentfilescontroller.h"
+#else
+#include "internal/recentfilescontroller.h"
+#endif
+
 using namespace au::project;
 using namespace muse::modularity;
 
@@ -58,7 +66,16 @@ void ProjectModule::registerExports()
     m_configuration = std::make_shared<ProjectConfiguration>();
     m_actionsController = std::make_shared<ProjectActionsController>();
 
-    ioc()->registerExport<IProjectConfiguration>(moduleName(), new ProjectConfiguration());
+#ifdef Q_OS_MAC
+    m_recentFilesController = std::make_shared<MacOSRecentFilesController>();
+#elif defined(Q_OS_WIN)
+    m_recentFilesController = std::make_shared<WindowsRecentFilesController>();
+#else
+    m_recentFilesController = std::make_shared<RecentFilesController>();
+#endif
+
+    ioc()->registerExport<IProjectConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<IRecentFilesController>(moduleName(), m_recentFilesController);
 }
 
 void ProjectModule::resolveImports()
@@ -94,6 +111,7 @@ void ProjectModule::onInit(const muse::IApplication::RunMode&)
 {
     m_configuration->init();
     m_actionsController->init();
+    m_recentFilesController->init();
 }
 
 void ProjectModule::onDeinit()

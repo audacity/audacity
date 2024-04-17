@@ -26,6 +26,7 @@
 
 #include "async/asyncable.h"
 
+#include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "irecentfilescontroller.h"
 #include "io/ifilesystem.h"
@@ -35,9 +36,9 @@ class RecentProjectsModel : public AbstractProjectsModel, public muse::async::As
 {
     Q_OBJECT
 
-    // INJECT(au::project::IProjectConfiguration, configuration)
-    // INJECT(IRecentFilesController, recentFilesController)
-    // INJECT(muse::io::IFileSystem, fileSystem)
+    INJECT(IProjectConfiguration, configuration)
+    INJECT(IRecentFilesController, recentFilesController)
+    INJECT(muse::io::IFileSystem, fileSystem)
 
 public:
     RecentProjectsModel(QObject* parent = nullptr);

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-Studio-CLA-applies
  *
- * MuseScore Studio
+ * Audacity Studio
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -30,7 +30,7 @@
 
 #include "types/projectmeta.h"
 
-namespace mu::project {
+namespace au::project {
 class IMscMetaReader : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IMscMetaReader)
