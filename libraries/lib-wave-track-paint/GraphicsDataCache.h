@@ -61,7 +61,6 @@ public:
 
    //! Invalidate the cache content
    void Invalidate();
-   void Invalidate(const ZoomInfo& zoomInfo, double t0, double t1);
 
    //! Returns the sample rate associated with cache
    double GetSampleRate() const noexcept;

@@ -76,51 +76,6 @@ void GraphicsDataCacheBase::Invalidate()
    mLookup.clear();
 }
 
-void GraphicsDataCacheBase::Invalidate(
-   const ZoomInfo& zoomInfo, double t0, double t1)
-{
-   if (bool(t0 > t1) || IsSameTime(mSampleRate, t0, t1))
-      return;
-
-   const double pixelsPerSecond = zoomInfo.GetZoom();
-
-   const auto ppsMatchRange =
-      GetPPSMatchRange(mLookup, pixelsPerSecond, mSampleRate);
-
-   const auto cacheRangeLength =
-      std::distance(ppsMatchRange.first, ppsMatchRange.second);
-
-   if (cacheRangeLength == 0)
-      return;
-
-   const int64_t left  = zoomInfo.TimeToPosition(t0);
-   const int64_t right = zoomInfo.TimeToPosition(t1) + 1;
-
-   mLRUHelper.reserve(cacheRangeLength);
-
-   for (auto it = ppsMatchRange.first; it != ppsMatchRange.second; ++it)
-   {
-      if (it->Key.FirstSample < left)
-         continue;
-
-      const auto itemRight = it->Key.FirstSample + CacheElementWidth;
-
-      DisposeElement(it->Data);
-      it->Data->AwaitsEviction = true;
-
-      if (right <= itemRight)
-         break;
-   }
-
-   mLookup.erase(
-      std::remove_if(
-         mLookup.begin(), mLookup.end(),
-         [](auto item) { return item.Data->AwaitsEviction; }),
-      mLookup.end());
-
-   mLRUHelper.clear();
-}
-
 double GraphicsDataCacheBase::GetSampleRate() const noexcept
 {
    return mSampleRate;
