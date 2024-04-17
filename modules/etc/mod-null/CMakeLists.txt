@@ -1,3 +1,7 @@
+#[[
+A skeletal example module that does nothing
+]]
+
 set( TARGET mod-null )
 set( DEFINES
    PRIVATE

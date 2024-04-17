@@ -1,3 +1,7 @@
+#[[
+Experimental module for interactive development of Nyquist plugins
+]]
+
 set( TARGET mod-nyq-bench )
 set( SOURCES
       NyqBench.cpp

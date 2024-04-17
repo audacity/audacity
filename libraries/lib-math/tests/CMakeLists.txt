@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-math
+]]
+
 add_unit_test(
    NAME
       lib-math

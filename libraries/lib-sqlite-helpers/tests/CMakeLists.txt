@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-sqlite
+]]
+
 add_unit_test(
    NAME
       lib-sqlite-helpers

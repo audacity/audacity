@@ -1,3 +1,7 @@
+#[[
+FLAC import and export
+]]
+
 set( TARGET mod-flac )
 
 set( SOURCES

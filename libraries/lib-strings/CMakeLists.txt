@@ -11,7 +11,7 @@ even if the global choice of locale changes during its lifetime.  It does not
 implicitly interconvert with wxString.
 
 This library depends only on the wxBase subset of wxWidgets.
-]]#
+]]
 
 set( SOURCES
    Base64.h

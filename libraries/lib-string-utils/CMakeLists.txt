@@ -1,3 +1,7 @@
+#[[
+String encoding and formatting utilities
+]]
+
 set(TARGET lib-string-utils)
 set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

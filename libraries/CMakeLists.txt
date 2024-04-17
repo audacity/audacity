@@ -1,3 +1,7 @@
+#[[
+A directory containing library targets
+]]
+
 # Include the libraries that we'll build
 
 # The list of modules is ordered so that each library occurs after any others

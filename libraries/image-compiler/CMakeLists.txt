@@ -2,7 +2,7 @@
 A small program that is run at build time of the application.  For each built-in
 theme it generates a header file from image files.  The images are part of the
 source code tree but not deployed with the program.
-]]#
+]]
 
 if( NOT IMAGE_COMPILER_EXECUTABLE )
    add_executable( image-compiler imageCompilerMain.cpp )

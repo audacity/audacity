@@ -1,3 +1,7 @@
+#[[
+Generation of UUIDs
+]]
+
 set( TARGET lib-uuid )
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

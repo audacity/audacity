@@ -6,7 +6,7 @@ Also the definition of certain significant file paths, such as the directory
 for temporary projects.
 
 Also the global logger which can save to a file.
-]]#
+]]
 
 set( SOURCES
    AudacityLogger.cpp

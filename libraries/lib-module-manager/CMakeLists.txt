@@ -5,6 +5,7 @@ effect, generator, and analyzer plug-ins.
 Maintains persistent data in the configuration file for enablement of modules
 and plug-ins, and preferred settings.
 ]]
+
 set( SOURCES
    AsyncPluginValidator.cpp
    AsyncPluginValidator.h

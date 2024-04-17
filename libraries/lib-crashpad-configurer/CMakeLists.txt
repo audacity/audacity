@@ -1,5 +1,7 @@
-# This module provides an interface to configure and start Crashpad handler 
-# in a platform independent way.
+#[[
+This library provides an interface to configure and start Crashpad handler 
+in a platform independent way.
+]]
 
 set(SOURCES 
    CrashpadConfigurer.h

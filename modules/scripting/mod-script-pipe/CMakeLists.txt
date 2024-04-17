@@ -1,3 +1,8 @@
+#[[
+Inter-process pipe allowing control of Audacity by sending macro commands and
+receiving responses
+]]
+
 set( SOURCES
    PipeServer.cpp
    ScripterCallback.cpp
