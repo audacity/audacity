@@ -9,7 +9,7 @@
 .Sh NAME@Variables_substituted_by_CMAKE_on_installation@
 .Nm mscore@MUSESCORE_INSTALL_SUFFIX@ ,
 .Nm musescore@MUSESCORE_INSTALL_SUFFIX@
-.Nd @MUSESCORE_NAME_VERSION@ sheet music editor
+.Nd @MUSE_APP_NAME_VERSION@ sheet music editor
 .Sh SYNOPSIS
 .Nm
 .Op Fl deFfhIiLmnOPRstvw

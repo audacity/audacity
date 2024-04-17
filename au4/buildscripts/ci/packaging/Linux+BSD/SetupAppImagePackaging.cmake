@@ -12,10 +12,10 @@ endif()
 if(MUSESCORE_UNSTABLE)
     # Use short name to avoid truncation by GNOME launcher. Save room for
     # a suffix in case multiple dev/nightly builds are installed.
-    set(DESKTOP_LAUNCHER_NAME "MU ${MUSESCORE_VERSION_MAJ_MIN}") # MU X.Y
+    set(DESKTOP_LAUNCHER_NAME "MU ${MUSE_APP_VERSION_MAJ_MIN}") # Muse X.Y
 else(MUSESCORE_UNSTABLE)
     # Use full name for stable releases
-    set(DESKTOP_LAUNCHER_NAME "${MUSESCORE_NAME} ${MUSESCORE_VERSION_MAJ_MIN}") # MuseScore X.Y
+    set(DESKTOP_LAUNCHER_NAME "${MUSE_APP_NAME} ${MUSE_APP_VERSION_MAJ_MIN}") # Muse X.Y
 endif(MUSESCORE_UNSTABLE)
 
 if(${MUSESCORE_INSTALL_SUFFIX} MATCHES "dev")
@@ -40,7 +40,7 @@ if(${MUSESCORE_INSTALL_SUFFIX} MATCHES "portable") # Note: "portableanything" wo
     get_filename_component(PORTABLE_INSTALL_NAME ${CMAKE_INSTALL_PREFIX} NAME) # Strip path (basename)
 
     if(NOT MUSESCORE_UNSTABLE)
-        set(PORTABLE_INSTALL_NAME "${PORTABLE_INSTALL_NAME}-${MUSESCORE_VERSION}") # Append version info.
+        set(PORTABLE_INSTALL_NAME "${PORTABLE_INSTALL_NAME}-${MUSE_APP_VERSION}") # Append version info.
     endif(NOT MUSESCORE_UNSTABLE)
 
     set(PORTABLE_INSTALL_NAME "${PORTABLE_INSTALL_NAME}-${ARCH}") # Append system architecture.
