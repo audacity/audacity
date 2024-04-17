@@ -3,7 +3,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       ${TARGET_ROOT}/audioreader.cpp
       ${TARGET_ROOT}/comp_chroma.cpp
@@ -16,7 +16,7 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/fft3/FFT3.cpp
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PUBLIC
       ${TARGET_ROOT}
 )

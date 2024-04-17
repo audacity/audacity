@@ -38,7 +38,7 @@ elseif( WIN32 )
    )
 endif()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       include/portmixer.h
 
@@ -71,14 +71,14 @@ list( APPEND SOURCES
       >
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PRIVATE
       src
    PUBLIC
       include
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PUBLIC
       USE_PORTMIXER=1
    PRIVATE
@@ -109,7 +109,7 @@ list( APPEND DEFINES
       >
 )
 
-list( APPEND LIBRARIES
+set( LIBRARIES
    PRIVATE
       portaudio::portaudio
 )

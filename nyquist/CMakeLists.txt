@@ -6,7 +6,7 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 
 def_vars()
 
-list( APPEND RUNTIME
+set( RUNTIME
    aud-do-support.lsp
    dspprims.lsp
    envelopes.lsp
