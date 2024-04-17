@@ -93,7 +93,9 @@ CREATE TABLE IF NOT EXISTS migration
    version INTEGER
 );
 
-INSERT OR IGNORE INTO migration (version) VALUES (0);
+INSERT INTO migration (version) VALUES (0);
+
+DELETE FROM migration WHERE ROWID != 1;
 )";
 
 const auto addProjectSyncedDialogShownColumn = R"(
