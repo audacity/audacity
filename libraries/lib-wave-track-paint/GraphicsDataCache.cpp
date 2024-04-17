@@ -12,19 +12,21 @@
 
 #include <algorithm>
 #include <cassert>
-#include <tuple>
 #include <type_traits>
 
 #include "ZoomInfo.h"
 
+#include "float_cast.h"
+
 namespace
 {
 
-bool IsSameTime(double sampleRate, double t0, double t1) noexcept
+bool IsSameSample(double sampleRate, double t0, double t1) noexcept
 {
-   const auto diff = std::abs(t0 - t1);
+   const auto firstSample  = llrint(t0 * sampleRate);
+   const auto secondSample = llrint(t1 * sampleRate);
 
-   return diff < (1.0 / sampleRate);
+   return firstSample == secondSample;
 }
 
 bool IsSamePPS(double sampleRate, double lhs, double rhs)
@@ -109,7 +111,7 @@ GraphicsDataCacheBase::BaseLookupResult
 GraphicsDataCacheBase::PerformBaseLookup(
    const ZoomInfo& zoomInfo, double t0, double t1)
 {
-   if (bool(t0 > t1) || IsSameTime(mSampleRate, t0, t1))
+   if (bool(t0 > t1) || IsSameSample(mSampleRate, t0, t1))
       return {};
 
    const double pixelsPerSecond = zoomInfo.GetZoom();
