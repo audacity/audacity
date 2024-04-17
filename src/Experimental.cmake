@@ -106,10 +106,6 @@ set( EXPERIMENTAL_OPTIONS_LIST
    # PRL disabled 31 Aug 2021 because, at least on Mac, it misfires the
    # preference dialog whenever any keystroke shortcuts with Shift+ are used
    # EASY_CHANGE_KEY_BINDINGS
-
-   # DV 26 December 2023
-   # Use lib-wave-track-paint for in-memory waveform image generation
-   WAVEFORM_PAINT
 )
 
 # Now define the flags
