@@ -4,7 +4,7 @@ add_library( ${TARGET} STATIC )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       # libnyquist
 
@@ -263,7 +263,7 @@ list( APPEND SOURCES
       nyquist/xlisp/xlsys.c
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PRIVATE
       ${CMAKE_CURRENT_SOURCE_DIR}/nyquist/cmt
       ${CMAKE_CURRENT_SOURCE_DIR}/nyquist/cmupv/src
@@ -279,7 +279,7 @@ list( APPEND INCLUDES
       ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PUBLIC
       USE_NYQUIST=1
    PRIVATE
@@ -288,12 +288,12 @@ list( APPEND DEFINES
       $<$<PLATFORM_ID:Windows>:WIN32>
 )
 
-list( APPEND OPTIONS
+set( OPTIONS
    PRIVATE
       $<$<PLATFORM_ID:Darwin>:-fno-common>
 )
 
-list( APPEND LIBRARIES
+set( LIBRARIES
    PRIVATE
       portaudio::portaudio
       SndFile::sndfile

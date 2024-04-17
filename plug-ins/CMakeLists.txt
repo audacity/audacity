@@ -6,7 +6,7 @@ message( STATUS "========== Configuring ${TARGET} ==========" )
 
 def_vars()
 
-list( APPEND SOURCES
+set( SOURCES
    ShelfFilter.ny
    SpectralEditMulti.ny
    SpectralEditParametricEQ.ny

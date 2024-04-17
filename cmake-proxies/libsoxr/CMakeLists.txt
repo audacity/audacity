@@ -5,7 +5,7 @@ def_vars()
 
 set(CMAKE_MODULE_PATH ${TARGET_ROOT}/cmake/Modules )
 
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/cr.c
       ${TARGET_ROOT}/src/cr32.c
@@ -23,21 +23,21 @@ list( APPEND SOURCES
       ${TARGET_ROOT}/src/vr32.c
 )
 
-list( APPEND INCLUDES
+set( INCLUDES
    PRIVATE
       ${_PRVDIR}
    PUBLIC
       ${TARGET_ROOT}/src
 )
 
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       _USE_MATH_DEFINES
       _CRT_SECURE_NO_WARNINGS
       SOXR_LIB
 )
 
-list( APPEND OPTIONS
+set( OPTIONS
    PRIVATE
       $<$<C_COMPILER_ID:AppleClang,Clang,GNU>:
          -Wconversion

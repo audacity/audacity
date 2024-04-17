@@ -54,7 +54,7 @@ set( USE_VST ${${_OPT}use_vst} CACHE INTERNAL "" )
 #
 #
 #
-list( APPEND SOURCES
+set( SOURCES
    PRIVATE
       ActiveProject.cpp
       ActiveProject.h
@@ -938,14 +938,14 @@ list( APPEND SOURCES
 #
 #
 #
-list( APPEND HEADERS
+set( HEADERS
    ../include/audacity/Types.h
 )
 
 #
 #
 #
-list( APPEND INCLUDES
+set( INCLUDES
    PUBLIC
       ${_PRVDIR}
       ${topdir}/include
@@ -955,14 +955,14 @@ list( APPEND INCLUDES
 #
 # Define resources
 #
-list( APPEND RESOURCES
+set( RESOURCES
    ${topdir}/resources/EffectsMenuDefaults.xml
 )
 
 #
 #
 #
-list( APPEND DEFINES
+set( DEFINES
    PRIVATE
       BUILDING_AUDACITY
       WXUSINGDLL
@@ -1002,7 +1002,7 @@ endif()
 
 audacity_append_common_compiler_options( OPTIONS "${${_OPT}use_pch}" )
 
-list( APPEND LDFLAGS
+set( LDFLAGS
    PRIVATE
       $<$<CXX_COMPILER_ID:MSVC>:/MANIFEST:NO>
       $<$<CXX_COMPILER_ID:GNU>:-Wl,--disable-new-dtags>
@@ -1063,7 +1063,7 @@ endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
    # Define the Windows specific resources
-   list( APPEND WIN_RESOURCES
+   set( WIN_RESOURCES
       ../win/audacity.rc
    )
 
@@ -1112,7 +1112,7 @@ elseif( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    endif()
 
    # Define Mac specific resources
-   list( APPEND MAC_RESOURCES
+   set( MAC_RESOURCES
       ../mac/Resources/Audacity.icns
       ../mac/Resources/AudacityAIFF.icns
       ../mac/Resources/AudacityAU.icns
