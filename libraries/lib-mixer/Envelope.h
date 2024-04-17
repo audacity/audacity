@@ -193,6 +193,11 @@ public:
       return mEnv[index];
    }
 
+   double GetDefaultValue() const;
+
+   size_t GetVersion() const;
+
+
 private:
    int InsertOrReplaceRelative(double when, double value) noexcept;
 
@@ -248,6 +253,7 @@ private:
    // UI stuff
    bool mDragPointValid { false };
    int mDragPoint { -1 };
+   size_t mVersion { 0 };
 
    mutable int mSearchGuess { -2 };
 };
