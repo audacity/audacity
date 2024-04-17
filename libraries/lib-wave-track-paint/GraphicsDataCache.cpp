@@ -17,6 +17,7 @@
 #include "ZoomInfo.h"
 
 #include "float_cast.h"
+#include "RoundUpUnsafe.h"
 
 namespace
 {

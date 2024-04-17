@@ -21,6 +21,8 @@
 #include "Sequence.h"
 #include "WaveClip.h"
 
+#include "RoundUpUnsafe.h"
+
 namespace
 {
 //
