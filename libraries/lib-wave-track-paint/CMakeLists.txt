@@ -9,10 +9,14 @@ set( SOURCES
    PixelSampleMapper.cpp
    PixelSampleMapper.h
 
+   waveform/WaveBitmapCache.cpp
+   waveform/WaveBitmapCache.h
    waveform/WaveData.cpp
    waveform/WaveData.h
    waveform/WaveDataCache.cpp
    waveform/WaveDataCache.h
+   waveform/WavePaintParameters.cpp
+   waveform/WavePaintParameters.h
 )
 set( LIBRARIES
    PUBLIC
