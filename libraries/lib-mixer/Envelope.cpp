@@ -1408,12 +1408,6 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
    }();
 }
 
-void Envelope::print() const
-{
-   for( unsigned int i = 0; i < mEnv.size(); i++ )
-      wxPrintf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
-}
-
 static void checkResult( int n, double a, double b )
 {
    if( (a-b > 0 ? a-b : b-a) > 0.0000001 )
@@ -1421,60 +1415,4 @@ static void checkResult( int n, double a, double b )
       wxPrintf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
       //exit( -1 );
    }
-}
-
-void Envelope::testMe()
-{
-   double t0=0, t1=0;
-
-   SetExponential(false);
-
-   Flatten(0.5);
-   checkResult( 1, Integral(0.0,100.0), 50);
-   checkResult( 2, Integral(-10.0,10.0), 10);
-
-   Flatten(0.5);
-   checkResult( 3, Integral(0.0,100.0), 50);
-   checkResult( 4, Integral(-10.0,10.0), 10);
-   checkResult( 5, Integral(-20.0,-10.0), 5);
-
-   Flatten(0.5);
-   InsertOrReplaceRelative( 5.0, 0.5 );
-   checkResult( 6, Integral(0.0,100.0), 50);
-   checkResult( 7, Integral(-10.0,10.0), 10);
-
-   Flatten(0.0);
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   t0 = 10.0 - .1;
-   t1 = 10.0 + .1;
-   double result = Integral(0.0,t1);
-   double resulta = Integral(0.0,t0);
-   double resultb = Integral(t0,t1);
-   // Integrals should be additive
-   checkResult( 8, result - resulta - resultb, 0);
-
-   Flatten(0.0);
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   t0 = 10.0 - .1;
-   t1 = 10.0 + .1;
-   checkResult( 9, Integral(0.0,t1), 5);
-   checkResult( 10, Integral(0.0,t0), 4.999);
-   checkResult( 11, Integral(t0,t1), .001);
-
-   mEnv.clear();
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   checkResult( 12, NumberOfPointsAfter( -1 ), 3 );
-   checkResult( 13, NumberOfPointsAfter( 0 ), 2 );
-   checkResult( 14, NumberOfPointsAfter( 1 ), 2 );
-   checkResult( 15, NumberOfPointsAfter( 5 ), 1 );
-   checkResult( 16, NumberOfPointsAfter( 7 ), 1 );
-   checkResult( 17, NumberOfPointsAfter( 10 ), 0 );
-   checkResult( 18, NextPointAfter( 0 ), 5 );
-   checkResult( 19, NextPointAfter( 5 ), 10 );
 }

@@ -79,8 +79,6 @@ public:
    // Create from a subrange of another envelope.
    Envelope(const Envelope &orig, double t0, double t1);
 
-   void Initialize(int numPoints);
-
    virtual ~Envelope();
 
    bool IsTrivial() const;
@@ -164,11 +162,6 @@ public:
    double Integral( double t0, double t1 ) const;
    double IntegralOfInverse( double t0, double t1 ) const;
    double SolveIntegralOfInverse( double t0, double area) const;
-
-   void print() const;
-   void testMe();
-
-   bool IsDirty() const;
 
    void Clear() { mEnv.clear(); }
 
