@@ -1,0 +1,552 @@
+.\" New manual page for MuseScore 4
+.\" Copyright (c) 2018, 2019, 2020
+.\"	mirabilos <m@mirbsd.org>
+.\" Published under the same terms as MuseScore itself.
+.\"-
+.Dd November 6, 2020
+.Dt @MAN_MSCORE_UPPER@ 1
+.Os MuseScore
+.Sh NAME@Variables_substituted_by_CMAKE_on_installation@
+.Nm mscore@MUSESCORE_INSTALL_SUFFIX@ ,
+.Nm musescore@MUSESCORE_INSTALL_SUFFIX@
+.Nd @MUSESCORE_NAME_VERSION@ sheet music editor
+.Sh SYNOPSIS
+.Nm
+.Op Fl deFfhIiLmnOPRstvw
+.Op Fl b | Fl \-bitrate Ar bitrate
+.Op Fl c | Fl \-config\-folder Ar pathname
+.Op Fl D | Fl \-monitor\-resolution Ar DPI
+.Op Fl E | Fl \-install\-extension Ar "extension file"
+.Op Fl j | Fl \-job Ar file.json
+.Op Fl M | Fl \-midi\-operations Ar file
+.Op Fl o | Fl \-export\-to Ar file
+.Op Fl p | Fl \-plugin Ar name
+.Op Fl r | Fl \-image\-resolution Ar DPI
+.Op Fl S | Fl \-style Ar style
+.Op Fl T | Fl \-trim\-image Ar margin
+.Op Fl x | Fl \-gui\-scaling Ar factor
+.Op Fl \-debug
+.Op Fl \-diff
+.Op Fl \-dump\-midi\-in
+.Op Fl \-dump\-midi\-out
+.Op Fl \-experimental
+.Op Fl \-export\-score\-parts
+.Op Fl \-factory\-settings
+.Op Fl \-force
+.Op Fl \-help
+.Op Fl \-layout\-debug
+.Op Fl \-load\-icons
+.Op Fl \-long\-version
+.Op Fl \-new\-score
+.Op Fl \-no\-fallback\-font
+.Op Fl \-no\-midi
+.Op Fl \-no\-synthesizer
+.Op Fl \-no\-webview
+.Op Fl \-raw\-diff
+.Op Fl \-revert\-settings
+.Op Fl \-run\-test\-script
+.Op Fl \-save\-online
+.Op Fl \-score\-media
+.Op Fl \-highlight\-config
+.Op Fl \-score\-mp3
+.Op Fl \-score\-parts
+.Op Fl \-score\-parts\-pdf
+.Op Fl \-score\-transpose
+.Op Fl \-template\-mode
+.Op Fl \-test\-mode
+.Op Fl \-version
+.Op Ar
+.\" should be .Ss semantically but that renders badly
+@MAN_PORTABLE@.Sh AppImage (portable version), before installation
+@MAN_PORTABLE@.Nm ./@PORTABLE_INSTALL_NAME@.AppImage
+@MAN_PORTABLE@.Op Cm options
+@MAN_PORTABLE@.Op Ar
+.Sh DESCRIPTION
+.Nm MuseScore
+is a Free and Open Source WYSIWYG cross-platform multi-lingual
+music composition and notation software, released under the
+GNU General Public Licence (GPLv2).
+@MAN_PORTABLE@.Ss Special options for the AppImage
+@MAN_PORTABLE@This portable version of MuseScore has all of MuseScore's
+@MAN_PORTABLE@usual features, but it runs on a wider range of distributions
+@MAN_PORTABLE@and does not need to be installed.
+@MAN_PORTABLE@There is an option to install it for full integration with
+@MAN_PORTABLE@other applications and the desktop environment, though.
+.Pp
+@MAN_PORTABLE@.Bl -tag -width Ds
+@MAN_PORTABLE@.It Cm man , Cm manual , Cm manpage
+@MAN_PORTABLE@Displays this manual.
+@MAN_PORTABLE@If MuseScore is installed, the manual can be viewed using
+@MAN_PORTABLE@the familiar command:
+@MAN_PORTABLE@.Pp
+@MAN_PORTABLE@.Dl man mscore@MUSESCORE_INSTALL_SUFFIX@
+@MAN_PORTABLE@.It Cm install Oo Fl i Oc Op Ar prefix
+@MAN_PORTABLE@Run this without the options to fully integrate MuseScore
+@MAN_PORTABLE@with the desktop environment (GNOME, KDE, etc).
+@MAN_PORTABLE@This should:
+@MAN_PORTABLE@.Bl -bullet
+@MAN_PORTABLE@.It
+@MAN_PORTABLE@Add MuseScore to your Applications Menu or Launcher,
+@MAN_PORTABLE@and add it to the
+@MAN_PORTABLE@.Dq Open with...
+@MAN_PORTABLE@list of programs.
+@MAN_PORTABLE@.It
+@MAN_PORTABLE@Move the executable to put it with your other programs.
+@MAN_PORTABLE@(This is usually a location within your
+@MAN_PORTABLE@.Ev PATH
+@MAN_PORTABLE@environment variable.)
+@MAN_PORTABLE@.It
+@MAN_PORTABLE@Create symbolic links to make it easier to launch
+@MAN_PORTABLE@MuseScore from the command line when needed.
+@MAN_PORTABLE@.It
+@MAN_PORTABLE@Make sure .MSCZ, .MSCX, .MSCS and MusicXML files are recognised
+@MAN_PORTABLE@by the system and the correct icons are displayed.
+@MAN_PORTABLE@.El
+@MAN_PORTABLE@.Pp
+@MAN_PORTABLE@Run as
+@MAN_PORTABLE@.Li root ,
+@MAN_PORTABLE@e.g. with
+@MAN_PORTABLE@.Xr sudo 8 ,
+@MAN_PORTABLE@to install for all users.
+@MAN_PORTABLE@Advanced users can use the
+@MAN_PORTABLE@.Fl i
+@MAN_PORTABLE@option to enter interactive mode, and provide an optional
+@MAN_PORTABLE@.Ar prefix
+@MAN_PORTABLE@to install into a custom location.
+@MAN_PORTABLE@Installation is not required to run the program.
+@MAN_PORTABLE@.It Cm update , Cm upgrade Oo Fl i Oc Op Ar prefix
+@MAN_PORTABLE@Updates MuseScore to the latest version. This uses your internet
+@MAN_PORTABLE@connection to check for an update and download it if one is
+@MAN_PORTABLE@available. A delta update mechanism is used to minimise the
+@MAN_PORTABLE@amount of data that is downloaded.
+@MAN_PORTABLE@.It Cm remove , Cm uninstall Op Ar prefix
+@MAN_PORTABLE@Removes icons and resources, and asks whether you would
+@MAN_PORTABLE@like to remove the program as well.
+@MAN_PORTABLE@(You can delete it yourself later if you wish.)
+@MAN_PORTABLE@Scores and personal files are not removed.
+@MAN_PORTABLE@If you installed it for all users then it will be removed
+@MAN_PORTABLE@for all users.
+@MAN_PORTABLE@.It Cm check\-depends , Cm check\-dependencies Op Cm exes\-only
+@MAN_PORTABLE@System information for developers.
+@MAN_PORTABLE@This detects which software libraries needed by MuseScore
+@MAN_PORTABLE@are not available from the system and so must be packaged
+@MAN_PORTABLE@alongside the MuseScore portable version.
+@MAN_PORTABLE@.El
+@MAN_PORTABLE@.Ss Normal MuseScore options
+Running
+.Nm
+without any extra options launches the full graphical MuseScore program
+and opens any files specified on the command line.
+.Pp
+The options are as follows:
+.Bl -tag -width Ds
+.It Fl b | Fl \-bitrate Ar bitrate
+Set MP3 output bitrate in kbit/s
+.It Fl c | Fl \-config\-folder Ar pathname
+Override configuration and settings directory
+.It Fl D | Fl \-monitor\-resolution Ar DPI
+Specify monitor resolution (override autodetection)
+.It Fl d | Fl \-debug
+Start MuseScore in debug mode
+.It Fl E | Fl \-install\-extension Ar "extension file"
+Install an extension file; soundfonts are loaded by default unless
+.Fl e
+is also specified
+.It Fl e | Fl \-experimental
+Enable experimental features, such as layers
+.It Fl F | \-factory\-settings
+Revert all settings, shortcuts, workspaces, extensions,
+translations, etc. to factory defaults; compare with the
+.Fl R
+option
+.It Fl f | \-force
+Ignore score corruption and version mismatch warnings in
+.Dq converter mode
+.It Fl h | \-help
+Display an overview of invocation instructions
+.It Fl I | \-dump\-midi\-in
+Display all MIDI input on the console
+.It Fl i | \-load\-icons
+Load icons from the filesystem; useful if you want to
+edit the MuseScore icons and preview the changes
+.It Fl j | Fl \-job Ar file.json
+Process a conversion job (see
+.Sx EXAMPLES
+below)
+.It Fl L | \-layout\-debug
+Start MuseScore in layout debug mode
+.It Fl M | Fl \-midi\-operations Ar file
+Specify MIDI import operations file (see
+.Sx EXAMPLES
+below)
+.It Fl m | \-no\-midi
+Disable MIDI input
+.It Fl n | \-new\-score
+Start with the New Score wizard regardless whether
+it's enabled or disabled in the user preferences
+.It Fl O | \-dump\-midi\-out
+Display all MIDI output on the console
+.It Fl o | Fl \-export\-to Ar file
+Export the given (or currently opened) file to the specified output
+.Ar file .
+The file type depends on the extension of the filename given.
+This option switches to
+.Dq converter mode
+and avoids the graphical user interface.
+.It Fl P | \-export\-score\-parts
+When converting to PDF with the
+.Fl o
+option, append each part's pages to the created PDF file.
+If the score has no parts, all default parts will
+temporarily be generated automatically.
+.It Fl p | Fl \-plugin Ar name
+Execute the named plugin
+.It Fl R | \-revert\-settings
+Revert user preferences to factory default but retain shortcuts,
+workspaces, extensions, translations, etc.; compare with
+.Fl F .
+.It Fl r | Fl \-image\-resolution Ar DPI
+Set image resolution for conversion to PNG files.
+.Pp
+Default: 360 DPI (actually, the value of
+.Dq Resolution
+of the PNG option group in the Export tab of the preferences)
+.It Fl S | Fl \-style Ar style
+Load a style file first; useful for use with the
+.Fl o
+option
+.It Fl s | \-no\-synthesizer
+Disable the integrated software synthesiser
+.It Fl T | Fl \-trim\-image Ar margin
+Trim exported PNG and SVG images to remove whitespace
+surrounding the score.
+The specified
+.Ar margin ,
+in pixels, will be retained (use 0 for a tightly cropped image).
+When exporting to SVG, this option only works with single-page scores.
+.It Fl t | \-test\-mode
+Set test mode flag for all files
+.It Fl v | \-version
+Display the name and version of the application
+without starting the graphical user interface
+.It Fl w | \-no\-webview
+Disable the web view component in the Start Centre
+.It Fl x | Fl \-gui\-scaling Ar factor
+Scale the score display and other GUI elements by the specified
+.Ar factor ;
+intended for use with high-resolution displays
+.It Fl \-diff
+Print a conditioned diff between the given scores
+.It Fl \-long\-version
+Display the full name, version and git revision of the application
+without starting the graphical user interface
+.It Fl \-no\-fallback\-font
+Don't use Bravura as fallback musical font
+.It Fl \-raw\-diff
+Print a raw diff between the given scores
+.It Fl \-run\-test\-script
+Run script tests listed in the command line arguments
+.It Fl \-save\-online
+Upload score(s) to its source URL. There must already be an online score at
+that URL, and the user must be signed-in to the account it belongs to. The
+online score will be replaced with the uploaded file, but the title and
+description of the online score's webpage will not change.
+.It Fl \-score\-media
+Export all media (except MP3) for a given score
+as a single JSON document to stdout
+.It Fl \-highlight\-config
+Set highlight to svg, generated from a given score
+.It Fl \-score\-mp3
+Generate an MP3 for the given score and export it
+as a single JSON document to stdout
+.It Fl \-score\-parts
+Generate parts data for the given score and save them
+to separate mscz files
+.It Fl \-score\-parts\-pdf
+Generate parts data for the given score and export it
+as a single JSON document to stdout
+.It Fl \-score\-transpose
+Transpose the given score and export the data to
+a single JSON file, print it to stdout
+.It Fl \-template\-mode
+Save files in template mode (e.g. without page sizes)
+.El
+.Pp
+MuseScore supports the automatic Qt command line options (see below).
+.Ss Batch conversion job JSON format
+The argument to the
+.Fl j
+option must be the pathname of a file comprised of a valid JSON
+document honouring the following specification:
+.Bl -bullet
+.It
+The top-level element must be a JSONArray, which may be empty.
+.It
+Each array element must be a JSONObject with the following keys:
+.Bl -tag -width plugin
+.It Li in
+Value is the name of the input file (score to convert), as JSONString.
+.It Li plugin
+Value is the filename of a plugin (with the .qml extension), which
+will be read from either the global or per-user plugin path and
+executed before the conversion output happens, as JSONString.
+Optional, but at least one of
+.Li plugin
+and
+.Li out
+.Em must
+be given.
+.It Li out
+Value is the conversion output target, as defined below.
+Optional, but at least one of
+.Li plugin
+and
+.Li out
+.Em must
+be given.
+.El
+.It
+The conversion output target may be a filename (with extension,
+which decided the format to convert to), as JSONString.
+.It
+The conversion output target may be a JSONArray of filenames as
+JSONString, as above, which will cause the score to be written
+to multiple output files (in multiple output formats) sequentially,
+without being closed, re-opened and re-processed in between.
+.It
+If the conversion output target is a JSONArray, one or more of
+its elements may also be, each, a JSONArray of two JSONStrings
+(called first and second half in the following description).
+This will cause part extraction: for each such two-tuple, all
+extant parts of the score will be saved
+.Em individually ,
+with filenames being composed by concatenating the first half,
+the name (title) of the part, and the second half.
+The resulting string must be a valid filename (with extension,
+determining the output format).
+If a score has no parts (excerpts) defined, this will be
+silently ignored without error.
+.It
+Valid file extensions for output are:
+.Bl -tag -width musicxml
+.It Li flac
+Free Lossless Audio Codec (compressed audio)
+.It Li metajson
+various score metadata (JSON)
+.It Li mid
+standard MIDI file
+.It Li midi
+standard MIDI file
+.It Li mlog
+internal file sanity check log (JSON)
+.It Li mp3
+MPEG Layer III (lossy compressed audio)
+.It Li mpos
+measure positions (XML)
+.It Li mscz
+MuseScore File
+.It Li mscx
+MuseScore Uncompressed File
+.It Li mscs
+MuseScore Uncompressed File
+.It Li musicxml
+uncompressed MusicXML file
+.It Li mxl
+compressed MusicXML file
+.It Li ogg
+OGG Vorbis (lossy compressed audio)
+.It Li pdf
+portable document file (print)
+.It Li png
+portable network graphics (image)
+.Pp
+Individual files, one per score page, with a hyphen-minus followed
+by the page number placed before the file extension, will be generated.
+.It Li spos
+segment positions (XML)
+.It Li svg
+scalable vector graphics (image)
+.It Li wav
+RIFF Waveform (uncompressed audio)
+.It Li xml
+uncompressed MusicXML file
+.El
+.El
+.Pp
+See below for an example.
+.Sh ENVIRONMENT
+.Bl -tag -width Ds
+.It Ev SKIP_LIBJACK
+Set this (the value does not matter) to skip initialisation
+of the JACK Audio Connection Kit library, in case it causes trouble.
+.It Ev XDG_CONFIG_HOME
+User configuration location; defaults to
+.Pa \(ti/.config
+if unset.
+.It Ev XDG_DATA_HOME
+User data location; defaults to
+.Pa \(ti/.local/share
+if unset.
+.It Ev XDG_DOCUMENTS_DIR
+Location of works the user created with the application; defaults to
+.Pa \(ti/Documents
+(or a localised version) and can be set in
+.Pa $XDG_CONFIG_HOME/user-dirs.dirs .
+.El
+.Pp
+Note that MuseScore also supports the normal Qt environment variables such as
+.Ev QT_QPA_GENERIC_PLUGINS ,
+.Ev QT_QPA_PLATFORM ,
+.Ev QT_QPA_PLATFORMTHEME ,
+.Ev QT_QPA_PLATFORM_PLUGIN_PATH ,
+.Ev QT_STYLE_OVERRIDE ,
+.Ev DISPLAY ,
+etc.
+.Sh FILES
+.Pa @CMAKE_INSTALL_PREFIX@/@Mscore_SHARE_NAME@@Mscore_INSTALL_NAME@
+contains the application support data (demos, instruments, localisation,
+system-wide plugins, soundfonts, styles, chords, templates and wallpapers).
+In the Debian packages, system-wide soundfonts are installed into
+.Pa /usr/share/sounds/sf2/ ,
+.Pa /usr/share/sounds/sf3/
+or
+.Pa /usr/share/sounds/sfz/ ,
+respectively, instead.
+.Pp
+The per-user data (extensions, plugins, soundfonts, styles, templates) and
+files (images, scores) are normally installed into subdirectories under
+.Pa $XDG_DOCUMENTS_DIR/MuseScore3/
+but may be changed in the configuration.
+Note that snapshot, alpha and beta versions use
+.Pa MuseScore3Development
+instead of
+.Pa MuseScore3
+in all of these paths.
+.Pp
+.Pa $XDG_CONFIG_HOME/MuseScore/MuseScore3.ini
+contains the user preferences, list of recently used files and their
+locations, window sizes and positions, etc.
+See above for development version paths.
+.Pp
+.Pa $XDG_DATA_HOME/MuseScore/MuseScore3/
+contains updated localisation files downloaded from within the
+program, plugin information, cached scores, credentials for the
+.Pa musescore.com
+community site, session information, synthesiser settings, custom
+key and time signatures and shortcuts.
+See above for development version paths.
+.Sh EXAMPLES
+Convert a score to PDF from the command line:
+.Pp
+.Dl Nm Fl o No "\(aqMy Score.pdf\(aq" "\(aqMy Score.mscz\(aq"
+.Pp
+Run a batch job converting multiple documents:
+.Pp
+.Dl Nm Fl j No job.json
+.Pp
+This requires the file
+.Pa job.json
+in the current working directory to have content
+similar to the following:
+.Bd -literal -offset indent
+[
+  {
+    "in": "Reunion.mscz",
+    "out": "Reunion\-coloured.pdf",
+    "plugin": "colornotes.qml"
+  },
+  {
+    "in": "Reunion.mscz",
+    "out": [
+      "Reunion.pdf",
+      [ "Reunion (part for ", ").pdf" ],
+      "Reunion.musicxml",
+      "Reunion.mid"
+    ]
+  },
+  {
+    "in": "Piece with excerpts.mscz",
+    "out": [
+      "Piece with excerpts (Partitura).pdf",
+      [ "Piece with excerpts (part for ", ").pdf" ],
+      "Piece with excerpts.mid"
+    ]
+  }
+]
+.Ed
+.Pp
+The last part of the job would, for example, cause files like
+.Dq Pa "Piece with excerpts (part for Violin).pdf"
+to be generated alongside the conductor's partitura and a MIDI
+file with the full orchestra sound, whereas the equivalent part
+of the Reunion conversion will be silently ignored (because the
+Reunion piece (a MuseScore demo) has no excerpts defined).
+.Pp
+.Pa https://musescore.org/sites/musescore.org/files/midi_import_options_0.xml
+is a sample MIDI import operations file for the
+.Fl M
+option.
+.Sh DIAGNOSTICS
+.Ex -std
+.Sh SEE ALSO
+.Xr fluidsynth 1 ,
+.Xr midicsv 1 ,
+.Xr timidity 1 ,
+.Xr qtoptions 7
+.Bl -tag -width Ds
+.It Pa https://musescore.org/handbook
+Online Handbook, full user manual
+.It Pa https://musescore.org/forum
+Support Forum
+.It Pa https://musescore.org/handbook/command\-line\-options\-0
+Further documentation of command line options
+.It Pa https://musescore.org/handbook/revert\-factory\-settings\-0
+Reverting to factory settings (troubleshooting)
+.It Pa https://musescore.org/project/issues
+Project Issue Tracker
+.Pp
+Please check first to if the bug you're encountering
+has already been reported.
+If you just need help with something, then please use the
+support forum (see above) instead.
+.It Pa http://doc.qt.io/qt\-5/qguiapplication.html#supported\-command\-line\-options
+Documentation of automatic Qt command line options
+.El
+.Sh STANDARDS
+MuseScore attempts to implement the following standards:
+.Bl -bullet
+.It
+MusicXML 3.1 (score interchange format)
+.It
+SF2 (SoundFont 2.01)
+.It
+SF3 (SoundFont with OGG Vorbis-compressed samples)
+.It
+SFZ (Sforzato soundfont)
+.It
+SMuFL (Standard Music Font Layout 1.30)
+.El
+.Sh HISTORY
+MuseScore was split off the MusE sequencer in 2002 and has since
+become the foremost Open Source notation software.
+.Sh AUTHORS
+MuseScore is developed by MuseScore Limited.
+.Pp
+This manual page was written by
+.An mirabilos Aq tg@debian.org .
+.Sh CAVEATS
+The automatic Qt command line options are removed from the
+argument vector before the application has a chance at option
+processing; this means that an invocation like
+.Pp
+.Dl Nm Fl S Ar \-reverse
+.Pp
+has no chance at working because the
+.Fl reverse
+is removed by Qt first.
+.Sh BUGS
+MuseScore does not honour
+.Pa /etc/papersize .
+.Pp
+Probably some more; check the project's bug tracker (cf.\&
+.Sx SEE ALSO ) .
