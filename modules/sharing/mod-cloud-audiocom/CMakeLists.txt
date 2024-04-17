@@ -1,3 +1,7 @@
+#[[
+Upload and download of project files in the cloud
+]]
+
 set( TARGET mod-cloud-audiocom )
 
 set( SOURCES

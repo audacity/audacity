@@ -1,7 +1,7 @@
 #[[
 Startup time injections of wxWidgets based implementations of services behind
 toolkit-neutral facades
-]]#
+]]
 
 set( SOURCES
    AccessibleLinksFormatter.cpp

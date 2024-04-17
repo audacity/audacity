@@ -1,7 +1,7 @@
 #[[
 A library to hold a registry of image and color identifiers, and multiple themes
 associating data with those identifiers.
-]]#
+]]
 
 set( SOURCES
    AColor.cpp

@@ -25,7 +25,7 @@ Registry implements trees of objects identified by textual paths, and allows
 scattered code to insert items or subtrees at specified paths.  Registry
 computes the merging of trees, and supports visitation.  It is used notably
 by the tree of menus, allowing insertion of menu items in decoupled code.
-]]#
+]]
 
 set( SOURCES
    AttachedVirtualFunction.h

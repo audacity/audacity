@@ -4,7 +4,7 @@ A library for fast fourier transforms
 
 Note -- this cannot be combined with lib-math, which depends on libsoxr, which
 includes a different version of pffft.h
-]]#
+]]
 
 set( SOURCES
    FFT.cpp

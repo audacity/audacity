@@ -1,3 +1,7 @@
+#[[
+MP2 export
+]]
+
 set( TARGET mod-mp2 )
 
 set( SOURCES

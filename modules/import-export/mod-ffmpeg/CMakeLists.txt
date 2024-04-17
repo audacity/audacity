@@ -1,3 +1,7 @@
+#[[
+FFmpeg import and export
+]]
+
 set( TARGET mod-ffmpeg )
 
 add_subdirectory(lib-ffmpeg-support)

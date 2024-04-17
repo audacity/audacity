@@ -1,3 +1,7 @@
+#[[
+A subdirectory containing module targets
+]]
+
 # Include the modules that we'll build
 
 # The list of modules is ordered so that each module occurs after any others

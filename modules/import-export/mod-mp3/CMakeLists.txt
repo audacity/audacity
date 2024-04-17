@@ -1,3 +1,7 @@
+#[[
+MP3 export using the LAME library
+]]
+
 set( TARGET mod-mp3 )
 
 set( SOURCES

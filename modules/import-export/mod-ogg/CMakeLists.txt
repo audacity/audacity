@@ -1,3 +1,7 @@
+#[[
+OGG import and export
+]]
+
 set( TARGET mod-ogg )
 
 set( SOURCES

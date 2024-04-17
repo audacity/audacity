@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-preferences
+]]
+
 add_unit_test(
    NAME
       lib-preferences

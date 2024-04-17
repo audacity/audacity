@@ -1,3 +1,7 @@
+#[[
+Import of older Audacity project files, in .aup format, saved before version 3.0
+]]
+
 set( TARGET mod-aup )
 
 set( SOURCES

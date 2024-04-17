@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-stretching-sequence
+]]
+
 add_compile_definitions(CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 add_unit_test(

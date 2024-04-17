@@ -2,6 +2,7 @@
 Management of undo and redo history of the project, stored as states, not
 deltas.  There is not yet persistency of undo history across sessions.
 ]]
+
 set( SOURCES
    ProjectHistory.cpp
    ProjectHistory.h

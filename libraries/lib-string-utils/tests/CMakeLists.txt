@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-string-utils
+]]
+
 add_unit_test(
    NAME
       lib-string-utils
