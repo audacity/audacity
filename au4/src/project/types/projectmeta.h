@@ -36,10 +36,7 @@ struct ProjectMeta
 
     QString title;
     QString subtitle;
-    QString composer;
     QString arranger;
-    QString lyricist;
-    QString translator;
     QString copyright;
     QDate creationDate;
 
@@ -51,7 +48,6 @@ struct ProjectMeta
     QString platform;
     QString audacityVersion;
     int audacityRevision = 0;
-    int mscVersion = 0;
 
     QVariantMap additionalTags;
 
@@ -65,10 +61,7 @@ struct ProjectMeta
         bool equal = filePath == other.filePath;
         equal &= title == other.title;
         equal &= subtitle == other.subtitle;
-        equal &= composer == other.composer;
         equal &= arranger == other.arranger;
-        equal &= lyricist == other.lyricist;
-        equal &= translator == other.translator;
         equal &= copyright == other.copyright;
         equal &= creationDate == other.creationDate;
 
@@ -80,7 +73,6 @@ struct ProjectMeta
         equal &= platform == other.platform;
         equal &= audacityVersion == other.audacityVersion;
         equal &= audacityRevision == other.audacityRevision;
-        equal &= mscVersion == other.mscVersion;
 
         equal &= additionalTags == other.additionalTags;
 
@@ -99,11 +91,8 @@ using ProjectMetaList = QList<ProjectMeta>;
 inline const QString WORK_TITLE_TAG("workTitle");
 inline const QString WORK_NUMBER_TAG("workNumber");
 inline const QString SUBTITLE_TAG("subtitle");
-inline const QString COMPOSER_TAG("composer");
 inline const QString ARRANGER_TAG("arranger");
-inline const QString LYRICIST_TAG("lyricist");
 inline const QString COPYRIGHT_TAG("copyright");
-inline const QString TRANSLATOR_TAG("translator");
 inline const QString MOVEMENT_TITLE_TAG("movementTitle");
 inline const QString MOVEMENT_NUMBER_TAG("movementNumber");
 inline const QString CREATION_DATE_TAG("creationDate");
@@ -123,11 +112,8 @@ inline bool isStandardTag(const QString& tag)
         WORK_TITLE_TAG,
         WORK_NUMBER_TAG,
         SUBTITLE_TAG,
-        COMPOSER_TAG,
         ARRANGER_TAG,
-        LYRICIST_TAG,
         COPYRIGHT_TAG,
-        TRANSLATOR_TAG,
         MOVEMENT_TITLE_TAG,
         MOVEMENT_NUMBER_TAG,
         CREATION_DATE_TAG,
@@ -146,11 +132,8 @@ inline bool isRepresentedInProjectMeta(const QString& tag)
     static const QSet<QString> projectMetaTags{
         WORK_TITLE_TAG,
         SUBTITLE_TAG,
-        COMPOSER_TAG,
         ARRANGER_TAG,
-        LYRICIST_TAG,
         COPYRIGHT_TAG,
-        TRANSLATOR_TAG,
         CREATION_DATE_TAG,
         PLATFORM_TAG,
 
