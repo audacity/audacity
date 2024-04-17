@@ -1313,6 +1313,7 @@ set( AUDACITY_LIBRARIES
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface
+   lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
 )
 

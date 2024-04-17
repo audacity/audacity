@@ -45,6 +45,14 @@ Paul Licameli split from WaveChannelView.cpp
 #include <wx/graphics.h>
 #include <wx/dc.h>
 
+#ifdef EXPERIMENTAL_WAVEFORM_PAINT
+#include <wx/dcmemory.h>
+#include "waveform/WaveBitmapCache.h"
+#include "waveform/WaveDataCache.h"
+#include "waveform/WavePaintParameters.h"
+#endif
+
+
 static WaveChannelSubView::Type sType{
    WaveChannelViewConstants::Waveform,
    { wxT("Waveform"), XXO("Wa&veform") }
@@ -151,6 +159,210 @@ std::shared_ptr<ChannelVRulerControls> WaveformView::DoGetVRulerControls()
 
 namespace
 {
+
+#ifdef EXPERIMENTAL_WAVEFORM_PAINT
+
+graphics::Color ColorFromWXPen(const wxPen& pen)
+{
+   const auto c = pen.GetColour();
+   return graphics::Color(c.Red(), c.Green(), c.Blue());
+}
+
+graphics::Color ColorFromWXBrush(const wxBrush& brush)
+{
+   const auto c = brush.GetColour();
+   return graphics::Color(c.Red(), c.Green(), c.Blue());
+}
+
+
+struct WaveBitmapCacheElementWX final : public WaveBitmapCacheElement
+{
+   uint8_t* Allocate(size_t width, size_t height) override
+   {
+      mImage = wxImage(width, height, false);
+      mBitmap = wxBitmap();
+      return mImage.GetData();
+   }
+
+   wxBitmap& GetBitmap()
+   {
+      if(!mBitmap.IsOk() && mImage.IsOk())
+         mBitmap = wxBitmap(mImage);
+      return mBitmap;
+   }
+
+   size_t Width() const override
+   {
+      return mImage.GetWidth();
+   }
+
+   size_t Height() const override
+   {
+      return mImage.GetHeight();
+   }
+
+private:
+   wxBitmap mBitmap;
+   wxImage  mImage;
+};
+
+
+class WaveformPainter final
+   : public WaveClipListener
+{
+public:
+
+   static WaveformPainter& Get(const WaveClip& clip);
+
+   WaveformPainter()
+   {
+   }
+
+   WaveformPainter& EnsureClip (const WaveClip& clip)
+   {
+      if (&clip != mWaveClip)
+         mChannelCaches.clear();
+
+      const auto nChannels = clip.NChannels();
+
+      if (mChannelCaches.size() == nChannels)
+         return *this;
+
+      mWaveClip = &clip;
+
+      mChannelCaches.reserve(nChannels);
+
+      for (auto channelIndex = 0; channelIndex < nChannels; ++channelIndex)
+      {
+         auto dataCache = std::make_shared<WaveDataCache>(clip, channelIndex);
+
+         auto bitmapCache = std::make_unique<WaveBitmapCache>(
+            dataCache,
+            [] { return std::make_unique<WaveBitmapCacheElementWX>(); },
+            dataCache->GetSampleRate());
+
+         mChannelCaches.push_back(
+            { std::move(dataCache), std::move(bitmapCache) });
+      }
+
+      return *this;
+   }
+
+   void SetSelection(const ZoomInfo& zoomInfo, float t0, float t1, bool selected)
+   {
+      for (auto& channelCache : mChannelCaches)
+         channelCache.BitmapCache->SetSelection(zoomInfo, t0, t1, selected);
+   }
+
+   void Draw(
+      int channelIndex, wxDC& dc, const WavePaintParameters& params,
+      const ZoomInfo& zoomInfo, const wxRect& targetRect, int leftOffset,
+      double from, double to)
+   {
+      auto& channelCache = mChannelCaches[channelIndex];
+
+      channelCache.BitmapCache->SetPaintParameters(params);
+
+      auto range = channelCache.BitmapCache->PerformLookup(zoomInfo, from, to);
+
+      auto left   = targetRect.x + leftOffset;
+      auto height = targetRect.height;
+
+      const auto top = targetRect.y;
+
+      wxMemoryDC memdc;
+      for (auto it = range.begin(); it != range.end(); ++it)
+      {
+         const auto elementLeftOffset  = it.GetLeftOffset();
+         const auto elementRightOffset = it.GetRightOffset();
+
+         const auto width = WaveBitmapCache::CacheElementWidth -
+                            elementLeftOffset - elementRightOffset;
+
+         auto& bitmap = static_cast<WaveBitmapCacheElementWX&>(*it).GetBitmap();
+         memdc.SelectObject(bitmap);
+         dc.Blit(
+            wxPoint(left, targetRect.y), wxSize(width, it->Height()), &memdc,
+            wxPoint(elementLeftOffset, 0));
+
+         left += width;
+      }
+   }
+
+   void MarkChanged() noexcept override { }
+
+   void Invalidate() override
+   {
+      for (auto& channelCache : mChannelCaches)
+         channelCache.DataCache->Invalidate();
+   }
+
+   std::unique_ptr<WaveClipListener> Clone() const override
+   {
+      return std::make_unique<WaveformPainter>(); 
+   }
+
+private:
+   const WaveClip* mWaveClip {};
+
+   struct ChannelCaches final
+   {
+      std::shared_ptr<WaveDataCache> DataCache;
+      std::unique_ptr<WaveBitmapCache> BitmapCache;
+   };
+
+   std::vector<ChannelCaches> mChannelCaches;
+};
+
+void DrawWaveform(
+   TrackPanelDrawingContext& context, const WaveTrack& track, const WaveChannelInterval& channelInterval,
+   int leftOffset, double t0, double t1,
+   const wxRect & rect, float zoomMin, float zoomMax, bool dB, float dBRange,
+   bool muted)
+{
+   auto& clip = channelInterval.GetClip();
+   const auto channelIndex = channelInterval.GetChannelIndex();
+
+   const auto artist = TrackArtist::Get(context);
+   const ZoomInfo zoomInfo(0.0, artist->pZoomInfo->GetZoom());
+
+   auto& clipPainter = WaveformPainter::Get(clip);
+   
+   const auto trimLeft = clip.GetTrimLeft();
+   const auto sequenceStartTime = clip.GetSequenceStartTime();
+
+   WavePaintParameters paintParameters;
+   
+   paintParameters
+      .SetDisplayParameters(
+         rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
+      .SetDBParameters(dBRange, dB)
+      .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
+      .SetSampleColors(
+         ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen),
+         ColorFromWXPen(muted ? artist->muteSamplePen : artist->selsamplePen))
+      .SetRMSColors(
+         ColorFromWXPen(muted ? artist->muteRmsPen : artist->rmsPen),
+         ColorFromWXPen(muted ? artist->muteRmsPen : artist->rmsPen))
+      .SetBackgroundColors(
+         ColorFromWXBrush(artist->unselectedBrush),
+         ColorFromWXBrush(artist->selectedBrush))
+      .SetClippingColors(
+         ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen),
+         ColorFromWXPen(muted ? artist->muteClippedPen : artist->clippedPen))
+      .SetEnvelope(clip.GetEnvelope());
+
+   clipPainter.SetSelection(
+      zoomInfo, artist->pSelectedRegion->t0() - sequenceStartTime,
+      artist->pSelectedRegion->t1() - sequenceStartTime,
+      SyncLock::IsSelectedOrSyncLockSelected(track));
+
+   clipPainter.Draw(
+      channelIndex, context.dc, paintParameters, zoomInfo, rect, leftOffset,
+      t0 + trimLeft, t1 + trimLeft);
+}
+
+#endif
 
 void DrawWaveformBackground(TrackPanelDrawingContext &context,
                                          int leftOffset, const wxRect &rect,
@@ -680,6 +892,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
 
    const double &t0 = params.t0;
+   const double &t1 = params.t1;
    const double playStartTime = clip.GetPlayStartTime();
    const double &trackRectT0 = params.trackRectT0;
    const double &averagePixelsPerSecond = params.averagePixelsPerSecond;
@@ -732,6 +945,34 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
          !track.GetSelected(), highlightEnvelope);
    }
 
+   // Require at least 1/2 pixel per sample for drawing individual samples.
+   const double threshold1 = 0.5 * sampleRate / stretchRatio;
+   // Require at least 3 pixels per sample for drawing the draggable points.
+   const double threshold2 = 3 * sampleRate / stretchRatio;
+
+   bool highlight = false;
+#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
+      auto target = dynamic_cast<SampleHandle*>(context.target.get());
+      highlight = target && target->FindChannel().get() == &track;
+#endif
+
+#ifdef EXPERIMENTAL_WAVEFORM_PAINT
+   const bool showIndividualSamples = zoomInfo.GetZoom() > threshold1;
+   const bool showPoints = zoomInfo.GetZoom() > threshold2;
+
+   if(!showIndividualSamples)
+   {
+      DrawWaveform(
+         context, channel.GetTrack(), clip, leftOffset, t0, t1,
+         rect, zoomMin, zoomMax, dB, dBRange, muted);
+   }
+   else
+   {
+      DrawIndividualSamples(
+         context, leftOffset, rect, zoomMin, zoomMax, dB, dBRange, clip,
+         showPoints, muted, highlight);
+   }
+#else
    WaveDisplay display(hiddenMid.width);
 
    // For each portion separately, we will decide to draw
@@ -739,11 +980,6 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    std::vector<WavePortion> portions;
    FindWavePortions(portions, rect, zoomInfo, params);
    const unsigned nPortions = portions.size();
-
-   // Require at least 1/2 pixel per sample for drawing individual samples.
-   const double threshold1 = 0.5 * sampleRate / stretchRatio;
-   // Require at least 3 pixels per sample for drawing the draggable points.
-   const double threshold2 = 3 * sampleRate / stretchRatio;
 
    auto &clipCache = WaveClipWaveformCache::Get(clip);
 
@@ -851,12 +1087,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
                useMin, useMax, useRms, muted);
          }
          else {
-            bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-            auto target = dynamic_cast<SampleHandle*>(context.target.get());
-            highlight = target && target->FindTrack().get() ==
-               &static_cast<const Track&>(channel.GetChannelGroup());
-#endif
+
             DrawIndividualSamples(
                context, leftOffset, rectPortion, zoomMin, zoomMax,
                dB, dBRange, clip, showPoints, muted, highlight);
@@ -865,6 +1096,7 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
 
       leftOffset += rectPortion.width + skippedRight;
    }
+#endif
 
    const auto drawEnvelope = artist->drawEnvelope;
    if (drawEnvelope) {
@@ -1161,4 +1393,19 @@ PopupMenuTable::AttachedItem sAttachment{
                : nullptr;
          } ) )
 };
+
 }
+
+#ifdef EXPERIMENTAL_WAVEFORM_PAINT
+
+static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip&) {
+   return std::make_unique<WaveformPainter>();
+} };
+
+WaveformPainter &WaveformPainter::Get( const WaveClip &clip )
+{
+   return const_cast< WaveClip& >( clip ) // Consider it mutable data
+      .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
+}
+
+#endif
