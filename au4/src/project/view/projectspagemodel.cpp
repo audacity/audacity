@@ -46,12 +46,12 @@ void ProjectsPageModel::openOther()
     dispatcher()->dispatch("file-open");
 }
 
-void ProjectsPageModel::openScore(const QString& scorePath, const QString& displayNameOverride)
+void ProjectsPageModel::openProject(const QString& scorePath, const QString& displayNameOverride)
 {
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(QUrl::fromLocalFile(scorePath), displayNameOverride));
 }
 
-void ProjectsPageModel::openScoreManager()
+void ProjectsPageModel::openProjectManager()
 {
     interactive()->openUrl(museScoreComService()->scoreManagerUrl());
 }
