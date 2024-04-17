@@ -23,6 +23,7 @@ declare_module(processing)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/processingmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/processingmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/processingtypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.h
