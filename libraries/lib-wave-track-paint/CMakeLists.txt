@@ -3,6 +3,9 @@ A library responsible for custom rendering in Audacity
 ]]
 
 set( SOURCES
+   GraphicsDataCache.cpp
+   GraphicsDataCache.h
+
    PixelSampleMapper.cpp
    PixelSampleMapper.h
 )
