@@ -1,3 +1,7 @@
+#[[
+Export of files with a command passed to a command-line shell
+]]
+
 set( TARGET mod-cl )
 
 set( SOURCES

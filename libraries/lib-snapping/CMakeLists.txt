@@ -8,6 +8,7 @@ This library:
 3. Provides a project extension that is responsible for snapping
 
 ]]
+
 set(TARGET lib-snapping)
 set(TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

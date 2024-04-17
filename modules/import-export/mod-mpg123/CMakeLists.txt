@@ -1,3 +1,7 @@
+#[[
+MPG123 import
+]]
+
 set( TARGET mod-mpg123 )
 
 set( SOURCES

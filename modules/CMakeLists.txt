@@ -1,3 +1,9 @@
+#[[
+A directory of directories of module targets.  Sub-directories group modules in
+some common area of functionality, such as import/export, and each group becomes
+a cluster in the modules.dot file generated at configuration time.
+]]
+
 # Include the modules that we'll build
 
 # The list of module sub-folders is ordered so that each folder occurs after any

@@ -1,3 +1,6 @@
+#[[
+Configure the executable, modules, and libraries
+]]
 
 set( TARGET Audacity )
 set( TARGET_ROOT ${topdir}/src )

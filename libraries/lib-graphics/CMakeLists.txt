@@ -1,6 +1,6 @@
 #[[
 A library responsible for custom rendering in Audacity
-]]#
+]]
 
 set( SOURCES
    FrameStatistics.cpp

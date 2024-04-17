@@ -1,3 +1,7 @@
+#[[
+PCM (that is .wav file) import and export
+]]
+
 set( TARGET mod-pcm )
 
 set( SOURCES

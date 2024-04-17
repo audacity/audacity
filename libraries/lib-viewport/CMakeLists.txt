@@ -2,6 +2,7 @@
 Viewport defines a callback facade for horizontal and vertical scrollbars, and
 provides methods to scroll and zoom the view of tracks.
 ]]
+
 set( SOURCES
    Viewport.cpp
    Viewport.h

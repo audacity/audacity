@@ -1,3 +1,7 @@
+#[[
+WavPack import and export
+]]
+
 set( TARGET mod-wavpack )
 
 set( SOURCES

@@ -8,7 +8,7 @@ Also abstract class Meter for communicating buffers of samples for display
 purposes.
 
 Does not contain an audio engine.
-]]#
+]]
 
 set( SOURCES
    AudioIOBase.cpp

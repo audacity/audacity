@@ -1,6 +1,6 @@
 #[[
 VST 2 effect plugin discovery and processing logic, without user interface
-]]#
+]]
 
 set( SOURCES
    VSTEffectBase.cpp

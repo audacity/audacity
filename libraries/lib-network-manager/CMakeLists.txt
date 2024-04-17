@@ -1,3 +1,7 @@
+#[[
+Asynchronously send and receive requests and responses over internet
+]]
+
 set(TARGET lib-network-manager)
 set( TARGET_ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 

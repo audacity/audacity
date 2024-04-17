@@ -1,7 +1,7 @@
 #[[
 Classes relating to the mappings between x or y coordinates of the screen, and
 times, or frequencies, or amplitudes.
-]]#
+]]
 
 set( SOURCES
    NumberScale.h

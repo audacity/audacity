@@ -1,3 +1,7 @@
+#[[
+Unit tests for lib-time-and-pitch
+]]
+
 add_compile_definitions(CMAKE_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
 
 add_unit_test(

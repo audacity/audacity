@@ -2,6 +2,7 @@
 #[[
 Library, responsible for handling custom URL scemas.
 ]]
+
 set( SOURCES
    URLSchemesRegistry.cpp
    URLSchemesRegistry.h

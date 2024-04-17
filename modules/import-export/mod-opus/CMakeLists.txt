@@ -1,3 +1,7 @@
+#[[
+Opus import and export
+]]
+
 set( TARGET mod-opus )
 
 set( SOURCES

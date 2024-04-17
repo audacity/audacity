@@ -1,3 +1,6 @@
+#[[
+Various versions of FFmpeg and a facade to hide their binary incompatibilities
+]]
 
 if (${_OPT}use_ffmpeg)
    set( SOURCES

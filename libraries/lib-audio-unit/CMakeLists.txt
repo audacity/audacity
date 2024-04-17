@@ -1,6 +1,6 @@
 #[[
 AudioUnit effect processing logic, minus user interface
-]]#
+]]
 
 if (USE_AUDIO_UNITS)
 
