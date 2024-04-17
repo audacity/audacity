@@ -51,6 +51,9 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    //! True, if we mark clipped values
    bool ShowClipping { false };
 
+   //! True, if we paint RMS values on top of min and max
+   bool ShowRMS { true };
+
    //! Color outside the waveform area
    graphics::Color BlankColor;
 
@@ -85,6 +88,8 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    WavePaintParameters& SetEnvelope(const Envelope& envelope) noexcept;
    //! Resets the envelope
    WavePaintParameters& ResetEnvelope() noexcept;
+   //! Sets the ShowRMS flag
+   WavePaintParameters& SetShowRMS(bool showRMS) noexcept;
 
    friend WAVE_TRACK_PAINT_API bool operator==(
       const WavePaintParameters& lhs,

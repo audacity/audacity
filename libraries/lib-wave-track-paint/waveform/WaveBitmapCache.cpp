@@ -181,6 +181,7 @@ struct WaveBitmapCache::LookupHelper final
       const auto sampleColors = cache->mPaintParamters.SampleColors;
       const auto rmsColors = cache->mPaintParamters.RMSColors;
       const auto clipColors = cache->mPaintParamters.ClippingColors;
+      const auto showRMS = cache->mPaintParamters.ShowRMS;
 
       auto firstPixel = int64_t(key.FirstSample / cache->GetSampleRate() * key.PixelsPerSecond + 0.5);
 
@@ -223,30 +224,34 @@ struct WaveBitmapCache::LookupHelper final
          if (maxRow >= height)
             continue;
 
-         const auto positiveRMSRow = GetRowFromValue(columnData.rms);
-
-         if (maxRow < positiveRMSRow)
+         if (showRMS)
          {
-            function.SetStop(
-               stopIndex++,
-               selected ? sampleColors.Selected : sampleColors.Normal,
-               positiveRMSRow);
+            const auto positiveRMSRow = GetRowFromValue(columnData.rms);
+
+            if (maxRow < positiveRMSRow)
+            {
+               function.SetStop(
+                  stopIndex++,
+                  selected ? sampleColors.Selected : sampleColors.Normal,
+                  positiveRMSRow);
+            }
+
+            if (positiveRMSRow >= height)
+               continue;
+
+            const auto negativeRMSRow =
+               GetRowFromValue(std::max(-columnData.rms, columnData.min));
+
+            if (positiveRMSRow < negativeRMSRow)
+            {
+               function.SetStop(
+                  stopIndex++, selected ? rmsColors.Selected : rmsColors.Normal,
+                  negativeRMSRow);
+            }
+
+            if (negativeRMSRow >= height)
+               continue;
          }
-
-         if (positiveRMSRow >= height)
-            continue;
-
-         const auto negativeRMSRow = GetRowFromValue(std::max(-columnData.rms, columnData.min));
-
-         if (positiveRMSRow < negativeRMSRow)
-         {
-            function.SetStop(
-               stopIndex++, selected ? rmsColors.Selected : rmsColors.Normal,
-               negativeRMSRow);
-         }
-
-         if (negativeRMSRow >= height)
-            continue;
 
          const auto minRow = GetRowFromValue(columnData.min);
 

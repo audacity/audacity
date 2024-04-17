@@ -80,6 +80,12 @@ WavePaintParameters& WavePaintParameters::ResetEnvelope() noexcept
    return *this;
 }
 
+WavePaintParameters& WavePaintParameters::SetShowRMS(bool showRMS) noexcept
+{
+   ShowRMS = showRMS;
+   return *this;
+}
+
 bool operator==(const ColorPair& lhs, const ColorPair& rhs) noexcept
 {
    return lhs.Normal == rhs.Normal && lhs.Selected == rhs.Selected;
