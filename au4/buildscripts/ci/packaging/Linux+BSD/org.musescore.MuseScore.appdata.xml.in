@@ -101,10 +101,10 @@
             <image>https://raw.githubusercontent.com/flathub/org.musescore.MuseScore/master/screenshots/07-new-score-wizard.png</image>
         </screenshot>
     </screenshots>
-    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSESCORE_VERSION_MAJ_MIN@/locale/instruments</translation>
-    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSESCORE_VERSION_MAJ_MIN@/locale/musescore</translation>
-    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSESCORE_VERSION_MAJ_MIN@/locale/qt</translation>
-    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSESCORE_VERSION_MAJ_MIN@/locale/qtbase</translation>
+    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/instruments</translation>
+    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/musescore</translation>
+    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qt</translation>
+    <translation type="qt">mscore@MUSESCORE_INSTALL_SUFFIX@-@MUSE_APP_VERSION_MAJ_MIN@/locale/qtbase</translation>
     <content_rating type="oars-1.1"/>
     <!-- GNOME extensions -->
     <kudos>
