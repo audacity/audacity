@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-04-04 21:13+0300\n"
-"PO-Revision-Date: 2024-04-07 12:32+0200\n"
+"PO-Revision-Date: 2024-04-18 02:29+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/"
 "Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (http://www.transifex.com/klyok/audacity/language/"
@@ -3450,19 +3450,19 @@ msgstr "E fighjulate ponu esse mudificate solu per i prughjetti in u Nivulu"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
-msgstr "Arregis&trà in u Nivulu…"
+msgstr "Arregistrà in u Ni&vulu…"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
-msgstr "M&udificà a fighjulata audio in u Nivulu"
+msgstr "Mudificà a &fighjulata audio in u Nivulu"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Fro&m Cloud..."
-msgstr "Apre da u &Nivulu…"
+msgstr "Apre &da u Nivulu…"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "S&hare Audio..."
-msgstr "S&parte l’audio…"
+msgstr "Sparte l’audi&o…"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15331,7 +15331,7 @@ msgstr "Schedarii &recente"
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Project"
-msgstr "Arregistrà u &prughjettu"
+msgstr "Arregistrà &u prughjettu"
 
 #: src/menus/FileMenus.cpp
 msgid "Save Project &As..."
@@ -15343,11 +15343,11 @@ msgstr "Copia di salva&guardia di u prughjettu…"
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
-msgstr "Espurtà l’&audio…"
+msgstr "Espurtà &l’audio…"
 
 #: src/menus/FileMenus.cpp
 msgid "Expo&rt Other"
-msgstr "Espu&rtà altrimente"
+msgstr "Espurtà altri&mente"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -15368,7 +15368,7 @@ msgstr "&Dati grossi…"
 #. i18n-hint: (verb) It's item on a menu.
 #: src/menus/FileMenus.cpp
 msgid "E&xit"
-msgstr "E&sce"
+msgstr "&Esce"
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -22089,10 +22089,10 @@ msgstr "Attrezzi spettrali"
 #~ msgstr "Stampà"
 
 #~ msgid "Pa&ge Setup..."
-#~ msgstr "Preferenze di pa&gina…"
+#~ msgstr "&Preferenze di pagina…"
 
 #~ msgid "&Print..."
-#~ msgstr "S&tampà…"
+#~ msgstr "&Stampà…"
 
 #~ msgid "Screen Capture Frame"
 #~ msgstr "Sequenza di cattura di screnu"
