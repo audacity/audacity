@@ -67,6 +67,7 @@ set(LINK_LIB
     muse::network
     muse::multiinstances
     muse::learn
+    muse::languages
 
     appshell
     au3wrap
