@@ -20,7 +20,7 @@ public:
 
     void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
 
-    muse::async::NotifyList<const Track> trackList() const;
+    muse::async::NotifyList<Track> trackList() const;
 
     //! NOTE Just for debug
     void dump();
