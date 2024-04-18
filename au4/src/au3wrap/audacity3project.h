@@ -24,12 +24,12 @@ public:
 
     std::string title() const;
 
-    muse::async::NotifyList<const processing::Track> trackList() const;
+    muse::async::NotifyList<processing::Track> trackList() const;
 
 private:
 
     std::shared_ptr<Audacity3ProjectData> m_data;
-    mutable muse::async::ChangedNotifier<const processing::Track> m_trackChangedNotifier;
+    mutable muse::async::ChangedNotifier<processing::Track> m_trackChangedNotifier;
 };
 }
 
