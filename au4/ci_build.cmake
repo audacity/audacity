@@ -19,7 +19,7 @@ set(INSTALL_DIR "../build.install" CACHE STRING "Build install dir")
 set(INSTALL_SUFFIX "" CACHE STRING "Install suffix")
 set(BUILD_NUMBER "12345678" CACHE STRING "Build number")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
-
+option(SKIP_RPATH "Skip rpath" OFF)
 
 # CPUS
 cmake_host_system_information(RESULT CPUS QUERY NUMBER_OF_LOGICAL_CORES)
@@ -65,9 +65,10 @@ macro(do_build build_type build_dir)
         -DAU4_BUILD_MODE=${BUILD_MODE}
         -DAU4_BUILD_CONFIGURATION=${BUILD_CONFIGURATION}
         -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
-        -DAU4_INSTALL_SUFFIX=${INSTALL_SUFFIX}
+        -DMUSE_APP_INSTALL_SUFFIX=${INSTALL_SUFFIX}
         -DCMAKE_BUILD_NUMBER=${BUILD_NUMBER}
         -DAU4_REVISION=${BUILD_REVISION}
+        -DCMAKE_SKIP_RPATH=${SKIP_RPATH}
     )
 
     message(STATUS "========= Begin configure =========")
@@ -87,14 +88,6 @@ macro(do_build build_type build_dir)
         RESULT_VARIABLE NINJA_RESULT
     )
     message(STATUS "========= End build: ${NINJA_RESULT}")
-
-    message(STATUS "========= Begin install =========")
-    execute_process(
-        COMMAND ninja install
-        WORKING_DIRECTORY ${build_dir}
-        RESULT_VARIABLE NINJA_RESULT
-    )
-    message(STATUS "========= End install: ${NINJA_RESULT}")
 
 
     # cmake .. -GNinja \
@@ -116,7 +109,59 @@ macro(do_build build_type build_dir)
 
 endmacro()
 
+macro(do_install build_dir)
+    message(STATUS "========= Begin install =========")
+    execute_process(
+        COMMAND cmake --install ${build_dir}
+        RESULT_VARIABLE INSTALL_RESULT
+    )
+    message(STATUS "========= End install: ${INSTALL_RESULT}")
+endmacro()
+
 # Configure and build
 if(BUILD_TYPE STREQUAL "DEBUG")
+
     do_build(Debug build.debug)
+
+elseif(BUILD_TYPE STREQUAL "APPIMAGE")
+
+    set(INSTALL_SUFFIX "4portable${INSTALL_SUFFIX}") # e.g. "4portable" or "4portablenightly"
+    set(SKIP_RPATH ON)
+    set(BUILD_DIR build.release)
+
+    do_build(Release ${BUILD_DIR})
+    do_install(${BUILD_DIR})
+
+    file (STRINGS "${BUILD_DIR}/PREFIX.txt" INSTALL_DIR)
+
+    execute_process (
+        COMMAND ln -sf . usr
+        WORKING_DIRECTORY ${INSTALL_DIR}
+    )
+
+    file(COPY
+        ${BUILD_DIR}/install_manifest.txt
+        DESTINATION ${INSTALL_DIR}
+    )
+
+    file(COPY
+        ${BUILD_DIR}/org.musescore.MuseScore${INSTALL_SUFFIX}.desktop
+        DESTINATION ${INSTALL_DIR}
+    )
+
+    file(COPY
+        ${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/audacity.svg
+        DESTINATION ${INSTALL_DIR}
+    )
+
+    # mscore="mscore${MUSE_APP_INSTALL_SUFFIX}"
+    # desktop="org.musescore.MuseScore${MUSE_APP_INSTALL_SUFFIX}.desktop"
+    # icon="${mscore}.png"
+    # mani="install_manifest.txt"
+    # cp "share/applications/${desktop}" "${desktop}"
+    # cp "share/icons/hicolor/128x128/apps/${icon}" "${icon}"
+    # <"$build_dir/${mani}" >"${mani}" sed -rn 's/.*(share\/)(applications|icons|man|metainfo|mime)(.*)/\1\2\3/p'
+    # ;;
+
+
 endif()

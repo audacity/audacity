@@ -63,7 +63,7 @@ apt_packages_runtime=(
   libcups2
   libdbus-1-3
   libegl1-mesa-dev
-  libodbc1
+  #libodbc1
   libpq-dev
   libssl-dev
   libxcomposite-dev
@@ -80,6 +80,7 @@ apt_packages_runtime=(
   libxcb-render-util0
   libxcb-xinerama0
   libxcb-xkb-dev
+  libxcb-shape0
   libxkbcommon-dev
   libvulkan-dev
   )

@@ -71,3 +71,7 @@ temp_*
 *.local.cmake
 
 *_deps/*
+
+*.AppImage
+
+build.*

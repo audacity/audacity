@@ -20,7 +20,7 @@ done
 
 # Add fallback directories to LD_LIBRARY_PATH. Don't add the main lib
 # directory because linuxdeploy sets RUNPATH to point to it anyway.
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${fallback_libs}"
+export LD_LIBRARY_PATH="${APPDIR}/lib:${APPDIR}/lib/audacity:${LD_LIBRARY_PATH}${fallback_libs}"
 
 # Launch MuseScore or an accompanying script
 case "$1" in
@@ -28,6 +28,6 @@ case "$1" in
     "${APPDIR}/bin/portable-utils" "$@"
     ;;
   * )
-    "${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" "$@"
+    "${APPDIR}/bin/audacity@MUSE_APP_INSTALL_SUFFIX@" "$@"
     ;;
 esac

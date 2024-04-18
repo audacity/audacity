@@ -32,7 +32,37 @@ set(EXECUTABLE_NAME audacity)
 ###########################################
 include(GetPlatformInfo)
 
-if(OS_IS_MAC)
+if (OS_IS_WIN)
+    set(APP_OUTPUT_NAME ${MUSESCORE_NAME}${MUSESCORE_VERSION_MAJOR})
+
+    include(GetCompilerInfo)
+
+    if (CC_IS_MSVC)
+        # MSVC recognizes a *.rc file and will invoke the resource compiler to link it
+        set(WINDOWS_ICONS_RC ${PROJECT_SOURCE_DIR}/share/icons/windows_icons.rc)
+    elseif(CC_IS_MINGW)
+        set(WINDOWS_ICONS_RC ${PROJECT_BINARY_DIR}/windows_icons_rc.o)
+        add_custom_command(
+            OUTPUT ${PROJECT_BINARY_DIR}/windows_icons_rc.o
+            COMMAND ${CMAKE_RC_COMPILER} -i windows_icons.rc -o ${PROJECT_BINARY_DIR}/windows_icons_rc.o
+            DEPENDS ${PROJECT_SOURCE_DIR}/share/icons/windows_icons.rc
+            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/share/icons
+            )
+        set_source_files_properties(${PROJECT_BINARY_DIR}/windows_icons_rc.o PROPERTIES generated true)
+    endif()
+
+elseif(OS_IS_LIN)
+
+    if (MUSE_APP_INSTALL_SUFFIX)
+        set(APP_OUTPUT_NAME "${EXECUTABLE_NAME}${MUSE_APP_INSTALL_SUFFIX}")
+    endif()
+
+    set(CMAKE_INSTALL_RPATH "${QT_INSTALL_LIBS}")
+    if (BUILD_SHARED_LIBS)
+        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${SHARED_LIBS_INSTALL_DESTINATION}")
+    endif(BUILD_SHARED_LIBS)
+
+elseif(OS_IS_MAC)
     set(EXECUTABLE_NAME audacity MACOSX_BUNDLE)
     set(MACOSX_BUNDLE_ICON_FILE AppIcon.icns)
     set(MACOSX_BUNDLE_GUI_IDENTIFIER org.musescore.${MUSESCORE_NAME})
@@ -99,13 +129,9 @@ target_include_directories(audacity PUBLIC
 # Setting target properties
 ###########################################
 
-
-# If MSCORE_OUTPUT_NAME is set (e.g, when cmake is called by the user), the output executable will be
-# called MSCORE_OUTPUT_NAME instead of 'mscore'. This can be used to have MuseScore stable and unstable
-# both installed in the same prefix on a Linux system.
-if (MSCORE_OUTPUT_NAME)
-  set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${MSCORE_OUTPUT_NAME})
-endif (MSCORE_OUTPUT_NAME)
+if (APP_OUTPUT_NAME)
+  set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${APP_OUTPUT_NAME})
+endif (APP_OUTPUT_NAME)
 
 if (OS_IS_MAC)
     set_target_properties(audacity PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/../cmake-proxies/cmake-modules/MacOSXBundleInfo.plist.in
@@ -244,7 +270,13 @@ if (OS_IS_WIN)
 ###########################################
 elseif(OS_IS_LIN)
 
-    install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin )
+    install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
+
+    message("~~~~~~~ install DIRECTORY: ${_LIB_OUTPUT} DESTINATION ${_LIB_INSTALL}")
+    install( DIRECTORY "${_LIB_OUTPUT}"
+             DESTINATION "${_LIB_INSTALL}"
+             USE_SOURCE_PERMISSIONS
+             FILES_MATCHING PATTERN "*.so*" )
 
 elseif(OS_IS_FBSD)
 ###########################################
