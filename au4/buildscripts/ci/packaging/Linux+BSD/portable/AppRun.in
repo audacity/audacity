@@ -28,6 +28,6 @@ case "$1" in
     "${APPDIR}/bin/portable-utils" "$@"
     ;;
   * )
-    "${APPDIR}/bin/mscore@MUSESCORE_INSTALL_SUFFIX@" "$@"
+    "${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" "$@"
     ;;
 esac
