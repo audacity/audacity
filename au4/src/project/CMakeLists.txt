@@ -57,6 +57,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecentfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectautosaver.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/projectmeta.h
@@ -67,6 +68,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.cpp
