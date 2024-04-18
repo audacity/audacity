@@ -62,8 +62,8 @@ public:
 
     Q_INVOKABLE void createNewProject();
     Q_INVOKABLE void openOther();
-    Q_INVOKABLE void openScore(const QString& scorePath, const QString& displayNameOverride);
-    Q_INVOKABLE void openScoreManager();
+    Q_INVOKABLE void openProject(const QString& scorePath, const QString& displayNameOverride);
+    Q_INVOKABLE void openProjectManager();
 
 signals:
     void tabIndexChanged();

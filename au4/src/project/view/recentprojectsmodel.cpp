@@ -39,9 +39,9 @@ void RecentProjectsModel::load()
 {
     updateRecentProjects();
 
-    // recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
-    //     updateRecentProjects();
-    // });
+    recentFilesController()->recentFilesListChanged().onNotify(this, [this]() {
+        updateRecentProjects();
+    });
 }
 
 void RecentProjectsModel::setRecentProjects(const std::vector<QVariantMap>& items)
@@ -57,10 +57,10 @@ void RecentProjectsModel::setRecentProjects(const std::vector<QVariantMap>& item
 
 void RecentProjectsModel::updateRecentProjects()
 {
-    // const RecentFilesList& recentProjects = recentFilesController()->recentFilesList();
+    const RecentFilesList& recentProjects = recentFilesController()->recentFilesList();
 
     std::vector<QVariantMap> items;
-    // items.reserve(recentProjects.size());
+    items.reserve(recentProjects.size());
 
     QVariantMap addItem;
     addItem[NAME_KEY] = muse::qtrc("project", "New project");
@@ -69,27 +69,26 @@ void RecentProjectsModel::updateRecentProjects()
     addItem[IS_CLOUD_KEY] = false;
     items.push_back(addItem);
 
-    // for (const RecentFile& file : recentProjects) {
-    //     QVariantMap obj;
+    for (const RecentFile& file : recentProjects) {
+        QVariantMap obj;
 
-    //     std::string suffix = io::suffix(file.path);
-    //     bool isSuffixInteresting = suffix != engraving::MSCZ;
+        std::string suffix = io::suffix(file.path);
 
-    //     RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
-    //     QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
+        RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
+        QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
-    //     obj[NAME_KEY] = file.displayName(isSuffixInteresting);
-    //     obj[PATH_KEY] = file.path.toQString();
-    //     obj[SUFFIX_KEY] = QString::fromStdString(suffix);
-    //     obj[FILE_SIZE_KEY] = fileSizeString;
-    //     obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
-    //     obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
-    //     obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
-    //     obj[IS_CREATE_NEW_KEY] = false;
-    //     obj[IS_NO_RESULTS_FOUND_KEY] = false;
+        obj[NAME_KEY] = file.displayName(false);
+        obj[PATH_KEY] = file.path.toQString();
+        obj[SUFFIX_KEY] = QString::fromStdString(suffix);
+        obj[FILE_SIZE_KEY] = fileSizeString;
+        // obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
+        // obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
+        obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
+        obj[IS_CREATE_NEW_KEY] = false;
+        obj[IS_NO_RESULTS_FOUND_KEY] = false;
 
-    //     items.push_back(obj);
-    // }
+        items.push_back(obj);
+    }
 
     QVariantMap noResultsFoundItem;
     noResultsFoundItem[NAME_KEY] = "";

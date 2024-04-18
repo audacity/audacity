@@ -4,6 +4,7 @@
 #include "global/translation.h"
 
 #include "audacityproject.h"
+#include "projecterrors.h"
 
 #include "log.h"
 
@@ -13,10 +14,40 @@ using namespace au::project;
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
+static const QString AUDACITY_URL_SCHEME("AUDACITY");
+static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
+
 void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::openProject);
+
+    dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
+}
+
+Ret ProjectActionsController::openProject(const ProjectFile& file)
+{
+    LOGI() << "Try open project: url = " << file.url.toString() << ", displayNameOverride = " << file.displayNameOverride;
+
+    if (file.isNull()) {
+        muse::io::path_t askedPath = selectOpeningFile();
+
+        if (askedPath.empty()) {
+            return make_ret(Ret::Code::Cancel);
+        }
+
+        return openProject(askedPath);
+    }
+
+    if (file.url.isLocalFile()) {
+        return openProject(file.path(), file.displayNameOverride);
+    }
+
+    // if (file.url.scheme() == AUDACITY_URL_SCHEME) {
+    //     return openMuseScoreUrl(file.url);
+    // }
+
+    return make_ret(Err::UnsupportedUrl);
 }
 
 void ProjectActionsController::newProject()
@@ -69,9 +100,50 @@ void ProjectActionsController::newProject()
 void ProjectActionsController::openProject(const muse::actions::ActionData& args)
 {
     UNUSED(args);
-    muse::io::path_t askedPath = selectOpeningFile();
+    QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
+    QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
 
-    openProject(askedPath);
+    openProject(ProjectFile(url, displayNameOverride));
+}
+
+bool ProjectActionsController::isUrlSupported(const QUrl& url) const
+{
+    //! TODO AU4
+    return false;
+}
+
+bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) const
+{
+    //! TODO AU4
+    return false;
+}
+
+bool ProjectActionsController::closeOpenedProject(bool quitApp)
+{
+    //! TODO AU4
+    return false;
+}
+
+bool ProjectActionsController::saveProject(const muse::io::path_t& path)
+{
+    //! TODO AU4
+    return false;
+}
+
+bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& path, SaveMode saveMode)
+{
+    //! TODO AU4
+    return false;
+}
+
+const ProjectBeingDownloaded& ProjectActionsController::projectBeingDownloaded() const
+{
+    return m_projectBeingDownloaded;
+}
+
+async::Notification ProjectActionsController::projectBeingDownloadedChanged() const
+{
+    return m_projectBeingDownloadedChanged;
 }
 
 muse::io::path_t ProjectActionsController::selectOpeningFile()
@@ -139,7 +211,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
         return make_ret(Ret::Code::UnknownError);
     }
 
-    //! Step 2. If the project is already open in the current window, then just switch to showing the notation
+    //! Step 2. If the project is already open in the current window, then just switch to showing the project
     if (isProjectOpened(actualPath)) {
         return openPageIfNeed(PROJECT_PAGE_URI);
     }
@@ -193,14 +265,26 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     //! TODO AU4
     // bool isNewlyCreated = projectAutoSaver()->isAutosaveOfNewlyCreatedProject(filePath);
-    // if (!isNewlyCreated) {
-    //     recentFilesController()->prependRecentFile(makeRecentFile(project));
-    // }
+    bool isNewlyCreated = false;
+    if (!isNewlyCreated) {
+        recentFilesController()->prependRecentFile(makeRecentFile(project));
+    }
 
     globalContext()->setCurrentProject(project);
 
     return openPageIfNeed(PROJECT_PAGE_URI);
 }
+
+//! TODO AU4
+// Ret ProjectActionsController::openAudacityUrl(const QUrl& url)
+// {
+//
+//     if (url.host() == OPEN_PROJECT_URL_HOSTNAME) {
+//         return openScoreFromMuseScoreCom(url);
+//     }
+
+//     return make_ret(Err::UnsupportedUrl);
+// }
 
 RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path_t& filePath)
 {
@@ -267,6 +351,24 @@ bool ProjectActionsController::isProjectOpened(const muse::io::path_t& projectPa
     }
 
     return false;
+}
+
+RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
+{
+    RecentFile file;
+    file.path = project->path();
+
+    //! TODO AU4
+    // if (project->isCloudProject()) {
+    //     file.displayNameOverride = project->cloudInfo().name;
+    // }
+
+    return file;
+}
+
+void ProjectActionsController::clearRecentProjects()
+{
+    recentFilesController()->clearRecentFiles();
 }
 
 muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)

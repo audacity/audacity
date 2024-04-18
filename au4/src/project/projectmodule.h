@@ -29,6 +29,7 @@
 namespace au::project {
 class ProjectConfiguration;
 class ProjectActionsController;
+class RecentFilesController;
 class ProjectModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -44,6 +45,7 @@ public:
 private:
     std::shared_ptr<ProjectConfiguration> m_configuration;
     std::shared_ptr<ProjectActionsController> m_actionsController;
+    std::shared_ptr<RecentFilesController> m_recentFilesController;
 };
 }
 

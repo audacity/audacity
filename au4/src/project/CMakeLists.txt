@@ -25,15 +25,38 @@ set(MODULE_QRC project.qrc)
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
+include(GetPlatformInfo)
+
+if (OS_IS_MAC)
+    set(PLATFORM_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/macos/macosrecentfilescontroller.mm
+        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/macos/macosrecentfilescontroller.h
+        )
+    # Don't mix C++ and Objective-C++ in Unity Build
+    set_source_files_properties(
+        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/macos/macosrecentfilescontroller.mm
+        PROPERTIES
+        SKIP_UNITY_BUILD_INCLUSION ON
+        SKIP_PRECOMPILE_HEADERS ON
+        )
+elseif(OS_IS_WIN)
+    set(PLATFORM_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/windows/windowsrecentfilescontroller.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/windows/windowsrecentfilescontroller.h
+    )
+endif()
+
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/projecterrors.h
     ${CMAKE_CURRENT_LIST_DIR}/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectcreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecentfilescontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/projectmeta.h
@@ -46,6 +69,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.h
+
+    ${PLATFORM_SRC}
 
     ${CMAKE_CURRENT_LIST_DIR}/view/projectspagemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectspagemodel.h
