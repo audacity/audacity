@@ -241,13 +241,15 @@ class IOExtension final : public ProjectFileIOExtension
          {
             auto project = weakProject.lock();
 
-            if (!project)
+            if (
+               !project ||
+               ProjectCloudExtension::Get(*project).IsFirstSyncDialogShown())
                return;
+
+            ProjectCloudExtension::Get(*project).SetFirstSyncDialogShown(true);
 
             const auto result =
                SyncSucceededDialog { project.get() }.ShowDialog();
-
-            ProjectCloudExtension::Get(*project).SetFirstSyncDialogShown(true);
 
             if (result == SyncSucceededDialog::ViewOnlineIdentifier())
                BasicUI::OpenInDefaultBrowser(audacity::ToWXString(
