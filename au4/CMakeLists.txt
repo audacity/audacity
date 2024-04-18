@@ -222,3 +222,6 @@ add_subdirectory(src)
 ###########################################
 # Setup Packaging
 ###########################################
+if (OS_IS_LIN)
+    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/ci/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
+endif(OS_IS_LIN)
