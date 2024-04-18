@@ -1,5 +1,6 @@
 
 # Just for local tests
+set(BUILD_TOOLS "$ENV{HOME}/build_tools")
 set(CI_DIR ${CMAKE_CURRENT_LIST_DIR})
 
 # Options
@@ -21,6 +22,20 @@ execute_process(
 
 message(STATUS "~~Build~~")
 
+set(BUILD_ARGS
+
+)
+
 execute_process(
-    COMMAND cmake -P ${CI_DIR}/build.cmake
+    COMMAND cmake ${BUILD_ARGS} -P ${CI_DIR}/build.cmake
+)
+
+message(STATUS "~~Package~~")
+
+set(PACK_ARGS
+    -DBUILD_VERSION=4.0.0.1234
+)
+
+execute_process(
+    COMMAND cmake ${PACK_ARGS} -P ${CI_DIR}/package.cmake
 )

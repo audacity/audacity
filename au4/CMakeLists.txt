@@ -84,6 +84,11 @@ cmd_option(${_OPT}use_rapidjson "" "local")
 cmd_option(${_OPT}use_midi "" "local")
 cmd_option(${_OPT}conan_allow_prebuilt_binaries "" On)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+set(_LIB_OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
+set(_LIB_INSTALL "lib")
+set(_LIB_OUTPUT "${_LIB_OUTPUT}/lib/audacity")
+
 find_package(Python3)
 if( Python3_FOUND )
    set(PYTHON "${Python3_EXECUTABLE}")
@@ -223,5 +228,5 @@ add_subdirectory(src)
 # Setup Packaging
 ###########################################
 if (OS_IS_LIN)
-    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/ci/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
+    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
 endif(OS_IS_LIN)

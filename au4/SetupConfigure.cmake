@@ -74,7 +74,7 @@ elseif (OS_IS_WIN)
     SET(AU4_INSTALL_NAME  "")
     SET(AU4_SHARE_NAME    "./")
 else()
-    SET(AU4_INSTALL_NAME  "audacity${AU4_INSTALL_SUFFIX}-${AU4_VERSION_MAJ_MIN}/")
+    SET(AU4_INSTALL_NAME  "audacity${MUSE_APP_INSTALL_SUFFIX}-${AU4_VERSION_MAJ_MIN}/")
     SET(AU4_SHARE_NAME    "share/")
 endif()
 
