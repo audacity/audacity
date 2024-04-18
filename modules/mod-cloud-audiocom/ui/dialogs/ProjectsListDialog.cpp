@@ -685,7 +685,16 @@ void ProjectsListDialog::SetupHandlers()
       [this](auto& evt)
       {
          const auto keyCode = evt.GetKeyCode();
-
+         // prevent being able to up arrow past the first row (issue #6251)
+         if (keyCode == WXK_UP && mProjectsTable->GetGridCursorRow() == 0) {
+               return;
+         }
+         // prevent being able to down arrow past the last row (issue #6251)
+         if (keyCode == WXK_DOWN &&
+            mProjectsTable->GetGridCursorRow() ==
+            mProjectsTable->GetNumberRows() - 1) {
+               return;
+         }
          if (keyCode != WXK_RETURN && keyCode != WXK_NUMPAD_ENTER)
          {
             evt.Skip();
