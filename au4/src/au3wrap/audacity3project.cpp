@@ -81,9 +81,9 @@ std::string Audacity3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
-muse::async::NotifyList<const au::processing::Track> Audacity3Project::trackList() const
+muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() const
 {
-    muse::async::NotifyList<const au::processing::Track> au4tracks;
+    muse::async::NotifyList<au::processing::Track> au4tracks;
     au4tracks.setNotify(m_trackChangedNotifier.notify());
 
     TrackList& tracks = TrackList::Get(m_data->projectRef());

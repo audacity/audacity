@@ -56,7 +56,7 @@ void TracksListModel::load()
         return;
     }
 
-    muse::async::NotifyList<const Track> tracks = prj->trackList();
+    muse::async::NotifyList<Track> tracks = prj->trackList();
 
     for (const Track& track : tracks) {
         m_trackList.push_back(buildTrackItem(track));
