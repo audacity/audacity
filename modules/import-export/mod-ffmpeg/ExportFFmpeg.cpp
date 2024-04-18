@@ -21,6 +21,7 @@ function.
 
 #include "../FFmpeg.h"
 #include "FFmpegFunctions.h"
+#include "FifoBuffer.h"
 
 #include <wx/app.h>
 #include <wx/log.h>
@@ -652,7 +653,7 @@ private:
    bool              mSupportsUTF8{true};
 
    // Smart pointer fields, their order is the reverse in which they are reset in FreeResources():
-   std::unique_ptr<AVFifoBufferWrapper> mEncAudioFifo; // FIFO to write incoming audio samples into
+   std::unique_ptr<FifoBuffer> mEncAudioFifo; // FIFO to write incoming audio samples into
    AVDataBuffer<int16_t> mEncAudioFifoOutBuf; // buffer to read _out_ of the FIFO into
    std::unique_ptr<AVFormatContextWrapper> mEncFormatCtx; // libavformat's context for our output file
    std::unique_ptr<AVCodecContextWrapper> mEncAudioCodecCtx;    // the encoder for the output audio stream
@@ -1289,7 +1290,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
    // The encoder may require a minimum number of raw audio samples for each encoding but we can't
    // guarantee we'll get this minimum each time an audio frame is decoded from the input file so
    // we use a FIFO to store up incoming raw samples until we have enough for one call to the codec.
-   mEncAudioFifo = mFFmpeg->CreateFifoBuffer(mDefaultFrameSize);
+   mEncAudioFifo = std::make_unique<FifoBuffer>(mDefaultFrameSize * mChannels * sizeof(int16_t));
 
    mEncAudioFifoOutBufSize = 2*MaxAudioPacketSize;
    // Allocate a buffer to read OUT of the FIFO into. The FIFO maintains its own buffer internally.
@@ -1471,8 +1472,8 @@ bool FFmpegExporter::Finalize()
    {
       std::unique_ptr<AVPacketWrapper> pkt = mFFmpeg->CreateAVPacketWrapper();
 
-      const int nFifoBytes = mFFmpeg->av_fifo_size(
-         mEncAudioFifo->GetWrappedValue()); // any bytes left in audio FIFO?
+      const auto nFifoBytes =
+         mEncAudioFifo->GetAvailable(); // any bytes left in audio FIFO?
 
       int encodeResult = 0;
 
@@ -1500,7 +1501,7 @@ bool FFmpegExporter::Finalize()
                          (mEncAudioCodecCtx->GetChannels() * sizeof(int16_t));
          }
 
-         wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %d bytes, writing %d sample frame ..."),
+         wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %lld bytes, writing %d sample frame ..."),
             nFifoBytes, frame_size);
 
          // Fill audio buffer with zeroes. If codec tries to read the whole buffer,
@@ -1509,7 +1510,7 @@ bool FFmpegExporter::Finalize()
          //const AVCodec *codec = mEncAudioCodecCtx->codec;
 
          // Pull the bytes out from the FIFO and feed them to the encoder.
-         if (mFFmpeg->av_fifo_generic_read(mEncAudioFifo->GetWrappedValue(), mEncAudioFifoOutBuf.data(), nFifoBytes, nullptr) == 0)
+         if (mEncAudioFifo->Read(mEncAudioFifoOutBuf.data(), nFifoBytes) == nFifoBytes)
          {
             encodeResult = EncodeAudio(*pkt, mEncAudioFifoOutBuf.data(), frame_size);
          }
@@ -1556,13 +1557,9 @@ bool FFmpegExporter::EncodeAudioFrame(int16_t *pFrame, size_t numSamples)
 
    nBytesToWrite = frameSize;
    pRawSamples  = (uint8_t*)pFrame;
-   if (mFFmpeg->av_fifo_realloc2(mEncAudioFifo->GetWrappedValue(), mFFmpeg->av_fifo_size(mEncAudioFifo->GetWrappedValue()) + frameSize) < 0) {
-      throw ExportErrorException("FFmpeg:905");
-   }
 
    // Put the raw audio samples into the FIFO.
-   ret = mFFmpeg->av_fifo_generic_write(
-      mEncAudioFifo->GetWrappedValue(), pRawSamples, nBytesToWrite, nullptr);
+   ret = mEncAudioFifo->Write(pRawSamples, nBytesToWrite);
 
    if (ret != nBytesToWrite) {
       throw ExportErrorException("FFmpeg:913");
@@ -1573,11 +1570,10 @@ bool FFmpegExporter::EncodeAudioFrame(int16_t *pFrame, size_t numSamples)
    }
 
    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
-   while (mFFmpeg->av_fifo_size(mEncAudioFifo->GetWrappedValue()) >= nAudioFrameSizeOut)
+   while (mEncAudioFifo->GetAvailable() >= nAudioFrameSizeOut)
    {
-      ret = mFFmpeg->av_fifo_generic_read(
-         mEncAudioFifo->GetWrappedValue(), mEncAudioFifoOutBuf.data(),
-         nAudioFrameSizeOut, nullptr);
+      mEncAudioFifo->Read(
+         mEncAudioFifoOutBuf.data(), nAudioFrameSizeOut);
 
       std::unique_ptr<AVPacketWrapper> pkt = mFFmpeg->CreateAVPacketWrapper();
 

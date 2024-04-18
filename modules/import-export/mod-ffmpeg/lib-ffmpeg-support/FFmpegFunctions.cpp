@@ -457,12 +457,6 @@ const std::vector<const AVCodecWrapper*>& FFmpegFunctions::GetCodecs() const
    return mCodecPointers;
 }
 
-std::unique_ptr<AVFifoBufferWrapper>
-FFmpegFunctions::CreateFifoBuffer(int size) const
-{
-   return std::make_unique<AVFifoBufferWrapper>(*this, size);
-}
-
 void FFmpegFunctions::FillCodecsList()
 {
    mCodecs.clear();

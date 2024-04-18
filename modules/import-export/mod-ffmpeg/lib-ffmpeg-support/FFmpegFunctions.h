@@ -119,8 +119,6 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions :
    const std::vector<const AVOutputFormatWrapper*>& GetOutputFormats() const;
    const std::vector<const AVCodecWrapper*>& GetCodecs() const;
 
-   std::unique_ptr<AVFifoBufferWrapper> CreateFifoBuffer(int size) const;
-
    template<typename T>
    AVDataBuffer<T> CreateMemoryBuffer(int preallocatedSize) const
    {

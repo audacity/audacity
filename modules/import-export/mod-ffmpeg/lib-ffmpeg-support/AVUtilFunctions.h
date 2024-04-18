@@ -30,12 +30,7 @@ struct FFMPEG_SUPPORT_API AVUtilFunctions
    int                (*av_get_bytes_per_sample) (AVSampleFormatFwd sample_fmt) = nullptr;
    void               (*av_log_set_callback) (void (*cb)(void*, int, const char*, va_list)) = nullptr;
    void               (*av_log_default_callback) (void* ptr, int level, const char* fmt, va_list vl) = nullptr;
-   AVFifoBuffer*      (*av_fifo_alloc) (unsigned int size) = nullptr;
-   int                (*av_fifo_generic_read) (AVFifoBuffer *f, void *buf, int buf_size, void (*func)(void*, void*, int)) = nullptr;
-   int                (*av_fifo_realloc2) (AVFifoBuffer *f, unsigned int size) = nullptr;
-   void               (*av_fifo_free) (AVFifoBuffer *f) = nullptr;
-   int                (*av_fifo_size) (const AVFifoBuffer *f) = nullptr;
-   int                (*av_fifo_generic_write) (AVFifoBuffer *f, void *src, int size, int (*func)(void*, void*, int)) = nullptr;
+
    int64_t            (*av_rescale_q) (int64_t a, AudacityAVRational bq, AudacityAVRational cq) = nullptr;
    AVFrame*           (*av_frame_alloc) (void) = nullptr;
    void               (*av_frame_free) (AVFrame **frame) = nullptr;

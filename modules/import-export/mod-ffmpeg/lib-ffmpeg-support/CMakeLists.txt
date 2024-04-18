@@ -11,14 +11,16 @@ if (${_OPT}use_ffmpeg)
       AVFormatFunctions.h
       AVUtilFunctions.h
 
+      FifoBuffer.cpp
+      FifoBuffer.h
+
+      wrappers/AVChannelLayoutWrapper.h
       wrappers/AVCodecContextWrapper.cpp
       wrappers/AVCodecContextWrapper.h
       wrappers/AVCodecWrapper.cpp
       wrappers/AVCodecWrapper.h
       wrappers/AVDictionaryWrapper.cpp
       wrappers/AVDictionaryWrapper.h
-      wrappers/AVFifoBufferWrapper.cpp
-      wrappers/AVFifoBufferWrapper.h
       wrappers/AVFormatContextWrapper.cpp
       wrappers/AVFormatContextWrapper.h
       wrappers/AVFrameWrapper.cpp
