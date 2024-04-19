@@ -25,6 +25,7 @@
 #include "iaudacityproject.h"
 
 #include "modularity/imoduleinterface.h"
+#include "iaudacityproject.h"
 
 namespace au::project {
 class IProjectCreator : MODULE_EXPORT_INTERFACE

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -21,13 +21,13 @@
  */
 #include "projectautosaver.h"
 
-#include "engraving/infrastructure/mscio.h"
+// #include "engraving/infrastructure/mscio.h"
 
 #include "defer.h"
 #include "log.h"
 
 using namespace muse;
-using namespace mu::project;
+using namespace au::project;
 
 void ProjectAutoSaver::init()
 {
@@ -60,11 +60,13 @@ void ProjectAutoSaver::init()
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         if (auto project = currentProject()) {
             if (project->isNewlyCreated() && !project->isImported()) {
-                Ret ret = project->save(configuration()->newProjectTemporaryPath(), SaveMode::AutoSave);
-                if (!ret) {
-                    LOGE() << "[autosave] failed to save project, err: " << ret.toString();
-                    return;
-                }
+                //! TODO AU4
+                // Ret ret = project->save(configuration()->newProjectTemporaryPath(), SaveMode::AutoSave);
+                // if (!ret) {
+                //     LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+                //     return;
+                // }
+                return;
             }
 
             project->pathChanged().onNotify(this, [this]() {
@@ -103,21 +105,21 @@ bool ProjectAutoSaver::isAutosaveOfNewlyCreatedProject(const muse::io::path_t& p
 
 muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& projectAutoSavePath) const
 {
-    IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
-        return engraving::mainFilePath(projectAutoSavePath);
-    }
+//     IF_ASSERT_FAILED(io::suffix(projectAutoSavePath) == AUTOSAVE_SUFFIX) {
+//         return engraving::mainFilePath(projectAutoSavePath);
+//     }
 
-    muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
+//     muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
 
-    return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
+//     return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
 }
 
 muse::io::path_t ProjectAutoSaver::projectAutoSavePath(const muse::io::path_t& projectPath) const
 {
-    return engraving::containerPath(projectPath).appendingSuffix(AUTOSAVE_SUFFIX);
+    // return engraving::containerPath(projectPath).appendingSuffix(AUTOSAVE_SUFFIX);
 }
 
-INotationProjectPtr ProjectAutoSaver::currentProject() const
+IAudacityProjectPtr ProjectAutoSaver::currentProject() const
 {
     return globalContext()->currentProject();
 }
@@ -151,7 +153,7 @@ void ProjectAutoSaver::onTrySave()
         }
     };
 
-    INotationProjectPtr project = globalContext()->currentProject();
+    IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         LOGD() << "[autosave] no project";
         return;
@@ -170,18 +172,20 @@ void ProjectAutoSaver::onTrySave()
     muse::io::path_t projectPath = this->projectPath(project);
     muse::io::path_t savePath = project->isNewlyCreated() ? projectPath : projectAutoSavePath(projectPath);
 
-    Ret ret = project->save(savePath, SaveMode::AutoSave);
-    if (!ret) {
-        LOGE() << "[autosave] failed to save project, err: " << ret.toString();
-        return;
-    }
+    //! TODO AU4
+    // Ret ret = project->save(savePath, SaveMode::AutoSave);
+    // if (!ret) {
+    //     LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+    //     return;
+    // }
+    return;
 
     project->setNeedAutoSave(false);
 
     LOGD() << "[autosave] successfully saved project";
 }
 
-muse::io::path_t ProjectAutoSaver::projectPath(INotationProjectPtr project) const
+muse::io::path_t ProjectAutoSaver::projectPath(IAudacityProjectPtr project) const
 {
     return project->isNewlyCreated() ? configuration()->newProjectTemporaryPath() : project->path();
 }

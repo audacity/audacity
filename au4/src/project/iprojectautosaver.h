@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,14 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_IPROJECTAUTOSAVER_H
-#define MU_PROJECT_IPROJECTAUTOSAVER_H
+#ifndef AU_PROJECT_IPROJECTAUTOSAVER_H
+#define AU_PROJECT_IPROJECTAUTOSAVER_H
 
 #include "io/path.h"
 
 #include "modularity/imoduleinterface.h"
 
-namespace mu::project {
+namespace au::project {
 class IProjectAutoSaver : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IProjectAutoSaver)
@@ -46,4 +46,4 @@ public:
 };
 }
 
-#endif // MU_PROJECT_IPROJECTAUTOSAVER_H
+#endif // AU_PROJECT_IPROJECTAUTOSAVER_H

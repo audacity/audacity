@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
+ * Audacity
  * Music Composition & Notation
  *
- * Copyright (C) 2021 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -19,8 +19,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_PROJECTAUTOSAVER_H
-#define MU_PROJECT_PROJECTAUTOSAVER_H
+#ifndef AU_PROJECT_PROJECTAUTOSAVER_H
+#define AU_PROJECT_PROJECTAUTOSAVER_H
 
 #include <QTimer>
 
@@ -33,10 +33,10 @@
 
 #include "../iprojectautosaver.h"
 
-namespace mu::project {
+namespace au::project {
 class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
 {
-    INJECT(context::IGlobalContext, globalContext)
+    INJECT(au::context::IGlobalContext, globalContext)
     INJECT(muse::io::IFileSystem, fileSystem)
     INJECT(IProjectConfiguration, configuration)
 
@@ -54,17 +54,17 @@ public:
     muse::io::path_t projectAutoSavePath(const muse::io::path_t& projectPath) const override;
 
 private:
-    INotationProjectPtr currentProject() const;
+    IAudacityProjectPtr currentProject() const;
 
     void update();
 
     void onTrySave();
 
-    muse::io::path_t projectPath(INotationProjectPtr project) const;
+    muse::io::path_t projectPath(IAudacityProjectPtr project) const;
 
     QTimer m_timer;
     muse::io::path_t m_lastProjectPathNeedingAutosave;
 };
 }
 
-#endif // MU_PROJECT_PROJECTAUTOSAVER_H
+#endif // AU_PROJECT_PROJECTAUTOSAVER_H

@@ -20,6 +20,7 @@ public:
     static std::shared_ptr<Audacity3Project> create();
 
     bool load(const muse::io::path_t& filePath);
+    bool save(const muse::io::path_t& fileName, const bool fromSaveAs);
     void close();
 
     std::string title() const;
