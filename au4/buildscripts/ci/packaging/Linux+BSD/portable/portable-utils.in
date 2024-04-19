@@ -18,7 +18,7 @@ function main() {
       removeResources "$2" "$3" || errorMsg "Unable to remove from '${prefix}'"
       ;;
     man|manual|manpage )
-      man "${APPDIR}/share/man/man1/mscore@MUSESCORE_INSTALL_SUFFIX@.1.gz"
+      man "${APPDIR}/share/man/man1/mscore@MUSE_APP_INSTALL_SUFFIX@.1.gz"
       ;;
     check-depends|check-dependencies )
       checkDependencies "$2"
@@ -48,13 +48,13 @@ Special options for MuseScore Portable AppImage:
   check-depends [exes-only]     Displays system information for developers.
 
 Ordinary MuseScore options:
-$("${APPDIR}/bin/mscore@MUSESCORE_INSTALL_SUFFIX@" --help | tail -n +5)
+$("${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" --help | tail -n +5)
 EOF
 }
 
 function printVersion() {
-  local pretty=$(sed -rn "s|^Name=([^#]*)|\1|p" "${APPDIR}/org.musescore.MuseScore@MUSESCORE_INSTALL_SUFFIX@.desktop")
-  local long=$("${APPDIR}/bin/mscore@MUSESCORE_INSTALL_SUFFIX@" --long-version 2>&1 | tail -n 1)
+  local pretty=$(sed -rn "s|^Name=([^#]*)|\1|p" "${APPDIR}/org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop")
+  local long=$("${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" --long-version 2>&1 | tail -n 1)
   if [ "$1" == "centered" ]; then
     printf "%*s\n" "$(((${#pretty}+80)/2))" "$pretty"
     printf "%*s\n" "$(((${#long}+80)/2))" "$long"
@@ -183,18 +183,18 @@ EOF
       echo "Please enter 'm', 'c', 'n', or 'h'. ('h' shows help)"
     done
   fi
-  sed -ri "s|^Exec=[^#%]*(.*)\$|Exec=${APPIMAGE} \1|" "share/applications/org.musescore.MuseScore@MUSESCORE_INSTALL_SUFFIX@.desktop"
+  sed -ri "s|^Exec=[^#%]*(.*)\$|Exec=${APPIMAGE} \1|" "share/applications/org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop"
   echo "Finished installing MuseScore to $prefix"
 cat <<EOF
 Step 3 of 3.
 Symlinks can be created to make it easier to launch MuseScore from
 the command line. (Symlinks are like shortcuts or aliases.)
 EOF
-  [ "$interactive" ] && printf "Create symlinks 'mscore@MUSESCORE_INSTALL_SUFFIX@' and 'musescore@MUSESCORE_INSTALL_SUFFIX@' [Y/n]?"
+  [ "$interactive" ] && printf "Create symlinks 'mscore@MUSE_APP_INSTALL_SUFFIX@' and 'musescore@MUSE_APP_INSTALL_SUFFIX@' [Y/n]?"
   if [ ! "$interactive" ] || readYes ; then
     cd bin
-    ln -sf "${name}" "mscore@MUSESCORE_INSTALL_SUFFIX@"
-    ln -sf "${name}" "musescore@MUSESCORE_INSTALL_SUFFIX@"
+    ln -sf "${name}" "mscore@MUSE_APP_INSTALL_SUFFIX@"
+    ln -sf "${name}" "musescore@MUSE_APP_INSTALL_SUFFIX@"
   fi
   if ! which "${name}" >/dev/null; then
 cat <<EOF
@@ -280,8 +280,8 @@ function removeResources() {
   readYes || return 0
   cd "$prefix" && <"${APPDIR}/install_manifest.txt" xargs rm || return 1
   actual_location="$(readlink -f "${APPIMAGE}")" # get before deleting symlinks
-  rm "bin/mscore@MUSESCORE_INSTALL_SUFFIX@"
-  rm "bin/musescore@MUSESCORE_INSTALL_SUFFIX@"
+  rm "bin/mscore@MUSE_APP_INSTALL_SUFFIX@"
+  rm "bin/musescore@MUSE_APP_INSTALL_SUFFIX@"
   <"${APPDIR}/install_manifest.txt" xargs "${APPDIR}/bin/rm-empty-dirs"
   updateCache "${prefix}"
   echo -ne "Resources removed from ${PWD}.\nRemove MuseScore itself (delete ${actual_location}) [Y/n]?"

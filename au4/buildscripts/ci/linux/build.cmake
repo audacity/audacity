@@ -40,7 +40,7 @@ endif()
 
 # Build 
 set(CONFIG
-    -DBUILD_TYPE=debug
+    -DBUILD_TYPE=appimage
     -DBUILD_MODE=${APP_BUILD_MODE}
     -DBUILD_NUMBER=${BUILD_NUMBER}
     -DINSTALL_SUFFIX=${APP_SUFFIX}

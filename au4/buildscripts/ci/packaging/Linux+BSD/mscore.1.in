@@ -7,8 +7,8 @@
 .Dt @MAN_MSCORE_UPPER@ 1
 .Os MuseScore
 .Sh NAME@Variables_substituted_by_CMAKE_on_installation@
-.Nm mscore@MUSESCORE_INSTALL_SUFFIX@ ,
-.Nm musescore@MUSESCORE_INSTALL_SUFFIX@
+.Nm mscore@MUSE_APP_INSTALL_SUFFIX@ ,
+.Nm musescore@MUSE_APP_INSTALL_SUFFIX@
 .Nd @MUSE_APP_NAME_VERSION@ sheet music editor
 .Sh SYNOPSIS
 .Nm
@@ -79,7 +79,7 @@ GNU General Public Licence (GPLv2).
 @MAN_PORTABLE@If MuseScore is installed, the manual can be viewed using
 @MAN_PORTABLE@the familiar command:
 @MAN_PORTABLE@.Pp
-@MAN_PORTABLE@.Dl man mscore@MUSESCORE_INSTALL_SUFFIX@
+@MAN_PORTABLE@.Dl man mscore@MUSE_APP_INSTALL_SUFFIX@
 @MAN_PORTABLE@.It Cm install Oo Fl i Oc Op Ar prefix
 @MAN_PORTABLE@Run this without the options to fully integrate MuseScore
 @MAN_PORTABLE@with the desktop environment (GNOME, KDE, etc).

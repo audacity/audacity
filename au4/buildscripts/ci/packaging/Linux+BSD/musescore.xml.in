@@ -7,7 +7,7 @@
         <comment>MuseScore File</comment>
         <glob pattern="*.mscz"/>
         <sub-class-of type="application/zip"/>
-        <icon name="application-x-musescore@MUSESCORE_INSTALL_SUFFIX@"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@"/>
     </mime-type>
 
     <mime-type type="application/x-musescore+xml">
@@ -15,7 +15,7 @@
         <glob pattern="*.mscx"/>
         <sub-class-of type="application/xml"/>
         <root-XML namespaceURI="" localName="museScore"/>
-        <icon name="application-x-musescore@MUSESCORE_INSTALL_SUFFIX@+xml"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
         <magic>
             <match type="string" value="&lt;?xml" offset="0">
                 <match type="string" value="&lt;museScore" offset="0:128">
@@ -30,7 +30,7 @@
         <glob pattern="*.mscsx"/>
         <sub-class-of type="application/xml"/>
         <root-XML namespaceURI="" localName="museScore"/>
-        <icon name="application-x-musescore@MUSESCORE_INSTALL_SUFFIX@+xml"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
         <magic>
             <match type="string" value="&lt;?xml" offset="0">
                 <match type="string" value="&lt;museScore" offset="0:128">
@@ -44,7 +44,7 @@
         <comment>MuseScore compressed backup score</comment>
         <glob pattern="*.mscz,"/>
         <sub-class-of type="application/zip"/>
-        <icon name="application-x-musescore@MUSESCORE_INSTALL_SUFFIX@"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@"/>
     </mime-type>
 
     <mime-type type="application/x-musescore+xml">
@@ -52,7 +52,7 @@
         <glob pattern="*.mscx,"/>
         <sub-class-of type="application/xml"/>
         <root-XML namespaceURI="" localName="museScore"/>
-        <icon name="application-x-musescore@MUSESCORE_INSTALL_SUFFIX@+xml"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
         <magic>
             <match type="string" value="&lt;?xml" offset="0">
                 <match type="string" value="&lt;museScore" offset="0:128">
@@ -111,7 +111,7 @@
         <comment>MusicXML compressed score</comment>
         <glob pattern="*.mxl"/>
         <sub-class-of type="application/zip"/>
-        <icon name="application-vnd.recordare.musicxml@MUSESCORE_INSTALL_SUFFIX@"/>
+        <icon name="application-vnd.recordare.musicxml@MUSE_APP_INSTALL_SUFFIX@"/>
     </mime-type>
 
     <mime-type type="application/vnd.recordare.musicxml+xml">
@@ -122,7 +122,7 @@
         <sub-class-of type="application/xml"/>
         <root-XML namespaceURI="" localName="score-partwise"/>
         <root-XML namespaceURI="" localName="score-timewise"/>
-        <icon name="application-vnd.recordare.musicxml@MUSESCORE_INSTALL_SUFFIX@+xml"/>
+        <icon name="application-vnd.recordare.musicxml@MUSE_APP_INSTALL_SUFFIX@+xml"/>
         <magic>
             <match type="string" value="&lt;?xml" offset="0">
                 <match type="string" value="score-partwise" offset="0:128"/>
