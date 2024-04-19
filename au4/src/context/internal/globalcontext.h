@@ -24,8 +24,8 @@
 
 #include "../iglobalcontext.h"
 
-namespace mu::context {
-class GlobalContext : public mu::context::IGlobalContext
+namespace au::context {
+class GlobalContext : public au::context::IGlobalContext
 {
 public:
 

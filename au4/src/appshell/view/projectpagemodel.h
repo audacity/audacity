@@ -23,7 +23,7 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     Q_OBJECT
 
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(mu::context::IGlobalContext, globalContext)
+    INJECT(au::context::IGlobalContext, globalContext)
     INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
     INJECT(IAppShellConfiguration, configuration)
 

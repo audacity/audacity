@@ -24,7 +24,7 @@
 #include "shortcutcontext.h"
 #include "log.h"
 
-using namespace mu::context;
+using namespace au::context;
 using namespace muse;
 using namespace muse::ui;
 

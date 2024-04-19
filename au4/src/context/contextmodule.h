@@ -26,7 +26,7 @@
 
 #include "modularity/imodulesetup.h"
 
-namespace mu::context {
+namespace au::context {
 class GlobalContext;
 class UiContextResolver;
 class ContextModule : public muse::modularity::IModuleSetup

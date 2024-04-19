@@ -33,19 +33,16 @@
 #include "multiinstances/imultiinstancesprovider.h"
 #include "isessionsmanager.h"
 
-//! TODO AU4
-//#include "project/iprojectconfiguration.h"
+#include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
 class SessionsManager : public ISessionsManager, public muse::async::Asyncable
 {
     INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(mu::context::IGlobalContext, globalContext)
+    INJECT(au::context::IGlobalContext, globalContext)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(muse::mi::IMultiInstancesProvider, multiInstancesProvider)
-
-//! TODO AU4
-//     INJECT(project::IProjectConfiguration, projectConfiguration)
+    INJECT(project::IProjectConfiguration, projectConfiguration)
 public:
     void init();
     void deinit();

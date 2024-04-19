@@ -21,7 +21,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    muse::Inject<mu::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
     Q_PROPERTY(bool isMovingUpAvailable READ isMovingUpAvailable NOTIFY isMovingUpAvailableChanged)
     Q_PROPERTY(bool isMovingDownAvailable READ isMovingDownAvailable NOTIFY isMovingDownAvailableChanged)

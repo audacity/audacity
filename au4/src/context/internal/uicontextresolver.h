@@ -33,8 +33,8 @@
 #include "playback/iplaybackcontroller.h"
 #endif
 
-namespace mu::context {
-class UiContextResolver : public IUiContextResolver, public muse::async::Asyncable
+namespace au::context {
+class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable
 {
     INJECT(muse::IInteractive, interactive)
     INJECT(IGlobalContext, globalContext)

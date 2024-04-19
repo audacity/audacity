@@ -21,7 +21,7 @@
  */
 #include "globalcontext.h"
 
-using namespace mu::context;
+using namespace au::context;
 using namespace au::project;
 
 void GlobalContext::setCurrentProject(const IAudacityProjectPtr& project)
