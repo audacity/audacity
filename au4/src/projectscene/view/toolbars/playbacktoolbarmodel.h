@@ -18,7 +18,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
-    muse::Inject<mu::context::IGlobalContext> context;
+    muse::Inject<au::context::IGlobalContext> context;
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 

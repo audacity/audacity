@@ -15,7 +15,7 @@ class ClipsModel : public QObject
     Q_OBJECT
     Q_PROPERTY(QList<TrackClipsItem*> tracks READ tracks WRITE setTracks NOTIFY tracksChanged FINAL)
 
-    mu::Inject<mu::context::IGlobalContext> globalContext;
+    mu::Inject<au::context::IGlobalContext> globalContext;
 
 public:
     ClipsModel() = default;
