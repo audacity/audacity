@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Compressor.cpp
+  OfflineCompressor.cpp
 
   Dominic Mazzoni
   Martyn Shaw
@@ -10,7 +10,7 @@
 
 *******************************************************************//**
 
-\class EffectCompressor
+\class EffectOfflineCompressor
 \brief An Effect derived from EffectTwoPassSimpleMono
 
  - Martyn Shaw made it inherit from EffectTwoPassSimpleMono 10/2005.
@@ -20,10 +20,10 @@
 *//****************************************************************//**
 
 \class CompressorPanel
-\brief Panel used within the EffectCompressor for EffectCompressor.
+\brief Panel used within the EffectOfflineCompressor for EffectOfflineCompressor.
 
 *//*******************************************************************/
-#include "Compressor.h"
+#include "OfflineCompressor.h"
 #include "EffectEditor.h"
 #include "LoadEffects.h"
 
@@ -57,9 +57,9 @@ enum
    ID_Decay
 };
 
-const EffectParameterMethods& EffectCompressor::Parameters() const
+const EffectParameterMethods& EffectOfflineCompressor::Parameters() const
 {
-   static CapturedParameters<EffectCompressor,
+   static CapturedParameters<EffectOfflineCompressor,
       Threshold, NoiseFloor, Ratio, // positive number > 1.0
       AttackTime, // seconds
       ReleaseTime, // seconds
@@ -69,19 +69,19 @@ const EffectParameterMethods& EffectCompressor::Parameters() const
 }
 
 //----------------------------------------------------------------------------
-// EffectCompressor
+// EffectOfflineCompressor
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol EffectCompressor::Symbol
+const ComponentInterfaceSymbol EffectOfflineCompressor::Symbol
 { XO("Compressor") };
 
-namespace{ BuiltinEffectsModule::Registration< EffectCompressor > reg; }
+namespace{ BuiltinEffectsModule::Registration< EffectOfflineCompressor > reg; }
 
-BEGIN_EVENT_TABLE(EffectCompressor, wxEvtHandler)
-   EVT_SLIDER(wxID_ANY, EffectCompressor::OnSlider)
+BEGIN_EVENT_TABLE(EffectOfflineCompressor, wxEvtHandler)
+   EVT_SLIDER(wxID_ANY, EffectOfflineCompressor::OnSlider)
 END_EVENT_TABLE()
 
-EffectCompressor::EffectCompressor()
+EffectOfflineCompressor::EffectOfflineCompressor()
 {
    Parameters().Reset(*this);
 
@@ -93,30 +93,30 @@ EffectCompressor::EffectCompressor()
    SetLinearEffectFlag(false);
 }
 
-EffectCompressor::~EffectCompressor()
+EffectOfflineCompressor::~EffectOfflineCompressor()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
+ComponentInterfaceSymbol EffectOfflineCompressor::GetSymbol() const
 {
    return Symbol;
 }
 
-TranslatableString EffectCompressor::GetDescription() const
+TranslatableString EffectOfflineCompressor::GetDescription() const
 {
    return XO("Compresses the dynamic range of audio");
 }
 
-ManualPageID EffectCompressor::ManualPage() const
+ManualPageID EffectOfflineCompressor::ManualPage() const
 {
    return L"Compressor";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectCompressor::GetType() const
+EffectType EffectOfflineCompressor::GetType() const
 {
    return EffectTypeProcess;
 }
@@ -157,7 +157,7 @@ TranslatableString RatioLabelFormat( int sliderValue, double value )
 
 }
 
-std::unique_ptr<EffectEditor> EffectCompressor::PopulateOrExchange(
+std::unique_ptr<EffectEditor> EffectOfflineCompressor::PopulateOrExchange(
    ShuttleGui & S, EffectInstance &, EffectSettingsAccess &,
    const EffectOutputs *)
 {
@@ -167,7 +167,7 @@ std::unique_ptr<EffectEditor> EffectCompressor::PopulateOrExchange(
    S.StartHorizontalLay(wxEXPAND, true);
    {
       S.SetBorder(10);
-      mPanel = safenew EffectCompressorPanel(S.GetParent(), wxID_ANY,
+      mPanel = safenew EffectOfflineCompressorPanel(S.GetParent(), wxID_ANY,
                                          mThresholdDB,
                                          mNoiseFloorDB,
                                          mRatio);
@@ -278,7 +278,7 @@ std::unique_ptr<EffectEditor> EffectCompressor::PopulateOrExchange(
    return nullptr;
 }
 
-bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
+bool EffectOfflineCompressor::TransferDataToWindow(const EffectSettings &)
 {
    mThresholdSlider->SetValue(lrint(mThresholdDB));
    mNoiseFloorSlider->SetValue(lrint(mNoiseFloorDB * NoiseFloor.scale));
@@ -293,7 +293,7 @@ bool EffectCompressor::TransferDataToWindow(const EffectSettings &)
    return true;
 }
 
-bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
+bool EffectOfflineCompressor::TransferDataFromWindow(EffectSettings &)
 {
    if (!mUIParent->Validate())
    {
@@ -302,7 +302,7 @@ bool EffectCompressor::TransferDataFromWindow(EffectSettings &)
    return DoTransferDataFromWindow();
 }
 
-bool EffectCompressor::DoTransferDataFromWindow()
+bool EffectOfflineCompressor::DoTransferDataFromWindow()
 {
    // To do:  eliminate this by using control validators instead
    mThresholdDB = (double) mThresholdSlider->GetValue();
@@ -318,7 +318,7 @@ bool EffectCompressor::DoTransferDataFromWindow()
 
 // EffectTwoPassSimpleMono implementation
 
-bool EffectCompressor::NewTrackPass1()
+bool EffectOfflineCompressor::NewTrackPass1()
 {
    mThreshold = DB_TO_LINEAR(mThresholdDB);
    mNoiseFloor = DB_TO_LINEAR(mNoiseFloorDB);
@@ -343,7 +343,7 @@ bool EffectCompressor::NewTrackPass1()
    return true;
 }
 
-bool EffectCompressor::InitPass1()
+bool EffectOfflineCompressor::InitPass1()
 {
    mMax=0.0;
    if (!mNormalize)
@@ -365,7 +365,7 @@ bool EffectCompressor::InitPass1()
    return true;
 }
 
-bool EffectCompressor::InitPass2()
+bool EffectOfflineCompressor::InitPass2()
 {
    // Actually, this should not even be called, because we call
    // DisableSecondPass() before, if mNormalize is false.
@@ -375,7 +375,7 @@ bool EffectCompressor::InitPass2()
 // Process the input with 2 buffers available at a time
 // buffer1 will be written upon return
 // buffer2 will be passed as buffer1 on the next call
-bool EffectCompressor::TwoBufferProcessPass1
+bool EffectOfflineCompressor::TwoBufferProcessPass1
    (float *buffer1, size_t len1, float *buffer2, size_t len2)
 {
    // If buffers are bigger than allocated, then abort
@@ -418,7 +418,7 @@ bool EffectCompressor::TwoBufferProcessPass1
    return true;
 }
 
-bool EffectCompressor::ProcessPass2(float *buffer, size_t len)
+bool EffectOfflineCompressor::ProcessPass2(float *buffer, size_t len)
 {
    if (mMax != 0)
    {
@@ -429,7 +429,7 @@ bool EffectCompressor::ProcessPass2(float *buffer, size_t len)
    return true;
 }
 
-void EffectCompressor::FreshenCircle()
+void EffectOfflineCompressor::FreshenCircle()
 {
    // Recompute the RMS sum periodically to prevent accumulation of rounding errors
    // during long waveforms
@@ -438,7 +438,7 @@ void EffectCompressor::FreshenCircle()
       mRMSSum += mCircle[i];
 }
 
-float EffectCompressor::AvgCircle(float value)
+float EffectOfflineCompressor::AvgCircle(float value)
 {
    float level;
 
@@ -453,7 +453,7 @@ float EffectCompressor::AvgCircle(float value)
    return level;
 }
 
-void EffectCompressor::Follow(float *buffer, float *env, size_t len, float *previous, size_t previous_len)
+void EffectOfflineCompressor::Follow(float *buffer, float *env, size_t len, float *previous, size_t previous_len)
 {
    /*
 
@@ -566,7 +566,7 @@ void EffectCompressor::Follow(float *buffer, float *env, size_t len, float *prev
    }
 }
 
-float EffectCompressor::DoCompression(float value, double env)
+float EffectOfflineCompressor::DoCompression(float value, double env)
 {
    float out;
    if(mUsePeak) {
@@ -584,13 +584,13 @@ float EffectCompressor::DoCompression(float value, double env)
    return out;
 }
 
-void EffectCompressor::OnSlider(wxCommandEvent & WXUNUSED(evt))
+void EffectOfflineCompressor::OnSlider(wxCommandEvent & WXUNUSED(evt))
 {
    DoTransferDataFromWindow();
    UpdateUI();
 }
 
-void EffectCompressor::UpdateUI()
+void EffectOfflineCompressor::UpdateUI()
 {
    mThresholdLabel->SetName(wxString::Format(_("Threshold %d dB"), (int) mThresholdDB));
    mThresholdText->SetLabel(ThresholdFormat((int) mThresholdDB).Translation());
@@ -620,15 +620,15 @@ void EffectCompressor::UpdateUI()
 }
 
 //----------------------------------------------------------------------------
-// EffectCompressorPanel
+// EffectOfflineCompressorPanel
 //----------------------------------------------------------------------------
 
-BEGIN_EVENT_TABLE(EffectCompressorPanel, wxPanelWrapper)
-   EVT_PAINT(EffectCompressorPanel::OnPaint)
-   EVT_SIZE(EffectCompressorPanel::OnSize)
+BEGIN_EVENT_TABLE(EffectOfflineCompressorPanel, wxPanelWrapper)
+   EVT_PAINT(EffectOfflineCompressorPanel::OnPaint)
+   EVT_SIZE(EffectOfflineCompressorPanel::OnSize)
 END_EVENT_TABLE()
 
-EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
+EffectOfflineCompressorPanel::EffectOfflineCompressorPanel(wxWindow *parent, wxWindowID winid,
                                              double & threshold,
                                              double & noiseFloor,
                                              double & ratio)
@@ -639,7 +639,7 @@ EffectCompressorPanel::EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
 {
 }
 
-void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
+void EffectOfflineCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
 {
    wxPaintDC dc(this);
 
@@ -731,7 +731,7 @@ void EffectCompressorPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    hRuler.Draw(dc);
 }
 
-void EffectCompressorPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
+void EffectOfflineCompressorPanel::OnSize(wxSizeEvent & WXUNUSED(evt))
 {
    Refresh(false);
 }

@@ -333,8 +333,6 @@ set( SOURCES
       effects/ChangeTempo.h
       effects/ClickRemoval.cpp
       effects/ClickRemoval.h
-      effects/Compressor.cpp
-      effects/Compressor.h
       effects/Contrast.cpp
       effects/Contrast.h
       effects/Distortion.cpp
@@ -392,12 +390,14 @@ set( SOURCES
       effects/NoiseReduction.h
       effects/Normalize.cpp
       effects/Normalize.h
+      effects/OfflineCompressor.cpp
+      effects/OfflineCompressor.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
       effects/Phaser.cpp
       effects/Phaser.h
-      effects/RealtimeEffectStateUI.h
       effects/RealtimeEffectStateUI.cpp
+      effects/RealtimeEffectStateUI.h
       effects/Repair.cpp
       effects/Repair.h
       effects/Repeat.cpp
