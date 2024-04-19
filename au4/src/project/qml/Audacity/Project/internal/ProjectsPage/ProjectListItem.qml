@@ -63,7 +63,7 @@ ListItemBlank {
             Loader {
                 id: thumbnailLoader
 
-                Layout.preferredWidth: 30
+                Layout.preferredWidth: 71
                 Layout.preferredHeight: 40
 
                 sourceComponent: ProjectThumbnail {

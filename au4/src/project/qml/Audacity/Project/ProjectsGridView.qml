@@ -109,11 +109,11 @@ Item {
         readonly property int columns: Math.max(0, Math.floor(width / cellWidth))
         readonly property int rows: Math.max(0, Math.ceil(height / cellHeight))
 
-        readonly property real spacingBetweenColumns: 60
+        readonly property real spacingBetweenColumns: 53
         readonly property real spacingBetweenRows: 40
 
-        readonly property real actualCellWidth: 172
-        readonly property real actualCellHeight: 294
+        readonly property real actualCellWidth: 224
+        readonly property real actualCellHeight: 196
 
         cellWidth: actualCellWidth + spacingBetweenColumns
         cellHeight: actualCellHeight + spacingBetweenRows

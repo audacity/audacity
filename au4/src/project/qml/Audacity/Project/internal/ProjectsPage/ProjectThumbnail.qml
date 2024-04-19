@@ -32,11 +32,11 @@ Item {
     property string suffix: ""
     property string thumbnailUrl: ""
 
-    // ProjectThumbnailLoader {
-    //     id: thumbnailLoader
+    ProjectThumbnailLoader {
+        id: thumbnailLoader
 
-    //     projectPath: root.path
-    // }
+        projectPath: root.path
+    }
 
     Image {
         id: image
@@ -58,14 +58,14 @@ Item {
             return genericThumbnailComp
         }
 
-        // Component {
-        //     id: projectThumbnailComp
+        Component {
+            id: projectThumbnailComp
 
-        //     PixmapProjectThumbnailView {
-        //         anchors.fill: parent
-        //         thumbnail: thumbnailLoader.thumbnail
-        //     }
-        // }
+            PixmapProjectThumbnailView {
+                anchors.fill: parent
+                thumbnail: thumbnailLoader.thumbnail
+            }
+        }
 
         Component {
             id: genericThumbnailComp
