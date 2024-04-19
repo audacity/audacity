@@ -7,6 +7,8 @@
 #include "global/async/channel.h"
 #include "async/notification.h"
 
+#include "iaudacityproject.h"
+
 namespace au::project {
 class IProjectConfiguration : MODULE_EXPORT_INTERFACE
 {
@@ -39,6 +41,14 @@ public:
 
     virtual HomeProjectsPageViewType homeProjectsPageViewType() const = 0;
     virtual void setHomeProjectsPageViewType(HomeProjectsPageViewType type) = 0;
+
+    virtual bool isAutoSaveEnabled() const = 0;
+    virtual void setAutoSaveEnabled(bool enabled) = 0;
+    virtual muse::async::Channel<bool> autoSaveEnabledChanged() const = 0;
+
+    virtual int autoSaveIntervalMinutes() const = 0;
+    virtual void setAutoSaveInterval(int minutes) = 0;
+    virtual muse::async::Channel<int> autoSaveIntervalChanged() const = 0;
 };
 }
 

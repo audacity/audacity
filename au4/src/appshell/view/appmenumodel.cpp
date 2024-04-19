@@ -141,10 +141,10 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeMenuItem("file-open"),
         //! TODO AU4
         // makeMenu(TranslatableString("appshell/menu/file", "Open &recent"), recentScoresList, "menu-file-open", openRecentEnabled),
-        // makeSeparator(),
+        makeSeparator(),
         // makeMenuItem("file-close"),
-        // makeMenuItem("file-save"),
-        // makeMenuItem("file-save-as"),
+        makeMenuItem("file-save"),
+        makeMenuItem("file-save-as"),
         // makeMenuItem("file-save-a-copy"),
         // makeMenuItem("file-save-selection"),
         // makeMenuItem("file-save-to-cloud"),

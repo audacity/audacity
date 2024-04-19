@@ -10,6 +10,8 @@ static const muse::Settings::Key COMPAT_RECENT_FILES_DATA(module_name, "project/
 static const muse::Settings::Key USER_PROJECTS_PATH(module_name, "project/paths/myprojects");
 static const muse::Settings::Key LAST_OPENED_PROJECTS_PATH(module_name, "project/paths/lastprojects");
 static const muse::Settings::Key HOME_PROJECTS_PAGE_VIEW_TYPE(module_name, "project/homeProjectsPageViewType");
+static const muse::Settings::Key AUTOSAVE_ENABLED_KEY(module_name, "project/autoSaveEnabled");
+static const muse::Settings::Key AUTOSAVE_INTERVAL_KEY(module_name, "project/autoSaveInterval");
 
 static const std::string DEFAULT_FILE_SUFFIX(".aup4");
 
@@ -17,6 +19,15 @@ void ProjectConfiguration::init()
 {
     muse::settings()->setDefaultValue(USER_PROJECTS_PATH, muse::Val(globalConfiguration()->userDataPath() + "/Projects"));
     muse::settings()->setDefaultValue(HOME_PROJECTS_PAGE_VIEW_TYPE, muse::Val(HomeProjectsPageViewType::Grid));
+    muse::settings()->setDefaultValue(AUTOSAVE_ENABLED_KEY, muse::Val(true));
+    muse::settings()->valueChanged(AUTOSAVE_ENABLED_KEY).onReceive(nullptr, [this](const muse::Val& val) {
+        m_autoSaveEnabledChanged.send(val.toBool());
+    });
+
+    muse::settings()->setDefaultValue(AUTOSAVE_INTERVAL_KEY, muse::Val(5));
+    muse::settings()->valueChanged(AUTOSAVE_INTERVAL_KEY).onReceive(nullptr, [this](const muse::Val& val) {
+        m_autoSaveIntervalChanged.send(val.toInt());
+    });
 }
 
 muse::io::path_t ProjectConfiguration::recentFilesJsonPath() const
@@ -85,4 +96,34 @@ IProjectConfiguration::HomeProjectsPageViewType ProjectConfiguration::homeProjec
 void ProjectConfiguration::setHomeProjectsPageViewType(HomeProjectsPageViewType type)
 {
     muse::settings()->setLocalValue(HOME_PROJECTS_PAGE_VIEW_TYPE, muse::Val(type));
+}
+
+bool ProjectConfiguration::isAutoSaveEnabled() const
+{
+    return muse::settings()->value(AUTOSAVE_ENABLED_KEY).toBool();
+}
+
+void ProjectConfiguration::setAutoSaveEnabled(bool enabled)
+{
+    muse::settings()->setSharedValue(AUTOSAVE_ENABLED_KEY, muse::Val(enabled));
+}
+
+muse::async::Channel<bool> ProjectConfiguration::autoSaveEnabledChanged() const
+{
+    return m_autoSaveEnabledChanged;
+}
+
+int ProjectConfiguration::autoSaveIntervalMinutes() const
+{
+    return muse::settings()->value(AUTOSAVE_INTERVAL_KEY).toInt();
+}
+
+void ProjectConfiguration::setAutoSaveInterval(int minutes)
+{
+    muse::settings()->setSharedValue(AUTOSAVE_INTERVAL_KEY, muse::Val(minutes));
+}
+
+muse::async::Channel<int> ProjectConfiguration::autoSaveIntervalChanged() const
+{
+    return m_autoSaveIntervalChanged;
 }
