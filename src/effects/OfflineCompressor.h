@@ -2,7 +2,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Compressor.h
+  OfflineCompressor.h
 
   Dominic Mazzoni
 
@@ -19,22 +19,22 @@
 class wxCheckBox;
 class wxSlider;
 class wxStaticText;
-class EffectCompressorPanel;
+class EffectOfflineCompressorPanel;
 class ShuttleGui;
 
 using Floats = ArrayOf<float>;
 using Doubles = ArrayOf<double>;
 
-class EffectCompressor final : public EffectTwoPassSimpleMono
+class EffectOfflineCompressor final : public EffectTwoPassSimpleMono
 {
 public:
-   static inline EffectCompressor *
-   FetchParameters(EffectCompressor &e, EffectSettings &) { return &e; }
+   static inline EffectOfflineCompressor *
+   FetchParameters(EffectOfflineCompressor &e, EffectSettings &) { return &e; }
 
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectCompressor();
-   virtual ~EffectCompressor();
+   EffectOfflineCompressor();
+   virtual ~EffectOfflineCompressor();
 
    // ComponentInterface implementation
 
@@ -66,7 +66,7 @@ protected:
       (float *buffer1, size_t len1, float *buffer2, size_t len2) override;
 
 private:
-   // EffectCompressor implementation
+   // EffectOfflineCompressor implementation
 
    void FreshenCircle();
    float AvgCircle(float x);
@@ -106,7 +106,7 @@ private:
 
    double    mMax;			//MJS
 
-   EffectCompressorPanel *mPanel;
+   EffectOfflineCompressorPanel *mPanel;
 
    wxStaticText *mThresholdLabel;
    wxSlider *mThresholdSlider;
@@ -134,26 +134,26 @@ private:
    const EffectParameterMethods& Parameters() const override;
    DECLARE_EVENT_TABLE()
 
-static constexpr EffectParameter Threshold{ &EffectCompressor::mThresholdDB,
+static constexpr EffectParameter Threshold{ &EffectOfflineCompressor::mThresholdDB,
    L"Threshold",     -12.0,   -60.0,   -1.0,    1   };
-static constexpr EffectParameter NoiseFloor{ &EffectCompressor::mNoiseFloorDB,
+static constexpr EffectParameter NoiseFloor{ &EffectOfflineCompressor::mNoiseFloorDB,
    L"NoiseFloor",    -40.0,   -80.0,   -20.0,   0.2   };
-static constexpr EffectParameter Ratio{ &EffectCompressor::mRatio,
+static constexpr EffectParameter Ratio{ &EffectOfflineCompressor::mRatio,
    L"Ratio",         2.0,     1.1,     10.0,    10  };
-static constexpr EffectParameter AttackTime{ &EffectCompressor::mAttackTime,
+static constexpr EffectParameter AttackTime{ &EffectOfflineCompressor::mAttackTime,
    L"AttackTime",    0.2,     0.1,     5.0,     100 };
-static constexpr EffectParameter ReleaseTime{ &EffectCompressor::mDecayTime,
+static constexpr EffectParameter ReleaseTime{ &EffectOfflineCompressor::mDecayTime,
    L"ReleaseTime",   1.0,     1.0,     30.0,    10  };
-static constexpr EffectParameter Normalize{ &EffectCompressor::mNormalize,
+static constexpr EffectParameter Normalize{ &EffectOfflineCompressor::mNormalize,
    L"Normalize",     true,    false,   true,    1   };
-static constexpr EffectParameter UsePeak{ &EffectCompressor::mUsePeak,
+static constexpr EffectParameter UsePeak{ &EffectOfflineCompressor::mUsePeak,
    L"UsePeak",       false,   false,   true,    1   };
 };
 
-class EffectCompressorPanel final : public wxPanelWrapper
+class EffectOfflineCompressorPanel final : public wxPanelWrapper
 {
 public:
-   EffectCompressorPanel(wxWindow *parent, wxWindowID winid,
+   EffectOfflineCompressorPanel(wxWindow *parent, wxWindowID winid,
                          double & threshold,
                          double & noiseFloor,
                          double & ratio);
