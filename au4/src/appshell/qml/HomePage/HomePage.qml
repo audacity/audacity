@@ -117,11 +117,8 @@ DockPage {
     Component {
         id: learnComp
 
-        // LearnPage {
-        //     section: root.subSection
-        // }
-        Text {
-            text: "LearnPage"
+        LearnPage {
+            section: root.subSection
         }
     }
 }

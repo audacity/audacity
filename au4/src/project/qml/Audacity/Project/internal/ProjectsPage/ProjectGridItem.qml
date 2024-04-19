@@ -79,8 +79,8 @@ FocusScope {
         spacing: 16
 
         Item {
-            height: 224
-            width: 172
+            height: 126
+            width: 224
 
             Item {
                 id: thumbnail
