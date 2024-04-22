@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-INSTALL_DIR="$1" # MuseScore was installed here
+INSTALL_DIR="$1" # App was installed here
 APPIMAGE_NAME="$2" # name for AppImage file (created outside $INSTALL_DIR)
 PACKARCH="$3" # architecture (x86_64, aarch64, armv7l)
 ENV="$4" # path to environment.sh

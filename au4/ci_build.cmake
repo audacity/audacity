@@ -123,6 +123,12 @@ if(BUILD_TYPE STREQUAL "DEBUG")
 
     do_build(Debug build.debug)
 
+elseif(BUILD_TYPE STREQUAL "RELEASE_INSTALL")
+
+    set(BUILD_DIR build.release)
+    do_build(Release ${BUILD_DIR})
+    do_install(${BUILD_DIR})
+
 elseif(BUILD_TYPE STREQUAL "APPIMAGE")
 
     set(INSTALL_SUFFIX "4portable${INSTALL_SUFFIX}") # e.g. "4portable" or "4portablenightly"
