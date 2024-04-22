@@ -19,7 +19,6 @@
 #include "Observer.h"
 
 class RealtimeEffectState;
-class Track;
 class EffectUIHost;
 class EffectInstance;
 
@@ -41,7 +40,9 @@ public:
    void Hide(AudacityProject* project = nullptr);
    void Toggle(AudacityProject& project);
 
-   void UpdateTrackData(const Track& track);
+   //! Sets the display name of the target, that will help
+   //! distinguish effect UI among others.
+   void SetTargetName(const wxString& name);
 
    static RealtimeEffectStateUI &Get(RealtimeEffectState &state);
    static const RealtimeEffectStateUI &Get(const RealtimeEffectState &state);
@@ -57,7 +58,7 @@ private:
    wxWeakRef<EffectUIHost> mEffectUIHost;
 
    TranslatableString mEffectName;
-   wxString mTrackName;
+   wxString mTargetName;
    AudacityProject *mpProject{};
 
    Observer::Subscription mProjectWindowDestroyedSubscription;

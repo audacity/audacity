@@ -22,7 +22,6 @@
 #include "UndoManager.h"
 #include "ProjectHistory.h"
 #include "ProjectWindow.h"
-#include "Track.h"
 
 namespace
 {
@@ -140,10 +139,9 @@ void RealtimeEffectStateUI::Toggle(AudacityProject& project)
       Show(project);
 }
 
-void RealtimeEffectStateUI::UpdateTrackData(const Track& track)
+void RealtimeEffectStateUI::SetTargetName(const wxString& targetName)
 {
-   mTrackName = track.GetName();
-
+   mTargetName = targetName;
    UpdateTitle();
 }
 
@@ -173,10 +171,10 @@ void RealtimeEffectStateUI::UpdateTitle()
    }
 
    const auto title =
-      mTrackName.empty() ?
+      mTargetName.empty() ?
          mEffectName :
          /* i18n-hint: First %s is an effect name, second is a track name */
-         XO("%s - %s").Format(mEffectName, mTrackName);
+         XO("%s - %s").Format(mEffectName, mTargetName);
 
    mEffectUIHost->SetTitle(title);
    mEffectUIHost->SetName(title);
