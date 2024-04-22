@@ -3415,20 +3415,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Förhandsvisningar kan endast uppdateras för molnprojekt"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Spara till Molnet..."
+msgid "Save &To Cloud..."
+msgstr "Spara &till Molnet..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Uppdatera Cloud Audio förhandsvisning"
+msgid "&Update Cloud Audio Preview"
+msgstr "&Uppdatera Cloud Audio förhandsvisning"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Öppna från Moln..."
+msgid "Open Fro&m Cloud..."
+msgstr "Öpp&na från Moln..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Dela ljud..."
+msgid "S&hare Audio..."
+msgstr "&Dela ljud..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -15211,8 +15211,8 @@ msgid "&Export Audio..."
 msgstr "Exportera &ljud..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Exportera annat"
+msgid "Expo&rt Other"
+msgstr "Expo&rtera annat"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."

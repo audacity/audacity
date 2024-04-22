@@ -72,7 +72,8 @@ SyncResultCode GuessResultCode(IResponse& response) noexcept
       code == NetworkError::HostNotFound ||
       code == NetworkError::ProxyConnectionFailed ||
       code == NetworkError::ProxyNotFound ||
-      code == NetworkError::RemoteHostClosed)
+      code == NetworkError::RemoteHostClosed ||
+      code == NetworkError::Timeout)
       return SyncResultCode::ConnectionFailed;
 
    if (code == NetworkError::HTTPError)
@@ -111,6 +112,17 @@ void SetCommonHeaders(Request& request)
    if (oauthService.HasAccessToken())
       request.setHeader(
          common_headers::Authorization, oauthService.GetAccessToken());
+}
+
+bool IsUploadRecoverable(SyncResultCode code)
+{
+   return code == SyncResultCode::Cancelled ||
+          code == SyncResultCode::ConnectionFailed ||
+          code == SyncResultCode::PaymentRequired ||
+          code == SyncResultCode::Unauthorized ||
+          code == SyncResultCode::Forbidden ||
+          code == SyncResultCode::InternalClientError ||
+          code == SyncResultCode::InternalServerError;
 }
 
 TransferStats& TransferStats::SetBytesTransferred(int64_t bytesTransferred)

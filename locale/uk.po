@@ -3447,19 +3447,19 @@ msgstr ""
 "проєктів"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
+msgid "Save &To Cloud..."
 msgstr "Зберегти до хмари..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
+msgid "&Update Cloud Audio Preview"
 msgstr "Оновити дані попереднього прослуховування у хмарі"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
+msgid "Open Fro&m Cloud..."
 msgstr "Відкрити з хмари..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
+msgid "S&hare Audio..."
 msgstr "Оприлюднити аудіо…"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -15347,7 +15347,7 @@ msgid "&Export Audio..."
 msgstr "&Експортувати звукові дані…"
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "Ексопртувати інше"
 
 #: src/menus/FileMenus.cpp

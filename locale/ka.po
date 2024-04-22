@@ -3369,19 +3369,19 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr ""
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
+msgid "Save &To Cloud..."
 msgstr "შენახვა ღრუბელში..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
+msgid "&Update Cloud Audio Preview"
 msgstr "აუდიოს მინიატურის განახლება ღრუბელში"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
+msgid "Open Fro&m Cloud..."
 msgstr "გახსნა ღრუბლიდან..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
+msgid "S&hare Audio..."
 msgstr "აუდიოს გაზიარება..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
@@ -14798,7 +14798,7 @@ msgid "&Export Audio..."
 msgstr "&აუდიოს გატანა..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "სხვების გატანა"
 
 #: src/menus/FileMenus.cpp

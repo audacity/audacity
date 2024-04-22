@@ -4,11 +4,12 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Francesco Sercia, 2023
-# Paval Shalamitski <yehekim@gmail.com>, 2023
-# Cristina Mantione, 2023
-# Matteo O., 2023
-# Michele Locati <michele@locati.it>, 2023
+# Saverio <saverio.brancaccio@gmail.com>, 2024
+# Matteo O., 2024
+# Cristina Mantione, 2024
+# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Francesco Sercia, 2024
+# Michele Locati <michele@locati.it>, 2024
 #
 #, fuzzy
 msgid ""
@@ -16,8 +17,8 @@ msgstr ""
 "Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-04-04 21:13+0300\n"
-"PO-Revision-Date: 2023-10-17 12:51+0000\n"
-"Last-Translator: Michele Locati <michele@locati.it>, 2023\n"
+"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/klyok/teams/690/it/)\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -180,7 +181,7 @@ msgstr ""
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
-msgstr "Error: %s"
+msgstr "Errore: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -360,23 +361,21 @@ msgstr "Impossibile procedere con l'upload."
 #. i18n-hint: database operation has failed because the requested item was not found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File not found"
-msgstr "Impossibile trovare il file \"%s\"."
+msgstr "File non trovato"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
 msgid "Project was closed before snapshot was created"
-msgstr ""
+msgstr "Il progetto è stato chiuso prima della creazione dello snapshot"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid Response: %s"
-msgstr "Frequenza di campionamento non valida"
+msgstr "Risposta non valida: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
-#, fuzzy
 msgid "Export failed"
-msgstr "Esporta in un file."
+msgstr "Esportazione non riuscita"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
@@ -386,19 +385,16 @@ msgid "Export error"
 msgstr "Errore di esportazione"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to attach to the Cloud project database"
-msgstr "Non è stato possibile aprire il database del progetto"
+msgstr "Collegamento al database del progetto cloud non riuscito"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to decompress the Cloud project block"
-msgstr "Non è stato possibile aprire il database del progetto"
+msgstr "Decompressione del blocco del progetto cloud non riuscita"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Failed to deserialize the response"
-msgstr "Non è stato possibile recuperare il contenuto della combinazione"
+msgstr "Non è stato possibile deserializzare la risposta"
 
 #: libraries/lib-effects/Effect.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -2238,147 +2234,133 @@ msgid "Samples"
 msgstr "Campioni"
 
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "SQLite3 error"
-msgstr "errore interno"
+msgstr "Errore SQLite3"
 
 #. i18n-hint: database operation was successful
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "No error"
-msgstr "nessun errore"
+msgstr "Nessun errore"
 
 #. i18n-hint: database operation has failed, but there is no specific reason
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Generic error"
-msgstr "Generico"
+msgstr "Errore generico"
 
 #. i18n-hint: database operation has failed due to the internal error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Internal logic error in SQLite"
-msgstr "Errore logico interno"
+msgstr "Errore logico interno in SQLite"
 
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Access permission denied"
-msgstr ""
+msgstr "Autorizzazione di accesso negata"
 
 #. i18n-hint: database operation was aborted by the callback
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Callback routine requested an abort"
-msgstr ""
+msgstr "La routine callback ha richiesto un'interruzione"
 
 #. i18n-hint: database operation has failed because database is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database file is locked"
-msgstr ""
+msgstr "Il file del database è bloccato"
 
 #. i18n-hint: database operation has failed because table is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A table in the database is locked"
-msgstr ""
+msgstr "Una tabella nel database è bloccata"
 
 #. i18n-hint: database operation has failed due to the lack of memory
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A malloc() failed"
-msgstr ""
+msgstr "Un malloc() non è riuscito"
 
 #. i18n-hint: database operation has failed because database is read-only
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Attempt to write a read-only database"
-msgstr ""
+msgstr "Tentativo di scrivere un database di sola lettura"
 
 #. i18n-hint: database operation was interrupted
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Operation terminated"
-msgstr "indeterminata"
+msgstr "Operazione terminata"
 
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "Si è verificato un errore I/O"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database disk image is malformed"
-msgstr ""
+msgstr "L'immagine del disco del database non è valida"
 
 #. i18n-hint: database operation has failed because the drive is full
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Insertion failed because the drive is full"
-msgstr ""
+msgstr "L'inserimento non è riuscito perché il disco è pieno"
 
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Unable to open the database file"
-msgstr ""
-"Non è stato possibile aprire il file del database:\n"
-"\n"
-"%s"
+msgstr "Impossibile aprire il file del database"
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
-msgstr ""
+msgstr "Errore del protocollo di blocco del database"
 
 #. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
-msgstr ""
+msgstr "Lo schema del database è cambiato"
 
 #. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
-msgstr ""
+msgstr "La stringa o il BLOB supera la dimensione massima"
 
 #. i18n-hint: database operation has failed due to the constraint violation
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Abort due to constraint violation"
-msgstr ""
+msgstr "Interruzione per violazione di vincolo"
 
 #. i18n-hint: database operation has failed due to the data type mismatch
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Data type mismatch"
-msgstr ""
+msgstr "Mancata corrispondenza del tipo di dati"
 
 #. i18n-hint: database operation has failed due to the library misuse
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Library used incorrectly"
-msgstr ""
+msgstr "Libreria usata in modo errato"
 
 #. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
-msgstr ""
+msgstr "Il supporto per file di grandi dimensioni è disabilitato"
 
 #. i18n-hint: database operation has failed due to the authorization error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Authorization denied"
-msgstr ""
+msgstr "Autorizzazione negata"
 
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Not used"
-msgstr "(non usato):"
+msgstr "Non usato"
 
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
-msgstr ""
+msgstr "2° parametro di sqlite3_bind fuori intervallo"
 
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File opened that is not a database file "
-msgstr ""
-"Non è stato possibile aprire il file del database:\n"
-"\n"
-"%s"
+msgstr "File aperto che non è un file di database"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2766,9 +2748,8 @@ msgid "Pre-processing"
 msgstr "Pre-elaborazione"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
 msgid "Rendering Clip"
-msgstr "Ri&nomina clip..."
+msgstr "Rendering della clip"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -3023,9 +3004,8 @@ msgid "Specify New Filename:"
 msgstr "Specificare nuovo nome di file:"
 
 #: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
-#, fuzzy
 msgid "Don't ask me again"
-msgstr "&Non inviare"
+msgstr "Non chiedermelo più"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -3321,102 +3301,88 @@ msgstr "&OK"
 
 #: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
 msgid "Waiting for audio.com"
-msgstr "audio.com"
+msgstr "In attesa di audio.com"
 
 #: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr ""
+msgstr "È necessaria un'azione su audio.com prima di poter continuare. È possibile annullare questa operazione."
 
 #: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to audio.com"
-msgstr "audio.com"
+msgstr "Salva su audio.com"
 
 #: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
 msgid "Generating audio preview..."
-msgstr "Preparazione dell'audio in corso..."
+msgstr "Generazione dell'anteprima dell'audio in corso..."
 
 #: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Open from audio.com"
-msgstr "audio.com"
+msgstr "Apri da audio.com"
 
 #: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Synchronizing project"
-msgstr "Salvataggio progetto"
+msgstr "Sincronizzazione del progetto"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
-msgstr ""
+msgstr "Le anteprime possono essere aggiornate solo per i progetti cloud"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr ""
+msgid "Save &To Cloud..."
+msgstr "&Salva nel cloud..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr ""
+msgid "&Update Cloud Audio Preview"
+msgstr "Aggiorna anteprima dell'a&udio cloud"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open From Cloud..."
-msgstr "Apri menu..."
+msgid "Open Fro&m Cloud..."
+msgstr "&Apri dal cloud..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Share Audio..."
-msgstr "Condividi audio"
+msgid "S&hare Audio..."
+msgstr "&Condividi audio..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
-msgstr ""
+msgstr "Cloud"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Account"
-msgstr "Co&llega account"
+msgstr "Account"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Export behavior"
-msgstr "Errore di esportazione"
+msgstr "Comportamento dell'esportazione"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "Come incollare l'audio?"
+msgstr "M&ostra la finestra di dialogo 'Come esportare?'"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Save behavior"
-msgstr "Comportamenti"
+msgstr "Comportamento del salvataggio"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &ask"
-msgstr ""
+msgstr "C&hiedi sempre"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always &save to cloud"
-msgstr "Colore &onda"
+msgstr "&Salva sempre nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always save to the co&mputer"
-msgstr "Salva il contenuto del registro."
+msgstr "Salva sempre nel co&mputer"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Temporary Cloud files directory"
-msgstr "Cartella file temporanei"
+msgstr "Cartella dei file temporanei del cloud"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -3430,17 +3396,15 @@ msgstr "S&foglia..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
-msgstr ""
+msgstr "giorni"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "&Remove temporary files after:"
-msgstr "Cartella file temporanei"
+msgstr "&Rimuovi i file temporanei dopo:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Preferences for Cloud"
-msgstr "Preferenze per mouse"
+msgstr "Preferenze per il cloud"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -3458,26 +3422,25 @@ msgid "Cannot set the preference."
 msgstr "Impossibile impostare le preferenze."
 
 #: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
 msgid "Failed."
-msgstr "Non riuscito"
+msgstr "Fallito."
 
 #: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 #, c-format
 msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
+msgstr "Sincronizzazione con audio.com in corso... (%d%%)"
 
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
+msgstr "Il progetto si sta sincronizzando con audio.com. Interrompere il processo di sincronizzazione?"
 
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Waiting for space to free up"
-msgstr ""
+msgstr "In attesa che si liberi lo spazio"
 
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
+msgstr "Fare clic su Riprova quando è stato reso disponibile spazio di archiviazione su audio.com."
 
 #. i18n-hint: Share audio button text, keep as short as possible
 #: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
@@ -3492,9 +3455,8 @@ msgid "&Share Audio Toolbar"
 msgstr "Barra degli strumenti di &condivisione audio"
 
 #: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "Account not linked"
-msgstr "Account collegato con successo!"
+msgstr "Account non collegato"
 
 #: modules/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -3505,92 +3467,80 @@ msgid "&Unlink Account"
 msgstr "&Scollega account"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Don't show this again"
-msgstr "Non mostrare più questo avviso"
+msgstr "Non mostrarlo più"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "How would you like to save?"
-msgstr "Come incollare l'audio?"
+msgstr "Come procedere col salvataggio?"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to the Cloud"
-msgstr "Salva registro in:"
+msgstr "Salva nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
-msgstr ""
+msgstr "Il backup del progetto viene eseguito in modo privato su audio.com. È possibile accedere al proprio lavoro da qualsiasi dispositivo e collaborare al progetto con altri."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Save to Cloud"
-msgstr "Colore &onda"
+msgstr "&Salva nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr ""
+msgstr "Sul proprio computer"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Files are saved on your device."
-msgstr ""
+msgstr "I file sono salvati sul tuo dispositivo."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to &computer"
-msgstr "Salva il contenuto del registro."
+msgstr "Salva nel &computer"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Remember my choice and don't show again"
-msgstr "Ricorda la mia scelta e non chiedermelo più"
+msgstr "&Ricorda la mia scelta e non mostrarla più"
 
 #. i18n-hint: A title that is shown on export that allows the user to select
 #. Cloud or local export.
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "How would you like to export?"
-msgstr "Come incollare l'audio?"
+msgstr "Come esportare?"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Share to audio.com"
-msgstr "Condividi audio"
+msgstr "Condividi su audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
+msgstr "Carica un file audio non compresso e genera un collegamento condivisibile. Questo collegamento consente ad altri di scaricare il file in formato .wav o .mp3."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Share to audio.com"
-msgstr "Condividi audio"
+msgstr "Condividi su &audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
+msgstr "Esporta MP3, WAV, FLAC e altri formati sul proprio computer."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Export to &computer"
-msgstr "Esporta altro"
+msgstr "Esporta nel &computer"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Don't show again"
-msgstr "Non mostrare più questo avviso"
+msgstr "&Non mostrarlo più"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "La condivisione dell'audio richiede un account %s gratuito collegato ad Audacity. %%Premere \"Collega account\" qui sopra per procedere."
+msgstr "Il salvataggio nel cloud richiede un account audio.com gratuito collegato ad Audacity. Premere \"Collega account\" qui sopra per procedere."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
-msgstr ""
+msgstr "Privato"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
@@ -3608,37 +3558,33 @@ msgid "Save"
 msgstr "Salva"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to computer..."
-msgstr "Salva progetto..."
+msgstr "Salva nel computer..."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Project Name"
-msgstr "Progetto"
+msgstr "Nome del progetto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "We encountered an issue syncing your file"
-msgstr ""
+msgstr "Si è verificato un problema durante la sincronizzazione del file"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
+msgstr "Nessun problema, le modifiche verranno salvate in una posizione temporanea e verranno sincronizzate nella propria copia cloud quando verrà ripristinata la connessione a internet."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "You are not signed in"
-msgstr "Non è possibile assegnare un tasto a questa voce"
+msgstr "Non sei registrato"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
-msgstr ""
+msgstr "Accedi ad audio.com per proseguire."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "Sign in"
-msgstr "Allinea fine"
+msgstr "Accedi"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -3691,148 +3637,133 @@ msgstr "C&ollega account audio.com..."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
-msgstr ""
+msgstr "Questo progetto non è più salvato nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
+msgstr "Questo progetto è stato rimosso da audio.com e quindi non può essere salvato in questo momento."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
+msgstr "È possibile salvarlo sul cloud come nuovo progetto oppure sul proprio computer."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#, fuzzy
 msgid "Save to computer"
-msgstr "Salva il contenuto del registro."
+msgstr "Salva nel computer"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
 msgid "Save to Cloud"
-msgstr "Salva registro in:"
+msgstr "Salva nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
-msgstr ""
+msgstr "È stato raggiunto il limite dello spazio di archiviazione del progetto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
+msgstr "Potrebbe essere necessario rimuovere i progetti più vecchi per liberare spazio. Visitare audio.com per ulteriori opzioni"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
+msgstr "È  anche possibile salvare il progetto in locale per evitare di perdere le modifiche."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Visit audio.com"
-msgstr "audio.com"
+msgstr "Visita audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project version conflict detected"
-msgstr ""
+msgstr "Rilevato conflitto di versione del progetto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr ""
+msgstr "C'è una versione più recente di questo progetto Audacity su Audio.com. Il salvataggio di questo progetto ne sostituirà la versione più recente."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Save this project"
-msgstr "Salva un progetto."
+msgstr "Salva questo progetto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Discard and open latest version"
-msgstr ""
+msgstr "Scarta e apri l'ultima versione"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr ""
+msgstr "Il progetto contiene modifiche non salvate. C'è una versione più recente di questo progetto Audacity su Audio.com. Se si scartano le modifiche, verrà invece aperta la versione più recente."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open local project"
-msgstr "Apre un progetto."
+msgstr "Apri progetto locale"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Cloud project conflict"
-msgstr "File di progetto compresso"
+msgstr "Conflitto del progetto nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr ""
+msgstr "Si sta cercando di aprire una nuova versione attiva di questo progetto quando ce n'è una già aperta. Selezionare la versione che si desidera mantenere aperta."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr ""
+msgstr "Mantieni la versione attualmente aperta"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open new version"
-msgstr "Conversione frequenza di campionamento"
+msgstr "Apri la nuova versione"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr ""
+msgstr "Apri dal cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "less than 1 minute"
-msgstr "Meno di 1 minuto"
+msgstr "meno di 1 minuto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "un minuto fa"
+msgstr[1] "%d minuti fa"
+msgstr[2] "%d minuti fa"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "Durata tono:"
-msgstr[1] "Durata tono:"
-msgstr[2] "Durata tono:"
+msgstr[0] "un'ora fa"
+msgstr[1] "%d ore fa"
+msgstr[2] "%d ore fa"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Modified"
-msgstr "Etichetta modificata"
+msgstr "Modificato"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to authorize account"
-msgstr "Impossibile ripristinare la connessione"
+msgstr "Impossibile autorizzare l'account"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Loading projects list..."
-msgstr "Salvataggio progetto"
+msgstr "Caricamento dell'elenco dei progetti..."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to get projects list"
-msgstr "Importazione del progetto fallita"
+msgstr "Impossibile ottenere l'elenco dei progetti"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Cloud saved projects"
-msgstr "File di progetto compresso"
+msgstr "Progetti salvati nel cloud"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Search:"
-msgstr "Cerc&a:"
+msgstr "Cerca:"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Prev"
-msgstr "Ante&prima"
+msgstr "Prec"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp
@@ -3845,14 +3776,13 @@ msgid "Open"
 msgstr "Apri"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "View in audio.com"
-msgstr "audio.com"
+msgstr "Vedi su audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Page %d of %d"
-msgstr "%s %d di %d"
+msgstr "Pagina %d di %d"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Anyone will be able to listen to this audio."
@@ -3915,66 +3845,64 @@ msgstr "Preparazione dell'audio in corso..."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You are not authorized to access this project."
-msgstr ""
+msgstr "Non sei autorizzato ad accedere a questo progetto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You tried to access a project that has expired."
-msgstr ""
+msgstr "Hai provato ad accedere a un progetto scaduto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity had trouble connecting to the server."
-msgstr ""
+msgstr "Audacity ha riscontrato problemi durante la connessione al server."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr ""
+msgstr "Il progetto è troppo grande per essere caricato. Salvalo sul proprio computer."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
-msgstr ""
+msgstr "Non hai accesso a questo progetto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "The project could not be found."
-msgstr "Non è stato possibile scollegare il progetto di destinazione"
+msgstr "Impossibile trovare il progetto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The server responded with something Audacity could not understand."
-msgstr ""
+msgstr "Il server ha risposto con qualcosa che Audacity non è riuscito a capire."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity encountered an internal error."
-msgstr ""
+msgstr "Audacity ha riscontrato un errore interno."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audio.com encountered an internal error."
-msgstr ""
+msgstr "Audio.com ha riscontrato un errore interno."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Audacity encountered an unknown error."
-msgstr "Errore di configurazione di Audacity"
+msgstr "Audacity ha riscontrato un errore sconosciuto."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Sync failed"
-msgstr " Sincronizzazione bloccata"
+msgstr "Sincronizzazione fallita"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error details:\n"
 "%s"
-msgstr "Dettagli problema"
+msgstr ""
+"Dettagli sull'errore:\n"
+"%s"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
 msgid "Syncing your project"
-msgstr "Copia di backup del progetto in corso"
+msgstr "Sincronizzazione del progetto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr ""
+msgstr "Il progetto verrà sincronizzato in background mentre si lavora. È possibile controllare in qualsiasi momento lo stato della sincronizzazione nell'angolo in basso a destra di Audacity"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 #: src/AudioPasteDialog.cpp
@@ -3982,54 +3910,48 @@ msgid "Continue"
 msgstr "Continua"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
 msgid "Success!"
-msgstr "Successo"
+msgstr "Successo!"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr ""
+msgstr "Tutte le modifiche salvate verranno ora aggiornate nel cloud. È possibile gestire questo file dalla pagina dei progetti caricati su audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
 msgid "View online"
-msgstr "Timeline"
+msgstr "Vedi online"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
-msgstr ""
+msgstr "Fatto"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Cloud project incomplete"
-msgstr "Componente non trovato"
+msgstr "Progetto nel cloud non completo"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr ""
+msgstr "L'ultima versione di questo progetto non è stata caricata completamente su audio.com. È invece possibile caricare l'ultima versione completa."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Load latest"
-msgstr "Carica file"
+msgstr "Carica più recente"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr ""
+msgstr "Nessuna versione di questo progetto è stata caricata completamente su audio.com. Non è possibile aprirlo."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#, fuzzy
 msgid "You have canceled this upload to audio.com"
-msgstr "Annulla l'upload su Audio.com"
+msgstr "Hai annullato questo caricamento su audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#, fuzzy
 msgid "Retry"
-msgstr "&Riprova"
+msgstr "Riprova"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr ""
+msgstr "È necessaria un'azione su audio.com prima di poter continuare. Una volta terminata, fare clic su Riprova"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -4412,14 +4334,12 @@ msgid "Show All Codecs"
 msgstr "Mostra tutti i codec"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
-#, fuzzy
 msgid "Formats"
-msgstr "Formato:"
+msgstr "Formati"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
-#, fuzzy
 msgid "Codecs"
-msgstr "Codec:"
+msgstr "Codec"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -5332,9 +5252,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "Solo libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Only libmp3lame.so"
-msgstr "Solo libmp3lame.so.0"
+msgstr "Solo libmp3lame.so"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -5953,9 +5872,8 @@ msgid "Opus files"
 msgstr "File Opus"
 
 #: modules/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "File has changed the number of channels in the middle."
-msgstr "il file ha cambiato il numero di canali al centro."
+msgstr "Il file ha cambiato il numero di canali al centro."
 
 #: modules/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
@@ -6469,9 +6387,9 @@ msgstr "Sito web di %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "Il software %s è protetto da copyright %s 1099-2023 Team di %s."
+msgstr "Il software %s è protetto da copyright %s 1999-2024 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -6675,9 +6593,8 @@ msgstr "Fare clic e trascinare per regolare, doppio clic per azzerare"
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Record/Playhead"
-msgstr "Registra/esegui intestazione"
+msgstr "Punto di riproduzione/registrazione"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
@@ -6772,11 +6689,11 @@ msgstr "Imposta ciclo ripetitivo alla selezione"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
-msgstr ""
+msgstr "Scorri la vista al punto di riproduzione"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Continuous scrolling"
-msgstr ""
+msgstr "Scorrimento continuo"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -7071,12 +6988,11 @@ msgstr "&Riprova"
 
 #: src/AudacityMirProject.cpp
 msgid "Configure Project from Music File"
-msgstr ""
+msgstr "Configura progetto da file musicale"
 
 #: src/AudacityMirProject.cpp
-#, fuzzy
 msgid "Automatic Music Configuration"
-msgstr "Errore di configurazione di Audacity"
+msgstr "Configurazione automatica della musica"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7084,6 +7000,8 @@ msgid ""
 "Audacity detected this file to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
+"Audacity ha rilevato che questo file usa %s bpm.\n"
+"Abilitare la vista Musica e imposatre il tempo del progetto su %s?"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7091,11 +7009,12 @@ msgid ""
 "Audacity detected one or more files to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
+"Audacity ha rilevato che uno o più file usano %s bpm.\n"
+"Abilitare la vista Musica e impostare il tempo del progetto su %s?"
 
 #: src/AudacityMirProject.cpp
-#, fuzzy
 msgid "Music Import"
-msgstr "Importazione MP3"
+msgstr "Importa musica"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -8003,12 +7922,11 @@ msgid "To plot the spectrum, all selected tracks must have the same sample rate.
 msgstr "Per tracciare lo spettro, tutte le tracce selezionate devono avere la stessa frequenza di campionamento."
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid ""
 "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
-"Non è stato possibile analizzare l'audio. Ciò potrebbe essere dovuto a una clip allungata.\n"
+"Impossibile analizzare l'audio. Ciò potrebbe essere dovuto a una clip allungata o spostata nell'intonazione.\n"
 "Provare a reimpostare eventuali clip allungate o a mixare e renderizzare le tracce prima dell'analisi"
 
 #: src/FreqWindow.cpp
@@ -8241,14 +8159,12 @@ msgid "Label Track"
 msgstr "Traccia etichette"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "SubRip text file"
-msgstr "File di testo"
+msgstr "File di testo SubRip"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "WebVTT file"
-msgstr "File HTML"
+msgstr "File WebVTT"
 
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
@@ -8269,7 +8185,7 @@ msgstr "Stile etichette esportate:"
 
 #: src/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
-msgstr ""
+msgstr "L'importazione di file WebVTT non è attualmente supportata."
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -8506,14 +8422,12 @@ msgstr ""
 "%s"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Disable"
-msgstr "Disabilitato"
+msgstr "Disabilita"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Enable"
-msgstr "Abilitato"
+msgstr "Abilita"
 
 #: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
 msgid "Type"
@@ -8532,9 +8446,8 @@ msgid "Generator"
 msgstr "Generatore"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Analyzer"
-msgstr "Analizza"
+msgstr "Analizzatore"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Tool"
@@ -8545,38 +8458,32 @@ msgid "Manage Plugins"
 msgstr "Gestisci estensioni"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Native Audacity"
-msgstr "Aggiorna Audacity"
+msgstr "Audacity nativo"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Show:"
-msgstr "Mostra:"
+msgstr "&Mostra:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Type:"
-msgstr "Tipo:"
+msgstr "&Tipo:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "C&ategory:"
-msgstr "Categoria"
+msgstr "C&ategoria:"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
 msgstr "Cerc&a:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Plugin"
 msgstr "Estensione"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Rescan"
-msgstr "Rianalizza"
+msgstr "&Rianalizza"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9093,13 +9000,12 @@ msgid "Importing %s"
 msgstr "Importazione in corso di %s"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Music Information Retrieval"
-msgstr "Informazioni sulla versione"
+msgstr "Recupero informazioni musicali"
 
 #: src/ProjectFileManager.cpp
 msgid "Analyzing imported audio"
-msgstr ""
+msgstr "Analisi dell'audio importato"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -14158,7 +14064,6 @@ msgid "M&ultiple Files"
 msgstr "&Più file"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Curren&t Selection"
 msgstr "Selezione corren&te"
 
@@ -14846,8 +14751,8 @@ msgid "&Export Audio..."
 msgstr "&Esporta audio..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Esporta altro"
+msgid "Expo&rt Other"
+msgstr "Espo&rta altro"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -15558,9 +15463,8 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "Ricerca lunga a d&estra durante la riproduzione"
 
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "Tim&eline"
-msgstr "Timeline"
+msgstr "Tim&eline"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16230,9 +16134,8 @@ msgid "Skip to Selection End"
 msgstr "Vai a fine selezione"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Enable E&xtra Menus"
-msgstr "Abilita menu a&ggiuntivi"
+msgstr "Abilita &menu aggiuntivi"
 
 #: src/menus/ViewMenus.cpp
 msgid "Show Track &Name as overlay"
@@ -16567,7 +16470,7 @@ msgstr "O&rganizzazione effetti in tempo reale:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Skip effects scanning at startup"
-msgstr ""
+msgstr "&Salta la scansione degli effetti all'avvio"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16578,9 +16481,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "&Usa SSE/SSE2/.../AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin &Manager"
-msgstr "Apri il gestore delle estensioni"
+msgstr "Apri il &gestore delle estensioni"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16770,25 +16672,23 @@ msgstr "Prefenze di ImportaEsporta"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr ""
+msgstr "&Passa alla visualizzazione Battute e misure e allineala alla griglia musicale"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
-msgstr ""
+msgstr "&Chiedimelo ogni volta"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Do &nothing"
-msgstr "Non fare nulla"
+msgstr "Non fare &nulla"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Music Imports"
-msgstr "Importazione MP3"
+msgstr "Importazioni musica"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When Audacity detects music in file imported on empty project"
-msgstr ""
+msgstr "Quando Audacity rileva musica nel file importato in un progetto vuoto"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17030,15 +16930,16 @@ msgid ""
 "Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
 "It is generally not necessary to change these settings."
 msgstr ""
+"I moduli sono componenti opzionali di Audacity che abilitano alcune funzionalità, come l'importazione e l'esportazione.\n"
+"Generalmente non è necessario modificare queste impostazioni."
 
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr "I cambiamenti a queste impostazioni hanno effetto solo all'avvio di Audacity."
+msgstr "Le modifiche a queste impostazioni hanno effetto solo dopo il riavvio di Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
-msgstr ""
+msgstr "Chiedi sempre"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
@@ -17046,11 +16947,11 @@ msgstr "Non riuscito"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "No choice made"
-msgstr ""
+msgstr "Nessuna scelta fatta"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr ""
+msgstr "Errore: nessun modulo trovato. Ciò potrebbe indicare un'installazione difettosa."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -17587,7 +17488,7 @@ msgstr "La modifica di una clip può &spostare altre clip"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Always paste audio as new clips"
-msgstr ""
+msgstr "Incolla sempre l'&audio come nuove clip"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -18456,57 +18357,48 @@ msgid "Stretch"
 msgstr "Allunga"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
-#, fuzzy
 msgid "Click to open clip context menu."
-msgstr "Fare clic per modificare il testo dell'etichetta"
+msgstr "Fare clic per aprire il menu contestuale della clip."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Reset Clip Pitch"
-msgstr "Allungamento della clip di rendering"
+msgstr "Ripristina intonazione della clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Not enough space"
-msgstr "I dati selezionati non sono sufficienti."
+msgstr "Spazio non sufficiente"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "There is not enough space to expand the clip to its original speed."
-msgstr "Non c'è abbastanza spazio per dilatare la clip alla velocità selezionata"
+msgstr "Non c'è abbastanza spazio per espandere la clip alla sua velocità originale."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Reset Clip Speed"
-msgstr "Velocità clip"
+msgstr "Ripristina velocità della clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip pitch."
-msgstr "Fai clic e trascina per allungare la clip"
+msgstr "Fare clic per ripristinare l'intonazione della clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip pitch, Cmd + click to reset."
-msgstr "Fare clic e trascinare per regolare, doppio clic per azzerare"
+msgstr "Fare clic per modificare l'intonazione della clip, Cmd + clic per ripristinarla."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip pitch, Ctrl + click to reset."
-msgstr ""
+msgstr "Fare clic per modificare l'intonazione della clip, Ctrl + clic per ripristinarla."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip speed."
-msgstr "Fai clic e trascina per allungare la clip"
+msgstr "Fare clic per ripristinare la velocità della clip."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip speed, Cmd + click to reset."
-msgstr "Fare clic e trascinare per regolare, doppio clic per azzerare"
+msgstr "Fare clic per modificare la velocità della clip, Cmd + clic per ripristinarla."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip speed, Ctrl + click to reset."
-msgstr ""
+msgstr "Fare clic per modificare la velocità della clip, Ctrl + clic per ripristinarla."
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18526,50 +18418,42 @@ msgid "Removed Cut Line"
 msgstr "Linea di taglio eliminata"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Pitch and Speed"
-msgstr "Intonazione e tempo"
+msgstr "Intonazione e velocità"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Pitch"
-msgstr "Intonazione"
+msgstr "Intonazione della clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "se&mitones:"
-msgstr "semitoni + centesimi"
+msgstr "se&mitoni:"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&cents:"
-msgstr ""
+msgstr "&cent:"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Speed"
-msgstr "Velocità clip"
+msgstr "Velocità della clip"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&speed %: "
-msgstr ""
+msgstr "&velocità %: "
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "General"
-msgstr "&Genera"
+msgstr "Generali"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "&Optimize for Voice"
-msgstr "Ottimizza per"
+msgstr "&Ottimizza per la voce"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Speed"
 msgstr "Cambia velocità"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Pitch"
 msgstr "Cambia intonazione"
 
@@ -18600,9 +18484,8 @@ msgstr "Adatta alla finestra"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Reset Zoom"
-msgstr "Ripristina"
+msgstr "Ripristina zoom"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18642,12 +18525,11 @@ msgstr "Successivo picco di frequenza più &basso"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
-msgstr ""
+msgstr "Trascinare per specificare una regione di zoom. Fare clic con il tasto destro per il menu. Ctrl+scorri per ingrandire."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#, fuzzy
 msgid "Right-click for menu. Ctrl+scroll to zoom."
-msgstr "Clic destro per il menu."
+msgstr "Fare clic con il tasto destro per il menu. Ctrl+scorri per ingrandire."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
@@ -18726,20 +18608,19 @@ msgid "Rename Clip..."
 msgstr "Ri&nomina clip..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-#, fuzzy
 msgid "Pitch and Speed..."
-msgstr "Cambia velocità (tempo e intonazione)..."
+msgstr "Intonazione e velocità..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 msgid "Render Pitch and Speed"
-msgstr ""
+msgstr "Renderizza intonazione e velocità"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
-msgstr "Velocità della clip cambiata al %.01f%%"
+msgstr "Velocità della clip cambiata del %.01f%%"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
@@ -18769,37 +18650,32 @@ msgid "Rendered time-stretched audio"
 msgstr "Audio dilatato nel tempo renderizzato"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch Shift"
-msgstr "Scostamento finale intonazione"
+msgstr "Scostamento dell'intonazione"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Changed Pitch Shift"
-msgstr "Cambia intonazione"
+msgstr "Cambia lo scostamento dell'intonazione"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
 msgstr "&Rinomina clip..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "&Pitch and Speed..."
-msgstr "Cambia velocità (tempo e intonazione)..."
+msgstr "&Intonazione e velocità..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
-msgstr ""
+msgstr "Renderizza intonazione e &velocità"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Up"
-msgstr "Intonazione"
+msgstr "&Aumenta intonazione"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Down"
-msgstr "Intonazione"
+msgstr "&Riduci intonazione"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19162,9 +19038,8 @@ msgid "Brush tool selection"
 msgstr "Selezione strumento pennello"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-#, fuzzy
 msgid "Re&name Track..."
-msgstr "Ricampiona traccia"
+msgstr "Ri&nomina traccia..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19351,9 +19226,8 @@ msgid "Ctrl+Click to deselect"
 msgstr "Ctrl+Clic per deselezionare"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Delete Track"
-msgstr "Seleziona tracce"
+msgstr "Elimina traccia"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -20350,7 +20224,7 @@ msgid ""
 "                 Track sample rate is ~a Hz~%~\n"
 "                 Frequency must be less than ~a Hz."
 msgstr ""
-"Errore:~%~%Frequenza (~a Hz) troppo alta per la frequenza di campionamento della traccia.~%~%~\n"
+"Error:~%~%Frequenza (~a Hz) per la frequenza di campionamento della traccia.~%~%~\n"
 "                 La frequenza di campionamento della traccia è ~a Hz~%~\n"
 "                 La frequenza deve essere inferiore di ~a Hz."
 
@@ -21332,722 +21206,3 @@ msgstr "Rimozione voce"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Strumenti spettrali"
-
-#, c-format
-#~ msgid ""
-#~ "\"%s\" \n"
-#~ "is a MIDI file, not an audio file. \n"
-#~ "Audacity cannot open this type of file for playing, but you can\n"
-#~ "edit it by clicking File > Import > MIDI."
-#~ msgstr ""
-#~ "\"%s\" \n"
-#~ "è un file MIDI, non un file audio. \n"
-#~ "Audacity non può aprire questo tipo di file per la riproduzione,\n"
-#~ "ma è possibile modificarlo facendo clic su File > Importa > MIDI."
-
-#~ msgid "Rendering Time-Stretched Audio"
-#~ msgstr "Rendering dell'audio dilatato nel tempo"
-
-#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-#~ msgstr "Sembra che il manuale non sia stato installato. È possibile [[*URL*|consultare il manuale online]].<br><br>Per visualizzare sempre il manuale online, modificare l'opzione \"Posizione del manuale\" nelle preferenze dell'interfaccia, selezionando \"Da internet\"."
-
-#~ msgid "You've specified a file name without an extension. Are you sure?"
-#~ msgstr "È stato specificato un nome di file senza alcuna. Si è certi?"
-
-#~ msgid "Update display while playing"
-#~ msgstr "Aggiorna visualizzazione durante la riproduzione"
-
-#~ msgid "Pinned Play Head"
-#~ msgstr "Intestazione riproduzione fissata"
-
-#~ msgid "Enable pinned play &head"
-#~ msgstr "Abilita intestazione riproduzione fissata"
-
-#~ msgid ""
-#~ "Reset Preferences?\n"
-#~ "\n"
-#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-#~ msgstr ""
-#~ "Azzerare le preferenze?\n"
-#~ "\n"
-#~ "Questa domanda viene posta una sola volta, dopo una 'installazione' in cui è stato chiesto di azzerare le preferenze."
-
-#~ msgid "Reset Audacity Preferences"
-#~ msgstr "Azzera le preferenze di Audacity"
-
-#, c-format
-#~ msgid ""
-#~ "You must first select some audio for '%s' to act on.\n"
-#~ "\n"
-#~ "Ctrl + A selects all audio."
-#~ msgstr ""
-#~ "Prima è necessario selezionare l'audio per cui '%s' deve operare.\n"
-#~ "\n"
-#~ "Ctrl + A seleziona tutto l'audio."
-
-#, c-format
-#~ msgid "Audacity Karaoke%s"
-#~ msgstr "Karaoke di Audacity%s"
-
-#~ msgid "&Karaoke"
-#~ msgstr "&Karaoke"
-
-#~ msgid "Select effects, click the Enable or Disable button, then click OK."
-#~ msgstr "Selezionare effetti, fare clic sul pulsante abilita o disabilita, quindi fare clic su OK."
-
-#~ msgid "Show all"
-#~ msgstr "Mostra tutto"
-
-#~ msgid "Show disabled"
-#~ msgstr "Mostra disabilitati"
-
-#~ msgid "D&isabled"
-#~ msgstr "D&isabilitati"
-
-#~ msgid "Show enabled"
-#~ msgstr "Mostra abilitati"
-
-#~ msgid "E&nabled"
-#~ msgstr "A&bilitati"
-
-#~ msgid "Show new"
-#~ msgstr "Mostra nuove"
-
-#~ msgid "Ne&w"
-#~ msgstr "Nuo&ve"
-
-#~ msgid "State"
-#~ msgstr "Stato"
-
-#~ msgid "&Select All"
-#~ msgstr "&Seleziona tutto"
-
-#~ msgid "C&lear All"
-#~ msgstr "Cance&lla tutto"
-
-#~ msgid "&Disable"
-#~ msgstr "&Disabilita"
-
-#, c-format
-#~ msgid ""
-#~ "Enabling effects or commands:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Abilitazione di effetti o comandi:\n"
-#~ "\n"
-#~ "%s"
-
-#, c-format
-#~ msgid ""
-#~ "Enabling effect or command:\n"
-#~ "\n"
-#~ "%s"
-#~ msgstr ""
-#~ "Abilitazione effetto o comando:\n"
-#~ "\n"
-#~ "%s"
-
-#~ msgid "There was a problem printing."
-#~ msgstr "Si è verificato un problema durante la stampa."
-
-#~ msgid "Print"
-#~ msgstr "Stampa"
-
-#~ msgid "Pa&ge Setup..."
-#~ msgstr "Imposta pa&gina..."
-
-#~ msgid "&Print..."
-#~ msgstr "Stam&pa..."
-
-#~ msgid "Screen Capture Frame"
-#~ msgstr "Cornice cattura schermo"
-
-#~ msgid "Choose location to save files"
-#~ msgstr "Selezionare posizione di salvataggio file"
-
-#~ msgid "Save images to:"
-#~ msgstr "Salva immagini in:"
-
-#~ msgid "Choose..."
-#~ msgstr "Seleziona..."
-
-#~ msgid "Capture entire window or screen"
-#~ msgstr "Cattura intera finestra o schermo"
-
-#~ msgid "Resize Small"
-#~ msgstr "Ridimensionamento piccolo"
-
-#~ msgid "Resize Large"
-#~ msgstr "Ridimensionamento grande"
-
-#~ msgid "Blue Bkgnd"
-#~ msgstr "Sfondo blu"
-
-#~ msgid "White Bkgnd"
-#~ msgstr "Sfondo bianco"
-
-#~ msgid "Capture Window Only"
-#~ msgstr "Cattura solo finestra"
-
-#~ msgid "Capture Full Window"
-#~ msgstr "Cattura finestra intera"
-
-#~ msgid "Capture Window Plus"
-#~ msgstr "Cattura finestra +"
-
-#~ msgid "Capture Full Screen"
-#~ msgstr "Cattura intero schermo"
-
-#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
-#~ msgstr "Attendi 5 secondi e cattura finestra/dialogo in primo piano"
-
-#~ msgid "Capture part of a project window"
-#~ msgstr "Cattura parte della finestra di un progetto"
-
-#~ msgid "All Toolbars"
-#~ msgstr "Tutte le barra degli strumenti"
-
-#~ msgid "All Effects"
-#~ msgstr "Tutti gli effetti"
-
-#~ msgid "All Scriptables"
-#~ msgstr "Tutti gli script"
-
-#~ msgid "All Preferences"
-#~ msgstr "Tutte le preferenze"
-
-#~ msgid "Ruler"
-#~ msgstr "Righello"
-
-#~ msgid "First Track"
-#~ msgstr "Prima traccia"
-
-#~ msgid "Second Track"
-#~ msgstr "Seconda traccia"
-
-#~ msgid "One Sec"
-#~ msgstr "Un secondo"
-
-#~ msgid "Ten Sec"
-#~ msgstr "Dieci secondi"
-
-#~ msgid "One Min"
-#~ msgstr "Un minuto"
-
-#~ msgid "Five Min"
-#~ msgstr "Cinque minuti"
-
-#~ msgid "One Hour"
-#~ msgstr "Un'ora"
-
-#~ msgid "Short Tracks"
-#~ msgstr "Tracce basse"
-
-#~ msgid "Medium Tracks"
-#~ msgstr "Tracce medie"
-
-#~ msgid "Tall Tracks"
-#~ msgstr "Tracce alte"
-
-#~ msgid "Choose a location to save screenshot images"
-#~ msgstr "Selezionare una posizione dove salvare le schermate"
-
-#~ msgid "Capture failed!"
-#~ msgstr "Cattura non riuscita!"
-
-#~ msgid "&Screenshot..."
-#~ msgstr "Cattura &schermo..."
-
-#~ msgid "Anonymous"
-#~ msgstr "Anonimo"
-
-#~ msgid "Screenshot"
-#~ msgstr "Cattura schermo"
-
-#~ msgid "Window"
-#~ msgstr "Finestra"
-
-#~ msgid "Full Window"
-#~ msgstr "Finestra intera"
-
-#~ msgid "Window Plus"
-#~ msgstr "Finestra +"
-
-#~ msgid "Fullscreen"
-#~ msgstr "Schermo intero"
-
-#~ msgid "Toolbars"
-#~ msgstr "Barre degli strumenti"
-
-#~ msgid "Scriptables"
-#~ msgstr "Script"
-
-#~ msgid "Trackpanel"
-#~ msgstr "Pannello traccia"
-
-#~ msgid "First Two Tracks"
-#~ msgstr "Prime due tracce"
-
-#~ msgid "First Three Tracks"
-#~ msgstr "Prime tre tracce"
-
-#~ msgid "First Four Tracks"
-#~ msgstr "Prime quattro tracce"
-
-#~ msgid "Tracks Plus"
-#~ msgstr "Tracce +"
-
-#~ msgid "First Track Plus"
-#~ msgstr "Prima traccia +"
-
-#~ msgid "All Tracks"
-#~ msgstr "Tutte le tracce"
-
-#~ msgid "All Tracks Plus"
-#~ msgstr "Tutte le tracce +"
-
-#~ msgid "Blue"
-#~ msgstr "Blu"
-
-#~ msgctxt "color"
-#~ msgid "White"
-#~ msgstr "Bianco"
-
-#~ msgid "Path:"
-#~ msgstr "Percorso:"
-
-#~ msgid "Capture What:"
-#~ msgstr "Cosa catturare:"
-
-#~ msgid "Background:"
-#~ msgstr "Sfondo:"
-
-#~ msgid "Bring To Top"
-#~ msgstr "Porta in primo piano"
-
-#, c-format
-#~ msgid "Error trying to save file: %s"
-#~ msgstr "Errore nel tentativo di salvataggio del file: %s"
-
-#~ msgid "Screenshot (short format)..."
-#~ msgstr "Cattura schermo (formato breve)..."
-
-#~ msgid "Takes screenshots."
-#~ msgstr "Cattura schermate."
-
-#~ msgid "Stop &Preview"
-#~ msgstr "Arresta ante&prima"
-
-#~ msgid "Hidden File Menu"
-#~ msgstr "Menu file nascosti"
-
-#~ msgid "&Quick Fix..."
-#~ msgstr "Corre&zione rapida..."
-
-#~ msgid "&Getting Started"
-#~ msgstr "&Per iniziare"
-
-#~ msgid "Audacity &Manual"
-#~ msgstr "&Manuale di Audacity"
-
-#~ msgid "&Timeline"
-#~ msgstr "&Timeline"
-
-#~ msgid "Advanced &Vertical Zooming"
-#~ msgstr "Zoom &verticale avanzato"
-
-#~ msgid "Show Timeline Tooltips"
-#~ msgstr "Mostra messaggi nella timeline"
-
-#~ msgid "Show Scrub Ruler"
-#~ msgstr "Mostra righello scorrimento"
-
-#~ msgid ""
-#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-#~ "and know what you are doing."
-#~ msgstr ""
-#~ "Questi sono moduli sperimentali. Abilitarli solo dopo aver letto il manuale di Audacity\n"
-#~ "e se si sa quello che si sta facendo."
-
-#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-#~ msgstr "  'Chiedi' indica che Audacity chiederà se caricare il modulo ad ogni avvio."
-
-#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-#~ msgstr "  'Non riuscito' indica che Audacity ritiene che il modulo sia guasto e non lo esegue."
-
-#~ msgid "  'New' means no choice has been made yet."
-#~ msgstr "  'Nuovo' indica che nessuna scelta è stata ancora fatta."
-
-#~ msgid "Ask"
-#~ msgstr "Chiedi"
-
-#~ msgid "No modules were found"
-#~ msgstr "Non è stato trovato alcun modulo"
-
-#~ msgid "Ctrl"
-#~ msgstr "Ctrl"
-
-#~ msgid "Mouse"
-#~ msgstr "Mouse"
-
-#~ msgid "Mouse Bindings (default values, not configurable)"
-#~ msgstr "Associazioni del mouse (valori predefiniti, non configurabili)"
-
-#~ msgid "Command Action"
-#~ msgstr "Azione del comando"
-
-#~ msgid "Buttons"
-#~ msgstr "Pulsanti"
-
-#~ msgid "Left-Click"
-#~ msgstr "Clic sinistro"
-
-#~ msgid "Set Selection Point"
-#~ msgstr "Imposta punto di selezione"
-
-#~ msgid "Left-Drag"
-#~ msgstr "Sinistro-Trascina"
-
-#~ msgid "Set Selection Range"
-#~ msgstr "Imposta area di selezione"
-
-#~ msgid "Extend Selection Range"
-#~ msgstr "Estendi area di selezione"
-
-#~ msgid "Left-Double-Click"
-#~ msgstr "Doppio clic sinistro"
-
-#~ msgid "Select Clip or Entire Track"
-#~ msgstr "Seleziona clip o intera traccia"
-
-#~ msgid "Wheel-Rotate"
-#~ msgstr "Rotazione rotellina"
-
-#~ msgid "Change scrub speed"
-#~ msgstr "Cambia velocità di scorrimento"
-
-#~ msgid "Zoom in on Point"
-#~ msgstr "Zoom avanti su punto"
-
-#~ msgid "Zoom in on a Range"
-#~ msgstr "Zoom avanti su un intervallo"
-
-#~ msgid "same as right-drag"
-#~ msgstr "come destro-trascina"
-
-#~ msgid "Right-Click"
-#~ msgstr "Clic destro"
-
-#~ msgid "Zoom out one step"
-#~ msgstr "Zoom indietro di un passo"
-
-#~ msgid "Right-Drag"
-#~ msgstr "Destro-Trascina"
-
-#~ msgid "same as left-drag"
-#~ msgstr "come sinistro-trascina"
-
-#~ msgid "Shift-Drag"
-#~ msgstr "Maiusc-Trascina"
-
-#~ msgid "Zoom out on a Range"
-#~ msgstr "Zoom indietro in un intervallo"
-
-#~ msgid "Middle-Click"
-#~ msgstr "Clic centrale"
-
-#~ msgid "Zoom default"
-#~ msgstr "Zoom predefinito"
-
-#~ msgid "Change Amplification Envelope"
-#~ msgstr "Modifica amplificazione inviluppo"
-
-#~ msgid "Pencil"
-#~ msgstr "Matita"
-
-#~ msgid "Change Sample"
-#~ msgstr "Cambia campione"
-
-#~ msgid "Alt-Left-Click"
-#~ msgstr "Alt-Clic sinistro"
-
-#~ msgid "Smooth at Sample"
-#~ msgstr "Smorza al campione"
-
-#~ msgid "Change Several Samples"
-#~ msgstr "Modifica più campioni"
-
-#~ msgid "-Left-Drag"
-#~ msgstr "-Sinistro-Trascina"
-
-#~ msgid "Change ONE Sample only"
-#~ msgstr "Cambia UN solo campione"
-
-#~ msgid "Multi"
-#~ msgstr "Multi"
-
-#~ msgid "same as select tool"
-#~ msgstr "come strumento di selezione"
-
-#~ msgid "same as zoom tool"
-#~ msgstr "come strumento di zoom"
-
-#~ msgid "Any"
-#~ msgstr "Qualsiasi"
-
-#~ msgid "Scroll tracks up or down"
-#~ msgstr "Scorri tracce su o giù"
-
-#~ msgid "Shift-Wheel-Rotate"
-#~ msgstr "Maiusc-Rotazione rotellina"
-
-#~ msgid "Scroll waveform"
-#~ msgstr "Scorri forma d'onda"
-
-#~ msgid "-Wheel-Rotate"
-#~ msgstr "-Rotazione rotellina"
-
-#~ msgid "Zoom waveform in or out"
-#~ msgstr "Zoom avanti o indietro su forma d'onda"
-
-#~ msgid "-Shift-Wheel-Rotate"
-#~ msgstr "-Maiusc-Rotazione rotellina"
-
-#~ msgid "Vertical Scale Waveform (dB) range"
-#~ msgstr "Intervallo scala verticale forma d'onda (dB)"
-
-#~ msgid "Shift-Left-Drag"
-#~ msgstr "Maiusc-Sinistro-Trascina"
-
-#~ msgid "Move all clips in track left/right"
-#~ msgstr "Sposta tutte le clip nella traccia sinistra/destra"
-
-#~ msgid "using clip handles"
-#~ msgstr "usando le maniglie delle clip"
-
-#~ msgid "Move clip up/down between tracks"
-#~ msgstr "Sposta clip su/giù tra le tracce"
-
-#~ msgid "Move clip left/right or between tracks"
-#~ msgstr "Sposta clip a sinistra/destra o tra tracce"
-
-#~ msgid "Enable &dragging selection edges"
-#~ msgstr "Abilita &trascinamento margini selezione"
-
-#~ msgid "Enable scrolling left of &zero"
-#~ msgstr "Abilita scorrimento a sinistra di &zero"
-
-#~ msgid "Advanced &vertical zooming"
-#~ msgstr "Zoom &verticale avanzato"
-
-#~ msgid "Mixing down to &mono during export"
-#~ msgstr "Quando si applica il mixaggio &mono in esportazione"
-
-#~ msgid "Mixing down to &stereo during export"
-#~ msgstr "Quando si applica il mixaggio &stereo in esportazione"
-
-#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
-#~ msgstr "Quando si applica il mixaggio in esportazione (FFmpeg &personalizzato o programma esterno)"
-
-#~ msgid "Missing file &name extension during export"
-#~ msgstr "Estensione mancante &nome file durante l'esportazione"
-
-#~ msgid "Scrub"
-#~ msgstr "Scorri"
-
-#~ msgid "Seek"
-#~ msgstr "Ricerca"
-
-#~ msgid "Scrub Ruler"
-#~ msgstr "Righello scorrimento"
-
-#~ msgid "Stop Scrubbing"
-#~ msgstr "Ferma scorrimento"
-
-#~ msgid "Start Scrubbing"
-#~ msgstr "Inizia scorrimento"
-
-#~ msgid "Stop Seeking"
-#~ msgstr "Ferma ricerca"
-
-#~ msgid "Start Seeking"
-#~ msgstr "Inizia ricerca"
-
-#~ msgid "Hide Scrub Ruler"
-#~ msgstr "Nascondi righello scorrimento"
-
-#~ msgid "Scru&b Toolbar"
-#~ msgstr "Barra sco&rrimento"
-
-#~ msgid "Invalid clip speed"
-#~ msgstr "Velocità della clip non valida"
-
-#~ msgid "Clip speed must be a positive value"
-#~ msgstr "La velocità della clip deve essere un valore positivo"
-
-#~ msgid "Change &Speed..."
-#~ msgstr "Cambia &velocità..."
-
-#~ msgid "Render Clip S&tretching"
-#~ msgstr "All&ungamento della clip di rendering"
-
-#~ msgid "Zoom x1/2"
-#~ msgstr "Zoom x1/2"
-
-#~ msgid "Zoom x2"
-#~ msgstr "Zoom x2"
-
-#~ msgid "&Name..."
-#~ msgstr "&Nome..."
-
-#~ msgid "EQ XML to TXT Converter"
-#~ msgstr "Convertitore da EQ XML a TXT"
-
-#~ msgid "Select target EQ effect"
-#~ msgstr "Selezionare effetto EQ di destinazione"
-
-#~ msgid "Equalization XML file"
-#~ msgstr "File XML equalizzazione"
-
-#~ msgid "XML file"
-#~ msgstr "File XML"
-
-#~ msgid "If output text file exists"
-#~ msgstr "Se il file del testo di output esiste"
-
-#~ msgid "Append number"
-#~ msgstr "Accoda numero"
-
-#~ msgid "Overwrite"
-#~ msgstr "Sovrascrivi"
-
-#, lisp-format
-#~ msgid "Error.~%Unable to open file~%~s"
-#~ msgstr "Errore.~%Impossibile aprire il file~%~s"
-
-#, lisp-format
-#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-#~ msgstr "Errore.~%Sovrascrittura file non permessa:~%\"~a.txt\""
-
-#, lisp-format
-#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
-#~ msgstr "Errore.~%Il file non può essere scritto:~%\"~a.txt\""
-
-#~ msgid "Robert Haenggi"
-#~ msgstr "Robert Haenggi"
-
-#~ msgid "Remove Vocals: to mono"
-#~ msgstr "Rimuovi voce: a mono"
-
-#~ msgid "Remove Vocals"
-#~ msgstr "Rimuovi voce"
-
-#~ msgid "Isolate Vocals"
-#~ msgstr "Isola voce"
-
-#~ msgid "Isolate Vocals and Invert"
-#~ msgstr "Isola voce e inverti"
-
-#~ msgid "Remove Center: to mono"
-#~ msgstr "Rimuovi centro: a mono"
-
-#~ msgid "Remove Center"
-#~ msgstr "Rimuovi centro"
-
-#~ msgid "Isolate Center"
-#~ msgstr "Isola centro"
-
-#~ msgid "Isolate Center and Invert"
-#~ msgstr "Isola centro e inverti"
-
-#~ msgid "Strength"
-#~ msgstr "Intensità"
-
-#~ msgid "Low Cut for Vocals (Hz)"
-#~ msgstr "Taglio basso per voci (Hz)"
-
-#~ msgid "High Cut for Vocals (Hz)"
-#~ msgstr "Taglio alto per voci (Hz)"
-
-#, lisp-format
-#~ msgid ""
-#~ "Average x: ~a, y: ~a\n"
-#~ "                    Covariance x y: ~a\n"
-#~ "                    Average variance x: ~a, y: ~a\n"
-#~ "                    Standard deviation x: ~a, y: ~a\n"
-#~ "                    Coefficient of correlation: ~a\n"
-#~ "                    Coefficient of determination: ~a\n"
-#~ "                    Variation of residuals: ~a\n"
-#~ "                    y equals ~a plus ~a times x~%"
-#~ msgstr ""
-#~ "Media x: ~a, y: ~a\n"
-#~ "                    Covarianza x y: ~a\n"
-#~ "                    Varianza media x: ~a, y: ~a\n"
-#~ "                    Deviazione standard x: ~a, y: ~a\n"
-#~ "                    Coefficiente di correlazione: ~a\n"
-#~ "                    Coefficiente di determinazione: ~a\n"
-#~ "                    Variazione dei residui: ~a\n"
-#~ "                    y uguale ~a più ~a volta x~%"
-
-#, lisp-format
-#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-#~ msgstr "Posizione bilanciamento: ~a~%I canali sinistro e destro sono correlati di circa ~a %. Questo significa:~%~a~%"
-
-#~ msgid ""
-#~ " - The two channels are identical, i.e. dual mono.\n"
-#~ "                The center can't be removed.\n"
-#~ "                Any remaining difference may be caused by lossy encoding."
-#~ msgstr ""
-#~ " - I due canali sono identici, cioè doppio mono.\n"
-#~ "                Il centro non può essere rimosso.\n"
-#~ "                Qualsiasi differenza residua può essere causata da una codifica con perdita."
-
-#~ msgid ""
-#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-#~ "                Most likely, the center extraction will be poor."
-#~ msgstr ""
-#~ " - I due canali sono fortemente correlati, ovvero quasi mono o estremamente bilanciati.\n"
-#~ "                Molto probabilmente, l'estrazione centrale sarà scarsa."
-
-#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
-#~ msgstr " - Un valore abbastanza buono, stereo almeno in media e non troppo diffuso."
-
-#~ msgid ""
-#~ " - An ideal value for Stereo.\n"
-#~ "                However, the center extraction depends also on the used reverb."
-#~ msgstr ""
-#~ " - Un valore ideale per lo stereo.\n"
-#~ "                Tuttavia, l'estrazione centrale dipende anche dal riverbero usato."
-
-#~ msgid ""
-#~ " - The two channels are almost not related.\n"
-#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-#~ "                The center extraction can still be good though."
-#~ msgstr ""
-#~ " - I due canali sono quasi non correlati.\n"
-#~ "                Si ha solo rumore o il pezzo è stato masterizzato in modo sbilanciato.\n"
-#~ "                L'estrazione centrale può comunque essere abbastanza buona."
-
-#~ msgid ""
-#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
-#~ "                This can cause strange effects.\n"
-#~ "                Especially when played by only one speaker."
-#~ msgstr ""
-#~ " - Sebbene la traccia sia stereo, il campo è evidentemente molto ampio.\n"
-#~ "                Questo può causare strani effetti.\n"
-#~ "                Soprattutto se riprodotto da un solo altoparlante."
-
-#~ msgid ""
-#~ " - The two channels are nearly identical.\n"
-#~ "                  Obviously, a pseudo stereo effect has been used\n"
-#~ "                  to spread the signal over the physical distance between the speakers.\n"
-#~ "                  Don't expect good results from a center removal."
-#~ msgstr ""
-#~ " - I due canali sono quasi identici.\n"
-#~ "                  Ovviamente, è stato usato un effetto pseudo-stereo\n"
-#~ "                  per diffondere il segnale sulla distanza fisica tra gli altoparlanti.\n"
-#~ "                  Non sono attesi buoni risultati da una rimozione del centro."
-
-#~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "Questa estensione funziona solo con tracce stereo."

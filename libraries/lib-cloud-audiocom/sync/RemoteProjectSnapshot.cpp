@@ -11,6 +11,7 @@
 #include "RemoteProjectSnapshot.h"
 
 #include <algorithm>
+#include <unordered_set>
 
 #include <wx/datetime.h>
 
@@ -110,6 +111,9 @@ RemoteProjectSnapshot::RemoteProjectSnapshot(
          return;
       }
    }
+
+   if (!mDownloadDetached)
+      CleanupOrphanBlocks();
 
    MarkProjectInDB(false);
 
@@ -348,6 +352,9 @@ std::unordered_set<std::string> RemoteProjectSnapshot::CalculateKnownBlocks(
 
 void RemoteProjectSnapshot::DoCancel()
 {
+   if (mState.load(std::memory_order_acquire) != State::Downloading)
+      return;
+
    SetState(State::Cancelled);
 
    mRequestsCV.notify_one();
@@ -413,10 +420,28 @@ void RemoteProjectSnapshot::DownloadBlob(
       });
 }
 
+namespace
+{
+std::vector<uint8_t>
+ReadResponseData(audacity::network_manager::IResponse& response)
+{
+   const auto size = response.getBytesAvailable();
+
+   if (size == 0)
+      return response.readAll<std::vector<uint8_t>>();
+
+   std::vector<uint8_t> data(size);
+   response.readData(data.data(), size);
+
+   return data;
+}
+} // namespace
+
+
 void RemoteProjectSnapshot::OnProjectBlobDownloaded(
    audacity::network_manager::ResponsePtr response)
 {
-   const std::vector<uint8_t> data = response->readAll();
+   const std::vector<uint8_t> data = ReadResponseData(*response);
    uint64_t dictSize               = 0;
 
    if (data.size() < sizeof(uint64_t))
@@ -511,7 +536,8 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 void RemoteProjectSnapshot::OnBlockDownloaded(
    std::string blockHash, audacity::network_manager::ResponsePtr response)
 {
-   const auto compressedData = response->readAll<std::vector<uint8_t>>();
+   const auto compressedData = ReadResponseData(*response);
+
    const auto blockData =
       DecompressBlock(compressedData.data(), compressedData.size());
 
@@ -676,6 +702,7 @@ void RemoteProjectSnapshot::ReportProgress()
 
    if (completed)
    {
+      CleanupOrphanBlocks();
       SetState(State::Succeeded);
       MarkProjectInDB(true);
    }
@@ -732,6 +759,48 @@ void RemoteProjectSnapshot::SetState(State state)
       mEndTime = Clock::now();
 
    mState.exchange(state);
+}
+
+void cloud::audiocom::sync::RemoteProjectSnapshot::CleanupOrphanBlocks()
+{
+   auto db = CloudProjectsDatabase::Get().GetConnection();
+
+   auto transaction = db->BeginTransaction("d_" + mProjectInfo.Id);
+
+   std::unordered_set<std::string> snaphotBlockHashes;
+
+   for (const auto& block : mSnapshotInfo.Blocks)
+      snaphotBlockHashes.insert(ToUpper(block.Hash));
+
+   auto inSnaphotFunction = db->CreateScalarFunction(
+      "inSnapshot", [&snaphotBlockHashes](const std::string& hash)
+      { return snaphotBlockHashes.find(hash) != snaphotBlockHashes.end(); });
+
+   // Delete blocks not in the snapshot
+   auto deleteBlocksStatement = db->CreateStatement(
+      "DELETE FROM " + mSnapshotDBName +
+      ".sampleblocks WHERE blockid NOT IN (SELECT block_id FROM block_hashes WHERE project_id = ? AND inSnapshot(hash))");
+
+   if (!deleteBlocksStatement)
+      return;
+
+   auto result = deleteBlocksStatement->Prepare(mProjectInfo.Id).Run();
+
+   if (!result.IsOk())
+      return;
+
+   auto deleteHashesStatement = db->CreateStatement(
+      "DELETE FROM block_hashes WHERE project_id = ? AND NOT inSnapshot(hash)");
+
+   if (!deleteHashesStatement)
+      return;
+
+   result = deleteHashesStatement->Prepare(mProjectInfo.Id).Run();
+
+   if (!result.IsOk())
+      return;
+
+   transaction.Commit();
 }
 
 bool RemoteProjectSnapshotState::IsComplete() const noexcept

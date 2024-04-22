@@ -28,6 +28,7 @@
 #include "SampleBlock.h"
 #include "WaveTrack.h"
 
+#include "CodeConversions.h"
 #include "DateTimeConversions.h"
 #include "FromChars.h"
 #include "IResponse.h"
@@ -153,7 +154,7 @@ private:
             if (!strongThis)
                return;
 
-            if (result.Code != SyncResultCode::ConnectionFailed)
+            if (!IsUploadRecoverable(result.Code))
                CloudProjectsDatabase::Get().RemovePendingProjectBlob(
                   mProjectId, mSnapshotId);
 
@@ -169,14 +170,14 @@ private:
 
    void CompleteSync()
    {
-      mCompleted.store(true);
-      mProjectCloudExtension.OnSyncCompleted(this, {});
+      if (!mCompleted.exchange(true))
+         mProjectCloudExtension.OnSyncCompleted(this, {});
    }
 
    void FailSync(CloudSyncError error)
    {
-      mCompleted.store(true);
-      mProjectCloudExtension.OnSyncCompleted(this, error);
+      if (!mCompleted.exchange(true))
+         mProjectCloudExtension.OnSyncCompleted(this, error);
    }
 
    void FailSync(ResponseResult result)
@@ -214,12 +215,27 @@ private:
 
          task.Block.Format =
             static_cast<sampleFormat>(pendingBlock.BlockSampleFormat);
-         task.Block.Hash  = pendingBlock.BlockHash;
-         task.Block.Id    = pendingBlock.BlockId;
-         task.Block.Block = sampleBlockFactory->CreateFromId(
-            task.Block.Format, pendingBlock.BlockId);
+         task.Block.Hash = pendingBlock.BlockHash;
+         task.Block.Id   = pendingBlock.BlockId;
+         try
+         {
+            task.Block.Block = sampleBlockFactory->CreateFromId(
+               task.Block.Format, pendingBlock.BlockId);
 
-         blockTasks.push_back(std::move(task));
+            blockTasks.push_back(std::move(task));
+         }
+         catch (const FileException& e)
+         {
+            // We have failed to resume the upload, local data is missing
+            CloudProjectsDatabase::Get().RemovePendingSnapshot(
+               mProjectId, mSnapshotId);
+            FailSync(
+               { SyncResultCode::InternalClientError,
+                 ToUTF8(
+                    XO("Local project data was removed before the sync has completed")
+                       .Translation()) });
+            return;
+         }
       }
 
       mMissingBlocksUploader = MissingBlocksUploader::Create(
@@ -401,6 +417,7 @@ private:
    void Cancel() override
    {
       mCancellationContext->Cancel();
+      FailSync(CloudSyncError { CloudSyncError::Cancelled });
    }
 
    ProjectCloudExtension& mProjectCloudExtension;

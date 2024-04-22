@@ -17,17 +17,22 @@ Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
 
  Other changes
 
-  Changes
-
+  Additions
    * Added an option to skip plugin scanning to Preferences -> Effects.
+   * Added an overflow menu, as well as speed and pitch indicators to clips.
+   * Added subtitle formats for labels. Export to WebVTT and SubRip and import of SubRip files is now supported. (Thanks, Pokechu22 and Larry Bordowitz!)
+
+  Changes
+  
+   * Reworked the plugin manager. 
    * Improved accessibility. (Thanks, David Bailes!)
    * When zooming in vertically (Ctrl+scroll on the vertical scale), the zeroline now remains centered. Moving the vertical zoom off-center still is possible via Shift+scroll on the vertical scale. 
    * Changed the look of the selection adjust cursors (previously pointing fingers on Windows and macOS, now look like >| everywhere).
    * Changed the timeline options button from a green triangle to a settings gear. From it, you can switch between Beats & Measures or hh:mm:ss timeline rulers, set various preferences regarding to looping, as well as playhead behaviors: "Scroll view to playhead" (previously: "Update display while playing") and "Continuous scrolling" (previously: Pinned Play Head).
    * Improved BSD support. (Thanks, Brad Smith!)
    * macOS: Changed the Audacity.app icon on macOS to fit new design guidelines.
-   * Added an overflow menu, as well as speed and pitch indicators to clips.
    * Reordered some menus. 
+   * Moved OK/Cancel buttons of effects to the bottom.
 
   Removals
 
@@ -44,6 +49,7 @@ Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
    * Replaced "Advanced Vertical Zooming" with new always-on behavior.
    * Removed some vertical zoom presets.
    * Removed EQ XML to TXT converter, which was needed for the Audacity 2.3 -> 2.4 transition. It is now a plugin instead, downloadable at https://plugins.audacityteam.org/additional-resources/eq-curves/eq-xml-to-txt-converter. 
+   * Removed the "Vocal reduction and isolation" effect. As a replacement on Windows and Linux, the Intel OpenVINO plugins work better and on a wider array of content, including mono tracks. The old effect still can be downloaded from https://plugins.audacityteam.org/nyquist-plugins/effect-plugins/filters-and-eq#vocal-reduction-and-isolation
 
   Bugfixes
 

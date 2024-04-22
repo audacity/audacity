@@ -93,7 +93,9 @@ CREATE TABLE IF NOT EXISTS migration
    version INTEGER
 );
 
-INSERT OR IGNORE INTO migration (version) VALUES (0);
+INSERT INTO migration (version) VALUES (0);
+
+DELETE FROM migration WHERE ROWID != 1;
 )";
 
 const auto addProjectSyncedDialogShownColumn = R"(
@@ -198,29 +200,9 @@ void cloud::audiocom::sync::CloudProjectsDatabase::DeleteProject(
    if (!connection)
       return;
 
-   static const char* queries[] = {
-      "DELETE FROM projects WHERE project_id = ?",
-      "DELETE FROM block_hashes WHERE project_id = ?",
-      "DELETE FROM pending_snapshots WHERE project_id = ?",
-      "DELETE FROM pending_project_blobs WHERE project_id = ?",
-      "DELETE FROM pending_project_blocks WHERE project_id = ?",
-      "DELETE FROM project_users WHERE project_id = ?",
-   };
-
    auto tx = connection->BeginTransaction("DeleteProject");
-
-   for (auto query : queries)
-   {
-      auto statement = connection->CreateStatement(query);
-
-      if (!statement)
-         return;
-
-      if (!statement->Prepare(projectId).Run().IsOk())
-         return;
-   }
-
-   tx.Commit();
+   if (DeleteProject(connection, projectId))
+      tx.Commit();
 }
 
 bool CloudProjectsDatabase::MarkProjectAsSynced(
@@ -331,13 +313,15 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
    if (!connection)
       return false;
 
-   auto statement = connection->CreateStatement(
+   auto tx = connection->BeginTransaction("UpdateProjectData");
+
+   auto updateProjectData = connection->CreateStatement(
       "INSERT OR REPLACE INTO projects (project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-   if (!statement)
+   if (!updateProjectData)
       return false;
 
-   auto result = statement
+   auto result = updateProjectData
                     ->Prepare(
                        projectData.ProjectId, projectData.SnapshotId,
                        projectData.SavesCount, projectData.LastAudioPreview,
@@ -346,7 +330,30 @@ bool CloudProjectsDatabase::UpdateProjectData(const DBProjectData& projectData)
                        projectData.FirstSyncDialogShown)
                     .Run();
 
-   return result.IsOk();
+   if (!result.IsOk())
+      return false;
+
+   auto listMissingProjects = connection->CreateStatement (
+      "SELECT project_id FROM projects WHERE project_id != ? AND local_path = ?");
+
+   if (!listMissingProjects)
+      return false;
+
+   auto missingProjects = listMissingProjects->Prepare(
+      projectData.ProjectId, projectData.LocalPath).Run();
+
+   for (auto row : missingProjects)
+   {
+      std::string missingProjectId;
+
+      if (!row.Get(0, missingProjectId))
+         return false;
+
+      if (!DeleteProject(connection, missingProjectId))
+         return false;
+   }
+
+   return tx.Commit().IsOk();
 }
 
 bool cloud::audiocom::sync::CloudProjectsDatabase::IsFirstSyncDialogShown(
@@ -492,13 +499,26 @@ void CloudProjectsDatabase::RemovePendingSnapshot(
    if (!connection)
       return;
 
-   auto statement = connection->CreateStatement(
-      "DELETE FROM pending_snapshots WHERE project_id = ? AND snapshot_id = ?");
+   static const char* queries[] = {
+      "DELETE FROM pending_snapshots WHERE project_id = ? AND snapshot_id = ?",
+      "DELETE FROM pending_project_blobs WHERE project_id = ? AND snapshot_id = ?",
+      "DELETE FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ?",
+   };
 
-   if (!statement)
-      return;
+   auto tx = connection->BeginTransaction("RemovePendingSnapshot");
 
-   statement->Prepare(projectId, snapshotId).Run();
+   for (auto query : queries)
+   {
+      auto statement = connection->CreateStatement(query);
+
+      if (!statement)
+         return;
+
+      if (!statement->Prepare(projectId, snapshotId).Run().IsOk())
+         return;
+   }
+
+   tx.Commit();
 }
 
 std::vector<PendingSnapshotData>
@@ -871,6 +891,32 @@ bool CloudProjectsDatabase::RunMigrations()
       return false;
 
    return tx.Commit().IsOk();
+}
+
+bool cloud::audiocom::sync::CloudProjectsDatabase::DeleteProject(
+   sqlite::SafeConnection::Lock& connection, std::string_view projectId)
+{
+   static const char* queries[] = {
+      "DELETE FROM projects WHERE project_id = ?",
+      "DELETE FROM block_hashes WHERE project_id = ?",
+      "DELETE FROM pending_snapshots WHERE project_id = ?",
+      "DELETE FROM pending_project_blobs WHERE project_id = ?",
+      "DELETE FROM pending_project_blocks WHERE project_id = ?",
+      "DELETE FROM project_users WHERE project_id = ?",
+   };
+
+   for (auto query : queries)
+   {
+      auto statement = connection->CreateStatement(query);
+
+      if (!statement)
+         return false;
+
+      if (!statement->Prepare(projectId).Run().IsOk())
+         return false;
+   }
+
+   return true;
 }
 
 } // namespace audacity::cloud::audiocom::sync

@@ -149,6 +149,8 @@ private:
    bool OpenConnection();
    bool RunMigrations();
 
+   bool DeleteProject(sqlite::SafeConnection::Lock& connection, std::string_view projectId);
+
    std::mutex mConnectionMutex;
    std::shared_ptr<sqlite::SafeConnection> mConnection;
 };

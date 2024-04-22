@@ -160,11 +160,11 @@ public:
                                                  mSyncedBitmap;
    }
 
-   TranslatableString GetTranslatableText () const
+   TranslatableString GetTranslatableText() const
    {
       if (mOwner.mState == State::Uploading)
-         return TranslatableString { CloudSyncProgressMessage }
-            .Format(mOwner.mProgress);
+         return TranslatableString { CloudSyncProgressMessage }.Format(
+            mOwner.mProgress);
       else if (mOwner.mState == State::Failed)
          return CloudSyncFailedMessage;
 
@@ -389,9 +389,15 @@ void CloudSyncStatusField::MarkDirty()
    if (field)
       field->MarkDirty(mProject);
 
-   GetStatusWidget().Refresh();
-   GetStatusWidget().Show(mState != State::Hidden);
-   GetStatusWidget().UpdateName();
+   auto& statusWidget = GetStatusWidget();
+
+   statusWidget.Show(mState != State::Hidden);
+   statusWidget.UpdateName();
+
+   if (statusWidget.GetParent())
+      statusWidget.GetParent()->Refresh();
+   else
+      statusWidget.Refresh();
 }
 
 void CloudSyncStatusField::OnCloudStatusChanged(

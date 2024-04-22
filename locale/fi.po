@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2024 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -10,7 +10,7 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-04-05 08:17+0000\n"
 "PO-Revision-Date: 2024-04-08 10:59+0300\n"
@@ -3297,20 +3297,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Esikatselut voidaan päivittää vain pilviprojekteille"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Tallenna pilveen..."
+msgid "Save &To Cloud..."
+msgstr "&Tallenna pilveen..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Päivitä Cloud Audio Preview"
+msgid "&Update Cloud Audio Preview"
+msgstr "Päivitä Clo&ud Audio Preview"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Avaa pilvestä..."
+msgid "Open Fro&m Cloud..."
+msgstr "Avaa &pilvestä..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Jaa ääni..."
+msgid "S&hare Audio..."
+msgstr "&Jaa ääni..."
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -14755,8 +14755,8 @@ msgid "&Export Audio..."
 msgstr "Vi&e ääni..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Vie muut"
+msgid "Expo&rt Other"
+msgstr "&Vie muut"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
