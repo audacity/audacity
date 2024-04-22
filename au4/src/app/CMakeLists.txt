@@ -272,11 +272,11 @@ elseif(OS_IS_LIN)
 
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 
-    message("~~~~~~~ install DIRECTORY: ${_LIB_OUTPUT} DESTINATION ${_LIB_INSTALL}")
-    install( DIRECTORY "${_LIB_OUTPUT}"
-             DESTINATION "${_LIB_INSTALL}"
-             USE_SOURCE_PERMISSIONS
-             FILES_MATCHING PATTERN "*.so*" )
+    # message("~~~~~~~ install DIRECTORY: ${_LIB_OUTPUT} DESTINATION ${_LIB_INSTALL}")
+    # install( DIRECTORY "${_LIB_OUTPUT}"
+    #          DESTINATION "${_LIB_INSTALL}"
+    #          USE_SOURCE_PERMISSIONS
+    #          FILES_MATCHING PATTERN "*.so*" )
 
 elseif(OS_IS_FBSD)
 ###########################################
