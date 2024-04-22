@@ -54,10 +54,10 @@ jobs:
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/linux/build.cmake 
-    # - name: Package 
-    #   if: env.DO_BUILD == 'true'
-    #   run: |
-    #     sudo bash ${CI_DIR}/linux/package.sh
+    - name: Package 
+      if: env.DO_BUILD == 'true'
+      run: |
+        cmake -P ${CI_DIR}/linux/package.cmake 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4
