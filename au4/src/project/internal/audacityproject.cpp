@@ -11,6 +11,11 @@ using namespace muse;
 using namespace au::project;
 using namespace au::processing;
 
+static QString projectDefaultTitle()
+{
+    return muse::qtrc("project", "Untitled project");
+}
+
 Audacity4Project::Audacity4Project()
 {
     m_processingProject = std::make_shared<ProcessingProject>();
@@ -76,6 +81,32 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 void Audacity4Project::close()
 {
     m_au3Project->close();
+}
+
+QString Audacity4Project::displayName() const
+{
+    if (isNewlyCreated()) {
+        if (m_path.empty()) {
+            QString workTitle = QString::fromStdString(m_au3Project->title());
+            if (workTitle.isEmpty()) {
+                return projectDefaultTitle();
+            }
+            return workTitle;
+        }
+        return io::filename(m_path).toQString();
+    }
+
+    //! TODO AU4
+    // if (isCloudProject()) {
+    //     return m_cloudInfo.name;
+    // }
+
+    return io::filename(m_path, false /*isSuffixInteresting*/).toQString();
+}
+
+muse::async::Notification Audacity4Project::displayNameChanged() const
+{
+    return m_displayNameChanged;
 }
 
 void Audacity4Project::setPath(const io::path_t& path)
@@ -187,12 +218,6 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
 
 Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
 {
-    // if (!isMuseScoreFile(fileSuffix) && !fileSuffix.empty()) {
-    //     return exportProject(path, fileSuffix);
-    // }
-
-    // MscIoMode ioMode = mscIoModeBySuffix(fileSuffix);
-
     return doSave(path, generateBackup, createThumbnail);
 }
 
@@ -315,16 +340,40 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
 void Audacity4Project::markAsSaved(const muse::io::path_t& path)
 {
     //! TODO AU4
-    // TRACEFUNC;
+    TRACEFUNC;
 
-    // //! NOTE: order is important
-    // m_isNewlyCreated = false;
+    //! NOTE: order is important
+    m_isNewlyCreated = false;
 
-    // setNeedSave(false);
+    setNeedSave(false);
 
-    // setPath(path);
+    setPath(path);
 
     // m_masterNotation->notation()->undoStack()->stackChanged().notify();
+}
+
+void Audacity4Project::setNeedSave(bool needSave)
+{
+    //! TODO AU4
+    // mu::engraving::MasterScore* score = m_masterNotation->masterScore();
+    // if (!score) {
+    //     return;
+    // }
+
+    // setNeedAutoSave(needSave);
+
+    // bool saved = !needSave;
+
+    // if (saved) {
+    //     m_hasNonUndoStackChanges = false;
+    // }
+
+    // if (score->saved() == saved) {
+    //     return;
+    // }
+
+    // score->setSaved(saved);
+    // m_needSaveNotification.notify();
 }
 
 const ProcessingProjectPtr Audacity4Project::processingProject() const

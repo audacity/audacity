@@ -3,7 +3,7 @@
  * Audacity-Studio-CLA-applies
  *
  * Audacity Studio
- * Music Composition & Notation
+ * A Digital Audio Editor
  *
  * Copyright (C) 2024 Audacity Limited
  *

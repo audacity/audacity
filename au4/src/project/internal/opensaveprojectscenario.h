@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2022 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,8 +20,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_PROJECT_OPENSAVEPROJECTSCENARIO_H
-#define MU_PROJECT_OPENSAVEPROJECTSCENARIO_H
+#ifndef AU_PROJECT_OPENSAVEPROJECTSCENARIO_H
+#define AU_PROJECT_OPENSAVEPROJECTSCENARIO_H
 
 #include "iopensaveprojectscenario.h"
 
@@ -34,7 +34,7 @@
 #include "cloud/audiocom/iaudiocomservice.h"
 #include "cloud/cloudqmltypes.h"
 
-namespace mu::project {
+namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario
 {
     INJECT(IProjectConfiguration, configuration)
@@ -46,13 +46,13 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario
 public:
     OpenSaveProjectScenario() = default;
 
-    muse::RetVal<SaveLocation> askSaveLocation(INotationProjectPtr project, SaveMode mode,
+    muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
                                                SaveLocationType preselectedType = SaveLocationType::Undefined) const override;
 
-    muse::RetVal<muse::io::path_t> askLocalPath(INotationProjectPtr project, SaveMode mode) const override;
-    muse::RetVal<CloudProjectInfo> askCloudLocation(INotationProjectPtr project, SaveMode mode) const override;
-    muse::RetVal<CloudProjectInfo> askPublishLocation(INotationProjectPtr project) const override;
-    muse::RetVal<CloudAudioInfo> askShareAudioLocation(INotationProjectPtr project) const override;
+    muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const override;
+    muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const override;
+    muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const override;
+    muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const override;
 
     bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const override;
 
@@ -68,7 +68,7 @@ private:
     /// \param isPublishShare:
     ///     false -> this is part of a "Save to cloud" action
     ///     true -> this is part of a "Publish" action
-    muse::RetVal<CloudProjectInfo> doAskCloudLocation(INotationProjectPtr project, SaveMode mode, bool isPublishShare) const;
+    muse::RetVal<CloudProjectInfo> doAskCloudLocation(IAudacityProjectPtr project, SaveMode mode, bool isPublishShare) const;
 
     bool warnBeforePublishing(bool isPublishShare, muse::cloud::Visibility visibility) const;
 
@@ -90,4 +90,4 @@ public:
 };
 }
 
-#endif // MU_PROJECT_OPENSAVEPROJECTSCENARIO_H
+#endif // AU_PROJECT_OPENSAVEPROJECTSCENARIO_H

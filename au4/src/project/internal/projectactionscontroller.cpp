@@ -240,14 +240,13 @@ bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType s
     }
 
     //! TODO AU4
-    // RetVal<SaveLocation> response = openSaveProjectScenario()->askSaveLocation(project, saveMode, saveLocationType);
-    // if (!response.ret) {
-    //     LOGE() << response.ret.toString();
-    //     return false;
-    // }
+    RetVal<SaveLocation> response = openSaveProjectScenario()->askSaveLocation(project, saveMode, saveLocationType);
+    if (!response.ret) {
+        LOGE() << response.ret.toString();
+        return false;
+    }
 
-    // return saveProjectAt(response.val, saveMode, force);
-    return false;
+    return saveProjectAt(response.val, saveMode, force);
 }
 
 bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveMode saveMode, bool force)
