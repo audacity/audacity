@@ -37,6 +37,7 @@ set(MUSE_FRAMEWORK_SRC_PATH ${muse_framework_SOURCE_DIR}/framework)
 
 set(CMAKE_MODULE_PATH
     ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/buildscripts/cmake
     ${MUSE_FRAMEWORK_PATH}/buildscripts/cmake
     ${CMAKE_MODULE_PATH}
     )
@@ -47,6 +48,22 @@ include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 # AudacityDependencies
 ###########################################
 set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
+include(GetPlatformInfo)
+
+set(USE_AU3_DEPS_SYSTEM ON)
+if (OS_IS_LIN)
+    set(USE_AU3_DEPS_SYSTEM OFF)
+endif()
+
+if (NOT USE_AU3_DEPS_SYSTEM)
+    include(SetupDependencies)
+endif()
+#message(FATAL_ERROR "Stop")
+
+if (USE_AU3_DEPS_SYSTEM)
+
 set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
 set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
@@ -128,7 +145,7 @@ else()
    configure_file( ${AUDACITY_ROOT}/src/audacity_config.h.in src/private/configunix.h )
 endif()
 
-add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+endif() # USE_AU3_DEPS_SYSTEM
 
 ###########################################
 # Setup option and build settings
