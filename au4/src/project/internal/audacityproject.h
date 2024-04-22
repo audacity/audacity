@@ -5,8 +5,6 @@
 #include "au3wrap/audacity3project.h"
 #include "modularity/ioc.h"
 #include "io/ifilesystem.h"
-// #include "../iprojectconfiguration.h"
-// #include "types/projecttypes.h"
 
 namespace au::au3 {
 class Audacity3Project;
@@ -45,6 +43,9 @@ public:
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     void close() override;
 
+    QString displayName() const override;
+    muse::async::Notification displayNameChanged() const override;
+
     muse::io::path_t path() const override { return m_path; }
     muse::async::Notification pathChanged() const override { return m_pathChanged; }
 
@@ -72,9 +73,11 @@ private:
                      bool createThumbnail = true);
 
     void markAsSaved(const muse::io::path_t& path);
+    void setNeedSave(bool needSave);
 
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;
+    muse::async::Notification m_displayNameChanged;
 
     bool m_isNewlyCreated = false; /// true if the file has never been saved yet
     bool m_isImported = false;

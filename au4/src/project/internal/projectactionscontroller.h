@@ -13,6 +13,7 @@
 #include "../iprojectconfiguration.h"
 #include "irecentfilescontroller.h"
 #include "iprojectautosaver.h"
+#include "iopensaveprojectscenario.h"
 
 #include "../iaudacityproject.h"
 
@@ -26,6 +27,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<muse::io::IFileSystem> fileSystem;
     INJECT(IRecentFilesController, recentFilesController)
     INJECT(IProjectAutoSaver, projectAutoSaver)
+    INJECT(IOpenSaveProjectScenario, openSaveProjectScenario)
 
 public:
     ProjectActionsController() = default;

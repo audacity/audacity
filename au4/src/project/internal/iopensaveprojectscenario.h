@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-Studio-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore Studio
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2022 MuseScore Limited
+ * Copyright (C) 2024 Audacity Limited
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -20,27 +20,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef MU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
-#define MU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
+#ifndef AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
+#define AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
 
 #include "modularity/imoduleinterface.h"
-#include "inotationproject.h"
+#include "iaudacityproject.h"
 
 #include "types/retval.h"
 
-namespace mu::project {
+namespace au::project {
 class IOpenSaveProjectScenario : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IOpenSaveProjectScenario)
 
 public:
-    virtual muse::RetVal<SaveLocation> askSaveLocation(INotationProjectPtr project, SaveMode mode,
+    virtual muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
                                                        SaveLocationType preselectedType = SaveLocationType::Undefined) const = 0;
 
-    virtual muse::RetVal<muse::io::path_t> askLocalPath(INotationProjectPtr project, SaveMode mode) const = 0;
-    virtual muse::RetVal<CloudProjectInfo> askCloudLocation(INotationProjectPtr project, SaveMode mode) const = 0;
-    virtual muse::RetVal<CloudProjectInfo> askPublishLocation(INotationProjectPtr project) const = 0;
-    virtual muse::RetVal<CloudAudioInfo> askShareAudioLocation(INotationProjectPtr project) const = 0;
+    virtual muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const = 0;
+    virtual muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const = 0;
+    virtual muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const = 0;
+    virtual muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const = 0;
 
     virtual bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const = 0;
 
@@ -55,4 +55,4 @@ public:
 };
 }
 
-#endif // MU_PROJECT_IOPENSAVEPROJECTSCENARIO_H
+#endif // AU_PROJECT_IOPENSAVEPROJECTSCENARIO_H

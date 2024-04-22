@@ -29,6 +29,18 @@ public:
     virtual muse::io::path_t lastOpenedProjectsPath() const = 0;
     virtual void setLastOpenedProjectsPath(const muse::io::path_t& path) = 0;
 
+    virtual muse::io::path_t lastSavedProjectsPath() const = 0;
+    virtual void setLastSavedProjectsPath(const muse::io::path_t& path) = 0;
+
+    virtual muse::io::path_t defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition = "",
+                                                   const std::string& suffix = "") const = 0;
+
+    virtual SaveLocationType lastUsedSaveLocationType() const = 0;
+    virtual void setLastUsedSaveLocationType(SaveLocationType type) = 0;
+
+    virtual bool shouldAskSaveLocationType() const = 0;
+    virtual void setShouldAskSaveLocationType(bool shouldAsk) = 0;
+
     virtual muse::io::path_t newProjectTemporaryPath() const = 0;
 
     virtual int homeProjectsPageTabIndex() const = 0;

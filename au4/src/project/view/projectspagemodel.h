@@ -3,7 +3,7 @@
  * Audacity-CLA-applies
  *
  * Audacity
- * Music Composition & Notation
+ * A Digital Audio Editor
  *
  * Copyright (C) 2024 Audacity BVBA and others
  *

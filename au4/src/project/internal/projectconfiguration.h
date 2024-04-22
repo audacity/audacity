@@ -29,6 +29,18 @@ public:
     muse::io::path_t lastOpenedProjectsPath() const override;
     void setLastOpenedProjectsPath(const muse::io::path_t& path) override;
 
+    muse::io::path_t lastSavedProjectsPath() const override;
+    void setLastSavedProjectsPath(const muse::io::path_t& path) override;
+
+    muse::io::path_t defaultSavingFilePath(IAudacityProjectPtr project, const std::string& filenameAddition = "",
+                                           const std::string& suffix = "") const override;
+
+    SaveLocationType lastUsedSaveLocationType() const override;
+    void setLastUsedSaveLocationType(SaveLocationType type) override;
+
+    bool shouldAskSaveLocationType() const override;
+    void setShouldAskSaveLocationType(bool shouldAsk) override;
+
     muse::io::path_t newProjectTemporaryPath() const override;
 
     int homeProjectsPageTabIndex() const override;
