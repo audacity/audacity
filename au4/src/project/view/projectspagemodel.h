@@ -37,10 +37,10 @@ class ProjectsPageModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(IProjectConfiguration, configuration)
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(muse::IInteractive, interactive)
-    INJECT(muse::cloud::IMuseScoreComService, museScoreComService)
+    muse::Inject<IProjectConfiguration> configuration;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
 
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)
