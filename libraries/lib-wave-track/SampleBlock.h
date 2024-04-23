@@ -45,10 +45,7 @@ public:
 class WAVE_TRACK_API SampleBlock
 {
 public:
-   //! Type of function that is informed when a block is about to be deleted
-   struct DeletionCallback : GlobalHook<DeletionCallback,
-      void(const SampleBlock&)
-   >{};
+   using DeletionCallback = std::function<void(const SampleBlock &)>;
 
    virtual ~SampleBlock();
 

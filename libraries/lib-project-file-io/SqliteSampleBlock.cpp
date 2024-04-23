@@ -167,6 +167,11 @@ public:
    SampleBlockPtr DoCreateFromId(
       sampleFormat srcformat, SampleBlockID id) override;
 
+   SampleBlock::DeletionCallback GetSampleBlockDeletionCallback() const
+   {
+      return mSampleBlockDeletionCallback;
+   }
+
 private:
    void OnBeginPurge(size_t begin, size_t end);
    void OnEndPurge();
@@ -175,7 +180,7 @@ private:
 
    AudacityProject &mProject;
    Observer::Subscription mUndoSubscription;
-   std::optional<SampleBlock::DeletionCallback::Scope> mScope;
+   SampleBlock::DeletionCallback mSampleBlockDeletionCallback;
    const std::shared_ptr<ConnectionPtr> mppConnection;
 
    // Track all blocks that this factory has created, but don't control
@@ -286,7 +291,7 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromId(
    // This may throw database errors
    // It initializes the rest of the fields
    ssb->Load(static_cast<SampleBlockID>(id));
-   
+
    return ssb;
 }
 
@@ -338,7 +343,12 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   DeletionCallback::Call(*this);
+   if (
+      const auto cb = mpFactory ? mpFactory->GetSampleBlockDeletionCallback() :
+                                  SampleBlock::DeletionCallback {})
+   {
+      cb(*this);
+   }
 
    if (IsSilent()) {
       // The block object was constructed but failed to Load() or Commit().
@@ -1100,7 +1110,7 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
        return;
    auto purgeStartTime = std::chrono::system_clock::now();
    std::shared_ptr<ProgressDialog> progressDialog;
-   mScope.emplace([=, nDeleted = 0](auto&) mutable {
+   mSampleBlockDeletionCallback = [=, nDeleted = 0](auto&) mutable {
       ++nDeleted;
       if(!progressDialog)
       {
@@ -1111,12 +1121,12 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
       }
       else
          progressDialog->Poll(nDeleted, nToDelete);
-   });
+   };
 }
 
 void SqliteSampleBlockFactory::OnEndPurge()
 {
-   mScope.reset();
+   mSampleBlockDeletionCallback = {};
 }
 
 // Inject our database implementation at startup
