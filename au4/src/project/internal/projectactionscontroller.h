@@ -25,9 +25,9 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<muse::io::IFileSystem> fileSystem;
-    INJECT(IRecentFilesController, recentFilesController)
-    INJECT(IProjectAutoSaver, projectAutoSaver)
-    INJECT(IOpenSaveProjectScenario, openSaveProjectScenario)
+    muse::Inject<IRecentFilesController> recentFilesController;
+    muse::Inject<IProjectAutoSaver> projectAutoSaver;
+    muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
 
 public:
     ProjectActionsController() = default;

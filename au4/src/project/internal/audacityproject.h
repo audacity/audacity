@@ -35,7 +35,7 @@ namespace au::project {
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
 class Audacity4Project : public IAudacityProject
 {
-    INJECT(muse::io::IFileSystem, fileSystem)
+    muse::Inject<muse::io::IFileSystem> fileSystem;
 
 public:
     Audacity4Project();

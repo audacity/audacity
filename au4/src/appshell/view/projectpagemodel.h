@@ -22,10 +22,10 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
 {
     Q_OBJECT
 
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(au::context::IGlobalContext, globalContext)
-    INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
-    INJECT(IAppShellConfiguration, configuration)
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
+    muse::Inject<IAppShellConfiguration> configuration;
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)

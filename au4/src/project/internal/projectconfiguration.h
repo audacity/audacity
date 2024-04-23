@@ -11,7 +11,7 @@
 namespace au::project {
 class ProjectConfiguration : public IProjectConfiguration
 {
-    INJECT(muse::IGlobalConfiguration, globalConfiguration)
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
     ProjectConfiguration() = default;
