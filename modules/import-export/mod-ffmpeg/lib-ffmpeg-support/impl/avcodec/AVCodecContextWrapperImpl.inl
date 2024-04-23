@@ -147,32 +147,32 @@ public:
          mAVCodecContext->bit_rate = value;
    }
 
-   uint64_t GetChannelLayout() const noexcept override
+   const AVChannelLayoutWrapper* GetChannelLayout() const noexcept override
    {
-      if (mAVCodecContext != nullptr)
-         return mAVCodecContext->channel_layout;
-
-      return {};
+      return GetChannelLayoutSafe();
    }
 
-   void SetChannelLayout(uint64_t value) noexcept override
+   void SetChannelLayout(const AVChannelLayoutWrapper* layout) noexcept override
    {
-      if (mAVCodecContext != nullptr)
-         mAVCodecContext->channel_layout = value;
+      if (mAVCodecContext == nullptr || layout == nullptr)
+         return;
+
+      mChannelLayoutWrapper = layout->Clone();
+// Clone never returns nullptr
+#if HAS_AV_CHANNEL_LAYOUT
+      mAVCodecContext->ch_layout = *layout->GetChannelLayout();
+#else
+      mAVCodecContext->channel_layout = layout->GetLegacyChannelLayout();
+      mAVCodecContext->channels       = layout->GetChannelsCount();
+#endif
    }
 
    int GetChannels() const noexcept override
    {
-      if (mAVCodecContext != nullptr)
-         return mAVCodecContext->channels;
+      if (auto layout = GetChannelLayoutSafe(); layout != nullptr)
+         return layout->GetChannelsCount();
 
       return {};
-   }
-
-   void SetChannels(int value) noexcept override
-   {
-      if (mAVCodecContext != nullptr)
-         mAVCodecContext->channels = value;
    }
 
    const AVCodecWrapper* GetCodec() const noexcept override
@@ -276,16 +276,15 @@ public:
 
    int GetFrameNumber() const noexcept override
    {
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(61, 0, 0)
       if (mAVCodecContext != nullptr)
          return mAVCodecContext->frame_number;
+#else
+      if (mAVCodecContext != nullptr)
+         return mAVCodecContext->frame_num;
+#endif
 
       return {};
-   }
-
-   void SetFrameNumber(int value) noexcept override
-   {
-      if (mAVCodecContext != nullptr)
-         mAVCodecContext->frame_number = value;
    }
 
    int GetFrameSize() const noexcept override
@@ -495,6 +494,26 @@ public:
 
       return result;
    }
+   const AVChannelLayoutWrapper* GetChannelLayoutSafe() const noexcept
+   {
+      if (mAVCodecContext == nullptr)
+         return nullptr;
+
+      if (mChannelLayoutWrapper == nullptr)
+      {
+#if HAS_AV_CHANNEL_LAYOUT
+         mChannelLayoutWrapper =
+            mFFmpeg.CreateAVChannelLayout(&mAVCodecContext->ch_layout);
+#else
+         mChannelLayoutWrapper = mFFmpeg.CreateLegacyChannelLayout(
+            mAVCodecContext->channel_layout, mAVCodecContext->channels);
+#endif
+      }
+
+      return mChannelLayoutWrapper.get();
+   }
+
+   mutable std::unique_ptr<AVChannelLayoutWrapper> mChannelLayoutWrapper;
 };
 
 std::unique_ptr<AVCodecContextWrapper> CreateAVCodecContextWrapperFromCodec(

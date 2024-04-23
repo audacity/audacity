@@ -41,7 +41,6 @@ public:
    virtual const AVMediaTypeFwd* GetPixFmts() const noexcept = 0;
    virtual const int* GetSupportedSamplerates() const noexcept = 0;
    virtual const AVSampleFormatFwd* GetSampleFmts() const noexcept = 0;
-   virtual const uint64_t* GetChannelLayouts() const noexcept = 0;
    virtual uint8_t GetMaxLowres() const noexcept = 0;
 
    virtual bool IsAudio() const noexcept = 0;

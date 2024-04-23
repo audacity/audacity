@@ -382,6 +382,27 @@ std::unique_ptr<AVOutputFormatWrapper> FFmpegFunctions::GuessOutputFormat(
    return mPrivate->FormatFactories.CreateAVOutputFormatWrapper(outputFormat);
 }
 
+std::unique_ptr<AVChannelLayoutWrapper>
+FFmpegFunctions::CreateDefaultChannelLayout(int channelsCount) const
+{
+   return mPrivate->UtilFactories.CreateDefaultChannelLayout(
+      *this, channelsCount);
+}
+
+std::unique_ptr<AVChannelLayoutWrapper>
+FFmpegFunctions::CreateLegacyChannelLayout(
+   uint64_t layout, int channelsCount) const
+{
+   return mPrivate->UtilFactories.CreateLegacyChannelLayout(
+      *this, layout, channelsCount);
+}
+
+std::unique_ptr<AVChannelLayoutWrapper>
+FFmpegFunctions::CreateAVChannelLayout(const AVChannelLayout* layout) const
+{
+   return mPrivate->UtilFactories.CreateAVChannelLayout(*this, layout);
+}
+
 std::unique_ptr<AVOutputFormatWrapper>
 FFmpegFunctions::CreateAVOutputFormatWrapper(
    const AVOutputFormat* outputFormat) const
@@ -455,12 +476,6 @@ const std::vector<const AVCodecWrapper*>& FFmpegFunctions::GetCodecs() const
       const_cast<FFmpegFunctions*>(this)->FillCodecsList();
 
    return mCodecPointers;
-}
-
-std::unique_ptr<AVFifoBufferWrapper>
-FFmpegFunctions::CreateFifoBuffer(int size) const
-{
-   return std::make_unique<AVFifoBufferWrapper>(*this, size);
 }
 
 void FFmpegFunctions::FillCodecsList()

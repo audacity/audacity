@@ -178,6 +178,8 @@ struct FFMPegVersion final
 
 typedef struct AVBuffer AVBuffer;
 
+typedef struct AVChannelLayout AVChannelLayout;
+
 struct AudacityAVBufferRef
 {
    AVBuffer* buffer;
