@@ -1,515 +1,253 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPrincipalClass</key>
-    <string>NSApplication</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<!-- UTI declarations for OS X >= 10.4	-->
-	<key>UTExportedTypeDeclarations</key>
-	<array>
-		<!-- MuseScore documents -->
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.musescore.mscz</string>
-			<key>UTTypeDescription</key>
-			<string>MuseScore File</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>mscz</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/x-musescore</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.musescore.mscx</string>
-			<key>UTTypeDescription</key>
-			<string>MuseScore Uncompressed File</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>mscx</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/x-musescore+xml</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.musescore.mscs</string>
-			<key>UTTypeDescription</key>
-			<string>MuseScore Uncompressed File</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>mscs</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/x-musescore+xml</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.musescore.mscx,</string>
-			<key>UTTypeDescription</key>
-			<string>MuseScore Backup File</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>mscx,</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/x-musescore+xml</string>
-				</array>
-			</dict>
-		</dict>
-		<dict>
-			<key>UTTypeIdentifier</key>
-			<string>org.musescore.mscz,</string>
-			<key>UTTypeDescription</key>
-			<string>MuseScore Compressed Backup File</string>
-			<key>UTTypeConformsTo</key>
-			<array>
-				<string>public.data</string>
-				<string>public.content</string>
-			</array>
-			<key>UTTypeTagSpecification</key>
-			<dict>
-				<key>public.filename-extension</key>
-				<array>
-					<string>mscz,</string>
-				</array>
-				<key>public.mime-type</key>
-				<array>
-					<string>application/x-musescore</string>
-				</array>
-			</dict>
-		</dict>
-	</array>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
-		    <key>CFBundleTypeName</key>
-			<string>MuseScore File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mscx</string>
+				<string>aup3</string>
+				<string>aup</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>MscxIcon.icns</string>
+			<string>AudacityProject.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-musescore+xml</string>
+				<string>application/x-audacity-project</string>
+				<string>application/x-audacity-project+sqlite3</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Audacity Project</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>auDp</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
 			<key>LSIsAppleDefaultForType</key>
 			<true/>
-			<key>LSHandlerRank</key>
-   			<string>Owner</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Compressed MuseScore File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mscz</string>
+				<string>wav</string>
+				<string>wave</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>MsczIcon.icns</string>
+			<string>AudacityWAV.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-musescore</string>
+				<string>audio/wav</string>
+				<string>audio/x-wav</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>WAV Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>WAV </string>
+				<string>wav </string>
+				<string>WAVE</string>
+				<string>wave</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
-			<key>LSHandlerRank</key>
-   			<string>Owner</string>
 		</dict>
 		<dict>
-		    <key>CFBundleTypeName</key>
-			<string>MuseScore Backup File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mscx,</string>
+				<string>aif</string>
+				<string>aiff</string>
+				<string>aifc</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>MscxIcon.icns</string>
+			<string>AudacityAIFF.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-musescore+xml</string>
+				<string>audio/aiff</string>
+				<string>audio/x-aiff</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>AIFF Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AIFF</string>
+				<string>AIFC</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
-			<key>LSHandlerRank</key>
-   			<string>Owner</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Compressed MuseScore Backup File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mscz,</string>
+				<string>au</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>MsczIcon.icns</string>
+			<string>AudacityAU.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-musescore</string>
+				<string>audio/au</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>AU Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AU  </string>
+				<string>au  </string>
+				<string>snd </string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>LSIsAppleDefaultForType</key>
-			<true/>
-			<key>LSHandlerRank</key>
-   			<string>Owner</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Uncompressed MusicXML File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>musicxml</string>
-				<string>xml</string>
+				<string>mp3</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AudacityMP3.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/vnd.recordare.musicxml+xml</string>
+				<string>audio/mpeg</string>
+				<string>audio/x-mpeg</string>
+				<string>audio/mpeg3</string>
+				<string>audio/x-mpeg3</string>
+				<string>audio/mpg</string>
+				<string>audio/x-mpg</string>
+				<string>audio/mp3</string>
+				<string>audio/x-mp3</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>MP3 Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>mp3!</string>
+				<string>MP3!</string>
+				<string>MPG3</string>
+				<string>mpg3</string>
+				<string>Mp3 </string>
+				<string>MP3 </string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Compressed MusicXML File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mxl</string>
+				<string>ogg</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AudacityOGG.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/vnd.recordare.musicxml</string>
+				<string>audio/ogg</string>
+				<string>audio/x-ogg</string>
+				<string>audio/vorbis</string>
+				<string>audio/x-vorbis</string>
+				<string>audio/vorbisogg</string>
+				<string>audio/x-vorbisogg</string>
+				<string>audio/ogg-vorbis</string>
+				<string>audio/x-ogg-vorbis</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Ogg Vorbis Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>Ogg </string>
+				<string>OGG </string>
+				<string>OggS</string>
+				<string>OGGS</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>XML</string>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>MIDI File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>mid</string>
+				<string>flac</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AudacityFLAC.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-midi</string>
-				<string>audio/midi</string>
+				<string>audio/flac</string>
+				<string>audio/x-flac</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>FLAC Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>flac</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
 		</dict>
 		<dict>
-			<key>CFBundleTypeName</key>
-			<string>KAR File</string>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>kar</string>
+				<string>m4a</string>
 			</array>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
-				<string>application/x-midi</string>
-				<string>audio/midi</string>
+				<string>audio/m4a</string>
+				<string>audio/x-m4a</string>
 			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSTypeIsPackage</key>
-			<false/>
-		</dict>
-		<dict>
 			<key>CFBundleTypeName</key>
-			<string>Bagpipe player File</string>
-			<key>CFBundleTypeExtensions</key>
+			<string>MPEG-4 Audio File</string>
+			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>bww</string>
+				<string>M4A </string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Overture Musical Score</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ove</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Score Writer Document</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>scw</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Capella File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>cap</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Capella CapXML File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>capx</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>BIAB File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>SGU</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>BIAB File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>MGU</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>MuseData File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>md</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Guitar Pro 3 File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gp3</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Guitar Pro 4 File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gp4</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Guitar Pro 5 File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gp5</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Guitar Pro 6 File</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>gpx</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Soundfont SF2</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>sf2</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeName</key>
-			<string>Soundfont SF3</string>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>sf3</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
+			<string>Editor</string>
 		</dict>
 	</array>
-
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-            <key>CFBundleTypeRole</key>
-            <string>Editor</string>
-            <key>CFBundleURLName</key>
-            <string>org.musescore.musescore.musescoreurl</string>
-            <key>CFBundleURLSchemes</key>
-            <array>
-                <string>musescore</string>
-            </array>
-        </dict>
-    </array>
-
-    <key>ATSApplicationFontsPath</key>
-    <string>fonts</string>
-
 	<key>CFBundleExecutable</key>
-	<string>${MACOSX_BUNDLE_EXECUTABLE_NAME}</string>
+	<string>Wrapper</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
 	<key>CFBundleIconFile</key>
-	<string>${MACOSX_BUNDLE_ICON_FILE}</string>
+	<string>Audacity.icns</string>
 	<key>CFBundleIdentifier</key>
-	<string>${MACOSX_BUNDLE_GUI_IDENTIFIER}</string>
+	<string>org.audacityteam.audacity</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleLongVersionString</key>
-	<string>${MACOSX_BUNDLE_LONG_VERSION_STRING}</string>
+	<string>Version ${AUDACITY_INFO_VERSION}</string>
 	<key>CFBundleName</key>
-	<string>${MACOSX_BUNDLE_BUNDLE_NAME}</string>
+	<string>Audacity</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>${MACOSX_BUNDLE_SHORT_VERSION_STRING}</string>
+	<string>${AUDACITY_INFO_VERSION}</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
+	<string>auDy</string>
 	<key>CFBundleVersion</key>
-	<string>${MACOSX_BUNDLE_BUNDLE_VERSION}</string>
-	<key>CSResourcesFileMapped</key>
-	<true/>
-	<key>LSRequiresCarbon</key>
-	<true/>
-	<key>LSMinimumSystemVersion</key>
-	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
+	<string>${AUDACITY_INFO_VERSION}</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.music</string>
-	<key>ATSApplicationFontsPath</key>
-	<string>fonts/</string>
-	<key>SUFeedURL</key>
-	<string>${SPARKLE_APPCAST_URL}</string>
-	<key>SUAllowsAutomaticUpdates</key>
-	<false/>
-	<key>CFBundleLocalizations</key>
+	<key>NSHighResolutionCapable</key>
+	<true/>
+   <key>NSRequiresAquaSystemAppearance</key>
+   <true/>
+	<key>NSHumanReadableCopyright</key>
+	<string>Audacity version ${AUDACITY_INFO_VERSION}</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Audacity requires access to the microphone only if you intend to record from it.</string>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+	<key>CFBundleURLTypes</key>
 	<array>
-		<string>ar</string>
-		<string>cs</string>
-		<string>da</string>
-		<string>de</string>
-		<string>el</string>
-		<string>en</string>
-		<string>es</string>
-		<string>fi</string>
-		<string>fr</string>
-		<string>fr_CA</string>
-		<string>hu</string>
-		<string>is</string>
-		<string>it</string>
-		<string>ja</string>
-		<string>ko</string>
-		<string>nb</string>
-		<string>nl</string>
-		<string>pl</string>
-		<string>pt</string>
-		<string>pt_BR</string>
-		<string>pt_PT</string>
-		<string>ro</string>
-		<string>ru</string>
-		<string>sk</string>
-		<string>sl</string>
-		<string>sv</string>
-		<string>th</string>
-		<string>tr</string>
-		<string>uk</string>
-		<string>zh_CN</string>
-		<string>zh_TW</string>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Audacity</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>audacity</string>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
