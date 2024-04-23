@@ -27,7 +27,7 @@
 
 #include "global/containers.h"
 
-namespace mu::context {
+namespace au::context {
 static const std::string CTX_ANY("any");
 static const std::string CTX_NOTATION_OPENED("notation-opened");
 static const std::string CTX_NOTATION_FOCUSED("notation-focused");

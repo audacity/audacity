@@ -66,6 +66,17 @@ bool Audacity3Project::load(const muse::io::path_t& filePath)
     return bParseSuccess;
 }
 
+bool Audacity3Project::save(const muse::io::path_t& filePath, const bool fromSaveAs)
+{
+    //! TODO AU4
+    // auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    // std::string sstr = filePath.toStdString();
+    // FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
+    // TrackList& tracks = TrackList::Get(m_data->projectRef());
+    // bool success = projectFileIO.SaveProject(fileName, nullptr /* m_lastSavedTracks*/);
+    return false;
+}
+
 void Audacity3Project::close()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());

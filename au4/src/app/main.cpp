@@ -114,7 +114,7 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
-    app.addModule(new mu::context::ContextModule());
+    app.addModule(new au::context::ContextModule());
     app.addModule(new au::project::ProjectModule());
     app.addModule(new au::projectscene::ProjectSceneModule());
     app.addModule(new au::au3::Au3WrapModule());

@@ -25,7 +25,7 @@
 #include "internal/globalcontext.h"
 #include "internal/uicontextresolver.h"
 
-using namespace mu::context;
+using namespace au::context;
 using namespace muse;
 using namespace muse::modularity;
 
@@ -40,7 +40,7 @@ void ContextModule::registerExports()
     m_uicontextResolver = std::make_shared<UiContextResolver>();
 
     ioc()->registerExport<IGlobalContext>(moduleName(), m_globalContext);
-    ioc()->registerExport<IUiContextResolver>(moduleName(), m_uicontextResolver);
+    ioc()->registerExport<muse::ui::IUiContextResolver>(moduleName(), m_uicontextResolver);
 }
 
 void ContextModule::onInit(const IApplication::RunMode& mode)

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -26,7 +26,7 @@
 #include "project/iaudacityproject.h"
 #include "async/notification.h"
 
-namespace mu::context {
+namespace au::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(au::context::IGlobalContext)

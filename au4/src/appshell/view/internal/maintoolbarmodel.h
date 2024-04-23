@@ -36,7 +36,7 @@ class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncabl
 {
     Q_OBJECT
 
-    INJECT(mu::context::IGlobalContext, context)
+    INJECT(au::context::IGlobalContext, context)
     INJECT(muse::IGlobalConfiguration, globalConfiguration)
 
 public:

@@ -21,8 +21,15 @@ void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::openProject);
+    dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
+    dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
 
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
+}
+
+IAudacityProjectPtr ProjectActionsController::currentProject() const
+{
+    return globalContext()->currentProject();
 }
 
 Ret ProjectActionsController::openProject(const ProjectFile& file)
@@ -130,10 +137,23 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return false;
 }
 
-bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& path, SaveMode saveMode)
+bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
 {
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return false;
+    }
+
+    Ret ret = project->save(filePath, saveMode);
     //! TODO AU4
-    return false;
+    // if (!ret) {
+    //     LOGE() << ret.toString();
+    //     warnScoreCouldnotBeSaved(ret);
+    //     return false;
+    // }
+
+    recentFilesController()->prependRecentFile(makeRecentFile(project));
+    return true;
 }
 
 const ProjectBeingDownloaded& ProjectActionsController::projectBeingDownloaded() const
@@ -185,6 +205,72 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
     }
 
     return filePath;
+}
+
+Ret ProjectActionsController::canSaveProject() const
+{
+    auto project = currentProject();
+    if (!project) {
+        LOGW() << "no current project";
+        return make_ret(Err::NoProjectError);
+    }
+
+    return project->canSave();
+}
+
+bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType saveLocationType, bool force)
+{
+    if (m_isProjectSaving) {
+        return false;
+    }
+
+    m_isProjectSaving = true;
+    DEFER {
+        m_isProjectSaving = false;
+    };
+
+    IAudacityProjectPtr project = currentProject();
+
+    if (saveMode == SaveMode::Save && !project->isNewlyCreated()) {
+        // if (project->isCloudProject()) {
+        //     return saveProjectAt(SaveLocation(SaveLocationType::Cloud, project->cloudInfo()));
+        // }
+
+        return saveProjectAt(SaveLocation(SaveLocationType::Local));
+    }
+
+    //! TODO AU4
+    RetVal<SaveLocation> response = openSaveProjectScenario()->askSaveLocation(project, saveMode, saveLocationType);
+    if (!response.ret) {
+        LOGE() << response.ret.toString();
+        return false;
+    }
+
+    return saveProjectAt(response.val, saveMode, force);
+}
+
+bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveMode saveMode, bool force)
+{
+    //! TODO AU4
+    // if (!force) {
+    //     Ret ret = canSaveProject();
+    //     if (!ret) {
+    //         ret = askIfUserAgreesToSaveProjectWithErrors(ret, location);
+    //         if (!ret) {
+    //             return ret;
+    //         }
+    //     }
+    // }
+
+    if (location.isLocal()) {
+        return saveProjectLocally(location.localPath(), saveMode);
+    }
+
+    // if (location.isCloud()) {
+    //     return saveProjectToCloud(location.cloudInfo(), saveMode);
+    // }
+
+    return false;
 }
 
 muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, const String& displayNameOverride)

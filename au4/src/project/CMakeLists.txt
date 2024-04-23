@@ -50,13 +50,13 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/projecterrors.h
-    ${CMAKE_CURRENT_LIST_DIR}/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudacityproject.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectcreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecentfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectautosaver.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projecttypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/projectmeta.h
@@ -67,10 +67,15 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/iopensaveprojectscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/opensaveprojectscenario.h
 
     ${PLATFORM_SRC}
 

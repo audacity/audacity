@@ -3,7 +3,7 @@
  * Audacity-CLA-applies
  *
  * Audacity
- * Music Composition & Notation
+ * A Digital Audio Editor
  *
  * Copyright (C) 2024 Audacity BVBA and others
  *
@@ -34,6 +34,7 @@
 
 #include "view/projectspagemodel.h"
 #include "view/recentprojectsmodel.h"
+#include "internal/opensaveprojectscenario.h"
 #include "view/cloudprojectsmodel.h"
 #include "view/cloudprojectstatuswatcher.h"
 #include "view/projectthumbnailloader.h"
@@ -76,6 +77,7 @@ void ProjectModule::registerExports()
 
     ioc()->registerExport<IProjectConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecentFilesController>(moduleName(), m_recentFilesController);
+    ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario());
 }
 
 void ProjectModule::resolveImports()
@@ -87,6 +89,7 @@ void ProjectModule::resolveImports()
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://project/new"), "Audacity/Project/NewProjectDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://project/asksavelocationtype"), "Audacity/Project/AskSaveLocationTypeDialog.qml");
     }
 }
 
@@ -105,6 +108,9 @@ void ProjectModule::registerUiTypes()
     qmlRegisterType<NewProjectModel>("Audacity.Project", 1, 0, "NewProjectModel");
     qmlRegisterType<ProjectThumbnailLoader>("Audacity.Project", 1, 0, "ProjectThumbnailLoader");
     qmlRegisterType<PixmapProjectThumbnailView>("Audacity.Project", 1, 0, "PixmapProjectThumbnailView");
+
+    qmlRegisterUncreatableType<QMLSaveLocationType>("Audacity.Project", 1, 0, "SaveLocationType",
+                                                    "Not creatable as it is an enum type");
 }
 
 void ProjectModule::onInit(const muse::IApplication::RunMode&)
