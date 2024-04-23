@@ -13,7 +13,9 @@
 #include <wx/window.h>
 #include <wx/containr.h>
 
+#ifndef __FreeBSD__
 extern template class WXDLLIMPEXP_CORE wxNavigationEnabled<wxWindow>;
+#endif
 
 #include "ListNavigationEnabled.h"
 
