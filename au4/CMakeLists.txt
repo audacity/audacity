@@ -53,7 +53,7 @@ add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 include(GetPlatformInfo)
 
 set(USE_AU3_DEPS_SYSTEM ON)
-if (OS_IS_LIN)
+if (NOT OS_IS_WIN)
     set(USE_AU3_DEPS_SYSTEM OFF)
 endif()
 

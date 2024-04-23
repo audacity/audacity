@@ -4,7 +4,7 @@ on:
   pull_request:
     paths: ["au4/**"]
     branches:
-    - master_off
+    - master
     
   # schedule:
   #   - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
