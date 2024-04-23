@@ -142,7 +142,7 @@ echo export QML2_IMPORT_PATH="${qt_dir}/qml" >> ${ENV_FILE}
 # COMPILER
 if [ "$COMPILER" == "gcc" ]; then
 
-  gcc_version="10"
+  gcc_version="11"
   sudo apt install -y --no-install-recommends "g++-${gcc_version}"
   sudo update-alternatives \
     --install /usr/bin/gcc gcc "/usr/bin/gcc-${gcc_version}" 40 \

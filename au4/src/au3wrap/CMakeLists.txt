@@ -132,42 +132,6 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-module-manager
 )
 
-if (AU3_ADD_AS_LIBS)
-set(AUDACITY_GLOBAL_LIBTYPE STATIC)
-macro(add_au3_lib name)
-    add_subdirectory(${AU3_LIBRARIES}/lib-${name} au3-lib-${name})
-    target_include_directories(lib-${name} PRIVATE ${AU3_INCLUDE})
-    target_compile_definitions(lib-${name} PRIVATE ${AU3_DEF})
-
-if (CC_IS_MSVC)
-    # set_property(TARGET lib-${name} PROPERTY
-    # MSVC_RUNTIME_LIBRARY “MultiThreaded$<$CONFIG:Debug:Debug>”)
-    message("CMAKE_CXX_FLAGS_DEBUG: ${CMAKE_CXX_FLAGS_DEBUG}")
-    set_target_properties(lib-${name} PROPERTIES COMPILE_FLAGS "${CMAKE_CXX_FLAGS_DEBUG}")
-endif()
-endmacro()
-
-add_au3_lib(project)
-# project dependincies
-add_au3_lib(utility)
-add_au3_lib(registries)
-add_au3_lib(preferences)
-add_au3_lib(basic-ui)
-add_au3_lib(strings)
-add_au3_lib(string-utils)
-add_au3_lib(components)
-add_au3_lib(exceptions)
-add_au3_lib(xml)
-add_au3_lib(files)
-# end project dependincies
-
-set(MODULE_LINK
-    wxwidgets::wxwidgets
-    expat::expat
-    lib-project-interface
-)
-endif()
-
 set(AU3_ADD_AS_SRC ON)
 if (AU3_ADD_AS_SRC)
     set(AU3_SRC
@@ -447,12 +411,44 @@ set(MODULE_LINK
     pffft
 )
 endif()
+
+set(WXBASE_RESTRICTIONS
+   "wxUSE_GUI=0"
+
+   # Don't use app.h
+   _WX_APP_H_BASE_
+
+   # Don't use evtloop.h
+   _WX_EVTLOOP_H_
+
+   # Don't use image.h
+   _WX_IMAGE_H
+
+   # Don't use colour.h
+   _WX_COLOUR_H_BASE_
+
+   # Don't use brush.h
+   _WX_BRUSH_H_BASE_
+
+   # Don't use pen.h
+   _WX_PEN_H_BASE_
+)
+
+set(WXBASE_DEFS
+    ${WXBASE_RESTRICTIONS}
+)
+
+include(GetPlatformInfo)
+
+if (OS_IS_LIN)
+    set(WXBASE_DEFS ${WXBASE_DEFS} __WXGTK__)
+endif()
+
 # ==================================
 set(MODULE_INCLUDE ${AU3_INCLUDE})
-set(MODULE_DEF ${AU3_DEF})
+set(MODULE_DEF ${AU3_DEF} ${WXBASE_DEFS})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 
 set(MODULE_USE_PCH_NONE ON)
 set(MODULE_USE_UNITY_NONE ON)
 setup_module()
-

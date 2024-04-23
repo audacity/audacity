@@ -158,7 +158,7 @@ export EXTRA_PLATFORM_PLUGINS="libqoffscreen.so;libqwayland-egl.so;libqwayland-g
 # Qml files can be in different directories, the qmlimportscanner will go through everything recursively.
 export QML_SOURCES_PATHS=./
 
-export LD_LIBRARY_PATH=${appdir}/lib/audacity:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=${appdir}/lib:$LD_LIBRARY_PATH
 linuxdeploy --appdir "${appdir}" # adds all shared library dependencies
 echo "end linuxdeploy: $?"
 linuxdeploy-plugin-qt --appdir "${appdir}" # adds all Qt dependencies
