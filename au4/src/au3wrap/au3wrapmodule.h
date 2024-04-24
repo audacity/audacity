@@ -26,6 +26,7 @@
 
 namespace au::au3 {
 class WxLogWrap;
+class Audacity3Playback;
 class Au3WrapModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -38,6 +39,8 @@ public:
 private:
 
     WxLogWrap* m_wxLog = nullptr;
+
+    std::shared_ptr<Audacity3Playback> m_playback;
 };
 }
 

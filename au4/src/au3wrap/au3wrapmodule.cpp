@@ -32,6 +32,9 @@
 
 #include "internal/wxlogwrap.h"
 
+#include "modularity/ioc.h"
+#include "audacity3playback.h"
+
 #include "log.h"
 
 using namespace au::au3;
@@ -43,6 +46,9 @@ std::string Au3WrapModule::moduleName() const
 
 void Au3WrapModule::registerExports()
 {
+    m_playback = std::make_shared<Audacity3Playback>();
+
+    muse::modularity::ioc()->registerExport<IAudacity3Playback>(moduleName(), m_playback);
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
