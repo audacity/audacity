@@ -36,7 +36,7 @@ class NewProjectModel : public QObject
 {
     Q_OBJECT
 
-    INJECT(au::project::IProjectConfiguration, configuration)
+    muse::Inject<au::project::IProjectConfiguration> configuration;
 
 public:
     explicit NewProjectModel(QObject* parent = nullptr);
