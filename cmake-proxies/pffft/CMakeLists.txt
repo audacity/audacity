@@ -13,3 +13,4 @@ set(INCLUDES
 set_target_properties( ${TARGET} PROPERTIES FOLDER "lib-src" )
 target_sources( ${TARGET} PRIVATE ${SOURCES} )
 target_include_directories( ${TARGET} PUBLIC ${INCLUDES} )
+set_property(TARGET ${TARGET} PROPERTY POSITION_INDEPENDENT_CODE ON)
