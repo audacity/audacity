@@ -79,7 +79,11 @@ macro(do_build build_type build_dir)
         WORKING_DIRECTORY ${build_dir}
         RESULT_VARIABLE CMAKE_RESULT
     )
-    message(STATUS "========= End configure: ${CMAKE_RESULT}")
+    if (CMAKE_RESULT GREATER 0)
+        message(FATAL_ERROR "========= Failed configure =========")
+    else()
+        message(STATUS "========= Success configure =========")
+    endif()
 
     message(STATUS "========= Begin build =========")
     execute_process(
@@ -87,7 +91,11 @@ macro(do_build build_type build_dir)
         WORKING_DIRECTORY ${build_dir}
         RESULT_VARIABLE NINJA_RESULT
     )
-    message(STATUS "========= End build: ${NINJA_RESULT}")
+    if (NINJA_RESULT GREATER 0)
+        message(FATAL_ERROR "========= Failed build =========")
+    else()
+        message(STATUS "========= Success build =========")
+    endif()
 
 
     # cmake .. -GNinja \
@@ -115,7 +123,12 @@ macro(do_install build_dir)
         COMMAND cmake --install ${build_dir}
         RESULT_VARIABLE INSTALL_RESULT
     )
-    message(STATUS "========= End install: ${INSTALL_RESULT}")
+    if (INSTALL_RESULT GREATER 0)
+        message(FATAL_ERROR "========= Failed install =========")
+    else()
+        message(STATUS "========= Success install =========")
+    endif()
+
 endmacro()
 
 # Configure and build

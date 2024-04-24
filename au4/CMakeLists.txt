@@ -49,6 +49,11 @@ include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 ###########################################
 set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
 add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${AUDACITY_CMAKE_MODULE_PATH}
+    )
 
 include(GetPlatformInfo)
 
@@ -63,12 +68,6 @@ endif()
 #message(FATAL_ERROR "Stop")
 
 if (USE_AU3_DEPS_SYSTEM)
-
-set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${AUDACITY_CMAKE_MODULE_PATH}
-    )
 
 set( AUDACITY_VERSION 4 )
 set( AUDACITY_RELEASE 0 )
