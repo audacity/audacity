@@ -223,6 +223,8 @@ RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityP
 //! TODO AU4
 RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityProjectPtr project, SaveMode mode, bool isPublishShare) const
 {
+    return RetVal<CloudProjectInfo>();
+
     // bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();
     // if (!isCloudAvailable) {
     //     return warnCloudNotAvailableForUploading(isPublishShare);
@@ -323,6 +325,8 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityPr
 //! TODO AU4
 bool OpenSaveProjectScenario::warnBeforePublishing(bool isPublishShare, cloud::Visibility visibility) const
 {
+    return false;
+
     // if (isPublishShare) {
     //     if (!configuration()->shouldWarnBeforePublish()) {
     //         return true;
@@ -520,6 +524,8 @@ void OpenSaveProjectScenario::showCloudOpenError(const Ret& ret) const
 Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret, const CloudProjectInfo& info, bool isPublishShare,
                                                 bool alreadyAttempted) const
 {
+    return muse::make_ok();
+
     // std::string title;
     // if (alreadyAttempted) {
     //     title = isPublishShare

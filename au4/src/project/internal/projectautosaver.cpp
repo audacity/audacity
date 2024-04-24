@@ -112,11 +112,13 @@ muse::io::path_t ProjectAutoSaver::projectOriginalPath(const muse::io::path_t& p
 //     muse::io::path_t withoutAutosaveSuffix = io::filename(projectAutoSavePath, false);
 
 //     return engraving::mainFilePath(io::absoluteDirpath(projectAutoSavePath).appendingComponent(withoutAutosaveSuffix));
+    return muse::io::path_t();
 }
 
 muse::io::path_t ProjectAutoSaver::projectAutoSavePath(const muse::io::path_t& projectPath) const
 {
     // return engraving::containerPath(projectPath).appendingSuffix(AUTOSAVE_SUFFIX);
+    return muse::io::path_t();
 }
 
 IAudacityProjectPtr ProjectAutoSaver::currentProject() const

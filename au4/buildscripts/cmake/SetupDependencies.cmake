@@ -35,7 +35,9 @@ function(populate name remote_suffix)
 
     if (NOT EXISTS ${local_path}/${name}.cmake)
         file(MAKE_DIRECTORY ${local_path})
-        file(DOWNLOAD ${remote_url}/${name}.cmake ${local_path}/${name}.cmake)
+        file(DOWNLOAD ${remote_url}/${name}.cmake ${local_path}/${name}.cmake
+            HTTPHEADER "Cache-Control: no-cache"
+        )
     endif()
 
     include(${local_path}/${name}.cmake)
@@ -49,10 +51,12 @@ function(populate name remote_suffix)
     set(${name}_INCLUDE_DIRS ${include_dirs} PARENT_SCOPE)
     set(${name}_LIBRARIES ${libraries} PARENT_SCOPE)
 
-    install(FILES ${libraries} TYPE LIB)
-
 endfunction()
 
 populate(wxwidgets "wxwidgets/3.1.3.4")
 populate(expat "expat/2.0.5")
 populate(portaudio "portaudio/19.7.0")
+
+if (OS_IS_WIN)
+    populate(zlib "zlib/1.2.13")
+endif()

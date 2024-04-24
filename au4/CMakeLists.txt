@@ -57,8 +57,8 @@ set(CMAKE_MODULE_PATH
 
 include(GetPlatformInfo)
 
-set(USE_AU3_DEPS_SYSTEM ON)
-if (NOT OS_IS_WIN)
+set(USE_AU3_DEPS_SYSTEM OFF)
+if (OS_IS_WIN)
     set(USE_AU3_DEPS_SYSTEM OFF)
 endif()
 
@@ -103,7 +103,13 @@ cmd_option(${_OPT}conan_allow_prebuilt_binaries "" On)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 set(_LIB_OUTPUT "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}")
 set(_LIB_INSTALL "lib")
-set(_LIB_OUTPUT "${_LIB_OUTPUT}/lib/audacity")
+
+if (OS_IS_WIN)
+    #set(_LIB_OUTPUT "${_LIB_OUTPUT}")
+else()
+    set(_LIB_OUTPUT "${_LIB_OUTPUT}/lib/audacity")
+endif()
+
 
 find_package(Python3)
 if( Python3_FOUND )
@@ -176,7 +182,7 @@ set(MUSE_MODULE_DIAGNOSTICS OFF)
 set(MUSE_MODULE_DRAW OFF)
 set(MUSE_MODULE_EXTENSIONS OFF)
 set(MUSE_MODULE_GLOBAL ON)
-set(MUSE_MODULE_LANGUAGES OFF)
+set(MUSE_MODULE_LANGUAGES ON)
 set(MUSE_MODULE_LEARN ON)
 set(MUSE_MODULE_MIDI OFF)
 set(MUSE_MODULE_MPE OFF)

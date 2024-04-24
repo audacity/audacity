@@ -34,6 +34,8 @@ NewProjectModel::NewProjectModel(QObject* parent)
 
 QString NewProjectModel::preferredProjectCreationMode() const
 {
+    return QString();
+
     // switch (configuration()->preferredScoreCreationMode()) {
     // case PreferredScoreCreationMode::FromInstruments: return "FromInstruments";
     // case PreferredScoreCreationMode::FromTemplate: return "FromTemplate";
@@ -44,6 +46,7 @@ QString NewProjectModel::preferredProjectCreationMode() const
 
 bool NewProjectModel::createProject(const QVariant& info)
 {
+    return false;
     // ProjectCreateOptions options = parseOptions(info.toMap());
 
     // auto project = notationCreator()->newProject();
@@ -64,6 +67,8 @@ bool NewProjectModel::createProject(const QVariant& info)
 
 ProjectCreateOptions NewProjectModel::parseOptions(const QVariantMap& info) const
 {
+    return ProjectCreateOptions();
+
     // ProjectCreateOptions projectOptions;
 
     // projectOptions.title = info["title"].toString();

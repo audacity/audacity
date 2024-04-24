@@ -479,11 +479,13 @@ if (OS_IS_LIN)
     set(WXBASE_DEFS ${WXBASE_DEFS} __WXGTK__)
 elseif(OS_IS_MAC)
     set(WXBASE_DEFS ${WXBASE_DEFS} __WXMAC__)
-
     find_library(CoreAudio NAMES CoreAudio)
     find_library(CoreAudioKit NAMES CoreAudioKit)
     set(MODULE_LINK ${MODULE_LINK} ${CoreAudio} ${CoreAudioKit})
 
+elseif(OS_IS_WIN)
+   set(WXBASE_DEFS ${WXBASE_DEFS} __WXMSW__ WXUSINGDLL)
+   set(MODULE_LINK ${MODULE_LINK} zlib::zlib winmm mmdevapi mfplat)
 endif()
 
 # ==================================
