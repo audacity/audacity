@@ -333,6 +333,7 @@ list( APPEND SOURCES
       effects/Distortion.h
       effects/DtmfGen.cpp
       effects/DtmfGen.h
+      effects/DynamicRangeProcessorEditor.h
       effects/EBUR128.cpp
       effects/EBUR128.h
       effects/Echo.cpp
@@ -376,6 +377,10 @@ list( APPEND SOURCES
       effects/Generator.h
       effects/Invert.cpp
       effects/Invert.h
+      effects/Limiter.cpp
+      effects/Limiter.h
+      effects/LimiterEditor.cpp
+      effects/LimiterEditor.h
       effects/Loudness.cpp
       effects/Loudness.h
       effects/Noise.cpp
@@ -390,6 +395,12 @@ list( APPEND SOURCES
       effects/Paulstretch.h
       effects/Phaser.cpp
       effects/Phaser.h
+      effects/Compressor.cpp
+      effects/Compressor.h
+      effects/CompressorEditor.cpp
+      effects/CompressorEditor.h
+      effects/CompressorInstance.cpp
+      effects/CompressorInstance.h
       effects/RealtimeEffectStateUI.cpp
       effects/RealtimeEffectStateUI.h
       effects/Repair.cpp

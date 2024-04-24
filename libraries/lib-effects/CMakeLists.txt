@@ -19,6 +19,13 @@ set( SOURCES
    PerTrackEffect.h
    StatefulEffectBase.cpp
    StatefulEffectBase.h
+
+   processors/CompressorProcessor.cpp
+   processors/CompressorProcessor.h
+   processors/SimpleCompressor/GainReductionComputer.cpp
+   processors/SimpleCompressor/GainReductionComputer.h
+   processors/SimpleCompressor/LookAheadGainReduction.cpp
+   processors/SimpleCompressor/LookAheadGainReduction.h
 )
 set( LIBRARIES
    lib-command-parameters-interface
