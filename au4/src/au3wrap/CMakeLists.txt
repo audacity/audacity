@@ -28,6 +28,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.h
+    ${CMAKE_CURRENT_LIST_DIR}/audacity3playback.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/audacity3playback.h
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
@@ -84,6 +86,11 @@ set(AU3_DEF
     -DREALTIME_EFFECTS_API=
     -DMODULE_MANAGER_API=
     -DWX_INIT_API=
+
+    -DTIME_FREQUENCY_SELECTION_API=
+    -DSCREEN_GEOMETRY_API=
+
+    -DEXPERIMENTAL_SPECTRAL_EDITING
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
@@ -95,6 +102,7 @@ set(AU3_INCLUDE
     ${AUDACITY_ROOT}/lib-src/sqlite
     ${AUDACITY_ROOT}/lib-src/pffft
     ${AUDACITY_ROOT}/lib-src/libsoxr/src
+    ${AUDACITY_ROOT}/lib-src/portmixer
 
     ${AUDACITY_ROOT}
     # compile lib-project
@@ -128,8 +136,11 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-audio-devices
 
     # compile lib-audio-io
+    ${AU3_LIBRARIES}/lib-audio-io
     ${AU3_LIBRARIES}/lib-realtime-effects
     ${AU3_LIBRARIES}/lib-module-manager
+
+    ${AU3_LIBRARIES}/lib-screen-geometry
 )
 
 set(AU3_ADD_AS_SRC ON)
@@ -339,6 +350,18 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipInterface.h
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.cpp
     ${AU3_LIBRARIES}/lib-stretching-sequence/ClipTimeAndPitchSource.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/StretchingSequence.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/StretchingSequence.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactory.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactory.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipSegment.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/ClipSegment.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegment.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegment.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/SilenceSegment.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/SilenceSegment.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.h
 
     # end dependencies of project-file-io
 
@@ -390,6 +413,15 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-components/EffectInterface.h
     ${AU3_LIBRARIES}/lib-components/ComponentInterface.cpp
     ${AU3_LIBRARIES}/lib-components/ComponentInterface.h
+    ${AU3_LIBRARIES}/lib-components/ComponentInterfaceSymbol.h
+
+    ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.cpp
+    ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.h
+    ${AU3_LIBRARIES}/lib-time-frequency-selection/ViewInfo.cpp
+    ${AU3_LIBRARIES}/lib-time-frequency-selection/ViewInfo.h
+
+    ${AU3_LIBRARIES}/lib-screen-geometry/ZoomInfo.cpp
+    ${AU3_LIBRARIES}/lib-screen-geometry/ZoomInfo.h
 
     # end dependencies of lib-audio-io
 
@@ -401,15 +433,18 @@ if (AU3_ADD_AS_SRC)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 
-set(MODULE_LINK
-    wxwidgets::wxwidgets
-    expat::expat
-    portaudio::portaudio
-    sqlite
-    soxr
-    pffft
-)
+    set(MODULE_LINK
+        wxwidgets::wxwidgets
+        expat::expat
+        portaudio::portaudio
+        sqlite
+        soxr
+        pffft
+        portmixer
+    )
+
 endif()
 
 set(WXBASE_RESTRICTIONS
@@ -444,6 +479,11 @@ if (OS_IS_LIN)
     set(WXBASE_DEFS ${WXBASE_DEFS} __WXGTK__)
 elseif(OS_IS_MAC)
     set(WXBASE_DEFS ${WXBASE_DEFS} __WXMAC__)
+
+    find_library(CoreAudio NAMES CoreAudio)
+    find_library(CoreAudioKit NAMES CoreAudioKit)
+    set(MODULE_LINK ${MODULE_LINK} ${CoreAudio} ${CoreAudioKit})
+
 endif()
 
 # ==================================
