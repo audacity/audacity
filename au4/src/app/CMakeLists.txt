@@ -106,12 +106,17 @@ set(LINK_LIB
     projectscene
 )
 
+###########################################
+# Resources
+###########################################
+qt_add_resources(APP_RCC_SOURCES app.qrc)
 
 ###########################################
 # Executable declaration
 ###########################################
 
 add_executable(audacity
+    ${APP_RCC_SOURCES}
     main.cpp
     app.cpp
     app.h
