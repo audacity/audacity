@@ -18,6 +18,8 @@
 
 #include "GainReductionComputer.h"
 
+#include "MathApprox.h"
+
 namespace DanielRudrich {
 GainReductionComputer::GainReductionComputer()
 {
@@ -98,7 +100,8 @@ void GainReductionComputer::computeGainInDecibelsFromSidechainSignal (const floa
     for (int i = 0; i < numSamples; ++i)
     {
         // convert sample to decibels
-        const float levelInDecibels = 20.0f * std::log10 (abs (sideChainSignal[i]));
+        constexpr auto C = 20 / 3.321928094887362; // 20 / log2(10)
+        const float levelInDecibels = C * FastLog2(abs(sideChainSignal[i]));
 
         if (levelInDecibels > maxInputLevel)
             maxInputLevel = levelInDecibels;
