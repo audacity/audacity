@@ -4,6 +4,7 @@ message(STATUS "Package")
 # Config
 set(ARTIFACTS_DIR "build.artifacts")
 set(INSTALL_DIR "build.install")
+set(PACKAGING_DIR ${CMAKE_CURRENT_LIST_DIR}/../../packaging/MacOS)
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
@@ -59,24 +60,11 @@ else()
 endif()
 
 execute_process(
-    COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_dmg.sh --longer_name "$ARTIFACT_NAME" --version "$BUILD_VERSION"
+    COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --longer_name "${ARTIFACT_NAME}" --version ${BUILD_VERSION}
 )
 
-# DMGFILE="$(ls applebuild/*.dmg)"
-# echo "DMGFILE: $DMGFILE"
+DMGFILE=${INSTALL_DIR}/${ARTIFACT_NAME}.dmg
 
-# if [ "$BUILD_MODE" == "nightly_build" ]; then
-
-#   BUILD_NUMBER=$(cat $ARTIFACTS_DIR/env/build_number.env)
-#   BUILD_BRANCH=$(cat $ARTIFACTS_DIR/env/build_branch.env)
-#   ARTIFACT_NAME=MuseScoreNightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}.dmg
-
-# else
-
-#   ARTIFACT_NAME=MuseScore-${BUILD_VERSION}.dmg
-
-# fi
-
-# mv $DMGFILE $ARTIFACTS_DIR/$ARTIFACT_NAME
+mv $DMGFILE $ARTIFACTS_DIR/${ARTIFACT_NAME}.dmg
 
 # bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME

@@ -58,6 +58,12 @@ execute_process(
     RESULT_VARIABLE BUILD_RESULT
 )
 
+if (BUILD_RESULT GREATER 0)
+    message(FATAL_ERROR "Failed build or install")
+else()
+    message(STATUS "Success build and install")
+endif()
+
 # bash ./buildscripts/ci/tools/make_release_channel_env.sh -c $MUSE_APP_BUILD_MODE
 # bash ./buildscripts/ci/tools/make_version_env.sh $BUILD_NUMBER
 # bash ./buildscripts/ci/tools/make_revision_env.sh $MUSESCORE_REVISION
