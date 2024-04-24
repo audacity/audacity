@@ -58,7 +58,6 @@ private:
       EffectSettings& settings, CompressorProcessor& instance,
       const float* const* inBlock, float* const* outBlock, size_t blockLen);
 
-   // TODO study other virtual functions and see if there's something important.
    EffectInstance::SampleCount
    GetLatency(const EffectSettings& settings, double sampleRate) const override;
 

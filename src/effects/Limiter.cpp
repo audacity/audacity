@@ -40,17 +40,14 @@ std::shared_ptr<EffectInstance> EffectLimiter::MakeInstance() const
 
 bool EffectLimiter::CheckWhetherSkipEffect(const EffectSettings& settings) const
 {
-   // TODO
-   return Effect::CheckWhetherSkipEffect(settings);
+   // Given the infinite ratio, a limiter is always susceptible to modifying the
+   // audio.
+   return false;
 }
 
 EffectLimiter::EffectLimiter()
 {
-   SetLinearEffectFlag(true);
-}
-
-EffectLimiter::~EffectLimiter()
-{
+   SetLinearEffectFlag(false);
 }
 
 ComponentInterfaceSymbol EffectLimiter::GetSymbol() const
@@ -60,7 +57,7 @@ ComponentInterfaceSymbol EffectLimiter::GetSymbol() const
 
 TranslatableString EffectLimiter::GetDescription() const
 {
-   return XO("A limiter");
+   return XO("Augments loudness while minimizing distortion.");
 }
 
 ManualPageID EffectLimiter::ManualPage() const

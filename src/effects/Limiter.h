@@ -22,7 +22,6 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectLimiter();
-   virtual ~EffectLimiter();
 
    // ComponentInterface implementation
 

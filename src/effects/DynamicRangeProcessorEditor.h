@@ -23,8 +23,6 @@ public:
    {
    }
 
-   virtual ~DynamicRangeProcessorEditor() = default;
-
    using Parameter = EffectParameter<SettingType, double, double>;
 
 protected:

@@ -42,17 +42,16 @@ std::shared_ptr<EffectInstance> EffectCompressor::MakeInstance() const
 bool EffectCompressor::CheckWhetherSkipEffect(
    const EffectSettings& settings) const
 {
-   // TODO
-   return Effect::CheckWhetherSkipEffect(settings);
+   const auto& compressorSettings = GetSettings(settings);
+   return compressorSettings.ratio == 1 && compressorSettings.makeUpDb == 0 &&
+          // Also look-ahead, as this adds delay when used on a real-time input
+          // (mic).
+          compressorSettings.lookaheadMs == 0;
 }
 
 EffectCompressor::EffectCompressor()
 {
-   SetLinearEffectFlag(true);
-}
-
-EffectCompressor::~EffectCompressor()
-{
+   SetLinearEffectFlag(false);
 }
 
 ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
@@ -62,12 +61,13 @@ ComponentInterfaceSymbol EffectCompressor::GetSymbol() const
 
 TranslatableString EffectCompressor::GetDescription() const
 {
-   return XO("A compressor");
+   return XO(
+      "Reduces \"dynamic range\", or differences between loud and quiet parts.");
 }
 
 ManualPageID EffectCompressor::ManualPage() const
 {
-   // TODO
+   // TODO: add manual page
    return L"";
 }
 

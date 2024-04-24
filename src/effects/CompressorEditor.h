@@ -17,7 +17,6 @@ public:
        }
    {
    }
-   virtual ~CompressorEditor() = default;
 
    void PopulateOrExchange(ShuttleGui& S);
 

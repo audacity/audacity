@@ -17,7 +17,6 @@ public:
        }
    {
    }
-   virtual ~LimiterEditor() = default;
 
    void PopulateOrExchange(ShuttleGui& S);
 
