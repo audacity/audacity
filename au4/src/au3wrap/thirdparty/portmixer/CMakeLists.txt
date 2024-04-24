@@ -23,19 +23,19 @@ if (UNIX AND NOT APPLE)
       find_package( OSS REQUIRED QUIET )
    endif()
 elseif( WIN32 )
-   try_compile(
-      PAWINMME_GETSTREAMINPUTHANDLE_EXISTS
-      ${CMAKE_CURRENT_BINARY_DIR}/winmme_check
-      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckPaWinMME_GetStreamInputHandle
-      CheckPaWinMME_GetStreamInputHandle
-   )
+   # try_compile(
+   #    PAWINMME_GETSTREAMINPUTHANDLE_EXISTS
+   #    ${CMAKE_CURRENT_BINARY_DIR}/winmme_check
+   #    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckPaWinMME_GetStreamInputHandle
+   #    CheckPaWinMME_GetStreamInputHandle
+   # )
 
-   try_compile(
-      PAWINDS_GETDEVICEGUID_EXISTS
-      ${CMAKE_CURRENT_BINARY_DIR}/winds_getguid_check
-      ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckPaWinDS_GetDeviceGUID
-      CheckPaWinDS_GetDeviceGUID
-   )
+   # try_compile(
+   #    PAWINDS_GETDEVICEGUID_EXISTS
+   #    ${CMAKE_CURRENT_BINARY_DIR}/winds_getguid_check
+   #    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/CheckPaWinDS_GetDeviceGUID
+   #    CheckPaWinDS_GetDeviceGUID
+   # )
 endif()
 
 list( APPEND SOURCES

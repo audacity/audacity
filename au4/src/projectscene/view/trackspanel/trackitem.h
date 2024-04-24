@@ -32,7 +32,6 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
 
 public:
-    TrackItem() = default;
     TrackItem(QObject* parent = nullptr);
 
     ~TrackItem() override;

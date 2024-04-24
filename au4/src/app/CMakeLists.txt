@@ -211,7 +211,7 @@ if (OS_IS_WIN)
                 DESTINATION bin)
     else()
         install(FILES
-                ${PROJECT_SOURCE_DIR}/build/qt.conf
+                #${PROJECT_SOURCE_DIR}/build/qt.conf
                 ${QtInstallLibraries}
                 #${QT_INSTALL_BINS}/libEGL.dll
                 #${QT_INSTALL_BINS}/libGLESv2.dll
@@ -270,6 +270,17 @@ if (OS_IS_WIN)
         install(FILES ${PROJECT_SOURCE_DIR}/build/PortableApps/help.html DESTINATION ${CMAKE_INSTALL_PREFIX}/../..)
         configure_file(${PROJECT_SOURCE_DIR}/build/PortableApps/appinfo.ini.in     ${CMAKE_INSTALL_PREFIX}/../../App/AppInfo/appinfo.ini   @ONLY)
     endif (WIN_PORTABLE)
+
+    # TODO
+    # install( DIRECTORY "${_LIB_OUTPUT}/"
+    #          TYPE LIB
+    #          USE_SOURCE_PERMISSIONS
+    #      )
+
+    install( DIRECTORY "${_LIB_OUTPUT}/"
+              TYPE BIN
+              USE_SOURCE_PERMISSIONS
+          )
 
 ###########################################
 # Linux

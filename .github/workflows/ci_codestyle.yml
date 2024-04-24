@@ -4,7 +4,7 @@ on:
   pull_request:
     paths: ["au4/**"]
     branches:
-    - master_off
+    - master
 
 jobs:
   codestyle:    
