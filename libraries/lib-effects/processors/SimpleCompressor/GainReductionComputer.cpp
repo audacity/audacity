@@ -18,6 +18,7 @@
 
 #include "GainReductionComputer.h"
 
+namespace DanielRudrich {
 GainReductionComputer::GainReductionComputer()
 {
     sampleRate = 0.0f;
@@ -141,3 +142,4 @@ float GainReductionComputer::getCharacteristicSample (const float inputLevelInDe
     overShoot = applyCharacteristicToOverShoot (overShoot);
     return overShoot + inputLevelInDecibels + makeUpGain;
 }
+} // namespace DanielRudrich

@@ -21,6 +21,7 @@
 #include <cmath>
 #include <algorithm>
 
+namespace DanielRudrich {
 void LookAheadGainReduction::setDelayTime (float delayTimeInSeconds)
 {
     if (delayTimeInSeconds <= 0.0f)
@@ -271,3 +272,4 @@ inline void LookAheadGainReduction::getReadPositions (int numSamples, int& start
         blockSize2 = numSamples <= 0 ? 0 : numSamples;
     }
 }
+} // namespace DanielRudrich

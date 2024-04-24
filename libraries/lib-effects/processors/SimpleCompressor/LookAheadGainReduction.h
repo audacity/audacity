@@ -20,6 +20,7 @@
 #pragma once
 #include <vector>
 
+namespace DanielRudrich {
 /** This class acts as a delay line for gain-reduction samples, which additionally fades in high gain-reduction values in order to avoid distortion when limiting an audio signal.
  */
 class LookAheadGainReduction
@@ -70,3 +71,4 @@ private:
     int lastPushedSamples = 0;
     std::vector<float> buffer;
 };
+} // namespace DanielRudrich

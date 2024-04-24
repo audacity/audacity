@@ -23,6 +23,7 @@
 #include <cmath>
 #include <atomic>
 
+namespace DanielRudrich {
 /**
  This class acts as the side-chain path of a dynamic range compressor. It processes a given side-chain signal and computes the gain reduction samples depending on the parameters threshold, knee, attack-time, release-time, ratio, and make-up gain.
  */
@@ -124,3 +125,4 @@ private:
     float alphaAttack;
     float alphaRelease;
 };
+} // namespace DanielRudrich
