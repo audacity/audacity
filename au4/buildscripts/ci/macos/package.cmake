@@ -63,8 +63,7 @@ execute_process(
     COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --longer_name "${ARTIFACT_NAME}" --version ${BUILD_VERSION}
 )
 
-DMGFILE=${INSTALL_DIR}/${ARTIFACT_NAME}.dmg
 
-mv $DMGFILE $ARTIFACTS_DIR/${ARTIFACT_NAME}.dmg
+file(COPY_FILE ${INSTALL_DIR}/${ARTIFACT_NAME}.dmg ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.dmg)
 
 # bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME

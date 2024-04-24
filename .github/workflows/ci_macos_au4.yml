@@ -56,11 +56,11 @@ jobs:
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/ci_build.cmake 
-    # - name: Package 
-    #   if: env.DO_BUILD == 'true'
-    #   run: |
-    #     source $HOME/build_tools/environment.sh
-    #     cmake -P ${CI_DIR}/macos/package.cmake 
+    - name: Package 
+      if: env.DO_BUILD == 'true'
+      run: |
+        source $HOME/build_tools/environment.sh
+        cmake -P ${CI_DIR}/macos/package.cmake 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4

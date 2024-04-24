@@ -26,7 +26,6 @@ else()
 endif()
 
 set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
-#set(REMOTE_ROOT_URL /home/igor/Dev/muse_deps)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
@@ -47,9 +46,17 @@ function(populate name remote_suffix)
 
     get_property(include_dirs GLOBAL PROPERTY ${name}_INCLUDE_DIRS)
     get_property(libraries GLOBAL PROPERTY ${name}_LIBRARIES)
+    get_property(instal_libraries GLOBAL PROPERTY ${name}_INSTALL_LIBRARIES)
 
     set(${name}_INCLUDE_DIRS ${include_dirs} PARENT_SCOPE)
     set(${name}_LIBRARIES ${libraries} PARENT_SCOPE)
+    set(${name}_INSTALL_LIBRARIES ${instal_libraries} PARENT_SCOPE)
+
+    if (OS_IS_MAC)
+        install(FILES ${instal_libraries} DESTINATION "audacity.app/Contents/Frameworks")
+    else()
+        install(FILES ${instal_libraries} TYPE BIN)
+    endif()
 
 endfunction()
 
@@ -57,6 +64,12 @@ populate(wxwidgets "wxwidgets/3.1.3.4")
 populate(expat "expat/2.0.5")
 populate(portaudio "portaudio/19.7.0")
 
-if (OS_IS_WIN)
+if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
 endif()
+
+if (OS_IS_MAC)
+    populate(libjpeg-turbo "libjpeg-turbo/2.1.5")
+    populate(libpng "libpng/1.6.39")
+endif()
+
