@@ -79,8 +79,6 @@ public:
    // Create from a subrange of another envelope.
    Envelope(const Envelope &orig, double t0, double t1);
 
-   void Initialize(int numPoints);
-
    virtual ~Envelope();
 
    bool IsTrivial() const;
@@ -165,11 +163,6 @@ public:
    double IntegralOfInverse( double t0, double t1 ) const;
    double SolveIntegralOfInverse( double t0, double area) const;
 
-   void print() const;
-   void testMe();
-
-   bool IsDirty() const;
-
    void Clear() { mEnv.clear(); }
 
    /** \brief Add a point at a particular absolute time coordinate */
@@ -199,6 +192,11 @@ public:
    {
       return mEnv[index];
    }
+
+   double GetDefaultValue() const;
+
+   size_t GetVersion() const;
+
 
 private:
    int InsertOrReplaceRelative(double when, double value) noexcept;
@@ -255,6 +253,7 @@ private:
    // UI stuff
    bool mDragPointValid { false };
    int mDragPoint { -1 };
+   size_t mVersion { 0 };
 
    mutable int mSearchGuess { -2 };
 };

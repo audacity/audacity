@@ -14,6 +14,7 @@ set( SOURCES
    Matrix.h
    Resample.cpp
    Resample.h
+   RoundUpUnsafe.h
    SampleCount.cpp
    SampleCount.h
    SampleFormat.cpp
