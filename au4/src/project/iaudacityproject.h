@@ -36,6 +36,8 @@ public:
     virtual muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
 
     virtual const au::processing::ProcessingProjectPtr processingProject() const = 0;
+
+    virtual uintptr_t au3ProjectPtr() const = 0;
 };
 
 using IAudacityProjectPtr = std::shared_ptr<IAudacityProject>;

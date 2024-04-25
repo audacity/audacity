@@ -104,6 +104,7 @@ set(LINK_LIB
     context
     project
     projectscene
+    playback
 )
 
 ###########################################

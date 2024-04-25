@@ -380,3 +380,8 @@ const ProcessingProjectPtr Audacity4Project::processingProject() const
 {
     return m_processingProject;
 }
+
+uintptr_t Audacity4Project::au3ProjectPtr() const
+{
+    return m_au3Project->au3ProjectPtr();
+}

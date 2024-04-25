@@ -6,7 +6,7 @@ import QtQuick 2.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
-import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
 
 import "internal"
 
@@ -26,7 +26,7 @@ Item {
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "PlaybackToolBar"
         enabled: root.enabled && root.visible
-        accessible.name: qsTrc("projectscene", "Playback toolbar")
+        accessible.name: qsTrc("playback", "Playback toolbar")
     }
 
     PlaybackToolBarModel {
@@ -208,13 +208,13 @@ Item {
 
         icon: IconCode.SETTINGS_COG
         iconFont: ui.theme.toolbarIconsFont
-        toolTipTitle: qsTrc("projectscene", "Customize toolbar")
-        toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
+        toolTipTitle: qsTrc("playback", "Customize toolbar")
+        toolTipDescription: qsTrc("playback", "Show/hide toolbar buttons")
         transparent: true
 
         navigation.panel: root.navigationPanel
         navigation.order: 100
-        navigation.accessible.name: qsTrc("projectscene", "Customize toolbar")
+        navigation.accessible.name: qsTrc("playback", "Customize toolbar")
 
         onClicked: {
             customizePopup.toggleOpened()

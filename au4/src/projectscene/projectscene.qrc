@@ -1,14 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Audacity/ProjectScene/qmldir</file>
-        <file>qml/Audacity/ProjectScene/PlaybackToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/TracksPanel.qml</file>
         <file>qml/Audacity/ProjectScene/ClipsView.qml</file>
         <file>qml/Audacity/ProjectScene/ProjectToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/internal/CustomiseControlPanel.qml</file>
-        <file>qml/Audacity/ProjectScene/internal/CustomiseView.qml</file>
-        <file>qml/Audacity/ProjectScene/internal/PlaybackToolBarActionDelegate.qml</file>
-        <file>qml/Audacity/ProjectScene/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/internal/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/internal/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/internal/audio/VolumePressureMeter.qml</file>

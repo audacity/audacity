@@ -20,7 +20,7 @@ class QItemSelectionModel;
 #pragma warning(disable: 4505)
 #endif
 
-namespace au::projectscene {
+namespace au::playback {
 class PlaybackToolBarCustomiseItem;
 class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::async::Asyncable
 {

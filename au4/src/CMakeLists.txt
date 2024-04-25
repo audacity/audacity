@@ -40,5 +40,9 @@ endif()
 
 add_subdirectory(processing)
 
+if (MU_BUILD_PLAYBACK_MODULE)
+    add_subdirectory(playback)
+endif()
+
 
 # ...

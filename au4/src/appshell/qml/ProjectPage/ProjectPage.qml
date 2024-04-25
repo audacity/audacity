@@ -28,6 +28,7 @@ import Muse.UiComponents 1.0
 import Muse.Dock 1.0
 import Audacity.AppShell 1.0
 import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
 
 import "../dockwindow"
 
