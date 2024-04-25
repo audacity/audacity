@@ -37,7 +37,7 @@ jobs:
         cmake -DEVENT=${{ github.event_name }} \
               -DBUILD_MODE=${{ github.event.inputs.build_mode }} \
               -DARTIFACT_INFO="Lin_${ADD_INFO}" \
-              -P ${CI_DIR}/linux/configure.cmake 
+              -P ${CI_DIR}/common/ci_configure.cmake 
 
         DO_BUILD='true'
         UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
@@ -56,11 +56,11 @@ jobs:
       run: |
         source $HOME/build_tools/environment.sh
         cmake -P ${CI_DIR}/macos/ci_build.cmake 
-    - name: Package 
-      if: env.DO_BUILD == 'true'
-      run: |
-        source $HOME/build_tools/environment.sh
-        cmake -P ${CI_DIR}/macos/package.cmake 
+    # - name: Package 
+    #   if: env.DO_BUILD == 'true'
+    #   run: |
+    #     source $HOME/build_tools/environment.sh
+    #     cmake -P ${CI_DIR}/macos/package.cmake 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
       uses: actions/upload-artifact@v4

@@ -1,8 +1,7 @@
 
 # Config
 set(ARTIFACTS_DIR "build.artifacts")
-set(CI_DIR ${CMAKE_CURRENT_LIST_DIR}/..)
-set(CI_TOOLS ${CI_DIR}/tools)
+set(CI_TOOLS ${CMAKE_CURRENT_LIST_DIR})
 
 # Options
 set(EVENT "" CACHE STRING "Action event")
