@@ -87,7 +87,6 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetPenColour(   muteSamplePen,   clrMuteSample);
    theTheme.SetPenColour(   odProgressDonePen, clrProgressDone);
    theTheme.SetPenColour(   odProgressNotYetPen, clrProgressNotYet);
-   theTheme.SetPenColour(   shadowPen,       clrShadow);
    theTheme.SetPenColour(   clippedPen,      clrClipped);
    theTheme.SetPenColour(   muteClippedPen,  clrMuteClipped);
    theTheme.SetPenColour(   blankSelectedPen,clrBlankSelected);

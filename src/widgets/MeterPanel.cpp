@@ -363,7 +363,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
    SetBackgroundColour( backgroundColour );
 
    mPeakPeakPen = wxPen(theTheme.Colour( clrMeterPeak),        1, wxPENSTYLE_SOLID);
-   mDisabledPen = wxPen(theTheme.Colour( clrMeterDisabledPen), 1, wxPENSTYLE_SOLID);
 
    mAudioIOStatusSubscription = AudioIO::Get()
       ->Subscribe(*this, &MeterPanel::OnAudioIOStatus);
@@ -388,10 +387,6 @@ MeterPanel::MeterPanel(AudacityProject *project,
 //      mDarkPen   = wxPen(   theTheme.Colour( clrMeterOutputDarkPen    ), 1, wxSOLID);
    }
 
-//   mDisabledBkgndBrush = wxBrush(theTheme.Colour( clrMeterDisabledBrush), wxSOLID);
-   // No longer show a difference in the background colour when not monitoring.
-   // We have the tip instead.
-   mDisabledBkgndBrush = mBkgndBrush;
 
    mTipTimer.SetOwner(this, OnTipTimeoutID);
    mTimer.SetOwner(this, OnMeterUpdateID);
@@ -1719,7 +1714,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // Draw the peak level
          // +/-1 to include the peak position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         dc.SetBrush(mBrush);
          if (ht)
          {
             dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
@@ -1745,7 +1740,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
          // Draw the RMS level
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         dc.SetBrush(mRMSBrush);
          if (ht)
          {
             dc.DrawRectangle(x, y + h - ht - 1, w, ht + 1);
@@ -1780,7 +1775,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // Draw the peak level
          // +1 to include peak position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBrush);
+         dc.SetBrush(mBrush);
          if (wd)
          {
             dc.DrawRectangle(x, y, wd + 1, h);
@@ -1806,7 +1801,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          // Draw the rms level
          // +1 to include the rms position
          dc.SetPen(*wxTRANSPARENT_PEN);
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mRMSBrush);
+         dc.SetBrush(mRMSBrush);
          if (wd)
          {
             dc.DrawRectangle(x, y, wd + 1, h);
@@ -1838,7 +1833,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
       }
       else
       {
-         dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+         dc.SetBrush(mBkgndBrush);
       }
       dc.SetPen(*wxTRANSPARENT_PEN);
       wxRect r(bar->rClip.GetX() + 1,

@@ -292,15 +292,12 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrRms3,       wxColour( 75, 200,  75), wxT("Rms3"));
    DEFINE_COLOUR( clrRms4,       wxColour(100, 100, 100), wxT("Rms4"));
    DEFINE_COLOUR( clrMuteRms,    wxColour(136, 136, 144), wxT("MuteRms"));
-   DEFINE_COLOUR( clrShadow,     wxColour(148, 148, 148), wxT("Shadow"));
 
    DEFINE_COLOUR( clrAboutBoxBackground,  wxColour(255, 255, 255),  wxT("AboutBackground"));
    DEFINE_COLOUR( clrTrackPanelText,      wxColour(200, 200, 200),  wxT("TrackPanelText"));
    DEFINE_COLOUR( clrLabelTrackText,      wxColour(  0,   0,   0),  wxT("LabelTrackText"));
 
    DEFINE_COLOUR( clrMeterPeak,            wxColour(102, 102, 255),  wxT("MeterPeak"));
-   DEFINE_COLOUR( clrMeterDisabledPen,     wxColour(192, 192, 192),  wxT("MeterDisabledPen"));
-   DEFINE_COLOUR( clrMeterDisabledBrush,   wxColour(160, 160, 160),  wxT("MeterDisabledBrush"));
 
    DEFINE_COLOUR( clrMeterInputPen,        wxColour(204, 70, 70),     wxT("MeterInputPen") );
    DEFINE_COLOUR( clrMeterInputBrush,      wxColour(204, 70, 70),     wxT("MeterInputBrush") );
@@ -334,9 +331,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrPlaybackBrush,        wxColour(    28,171, 51),  wxT("PlaybackBrush") );
 
    DEFINE_COLOUR( clrRulerRecordingBrush,  wxColour(   196,196,196),  wxT("RulerRecordingBrush") );
-   DEFINE_COLOUR( clrRulerRecordingPen,    wxColour(   128,128,128),  wxT("RulerRecordingPen") ); // unused
-   DEFINE_COLOUR( clrRulerPlaybackBrush,   wxColour(   190,129,129),  wxT("RulerPlaybackBrush") ); // unused
-   DEFINE_COLOUR( clrRulerPlaybackPen,     wxColour(   176,  0, 28),  wxT("RulerPlaybackPen") ); // unused
 
    DEFINE_COLOUR( clrTimeFont,             wxColour(     0,  0,180),  wxT("TimeFont") );
    DEFINE_COLOUR( clrTimeBack,             wxColour(   160,160,160),  wxT("TimeBack") );
@@ -347,8 +341,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrLabelTextEditBrush,   wxColour(   255,255,255),  wxT("LabelTextEditBrush") );
    DEFINE_COLOUR( clrLabelUnselectedBrush, wxColour(   192,192,192),  wxT("LabelUnselectedBrush") );
    DEFINE_COLOUR( clrLabelSelectedBrush,   wxColour(   148,148,170),  wxT("LabelSelectedBrush") );
-   DEFINE_COLOUR( clrLabelUnselectedPen,   wxColour(   192,192,192),  wxT("LabelUnselectedPen") );
-   DEFINE_COLOUR( clrLabelSelectedPen,     wxColour(   148,148,170),  wxT("LabelSelectedPen") );
    DEFINE_COLOUR( clrLabelSurroundPen,     wxColour(     0,  0,  0),  wxT("LabelSurroundPen") );
 
    DEFINE_COLOUR( clrTrackFocus0,          wxColour( 200, 200, 200),  wxT("TrackFocus0") );
@@ -374,7 +366,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrProgressNotYet,   wxColour(255, 255, 255,220), wxT("ProgressNotYet"));
    DEFINE_COLOUR( clrSyncLockSel,          wxColour(192, 192, 192),      wxT("SyncLockSel"));
 
-   DEFINE_COLOUR( clrSelTranslucent,   wxColour(104, 104, 148, 127), wxT("SelTranslucent"));
    // This is for waveform drawing, selected outside of clips
    DEFINE_COLOUR( clrBlankSelected, wxColour(170, 170, 192), wxT("BlankSelected"));
 
@@ -384,13 +375,11 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrTrackBackground,     wxColour(  20,  20,  20),  wxT("TrackBackground") );
 
 
-   DEFINE_COLOUR( clrPlaceHolder1,        wxColour(  255,  255,  20),  wxT("Placeholder1") );
+
    DEFINE_COLOUR( clrGraphLabels,         wxColour(    0,    0,   0),  wxT("GraphLabels") );
    DEFINE_COLOUR( clrSpectroBackground,   wxColour(  255,  255,  20),  wxT("SpectroBackground") );
    DEFINE_COLOUR( clrScrubRuler,          wxColour(  255,  255,  20),  wxT("ScrubRuler") );
    DEFINE_COLOUR( clrTimeHours,           wxColour(  255,  255,  20),  wxT("TimeHours") );
-   DEFINE_COLOUR( clrFoxusBox,            wxColour(  255,  255,  20),  wxT("FocusBox") );
-   DEFINE_COLOUR( clrTrackNameText,       wxColour(  255,  255,  20),  wxT("TrackNameText") );
    DEFINE_COLOUR( clrMidiZebra,           wxColour(  255,  255,  20),  wxT("MidiZebra") );
    DEFINE_COLOUR( clrMidiLines,           wxColour(  255,  255,  20),  wxT("MidiLines") );
    DEFINE_COLOUR( clrTextNegativeNumbers, wxColour(    0,    0,  255), wxT("TextNegativeNumbers") );
