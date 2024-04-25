@@ -27,7 +27,7 @@ enum : int {
    kLeftMargin = kLeftInset + kBorderThickness,
    kRightMargin = kRightInset + kShadowThickness + kBorderThickness,
 
-   kTrackInfoWidth = 100 - kLeftMargin,
+   kTrackInfoWidth = 155 - kLeftMargin,
 };
 
 // The subset of ViewInfo information (other than selection)
