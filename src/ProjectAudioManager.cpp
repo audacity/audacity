@@ -967,8 +967,15 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
          pendingTracks.RegisterPendingNewTracks(std::move(*newTracks));
          // Bug 1548.  First of new tracks needs the focus.
          TrackFocus::Get(project).Set(first);
-         if (!trackList.empty())
-            Viewport::Get(project).ShowTrack(**trackList.rbegin());
+         if (!trackList.empty()) {
+            BasicUI::CallAfter([pProject = project.weak_from_this()]{
+               if (!pProject.expired()) {
+                  auto &project = *pProject.lock();
+                  auto &trackList = TrackList::Get(project);
+                  Viewport::Get(project).ShowTrack(**trackList.rbegin());
+               }
+            });
+         }
       }
 
       //Automated Input Level Adjustment Initialization
