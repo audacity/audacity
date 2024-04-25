@@ -10,10 +10,11 @@
 #include "context/iglobalcontext.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/iuiconfiguration.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "uicomponents/view/abstractmenumodel.h"
 
-namespace au::projectscene {
+namespace au::playback {
 class PlaybackToolBarModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
@@ -21,6 +22,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractMenuModel
     muse::Inject<au::context::IGlobalContext> context;
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::Inject<au::playback::IPlaybackController> controller;
 
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
@@ -37,14 +39,20 @@ private:
         SectionRole
     };
 
+    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+
+    void setupConnections();
     void onProjectChanged();
 
+    void updateActions();
     void updateState();
 
     bool isMenuSecondary(const muse::actions::ActionCode& actionCode) const;
 
     muse::uicomponents::MenuItem* makeActionItem(const muse::ui::UiAction& action, const QString& section,
                                                  const muse::uicomponents::MenuItemList& subitems = {});
+
+    muse::ui::UiAction playAction() const;
 };
 }
 

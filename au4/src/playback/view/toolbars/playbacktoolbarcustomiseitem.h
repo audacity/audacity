@@ -9,7 +9,7 @@
 #include "ui/view/iconcodes.h"
 #include "uicomponents/view/selectableitemlistmodel.h"
 
-namespace au::projectscene {
+namespace au::playback {
 class PlaybackToolBarCustomiseItem : public muse::uicomponents::SelectableItemListModel::Item
 {
     Q_OBJECT

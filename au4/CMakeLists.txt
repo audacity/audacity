@@ -191,6 +191,7 @@ set(MUSE_MODULE_WORKSPACE OFF)
 
 # Modules (alphabetical order please)
 option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
+option(MU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
 option(MU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
 option(MU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 
