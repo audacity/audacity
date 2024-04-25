@@ -3,14 +3,18 @@
 */
 #include "playbacktoolbarmodel.h"
 
-#include "view/projectsceneuiactions.h"
+#include "internal/playbackuiactions.h"
 
 #include "log.h"
 
 using namespace muse::uicomponents;
-using namespace au::projectscene;
+using namespace muse::ui;
+using namespace muse::actions;
+using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
+
+static const ActionCode PLAY_ACTION_CODE("play");
 
 PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
     : AbstractMenuModel(parent)
@@ -26,32 +30,9 @@ PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
 
 void PlaybackToolBarModel::load()
 {
-    MenuItemList items;
-
-    muse::ui::ToolConfig noteInputConfig
-        = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
-
-    int section = 0;
-    for (const muse::ui::ToolConfig::Item& citem : noteInputConfig.items) {
-        if (!citem.show) {
-            continue;
-        }
-
-        if (citem.action.empty()) {
-            section++;
-            continue;
-        }
-
-        MenuItem* item = makeActionItem(uiActionsRegister()->action(citem.action), QString::number(section));
-
-        items << item;
-    }
-
-    setItems(items);
-
-    onProjectChanged();
-
     AbstractMenuModel::load();
+    updateActions();
+    setupConnections();
 }
 
 QVariant PlaybackToolBarModel::data(const QModelIndex& index, int role) const
@@ -83,9 +64,56 @@ QHash<int, QByteArray> PlaybackToolBarModel::roleNames() const
     return roles;
 }
 
+void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
+{
+    AbstractMenuModel::onActionsStateChanges(codes);
+
+    if (containsAction(codes, PLAY_ACTION_CODE)) {
+        MenuItem& item = findItem(PLAY_ACTION_CODE);
+        item.setAction(playAction());
+    }
+}
+
+void PlaybackToolBarModel::setupConnections()
+{
+    controller()->isPlayingChanged().onNotify(this, [this]() {
+        onActionsStateChanges({ PLAY_ACTION_CODE });
+    });
+}
+
 void PlaybackToolBarModel::onProjectChanged()
 {
     updateState();
+}
+
+void PlaybackToolBarModel::updateActions()
+{
+    MenuItemList items;
+
+    muse::ui::ToolConfig playbackConfig
+        = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
+
+    int section = 0;
+    for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
+        if (!citem.show) {
+            continue;
+        }
+
+        if (citem.action.empty()) {
+            section++;
+            continue;
+        }
+
+        MenuItem* item = makeActionItem(uiActionsRegister()->action(citem.action), QString::number(section));
+
+        if (citem.action == PLAY_ACTION_CODE) {
+            item->setAction(playAction());
+        }
+
+        items << item;
+    }
+
+    setItems(items);
 }
 
 void PlaybackToolBarModel::updateState()
@@ -112,4 +140,14 @@ MenuItem* PlaybackToolBarModel::makeActionItem(const muse::ui::UiAction& action,
     item->setSection(section);
     item->setSubitems(subitems);
     return item;
+}
+
+UiAction PlaybackToolBarModel::playAction() const
+{
+    UiAction action = uiActionsRegister()->action(PLAY_ACTION_CODE);
+
+    bool isPlaying = controller()->isPlaying();
+    action.iconCode =  isPlaying ? IconCode::Code::PAUSE : IconCode::Code::PLAY;
+
+    return action;
 }

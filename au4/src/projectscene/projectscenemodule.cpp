@@ -23,19 +23,7 @@
 
 #include <QtQml>
 
-#include "modularity/ioc.h"
-#include "ui/iuiactionsregister.h"
-
-#include "internal/projectsceneactioncontroller.h"
-#include "internal/playbackcontroller.h"
-
-#include "view/projectsceneuiactions.h"
-
-#include "view/toolbars/playbacktoolbarmodel.h"
-#include "view/toolbars/playbacktoolbarcustomisemodel.h"
-#include "view/toolbars/playbacktoolbarcustomiseitem.h"
 #include "view/toolbars/projecttoolbarmodel.h"
-
 #include "view/trackspanel/trackslistmodel.h"
 
 #include "view/clipsview/waveview.h"
@@ -58,27 +46,15 @@ std::string ProjectSceneModule::moduleName() const
 
 void ProjectSceneModule::registerExports()
 {
-    m_actionController = std::make_shared<ProjectSceneActionController>();
-    m_projectSceneUiActions = std::make_shared<ProjectSceneUiActions>();
-
-    ioc()->registerExport<IPlaybackController>(moduleName(), new PlaybackController());
 }
 
 void ProjectSceneModule::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
-    if (ar) {
-        ar->reg(m_projectSceneUiActions);
-    }
 }
 
 void ProjectSceneModule::registerUiTypes()
 {
     // toolbars
-    qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
-    qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
-    qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseItem",
-                                                             "Cannot create");
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
 
     // tracks panel
@@ -95,13 +71,4 @@ void ProjectSceneModule::registerUiTypes()
 void ProjectSceneModule::registerResources()
 {
     projectscene_init_qrc();
-}
-
-void ProjectSceneModule::onInit(const muse::IApplication::RunMode&)
-{
-    m_actionController->init();
-}
-
-void ProjectSceneModule::onDeinit()
-{
 }

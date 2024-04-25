@@ -111,3 +111,8 @@ muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() con
 
     return au4tracks;
 }
+
+uintptr_t Audacity3Project::au3ProjectPtr() const
+{
+    return reinterpret_cast<uintptr_t>(m_data->project.get());
+}

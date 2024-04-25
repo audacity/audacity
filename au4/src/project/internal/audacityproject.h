@@ -62,6 +62,8 @@ public:
 
     const au::processing::ProcessingProjectPtr processingProject() const override;
 
+    uintptr_t au3ProjectPtr() const override;
+
 private:
     void setPath(const muse::io::path_t& path);
 

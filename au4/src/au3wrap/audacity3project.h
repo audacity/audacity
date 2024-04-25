@@ -27,6 +27,8 @@ public:
 
     muse::async::NotifyList<processing::Track> trackList() const;
 
+    uintptr_t au3ProjectPtr() const;
+
 private:
 
     std::shared_ptr<Audacity3ProjectData> m_data;

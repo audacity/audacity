@@ -8,7 +8,7 @@ import QtQuick.Layouts 1.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
-import Audacity.ProjectScene 1.0
+import Audacity.Playback 1.0
 
 StyledPopupView {
     id: root
