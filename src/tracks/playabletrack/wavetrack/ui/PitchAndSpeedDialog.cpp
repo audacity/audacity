@@ -16,12 +16,13 @@
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "TimeAndPitchInterface.h"
+#include "TimeStretching.h"
 #include "TrackPanel.h"
 #include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
 #include "WaveClip.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrackUtilities.h"
 #include "WindowAccessible.h"
 
@@ -34,6 +35,7 @@
 #include "ShuttleGui.h"
 #include "ShuttleGuiScopedSizer.h"
 #include "SpinControl.h"
+#include "WaveClip.h"
 #include "wxWidgetsWindowPlacement.h"
 
 #include <regex>
@@ -72,6 +74,13 @@ GetHitClip(AudacityProject& project, const TrackPanelMouseEvent& event)
       }
    }
    return {};
+}
+
+bool IsExactlySelected(AudacityProject& project, const ClipTimes& clip)
+{
+   auto& viewInfo = ViewInfo::Get(project);
+   return clip.GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+          clip.GetPlayEndTime() == viewInfo.selectedRegion.t1();
 }
 
 PitchAndSpeedDialog::PitchShift ToSemitonesAndCents(int oldCents, int newCents)
@@ -156,7 +165,7 @@ void PitchAndSpeedDialog::Destroy(AudacityProject& project)
 
 PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
     : wxDialogWrapper(
-         nullptr, wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
+         FindProjectFrame(&project), wxID_ANY, XO("Pitch and Speed"), wxDefaultPosition,
          { 480, 250 }, wxDEFAULT_DIALOG_STYLE)
     , mProject { project }
     , mProjectCloseSubscription { ProjectWindow::Get(mProject).Subscribe(
@@ -198,7 +207,7 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
 void PitchAndSpeedDialog::TryRetarget(const TrackPanelMouseEvent& event)
 {
    const auto target = GetHitClip(mProject, event);
-   if (!target.has_value() || target->clip->GetClip(0) == mLeftClip.lock())
+   if (!target.has_value() || target->clip == mLeftClip.lock())
       return;
    Retarget(target->track, target->clip);
 }
@@ -209,7 +218,7 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
 {
    mConsolidateHistory = false;
    wxDialog::SetTitle(mTitle + " - " + clip->GetName());
-   const auto leftClip = clip->GetClip(0);
+   const auto leftClip = clip;
    mClipDeletedSubscription =
       leftClip->Observer::Publisher<WaveClipDtorCalled>::Subscribe(
          [this](WaveClipDtorCalled) { Show(false); });
@@ -229,7 +238,6 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::Retarget(
 
    mTrack = track;
    mLeftClip = leftClip;
-   mRightClip = clip->GetClip(1);
    mClipSpeed = 100.0 / leftClip->GetStretchRatio();
    mOldClipSpeed = mClipSpeed;
    mShift = GetClipShift(*leftClip);
@@ -269,13 +277,9 @@ PitchAndSpeedDialog& PitchAndSpeedDialog::SetFocus(
          nullptr;
    if (item)
       item->SetFocus();
+   wxDialog::Show(true);
+   wxDialog::Raise();
    wxDialog::SetFocus();
-   return *this;
-}
-
-PitchAndSpeedDialog& PitchAndSpeedDialog::Show()
-{
-   Show(true);
    return *this;
 }
 
@@ -291,14 +295,17 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
             s.SetBorder(2);
             // Use `TieSpinCtrl` rather than `AddSpinCtrl`, too see updates
             // instantly when `UpdateDialog` is called.
-            s.Id(semitoneCtrlId)
-               .TieSpinCtrl(
-                  XO("se&mitones:"), mShift.semis,
-                  TimeAndPitchInterface::MaxCents / 100,
-                  TimeAndPitchInterface::MinCents / 100)
-               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
+            const auto semiSpin = s.Id(semitoneCtrlId)
+                                     .TieSpinCtrl(
+                                        XO("se&mitones:"), mShift.semis,
+                                        TimeAndPitchInterface::MaxCents / 100,
+                                        TimeAndPitchInterface::MinCents / 100);
+            semiSpin->Bind(wxEVT_SPINCTRL, [this, semiSpin](const auto&) {
+               // The widget's value isn't updated yet on macos, so we need
+               // to asynchronously query it later.
+               CallAfter([this, semiSpin] {
                   const auto prevSemis = mShift.semis;
-                  mShift.semis = event.GetInt();
+                  mShift.semis = semiSpin->GetValue();
                   // If we have e.g. -3 semi, -1 cents, and the user
                   // changes the sign of the semitones, the logic in
                   // `SetSemitoneShift` would result in 2 semi, 99
@@ -317,11 +324,15 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                   }
                   SetSemitoneShift();
                });
-            s.TieSpinCtrl(XO("&cents:"), mShift.cents, 100, -100)
-               ->Bind(wxEVT_SPINCTRL, [this](wxSpinEvent& event) {
-                  mShift.cents = event.GetInt();
+            });
+            const auto centSpin =
+               s.TieSpinCtrl(XO("&cents:"), mShift.cents, 100, -100);
+            centSpin->Bind(wxEVT_SPINCTRL, [this, centSpin](const auto&) {
+               CallAfter([this, centSpin] {
+                  mShift.cents = centSpin->GetValue();
                   SetSemitoneShift();
                });
+            });
          }
       }
 
@@ -350,7 +361,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                      if (auto target = LockTarget())
                      {
                         WaveTrackUtilities::ExpandClipTillNextOne(
-                           *target->track, target->clip);
+                           *target->track, *target->clip);
                         UpdateDialog();
                      }
                });
@@ -369,7 +380,7 @@ void PitchAndSpeedDialog::PopulateOrExchange(ShuttleGui& s)
                ->Bind(wxEVT_CHECKBOX, [this](auto&) {
                   mFormantPreservation = !mFormantPreservation;
                   if (auto target = LockTarget())
-                     target->clip.SetPitchAndSpeedPreset(
+                     target->clip->SetPitchAndSpeedPreset(
                         mFormantPreservation ?
                            PitchAndSpeedPreset::OptimizeForVoice :
                            PitchAndSpeedPreset::Default);
@@ -385,9 +396,15 @@ bool PitchAndSpeedDialog::SetClipSpeed()
    if (!target)
       return false;
 
-   if (!WaveTrackUtilities::SetClipStretchRatio(
-          *target->track, target->clip, 100 / mClipSpeed))
+   const auto wasExactlySelected =
+      IsExactlySelected(mProject, *mLeftClip.lock());
+
+   if (!TimeStretching::SetClipStretchRatio(
+          *target->track, *target->clip, 100 / mClipSpeed))
       return false;
+
+   if (wasExactlySelected)
+      WaveClipUIUtilities::SelectClip(mProject, *target->clip);
 
    UpdateHistory(XO("Changed Speed"));
 
@@ -413,7 +430,7 @@ PitchAndSpeedDialog::LockTarget()
    if (const auto track = mTrack.lock())
       if (const auto leftClip = mLeftClip.lock())
          return StrongTarget {
-            track, WaveTrack::Interval { *track, leftClip, mRightClip.lock() }
+            track, leftClip
          };
    return {};
 }
@@ -425,7 +442,7 @@ void PitchAndSpeedDialog::SetSemitoneShift()
       return;
    ClampPitchShift(mShift);
    const auto success =
-      target->clip.SetCentShift(mShift.semis * 100 + mShift.cents);
+      target->clip->SetCentShift(mShift.semis * 100 + mShift.cents);
    assert(success);
    TrackPanel::Get(mProject).RefreshTrack(target->track.get());
    UpdateHistory(XO("Changed Pitch"));

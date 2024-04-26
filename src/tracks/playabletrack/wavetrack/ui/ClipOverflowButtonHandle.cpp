@@ -10,7 +10,6 @@
 **********************************************************************/
 #include "ClipOverflowButtonHandle.h"
 #include "AllThemeResources.h"
-#include "ClipParameters.h"
 #include "HitTestResult.h"
 #include "LowlitClipButton.h"
 #include "ProjectHistory.h"
@@ -48,7 +47,7 @@ ClipOverflowButtonHandle::ClipOverflowButtonHandle(
 
 void ClipOverflowButtonHandle::DoDraw(const wxRect& rect, wxDC& dc)
 {
-   const ClipInterface& clip = *mClip->GetClip(0);
+   const ClipInterface& clip = *mClip;
    ClipButtonDrawingArgs args { rect, clip, dc };
    ClipButtonSpecializations<ClipButtonId::Overflow>::DrawOnClip(args);
 }

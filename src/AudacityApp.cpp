@@ -79,6 +79,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Languages.h"
 #include "MenuCreator.h"
 #include "PathList.h"
+#include "PendingTracks.h"
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -408,6 +409,12 @@ void PopulatePreferences()
    {
       if (gPrefs->Exists(wxT("/GUI/ToolBars")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 5 })
+   {
       if (gPrefs->Exists("/GUI/ShowSplashScreen"))
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
@@ -1189,7 +1196,7 @@ bool AudacityApp::OnExceptionInMainLoop()
             ProjectHistory::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
-            TrackList::Get( *pProject ).ClearPendingTracks();
+            PendingTracks::Get(*pProject).ClearPendingTracks();
             Viewport::Get(*pProject).Redraw();
          }
 
@@ -1751,6 +1758,8 @@ void AudacityApp::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
    try {
+      HandleAppIdle();
+
       if ( Journal::Dispatch() )
          evt.RequestMore();
    }
@@ -2429,6 +2438,8 @@ int AudacityApp::OnExit()
    {
       Dispatch();
    }
+
+   HandleAppClosing();
 
    Importer::Get().Terminate();
 

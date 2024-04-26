@@ -20,7 +20,9 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 
 #include "SampleBlock.h" // to inherit
 #include "UndoManager.h"
+#include "UndoTracks.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 
 #include "SentryHelper.h"
 #include <wx/log.h>
@@ -61,7 +63,7 @@ public:
                        sampleFormat destformat,
                        size_t sampleoffset,
                        size_t numsamples) override;
-   sampleFormat GetSampleFormat() const;
+   sampleFormat GetSampleFormat() const override;
    size_t GetSampleCount() const override;
 
    bool GetSummary256(float *dest, size_t frameoffset, size_t numframes) override;
@@ -164,6 +166,14 @@ public:
       sampleFormat srcformat,
       const AttributesList &attrs) override;
 
+   SampleBlockPtr DoCreateFromId(
+      sampleFormat srcformat, SampleBlockID id) override;
+
+   SampleBlock::DeletionCallback GetSampleBlockDeletionCallback() const
+   {
+      return mSampleBlockDeletionCallback;
+   }
+
 private:
    void OnBeginPurge(size_t begin, size_t end);
    void OnEndPurge();
@@ -172,7 +182,7 @@ private:
 
    AudacityProject &mProject;
    Observer::Subscription mUndoSubscription;
-   std::optional<SampleBlock::DeletionCallback::Scope> mScope;
+   SampleBlock::DeletionCallback mSampleBlockDeletionCallback;
    const std::shared_ptr<ConnectionPtr> mppConnection;
 
    // Track all blocks that this factory has created, but don't control
@@ -249,10 +259,6 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateSilent(
 SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
    sampleFormat srcformat, const AttributesList &attrs )
 {
-   std::shared_ptr<SampleBlock> sb;
-
-   int found = 0;
-
    // loop through attrs, which is a null-terminated list of attribute-value pairs
    for (auto pair : attrs)
    {
@@ -262,40 +268,33 @@ SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromXML(
       long long nValue;
 
       if (attr == "blockid" && value.TryGet(nValue))
-      {
-         if (nValue <= 0) {
-            sb = DoCreateSilent( -nValue, floatSample );
-         }
-         else {
-            // First see if this block id was previously loaded
-            auto &wb = mAllBlocks[ nValue ];
-            auto pb = wb.lock();
-            if (pb)
-               // Reuse the block
-               sb = pb;
-            else {
-               // First sight of this id
-               auto ssb =
-                  std::make_shared<SqliteSampleBlock>(shared_from_this());
-               wb = ssb;
-               sb = ssb;
-               ssb->mSampleFormat = srcformat;
-               // This may throw database errors
-               // It initializes the rest of the fields
-               ssb->Load((SampleBlockID) nValue);
-            }
-         }
-         found++;
-      }
+         return DoCreateFromId(srcformat, nValue);
    }
 
-  // Were all attributes found?
-   if (found != 1)
-   {
-      return nullptr;
-   }
+   return nullptr;
+}
 
-   return sb;
+SampleBlockPtr SqliteSampleBlockFactory::DoCreateFromId(
+   sampleFormat srcformat, SampleBlockID id)
+{
+   if (id <= 0)
+      return DoCreateSilent(-id, floatSample);
+
+   // First see if this block id was previously loaded
+   auto& wb = mAllBlocks[id];
+
+   if (auto block = wb.lock())
+      return block;
+
+   // First sight of this id
+   auto ssb           = std::make_shared<SqliteSampleBlock>(shared_from_this());
+   wb                 = ssb;
+   ssb->mSampleFormat = srcformat;
+   // This may throw database errors
+   // It initializes the rest of the fields
+   ssb->Load(static_cast<SampleBlockID>(id));
+
+   return ssb;
 }
 
 BlockSampleView SqliteSampleBlock::GetFloatSampleView(bool mayThrow)
@@ -346,7 +345,12 @@ SqliteSampleBlock::SqliteSampleBlock(
 
 SqliteSampleBlock::~SqliteSampleBlock()
 {
-   DeletionCallback::Call(*this);
+   if (
+      const auto cb = mpFactory ? mpFactory->GetSampleBlockDeletionCallback() :
+                                  SampleBlock::DeletionCallback {})
+   {
+      cb(*this);
+   }
 
    if (IsSilent()) {
       // The block object was constructed but failed to Load() or Commit().
@@ -1062,12 +1066,14 @@ void SqliteSampleBlock::CalcSummary(Sizes sizes)
 static size_t EstimateRemovedBlocks(
    AudacityProject &project, size_t begin, size_t end)
 {
+   using namespace WaveTrackUtilities;
    auto &manager = UndoManager::Get(project);
 
    // Collect ids that survive
+   using namespace WaveTrackUtilities;
    SampleBlockIDSet wontDelete;
    auto f = [&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem))
+      if (auto pTracks = UndoTracks::Find(elem))
          InspectBlocks(*pTracks, {}, &wontDelete);
    };
    manager.VisitStates(f, 0, begin);
@@ -1079,10 +1085,10 @@ static size_t EstimateRemovedBlocks(
    // Collect ids that won't survive (and are not negative pseudo ids)
    SampleBlockIDSet seen, mayDelete;
    manager.VisitStates([&](const UndoStackElem &elem) {
-      if (auto pTracks = TrackList::FindUndoTracks(elem)) {
+      if (auto pTracks = UndoTracks::Find(elem)) {
          InspectBlocks(*pTracks,
-            [&](const SampleBlock &block){
-               auto id = block.GetBlockID();
+            [&](SampleBlockConstPtr pBlock){
+               auto id = pBlock->GetBlockID();
                if (id > 0 && !wontDelete.count(id))
                   mayDelete.insert(id);
             },
@@ -1108,7 +1114,7 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
        return;
    auto purgeStartTime = std::chrono::system_clock::now();
    std::shared_ptr<ProgressDialog> progressDialog;
-   mScope.emplace([=, nDeleted = 0](auto&) mutable {
+   mSampleBlockDeletionCallback = [=, nDeleted = 0](auto&) mutable {
       ++nDeleted;
       if(!progressDialog)
       {
@@ -1119,12 +1125,12 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
       }
       else
          progressDialog->Poll(nDeleted, nToDelete);
-   });
+   };
 }
 
 void SqliteSampleBlockFactory::OnEndPurge()
 {
-   mScope.reset();
+   mSampleBlockDeletionCallback = {};
 }
 
 // Inject our database implementation at startup

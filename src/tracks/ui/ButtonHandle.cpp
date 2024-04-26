@@ -29,9 +29,9 @@ ButtonHandle::~ButtonHandle()
 {
 }
 
-std::shared_ptr<const Channel> ButtonHandle::FindChannel() const
+std::shared_ptr<const Track> ButtonHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack.lock());
+   return mpTrack.lock();
 }
 
 bool ButtonHandle::IsDragging() const

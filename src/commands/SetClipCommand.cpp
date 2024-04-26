@@ -24,6 +24,7 @@
 #include "MenuRegistry.h"
 #include "../CommonCommandFlags.h"
 #include "LoadCommands.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
 #include "WaveTrack.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"
@@ -94,15 +95,16 @@ bool SetClipCommand::Apply(const CommandContext& context)
 
       // if no 'At' is specified, then any clip in any selected track will be set.
       track->TypeSwitch([&](WaveTrack &waveTrack) {
-         for(const auto& interval : waveTrack.Intervals())
-         {
+         for (const auto &interval : waveTrack.Intervals()) {
             if(!bHasContainsTime || 
                (interval->Start() <= mContainsTime &&
                interval->End() >= mContainsTime ))
             {
                // Inside this IF is where we actually apply the command
-               if( bHasColour )
-                  interval->SetColorIndex(mColour);
+               if (bHasColour) {
+                  for (const auto channel : interval->Channels())
+                     WaveColorAttachment::Get(*channel).SetColorIndex(mColour);
+               }
                // No validation of overlap yet.  We assume the user is sensible!
                if( bHasT0 )
                   interval->SetPlayStartTime(mT0);

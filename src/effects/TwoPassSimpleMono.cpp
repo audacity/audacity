@@ -32,8 +32,8 @@ bool EffectTwoPassSimpleMono::Process(
 
    mWorkTracks = TrackList::Create(const_cast<AudacityProject*>(FindProject()));
    for (auto track : outputs.Get().Selected<WaveTrack>()) {
-      auto pNewTracks = track->WideEmptyCopy();
-      mWorkTracks->Append(std::move(*pNewTracks));
+      auto pNewTrack = track->EmptyCopy();
+      mWorkTracks->Add(pNewTrack);
    }
    for (const auto pNewTrack : mWorkTracks->Any<WaveTrack>()) {
       pNewTrack->ConvertToSampleFormat(floatSample);
@@ -175,7 +175,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveChannel &track,
       // Processing succeeded. copy the newly-changed samples back
       // onto the track.
       if (mSecondPassDisabled || mPass != 0) {
-         if (!outTrack.Set((samplePtr)buffer1.get(), floatSample, s - samples1,
+         if (!outTrack.SetFloats(buffer1.get(), s - samples1,
             samples1))
             return false;
       }
@@ -217,7 +217,7 @@ bool EffectTwoPassSimpleMono::ProcessOne(WaveChannel &track,
    // Processing succeeded. copy the newly-changed samples back
    // onto the track.
    if (mSecondPassDisabled || mPass != 0) {
-      if (!outTrack.Set((samplePtr)buffer1.get(), floatSample, s - samples1,
+      if (!outTrack.SetFloats(buffer1.get(), s - samples1,
          samples1))
          return false;
    }

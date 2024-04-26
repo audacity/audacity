@@ -19,8 +19,8 @@ class wxMouseState;
 
 class Track;
 class ViewInfo;
-class WaveClip;
-class WaveTrack;
+class WaveChannel;
+class WaveClipChannel;
 
 class SampleHandle final : public UIHandle
 {
@@ -29,21 +29,22 @@ class SampleHandle final : public UIHandle
       (const wxMouseState &state, const AudacityProject *pProject, bool unsafe);
 
 public:
-   explicit SampleHandle( const std::shared_ptr<WaveTrack> &pTrack );
+   explicit SampleHandle(const std::shared_ptr<WaveChannel> &pTrack);
 
    SampleHandle &operator=(const SampleHandle&) = default;
 
-   static UIHandlePtr HitAnywhere
-      (std::weak_ptr<SampleHandle> &holder,
-       const wxMouseState &state, const std::shared_ptr<WaveTrack> &pTrack);
-   static UIHandlePtr HitTest
-      (std::weak_ptr<SampleHandle> &holder,
-       const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &pTrack);
+   static UIHandlePtr HitAnywhere(
+      std::weak_ptr<SampleHandle> &holder,
+      const wxMouseState &state, const std::shared_ptr<WaveChannel> &pChannel);
+   static UIHandlePtr HitTest(
+      std::weak_ptr<SampleHandle> &holder,
+      const wxMouseState &state, const wxRect &rect,
+      const AudacityProject *pProject,
+      const std::shared_ptr<WaveChannel> &pChannel);
 
    virtual ~SampleHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    void Enter(bool forward, AudacityProject *) override;
 
@@ -69,8 +70,8 @@ private:
    float FindSampleEditingLevel
       (const wxMouseEvent &event, const ViewInfo &viewInfo, double t0);
 
-   std::shared_ptr<WaveTrack> mClickedTrack;
-   WaveClip* mClickedClip {};
+   std::shared_ptr<WaveChannel> mClickedTrack;
+   std::shared_ptr<WaveClipChannel> mClickedClip {};
    wxRect mRect{};
 
    int mClickedStartPixel {};

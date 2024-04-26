@@ -184,8 +184,7 @@ bool EffectClickRemoval::ProcessOne(
 
       if (mbDidSomething) {
          // RemoveClicks() actually did something.
-         if(!track.Set(
-            (samplePtr) buffer.get(), floatSample, start + s, block)) {
+         if(!track.SetFloats(buffer.get(), start + s, block)) {
             bResult = false;
             break;
          }

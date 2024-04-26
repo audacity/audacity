@@ -153,8 +153,8 @@ private:
       TrackPanelDrawingContext &context,
       const wxRect &rect, unsigned iPass ) override;
 
-   void DoDraw(TrackPanelDrawingContext &context, size_t channel,
-      const WaveTrack &track, const WaveTrack::Interval* selectedClip,
+   void DoDraw(TrackPanelDrawingContext &context,
+      const WaveChannel &channel, const WaveTrack::Interval* selectedClip,
       const wxRect & rect);
 
    std::vector<UIHandlePtr> DetailedHitTest(

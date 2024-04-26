@@ -5,12 +5,15 @@
 #include <memory>
 #include <new> // align_val_t and hardware_destructive_interference_size
 #include <cstdlib> // Needed for free.
+#include <cmath>
 #ifndef safenew
 #define safenew new
 #endif
 
 #include <functional>
 #include <limits>
+
+#include <cstdint>
 
 /*
  * ArrayOf<X>
@@ -194,7 +197,7 @@ template<typename F> Finally(F) -> Finally<F>;
 #include <algorithm>
 
 /**
-  \brief Structure used by ValueRestorer 
+  \brief Structure used by ValueRestorer
  */
 template< typename T >
 struct RestoreValue {
@@ -360,5 +363,42 @@ private:
    using std::atomic<T*>::fetch_add;
    using std::atomic<T*>::fetch_sub;
 };
+
+//! Check that machine is little-endian
+inline bool IsLittleEndian() noexcept
+{
+   const std::uint32_t x = 1u;
+   return static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
+   // We will assume the same for other widths!
+}
+
+//! Swap bytes in an integer
+template <typename IntType>
+constexpr IntType SwapIntBytes(IntType value) noexcept
+{
+   static_assert(std::is_integral<IntType>::value, "Integral type required");
+
+   constexpr auto size = sizeof(IntType);
+
+   static_assert(
+      size == 1 || size == 2 || size == 4 || size == 8, "Unsupported size");
+
+   if constexpr (size == 1)
+      return value;
+   else if constexpr (size == 2)
+      return (value >> 8) | (value << 8);
+   else if constexpr (size == 4) // On x86, this (and 64 bit version) is a single instruction! (At least, clang is smart enough to do that)
+      return ((value >> 24) & 0xFF) | ((value >> 8) & 0xFF00) |
+             ((value << 8) & 0xFF0000) | ((value << 24) & 0xFF000000);
+   else if constexpr (size == 8)
+      return ((value >> 56) & 0xFF) | ((value >> 40) & 0xFF00) |
+             ((value >> 24) & 0xFF0000) | ((value >> 8) & 0xFF000000) |
+             ((value << 8) & 0xFF00000000) | ((value << 24) & 0xFF0000000000) |
+             ((value << 40) & 0xFF000000000000) |
+             ((value << 56) & 0xFF00000000000000);
+
+   // Unreachable
+   return value;
+}
 
 #endif // __AUDACITY_MEMORY_X_H__

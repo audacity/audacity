@@ -12,10 +12,9 @@ Paul Licameli split from AudioIO.cpp and AudioIOBase.cpp
 \class MIDIPlay
 \brief Callbacks that AudioIO uses, to synchronize audio and MIDI playback
 
-  \par EXPERIMENTAL_MIDI_OUT
-  If EXPERIMENTAL_MIDI_OUT is defined, this class manages
-  MIDI playback. It is decoupled from AudioIO by the abstract interface
-  AudioIOExt. Some of its methods execute on the main thread and some on the
+  This class manages MIDI playback.
+  It is decoupled from AudioIO by the abstract interface AudioIOExt.
+  Some of its methods execute on the main thread and some on the
   low-latency PortAudio thread.
 
   \par MIDI With Audio

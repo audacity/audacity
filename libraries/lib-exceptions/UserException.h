@@ -21,6 +21,13 @@ public:
    ~UserException() override;
 
    void DelayedHandlerAction() override;
+
+   using ProgressReporter = std::function<void(double)>;
+
+   //! A frequently useful convenience wraps a lambda and may throw this type
+   static void WithCancellableProgress(
+      std::function<void(const ProgressReporter&)> action,
+      TranslatableString title, TranslatableString message);
 };
 
 #endif

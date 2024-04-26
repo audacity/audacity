@@ -10,9 +10,9 @@
 # mkpoli <snowwolf1001@gmail.com>, 2017-2018
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2023-02-25 20:05+0800\n"
 "Last-Translator: WhiredPlanck <fungdaat31@outlook.com>\n"
 "Language-Team: Chinese (http://www.transifex.com/klyok/audacity/language/zh/)\n"
@@ -23,40 +23,48 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 3.2.2\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "音频流处于活动状态，无法获得信息。\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "默认录制设备编号：%d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "默认播放设备编号：%d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "未找到设备\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "%d 的设备信息不可用。\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "设备 ID：%d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "设备名：%s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "主机名：%s\n"
@@ -168,8 +176,8 @@ msgstr ""
 "你将无法播放或录制音频。\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "错误: %s"
@@ -202,7 +210,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "错误"
 
@@ -350,8 +357,53 @@ msgstr "消息"
 msgid "Cannot proceed to upload."
 msgstr "无法上传。"
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File not found"
+msgstr "未找到文件“%s”。"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, fuzzy, c-format
+msgid "Invalid Response: %s"
+msgstr "无效的采样率"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#, fuzzy
+msgid "Export failed"
+msgstr "导出文件到："
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "导出错误"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to attach to the Cloud project database"
+msgstr "无法打开项目数据库"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to decompress the Cloud project block"
+msgstr "无法打开项目数据库"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+#, fuzzy
+msgid "Failed to deserialize the response"
+msgstr "无法检索预设内容"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -383,7 +435,7 @@ msgstr "应用 %s 中..."
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "内建效果器"
 
@@ -425,6 +477,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "内部错误"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "矩形"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "Bartlett"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "Hamming"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "Hann"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "Blackman"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Blackman-Harris"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "Welch"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "Gaussian(a=2.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "Gaussian(a=3.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "Gaussian(a=4.5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
@@ -460,9 +561,8 @@ msgstr ""
 msgid "File Error"
 msgstr "文件错误"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "所有文件"
 
@@ -538,6 +638,7 @@ msgstr ""
 "点击帮助按钮以获取合适驱动器的提示。"
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -545,10 +646,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "警告"
 
@@ -561,22 +661,19 @@ msgstr ""
 "无法导出。\n"
 "%s错误"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "导出"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#, fuzzy
+msgid "Export completed with error."
+msgstr "导出选择的音频"
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "所有支持的文件"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
-"是一个 MIDI 文件，不是音频文件。\n"
-"Audacity 不能打开并播放这类文件，但可以通过\n"
-"点击文件->导入->MIDI 来编辑它。"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -838,8 +935,7 @@ msgstr "LV2 效果"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "为 Audacity 提供 LV2 效果器支持"
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -858,55 +954,6 @@ msgstr "三角形"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "给定形"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "矩形"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "Bartlett"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "Hamming"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "Hann"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "Blackman"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Blackman-Harris"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "Welch"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "Gaussian(a=2.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "Gaussian(a=3.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "Gaussian(a=4.5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -943,6 +990,57 @@ msgstr "32 位 浮点"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "未知格式"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "命令"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "重复 %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, 因为已将 %s 快捷键分配给 %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+"你的最后的动作有问题，如果你认为这是一个BUG，\n"
+"请精确地告诉我们它在怎样的情况下发生。"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "不允许"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "撤消 %s(&U)"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "撤消(&U)"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "重做 %s(&R)"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "重做(&R)"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1079,6 +1177,74 @@ msgstr "Nyquist 提示符"
 #, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "无法打开项目文件：%s"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "初始化 MIDI I/O 层时出错.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"你将不能播放 MIDI.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "MIDI初始化错误"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "音符轨"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "秒"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "拍"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "支持输出：%d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "支持输入：%d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "已打开：%d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "选择 MIDI 录制设备：%d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "未找到“%s”的 MIDI 录制设备。\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "选择 MIDI 播放设备：%d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "未找到“%s”的 MIDI 播放设备。\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -2084,6 +2250,155 @@ msgstr "毫秒"
 msgid "Samples"
 msgstr "采样"
 
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "SQLite3 error"
+msgstr "内部错误"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "No error"
+msgstr "未知错误"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Generic error"
+msgstr "常规"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Internal logic error in SQLite"
+msgstr "内部处理错误"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr ""
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr ""
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Operation terminated"
+msgstr "不确定"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Unable to open the database file"
+msgstr ""
+"无法打开数据库文件:\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Not used"
+msgstr "(未使用):"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File opened that is not a database file "
+msgstr ""
+"无法打开数据库文件:\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+msgid "Unknown error"
+msgstr "未知错误"
+
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr "剪切/复制/粘贴"
@@ -2465,8 +2780,9 @@ msgid "Pre-processing"
 msgstr "处理中(&P): "
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr ""
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "重命名片段..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2501,7 +2817,6 @@ msgid "Problem details"
 msgstr "问题细节"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "注释"
 
@@ -2535,7 +2850,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "关闭"
 
@@ -2619,10 +2934,6 @@ msgid "You can also read our help on importing [[https://manual.audacityteam.org
 msgstr "你也可以通过阅读帮助，来了解如何导入[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI 文件]]和[[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| 音乐CD]]的曲目。"
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "使用手册好像没有被安装。请[[*URL*|在线浏览使用手册]]。<br><br>如果你想总是在线浏览使用手册，请将界面偏好设置中“使用手册的位置”更改为“从互联网”。"
-
-#: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr "使用手册好像没有被安装。请[[*URL*|在线浏览使用手册]]或[[https://manual.audacityteam.org/man/unzipping_the_manual.html|下载使用手册]].。<br><br>如果你想总是在线浏览使用手册，请将界面偏好设置中“使用手册的位置”更改为“从互联网”。"
 
@@ -2658,18 +2969,24 @@ msgid "Show Log for Details"
 msgstr "打开日志显示详情"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "确定"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "已用时间："
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "剩余时间："
 
@@ -2678,7 +2995,13 @@ msgstr "剩余时间："
 msgid "Stop"
 msgstr "停止"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "取消"
 
@@ -2713,6 +3036,11 @@ msgstr "无法转换指定的文件名，因为使用了 Unicode 字符。"
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "指定新文件名："
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+#, fuzzy
+msgid "Don't ask me again"
+msgstr "不要发送(&D)"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -2996,15 +3324,713 @@ msgid "Command Output"
 msgstr "命令行输出"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "确定(&O)"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "正在保存录制的音频"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
 msgstr ""
-"你指定了一个未知扩展名的文件。\n"
-"确定吗？"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "生成 Risset 鼓点..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Open from audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "保存项目"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save To Cloud..."
+msgstr "保存为..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open From Cloud..."
+msgstr "打开菜单..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Share Audio..."
+msgstr "分享音频"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "关联账户(&L)"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "导出错误"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "S&how 'How would you like to export?' dialog"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "行为"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "波形颜色(&W)"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "保存日志内容。"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "临时文件目录"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "位置(&L)"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "浏览(&B)..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "临时文件目录"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "鼠标偏好设置"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "选择存放临时目录的位置"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "临时文件目录不能设于FAT驱动器上。"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "无法设置偏好。"
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "失败"
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "分享音频"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "分享音频工具栏(&S)"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "Account not linked"
+msgstr "账户已成功关联！"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "关联账户(&L)"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "取消关联账户(&U)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "下次不再显示此警告"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "保存日志到："
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "波形颜色(&W)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to &computer"
+msgstr "保存日志内容。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr ""
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "分享音频"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "分享音频"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "导出错误"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "下次不再显示此警告"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "未列出"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "公开"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "保存"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "保存项目..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "项目"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "此项未设置键"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "对齐终点"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "关联账户"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "我们无法关联你的账户。请重试。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "取消(&C)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "重试(&T)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "账户已成功关联！"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "确定(&O)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "输入token或者关联你的账户"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Token"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "继续(&O)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "关联audio.com账户(&I)..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#, fuzzy
+msgid "Save to computer"
+msgstr "保存日志内容。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "保存日志到："
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "保存一个项目。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "打开一个项目。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "已压缩的项目文件"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "采样率转换"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "less than 1 minute"
+msgstr "不到 1 分钟"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "音的持续时间："
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "已修改的标签"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "无法还原连接"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "保存项目时(&P)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "无法导入项目"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Audacity项目"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "搜索(&H)："
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "预览(&P)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "下一个"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "打开"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "View in audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "%s 第 %d 个，共 %d 个"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "任何人都可以播放此音频。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "只有你和你分享了链接的人可以播放此音频。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "确定要取消？"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "取消上传到 Audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "正在上传音频..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "我们无法上传此文件。请关联你的audio.com账户并重试。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "上传错误"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "无法准备此文件以用于上传。"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "完成上传..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "轨道标题"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "点击“继续”以上传到 audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "准备音频..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "目标项目无法被分离"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Audacity设置错误"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr " 已同步锁定"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "问题细节"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "备份项目"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "继续"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "Success!"
+msgstr "成功"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "时间线"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "无法找到组件"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "载入文件"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#, fuzzy
+msgid "You have canceled this upload to audio.com"
+msgstr "取消上传到 Audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#, fuzzy
+msgid "Retry"
+msgstr "重试(&R)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3099,7 +4125,8 @@ msgid "Cutoff"
 msgstr "切除"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "未启用"
 
@@ -3386,6 +4413,16 @@ msgstr "显示所有格式"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "显示所有编码"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Formats"
+msgstr "格式："
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Codecs"
+msgstr "编码："
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4016,6 +5053,90 @@ msgstr "MIDI轨道不能单独偏移，只有音频文件才可以。"
 msgid "Invalid track offset in LOF file."
 msgstr "LOF 文件中的轨道偏移无效。"
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "导出的 Allegro (.gro) 文件保存时间为："
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "请每次只选择一个音符轨。"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "请选择一个音符轨。"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "导出 MIDI 为："
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "MIDI 文件"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Allegro 文件"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"你选择了一个未知扩展名的文件\n"
+"你想继续吗？"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "导出 MIDI"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "导出 MI&DI..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "从“%s”中导入的 MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "导入MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "无法打开文件 %s：文件名过短。"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "无法打开文件 %s：文件类型错误。"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "无法打开文件 %s。"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "选择一个 MIDI 文件"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "MIDI 和 Allegro 文件"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "MIDI 文件"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Allegro 文件"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "MIDI(&M)..."
+
 #: modules/mod-mp2/ExportMP2.cpp
 msgid "Version"
 msgstr "版本"
@@ -4212,7 +5333,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "仅 libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
+#, fuzzy
+msgid "Only libmp3lame.so"
 msgstr "仅 libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
@@ -4222,6 +5344,10 @@ msgstr "主共享对象文件"
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "扩展库"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "仅 libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4498,8 +5624,7 @@ msgstr "无标题"
 msgid "Nyquist Effect Workbench - "
 msgstr "Nyquist 效果工作台 - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "新建"
 
@@ -4508,16 +5633,8 @@ msgid "New script"
 msgstr "新建脚本"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "打开"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "打开脚本"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "保存"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4638,10 +5755,6 @@ msgid "Go to previous S-expr"
 msgstr "转到上一个 S-expr"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "下一个"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "转到下一个 S-expr"
 
@@ -4760,10 +5873,6 @@ msgid "memory allocation has failed"
 msgstr "内存分配失败 -- NewSamples"
 
 #: modules/mod-opus/ExportOpus.cpp
-msgid "Unknown error"
-msgstr "未知错误"
-
-#: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Auto"
 msgstr "自动回避(用于DJ的自动音量调节)"
@@ -4871,7 +5980,7 @@ msgid "Opus files"
 msgstr "%s 文件"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
+msgid "File has changed the number of channels in the middle."
 msgstr ""
 
 #: modules/mod-opus/ImportOpus.cpp
@@ -5395,7 +6504,7 @@ msgstr "%s 网站: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
+msgid "%s software is copyright %s 1999-2024 %s Team."
 msgstr "%s 软件，%s 1999-2018 %s 团队，版权所有。"
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -5408,8 +6517,8 @@ msgstr "%s 是注册商标。"
 msgid "Build Information"
 msgstr "构建信息"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "已启用"
 
@@ -5603,10 +6712,11 @@ msgstr "点击并拖动以调整，双击以重置"
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
+#, fuzzy
+msgid "Record/Playhead"
 msgstr "录制/播放头"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "时间线"
 
@@ -5690,10 +6800,6 @@ msgstr "节拍寻找"
 msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "播放时更新显示"
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
@@ -5704,13 +6810,12 @@ msgid "Set Loop To Selection"
 msgstr "设置循环到所选区"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "固定播放头"
+msgid "Scroll view to playhead"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
-msgid "Enable pinned play &head"
-msgstr "固定播放头"
+msgid "Continuous scrolling"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5720,20 +6825,6 @@ msgstr "%s 移除失败"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "失败！"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr ""
-"你真的要重置偏好设置吗？\n"
-"\n"
-"此问题只会在软件安装结束后出现一次，当且仅当你选择了重置偏好设置。"
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "重置 Audacity 偏好设置"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6017,6 +7108,34 @@ msgstr "退出 Audacity(&Q)"
 msgid "&Retry"
 msgstr "重试(&R)"
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Automatic Music Configuration"
+msgstr "Audacity设置错误"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Music Import"
+msgstr "MP3 导入"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -6049,10 +7168,6 @@ msgstr ""
 msgid "Remember my choice and don't ask again"
 msgstr ""
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "继续"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "崩溃自动恢复"
@@ -6071,14 +7186,14 @@ msgid "Recoverable &projects"
 msgstr "可恢复的项目(&P)"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "选择"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "名称"
 
@@ -6157,7 +7272,7 @@ msgstr "%s已存在。你想要替换它吗？"
 msgid "Export Macro"
 msgstr "导出宏"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "效果"
 
@@ -6290,14 +7405,6 @@ msgstr "正在应用..."
 msgid "File"
 msgstr "文件"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "取消(&C)"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "移除(&V)"
@@ -6409,14 +7516,6 @@ msgstr "你确实要删除 %s?"
 #, c-format
 msgid "&Repeat %s"
 msgstr "重复 %s (&R)"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "重复 %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
@@ -6615,18 +7714,6 @@ msgstr "测试失败！！！\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "性能测试成功完成。\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
-"你必须先选择一段音频才能使用“%s” 。\n"
-"\n"
-"Ctrl + A 以选择全部音频。"
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -6904,7 +7991,7 @@ msgstr "分贝"
 msgid "Scroll"
 msgstr "滚动"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "缩放"
 
@@ -6951,7 +8038,7 @@ msgstr "为了进行频谱分析，所有选定的轨道必须具有相同的采
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 
@@ -7033,7 +8120,7 @@ msgstr "历史记录"
 msgid "&Manage History"
 msgstr "管理历史记录(&M)"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "动作"
 
@@ -7093,11 +8180,6 @@ msgstr "发现不兼容的插件"
 #, fuzzy
 msgid "&Manage Plugins"
 msgstr "管理插件"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "继续(&O)"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7190,10 +8272,36 @@ msgstr "输入标签轨名"
 msgid "Label Track"
 msgstr "标签轨"
 
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "文本文件"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "HTML 文件"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "标签"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "标准(&T)"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "扩展的（包含频率范围）(&X)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "已导出标签风格："
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7233,60 +8341,13 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "打开 Audacity 项目"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity 卡拉OK%s"
+#: src/MenuCreator.cpp
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
+msgstr "以下命令的快捷键已删除，因为它们的默认快捷键是新的或已更改，并且与你分配给另一个命令的快捷键相同。"
 
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "卡拉O&K"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "初始化 MIDI I/O 层时出错.\n"
-
-#: src/MIDIPlay.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-"你将不能播放 MIDI.\n"
-"\n"
-
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "MIDI初始化错误"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "撤消 %s(&U)"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "撤消(&U)"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "重做 %s(&R)"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "重做(&R)"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"你的最后的动作有问题，如果你认为这是一个BUG，\n"
-"请精确地告诉我们它在怎样的情况下发生。"
-
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "不允许"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "快捷键已删除"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7356,49 +8417,6 @@ msgstr "已移动左右声道平衡滑杆"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "混音器(&M)"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "音符轨"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "支持输出：%d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "支持输入：%d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "已打开：%d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "选择 MIDI 录制设备：%d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "未找到“%s”的 MIDI 录制设备。\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "选择 MIDI 播放设备：%d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "未找到“%s”的 MIDI 播放设备。\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7510,110 +8528,7 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "管理插件"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "选中效果器，点击启用或者禁用按钮，然后点确定。"
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "显示："
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "显示所有"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "全部(&A)"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "显示禁用的"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "已禁用(&I)"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "显示启用的"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "已启用(&N)"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "显示新增的"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "新的(&W)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "状态"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "路径"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "选择所有(&S)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "清除所有(&L)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "重新扫描"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "启用(&E)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "禁用(&D)"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"启用效果器或命令中：\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"启用效果器或命令中：\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7622,26 +8537,80 @@ msgstr ""
 "效果器或命令于 %s 注册失败：\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Disable"
+msgstr "未启用"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Enable"
+msgstr "启用"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "类型"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "路径"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "所有"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "生成器"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Analyzer"
+msgstr "分析"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "工具"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "管理插件"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Native Audacity"
+msgstr "更新Audacity"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Show:"
+msgstr "显示："
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Type:"
+msgstr "类型："
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&ategory:"
+msgstr "分类(&A)："
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "搜索(&H)："
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Plugin"
+msgstr "插件"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Rescan"
+msgstr "重新扫描"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "搜索插件"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "打印时出错。"
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "打印"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "页面设置(&G)..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "打印(&P)..."
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -7960,7 +8929,7 @@ msgstr ""
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr "该项目超过FAT32文件系统的最大4GB文件尺寸限制。"
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "%s已保存"
@@ -8143,6 +9112,16 @@ msgstr "选择要导入的流"
 #, c-format
 msgid "Importing %s"
 msgstr "正在导入 %s"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Music Information Retrieval"
+msgstr "构建信息"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Analyzing imported audio"
+msgstr "正在保存录制的音频"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8352,7 +9331,7 @@ msgstr "无效果"
 msgid "Get more effects..."
 msgstr "获取更多效果..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "分析"
 
@@ -8399,164 +9378,6 @@ msgstr "实时效果"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "%s的实时效果"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "截屏工具"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "选择文件保存的位置"
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "保存图片到："
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "选择..."
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "抓整个窗口或屏幕"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "缩小"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "放大"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "蓝色背景"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "白色背景"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "仅截窗口"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "完整窗口"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "高级窗口"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "截全屏"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "等5秒后抓最前面的窗口/对话框"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "抓取部分项目窗口"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "所有工具栏"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "全部效果"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "所有脚本"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "全部偏好设置"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "轨道面板"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "标尺"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "轨道"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "第一轨"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "第二轨"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "长度"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "一秒"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "十秒"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "一分"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "五分"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "一小时"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "短轨道"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "中轨道"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "长轨道"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "选择保存截屏的位置"
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "捕获失败！"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "长消息"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "截取屏幕(&S)..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8694,10 +9515,6 @@ msgstr "启动时不再显示"
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "艺术家名字"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "轨道标题"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9180,6 +9997,10 @@ msgstr "导出标签"
 msgid "Stereo, 999999Hz"
 msgstr "立体声，999999 Hz"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "轨道面板"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9346,131 +10167,6 @@ msgstr "方向改变  -- 均值： %1.4f  标准差： (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "校准完成"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "分享音频"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "分享音频工具栏(&S)"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "关联账户"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "输入token或者关联你的账户"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "Token"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "关联audio.com账户(&I)..."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "我们无法关联你的账户。请重试。"
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "重试(&T)"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "账户已成功关联！"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "确定(&O)"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "公开"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "任何人都可以播放此音频。"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "未列出"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "只有你和你分享了链接的人可以播放此音频。"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "确定要取消？"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "取消上传到 Audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "正在上传音频..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "我们无法上传此文件。请关联你的audio.com账户并重试。"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "上传错误"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "导出错误"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "无法准备此文件以用于上传。"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "完成上传..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "匿名"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "关联账户(&L)"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "点击“继续”以上传到 audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "取消关联账户(&U)"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "准备音频..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9499,28 +10195,6 @@ msgstr "%s 不是被 %s 所接受的参数"
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "参数“%s”的值无效：应为 %s"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "命令"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-"\n"
-"* %s, 因为已将 %s 快捷键分配给 %s"
-
-#: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "以下命令的快捷键已删除，因为它们的默认快捷键是新的或已更改，并且与你分配给另一个命令的快捷键相同。"
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "快捷键已删除"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9617,9 +10291,18 @@ msgstr "命令"
 msgid "Menus"
 msgstr "菜单"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "偏好设置"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "轨道"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -9839,113 +10522,6 @@ msgstr "获取单个偏好设置的值。"
 msgid "Sets the value of a single preference."
 msgstr "设置单个偏好设置的值。"
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "截屏"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "窗口"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "完整窗口"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "附加窗口"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "全屏幕"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "工具栏"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "效果"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "脚本"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "轨道面板"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "前两轨"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "前三轨"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "前四轨"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "附加轨道"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "第一附加轨道"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "所有轨道"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "所有附加轨道"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "蓝色"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "白色"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "路径："
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "捕获什么："
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "背景："
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "置顶"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "保存文件时错误：%s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "截屏工具（简式）..."
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "截图。"
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "选择时间"
@@ -10110,8 +10686,7 @@ msgid "Edited Envelope"
 msgstr "已编辑的包络"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "包络线"
 
@@ -10305,6 +10880,10 @@ msgstr "设置轨道..."
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
 msgstr "设置轨道的各个值。"
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "长消息"
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
@@ -11538,10 +12117,6 @@ msgid "Preview effect"
 msgstr "预览效果"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "停止预览(&P)"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "应用(&A)"
 
@@ -11613,13 +12188,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "均衡器（EQ）"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "滤波曲线均衡器"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "图形化均衡"
 
@@ -13325,10 +13899,6 @@ msgstr "LADSPA 效果器选项"
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr "作为其处理的一部分过程，某些 LADSPA 效果必须延迟将音频返回 Audacity 的时间。 当不补偿此延迟时，你会注意到音频中已经插入了小的空白片段。 启用此选项将提供该补偿，但可能不适用于所有 LADSPA 效果。"
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "生成器"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "无法实例化效果"
@@ -13605,7 +14175,7 @@ msgstr ""
 
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "剪切选区"
 
 #: src/export/ExportAudioDialog.cpp
@@ -13712,10 +14282,6 @@ msgstr "所有选择的音频被静音。"
 msgid "Continue to export remaining files?"
 msgstr "继续导出剩余文件？"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "导出"
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "Custom Sample Rate"
@@ -13735,10 +14301,6 @@ msgstr "文件名称："
 #, fuzzy
 msgid "Fo&lder:"
 msgstr "文件夹："
-
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "浏览(&B)..."
 
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
@@ -13802,42 +14364,6 @@ msgstr ""
 msgid "Other..."
 msgstr "其它..."
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "请每次只选择一个音符轨。"
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "请选择一个音符轨。"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "导出 MIDI 为："
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "MIDI 文件"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Allegro 文件"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"你选择了一个未知扩展名的文件\n"
-"你想继续吗？"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "导出 MIDI"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "导出 MI&DI..."
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -13867,55 +14393,6 @@ msgstr "通道： %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "无格式指定选项"
-
-#: src/export/ExportProgressUI.cpp
-#, fuzzy
-msgid "Export completed with error."
-msgstr "导出选择的音频"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "从“%s”中导入的 MIDI"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "导入MIDI"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "无法打开文件 %s：文件名过短。"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "无法打开文件 %s：文件类型错误。"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "无法打开文件 %s。"
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "选择一个 MIDI 文件"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "MIDI 和 Allegro 文件"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "MIDI 文件"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Allegro 文件"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "MIDI(&M)..."
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14426,14 +14903,6 @@ msgid "E&xit"
 msgstr "退出(&X)"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "隐藏文件菜单"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "导出为 FLAC"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "导出为 MP&3"
 
@@ -14444,6 +14913,10 @@ msgstr "导出为 &WAV"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "导出为 &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "导出为 FLAC"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14484,18 +14957,6 @@ msgstr "已解决"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "音频设备信息"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "快速修复(&Q)..."
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "入门(&G)"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "Audacity 手册(&M)"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14879,6 +15340,10 @@ msgid "&Select"
 msgstr "选择(&S)"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "全部(&A)"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "全不(&N)"
 
@@ -15128,7 +15593,7 @@ msgstr "播放时稍右定位(&H)"
 
 #: src/menus/TimelineMenus.cpp
 #, fuzzy
-msgid "&Timeline"
+msgid "Tim&eline"
 msgstr "时间线"
 
 #: src/menus/ToolbarMenus.cpp
@@ -15767,10 +16232,6 @@ msgid "Zoom &Toggle"
 msgstr "缩放开关(&T)"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "高级垂直缩放(&V)"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "轨道大小(&R)"
 
@@ -15808,7 +16269,7 @@ msgstr "跳到选区终点"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "打开剪切线(&:)"
 
 #: src/menus/ViewMenus.cpp
@@ -16015,28 +16476,12 @@ msgid "Temporary files directory"
 msgstr "临时文件目录"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "位置(&L)"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "临时文件目录不能设于FAT驱动器上。"
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
 msgstr "浏览..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "剩余容量："
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "选择存放临时目录的位置"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "无法设置偏好。"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16114,6 +16559,12 @@ msgstr "导无法设置导出目录。"
 msgid "'Macro Output' directory cannot be set."
 msgstr "无法设置宏输出目录。"
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "效果"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "效果偏好设置"
@@ -16167,6 +16618,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "%s的实时效果"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "指令集"
 
@@ -16176,7 +16631,7 @@ msgstr "使用 SSE/SSE2/.../AVX (&U)"
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
-msgid "Open Plugin Manager"
+msgid "Open Plugin &Manager"
 msgstr "插件管理器"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16348,14 +16803,6 @@ msgstr "在从右向左书写的语言中使用大多数从左向右的布局"
 msgid "Never use comma as decimal point"
 msgstr "永远不使用逗号作为小数点"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "显示时间线工具提示"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "显示跟随播放标尺"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
@@ -16374,29 +16821,26 @@ msgid "Preferences for ImportExport"
 msgstr "导入导出的偏好设置"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "标准(&T)"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "扩展的（包含频率范围）(&X)"
+msgid "&Ask me each time"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "秒"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "拍"
+#, fuzzy
+msgid "Do &nothing"
+msgstr "什么都不做"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "已导出标签风格："
+#, fuzzy
+msgid "Music Imports"
+msgstr "MP3 导入"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "导出的 Allegro (.gro) 文件保存时间为："
+msgid "When Audacity detects music in file imported on empty project"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16454,10 +16898,6 @@ msgstr "按名称查看"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "以关键字方式查看"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "搜索(&H)："
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -16640,258 +17080,34 @@ msgstr "模块偏好设置"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
-"这些测试模块。请在阅读完 Audacity 使用手册后\n"
-"谨慎启用。"
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr " “询问” 表示 Audacity 每次启动时都会询问是否要加载此模块。"
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr " “失败” 表示 Audacity 发现模块已损坏，不会运行。"
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr " “新建” 表示尚未作出任何选择。"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+#, fuzzy
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "这些设置只会在 Audacity 启动时生效。"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "询问"
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "失败"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "未找到模块"
+msgid "No choice made"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "模块"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "鼠标"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "鼠标偏好设置"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "鼠标绑定 (默认值， 不可更改)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "工具"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "命令动作"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "按钮"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "左击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "设置选区位置"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "按住左键-拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "设置选区范围"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Shift 键-左键双击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "扩展选区范围"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "左键双击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "选择片段或整个轨道"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "滚轮"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "改变跟随播放速度"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "点放大"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "范围放大"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "同右键-拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "右击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "缩小一级"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "右键-拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "同左键-拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "Shift 键-拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "范围缩小"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "中击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "默认缩放"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "改变增益包络"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "铅笔"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "变更采样"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt 键-左键点击"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "平滑采样"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "修改若干采样"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "-左键拖动"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "仅修改一处采样点"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "多功能"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "同选择工具"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "同缩放工具"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "(任一)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "上下滚动轨道"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Shift键-滚轮"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "滚动波形"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "-滚轮转动"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "缩放波形"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "Shift键-滚轮"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "纵向缩放波形 (dB) 范围"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Shift 键-左键拖拽"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "左右移动轨道内的全部片段"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "在轨道间上下移动剪辑"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "左右或在轨道间移动片段"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -17009,6 +17225,10 @@ msgstr "侦测丢失"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr "声控录音"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "启用(&E)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17192,6 +17412,10 @@ msgstr "频谱偏好设置"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "使用偏好设置"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "长度"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17410,12 +17634,12 @@ msgid "Enable cut &lines"
 msgstr "打开剪切线(&:)"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
-msgstr "启用拖拽选区边缘(&D)"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
 msgstr "编辑一段会移动 其它片段(&M)"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "&Always paste audio as new clips"
+msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17428,14 +17652,6 @@ msgstr "键入以创建标签(&T)"
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr "使用新标签名的对话框"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr "可以滑动到零点左侧(&Z)"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "高级垂直缩放(&V)"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -17596,22 +17812,6 @@ msgstr "下次导出音频时不再显示此警告"
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
 msgstr "保存空项目时(&E)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr "导出过程中混音成单声道时(&M)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr "导出过程中混音成立体声时(&S)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "混音导出时(自定义 FFmpeg 或外部程序) (&C)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr "导出期间缺少文件名和扩展名时"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -17935,64 +18135,6 @@ msgstr "增加录制音量(&N)"
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "减小录制音量(&E)"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "跟随播放"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "定位"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "跟随播放标尺"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "跟随播放"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "停止跟随播放"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "启动跟随播放"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "停止定位播放"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "开始定位播放"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "隐藏跟随播放标尺"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "跟随播放工具栏(&B)"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18339,33 +18481,24 @@ msgid "&MIDI Device Info..."
 msgstr "MIDI 设备信息(&D)..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "点击在垂直方向放大。按住Shift键点击缩小。拖拽指定一个缩放区域。"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "右击以打开菜单。"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "缩放重置"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "Shift 键-右键点击"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "左键点击/左键拖拽"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "Shift 键-左键双击"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18385,30 +18518,57 @@ msgstr "伸展音符轨"
 msgid "Stretch"
 msgstr "拉伸"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "改变速率"
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed"
+msgid "Click to open clip context menu."
+msgstr "点击编辑标签文本"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Not enough space"
+msgstr "没有选择足够的数据。"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "There is not enough space to expand the clip to its original speed."
+msgstr "没有足够的空间来粘贴选区"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Reset Clip Speed"
 msgstr " 已修剪的 "
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Invalid clip speed"
-msgstr "无效的采样率"
+msgid "Click to reset clip pitch."
+msgstr "左键点击合并片段"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed must be a positive value"
-msgstr "范围必须是一个正整数"
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "点击并拖动以调整，双击以重置"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "没有足够的空间来粘贴选区"
+msgid "Click to reset clip speed."
+msgstr "左键点击合并片段"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "点击并拖动以调整，双击以重置"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18426,6 +18586,53 @@ msgstr "扩展"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "已移除剪切线"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Pitch and Speed"
+msgstr "音高和速度"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Pitch"
+msgstr "音高"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "se&mitones:"
+msgstr "半音 + 音分（semitones + cents）"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Speed"
+msgstr " 已修剪的 "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "General"
+msgstr "生成(&G)"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Speed"
+msgstr "改变速率"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Pitch"
+msgstr "改变音高"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18451,6 +18658,12 @@ msgstr "k"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "自适应缩放"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Reset Zoom"
+msgstr "重置"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18487,6 +18700,15 @@ msgstr "下一个更高的峰值频率(&H)"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "下一个更低的峰值频率(&L)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+#, fuzzy
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "右击以打开菜单。"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
@@ -18566,20 +18788,22 @@ msgstr "重命名片段..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy
-msgid "Change Speed..."
+msgid "Pitch and Speed..."
 msgstr "改变速率"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
+msgid "Render Pitch and Speed"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
@@ -18608,17 +18832,37 @@ msgstr "反向选择的音频"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
+msgid "Pitch Shift"
+msgstr "终点音调变化"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Changed Pitch Shift"
+msgstr "改变音高"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
 msgid "&Rename Clip..."
 msgstr "重命名片段..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
-msgid "Change &Speed..."
+msgid "&Pitch and Speed..."
 msgstr "改变速率"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
+msgid "Render Pitch and &Speed"
 msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Up"
+msgstr "音高"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Down"
+msgstr "音高"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -18837,14 +19081,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% 右"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "缩放 x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "缩放 x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "半波"
 
@@ -18943,6 +19179,10 @@ msgstr "新建时间轨"
 msgid "&Time Track"
 msgstr "时间轨(&T)"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "右击以打开菜单。"
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
@@ -18977,8 +19217,9 @@ msgid "Brush tool selection"
 msgstr "选择刷子工具"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "名称(&N)..."
+#, fuzzy
+msgid "Re&name Track..."
+msgstr "重采样轨道"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19029,6 +19270,10 @@ msgstr "已调整的包络。"
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "跟随播放(&S)"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
+msgstr "跟随播放"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19161,6 +19406,11 @@ msgstr "选择轨道"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "Ctrl+点击 以反选"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Delete Track"
+msgstr "选择轨道"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19573,8 +19823,7 @@ msgstr "陷波滤波器"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19584,7 +19833,7 @@ msgstr "Steve Daulton"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "基于GNU通用公共许可证v2.0发布"
 
@@ -19709,9 +19958,8 @@ msgstr "频谱编辑架"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20003,50 +20251,6 @@ msgstr "回响次数"
 msgid "Allow duration to change"
 msgstr "允许持续时长变更"
 
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "均衡器 XML 配置到 TXT 转换器"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "选择目标均衡器效果"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "均衡配置 - XML 文件"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "XML 文件"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "如果输出的文本文件存在"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "追加编号"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "覆盖原文件"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "错误。~% 无法打开文件~%~s"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "错误。~%文件不允许覆盖:~%\"~a.txt\""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "错误。~%无法写入文件:~%\"~a.txt\""
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "常规间隔标签"
@@ -20308,10 +20512,6 @@ msgstr "声音之间的标签区域需要~%至少 2 个声音。~%只检测到�
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "限幅器"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "类型"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -20776,10 +20976,6 @@ msgid "Minimal"
 msgstr "最小"
 
 #: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "所有"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr "可选头部文本"
 
@@ -21101,150 +21297,6 @@ msgstr "起始相位（度）"
 msgid "Wet level (percent)"
 msgstr "湿音等级（百分比）"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "人声消除和隔离"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "Robert Haenggi"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "移除人声：到单声道"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "移除人声"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "隔离人声"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "隔离人声并反转"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "移除中心：到单声道"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "移除中心"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "隔离中心"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "隔离中心并反转"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "强度"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr "人声低切（Hz）"
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr "人声高切（Hz）"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-"平均值 x: ~a, y: ~a\n"
-"                    协方差 x y: ~a\n"
-"                    平均方差 x: ~a, y: ~a\n"
-"                    标准偏差 x: ~a, y: ~a\n"
-"                    相关系数: ~a\n"
-"                    确定系数: ~a\n"
-"                    残差变化: ~a\n"
-"                    y 等于 ~a 加 ~a 倍的 x~%"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "平衡位置：~a~%左右声道互相有大约 ~a % 相关，意味着：~%~a~%"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-" - 两个轨道是相同的，即双单声道。\n"
-"                其中心无法被移除。\n"
-"                任何剩余的差异都可能引起编码有损 (失真)。"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-" - 两个轨道强烈相关，即接近单声道或极端平衡。\n"
-"                中央抽出的效果很有可能不会很好。"
-
-#: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - 一个非常好的值，至少立体声在平均上并且并不过于分散。"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
-msgstr ""
-" - 对于立体声来说是个理想值。\n"
-"                但是，中央抽出取决于所使用的混响 (效果)。"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-" - 两个轨道几乎不相关。\n"
-"                要么只有噪声或两部分被控制在一个不平衡的表现上。\n"
-"                尽管中央抽出仍有可能不错。"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-" - 尽管轨道是立体声，此区域显然过宽。\n"
-"                这可能产生奇怪的效果。\n"
-"                特别是当仅在一个扬声器上播放。"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-" - 两个声道接近一致。\n"
-"                  显然，这里使用了一个伪立体声效果\n"
-"                  以使信号在扬声器间的物理距离上扩散。\n"
-"                  不要期待中央移除会有好效果。"
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr "此插件仅适用于立体声轨道。"
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "声码器"
@@ -21330,12 +21382,733 @@ msgid "Special"
 msgstr "特别鸣谢"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "人声消除和隔离"
+
+#: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
 msgstr "人声消除"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "频谱工具"
+
+#, c-format
+#~ msgid ""
+#~ "\"%s\" \n"
+#~ "is a MIDI file, not an audio file. \n"
+#~ "Audacity cannot open this type of file for playing, but you can\n"
+#~ "edit it by clicking File > Import > MIDI."
+#~ msgstr ""
+#~ "\"%s\" \n"
+#~ "是一个 MIDI 文件，不是音频文件。\n"
+#~ "Audacity 不能打开并播放这类文件，但可以通过\n"
+#~ "点击文件->导入->MIDI 来编辑它。"
+
+#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+#~ msgstr "使用手册好像没有被安装。请[[*URL*|在线浏览使用手册]]。<br><br>如果你想总是在线浏览使用手册，请将界面偏好设置中“使用手册的位置”更改为“从互联网”。"
+
+#~ msgid "You've specified a file name without an extension. Are you sure?"
+#~ msgstr ""
+#~ "你指定了一个未知扩展名的文件。\n"
+#~ "确定吗？"
+
+#~ msgid "Update display while playing"
+#~ msgstr "播放时更新显示"
+
+#~ msgid "Pinned Play Head"
+#~ msgstr "固定播放头"
+
+#, fuzzy
+#~ msgid "Enable pinned play &head"
+#~ msgstr "固定播放头"
+
+#~ msgid ""
+#~ "Reset Preferences?\n"
+#~ "\n"
+#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
+#~ msgstr ""
+#~ "你真的要重置偏好设置吗？\n"
+#~ "\n"
+#~ "此问题只会在软件安装结束后出现一次，当且仅当你选择了重置偏好设置。"
+
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "重置 Audacity 偏好设置"
+
+#, c-format
+#~ msgid ""
+#~ "You must first select some audio for '%s' to act on.\n"
+#~ "\n"
+#~ "Ctrl + A selects all audio."
+#~ msgstr ""
+#~ "你必须先选择一段音频才能使用“%s” 。\n"
+#~ "\n"
+#~ "Ctrl + A 以选择全部音频。"
+
+#, c-format
+#~ msgid "Audacity Karaoke%s"
+#~ msgstr "Audacity 卡拉OK%s"
+
+#~ msgid "&Karaoke"
+#~ msgstr "卡拉O&K"
+
+#~ msgid "Select effects, click the Enable or Disable button, then click OK."
+#~ msgstr "选中效果器，点击启用或者禁用按钮，然后点确定。"
+
+#~ msgid "Show all"
+#~ msgstr "显示所有"
+
+#~ msgid "Show disabled"
+#~ msgstr "显示禁用的"
+
+#~ msgid "D&isabled"
+#~ msgstr "已禁用(&I)"
+
+#~ msgid "Show enabled"
+#~ msgstr "显示启用的"
+
+#~ msgid "E&nabled"
+#~ msgstr "已启用(&N)"
+
+#~ msgid "Show new"
+#~ msgstr "显示新增的"
+
+#~ msgid "Ne&w"
+#~ msgstr "新的(&W)"
+
+#~ msgid "State"
+#~ msgstr "状态"
+
+#~ msgid "&Select All"
+#~ msgstr "选择所有(&S)"
+
+#~ msgid "C&lear All"
+#~ msgstr "清除所有(&L)"
+
+#~ msgid "&Disable"
+#~ msgstr "禁用(&D)"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "启用效果器或命令中：\n"
+#~ "\n"
+#~ "%s"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "启用效果器或命令中：\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "打印时出错。"
+
+#~ msgid "Print"
+#~ msgstr "打印"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "页面设置(&G)..."
+
+#~ msgid "&Print..."
+#~ msgstr "打印(&P)..."
+
+#~ msgid "Screen Capture Frame"
+#~ msgstr "截屏工具"
+
+#~ msgid "Choose location to save files"
+#~ msgstr "选择文件保存的位置"
+
+#~ msgid "Save images to:"
+#~ msgstr "保存图片到："
+
+#~ msgid "Choose..."
+#~ msgstr "选择..."
+
+#~ msgid "Capture entire window or screen"
+#~ msgstr "抓整个窗口或屏幕"
+
+#~ msgid "Resize Small"
+#~ msgstr "缩小"
+
+#~ msgid "Resize Large"
+#~ msgstr "放大"
+
+#~ msgid "Blue Bkgnd"
+#~ msgstr "蓝色背景"
+
+#~ msgid "White Bkgnd"
+#~ msgstr "白色背景"
+
+#~ msgid "Capture Window Only"
+#~ msgstr "仅截窗口"
+
+#~ msgid "Capture Full Window"
+#~ msgstr "完整窗口"
+
+#~ msgid "Capture Window Plus"
+#~ msgstr "高级窗口"
+
+#~ msgid "Capture Full Screen"
+#~ msgstr "截全屏"
+
+#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
+#~ msgstr "等5秒后抓最前面的窗口/对话框"
+
+#~ msgid "Capture part of a project window"
+#~ msgstr "抓取部分项目窗口"
+
+#~ msgid "All Toolbars"
+#~ msgstr "所有工具栏"
+
+#~ msgid "All Effects"
+#~ msgstr "全部效果"
+
+#~ msgid "All Scriptables"
+#~ msgstr "所有脚本"
+
+#~ msgid "All Preferences"
+#~ msgstr "全部偏好设置"
+
+#~ msgid "Ruler"
+#~ msgstr "标尺"
+
+#~ msgid "First Track"
+#~ msgstr "第一轨"
+
+#~ msgid "Second Track"
+#~ msgstr "第二轨"
+
+#~ msgid "One Sec"
+#~ msgstr "一秒"
+
+#~ msgid "Ten Sec"
+#~ msgstr "十秒"
+
+#~ msgid "One Min"
+#~ msgstr "一分"
+
+#~ msgid "Five Min"
+#~ msgstr "五分"
+
+#~ msgid "One Hour"
+#~ msgstr "一小时"
+
+#~ msgid "Short Tracks"
+#~ msgstr "短轨道"
+
+#~ msgid "Medium Tracks"
+#~ msgstr "中轨道"
+
+#~ msgid "Tall Tracks"
+#~ msgstr "长轨道"
+
+#~ msgid "Choose a location to save screenshot images"
+#~ msgstr "选择保存截屏的位置"
+
+#~ msgid "Capture failed!"
+#~ msgstr "捕获失败！"
+
+#~ msgid "&Screenshot..."
+#~ msgstr "截取屏幕(&S)..."
+
+#~ msgid "Anonymous"
+#~ msgstr "匿名"
+
+#~ msgid "Screenshot"
+#~ msgstr "截屏"
+
+#~ msgid "Window"
+#~ msgstr "窗口"
+
+#~ msgid "Full Window"
+#~ msgstr "完整窗口"
+
+#~ msgid "Window Plus"
+#~ msgstr "附加窗口"
+
+#~ msgid "Fullscreen"
+#~ msgstr "全屏幕"
+
+#~ msgid "Toolbars"
+#~ msgstr "工具栏"
+
+#~ msgid "Scriptables"
+#~ msgstr "脚本"
+
+#~ msgid "Trackpanel"
+#~ msgstr "轨道面板"
+
+#~ msgid "First Two Tracks"
+#~ msgstr "前两轨"
+
+#~ msgid "First Three Tracks"
+#~ msgstr "前三轨"
+
+#~ msgid "First Four Tracks"
+#~ msgstr "前四轨"
+
+#~ msgid "Tracks Plus"
+#~ msgstr "附加轨道"
+
+#~ msgid "First Track Plus"
+#~ msgstr "第一附加轨道"
+
+#~ msgid "All Tracks"
+#~ msgstr "所有轨道"
+
+#~ msgid "All Tracks Plus"
+#~ msgstr "所有附加轨道"
+
+#~ msgid "Blue"
+#~ msgstr "蓝色"
+
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "白色"
+
+#~ msgid "Path:"
+#~ msgstr "路径："
+
+#~ msgid "Capture What:"
+#~ msgstr "捕获什么："
+
+#~ msgid "Background:"
+#~ msgstr "背景："
+
+#~ msgid "Bring To Top"
+#~ msgstr "置顶"
+
+#, c-format
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "保存文件时错误：%s"
+
+#~ msgid "Screenshot (short format)..."
+#~ msgstr "截屏工具（简式）..."
+
+#~ msgid "Takes screenshots."
+#~ msgstr "截图。"
+
+#~ msgid "Stop &Preview"
+#~ msgstr "停止预览(&P)"
+
+#~ msgid "Hidden File Menu"
+#~ msgstr "隐藏文件菜单"
+
+#~ msgid "&Quick Fix..."
+#~ msgstr "快速修复(&Q)..."
+
+#~ msgid "&Getting Started"
+#~ msgstr "入门(&G)"
+
+#~ msgid "Audacity &Manual"
+#~ msgstr "Audacity 手册(&M)"
+
+#, fuzzy
+#~ msgid "&Timeline"
+#~ msgstr "时间线"
+
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "高级垂直缩放(&V)"
+
+#~ msgid "Show Timeline Tooltips"
+#~ msgstr "显示时间线工具提示"
+
+#~ msgid "Show Scrub Ruler"
+#~ msgstr "显示跟随播放标尺"
+
+#~ msgid ""
+#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+#~ "and know what you are doing."
+#~ msgstr ""
+#~ "这些测试模块。请在阅读完 Audacity 使用手册后\n"
+#~ "谨慎启用。"
+
+#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+#~ msgstr " “询问” 表示 Audacity 每次启动时都会询问是否要加载此模块。"
+
+#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+#~ msgstr " “失败” 表示 Audacity 发现模块已损坏，不会运行。"
+
+#~ msgid "  'New' means no choice has been made yet."
+#~ msgstr " “新建” 表示尚未作出任何选择。"
+
+#~ msgid "Ask"
+#~ msgstr "询问"
+
+#~ msgid "No modules were found"
+#~ msgstr "未找到模块"
+
+#~ msgid "Ctrl"
+#~ msgstr "Ctrl"
+
+#~ msgid "Mouse"
+#~ msgstr "鼠标"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "鼠标绑定 (默认值， 不可更改)"
+
+#~ msgid "Command Action"
+#~ msgstr "命令动作"
+
+#~ msgid "Buttons"
+#~ msgstr "按钮"
+
+#~ msgid "Left-Click"
+#~ msgstr "左击"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "设置选区位置"
+
+#~ msgid "Left-Drag"
+#~ msgstr "按住左键-拖拽"
+
+#~ msgid "Set Selection Range"
+#~ msgstr "设置选区范围"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "扩展选区范围"
+
+#~ msgid "Left-Double-Click"
+#~ msgstr "左键双击"
+
+#~ msgid "Select Clip or Entire Track"
+#~ msgstr "选择片段或整个轨道"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "滚轮"
+
+#~ msgid "Change scrub speed"
+#~ msgstr "改变跟随播放速度"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "点放大"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "范围放大"
+
+#~ msgid "same as right-drag"
+#~ msgstr "同右键-拖拽"
+
+#~ msgid "Right-Click"
+#~ msgstr "右击"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "缩小一级"
+
+#~ msgid "Right-Drag"
+#~ msgstr "右键-拖拽"
+
+#~ msgid "same as left-drag"
+#~ msgstr "同左键-拖拽"
+
+#~ msgid "Shift-Drag"
+#~ msgstr "Shift 键-拖拽"
+
+#~ msgid "Zoom out on a Range"
+#~ msgstr "范围缩小"
+
+#~ msgid "Middle-Click"
+#~ msgstr "中击"
+
+#~ msgid "Zoom default"
+#~ msgstr "默认缩放"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "改变增益包络"
+
+#~ msgid "Pencil"
+#~ msgstr "铅笔"
+
+#~ msgid "Change Sample"
+#~ msgstr "变更采样"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Alt 键-左键点击"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "平滑采样"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "修改若干采样"
+
+#~ msgid "-Left-Drag"
+#~ msgstr "-左键拖动"
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "仅修改一处采样点"
+
+#~ msgid "Multi"
+#~ msgstr "多功能"
+
+#~ msgid "same as select tool"
+#~ msgstr "同选择工具"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "同缩放工具"
+
+#~ msgid "Any"
+#~ msgstr "(任一)"
+
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "上下滚动轨道"
+
+#~ msgid "Shift-Wheel-Rotate"
+#~ msgstr "Shift键-滚轮"
+
+#~ msgid "Scroll waveform"
+#~ msgstr "滚动波形"
+
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "-滚轮转动"
+
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "缩放波形"
+
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "Shift键-滚轮"
+
+#~ msgid "Vertical Scale Waveform (dB) range"
+#~ msgstr "纵向缩放波形 (dB) 范围"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "Shift 键-左键拖拽"
+
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "左右移动轨道内的全部片段"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "在轨道间上下移动剪辑"
+
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "左右或在轨道间移动片段"
+
+#~ msgid "Enable &dragging selection edges"
+#~ msgstr "启用拖拽选区边缘(&D)"
+
+#~ msgid "Enable scrolling left of &zero"
+#~ msgstr "可以滑动到零点左侧(&Z)"
+
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "高级垂直缩放(&V)"
+
+#~ msgid "Mixing down to &mono during export"
+#~ msgstr "导出过程中混音成单声道时(&M)"
+
+#~ msgid "Mixing down to &stereo during export"
+#~ msgstr "导出过程中混音成立体声时(&S)"
+
+#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
+#~ msgstr "混音导出时(自定义 FFmpeg 或外部程序) (&C)"
+
+#~ msgid "Missing file &name extension during export"
+#~ msgstr "导出期间缺少文件名和扩展名时"
+
+#~ msgid "Scrub"
+#~ msgstr "跟随播放"
+
+#~ msgid "Seek"
+#~ msgstr "定位"
+
+#~ msgid "Scrub Ruler"
+#~ msgstr "跟随播放标尺"
+
+#~ msgid "Stop Scrubbing"
+#~ msgstr "停止跟随播放"
+
+#~ msgid "Start Scrubbing"
+#~ msgstr "启动跟随播放"
+
+#~ msgid "Stop Seeking"
+#~ msgstr "停止定位播放"
+
+#~ msgid "Start Seeking"
+#~ msgstr "开始定位播放"
+
+#~ msgid "Hide Scrub Ruler"
+#~ msgstr "隐藏跟随播放标尺"
+
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "跟随播放工具栏(&B)"
+
+#, fuzzy
+#~ msgid "Invalid clip speed"
+#~ msgstr "无效的采样率"
+
+#, fuzzy
+#~ msgid "Clip speed must be a positive value"
+#~ msgstr "范围必须是一个正整数"
+
+#, fuzzy
+#~ msgid "Change &Speed..."
+#~ msgstr "改变速率"
+
+#~ msgid "Zoom x1/2"
+#~ msgstr "缩放 x1/2"
+
+#~ msgid "Zoom x2"
+#~ msgstr "缩放 x2"
+
+#~ msgid "&Name..."
+#~ msgstr "名称(&N)..."
+
+#~ msgid "EQ XML to TXT Converter"
+#~ msgstr "均衡器 XML 配置到 TXT 转换器"
+
+#~ msgid "Select target EQ effect"
+#~ msgstr "选择目标均衡器效果"
+
+#~ msgid "Equalization XML file"
+#~ msgstr "均衡配置 - XML 文件"
+
+#~ msgid "XML file"
+#~ msgstr "XML 文件"
+
+#~ msgid "If output text file exists"
+#~ msgstr "如果输出的文本文件存在"
+
+#~ msgid "Append number"
+#~ msgstr "追加编号"
+
+#~ msgid "Overwrite"
+#~ msgstr "覆盖原文件"
+
+#, lisp-format
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "错误。~% 无法打开文件~%~s"
+
+#, lisp-format
+#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
+#~ msgstr "错误。~%文件不允许覆盖:~%\"~a.txt\""
+
+#, lisp-format
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "错误。~%无法写入文件:~%\"~a.txt\""
+
+#~ msgid "Robert Haenggi"
+#~ msgstr "Robert Haenggi"
+
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "移除人声：到单声道"
+
+#~ msgid "Remove Vocals"
+#~ msgstr "移除人声"
+
+#~ msgid "Isolate Vocals"
+#~ msgstr "隔离人声"
+
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "隔离人声并反转"
+
+#~ msgid "Remove Center: to mono"
+#~ msgstr "移除中心：到单声道"
+
+#~ msgid "Remove Center"
+#~ msgstr "移除中心"
+
+#~ msgid "Isolate Center"
+#~ msgstr "隔离中心"
+
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "隔离中心并反转"
+
+#~ msgid "Strength"
+#~ msgstr "强度"
+
+#~ msgid "Low Cut for Vocals (Hz)"
+#~ msgstr "人声低切（Hz）"
+
+#~ msgid "High Cut for Vocals (Hz)"
+#~ msgstr "人声高切（Hz）"
+
+#, lisp-format
+#~ msgid ""
+#~ "Average x: ~a, y: ~a\n"
+#~ "                    Covariance x y: ~a\n"
+#~ "                    Average variance x: ~a, y: ~a\n"
+#~ "                    Standard deviation x: ~a, y: ~a\n"
+#~ "                    Coefficient of correlation: ~a\n"
+#~ "                    Coefficient of determination: ~a\n"
+#~ "                    Variation of residuals: ~a\n"
+#~ "                    y equals ~a plus ~a times x~%"
+#~ msgstr ""
+#~ "平均值 x: ~a, y: ~a\n"
+#~ "                    协方差 x y: ~a\n"
+#~ "                    平均方差 x: ~a, y: ~a\n"
+#~ "                    标准偏差 x: ~a, y: ~a\n"
+#~ "                    相关系数: ~a\n"
+#~ "                    确定系数: ~a\n"
+#~ "                    残差变化: ~a\n"
+#~ "                    y 等于 ~a 加 ~a 倍的 x~%"
+
+#, lisp-format
+#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+#~ msgstr "平衡位置：~a~%左右声道互相有大约 ~a % 相关，意味着：~%~a~%"
+
+#~ msgid ""
+#~ " - The two channels are identical, i.e. dual mono.\n"
+#~ "                The center can't be removed.\n"
+#~ "                Any remaining difference may be caused by lossy encoding."
+#~ msgstr ""
+#~ " - 两个轨道是相同的，即双单声道。\n"
+#~ "                其中心无法被移除。\n"
+#~ "                任何剩余的差异都可能引起编码有损 (失真)。"
+
+#~ msgid ""
+#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+#~ "                Most likely, the center extraction will be poor."
+#~ msgstr ""
+#~ " - 两个轨道强烈相关，即接近单声道或极端平衡。\n"
+#~ "                中央抽出的效果很有可能不会很好。"
+
+#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
+#~ msgstr " - 一个非常好的值，至少立体声在平均上并且并不过于分散。"
+
+#~ msgid ""
+#~ " - An ideal value for Stereo.\n"
+#~ "                However, the center extraction depends also on the used reverb."
+#~ msgstr ""
+#~ " - 对于立体声来说是个理想值。\n"
+#~ "                但是，中央抽出取决于所使用的混响 (效果)。"
+
+#~ msgid ""
+#~ " - The two channels are almost not related.\n"
+#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+#~ "                The center extraction can still be good though."
+#~ msgstr ""
+#~ " - 两个轨道几乎不相关。\n"
+#~ "                要么只有噪声或两部分被控制在一个不平衡的表现上。\n"
+#~ "                尽管中央抽出仍有可能不错。"
+
+#~ msgid ""
+#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
+#~ "                This can cause strange effects.\n"
+#~ "                Especially when played by only one speaker."
+#~ msgstr ""
+#~ " - 尽管轨道是立体声，此区域显然过宽。\n"
+#~ "                这可能产生奇怪的效果。\n"
+#~ "                特别是当仅在一个扬声器上播放。"
+
+#~ msgid ""
+#~ " - The two channels are nearly identical.\n"
+#~ "                  Obviously, a pseudo stereo effect has been used\n"
+#~ "                  to spread the signal over the physical distance between the speakers.\n"
+#~ "                  Don't expect good results from a center removal."
+#~ msgstr ""
+#~ " - 两个声道接近一致。\n"
+#~ "                  显然，这里使用了一个伪立体声效果\n"
+#~ "                  以使信号在扬声器间的物理距离上扩散。\n"
+#~ "                  不要期待中央移除会有好效果。"
+
+#~ msgid "This plug-in works only with stereo tracks."
+#~ msgstr "此插件仅适用于立体声轨道。"
 
 #, c-format
 #~ msgid ""
@@ -21509,9 +22282,6 @@ msgstr "频谱工具"
 #~ "你没有未静音的音轨和可用的标签\n"
 #~ "因此你不能导出为多个拆分的音频文件。"
 
-#~ msgid "Export files to:"
-#~ msgstr "导出文件到："
-
 #~ msgid "Create"
 #~ msgstr "新建"
 
@@ -21565,9 +22335,6 @@ msgstr "频谱工具"
 #~ "标签或音轨\"%s\"不是合法的文件名。你不能使用：\"%s\"。\n"
 #~ "\n"
 #~ "建议替换为："
-
-#~ msgid "Save As..."
-#~ msgstr "保存为..."
 
 #~ msgid "Unable to export - problem with metadata"
 #~ msgstr "无法导出 - 元数据问题"
@@ -21730,12 +22497,6 @@ msgstr "频谱工具"
 #~ msgid "1024 - default"
 #~ msgstr "1024 - 默认"
 
-#~ msgid "Saving &projects"
-#~ msgstr "保存项目时(&P)"
-
-#~ msgid "Left-Click to merge clips"
-#~ msgstr "左键点击合并片段"
-
 #~ msgid "Merged Clips"
 #~ msgstr "已合并的剪辑"
 
@@ -21846,9 +22607,6 @@ msgstr "频谱工具"
 
 #~ msgid "Selectionbar"
 #~ msgstr "选择栏"
-
-#~ msgid "Enable"
-#~ msgstr "启用"
 
 #~ msgid "D&efault"
 #~ msgstr "默认(&E)"
@@ -22248,9 +23006,6 @@ msgstr "频谱工具"
 
 #~ msgid "Generating Rhythm..."
 #~ msgstr "正在生成节奏......"
-
-#~ msgid "Generating Risset Drum..."
-#~ msgstr "生成 Risset 鼓点..."
 
 #~ msgid "Analyzing..."
 #~ msgstr "正在分析......"
@@ -22692,14 +23447,8 @@ msgstr "频谱工具"
 #~ msgid "Caching audio into memory"
 #~ msgstr "正在缓存音频到内存"
 
-#~ msgid "Saving recorded audio"
-#~ msgstr "正在保存录制的音频"
-
 #~ msgid "Saving recorded audio to disk"
 #~ msgstr "正在将录制的音频保存到磁盘"
-
-#~ msgid "Audacity projects"
-#~ msgstr "Audacity项目"
 
 #~ msgid ""
 #~ "This file was saved by Audacity version %s. The format has changed. \n"
@@ -24072,9 +24821,6 @@ msgstr "频谱工具"
 
 #~ msgid "Noise Threshold:"
 #~ msgstr "噪声阈值："
-
-#~ msgid "C&ategory:"
-#~ msgstr "分类(&A)："
 
 #~ msgid ""
 #~ "The keyboard shortcut '%s' is already assigned to:\n"

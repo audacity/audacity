@@ -96,6 +96,7 @@ bool Envelope::ConsistencyCheck()
       }
 
       if (disorder) {
+         ++mVersion;
          consistent = false;
          // repair it
          std::stable_sort( mEnv.begin(), mEnv.end(),
@@ -130,6 +131,7 @@ void Envelope::RescaleValues(double minValue, double maxValue)
       mEnv[i].SetVal( this, mMinValue + (mMaxValue - mMinValue) * factor );
    }
 
+   ++mVersion;
 }
 
 /// Flatten removes all points from the envelope to
@@ -139,6 +141,8 @@ void Envelope::Flatten(double value)
 {
    mEnv.clear();
    mDefaultValue = ClampValue(value);
+
+   ++mVersion;
 }
 
 void Envelope::SetDragPoint(int dragPoint)
@@ -182,6 +186,8 @@ void Envelope::SetDragPointValid(bool valid)
          mEnv[mDragPoint].SetVal( this, neighbor.GetVal() );
       }
    }
+
+   ++mVersion;
 }
 
 void Envelope::MoveDragPoint(double newWhen, double value)
@@ -208,6 +214,8 @@ void Envelope::MoveDragPoint(double newWhen, double value)
    // points share a time value.
    dragPoint.SetT(tt);
    dragPoint.SetVal( this, value );
+
+   ++mVersion;
 }
 
 void Envelope::ClearDragPoint()
@@ -225,6 +233,8 @@ void Envelope::SetRange(double minValue, double maxValue) {
    mDefaultValue = ClampValue(mDefaultValue);
    for( unsigned int i = 0; i < mEnv.size(); i++ )
       mEnv[i].SetVal( this, mEnv[i].GetVal() ); // this clamps the value to the NEW range
+
+   ++mVersion;
 }
 
 // This is used only during construction of an Envelope by complete or partial
@@ -244,6 +254,8 @@ void Envelope::AddPointAtEnd( double t, double val )
       mEnv.erase( mEnv.begin() + nn - 1 );
       --nn;
    }
+
+   ++mVersion;
 }
 
 Envelope::Envelope(const Envelope &orig, double t0, double t1)
@@ -362,20 +374,26 @@ void Envelope::WriteXML(XMLWriter &xmlFile) const
 void Envelope::Delete( int point )
 {
    mEnv.erase(mEnv.begin() + point);
+
+   ++mVersion;
 }
 
-void Envelope::Insert(int point, const EnvPoint &p)
+void Envelope::Insert(int point, const EnvPoint &p) noexcept
 {
    mEnv.insert(mEnv.begin() + point, p);
+
+   ++mVersion;
 }
 
 void Envelope::Insert(double when, double value)
 {
-   mEnv.push_back( EnvPoint{ when, value });
+   mEnv.push_back(EnvPoint { when, value });
+
+   ++mVersion;
 }
 
 /*! @excsafety{No-fail} */
-void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
+void Envelope::CollapseRegion(double t0, double t1, double sampleDur) noexcept
 {
    if ( t1 <= t0 )
       return;
@@ -392,7 +410,7 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    bool leftPoint = true, rightPoint = true;
 
    // Determine the start of the range of points to remove from the array.
-   auto range0 = EqualRange( t0, 0 );
+   auto range0 = EqualRange(t0, 0);
    auto begin = range0.first;
    if ( begin == range0.second ) {
       if ( t0 > epsilon ) {
@@ -454,7 +472,9 @@ void Envelope::CollapseRegion( double t0, double t1, double sampleDur )
    if ( leftPoint )
       RemoveUnneededPoints( begin - 1, false );
 
-   mTrackLen -= ( t1 - t0 );
+   mTrackLen -= (t1 - t0);
+
+   ++mVersion;
 }
 
 // This operation is trickier than it looks; the basic rub is that
@@ -470,6 +490,8 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
    const double otherDur = e->mTrackLen;
    const auto otherOffset = e->mOffset;
    const auto deltat = otherOffset + otherDur;
+
+   ++mVersion;
 
    if ( otherSize == 0 && wasEmpty && e->mDefaultValue == this->mDefaultValue )
    {
@@ -546,14 +568,14 @@ void Envelope::PasteEnvelope( double t0, const Envelope *e, double sampleDur )
 }
 
 /*! @excsafety{No-fail} */
-void Envelope::RemoveUnneededPoints
-   ( size_t startAt, bool rightward, bool testNeighbors )
+void Envelope::RemoveUnneededPoints(
+   size_t startAt, bool rightward, bool testNeighbors) noexcept
 {
    // startAt is the index of a recently inserted point which might make no
    // difference in envelope evaluation, or else might cause nearby points to
    // make no difference.
 
-   auto isDiscontinuity = [this]( size_t index ) {
+   auto isDiscontinuity = [this]( size_t index ) noexcept {
       // Assume array accesses are in-bounds
       const EnvPoint &point1 = mEnv[ index ];
       const EnvPoint &point2 = mEnv[ index + 1 ];
@@ -561,7 +583,7 @@ void Envelope::RemoveUnneededPoints
          fabs( point1.GetVal() - point2.GetVal() ) > VALUE_TOLERANCE;
    };
 
-   auto remove = [this]( size_t index, bool leftLimit ) {
+   auto remove = [this]( size_t index, bool leftLimit ) noexcept {
       // Assume array accesses are in-bounds
       const auto &point = mEnv[ index ];
       auto when = point.GetT();
@@ -574,7 +596,10 @@ void Envelope::RemoveUnneededPoints
          return false;
       }
       else
+      {
+         ++mVersion;
          return true;
+      }
    };
 
    auto len = mEnv.size();
@@ -687,7 +712,10 @@ int Envelope::Reassign(double when, double value)
    if (i >= len || when < mEnv[i].GetT())
       return -1;
 
-   mEnv[i].SetVal( this, value );
+   mEnv[i].SetVal(this, value);
+
+   ++mVersion;
+
    return 0;
 }
 
@@ -695,6 +723,16 @@ int Envelope::Reassign(double when, double value)
 size_t Envelope::GetNumberOfPoints() const
 {
    return mEnv.size();
+}
+
+double Envelope::GetDefaultValue() const
+{
+   return mDefaultValue;
+}
+
+size_t Envelope::GetVersion() const
+{
+   return mVersion;
 }
 
 void Envelope::GetPoints(double *bufferWhen,
@@ -726,7 +764,7 @@ void Envelope::Cap( double sampleDur )
  * @param value the envelope value to use at the given point.
  * @return the index of the NEW envelope point within array of envelope points.
  */
-int Envelope::InsertOrReplaceRelative(double when, double value)
+int Envelope::InsertOrReplaceRelative(double when, double value) noexcept
 {
 #if defined(_DEBUG)
    // in debug builds, do a spot of argument checking
@@ -760,7 +798,8 @@ int Envelope::InsertOrReplaceRelative(double when, double value)
    return index;
 }
 
-std::pair<int, int> Envelope::EqualRange( double when, double sampleDur ) const
+std::pair<int, int> Envelope::EqualRange(double when, double sampleDur)
+   const noexcept
 {
    // Find range of envelope points matching the given time coordinate
    // (within an interval of length sampleDur)
@@ -806,6 +845,8 @@ void Envelope::SetTrackLen( double trackLen, double sampleDur )
    int newLen = std::min( 1 + range.first, range.second );
    mEnv.resize( newLen );
 
+   ++mVersion;
+
    if ( needPoint )
       AddPointAtEnd( mTrackLen, value );
 }
@@ -823,6 +864,8 @@ void Envelope::RescaleTimes( double newLength )
          point.SetT( point.GetT() * ratio );
    }
    mTrackLen = newLength;
+
+   ++mVersion;
 }
 
 void Envelope::RescaleTimesBy(double ratio)
@@ -843,7 +886,7 @@ double Envelope::GetValue( double t, double sampleDur ) const
    return temp;
 }
 
-double Envelope::GetValueRelative(double t, bool leftLimit) const
+double Envelope::GetValueRelative(double t, bool leftLimit) const noexcept
 {
    double temp;
 
@@ -854,7 +897,7 @@ double Envelope::GetValueRelative(double t, bool leftLimit) const
 // relative time
 /// @param Lo returns last index at or before this time, maybe -1
 /// @param Hi returns first index after this time, maybe past the end
-void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
+void Envelope::BinarySearchForTime(int &Lo, int &Hi, double t) const noexcept
 {
    // Optimizations for the usual pattern of repeated calls with
    // small increases of t.
@@ -901,7 +944,8 @@ void Envelope::BinarySearchForTime( int &Lo, int &Hi, double t ) const
 // relative time
 /// @param Lo returns last index before this time, maybe -1
 /// @param Hi returns first index at or after this time, maybe past the end
-void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
+void Envelope::BinarySearchForTime_LeftLimit(int &Lo, int &Hi, double t)
+   const noexcept
 {
    Lo = -1;
    Hi = mEnv.size();
@@ -925,7 +969,7 @@ void Envelope::BinarySearchForTime_LeftLimit( int &Lo, int &Hi, double t ) const
 /// or log interpolation.
 /// @param iPoint index in env array to look at.
 /// @return value there, or its (safe) log10.
-double Envelope::GetInterpolationStartValueAtPoint( int iPoint ) const
+double Envelope::GetInterpolationStartValueAtPoint(int iPoint) const noexcept
 {
    double v = mEnv[ iPoint ].GetVal();
    if( !mDB )
@@ -944,7 +988,7 @@ void Envelope::GetValues( double *buffer, int bufferLen,
 
 void Envelope::GetValuesRelative
    (double *buffer, int bufferLen, double t0, double tstep, bool leftLimit)
-   const
+   const noexcept
 {
    // JC: If bufferLen ==0 we have probably just allocated a zero sized buffer.
    // wxASSERT( bufferLen > 0 );
@@ -1406,12 +1450,6 @@ double Envelope::SolveIntegralOfInverse( double t0, double area ) const
    }();
 }
 
-void Envelope::print() const
-{
-   for( unsigned int i = 0; i < mEnv.size(); i++ )
-      wxPrintf( "(%.2f, %.2f)\n", mEnv[i].GetT(), mEnv[i].GetVal() );
-}
-
 static void checkResult( int n, double a, double b )
 {
    if( (a-b > 0 ? a-b : b-a) > 0.0000001 )
@@ -1419,60 +1457,4 @@ static void checkResult( int n, double a, double b )
       wxPrintf( "Envelope:  Result #%d is: %f, should be %f\n", n, a, b );
       //exit( -1 );
    }
-}
-
-void Envelope::testMe()
-{
-   double t0=0, t1=0;
-
-   SetExponential(false);
-
-   Flatten(0.5);
-   checkResult( 1, Integral(0.0,100.0), 50);
-   checkResult( 2, Integral(-10.0,10.0), 10);
-
-   Flatten(0.5);
-   checkResult( 3, Integral(0.0,100.0), 50);
-   checkResult( 4, Integral(-10.0,10.0), 10);
-   checkResult( 5, Integral(-20.0,-10.0), 5);
-
-   Flatten(0.5);
-   InsertOrReplaceRelative( 5.0, 0.5 );
-   checkResult( 6, Integral(0.0,100.0), 50);
-   checkResult( 7, Integral(-10.0,10.0), 10);
-
-   Flatten(0.0);
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   t0 = 10.0 - .1;
-   t1 = 10.0 + .1;
-   double result = Integral(0.0,t1);
-   double resulta = Integral(0.0,t0);
-   double resultb = Integral(t0,t1);
-   // Integrals should be additive
-   checkResult( 8, result - resulta - resultb, 0);
-
-   Flatten(0.0);
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   t0 = 10.0 - .1;
-   t1 = 10.0 + .1;
-   checkResult( 9, Integral(0.0,t1), 5);
-   checkResult( 10, Integral(0.0,t0), 4.999);
-   checkResult( 11, Integral(t0,t1), .001);
-
-   mEnv.clear();
-   InsertOrReplaceRelative( 0.0, 0.0 );
-   InsertOrReplaceRelative( 5.0, 1.0 );
-   InsertOrReplaceRelative( 10.0, 0.0 );
-   checkResult( 12, NumberOfPointsAfter( -1 ), 3 );
-   checkResult( 13, NumberOfPointsAfter( 0 ), 2 );
-   checkResult( 14, NumberOfPointsAfter( 1 ), 2 );
-   checkResult( 15, NumberOfPointsAfter( 5 ), 1 );
-   checkResult( 16, NumberOfPointsAfter( 7 ), 1 );
-   checkResult( 17, NumberOfPointsAfter( 10 ), 0 );
-   checkResult( 18, NextPointAfter( 0 ), 5 );
-   checkResult( 19, NextPointAfter( 5 ), 10 );
 }

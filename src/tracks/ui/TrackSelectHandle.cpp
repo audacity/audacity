@@ -65,9 +65,9 @@ TrackSelectHandle::~TrackSelectHandle()
 {
 }
 
-std::shared_ptr<const Channel> TrackSelectHandle::FindChannel() const
+std::shared_ptr<const Track> TrackSelectHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(mpTrack);
+   return mpTrack;
 }
 
 UIHandle::Result TrackSelectHandle::Click
@@ -116,6 +116,8 @@ UIHandle::Result TrackSelectHandle::Drag
 {
    using namespace RefreshCode;
    Result result = RefreshNone;
+   if (!mpTrack)
+      return result;
 
    const wxMouseEvent &event = evt.event;
 
@@ -127,12 +129,12 @@ UIHandle::Result TrackSelectHandle::Drag
       return result;
 
    if (event.m_y < mMoveUpThreshold || event.m_y < 0) {
-      tracks.MoveUp(mpTrack.get());
+      tracks.MoveUp(*mpTrack);
       --mRearrangeCount;
    }
    else if ( event.m_y > mMoveDownThreshold
       || event.m_y > evt.whole.GetHeight() ) {
-      tracks.MoveDown(mpTrack.get());
+      tracks.MoveDown(*mpTrack);
       ++mRearrangeCount;
    }
    else
@@ -228,7 +230,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
 
    auto &tracks = TrackList::Get( *project );
 
-   if (tracks.CanMoveUp(mpTrack.get()))
+   if (mpTrack && tracks.CanMoveUp(*mpTrack))
       mMoveUpThreshold =
          event.m_y -
             ChannelView::GetChannelGroupHeight(
@@ -236,7 +238,7 @@ void TrackSelectHandle::CalculateRearrangingThresholds(
    else
       mMoveUpThreshold = INT_MIN;
 
-   if (tracks.CanMoveDown(mpTrack.get()))
+   if (mpTrack && tracks.CanMoveDown(*mpTrack))
       mMoveDownThreshold =
          event.m_y +
             ChannelView::GetChannelGroupHeight(

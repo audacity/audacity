@@ -32,14 +32,14 @@ class WaveTrackFactory;
  * If the start and end times passed are the same this is taken as meaning
  * no explicit time range to process, and the whole occupied length of the
  * input tracks is processed.
- * Channel group properties of the result are copied from the first input track.
+ *
+ * Channel group properties of the result are copied from the first input track,
+ * except that `newTrackName` is applied when more than one track is mixed.
  *
  * @param newTrackName used only when there is more than one input track (one
  * mono channel or a stereo pair); else the unique track's name is copied
- *
- * @pre `trackRange` iterates over leaders only
  */
-EFFECTS_API TrackListHolder MixAndRender(
+EFFECTS_API Track::Holder MixAndRender(
    const TrackIterRange<const WaveTrack> &trackRange,
    const Mixer::WarpOptions &warpOptions,
    const wxString &newTrackName,

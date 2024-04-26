@@ -17,6 +17,7 @@ Paul Licameli
 class wxRect;
 
 class EnumValueSymbols;
+class WaveChannel;
 class WaveTrack;
 
 class AUDACITY_DLL_API WaveformSettings
@@ -29,9 +30,14 @@ public:
    //! Mutative access to attachment even if the track argument is const
    static WaveformSettings &Get(const WaveTrack &track);
 
+   /*!
+    @copydoc Get(const WaveTrack &);
+    */
+   static WaveformSettings &Get(const WaveChannel &channel);
+
    //! Guarantee independence of settings, then assign
    static void Set(
-      WaveTrack &track, std::unique_ptr<WaveformSettings> pSettings );
+      WaveChannel &channel, std::unique_ptr<WaveformSettings> pSettings );
 
    // Singleton for settings that are not per-track
    class AUDACITY_DLL_API Globals
@@ -95,6 +101,11 @@ class AUDACITY_DLL_API WaveformScale
 public:
    //! Mutative access to attachment even if the track argument is const
    static WaveformScale &Get(const WaveTrack &track);
+
+   /*!
+    @copydoc Get(const WaveTrack &)
+    */
+   static WaveformScale &Get(const WaveChannel &channel);
 
    ~WaveformScale() override;
    PointerType Clone() const override;

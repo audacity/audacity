@@ -433,7 +433,6 @@ public:
 
    //! Forwards to RealtimeEffectManager::AddState with proper init scope
    /*!
-    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
@@ -442,7 +441,6 @@ public:
 
    //! Forwards to RealtimeEffectManager::ReplaceState with proper init scope
    /*!
-    @pre `!pGroup || pGroup->IsLeader()`
     @post result: `!result || result->GetEffect() != nullptr`
     */
    std::shared_ptr<RealtimeEffectState>
@@ -470,10 +468,9 @@ public:
     * If successful, returns a token identifying this particular stream
     * instance.  For use with IsStreamActive()
     *
-    * @pre `p && p->FindChannelGroup() &&
-    *    p->FindChannelGroup()->IsLeader()` for all pointers `p` in
+    * @pre `p && p->FindChannelGroup()` for all pointers `p` in
     *    `sequences.playbackSequences`
-    * @pre `p && p->IsLeader()` for all pointers `p` in
+    * @pre `p != nullptr` for all pointers `p` in
     *    `sequences.captureSequences`
     */
 

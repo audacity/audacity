@@ -165,8 +165,6 @@ auto MenuItems::GetOrdering() const -> Ordering {
 }
 auto MenuItems::GetProperties() const -> Properties { return Inline; }
 
-ItemProperties::~ItemProperties() {}
-
 CommandHandlerFinder FinderScope::sFinder =
    [](AudacityProject &project) -> CommandHandlerObject & {
       // If this default finder function is reached, then FinderScope should

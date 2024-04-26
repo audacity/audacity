@@ -196,7 +196,6 @@ void OnRecord2ndChoice(const CommandContext &context)
    TransportUtilities::RecordAndWait(context, true);
 }
 
-#ifdef EXPERIMENTAL_PUNCH_AND_ROLL
 void OnPunchAndRoll(const CommandContext &context)
 {
    AudacityProject &project = context.project;
@@ -261,12 +260,10 @@ void OnPunchAndRoll(const CommandContext &context)
    bool error = (t1 == 0.0);
 
    double newt1 = t1;
-   using Iterator =
-      ChannelGroup::IntervalIterator<const WideChannelGroupInterval>;
    for (const auto &wt : tracks) {
       auto rate = wt->GetRate();
       sampleCount testSample(floor(t1 * rate));
-      const auto intervals = as_const(*wt).Intervals();
+      const auto &intervals = as_const(*wt).Intervals();
       auto pred = [rate](sampleCount testSample){ return
          [rate, testSample](const auto &pInterval){
             auto start = floor(pInterval->Start() * rate + 0.5);
@@ -363,7 +360,6 @@ void OnPunchAndRoll(const CommandContext &context)
       // Roll back the deletions
       ProjectHistory::Get( project ).RollbackState();
 }
-#endif
 
 void OnTogglePlayRegion(const CommandContext &context)
 {
@@ -769,11 +765,9 @@ auto TransportMenu()
                wxT("Shift+R")
             ); },
 
-   #ifdef EXPERIMENTAL_PUNCH_AND_ROLL
             Command( wxT("PunchAndRoll"), XXO("Punch and Rol&l Record"),
                OnPunchAndRoll,
                WaveTracksExistFlag() | AudioIONotBusyFlag(), wxT("Shift+D") ),
-   #endif
 
             // JKC: I decided to duplicate this between play and record,
             // rather than put it at the top level.

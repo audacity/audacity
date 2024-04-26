@@ -111,7 +111,7 @@ namespace MenuRegistry {
          Whole,
          Extension,
       };
-      virtual ~ItemProperties();
+      virtual ~ItemProperties() = default;
       virtual Properties GetProperties() const = 0;
    };
 

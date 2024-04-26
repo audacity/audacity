@@ -20,7 +20,7 @@
 using ClipConstHolder = std::shared_ptr<const ClipInterface>;
 
 AudioSegmentFactory::AudioSegmentFactory(
-   int sampleRate, int numChannels, ClipHolders clips)
+   int sampleRate, int numChannels, ClipConstHolders clips)
     : mClips { std::move(clips) }
     , mSampleRate { sampleRate }
     , mNumChannels { numChannels }
@@ -42,8 +42,8 @@ AudioSegmentFactory::CreateAudioSegmentSequenceForward(double t0)
    auto sortedClips = mClips;
    std::sort(
       sortedClips.begin(), sortedClips.end(),
-      [](const std::shared_ptr<ClipInterface>& a,
-         const std::shared_ptr<ClipInterface>& b) {
+      [](const std::shared_ptr<const ClipInterface>& a,
+         const std::shared_ptr<const ClipInterface>& b) {
          return a->GetPlayStartTime() < b->GetPlayStartTime();
       });
    std::vector<std::shared_ptr<AudioSegment>> segments;
@@ -73,8 +73,8 @@ AudioSegmentFactory::CreateAudioSegmentSequenceBackward(double t0)
    std::sort(
       sortedClips.begin(), sortedClips.end(),
       [&](
-         const std::shared_ptr<ClipInterface>& a,
-         const std::shared_ptr<ClipInterface>& b) {
+         const std::shared_ptr<const ClipInterface>& a,
+         const std::shared_ptr<const ClipInterface>& b) {
          return a->GetPlayEndTime() > b->GetPlayEndTime();
       });
    std::vector<std::shared_ptr<AudioSegment>> segments;

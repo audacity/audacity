@@ -58,7 +58,7 @@ private:
    bool ProcessNoteTrack(NoteTrack *track, const TimeWarper &warper);
 #endif
    bool ProcessOne(soundtouch::SoundTouch *pSoundTouch,
-      WaveTrack &orig, WaveTrack &out, sampleCount start, sampleCount end,
+      WaveChannel &orig, WaveTrack &out, sampleCount start, sampleCount end,
       const TimeWarper &warper);
    bool ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
       WaveTrack &orig, WaveTrack &out,
@@ -69,8 +69,6 @@ private:
       WaveChannel &outputLeftTrack,
       WaveChannel &outputRightTrack);
    /*!
-    @pre `orig.IsLeader()`
-    @pre `out.IsLeader()`
     @pre `out.NChannels() == orig.NChannels()`
     */
    void Finalize(WaveTrack &orig, WaveTrack &out, const TimeWarper &warper);

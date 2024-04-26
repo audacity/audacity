@@ -47,14 +47,6 @@ class wxRect;
 
 class Alg_seq;   // from "allegro.h"
 
-using NoteTrackBase =
-#ifdef EXPERIMENTAL_MIDI_OUT
-   PlayableTrack
-#else
-   AudioTrack
-#endif
-   ;
-
 using QuantizedTimeAndBeat = std::pair< double, double >;
 
 class NoteTrack;
@@ -80,7 +72,7 @@ using NoteTrackAttachments = ClientData::Site<
 >;
 
 class NOTE_TRACK_API NoteTrack final
-   : public UniqueChannelTrack<NoteTrackBase>
+   : public UniqueChannelTrack<PlayableTrack>
    , public OtherPlayableSequence
    , public NoteTrackAttachments
 {
@@ -100,7 +92,7 @@ public:
    using Holder = std::shared_ptr<NoteTrack>;
 
 private:
-   TrackListHolder Clone(bool backup) const override;
+   Track::Holder Clone(bool backup) const override;
 
 public:
    void MoveTo(double origin) override { mOrigin = origin; }
@@ -118,8 +110,8 @@ public:
    bool ExportAllegro(const wxString &f) const;
 
    // High-level editing
-   TrackListHolder Cut(double t0, double t1) override;
-   TrackListHolder Copy(double t0, double t1, bool forClipboard = true)
+   Track::Holder Cut(double t0, double t1) override;
+   Track::Holder Copy(double t0, double t1, bool forClipboard = true)
       const override;
    bool Trim (double t0, double t1) /* not override */;
    void Clear(double t0, double t1) override;
@@ -129,11 +121,9 @@ public:
    void InsertSilence(double t, double len) override;
    bool Shift(double t) /* not override */;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    float GetVelocity() const {
       return mVelocity.load(std::memory_order_relaxed); }
    void SetVelocity(float velocity);
-#endif
 
    QuantizedTimeAndBeat NearestBeatTime( double time ) const;
    bool StretchRegion
@@ -190,23 +180,25 @@ public:
 
    size_t NIntervals() const override;
 
-   struct Interval : WideChannelGroupInterval {
-      using WideChannelGroupInterval::WideChannelGroupInterval;
+   struct Interval final : WideChannelGroupInterval {
+      explicit Interval(const NoteTrack &track);
       ~Interval() override;
       std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) override;
+      double Start() const override;
+      double End() const override;
+      size_t NChannels() const override;
+   private:
+      //! @invariant not null
+      const std::shared_ptr<const NoteTrack> mpTrack;
    };
 
 private:
    std::shared_ptr<WideChannelGroupInterval> DoGetInterval(size_t iInterval)
       override;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    void DoSetVelocity(float velocity);
-#endif
 
    void AddToDuration( double delta );
-   void DoOnProjectTempoChange(
-      const std::optional<double>& oldTempo, double newTempo) override;
 
    // These are mutable to allow NoteTrack to switch details of representation
    // in logically const methods
@@ -216,10 +208,8 @@ private:
    mutable std::unique_ptr<char[]> mSerializationBuffer;
    mutable long mSerializationLength;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    //! Atomic because it may be read by worker threads in playback
    std::atomic<float> mVelocity{ 0.0f }; // velocity offset
-#endif
 
    //! A bit set; atomic because it may be read by worker threads in playback
    std::atomic<unsigned> mVisibleChannels{ ALL_CHANNELS };

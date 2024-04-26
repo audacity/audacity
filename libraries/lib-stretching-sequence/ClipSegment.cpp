@@ -12,7 +12,6 @@
 #include "ClipInterface.h"
 #include "SampleFormat.h"
 #include "StaffPadTimeAndPitch.h"
-
 #include <cassert>
 #include <cmath>
 #include <functional>
@@ -40,32 +39,52 @@ GetTotalNumSamplesToProduce(const ClipInterface& clip, double durationToDiscard)
 } // namespace
 
 ClipSegment::ClipSegment(
-   ClipInterface& clip, double durationToDiscard, PlaybackDirection direction)
+   const ClipInterface& clip, double durationToDiscard,
+   PlaybackDirection direction)
     : mTotalNumSamplesToProduce { GetTotalNumSamplesToProduce(
          clip, durationToDiscard) }
     , mSource { clip, durationToDiscard, direction }
+    , mPreserveFormants { clip.GetPitchAndSpeedPreset() ==
+                          PitchAndSpeedPreset::OptimizeForVoice }
+    , mCentShift { clip.GetCentShift() }
     , mStretcher { std::make_unique<StaffPadTimeAndPitch>(
-         clip.GetRate(), clip.GetWidth(), mSource,
+         clip.GetRate(), clip.NChannels(), mSource,
          GetStretchingParameters(clip)) }
     , mOnSemitoneShiftChangeSubscription { clip.SubscribeToCentShiftChange(
          [this](int cents) {
-            std::lock_guard<std::mutex> lock(mStretcherMutex);
-            mStretcher->OnCentShiftChange(cents);
+            mCentShift = cents;
+            mUpdateCentShift = true;
          }) }
     , mOnFormantPreservationChangeSubscription {
        clip.SubscribeToPitchAndSpeedPresetChange(
           [this](PitchAndSpeedPreset preset) {
-             std::lock_guard<std::mutex> lock(mStretcherMutex);
-             mStretcher->OnFormantPreservationChange(
-                preset == PitchAndSpeedPreset::OptimizeForVoice);
+             mPreserveFormants =
+                preset == PitchAndSpeedPreset::OptimizeForVoice;
+             mUpdateFormantPreservation = true;
           })
     }
 {
 }
 
+ClipSegment::~ClipSegment()
+{
+   mOnSemitoneShiftChangeSubscription.Reset();
+   mOnFormantPreservationChangeSubscription.Reset();
+}
+
 size_t ClipSegment::GetFloats(float* const* buffers, size_t numSamples)
 {
-   std::lock_guard<std::mutex> lock(mStretcherMutex);
+   // Check if formant preservation of pitch shift needs to be updated.
+   // This approach is not immune to a race condition, but it is unlikely and
+   // not critical, as it would only affect one playback pass, during which the
+   // user could easily correct the mistake if needed. On the other hand, we
+   // cannot trust that the observer subscriptions do not get called after
+   // destruction of this object, so better not do anything too sophisticated
+   // there.
+   if (mUpdateFormantPreservation.exchange(false))
+      mStretcher->OnFormantPreservationChange(mPreserveFormants);
+   if (mUpdateCentShift.exchange(false))
+      mStretcher->OnCentShiftChange(mCentShift);
    const auto numSamplesToProduce = limitSampleBufferSize(
       numSamples, mTotalNumSamplesToProduce - mTotalNumSamplesProduced);
    mStretcher->GetSamples(buffers, numSamplesToProduce);
@@ -78,7 +97,7 @@ bool ClipSegment::Empty() const
    return mTotalNumSamplesProduced == mTotalNumSamplesToProduce;
 }
 
-size_t ClipSegment::GetWidth() const
+size_t ClipSegment::NChannels() const
 {
-   return mSource.GetWidth();
+   return mSource.NChannels();
 }

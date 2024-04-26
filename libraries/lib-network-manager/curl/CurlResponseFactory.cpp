@@ -7,18 +7,121 @@
 
  Dmitry Vedenko
  **********************************************************************/
-
 #include "CurlResponseFactory.h"
-
-#include <algorithm>
 
 #include "CurlResponse.h"
 #include "MultipartData.h"
+#include "RequestPayload.h"
+
+#include "ThreadPool/ThreadPool.h"
 
 namespace audacity
 {
 namespace network_manager
 {
+namespace
+{
+class StubResponse final : public IResponse
+{
+public:
+   explicit StubResponse(const Request& request)
+       : mRequest { request }
+   {
+   }
+
+   bool isFinished() const noexcept override
+   {
+      return true;
+   }
+
+   unsigned getHTTPCode() const noexcept override
+   {
+      return 0;
+   }
+
+   NetworkError getError() const noexcept override
+   {
+      return NetworkError::OperationCancelled;
+   }
+
+   std::string getErrorString() const override
+   {
+      return {};
+   }
+
+   bool headersReceived() const noexcept override
+   {
+      return false;
+   }
+
+   bool hasHeader(const std::string& headerName) const noexcept override
+   {
+      return false;
+   }
+
+   std::string getHeader(const std::string& headerName) const override
+   {
+      return {};
+   }
+
+   const HeadersList& getHeaders() const noexcept override
+   {
+      static HeadersList empty;
+      return empty;
+   }
+
+   const CookiesList& getCookies() const noexcept override
+   {
+      static CookiesList empty;
+      return empty;
+   }
+
+   const Request& getRequest() const noexcept override
+   {
+      return mRequest;
+   }
+
+   std::string getURL() const override
+   {
+      return {};
+   }
+
+   void abort() noexcept override
+   {
+   }
+
+   void setOnDataReceivedCallback(RequestCallback) override
+   {
+   }
+
+   void setRequestFinishedCallback(RequestCallback callback) override
+   {
+      if (callback)
+         callback(this);
+   }
+
+   void setDownloadProgressCallback(ProgressCallback) override
+   {
+   }
+
+   void setUploadProgressCallback(ProgressCallback) override
+   {
+   }
+
+   uint64_t getBytesAvailable() const noexcept override
+   {
+      return 0;
+   }
+
+   uint64_t readData(void*, uint64_t) override
+   {
+      return 0;
+   }
+
+private:
+   Request mRequest;
+};
+} // namespace
 
 constexpr decltype(std::thread::hardware_concurrency ()) MIN_CURL_THREADS = 6;
 
@@ -32,6 +135,10 @@ CurlResponseFactory::CurlResponseFactory ()
 
 }
 
+CurlResponseFactory::~CurlResponseFactory ()
+{
+}
+
 void CurlResponseFactory::setProxy (const std::string& proxy)
 {
     mHandleManager->setProxy (proxy);
@@ -39,34 +146,27 @@ void CurlResponseFactory::setProxy (const std::string& proxy)
 
 ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request& request)
 {
-    return performRequest (verb, request, nullptr, 0);
+    return performRequest(verb, request, RequestPayloadStreamPtr {});
 }
 
-ResponsePtr CurlResponseFactory::performRequest (RequestVerb verb, const Request& request, const void* data, size_t size)
+ResponsePtr CurlResponseFactory::performRequest(
+   RequestVerb verb, const Request& request,
+   RequestPayloadStreamPtr payloadStream)
 {
-    if (!mThreadPool)
-        return {};
+   if (!mThreadPool)
+      return std::make_shared<StubResponse>(request);
 
-    std::shared_ptr<CurlResponse> response = std::make_shared<CurlResponse> (
-        verb, request, mHandleManager.get ()
-    );
+    auto response =
+       std::make_shared<CurlResponse>(verb, request, mHandleManager.get());
 
-    std::vector<uint8_t> buffer;
+    mThreadPool->enqueue(
+       [response, payloadStream = std::move(payloadStream)]()
+       {
+          if (payloadStream)
+             response->setPayload(payloadStream);
 
-    if (data != nullptr && size != 0)
-    {
-        const uint8_t* start = static_cast<const uint8_t*>(data);
-        const uint8_t* end = static_cast<const uint8_t*>(data) + size;
-
-        buffer.insert (buffer.begin (), start, end);
-    }
-
-    mThreadPool->enqueue ([response, dataBuffer = std::move (buffer)]() {
-        if (!dataBuffer.empty())
-            response->setPayload (dataBuffer.data (), dataBuffer.size ());
-        
-        response->perform ();
-    });
+          response->perform();
+       });
 
     return response;
 }
@@ -76,7 +176,7 @@ ResponsePtr CurlResponseFactory::performRequest(
    std::unique_ptr<MultipartData> form)
 {
    if (!mThreadPool)
-      return {};
+      return std::make_shared<StubResponse>(request);
 
    std::shared_ptr<CurlResponse> response =
       std::make_shared<CurlResponse>(verb, request, mHandleManager.get());

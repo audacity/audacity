@@ -35,8 +35,8 @@ UIHandle::Result MuteButtonHandle::CommitChanges
    (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *)
 {
    auto pTrack = mpTrack.lock();
-   if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      TrackUtilities::DoTrackMute(*pProject, pTrack.get(), event.ShiftDown());
+   if (dynamic_cast<PlayableTrack*>(pTrack.get()))
+      TrackUtilities::DoTrackMute(*pProject, *pTrack, event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }
@@ -91,8 +91,8 @@ UIHandle::Result SoloButtonHandle::CommitChanges
 (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *WXUNUSED(pParent))
 {
    auto pTrack = mpTrack.lock();
-   if ( dynamic_cast< PlayableTrack* >( pTrack.get() ) )
-      TrackUtilities::DoTrackSolo(*pProject, pTrack.get(), event.ShiftDown());
+   if (dynamic_cast<PlayableTrack*>(pTrack.get()))
+      TrackUtilities::DoTrackSolo(*pProject, *pTrack, event.ShiftDown());
 
    return RefreshCode::RefreshNone;
 }

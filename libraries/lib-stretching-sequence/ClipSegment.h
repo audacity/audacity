@@ -14,8 +14,8 @@
 #include "ClipTimeAndPitchSource.h"
 #include "Observer.h"
 #include "PlaybackDirection.h"
+#include <atomic>
 #include <memory>
-#include <mutex>
 
 class ClipInterface;
 class TimeAndPitchInterface;
@@ -30,18 +30,23 @@ using PitchRatioChangeCbSubscriber =
 class STRETCHING_SEQUENCE_API ClipSegment final : public AudioSegment
 {
 public:
-   ClipSegment(ClipInterface&, double durationToDiscard, PlaybackDirection);
+   ClipSegment(const ClipInterface&,
+      double durationToDiscard, PlaybackDirection);
+   ~ClipSegment() override;
 
    // AudioSegment
    size_t GetFloats(float* const* buffers, size_t numSamples) override;
    bool Empty() const override;
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
 private:
    const sampleCount mTotalNumSamplesToProduce;
    sampleCount mTotalNumSamplesProduced = 0;
    ClipTimeAndPitchSource mSource;
-   std::mutex mStretcherMutex;
+   bool mPreserveFormants;
+   int mCentShift;
+   std::atomic<bool> mUpdateFormantPreservation = false;
+   std::atomic<bool> mUpdateCentShift = false;
    // Careful that this guy is constructed after `mSource`, which it refers to
    // in its ctor.
    // todo(mhodgkinson) make this safe.

@@ -30,17 +30,17 @@ bool WaveChannelVZoomHandle::IsDragZooming(int zoomStart, int zoomEnd, bool hasD
 ///////////////////////////////////////////////////////////////////////////////
 // Table class
 
-void WaveTrackVRulerMenuTable::InitUserData(void *pUserData)
+void WaveChannelVRulerMenuTable::InitUserData(void *pUserData)
 {
    mpData = static_cast<InitMenuData*>(pUserData);
 }
 
 
-void WaveTrackVRulerMenuTable::OnZoom(
+void WaveChannelVRulerMenuTable::OnZoom(
    WaveChannelViewConstants::ZoomActions iZoomCode)
 {
    mpData->doZoom(
-      &mpData->project, mpData->pTrack,
+      &mpData->project, mpData->wc,
       iZoomCode, mpData->rect, mpData->yy, mpData->yy, false
    );
 
@@ -48,7 +48,7 @@ void WaveTrackVRulerMenuTable::OnZoom(
    mpData->result = UpdateVRuler | RefreshAll;
 }
 
-void WaveTrackVRulerMenuTable::UpdatePrefs()
+void WaveChannelVRulerMenuTable::UpdatePrefs()
 {
    // Because labels depend on advanced vertical zoom setting
    PopupMenuTable::Clear();
@@ -88,14 +88,11 @@ UIHandle::Result WaveChannelVZoomHandle::DoDrag(
 
 UIHandle::Result WaveChannelVZoomHandle::DoRelease(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject,
-   wxWindow *pParent, WaveTrack *pTrack, const wxRect &rect,
+   wxWindow *pParent, WaveChannel &wc, const wxRect &rect,
    DoZoomFunction doZoom, PopupMenuTable &table,
    int zoomStart, int zoomEnd)
 {
    using namespace RefreshCode;
-   if (!pTrack)
-      return RefreshNone;
-
    const wxMouseEvent &event = evt.event;
    const bool shiftDown = event.ShiftDown();
    const bool rightUp = event.RightUp();
@@ -107,9 +104,9 @@ UIHandle::Result WaveChannelVZoomHandle::DoRelease(
        rightUp &&
        !(event.ShiftDown() || event.CmdDown()))
    {
-      WaveTrackVRulerMenuTable::InitMenuData data {
+      WaveChannelVRulerMenuTable::InitMenuData data {
          *pProject,
-         pTrack, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
+         wc, rect, RefreshCode::RefreshNone, event.m_y, doZoom };
 
       auto pMenu = PopupMenuTable::BuildMenu( &table, &data );
       pMenu->Popup( *pParent, { event.m_x, event.m_y } );
@@ -122,7 +119,7 @@ UIHandle::Result WaveChannelVZoomHandle::DoRelease(
       // Shift+rightclick to reset zoom
       if( shiftDown && notLost)
          zoomStart = zoomEnd;
-      doZoom(pProject, pTrack, kZoom1to1,
+      doZoom(pProject, wc, kZoom1to1,
          rect, zoomStart, zoomEnd, !shiftDown);
       
    }

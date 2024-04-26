@@ -21,16 +21,20 @@ set( SOURCES
    SampleBlock.h
    Sequence.cpp
    Sequence.h
+   TimeStretching.cpp
+   TimeStretching.h
+   WaveChannelUtilities.cpp
+   WaveChannelUtilities.h
    WaveClip.cpp
    WaveClip.h
+   WaveClipUtilities.cpp
+   WaveClipUtilities.h
    WaveTrack.cpp
    WaveTrack.h
    WaveTrackSink.cpp
    WaveTrackSink.h
    WaveTrackUtilities.cpp
    WaveTrackUtilities.h
-   WideClip.cpp
-   WideClip.h
 )
 set( LIBRARIES
    lib-project-rate-interface

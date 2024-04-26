@@ -458,7 +458,6 @@ std::shared_ptr<EffectInstance>
 RealtimeEffectState::AddGroup(
    const ChannelGroup &group, unsigned chans, float sampleRate)
 {
-   assert(group.IsLeader());
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
       return {};

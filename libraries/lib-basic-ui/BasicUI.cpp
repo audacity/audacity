@@ -29,6 +29,11 @@ Paul Licameli
 
 #include <string>
 
+#ifdef __FreeBSD__
+extern char** environ;
+#endif
+
+
 namespace
 {
 

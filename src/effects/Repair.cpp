@@ -28,7 +28,7 @@ the audio, rather than actually finding the clicks.
 #include "InterpolateAudio.h"
 #include "LoadEffects.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 
 const ComponentInterfaceSymbol EffectRepair::Symbol
 { XO("Repair") };
@@ -90,7 +90,7 @@ bool EffectRepair::Process(EffectInstance &, EffectSettings &)
          const auto repair0 = track->TimeToLongSamples(repair_t0);
          const auto repair1 = track->TimeToLongSamples(repair_t1);
          const auto repairLen = repair1 - repair0;
-         if (WaveTrackUtilities::HasPitchOrSpeed(*track, repair_t0, repair_t1)) {
+         if (TimeStretching::HasPitchOrSpeed(*track, repair_t0, repair_t1)) {
             EffectUIServices::DoMessageBox(*this,
                XO(
 "The Repair effect cannot be applied within stretched or shrunk clips") );
@@ -152,7 +152,7 @@ bool EffectRepair::ProcessOne(int count, WaveChannel &track,
    Floats buffer{ len };
    track.GetFloats(buffer.get(), start, len);
    InterpolateAudio(buffer.get(), len, repairStart, repairLen);
-   if (!track.Set((samplePtr)&buffer[repairStart], floatSample,
+   if (!track.SetFloats(&buffer[repairStart],
       start + repairStart, repairLen,
       // little repairs shouldn't force dither on rendering:
       narrowestSampleFormat

@@ -23,6 +23,7 @@
 #include "ShuttleGui.h"
 #include "FileNames.h"
 #include "ViewInfo.h"
+#include "WaveChannelUtilities.h"
 #include "HelpSystem.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "AudacityMessageBox.h"
@@ -114,7 +115,7 @@ bool ContrastDialog::GetDB(float &dB)
       }
 
       // Don't throw in this analysis dialog
-      rms = t->GetRMS(mT0, mT1, false);
+      rms = WaveChannelUtilities::GetRMS(*t, mT0, mT1, false);
       meanSq += rms * rms;
    }
    // TODO: This works for stereo, provided the audio clips are in both channels.

@@ -46,6 +46,8 @@ public:
    explicit
    WaveChannelSubView(WaveChannelView &waveChannelView);
 
+   std::shared_ptr<WaveChannel> FindWaveChannel();
+
    virtual const Type &SubViewType() const = 0;
 
    // For undo and redo purpose
@@ -58,11 +60,11 @@ public:
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt );
+      const std::shared_ptr<WaveChannel> &wt);
 
 protected:
    static void DrawBoldBoundaries(
-      TrackPanelDrawingContext &context, const WaveTrack &track,
+      TrackPanelDrawingContext &context, const WaveChannel &channel,
       const wxRect &rect);
 
    std::weak_ptr<WaveChannelView> GetWaveChannelView() const;
@@ -109,20 +111,31 @@ public:
    static WaveChannelView *Find(WaveChannel *pChannel);
    static const WaveChannelView *Find(const WaveChannel *pChannel);
 
-   //! Construct a view of one channel
-   /*!
-    @param channel which channel of a possibly wide wave track
-    */
-   WaveChannelView(const std::shared_ptr<Track> &pTrack, size_t channel);
+   //! Get the view of the first channel
+   static WaveChannelView &GetFirst(WaveTrack &wt);
+
+   //! Get the view of the first channel
+   static const WaveChannelView &GetFirst(const WaveTrack &wt);
+
+   //! If pWt is not null, return a pointer to the view of the first channel
+   static WaveChannelView *FindFirst(WaveTrack *pWt);
+
+   //! If pWt is not null, return a pointer to the view of the first channel
+   static const WaveChannelView *FindFirst(const WaveTrack *pWt);
+
+   using CommonChannelView::CommonChannelView;
    ~WaveChannelView() override;
 
+   std::shared_ptr<WaveChannel> FindWaveChannel();
+
    // Preserve some view state too for undo/redo purposes
-   void CopyTo( Track &track ) const override;
+   void CopyTo(Track &track, size_t iChannel) const override;
 
    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;
 
    // CommonChannelView implementation
-   void Reparent( const std::shared_ptr<Track> &parent ) override;
+   void Reparent(const std::shared_ptr<Track> &parent, size_t iChannel)
+      override;
 
    static std::pair<
       bool, // if true, hit-testing is finished
@@ -130,7 +143,7 @@ public:
    > DoDetailedHitTest(
       const TrackPanelMouseState &state,
       const AudacityProject *pProject, int currentTool, bool bMultiTool,
-      const std::shared_ptr<WaveTrack> &wt,
+      const std::shared_ptr<WaveChannel> &wt,
       CommonChannelView &view);
 
    std::vector<WaveChannelSubView::Type> GetDisplays() const;
@@ -156,8 +169,6 @@ public:
    void SetMultiView( bool value ) { DoGetMultiView() = value; }
 
    WaveTrack::IntervalHolder GetSelectedClip();
-   static bool WideClipContains(
-      const WaveTrack::Interval &wideClip, const WaveClip &clip);
 
    // Returns a visible subset of subviews, sorted in the same
    // order as they are supposed to be displayed
@@ -183,8 +194,9 @@ public:
 
    static bool ClipDetailsVisible(
       const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static wxRect ClipHitTestArea(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& viewRect);
-   static bool HitTest(const WaveClip& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
+   static wxRect ClipHitTestArea(const ClipTimes& clip,
+      const ZoomInfo& zoomInfo, const wxRect& viewRect);
+   static bool HitTest(const ClipTimes& clip, const ZoomInfo& zoomInfo, const wxRect& rect, const wxPoint& pos);
 
    //FIXME: These functions do not push state to undo history
    //because attempt to do so leads to a focus lose which, in
@@ -195,6 +207,8 @@ public:
    bool CopySelectedText(AudacityProject& project);
    bool PasteText(AudacityProject& project);
    bool SelectAllText(AudacityProject& project);
+
+   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
 private:
    void BuildSubViews() const;
@@ -215,7 +229,6 @@ private:
    Refinement GetSubViews(const wxRect& rect) override;
 
 private:
-   std::shared_ptr<CommonTrackCell> GetAffordanceControls() override;
 
    void DoSetMinimized( bool minimized ) override;
 
@@ -229,7 +242,7 @@ private:
    bool &DoGetMultiView();
    bool DoGetMultiView() const;
 
-   std::shared_ptr<CommonTrackCell> DoGetAffordance(const std::shared_ptr<Track>& track);
+   std::shared_ptr<CommonTrackCell> DoGetAffordance(Track& track);
 
    std::shared_ptr<CommonTrackCell> mpAffordanceCellControl;
 

@@ -158,20 +158,19 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
       double t0 = mT0 < trackStart ? trackStart : mT0;
       double t1 = mT1 > trackEnd ? trackEnd : mT1;
       if (t1 > t0) {
-         auto tempList = track->WideEmptyCopy();
+         auto tempTrack = track->EmptyCopy();
          const auto channels = track->Channels();
-         auto iter = (*tempList->Any<WaveTrack>().begin())->Channels().begin();
+         auto iter = tempTrack->Channels().begin();
          for (const auto pChannel : channels) {
             if (!ProcessOne(*pChannel, **iter++, t0, t1, count++))
                return false;
          }
-         const auto pNewTrack = *tempList->Any<WaveTrack>().begin();
-         pNewTrack->Flush();
-         newT1 = std::max(newT1, mT0 + pNewTrack->GetEndTime());
-         PasteTimeWarper warper { t1, t0 + (*tempList->begin())->GetEndTime() };
+         tempTrack->Flush();
+         newT1 = std::max(newT1, mT0 + tempTrack->GetEndTime());
+         PasteTimeWarper warper { t1, t0 + tempTrack->GetEndTime() };
          constexpr auto preserve = false;
          constexpr auto merge = true;
-         track->ClearAndPaste(t0, t1, *tempList, preserve, merge, &warper);
+         track->ClearAndPaste(t0, t1, *tempTrack, preserve, merge, &warper);
       }
       else
          count += track->NChannels();
@@ -184,7 +183,7 @@ bool EffectPaulstretch::Process(EffectInstance &, EffectSettings &)
             fallthrough();
       }; },
       [&](Track &track) {
-         if (SyncLock::IsSyncLockSelected(&track))
+         if (SyncLock::IsSyncLockSelected(track))
             track.SyncLockAdjust(mT1, newT1);
       }
    );

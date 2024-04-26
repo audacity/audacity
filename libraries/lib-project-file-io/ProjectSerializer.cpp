@@ -26,6 +26,7 @@
 #include <wx/log.h>
 
 #include "BufferedStreamReader.h"
+#include "MemoryX.h"
 
 ///
 /// ProjectSerializer class
@@ -116,13 +117,6 @@ using ULong = std::uint32_t; // To save size_t values
 
 using LongLong = std::int64_t;
 
-// Detect this computer's endianness
-bool IsLittleEndian()
-{
-   const std::uint32_t x = 1u;
-   return static_cast<const unsigned char*>(static_cast<const void*>(&x))[0];
-   // We will assume the same for other widths!
-}
 // In C++20 this could be
 // constexpr bool IsLittleEndian = (std::endian::native == std::endian::little);
 // static_assert( IsLittleEndian || (std::endian::native == std::endian::big),

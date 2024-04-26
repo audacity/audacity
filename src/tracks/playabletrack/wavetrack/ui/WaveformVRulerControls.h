@@ -13,7 +13,7 @@ Paul Licameli split from WaveChannelVRulerControls.h
 
 #include "../../../ui/ChannelVRulerControls.h" // to inherit
 
-class WaveTrack;
+class WaveChannel;
 class WaveformVZoomHandle;
 
 class WaveformVRulerControls final : public ChannelVRulerControls
@@ -36,7 +36,9 @@ public:
       AudacityProject *pProject) override;
    static unsigned DoHandleWheelRotation(
       const TrackPanelMouseEvent &event,
-      AudacityProject *pProject, WaveTrack *wt);
+      AudacityProject *pProject, WaveChannel &wc);
+
+   std::shared_ptr<WaveChannel> FindWaveChannel();
 
 private:
    // TrackPanelDrawable implementation
@@ -47,7 +49,7 @@ private:
    // ChannelVRulerControls implementation
    void UpdateRuler( const wxRect &rect ) override;
 
-   static void DoUpdateVRuler(const wxRect &rect, const WaveTrack *wt);
+   static void DoUpdateVRuler(const wxRect &rect, const WaveChannel &wc);
 
    std::weak_ptr<WaveformVZoomHandle> mVZoomHandle;
 };

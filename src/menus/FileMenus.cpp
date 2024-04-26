@@ -28,8 +28,7 @@
 #include "wxPanelWrapper.h"
 
 #include "ExportUtils.h"
-#include "export/ExportProgressUI.h"
-#include "export/ExportAudioDialog.h"
+#include "ExportProgressUI.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -61,11 +60,8 @@ void DoExport(AudacityProject &project, const FileExtension &format)
             false);
          return;
       }
-      ExportAudioDialog dialog(&GetProjectFrame(project),
-                               project,
-                               project.GetProjectName(),
-                               format);
-      dialog.ShowModal();
+
+      ExportUtils::PerformInteractiveExport(project, format);
    }
    else {
       // We either use a configured output path,
@@ -321,12 +317,14 @@ void OnExportLabels(const CommandContext &context)
       wxEmptyString,
       fName,
       wxT("txt"),
-      { FileNames::TextFiles },
+      { FileNames::TextFiles, LabelTrack::SubripFiles, LabelTrack::WebVTTFiles },
       wxFD_SAVE | wxFD_OVERWRITE_PROMPT | wxRESIZE_BORDER,
       &window);
 
    if (fName.empty())
       return;
+
+   LabelFormat format = LabelTrack::FormatForFileName(fName);
 
    // Move existing files out of the way.  Otherwise wxTextFile will
    // append to (rather than replace) the current file.
@@ -354,7 +352,7 @@ void OnExportLabels(const CommandContext &context)
    }
 
    for (auto lt : trackRange)
-      lt->Export(f);
+      lt->Export(f, format);
 
    f.Write();
    f.Close();
@@ -368,7 +366,6 @@ void OnImport(const CommandContext &context)
 void OnImportLabels(const CommandContext &context)
 {
    auto &project = context.project;
-   auto &trackFactory = WaveTrackFactory::Get( project );
    auto &tracks = TrackList::Get( project );
    auto &viewport = Viewport::Get(project);
    auto &window = GetProjectFrame(project);
@@ -378,12 +375,13 @@ void OnImportLabels(const CommandContext &context)
          XO("Select a text file containing labels"),
          wxEmptyString,     // Path
          wxT(""),       // Name
-         wxT("txt"),   // Extension
-         { FileNames::TextFiles, FileNames::AllFiles },
+         wxT("txt"),    // Extension
+         { FileNames::TextFiles, LabelTrack::SubripFiles, FileNames::AllFiles },
          wxRESIZE_BORDER,        // Flags
          &window);    // Parent
 
    if (!fileName.empty()) {
+      LabelFormat format = LabelTrack::FormatForFileName(fileName);
       wxTextFile f;
 
       f.Open(fileName);
@@ -398,7 +396,7 @@ void OnImportLabels(const CommandContext &context)
       wxFileName::SplitPath(fileName, NULL, NULL, &sTrackName, NULL);
       newTrack->SetName(sTrackName);
 
-      newTrack->Import(f);
+      newTrack->Import(f, format);
 
       SelectUtilities::SelectNone( project );
       newTrack->SetSelected(true);
@@ -486,12 +484,7 @@ auto FileMenu()
                      recentFilesMenu->GetParent()->SetHelpString( 0, "" );
                } );
             } )
-         ),
-
-   /////////////////////////////////////////////////////////////////////////////
-
-         Command( wxT("Close"), XXO("&Close"), OnClose,
-            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+         )
       ),
 
       Section( "Save",
@@ -513,11 +506,15 @@ auto FileMenu()
          //   AudioIONotBusyFlag(), wxT("Shift+A") )
       ),
 
+      Section( "Close", Command( wxT("Close"), XXO("&Close"), OnClose,
+            AudioIONotBusyFlag(), wxT("Ctrl+W") )
+      ),
+
       Section( "Import-Export",
          Command( wxT("Export"), XXO("&Export Audio..."), OnExportAudio,
             AudioIONotBusyFlag() | WaveTracksExistFlag(), wxT("Ctrl+Shift+E") ),
 
-         Menu( wxT("ExportOther"), XXO("Export Other"),
+         Menu( wxT("ExportOther"), XXO("Expo&rt Other"),
             Command( wxT("ExportLabels"), XXO("Export &Labels..."),
                OnExportLabels,
                AudioIONotBusyFlag() | LabelTracksExistFlag() )

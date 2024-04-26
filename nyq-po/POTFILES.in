@@ -22,6 +22,4 @@ plug-ins/sample-data-export.ny
 plug-ins/sample-data-import.ny
 plug-ins/spectral-delete.ny
 plug-ins/tremolo.ny
-plug-ins/vocalrediso.ny
-plug-ins/vocalremover.ny
 plug-ins/vocoder.ny

@@ -208,9 +208,6 @@ public:
       size_t queueLength, sampleCount start, sampleCount len);
 
    //! Final flush and trimming of tail samples
-   /*!
-    @pre `outputTrack.IsLeader()`
-    */
    static bool PostProcess(WaveTrack &outputTrack, sampleCount len);
 
 protected:

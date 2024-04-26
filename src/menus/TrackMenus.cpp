@@ -53,12 +53,12 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
    auto &trackPanel = TrackPanel::Get(project);
 
    auto trackRange = tracks.Selected<WaveTrack>();
-   auto newTracks = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
+   auto newTrack = ::MixAndRender(trackRange.Filter<const WaveTrack>(),
       Mixer::WarpOptions{ tracks.GetOwner() },
       tracks.MakeUniqueTrackName(_("Mix")),
       &trackFactory, rate, defaultFormat, 0.0, 0.0);
 
-   if (newTracks) {
+   if (newTrack) {
       // Remove originals, get stats on what tracks were mixed
 
       // But before removing, determine the first track after the removal
@@ -66,33 +66,21 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       auto insertionPoint = * ++ tracks.Find(last);
 
       auto selectedCount = trackRange.size();
-      wxString firstName;
-      int firstColour = -1;
-      if (selectedCount > 0) {
-         firstName = (*trackRange.begin())->GetName();
-         firstColour = (*trackRange.begin())->GetWaveColorIndex();
-      }
       if (!toNewTrack)  {
          // Beware iterator invalidation!
          while (!trackRange.empty())
-            // Range iterates over leaders only
             tracks.Remove(**trackRange.first++);
       }
 
       // Add new tracks
-      const bool stereo = newTracks->NChannels() > 1;
-      tracks.Append(std::move(*newTracks));
+      const bool stereo = newTrack->NChannels() > 1;
+      const auto firstName = newTrack->GetName();
+      tracks.Add(newTrack);
       const auto pNewTrack = *tracks.Any<WaveTrack>().rbegin();
 
-      // If we're just rendering (not mixing), keep the track name the same
-      if (selectedCount == 1)
-         pNewTrack->SetName(firstName);
-
       // Bug 2218, remember more things...
-      if (selectedCount >= 1) {
+      if (selectedCount >= 1)
          pNewTrack->SetSelected(!toNewTrack);
-         pNewTrack->SetWaveColorIndex(firstColour);
-      }
 
       // Permute the tracks as needed
       // The new track appears after the old tracks (or where the old tracks
@@ -114,8 +102,8 @@ void DoMixAndRender(AudacityProject &project, bool toNewTrack)
       }
 
       // Smart history/undo message
-      if (selectedCount==1) {
-         auto msg = XO("Rendered all audio in track '%s'").Format( firstName );
+      if (selectedCount == 1) {
+         auto msg = XO("Rendered all audio in track '%s'").Format(firstName);
          /* i18n-hint: Convert the audio into a more usable form, so apply
           * panning and amplification and write to some external file.*/
          ProjectHistory::Get( project ).PushState(msg, XO("Render"));
@@ -295,7 +283,7 @@ void DoAlign(AudacityProject &project, int index, bool moveSel)
    if (delta != 0.0) {
       // For a fixed-distance shift move sync-lock selected tracks also.
       for (auto t : tracks.Any()
-           + &SyncLock::IsSelectedOrSyncLockSelected )
+           + &SyncLock::IsSelectedOrSyncLockSelectedP)
          t->MoveTo(t->GetStartTime() + delta);
    }
 
@@ -478,7 +466,7 @@ void DoSortTracks( AudacityProject &project, int flags )
 
             int ndx;
             for (ndx = 0; ndx < w.GetNumClips(); ndx++) {
-               const auto c = w.GetClipByIndex(ndx);
+               const auto c = w.GetClip(ndx);
                if (c->GetVisibleSampleCount() == 0)
                   continue;
                stime = std::min(stime, c->GetPlayStartTime());
@@ -1036,7 +1024,7 @@ void OnTrackMute(const CommandContext &context)
       track = TrackFocus::Get( project ).Get();
 
    if (track) track->TypeSwitch( [&](PlayableTrack &t) {
-      TrackUtilities::DoTrackMute(project, &t, false);
+      TrackUtilities::DoTrackMute(project, t, false);
    });
 }
 
@@ -1046,7 +1034,7 @@ void OnTrackSolo(const CommandContext &context)
 
    const auto track = TrackFocus::Get( project ).Get();
    if (track) track->TypeSwitch( [&](PlayableTrack &t) {
-      TrackUtilities::DoTrackSolo(project, &t, false);
+      TrackUtilities::DoTrackSolo(project, t, false);
    });
 }
 
@@ -1069,7 +1057,7 @@ void OnTrackClose(const CommandContext &context)
       return;
    }
 
-   TrackUtilities::DoRemoveTrack(project, t);
+   TrackUtilities::DoRemoveTrack(project, *t);
 
    trackPanel.UpdateViewIfNoTracks();
    trackPanel.Refresh(false);
@@ -1082,8 +1070,8 @@ void OnTrackMoveUp(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveUpID);
+   if (focusedTrack && tracks.CanMoveUp(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveUpID);
       trackPanel.Refresh(false);
    }
 }
@@ -1095,8 +1083,8 @@ void OnTrackMoveDown(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveDownID);
+   if (focusedTrack && tracks.CanMoveDown(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveDownID);
       trackPanel.Refresh(false);
    }
 }
@@ -1108,8 +1096,8 @@ void OnTrackMoveTop(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveUp(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveTopID);
+   if (focusedTrack && tracks.CanMoveUp(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveTopID);
       trackPanel.Refresh(false);
    }
 }
@@ -1121,8 +1109,8 @@ void OnTrackMoveBottom(const CommandContext &context)
    auto &tracks = TrackList::Get( project );
 
    const auto focusedTrack = TrackFocus::Get( project ).Get();
-   if (tracks.CanMoveDown(focusedTrack)) {
-      DoMoveTrack(project, focusedTrack, TrackUtilities::OnMoveBottomID);
+   if (focusedTrack && tracks.CanMoveDown(*focusedTrack)) {
+      DoMoveTrack(project, *focusedTrack, TrackUtilities::OnMoveBottomID);
       trackPanel.Refresh(false);
    }
 }

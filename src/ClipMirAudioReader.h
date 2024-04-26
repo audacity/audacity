@@ -45,7 +45,7 @@ private:
    void AddChannel(
       size_t iChannel, float* buffer, sampleCount start, size_t len) const;
 
-   const std::shared_ptr<const ClipInterface> mWideClip;
+   const std::shared_ptr<const ClipInterface> mClip;
 
    // An array with two entries because maybe two channels, and each channel has
    // two caches to cope with back-and-forth access between beginning and end

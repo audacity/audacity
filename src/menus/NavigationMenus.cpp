@@ -91,7 +91,6 @@ void DoPrevTrack(
       }
       return;
    }
-   assert(t->IsLeader());
 
    if (shift) {
       auto p = * -- tracks.Find(t); // Get previous track
@@ -109,7 +108,7 @@ void DoPrevTrack(
       }
       // If here, then there is a nonempty list and a previous track
       // (maybe circularly)
-      assert(p && p->IsLeader());
+      assert(p);
       auto tSelected = t->GetSelected();
       auto pSelected = p->GetSelected();
       if (tSelected && pSelected) {
@@ -201,7 +200,6 @@ void DoNextTrack(
       }
       return;
    }
-   assert(t->IsLeader());
 
    if (shift) {
       auto n = * ++ tracks.Find(t); // Get next track
@@ -217,7 +215,7 @@ void DoNextTrack(
       }
       // If here, then there is a nonempty list and a next track
       // (maybe circularly)
-      assert(n && n->IsLeader());
+      assert(n);
       auto tSelected = t->GetSelected();
       auto nSelected = n->GetSelected();
       if (tSelected && nSelected) {
@@ -481,7 +479,6 @@ void OnLastTrack(const CommandContext &context)
    auto &viewport = Viewport::Get(project);
 
    Track *t = trackFocus.Get();
-   assert(t->IsLeader());
    if (!t)
       return;
 
@@ -520,7 +517,6 @@ void OnToggle(const CommandContext &context)
    t = trackFocus.Get();   // Get currently focused track
    if (!t)
       return;
-   assert(t->IsLeader()); // TrackFocus promises this
    selectionState.SelectTrack(*t, !t->GetSelected(), true);
    viewport.ShowTrack(*t);
    projectHistory.ModifyState(false);

@@ -56,18 +56,10 @@ public:
 
    //! Use this to add an output track, not corresponding to an input.
    /*!
-    @pre `t && t->IsLeader() && t->NChannels() == 1`
     @return a pointer to the given track
     */
    Track *AddToOutputTracks(const std::shared_ptr<Track> &t);
 
-   //! An overload to add a "wide" output track, now represented as a TrackList,
-   //! which will be moved-from.
-   /*!
-    @pre `list.Size() == 1`
-    @return a pointer to the given (leader) track
-    */
-   Track *AddToOutputTracks(TrackList &&list);
 
    /*!
     * @brief Gets the matching input track for the given output track if it
@@ -93,7 +85,6 @@ private:
    /*!
     @invariant `mIMap.size() == mOutputTracks->Size()`
     @invariant `mIMap.size() == mOMap.size()`
-    @invariant mIMap points to leaders only, or nulls
     */
    std::vector<Track*> mIMap;
    std::vector<Track*> mOMap;

@@ -33,10 +33,8 @@ i.e. an alternative to the usual interface, for Audacity.
 #include "PluginInterface.h"
 #include "ModuleSettings.h"
 
-#ifdef EXPERIMENTAL_MODULE_PREFS
 #include "Prefs.h"
 #include "ModuleSettings.h"
-#endif
 
 #define initFnName      "ExtensionModuleInit"
 #define versionFnName   "GetVersionString"
@@ -53,6 +51,14 @@ Module::Module(const FilePath & name)
 
 Module::~Module()
 {
+   // DV: The current Registry code makes unloading of the modules
+   // impossible. The order in which static objects are destroyed
+   // may result in the Registry instance being destroyed after the ModuleManager.
+   // The way Audacity is currently implemented, it is not possible to
+   // guarantee that the ModuleManager instance is initialized before
+   // any of the Registry instances.
+   if (mLib != nullptr && mLib->IsLoaded())
+      mLib->Detach();
 }
 
 static BasicUI::MessageBoxResult DoMessageBox(const TranslatableString &msg)
@@ -264,7 +270,6 @@ void ModuleManager::TryLoadModules(
       if( decided.Index( ShortName, false ) != wxNOT_FOUND )
          continue;
 
-#ifdef EXPERIMENTAL_MODULE_PREFS
       int iModuleStatus = ModuleSettings::GetModuleStatus( file );
       if( iModuleStatus == kModuleDisabled )
          continue;
@@ -279,7 +284,6 @@ void ModuleManager::TryLoadModules(
       }
 
       if( iModuleStatus == kModuleAsk )
-#endif
       // JKC: I don't like prompting for the plug-ins individually
       // I think it would be better to show the module prefs page,
       // and let the user decide for each one.
@@ -295,23 +299,19 @@ void ModuleManager::TryLoadModules(
             "",
             XO("Try and load this module?"),
             false);
-#ifdef EXPERIMENTAL_MODULE_PREFS
          // If we're not prompting always, accept the answer permanently
          if( iModuleStatus == kModuleNew ){
             iModuleStatus = (action==1)?kModuleDisabled : kModuleEnabled;
             ModuleSettings::SetModuleStatus( file, iModuleStatus );
          }
-#endif
          if(action == 1){   // "No"
             decided.Add( ShortName );
             continue;
          }
       }
-#ifdef EXPERIMENTAL_MODULE_PREFS
       // Before attempting to load, we set the state to bad.
       // That way, if we crash, we won't try again.
       ModuleSettings::SetModuleStatus( file, kModuleFailed );
-#endif
 
       wxString Error;
       auto umodule = std::make_unique<Module>(file);
@@ -333,10 +333,8 @@ void ModuleManager::TryLoadModules(
          {
             Get().mModules.push_back(std::move(umodule));
 
-#ifdef EXPERIMENTAL_MODULE_PREFS
             // Loaded successfully, restore the status.
             ModuleSettings::SetModuleStatus(file, iModuleStatus);
-#endif
          }
       }
       else if (!Error.empty()) {

@@ -52,6 +52,7 @@ enum class ProjectFileIOMessage : int {
    ReconnectionFailure, /*!< Failure to reconnect to the database,
       after temporary close and attempted file movement */
    ProjectTitleChange,  //!< A normal occurrence
+   ProjectFilePathChange,  //!< A normal occurrence
 };
 
 ///\brief Object associated with a project that manages reading and writing
@@ -107,11 +108,13 @@ public:
    bool IsTemporary() const;
    bool IsRecovered() const;
 
+   void MarkTemporary();
+
    bool AutoSave(bool recording = false);
    bool AutoSaveDelete(sqlite3 *db = nullptr);
 
    bool OpenProject();
-   bool CloseProject();
+   void CloseProject();
    bool ReopenProject();
 
    //! If successful, return non-empty; the caller must commit to keep the
@@ -297,11 +300,6 @@ private:
        int errorCode = -1);
 
    bool ShouldCompact(const std::vector<const TrackList *> &tracks);
-
-   // Gets values from SQLite B-tree structures
-   static unsigned int get2(const unsigned char *ptr);
-   static unsigned int get4(const unsigned char *ptr);
-   static int get_varint(const unsigned char *ptr, int64_t *out);
 
 private:
    Connection &CurrConn();

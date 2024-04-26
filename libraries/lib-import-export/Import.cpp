@@ -654,15 +654,6 @@ bool Importer::Import(
                return true;
             }
 
-            auto end = tracks.end();
-            auto iter = std::remove_if(tracks.begin(), end,
-               [](auto &pList){ return pList->empty(); });
-            if (iter != end) {
-               // importer shouldn't give us empty groups of channels!
-               assert(false);
-               // But correct that and proceed anyway
-               tracks.erase(iter, end);
-            }
             if (tracks.size() > 0)
                // success!
                return true;

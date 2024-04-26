@@ -59,12 +59,12 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
 
          if (duration > 0.0) {
             // Create a temporary track
-            auto list = track.WideEmptyCopy();
+            auto copy = track.EmptyCopy();
             // Fill with data
-            if (!GenerateTrack(settings, *list))
+            if (!GenerateTrack(settings, *copy))
                bGoodResult = false;
             if (bGoodResult) {
-               (*list->Any<WaveTrack>().begin())->Flush();
+               copy->Flush();
                PasteTimeWarper warper{ mT1, mT0 + duration };
                auto pProject = FindProject();
                const auto &selectedRegion =
@@ -76,7 +76,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
                constexpr auto preserve = true;
                constexpr auto merge = true;
                track.ClearAndPaste(
-                  selectedRegion.t0(), selectedRegion.t1(), *list, preserve,
+                  selectedRegion.t0(), selectedRegion.t1(), *copy, preserve,
                   merge, &warper);
             }
             else
@@ -90,7 +90,7 @@ bool Generator::Process(EffectInstance &, EffectSettings &settings)
          ntrack++;
       }; },
       [&](Track &t) {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + duration);
       }
    );

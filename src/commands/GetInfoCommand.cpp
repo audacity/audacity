@@ -17,6 +17,7 @@ This class now lists
 - Clips
 - Labels
 - Boxes
+- Selection
 
 *//*******************************************************************/
 
@@ -35,6 +36,7 @@ This class now lists
 #include "TrackFocus.h"
 #include "../TrackPanel.h"
 #include "WaveClip.h"
+#include "../tracks/playabletrack/wavetrack/ui/WaveformAppearance.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
 #include "prefs/WaveformSettings.h"
@@ -42,6 +44,8 @@ This class now lists
 #include "NoteTrack.h"
 #include "TimeTrack.h"
 #include "Envelope.h"
+#include "ProjectAudioIO.h"
+#include "AudioIO.h"
 
 #include "SelectCommand.h"
 #include "ShuttleGui.h"
@@ -71,6 +75,7 @@ enum {
    kEnvelopes,
    kLabels,
    kBoxes,
+   kSelection,
    nTypes
 };
 
@@ -85,6 +90,7 @@ static const EnumValueSymbol kTypes[nTypes] =
    { XO("Envelopes") },
    { XO("Labels") },
    { XO("Boxes") },
+   { XO("Selection") },
 };
 
 enum {
@@ -170,6 +176,7 @@ bool GetInfoCommand::ApplyInner(const CommandContext &context)
       case kEnvelopes    : return SendEnvelopes( context );
       case kLabels       : return SendLabels( context );
       case kBoxes        : return SendBoxes( context );
+      case kSelection    : return SendSelection( context );
       default:
          context.Status( "Command options not recognised" );
    }
@@ -490,7 +497,7 @@ bool GetInfoCommand::SendTracks(const CommandContext & context)
          context.AddItem( t.GetEndTime(), "end" );
          context.AddItem( t.GetPan() , "pan");
          context.AddItem( t.GetGain() , "gain");
-         context.AddItem( TrackList::NChannels(t), "channels");
+         context.AddItem( t.NChannels(), "channels");
          context.AddBool( t.GetSolo(), "solo" );
          context.AddBool( t.GetMute(), "mute");
          context.AddItem( vzmin, "VZoomMin");
@@ -521,14 +528,16 @@ bool GetInfoCommand::SendClips(const CommandContext &context)
    context.StartArray();
    for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
-         WaveClipPointers ptrs(waveTrack.SortedClipArray());
-         for (WaveClip * pClip : ptrs) {
+         for (const auto pInterval : waveTrack.Intervals()) {
             context.StartStruct();
             context.AddItem((double)i, "track");
-            context.AddItem(pClip->GetPlayStartTime(), "start");
-            context.AddItem(pClip->GetPlayEndTime(), "end");
-            context.AddItem(pClip->GetColourIndex(), "color");
-            context.AddItem(pClip->GetName(), "name");
+            context.AddItem(pInterval->GetPlayStartTime(), "start");
+            context.AddItem(pInterval->GetPlayEndTime(), "end");
+            // Assuming same colors, look at only left channel
+            const auto &colors =
+               WaveColorAttachment::Get(**pInterval->Channels().begin());
+            context.AddItem(colors.GetColorIndex(), "color");
+            context.AddItem(pInterval->GetName(), "name");
             context.EndStruct();
          }
       });
@@ -548,14 +557,14 @@ bool GetInfoCommand::SendEnvelopes(const CommandContext &context)
    context.StartArray();
    for (auto t : tracks) {
       t->TypeSwitch([&](WaveTrack &waveTrack) {
-         WaveClipPointers ptrs(waveTrack.SortedClipArray());
+         auto ptrs = waveTrack.SortedIntervalArray();
          j = 0;
-         for (WaveClip * pClip : ptrs) {
+         for (auto &pClip : ptrs) {
             context.StartStruct();
             context.AddItem((double)i, "track");
             context.AddItem((double)j, "clip");
             context.AddItem(pClip->GetPlayStartTime(), "start");
-            Envelope * pEnv = pClip->GetEnvelope();
+            const auto pEnv = &pClip->GetEnvelope();
             context.StartField("points");
             context.StartArray();
             double offset = pEnv->GetOffset();
@@ -618,6 +627,20 @@ bool GetInfoCommand::SendLabels(const CommandContext &context)
       i++;
    }
    context.EndArray();
+
+   return true;
+}
+
+bool GetInfoCommand::SendSelection(const CommandContext &context)
+{
+   context.StartStruct();
+
+   const auto& selectedRegion = ViewInfo::Get( context.project ).selectedRegion;
+
+   context.AddItem(selectedRegion.t0(), "Start");  // Send selection start position
+   context.AddItem(selectedRegion.t1(), "End");    // Send cselection end position
+
+   context.EndStruct();
 
    return true;
 }
@@ -709,9 +732,9 @@ void GetInfoCommand::ExploreTrackPanel( const CommandContext &context,
    AudacityProject * pProj = &context.project;
    auto &tp = TrackPanel::Get( *pProj );
    wxRect panelRect{ {}, tp.GetSize() };
-   for (auto leader : TrackList::Get(*pProj)) {
-      for (auto t : leader->Channels()) {
-         auto rulers = tp.FindRulerRects(*t);
+   for (auto pTrack : TrackList::Get(*pProj)) {
+      for (auto pChannel : pTrack->Channels()) {
+         auto rulers = tp.FindRulerRects(*pChannel);
          for (auto &R : rulers) {
             if (!R.Intersects(panelRect))
                continue;

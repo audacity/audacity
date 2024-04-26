@@ -14,7 +14,7 @@
 #include "RealFFTf.h"
 #include "Sequence.h"
 #include "Spectrum.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 #include "WaveTrack.h"
 #include "WideSampleSequence.h"
 #include <cmath>
@@ -508,7 +508,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 
    int copyBegin = 0, copyEnd = 0;
    if (match) {
-      WaveClipUtilities::findCorrection(
+      WaveClipUIUtilities::findCorrection(
          mSpecCache->where, mSpecCache->len, numPixels, t0, sampleRate,
          stretchRatio, samplesPerPixel, oldX0, correction);
       // Remember our first pixel maps to oldX0 in the old cache,
@@ -558,7 +558,7 @@ bool WaveClipSpectrumCache::GetSpectrogram(
    // purposely offset the display 1/2 sample to the left (as compared
    // to waveform display) to properly center response of the FFT
    constexpr auto addBias = true;
-   WaveClipUtilities::fillWhere(
+   WaveClipUIUtilities::fillWhere(
       mSpecCache->where, numPixels, addBias, correction, t0, sampleRate,
       stretchRatio, samplesPerPixel);
 
@@ -573,9 +573,8 @@ bool WaveClipSpectrumCache::GetSpectrogram(
 }
 
 WaveClipSpectrumCache::WaveClipSpectrumCache(size_t nChannels)
-   // TODO wide wave tracks -- won't need std::max here
-   : mSpecCaches(std::max<size_t>(2, nChannels))
-   , mSpecPxCaches(std::max<size_t>(2, nChannels))
+   : mSpecCaches(nChannels)
+   , mSpecPxCaches(nChannels)
 {
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
@@ -585,17 +584,24 @@ WaveClipSpectrumCache::~WaveClipSpectrumCache()
 {
 }
 
-static WaveClip::Caches::RegisteredFactory sKeyS{ [](WaveClip &clip){
-   return std::make_unique<WaveClipSpectrumCache>(clip.GetWidth());
-} };
-
-WaveClipSpectrumCache &WaveClipSpectrumCache::Get( const WaveClip &clip )
+std::unique_ptr<WaveClipListener> WaveClipSpectrumCache::Clone() const
 {
-   return const_cast< WaveClip& >( clip ) // Consider it mutable data
-      .Caches::Get< WaveClipSpectrumCache >( sKeyS );
+   // Don't need to copy contents
+   return std::make_unique<WaveClipSpectrumCache>(mSpecCaches.size());
 }
 
-void WaveClipSpectrumCache::MarkChanged()
+static WaveClip::Attachments::RegisteredFactory sKeyS{ [](WaveClip &clip){
+   return std::make_unique<WaveClipSpectrumCache>(clip.NChannels());
+} };
+
+WaveClipSpectrumCache &
+WaveClipSpectrumCache::Get(const WaveChannelInterval &clip)
+{
+   return const_cast<WaveClip&>(clip.GetClip()) // Consider it mutable data
+      .Attachments::Get< WaveClipSpectrumCache >( sKeyS );
+}
+
+void WaveClipSpectrumCache::MarkChanged() noexcept
 {
    ++mDirty;
 }
@@ -605,4 +611,28 @@ void WaveClipSpectrumCache::Invalidate()
    // Invalidate the spectrum display cache
    for (auto &pCache : mSpecCaches)
       pCache = std::make_unique<SpecCache>();
+}
+
+void WaveClipSpectrumCache::MakeStereo(WaveClipListener &&other, bool)
+{
+   auto pOther = dynamic_cast<WaveClipSpectrumCache *>(&other);
+   assert(pOther); // precondition
+   mSpecCaches.push_back(move(pOther->mSpecCaches[0]));
+   mSpecPxCaches.push_back(move(pOther->mSpecPxCaches[0]));
+}
+
+void WaveClipSpectrumCache::SwapChannels()
+{
+   mSpecCaches.resize(2);
+   std::swap(mSpecCaches[0], mSpecCaches[1]);
+   mSpecPxCaches.resize(2);
+   std::swap(mSpecPxCaches[0], mSpecPxCaches[1]);
+}
+
+void WaveClipSpectrumCache::Erase(size_t index)
+{
+   if (index < mSpecCaches.size())
+      mSpecCaches.erase(mSpecCaches.begin() + index);
+   if (index < mSpecPxCaches.size())
+      mSpecPxCaches.erase(mSpecPxCaches.begin() + index);
 }

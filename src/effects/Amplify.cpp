@@ -37,8 +37,9 @@
 
 #include "EffectOutputTracks.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "../widgets/valnum.h"
 
 
@@ -191,14 +192,15 @@ bool EffectAmplify::Init()
 {
    auto range = inputTracks()->Selected<const WaveTrack>();
    bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
-      return WaveTrackUtilities::HasPitchOrSpeed(*pTrack, mT0, mT1);
+      return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
    });
    if (hasPitchOrSpeed)
       range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
    mPeak = 0.0;
    for (auto t : range) {
       for (const auto pChannel : t->Channels()) {
-         auto pair = pChannel->GetMinMax(mT0, mT1); // may throw
+         auto pair =
+            WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
          const float min = pair.first, max = pair.second;
          const float newpeak = std::max(fabs(min), fabs(max));
          mPeak = std::max<double>(mPeak, newpeak);

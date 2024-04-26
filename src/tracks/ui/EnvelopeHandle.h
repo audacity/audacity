@@ -18,11 +18,12 @@ Paul Licameli split from TrackPanel.cpp
 class wxMouseEvent;
 class wxMouseState;
 
+class Channel;
 class Envelope;
 class EnvelopeEditor;
 class ViewInfo;
 class TimeTrack;
-class WaveTrack;
+class WaveChannel;
 
 class AUDACITY_DLL_API EnvelopeHandle final : public UIHandle
 {
@@ -44,7 +45,7 @@ public:
 
    virtual ~EnvelopeHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    static UIHandlePtr HitAnywhere(std::weak_ptr<EnvelopeHandle> &holder,
       Envelope *envelope, std::weak_ptr<const Channel> wChannel,
@@ -53,10 +54,9 @@ public:
       (std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
        const AudacityProject *pProject, const std::shared_ptr<TimeTrack> &tt);
-   static UIHandlePtr WaveTrackHitTest
-      (std::weak_ptr<EnvelopeHandle> &holder,
+   static UIHandlePtr WaveChannelHitTest(std::weak_ptr<EnvelopeHandle> &holder,
        const wxMouseState &state, const wxRect &rect,
-       const AudacityProject *pProject, const std::shared_ptr<WaveTrack> &wt);
+       const AudacityProject *pProject, const std::shared_ptr<WaveChannel> &wt);
 
    Envelope *GetEnvelope() const { return mEnvelope; }
 

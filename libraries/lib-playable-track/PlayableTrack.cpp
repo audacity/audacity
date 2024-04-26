@@ -58,8 +58,7 @@ std::unique_ptr<ClientData::Cloneable<>> MuteAndSolo::Clone() const {
 }
 
 MuteAndSolo &MuteAndSolo::Get(PlayableTrack &track) {
-   return track.GetGroupData().Attachments
-      ::Get<MuteAndSolo>(muteAndSoloFactory);
+   return track.Attachments::Get<MuteAndSolo>(muteAndSoloFactory);
 }
 
 const MuteAndSolo &MuteAndSolo::Get(const PlayableTrack &track)

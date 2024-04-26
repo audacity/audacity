@@ -53,6 +53,9 @@ using BlockPtrArray = std::vector<SeqBlock*>; // non-owning pointers
 class WAVE_TRACK_API Sequence final : public XMLTagHandler{
  public:
 
+   static const char *Sequence_tag;
+   static const char *WaveBlock_tag;
+
    //
    // Static methods
    //
@@ -83,6 +86,17 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
 
    sampleCount GetNumSamples() const { return mNumSamples; }
 
+   //! Get a range of samples from the sequence
+   /*
+    If the requested range is not all defined, the buffer may still contain
+    valid results, with zero filling
+
+    @param start offset into sequence
+    @param len number of samples to put in buffer
+    @param mayThrow if true, propagate read error exceptions
+    @return whether [start, start + len) was within the defined range of the
+    sequence and there were no read errors
+    */
    bool Get(samplePtr buffer, sampleFormat format,
             sampleCount start, size_t len, bool mayThrow) const;
 
@@ -172,7 +186,7 @@ class WAVE_TRACK_API Sequence final : public XMLTagHandler{
    XMLTagHandler *HandleXMLChild(const std::string_view& tag) override;
    void WriteXML(XMLWriter &xmlFile) const /* not override */;
 
-   bool GetErrorOpening() { return mErrorOpening; }
+   bool GetErrorOpening() const { return mErrorOpening; }
 
    //
    // Lock all of this sequence's sample blocks, keeping them

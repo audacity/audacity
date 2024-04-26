@@ -363,7 +363,6 @@ bool Effect::TrackGroupProgress(
 void Effect::GetBounds(
    const WaveTrack &track, sampleCount *start, sampleCount *len)
 {
-   assert(track.IsLeader());
    const auto t0 = std::max(mT0, track.GetStartTime());
    const auto t1 = std::min(mT1, track.GetEndTime());
    if (t1 > t0) {

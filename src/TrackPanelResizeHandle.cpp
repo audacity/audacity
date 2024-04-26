@@ -53,9 +53,9 @@ TrackPanelResizeHandle::~TrackPanelResizeHandle()
 {
 }
 
-std::shared_ptr<const Channel> TrackPanelResizeHandle::FindChannel() const
+std::shared_ptr<const Track> TrackPanelResizeHandle::FindTrack() const
 {
-   return mwChannel.lock();
+   return TrackFromChannel(mwChannel.lock());
 }
 
 std::shared_ptr<Channel> TrackPanelResizeHandle::FindChannel()
@@ -334,10 +334,5 @@ UIHandle::Result TrackPanelResizeHandle::Cancel(AudacityProject *pProject)
 
 Track &TrackPanelResizeHandle::GetTrack(Channel &channel)
 {
-   // TODO wide wave tracks -- just return channel.GetTrack()
-   // But until then, Track::Channels() will not iterate all channels when
-   // given a right hand track
-   // So be sure to substitute the leader
-   const auto pTrack = static_cast<Track*>(&channel.GetChannelGroup());
-   return **TrackList::Channels(pTrack).begin();
+   return *static_cast<Track*>(&channel.GetChannelGroup());
 }

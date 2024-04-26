@@ -57,6 +57,7 @@ private:
    bool SendClips(const CommandContext & context);
    bool SendEnvelopes(const CommandContext & context);
    bool SendBoxes(const CommandContext & context);
+   bool SendSelection(const CommandContext & context);
 
    void ExploreMenu( const CommandContext &context, wxMenu * pMenu, int Id, int depth );
    void ExploreTrackPanel( const CommandContext & context,

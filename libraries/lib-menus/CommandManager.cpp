@@ -1040,9 +1040,7 @@ void CommandManager::GetAllCommandData(
    std::vector<NormalizedKeyString> &default_keys,
    TranslatableStrings &labels,
    TranslatableStrings &categories,
-#if defined(EXPERIMENTAL_KEY_VIEW)
    TranslatableStrings &prefixes,
-#endif
    bool includeMultis)
 {
    for(const auto &entry : mCommandList) {
@@ -1057,9 +1055,7 @@ void CommandManager::GetAllCommandData(
          default_keys.push_back(entry->defaultKey);
          labels.push_back(entry->label);
          categories.push_back(entry->labelTop);
-#if defined(EXPERIMENTAL_KEY_VIEW)
          prefixes.push_back(entry->labelPrefix);
-#endif
       }
    }
 }

@@ -293,7 +293,6 @@ class AUDACITY_DLL_API MeterPanel final
    wxSize    mLeftSize;
    wxSize    mRightSize;
    wxPen     mPen;
-   wxPen     mDisabledPen;
    wxPen     mPeakPeakPen;
    wxBrush   mBrush;
    wxBrush   mRMSBrush;

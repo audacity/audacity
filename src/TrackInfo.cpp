@@ -37,30 +37,8 @@ struct Settings : PrefsListener {
 
    void UpdatePrefs() override
    {
-      // Calculation of best font size depends on language, so it should be redone in case
-      // the language preference changed.
-
-      // wxWidgets seems to need a window to do this portably.
-      if ( !wxTheApp )
-         return;
-      auto window = wxTheApp->GetTopWindow();
-      if ( !window )
-         return;
-
       int fontSize = 10;
       gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-
-      int allowableWidth =
-         // PRL:  was it correct to include the margin?
-         ( kTrackInfoWidth + kLeftMargin )
-            - 2; // 2 to allow for left/right borders
-      int textWidth;
-      do {
-         gFont.SetPointSize(fontSize);
-         window->GetTextExtent(_("Stereo, 999999Hz"),
-            &textWidth, nullptr, nullptr, nullptr, &gFont);
-         fontSize--;
-      } while (textWidth >= allowableWidth);
 
       mInitialized = true;
    }

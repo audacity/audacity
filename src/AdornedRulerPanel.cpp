@@ -130,7 +130,7 @@ public:
       , mChoice( menuChoice )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    bool Clicked() const { return mClicked != Button::None; }
@@ -923,7 +923,7 @@ public:
       , mX( xx )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    static UIHandle::Result NeedChangeHighlight(
@@ -1065,7 +1065,6 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    std::vector<UIHandlePtr> results;
    auto xx = state.state.m_x;
 
-#ifdef EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
    {
       // Allow click and drag on the play head even while recording
       // Make this handle more prominent then the quick play handle
@@ -1075,7 +1074,6 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
          results.push_back( result );
       }
    }
-#endif
    
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {

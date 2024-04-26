@@ -19,10 +19,7 @@ class ChannelGroup;
  Extends the interface for random access into a sample stream with tests for
  muting and solo
  */
-struct MIXER_API PlayableSequence
-   // TODO wide wave tracks -- remove virtual
-   : virtual WideSampleSequence
-{
+struct MIXER_API PlayableSequence : WideSampleSequence {
    ~PlayableSequence() override;
 
    //! Find associated ChannelGroup if any
@@ -54,40 +51,29 @@ struct MIXER_API RecordableSequence {
    virtual size_t NChannels() const = 0;
 
    /** @brief Append the sample data to the track. You must call Flush()
-    * after the last Append.
-    *
-    * @return true in case a block was flushed from memory to underlying DB
+    after the last Append.
+    @pre `iChannel < NChannels()`
+    @return true in case a block was flushed from memory to underlying DB
     */
-   virtual bool Append(
+   virtual bool Append(size_t iChannel,
       constSamplePtr buffer, sampleFormat format,
       size_t len,
       unsigned int stride,
-      sampleFormat effectiveFormat, /*!<
+      sampleFormat effectiveFormat /*!<
          Make the effective format of the data at least the minumum of this
          value and `format`.  (Maybe wider, if merging with preexistent data.)
          If the data are later narrowed from stored format, but not narrower
          than the effective, then no dithering will occur.
       */
-      size_t iChannel = 0
    ) = 0;
 
-   inline bool Append(constSamplePtr buffer, sampleFormat format,
-      size_t len, size_t iChannel = 0)
-   {
-      return Append(buffer, format, len, 1, widestSampleFormat, iChannel);
-   }
-
-   virtual bool IsLeader() const = 0;
-
-   //! Flush of related leader must be called after last Append
-   /*!
-    @pre `IsLeader()`
-    */
+   //! Flush must be called after last Append
    virtual void Flush() = 0;
 
-   /*!
-    @pre `IsLeader()`
-    */
+   //! Called in exception handling after possibly unbalanced calls to Append
+   //! in different channels. Allows the sequence to repair consistency.
+   virtual void RepairChannels() = 0;
+
    virtual void InsertSilence(double t, double len) = 0;
 };
 

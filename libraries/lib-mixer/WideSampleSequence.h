@@ -63,7 +63,6 @@ public:
    //! Retrieve samples of one of the channels from a sequence in a specified
    //! format
    /*!
-    @copydetails SampleTrack::GetFloats()
     @param format sample format of the destination buffer
     @param backward retrieves samples from `start` (inclusive) to `start + len`
     if false, else from `start` (exclusive) to `start - len` in reverse order.

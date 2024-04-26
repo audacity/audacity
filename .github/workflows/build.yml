@@ -321,8 +321,11 @@ jobs:
           macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
           macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Install Apple codesigning certificates
-      uses: apple-actions/import-codesign-certs@v1
-      if: github.event_name != 'pull_request' && github.repository_owner == 'audacity'
+      uses: apple-actions/import-codesign-certs@v2
+      env:
+        P12_FILE_BASE64: ${{ secrets.APPLE_CERTIFICATE }}
+        P12_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      if: ${{ env.P12_FILE_BASE64 != '' && env.P12_PASSWORD != '' }}
       with:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}

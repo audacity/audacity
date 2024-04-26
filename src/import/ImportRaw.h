@@ -14,14 +14,14 @@
 #include <memory>
 
 class AudacityProject;
-class TrackList;
+class Track;
 class WaveTrackFactory;
 class wxString;
 class wxWindow;
 
 #include <vector>
 
-using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
+using TrackHolders = std::vector<std::shared_ptr<Track>>;
 
 void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString &fileName,
    WaveTrackFactory *trackFactory, TrackHolders &outTracks);

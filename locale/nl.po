@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 # 
 # Translators:
-# Paval Shalamitski <yehekim@gmail.com>, 2023
-# Thomas De Rocker, 2023
+# Paval Shalamitski <yehekim@gmail.com>, 2024
+# Thomas De Rocker, 2024
 # 
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2023-10-17 12:51+0000\n"
-"Last-Translator: Thomas De Rocker, 2023\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
+"PO-Revision-Date: 2024-04-06 16:47+0000\n"
+"Last-Translator: Thomas De Rocker, 2024\n"
 "Language-Team: Dutch (https://app.transifex.com/klyok/teams/690/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,40 +22,48 @@ msgstr ""
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "Stream is actief ... niet in staat om informatie te verzamelen.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "Nummer van standaard opname-apparaat: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "Nummer van standaard afspeelapparaat: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "Geen apparaten gevonden\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "Apparaatinfo niet beschikbaar voor %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "Apparaat-ID: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "Naam apparaat: %s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "Host-naam: %s\n"
@@ -167,8 +175,8 @@ msgstr ""
 "U zult geen audio kunnen opnemen of afspelen.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Fout: %s"
@@ -202,7 +210,6 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Fout"
 
@@ -370,8 +377,49 @@ msgstr "Bericht"
 msgid "Cannot proceed to upload."
 msgstr "Kan niet verder gaan om te uploaden."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not
+#. found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File not found"
+msgstr "Bestand niet gevonden"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr "Project werd afgesloten voordat momentopname werd gemaakt"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, c-format
+msgid "Invalid Response: %s"
+msgstr "Ongeldig antwoord: %s"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+msgid "Export failed"
+msgstr "Exporteren mislukt"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "Exporteerfout"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to attach to the Cloud project database"
+msgstr "Koppeling met de Cloud-projectdatabase mislukt"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to decompress the Cloud project block"
+msgstr "Decomprimeren van het Cloud-projectblok mislukt"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Failed to deserialize the response"
+msgstr "Deserialiseren van het antwoord mislukt"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -404,7 +452,7 @@ msgstr "%s toepassen..."
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "Ingebouwde effecten"
 
@@ -446,6 +494,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Interne fout"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "Rechthoekig"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "Bartlett"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "Hamming"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "Hann"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "Blackman"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Blackman-Harris"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "Welch"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "Gaussiaans (a = 2,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "Gaussiaans (a = 3,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "Gaussiaans (a = 4,5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software
 #. library
 #: libraries/lib-file-formats/FileFormats.cpp
@@ -484,9 +581,8 @@ msgstr ""
 msgid "File Error"
 msgstr "Bestandsfout"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "Alle bestanden"
 
@@ -562,6 +658,7 @@ msgstr ""
 "Klip op de help-knop voor tips over geschikte stations."
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -570,9 +667,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveTrack.cpp libraries/lib-wx-init/LogWindow.cpp
 #: modules/mod-cl/ExportCL.cpp modules/mod-nyq-bench/NyqBench.cpp
 #: src/TimerRecordDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/export/ExportProgressUI.h src/import/RawAudioGuess.cpp
-#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
-#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
+#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
+#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Waarschuwing"
 
@@ -585,22 +682,18 @@ msgstr ""
 "Niet in staat om te exporteren.\n"
 "Fout %s"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "Exporteren"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+msgid "Export completed with error."
+msgstr "Exporteren voltooid met fout."
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "Alle ondersteunde bestanden"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"‘%s’ \n"
-"is een MIDI-bestand, geen audiobestand. \n"
-"Audacity kan dit type bestand niet afspelen of bewerken, maar u kunt het wel \n"
-"bewerken via Bestand > Importeren > MIDI."
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -861,9 +954,7 @@ msgstr "LV2-effecten"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Voorziet ondersteuning voor LV2-effecten in Audacity"
 
-#: libraries/lib-math/Dither.cpp
-#: libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -881,55 +972,6 @@ msgstr "Driehoek"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Flexibel"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "Rechthoekig"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "Bartlett"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "Hamming"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "Hann"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "Blackman"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Blackman-Harris"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "Welch"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "Gaussiaans (a = 2,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "Gaussiaans (a = 3,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "Gaussiaans (a = 4,5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -966,6 +1008,57 @@ msgstr "32-bit float"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "Onbekend formaat"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "Opdracht"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Herhalen %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, omdat u snelkoppeling %s toegewezen hebt aan %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+"Er was een probleem bij uw laatste handeling. Als u denkt\n"
+"dat dit een bug is, vertel ons exact waar hij zich voordeed."
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "Uitgeschakeld"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "%s ongedaan maken"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "Ongedaan maken"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "%s opnieuw uitvoeren"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "Opnieuw uitvoeren"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1103,6 +1196,76 @@ msgstr "Nyquist Prompt"
 #, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "Kon het bestand niet openen om te uploaden: %s"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr ""
+"Er trad een fout op bij het initialiseren van de midi invoer/uitvoer-"
+"layer.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"U zult geen midi kunnen afspelen.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "Fout bij initialiseren van midi"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "Notentrack"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "Seconden"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "Beats"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "Ondersteunt uitvoer: %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "Ondersteunt invoer: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "Geopend: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Geselecteerd MIDI-opnameapparaat: %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "Geen MIDI-opnameapparaat gevonden voor '%s'.\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Geselecteerd MIDI-afspeelapparaat: %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "Geen MIDI-afspeelapparaat gevonden voor '%s'.\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -2095,7 +2258,7 @@ msgstr "CD-frames"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 msgid "Seconds && samples"
-msgstr "Seconden && samples"
+msgstr "Seconden en samples"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
@@ -2118,6 +2281,147 @@ msgstr "Milliseconden"
 #: src/prefs/TracksPrefs.cpp
 msgid "Samples"
 msgstr "Samples"
+
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "SQLite3 error"
+msgstr "SQLite3-fout"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "No error"
+msgstr "Geen fout"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Generic error"
+msgstr "Algemene fout"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Internal logic error in SQLite"
+msgstr "Interne logische fout in SQLite"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr "Toegang geweigerd"
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr "Callback-routine vroeg om afbreken"
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr "Het database-bestand is vergrendeld"
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr "Een tabel in de database is vergrendeld"
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr "Een malloc() is mislukt"
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr "Poging om te schrijven naar een alleen-lezen database"
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Operation terminated"
+msgstr "Handeling beëindigd"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr "I/O-fout opgetreden"
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr "De database-schijf-image is misvormd"
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr "Invoegen mislukt omdat de schijf vol is"
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Unable to open the database file"
+msgstr "Kan databasebestand niet openen"
+
+#. i18n-hint: database operation has failed because the lock protocol has
+#. failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr "Fout in vergrendelingsprotocol van database"
+
+#. i18n-hint: database operation has failed because the database schema has
+#. changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr "het database-schema is gewijzigd"
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds
+#. size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr "String of BLOB overschrijdt de maximale grootte"
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr "Afbreken wegens beperkingsovertreding"
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr "Gegevenstype komt niet overeen"
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr "Bibliotheek incorrect gebruikt"
+
+#. i18n-hint: database operation has failed because the large file support is
+#. disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr "Ondersteuning voor grote bestanden is uitgeschakeld"
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr "Toestemming geweigerd"
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Not used"
+msgstr "Niet gebruikt"
+
+#. i18n-hint: database operation has failed because the parameter is out of
+#. range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr "2de parameter voor sqlite3_bind buiten bereik"
+
+#. i18n-hint: database operation has failed because the file opened is not a
+#. database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File opened that is not a database file "
+msgstr "Bestand geopend dat geen database-bestand is"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+msgid "Unknown error"
+msgstr "Onbekende fout"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
@@ -2506,8 +2810,8 @@ msgid "Pre-processing"
 msgstr "Voorverwerking"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr "Tijd-uitgerekte audio renderen"
+msgid "Rendering Clip"
+msgstr "Clip renderen"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2543,7 +2847,6 @@ msgid "Problem details"
 msgstr "Details van probleem"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "Opmerkingen"
 
@@ -2577,7 +2880,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "Sluiten"
 
@@ -2682,17 +2985,6 @@ msgstr ""
 #: libraries/lib-wx-init/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"De handleiding lijkt niet geïnstalleerd te zijn. [[*URL*|Geef de "
-"handleidinng online weer]].<br><br>Om de handleiding altijd online weer te "
-"geven, wijzigt u de \"locatie van de handleiding\" in interface-voorkeuren "
-"naar \"internet\"."
-
-#: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html|"
 " download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
@@ -2736,18 +3028,24 @@ msgstr "Log weergeven voor details"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a
 #. button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Verstreken tijd:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Resterende tijd:"
 
@@ -2756,7 +3054,13 @@ msgstr "Resterende tijd:"
 msgid "Stop"
 msgstr "Stoppen"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "Annuleren"
 
@@ -2794,6 +3098,10 @@ msgstr ""
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "Voer nieuwe bestandsnaam in:"
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+msgid "Don't ask me again"
+msgstr "Niet meer vragen"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -3098,13 +3406,752 @@ msgid "Command Output"
 msgstr "Opdrachtregel uitvoer"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "OK"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "U hebt een bestandsnaam gekozen zonder extensie. Bent u zeker?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "Waiting for audio.com"
+msgstr "Wachten op audio.com"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid ""
+"An action on audio.com is required before you can continue. You can cancel "
+"this operation."
+msgstr ""
+"Er is een actie op audio.com vereist voordat u verder kunt gaan. U kunt deze"
+" bewerking annuleren."
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr "Opslaan naar audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+msgid "Generating audio preview..."
+msgstr "Audio-voorbeeld genereren..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Openen van audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+msgid "Synchronizing project"
+msgstr "Project synchroniseren"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr "Voorbeelden kunnen alleen worden bijgewerkt voor Cloud-projecten"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Save &To Cloud..."
+msgstr "Op&slaan naar Cloud..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr "Clo&ud-audiovoorbeeld bijwerken"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Fro&m Cloud..."
+msgstr "Ope&nen van Cloud..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "S&hare Audio..."
+msgstr "Aud&io delen..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr "Cloud"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Account"
+msgstr "Account"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Export behavior"
+msgstr "Gedrag exporteren"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "S&how 'How would you like to export?' dialog"
+msgstr "Venster 'Hoe wilt u exporteren?' weergeven"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Save behavior"
+msgstr "Gedrag bij opslaan"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr "Altijd vragen"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &save to cloud"
+msgstr "Altijd opslaan in de cloud"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to the co&mputer"
+msgstr "Altijd opslaan op de computer"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Temporary Cloud files directory"
+msgstr "Map voor tijdelijke Cloud-bestanden"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "Locatie:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "Bladeren..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr "dagen"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "&Remove temporary files after:"
+msgstr "Tijdelijke bestanden verwijderen na:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Preferences for Cloud"
+msgstr "Voorkeuren voor Cloud"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Kies een map voor tijdelijke bestanden"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "De map met tijdelijke bestanden kan niet op een FAT-station staan."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "Kan de voorkeur niet instellen."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+msgid "Failed."
+msgstr "Mislukt."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr "Synchroniseren naar audio.com... (%d%%)"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid ""
+"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+"Project synchroniseert met audio.com. Wilt u het synchronisatieproces "
+"stoppen?"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr "Wachten tot er ruimte vrijkomt"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+"Zodra u opslagruimte beschikbaar hebt gemaakt op audio.com, klikt u op "
+"Opnieuw proberen."
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "Audio delen"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "Werkbalk audio delen"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr "Account niet gekoppeld"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "Account koppelen"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "Account ontkoppelen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Don't show this again"
+msgstr "Dit niet meer weergeven"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr "Hoe wilt u opslaan?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to the Cloud"
+msgstr "Opslaan in de Cloud"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Your project is backed up privately on audio.com. You can access your work "
+"from any device and collaborate on your project with others."
+msgstr ""
+"Uw project wordt privé opgeslagen op audio.com. U hebt vanaf elk apparaat "
+"toegang tot uw werk en u kunt met anderen samenwerken aan uw project."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Save to Cloud"
+msgstr "Opslaan in de Cloud"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr "Op uw computer"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr "Bestanden worden opgeslagen op uw apparaat."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr "Opslaan op computer"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr "Mijn keuze onthouden en niet meer vragen."
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr "Hoe wilt u exporteren?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Share to audio.com"
+msgstr "Delen met audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Uploads an uncompressed audio file and generates a shareable link. This link"
+" allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+"Uploadt een ongecomprimeerd audiobestand en genereert een link om te delen. "
+"Met deze link kunnen anderen het bestand downloaden in .wav- of "
+".mp3-indeling."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Share to audio.com"
+msgstr "Delen met audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr "MP3's, WAVs, FLACs en andere formaten naar uw computer exporteren."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export to &computer"
+msgstr "Exporteren naar computer"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Don't show again"
+msgstr "Niet meer weergeven"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid ""
+"Cloud saving requires a free audio.com account linked to Audacity. Press "
+"\"Link account\" above to proceed."
+msgstr ""
+"Opslaan in de cloud vereist een gratis audio.com-account die is gekoppeld "
+"aan Audacity. Druk hierboven op \"account koppelen\" om verder te gaan."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr "Privé"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "Niet vermeld"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "Openbaar"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "Opslaan"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to computer..."
+msgstr "Opslaan op computer..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Project Name"
+msgstr "Naam project"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr "Er is een probleem opgetreden bij het synchroniseren van uw bestand"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid ""
+"Don't worry, your changes will be saved to a temporary location and will be "
+"synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+"Geen zorgen, uw wijzigingen worden opgeslagen op een tijdelijke locatie en "
+"worden gesynchroniseerd naar uw cloudkopie wanneer uw internetverbinding "
+"wordt hersteld."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "U bent niet aangemeld"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr "Meld aan bij audio.com om verder te gaan."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Aanmelden"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "Account koppelen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "We konden uw account niet koppelen. Probeer het opnieuw."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "Annuleren"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "Opnieuw proberen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Account met succes gekoppeld!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "Ok"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "Token ingeven om uw account te koppelen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Token"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "Doorgaan"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "Audio.com-account koppelen..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr "Dit project wordt niet langer in de Cloud opgeslagen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"This project was removed from audio.com and therefore cannot be saved at "
+"this time. "
+msgstr ""
+"Dit project is verwijderd van audio.com en kan daarom op dit moment niet "
+"worden opgeslagen."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"You can either save it to the Cloud as a new project, or save it to your "
+"computer."
+msgstr ""
+"U kunt het opslaan in de Cloud als een nieuw project of het opslaan op uw "
+"computer."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr "Opslaan op computer"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "Save to Cloud"
+msgstr "Opslaan in de Cloud"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr "Uw limiet voor projectopslag is bereikt."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid ""
+"You may need to remove older projects to make space available. For more "
+"options, visit audio.com"
+msgstr ""
+"U moet mogelijk oudere projecten verwijderen om ruimte vrij te maken. Ga "
+"voor meer opties naar audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+"U kunt dit project ook lokaal opslaan om te voorkomen dat wijzigingen "
+"verloren gaan."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Visit audio.com"
+msgstr "Bezoek audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr "Projectversie-conflict gedetecteerd"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"There's a newer version of this Audacity project on Audio.com. Saving this "
+"project will replace it as the newest version instead."
+msgstr ""
+"Er is een nieuwere versie van dit Audacity-project op Audio.com. Opslaan van"
+" dit project heeft tot gevolg dat het de nieuwere versie vervangt"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Save this project"
+msgstr "Dit project opslaan"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr "Weggooien en nieuwste versie openen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"Project contains unsaved changes. There's a newer version of this Audacity "
+"project on Audio.com. Discarding changes will open the latest version "
+"instead."
+msgstr ""
+"Project bevat niet-opgeslagen wijzigingen. Er is een nieuwere versie van dit"
+" Audacity-project op Audio.com. Het verwijderen van wijzigingen zal in "
+"plaats daarvan de nieuwste versie openen."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open local project"
+msgstr "Lokaal project openen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Cloud project conflict"
+msgstr "Cloud-project conflict"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"You are attempting to open a new active version of this project when there "
+"is already one open. Please select which version you wish to remain open."
+msgstr ""
+"U probeert een nieuwe actieve versie van dit project te openen terwijl er al"
+" een open is. Selecteer de versie die open moet blijven staan."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr "De momenteel geopende versie behouden"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open new version"
+msgstr "Nieuwe versie openen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr "Openen van Cloud"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "minder dan 1 minuut"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "een minuut geleden"
+msgstr[1] "%d minutes ago"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "een uur geleden"
+msgstr[1] "%d uur geleden"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Modified"
+msgstr "Gewijzigd"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "Account niet gemachtigd"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Loading projects list..."
+msgstr "Lijst met projecten laden..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to get projects list"
+msgstr "Lijst met projecten is niet opgehaald"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Cloud saved projects"
+msgstr "Projecten opgeslagen in de Cloud"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "Zoeken:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "Vorige"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "Volgende"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "Openen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "Weergeven in audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "Pagina %d van %d"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "Iedereen kan deze audio beluisteren."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"Only you and people you share a link with will be able to listen to this "
+"audio."
+msgstr ""
+"Alleen u en mensen met wie u een link deelt, kunnen deze audio beluisteren."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "Bent u zeker dat u wilt annuleren?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Uploaden naar Audio.com annuleren"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "Audio uploaden..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to"
+" your audio.com account before uploading."
+msgstr ""
+"We kunnen dit bestand niet uploaden. Probeer het opnieuw en zorg ervoor dat "
+"u een koppeling maakt met uw audio.com-account voordat u gaat uploaden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "Uploadfout"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "We kunnen dit bestand niet voorbereiden om te uploaden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "Uploaden afwerken..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Track-titel"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this
+#. context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
+"account\" above to proceed."
+msgstr ""
+"Voor het delen van audio is een gratis %s-account nodig die gekoppeld is aan"
+" Audacity. %%Druk op \"account koppelen\" hierboven om verder te gaan."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Druk op \"doorgaan\" om naar audio.com te uploaden"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "Audio voorbereiden..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr "U hebt geen toegang tot dit project."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr "U probeerde toegang te krijgen tot een project dat verlopen is."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr "Audacity had problemen om verbinding te maken met de server."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid ""
+"The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+"Het project is te groot om te uploaden. Sla het in plaats daarvan op uw "
+"computer op."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr "U hebt geen toegang tot dit project."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project could not be found."
+msgstr "Het project kon niet worden gevonden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr "De server reageerde met iets dat Audacity niet kon begrijpen."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr "Audacity is een interne fout tegengekomen."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr "Audio.com heeft een interne fout ondervonden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an unknown error."
+msgstr "Audacity heeft een onbekende fout ondervonden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Sync failed"
+msgstr "Sync mislukt"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr ""
+"Details van fout:\n"
+"%s"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "Syncing your project"
+msgstr "Uw project synchroniseren"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid ""
+"The project will sync in background while you work. You can check the sync "
+"status on the bottom right corner of Audacity at any time"
+msgstr ""
+"Het project wordt op de achtergrond gesynchroniseerd terwijl u werkt. U kunt"
+" de synchronisatiestatus op elk moment controleren in de rechterbenedenhoek "
+"van Audacity"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Doorgaan"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr "Gelukt!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid ""
+"All saved changes will now update to the cloud. You can manage this file "
+"from your uploaded projects page on audio.com"
+msgstr ""
+"Alle opgeslagen wijzigingen worden nu bijgewerkt naar de cloud. U kunt dit "
+"bestand beheren vanaf uw pagina met geüploade projecten op audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "View online"
+msgstr "Online weergeven"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr "Klaar"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Cloud project incomplete"
+msgstr "Cloud-project onvolledig"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"The latest version of this project was not fully uploaded to audio.com. You "
+"can load the last complete version instead."
+msgstr ""
+"De laatste versie van dit project is niet volledig geüpload naar audio.com. "
+"U kunt in plaats daarvan de laatste volledige versie laden."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Load latest"
+msgstr "Nieuwste laden"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"No version of this project has been fully uploaded to audio.com. It cannot "
+"be loaded."
+msgstr ""
+"Geen enkele versie van dit project is volledig geüpload naar audio.com. Het "
+"kan niet worden geladen."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr "U hebt deze upload naar audio.com geannuleerd"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr "Opnieuw proberen"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid ""
+"An action on audio.com is required before you can continue. Once you are "
+"done with it, click Retry"
+msgstr ""
+"Er is een actie op audio.com vereist voordat u verder kunt gaan. Klik op "
+"opnieuw proberen als u klaar bent"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3195,7 +4242,8 @@ msgid "Cutoff"
 msgstr "Cutoff"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Uitgeschakeld"
 
@@ -3500,6 +4548,14 @@ msgstr "Alle formaten weergeven"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Alle codecs weergeven"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Formats"
+msgstr "Formaten"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Codecs"
+msgstr "Codecs"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4144,6 +5200,90 @@ msgstr ""
 msgid "Invalid track offset in LOF file."
 msgstr "Ongeldige track-offset in LOF-bestand."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "Geëxporteerde Allegro (.gro)-bestanden slaan tijd op als:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Gelieve slechts een noot-track tegelijk te selecteren."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "Selecteer een noot-track."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI exporteren als:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "MIDI-bestand"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Allegro-bestand"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"U hebt een bestandsnaam gekozen met een niet-herkende extensie.\n"
+"Wilt u doorgaan?"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "MIDI exporteren"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "MIDI exporteren..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "MIDI van ‘%s’ is geïmporteerd"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "MIDI importeren"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Kon bestand %s niet openen: bestandsnaam te kort."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Kon bestand %s niet openen: onjuist bestandstype."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "Kon bestand %s niet openen."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "Selecteer een midi-bestand"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "MIDI- en Allegro-bestanden"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "MIDI-bestanden"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Allegro-bestanden"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "MIDI…"
+
 #: modules/mod-mp2/ExportMP2.cpp
 msgid "Version"
 msgstr "Versie"
@@ -4340,8 +5480,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "Alleen libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
-msgstr "Alleen libmp3lame.so.0"
+msgid "Only libmp3lame.so"
+msgstr "Alleen libmp3lame.so"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -4350,6 +5490,10 @@ msgstr "Primaire gedeelde objectbestanden"
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "Uitgebreide bibliotheken"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "Alleen libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4630,8 +5774,7 @@ msgstr "Naamloos"
 msgid "Nyquist Effect Workbench - "
 msgstr "Nyquist-effectenwerkbank - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "Nieuw"
 
@@ -4640,16 +5783,8 @@ msgid "New script"
 msgstr "Nieuw script"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "Openen"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "Script openen"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "Opslaan"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4770,10 +5905,6 @@ msgid "Go to previous S-expr"
 msgstr "Ga naar vorige S-expr"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "Volgende"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "Ga naar volgende S-expr"
 
@@ -4885,10 +6016,6 @@ msgid "memory allocation has failed"
 msgstr "geheugentoewijzing is mislukt"
 
 #: modules/mod-opus/ExportOpus.cpp
-msgid "Unknown error"
-msgstr "Onbekende fout"
-
-#: modules/mod-opus/ExportOpus.cpp
 msgid "Auto"
 msgstr "Auto"
 
@@ -4914,7 +6041,7 @@ msgstr "Buffer-overflow in OGG-pakket"
 
 #: modules/mod-opus/ExportOpus.cpp
 msgid "Unable to write OGG page header"
-msgstr "Niet in staat om OGG-paginahoofding te schrijven"
+msgstr "Niet in staat om OGG-pagina-header te schrijven"
 
 #: modules/mod-opus/ExportOpus.cpp
 msgid "Unable to write OGG page"
@@ -4977,8 +6104,8 @@ msgid "Opus files"
 msgstr "Opus-bestanden"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
-msgstr "bestand heeft het aantal kanalen in het midden veranderd."
+msgid "File has changed the number of channels in the middle."
+msgstr "Bestand heeft het aantal kanalen in het midden veranderd."
 
 #: modules/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
@@ -5515,8 +6642,8 @@ msgstr "%s-website: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "%s-software is auteursrecht %s 1999-2023 %s-team."
+msgid "%s software is copyright %s 1999-2024 %s Team."
+msgstr "%s-software is auteursrecht %s 1999-2024 %s-team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -5528,8 +6655,8 @@ msgstr "De naam %s is een geregistreerd handelsmerk."
 msgid "Build Information"
 msgstr "Programma-informatie"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "Ingeschakeld"
 
@@ -5721,10 +6848,10 @@ msgstr "Klikken en slepen om te wijzigen, dubbelklikken om te herstellen"
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
+msgid "Record/Playhead"
 msgstr "Opname/afspelen-kop"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "Tijdlijn"
 
@@ -5795,15 +6922,11 @@ msgstr "Minuten en seconden"
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
 msgid "Beats and Measures"
-msgstr "Beats en balken"
+msgstr "Beats en maten"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
 msgstr "Instellen van een loop-gebied maakt ook een audioselectie"
-
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "Weergave bijwerken tijdens afspelen"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
@@ -5815,12 +6938,12 @@ msgid "Set Loop To Selection"
 msgstr "Loop instellen op selectie"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "Afspelen-kop vastgezet"
+msgid "Scroll view to playhead"
+msgstr "Weergave naar afspeelkop scrollen"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Enable pinned play &head"
-msgstr "Vastgezette afspelen-kop inschakelen"
+msgid "Continuous scrolling"
+msgstr "Doorlopend scrollen"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5830,20 +6953,6 @@ msgstr "Kon %s niet verwijderen"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "Mislukt!"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr ""
-"Voorkeuren opnieuw instellen?\n"
-"\n"
-"Dit is een eenmalige vraag, na een 'installatie' waar u vroeg om de voorkeuren te herstellen."
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Audacity-voorkeuren opnieuw instellen"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6133,6 +7242,36 @@ msgstr "Audacity afsluiten"
 msgid "&Retry"
 msgstr "Opnieuw proberen"
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr "Project uit muziekbestand configureren"
+
+#: src/AudacityMirProject.cpp
+msgid "Automatic Music Configuration"
+msgstr "Automatische muziekconfiguratie"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+"Audacity heeft gedetecteerd dat dit bestand %s bpm is.\n"
+"Wilt u de muziekweergave inschakelen en het projecttempo instellen op %s?"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+"Audacity heeft gedetecteerd dat een of meerdere bestanden %s bpm zijn.\n"
+"Wilt u de muziekweergave inschakelen en het projecttempo instellen op %s?"
+
+#: src/AudacityMirProject.cpp
+msgid "Music Import"
+msgstr "Muziek importeren"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -6172,10 +7311,6 @@ msgstr ""
 msgid "Remember my choice and don't ask again"
 msgstr "Mijn keuze onthouden en niet meer vragen."
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Doorgaan"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Automatisch herstel na crash"
@@ -6195,14 +7330,14 @@ msgid "Recoverable &projects"
 msgstr "Herstelbare projecten"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Selecteren"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "Naam"
 
@@ -6281,7 +7416,7 @@ msgstr "Macro %s bestaat al. Wilt u hem vervangen?"
 msgid "Export Macro"
 msgstr "Macro exporteren"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "Effect"
 
@@ -6415,14 +7550,6 @@ msgstr "Toepassen…"
 msgid "File"
 msgstr "Bestand"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "Annuleren"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "Verwijderen"
@@ -6535,14 +7662,6 @@ msgstr "Weet u zeker dat u %s wilt verwijderen?"
 #, c-format
 msgid "&Repeat %s"
 msgstr "%s herhalen"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Herhalen %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
@@ -6742,19 +7861,6 @@ msgstr "TEST MISLUKT!!!\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "Benchmark met succes voltooid.\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
-#. Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
-"U moet eerst wat audio selecteren om '%s' te laten op werken.\n"
-"\n"
-"Ctrl + A selecteert alle audio."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize,
 #. Cut, Fade.
@@ -7044,7 +8150,7 @@ msgstr "dB"
 msgid "Scroll"
 msgstr "Scrollen"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "Zoomen"
 
@@ -7092,10 +8198,10 @@ msgstr ""
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
-"Audio kon niet worden geanalyseerd. Dit kan komen door een uitgerekte clip.\n"
+"Audio kon niet worden geanalyseerd. Dit kan komen door een clip die uitgerekt is of waarvan de toonhoogte gewijzigd is.\n"
 "Probeer uitgerekte clips te resetten of de tracks te mixen en renderen voordat u ze analyseert."
 
 #: src/FreqWindow.cpp
@@ -7184,7 +8290,7 @@ msgstr "Geschiedenis"
 msgid "&Manage History"
 msgstr "Geschiedenis beheren"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "Bewerking"
 
@@ -7243,11 +8349,6 @@ msgstr "Niet-compatibele plugin(s) gevonden"
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "Plugins beheren"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "Doorgaan"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7353,10 +8454,34 @@ msgstr "Naam van track invoeren"
 msgid "Label Track"
 msgstr "Labeltrack"
 
+#: src/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "SubRip-tekstbestand"
+
+#: src/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "WebVTT-bestand"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "Labels"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "Standaard"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Uitgebreid (met frequentiebereiken)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Stijl geëxporteerd label:"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "Het importeren van WebVTT-bestanden wordt momenteel niet ondersteund."
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7400,62 +8525,19 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Audacity-project wordt geopend"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity Karaoke%s"
-
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "Karaoke"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr ""
-"Er trad een fout op bij het initialiseren van de midi invoer/uitvoer-"
-"layer.\n"
-
-#: src/MIDIPlay.cpp
+#: src/MenuCreator.cpp
 msgid ""
-"You will not be able to play midi.\n"
-"\n"
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
 msgstr ""
-"U zult geen midi kunnen afspelen.\n"
-"\n"
+"De sneltoetsen van de volgende opdrachten zijn verwijderd omdat hun "
+"standaard sneltoets nieuw of gewijzigd is, en dezelfde sneltoets is die u "
+"aan een andere opdracht toegewezen hebt."
 
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "Fout bij initialiseren van midi"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "%s ongedaan maken"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "Ongedaan maken"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "%s opnieuw uitvoeren"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "Opnieuw uitvoeren"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Er was een probleem bij uw laatste handeling. Als u denkt\n"
-"dat dit een bug is, vertel ons exact waar hij zich voordeed."
-
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "Uitgeschakeld"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "Sneltoetsen zijn verwijderd"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7526,49 +8608,6 @@ msgstr "Balansschuif verplaatst"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "Mixer"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "Notentrack"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "Ondersteunt uitvoer: %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "Ondersteunt invoer: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "Geopend: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Geselecteerd MIDI-opnameapparaat: %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "Geen MIDI-opnameapparaat gevonden voor '%s'.\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Geselecteerd MIDI-afspeelapparaat: %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "Geen MIDI-afspeelapparaat gevonden voor '%s'.\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7685,111 +8724,7 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "Plugins beheren"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"Selecteer effecten, klik op de in/uitschakelen-knop, en klik daarna op OK."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "Weergeven:"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "Alles weergeven"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "Alles"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "Uitgeschakelde weergeven"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "Uitgeschakeld"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "Ingeschakelde weergeven"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "Ingeschakeld"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "Nieuwe weergeven"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "Nieuwe"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "Status"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "Pad"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "Alles selecteren"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "Alles wissen"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "Opnieuw scannen"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "Inschakelen"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "Uitschakelen"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"Effecten of opdrachten inschakelen:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"Effect of opdracht inschakelen:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7798,26 +8733,73 @@ msgstr ""
 "Effect of opdracht op %s kon niet registreren:\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Enable"
+msgstr "Inschakelen"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "Type"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "Pad"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Alles"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "Generator"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Analyzer"
+msgstr "Analyzer"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "Gereedschap"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "Plugins beheren"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Native Audacity"
+msgstr "Originele Audacity"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Show:"
+msgstr "Weergeven:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Type:"
+msgstr "Type:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&ategory:"
+msgstr "C&ategorie:"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "Zoeken:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Plugin"
+msgstr "Plug-in"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Rescan"
+msgstr "Opnieuw scannen"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "Zoeken naar plugins"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "Er was een probleem bij het afdrukken."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "Afdrukken"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "Pagina-instelling…"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "Afdrukken…"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -8155,7 +9137,7 @@ msgstr ""
 "Het project overschrijdt de maximale grootte van 4 GB bij het schrijven naar"
 " een bestandssysteem dat als FAT32 geformatteerd is."
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "%s Opgeslagen"
@@ -8345,6 +9327,14 @@ msgstr "Selecteer te importeren stream(s)"
 #, c-format
 msgid "Importing %s"
 msgstr "Importeren van %s"
+
+#: src/ProjectFileManager.cpp
+msgid "Music Information Retrieval"
+msgstr "Ophalen van muziekinformatie"
+
+#: src/ProjectFileManager.cpp
+msgid "Analyzing imported audio"
+msgstr "Geïmporteerde audio analyseren"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8554,7 +9544,7 @@ msgstr "Geen effect"
 msgid "Get more effects..."
 msgstr "Meer effecten verkrijgen..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "Analyseren"
 
@@ -8603,165 +9593,6 @@ msgstr "Realtime effecten"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "Realtime effecten voor %s"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "Schermopname-venster"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "Locatie kiezen om bestanden op te slaan"
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "Afbeeldingen opslaan in:"
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "Kiezen…"
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "Volledig venster of scherm opnemen"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "Herschalen klein"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "Herschalen groot"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "Blauwe achtergrond"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "Witte achtergrond"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "Alleen venster opnemen"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "Volledig venster opnemen"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "Venster plus opnemen"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "Volledig scherm opnemen"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "5 seconden wachten en voorste venster/dialoog opnemen"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "Een gedeelte van het projectvenster opnemen"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "Alle werkbalken"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "Alle effecten"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "Alle scriptables"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "Alle voorkeuren"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "Track-paneel"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "Liniaal"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and
-#. musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "Tracks"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "Eerste track"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "Tweede track"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "Schaal"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "Een seconde"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "Tien seconden"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "Een minuut"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "Vijf minuten"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "Een uur"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "Korte tracks"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "Medium tracks"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "Lange tracks"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "Kies een locatie om screenshot-afbeeldingen op te slaan"
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "Opnemen mislukt!"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Lang bericht"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "Screenshot..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8867,7 +9698,7 @@ msgstr "Wat is nieuw in Audacity %s"
 msgid ""
 "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
 msgstr ""
-"<p>In deze versie hebben we beats en maten, tijd rekken en meer "
+"<p>In deze versie hebben we beats en maten, tijd-uitrekken en meer "
 "toegevoegd.<br/>"
 
 #: src/SplashDialog.cpp
@@ -8923,10 +9754,6 @@ msgstr "Niet meer weergeven bij het opstarten"
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Naam artiest"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "Track-titel"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9421,6 +10248,10 @@ msgstr "Geëxporteerde tags"
 msgid "Stereo, 999999Hz"
 msgstr "Stereo, 999999Hz"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "Track-paneel"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9594,143 +10425,6 @@ msgstr "Richtingwisselingen  -- gemiddeld: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Kalibratie voltooid"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "Audio delen"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "Werkbalk audio delen"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "Account koppelen"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "Token ingeven om uw account te koppelen"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "Token"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "Audio.com-account koppelen..."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "We konden uw account niet koppelen. Probeer het opnieuw."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "Opnieuw proberen"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "Account met succes gekoppeld!"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "Ok"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "Openbaar"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "Iedereen kan deze audio beluisteren."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "Niet vermeld"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
-msgstr ""
-"Alleen u en mensen met wie u een link deelt, kunnen deze audio beluisteren."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "Bent u zeker dat u wilt annuleren?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Uploaden naar Audio.com annuleren"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "Audio uploaden..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to"
-" your audio.com account before uploading."
-msgstr ""
-"We kunnen dit bestand niet uploaden. Probeer het opnieuw en zorg ervoor dat "
-"u een koppeling maakt met uw audio.com-account voordat u gaat uploaden."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "Uploadfout"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "Exporteerfout"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "We kunnen dit bestand niet voorbereiden om te uploaden."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "Uploaden afwerken..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "Anoniem"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "Account koppelen"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this
-#. context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid ""
-"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
-"account\" above to proceed."
-msgstr ""
-"Voor het delen van audio is een gratis %s-account nodig die gekoppeld is aan"
-" Audacity. %%Druk op \"account koppelen\" hierboven om verder te gaan."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Druk op \"doorgaan\" om naar audio.com te uploaden"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "Account ontkoppelen"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "Audio voorbereiden..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating
 #. punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
@@ -9760,34 +10454,6 @@ msgstr "%s is geen parameter die aanvaard wordt door %s"
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "Ongeldige waarde voor parameter \"%s\" moet %s zijn"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "Opdracht"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-"\n"
-"* %s, omdat u snelkoppeling %s toegewezen hebt aan %s"
-
-#: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
-msgstr ""
-"De sneltoetsen van de volgende opdrachten zijn verwijderd omdat hun "
-"standaard sneltoets nieuw of gewijzigd is, en dezelfde sneltoets is die u "
-"aan een andere opdracht toegewezen hebt."
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "Sneltoetsen zijn verwijderd"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9882,9 +10548,19 @@ msgstr "Opdrachten"
 msgid "Menus"
 msgstr "Menu's"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "Voorkeuren"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and
+#. musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "Tracks"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -10104,113 +10780,6 @@ msgstr "Haalt de waarde op van een enkele voorkeur."
 msgid "Sets the value of a single preference."
 msgstr "Stelt de waarde in van een enkele voorkeur."
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "Screenshot"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "Venster"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "Volledig venster"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "Venster plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "Volledig scherm"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "Werkbalken"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "Effecten"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "Scriptables"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "Track-paneel"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "Eerste twee tracks"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "Eerste drie tracks"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "Eerste vier tracks"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "Tracks plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "Eerste track plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "Alle tracks"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "Alle tracks plus"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "Blauw"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "Wit"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "Pad:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "Wat opnemen:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "Achtergrond:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "Naar boven brengen"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "Fout bij proberen opslaan van bestand: %s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "Schermopname (kort formaat)..."
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "Neemt screenshots."
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "Tijd selecteren"
@@ -10375,8 +10944,7 @@ msgid "Edited Envelope"
 msgstr "Envelope bewerkt"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "Verloop"
 
@@ -10567,6 +11135,10 @@ msgstr "Track instellen..."
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
 msgstr "Stelt verscheidene waarden in voor een track."
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "Lang bericht"
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
@@ -11824,10 +12396,6 @@ msgid "Preview effect"
 msgstr "Effect-voorbeeld"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "Voorbeeld stoppen"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "Toepassen"
 
@@ -11899,13 +12467,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "Equalizer"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Filtercurve EQ"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Grafische EQ"
 
@@ -13721,10 +14288,6 @@ msgstr ""
 "aangebracht. Het inschakelen van deze optie zorgt voor deze compensatie, "
 "maar het kan zijn dat het niet voor alle LADSPA-effecten werkt."
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "Generator"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Kon effect niet instantiëren"
@@ -14025,7 +14588,7 @@ msgid "M&ultiple Files"
 msgstr "Meerdere bestanden"
 
 #: src/export/ExportAudioDialog.cpp
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "Huidige selectie"
 
 #: src/export/ExportAudioDialog.cpp
@@ -14129,10 +14692,6 @@ msgstr "Alle geselecteerde audio is gedempt."
 msgid "Continue to export remaining files?"
 msgstr "Doorgaan met exporteren van resterende bestanden?"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "Exporteren"
-
 #: src/export/ExportFilePanel.cpp
 msgid "Custom Sample Rate"
 msgstr "Aangepaste samplerate"
@@ -14149,10 +14708,6 @@ msgstr "Bestandsnaam:"
 #: src/export/ExportFilePanel.cpp
 msgid "Fo&lder:"
 msgstr "Map:"
-
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "Bladeren..."
 
 #: src/export/ExportFilePanel.cpp
 msgid "&Format:"
@@ -14209,42 +14764,6 @@ msgstr "%d Hz (aangepast)"
 msgid "Other..."
 msgstr "Andere…"
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Gelieve slechts een noot-track tegelijk te selecteren."
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "Selecteer een noot-track."
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI exporteren als:"
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "MIDI-bestand"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Allegro-bestand"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"U hebt een bestandsnaam gekozen met een niet-herkende extensie.\n"
-"Wilt u doorgaan?"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "MIDI exporteren"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "MIDI exporteren..."
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -14274,54 +14793,6 @@ msgstr "Kanaal: %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "Geen formaatspecifieke opties"
-
-#: src/export/ExportProgressUI.cpp
-msgid "Export completed with error."
-msgstr "Exporteren voltooid met fout."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "MIDI van ‘%s’ is geïmporteerd"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "MIDI importeren"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Kon bestand %s niet openen: bestandsnaam te kort."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Kon bestand %s niet openen: onjuist bestandstype."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "Kon bestand %s niet openen."
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "Selecteer een midi-bestand"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "MIDI- en Allegro-bestanden"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "MIDI-bestanden"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Allegro-bestanden"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "MIDI…"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14810,8 +15281,8 @@ msgid "&Export Audio..."
 msgstr "Audio exporteren..."
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
-msgstr "Andere exporteren"
+msgid "Expo&rt Other"
+msgstr "Ande&re exporteren"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -14835,14 +15306,6 @@ msgid "E&xit"
 msgstr "Afsluiten"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "Verborgen bestandsmenu"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "Exporteren als FLAC"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "Exporteren als MP3"
 
@@ -14853,6 +15316,10 @@ msgstr "Exporteren als WAV"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "Exporteren als OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "Exporteren als FLAC"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14895,18 +15362,6 @@ msgstr "Opgelost"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Audio-apparaatinfo"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "Snelle oplossing..."
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "Ermee beginnen"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "Audactiy-handleiding"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -15288,6 +15743,10 @@ msgid "&Select"
 msgstr "Selecteren"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "Alles"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "Geen"
 
@@ -15535,8 +15994,8 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "Tijdens afspelen grote stap vooruitspoelen"
 
 #: src/menus/TimelineMenus.cpp
-msgid "&Timeline"
-msgstr "&Tijdlijn"
+msgid "Tim&eline"
+msgstr "Tijdlijn"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16177,10 +16636,6 @@ msgid "Zoom &Toggle"
 msgstr "Zoomen aan/uit"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "Geavanceerd verticaal zoomen"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "Track-grootte"
 
@@ -16217,7 +16672,7 @@ msgid "Skip to Selection End"
 msgstr "Naar selectie-einde gaan"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "Extra menu's inschakelen"
 
 #: src/menus/ViewMenus.cpp
@@ -16427,28 +16882,12 @@ msgid "Temporary files directory"
 msgstr "Map voor tijdelijke bestanden"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "Locatie:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "De map met tijdelijke bestanden kan niet op een FAT-station staan."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
 msgstr "Bladeren..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Vrije ruimte:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Kies een map voor tijdelijke bestanden"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "Kan de voorkeur niet instellen."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16530,6 +16969,12 @@ msgstr "'Exporteren'-map kan niet worden ingesteld."
 msgid "'Macro Output' directory cannot be set."
 msgstr "'Macro-uitvoer'-map kan niet worden ingesteld."
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "Effecten"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "Voorkeuren voor effecten"
@@ -16575,6 +17020,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "Organisatie van realtime effect:"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr "Scannen van effecten bij opstarten overslaan"
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "Instructieset"
 
@@ -16583,7 +17032,7 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "SSE/SSE2/.../AVX gebruiken"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
+msgid "Open Plugin &Manager"
 msgstr "Plugin-beheerder openen"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16764,14 +17213,6 @@ msgstr "Vooral links-naar-rechts layouts gebruiken in RNL-talen"
 msgid "Never use comma as decimal point"
 msgstr "Nooit een komma als decimaalteken gebruiken"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "Tijdlijn-tooltips weergeven"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "Scrub-liniaal weergeven"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
@@ -16790,29 +17231,26 @@ msgid "Preferences for ImportExport"
 msgstr "Voorkeuren voor importeren/exporteren"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "Standaard"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr "Overschakelen naar beats en maten en uitlijnen op muzikaal raster"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Uitgebreid (met frequentiebereiken)"
+msgid "&Ask me each time"
+msgstr "Mij elke keer vragen"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "Seconden"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "Beats"
+msgid "Do &nothing"
+msgstr "Niets doen"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "Stijl geëxporteerd label:"
+msgid "Music Imports"
+msgstr "Geïmporteerde muziek"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "Geëxporteerde Allegro (.gro)-bestanden slaan tijd op als:"
+msgid "When Audacity detects music in file imported on empty project"
+msgstr ""
+"Wanneer Audacity muziek detecteert in een bestand dat is geïmporteerd in een"
+" leeg project"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16869,10 +17307,6 @@ msgstr "Weergeven op naam"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "Weergeven op toets"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "Zoeken:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -17058,267 +17492,39 @@ msgstr "Voorkeuren voor module"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
-"Dit zijn experimentele modules. Schakel ze alleen in als u de Audacity-handleiding gelezen heeft\n"
-"en weet wat u aan het doen bent."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
-msgstr ""
-"  'Vragen' betekent dat Audacity zal vragen of u de modules wilt laden elke "
-"keer als het opstart."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
-"  'Mislukt' betekent dat Audacity denk dat de module defect is en weigert ze"
-" te starten."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr "  'Nieuw' betekent dat er nog geen keuze gemaakt werd."
+"Modules zijn optionele onderdelen van Audacity die bepaalde functionaliteit mogelijk maken, zoals importeren en exporteren. \n"
+"Het is meestal niet nodig om deze instellingen te wijzigen."
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr ""
 "Wijzigingen aan deze instellingen hebben alleen effect wanneer Audacity "
-"opstart."
+"opnieuw gestart wordt.\n"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Vragen"
+msgid "Always ask"
+msgstr "Altijd vragen"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "Mislukt"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "Geen modules gevonden"
+msgid "No choice made"
+msgstr "Geen keuze gemaakt"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
+"Fout: er zijn geen modules gevonden. Dit kan duiden op een foutieve "
+"installatie."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "Module"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "Muis"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "Voorkeuren voor muis"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "Muis-bindingen (standaardwaarden, niet configureerbaar)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "Gereedschap"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "Resultaat"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "Muisgebruik"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "Linksklikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "Selectiepunt plaatsen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "Links-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "Selectie maken"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Shift-linksklikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "Selectiegebied uitbreiden"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "Links-dubbelklikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "Clip of volledige track selecteren"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "Wiel-draaien"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "Scrub-snelheid wijzigen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "Inzoomen op punt"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "Inzoomen op gebied"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "hetzelfde als rechts-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "Rechtsklikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "Een stap uitzoomen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "Rechts-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "hetzelfde als links-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "Shift-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "Uitzoomen op gebied"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "Middel-klikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "Standaard zoom"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "Versterkingsverloop wijzigen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "Tekenen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "Sample-waarde wijzigen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt-Linksklikken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "Glad maken"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "Meerdere samples wijzigen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "-links-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "Slechts één sample wijzigen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "Multi"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "hetzelfde als bij selecteren"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "hetzelfde als bij zoomen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "Elke"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "Tracks omhoog of omlaag scrollen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Shift-wiel-draaien"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "Golfvorm scrollen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "-wiel-draaien"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "Golfvorm in- of uitzoomen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "-Shift-wiel-draaien"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "Bereik verticale schaal golfvorm (dB)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Shift-links-slepen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "Alle clips in track links/rechts verplaatsen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr "met clip-hendels"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "Clip naar andere track verplaatsen"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "Clip links/rechts of tussen tracks verplaatsen"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -17438,6 +17644,10 @@ msgstr "Uitval detecteren"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr "Geluidsgeactiveerd opnemen"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "Inschakelen"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17623,6 +17833,10 @@ msgstr "Voorkeuren voor spectrum"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "Voorkeuren gebruiken"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "Schaal"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17848,12 +18062,12 @@ msgid "Enable cut &lines"
 msgstr "Snijlijnen inschakelen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
-msgstr "Slepen van selectieranden inschakelen"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
 msgstr "Het bewerken van een clip kan andere clips verschuiven"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "&Always paste audio as new clips"
+msgstr "Audio altijd plakken als nieuwe clips"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17866,14 +18080,6 @@ msgstr "Typen om een label aan te maken"
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr "Dialoogvenster gebruiken voor de naam van een nieuw label"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr "Links van nul scrollen inschakelen"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "Geavanceerd verticaal zoomen"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -18032,22 +18238,6 @@ msgstr "Projecten opslaan versus audio exporteren"
 msgid "Saving &empty project"
 msgstr "Leeg project opslaan"
 
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr "Downmixen naar mono tijdens het exporteren"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr "Downmixen naar stereo tijdens het exporteren"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Downmixen bij exporteren (aangepaste FFmpeg of extern programma)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr "Ontbrekende bestandsnaam-extensie tijdens het exporteren"
-
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
 msgid "Waveforms"
@@ -18069,7 +18259,7 @@ msgstr "Audio-instelling"
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Host"
-msgstr "&Host"
+msgstr "Host"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Playback Device"
@@ -18374,60 +18564,6 @@ msgstr "Opnamevolume verhogen"
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "Opnamevolume verlagen"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "Scrubben"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "Zoeken"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "Scrub-liniaal"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "Scrubben"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "Scrubben stoppen"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "Scrubben starten"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "Zoeken stoppen"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "Zoeken starten"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "Scrub-liniaal verbergen"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "Scrub-werkbalk"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18768,7 +18904,6 @@ msgid "&MIDI Device Info..."
 msgstr "MIDI-apparaatinfo..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom"
 " region."
@@ -18777,28 +18912,20 @@ msgstr ""
 " op een bepaald gebied te zoomen."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "Rechtsklikken voor menu."
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "Zoom herstellen"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "Shift-rechtsklikken"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "Links-klikken/links-slepen"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "Shift-linksklikken"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18818,28 +18945,59 @@ msgstr "Notentrack uitrekken"
 msgid "Stretch"
 msgstr "Uitrekken"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "Snelheid wijzigen"
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
+msgid "Click to open clip context menu."
+msgstr "Klikken om het contextmenu van de clip te openen."
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed"
-msgstr "Clip-snelheid"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr "Toonhoogte van clip herstellen"
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Invalid clip speed"
-msgstr "Ongeldige clip-snelheid"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Not enough space"
+msgstr "Niet genoeg ruimte"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed must be a positive value"
-msgstr "Clip-snelheid moet een positieve waarde zijn"
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "There is not enough space to stretch the clip to the selected speed"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "There is not enough space to expand the clip to its original speed."
 msgstr ""
-"Er is niet voldoende ruimte om de clip uit te rekken tot de geselecteerde "
-"snelheid"
+"Er is niet genoeg ruimte om de clip uit te breiden tot zijn oorspronkelijke "
+"snelheid."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Speed"
+msgstr "Snelheid van clip herstellen"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip pitch."
+msgstr "Klikken om toonhoogte van clip te herstellen."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr ""
+"Klikken om de toonhoogte van de clip te wijzigen, Cmd + klikken om te "
+"herstellen."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+"Klikken om de toonhoogte van de clip te wijzigen, Ctrl + klikken om te "
+"herstellen."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip speed."
+msgstr "Klikken om de snelheid van de clip te herstellen."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr ""
+"Klikken om de snelheid van de clip te wijzigen, Cmd + klikken om te "
+"herstellen."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
+"Klikken om de snelheid van de clip te wijzigen, Ctrl + klikken om te "
+"herstellen."
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18857,6 +19015,46 @@ msgstr "Uitvouwen"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "Snijlijn verwijderd"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Pitch and Speed"
+msgstr "Toonhoogte en snelheid"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Pitch"
+msgstr "Toonhoogte van clip"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "se&mitones:"
+msgstr "semitonen:"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr "centiemen:"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Speed"
+msgstr "Snelheid van clip"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr "Snelheidspercentage: "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "General"
+msgstr "Algemeen"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr "Optimaliseren voor stem"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Speed"
+msgstr "Snelheid gewijzigd"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Pitch"
+msgstr "Toonhoogte gewijzigd"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18883,6 +19081,11 @@ msgstr "k"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "Passend zoomen"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Reset Zoom"
+msgstr "Zoom herstellen"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18919,6 +19122,17 @@ msgstr "Volgende hogere piekfrequentie"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "Volgende lagere piekfrequentie"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid ""
+"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+"Slepen om een zoomgebied aan te duiden. Rechtsklikken voor menu. "
+"Ctrl+scrollen om te zoomen."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "Rechtsklikken voor menu. Ctrl+scrollen om te zoomen."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid ""
@@ -19002,12 +19216,12 @@ msgid "Rename Clip..."
 msgstr "Naam van clip wijzigen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Change Speed..."
-msgstr "Snelheid wijzigen…"
+msgid "Pitch and Speed..."
+msgstr "Toonhoogte en snelheid..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
-msgstr "Uitrekken van clip renderen"
+msgid "Render Pitch and Speed"
+msgstr "Toonhoogte en snelheid renderen"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
@@ -19044,16 +19258,32 @@ msgid "Rendered time-stretched audio"
 msgstr "Tijd-uitgerekte audio gerenderd"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch Shift"
+msgstr "Toonhoogte wijzigen"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Changed Pitch Shift"
+msgstr "Toonhoogte gewijzigd"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
 msgstr "Naam van clip wijzigen..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Change &Speed..."
-msgstr "Snelheid wijzigen..."
+msgid "&Pitch and Speed..."
+msgstr "Toonhoogte en snelheid..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
-msgstr "Uitrekken van clip renderen"
+msgid "Render Pitch and &Speed"
+msgstr "Toonhoogte en snelheid renderen"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Up"
+msgstr "Toonhoogte omhoog"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Down"
+msgstr "Toonhoogte omlaag"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19280,14 +19510,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% rechts"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "Zoom x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "Zoom x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "Halve golf"
 
@@ -19389,6 +19611,10 @@ msgstr "Nieuwe tijd-track aangemaakt"
 msgid "&Time Track"
 msgstr "Tijd-track"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "Rechtsklikken voor menu."
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid ""
@@ -19427,8 +19653,8 @@ msgid "Brush tool selection"
 msgstr "Penseelgereedschap-selectie"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "Naam..."
+msgid "Re&name Track..."
+msgstr "Naam track wijzigen..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19477,6 +19703,10 @@ msgstr "Verloop aangepast."
 #. "Seeking" is normal speed playback but with skips, ...
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
+msgstr "Scrubben"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
 msgstr "Scrubben"
 
 #: src/tracks/ui/Scrubbing.cpp
@@ -19611,6 +19841,10 @@ msgstr "Track selecteren"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "Ctrl+klikken om te deselecteren"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Delete Track"
+msgstr "Track verwijderen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -20047,8 +20281,7 @@ msgstr "Shelf-filter"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20058,8 +20291,7 @@ msgstr "Steve Daulton"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny
-#: plug-ins/pluck.ny plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny
-#: plug-ins/vocoder.ny
+#: plug-ins/pluck.ny plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "GNU General Public License v2.0"
 
@@ -20183,9 +20415,8 @@ msgstr "Spectrale bewerking shelves"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20369,7 +20600,7 @@ msgstr "Fout.~%Ongeldige selectie.~%Meer dan 2 audioclips geselecteerd."
 msgid ""
 "Error.~%Invalid selection.~%Empty space at start/ end of the selection."
 msgstr ""
-"Fout.~%Ongeldige selectie.~%Er is een lege ruimte bij begin/einde van de "
+"Fout.~%Ongeldige selectie.~1%Er is een lege ruimte bij begin/einde van de "
 "selectie."
 
 #: plug-ins/crossfadeclips.ny
@@ -20477,50 +20708,6 @@ msgstr "Aantal echo's"
 #: plug-ins/delay.ny
 msgid "Allow duration to change"
 msgstr "Duurwijziging toestaan"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "EQ XML naar TXT converter"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "Doel-EQ-effect selecteren"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "Equalizer-XML-bestand"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "XML-bestand"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "Als uitvoer-tekstbestand bestaat"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "Nummer achteraan toevoegen"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "Overschrijven"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "Fout.~%Niet in staat om bestand te openen~%~s"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "Fout.~%Overschrijven van bestand niet toegestaan:~%\"~a.txt\""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Fout.~%Bestand kan niet geschreven worden:~%\"~a.txt\""
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -20790,10 +20977,6 @@ msgstr ""
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Limiter"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Type"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -21262,10 +21445,6 @@ msgid "Minimal"
 msgstr "Minimaal"
 
 #: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "Alles"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr "Optionele header-tekst"
 
@@ -21590,157 +21769,6 @@ msgstr "Beginfase (graden)"
 msgid "Wet level (percent)"
 msgstr "Wet niveau (procent)"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "Stem-reductie en -isolatie"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "Robert Haenggi"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "Stem verwijderen: naar mono"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "Stem verwijderen"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "Stem isoleren"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "Stem isoleren en inverteren"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "Centrum verwijderen: naar mono"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "Centrum verwijderen"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "Centrum isoleren"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "Centrum isoleren en inverteren"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "Sterkte"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr "Low cut voor stemmen (Hz)"
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr "High cut voor stemmen (Hz)"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-"Gemiddelde x: ~a, y: ~a\n"
-"                    Covariantie x y: ~a\n"
-"                    Gemiddelde variantie x: ~a, y: ~a\n"
-"                    Standaarddeviatie x: ~a, y: ~a\n"
-"                    Correlatiecoëfficiënt: ~a\n"
-"                    Determinatiecoëfficiënt: ~a\n"
-"                    Variatie van residuelen: ~a\n"
-"                    y is gelijk aan ~a plus ~a maal x~%"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
-msgstr ""
-"Pan-positie: ~a~%Het linker en rechter kanaal zijn met ongeveer ~a % "
-"gecorreleerd. Dit betekent:~%~a~%"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-" - De twee kanalen zijn identiek, dit is dubbel mono.\n"
-"                Het centrum kan niet verwijderd worden.\n"
-"                Enige resterende verschillen kunnen veroorzaakt worden door lossy coderen."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-" - De twee kanalen zijn sterk gerelateerd, dit is bijna mono of extreem gepand.\n"
-"                De centrumextractie zal hoogstwaarschijnlijk van lage kwaliteit zijn."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
-msgstr ""
-" - Een tamelijk goeie waarde, ten minste stereo in gemiddeld en niet te wijd"
-" gespreid."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
-msgstr ""
-" - Een ideale waarde voor stereo.\n"
-"                De centrum-extractie hangt echter ook af van de gebruikte galm."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-" - De twee kanalen zijn bijna niet gerelateerd.\n"
-"                Ofwel heeft u alleen ruis of het stuk is gemasterd op een niet-gebalanceerde manier.\n"
-"                De centrum-extractie kan echter nog steeds goed zijn."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-" - Hoewel de track stereo is, is het veld duidelijk extra wijd.\n"
-"                Dit kan rare effecten tot gevolg hebben.\n"
-"                Vooral wanneer via slechts een speaker afgespeeld wordt."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-" - De twee kanalen zijn bijna identiek.\n"
-"                  Er is duidelijk een pseudo-stereo-effect gebruikt\n"
-"                  om het signaal te spreiden over de fysieke afstand tussen de speakers.\n"
-"                  Verwacht geen goeie resultaten van een centrumverwijdering."
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr "Deze plug-in werkt alleen met stereotracks."
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "Vocoder"
@@ -21824,6 +21852,10 @@ msgstr "Vervorming en modulatie"
 #: resources/EffectsMenuDefaults.xml
 msgid "Special"
 msgstr "Speciaal"
+
+#: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "Stem-reductie en -isolatie"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"

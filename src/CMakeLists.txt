@@ -126,6 +126,7 @@ list( APPEND SOURCES
       LabelDialog.h
       LabelTrack.cpp
       LabelTrack.h
+      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -141,8 +142,13 @@ list( APPEND SOURCES
       MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
+      NoteTrackEditing.cpp
       PitchName.cpp
       PitchName.h
+      PluginDataModel.cpp
+      PluginDataModel.h
+      PluginDataViewCtrl.cpp
+      PluginDataViewCtrl.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
@@ -195,6 +201,7 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeDisplayMode.cpp
       TimeDisplayMode.h
+      TimeTrackEditing.cpp
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp
@@ -377,8 +384,6 @@ list( APPEND SOURCES
       effects/Noise.h
       effects/NoiseReduction.cpp
       effects/NoiseReduction.h
-      effects/NoiseRemoval.cpp
-      effects/NoiseRemoval.h
       effects/Normalize.cpp
       effects/Normalize.h
       effects/Paulstretch.cpp
@@ -546,8 +551,6 @@ list( APPEND SOURCES
       export/ExportMixerDialog.h
       export/ExportOptionsHandler.cpp
       export/ExportOptionsHandler.h
-      export/ExportProgressUI.cpp
-      export/ExportProgressUI.h
 
       # Import
 
@@ -721,8 +724,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.cpp
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.h
       tracks/playabletrack/wavetrack/ui/LowlitClipButton.cpp
@@ -750,8 +751,10 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.cpp
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
@@ -766,12 +769,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
-      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
-      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
-      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackMenuItems.cpp
@@ -929,27 +928,6 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.cpp
       >
 
-      # Audio.com
-      $<$<BOOL:${${_OPT}has_audiocom_upload}>:
-         cloud/ShareAudioToolbar.cpp
-         cloud/ShareAudioToolbar.h
-         cloud/audiocom/AuthorizationHandler.cpp
-         cloud/audiocom/AuthorizationHandler.h
-         cloud/audiocom/LinkAccountDialog.cpp
-         cloud/audiocom/LinkAccountDialog.h
-         cloud/audiocom/LinkFailedDialog.cpp
-         cloud/audiocom/LinkFailedDialog.h
-         cloud/audiocom/LinkSucceededDialog.cpp
-         cloud/audiocom/LinkSucceededDialog.h
-         cloud/audiocom/ShareAudioDialog.cpp
-         cloud/audiocom/ShareAudioDialog.h
-         cloud/audiocom/UserImage.cpp
-         cloud/audiocom/UserImage.h
-      >
-
-      $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
-         cloud/audiocom/LinkUrlHandler.cpp
-      >
       Experimental.cmake
 )
 
@@ -1331,6 +1309,7 @@ set( AUDACITY_LIBRARIES
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface
+   lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
 )
 
@@ -1371,12 +1350,6 @@ endif()
 if( ${_OPT}has_url_schemes_support )
    list( APPEND AUDACITY_LIBRARIES
       lib-url-schemes-interface
-   )
-endif()
-
-if( ${_OPT}has_audiocom_upload )
-   list( APPEND AUDACITY_LIBRARIES
-      lib-cloud-audiocom-interface
    )
 endif()
 

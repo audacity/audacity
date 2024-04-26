@@ -29,6 +29,7 @@
 #include "../LabelTrack.h"
 #include "ShuttleGui.h"
 #include "SyncLock.h"
+#include "WaveClip.h"
 #include "WaveTrack.h"
 #include "../widgets/NumericTextCtrl.h"
 #include "../widgets/valnum.h"
@@ -100,7 +101,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &track) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(&track))
+         if (SyncLock::IsSelectedOrSyncLockSelected(track))
          {
             if (!track.Repeat(mT0, mT1, repeatCount))
                bGoodResult = false;
@@ -118,10 +119,8 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
          if (len <= 0)
             return;
 
-         auto tempList = track.Copy(mT0, mT1);
-         const auto firstTemp = *tempList->Any<const WaveTrack>().begin();
-
-
+         auto firstTemp =
+            std::static_pointer_cast<WaveTrack>(track.Copy(mT0, mT1));
 
          auto t0 = tc;
          for (size_t j = 0; j < repeatCount; ++j) {
@@ -174,7 +173,7 @@ bool EffectRepeat::Process(EffectInstance &, EffectSettings &)
       }; },
       [&](Track &t)
       {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT1 + (mT1 - mT0) * repeatCount);
       }
    );

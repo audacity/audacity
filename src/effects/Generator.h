@@ -30,10 +30,9 @@ protected:
    //! GenerateTrack() must be overridden by the actual generator class
    /*!
     @pre `mDuration > 0.0`
-    @pre `tmp` contains exactly one channel group
     @post `tmp` is filled with data
     */
-   virtual bool GenerateTrack(const EffectSettings &settings, TrackList &tmp)
+   virtual bool GenerateTrack(const EffectSettings &settings, WaveTrack &tmp)
       = 0;
 
    // Precondition:

@@ -83,7 +83,7 @@ ZoomHandle::~ZoomHandle()
 {
 }
 
-std::shared_ptr<const Channel> ZoomHandle::FindChannel() const
+std::shared_ptr<const Track> ZoomHandle::FindTrack() const
 {
    return nullptr;
 }

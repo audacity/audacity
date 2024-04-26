@@ -17,7 +17,6 @@ class CloseButtonHandle;
 class MenuButtonHandle;
 class PopupMenuTable;
 class MinimizeButtonHandle;
-class SelectButtonHandle;
 class TrackSelectHandle;
 
 namespace TrackInfo{ struct TCPLine; }
@@ -34,7 +33,7 @@ public:
    {
    public:
       AudacityProject &project;
-      Track *pTrack;
+      Track &track;
       wxWindow *pParent;
       unsigned result;
    };
@@ -65,7 +64,6 @@ protected:
    std::weak_ptr<CloseButtonHandle> mCloseHandle;
    std::weak_ptr<MenuButtonHandle> mMenuHandle;
    std::weak_ptr<MinimizeButtonHandle> mMinimizeHandle;
-   std::weak_ptr<SelectButtonHandle> mSelectButtonHandle;
    std::weak_ptr<TrackSelectHandle> mSelectHandle;
 };
 

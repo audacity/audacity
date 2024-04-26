@@ -7,12 +7,10 @@ TrackPanelResizeHandle.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
-
 #include "TrackPanelResizerCell.h"
 
 #include "AColor.h"
-#include "Track.h"
+#include "ChannelAttachments.h"
 #include "TrackArtist.h"
 #include "TrackPanelDrawingContext.h"
 #include "TrackPanelResizeHandle.h"
@@ -24,8 +22,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/dc.h>
 #include <wx/mousestate.h>
 
-TrackPanelResizerCell::TrackPanelResizerCell(Channel &channel)
-   : CommonTrackCell{ channel.GetChannelGroup(), channel.GetChannelIndex() }
+TrackPanelResizerCell::TrackPanelResizerCell(
+   const std::shared_ptr<Channel> &channel
+)  : CommonChannelCell{ channel }
 {}
 
 std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
@@ -33,10 +32,9 @@ std::vector<UIHandlePtr> TrackPanelResizerCell::HitTest
 {
    (void)pProject;// Compiler food
    std::vector<UIHandlePtr> results;
-   auto pTrack = FindTrack();
-   if (pTrack) {
-      auto result = std::make_shared<TrackPanelResizeHandle>(
-         pTrack->GetChannel(0), st.state.m_y );
+   if (const auto pChannel = FindChannel()) {
+      auto result =
+         std::make_shared<TrackPanelResizeHandle>(pChannel, st.state.m_y);
       result = AssignUIHandlePtr(mResizeHandle, result);
       results.push_back(result);
    }
@@ -47,13 +45,16 @@ void TrackPanelResizerCell::Draw(
    TrackPanelDrawingContext &context,
    const wxRect &rect, unsigned iPass )
 {
-   if ( iPass == TrackArtist::PassMargins ) {
-      auto pTrack = FindTrack();
-      if ( pTrack ) {
+   if (iPass == TrackArtist::PassMargins) {
+      if (const auto pChannel = FindChannel()) {
+         const auto pTrack =
+            dynamic_cast<Track *>(&pChannel->GetChannelGroup());
+         if (!pTrack)
+            return;
          auto dc = &context.dc;
-         const bool last =
-            pTrack.get() == *TrackList::Channels( pTrack.get() ).rbegin();
-         if ( last ) {
+         const auto &channels = pTrack->Channels();
+         const bool last = (pChannel == *channels.rbegin());
+         if (last) {
             // Fill in separator area below a track
             AColor::TrackPanelBackground( dc, false );
             dc->DrawRectangle( rect );
@@ -67,7 +68,7 @@ void TrackPanelResizerCell::Draw(
             ADCChanger cleanup{ dc };
             
             // Paint the left part of the background
-            const auto artist = TrackArtist::Get( context );
+            const auto artist = TrackArtist::Get(context);
             auto labelw = artist->pZoomInfo->GetLeftOffset() - 1;
             AColor::MediumTrackInfo( dc, pTrack->GetSelected() );
             dc->DrawRectangle(
@@ -112,16 +113,22 @@ static const AttachedTrackObjects::RegisteredFactory key{
             // ChannelAttachments promises this precondition
             assert(iChannel <= track.NChannels());
             return std::make_shared<TrackPanelResizerCell>(
-               *track.GetChannel(iChannel));
+               track.GetChannel(iChannel));
          }
       );
    }
 };
 
+TrackPanelResizerCell &TrackPanelResizerCell::GetFromChannelGroup(
+   ChannelGroup &group, size_t iChannel)
+{
+   auto &track = static_cast<Track&>(group);
+   return ResizerCellAttachments::Get(key, track, iChannel);
+}
+
 TrackPanelResizerCell &TrackPanelResizerCell::Get(Channel &channel)
 {
-   return ResizerCellAttachments::Get(key,
-      static_cast<Track &>(channel.GetChannelGroup()),
+   return GetFromChannelGroup(channel.GetChannelGroup(),
       channel.GetChannelIndex());
 }
 

@@ -40,7 +40,7 @@ enum class PlayMode : int {
 
 struct TransportSequences;
 
-enum StatusBarField : int;
+using StatusBarField = Identifier;
 enum class ProjectFileIOMessage : int;
 
 //! Notification, after recording has stopped, when dropouts have been detected
@@ -68,7 +68,6 @@ public:
    static const ProjectAudioManager &Get( const AudacityProject &project );
 
    //! Find suitable tracks to record into, or return an empty array.
-   //! Returns leader tracks only
    static WritableSampleTrackArray ChooseExistingRecordingTracks(
       AudacityProject &proj, bool selectedOnly,
       double targetRate = RATE_NOT_SELECTED);

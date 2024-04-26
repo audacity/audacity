@@ -57,10 +57,6 @@ std::vector<UIHandlePtr> CommonTrackControls::HitTest
       mMinimizeHandle, state, rect, this)))
       results.push_back(result);
 
-   if (NULL != (result = SelectButtonHandle::HitTest(
-      mSelectButtonHandle, state, rect, this)))
-      results.push_back(result);
-
    if (results.empty()) {
       if (NULL != (result = TrackSelectHandle::HitAnywhere(
          mSelectHandle, FindTrack())))
@@ -122,9 +118,9 @@ BEGIN_POPUP_MENU(TrackMenuTable)
       [up]( PopupMenuHandler &handler, wxMenu &menu, int id ){
          auto pData = static_cast<TrackMenuTable&>( handler ).mpData;
          const auto &tracks = TrackList::Get( pData->project );
-         Track *const pTrack = pData->pTrack;
-         menu.Enable( id,
-            up ? tracks.CanMoveUp(pTrack) : tracks.CanMoveDown(pTrack) );
+         auto &track = pData->track;
+         menu.Enable(id,
+            up ? tracks.CanMoveUp(track) : tracks.CanMoveDown(track));
       };
    };
       //First section in the menu doesn't need BeginSection/EndSection
@@ -219,28 +215,25 @@ void SetTrackNameCommand::PopulateOrExchange(ShuttleGui & S)
 
 void TrackMenuTable::OnSetName(wxCommandEvent &)
 {
-   Track *const pTrack = mpData->pTrack;
-   if (pTrack)
+   auto &track = mpData->track;
+   AudacityProject *const proj = &mpData->project;
+   const wxString oldName = track.GetName();
+
+   SetTrackNameCommand Command;
+   Command.mName = oldName;
+   // Bug 1837 : We need an OK/Cancel result if we are to enter a blank string.
+   bool bResult = Command.PromptUser( &GetProjectFrame( *proj ) );
+   if (bResult)
    {
-      AudacityProject *const proj = &mpData->project;
-      const wxString oldName = pTrack->GetName();
+      wxString newName = Command.mName;
+      track.SetName(newName);
 
-      SetTrackNameCommand Command;
-      Command.mName = oldName;
-      // Bug 1837 : We need an OK/Cancel result if we are to enter a blank string.
-      bool bResult = Command.PromptUser( &GetProjectFrame( *proj ) );
-      if (bResult) 
-      {
-         wxString newName = Command.mName;
-         pTrack->SetName(newName);
+      ProjectHistory::Get( *proj )
+         .PushState(
+            XO("Renamed '%s' to '%s'").Format( oldName, newName ),
+            XO("Name Change"));
 
-         ProjectHistory::Get( *proj )
-            .PushState(
-               XO("Renamed '%s' to '%s'").Format( oldName, newName ),
-               XO("Name Change"));
-
-         mpData->result = RefreshCode::RefreshAll;
-      }
+      mpData->result = RefreshCode::RefreshAll;
    }
 }
 
@@ -261,7 +254,7 @@ void TrackMenuTable::OnMoveTrack(wxCommandEvent &event)
       choice = TrackUtilities::OnMoveBottomID; break;
    }
 
-   TrackUtilities::DoMoveTrack(*project, mpData->pTrack, choice);
+   TrackUtilities::DoMoveTrack(*project, mpData->track, choice);
 
    // MoveTrack already refreshed TrackPanel, which means repaint will happen.
    // This is a harmless redundancy:
@@ -280,7 +273,7 @@ unsigned CommonTrackControls::DoContextMenu(
    if (!track)
       return RefreshNone;
 
-   InitMenuData data{ *pProject, track.get(), pParent, RefreshNone };
+   InitMenuData data{ *pProject, *track, pParent, RefreshNone };
 
    const auto pTable = &TrackMenuTable::Instance();
    auto pMenu = PopupMenuTable::BuildMenu(pTable, &data);

@@ -10,6 +10,7 @@ Paul Licameli split from ProjectWindow.cpp
 #include "Viewport.h"
 
 #include "BasicUI.h"
+#include "PendingTracks.h"
 #include "PlayableTrack.h" // just for AudioTrack
 #include "Project.h"
 #include "ProjectSnap.h"
@@ -274,11 +275,12 @@ void Viewport::UpdateScrollbarsForTracks()
    const bool oldhstate = (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    const bool oldvstate = panelHeight < totalHeight;
 
+   auto &pendingTracks = PendingTracks::Get(mProject);
    const auto LastTime = std::accumulate(tracks.begin(), tracks.end(),
       viewInfo.selectedRegion.t1(),
-      [](double acc, const Track *track){
+      [&pendingTracks](double acc, const Track *track){
          // Iterate over pending changed tracks if present.
-         track = track->SubstitutePendingChangedTrack().get();
+         track = &pendingTracks.SubstitutePendingChangedTrack(*track);
          return std::max(acc, track->GetEndTime());
       });
 
@@ -420,7 +422,7 @@ void Viewport::DoScroll()
 
    auto width = viewInfo.GetTracksUsableWidth();
    const auto zoom = viewInfo.GetZoom();
-   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, total - width / zoom);
+   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, std::max(lowerBound, total - width / zoom));
 
    const auto pos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
    viewInfo.vpos = pos * scrollStep;
@@ -453,7 +455,6 @@ void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
 
 void Viewport::ShowTrack(const Track &track)
 {
-   assert(track.IsLeader());
    auto &viewInfo = ViewInfo::Get(mProject);
 
    int trackTop = 0;

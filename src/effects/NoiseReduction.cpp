@@ -74,7 +74,7 @@
 
 // SPECTRAL_SELECTION not to affect this effect for now, as there might be no indication that it does.
 // [Discussed and agreed for v2.1 by Steve, Paul, Bill].
-#undef EXPERIMENTAL_SPECTRAL_EDITING
+#undef SPECTRAL_EDIT_NOISE_REDUCTION
 
 typedef std::vector<float> FloatVector;
 
@@ -298,7 +298,7 @@ public:
 
    Worker(EffectNoiseReduction &effect, const Settings &settings,
       Statistics &statistics
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDIT_NOISE_REDUCTION
       , double f0, double f1
 #endif
       );
@@ -695,7 +695,7 @@ bool EffectNoiseReduction::Process(EffectInstance &, EffectSettings &)
       break;
    }
    Worker worker{ *this, *mSettings, *mStatistics
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDIT_NOISE_REDUCTION
       , mF0, mF1
 #endif
    };
@@ -758,12 +758,12 @@ bool EffectNoiseReduction::Worker::Process(
 
          auto t0 = track->LongSamplesToTime(start);
          auto tLen = track->LongSamplesToTime(len);
-         std::optional<TrackListHolder> ppTempList;
+         std::optional<WaveTrack::Holder> ppTempTrack;
          std::optional<ChannelGroup::ChannelIterator<WaveChannel>> pIter;
          WaveTrack *pFirstTrack{};
          if (!mSettings.mDoProfile) {
-            ppTempList.emplace(track->WideEmptyCopy());
-            pFirstTrack = *(*ppTempList)->Any<WaveTrack>().begin();
+            ppTempTrack.emplace(track->EmptyCopy());
+            pFirstTrack = ppTempTrack->get();
             pIter.emplace(pFirstTrack->Channels().begin());
          }
          for (const auto pChannel : track->Channels()) {
@@ -778,12 +778,12 @@ bool EffectNoiseReduction::Worker::Process(
                return false;
             ++mProgressTrackCount;
          }
-         if (ppTempList) {
+         if (ppTempTrack) {
             TrackSpectrumTransformer::PostProcess(*pFirstTrack, len);
             constexpr auto preserveSplits = true;
             constexpr auto merge = true;
             track->ClearAndPaste(
-               t0, t0 + tLen, **ppTempList, preserveSplits, merge);
+               t0, t0 + tLen, **ppTempTrack, preserveSplits, merge);
          }
       }
    }
@@ -834,7 +834,7 @@ void EffectNoiseReduction::Worker::ApplyFreqSmoothing(FloatVector &gains)
 
 EffectNoiseReduction::Worker::Worker(EffectNoiseReduction &effect,
    const Settings &settings, Statistics &statistics
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDIT_NOISE_REDUCTION
    , double f0, double f1
 #endif
 )
@@ -857,7 +857,7 @@ EffectNoiseReduction::Worker::Worker(EffectNoiseReduction &effect,
 {
    const auto sampleRate = mStatistics.mRate;
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
+#ifdef SPECTRAL_EDIT_NOISE_REDUCTION
    {
       // mBinLow is inclusive, mBinHigh is exclusive, of
       // the range of frequencies to affect.  Include any

@@ -331,14 +331,9 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
    S.StartStatic(XO("Display"));
    {
       S.TieCheckBox(XXO("Auto-&fit track height"), TracksFitVerticallyZoomed);
-      S.TieCheckBox(XXO("Sho&w track name as overlay"),
-                  {wxT("/GUI/ShowTrackNameInWaveform"),
-                   false});
-#ifdef EXPERIMENTAL_HALF_WAVE
       S.TieCheckBox(XXO("Use &half-wave display when collapsed"),
                   {wxT("/GUI/CollapseToHalfWave"),
                    false});
-#endif
 #ifdef SHOW_PINNED_UNPINNED_IN_PREFS
       S.TieCheckBox(XXO("&Pinned Recording/Playback head"),
          {PinnedHeadPreferenceKey(),

@@ -31,15 +31,15 @@ Paul Licameli
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h"
 
 WaveformPrefs::WaveformPrefs(wxWindow * parent, wxWindowID winid,
-   AudacityProject *pProject, WaveTrack *wt)
+   AudacityProject *pProject, WaveChannel *wc)
 /* i18n-hint: A waveform is a visual representation of vibration */
 : PrefsPanel(parent, winid, XO("Waveforms"))
 , mProject{ pProject }
-, mWt(wt)
+, mWc(wc)
 , mPopulating(false)
 {
-   if (mWt) {
-      auto &settings = WaveformSettings::Get(*wt);
+   if (mWc) {
+      auto &settings = WaveformSettings::Get(*wc);
       mDefaulted = (&WaveformSettings::defaults() == &settings);
       mTempSettings = settings;
    }
@@ -100,7 +100,7 @@ void WaveformPrefs::PopulateOrExchange(ShuttleGui & S)
    // S.StartStatic(XO("Track Settings"));
    {
       mDefaultsCheckbox = 0;
-      if (mWt) {
+      if (mWc) {
          /* i18n-hint: use is a verb */
          mDefaultsCheckbox = S.Id(ID_DEFAULTS).TieCheckBox(XXO("&Use Preferences"), mDefaulted);
       }
@@ -165,17 +165,17 @@ bool WaveformPrefs::Commit()
    mTempSettings.ConvertToActualDBRange();
    WaveformSettings::Globals::Get().SavePrefs();
 
-   if (mWt) {
+   if (mWc) {
       if (mDefaulted)
-         WaveformSettings::Set(*mWt, {});
+         WaveformSettings::Set(*mWc, {});
       else {
-         auto &settings = WaveformSettings::Get(*mWt);
+         auto &settings = WaveformSettings::Get(*mWc);
          settings = mTempSettings;
       }
    }
 
    WaveformSettings *const pSettings = &WaveformSettings::defaults();
-   if (!mWt || mDefaulted) {
+   if (!mWc || mDefaulted) {
       *pSettings = mTempSettings;
       pSettings->SavePrefs();
    }
@@ -183,8 +183,8 @@ bool WaveformPrefs::Commit()
 
    mTempSettings.ConvertToEnumeratedDBRange();
 
-   if (mWt && isOpenPage) {
-      WaveChannelView::Get(*mWt).SetDisplay(WaveChannelViewConstants::Waveform);
+   if (mWc && isOpenPage) {
+      WaveChannelView::Get(*mWc).SetDisplay(WaveChannelViewConstants::Waveform);
    }
 
    if (isOpenPage) {
@@ -250,12 +250,12 @@ EVT_CHECKBOX(ID_DEFAULTS, WaveformPrefs::OnDefaults)
 END_EVENT_TABLE()
 
 PrefsPanel::Factory
-WaveformPrefsFactory(WaveTrack *wt)
+WaveformPrefsFactory(WaveChannel *wc)
 {
    return [=](wxWindow *parent, wxWindowID winid, AudacityProject *pProject)
    {
       wxASSERT(parent); // to justify safenew
-      return safenew WaveformPrefs(parent, winid, pProject, wt);
+      return safenew WaveformPrefs(parent, winid, pProject, wc);
    };
 }
 #if 0
