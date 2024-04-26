@@ -18,6 +18,7 @@
 
 #include "GraphicsDataCache.h"
 #include "WaveData.h"
+#include "Observer.h"
 
 class WaveClip;
 
@@ -103,4 +104,7 @@ private:
    DataProvider mProvider;
 
    WaveCacheSampleBlock mCachedBlock;
+
+   const WaveClip& mWaveClip;
+   Observer::Subscription mStretchChangedSubscription;
 };
