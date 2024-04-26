@@ -1,4 +1,5 @@
 
+# Config
 set(ARTIFACTS_DIR "build.artifacts")
 
 set(EVENT "" CACHE STRING "Action event")
