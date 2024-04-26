@@ -73,7 +73,7 @@ EffectType EffectLimiter::GetType() const
 
 auto EffectLimiter::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::After_3_1;
+   return RealtimeSince::Always;
 }
 
 // Effect implementation

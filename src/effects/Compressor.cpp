@@ -78,7 +78,7 @@ EffectType EffectCompressor::GetType() const
 
 auto EffectCompressor::RealtimeSupport() const -> RealtimeSince
 {
-   return RealtimeSince::After_3_1;
+   return RealtimeSince::Always;
 }
 
 // Effect implementation
