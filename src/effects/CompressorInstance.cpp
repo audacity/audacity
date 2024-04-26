@@ -63,7 +63,7 @@ bool CompressorInstance::RealtimeAddProcessor(
    EffectSettings& settings, EffectOutputs*, unsigned numChannels,
    float sampleRate)
 {
-   mSlaves.emplace_back(std::move(mProcessor));
+   mSlaves.emplace_back(mProcessor);
    InstanceInit(settings, *mSlaves.back().mCompressor, numChannels, sampleRate);
    return true;
 }

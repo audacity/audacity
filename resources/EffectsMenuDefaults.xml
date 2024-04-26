@@ -9,6 +9,8 @@
             <Effect>Normalize</Effect>
             <Effect>Loudness Normalization</Effect>
             <Effect>Auto Duck</Effect>
+            <Effect>Real-time Compressor</Effect>
+            <Effect>Real-time Limiter</Effect>
         </Effects>
     </Group>
     <Group>

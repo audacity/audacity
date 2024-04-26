@@ -141,13 +141,14 @@ bool DynamicRangeProcessorEditor<EditorType, SettingType>::UpdateUI()
    mSettings = GetSettings(settings);
    auto& ms = mSettings;
    mThresholdDbCtrl.slider->SetValue(
-      (int)(ms.thresholdDb * EditorType::thresholdDb.scale));
-   mKneeDbCtrl.slider->SetValue((int)(ms.kneeDb * EditorType::kneeDb.scale));
+      static_cast<int>(ms.thresholdDb * EditorType::thresholdDb.scale));
+   mKneeDbCtrl.slider->SetValue(
+      static_cast<int>(ms.kneeDb * EditorType::kneeDb.scale));
    mLookaheadMsCtrl.slider->SetValue(
-      (int)(ms.lookaheadMs * EditorType::lookaheadMs.scale));
+      static_cast<int>(ms.lookaheadMs * EditorType::lookaheadMs.scale));
    mReleaseMsCtrl.slider->SetValue(
-      (int)(ms.releaseMs * EditorType::releaseMs.scale));
+      static_cast<int>(ms.releaseMs * EditorType::releaseMs.scale));
    mMakeUpCtrl.slider->SetValue(
-      (int)(ms.makeUpDb * EditorType::makeUpDb.scale));
+      static_cast<int>(ms.makeUpDb * EditorType::makeUpDb.scale));
    return true;
 }
