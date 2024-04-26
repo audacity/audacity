@@ -1,6 +1,8 @@
 
+# Config
 set(ARTIFACTS_DIR "build.artifacts")
 
+# Options
 set(BUILD_NUMBER "" CACHE STRING "Build number")
 
 if (NOT BUILD_NUMBER)

@@ -16,8 +16,7 @@ if (NOT BUILD_MODE)
 endif()
 
 if (NOT BUILD_VERSION)
-    set(BUILD_VERSION 4.0.0.1234) # TODO
-    #file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
+    file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 
 if (NOT BUILD_MODE)
@@ -78,8 +77,6 @@ if(PACKTYPE STREQUAL "appimage")
         COMMAND mv "${INSTALL_DIR}/../${ARTIFACT_NAME}.AppImage" "${ARTIFACTS_DIR}/"
     )
 
-
-    # bash ./buildscripts/ci/tools/make_artifact_name_env.sh $ARTIFACT_NAME.AppImage
 
     # if [ -v UPDATE_INFORMATION ]; then
     #     # zsync file contains data for automatic delta updates

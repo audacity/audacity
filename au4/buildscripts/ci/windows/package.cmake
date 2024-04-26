@@ -20,8 +20,7 @@ if (NOT BUILD_MODE)
 endif()
 
 if (NOT BUILD_VERSION)
-    set(BUILD_VERSION 4.0.0.1234) # TODO
-    #file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
+    file (STRINGS "${ARTIFACTS_DIR}/env/build_version.env" BUILD_VERSION)
 endif()
 
 # Setup package type
@@ -44,7 +43,6 @@ set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64")
 file(RENAME ${INSTALL_DIR} ${ARTIFACT_NAME})
 file(ARCHIVE_CREATE OUTPUT ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.7z PATHS ${ARTIFACT_NAME} FORMAT 7zip)
 
-#bash ./buildscripts/ci/tools/make_artifact_name_env.sh %ARTIFACT_NAME%.7z
 message(STATUS "Finished 7z packing")
 
 
