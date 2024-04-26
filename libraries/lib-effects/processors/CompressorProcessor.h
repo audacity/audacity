@@ -23,34 +23,49 @@ class LookAheadGainReduction;
 
 struct LimiterSettings
 {
+   static constexpr double thresholdDbDefault = -3;
+   static constexpr double kneeDbDefault = 0;
+   static constexpr double lookaheadMsDefault = 0;
+   static constexpr double releaseMsDefault = 15;
+   static constexpr double ceilingDbDefault = -1;
+
+   double thresholdDb { thresholdDbDefault };
+   double kneeDb { kneeDbDefault };
+   double lookaheadMs { lookaheadMsDefault };
+   double releaseMs { releaseMsDefault };
+   double ceilingDb { ceilingDbDefault };
+};
+
+struct CompressorSettings
+{
    static constexpr double thresholdDbDefault = -10;
    static constexpr double kneeDbDefault = 0;
    static constexpr double lookaheadMsDefault = 0;
    static constexpr double releaseMsDefault = 150;
    static constexpr double makeUpDbDefault = 0;
+   static constexpr double attackMsDefault = 30;
+   static constexpr double ratioDefault = 10;
+   static constexpr double infRatio = std::numeric_limits<double>::infinity();
 
    double thresholdDb { thresholdDbDefault };
    double kneeDb { kneeDbDefault };
    double lookaheadMs { lookaheadMsDefault };
    double releaseMs { releaseMsDefault };
    double makeUpDb { makeUpDbDefault };
-};
-
-struct CompressorSettings : LimiterSettings
-{
-   static constexpr double attackMsDefault = 30;
-   static constexpr double ratioDefault = 10;
-   static constexpr double infRatio = std::numeric_limits<double>::infinity();
-
    double attackMs { attackMsDefault };
    double ratio { ratioDefault };
 
    CompressorSettings() = default;
-   CompressorSettings(const LimiterSettings& settings)
-       : LimiterSettings(settings)
+
+   CompressorSettings(const LimiterSettings& limiterSettings)
+       : thresholdDb { limiterSettings.thresholdDb }
+       , kneeDb { limiterSettings.kneeDb }
+       , lookaheadMs { limiterSettings.lookaheadMs }
+       , releaseMs { limiterSettings.releaseMs }
+       , makeUpDb { limiterSettings.ceilingDb - limiterSettings.thresholdDb }
+       , attackMs { 0. }
+       , ratio { infRatio }
    {
-      attackMs = 0;
-      ratio = infRatio;
    }
 };
 

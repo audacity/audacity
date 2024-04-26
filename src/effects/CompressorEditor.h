@@ -81,4 +81,5 @@ private:
 
    Control mAttackMsCtrl { attackMs, mSettings.attackMs };
    Control mRatioCtrl { ratio, mSettings.ratio };
+   Control mMakeupDbCtrl { makeUpDb, mSettings.makeUpDb };
 };

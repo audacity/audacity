@@ -38,7 +38,6 @@ protected:
    Control mKneeDbCtrl { EditorType::kneeDb, mSettings.kneeDb };
    Control mLookaheadMsCtrl { EditorType::lookaheadMs, mSettings.lookaheadMs };
    Control mReleaseMsCtrl { EditorType::releaseMs, mSettings.releaseMs };
-   Control mMakeUpCtrl { EditorType::makeUpDb, mSettings.makeUpDb };
 
    bool ValidateUI() override;
    bool UpdateUI() override;
@@ -148,7 +147,5 @@ bool DynamicRangeProcessorEditor<EditorType, SettingType>::UpdateUI()
       static_cast<int>(ms.lookaheadMs * EditorType::lookaheadMs.scale));
    mReleaseMsCtrl.slider->SetValue(
       static_cast<int>(ms.releaseMs * EditorType::releaseMs.scale));
-   mMakeUpCtrl.slider->SetValue(
-      static_cast<int>(ms.makeUpDb * EditorType::makeUpDb.scale));
    return true;
 }

@@ -36,7 +36,8 @@ void CompressorEditor::PopulateOrExchange(ShuttleGui& S)
          CompressorSettings::infRatio);
 
       AddTextboxAndSlider(
-         S, mMakeUpCtrl, XXO("&Make-up gain (dB):"), XXO("Make-up gain in dB"));
+         S, mMakeupDbCtrl, XXO("&Make-up gain (dB):"),
+         XXO("Make-up gain in dB"));
    }
    S.EndMultiColumn();
 }

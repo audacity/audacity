@@ -28,7 +28,7 @@ const EffectParameterMethods& EffectLimiter::Parameters() const
    static CapturedParameters<
       EffectLimiter, LimiterEditor::thresholdDb, LimiterEditor::kneeDb,
       LimiterEditor::lookaheadMs, LimiterEditor::releaseMs,
-      LimiterEditor::makeUpDb>
+      LimiterEditor::ceilingDb>
       parameters;
    return parameters;
 }

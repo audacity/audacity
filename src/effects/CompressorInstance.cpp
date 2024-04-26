@@ -117,10 +117,10 @@ size_t CompressorInstance::InstanceProcess(
 EffectInstance::SampleCount CompressorInstance::GetLatency(
    const EffectSettings& settings, double sampleRate) const
 {
-   const LimiterSettings* pSettings = settings.cast<LimiterSettings>();
-   if (!pSettings)
-      pSettings = settings.cast<CompressorSettings>();
-   return pSettings->lookaheadMs * sampleRate / 1000;
+   if (const auto* pSettings = settings.cast<LimiterSettings>())
+      return pSettings->lookaheadMs * sampleRate / 1000;
+   else
+      settings.cast<CompressorSettings>()->lookaheadMs* sampleRate / 1000;
 }
 
 unsigned CompressorInstance::GetAudioOutCount() const

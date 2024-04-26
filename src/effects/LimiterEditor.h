@@ -23,8 +23,8 @@ public:
    static constexpr Parameter thresholdDb { &LimiterSettings::thresholdDb,
                                             L"thresholdDb",
                                             LimiterSettings::thresholdDbDefault,
-                                            -50,
-                                            10,
+                                            -20,
+                                            0,
                                             1 };
 
    static constexpr Parameter kneeDb { &LimiterSettings::kneeDb,
@@ -38,20 +38,22 @@ public:
                                             L"lookaheadMs",
                                             LimiterSettings::lookaheadMsDefault,
                                             0,
-                                            1000,
+                                            20,
                                             1 };
 
    static constexpr Parameter releaseMs { &LimiterSettings::releaseMs,
                                           L"releaseMs",
                                           LimiterSettings::releaseMsDefault,
                                           0,
-                                          1000,
+                                          100,
                                           1 };
 
-   static constexpr Parameter makeUpDb { &LimiterSettings::makeUpDb,
-                                         L"makeUpDb",
-                                         LimiterSettings::makeUpDbDefault,
-                                         -10,
-                                         20,
-                                         1 };
+   static constexpr Parameter ceilingDb { &LimiterSettings::ceilingDb,
+                                          L"ceilingDb",
+                                          LimiterSettings::ceilingDbDefault,
+                                          -20,
+                                          0,
+                                          1 };
+
+   Control mCeilingDbCtrl { ceilingDb, mSettings.ceilingDb };
 };

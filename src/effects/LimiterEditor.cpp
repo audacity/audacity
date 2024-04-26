@@ -27,7 +27,7 @@ void LimiterEditor::PopulateOrExchange(ShuttleGui& S)
          S, mReleaseMsCtrl, XXO("&Release (ms):"), XXO("Release time in ms"));
 
       AddTextboxAndSlider(
-         S, mMakeUpCtrl, XXO("&Make-up gain (dB):"), XXO("Make-up gain in dB"));
+         S, mCeilingDbCtrl, XXO("&Ceiling (dB):"), XXO("Ceiling in dB"));
    }
    S.EndMultiColumn();
 }
