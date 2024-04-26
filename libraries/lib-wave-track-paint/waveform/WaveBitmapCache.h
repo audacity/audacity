@@ -13,12 +13,14 @@
 #include <memory>
 
 #include "GraphicsDataCache.h"
+#include "Observer.h"
 #include "waveform/WavePaintParameters.h"
 
 class wxBitmap;
 class wxImage;
 class WaveDataCache;
 class Envelope;
+class WaveClip;
 
 //! An element, that contains a rasterized bitmap matching the WaveDataCacheElement
 class WAVE_TRACK_PAINT_API WaveBitmapCacheElement :
@@ -40,9 +42,8 @@ class WAVE_TRACK_PAINT_API WaveBitmapCache final :
     public GraphicsDataCache<WaveBitmapCacheElement>
 {
 public:
-   WaveBitmapCache(std::shared_ptr<WaveDataCache> dataCache,
-                   ElementFactory elementFactory,
-                   double sampleRate);
+   WaveBitmapCache(const WaveClip& waveClip, std::shared_ptr<WaveDataCache> dataCache,
+                   ElementFactory elementFactory);
    ~WaveBitmapCache() override;
 
    WaveBitmapCache& SetPaintParameters(const WavePaintParameters& params);
@@ -73,4 +74,7 @@ private:
 
    const Envelope* mEnvelope { nullptr };
    size_t mEnvelopeVersion { 0 };
+
+   const WaveClip& mWaveClip;
+   Observer::Subscription mStretchChangedSubscription;
 };

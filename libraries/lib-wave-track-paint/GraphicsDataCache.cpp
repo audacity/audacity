@@ -79,9 +79,9 @@ void GraphicsDataCacheBase::Invalidate()
    mLookup.clear();
 }
 
-double GraphicsDataCacheBase::GetSampleRate() const noexcept
+double GraphicsDataCacheBase::GetScaledSampleRate() const noexcept
 {
-   return mSampleRate;
+   return mScaledSampleRate;
 }
 
 void GraphicsDataCacheBase::UpdateViewportWidth(int64_t width) noexcept
@@ -95,8 +95,19 @@ int64_t GraphicsDataCacheBase::GetMaxViewportWidth() const noexcept
 }
 
 GraphicsDataCacheBase::GraphicsDataCacheBase(double sampleRate)
-    : mSampleRate(sampleRate)
+    : mScaledSampleRate { sampleRate }
 {
+}
+
+void GraphicsDataCacheBase::SetScaledSampleRate(double scaledSampleRate)
+{
+   if (
+      std::abs(mScaledSampleRate - scaledSampleRate) <=
+      std::numeric_limits<double>::epsilon())
+      return;
+
+   mScaledSampleRate = scaledSampleRate;
+   Invalidate();
 }
 
 void GraphicsDataCacheElementBase::Dispose()
@@ -112,7 +123,7 @@ GraphicsDataCacheBase::BaseLookupResult
 GraphicsDataCacheBase::PerformBaseLookup(
    const ZoomInfo& zoomInfo, double t0, double t1)
 {
-   if (bool(t0 > t1) || IsSameSample(mSampleRate, t0, t1))
+   if (bool(t0 > t1) || IsSameSample(mScaledSampleRate, t0, t1))
       return {};
 
    const double pixelsPerSecond = zoomInfo.GetZoom();
@@ -129,7 +140,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
    const int64_t cacheLeftColumn  = cacheLeft * CacheElementWidth;
    const int64_t cacheRightColumn = cacheRight * CacheElementWidth;
 
-   const double samplesPerPixel = mSampleRate / pixelsPerSecond;
+   const double samplesPerPixel = mScaledSampleRate / pixelsPerSecond;
 
    UpdateViewportWidth(width);
 
@@ -137,7 +148,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
    mNewLookupItems.reserve(cacheItemsCount);
 
    const auto ppsMatchRange =
-      GetPPSMatchRange(mLookup, pixelsPerSecond, mSampleRate);
+      GetPPSMatchRange(mLookup, pixelsPerSecond, mScaledSampleRate);
 
    for (int64_t itemIndex = 0; itemIndex < cacheItemsCount; ++itemIndex)
    {
@@ -170,7 +181,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
    std::merge(
       mLookup.begin(), mLookup.end(), mNewLookupItems.begin(),
       mNewLookupItems.end(), std::back_inserter(mLookupHelper),
-      [sampleRate = mSampleRate](auto lhs, auto rhs)
+      [sampleRate = mScaledSampleRate](auto lhs, auto rhs)
       { return IsKeyLess(sampleRate, lhs.Key, rhs.Key); });
 
    std::swap(mLookup, mLookupHelper);
@@ -265,7 +276,7 @@ GraphicsDataCacheBase::PerformBaseLookup(GraphicsDataCacheKey key)
    auto insertedPosition = mLookup.insert(
       std::upper_bound(
          mLookup.begin(), mLookup.end(), key,
-         [sampleRate = mSampleRate](auto lhs, auto rhs)
+         [sampleRate = mScaledSampleRate](auto lhs, auto rhs)
          {
             if constexpr (std::is_same_v<
                              std::decay_t<decltype(lhs)>, GraphicsDataCacheKey>)
@@ -315,7 +326,7 @@ GraphicsDataCacheBase::FindKey(GraphicsDataCacheKey key)
 {
    return std::find_if(
       mLookup.begin(), mLookup.end(),
-      [sampleRate = mSampleRate, key](auto lhs)
+      [sampleRate = mScaledSampleRate, key](auto lhs)
       { return IsSameKey(sampleRate, lhs.Key, key); });
 }
 

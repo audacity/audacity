@@ -233,9 +233,8 @@ public:
          auto dataCache = std::make_shared<WaveDataCache>(clip, channelIndex);
 
          auto bitmapCache = std::make_unique<WaveBitmapCache>(
-            dataCache,
-            [] { return std::make_unique<WaveBitmapCacheElementWX>(); },
-            dataCache->GetSampleRate());
+            clip, dataCache,
+            [] { return std::make_unique<WaveBitmapCacheElementWX>(); });
 
          mChannelCaches.push_back(
             { std::move(dataCache), std::move(bitmapCache) });
@@ -290,7 +289,10 @@ public:
    void Invalidate() override
    {
       for (auto& channelCache : mChannelCaches)
+      {
          channelCache.DataCache->Invalidate();
+         channelCache.BitmapCache->Invalidate();
+      }
    }
 
    std::unique_ptr<WaveClipListener> Clone() const override
