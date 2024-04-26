@@ -253,9 +253,18 @@ MakeDefaultDataProvider(const WaveClip& clip, int channelIndex)
 
 WaveDataCache::WaveDataCache(const WaveClip& waveClip, int channelIndex)
     : GraphicsDataCache<WaveCacheElement>(
-         waveClip.GetRate(),
+         waveClip.GetRate() / waveClip.GetStretchRatio(),
          [] { return std::make_unique<WaveCacheElement>(); })
-    , mProvider(MakeDefaultDataProvider(waveClip, channelIndex))
+    , mProvider { MakeDefaultDataProvider(waveClip, channelIndex) }
+    , mWaveClip { waveClip }
+    , mStretchChangedSubscription {
+       const_cast<WaveClip&>(waveClip)
+          .Observer::Publisher<StretchRatioChange>::Subscribe(
+             [this](const StretchRatioChange&) {
+                SetScaledSampleRate(
+                   mWaveClip.GetRate() / mWaveClip.GetStretchRatio());
+             })
+    }
 {
 }
 
@@ -270,7 +279,7 @@ bool WaveDataCache::InitializeElement(
    int64_t firstSample = key.FirstSample;
 
    const size_t samplesPerColumn =
-      static_cast<size_t>(std::max(0.0, GetSampleRate() / key.PixelsPerSecond));
+      static_cast<size_t>(std::max(0.0, GetScaledSampleRate() / key.PixelsPerSecond));
 
    const size_t elementSamplesCount =
       samplesPerColumn * WaveDataCache::CacheElementWidth;

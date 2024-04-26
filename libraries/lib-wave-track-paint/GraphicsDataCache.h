@@ -63,13 +63,15 @@ public:
    void Invalidate();
 
    //! Returns the sample rate associated with cache
-   double GetSampleRate() const noexcept;
+   double GetScaledSampleRate() const noexcept;
 
    void UpdateViewportWidth(int64_t width) noexcept;
    int64_t GetMaxViewportWidth() const noexcept;
 
 protected:
-   explicit GraphicsDataCacheBase(double sampleRate);
+   explicit GraphicsDataCacheBase(double scaledSampleRate);
+
+   void SetScaledSampleRate(double scaledSampleRate);
 
    //! Element of the cache lookup
    struct WAVE_TRACK_PAINT_API LookupElement final
@@ -128,7 +130,7 @@ private:
    std::vector<size_t> mLRUHelper;
 
    // Sample rate associated with this cache
-   double mSampleRate {}; // DV: Why do we use double for sample rate? I don't know
+   double mScaledSampleRate {}; // DV: Why do we use double for sample rate? I don't know
 
    // The max width of the request processed in pixels
    int64_t mMaxWidth { 1600 };
@@ -236,8 +238,8 @@ public:
 
    using Initializer = std::function<bool(const GraphicsDataCacheKey& Key, CacheElementType& element)>;
 
-   explicit GraphicsDataCache(double sampleRate, ElementFactory elementFactory)
-       : GraphicsDataCacheBase(sampleRate), mElementFactory(std::move(elementFactory))
+   explicit GraphicsDataCache(double scaledSampleRate, ElementFactory elementFactory)
+       : GraphicsDataCacheBase(scaledSampleRate), mElementFactory(std::move(elementFactory))
    {
    }
 

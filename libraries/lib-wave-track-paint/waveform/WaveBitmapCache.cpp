@@ -21,6 +21,8 @@
 #include "Envelope.h"
 #include "FrameStatistics.h"
 
+#include "WaveClip.h"
+
 // The worst case scenario is:
 // blank -> background -> min -> rms -> max -> backgroud -> blank
 // So we have 7 stops
@@ -153,7 +155,7 @@ struct WaveBitmapCache::LookupHelper final
       {
          envelope->GetValues(
             EnvelopeValues.data(), static_cast<int>(EnvelopeValues.size()),
-            key.FirstSample / cache->GetSampleRate(),
+            key.FirstSample / cache->GetScaledSampleRate(),
             1.0 / key.PixelsPerSecond);
 
          for (size_t column = 0; column < columnsCount; ++column)
@@ -183,7 +185,7 @@ struct WaveBitmapCache::LookupHelper final
       const auto clipColors = cache->mPaintParamters.ClippingColors;
       const auto showRMS = cache->mPaintParamters.ShowRMS;
 
-      auto firstPixel = int64_t(key.FirstSample / cache->GetSampleRate() * key.PixelsPerSecond + 0.5);
+      auto firstPixel = int64_t(key.FirstSample / cache->GetScaledSampleRate() * key.PixelsPerSecond + 0.5);
 
       const auto selFirst = cache->mSelection.FirstPixel;
       const auto selLast = cache->mSelection.LastPixel;
@@ -293,12 +295,21 @@ struct WaveBitmapCache::LookupHelper final
    bool IsComplete { 0 };
 };
 
-WaveBitmapCache::WaveBitmapCache(std::shared_ptr<WaveDataCache> dataCache,
-                                 ElementFactory elementFactory,
-                                 double sampleRate)
-    : GraphicsDataCache(sampleRate, std::move(elementFactory))
-     
-    , mLookupHelper(std::make_unique<LookupHelper>(std::move(dataCache)))
+WaveBitmapCache::WaveBitmapCache(
+   const WaveClip& waveClip, std::shared_ptr<WaveDataCache> dataCache,
+   ElementFactory elementFactory)
+    : GraphicsDataCache { waveClip.GetRate() / waveClip.GetStretchRatio(),
+                          std::move(elementFactory) }
+    , mLookupHelper { std::make_unique<LookupHelper>(std::move(dataCache)) }
+    , mWaveClip { waveClip }
+    , mStretchChangedSubscription {
+       const_cast<WaveClip&>(waveClip)
+          .Observer::Publisher<StretchRatioChange>::Subscribe(
+             [this](const StretchRatioChange&) {
+                SetScaledSampleRate(
+                   mWaveClip.GetRate() / mWaveClip.GetStretchRatio());
+             })
+    }
 {
 }
 
