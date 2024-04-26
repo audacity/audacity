@@ -89,6 +89,7 @@ set(AU3_DEF
 
     -DTIME_FREQUENCY_SELECTION_API=
     -DSCREEN_GEOMETRY_API=
+    -DSQLITE_HELPERS_API=
 
     -DEXPERIMENTAL_SPECTRAL_EDITING
 )
@@ -141,6 +142,9 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-module-manager
 
     ${AU3_LIBRARIES}/lib-screen-geometry
+
+    # compile after update 04.26
+    ${AU3_LIBRARIES}/lib-sqlite-helpers
 )
 
 set(AU3_ADD_AS_SRC ON)
@@ -193,9 +197,16 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-project-file-io/DBConnection.h
     ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIO.cpp
     ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIO.h
+    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIOExtension.cpp
+    ${AU3_LIBRARIES}/lib-project-file-io/ProjectFileIOExtension.h
     ${AU3_LIBRARIES}/lib-project-file-io/ProjectSerializer.cpp
     ${AU3_LIBRARIES}/lib-project-file-io/ProjectSerializer.h
     ${AU3_LIBRARIES}/lib-project-file-io/SqliteSampleBlock.cpp
+
+    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/SQLiteUtils.cpp
+    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/SQLiteUtils.h
+    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/Error.cpp
+    ${AU3_LIBRARIES}/lib-sqlite-helpers/sqlite/Error.h
 
     ${AU3_LIBRARIES}/lib-project-history/ProjectHistory.cpp
     ${AU3_LIBRARIES}/lib-project-history/ProjectHistory.h
@@ -258,6 +269,12 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-track/Track.h
     ${AU3_LIBRARIES}/lib-track/TrackAttachment.cpp
     ${AU3_LIBRARIES}/lib-track/TrackAttachment.h
+    ${AU3_LIBRARIES}/lib-track/UndoTracks.cpp
+    ${AU3_LIBRARIES}/lib-track/UndoTracks.h
+    ${AU3_LIBRARIES}/lib-track/PendingTracks.cpp
+    ${AU3_LIBRARIES}/lib-track/PendingTracks.h
+    ${AU3_LIBRARIES}/lib-track/ChannelAttachments.cpp
+    ${AU3_LIBRARIES}/lib-track/ChannelAttachments.h
 
     ${AU3_LIBRARIES}/lib-wave-track/WaveTrack.cpp
     ${AU3_LIBRARIES}/lib-wave-track/WaveTrack.h
@@ -267,8 +284,8 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-wave-track/WaveClip.h
     ${AU3_LIBRARIES}/lib-wave-track/SampleBlock.cpp
     ${AU3_LIBRARIES}/lib-wave-track/SampleBlock.h
-    ${AU3_LIBRARIES}/lib-wave-track/WideClip.cpp
-    ${AU3_LIBRARIES}/lib-wave-track/WideClip.h
+    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackUtilities.cpp
+    ${AU3_LIBRARIES}/lib-wave-track/WaveTrackUtilities.h
 
     ${AU3_LIBRARIES}/lib-sample-track/SampleTrack.cpp
     ${AU3_LIBRARIES}/lib-sample-track/SampleTrack.h
@@ -362,6 +379,8 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-stretching-sequence/SilenceSegment.h
     ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.cpp
     ${AU3_LIBRARIES}/lib-stretching-sequence/AudioSegmentFactoryInterface.h
+    ${AU3_LIBRARIES}/lib-stretching-sequence/TempoChange.cpp
+    ${AU3_LIBRARIES}/lib-stretching-sequence/TempoChange.h
 
     # end dependencies of project-file-io
 
