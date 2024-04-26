@@ -9,6 +9,7 @@ set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 # Options
 set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
+set(BUILD_REVISION "" CACHE STRING "Build revision")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -16,6 +17,10 @@ endif()
 
 if (NOT BUILD_MODE)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
+endif()
+
+if (NOT BUILD_REVISION)
+    file (STRINGS "${ARTIFACTS_DIR}/env/build_revision.env" BUILD_REVISION)
 endif()
 
 set(APP_BUILD_MODE "dev")
@@ -40,6 +45,7 @@ set(CONFIG
     -DBUILD_TYPE=appimage
     -DBUILD_MODE=${APP_BUILD_MODE}
     -DBUILD_NUMBER=${BUILD_NUMBER}
+    -DBUILD_REVISION=${BUILD_REVISION}
     -DINSTALL_SUFFIX=${APP_SUFFIX}
 )
 
@@ -51,9 +57,4 @@ execute_process(
 if (BUILD_RESULT GREATER 0) 
     message(FATAL_ERROR "Failed build")
 endif()
-
-# bash ./buildscripts/ci/tools/make_release_channel_env.sh -c $AU4_BUILD_MODE
-# bash ./buildscripts/ci/tools/make_version_env.sh $BUILD_NUMBER
-# bash ./buildscripts/ci/tools/make_revision_env.sh $AU4_REVISION
-# bash ./buildscripts/ci/tools/make_branch_env.sh
 

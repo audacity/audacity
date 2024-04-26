@@ -41,15 +41,6 @@ endif()
 
 string(TOUPPER ${BUILD_TYPE} BUILD_TYPE)
 
-if (NOT BUILD_REVISION)
-    execute_process(
-        COMMAND git rev-parse --short=7 HEAD
-        WORKING_DIRECTORY ${SOURCE_DIR}
-        OUTPUT_VARIABLE BUILD_REVISION
-    )
-    string(STRIP ${BUILD_REVISION} BUILD_REVISION)
-endif()
-
 message(STATUS "CPUS=${CPUS}")
 message(STATUS "BUILD_TYPE=${BUILD_TYPE}")
 message(STATUS "BUILD_MODE=${BUILD_MODE}")
