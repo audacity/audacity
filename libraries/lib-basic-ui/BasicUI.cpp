@@ -29,10 +29,9 @@ Paul Licameli
 
 #include <string>
 
-#ifdef __FreeBSD__
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
 extern char** environ;
 #endif
-
 
 namespace
 {
