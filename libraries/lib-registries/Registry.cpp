@@ -888,6 +888,8 @@ OrderingPreferenceInitializer::OrderingPreferenceInitializer(
 
 void OrderingPreferenceInitializer::operator () ()
 {
+   // Default, as needed, any registry items that specify left-to-right
+   // orderings of internal nodes.
    bool doFlush = false;
    for (const auto &pair : mPairs) {
       const auto key = wxString{'/'} + mRoot + pair.first;

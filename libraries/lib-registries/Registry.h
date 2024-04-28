@@ -216,6 +216,8 @@ namespace detail {
    /*!
     The name of the substitute is significant for path calculations, but the
     ComputedItem's ordering hint is used if the substitute has none
+    It expects a certain Visitor subtype as context for the function, but
+    which type that is -- is type-erased
     */
    template<typename Context, typename Item>
    struct ComputedItem final : ComputedItemBase {
@@ -381,12 +383,14 @@ namespace detail {
    };
 }
 
-   // registry collects items, before consulting preferences and ordering
-   // hints, and applying the merge procedure to them.
-   // This function puts one more item into the registry.
-   // The sequence of calls to RegisterItem has no significance for
-   // determining the visitation ordering.  When sequence is important, register
-   // a GroupItem.
+   /*!
+    Registry collects items, before consulting preferences and ordering
+    hints, and applying the merge procedure to them.
+    This function puts one more item into the registry.
+    The sequence of calls to RegisterItem has no significance for
+    determining the visitation ordering.  When sequence is important, use an
+    OrderingHint in placement.
+    */
    template<typename RegistryTraits, typename Item>
    void RegisterItem(GroupItem<RegistryTraits> &registry,
       const Placement &placement, std::unique_ptr<Item> pItem)
@@ -675,13 +679,15 @@ namespace detail {
       }
    };
 
-   // Typically a static object.  Constructor initializes certain preferences
-   // if they are not present.  These preferences determine an extrinsic
-   // visitation ordering for registered items.  This is needed in some
-   // places that have migrated from a system of exhaustive listings, to a
-   // registry of plug-ins, and something must be done to preserve old
-   // behavior.  It can be done in the central place using string literal
-   // identifiers only, not requiring static compilation or linkage dependency.
+   /*
+    Typically a static object.  Constructor or operator() initializes certain
+    preferences if they are not present.  These preferences determine an
+    extrinsic visitation ordering for registered items.  This is needed in
+    some places that have migrated from a system of exhaustive listings, to a
+    registry of plug-ins, and something must be done to preserve old
+    behavior.  It can be done in the central place using string literal
+    identifiers only, not requiring static compilation or linkage dependency.
+    */
    struct REGISTRIES_API
    OrderingPreferenceInitializer : PreferenceInitializer {
       using Literal = const wxChar *;
@@ -696,7 +702,7 @@ namespace detail {
          // desired ordering at one node of the tree:
          Pairs pairs );
 
-      void operator () () override;
+      void operator () () final;
 
    private:
       Pairs mPairs;
