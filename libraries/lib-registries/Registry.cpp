@@ -38,20 +38,22 @@ struct PlaceHolder : GroupItemBase {
 
 struct CollectedItems
 {
-   //! @invariant `!MergeLater() || dynamic_cast<GroupItemBase *>(&VisitNow())`
+   //! @invariant `!MergeLater() ||
+   //!    dynamic_cast<const GroupItemBase *>(&VisitNow())`
    class Item {
    public:
-      Item(BaseItem &visitNow, OrderingHint hint = {})
+      Item(const BaseItem &visitNow, OrderingHint hint = {})
          : mVisitNow{ &visitNow }, mHint{ hint }
       {
          assert(CheckInvariant());
       }
 
-      BaseItem &VisitNow() const { return *mVisitNow; }
-      //! @pre !MergeLater() || dynamic_cast<GroupItemBase *>(&visitNow)
-      void SetVisitNow(BaseItem &visitNow)
+      const BaseItem &VisitNow() const { return *mVisitNow; }
+      //! @pre !MergeLater() || dynamic_cast<const GroupItemBase *>(&visitNow)
+      void SetVisitNow(const BaseItem &visitNow)
       {
-         assert(!MergeLater() || dynamic_cast<GroupItemBase *>(&visitNow));
+         assert(!MergeLater() ||
+            dynamic_cast<const GroupItemBase *>(&visitNow));
          mVisitNow = &visitNow;
          assert(CheckInvariant());
       }
@@ -59,10 +61,10 @@ struct CollectedItems
       const OrderingHint &Hint() const { return mHint; }
 
       PlaceHolder *MergeLater() const { return mMergeLater; }
-      //! @pre dynamic_cast<GroupItemBase *>(&VisitNow())
+      //! @pre dynamic_cast<const GroupItemBase *>(&VisitNow())
       void SetMergeLater(PlaceHolder &mergeLater)
       {
-         assert(dynamic_cast<GroupItemBase *>(&VisitNow()));
+         assert(dynamic_cast<const GroupItemBase *>(&VisitNow()));
          mMergeLater = &mergeLater;
          assert(CheckInvariant());
       }
@@ -70,12 +72,12 @@ struct CollectedItems
       bool CheckInvariant() const
       {
          return mVisitNow &&
-            (!MergeLater() || dynamic_cast<GroupItemBase *>(&VisitNow()));
+            (!MergeLater() || dynamic_cast<const GroupItemBase *>(&VisitNow()));
       }
 
       // Predefined, or merged from registry already.
       // @invariant not null
-      BaseItem *mVisitNow{};
+      const BaseItem *mVisitNow{};
 
       // Ordering hint for the merged item:
       OrderingHint mHint{};
@@ -85,7 +87,7 @@ struct CollectedItems
       PlaceHolder *mMergeLater{};
    };
    std::vector< BaseItemSharedPtr > &computedItems;
-   std::vector< Item > items;
+   std::vector<Item> items;
    std::unordered_set<Identifier> mResolvedConflicts;
 
    // A linear search.  Smarter search may not be worth the effort.
@@ -100,33 +102,33 @@ struct CollectedItems
    }
 
    auto InsertNewItemUsingPreferences(
-      const ItemOrdering &itemOrdering, BaseItem &item) -> bool;
+      const ItemOrdering &itemOrdering, const BaseItem &item) -> bool;
 
    auto InsertNewItemUsingHint(ItemOrdering &itemOrdering,
-      BaseItem &item, const OrderingHint &hint, size_t endItemsCount,
+      const BaseItem &item, const OrderingHint &hint, size_t endItemsCount,
       bool force )
          -> bool;
 
    auto MergeLater(Item &found, const Identifier &name,
       GroupItemBase::Ordering ordering) -> PlaceHolder *;
 
-   void SubordinateSingleItem(Item &found, BaseItem &item);
+   void SubordinateSingleItem(Item &found, const BaseItem &item);
 
-   void SubordinateMultipleItems(Item &found, GroupItemBase &items);
+   void SubordinateMultipleItems(Item &found, const GroupItemBase &items);
 
    auto MergeWithExistingItem(const ItemOrdering &itemOrdering,
-      BaseItem &item, OrderingHint::ConflictResolutionPolicy policy) -> bool;
+      const BaseItem &item, OrderingHint::ConflictResolutionPolicy policy) -> bool;
 
    class NewItem {
    public:
-      NewItem(BaseItem &item, OrderingHint hint)
+      NewItem(const BaseItem &item, OrderingHint hint)
          : mpItem{ &item }, mHint{ hint }
       {}
-      BaseItem &Item() const { return *mpItem; }
+      const BaseItem &Item() const { return *mpItem; }
       const OrderingHint &Hint() const { return mHint; }
    private:
       //! @invariant not null
-      BaseItem *mpItem;
+      const BaseItem *mpItem;
       OrderingHint mHint;
    };
    using NewItems = std::vector<NewItem>;
@@ -152,7 +154,7 @@ struct CollectedItems
 // When a computed or indirect item, or nameless grouping, specifies a hint and
 // the subordinate does not, propagate the hint.
 // Likewise for conflict resolution.
-OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
+OrderingHint ChooseHint(const BaseItem *delegate, const OrderingHint &hint)
 {
    auto result =
       !delegate || delegate->orderingHint.type == OrderingHint::Unspecified
@@ -173,7 +175,7 @@ OrderingHint ChooseHint(BaseItem *delegate, const OrderingHint &hint)
 // alternate as the entire tree is recursively visited.
 
 // forward declaration for mutually recursive functions
-void CollectItem(CollectedItems &collection, BaseItem &item,
+void CollectItem(CollectedItems &collection, const BaseItem &item,
    const OrderingHint &hint, void *pComputedItemContext);
 void CollectItems(CollectedItems &collection, const GroupItemBase &items,
    const OrderingHint &hint, void *pComputedItemContext)
@@ -184,11 +186,11 @@ void CollectItems(CollectedItems &collection, const GroupItemBase &items,
             ChooseHint(item.get(), hint), pComputedItemContext);
 }
 void CollectItem(CollectedItems &collection,
-   BaseItem &item, const OrderingHint &hint, void *pComputedItemContext)
+   const BaseItem &item, const OrderingHint &hint, void *pComputedItemContext)
 {
    using namespace Registry;
    if (const auto pIndirect =
-       dynamic_cast<IndirectItemBase*>(&item)) {
+       dynamic_cast<const IndirectItemBase*>(&item)) {
       auto delegate = pIndirect->ptr.get();
       if (delegate)
          // recursion
@@ -198,7 +200,7 @@ void CollectItem(CollectedItems &collection,
    }
    else
    if (const auto pComputed =
-       dynamic_cast<ComputedItemBase*>(&item)) {
+       dynamic_cast<const ComputedItemBase*>(&item)) {
       auto result = pComputed->factory(pComputedItemContext);
       if (result) {
          // Guarantee long enough lifetime of the result
@@ -210,7 +212,7 @@ void CollectItem(CollectedItems &collection,
       }
    }
    else
-   if (auto pGroup = dynamic_cast<GroupItemBase*>(&item)) {
+   if (auto pGroup = dynamic_cast<const GroupItemBase*>(&item)) {
       if (pGroup->GetOrdering() == GroupItemBase::Anonymous)
          // anonymous grouping item is transparent to path calculations
          // collect group members now
@@ -224,7 +226,7 @@ void CollectItem(CollectedItems &collection,
    }
    else {
       // Exhaustive type switch
-      assert(dynamic_cast<SingleItem*>(&item));
+      assert(dynamic_cast<const SingleItem*>(&item));
       // common to all single items
       collection.items.push_back({ item, hint });
    }
@@ -374,7 +376,7 @@ struct ItemOrdering {
 // preferences done at the very end of the visitation.
 // This function will succeed whenever the item's name is in the ordering.
 auto CollectedItems::InsertNewItemUsingPreferences(
-   const ItemOrdering &itemOrdering, BaseItem &item)
+   const ItemOrdering &itemOrdering, const BaseItem &item)
       -> bool
 {
    // Note that if more than one plug-in registers items under the same
@@ -419,7 +421,7 @@ auto CollectedItems::InsertNewItemUsingPreferences(
 // For each group node, this may be called in the second and later passes
 // of merging of items.  It will succeed if force is true.
 auto CollectedItems::InsertNewItemUsingHint(ItemOrdering &itemOrdering,
-   BaseItem &item, const OrderingHint &hint, size_t endItemsCount,
+   const BaseItem &item, const OrderingHint &hint, size_t endItemsCount,
    bool force ) -> bool
 {
    auto begin = items.begin(), end = items.end(),
@@ -498,7 +500,7 @@ auto CollectedItems::InsertNewItemUsingHint(ItemOrdering &itemOrdering,
 auto CollectedItems::MergeLater(Item &found, const Identifier &name,
    GroupItemBase::Ordering ordering) -> PlaceHolder *
 {
-   assert(dynamic_cast<GroupItemBase*>(&found.VisitNow()));
+   assert(dynamic_cast<const GroupItemBase*>(&found.VisitNow()));
    // Therefore found.SetMergeLater can be called
 
    auto subGroup = found.MergeLater();
@@ -512,19 +514,20 @@ auto CollectedItems::MergeLater(Item &found, const Identifier &name,
 }
 
 //! @pre `found.VisitNow()` is a GroupItemBase
-void CollectedItems::SubordinateSingleItem(Item &found, BaseItem &item)
+void CollectedItems::SubordinateSingleItem(Item &found, const BaseItem &item)
 {
-   assert(dynamic_cast<GroupItemBase*>(&found.VisitNow()));
+   assert(dynamic_cast<const GroupItemBase*>(&found.VisitNow()));
    MergeLater(found, item.name, GroupItemBase::Weak)->push_back(
       std::make_unique<IndirectItemBase>(
          // shared pointer with vacuous deleter
-         std::shared_ptr<BaseItem>(&item, [](void*){})));
+         std::shared_ptr<const BaseItem>(&item, [](const void*){})));
 }
 
 //! @pre `found.VisitNow()` is a GroupItemBase
-void CollectedItems::SubordinateMultipleItems(Item &found, GroupItemBase &items)
+void CollectedItems::SubordinateMultipleItems(Item &found,
+   const GroupItemBase &items)
 {
-   assert(dynamic_cast<GroupItemBase*>(&found.VisitNow()));
+   assert(dynamic_cast<const GroupItemBase*>(&found.VisitNow()));
    auto subGroup = MergeLater(found, items.name, items.GetOrdering());
    for (const auto &pItem : items)
       subGroup->push_back(std::make_unique<IndirectItemBase>(
@@ -533,7 +536,7 @@ void CollectedItems::SubordinateMultipleItems(Item &found, GroupItemBase &items)
 }
 
 auto CollectedItems::MergeWithExistingItem(const ItemOrdering &itemOrdering,
-   BaseItem &item, OrderingHint::ConflictResolutionPolicy policy) -> bool
+   const BaseItem &item, OrderingHint::ConflictResolutionPolicy policy) -> bool
 {
    // Assume no null pointers remain after CollectItems:
    const auto &name = item.name;
@@ -542,9 +545,9 @@ auto CollectedItems::MergeWithExistingItem(const ItemOrdering &itemOrdering,
       // Collision of names between collection and registry!
       // There are 2 * 2 = 4 cases, as each of the two are group items or
       // not.
-      const auto pRegistryGroup = dynamic_cast<GroupItemBase *>(&item);
+      const auto pRegistryGroup = dynamic_cast<const GroupItemBase *>(&item);
       if (const auto pCollectionGroup =
-         dynamic_cast<GroupItemBase *>(&found->VisitNow()))
+         dynamic_cast<const GroupItemBase *>(&found->VisitNow()))
       {
          // Therefore preconditions of Subordinate calls below are satisfied
          if (pRegistryGroup) {

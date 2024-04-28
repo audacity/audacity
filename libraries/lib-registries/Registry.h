@@ -110,17 +110,17 @@ namespace detail { using namespace TypeList;
    };
 
    using BaseItemPtr = std::unique_ptr<BaseItem>;
-
-   using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
+using BaseItemSharedPtr = std::shared_ptr<BaseItem>;
+using ConstBaseItemSharedPtr = std::shared_ptr<const BaseItem>;
 
    struct REGISTRIES_API IndirectItemBase : BaseItem {
-      explicit IndirectItemBase(const BaseItemSharedPtr &ptr)
+      explicit IndirectItemBase(const ConstBaseItemSharedPtr &ptr)
          : BaseItem{ wxEmptyString }
          , ptr{ ptr }
       {}
       ~IndirectItemBase() override;
 
-      BaseItemSharedPtr ptr;
+      ConstBaseItemSharedPtr ptr;
    };
 
    struct ComputedItemBase;
