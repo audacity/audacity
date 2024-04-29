@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
+import Audacity.ProjectScene
 
 RowLayout {
     id: root
@@ -18,7 +19,7 @@ RowLayout {
 
     property alias navigation: keynavSub
 
-    signal addRequested()
+    signal addRequested(type: int, quantity: int)
     signal moveUpRequested()
     signal moveDownRequested()
     signal removingRequested()
@@ -47,12 +48,26 @@ RowLayout {
         navigation.order: 1
         accessible.name: qsTrc("projectscene", "Add Track")
 
-        text: qsTrc("projectscene", "Add")
+        text: qsTrc("projectscene", "Add new track")
 
         enabled: root.isAddingAvailable
 
+        icon: IconCode.PLUS
+
+        orientation: Qt.Horizontal
+
         onClicked: {
-            root.addRequested()
+            addNewTrack.open()
+
+        }
+
+        AddNewTrackPopup {
+            id: addNewTrack
+
+            onCreateTracks: (type, quantity) => {
+                root.addRequested(type, quantity)
+                addNewTrack.close()
+            }
         }
     }
 

@@ -4,6 +4,7 @@
         <file>qml/Audacity/ProjectScene/TracksPanel.qml</file>
         <file>qml/Audacity/ProjectScene/ClipsView.qml</file>
         <file>qml/Audacity/ProjectScene/ProjectToolBar.qml</file>
+        <file>qml/Audacity/ProjectScene/internal/AddNewTrackPopup.qml</file>
         <file>qml/Audacity/ProjectScene/internal/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/internal/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/internal/audio/VolumePressureMeter.qml</file>

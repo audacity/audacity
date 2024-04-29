@@ -31,6 +31,8 @@
 #include "view/clipsview/trackclipsitem.h"
 #include "view/clipsview/clipitem.h"
 
+#include "types/tracktypes.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 
@@ -59,6 +61,8 @@ void ProjectSceneModule::registerUiTypes()
 
     // tracks panel
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");
+    qmlRegisterUncreatableType<TrackTypes>("Audacity.ProjectScene", 1, 0, "TrackType",
+                                           "Not creatable as it is an enum type");
 
     // clips view
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
