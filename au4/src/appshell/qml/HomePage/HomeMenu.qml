@@ -85,11 +85,8 @@ Item {
             spacing: 0
 
             model: [
-                { "name": "projects", "title": qsTrc("appshell", "Project"), "icon": IconCode.MUSIC_NOTES },
-                // { "name": "extensions", "title": qsTrc("appshell", "Plugins"), "icon":  IconCode.PLUGIN },
-                // TODO: need to implement
-                // { "name": "audio", "title": qsTrc("appshell", "Audio"), "icon":  IconCode.AUDIO },
-                { "name": "learn", "title": qsTrc("appshell", "Learn"), "icon":  IconCode.MORTAR_BOARD }
+                { "name": "projects", "title": qsTrc("appshell", "Project"), "icon": IconCode.WAVEFORM },
+                { "name": "learn", "title": qsTrc("appshell", "Learn"), "icon":  IconCode.LEARN }
             ]
 
             currentIndex: 0
