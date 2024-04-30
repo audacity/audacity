@@ -58,8 +58,8 @@
   ;;; 'Commands+' is not supported in Audacity 2.3.0
   (let (type
         info
-        (types '("Commands" "Menus" "Preferences"
-                "Tracks" "Clips" "Envelopes" "Labels" "Boxes")))
+        (types '("Commands" "Menus" "Preferences" "Tracks" "Clips"
+				 "Envelopes" "Labels" "Boxes" "Selection")))
     ;Case insensitive search, then set 'type' with correct case string, or  NIL.
     (setf type (first (member str types :test 'string-equal)))
     (if (not type)

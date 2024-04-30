@@ -422,7 +422,7 @@ void Viewport::DoScroll()
 
    auto width = viewInfo.GetTracksUsableWidth();
    const auto zoom = viewInfo.GetZoom();
-   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, total - width / zoom);
+   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, std::max(lowerBound, total - width / zoom));
 
    const auto pos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
    viewInfo.vpos = pos * scrollStep;

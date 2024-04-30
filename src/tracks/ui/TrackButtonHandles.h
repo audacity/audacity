@@ -41,32 +41,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////
-class SelectButtonHandle final : public ButtonHandle
-{
-   SelectButtonHandle(const SelectButtonHandle&) = delete;
 
-protected:
-   Result CommitChanges
-      (const wxMouseEvent &event, AudacityProject *pProject, wxWindow *pParent)
-      override;
-
-   TranslatableString Tip(
-      const wxMouseState &state, AudacityProject &) const override;
-
-public:
-   explicit SelectButtonHandle
-      ( const std::shared_ptr<Track> &pTrack, const wxRect &rect );
-
-   SelectButtonHandle &operator=(const SelectButtonHandle&) = default;
-
-   virtual ~SelectButtonHandle();
-
-   static UIHandlePtr HitTest
-      (std::weak_ptr<SelectButtonHandle> &holder,
-       const wxMouseState &state, const wxRect &rect, TrackPanelCell *pCell);
-};
-
-////////////////////////////////////////////////////////////////////////////////
 class CloseButtonHandle final : public ButtonHandle
 {
    CloseButtonHandle(const CloseButtonHandle&) = delete;

@@ -121,8 +121,6 @@ class THEME_API AColor {
    static wxBrush labelUnselectedBrush;
    static wxBrush labelSelectedBrush;
    static wxBrush labelSyncLockSelBrush;
-   static wxPen labelUnselectedPen;
-   static wxPen labelSelectedPen;
    static wxPen labelSyncLockSelPen;
    static wxPen labelSurroundPen;
 

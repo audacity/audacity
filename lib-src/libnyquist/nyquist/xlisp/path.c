@@ -25,6 +25,7 @@
  */
 
 #include <string.h>
+#include <stdint.h>
 
 #include "switches.h"
 #include "xlisp.h"

@@ -5,6 +5,7 @@
 #include <memory>
 #include <new> // align_val_t and hardware_destructive_interference_size
 #include <cstdlib> // Needed for free.
+#include <cmath>
 #ifndef safenew
 #define safenew new
 #endif

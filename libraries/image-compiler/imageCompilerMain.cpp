@@ -76,8 +76,6 @@ bool App::OnInit()
 {
    // Leave no persistent side-effect on preferences
    SettingScope scope;
-   // Don't blend colors
-   GUIBlendThemes.Write(false);
 
    // So that the program can interpret PNG
    wxInitAllImageHandlers();

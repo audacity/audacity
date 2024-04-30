@@ -1,5 +1,13 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.5.1
+
+ This is a hotfix release. It fixes the following bugs:
+ 
+   * #6322 Fixed a crash on launch on macOS 11 and older.
+   * #6324 Fixed the update notification looking for alpha versions instead of release versions.
+   * #6321 Fixed a freeze when using macros on multiple files.
+
 Changes in version 3.5.0
 
 Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.

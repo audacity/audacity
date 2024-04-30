@@ -724,8 +724,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.cpp
       tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.h
       tracks/playabletrack/wavetrack/ui/LowlitClipButton.cpp
@@ -771,8 +769,6 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
-      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
       tracks/timetrack/ui/TimeTrackControls.cpp
@@ -1251,10 +1247,12 @@ else()
    # Create the desktop file
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
-   add_executable(findlib ../linux/findlib.c)
-   target_link_libraries(findlib ${CMAKE_DL_LIBS})
-   set_target_property_all( findlib SKIP_BUILD_RPATH On )
-   set_target_property_all( findlib RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}/${_EXEDIR}" )
+   if( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+      add_executable(findlib ../linux/findlib.c)
+      target_link_libraries(findlib ${CMAKE_DL_LIBS})
+      set_target_property_all( findlib SKIP_BUILD_RPATH On )
+      set_target_property_all( findlib RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}/${_EXEDIR}" )
+   endif()
 endif()
 
 if(CRASH_REPORT_URL)
@@ -1313,6 +1311,7 @@ set( AUDACITY_LIBRARIES
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface
+   lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
 )
 
@@ -1353,6 +1352,12 @@ endif()
 if( ${_OPT}has_url_schemes_support )
    list( APPEND AUDACITY_LIBRARIES
       lib-url-schemes-interface
+   )
+endif()
+
+if( ${_OPT}has_audiocom_upload )
+   list( APPEND AUDACITY_LIBRARIES
+      lib-cloud-audiocom-interface
    )
 endif()
 

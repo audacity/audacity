@@ -257,8 +257,11 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          // progress dialog correct
          if (len == 0 && genLength)
             len = *genLength;
+         WideSampleSequence *pSeq = &chan;
+         if (pRight)
+            pSeq = &wt;
          WideSampleSource source{
-            chan, size_t(pRight ? 2 : 1), start, len, pollUser };
+            *pSeq, size_t(pRight ? 2 : 1), start, len, pollUser };
          // Assert source is safe to Acquire inBuffers
          assert(source.AcceptsBuffers(inBuffers));
          assert(source.AcceptsBlockSize(inBuffers.BlockSize()));

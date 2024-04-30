@@ -58,8 +58,6 @@ wxBrush AColor::labelTextEditBrush;
 wxBrush AColor::labelUnselectedBrush;
 wxBrush AColor::labelSelectedBrush;
 wxBrush AColor::labelSyncLockSelBrush;
-wxPen AColor::labelUnselectedPen;
-wxPen AColor::labelSelectedPen;
 wxPen AColor::labelSyncLockSelPen;
 wxPen AColor::labelSurroundPen;
 wxPen AColor::trackFocusPens[3];
@@ -572,8 +570,6 @@ void AColor::Init()
    theTheme.SetBrushColour( labelUnselectedBrush,  clrLabelUnselectedBrush );
    theTheme.SetBrushColour( labelSelectedBrush,    clrLabelSelectedBrush );
    theTheme.SetBrushColour( labelSyncLockSelBrush, clrSyncLockSel );
-   theTheme.SetPenColour( labelUnselectedPen,   clrLabelUnselectedPen );
-   theTheme.SetPenColour( labelSelectedPen,     clrLabelSelectedPen );
    theTheme.SetPenColour( labelSyncLockSelPen,  clrSyncLockSel );
    theTheme.SetPenColour( labelSurroundPen,     clrLabelSurroundPen );
 
@@ -590,9 +586,6 @@ void AColor::Init()
    theTheme.SetBrushColour( indicatorBrush[1], clrPlaybackBrush);
 
    theTheme.SetBrushColour( playRegionBrush[0],clrRulerRecordingBrush);
-   // theTheme.SetPenColour(   playRegionPen[0],  clrRulerRecordingPen);
-   // theTheme.SetBrushColour( playRegionBrush[1],clrRulerPlaybackBrush);
-   // theTheme.SetPenColour(   playRegionPen[1],  clrRulerPlaybackPen);
 
    //Determine tooltip color
    tooltipPen.SetColour( wxSystemSettingsNative::GetColour(wxSYS_COLOUR_INFOTEXT) );

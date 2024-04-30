@@ -134,7 +134,6 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Yana Larina"), roleTeamMember);
-   AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
@@ -162,6 +161,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Paul Licameli"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Leland Lucius"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Dominic Mazzoni"), coFounderFormat, roleEmeritusTeam);
    AddCredit(wxT("Markus Meyer"), developerFormat, roleEmeritusTeam);

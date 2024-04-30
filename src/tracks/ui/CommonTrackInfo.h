@@ -74,11 +74,6 @@ namespace CommonTrackInfo
    void GetMinimizeRect(const wxRect & rect, wxRect &dest);
 
    AUDACITY_DLL_API
-   void GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest );
-   AUDACITY_DLL_API
-   void GetSelectButtonRect(const wxRect & rect, wxRect &dest);
-
-   AUDACITY_DLL_API
    void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );
    AUDACITY_DLL_API
    void GetSyncLockIconRect(const wxRect & rect, wxRect &dest);

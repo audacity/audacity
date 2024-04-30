@@ -1,0 +1,10 @@
+add_unit_test(
+   NAME
+      lib-wave-track-paint-test
+   SOURCES
+      GraphicsDataCacheTests.cpp
+   LIBRARIES
+      lib-wave-track-paint
+      lib-screen-geometry-interface
+      wxwidgets::base
+)

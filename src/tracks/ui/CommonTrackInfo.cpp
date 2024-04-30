@@ -310,31 +310,6 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
                     minimized);
    }
 
-   {
-      wxRect bev = rect;
-      GetSelectButtonHorizontalBounds(rect, bev);
-      auto target = context.target.get();
-      bool hit = target && target->FindTrack().get() == pTrack;
-      bool captured = hit && target->IsDragging();
-      bool down = captured && bev.Contains( context.lastState.GetPosition());
-
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
-
-      wxColour c = theTheme.Colour(clrTrackPanelText);
-      dc->SetBrush(c);
-      dc->SetPen(c);
-
-      wxString str = _("Select");
-      wxCoord textWidth;
-      wxCoord textHeight;
-      TrackInfo::SetTrackInfoFont(dc);
-      dc->GetTextExtent(str, &textWidth, &textHeight);
-
-      dc->SetTextForeground( c );
-      dc->SetTextBackground( wxTRANSPARENT );
-      dc->DrawText(str, bev.x + 2 + (bev.width-textWidth)/2, bev.y + (bev.height - textHeight) / 2);
-   }
-
 
    // Draw the sync-lock indicator if this track is in a sync-lock selected group.
    if (syncLockSelected)
@@ -405,32 +380,6 @@ void CommonTrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &d
 void CommonTrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    GetMinimizeHorizontalBounds( rect, dest );
-   auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
-   dest.y = rect.y + results.first;
-   dest.height = results.second;
-}
-
-void CommonTrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest )
-{
-   const int space = 0;// was 3.
-   dest.x = rect.x + space;
-
-   wxRect syncLockRect;
-   GetSyncLockHorizontalBounds( rect, syncLockRect );
-   wxRect minimizeRect;
-   GetMinimizeHorizontalBounds( rect, minimizeRect );
-
-   dest.x = dest.x + space + minimizeRect.width;
-   // Width is rect.width less space on left for track select
-   // and on right for sync-lock icon.
-   dest.width = rect.width - (space + syncLockRect.width) - (space + minimizeRect.width);
-}
-
-
-void CommonTrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
-{
-   GetSelectButtonHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
