@@ -25,6 +25,10 @@
 
 #include "types/projectscenetypes.h"
 
+#include "ui/iuiactionsregister.h"
+
+#include "internal/projectsceneuiactions.h"
+
 #include "internal/projectsceneconfiguration.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
@@ -37,6 +41,7 @@
 
 using namespace au::projectscene;
 using namespace muse::modularity;
+using namespace muse::ui;
 
 static void projectscene_init_qrc()
 {
@@ -55,6 +60,7 @@ void ProjectSceneModule::registerResources()
 
 void ProjectSceneModule::registerExports()
 {
+    m_uiActions = std::make_shared<ProjectSceneUiActions>();
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
@@ -62,6 +68,10 @@ void ProjectSceneModule::registerExports()
 
 void ProjectSceneModule::resolveImports()
 {
+    auto ar = ioc()->resolve<IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }
 
 void ProjectSceneModule::registerUiTypes()

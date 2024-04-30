@@ -19,7 +19,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
-             IconCode::Code::PLAY
+             IconCode::Code::PLAY_FILL
              ),
     UiAction("stop",
              au::context::UiCtxNotationOpened,
@@ -28,12 +28,19 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Stop playback"),
              IconCode::Code::STOP
              ),
-    UiAction("rewind",
+    UiAction("rewind-start",
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
-             TranslatableString("action", "Rewind"),
-             TranslatableString("action", "Rewind"),
-             IconCode::Code::REWIND
+             TranslatableString("action", "Rewind to start"),
+             TranslatableString("action", "Rewind to start"),
+             IconCode::Code::REWIND_START_FILL
+             ),
+    UiAction("rewind-end",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Rewind to end"),
+             TranslatableString("action", "Rewind to end"),
+             IconCode::Code::REWIND_END_FILL
              ),
     UiAction("loop",
              au::context::UiCtxNotationOpened,
@@ -43,13 +50,34 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              IconCode::Code::LOOP,
              Checkable::Yes
              ),
-    UiAction("playback-setup",
+    UiAction("audio-setup",
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
-             TranslatableString("action", "Playback setup"),
-             TranslatableString("action", "Open playback setup dialog"),
-             IconCode::Code::NONE
-             )
+             TranslatableString("action", "Audio setup"),
+             TranslatableString("action", "Open audio setup dialog"),
+             IconCode::Code::CONFIGURE
+             ),
+    UiAction("playback-level",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Playback level"),
+             TranslatableString("action", "Set playback level"),
+             IconCode::Code::AUDIO // todo
+             ),
+    UiAction("playback-time",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Playback time"),
+             TranslatableString("action", "Set playback time"),
+             IconCode::Code::AUDIO // todo
+             ),
+    UiAction("record",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Record"),
+             TranslatableString("action", "Record"),
+             IconCode::Code::RECORD_FILL
+             ),
 };
 
 const UiActionList PlaybackUiActions::m_settingsActions = {
@@ -164,11 +192,24 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
     static ToolConfig config;
     if (!config.isValid()) {
         config.items = {
-            { "rewind", true },
             { "play", true },
+            { "rewind-start", true },
+            { "rewind-end", true },
+            { "record", true },
             { "loop", true },
-            { "loop-in", true },
-            { "loop-out", true },
+            { "", true },
+            { "envelope", true },
+            { "zoomin", true },
+            { "zoomout", true },
+            { "fit-selection", true },
+            { "fit-project", true },
+            { "zoom", true },
+            { "trim-audio-outside-selection", true },
+            { "silence-audio-selection", true },
+            { "", true },
+            { "playback-time", true },
+            { "", true },
+            { "playback-level", true }
         };
     }
     return config;
