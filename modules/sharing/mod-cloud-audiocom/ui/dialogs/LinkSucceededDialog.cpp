@@ -46,7 +46,7 @@ LinkSucceededDialog::LinkSucceededDialog(wxWindow* parent)
          {
             s.AddSpace(1, 0, 1);
 
-            auto btn = s.AddButton(XO("&Ok"));
+            auto btn = s.AddButton(XO("&OK"));
 
             btn->Bind(wxEVT_BUTTON, [this](auto) { EndModal(wxID_OK); });
             btn->SetDefault();
