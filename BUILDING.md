@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-* **python3** >= 3.8
-* **cmake** >= 3.16
+* **python3** >= 3.8 (you can find an official download here: https://www.python.org/downloads/)
+* **cmake** >= 3.16 (you can find an official download here: https://cmake.org/download/)
 * A working C++ 17 compiler
 * Graphviz (optional)
 
