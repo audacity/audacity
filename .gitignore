@@ -1,3 +1,5 @@
+CMakeUserPresets.json
+
 # Autotools generated files
 locale/Makefile.in
 Makefile
@@ -148,6 +150,10 @@ help/temp*
 # Misc
 src/RevisionIdent.h
 win/resetPrefs.txt
+libraries/lib-music-information-retrieval/tests/benchmarking-dataset/
+libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/debug_output.py
+libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/stft_log.py
+libraries/lib-music-information-retrieval/tests/TatumQuantizationFitVisualization/__pycache__/
 
 # Emacs backup files
 *~
@@ -167,7 +173,6 @@ win/xaudacity.ico
 linuxdeploy/*
 appimagetool/*
 
-.build.x64/
-.build.arm64/
+.build.*/
 .conan/
 .debug/

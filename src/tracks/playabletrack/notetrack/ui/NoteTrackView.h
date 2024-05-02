@@ -20,7 +20,7 @@ class NoteTrackView final : public CommonChannelView
 
 public:
    explicit
-   NoteTrackView( const std::shared_ptr<Track> &pTrack );
+   NoteTrackView(const std::shared_ptr<Channel> &pChannel);
    ~NoteTrackView() override;
 
 private:

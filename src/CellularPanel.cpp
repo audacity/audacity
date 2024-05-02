@@ -500,7 +500,7 @@ bool CellularPanel::IsMouseCaptured()
 
 void CellularPanel::OnContextMenu(wxContextMenuEvent & WXUNUSED(event))
 {
-   DoContextMenu();
+   DoContextMenu({});
 }
 
 /// Handle mouse wheel rotation (for zoom in/out, vertical and horizontal scrolling)
@@ -564,7 +564,7 @@ void CellularPanel::OnCaptureKey(wxCommandEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->CaptureKey(*kevent, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
       event.Skip(kevent->GetSkipped());
    }
 
@@ -618,11 +618,10 @@ void CellularPanel::OnKeyDown(wxKeyEvent & event)
    }
 
    const auto t = GetFocusedCell();
-
    if (t) {
       const unsigned refreshResult =
          t->KeyDown(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
    }
    else
       event.Skip();
@@ -645,7 +644,7 @@ void CellularPanel::OnChar(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->Char(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
    }
    else
       event.Skip();
@@ -677,7 +676,7 @@ void CellularPanel::OnKeyUp(wxKeyEvent & event)
    if (t) {
       const unsigned refreshResult =
          t->KeyUp(event, *mViewInfo, this, GetProject());
-      ProcessUIHandleResult(t, t, refreshResult);
+      ProcessUIHandleResult(t.get(), t.get(), refreshResult);
       return;
    }
 
@@ -861,7 +860,7 @@ public:
 
    ~DefaultRightButtonHandler() override;
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    virtual Result Click
@@ -967,13 +966,15 @@ void CellularPanel::HandleClick( const TrackPanelMouseEvent &tpmEvent )
    }
 }
 
-void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
+void CellularPanel::DoContextMenu( std::shared_ptr<TrackPanelCell> pCell )
 {
    if( !pCell ) {
       pCell = GetFocusedCell();
       if( !pCell )
          return;
    }
+
+   std::weak_ptr<TrackPanelCell> wCell = pCell;
 
    const auto delegate = pCell->ContextMenuDelegate();
    if (!delegate)
@@ -982,9 +983,9 @@ void CellularPanel::DoContextMenu( TrackPanelCell *pCell )
    auto rect = FindRect( *delegate );
    const UIHandle::Result refreshResult =
       delegate->DoContextMenu(rect, this, nullptr, GetProject());
+   pCell.reset();
 
-   // To do: use safer shared_ptr to pCell
-   ProcessUIHandleResult(pCell, pCell, refreshResult);
+   ProcessUIHandleResult(wCell.lock().get(), wCell.lock().get(), refreshResult);
 }
 
 void CellularPanel::OnSetFocus(wxFocusEvent &event)

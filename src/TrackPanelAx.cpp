@@ -309,7 +309,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
 
          auto t = pFocus->FindTrack(childId);
 
-         if( t == NULL )
+         if (!t)
             return wxACC_FAIL;
 
          name->Printf("%d %s", pFocus->TrackNum(t), t->GetName());
@@ -367,7 +367,7 @@ wxAccStatus TrackPanelAx::GetName( int childId, wxString* name )
                this track is selected.*/
             name->Append( wxT(" ") + wxString(_( " Selected" )) );
          }
-         if (SyncLock::IsSyncLockSelected(t.get()))
+         if (SyncLock::IsSyncLockSelected(*t))
          {
             /* i18n-hint: This is for screen reader software and indicates that
                this track is shown with a sync-locked icon.*/
@@ -453,7 +453,7 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
       *state = wxACC_STATE_SYSTEM_FOCUSABLE | wxACC_STATE_SYSTEM_SELECTABLE;
       if (t)
       {
-         if (t == pFocus->PeekFocus())
+         if (t == pFocus->PeekFocus() && GetWindow() == wxWindow::FindFocus())
          {
             *state |= wxACC_STATE_SYSTEM_FOCUSED;
          }
@@ -466,7 +466,8 @@ wxAccStatus TrackPanelAx::GetState( int childId, long* state )
    }
    else     // childId == wxACC_SELF
    {
-      *state = wxACC_STATE_SYSTEM_FOCUSABLE + wxACC_STATE_SYSTEM_FOCUSED;
+      // let wxWidgets use a standard accessible object for the state
+      return wxACC_NOT_IMPLEMENTED;
    }
 #endif
 

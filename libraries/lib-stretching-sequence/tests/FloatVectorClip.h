@@ -28,7 +28,7 @@ public:
 
    sampleCount GetVisibleSampleCount() const override;
 
-   size_t GetWidth() const override;
+   size_t NChannels() const override;
 
    int GetRate() const override;
 
@@ -47,6 +47,28 @@ public:
    double GetStretchRatio() const override
    {
       return stretchRatio;
+   }
+
+   int GetCentShift() const override
+   {
+      return 0;
+   }
+
+   Observer::Subscription
+   SubscribeToCentShiftChange(std::function<void(int)> cb) const override
+   {
+      return {};
+   }
+
+   PitchAndSpeedPreset GetPitchAndSpeedPreset() const override
+   {
+      return PitchAndSpeedPreset::Default;
+   }
+
+   Observer::Subscription SubscribeToPitchAndSpeedPresetChange(
+      std::function<void(PitchAndSpeedPreset)> cb) const override
+   {
+      return {};
    }
 
 public:

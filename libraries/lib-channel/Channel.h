@@ -20,29 +20,22 @@
 #include <vector>
 
 #include "ClientData.h"
-#include "MemoryX.h"
+#include "IteratorX.h"
 
 //! A start and an end time, and whatever else subclasses associate with them
 /*!
  Start and end are immutable, but subclasses may add other mutable data
- @invariant `Start() <= End()`
  */
 class CHANNEL_API ChannelGroupInterval {
 public:
-   /*! @pre `start <= end` */
-   ChannelGroupInterval(double start, double end)
-      : mStart{ start }, mEnd{ end }
-   {
-      assert(start <= end);
-   }
+   ChannelGroupInterval() = default;
 
    virtual ~ChannelGroupInterval();
 
-   double Start() const { return mStart; }
-   double End() const { return mEnd; }
-
-private:
-   const double mStart, mEnd;
+   //! @post result: `result < End()`
+   virtual double Start() const = 0;
+   //! @post result: `Start() < result`
+   virtual double End() const = 0;
 };
 
 //! The intersection of a Channel and a WideChannelGroupInterval
@@ -62,22 +55,13 @@ class ChannelGroup;
  */
 class CHANNEL_API WideChannelGroupInterval : public ChannelGroupInterval {
 public:
-   //! Initialize immutable properties, constraining number of channels to
-   //! equal that of the containing group
-   /*!
-    @pre `group.IsLeader()`
-    @pre `start <= end`
-    @post `NChannels() == group.NChannels()`
-    */
-   WideChannelGroupInterval(
-      const ChannelGroup &group, double start, double end);
    ~WideChannelGroupInterval() override;
 
    //! Report the number of channels
    /*!
     @post result: `result >= 1`
     */
-   size_t NChannels() const { return mNChannels; }
+   virtual size_t NChannels() const = 0;
 
    //! Retrieve a channel, cast to the given type
    /*!
@@ -169,9 +153,6 @@ protected:
     @post result: `!(iChannel < NChannels()) || result`
     */
    virtual std::shared_ptr<ChannelInterval> DoGetChannel(size_t iChannel) = 0;
-
-private:
-   const size_t mNChannels;
 };
 
 class CHANNEL_API Channel
@@ -190,8 +171,6 @@ public:
     @return `ii` such that `this == GetChannelGroup().GetChannel(ii).get()`
     */
    size_t GetChannelIndex() const;
-
-   size_t ReallyGetChannelIndex() const;
 
    /*!
       @name Acesss to intervals
@@ -293,16 +272,19 @@ protected:
     */
    virtual ChannelGroup &DoGetChannelGroup() const = 0;
 
-   //! This is temporary!  It defaults to call the above
-   virtual ChannelGroup &ReallyDoGetChannelGroup() const;
-
 private:
-   int FindChannelIndex() const;
 };
 
-class CHANNEL_API ChannelGroup
+//! Hosting of objects attached by higher level code
+using ChannelGroupAttachments = ClientData::Site<
+   ChannelGroup, ClientData::Cloneable<>, ClientData::DeepCopying
+>;
+
+class CHANNEL_API ChannelGroup : public ChannelGroupAttachments
 {
 public:
+   using Attachments = ChannelGroupAttachments;
+
    virtual ~ChannelGroup();
 
    //! Get the minimum of Start() values of intervals, or 0 when none
@@ -311,15 +293,9 @@ public:
    double GetEndTime() const;
 
    //! Change start time by given duration
-   /*
-    @pre `IsLeader()`
-    */
    void ShiftBy(double t) { MoveTo(GetStartTime() + t); }
 
    //! Change start time to given time point
-   /*
-    @pre `IsLeader()`
-    */
    virtual void MoveTo(double o) = 0;
 
    /*!
@@ -401,28 +377,34 @@ public:
    };
 
    //! Get range of channels with mutative access
-   /*!
-    @pre `IsLeader()`
-    */
    template<typename ChannelType = Channel>
    IteratorRange<ChannelIterator<ChannelType>> Channels()
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NChannels() } };
    }
 
    //! Get range of channels with read-only access
-   /*!
-    @pre `IsLeader()`
-    */
    template<typename ChannelType = const Channel>
    auto Channels() const
       -> std::enable_if_t<std::is_const_v<ChannelType>,
          IteratorRange<ChannelIterator<ChannelType>>
       >
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NChannels() } };
+   }
+
+   std::shared_ptr<Channel> NthChannel(size_t nChannel)
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
+   }
+
+   std::shared_ptr<const Channel> NthChannel(size_t nChannel) const
+   {
+      auto iter = Channels().begin();
+      std::advance(iter, nChannel);
+      return *iter;
    }
 
    /*!
@@ -506,27 +488,19 @@ public:
    };
 
    //! Get range of intervals with mutative access
-   /*
-      @pre `IsLeader()`
-    */
    template<typename IntervalType = Interval>
    IteratorRange<IntervalIterator<IntervalType>> Intervals()
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
    //! Get range of intervals with read-only access
-   /*
-      @pre `IsLeader()`
-    */
    template<typename IntervalType = const Interval>
    auto Intervals() const
       -> std::enable_if_t<std::is_const_v<IntervalType>,
          IteratorRange<IntervalIterator<IntervalType>>
       >
    {
-      assert(IsLeader());
       return { { this, 0 }, { this, NIntervals() } };
    }
 
@@ -534,39 +508,6 @@ public:
       @}
    */
 
-   // TODO remove this which is only used in assertions
-   virtual bool IsLeader() const = 0;
-
-   //! Hosting of objects attached by higher level code
-   struct ChannelGroupData;
-   using Attachments = ClientData::Site<
-      ChannelGroupData, ClientData::Cloneable<>, ClientData::DeepCopying
-   >;
-
-   //! Make attachment site on demand as needed
-   ChannelGroupData &GetGroupData();
-   //! Make attachment site on demand as needed
-   //! May make new group data on demand, but consider that logically const
-   const ChannelGroupData &GetGroupData() const;
-
-   //! Do not make attachment site on demand if absent
-   ChannelGroupData *FindGroupData() { return mpGroupData.get(); }
-   //! Do not make attachment site on demand if absent
-   const ChannelGroupData *FindGroupData() const { return mpGroupData.get(); }
-
-   //! Copy, including cloning of attached objects
-   void Init(const ChannelGroup &other);
-
-   //! Leave all attachments null
-   void DestroyGroupData();
-
-   //! Move attachments out
-   std::unique_ptr<ChannelGroupData> DetachGroupData();
-
-   //! Replace any previous attachments
-   void AssignGroupData(std::unique_ptr<ChannelGroupData> pGroupData);
-
-   // TODO wide wave tracks -- remove this
    //! For two tracks describes the type of the linkage
    enum class LinkType : int {
        None = 0, //!< No linkage
@@ -577,18 +518,10 @@ public:
        Aligned, //!< Tracks are grouped and changes should be synchronized
    };
 
-   // Structure describing data common to channels of a group of tracks
-   // Should be deep-copyable (think twice before adding shared pointers!)
-   struct CHANNEL_API ChannelGroupData : Attachments {
-      using Attachments = ChannelGroup::Attachments;
-      wxString mName;
-      LinkType mLinkType{ LinkType::None };
-      std::optional<double> mProjectTempo;
-      bool mSelected{ false };
-   };
-
 protected:
    //! Retrieve a channel
+   //! For fixed iChannel, resulting address must be unchanging, if there has
+   //! been no other mutation of this ChannelGroup
    /*!
     @post result: `!(iChannel < NChannels()) || result`
     */
@@ -599,10 +532,6 @@ protected:
     @post result: `!(iInterval < NIntervals()) || result`
     */
    virtual std::shared_ptr<Interval> DoGetInterval(size_t iInterval) = 0;
-
-private:
-   // TODO wide wave tracks -- Make ChannelGroup itself the Site
-   std::unique_ptr<ChannelGroupData> mpGroupData;
 };
 
 inline size_t Channel::NIntervals() const
@@ -613,8 +542,8 @@ inline size_t Channel::NIntervals() const
 template<typename IntervalType>
 std::shared_ptr<IntervalType> Channel::GetInterval(size_t iInterval)
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 
 template<typename IntervalType>
@@ -622,7 +551,7 @@ auto Channel::GetInterval(size_t iInterval) const
    -> std::enable_if_t<std::is_const_v<IntervalType>,
       std::shared_ptr<IntervalType>>
 {
-   return ReallyDoGetChannelGroup().GetInterval(iInterval)
-      ->template GetChannel<IntervalType>(ReallyGetChannelIndex());
+   return DoGetChannelGroup().GetInterval(iInterval)
+      ->template GetChannel<IntervalType>(GetChannelIndex());
 }
 #endif

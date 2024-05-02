@@ -63,7 +63,9 @@ public:
    const ExportPlugin* GetPlugin() const;
    int GetFormat() const;
    int GetSampleRate() const;
-   ExportProcessor::Parameters GetParameters() const;
+
+   ///@return May return std::nullopt if plugin isn't properly configured
+   std::optional<ExportProcessor::Parameters> GetParameters() const;
    int GetChannels() const;
 
    MixerOptions::Downmix* GetMixerSpec() const;
@@ -86,7 +88,6 @@ private:
    void OnOptionsHandlerEvent(const ExportOptionsHandlerEvent& e);
    
    void UpdateSampleRateList();
-   void UpdateFileNameExt(const wxString& ext);
    void UpdateMaxChannels(unsigned maxChannels);
 
    AudacityProject& mProject;

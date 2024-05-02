@@ -38,9 +38,6 @@ public:
 
    virtual ~TrackShifter() = 0;
    //! There is always an associated track
-   /*!
-    @post result: `result.IsLeader()`
-    */
    virtual Track &GetTrack() const = 0;
 
    //! Possibilities for HitTest on the clicked track
@@ -83,9 +80,25 @@ public:
    //! Change all intervals from fixed to moving
    void UnfixAll();
 
+   //! A simple time interval
+   /*!
+    @invariant `Start() <= End()`
+    */
+   struct TimeInterval {
+      TimeInterval(double start, double end)
+         : mStart{ start }, mEnd{ std::max(start, end) }
+      {}
+      
+      double Start() const { return mStart; }
+      double End() const { return mEnd; }
+   private:
+      const double mStart;
+      const double mEnd;
+   };
+
    //! Notifies the shifter that a region is selected, so it may update its fixed and moving intervals
    /*! Default behavior:  if any part of the track is selected, unfix all parts of it. */
-   virtual void SelectInterval(const ChannelGroupInterval &interval);
+   virtual void SelectInterval(TimeInterval interval);
 
    //! Whether unfixing of an interval should propagate to all overlapping intervals in the sync lock group
    virtual bool SyncLocks() = 0;
@@ -116,7 +129,6 @@ public:
    //! Whether intervals may migrate to the other track, not yet checking all
    //! placement constraints
    /*!
-    @pre otherTrack.IsLeader()
     Default implementation returns false
     */
    virtual bool MayMigrateTo(Track &otherTrack);
@@ -170,14 +182,13 @@ public:
 
 protected:
    /*! Unfix any of the intervals that intersect the given one; may be useful to override `SelectInterval()` */
-   void CommonSelectInterval(const ChannelGroupInterval &interval);
+   void CommonSelectInterval(TimeInterval interval);
 
    /*!
     May be useful to override `MayMigrateTo()`, if certain other needed
     overrides are given.
     Returns true, iff: tracks have same type, and their channel groups have same
     width
-    @pre `otherTrack.IsLeader()`
     */
    bool CommonMayMigrateTo(Track &otherTrack);
 
@@ -201,9 +212,6 @@ private:
 //! invoking Track::ShiftBy()
 class CoarseTrackShifter final : public TrackShifter {
 public:
-   /*!
-    @pre `track.IsLeader()`
-    */
    CoarseTrackShifter(Track &track);
    ~CoarseTrackShifter() override;
    Track &GetTrack() const override { return *mpTrack; }
@@ -219,9 +227,6 @@ private:
 
 struct MakeTrackShifterTag;
 //! Declare an open method to get time shifting policy for the track
-/*!
- @pre The Track `IsLeader()`
- */
 using MakeTrackShifter = AttachedVirtualFunction<
    MakeTrackShifterTag, std::unique_ptr<TrackShifter>, Track, AudacityProject&>;
 DECLARE_EXPORTED_ATTACHED_VIRTUAL(AUDACITY_DLL_API, MakeTrackShifter);
@@ -240,9 +245,6 @@ struct AUDACITY_DLL_API ClipMoveState {
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
    
    //! Will associate a TrackShifter with each track in the list
-   /*!
-    @pre `capturedTrack.IsLeader()`
-    */
    void Init(
       AudacityProject &project,
       Track &capturedTrack, //<! pHit if not null associates with this track
@@ -264,16 +266,12 @@ struct AUDACITY_DLL_API ClipMoveState {
    //! Offset tracks or intervals horizontally, without adjusting the offset
    void DoHorizontalOffset(double offset);
 
-   // This should be a leader track when not null
    std::shared_ptr<Track> mCapturedTrack;
 
    bool initialized{ false };
    bool movingSelection {};
    bool wasMoved{ false };
    double hSlideAmount {};
-   /*!
-    @invariant all keys of this map point to leader tracks
-    */
    ShifterMap shifters;
    wxInt64 snapLeft { -1 }, snapRight { -1 };
 
@@ -314,7 +312,7 @@ public:
 
    virtual ~TimeShiftHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    void Enter(bool forward, AudacityProject *) override;
 
@@ -338,9 +336,6 @@ public:
 
    bool Clicked() const;
 
-   /*!
-    @return will point only to a leader
-    */
    std::shared_ptr<Track> GetTrack() const;
 
 protected:

@@ -15,7 +15,7 @@
 #include "ViewInfo.h"
 #include "Viewport.h"
 #include "WaveTrack.h"
-#include "WaveTrackUtilities.h"
+#include "TimeStretching.h"
 #include "CommandContext.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "toolbars/ToolManager.h"
@@ -160,9 +160,6 @@ void GetRegionsByLabel(
    }
 }
 
-/*!
- @pre `track.IsLeader()`
- */
 using EditFunction = std::function<void(Track& track, double, double)>;
 using EditFunctionWithProgress =
    std::function<void(Track& track, double, double, ProgressReporter)>;
@@ -189,7 +186,7 @@ void EditByLabel(
                            (tracks.Selected<PlayableTrack>()).empty());
 
    const auto tracksToEdit = tracks.Any<Track>() + [&](const auto pTrack) {
-      return SyncLock::IsSyncLockSelected(pTrack) ||
+      return SyncLock::IsSyncLockSelected(*pTrack) ||
              (notLocked && dynamic_cast<const PlayableTrack*>(pTrack) != nullptr);
    };
 
@@ -221,10 +218,8 @@ void EditByLabel(
       nullptr);
 }
 
-//! The argument is always a leader track and the return has an equal number
-//! of channels, or is null
 using EditDestFunction =
-   std::function<std::shared_ptr<TrackList>(Track &, double, double)>;
+   std::function<Track::Holder(Track &, double, double)>;
 
 //Executes the edit function on all selected wave tracks with
 //regions specified by selected labels
@@ -257,20 +252,19 @@ void EditClipboardByLabel(AudacityProject &project,
 
    for (auto t : tracks) {
       const bool playable = dynamic_cast<const PlayableTrack *>(t) != nullptr;
-      if (SyncLock::IsSyncLockSelected(t) || (notLocked && playable)) {
+      if (SyncLock::IsSyncLockSelected(*t) || (notLocked && playable)) {
          // These tracks accumulate the needed clips, right to left:
-         std::shared_ptr<TrackList> merged;
+         Track::Holder merged;
          for (size_t i = regions.size(); i--;) {
             const Region &region = regions.at(i);
             if (auto dest = action(*t, region.start, region.end)) {
                if (!merged)
                   merged = dest;
                else {
-                  const auto pMerged = *merged->begin();
                   // Paste to the beginning; unless this is the first region,
                   // offset the track to account for time between the regions
                   if (i + 1 < regions.size())
-                     pMerged->ShiftBy(
+                     merged->ShiftBy(
                         regions.at(i + 1).start - region.end);
 
                   // dest may have a placeholder clip at the end that is
@@ -278,18 +272,17 @@ void EditClipboardByLabel(AudacityProject &project,
                   // right to left.  Any placeholder already in merged is kept.
                   // Only the rightmost placeholder is important in the final
                   // result.
-                  pMerged->Paste(0.0, *dest);
+                  merged->Paste(0.0, *dest);
                }
             }
             else
                // nothing copied but there is a 'region', so the 'region' must
                // be a 'point label' so offset
                if (i + 1 < regions.size() && merged)
-                  (*merged->begin())
-                     ->ShiftBy(regions.at(i + 1).start - region.end);
+                  merged->ShiftBy(regions.at(i + 1).start - region.end);
          }
          if (merged)
-            newClipboard.Append(std::move(*merged));
+            newClipboard.Add(merged);
       }
    }
 
@@ -417,8 +410,7 @@ void OnCutLabels(const CommandContext &context)
    // Because of grouping the copy may need to operate on different tracks than
    // the clear, so we do these actions separately.
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };
@@ -426,7 +418,6 @@ void OnCutLabels(const CommandContext &context)
 
    bool enableCutlines = gPrefs->ReadBool(wxT( "/GUI/EnableCutLines"), false);
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack &t) {
             if (enableCutlines)
@@ -461,7 +452,6 @@ void OnDeleteLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](Track &t) { t.Clear(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
@@ -485,8 +475,7 @@ void OnSplitCutLabels(const CommandContext &context)
       return;
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch(
          [&](WaveTrack &wt) {
             result = wt.SplitCut(t0, t1);
@@ -518,7 +507,6 @@ void OnSplitDeleteLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack &t) {
             t.SplitDelete(t0, t1);
@@ -549,7 +537,6 @@ void OnSilenceLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       // TODO use progress-bar utilities pending in
       // https://github.com/audacity/audacity/pull/5043
       track.TypeSwitch([&](WaveTrack& t) { t.Silence(t0, t1, {}); });
@@ -573,8 +560,7 @@ void OnCopyLabels(const CommandContext &context)
       return;
 
    auto copyfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
-      std::shared_ptr<TrackList> result;
+      Track::Holder result;
       track.TypeSwitch( [&](WaveTrack &wt) { result = wt.Copy(t0, t1); } );
       return result;
    };
@@ -596,7 +582,6 @@ void OnSplitLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](WaveTrack &t) { t.Split(t0, t1); } );
    };
    EditByLabel(project, tracks, selectedRegion, editfunc);
@@ -619,11 +604,10 @@ void OnJoinLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track& track, double t0, double t1, ProgressReporter reportProgress) {
-      assert(track.IsLeader());
       track.TypeSwitch(
          [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
    };
-   WaveTrackUtilities::WithStretchRenderingProgress(
+   TimeStretching::WithClipRenderingProgress(
       [&](ProgressReporter progress) {
          EditByLabel(project, tracks, selectedRegion, editfunc, progress);
       });
@@ -646,7 +630,6 @@ void OnDisjoinLabels(const CommandContext &context)
       return;
 
    auto editfunc = [&](Track &track, double t0, double t1) {
-      assert(track.IsLeader());
       track.TypeSwitch( [&](WaveTrack &t) {
          wxBusyCursor busy;
          t.Disjoin(t0, t1);

@@ -14,6 +14,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "../../../../UIHandle.h"
 
 class Alg_seq;
+class Channel;
 class NoteTrack;
 class Track;
 class ViewInfo;
@@ -68,7 +69,7 @@ public:
 
    virtual ~StretchHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
 
    Result Click
       (const TrackPanelMouseEvent &event, AudacityProject *pProject) override;
@@ -92,8 +93,8 @@ private:
    static double GetT0(const Track &track, const ViewInfo &viewInfo);
    static double GetT1(const Track &track, const ViewInfo &viewInfo);
 
-   void Stretch
-      (AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge, Track *pTrack);
+   void Stretch(AudacityProject *pProject, int mouseXCoordinate,
+      int trackLeftEdge, Channel *pChannel);
 
    std::shared_ptr<NoteTrack> mpTrack{};
    int mLeftEdge{ -1 };

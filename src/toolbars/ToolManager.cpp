@@ -541,8 +541,7 @@ static struct DefaultConfigEntry {
    { wxT("PlayMeter"),         wxT("RecordMeter"),     {}                },
 
    // start another top dock row
-   { wxT("Scrub"),             {},                     wxT("Control")         },
-   { wxT("Device"),            wxT("Scrub"),           wxT("Control")         },
+   { wxT("Device"),             {},                     wxT("Control")         },
 
    // Hidden by default in top dock
    { wxT("CombinedMeter"),     {},                     {}                },
@@ -913,7 +912,8 @@ void ToolManager::ReadConfig()
    {
       const auto &ndx = entry.barID;
       const auto bar = GetToolBar(ndx);
-      bar->SetPreferredNeighbors(entry.rightOf, entry.below);
+      if (bar != nullptr)
+         bar->SetPreferredNeighbors(entry.rightOf, entry.below);
    }
 
    if (!someFound)

@@ -1,13 +1,12 @@
 #include "FourierTransform_pffft.h"
 
-#include "pffft/pffft.h"
+#include "pffft.h"
 
 namespace staffpad::audio {
 
 FourierTransform::FourierTransform(int32_t newBlockSize)
+    : _blockSize { newBlockSize }
 {
-  _blockSize = newBlockSize;
-
   _pffft_scratch = (float*)pffft_aligned_malloc(_blockSize * sizeof(float));
   realFftSpec = pffft_new_setup(_blockSize, PFFFT_REAL);
 }

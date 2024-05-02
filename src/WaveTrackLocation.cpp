@@ -18,7 +18,7 @@ WaveTrackLocations FindWaveTrackLocations(const WaveTrack &track)
 {
    WaveTrackLocations locations;
 
-   auto clips = track.SortedClipArray();
+   auto clips = track.SortedIntervalArray();
 
    // Count number of display locations
    int num = 0;

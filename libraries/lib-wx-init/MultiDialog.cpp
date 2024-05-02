@@ -15,10 +15,8 @@
 \brief A dialog presenting an exclusive, multiple choice, help button, and log info
 
 *//*******************************************************************/
-
-
 #include "MultiDialog.h"
-#include "MemoryX.h"
+#include "IteratorX.h"
 
 #include "ShuttleGui.h"
 

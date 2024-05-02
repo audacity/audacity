@@ -81,6 +81,8 @@ on:
         required: false
       APPLE_NOTARIZATION_PASSWORD:
         required: false
+      APPLE_NOTARIZATION_TEAM_ID:
+        required: false
       CRASH_REPORT_URL:
         required: false
       SENTRY_AUTH_TOKEN:
@@ -239,7 +241,7 @@ jobs:
         postfix: ${{ matrix.config.postfix }}
   build_macos_intel:
     name: Build macOS (x86_64)
-    runs-on: macos-11
+    runs-on: macos-13
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -273,7 +275,7 @@ jobs:
         path: macos_intel.tar
   build_macos_arm64:
     name: Build macOS (arm64)
-    runs-on: macos-11
+    runs-on: macos-13
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -315,7 +317,7 @@ jobs:
         path: macos_arm64.tar
   package_macos:
     name: Package macOS (x86_64, arm64, universal)
-    runs-on: macos-11
+    runs-on: macos-13
     needs: [build_macos_intel, build_macos_arm64]
     steps:
     - name: Checkout Audacity
@@ -337,8 +339,11 @@ jobs:
           macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
           macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
     - name: Install Apple codesigning certificates
-      uses: apple-actions/import-codesign-certs@v1
-      if: github.event_name != 'pull_request' && github.repository_owner == 'audacity'
+      uses: apple-actions/import-codesign-certs@v2
+      env:
+        P12_FILE_BASE64: ${{ secrets.APPLE_CERTIFICATE }}
+        P12_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      if: ${{ env.P12_FILE_BASE64 != '' && env.P12_PASSWORD != '' }}
       with:
         p12-file-base64: ${{ secrets.APPLE_CERTIFICATE }}
         p12-password: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
@@ -352,6 +357,7 @@ jobs:
         apple_codesign_identity: ${{ secrets.APPLE_CODESIGN_IDENTITY }}
         apple_notarization_user_name: ${{ secrets.APPLE_NOTARIZATION_USER_NAME }}
         apple_notarization_password: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
+        apple_notarization_team_id: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
         archs: |
           x64
           arm64

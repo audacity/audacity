@@ -25,8 +25,9 @@ class Track;
 class TrackList;
 class WaveTrack;
 class XMLTagHandler;
+class ClipMirAudioReader;
 
-using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
+using TrackHolders = std::vector<std::shared_ptr<Track>>;
 
 class AUDACITY_DLL_API ProjectFileManager final
    : public ClientData::Base
@@ -94,8 +95,9 @@ public:
    static AudacityProject *OpenFile( const ProjectChooserFn &chooser,
       const FilePath &fileName, bool addtohistory = true);
 
-   bool Import(const FilePath &fileName,
-               bool addToHistory = true);
+   bool
+   Import(const std::vector<FilePath>& fileNames, bool addToHistory = true);
+   bool Import(const FilePath& fileName, bool addToHistory = true);
 
    void Compact();
 
@@ -116,6 +118,10 @@ public:
                          const std::function<void(const TranslatableString&/*unlinkReason*/)>& onUnlink);
 
 private:
+   bool Import(
+      const FilePath& fileName, bool addToHistory,
+      std::shared_ptr<ClipMirAudioReader>& resultingReader);
+
    /*!
     @param fileName a path assumed to exist and contain an .aup3 project
     @param addtohistory whether to add the file to the MRU list
@@ -139,7 +145,7 @@ private:
    AudacityProject &mProject;
 
    std::shared_ptr<TrackList> mLastSavedTracks;
-   
+
    // Are we currently closing as the result of a menu command?
    bool mMenuClose{ false };
 };

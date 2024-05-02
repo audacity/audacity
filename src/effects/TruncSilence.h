@@ -59,9 +59,6 @@ public:
    // Analyze a single track to find silences
    // If inputLength is not NULL we are calculating the minimum
    // amount of input for previewing.
-   /*!
-    @pre `wt.IsLeader()`
-    */
    bool Analyze(RegionList &silenceList, RegionList &trackSilences,
       const WaveTrack &wt, sampleCount* silentFrame, sampleCount* index,
       int whichTrack, double* inputLength = nullptr,
@@ -88,14 +85,8 @@ private:
 
    bool ProcessIndependently();
    bool ProcessAll();
-   /*!
-    @pre range visits leaders only
-    */
    bool FindSilences(RegionList &silences,
       const TrackIterRange<const WaveTrack> &range);
-   /*!
-    @pre range visits leaders only
-    */
    bool DoRemoval(const RegionList &silences,
       const TrackIterRange<Track> &range,
       unsigned iGroup, unsigned nGroups,

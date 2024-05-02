@@ -4,6 +4,7 @@ add_unit_test(
    NAME
       lib-time-and-pitch
    WAV_FILE_IO
+   MOCK_PREFS
    SOURCES
       StaffPadTimeAndPitchTest.cpp
       TimeAndPitchFakeSource.h

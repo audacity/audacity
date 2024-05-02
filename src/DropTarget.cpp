@@ -16,8 +16,8 @@
 #include "FileNames.h"
 #include "Project.h"
 #include "ProjectFileManager.h"
-#include "Viewport.h"
 #include "TrackPanel.h"
+#include "Viewport.h"
 
 #if wxUSE_DRAG_AND_DROP
 class FileObject final : public wxFileDataObject
@@ -165,8 +165,8 @@ public:
             Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
          } );
 
-         for (const auto &name : sortednames)
-            ProjectFileManager::Get( *mProject ).Import(name);
+         ProjectFileManager::Get(*mProject).Import(
+            std::vector<FilePath> { sortednames.begin(), sortednames.end() });
 
          auto &viewport = Viewport::Get(*mProject);
          viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
@@ -185,7 +185,7 @@ static const AudacityProject::AttachedObjects::RegisteredFactory key{
       // We can import now, so become a drag target
       //   SetDropTarget(safenew AudacityDropTarget(this));
       //   mTrackPanel->SetDropTarget(safenew AudacityDropTarget(this));
-      
+
       TrackPanel::Get( project )
          .SetDropTarget(
             // SetDropTarget takes ownership

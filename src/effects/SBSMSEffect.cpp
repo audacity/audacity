@@ -240,7 +240,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
-         if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(&lt)))
+         if (!(lt.GetSelected() || SyncLock::IsSyncLockSelected(lt)))
             return fallthrough();
          if (!ProcessLabelTrack(&lt))
             bGoodResult = false;
@@ -350,10 +350,9 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
             const auto warper = createTimeWarper(
                mT0, mT1, maxDuration, rateStart, rateEnd, rateSlideType);
 
-            std::shared_ptr<TrackList> tempList = track.WideEmptyCopy();
-            const auto outputTrack = *tempList->Any<WaveTrack>().begin();
+            WaveTrack::Holder outputTrack = track.EmptyCopy();
             auto iter = outputTrack->Channels().begin();
-            rb.outputTrack = outputTrack;
+            rb.outputTrack = outputTrack.get();
             rb.outputLeftChannel = (*iter++).get();
             if (rightTrack)
                rb.outputRightChannel = (*iter).get();
@@ -414,9 +413,7 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
          mCurTrackNum++;
       }; },
       [&](Track &t) {
-         // Outer loop is over leaders, so fall-through must check for
-         // multiple channels
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mTotalStretch);
       }
    );
@@ -430,14 +427,12 @@ bool EffectSBSMS::Process(EffectInstance &, EffectSettings &)
 void EffectSBSMS::Finalize(
    WaveTrack &orig, const WaveTrack &out, const TimeWarper &warper)
 {
-   assert(orig.IsLeader());
-   assert(out.IsLeader());
    assert(orig.NChannels() == out.NChannels());
    // Silenced samples will be inserted in gaps between clips, so capture where these
    // gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
    double last = mT0;
-   auto clips = orig.SortedClipArray();
+   auto clips = orig.SortedIntervalArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {

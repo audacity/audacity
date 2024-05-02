@@ -24,8 +24,9 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/translation.h>
 
 ChannelVRulerControls::ChannelVRulerControls(
-   const std::shared_ptr<ChannelView> &pChannelView)
-  : mwChannelView{ pChannelView }
+   const std::shared_ptr<ChannelView> &pChannelView
+) : CommonChannelCell{ pChannelView->FindChannel() }
+  , mwChannelView{ pChannelView }
 {
 }
 
@@ -46,9 +47,10 @@ const ChannelVRulerControls &ChannelVRulerControls::Get(
 
 std::shared_ptr<Track> ChannelVRulerControls::DoFindTrack()
 {
+   // Just pass-through to related ChannelView object
    const auto pView = mwChannelView.lock();
    if (pView)
-      return pView->FindTrack();
+      return pView->DoFindTrack();
    return {};
 }
 

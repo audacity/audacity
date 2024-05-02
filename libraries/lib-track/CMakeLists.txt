@@ -18,12 +18,18 @@ reapplied to another track that must stay synchronized.
 ]]
 
 set( SOURCES
+   ChannelAttachments.cpp
+   ChannelAttachments.h
+   PendingTracks.cpp
+   PendingTracks.h
    TimeWarper.cpp
    TimeWarper.h
    Track.cpp
    Track.h
    TrackAttachment.cpp
    TrackAttachment.h
+   UndoTracks.cpp
+   UndoTracks.h
 )
 set( LIBRARIES
    lib-channel-interface

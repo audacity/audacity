@@ -140,7 +140,10 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
          safenew WindowAccessible(musicImportsBox);
       }
 #endif
+#if defined(__WXMAC__)
+      // see https://bugzilla.audacityteam.org/show_bug.cgi?id=2692
       S.StartPanel();
+#endif
       {
          S.StartRadioButtonGroup(ImportExportPrefs::MusicFileImportSetting);
          {
@@ -150,7 +153,9 @@ void ImportExportPrefs::PopulateOrExchange(ShuttleGui & S)
          }
          S.EndRadioButtonGroup();
       }
+#if defined(__WXMAC__)
       S.EndPanel();
+#endif
    }
    S.EndStatic();
 

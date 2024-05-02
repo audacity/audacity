@@ -22,8 +22,9 @@ class wxRegion;
 class wxWindow;
 
 class AudacityProject;
-struct HitTestPreview;
 class Channel;
+struct HitTestPreview;
+class Track;
 class TrackPanelCell;
 struct TrackPanelMouseEvent;
 struct TrackPanelMouseState;
@@ -119,8 +120,8 @@ public:
    // use?
    virtual void OnProjectChange(AudacityProject *pProject);
 
-   //! @return pointer to associated channel, if any
-   virtual std::shared_ptr<const Channel> FindChannel() const = 0;
+   //! @return pointer to associated track, if any
+   virtual std::shared_ptr<const Track> FindTrack() const = 0;
 
    //! Whether the handle is dragging, affecting other panel painting;
    //! default returns false
@@ -139,6 +140,10 @@ public:
    {
       return 0;
    }
+
+   //! A frequent convenience in the definition of UIHandles
+   static std::shared_ptr<const Track>
+   TrackFromChannel(const std::shared_ptr<const Channel> &pChannel);
 
 protected:
    // Derived classes can set this nonzero in a constructor, which is enough

@@ -124,4 +124,14 @@ QString ToQString (const wxString& str)
 
 #endif
 
+wxString ToWXString(std::wstring_view str)
+{
+    return wxString(str.data(), str.size());
+}
+
+wxString ToWXString(const wchar_t* str)
+{
+    return wxString(str);
+}
+
 }

@@ -25,6 +25,5 @@ public:
    virtual ~AudioSegmentFactoryInterface();
 
    virtual std::vector<std::shared_ptr<AudioSegment>>
-   CreateAudioSegmentSequence(
-      double playbackStartTime, PlaybackDirection) const = 0;
+   CreateAudioSegmentSequence(double playbackStartTime, PlaybackDirection) = 0;
 };

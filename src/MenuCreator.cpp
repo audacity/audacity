@@ -310,6 +310,13 @@ FormatLabelWithDisabledAccel(const CommandManager::CommandListEntry &entry)
          if( key.StartsWith(",") ) break;
          if( key.StartsWith(".") ) break;
 
+         // https://github.com/audacity/audacity/issues/5868
+         // On German and Norwegian keyboards, [ and ] are
+         // AltGr 8 and AltGr 9. On Windows typing 8 or 9 match
+         // [ or ] repectively when they are accelerators in menus.
+         if ( key.StartsWith("[") ) break;
+         if ( key.StartsWith("]") ) break;
+
 #endif
          //wxLogDebug("Added Accel:[%s][%s]", entry.label, entry.key );
          // Normal accelerator.

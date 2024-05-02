@@ -71,7 +71,7 @@ class ImportRawDialog final : public wxDialogWrapper {
    // Make static to preserve value for next raw import
    static int mEncoding;
    static unsigned mChannels;
-   static int mOffset;
+   static long long mOffset;
    static double mRate;
    static double mPercent;
 
@@ -95,7 +95,7 @@ class ImportRawDialog final : public wxDialogWrapper {
 // Initial value for Import Raw dialog
 int ImportRawDialog::mEncoding = SF_FORMAT_RAW | SF_ENDIAN_CPU | SF_FORMAT_PCM_16;
 unsigned ImportRawDialog::mChannels = 1;
-int ImportRawDialog::mOffset = 0;
+long long ImportRawDialog::mOffset = 0;
 double ImportRawDialog::mRate = 0;  // -> project rate
 double ImportRawDialog::mPercent = 100.;
 
@@ -178,7 +178,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
       const auto format = ImportUtils::ChooseFormat(
          sf_subtype_to_effective_format(encoding));
 
-      trackList = trackFactory->Create(numChannels, format, rate);
+      trackList = trackFactory->CreateMany(numChannels, format, rate);
 
       const auto maxBlockSize = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
 
@@ -252,7 +252,7 @@ void ImportRaw(const AudacityProject &project, wxWindow *parent, const wxString 
    if (updateResult == ProgressResult::Failed || updateResult == ProgressResult::Cancelled)
       throw UserException{};
 
-   ImportUtils::FinalizeImport(outTracks, trackList);
+   ImportUtils::FinalizeImport(outTracks, move(*trackList));
 }
 
 
@@ -437,12 +437,12 @@ ImportRawDialog::~ImportRawDialog()
 
 void ImportRawDialog::OnOK(wxCommandEvent & WXUNUSED(event))
 {
-   long l;
+   long long l;
 
    mEncoding = mEncodingSubtype[mEncodingChoice->GetSelection()];
    mEncoding += (mEndianChoice->GetSelection() * 0x10000000);
    mChannels = mChannelChoice->GetSelection() + 1;
-   mOffsetText->GetValue().ToLong(&l);
+   mOffsetText->GetValue().ToLongLong(&l);
    mOffset = l;
    mPercentText->GetValue().ToDouble(&mPercent);
    mRateText->GetValue().ToDouble(&mRate);

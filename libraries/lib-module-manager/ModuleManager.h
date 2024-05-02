@@ -12,9 +12,10 @@
 #ifndef __AUDACITY_MODULEMANAGER_H__
 #define __AUDACITY_MODULEMANAGER_H__
 
-#include "MemoryX.h"
+#include "IteratorX.h"
 #include <functional>
 #include <map>
+#include <memory>
 #include <vector>
 #include <wx/string.h>
 

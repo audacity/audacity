@@ -31,16 +31,21 @@ class EffectSettings;
 class TranslatableString;
 class AudioUnitWrapper;
 
-//! This works as a cached copy of state stored in an AudioUnit, but can also
-//! outlive it
+/**
+ * @struct AudioUnitEffectSettings
+ * @brief Represents a cached copy of the state stored in an AudioUnit, but can outlive the original AudioUnit.
+ *
+ * This structure handles the storage and management of settings and state information for AudioUnit effects.
+ * It provides mechanisms for sharing settings between different instances and managing preset configurations.
+ */
 struct AudioUnitEffectSettings {
-   //! The effect object and all Settings objects coming from it share this
-   //! set of strings, which allows Pair below to copy without allocations.
-   /*!
-    Note that names associated with parameter IDs are not invariant metadata
-    of an AudioUnit effect!  The names can themselves depend on the current
-    values.  Example:  AUGraphicEQ changes names of slider parameters when you
-    change the switch between 10 and 31 bands.
+   /**
+    * @brief Shared set of strings to optimize memory usage by avoiding repeated allocations.
+    * 
+    * All instances of AudioUnitEffectSettings share this set to reduce memory overhead and ensure consistency.
+    * The effect object and all Settings objects coming from it share this set of strings.
+    * Note: The names associated with parameter IDs are not invariant metadata of an AudioUnit effect.
+    * For example, AUGraphicEQ changes names of slider parameters when you switch between 10 and 31 bands.
     */
    using StringSet = std::set<wxString>;
    const std::shared_ptr<StringSet> mSharedNames{
@@ -75,10 +80,12 @@ struct AudioUnitEffectSettings {
    }
 };
 
-//! Common base class for AudioUnitEffect and its Instance
-/*!
- Maintains a smart handle to an AudioUnit (also called AudioComponentInstance)
- in the SDK and defines some utility functions
+/**
+ * @class AudioUnitWrapper
+ * @brief Manages and interacts with an AudioUnit, providing operations on audio effects.
+ *
+ * This class hosts the functionality for managing AudioUnit settings, presets, and parameters,
+ * allowing manipulation of audio processing units.
  */
 struct AudioUnitWrapper
 {
@@ -192,6 +199,10 @@ protected:
    unsigned mAudioOuts{ 2 };
 };
 
+/**
+ * @class AudioUnitWrapper::ParameterInfo
+ * @brief Encapsulates parameter information for an AudioUnit.
+ * */
 class AudioUnitWrapper::ParameterInfo final
 {
 public:

@@ -13,11 +13,8 @@
 of languages for Audacity.
 
 *//*******************************************************************/
-
-
-
 #include "LangChoice.h"
-#include "MemoryX.h"
+#include "IteratorX.h"
 
 #include <wx/defs.h>
 #include <wx/choice.h>

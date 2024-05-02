@@ -48,7 +48,8 @@ def usage(code, msg=''):
 def add(ctxt, id, str, fuzzy):
     "Add a non-fuzzy translation to the dictionary."
     global MESSAGES
-    if not fuzzy and str:
+    # Add a string if it's not fuzzy, or if it's the header (that is, empty ctxt and empty id)
+    if str and (not fuzzy or (not ctxt and not id)):
         if ctxt is None:
             MESSAGES[id] = str
         else:

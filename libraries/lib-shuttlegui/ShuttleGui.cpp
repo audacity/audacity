@@ -97,9 +97,10 @@ for registering for changes.
 
 
 
-#include "MemoryX.h"
+#include "IteratorX.h"
 #include "Prefs.h"
 #include "ShuttlePrefs.h"
+#include "SpinControl.h"
 #include "Theme.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -631,6 +632,25 @@ wxSpinCtrl * ShuttleGuiBase::AddSpinCtrl(
       Min, Max, Value
       );
    mpWind->SetName(wxStripMenuCodes(translated));
+   miProp=1;
+   UpdateSizers();
+   return pSpinCtrl;
+}
+
+SpinControl* ShuttleGuiBase::AddSpinControl(
+   const wxSize& size, const TranslatableString& Prompt, double Value,
+   double Max, double Min)
+{
+   const auto translated = Prompt.Translation();
+   HandleOptionality( Prompt );
+   AddPrompt( Prompt );
+   UseUpId();
+   if( mShuttleMode != eIsCreating )
+      return dynamic_cast<SpinControl*>(wxWindow::FindWindowById(miId, mpDlg));
+   SpinControl * pSpinCtrl;
+   mpWind = pSpinCtrl = safenew SpinControl(
+      GetParent(), miId, Value, Min, Max, 1.0, true, wxDefaultPosition, size,
+      Prompt);
    miProp=1;
    UpdateSizers();
    return pSpinCtrl;
@@ -1372,6 +1392,45 @@ wxSpinCtrl * ShuttleGuiBase::DoTieSpinCtrl(
    return pSpinCtrl;
 }
 
+SpinControl* ShuttleGuiBase::DoTieSpinControl(
+   const wxSize& size, const TranslatableString& Prompt,
+   WrappedType& WrappedRef, const double max, const double min)
+{
+   HandleOptionality( Prompt );
+   // The Add function does a UseUpId(), so don't do it here in that case.
+   if( mShuttleMode == eIsCreating )
+      return AddSpinControl(size, Prompt, WrappedRef.ReadAsDouble(), max, min);
+
+   UseUpId();
+   SpinControl * pSpinCtrl=NULL;
+
+   wxWindow * pWnd  = wxWindow::FindWindowById( miId, mpDlg);
+   pSpinCtrl = dynamic_cast<SpinControl*>(pWnd);
+
+   switch( mShuttleMode )
+   {
+      // IF setting internal storage from the controls.
+   case eIsGettingMetadata:
+      break;
+   case eIsGettingFromDialog:
+      {
+         wxASSERT( pSpinCtrl );
+         WrappedRef.WriteToAsDouble( pSpinCtrl->GetValue() );
+      }
+      break;
+   case eIsSettingToDialog:
+      {
+         wxASSERT( pSpinCtrl );
+         pSpinCtrl->SetValue( WrappedRef.ReadAsDouble() );
+      }
+      break;
+   default:
+      wxASSERT( false );
+      break;
+   }
+   return pSpinCtrl;
+}
+
 wxTextCtrl * ShuttleGuiBase::DoTieTextBox(
    const TranslatableString &Prompt, WrappedType & WrappedRef, const int nChars)
 {
@@ -1653,6 +1712,14 @@ wxSpinCtrl * ShuttleGuiBase::TieSpinCtrl(
 {
    WrappedType WrappedRef(Value);
    return DoTieSpinCtrl( Prompt, WrappedRef, max, min );
+}
+
+SpinControl* ShuttleGuiBase::TieSpinControl(
+   const wxSize& size, const TranslatableString& Prompt, double& Value,
+   const double max, const double min)
+{
+   WrappedType WrappedRef(Value);
+   return DoTieSpinControl(size, Prompt, WrappedRef, max, min);
 }
 
 wxTextCtrl * ShuttleGuiBase::TieTextBox(
@@ -2091,7 +2158,7 @@ void ShuttleGuiBase::SetProportions( int Default )
 
 void ShuttleGuiBase::ApplyItem( int step, const DialogDefinition::Item &item,
    wxWindow *pWind, wxWindow *pDlg )
-{  
+{
    if ( step == 0 ) {
       // Do these steps before adding the window to the sizer
       if( item.mUseBestSize )
@@ -2277,7 +2344,7 @@ ShuttleGui & ShuttleGui::Id(int id )
 }
 
 ShuttleGui & ShuttleGui::Optional( bool &bVar ){
-   mpbOptionalFlag = &bVar; 
+   mpbOptionalFlag = &bVar;
    return *this;
 };
 
@@ -2303,7 +2370,7 @@ std::unique_ptr<wxSizer> CreateStdButtonSizer(wxWindow *parent, long buttons, wx
 
    wxButton *b = NULL;
    auto bs = std::make_unique<wxStdDialogButtonSizer>();
-   
+
    const auto makeButton =
    [parent]( wxWindowID id, const wxString label = {} ) {
       auto result = safenew wxButton( parent, id, label );

@@ -10,6 +10,33 @@ macro( def_vars )
    set( _PUBDIR "${CMAKE_CURRENT_BINARY_DIR}/public" )
 endmacro()
 
+### Based on
+### https://github.com/alandefreitas/moderncpp/blob/master/cmake/functions/sanitizers.cmake
+macro(add_sanitizer flag)
+    #[add_sanitizer Add sanitizer flag to all targets
+    include(CheckCXXCompilerFlag)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+        message("Looking for -fsanitize=${flag}")
+        set(CMAKE_REQUIRED_FLAGS "-Werror -fsanitize=${flag}")
+        check_cxx_compiler_flag(-fsanitize=${flag} HAVE_FLAG_SANITIZER)
+        if (HAVE_FLAG_SANITIZER)
+            message("Adding -fsanitize=${flag}")
+            set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=${flag} -fno-omit-frame-pointer")
+            set(DCMAKE_C_FLAGS "${DCMAKE_C_FLAGS} -fsanitize=${flag} -fno-omit-frame-pointer")
+            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=${flag}")
+            set(DCMAKE_MODULE_LINKER_FLAGS "${DCMAKE_MODULE_LINKER_FLAGS} -fsanitize=${flag}")
+        else ()
+            message("-fsanitize=${flag} unavailable")
+        endif ()
+    endif ()
+    #]
+endmacro()
+
+if ( ${_OPT}thread_sanitizer )
+      add_sanitizer("thread")
+endif()
+
+
 # Helper to organize sources into folders for the IDEs
 macro( organize_source root prefix sources )
    set( cleaned )
@@ -329,7 +356,7 @@ endfunction()
 # shorten a target name for purposes of generating a dependency graph picture
 function( canonicalize_node_name var node )
    # strip generator expressions
-   string( REGEX REPLACE ".*>.*:(.*)>" "\\1" node "${node}" )
+   string( REGEX REPLACE ".*>:(.*)>" "\\1" node "${node}" )
    # omit the "-interface" for alias targets to modules
    string( REGEX REPLACE "-interface\$" "" node "${node}"  )
    # shorten names of standard libraries or Apple frameworks
@@ -492,6 +519,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
          set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN:$ORIGIN/..")
+         set_target_property_all(${TARGET} BUILD_RPATH "$ORIGIN:$ORIGIN/..")
          install( TARGETS ${TARGET} OPTIONAL DESTINATION ${_MODDIR} )
       endif()
 
@@ -506,6 +534,7 @@ function( audacity_module_fn NAME SOURCES IMPORT_TARGETS
 
       if( NOT CMAKE_SYSTEM_NAME MATCHES "Windows|Darwin" )
          set_target_property_all(${TARGET} INSTALL_RPATH "$ORIGIN")
+         set_target_property_all(${TARGET} BUILD_RPATH "$ORIGIN")
          install(TARGETS ${TARGET} DESTINATION ${_PKGLIB} )
       endif()
    endif()
@@ -932,3 +961,57 @@ function(fix_bundle target_name)
 	 -config=$<CONFIG>
    )
 endfunction()
+
+
+# The list of modules is ordered so that each module occurs after any others
+# that it depends on
+macro( audacity_module_subdirectory modules )
+   # Make a graphviz cluster of module nodes and maybe some 3p libraries
+   set( subgraph )
+   get_filename_component( name "${CMAKE_CURRENT_SOURCE_DIR}" NAME_WE )
+   string( APPEND subgraph
+      # name must begin with "cluster" to get graphviz to draw a box
+      "subgraph \"cluster${name}\" { "
+         # style attributes and visible name
+         "style=bold color=blue labeljust=r labelloc=b label=\"${name}\" "
+   )
+
+   set( nodes )
+   set( EXCLUDE_LIST
+      Audacity
+      PRIVATE
+      PUBLIC
+      INTERFACE
+   )
+
+   # Visit each module, and may collect some clustered node names
+   foreach( MODULE ${MODULES} )
+      set( EXTRA_CLUSTER_NODES ) # a variable that the subdirectory may change
+      add_subdirectory( "${MODULE}" )
+
+      foreach( NODE ${EXTRA_CLUSTER_NODES} )
+         # This processing of NODE makes it easy for the module simply to
+         # designate all of its libraries as extra cluster nodes, when they
+         # (besides the executable itself) are not used anywhere else
+         if ( NODE IN_LIST EXCLUDE_LIST )
+            continue()
+         endif()
+         canonicalize_node_name( NODE "${NODE}" )
+         string( APPEND nodes "\"${NODE}\"\n" )
+      endforeach()
+    endforeach()
+ 
+   # complete the cluster description
+   foreach( MODULE ${MODULES} )
+      string( APPEND nodes "\"${MODULE}\"\n" )
+   endforeach()
+   string( APPEND subgraph
+         # names of nodes to be grouped
+         "\n${nodes}"
+      "}\n"
+   )
+
+   # propagate collected edges and subgraphs up to root CMakeLists.txt
+   set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+   set( GRAPH_SUBGRAPHS "${GRAPH_SUBGRAPHS}${subgraph}" PARENT_SCOPE )
+endmacro()

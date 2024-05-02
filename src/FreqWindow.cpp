@@ -628,7 +628,7 @@ bool FrequencyPlotDialog::GetAudio()
       {
          using namespace BasicUI;
          ShowMessageBox(
-            XO("Audio could not be analyzed. This may be due to a stretched clip.\nTry resetting any stretched clips, or mixing and rendering the tracks before analyzing"),
+            XO("Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\nTry resetting any stretched clips, or mixing and rendering the tracks before analyzing"),
             MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
          mData.reset();
          mDataLen = 0;

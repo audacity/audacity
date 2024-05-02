@@ -173,9 +173,7 @@ private:
 
    bool mCancelled {};
 
-#ifdef EXPERIMENTAL_SCRUBBING_SCROLL_WHEEL
    int mLogMaxScrubSpeed;
-#endif
 
    AudacityProject *mProject;
 

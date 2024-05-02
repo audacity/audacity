@@ -95,7 +95,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    auto cleanup = finally( [&] {
       if (!success) {
          if (newTrack) {
-            assert(newTrack->IsLeader());
             mTracks->Remove(*newTrack);
          }
          // On failure, restore the old duration setting
@@ -113,8 +112,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
       auto track = mFactory->Create();
       track->SetName(mTracks->MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
       newTrack = mTracks->Add(track);
-      // Expect that newly added tracks are always leaders
-      assert(newTrack->IsLeader());
       newTrack->SetSelected(true);
    }
 
@@ -148,7 +145,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    if (pAccess)
       pAccess->ModifySettings(updater);
 
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    mF0 = selectedRegion.f0();
    mF1 = selectedRegion.f1();
    if( mF0 != SelectedRegion::UndefinedFrequency )
@@ -156,7 +152,6 @@ bool EffectBase::DoEffect(EffectSettings &settings,
    if( mF1 != SelectedRegion::UndefinedFrequency )
       mPresetNames.push_back(L"control-f1");
 
-#endif
    CountWaveTracks();
 
    // Allow the dialog factory to fill this in, but it might not

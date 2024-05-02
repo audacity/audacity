@@ -3,6 +3,8 @@
 //
 #pragma once
 
+#include <complex>
+#include <functional>
 #include <memory>
 #include <vector>
 
@@ -11,9 +13,15 @@ namespace staffpad {
 class TimeAndPitch
 {
 public:
-  TimeAndPitch(int sampleRate);
-  ~TimeAndPitch();
+  /**
+   * `magnitude` may be null, in which case the callback should re-compute it.
+   */
+  using ShiftTimbreCb = std::function<void(
+     double factor, std::complex<float>* spectrum, const float* magnitude)>;
 
+  TimeAndPitch(
+     int fftSize, bool reduceImaging = true, ShiftTimbreCb shiftTimbreCb = {});
+  ~TimeAndPitch();
   /**
     Setup at least once before processing.
     \param numChannels  Must be 1 or 2
@@ -84,9 +92,13 @@ private:
   void _process_hop(int hop_a, int hop_s);
   template <int num_channels>
   void _time_stretch(float hop_a, float hop_s);
+  void _applyImagingReduction();
 
   struct impl;
   std::shared_ptr<impl> d;
+
+  const bool _reduceImaging;
+  const ShiftTimbreCb _shiftTimbreCb;
 
   int _numChannels = 1;
   int _maxBlockSize = 1024;

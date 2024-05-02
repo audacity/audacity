@@ -156,7 +156,7 @@ StretchHandle::~StretchHandle()
 {
 }
 
-std::shared_ptr<const Channel> StretchHandle::FindChannel() const
+std::shared_ptr<const Track> StretchHandle::FindTrack() const
 {
    return mpTrack;
 }
@@ -203,14 +203,14 @@ UIHandle::Result StretchHandle::Drag
    const wxMouseEvent &event = evt.event;
    const int x = event.m_x;
 
-   Track *clickedTrack=nullptr;
+   Channel *clickedChannel = nullptr;
    if (evt.pCell)
-      clickedTrack =
-         static_cast<CommonTrackPanelCell*>(evt.pCell.get())->FindTrack().get();
+      clickedChannel =
+         static_cast<CommonChannelCell*>(evt.pCell.get())->FindChannel().get();
 
-   if (clickedTrack == nullptr && mpTrack != nullptr)
-      clickedTrack = mpTrack.get();
-   Stretch(pProject, x, mLeftEdge, clickedTrack);
+   if (clickedChannel == nullptr && mpTrack != nullptr)
+      clickedChannel = mpTrack.get();
+   Stretch(pProject, x, mLeftEdge, clickedChannel);
    return RefreshAll;
 }
 
@@ -226,6 +226,8 @@ UIHandle::Result StretchHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
+   if (!mpTrack)
+      return RefreshNone;
 
    const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
    if (unsafe) {
@@ -237,7 +239,7 @@ UIHandle::Result StretchHandle::Release
    bool right = mStretchState.mMode == stretchRight;
    auto &viewInfo = ViewInfo::Get( *pProject );
    if (SyncLockState::Get(*pProject).IsSyncLocked() && (left || right)) {
-      for (auto track : SyncLock::Group(mpTrack.get())) {
+      for (auto track : SyncLock::Group(*mpTrack)) {
          if (track != mpTrack.get()) {
             if (left) {
                auto origT0 = mStretchState.mOrigSel0Quantized;
@@ -286,14 +288,15 @@ double StretchHandle::GetT1(const Track &track, const ViewInfo &viewInfo)
 }
 
 void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int trackLeftEdge,
-   Track *pTrack)
+   Channel *pChannel)
 {
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   if (pTrack == NULL && mpTrack != NULL)
-      pTrack = mpTrack.get();
+   if (pChannel == nullptr && mpTrack != nullptr)
+      pChannel = mpTrack.get();
 
-  if (pTrack) pTrack->TypeSwitch( [&](NoteTrack &nt) {
+  if (const auto pNt = dynamic_cast<NoteTrack*>(pChannel)) {
+      auto &nt = *pNt;
       double moveto =
         std::max(0.0, viewInfo.PositionToTime(mouseXCoordinate, trackLeftEdge));
 
@@ -347,6 +350,6 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
          wxASSERT(false);
          break;
       }
-  });
+  };
 }
 #endif

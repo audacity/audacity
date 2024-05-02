@@ -17,8 +17,8 @@
 #include <vector>
 #include <wx/defs.h>
 
+#include "IteratorX.h"
 #include "ToolBar.h"
-#include "MemoryX.h"
 
 class wxCommandEvent;
 class wxEraseEvent;

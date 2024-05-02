@@ -32,7 +32,7 @@ public:
 
    SliderHandle &operator=(const SliderHandle&) = default;
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
    std::shared_ptr<Track> GetTrack() const { return mpTrack.lock(); }
    bool IsDragging() const override;
 

@@ -23,7 +23,7 @@ class DefaultPlaybackPolicy final
 {
 public:
    DefaultPlaybackPolicy( AudacityProject &project,
-      double trackEndTime, double loopEndTime,
+      double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
       bool loopEnabled, bool variableSpeed);
    ~DefaultPlaybackPolicy() override;
 
@@ -34,6 +34,8 @@ public:
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
    bool Done( PlaybackSchedule &schedule, unsigned long ) override;
+
+   double OffsetSequenceTime(PlaybackSchedule& schedule, double offset) override;
 
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available ) override;
@@ -71,6 +73,7 @@ private:
    double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;
    double mLoopEndTime;
+   std::optional<double> mpStartTime;
    size_t mRemaining{ 0 };
    bool mProgress{ true };
    bool mLoopEnabled{ true };

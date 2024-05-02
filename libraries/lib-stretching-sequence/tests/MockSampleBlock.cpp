@@ -39,6 +39,11 @@ SampleBlockID MockSampleBlock::GetBlockID() const
    return id;
 }
 
+sampleFormat MockSampleBlock::GetSampleFormat() const
+{
+   return srcFormat;
+}
+
 size_t MockSampleBlock::GetSampleCount() const
 {
    return data.size() / SAMPLE_SIZE(srcFormat);

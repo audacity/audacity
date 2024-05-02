@@ -19,6 +19,3 @@
 (setq line-number-mode 1)
 (setq tab-width 3)
 (setq default-tab-width 3)
-
-;; arch-tag: e98088ea-9ff0-4031-bfc0-1d2a30eab3de
-

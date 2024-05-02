@@ -6,9 +6,9 @@
 # Khujand Computer Technologies, Inc
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2007-08-30 07:25-0400\n"
 "Last-Translator: Victor Ibragimov <youth_opportunities@tajikngo.org>\n"
 "Language-Team: Tajik Language\n"
@@ -21,40 +21,48 @@ msgstr ""
 "X-Poedit-SourceCharset: utf-8\n"
 "X-Generator: KBabel 1.11.4\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr ""
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Default recording device number: %d\n"
 msgstr "Афзори вурудӣ"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr ""
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr ""
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "Пештасвир дастрас нест"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device ID: %d\n"
 msgstr "Афзор"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device name: %s\n"
 msgstr "Афзор"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Host name: %s\n"
 msgstr "Ном"
@@ -170,8 +178,8 @@ msgstr ""
 "Шумо садоро наметавонед сабт кунед ё ин ки боз хонед.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy, c-format
 msgid "Error: %s"
 msgstr "Хато: "
@@ -203,7 +211,6 @@ msgstr "Хато ҳангоми кушодани афзори садо. "
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Хато"
 
@@ -358,8 +365,53 @@ msgstr ""
 msgid "Cannot proceed to upload."
 msgstr "Нишона барои содирот ҷой надорад."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File not found"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, c-format
+msgid "Invalid Response: %s"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#, fuzzy
+msgid "Export failed"
+msgstr "Мавқеи вуруд:"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Export error"
+msgstr "Берунсозии файл"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to attach to the Cloud project database"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to decompress the Cloud project block"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+#, fuzzy
+msgid "Failed to deserialize the response"
+msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Таблои %s Audacity"
@@ -389,7 +441,7 @@ msgstr "Истифодабарӣ..."
 msgid "Nyquist"
 msgstr "Оҳанг"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr ""
 
@@ -428,6 +480,55 @@ msgstr ""
 #, fuzzy
 msgid "Internal Error"
 msgstr "(барномаи берунӣ)"
+
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "Устувор"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr ""
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr ""
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr ""
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr ""
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr ""
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr ""
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr ""
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr ""
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr ""
 
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
@@ -468,9 +569,8 @@ msgstr ""
 msgid "File Error"
 msgstr "Хатои LOF"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #, fuzzy
 msgid "All files"
 msgstr "Ҳамаи файлҳо (*)|*"
@@ -544,6 +644,7 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -551,10 +652,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Огоҳӣ"
 
@@ -565,19 +665,20 @@ msgid ""
 "Error %s"
 msgstr "Содирот номумкин аст"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "Содирот"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#, fuzzy
+msgid "Export completed with error."
+msgstr "Содиро&ти Интихоби..."
+
 #: libraries/lib-import-export/Import.cpp
 #, fuzzy
 msgid "All supported files"
 msgstr "Содирот"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -790,8 +891,7 @@ msgstr "Нати&ҷа"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr ""
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -810,55 +910,6 @@ msgstr "Секунҷа"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "Аз руи хаткашӣ"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "Устувор"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr ""
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr ""
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr ""
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr ""
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr ""
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr ""
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr ""
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr ""
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr ""
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -897,6 +948,53 @@ msgstr "32-бит float"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr ""
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr ""
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Такрор %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr ""
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "&Барҳамдиҳии амалиёт %s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "&Барҳамдихӣ"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "&Такрори амалиёт %s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "&Такрор"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1018,6 +1116,74 @@ msgstr ""
 #, fuzzy, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "'%s' тоза намешавад"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr ""
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr ""
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "Қайди Роҳча"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, fuzzy
+msgid "&Seconds"
+msgstr "сонияҳо"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+#, fuzzy
+msgid "&Beats"
+msgstr "Такрор"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr ""
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr ""
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr ""
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Афзори вурудӣ"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr ""
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, fuzzy, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Суръати иҷро"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr ""
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -2003,6 +2169,150 @@ msgstr "миллисония"
 msgid "Samples"
 msgstr "намунаҳо"
 
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "SQLite3 error"
+msgstr "(барномаи берунӣ)"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "No error"
+msgstr "Берунсозии файл"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Generic error"
+msgstr "&Тавлид кардан"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Internal logic error in SQLite"
+msgstr "Хатои мантиқии дохилӣ"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr ""
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr ""
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Operation terminated"
+msgstr "Сабт иҷозат нашудааст"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Unable to open the database file"
+msgstr "'%s' тоза намешавад"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Not used"
+msgstr "Таваққуф"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File opened that is not a database file "
+msgstr "'%s' тоза намешавад"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#, fuzzy
+msgid "Unknown error"
+msgstr "Қисмати номаълуми сатри фармоишӣ: %s\n"
+
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr ""
@@ -2386,8 +2696,9 @@ msgid "Pre-processing"
 msgstr "Пардозиши Auto Duck..."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr ""
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "Афзори Навбатӣ"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2422,7 +2733,6 @@ msgid "Problem details"
 msgstr ""
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "Шарҳ"
 
@@ -2456,7 +2766,7 @@ msgstr ""
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "Пӯшидан(бастан)"
 
@@ -2542,10 +2852,6 @@ msgid "You can also read our help on importing [[https://manual.audacityteam.org
 msgstr ""
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-
-#: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr ""
 
@@ -2582,18 +2888,24 @@ msgid "Show Log for Details"
 msgstr ""
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "ОК"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr ""
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr ""
 
@@ -2602,7 +2914,13 @@ msgstr ""
 msgid "Stop"
 msgstr "Боздорӣ"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr ""
 
@@ -2642,6 +2960,10 @@ msgstr ""
 
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
+msgstr ""
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+msgid "Don't ask me again"
 msgstr ""
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
@@ -2919,12 +3241,714 @@ msgid "Command Output"
 msgstr "Бурунсозии фармонҳо"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&ОК"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "Савти навишташуда сабт шуда истодааст"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Муваллиди хаш"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "&Сабти Лоиҳа"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save To Cloud..."
+msgstr "Сабт ҳамчун..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open From Cloud..."
+msgstr "&Кушодан..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Share Audio..."
+msgstr "Нусхабардории Нишонаҳо"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Account"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Берунсозии файл"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "S&how 'How would you like to export?' dialog"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Рафтор"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Мавҷшакл"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Сабти Лоиҳа &Ҳамчун..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Рӯйхатҳои файлҳои муваққатӣ"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Browse..."
+msgstr "Баррасии..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Рӯйхатҳои файлҳои муваққатӣ"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Қисматҳо..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Интихоби ҷой барои ҷойкунии рӯйхати муваққатӣ"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Рӯйхатҳои файлҳои муваққатӣ"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Cannot set the preference."
+msgstr "Қисматҳо..."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+msgid "Failed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Нусхабардории Нишонаҳо"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Лавҳаи интихобӣ"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Ин огоҳиро дигар нишон надиҳед"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to the Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "Мавҷшакл"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr ""
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Нусхабардории Нишонаҳо"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Нусхабардории Нишонаҳо"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Берунсозии файл"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Ин огоҳиро дигар нишон надиҳед"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#, fuzzy
+msgid "Save"
+msgstr "&Захира кардан..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Сабти Лоиҳа &Ҳамчун..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Пурракунии лоиҳа"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Ҷобаҷогузорӣ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Бекор кардан"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#, fuzzy
+msgid "&Ok"
+msgstr "&ОК"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Нишона"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "Нусхабардории Нишонаҳо"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "&Сабти Лоиҳа"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Кушодани Лоиҳаи Audacity"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Лоиҳаи файлро кушода наметавонад"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open new version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Давомнокии оҳанг:"
+msgstr[1] "Давомнокии оҳанг:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Тағиротҳои Нишонавӣ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "'%s' тоза намешавад"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "&Сабти Лоиҳа"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Лоиҳаи файлро кушода наметавонад"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "Пеш&намоиш"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Next"
+msgstr "Афзори Навбатӣ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Open"
+msgstr "&Кушодан..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "Дастаҳои иттисоли %i ба %i"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Шумо садоро наметавонед сабт кунед ё ин ки боз хонед.\n"
+"\n"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "Шумо бовари доред, ки %s нест карда шавад?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Кэширонидани додаҳои садоӣ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Теғаи файлро барои сабт кушода наметавонад"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Буридашавии қисматҳои хомӯшӣ..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr ""
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Кэширонидани додаҳои садоӣ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project could not be found."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Давомнокии оҳанг:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Sync failed"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Хато: "
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "&Сабти Лоиҳа"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Ширкаткунандаҳои дигари лоиҳа"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Дастаҳои иттисоли 1 ба %i"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Файлро кушода натавонист: "
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Бор кардани файлҳо"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
 msgstr ""
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
@@ -3025,7 +4049,8 @@ msgid "Cutoff"
 msgstr ""
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Хомӯш карда шуд"
 
@@ -3306,6 +4331,15 @@ msgstr ""
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
+msgstr ""
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Formats"
+msgstr "Қолаб:"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Codecs"
 msgstr ""
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
@@ -3863,6 +4897,96 @@ msgstr "MIDI роҳчаҳо ба таври муққарарӣ ҷудо наме
 msgid "Invalid track offset in LOF file."
 msgstr "Роҳчаи хароби ҷудошуда дар файли LOF."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Созиши роҳчаи нави аудиоии нав"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Созиши роҳчаи нави аудиоии нав"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "MIDI file"
+msgstr "Интихоби MIDI файл..."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Allegro file"
+msgstr "Ҳамаи файлҳо (*)|*"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr ""
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "&Содирот..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Воридоти MIDI аз '%s'"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Воридоти MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Файлро кушода натавонист: "
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Файлро кушода натавонист: "
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s."
+msgstr "Файлро \"%s\"-ро кушода натавонист"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Интихоби MIDI файл..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr ""
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "MIDI files"
+msgstr "Интихоби MIDI файл..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Allegro files"
+msgstr "Ҳамаи файлҳо (*)|*"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
+
 #: modules/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
@@ -4060,7 +5184,7 @@ msgid "Only libmp3lame.dylib"
 msgstr ""
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
+msgid "Only libmp3lame.so"
 msgstr ""
 
 #: modules/mod-mp3/ExportMP3.cpp
@@ -4069,6 +5193,10 @@ msgstr ""
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
+msgstr ""
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
 msgstr ""
 
 #: modules/mod-mp3/ExportMP3.cpp
@@ -4359,8 +5487,7 @@ msgstr ""
 msgid "Nyquist Effect Workbench - "
 msgstr "Корбарии натиҷаи Nyquist..."
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
 msgid "New"
 msgstr "&Нав"
@@ -4371,18 +5498,8 @@ msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
-msgid "Open"
-msgstr "&Кушодан..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
 msgid "Open script"
 msgstr "Кушодани файлҳои Қаблӣ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#, fuzzy
-msgid "Save"
-msgstr "&Захира кардан..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 #, fuzzy
@@ -4516,11 +5633,6 @@ msgid "Go to previous S-expr"
 msgstr ""
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Next"
-msgstr "Афзори Навбатӣ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr ""
 
@@ -4641,11 +5753,6 @@ msgstr "Рӯйхатҳо"
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
-msgid "Unknown error"
-msgstr "Қисмати номаълуми сатри фармоишӣ: %s\n"
-
-#: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Auto"
 msgstr "Даки худкор"
 
@@ -4753,7 +5860,7 @@ msgid "Opus files"
 msgstr "Номи файлҳо:"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
+msgid "File has changed the number of channels in the middle."
 msgstr ""
 
 #: modules/mod-opus/ImportOpus.cpp
@@ -5290,7 +6397,7 @@ msgstr "Аввал Audacity Бакордарорӣ"
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
+msgid "%s software is copyright %s 1999-2024 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -5303,8 +6410,8 @@ msgstr ""
 msgid "Build Information"
 msgstr ""
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "Фаъол шуд"
 
@@ -5506,10 +6613,10 @@ msgstr "Пахш ва кашидан барои ба тартибоварии а
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
-msgid "Record/Play head"
+msgid "Record/Playhead"
 msgstr "Сабтшавӣ"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr ""
 
@@ -5597,10 +6704,6 @@ msgstr "Такрор"
 msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr ""
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 #, fuzzy
@@ -5613,14 +6716,12 @@ msgid "Set Loop To Selection"
 msgstr "&Тағири тасвир барои интихоб"
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
-msgid "Pinned Play Head"
-msgstr "Сабтшавӣ"
+msgid "Scroll view to playhead"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
-msgid "Enable pinned play &head"
-msgstr "Сабтшавӣ"
+msgid "Continuous scrolling"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, fuzzy, c-format
@@ -5630,18 +6731,6 @@ msgstr "'%s' тоза намешавад"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr ""
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr ""
-
-#: src/AudacityApp.cpp
-#, fuzzy
-msgid "Reset Audacity Preferences"
-msgstr "Қисматҳои Audacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5895,6 +6984,34 @@ msgstr "Баромад аз Audacity"
 msgid "&Retry"
 msgstr ""
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Automatic Music Configuration"
+msgstr "Давомнокии оҳанг:"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Music Import"
+msgstr "Воридот"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -5927,11 +7044,6 @@ msgstr ""
 msgid "Remember my choice and don't ask again"
 msgstr ""
 
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "Ширкаткунандаҳои дигари лоиҳа"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Ба таври автоматӣ барқарорсозӣ баъди садама"
@@ -5952,14 +7064,14 @@ msgid "Recoverable &projects"
 msgstr "Лоиҳаҳои барқароршаванда"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Ҷудокунӣ"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "Ном"
 
@@ -6046,7 +7158,7 @@ msgstr ""
 msgid "Export Macro"
 msgstr "Берунсозии файл"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 #, fuzzy
 msgid "Effect"
 msgstr "Нати&ҷа"
@@ -6190,14 +7302,6 @@ msgstr "Истифодабарӣ..."
 msgid "File"
 msgstr "Файл"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "&Бекор кардан"
-
 #: src/BatchProcessDialog.cpp
 #, fuzzy
 msgid "Remo&ve"
@@ -6315,14 +7419,6 @@ msgstr "Шумо бовари доред, ки %s нест карда шавад
 #: src/BatchProcessDialog.cpp
 #, fuzzy, c-format
 msgid "&Repeat %s"
-msgstr "Такрор %s"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
 msgstr "Такрор %s"
 
 #: src/BatchProcessDialog.cpp
@@ -6528,15 +7624,6 @@ msgstr ""
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr ""
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, fuzzy, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr "Аввал роҳчаро ҷудо кунед."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -6793,7 +7880,7 @@ msgstr "дБ"
 msgid "Scroll"
 msgstr ""
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "Калонкунӣ"
 
@@ -6845,7 +7932,7 @@ msgstr "Барои сохтани спектрум, ҳамаи роҳчаҳои 
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 
@@ -6930,7 +8017,7 @@ msgstr "&Таърих..."
 msgid "&Manage History"
 msgstr "Идораи таърих"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "Амал"
 
@@ -6997,11 +8084,6 @@ msgstr ""
 #, fuzzy
 msgid "&Manage Plugins"
 msgstr "Масрафсанҷи ғайрифаъол"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr ""
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7099,10 +8181,38 @@ msgstr "Номи роҳчаро ворид кунед"
 msgid "Label Track"
 msgstr ""
 
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "Номи файлҳо:"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "Файлҳои MP2"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "Нишонаҳо"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "S&tandard"
+msgstr "Танзимшуда"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr ""
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "Exported Label Style:"
+msgstr "Воридоти НишонаҳоҲамчун:"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7142,55 +8252,12 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Кушодани Лоиҳаи Audacity"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
+#: src/MenuCreator.cpp
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
 msgstr ""
 
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr ""
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr ""
-
-#: src/MIDIPlay.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr ""
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "&Барҳамдиҳии амалиёт %s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "&Барҳамдихӣ"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "&Такрори амалиёт %s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "&Такрор"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-
-#: src/Menus.cpp
-msgid "Disallowed"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
 msgstr ""
 
 #: src/MixerBoard.cpp
@@ -7262,49 +8329,6 @@ msgstr "Ҷойивазшавии идоракунандаҳои садо"
 #, fuzzy
 msgid "&Mixer"
 msgstr "Омезишкунанда"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "Қайди Роҳча"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr ""
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr ""
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr ""
-
-#: src/NoteTrack.cpp
-#, fuzzy, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Афзори вурудӣ"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr ""
-
-#: src/NoteTrack.cpp
-#, fuzzy, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Суръати иҷро"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr ""
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7418,139 +8442,89 @@ msgstr ""
 msgid "A♯/B♭"
 msgstr ""
 
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Manage Plugins"
-msgstr "Масрафсанҷи ғайрифаъол"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr ""
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr ""
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "&Ҳама"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Show disabled"
-msgstr " (хомӯш)"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "D&isabled"
-msgstr "Хомӯш карда шуд"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "Show enabled"
-msgstr "Фаъол шуд"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "E&nabled"
-msgstr "Фаъол шуд"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr ""
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr ""
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr ""
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr ""
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "&Select All"
-msgstr "Ҷудокунӣ"
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "C&lear All"
-msgstr "&Тоза кардан"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr ""
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-#, fuzzy
-msgid "&Enable"
-msgstr "Фаъол шуд"
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy
-msgid "&Disable"
-msgstr "Хомӯш карда шуд"
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr "Натиҷаи корбурдашуда: %s"
-
-#: src/PluginRegistrationDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr "Натиҷаи корбурдашуда: %s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, fuzzy, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr "'%s' тоза намешавад"
 
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Disable"
+msgstr "Хомӯш карда шуд"
+
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Enable"
+msgstr "Фаъол шуд"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#, fuzzy
+msgid "Type"
+msgstr "масрафсанҷ"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+#, fuzzy
+msgid "All"
+msgstr "&Ҳама"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Analyzer"
+msgstr "&Таҳлил"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "Афзор"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Manage Plugins"
+msgstr "Масрафсанҷи ғайрифаъол"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Native Audacity"
+msgstr "Баромад аз Audacity"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Show:"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Type:"
+msgstr "масрафсанҷ"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&ategory:"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr ""
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Plugin"
+msgstr "Буруни Nyquistы: "
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Rescan"
+msgstr ""
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr ""
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "Ҳангоми чоп хато ба амал омад."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "Чоп кардан"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "Та&ъини Саҳифа..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "&Чоп кардан..."
 
 #: src/ProjectAudioManager.cpp
 #, fuzzy, c-format
@@ -7818,7 +8792,7 @@ msgstr ""
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr ""
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "Сабт шуд %s"
@@ -7986,6 +8960,15 @@ msgstr ""
 #, c-format
 msgid "Importing %s"
 msgstr ""
+
+#: src/ProjectFileManager.cpp
+msgid "Music Information Retrieval"
+msgstr ""
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Analyzing imported audio"
+msgstr "Савти навишташуда сабт шуда истодааст"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -8196,7 +9179,7 @@ msgstr "Нати&ҷа"
 msgid "Get more effects..."
 msgstr "Қисматҳо..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Analyze"
 msgstr "&Таҳлил"
@@ -8246,168 +9229,6 @@ msgstr "Нати&ҷа"
 #, fuzzy, c-format
 msgid "Realtime effects for %s"
 msgstr "Натиҷаи корбурдашуда: %s"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "Интихоби..."
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr ""
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr ""
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr ""
-
-#: src/Screenshot.cpp
-#, fuzzy
-msgid "All Effects"
-msgstr "Нати&ҷа"
-
-#: src/Screenshot.cpp
-#, fuzzy
-msgid "All Scriptables"
-msgstr "Ҳамаи файлҳо (*)|*"
-
-#: src/Screenshot.cpp
-#, fuzzy
-msgid "All Preferences"
-msgstr "Қисматҳо..."
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "Лавҳаи Роҳча"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr ""
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "Роҳчаҳо"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr ""
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr ""
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr ""
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr ""
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr ""
-
-#: src/Screenshot.cpp
-#, fuzzy
-msgid "&Screenshot..."
-msgstr "&Чоп кардан..."
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8546,10 +9367,6 @@ msgstr ""
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
-msgstr ""
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
 msgstr ""
 
 #: src/TagsEditor.cpp
@@ -9035,6 +9852,10 @@ msgstr "Содирот"
 msgid "Stereo, 999999Hz"
 msgstr ""
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "Лавҳаи Роҳча"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9211,143 +10032,6 @@ msgstr "Ивази Самт  -- маънои: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Натиҷаи андозагароӣ\n"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Share Audio"
-msgstr "Нусхабардории Нишонаҳо"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-#, fuzzy
-msgid "&Share Audio Toolbar"
-msgstr "Лавҳаи интихобӣ"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr ""
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr ""
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr ""
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr ""
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr ""
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr ""
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr ""
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-#, fuzzy
-msgid "&Ok"
-msgstr "&ОК"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Шумо садоро наметавонед сабт кунед ё ин ки боз хонед.\n"
-"\n"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Are you sure you want to cancel?"
-msgstr "Шумо бовари доред, ки %s нест карда шавад?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Uploading audio..."
-msgstr "Кэширонидани додаҳои садоӣ"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-#, fuzzy
-msgid "Export error"
-msgstr "Берунсозии файл"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "We are unable to prepare this file for uploading."
-msgstr "Теғаи файлро барои сабт кушода наметавонад"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Finalizing upload..."
-msgstr "Буридашавии қисматҳои хомӯшӣ..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr ""
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Preparing audio..."
-msgstr "Кэширонидани додаҳои садоӣ"
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9376,26 +10060,6 @@ msgstr ""
 #: src/commands/Command.cpp
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
-msgstr ""
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr ""
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
 msgstr ""
 
 #: src/commands/CompareAudioCommand.cpp
@@ -9501,10 +10165,19 @@ msgstr "&Фармон"
 msgid "Menus"
 msgstr "Ҳамаи файлҳо (*)|*"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 #, fuzzy
 msgid "Preferences"
 msgstr "Қисматҳо..."
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "Роҳчаҳо"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -9753,127 +10426,6 @@ msgstr ""
 msgid "Sets the value of a single preference."
 msgstr ""
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Window"
-msgstr " равзана"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Full Window"
-msgstr " равзана"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Window Plus"
-msgstr "Намуди равзана:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Toolbars"
-msgstr "Афзор"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Scriptables"
-msgstr "Тағирёбанда"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Trackpanel"
-msgstr "Лавҳаи Роҳча"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "First Two Tracks"
-msgstr "&Роҳчаҳо"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "First Three Tracks"
-msgstr "&Роҳчаҳо"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "First Four Tracks"
-msgstr "&Роҳчаҳо"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "Tracks Plus"
-msgstr "Лавҳаи Роҳча"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "First Track Plus"
-msgstr "&Роҳчаҳо"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "All Tracks"
-msgstr "Роҳчаҳо"
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgid "All Tracks Plus"
-msgstr "Лавҳаи Роҳча"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr ""
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy
-msgctxt "color"
-msgid "White"
-msgstr "Сафед"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr ""
-
-#: src/commands/ScreenshotCommand.cpp
-#, fuzzy, c-format
-msgid "Error trying to save file: %s"
-msgstr "Дар файл сабт намешавад: "
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr ""
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr ""
-
 #: src/commands/SelectCommand.cpp
 #, fuzzy
 msgid "Select Time"
@@ -10065,8 +10617,7 @@ msgid "Edited Envelope"
 msgstr "Лифофа"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "Лифофа"
 
@@ -10285,6 +10836,10 @@ msgstr "&Роҳчаҳо"
 
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
+msgstr ""
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
 msgstr ""
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
@@ -11587,11 +12142,6 @@ msgstr "Пеш&намоиш"
 
 #: src/effects/EffectUI.cpp
 #, fuzzy
-msgid "Stop &Preview"
-msgstr "Пеш&намоиш"
-
-#: src/effects/EffectUI.cpp
-#, fuzzy
 msgid "&Apply"
 msgstr "Истифодаи %s"
 
@@ -11665,14 +12215,13 @@ msgstr "Файл бо номи \"%s\" аллакай мавҷуд аст.  Ҷо�
 msgid "Equalization"
 msgstr "Баробарсозӣ"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Filter Curve EQ"
 msgstr "Бознасбшуда"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Графики EQ"
 
@@ -13455,10 +14004,6 @@ msgstr "Танзимоти натиҷаҳо"
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr ""
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr ""
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr ""
@@ -13744,7 +14289,7 @@ msgstr ""
 
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "Пурракунии интихоб"
 
 #: src/export/ExportAudioDialog.cpp
@@ -13853,10 +14398,6 @@ msgstr ""
 msgid "Continue to export remaining files?"
 msgstr "Кушодан/сохтани файлҳои санҷишӣ номумкин аст"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "Содирот"
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "Custom Sample Rate"
@@ -13876,11 +14417,6 @@ msgstr "Навъи хаш:"
 #, fuzzy
 msgid "Fo&lder:"
 msgstr "Танзимоти пӯша: "
-
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Баррасии..."
 
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
@@ -13943,45 +14479,6 @@ msgstr ""
 msgid "Other..."
 msgstr "Дигар..."
 
-#: src/export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Созиши роҳчаи нави аудиоии нав"
-
-#: src/export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Созиши роҳчаи нави аудиоии нав"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr ""
-
-#: src/export/ExportMIDI.cpp
-#, fuzzy
-msgid "MIDI file"
-msgstr "Интихоби MIDI файл..."
-
-#: src/export/ExportMIDI.cpp
-#, fuzzy
-msgid "Allegro file"
-msgstr "Ҳамаи файлҳо (*)|*"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr ""
-
-#: src/export/ExportMIDI.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "&Содирот..."
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, fuzzy, c-format
@@ -14011,58 +14508,6 @@ msgstr "Шабакаи: %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr ""
-
-#: src/export/ExportProgressUI.cpp
-#, fuzzy
-msgid "Export completed with error."
-msgstr "Содиро&ти Интихоби..."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Воридоти MIDI аз '%s'"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Воридоти MIDI"
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Файлро кушода натавонист: "
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Файлро кушода натавонист: "
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s."
-msgstr "Файлро \"%s\"-ро кушода натавонист"
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Интихоби MIDI файл..."
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr ""
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy
-msgid "MIDI files"
-msgstr "Интихоби MIDI файл..."
-
-#: src/import/ImportMIDI.cpp
-#, fuzzy
-msgid "Allegro files"
-msgstr "Ҳамаи файлҳо (*)|*"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14593,15 +15038,6 @@ msgid "E&xit"
 msgstr "Б&аромад"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr ""
-
-#: src/menus/FileMenus.cpp
-#, fuzzy
-msgid "Export as FLAC"
-msgstr "Воридоти НишонаҳоҲамчун:"
-
-#: src/menus/FileMenus.cpp
 #, fuzzy
 msgid "Export as MP&3"
 msgstr "Содирот"
@@ -14615,6 +15051,11 @@ msgstr "Воридоти НишонаҳоҲамчун:"
 #, fuzzy
 msgid "Export as &OGG"
 msgstr "Содирот"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Export as FLAC"
+msgstr "Воридоти НишонаҳоҲамчун:"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -14661,21 +15102,6 @@ msgstr ""
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr ""
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&Quick Fix..."
-msgstr "&Мадад"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "&Getting Started"
-msgstr "Ибтидои интихоб:"
-
-#: src/menus/HelpMenus.cpp
-#, fuzzy
-msgid "Audacity &Manual"
-msgstr "Таблои %s Audacity"
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -15106,6 +15532,10 @@ msgid "&Select"
 msgstr ""
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Ҳама"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "&Ягонто"
 
@@ -15399,7 +15829,7 @@ msgstr ""
 
 #: src/menus/TimelineMenus.cpp
 #, fuzzy
-msgid "&Timeline"
+msgid "Tim&eline"
 msgstr "Дастаҳои иттисоли 1 ба %i"
 
 #: src/menus/ToolbarMenus.cpp
@@ -16133,11 +16563,6 @@ msgstr "Тағирдиҳии андозаи Афзор"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Advanced &Vertical Zooming"
-msgstr "Қисматҳои омехтаи пешрафта"
-
-#: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "T&rack Size"
 msgstr "НамудиРоҳча"
 
@@ -16181,7 +16606,7 @@ msgstr "Интиҳо ба интихоб"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "Масрафсанҷи ғайрифаъол"
 
 #: src/menus/ViewMenus.cpp
@@ -16402,15 +16827,6 @@ msgid "Temporary files directory"
 msgstr "Рӯйхатҳои файлҳои муваққатӣ"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr ""
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Рӯйхатҳои файлҳои муваққатӣ"
-
-#: src/prefs/DirectoriesPrefs.cpp
 #, fuzzy
 msgid "Brow&se..."
 msgstr "Баррасии..."
@@ -16419,15 +16835,6 @@ msgstr "Баррасии..."
 #, fuzzy
 msgid "&Free Space:"
 msgstr "Фазои холӣ:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Интихоби ҷой барои ҷойкунии рӯйхати муваққатӣ"
-
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Cannot set the preference."
-msgstr "Қисматҳо..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16509,6 +16916,12 @@ msgstr "Берунсозии файл"
 msgid "'Macro Output' directory cannot be set."
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr ""
+
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
 msgid "Preferences for Effects"
@@ -16560,6 +16973,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "Натиҷаи корбурдашуда: %s"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr ""
 
@@ -16568,7 +16985,7 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
+msgid "Open Plugin &Manager"
 msgstr ""
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16746,14 +17163,6 @@ msgstr ""
 msgid "Never use comma as decimal point"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr ""
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr ""
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr ""
@@ -16772,32 +17181,24 @@ msgid "Preferences for ImportExport"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
-msgid "S&tandard"
-msgstr "Танзимшуда"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
+msgid "&Ask me each time"
+msgstr ""
+
+#: src/prefs/ImportExportPrefs.cpp
+msgid "Do &nothing"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 #, fuzzy
-msgid "&Seconds"
-msgstr "сонияҳо"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
-msgid "&Beats"
-msgstr "Такрор"
+msgid "Music Imports"
+msgstr "Воридот"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
-msgid "Exported Label Style:"
-msgstr "Воридоти НишонаҳоҲамчун:"
-
-#: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
+msgid "When Audacity detects music in file imported on empty project"
 msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
@@ -16857,10 +17258,6 @@ msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
-msgstr ""
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
 msgstr ""
 
 #: src/prefs/KeyConfigPrefs.cpp
@@ -17032,269 +17429,34 @@ msgstr "Қисматҳо..."
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-"and know what you are doing."
-msgstr ""
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr ""
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr ""
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 #, fuzzy
-msgid "Changes to these settings only take effect when Audacity starts up."
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "Тағиротҳо ба рӯйхати муваққатӣ то аз навборкунии Audacity натиҷагирӣ намешаванд"
 
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
-msgid "Ask"
-msgstr "Маро пурсед"
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
+msgid "No choice made"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
 msgstr ""
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "Муш"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Preferences for Mouse"
-msgstr "Қисматҳо..."
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "Истифодабарии муш (қисматҳои ивазнашаванда)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "Афзор"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "Фармони иҷро"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "Тугмаҳо"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "Пахши чап"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "Насби нуқтаи ҷудокунӣ"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "Тугмаи чап -кашидашавӣ "
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "Интихоби насби соҳа"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Shift-Left-Пахшкунӣ"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "Васеъкунии соҳаи интихоб"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "Чархиши чарх"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Change scrub speed"
-msgstr "Ивазшавии суръат"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "Наздиккунӣ бо нуқта"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "Наздиккунӣ дар соҳа"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "ҳамон як кашиши рост"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "Пахши рост"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "Дуркунӣ бо як қадам"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "Кашиши рост"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "ҳамон як кашиши чап"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr ""
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "Тағирдиҳии ҳаракати қатъшӣ"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "Қалам"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "Тағирдиҳии намуна"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt-Left-Пахш"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "Суфтакунии намуна"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "Ивазкунии якчанд намуна"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "-Left-Drag"
-msgstr "Тугмаи чап -кашидашавӣ "
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "Ивазкунии танҳо ЯК намуна"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "Бисёр"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "ҳамон як кашиши чап"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "ҳамон як кашиши чап"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "Ҳама"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Scroll tracks up or down"
-msgstr "Чархиш ба боло ё поён"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Scroll waveform"
-msgstr "Мавҷшакл"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "-Wheel-Rotate"
-msgstr "Чархиши чарх"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Zoom waveform in or out"
-msgstr "Калонкунии намуд"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "-Shift-Wheel-Rotate"
-msgstr "Чархиши чарх"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "Мавҷшакл (dB)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Shift-Left-кашиш"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Move all clips in track left/right"
-msgstr "Вақти таконхӯрии ҳамаи қисматҳои роҳча"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "Ҷойгузорӣ ба боло/поён байни роҳчаҳо"
-
-#: src/prefs/MousePrefs.cpp
-#, fuzzy
-msgid "Move clip left/right or between tracks"
-msgstr "Ҷойгузорӣ ба боло/поён байни роҳчаҳо"
 
 #: src/prefs/PlaybackPrefs.cpp
 #, fuzzy
@@ -17419,6 +17581,11 @@ msgstr ""
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr ""
+
+#: src/prefs/RecordingPrefs.cpp
+#, fuzzy
+msgid "&Enable"
+msgstr "Фаъол шуд"
 
 #: src/prefs/RecordingPrefs.cpp
 #, fuzzy
@@ -17612,6 +17779,10 @@ msgstr "Қисматҳо..."
 #, fuzzy
 msgid "&Use Preferences"
 msgstr "Қисматҳо..."
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr ""
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17854,12 +18025,11 @@ msgid "Enable cut &lines"
 msgstr "Масрафсанҷи ғайрифаъол"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
-msgid "Enable &dragging selection edges"
-msgstr "Иловаи нишонаҳо дар ҷудокунӣ"
+msgid "Editing a clip can &move other clips"
+msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Editing a clip can &move other clips"
+msgid "&Always paste audio as new clips"
 msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
@@ -17873,15 +18043,6 @@ msgstr ""
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr ""
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr ""
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
-msgid "Advanced &vertical zooming"
-msgstr "Қисматҳои омехтаи пешрафта"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -18059,22 +18220,6 @@ msgstr "Ин огоҳиро дигар нишон надиҳед"
 
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr ""
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
 msgstr ""
 
 #. i18n-hint: A waveform is a visual representation of vibration
@@ -18448,68 +18593,6 @@ msgstr "Сабтшавӣ"
 #, fuzzy
 msgid "D&ecrease Recording Volume"
 msgstr "Сабтшавӣ"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr ""
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr ""
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr ""
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr ""
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-#, fuzzy
-msgid "Stop Scrubbing"
-msgstr "Дархости Nyquist..."
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-#, fuzzy
-msgid "Start Scrubbing"
-msgstr "Дархости Nyquist..."
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr ""
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-#, fuzzy
-msgid "Start Seeking"
-msgstr "Ибтидои мазмун"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr ""
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-#, fuzzy
-msgid "Scru&b Toolbar"
-msgstr "Лавҳаи таҳрирӣ"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18898,37 +18981,27 @@ msgid "&MIDI Device Info..."
 msgstr ""
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 #, fuzzy
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "Барои наздиксозии амудӣ пахшро иҷро кунед, Shift-ро барои дурсозӣ ва Drag-ро барои сохтани наздиксозии муҳити махсус истифода кунед."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-#, fuzzy
-msgid "Right-click for menu."
-msgstr "Пахши рост"
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Zoom Reset"
 msgstr "Хурдкунӣ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Shift-Right-Click"
 msgstr "Shift-Left-Пахшкунӣ"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 #, fuzzy
 msgid "Left-Click/Left-Drag"
+msgstr "Shift-Left-Пахшкунӣ"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
 msgstr "Shift-Left-Пахшкунӣ"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
@@ -18952,27 +19025,56 @@ msgstr "Қайди Роҳча"
 msgid "Stretch"
 msgstr "Харобии омил:"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "Ивазшавии суръат"
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed"
-msgstr ""
-
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Invalid clip speed"
-msgstr ""
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed must be a positive value"
-msgstr ""
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 #, fuzzy
-msgid "There is not enough space to stretch the clip to the selected speed"
+msgid "Click to open clip context menu."
+msgstr "Гузариш ба Ибтидо"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Not enough space"
+msgstr "Додаҳо кам интихоб шуданд."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "There is not enough space to expand the clip to its original speed."
 msgstr "Барои гузоштани интихоб пораи ҳофиза кам аст"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Speed"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to reset clip pitch."
+msgstr "Барои ҷудокунии аудио пахш ва кашишро иҷро кунед"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "Пахш ва кашидан барои ба тартибоварии андозаи роҳчаҳои стереоӣ."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to reset clip speed."
+msgstr "Барои ҷудокунии аудио пахш ва кашишро иҷро кунед"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "Пахш ва кашидан барои ба тартибоварии андозаи роҳчаҳои стереоӣ."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18990,6 +19092,52 @@ msgstr "Васеъкунӣ"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "Хати Буриш Ҷой иваз шудааст"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Pitch and Speed"
+msgstr "Баландии садо (EAC)"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Pitch"
+msgstr "Ивазшавии баландкунӣ"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "se&mitones:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Speed"
+msgstr "Ивазшавии суръат"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "General"
+msgstr "&Тавлид кардан"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Speed"
+msgstr "Ивазшавии суръат"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Pitch"
+msgstr "Ивази сабти овоз"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -19017,6 +19165,12 @@ msgstr ""
 #, fuzzy
 msgid "Zoom to Fit"
 msgstr "Наздиккунӣ бо нуқта"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Reset Zoom"
+msgstr "Бознасбшуда"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 #, fuzzy
@@ -19057,6 +19211,15 @@ msgstr "Басомад (Ҳз)"
 #, fuzzy
 msgid "Next &Lower Peak Frequency"
 msgstr "Басомади хаттӣ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+#, fuzzy
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "Пахши рост"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 #, fuzzy
@@ -19143,20 +19306,23 @@ msgid "Rename Clip..."
 msgstr "Афзори Навбатӣ"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Change Speed..."
+#, fuzzy
+msgid "Pitch and Speed..."
 msgstr "Ивазшавии суръат..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
+msgid "Render Pitch and Speed"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
@@ -19189,17 +19355,37 @@ msgstr "Вуруди аудиоҳои интихобшуда ба монанди
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
+msgid "Pitch Shift"
+msgstr "Интерполятсияи баландсифати синхронӣ"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Changed Pitch Shift"
+msgstr "Ивази сабти овоз"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
 msgid "&Rename Clip..."
 msgstr "Афзори Навбатӣ"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
-msgid "Change &Speed..."
+msgid "&Pitch and Speed..."
 msgstr "Ивазшавии суръат..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
+msgid "Render Pitch and &Speed"
 msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Up"
+msgstr "Баландии садо (EAC)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Down"
+msgstr "Баландии садо (EAC)"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy
@@ -19430,16 +19616,6 @@ msgid "%.0f%% Right"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom x1/2"
-msgstr "Калонкунӣ"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
-msgid "Zoom x2"
-msgstr "Калонкунӣ"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr ""
 
@@ -19546,6 +19722,11 @@ msgstr "Созиши вақти роҳчаи нав"
 msgid "&Time Track"
 msgstr "&Роҳчаи Вақт"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+#, fuzzy
+msgid "Right-click for menu."
+msgstr "Пахши рост"
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
@@ -19586,8 +19767,8 @@ msgstr "Пурракунии интихоб"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 #, fuzzy
-msgid "&Name..."
-msgstr "Ном..."
+msgid "Re&name Track..."
+msgstr "Бознамунагирии Роҳча"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 #, fuzzy
@@ -19643,6 +19824,10 @@ msgstr "Ба тартибории лифофавӣ."
 #.
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
+msgstr ""
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
 msgstr ""
 
 #: src/tracks/ui/Scrubbing.cpp
@@ -19792,6 +19977,11 @@ msgstr "&Роҳчаҳо"
 #, fuzzy
 msgid "Ctrl+Click to deselect"
 msgstr "&Фармон"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Delete Track"
+msgstr "&Роҳчаҳо"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
@@ -20229,8 +20419,7 @@ msgstr "Ба кор бурдани дараҷакунанда..."
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20240,7 +20429,7 @@ msgstr ""
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr ""
 
@@ -20358,9 +20547,8 @@ msgstr "Интихобкунӣ"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20689,54 +20877,6 @@ msgstr "Миқдори вақтҳои такроршаванда: "
 msgid "Allow duration to change"
 msgstr ""
 
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr ""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
-msgid "Select target EQ effect"
-msgstr "Бознасбшуда"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
-msgid "Equalization XML file"
-msgstr "Баробарсозӣ"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
-msgid "XML file"
-msgstr "Файлҳои MP2"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr ""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy
-msgid "Append number"
-msgstr "Сабт"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr ""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "Хатои кушодашавии файл"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr ""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, fuzzy, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Хато (файл сабт намешавад): %s"
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr ""
@@ -21021,11 +21161,6 @@ msgstr ""
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr ""
-
-#: plug-ins/limiter.ny
-#, fuzzy
-msgid "Type"
-msgstr "масрафсанҷ"
 
 #: plug-ins/limiter.ny
 #, fuzzy
@@ -21524,11 +21659,6 @@ msgid "Minimal"
 msgstr ""
 
 #: plug-ins/sample-data-export.ny
-#, fuzzy
-msgid "All"
-msgstr "&Ҳама"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr ""
 
@@ -21854,134 +21984,6 @@ msgstr "Ибтидои марҳилаи LFO (дараҷа):"
 msgid "Wet level (percent)"
 msgstr ""
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Remove Vocals: to mono"
-msgstr "Ҷойивазку&нии Роҳчаҳо"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Remove Vocals"
-msgstr "Ҷойивазку&нии Роҳчаҳо"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Isolate Vocals"
-msgstr "Ҷойивазку&нии Роҳчаҳо"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Isolate Vocals and Invert"
-msgstr "Марказ"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Remove Center: to mono"
-msgstr "Хати Буриш Ҷой иваз шудааст"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Remove Center"
-msgstr "Хати Буриш Ҷой иваз шудааст"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Isolate Center"
-msgstr "Марказ"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Isolate Center and Invert"
-msgstr "Марказ"
-
-#: plug-ins/vocalrediso.ny
-#, fuzzy
-msgid "Strength"
-msgstr "Дарозӣ"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr ""
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr ""
@@ -22082,6 +22084,10 @@ msgid "Special"
 msgstr "Ташаккури махсус:"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr ""
+
+#: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Vocal Remover"
 msgstr "Ҷойгузории Роҳча"
@@ -22090,6 +22096,413 @@ msgstr "Ҷойгузории Роҳча"
 #, fuzzy
 msgid "Spectral Tools"
 msgstr "Спектрум"
+
+#, fuzzy
+#~ msgid "Pinned Play Head"
+#~ msgstr "Сабтшавӣ"
+
+#, fuzzy
+#~ msgid "Enable pinned play &head"
+#~ msgstr "Сабтшавӣ"
+
+#, fuzzy
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "Қисматҳои Audacity"
+
+#, fuzzy, c-format
+#~ msgid ""
+#~ "You must first select some audio for '%s' to act on.\n"
+#~ "\n"
+#~ "Ctrl + A selects all audio."
+#~ msgstr "Аввал роҳчаро ҷудо кунед."
+
+#, fuzzy
+#~ msgid "Show disabled"
+#~ msgstr " (хомӯш)"
+
+#, fuzzy
+#~ msgid "D&isabled"
+#~ msgstr "Хомӯш карда шуд"
+
+#, fuzzy
+#~ msgid "Show enabled"
+#~ msgstr "Фаъол шуд"
+
+#, fuzzy
+#~ msgid "E&nabled"
+#~ msgstr "Фаъол шуд"
+
+#, fuzzy
+#~ msgid "&Select All"
+#~ msgstr "Ҷудокунӣ"
+
+#, fuzzy
+#~ msgid "C&lear All"
+#~ msgstr "&Тоза кардан"
+
+#, fuzzy
+#~ msgid "&Disable"
+#~ msgstr "Хомӯш карда шуд"
+
+#, fuzzy, c-format
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr "Натиҷаи корбурдашуда: %s"
+
+#, fuzzy, c-format
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr "Натиҷаи корбурдашуда: %s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "Ҳангоми чоп хато ба амал омад."
+
+#~ msgid "Print"
+#~ msgstr "Чоп кардан"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "Та&ъини Саҳифа..."
+
+#~ msgid "&Print..."
+#~ msgstr "&Чоп кардан..."
+
+#~ msgid "Choose..."
+#~ msgstr "Интихоби..."
+
+#, fuzzy
+#~ msgid "All Effects"
+#~ msgstr "Нати&ҷа"
+
+#, fuzzy
+#~ msgid "All Scriptables"
+#~ msgstr "Ҳамаи файлҳо (*)|*"
+
+#, fuzzy
+#~ msgid "All Preferences"
+#~ msgstr "Қисматҳо..."
+
+#, fuzzy
+#~ msgid "&Screenshot..."
+#~ msgstr "&Чоп кардан..."
+
+#, fuzzy
+#~ msgid "Window"
+#~ msgstr " равзана"
+
+#, fuzzy
+#~ msgid "Full Window"
+#~ msgstr " равзана"
+
+#, fuzzy
+#~ msgid "Window Plus"
+#~ msgstr "Намуди равзана:"
+
+#, fuzzy
+#~ msgid "Toolbars"
+#~ msgstr "Афзор"
+
+#, fuzzy
+#~ msgid "Scriptables"
+#~ msgstr "Тағирёбанда"
+
+#, fuzzy
+#~ msgid "Trackpanel"
+#~ msgstr "Лавҳаи Роҳча"
+
+#, fuzzy
+#~ msgid "First Two Tracks"
+#~ msgstr "&Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "First Three Tracks"
+#~ msgstr "&Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "First Four Tracks"
+#~ msgstr "&Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Tracks Plus"
+#~ msgstr "Лавҳаи Роҳча"
+
+#, fuzzy
+#~ msgid "First Track Plus"
+#~ msgstr "&Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "All Tracks"
+#~ msgstr "Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "All Tracks Plus"
+#~ msgstr "Лавҳаи Роҳча"
+
+#, fuzzy
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "Сафед"
+
+#, fuzzy, c-format
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "Дар файл сабт намешавад: "
+
+#, fuzzy
+#~ msgid "Stop &Preview"
+#~ msgstr "Пеш&намоиш"
+
+#, fuzzy
+#~ msgid "&Quick Fix..."
+#~ msgstr "&Мадад"
+
+#, fuzzy
+#~ msgid "&Getting Started"
+#~ msgstr "Ибтидои интихоб:"
+
+#, fuzzy
+#~ msgid "Audacity &Manual"
+#~ msgstr "Таблои %s Audacity"
+
+#, fuzzy
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "Қисматҳои омехтаи пешрафта"
+
+#, fuzzy
+#~ msgid "Ask"
+#~ msgstr "Маро пурсед"
+
+#~ msgid "Mouse"
+#~ msgstr "Муш"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "Истифодабарии муш (қисматҳои ивазнашаванда)"
+
+#~ msgid "Command Action"
+#~ msgstr "Фармони иҷро"
+
+#~ msgid "Buttons"
+#~ msgstr "Тугмаҳо"
+
+#~ msgid "Left-Click"
+#~ msgstr "Пахши чап"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "Насби нуқтаи ҷудокунӣ"
+
+#~ msgid "Left-Drag"
+#~ msgstr "Тугмаи чап -кашидашавӣ "
+
+#~ msgid "Set Selection Range"
+#~ msgstr "Интихоби насби соҳа"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "Васеъкунии соҳаи интихоб"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "Чархиши чарх"
+
+#, fuzzy
+#~ msgid "Change scrub speed"
+#~ msgstr "Ивазшавии суръат"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "Наздиккунӣ бо нуқта"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "Наздиккунӣ дар соҳа"
+
+#~ msgid "same as right-drag"
+#~ msgstr "ҳамон як кашиши рост"
+
+#~ msgid "Right-Click"
+#~ msgstr "Пахши рост"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "Дуркунӣ бо як қадам"
+
+#~ msgid "Right-Drag"
+#~ msgstr "Кашиши рост"
+
+#~ msgid "same as left-drag"
+#~ msgstr "ҳамон як кашиши чап"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "Тағирдиҳии ҳаракати қатъшӣ"
+
+#~ msgid "Pencil"
+#~ msgstr "Қалам"
+
+#~ msgid "Change Sample"
+#~ msgstr "Тағирдиҳии намуна"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Alt-Left-Пахш"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "Суфтакунии намуна"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "Ивазкунии якчанд намуна"
+
+#, fuzzy
+#~ msgid "-Left-Drag"
+#~ msgstr "Тугмаи чап -кашидашавӣ "
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "Ивазкунии танҳо ЯК намуна"
+
+#~ msgid "Multi"
+#~ msgstr "Бисёр"
+
+#~ msgid "same as select tool"
+#~ msgstr "ҳамон як кашиши чап"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "ҳамон як кашиши чап"
+
+#~ msgid "Any"
+#~ msgstr "Ҳама"
+
+#, fuzzy
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "Чархиш ба боло ё поён"
+
+#, fuzzy
+#~ msgid "Scroll waveform"
+#~ msgstr "Мавҷшакл"
+
+#, fuzzy
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "Чархиши чарх"
+
+#, fuzzy
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "Калонкунии намуд"
+
+#, fuzzy
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "Чархиши чарх"
+
+#, fuzzy
+#~ msgid "Vertical Scale Waveform (dB) range"
+#~ msgstr "Мавҷшакл (dB)"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "Shift-Left-кашиш"
+
+#, fuzzy
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "Вақти таконхӯрии ҳамаи қисматҳои роҳча"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "Ҷойгузорӣ ба боло/поён байни роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "Ҷойгузорӣ ба боло/поён байни роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Enable &dragging selection edges"
+#~ msgstr "Иловаи нишонаҳо дар ҷудокунӣ"
+
+#, fuzzy
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "Қисматҳои омехтаи пешрафта"
+
+#, fuzzy
+#~ msgid "Stop Scrubbing"
+#~ msgstr "Дархости Nyquist..."
+
+#, fuzzy
+#~ msgid "Start Scrubbing"
+#~ msgstr "Дархости Nyquist..."
+
+#, fuzzy
+#~ msgid "Start Seeking"
+#~ msgstr "Ибтидои мазмун"
+
+#, fuzzy
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "Лавҳаи таҳрирӣ"
+
+#, fuzzy
+#~ msgid "Change &Speed..."
+#~ msgstr "Ивазшавии суръат..."
+
+#, fuzzy
+#~ msgid "Zoom x1/2"
+#~ msgstr "Калонкунӣ"
+
+#, fuzzy
+#~ msgid "Zoom x2"
+#~ msgstr "Калонкунӣ"
+
+#, fuzzy
+#~ msgid "&Name..."
+#~ msgstr "Ном..."
+
+#, fuzzy
+#~ msgid "Select target EQ effect"
+#~ msgstr "Бознасбшуда"
+
+#, fuzzy
+#~ msgid "Equalization XML file"
+#~ msgstr "Баробарсозӣ"
+
+#, fuzzy
+#~ msgid "XML file"
+#~ msgstr "Файлҳои MP2"
+
+#, fuzzy
+#~ msgid "Append number"
+#~ msgstr "Сабт"
+
+#, fuzzy, lisp-format
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "Хатои кушодашавии файл"
+
+#, fuzzy, lisp-format
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "Хато (файл сабт намешавад): %s"
+
+#, fuzzy
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "Ҷойивазку&нии Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Remove Vocals"
+#~ msgstr "Ҷойивазку&нии Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Isolate Vocals"
+#~ msgstr "Ҷойивазку&нии Роҳчаҳо"
+
+#, fuzzy
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "Марказ"
+
+#, fuzzy
+#~ msgid "Remove Center: to mono"
+#~ msgstr "Хати Буриш Ҷой иваз шудааст"
+
+#, fuzzy
+#~ msgid "Remove Center"
+#~ msgstr "Хати Буриш Ҷой иваз шудааст"
+
+#, fuzzy
+#~ msgid "Isolate Center"
+#~ msgstr "Марказ"
+
+#, fuzzy
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "Марказ"
+
+#, fuzzy
+#~ msgid "Strength"
+#~ msgstr "Дарозӣ"
 
 #, fuzzy
 #~ msgid "Import via GStreamer"
@@ -22203,10 +22616,6 @@ msgstr "Спектрум"
 #~ msgid "Cannot Export Multiple"
 #~ msgstr "Вуруди бисёркарата"
 
-#, fuzzy
-#~ msgid "Export files to:"
-#~ msgstr "Мавқеи вуруд:"
-
 #~ msgid "Create"
 #~ msgstr "Сохтан"
 
@@ -22230,9 +22639,6 @@ msgstr "Спектрум"
 #~ "\"%s\" вуҷуд надорад.\n"
 #~ "\n"
 #~ "Шумо онро сохтан мехоҳад?"
-
-#~ msgid "Save As..."
-#~ msgstr "Сабт ҳамчун..."
 
 #, fuzzy
 #~ msgid "Error Exporting"
@@ -22365,10 +22771,6 @@ msgstr "Спектрум"
 #~ msgstr "Интихобкунӣ"
 
 #, fuzzy
-#~ msgid "Enable"
-#~ msgstr "Фаъол шуд"
-
-#, fuzzy
 #~ msgid "D&efault"
 #~ msgstr "&Аз рӯи хомӯшӣ"
 
@@ -22379,10 +22781,6 @@ msgstr "Спектрум"
 #, fuzzy, c-format
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "Лоиҳаи файлро кушода наметавонад"
-
-#, fuzzy, c-format
-#~ msgid "Plugin %d to %d"
-#~ msgstr "Дастаҳои иттисоли %i ба %i"
 
 #, fuzzy
 #~ msgid "&Window"
@@ -22600,10 +22998,6 @@ msgstr "Спектрум"
 #~ msgstr "Муваллиди набз"
 
 #, fuzzy
-#~ msgid "Generating Risset Drum..."
-#~ msgstr "Муваллиди хаш"
-
-#, fuzzy
 #~ msgid "Analyzing..."
 #~ msgstr "Истифодабарӣ..."
 
@@ -22783,9 +23177,6 @@ msgstr "Спектрум"
 
 #~ msgid "Caching audio"
 #~ msgstr "Кэширонидани додаҳои садоӣ"
-
-#~ msgid "Saving recorded audio"
-#~ msgstr "Савти навишташуда сабт шуда истодааст"
 
 #, fuzzy
 #~ msgid "Reclaimable Space"
@@ -23515,16 +23906,8 @@ msgstr "Спектрум"
 #~ msgstr "Қисматҳои масрафсанҷ"
 
 #, fuzzy
-#~ msgid "Modified"
-#~ msgstr "Тағиротҳои Нишонавӣ"
-
-#, fuzzy
 #~ msgid "NewName"
 #~ msgstr "Ном"
-
-#, fuzzy
-#~ msgid "Operation not permitted."
-#~ msgstr "Сабт иҷозат нашудааст"
 
 #, fuzzy
 #~ msgid "Go to parent directory"
@@ -23661,14 +24044,8 @@ msgstr "Спектрум"
 #~ msgid "Change Pitch..."
 #~ msgstr "Ивази баландкунӣ..."
 
-#~ msgid "Changing Pitch"
-#~ msgstr "Ивазшавии баландкунӣ"
-
 #~ msgid "Applied effect: %s %.1f%%"
 #~ msgstr "Натиҷаи корфармудашуда: %s %.1f%%"
-
-#~ msgid "Changing Speed"
-#~ msgstr "Ивазшавии суръат"
 
 #~ msgid "Change Tempo..."
 #~ msgstr "Ивазшавии зарбаи..."

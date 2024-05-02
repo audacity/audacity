@@ -96,7 +96,7 @@ enum : int {
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
    kTrackEffectsBtnHeight = 28,
    kTrackInfoSliderHeight = 25,
-   kTrackInfoSliderWidth = 84,
+   kTrackInfoSliderWidth = 139,
    kTrackInfoSliderAllowance = 5,
    kTrackInfoSliderExtra = 5,
 };
@@ -225,9 +225,6 @@ public:
 
    bool bUpdateTrackIndicator;
 
-   bool bScrollBeyondZero;
-   bool bAdjustSelectionEdges;
-
    void WriteXMLAttributes(XMLWriter &xmlFile) const;
 
 private:
@@ -236,5 +233,4 @@ private:
    struct ProjectFileIORegistration;
 };
 
-extern TIME_FREQUENCY_SELECTION_API BoolSetting ScrollingPreference;
 #endif

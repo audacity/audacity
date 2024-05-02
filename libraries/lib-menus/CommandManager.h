@@ -268,9 +268,7 @@ public:
       std::vector<NormalizedKeyString> &keys,
       std::vector<NormalizedKeyString> &default_keys,
       TranslatableStrings &labels, TranslatableStrings &categories,
-#if defined(EXPERIMENTAL_KEY_VIEW)
       TranslatableStrings &prefixes,
-#endif
       bool includeMultis);
 
    // Each command is assigned a numerical ID for use in wxMenu and wxEvent,

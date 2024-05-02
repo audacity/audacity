@@ -10,6 +10,7 @@
 **********************************************************************/
 #include "AudioSegmentSampleView.h"
 
+#include <algorithm>
 #include <cassert>
 #include <numeric>
 
@@ -39,6 +40,13 @@ void AudioSegmentSampleView::Copy(float* buffer, size_t bufferSize) const
                DoCopy(buffer, bufferSize);
 }
 
+void AudioSegmentSampleView::AddTo(float* buffer, size_t bufferSize) const
+{
+   if (mIsSilent)
+      return;
+   DoAdd(buffer, bufferSize);
+}
+
 size_t AudioSegmentSampleView::GetSampleCount() const
 {
    return mLength;
@@ -46,18 +54,23 @@ size_t AudioSegmentSampleView::GetSampleCount() const
 
 void AudioSegmentSampleView::DoCopy(float* buffer, size_t bufferSize) const
 {
+   std::fill(buffer, buffer + bufferSize, 0.f);
+   DoAdd(buffer, bufferSize);
+}
+
+void AudioSegmentSampleView::DoAdd(float* buffer, size_t bufferSize) const
+{
    size_t toWrite { limitSampleBufferSize(bufferSize, mLength) };
    size_t written = 0u;
    size_t offset = mStart;
    for (const auto& block : mBlockViews)
    {
       const auto toWriteFromBlock = std::min(block->size() - offset, toWrite);
-      std::copy(
-         block->data() + offset, block->data() + offset + toWriteFromBlock,
-         buffer + written);
+      const auto src = block->data() + offset;
+      const auto dst = buffer + written;
+      std::transform(src, src + toWriteFromBlock, dst, dst, std::plus {});
       toWrite -= toWriteFromBlock;
       written += toWriteFromBlock;
       offset = 0;
    }
-   std::fill(buffer + written, buffer + bufferSize, 0.f);
 }

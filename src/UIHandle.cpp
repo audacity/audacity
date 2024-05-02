@@ -7,11 +7,10 @@ UIHandle.cpp
 Paul Licameli
 
 **********************************************************************/
-
-
 #include "UIHandle.h"
-
+#include "Channel.h"
 #include "RefreshCode.h"
+#include "Track.h"
 
 UIHandle::~UIHandle()
 {
@@ -58,4 +57,13 @@ void UIHandle::OnProjectChange(AudacityProject *)
 bool UIHandle::IsDragging() const
 {
    return false;
+}
+
+std::shared_ptr<const Track>
+UIHandle::TrackFromChannel(const std::shared_ptr<const Channel> &pChannel)
+{
+   return pChannel
+      ? static_cast<const Track &>(pChannel->GetChannelGroup())
+         .shared_from_this()
+      : nullptr;
 }

@@ -64,6 +64,8 @@ list( APPEND SOURCES
       $<$<BOOL:${${_OPT}bundle_gplv3}>:AboutDialogGPLv3Text.cpp>
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
+      AnalyzedWaveClip.cpp
+      AnalyzedWaveClip.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -71,6 +73,8 @@ list( APPEND SOURCES
       AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
+      AudacityMirProject.cpp
+      AudacityMirProject.h
       AudioPasteDialog.cpp
       AudioPasteDialog.h
       AutoRecoveryDialog.cpp
@@ -87,6 +91,8 @@ list( APPEND SOURCES
       CellularPanel.h
       Clipboard.cpp
       Clipboard.h
+      ClipMirAudioReader.cpp
+      ClipMirAudioReader.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
       CrashReport.cpp
@@ -120,6 +126,7 @@ list( APPEND SOURCES
       LabelDialog.h
       LabelTrack.cpp
       LabelTrack.h
+      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
@@ -135,8 +142,13 @@ list( APPEND SOURCES
       MouseWheelHandler.cpp
       MovableControl.cpp
       MovableControl.h
+      NoteTrackEditing.cpp
       PitchName.cpp
       PitchName.h
+      PluginDataModel.cpp
+      PluginDataModel.h
+      PluginDataViewCtrl.cpp
+      PluginDataViewCtrl.h
       PluginRegistrationDialog.cpp
       PluginRegistrationDialog.h
       PluginStartupRegistration.cpp
@@ -189,6 +201,7 @@ list( APPEND SOURCES
       TimeDialog.h
       TimeDisplayMode.cpp
       TimeDisplayMode.h
+      TimeTrackEditing.cpp
       TimerRecordDialog.cpp
       TimerRecordDialog.h
       TimerRecordExportDialog.cpp
@@ -371,8 +384,6 @@ list( APPEND SOURCES
       effects/Noise.h
       effects/NoiseReduction.cpp
       effects/NoiseReduction.h
-      effects/NoiseRemoval.cpp
-      effects/NoiseRemoval.h
       effects/Normalize.cpp
       effects/Normalize.h
       effects/Paulstretch.cpp
@@ -540,8 +551,6 @@ list( APPEND SOURCES
       export/ExportMixerDialog.h
       export/ExportOptionsHandler.cpp
       export/ExportOptionsHandler.h
-      export/ExportProgressUI.cpp
-      export/ExportProgressUI.h
 
       # Import
 
@@ -644,8 +653,6 @@ list( APPEND SOURCES
       toolbars/EditToolBar.h
       toolbars/MeterToolBar.cpp
       toolbars/MeterToolBar.h
-      toolbars/ScrubbingToolBar.cpp
-      toolbars/ScrubbingToolBar.h
       toolbars/SelectionBar.cpp
       toolbars/SelectionBar.h
       toolbars/SnappingToolBar.cpp
@@ -708,14 +715,24 @@ list( APPEND SOURCES
       tracks/playabletrack/ui/PlayableTrackButtonHandles.h
       tracks/playabletrack/ui/PlayableTrackControls.cpp
       tracks/playabletrack/ui/PlayableTrackControls.h
-      tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-      tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.h
+      tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.h
+      tracks/playabletrack/wavetrack/ui/ClipButtonId.h
+      tracks/playabletrack/wavetrack/ui/ClipParameters.cpp
+      tracks/playabletrack/wavetrack/ui/ClipParameters.h
+      tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.h
       tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
       tracks/playabletrack/wavetrack/ui/CutlineHandle.h
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.cpp
-      tracks/playabletrack/wavetrack/ui/GetWaveDisplay.h
+      tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.cpp
+      tracks/playabletrack/wavetrack/ui/HighlitClipButtonHandle.h
+      tracks/playabletrack/wavetrack/ui/LowlitClipButton.cpp
+      tracks/playabletrack/wavetrack/ui/LowlitClipButton.h
+      tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+      tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.h
       tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
       tracks/playabletrack/wavetrack/ui/SampleHandle.h
+      tracks/playabletrack/wavetrack/ui/ShuttleGuiScopedSizer.h
       tracks/playabletrack/wavetrack/ui/SpectrumCache.cpp
       tracks/playabletrack/wavetrack/ui/SpectrumCache.h
       tracks/playabletrack/wavetrack/ui/SpectrumVRulerControls.cpp
@@ -734,8 +751,10 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveChannelViewConstants.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.h
       tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-      tracks/playabletrack/wavetrack/ui/WaveClipUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+      tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.h
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.cpp
+      tracks/playabletrack/wavetrack/ui/WaveformAppearance.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.h
       tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceHandle.cpp
@@ -750,12 +769,8 @@ list( APPEND SOURCES
       tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.h
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
       tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.h
-      tracks/playabletrack/wavetrack/ui/WaveformCache.cpp
-      tracks/playabletrack/wavetrack/ui/WaveformCache.h
       tracks/playabletrack/wavetrack/ui/WaveformView.cpp
       tracks/playabletrack/wavetrack/ui/WaveformView.h
-      tracks/playabletrack/wavetrack/WaveTrackUtils.cpp
-      tracks/playabletrack/wavetrack/WaveTrackUtils.h
       tracks/timetrack/ui/TimeTrackControls.cpp
       tracks/timetrack/ui/TimeTrackControls.h
       tracks/timetrack/ui/TimeTrackMenuItems.cpp
@@ -913,27 +928,6 @@ list( APPEND SOURCES
           update/NoUpdatesAvailableDialog.cpp
       >
 
-      # Audio.com
-      $<$<BOOL:${${_OPT}has_audiocom_upload}>:
-         cloud/ShareAudioToolbar.cpp
-         cloud/ShareAudioToolbar.h
-         cloud/audiocom/AuthorizationHandler.cpp
-         cloud/audiocom/AuthorizationHandler.h
-         cloud/audiocom/LinkAccountDialog.cpp
-         cloud/audiocom/LinkAccountDialog.h
-         cloud/audiocom/LinkFailedDialog.cpp
-         cloud/audiocom/LinkFailedDialog.h
-         cloud/audiocom/LinkSucceededDialog.cpp
-         cloud/audiocom/LinkSucceededDialog.h
-         cloud/audiocom/ShareAudioDialog.cpp
-         cloud/audiocom/ShareAudioDialog.h
-         cloud/audiocom/UserImage.cpp
-         cloud/audiocom/UserImage.h
-      >
-
-      $<$<AND:$<BOOL:${${_OPT}has_audiocom_upload}>,$<BOOL:${${_OPT}has_url_schemes_support}>>:
-         cloud/audiocom/LinkUrlHandler.cpp
-      >
       Experimental.cmake
 )
 
@@ -1255,10 +1249,12 @@ else()
    # Create the desktop file
    configure_file( audacity.desktop.in ${_INTDIR}/audacity.desktop )
 
-   add_executable(findlib ../linux/findlib.c)
-   target_link_libraries(findlib ${CMAKE_DL_LIBS})
-   set_target_property_all( findlib SKIP_BUILD_RPATH On )
-   set_target_property_all( findlib RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}/${_EXEDIR}" )
+   if( CMAKE_SYSTEM_NAME MATCHES "Linux" )
+      add_executable(findlib ../linux/findlib.c)
+      target_link_libraries(findlib ${CMAKE_DL_LIBS})
+      set_target_property_all( findlib SKIP_BUILD_RPATH On )
+      set_target_property_all( findlib RUNTIME_OUTPUT_DIRECTORY "${_DESTDIR}/${_EXEDIR}" )
+   endif()
 endif()
 
 if(CRASH_REPORT_URL)
@@ -1314,10 +1310,10 @@ set( AUDACITY_LIBRARIES
    lib-stretching-sequence-interface
    lib-import-export-interface
    lib-export-ui-interface
-   lib-file-formats-interface
    lib-menus-interface
    lib-note-track-interface
    lib-viewport-interface
+   lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
 )
 
@@ -1418,6 +1414,8 @@ if( "${CMAKE_GENERATOR}" MATCHES "Xcode|Visual Studio*" )
       PATTERN "*.dSYM" EXCLUDE
       PATTERN "image-compiler" EXCLUDE
       PATTERN "image-compiler.exe" EXCLUDE
+      PATTERN "riff-test-util" EXCLUDE
+      PATTERN "riff-test-util.exe" EXCLUDE
    )
 else()
    if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )

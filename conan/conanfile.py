@@ -18,7 +18,7 @@ def fix_expact_rpath(conanfile, filepath):
     # Force expat ID to be @rpath/libexpat.dylib
     if 'expat' in filepath:
         filename = os.path.basename(filepath)
-        print(f"Setting id of {filepath} to @rpath/{filename}")
+        conanfile.output.info(f"Setting id of {filepath} to @rpath/{filename}")
         subprocess.check_call(["install_name_tool", "-id", f"@rpath/{filename}", filepath])
         return
 
@@ -27,7 +27,7 @@ def fix_expact_rpath(conanfile, filepath):
         if 'expat' not in dep:
             continue
         if not dep.startswith("@"):
-            print(f"=== Changing {dep} to @rpath/{os.path.basename(dep)} in {filepath} ===")
+            conanfile.output.info(f"=== Changing {dep} to @rpath/{os.path.basename(dep)} in {filepath} ===")
             subprocess.check_call(["install_name_tool", "-change", dep, f"@rpath/{os.path.basename(dep)}", filepath])
 
 # Why is it not Conan? Copied from cmake_layout().

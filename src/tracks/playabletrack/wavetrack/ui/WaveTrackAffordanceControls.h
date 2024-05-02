@@ -27,13 +27,15 @@ class SelectHandle;
 class WaveClip;
 class TrackPanelResizeHandle;
 class WaveClipTitleEditHandle;
+class ClipOverflowButtonHandle;
+class ClipPitchAndSpeedButtonHandle;
 class WaveTrackAffordanceHandle;
 class WaveClipAdjustBorderHandle;
 class TrackList;
 
 //Handles clip movement, selection, navigation and
 //allow name change
-class AUDACITY_DLL_API WaveTrackAffordanceControls : 
+class AUDACITY_DLL_API WaveTrackAffordanceControls :
     public CommonTrackCell,
     public TextEditDelegate,
     public std::enable_shared_from_this<WaveTrackAffordanceControls>
@@ -41,6 +43,9 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     using IntervalIterator = ChannelGroup::IntervalIterator<WaveTrack::Interval>;
 
     IntervalIterator mFocusInterval;
+    std::weak_ptr<ClipOverflowButtonHandle> mOverflowButtonHandle;
+    std::weak_ptr<ClipPitchAndSpeedButtonHandle> mPitchButtonHandle;
+    std::weak_ptr<ClipPitchAndSpeedButtonHandle> mSpeedButtonHandle;
     std::weak_ptr<WaveTrackAffordanceHandle> mAffordanceHandle;
     std::weak_ptr<TrackPanelResizeHandle> mResizeHandle;
     std::weak_ptr<WaveClipTitleEditHandle> mTitleEditHandle;
@@ -51,7 +56,7 @@ class AUDACITY_DLL_API WaveTrackAffordanceControls :
     std::shared_ptr<TextEditHelper> mTextEditHelper;
 
     wxFont mClipNameFont;
-   
+
     //Helper container used to track clips names visibility
     std::vector<IntervalIterator> mVisibleIntervals;
 
@@ -67,7 +72,7 @@ public:
     unsigned CaptureKey
     (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
         AudacityProject* project) override;
-    
+
     unsigned KeyDown (wxKeyEvent& event, ViewInfo& viewInfo, wxWindow* pParent,
         AudacityProject* project) override;
 
@@ -88,29 +93,29 @@ public:
     bool OnTextCut(AudacityProject& project);
     bool OnTextPaste(AudacityProject& project);
     bool OnTextSelect(AudacityProject& project);
-   
+
     void StartEditSelectedClipName(AudacityProject& project);
 
     void StartEditSelectedClipSpeed(AudacityProject& project);
 
-    void OnRenderClipStretching(AudacityProject& project);
+    void OnRenderClipStretching(AudacityProject& project) const;
 
     std::vector<MenuItem> GetMenuItems(
        const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject )
     override;
 private:
-   
+
     bool IsIntervalVisible(const IntervalIterator& it) const noexcept;
     ///@brief Starts in-place clip name editing or shows a Clip Name Edit dialog, depending on prefs
     ///@param clip to be edited. Should belong to the same `WaveTrack` as returned by `FindTrack()`
     bool StartEditClipName(AudacityProject& project, IntervalIterator it);
-   
+
     void ResetClipNameEdit();
 
     void OnTrackListEvent(const TrackListEvent& evt);
 
     void OnSelectionChange(NotifyingSelectedRegionMessage);
-   
+
     unsigned ExitTextEditing();
 
     std::shared_ptr<TextEditHelper> MakeTextEditHelper(const wxString& text);

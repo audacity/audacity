@@ -49,7 +49,7 @@ public:
    // area into cells
    virtual std::shared_ptr<TrackPanelNode> Root() = 0;
 
-   virtual TrackPanelCell *GetFocusedCell() = 0;
+   virtual std::shared_ptr<TrackPanelCell> GetFocusedCell() = 0;
    virtual void SetFocusedCell() = 0;
    
    virtual void ProcessUIHandleResult
@@ -119,7 +119,7 @@ public:
 protected:
    bool HasEscape();
    bool CancelDragging( bool escaping );
-   void DoContextMenu( TrackPanelCell *pCell = nullptr );
+   void DoContextMenu( std::shared_ptr<TrackPanelCell> pCell );
    void ClearTargets();
    
 private:

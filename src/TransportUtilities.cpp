@@ -216,7 +216,6 @@ TransportSequences MakeTransportTracks(
          result.playbackSequences.push_back(
             StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
    }
-#ifdef EXPERIMENTAL_MIDI_OUT
    if (nonWaveToo) {
       const auto range = trackList.Any<const PlayableTrack>() +
          (selectedOnly ? &Track::IsSelected : &Track::Any);
@@ -228,6 +227,5 @@ TransportSequences MakeTransportTracks(
             )
                result.otherPlayableSequences.push_back(pSequence);
    }
-#endif
    return result;
 }

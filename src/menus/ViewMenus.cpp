@@ -276,22 +276,6 @@ void OnShowClipping(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
-void OnShowNameOverlay(const CommandContext &context)
-{
-   auto &project = context.project;
-   auto &commandManager = CommandManager::Get( project );
-   auto &trackPanel = TrackPanel::Get( project );
-
-   bool checked = !gPrefs->Read(wxT("/GUI/ShowTrackNameInWaveform"), 0L);
-   gPrefs->Write(wxT("/GUI/ShowTrackNameInWaveform"), checked);
-   gPrefs->Flush();
-   commandManager.Check(wxT("ShowTrackNameInWaveform"), checked);
-
-   PrefsListener::Broadcast(ShowTrackNameInWaveformPrefsID());
-
-   trackPanel.Refresh(false);
-}
-
 } // namespace
 
 // Menu definitions
@@ -341,12 +325,9 @@ auto ViewMenu()
       Section( "Windows" ),
 
       Section( "Other",
-         Command( wxT("ShowExtraMenus"), XXO("Enable &Extra Menus"),
+         Command( wxT("ShowExtraMenus"), XXO("Enable E&xtra Menus"),
             OnShowExtraMenus, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
-         Command( wxT("ShowTrackNameInWaveform"), XXO("Show Track &Name as overlay"),
-            OnShowNameOverlay, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/ShowTrackNameInWaveform"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             OnShowClipping, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )

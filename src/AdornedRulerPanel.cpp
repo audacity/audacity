@@ -130,7 +130,7 @@ public:
       , mChoice( menuChoice )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    bool Clicked() const { return mClicked != Button::None; }
@@ -740,9 +740,7 @@ public:
    {
       // May come here when recording is in progress, so hit tests are turned
       // off.
-      TranslatableString tooltip;
-      if (mParent->mTimelineToolTip)
-         tooltip = XO("Timeline actions disabled during recording");
+      TranslatableString tooltip = XO("Timeline actions disabled during recording");
 
       static wxCursor cursor{ wxCURSOR_DEFAULT };
       return {
@@ -925,7 +923,7 @@ public:
       , mX( xx )
    {}
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    { return nullptr; }
 
    static UIHandle::Result NeedChangeHighlight(
@@ -991,7 +989,7 @@ protected:
          &cursor,
          /* i18n-hint: This text is a tooltip on the icon (of a pin) representing 
          the temporal position in the audio.  */
-         XO( "Record/Play head" )
+         XO( "Record/Playhead" )
       };
    }
 
@@ -1067,7 +1065,6 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
    std::vector<UIHandlePtr> results;
    auto xx = state.state.m_x;
 
-#ifdef EXPERIMENTAL_DRAGGABLE_PLAY_HEAD
    {
       // Allow click and drag on the play head even while recording
       // Make this handle more prominent then the quick play handle
@@ -1077,7 +1074,6 @@ std::vector<UIHandlePtr> AdornedRulerPanel::QPCell::HitTest(
          results.push_back( result );
       }
    }
-#endif
    
    // Disable mouse actions on Timeline while recording.
    if (!mParent->mIsRecording) {
@@ -1328,7 +1324,6 @@ AdornedRulerPanel::AdornedRulerPanel(AudacityProject* project,
 
    mIsRecording = false;
 
-   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
    mPlayRegionDragsSelection = (gPrefs->Read(wxT("/QuickPlay/DragSelection"), 0L) == 1)? true : false; 
 
 #if wxUSE_TOOLTIPS
@@ -1378,17 +1373,6 @@ void AdornedRulerPanel::UpdatePrefs()
    // Update button texts for language change
    UpdateButtonStates();
 
-   mTimelineToolTip = !!gPrefs->Read(wxT("/QuickPlay/ToolTips"), 1L);
-
-#ifdef EXPERIMENTAL_SCROLLING_LIMITS
-#ifdef EXPERIMENTAL_TWO_TONE_TIME_RULER
-   {
-      auto scrollBeyondZero = ScrollingPreference.Read();
-      mRuler.SetTwoTone(scrollBeyondZero);
-   }
-#endif
-#endif
-
    mTimeDisplayMode = TimeDisplayModePreference.ReadEnum();
    Refresh();
    // Update();
@@ -1427,44 +1411,16 @@ void AdornedRulerPanel::ReCreateButtons()
    auto size = theTheme.ImageSize( bmpRecoloredUpSmall );
    size.y = std::min(size.y, GetRulerHeight(false));
 
-   auto buttonMaker = [&]
-   (wxWindowID id, teBmps bitmap, bool toggle)
-   {
-      const auto button =
-      ToolBar::MakeButton(
-         this,
-         bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
-         bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-         bitmap, bitmap, bitmap,
-         id, position, toggle, size
-      );
-
-      position.x += size.GetWidth();
-      mButtons[iButton++] = button;
-      return button;
-   };
-   auto button = buttonMaker(OnTogglePinnedStateID, bmpPlayPointerPinned, true);
-   ToolBar::MakeAlternateImages(
-	   *button, 3,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointer, bmpRecordPointer, bmpRecordPointer,
-	   size);
-   ToolBar::MakeAlternateImages(
-	   *button, 2,
-	   bmpRecoloredUpSmall, bmpRecoloredDownSmall,
-	   bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-	   //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-	   bmpRecordPointerPinned, bmpRecordPointerPinned, bmpRecordPointerPinned,
-	   size);
-   ToolBar::MakeAlternateImages(
-      *button, 1,
+   const auto button = ToolBar::MakeButton(
+      this,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, 
       bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall, 
-      //bmpUnpinnedPlayHead, bmpUnpinnedPlayHead, bmpUnpinnedPlayHead,
-      bmpPlayPointer, bmpPlayPointer, bmpPlayPointer,
-      size);
+      bmpCogwheel, bmpCogwheel, bmpCogwheel,
+      OnTogglePinnedStateID, position, true, size
+   );
+
+   position.x += size.GetWidth();
+   mButtons[iButton++] = button;
 
    UpdateButtonStates();
 }
@@ -1949,7 +1905,7 @@ auto AdornedRulerPanel::ScrubbingHandle::Preview(
       message,
       {},
       // Tooltip is same as status message, or blank
-      ((mParent && mParent->mTimelineToolTip) ? message : TranslatableString{}),
+      mParent ? message : TranslatableString{},
    };
 }
 
@@ -1961,7 +1917,7 @@ auto AdornedRulerPanel::QPHandle::Preview(
    mParent->SetNumGuides(1);
    TranslatableString tooltip;
    #if 0
-   if (mParent && mParent->mTimelineToolTip) {
+   if (mParent) {
       if (!mParent->mQuickPlayEnabled)
          tooltip = XO("Quick-Play disabled");
       else
@@ -2220,21 +2176,12 @@ void AdornedRulerPanel::UpdateButtonStates()
    };
 
    {
-      // The button always reflects the pinned head preference, even though
-      // there is also a Playback preference that may overrule it for scrubbing
-      bool state = TracksPrefs::GetPinnedHeadPreference();
-      auto pinButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
-      if( !state )
-         pinButton->PopUp();
-      else
-         pinButton->PushDown();
-      auto gAudioIO = AudioIO::Get();
-      pinButton->SetAlternateIdx(
-         (gAudioIO->IsCapturing() ? 2 : 0) + (state ? 0 : 1));
+      auto timelineOptionsButton = static_cast<AButton*>(FindWindow(OnTogglePinnedStateID));
+      timelineOptionsButton->PopUp();
       // Bug 1584: Tooltip now shows what clicking will do.
       // Bug 2357: Action of button (and hence tooltip wording) updated.
       const auto label = XO("Timeline Options");
-      common(*pinButton, wxT("PinnedHead"), label);
+      common(*timelineOptionsButton, wxT("PinnedHead"), label);
    }
 }
 
@@ -2295,9 +2242,6 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    pDrag->Check(mPlayRegionDragsSelection && playRegion.Active());
    pDrag->Enable(playRegion.Active());
 
-   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Update display while playing"))->
-      Check(mViewInfo->bUpdateTrackIndicator);
-
    {
       auto item = rulerMenu.AppendCheckItem(OnTogglePlayRegionID,
          LoopToggleText.Stripped().Translation());
@@ -2316,7 +2260,11 @@ void AdornedRulerPanel::ShowMenu(const wxPoint & pos)
    }
 
    rulerMenu.AppendSeparator();
-   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Pinned Play Head"))->
+
+   rulerMenu.AppendCheckItem(OnAutoScrollID, _("Scroll view to playhead"))->
+      Check(mViewInfo->bUpdateTrackIndicator);
+
+   rulerMenu.AppendCheckItem(OnTogglePinnedStateID, _("Continuous scrolling"))->
       Check(TracksPrefs::GetPinnedHeadPreference());
 
    BasicMenu::Handle{ &rulerMenu }.Popup(
@@ -2384,16 +2332,6 @@ void AdornedRulerPanel::OnSyncSelToQuickPlay(wxCommandEvent&)
    gPrefs->Write(wxT("/QuickPlay/DragSelection"), mPlayRegionDragsSelection);
    gPrefs->Flush();
 }
-
-#if 0
-void AdornedRulerPanel::OnTimelineToolTips(wxCommandEvent&)
-{
-   mTimelineToolTip = (mTimelineToolTip)? false : true;
-   gPrefs->Write(wxT("/QuickPlay/ToolTips"), mTimelineToolTip);
-   gPrefs->Flush();
-}
-#endif
-
 
 void AdornedRulerPanel::OnAutoScroll(wxCommandEvent&)
 {
@@ -2837,18 +2775,15 @@ AudacityProject * AdornedRulerPanel::GetProject() const
    return mProject;
 }
 
-
-TrackPanelCell *AdornedRulerPanel::GetFocusedCell()
+std::shared_ptr<TrackPanelCell> AdornedRulerPanel::GetFocusedCell()
 {
    // No switching of focus yet to the other, scrub zone
-   return mQPCell.get();
+   return mQPCell;
 }
-
 
 void AdornedRulerPanel::SetFocusedCell()
 {
 }
-
 
 void AdornedRulerPanel::ProcessUIHandleResult(
    TrackPanelCell *, TrackPanelCell *, unsigned refreshResult)
@@ -2923,7 +2858,7 @@ void OnTogglePinnedHead(const CommandContext &context)
 
 using namespace MenuRegistry;
 AttachedItem sAttachment{
-   Command( wxT("PinnedHead"), XXO("Enable pinned play &head"),
+   Command( wxT("PinnedHead"), XXO("Continuous scrolling"),
       OnTogglePinnedHead,
       // Switching of scrolling on and off is permitted
       // even during transport

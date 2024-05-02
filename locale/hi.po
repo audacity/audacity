@@ -11,9 +11,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.4.0\n"
+"Project-Id-Version: audacity 3.5.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
+"POT-Creation-Date: 2024-04-04 21:13+0300\n"
 "PO-Revision-Date: 2023-05-24 19:13+0530\n"
 "Last-Translator: Bashishtha Narayan Singh <bashishtha.singh@gmail.com>, 2023\n"
 "Language-Team: Hindi (https://app.transifex.com/klyok/teams/690/hi/)\n"
@@ -24,40 +24,48 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n==0 || n==1);\n"
 "X-Generator: Poedit 3.2\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "प्रवाह कार्यरत है ... सूचना एकत्र करने में असमर्थ.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "आरंभिक रिकॉर्डिंग यंत्र क्रमांक : %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "आरंभिक प्लेबैक यंत्र क्रमांक : %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "कोई यंत्र नहीं मिला\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "यंत्र की जानकारी : %d के लिए उपलब्ध नहीं है.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "यंत्र ID: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "यंत्र का नाम : %s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "होस्ट का नाम : %s\n"
@@ -167,8 +175,8 @@ msgstr ""
 "आप ऑडियो रिकार्ड या प्ले नहीं कर सकते.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "त्रुटि : %s"
@@ -201,7 +209,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "त्रुटि"
 
@@ -349,8 +356,53 @@ msgstr "संदेश"
 msgid "Cannot proceed to upload."
 msgstr "अपलोड के लिए आगे नहीं बढ़ सकते."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File not found"
+msgstr "\"%s\" फ़ाइल नहीं मिला."
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, fuzzy, c-format
+msgid "Invalid Response: %s"
+msgstr "अमान्य सैंपल रेट"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#, fuzzy
+msgid "Export failed"
+msgstr "फ़ाइलों का निर्यात यहाँ करें:"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "निर्यात त्रुटि"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to attach to the Cloud project database"
+msgstr "प्रोजेक्ट डेटाबेस खोलने में विफल"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+#, fuzzy
+msgid "Failed to decompress the Cloud project block"
+msgstr "प्रोजेक्ट डेटाबेस खोलने में विफल"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+#, fuzzy
+msgid "Failed to deserialize the response"
+msgstr "प्रिसेट सामग्री प्राप्त करने में विफल"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -382,7 +434,7 @@ msgstr "%s लागू कर रहे हैं..."
 msgid "Nyquist"
 msgstr "Nyquist"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "अंतर्निहित प्रभाव"
 
@@ -424,6 +476,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "आंतरिक त्रुटि"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "आयताकार"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "Bartlett"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "Hamming"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "Hann"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "Blackman"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Blackman-Harris"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "Welch"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "गॉस्सियन(a=2.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "गॉस्सियन(a=3.5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "गॉस्सियन(a=4.5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
@@ -459,9 +560,8 @@ msgstr ""
 msgid "File Error"
 msgstr "फ़ाइल त्रुटि"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "सभी फ़ाइलें"
 
@@ -537,6 +637,7 @@ msgstr ""
 "उपयुक्त ड्राइव के सुझाव के लिए, मदद बटन पर क्लिक करें."
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -544,10 +645,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "चेतावनी"
 
@@ -560,22 +660,19 @@ msgstr ""
 "निर्यात करने में असमर्थ.\n"
 "त्रुटि %s"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "निर्यात"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#, fuzzy
+msgid "Export completed with error."
+msgstr "चयनित ऑडियो का निर्यात करें"
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "सभी समर्थित फ़ाइलें"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"\"%s\" \n"
-"  एक MIDI फ़ाइल है , ऑडियो फ़ाइल नहीं. \n"
-"ऑडेसिटी इस प्रकार की फ़ाइलें बजाने के लिए नहीं खोल सकता, लेकिन आप \n"
-"फ़ाइल > आयात > MIDI क्लिक करके इसे संपादित कर सकते हैं."
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -831,8 +928,7 @@ msgstr "LV2 प्रभाव"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Audacity में LV2  का समर्थन प्रदान करता है"
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -850,55 +946,6 @@ msgstr "त्रिभुज"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "तराशा"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "आयताकार"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "Bartlett"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "Hamming"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "Hann"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "Blackman"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Blackman-Harris"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "Welch"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "गॉस्सियन(a=2.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "गॉस्सियन(a=3.5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "गॉस्सियन(a=4.5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -935,6 +982,55 @@ msgstr "32-बिट् दशमलव"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "अनजाना प्रारूप"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "आदेश"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "%s दुहराएं"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, क्योंकि आपने शॉर्टकट  %s को बदलकर %s कर दिया है"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr "आपके पिछले कार्य में एक समस्या थी. यदि आप समझते हैं कि यह एक त्रुटि है, तो कृपया हमें बताएं कि ये कहाँ पर हुआ था."
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "प्रतिबंधित"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "पूर्ववत(&U)%s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "पूर्ववत(&U)"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "दोहराएं (&R)%s"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "दोहराएं(&R)"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1074,6 +1170,74 @@ msgstr "Nyquist आदेश"
 #, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "अपलोड के लिए फ़ाइल खोलने में विफल : %s"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "MIDI i/o परत की शुरुआत में एक त्रुटि हुई.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "Midi शुरू करने में त्रुटि"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "सुर ट्रैक"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "सेकेंड (&S)"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "ताल (&B)"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "समर्थित आउटपुट : %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "समर्थित इनपुट : %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "खुला है : %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "चयनित मिडी रिकार्डिंग यंत्र चुनें : %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "कोई MIDI रिकॉर्डिंग उपकरण '%s' के लिए नहीं मिला.\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "चयनित मिडी प्लेबैक यंत्र : %d - %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "कोई MIDI प्लेबैक उपकरण '%s' के लिए नहीं मिला.\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -2063,6 +2227,156 @@ msgstr "मिलीसेकेंड"
 msgid "Samples"
 msgstr "नमूने"
 
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "SQLite3 error"
+msgstr "आंतरिक त्रुटि"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "No error"
+msgstr "अपलोड त्रुटि"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Generic error"
+msgstr "सामान्य"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Internal logic error in SQLite"
+msgstr "आंतरिक लॉज़िक त्रुटि"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr ""
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr ""
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Operation terminated"
+msgstr "पता लगाने में असमर्थ"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Unable to open the database file"
+msgstr ""
+"डेटाबेस फ़ाइल खोलने में विफल :\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr ""
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "Not used"
+msgstr "(अप्रयुक्त) :"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr ""
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#, fuzzy
+msgid "File opened that is not a database file "
+msgstr ""
+"डेटाबेस फ़ाइल खोलने में विफल :\n"
+"\n"
+"%s"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#, fuzzy
+msgid "Unknown error"
+msgstr "अनजाना प्रारूप"
+
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr "काटें/कॉपी करें/चिपकाएं"
@@ -2445,8 +2759,9 @@ msgid "Pre-processing"
 msgstr "प्रक्रिया चल रही है : %s"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr ""
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "क्लिप का नाम बदलें..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2481,7 +2796,6 @@ msgid "Problem details"
 msgstr "समस्या विवरण"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "टिप्पणी"
 
@@ -2515,7 +2829,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "बंद करें"
 
@@ -2599,10 +2913,6 @@ msgid "You can also read our help on importing [[https://manual.audacityteam.org
 msgstr "आप [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#midi|MIDI फ़ाइलें]] और  [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ऑडियो CDs]] ट्रैकों से आयात के बारे में भी हमारी मदद पढ़ सकते हैं."
 
 #: libraries/lib-wx-init/HelpText.cpp
-msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "लगता है मदद पुस्तिका स्थापित नहीं है. कृपया  [[*URL*|मदद सामग्री ऑनलाइन देखें]].<br><br>हमेशा मैनुअल ऑनलाइन देखने के लिए, \"मैनुअल निवासस्थान\" को इंटरफेस में पसंद बदलकर  \"इंटरनेट से \" करें."
-
-#: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
 msgstr "लगता है मदद पुस्तिका स्थापित नहीं है. कृपया  [[*URL*|मदद सामग्री ऑनलाइन देखें]] या [[https://manual.audacityteam.org/man/unzipping_the_manual.html| मैनुअल डाउनलोड करें]].<br><br>हमेशा मैनुअल ऑनलाइन देखने के लिए, \"मैनुअल निवासस्थान\" को इंटरफेस में पसंद बदलकर \"इंटरनेट से\" करें."
 
@@ -2638,18 +2948,24 @@ msgid "Show Log for Details"
 msgstr "विस्तृत जानकारी के लिए लॉग दिखाएँ"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "ठीक"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "बीता समय :"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "शेष समय :"
 
@@ -2658,7 +2974,13 @@ msgstr "शेष समय :"
 msgid "Stop"
 msgstr "रोकें"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "निरस्त"
 
@@ -2693,6 +3015,11 @@ msgstr "निर्दिष्ट फ़ाइल का नाम यून�
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "नए फ़ाइल का नाम बताएं:"
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+#, fuzzy
+msgid "Don't ask me again"
+msgstr "भेजें नहीं (&D)"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -2975,13 +3302,719 @@ msgid "Command Output"
 msgstr "आदेश आउटपुट"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "ठीक"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "आपने एक्सटेंशन के बिना एक फाइल नाम निर्दिष्ट किया है. क्या ये सही है?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "ऑडियो तैयार हो रहा है..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Open from audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "परियोजना संचित हो रहा है"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save To Cloud..."
+msgstr "जैसा सुरक्षित करें..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open From Cloud..."
+msgstr "मेनू खोलें..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Share Audio..."
+msgstr "ऑडियो साझा करें"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "खाता लिंक करें (&L)"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "निर्यात त्रुटि"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "S&how 'How would you like to export?' dialog"
+msgstr "आप अपना ऑडियो कैसे पेस्ट करना चाहेंगे?"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "व्यवहार"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "तरंग का रंग"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "लॉग सामग्री संचित करता है."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "क्षणिक फ़ाईल डायरेक्टरी"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "स्थान:(&L)"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "ब्राउज़ करें (&B)..."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "क्षणिक फ़ाईल डायरेक्टरी"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "माउस के लिए वरीयतायें"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "एक अस्थायी निर्देशिका रखने का स्थान चुनें"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "अस्थायी फ़ाइल निर्देशिका FAT ड्राइव पर नहीं हो सकती."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "वरीयता निर्धारित नहीं की जा सकती."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "असफ़ल"
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "ऑडियो साझा करें"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "ऑडियो साझा हेतु टूलबार (&S)"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "Account not linked"
+msgstr "खाता सफलतापूर्वक लिंक हुआ!"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "खाता लिंक करें (&L)"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "खाता से लिंक हटाएं  (&U)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "यह चेतावनी दुबारा न दिखाएँ"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to save?"
+msgstr "आप अपना ऑडियो कैसे पेस्ट करना चाहेंगे?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "लॉग यहाँ संचित करें :"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "तरंग का रंग"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to &computer"
+msgstr "लॉग सामग्री संचित करता है."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Remember my choice and don't show again"
+msgstr "मेरी पसंद याद रखें और दोबारा न पूछें"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to export?"
+msgstr "आप अपना ऑडियो कैसे पेस्ट करना चाहेंगे?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "ऑडियो साझा करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "ऑडियो साझा करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "निर्यात त्रुटि"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "यह चेतावनी दुबारा न दिखाएँ"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "गैर-सूचीबद्ध"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "सार्वजनिक"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "संचित करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "परियोजना सहेजें..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "परियोजना"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "आप इस प्रविष्टि के लिए लघुकुँजी नियत नहीं कर सकेंगे"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "अंत मिलाएं"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "खाता लिंक करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "हम आपके खाते को लिंक नहीं कर सके. कृपया पुन: प्रयास करें."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "निरस्त करें(&C)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "पुन: प्रयास करें (&T)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "खाता सफलतापूर्वक लिंक हुआ!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "ठीक है (&O)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "अपना खाता लिंक करने के लिए टोकन दर्ज करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "टोकन"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "आगे बढ़ें (&o)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "audio.com खाता लिंक करें... (&i)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#, fuzzy
+msgid "Save to computer"
+msgstr "लॉग सामग्री संचित करता है."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "लॉग यहाँ संचित करें :"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "परियोजना संचित करता है."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "परियोजना खोलता है."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "सुगठित परियोजना फाइल"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "नमूना दर परिवर्तन"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "less than 1 minute"
+msgstr "1 मिनट से भी कम"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "स्वर समय:"
+msgstr[1] "स्वर समय:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "परिवर्तित नाम"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "संपर्क पुन: जोड़ने में विफल"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "परियोजनाएं संचित कर रहे हैं(&p)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "प्रोजेक्ट आयात करने में विफल"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "सुगठित परियोजना फाइल"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "खोज :(&h)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "पूर्वालोकन"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "अगला"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "खोलें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "View in audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "%s %d कुल %d"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "इस ऑडियो को कोई भी सुन सकेगा."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "केवल आप और वे लोग जिनके साथ आप लिंक साझा करते हैं, इस ऑडियो को सुन सकेंगे."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "क्या आप सच-मुच रद्द करना चाहते हैं?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Audio.com पर अपलोड रद्द करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "ऑडियो अपलोड हो रहा है..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "हम इस फ़ाइल को अपलोड करने में असमर्थ हैं. कृपया पुन: प्रयास करें और अपलोड करने से पहले अपने audio.com खाते से लिंक करना सुनिश्चित करें."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "अपलोड त्रुटि"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "हम इस फ़ाइल को अपलोड के लिए तैयार करने में असमर्थ हैं."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "अपलोड तैयार किया जा रहा है..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "शीर्षक ट्रैक"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Audio.com पर अपलोड करने के लिए \"आगे बढ़ें\" दबाएं"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "ऑडियो तैयार हो रहा है..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "गंतव्य परियोजना को अलग नहीं किया जा सका"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Audacity कॉन्फ़िगरेशन त्रुटि"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr " सिंक लॉक्ड"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "समस्या विवरण"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "परियोजना का बैकअप बन रहा है"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "आगे बढ़ें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "Success!"
+msgstr "सफल"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "समयरेखा"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "पुर्जा नहीं मिला"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "फ़ाइलें लाएं"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#, fuzzy
+msgid "You have canceled this upload to audio.com"
+msgstr "Audio.com पर अपलोड रद्द करें"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#, fuzzy
+msgid "Retry"
+msgstr "पुनः प्रयास करें(&R)"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3077,7 +4110,8 @@ msgid "Cutoff"
 msgstr "सीमा:"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "निष्क्रिय"
 
@@ -3366,6 +4400,16 @@ msgstr "सभी स्वरुप दिखाएं"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "सभी कोडेक दिखाएं"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Formats"
+msgstr "प्रारुप:"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#, fuzzy
+msgid "Codecs"
+msgstr "कोडेक:"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -3998,6 +5042,90 @@ msgstr "सिर्फ ऑडियो फाइलों को ही व्�
 msgid "Invalid track offset in LOF file."
 msgstr "LOF फ़ाइल में अवैध ट्रैक ऑफसेट."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "निर्यातित Allegro (.gro) फाइल संचय समय :"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "आप एक समय में केवल एक नोट ट्रैक चुन सकते हैं."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "कृपया एक नोट ट्रैक चुनें."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "MIDI निर्यात ऐसे :"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "MIDI फाइल"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Allegro फाइल"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
+"क्या आप जारी रखना चाहते हैं?"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "MIDI निर्यात"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "MI&DI में निर्यात करें..."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "'%s' से MIDI आयात किया गया"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "MIDI आयात"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "फ़ाइल %s नहीं खोली जा सकी. नाम से बहुत छोटा है."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "फ़ाइल %s खोला नहीं जा सका : गलत फ़ाइल प्रकार."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "फ़ाइल %s खोला नहीं जा सका."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "एक MIDI फ़ाइल चुनें"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "MIDI तथा Allegro फाइलें"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "MIDI फाइलें"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Allegro फाइलें"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "MIDI...(&M)"
+
 #: modules/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
@@ -4195,7 +5323,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "केवल libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
+#, fuzzy
+msgid "Only libmp3lame.so"
 msgstr "केवल libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
@@ -4205,6 +5334,10 @@ msgstr "प्राथमिक साझा ऑब्जेक्ट फ़ा
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "एक्सटेन्डेड लाइब्रेरी"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "केवल libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4481,8 +5614,7 @@ msgstr "बेनाम"
 msgid "Nyquist Effect Workbench - "
 msgstr "Nyquist प्रभाव वर्कबेंच - "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "नया"
 
@@ -4491,16 +5623,8 @@ msgid "New script"
 msgstr "नया स्क्रिप्ट"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "खोलें"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "स्क्रिप्ट खोलें"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "संचित करें"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4619,10 +5743,6 @@ msgstr "पिछला"
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to previous S-expr"
 msgstr "पिछले S-expr पर जाएं"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "अगला"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
@@ -4744,11 +5864,6 @@ msgstr "निर्देशिका बनाना विफल रहा."
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
-msgid "Unknown error"
-msgstr "अनजाना प्रारूप"
-
-#: modules/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Auto"
 msgstr "ऑटो डक"
 
@@ -4855,7 +5970,7 @@ msgid "Opus files"
 msgstr "%s फ़ाइलें"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
+msgid "File has changed the number of channels in the middle."
 msgstr ""
 
 #: modules/mod-opus/ImportOpus.cpp
@@ -5381,8 +6496,8 @@ msgstr "%s वेबसाइट : "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2024 %s Team."
 msgstr "%s सॉफ्टवेयर कॉपीराइट है %s 1999-2023 %s टीम."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -5395,8 +6510,8 @@ msgstr "ये नाम %s एक पंजीकृत ट्रेडमा�
 msgid "Build Information"
 msgstr "निर्माण जानकारी"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "सक्रिय"
 
@@ -5590,10 +6705,11 @@ msgstr "समायोजन के लिए क्लिक करके ख�
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
+#, fuzzy
+msgid "Record/Playhead"
 msgstr "रिकार्ड/प्ले हेड"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "समयरेखा"
 
@@ -5675,10 +6791,6 @@ msgstr "Beats और Measures"
 msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "बजाते समय प्रदर्शन अद्यतन करें"
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
@@ -5689,13 +6801,12 @@ msgid "Set Loop To Selection"
 msgstr "चयनित भाग लूप में सेट करें"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "पिन लगा प्लेहेड"
+msgid "Scroll view to playhead"
+msgstr ""
 
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
-msgid "Enable pinned play &head"
-msgstr "पिन लगा प्लेहेड"
+msgid "Continuous scrolling"
+msgstr ""
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5705,20 +6816,6 @@ msgstr "%s को हटाने में असफ़ल"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "असफ़ल!"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the Preferences reset."
-msgstr ""
-"वरीयताएँ रीसेट करें?\n"
-"\n"
-"यह प्रश्न केवल एक बार 'स्थापना' के बाद पूछा जाएगा, जहां आप वरीयताएँ पहली बार संचित करते हैं."
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Audacity वरीयताएं रीसेट करें"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6001,6 +7098,34 @@ msgstr "Audacity छोड़ें"
 msgid "&Retry"
 msgstr "पुनः प्रयास करें(&R)"
 
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Automatic Music Configuration"
+msgstr "Audacity कॉन्फ़िगरेशन त्रुटि"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+
+#: src/AudacityMirProject.cpp
+#, fuzzy
+msgid "Music Import"
+msgstr "MP3 आयात जारी"
+
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
 "Smart clip.\n"
@@ -6035,10 +7160,6 @@ msgstr "ऑडियो डेटा %s है. बड़े आकार को
 msgid "Remember my choice and don't ask again"
 msgstr "मेरी पसंद याद रखें और दोबारा न पूछें"
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "आगे बढ़ें"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "दुर्घटना से स्वचालित बचाव"
@@ -6058,14 +7179,14 @@ msgid "Recoverable &projects"
 msgstr "पुनर्प्राप्त करने योग्य परियोजनाएं (&p)"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "चुनें"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "नाम"
 
@@ -6144,7 +7265,7 @@ msgstr "%s मैक्रो पहले से मौजूद है. क्
 msgid "Export Macro"
 msgstr "मैक्रो निर्यात करें"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "प्रभाव"
 
@@ -6278,14 +7399,6 @@ msgstr "लागू हो रहा है..."
 msgid "File"
 msgstr "फ़ाइल"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "निरस्त करें(&C)"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "हटाएं (&v)"
@@ -6397,14 +7510,6 @@ msgstr "क्या आप सचमुच %s मिटाना चाहत�
 #, c-format
 msgid "&Repeat %s"
 msgstr "%s दोहराएं (&R)"
-
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "%s दुहराएं"
 
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
@@ -6603,18 +7708,6 @@ msgstr "जाँच में असफ़ल!!!\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "मान-दंड सफलतापूर्वक पूर्ण.\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
-"आप '%s' के उपयोग के लिए पहले कुछ ऑडियो चुनें.\n"
-"\n"
-"Ctrl + A सभी कुछ चयन करने के लिए."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -6892,7 +7985,7 @@ msgstr "dB"
 msgid "Scroll"
 msgstr "स्क्रौल"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "बड़ा करें"
 
@@ -6939,7 +8032,7 @@ msgstr "वर्णक्रम दिखाने के लिए, सभी 
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 
@@ -7021,7 +8114,7 @@ msgstr "इतिहास"
 msgid "&Manage History"
 msgstr "इतिहास प्रबंधन"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "गतिविथि"
 
@@ -7080,11 +8173,6 @@ msgstr "असंगत प्लगइन्स मिले हैं"
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "प्लगइन प्रबंधित करें (&M)"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "आगे बढ़ें (&o)"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7177,10 +8265,36 @@ msgstr "ट्रैक का नाम बताएं"
 msgid "Label Track"
 msgstr "नाम ट्रैक"
 
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "SubRip text file"
+msgstr "टेक्स्ट फ़ाईल"
+
+#: src/LabelTrack.cpp
+#, fuzzy
+msgid "WebVTT file"
+msgstr "HTML फ़ाईल"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "लेबल"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "मानक (&t)"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "विस्तारित (आवृति सीमाओं के साथ)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "निर्यातित लेबल शैली :"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr ""
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7220,58 +8334,13 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Audacity परियोजना खोलते हैं"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity काराओके%s"
+#: src/MenuCreator.cpp
+msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
+msgstr "निम्नलिखित आदेशों में उनके शॉर्टकट हटा दिए गए हैं, क्योंकि उनका डिफ़ॉल्ट शॉर्टकट नया या बदल गया है, और ये वही शॉर्टकट है जिसे आपने किसी अन्य आदेश को सौंपा है."
 
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "काराओके (&K)"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "MIDI i/o परत की शुरुआत में एक त्रुटि हुई.\n"
-
-#: src/MIDIPlay.cpp
-msgid ""
-"You will not be able to play midi.\n"
-"\n"
-msgstr ""
-"आप midi रिकार्ड या प्ले नहीं कर सकते.\n"
-"\n"
-
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "Midi शुरू करने में त्रुटि"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "पूर्ववत(&U)%s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "पूर्ववत(&U)"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "दोहराएं (&R)%s"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "दोहराएं(&R)"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr "आपके पिछले कार्य में एक समस्या थी. यदि आप समझते हैं कि यह एक त्रुटि है, तो कृपया हमें बताएं कि ये कहाँ पर हुआ था."
-
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "प्रतिबंधित"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "शॉर्टकट हटा दिए गए हैं"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7341,49 +8410,6 @@ msgstr "पैन स्लाइडर स्थानांतरित"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "मिक्सर (&M)"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "सुर ट्रैक"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "समर्थित आउटपुट : %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "समर्थित इनपुट : %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "खुला है : %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "चयनित मिडी रिकार्डिंग यंत्र चुनें : %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "कोई MIDI रिकॉर्डिंग उपकरण '%s' के लिए नहीं मिला.\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "चयनित मिडी प्लेबैक यंत्र : %d - %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "कोई MIDI प्लेबैक उपकरण '%s' के लिए नहीं मिला.\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7495,110 +8521,7 @@ msgstr "ध॒"
 msgid "A♯/B♭"
 msgstr "नि॒"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "प्लगइन्स प्रबंधित करें"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr "प्रभाव को चुनें, सक्षम या अक्षम बटन पर क्लिक करें, फिर ठीक पर क्लिक करें."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "दिखाएं :"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "सब दिखाएं"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "सब(&A)"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "निष्क्रिय दिखाएं"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "निष्क्रिय"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "सक्रिय दिखाएं"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "सक्रिय"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "नया दिखाएं"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "नया"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "अवस्था"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "पथ"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "सबको चुनें (&S)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "पूर्ण सफ़ाई (&l )"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "रीस्कैन"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "सक्रिय करें(&E)"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "निष्क्रिय"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"प्रभावों या आदेशों को सक्रिय करते हैं :\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"प्रभाव या आदेश सक्रिय करते हैं:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7607,26 +8530,82 @@ msgstr ""
 "प्रभाव या आदेश %s पर लागू करने में विफ़ल रहे :\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Disable"
+msgstr "निष्क्रिय"
+
+#: src/PluginDataViewCtrl.cpp
+#, fuzzy
+msgid "Enable"
+msgstr "सक्रिय"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "प्रकार"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "पथ"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "सब"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "सृजनकर्ता"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Analyzer"
+msgstr "विश्लेषण करें"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "औजार"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "प्लगइन्स प्रबंधित करें"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Native Audacity"
+msgstr "Audacity अपडेट करें"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Show:"
+msgstr "दिखाएं :"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Type:"
+msgstr "प्रकार :"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "C&ategory:"
+msgstr "कैटेगरी"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "खोज :(&h)"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "Plugin"
+msgstr "प्लग-इन"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Rescan"
+msgstr "रीस्कैन"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "प्लगिन ढूँढा जा रहा है"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "छपाई में एक बाधा है."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "मुद्रण"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "पेज सेटअप..."
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "मुद्रण...(&P)"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -7947,7 +8926,7 @@ msgstr ""
 msgid "The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem."
 msgstr "FAT32 प्रारूप फाइल सिस्टम पर लिखते समय प्रोजेक्ट का आकार 4GB की अधिकतम सीमा को पार कर रहा है."
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "सुरक्षित किया %s"
@@ -8131,6 +9110,15 @@ msgstr "आयात के लिए प्रवाह(stream)चुनें"
 #, c-format
 msgid "Importing %s"
 msgstr "%s आयात कर रहे हैं"
+
+#: src/ProjectFileManager.cpp
+#, fuzzy
+msgid "Music Information Retrieval"
+msgstr "निर्माण जानकारी"
+
+#: src/ProjectFileManager.cpp
+msgid "Analyzing imported audio"
+msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8342,7 +9330,7 @@ msgstr "कोई प्रभाव नहीं"
 msgid "Get more effects..."
 msgstr "अधिक प्रभाव पायें..."
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "विश्लेषण करें"
 
@@ -8390,164 +9378,6 @@ msgstr "समयोचित प्रभाव"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "%s के लिए रीयलटाइम प्रभाव"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "स्क्रीन कतरन फ़्रेम"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "फ़ाइलें संचित करने की जगह बताएं"
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "तस्वीरें यहाँ संचित करें :"
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "चुनें..."
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "पूरी विंडो या स्क्रीन का दृश्य कैद करें"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "आकार घटाएं"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "आकार बढ़ाएं"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "नीला परिपेक्ष्य"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "सफ़ेद परिपेक्ष्य"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "सिर्फ़ झरोखे का कतरन बनाएं"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "पूर्ण झरोखे का कतरन बनाएं"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "झरोखे से बाहर तक कतरन बनाएं"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "पूर्ण स्क्रीन का कतरन बनाएं"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "5 सेकंड रुककर सबसे ऊपरी झरोखे/संवाद को कैद करें"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "परियोजना झरोखे के एक भाग का कतरन बनाएं"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "औजार-पट्टियाँ"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "सभी प्रभाव"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "सब स्क्रिप्टयोग्य"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "सभी वरीयतायें"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "ट्रैक पैनल"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "मापक"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "ट्रैक"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "पहला ट्रैक"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "दूसरा ट्रैक"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "पैमाना"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "एक सेकेंड"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "दस सेकेंड"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "एक मिनट"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "पाँच मिनट"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "एक घंटा"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "लघु ट्रैक"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "मध्यम ट्रैक"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "लंबा ट्रैक"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "स्क्रीनशॉट छवियों को सहेजने का स्थान चुनें"
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "कैद करना असफल!"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "लंबा संदेश"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "स्क्रीनशॉट...(&S)"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8685,10 +9515,6 @@ msgstr "फिर यह संदेश शुरुआत में न दि
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "कलाकार का नाम"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "शीर्षक ट्रैक"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9177,6 +10003,10 @@ msgstr "निर्यातित टैग"
 msgid "Stereo, 999999Hz"
 msgstr "स्टिरियो, 999999Hz"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "ट्रैक पैनल"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9343,131 +10173,6 @@ msgstr "दिशा परिवर्तन -- माध्यिका : %1.4
 msgid "Calibration Complete"
 msgstr "अंशांकन पूर्ण"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "ऑडियो साझा करें"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "ऑडियो साझा हेतु टूलबार (&S)"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "खाता लिंक करें"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "अपना खाता लिंक करने के लिए टोकन दर्ज करें"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "टोकन"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "audio.com खाता लिंक करें... (&i)"
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "हम आपके खाते को लिंक नहीं कर सके. कृपया पुन: प्रयास करें."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "पुन: प्रयास करें (&T)"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "खाता सफलतापूर्वक लिंक हुआ!"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "ठीक है (&O)"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "सार्वजनिक"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "इस ऑडियो को कोई भी सुन सकेगा."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "गैर-सूचीबद्ध"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "केवल आप और वे लोग जिनके साथ आप लिंक साझा करते हैं, इस ऑडियो को सुन सकेंगे."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "क्या आप सच-मुच रद्द करना चाहते हैं?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Audio.com पर अपलोड रद्द करें"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "ऑडियो अपलोड हो रहा है..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "हम इस फ़ाइल को अपलोड करने में असमर्थ हैं. कृपया पुन: प्रयास करें और अपलोड करने से पहले अपने audio.com खाते से लिंक करना सुनिश्चित करें."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "अपलोड त्रुटि"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "निर्यात त्रुटि"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "हम इस फ़ाइल को अपलोड के लिए तैयार करने में असमर्थ हैं."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "अपलोड तैयार किया जा रहा है..."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "अनाम"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "खाता लिंक करें (&L)"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Audio.com पर अपलोड करने के लिए \"आगे बढ़ें\" दबाएं"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "खाता से लिंक हटाएं  (&U)"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "ऑडियो तैयार हो रहा है..."
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9496,28 +10201,6 @@ msgstr "%s वह पैरामीटर नहीं जो %s को मा�
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "पैरामीटर '%s': should be %s"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "आदेश"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-"\n"
-"* %s, क्योंकि आपने शॉर्टकट  %s को बदलकर %s कर दिया है"
-
-#: src/commands/CommandManager.cpp
-msgid "The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command."
-msgstr "निम्नलिखित आदेशों में उनके शॉर्टकट हटा दिए गए हैं, क्योंकि उनका डिफ़ॉल्ट शॉर्टकट नया या बदल गया है, और ये वही शॉर्टकट है जिसे आपने किसी अन्य आदेश को सौंपा है."
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "शॉर्टकट हटा दिए गए हैं"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9612,9 +10295,18 @@ msgstr "आदेश"
 msgid "Menus"
 msgstr "मेन्यु"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "वरीयतायें"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "ट्रैक"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -9834,113 +10526,6 @@ msgstr "केवल एक पसंद का मूल्य प्राप�
 msgid "Sets the value of a single preference."
 msgstr "एक पसंद के मूल्य को सेट करता है."
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "स्क्रीनशॉट"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "विंडो"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "पूर्ण विंडो"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "विंडो प्लस"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "पूर्ण स्क्रीन"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "औजार-पट्टी"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "प्रभाव"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "स्क्रिप्टेबल्स"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "ट्रैक पैनल"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "पहले दो ट्रैक"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "पहले तीन ट्रैक"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "पहले चार ट्रैक"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "ट्रैक प्लस"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "पहला ट्रैक प्लस"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "सभी ट्रैक"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "सभी लंबे ट्रैक"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "नीला"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "सफ़ेद"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "पथ :"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "क्या कैद करें:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "परिदृश्य :"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "सबसे ऊपर लाएं"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "फ़ाइल संचयन में त्रुटि : %s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "स्क्रीनशॉट (छोटा प्रारूप)..."
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "स्क्रीनशॉट लेता है."
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "समय चुनें"
@@ -10105,8 +10690,7 @@ msgid "Edited Envelope"
 msgstr "संपादित लिफाफा"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "लिफ़ाफ़ा"
 
@@ -10298,6 +10882,10 @@ msgstr "ट्रैक निर्धारित करें..."
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
 msgstr "एक ट्रैक के विभिन्न मूल्यों को सेट करता है."
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "लंबा संदेश"
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
@@ -11532,10 +12120,6 @@ msgid "Preview effect"
 msgstr "प्रभाव पूर्वालोकन"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "पूर्वावलोकन बंद (&P)"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "लागू करें (&A)"
 
@@ -11607,13 +12191,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "इक्वलाइज़ेशन"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "फ़िल्टर वक्र EQ"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "ग्राफ़िक EQ"
 
@@ -13318,10 +13901,6 @@ msgstr "LADSPA प्रभाव विकल्प"
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
 msgstr "उनके प्रसंस्करण के भाग के रूप में, कुछ LADSPA प्रभावों को Audacity में ऑडियो लौटने में देरी करनी चाहिए. जब इस देरी की भरपाई नहीं होती है, तो आप देखेंगे कि ऑडियो में छोटी चुप्पी डाली गई है. इस विकल्प को सक्षम करने से वह मुआवजा मिल जाएगा, लेकिन यह सभी LADSPA प्रभावों के लिए काम नहीं कर सकता है."
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "सृजनकर्ता"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "प्रभाव को लागू नहीं किया जा सका"
@@ -13598,7 +14177,7 @@ msgstr ""
 
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "वर्तमान चयन की लंबाई : %s"
 
 #: src/export/ExportAudioDialog.cpp
@@ -13705,10 +14284,6 @@ msgstr "सभी चयनित ऑडियो मौन है."
 msgid "Continue to export remaining files?"
 msgstr "शेष फ़ाइलों को निर्यात करना जारी रखें?"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "निर्यात"
-
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
 msgid "Custom Sample Rate"
@@ -13728,10 +14303,6 @@ msgstr "फ़ाइल का नाम :"
 #, fuzzy
 msgid "Fo&lder:"
 msgstr "निर्देशिका:"
-
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "ब्राउज़ करें (&B)..."
 
 #: src/export/ExportFilePanel.cpp
 #, fuzzy
@@ -13795,42 +14366,6 @@ msgstr ""
 msgid "Other..."
 msgstr "अन्य..."
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "आप एक समय में केवल एक नोट ट्रैक चुन सकते हैं."
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "कृपया एक नोट ट्रैक चुनें."
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "MIDI निर्यात ऐसे :"
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "MIDI फाइल"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Allegro फाइल"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"आपने एक अनजाने फ़ाइल एक्सटेंशन के साथ फ़ाइल नाम चुना है.\n"
-"क्या आप जारी रखना चाहते हैं?"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "MIDI निर्यात"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "MI&DI में निर्यात करें..."
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -13860,55 +14395,6 @@ msgstr "चैनल : %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "कोई प्रारूप विशिष्ट विकल्प नहीं"
-
-#: src/export/ExportProgressUI.cpp
-#, fuzzy
-msgid "Export completed with error."
-msgstr "चयनित ऑडियो का निर्यात करें"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "'%s' से MIDI आयात किया गया"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "MIDI आयात"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "फ़ाइल %s नहीं खोली जा सकी. नाम से बहुत छोटा है."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "फ़ाइल %s खोला नहीं जा सका : गलत फ़ाइल प्रकार."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "फ़ाइल %s खोला नहीं जा सका."
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "एक MIDI फ़ाइल चुनें"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "MIDI तथा Allegro फाइलें"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "MIDI फाइलें"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Allegro फाइलें"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "MIDI...(&M)"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14421,14 +14907,6 @@ msgid "E&xit"
 msgstr "बाहर(&x)"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "छिपा हुआ फ़ाइल मेनू"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "FLAC में निर्यात करें"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "MP&3 में निर्यात करें"
 
@@ -14439,6 +14917,10 @@ msgstr "&WAV में निर्यात करें"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "&OGG में निर्यात करें"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "FLAC में निर्यात करें"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14479,18 +14961,6 @@ msgstr "ठीक हो गया"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "ऑडियो यंत्र सूचना"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "त्वरित समाधान... (&Q)"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "आरंभ करें (&G)"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "Audacity मदद पुस्तिका (&M)"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -14874,6 +15344,10 @@ msgid "&Select"
 msgstr "चुनें(&S)"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "सब(&A)"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "कुछ नहीं(&N)"
 
@@ -15123,7 +15597,7 @@ msgstr "बजाते समय दाँई ओर लंबी तलाश 
 
 #: src/menus/TimelineMenus.cpp
 #, fuzzy
-msgid "&Timeline"
+msgid "Tim&eline"
 msgstr "समयरेखा"
 
 #: src/menus/ToolbarMenus.cpp
@@ -15762,10 +16236,6 @@ msgid "Zoom &Toggle"
 msgstr "बड़ा/छोटा करें (&T)"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "परिष्कृत लंबवत(&V) ज़ूमिंग"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "ट्रैक आकार (&r)"
 
@@ -15803,7 +16273,7 @@ msgstr "छोड़कर समाप्ति पर जाएं"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "काट रेखाएं(&l) सक्रिय करें"
 
 #: src/menus/ViewMenus.cpp
@@ -16007,28 +16477,12 @@ msgid "Temporary files directory"
 msgstr "क्षणिक फ़ाईल डायरेक्टरी"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "स्थान:(&L)"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "अस्थायी फ़ाइल निर्देशिका FAT ड्राइव पर नहीं हो सकती."
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "Brow&se..."
 msgstr "ब्राउज(&s)..."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "रिक्त स्थान(&F) :"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "एक अस्थायी निर्देशिका रखने का स्थान चुनें"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "वरीयता निर्धारित नहीं की जा सकती."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16106,6 +16560,12 @@ msgstr "'निर्यात' डायरेक्टरी सेट नह�
 msgid "'Macro Output' directory cannot be set."
 msgstr "'मैक्रो आउटपुट' डायरेक्टरी सेट नहीं की जा सकती."
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "प्रभाव"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "प्रभाव के लिए वरीयतायें"
@@ -16151,6 +16611,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "रीयलटाइम प्रभाव संगठन (&r) :"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "निर्देश सूची"
 
@@ -16159,7 +16623,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "SSE/SSE2/.../AVX का उपयोग करें"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
+#, fuzzy
+msgid "Open Plugin &Manager"
 msgstr "प्लगइन प्रबंधक खोलें"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
@@ -16331,14 +16796,6 @@ msgstr "RTL भाषाओं में ज्यादातर बाएं-�
 msgid "Never use comma as decimal point"
 msgstr "दशमलव बिंदु के रूप में कभी भी अल्पविराम का उपयोग न करें"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "समयरेखा टूलटिप्स दिखाएं"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "स्क्रब मापक दिखाएं"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "GUI"
@@ -16357,29 +16814,26 @@ msgid "Preferences for ImportExport"
 msgstr "आयात निर्यात के लिए वरीयताएं"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "मानक (&t)"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "विस्तारित (आवृति सीमाओं के साथ)"
+msgid "&Ask me each time"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "सेकेंड (&S)"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "ताल (&B)"
+#, fuzzy
+msgid "Do &nothing"
+msgstr "कुछ भी नहीं"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "निर्यातित लेबल शैली :"
+#, fuzzy
+msgid "Music Imports"
+msgstr "MP3 आयात जारी"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "निर्यातित Allegro (.gro) फाइल संचय समय :"
+msgid "When Audacity detects music in file imported on empty project"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16437,10 +16891,6 @@ msgstr "नाम अनुसार देखें"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "कुँजी अनुसार देखें"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "खोज :(&h)"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -16623,258 +17073,34 @@ msgstr "मोड्यूल के लिए वरीयतायें"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
-"ये केवल प्रयोगात्मक मोड्यूल्स हैं. उन्हें तभी सक्रिय करें जब आपने Audacity मदद पुस्तिका पढ़ी हो\n"
-"और आपको पता है आप क्या कर रहे हैं."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
-msgstr " 'पूछें' का मतलब है कि Audacity हर बार शुरू होते समय पूछेगी कि क्या आप मॉड्यूल को लोड करना चाहते हैं."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr "  'विफल' का अर्थ है कि Audacity को लगता है कि मॉड्यूल टूट गया है और इसे नहीं चलाएगा."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr " 'नया' का मतलब अभी तक कोई विकल्प नहीं चुना गया है."
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
+#, fuzzy
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr "इन परिवर्तनों को प्रभावी करने के  लिए Audacity को दुबारा शुरू करना होगा."
 
 #: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "पूछिए"
+msgid "Always ask"
+msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "असफ़ल"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "कोई भी मॉड्यूल नहीं मिला"
+msgid "No choice made"
+msgstr ""
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "मोड्यूल"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "माउस"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "माउस के लिए वरीयतायें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "माउस जुड़ाव (डिफ़ाल्ट वैल्यू, अपरिवर्तनीय)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "औजार"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "आदेश पालन"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "बटन"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "बायाँ-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "चयन बिंदु बताएं"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "बायाँ-खीचें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "चयन क्षेत्र बताएं"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "ऊच्च-बायाँ-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "चयन क्षेत्र बढ़ाएं"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "बायाँ-दोहरा-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "क्लिप या पूरा ट्रैक चुनें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "चक्का-घुमाएं"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "खुरचन गति बदलें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "इस जगह पर बड़ा करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "इस क्षेत्र पर बड़ा करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "दाएं-खींचने के जैसा"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "दायां बटन-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "एक बार बड़ा करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "दायां बटन-खींचें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "बाएं-खींचने के जैसा"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "शिफ्ट-खींचें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "इस क्षेत्र पर छोटा करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "मध्य-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "ज़ूम - डिफ़ाल्ट"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "Change Amplification Envelope"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "पेंसिल"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "सैंपल रेट बदलें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt-बायाँ-क्लिक"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "सैंपल को एकसार करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "विविध नमूनों को परिवर्तित करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "-बायाँ-खीचें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "बदलें केवल एक नमूना"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "विभिन्न औजार"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "चयन औजार के जैसा"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "बड़ा-छोटा औजार के जैसा"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "कोई"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "ट्रैक ऊपर या नीचे स्क्रौल करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Shift-चक्करघिन्नी"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "तरंगरूप स्क्रौल करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "-चक्का-घुमाएं"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "तरंग बड़ा या छोटा करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "Shift-चक्करघिन्नी"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "लंबवत तरंग-रुप (dB) सीमाक्षेत्र"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "उच्च-बायाँ-खीचें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "ट्रैक में सभी क्लिप्स को दाएं/बाएं खिसकाएं"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr ""
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "क्लिप को ट्रैकों के बीच ऊपर/नीचे स्थानांतरित करें"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "क्लिप को दाएं/बाएं या ट्रैकों के बीच स्थानांतरित करें"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -16992,6 +17218,10 @@ msgstr "छूटे हुए का पता लगाएं"
 #: src/prefs/RecordingPrefs.cpp
 msgid "Sound Activated Recording"
 msgstr "ध्वनि-चालित अंकन"
+
+#: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "सक्रिय करें(&E)"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
@@ -17175,6 +17405,10 @@ msgstr "वर्णक्रम के लिए वरीयतायें"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "वरीयतायें प्रयोग(&U) करें"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "पैमाना"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17392,12 +17626,12 @@ msgid "Enable cut &lines"
 msgstr "काट रेखाएं(&l) सक्रिय करें"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
-msgstr "चयन किनारों को खींचना सक्षम करें"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
 msgstr "एक क्लिप के संपादन से अन्य क्लिप्स का स्थानांतरण हो सकता है(&m)"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "&Always paste audio as new clips"
+msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17410,14 +17644,6 @@ msgstr "नाम-पट्टी बनाने के लिए टाइप 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr "एक नए लेबल के नाम (&n) हेतु संवाद का प्रयोग करें"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr "शून्य से पहले स्क्रॉलिंग सक्रिय करें (&z)"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "परिष्कृत लंबवत(&v) ज़ूमिंग"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -17576,22 +17802,6 @@ msgstr "ऑडियो निर्यात करते समय इसे �
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
 msgstr "खाली परियोजना संचित कर रहे हैं(&e)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr "निर्यात के दौरान मिश्रित कर मोनो बना रहे हैं"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr "निर्यात के दौरान मिश्रित कर स्टीरियो बना रहे हैं"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "निर्यात पर निम्न मिश्रण (कस्टम FFmpeg या बाहरी प्रोग्राम)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr "निर्यात के दौरान फ़ाइल नाम एक्सटेंशन नहीं मिला"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -17915,64 +18125,6 @@ msgstr "रिकार्डिंग वॉल्यूम बढ़ाएं 
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "रिकार्डिंग वॉल्यूम घटाएं (&e)"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "Scrub"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "खोज"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "स्क्रब मापक"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "स्क्रबिंग"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "स्क्रबिंग बंद करें"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "स्क्रबिंग आरंभ"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "खोजना बंद करें"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "खोजना आरंभ"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "स्क्रब मापक छुपाएं"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "स्क्रब औजार-पट्टी"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18312,33 +18464,24 @@ msgid "&MIDI Device Info..."
 msgstr "&MIDI यंत्र सूचना..."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region."
 msgstr "क्लिक करें ऊर्ध्व में ज़ूम के लिए, उच्च-क्लिक ज़ूम-आउट के लिए. ज़ूम-क्षेत्र बताने के लिए क्लिक करते हुए खींचें."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "मेन्यू के लिए दायां-क्लिक."
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "ज़ूम रिसेट"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "शिफ्ट-दायां-क्लिक करें"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "बायाँ-क्लिक / बायाँ-ड्रैग"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "ऊच्च-बायाँ-क्लिक"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18358,30 +18501,57 @@ msgstr "स्वर ट्रैक को फैलाएं"
 msgid "Stretch"
 msgstr "विस्तार"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "गति बदलें"
-
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed"
+msgid "Click to open clip context menu."
+msgstr "नामपट्ट संपादन के लिए क्लिक करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Not enough space"
+msgstr "समुचित डाटा नहीं चुना गया."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "There is not enough space to expand the clip to its original speed."
+msgstr "चयनित भाग चिपकाने के लिए पर्याप्त जगह नहीं है"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Reset Clip Speed"
 msgstr " कटा हुआ "
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Invalid clip speed"
-msgstr "अमान्य सैंपल रेट"
+msgid "Click to reset clip pitch."
+msgstr "बड़ा करें बायाँ-क्लिक या बायाँ-क्लिक खीचें"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "Clip speed must be a positive value"
-msgstr "क्षेत्र धनात्मक पूर्णांक ही होना चाहिए"
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "समायोजन के लिए क्लिक करके खींचें, रिसेट के लिए दोहरा-क्लिक"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 #, fuzzy
-msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "चयनित भाग चिपकाने के लिए पर्याप्त जगह नहीं है"
+msgid "Click to reset clip speed."
+msgstr "बड़ा करें बायाँ-क्लिक या बायाँ-क्लिक खीचें"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+#, fuzzy
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "समायोजन के लिए क्लिक करके खींचें, रिसेट के लिए दोहरा-क्लिक"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18399,6 +18569,53 @@ msgstr "विस्तार"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "काट-रेखा हटाई गई"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Pitch and Speed"
+msgstr "पिच और गति"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Pitch"
+msgstr "पिच"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "se&mitones:"
+msgstr "अर्द्ध-स्वर + सेंट्स"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Clip Speed"
+msgstr " कटा हुआ "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "General"
+msgstr "उत्पत्ति (&G)"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Speed"
+msgstr "गति बदलें"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+#, fuzzy
+msgid "Changed Pitch"
+msgstr "पिच बदलें"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18424,6 +18641,12 @@ msgstr "k"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "फिट करने योग्य ज़ूम करें"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+#, fuzzy
+msgid "Reset Zoom"
+msgstr "रिसेट"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18460,6 +18683,15 @@ msgstr "अगली उच्चतम आवृत्ति (&H)"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "अगली न्यूनतम आवृत्ति (&L)"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+#, fuzzy
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "मेन्यू के लिए दायां-क्लिक."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
@@ -18540,20 +18772,22 @@ msgstr "क्लिप का नाम बदलें..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy
-msgid "Change Speed..."
+msgid "Pitch and Speed..."
 msgstr "गति बदलें"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
+msgid "Render Pitch and Speed"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
@@ -18582,17 +18816,37 @@ msgstr "चुनी हुई ध्वनी को उल्टा करत�
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
+msgid "Pitch Shift"
+msgstr "अंतिम पिच शिफ्ट"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Changed Pitch Shift"
+msgstr "पिच बदलें"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
 msgid "&Rename Clip..."
 msgstr "क्लिप का नाम बदलें..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 #, fuzzy
-msgid "Change &Speed..."
+msgid "&Pitch and Speed..."
 msgstr "गति बदलें"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
+msgid "Render Pitch and &Speed"
 msgstr ""
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Up"
+msgstr "पिच"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+#, fuzzy
+msgid "Pitch &Down"
+msgstr "पिच"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -18811,14 +19065,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% दायां"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "छोटा करें x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "बड़ा करें x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "अर्ध तरंग"
 
@@ -18917,6 +19163,10 @@ msgstr "नया समय ट्रैक बनाया गया"
 msgid "&Time Track"
 msgstr "समय ट्रैक (&T)"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "मेन्यू के लिए दायां-क्लिक."
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid "Drag clips to reposition them. Hold Shift and drag to move all clips on the same track."
@@ -18951,8 +19201,9 @@ msgid "Brush tool selection"
 msgstr "ब्रश टूल चयन"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "नाम..."
+#, fuzzy
+msgid "Re&name Track..."
+msgstr "ट्रैक का नया नमूना"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19003,6 +19254,10 @@ msgstr "ऐडजस्टेड लिफ़ाफ़ा."
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "स्क्रब(&S)"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
+msgstr "स्क्रबिंग"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19134,6 +19389,11 @@ msgstr "ट्रैक चुनें"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "अचयनित करने के लिए कंट्रोल+क्लिक करें"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+#, fuzzy
+msgid "Delete Track"
+msgstr "ट्रैक चुनें"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19544,8 +19804,7 @@ msgstr "शेल्फ फ़िल्टर"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19555,7 +19814,7 @@ msgstr "स्टीव डॉल्टन"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "GNU जनरल पब्लिक लाइसेंस v2.0"
 
@@ -19679,9 +19938,8 @@ msgstr "वर्णक्रमीय संपादन की अलमार
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -19972,50 +20230,6 @@ msgstr "गूँज संख्या"
 msgid "Allow duration to change"
 msgstr "अवधि बदलने दें"
 
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "EQ XML से TXT कनवर्टर"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "लक्ष्य EQ प्रभाव चुनें"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "इक्वलाइजेशन XML फ़ाइल"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "XML फ़ाइल"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "यदि आउटपुट टेक्स्ट फ़ाइल मौजूद है"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "नंबर संलग्न करें"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "ओवरराइट"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "त्रुटि.~%फ़ाइल खोलने में अक्षम~%~s"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "त्रुटि.~%Fफ़ाइल ओवरराइट की अनुमति नहीं:~%\"~a.txt\""
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "त्रुटि.%Fफ़ाइल में नहीं लिखा जा सकता :~%\"~a.txt\""
-
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
 msgstr "समान अंतराल लेबल"
@@ -20277,10 +20491,6 @@ msgstr "ध्वनियों के बीच क्षेत्रों �
 #: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "लिमिटर"
-
-#: plug-ins/limiter.ny
-msgid "Type"
-msgstr "प्रकार"
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -20745,10 +20955,6 @@ msgid "Minimal"
 msgstr "न्यूनतम"
 
 #: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "सब"
-
-#: plug-ins/sample-data-export.ny
 msgid "Optional header text"
 msgstr "वैकल्पिक शीर्ष टेक्सट्"
 
@@ -21070,150 +21276,6 @@ msgstr "शुरूआती फ़ेज (डिग्री)"
 msgid "Wet level (percent)"
 msgstr "वेट् स्तर (प्रतिशत)"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "गायन में कमी तथा अलगाव"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "रॉबर्ट हयेंगी"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "गायन हटाएं: मोनो में"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "गायन हटाएं"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "गायन अलग करें"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "गायन अलग कर उलटें"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "मध्य हटाएं : मोनो में"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "मध्य हटाएं"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "केंद्र अलग करें"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "केंद्र अलग कर उलटें"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "ताकत"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr "गायन हेतु निम्नतम काट सीमा (Hz)"
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr "गायन की ऊच्चतम काट सीमा (Hz)"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-"औसत x: ~a, y: ~a\n"
-"                    कोवैरिएन्स x y: ~a\n"
-"                    औसत वैरिएन्स x: ~a, y: ~a\n"
-"                    स्टैन्डर्ड डेव्हीएसन x: ~a, y: ~a\n"
-"                    केरीलेशन गुणांक : ~a\n"
-"                    डिटरमिनेशन गुणांक: ~a\n"
-"                    रेसिड्यूल वैरिएसन: ~a\n"
-"                    y बराबर है ~a जोड़ ~a गुणा x~%"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
-msgstr "पैन की स्थिति : ~a~%बाएं और दाएं चैनल लगभग ~a % सहसंबंधित हैं. इसका मतलब है:~%~a~%"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-" - दो चैनल समान हैं, यानी दोहरी मोनो.\n"
-"               केंद्र को हटाया नहीं जा सकता.\n"
-"               बचा-खुचा अंतर हानिपूर्ण एन्कोडिंग के कारण हो सकता है."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-" - दो चैनल दृढ़ता से संबंधित हैं, यानी लगभग मोनो या बेहद छितराए.\n"
-"               अधिक संभावना है, कि केंद्र निष्कर्षण खराब होगा."
-
-#: plug-ins/vocalrediso.ny
-msgid " - A fairly good value, at least stereo in average and not too wide spread."
-msgstr " - एक काफी अच्छा मूल्य, कम से कम औसत स्टीरियो और जिसका विस्तार कम हो."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used reverb."
-msgstr ""
-" - स्टीरियो के लिए एक आदर्श मूल्य।\n"
-"                हालांकि, केंद्र निष्कर्षण गूँज के इस्तेमाल पर भी निर्भर करता है."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-" - दो चैनल लगभग संबंधित नहीं हैं।\n"
-"                या तो आपके पास केवल शोर है या यह असंतुलित तरीके से अंकित हुआ है.\n"
-"                केंद्र निष्कर्षण हालांकि अभी भी अच्छा हो सकता है."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-" - हालांकि ट्रैक स्टीरियो है, पर स्पष्ट रूप से अतिरिक्त विस्तृत लगाता है.\n"
-" यह अजीब प्रभाव पैदा कर सकता है.\n"
-" खासकर जब केवल एक स्पीकर द्वारा बजाया जाता है."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-" - दोनों चैनल लगभग समान हैं.\n"
-"                  जाहिर है, एक छद्म स्टीरियो प्रभाव का उपयोग किया गया है\n"
-"                  वक्ताओं के बीच भौतिक दूरी पर संकेत फैलाने के लिए.\n"
-"                  केंद्र निष्कासन से अच्छे परिणाम की उम्मीद न करें."
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr "यह प्लग-इन केवल स्टीरियो ट्रैक के साथ काम करता है."
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "वोकोडर"
@@ -21299,12 +21361,731 @@ msgid "Special"
 msgstr "विशेष"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "गायन में कमी तथा अलगाव"
+
+#: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
 msgstr "वोकल रिमूवर"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "स्पेक्ट्रल टूल्स"
+
+#, c-format
+#~ msgid ""
+#~ "\"%s\" \n"
+#~ "is a MIDI file, not an audio file. \n"
+#~ "Audacity cannot open this type of file for playing, but you can\n"
+#~ "edit it by clicking File > Import > MIDI."
+#~ msgstr ""
+#~ "\"%s\" \n"
+#~ "  एक MIDI फ़ाइल है , ऑडियो फ़ाइल नहीं. \n"
+#~ "ऑडेसिटी इस प्रकार की फ़ाइलें बजाने के लिए नहीं खोल सकता, लेकिन आप \n"
+#~ "फ़ाइल > आयात > MIDI क्लिक करके इसे संपादित कर सकते हैं."
+
+#~ msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
+#~ msgstr "लगता है मदद पुस्तिका स्थापित नहीं है. कृपया  [[*URL*|मदद सामग्री ऑनलाइन देखें]].<br><br>हमेशा मैनुअल ऑनलाइन देखने के लिए, \"मैनुअल निवासस्थान\" को इंटरफेस में पसंद बदलकर  \"इंटरनेट से \" करें."
+
+#~ msgid "You've specified a file name without an extension. Are you sure?"
+#~ msgstr "आपने एक्सटेंशन के बिना एक फाइल नाम निर्दिष्ट किया है. क्या ये सही है?"
+
+#~ msgid "Update display while playing"
+#~ msgstr "बजाते समय प्रदर्शन अद्यतन करें"
+
+#~ msgid "Pinned Play Head"
+#~ msgstr "पिन लगा प्लेहेड"
+
+#, fuzzy
+#~ msgid "Enable pinned play &head"
+#~ msgstr "पिन लगा प्लेहेड"
+
+#~ msgid ""
+#~ "Reset Preferences?\n"
+#~ "\n"
+#~ "This is a one-time question, after an 'install' where you asked to have the Preferences reset."
+#~ msgstr ""
+#~ "वरीयताएँ रीसेट करें?\n"
+#~ "\n"
+#~ "यह प्रश्न केवल एक बार 'स्थापना' के बाद पूछा जाएगा, जहां आप वरीयताएँ पहली बार संचित करते हैं."
+
+#~ msgid "Reset Audacity Preferences"
+#~ msgstr "Audacity वरीयताएं रीसेट करें"
+
+#, c-format
+#~ msgid ""
+#~ "You must first select some audio for '%s' to act on.\n"
+#~ "\n"
+#~ "Ctrl + A selects all audio."
+#~ msgstr ""
+#~ "आप '%s' के उपयोग के लिए पहले कुछ ऑडियो चुनें.\n"
+#~ "\n"
+#~ "Ctrl + A सभी कुछ चयन करने के लिए."
+
+#, c-format
+#~ msgid "Audacity Karaoke%s"
+#~ msgstr "Audacity काराओके%s"
+
+#~ msgid "&Karaoke"
+#~ msgstr "काराओके (&K)"
+
+#~ msgid "Select effects, click the Enable or Disable button, then click OK."
+#~ msgstr "प्रभाव को चुनें, सक्षम या अक्षम बटन पर क्लिक करें, फिर ठीक पर क्लिक करें."
+
+#~ msgid "Show all"
+#~ msgstr "सब दिखाएं"
+
+#~ msgid "Show disabled"
+#~ msgstr "निष्क्रिय दिखाएं"
+
+#~ msgid "D&isabled"
+#~ msgstr "निष्क्रिय"
+
+#~ msgid "Show enabled"
+#~ msgstr "सक्रिय दिखाएं"
+
+#~ msgid "E&nabled"
+#~ msgstr "सक्रिय"
+
+#~ msgid "Show new"
+#~ msgstr "नया दिखाएं"
+
+#~ msgid "Ne&w"
+#~ msgstr "नया"
+
+#~ msgid "State"
+#~ msgstr "अवस्था"
+
+#~ msgid "&Select All"
+#~ msgstr "सबको चुनें (&S)"
+
+#~ msgid "C&lear All"
+#~ msgstr "पूर्ण सफ़ाई (&l )"
+
+#~ msgid "&Disable"
+#~ msgstr "निष्क्रिय"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effects or commands:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "प्रभावों या आदेशों को सक्रिय करते हैं :\n"
+#~ "\n"
+#~ "%s"
+
+#, c-format
+#~ msgid ""
+#~ "Enabling effect or command:\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "प्रभाव या आदेश सक्रिय करते हैं:\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "There was a problem printing."
+#~ msgstr "छपाई में एक बाधा है."
+
+#~ msgid "Print"
+#~ msgstr "मुद्रण"
+
+#~ msgid "Pa&ge Setup..."
+#~ msgstr "पेज सेटअप..."
+
+#~ msgid "&Print..."
+#~ msgstr "मुद्रण...(&P)"
+
+#~ msgid "Screen Capture Frame"
+#~ msgstr "स्क्रीन कतरन फ़्रेम"
+
+#~ msgid "Choose location to save files"
+#~ msgstr "फ़ाइलें संचित करने की जगह बताएं"
+
+#~ msgid "Save images to:"
+#~ msgstr "तस्वीरें यहाँ संचित करें :"
+
+#~ msgid "Choose..."
+#~ msgstr "चुनें..."
+
+#~ msgid "Capture entire window or screen"
+#~ msgstr "पूरी विंडो या स्क्रीन का दृश्य कैद करें"
+
+#~ msgid "Resize Small"
+#~ msgstr "आकार घटाएं"
+
+#~ msgid "Resize Large"
+#~ msgstr "आकार बढ़ाएं"
+
+#~ msgid "Blue Bkgnd"
+#~ msgstr "नीला परिपेक्ष्य"
+
+#~ msgid "White Bkgnd"
+#~ msgstr "सफ़ेद परिपेक्ष्य"
+
+#~ msgid "Capture Window Only"
+#~ msgstr "सिर्फ़ झरोखे का कतरन बनाएं"
+
+#~ msgid "Capture Full Window"
+#~ msgstr "पूर्ण झरोखे का कतरन बनाएं"
+
+#~ msgid "Capture Window Plus"
+#~ msgstr "झरोखे से बाहर तक कतरन बनाएं"
+
+#~ msgid "Capture Full Screen"
+#~ msgstr "पूर्ण स्क्रीन का कतरन बनाएं"
+
+#~ msgid "Wait 5 seconds and capture frontmost window/dialog"
+#~ msgstr "5 सेकंड रुककर सबसे ऊपरी झरोखे/संवाद को कैद करें"
+
+#~ msgid "Capture part of a project window"
+#~ msgstr "परियोजना झरोखे के एक भाग का कतरन बनाएं"
+
+#~ msgid "All Toolbars"
+#~ msgstr "औजार-पट्टियाँ"
+
+#~ msgid "All Effects"
+#~ msgstr "सभी प्रभाव"
+
+#~ msgid "All Scriptables"
+#~ msgstr "सब स्क्रिप्टयोग्य"
+
+#~ msgid "All Preferences"
+#~ msgstr "सभी वरीयतायें"
+
+#~ msgid "Ruler"
+#~ msgstr "मापक"
+
+#~ msgid "First Track"
+#~ msgstr "पहला ट्रैक"
+
+#~ msgid "Second Track"
+#~ msgstr "दूसरा ट्रैक"
+
+#~ msgid "One Sec"
+#~ msgstr "एक सेकेंड"
+
+#~ msgid "Ten Sec"
+#~ msgstr "दस सेकेंड"
+
+#~ msgid "One Min"
+#~ msgstr "एक मिनट"
+
+#~ msgid "Five Min"
+#~ msgstr "पाँच मिनट"
+
+#~ msgid "One Hour"
+#~ msgstr "एक घंटा"
+
+#~ msgid "Short Tracks"
+#~ msgstr "लघु ट्रैक"
+
+#~ msgid "Medium Tracks"
+#~ msgstr "मध्यम ट्रैक"
+
+#~ msgid "Tall Tracks"
+#~ msgstr "लंबा ट्रैक"
+
+#~ msgid "Choose a location to save screenshot images"
+#~ msgstr "स्क्रीनशॉट छवियों को सहेजने का स्थान चुनें"
+
+#~ msgid "Capture failed!"
+#~ msgstr "कैद करना असफल!"
+
+#~ msgid "&Screenshot..."
+#~ msgstr "स्क्रीनशॉट...(&S)"
+
+#~ msgid "Anonymous"
+#~ msgstr "अनाम"
+
+#~ msgid "Screenshot"
+#~ msgstr "स्क्रीनशॉट"
+
+#~ msgid "Window"
+#~ msgstr "विंडो"
+
+#~ msgid "Full Window"
+#~ msgstr "पूर्ण विंडो"
+
+#~ msgid "Window Plus"
+#~ msgstr "विंडो प्लस"
+
+#~ msgid "Fullscreen"
+#~ msgstr "पूर्ण स्क्रीन"
+
+#~ msgid "Toolbars"
+#~ msgstr "औजार-पट्टी"
+
+#~ msgid "Scriptables"
+#~ msgstr "स्क्रिप्टेबल्स"
+
+#~ msgid "Trackpanel"
+#~ msgstr "ट्रैक पैनल"
+
+#~ msgid "First Two Tracks"
+#~ msgstr "पहले दो ट्रैक"
+
+#~ msgid "First Three Tracks"
+#~ msgstr "पहले तीन ट्रैक"
+
+#~ msgid "First Four Tracks"
+#~ msgstr "पहले चार ट्रैक"
+
+#~ msgid "Tracks Plus"
+#~ msgstr "ट्रैक प्लस"
+
+#~ msgid "First Track Plus"
+#~ msgstr "पहला ट्रैक प्लस"
+
+#~ msgid "All Tracks"
+#~ msgstr "सभी ट्रैक"
+
+#~ msgid "All Tracks Plus"
+#~ msgstr "सभी लंबे ट्रैक"
+
+#~ msgid "Blue"
+#~ msgstr "नीला"
+
+#~ msgctxt "color"
+#~ msgid "White"
+#~ msgstr "सफ़ेद"
+
+#~ msgid "Path:"
+#~ msgstr "पथ :"
+
+#~ msgid "Capture What:"
+#~ msgstr "क्या कैद करें:"
+
+#~ msgid "Background:"
+#~ msgstr "परिदृश्य :"
+
+#~ msgid "Bring To Top"
+#~ msgstr "सबसे ऊपर लाएं"
+
+#, c-format
+#~ msgid "Error trying to save file: %s"
+#~ msgstr "फ़ाइल संचयन में त्रुटि : %s"
+
+#~ msgid "Screenshot (short format)..."
+#~ msgstr "स्क्रीनशॉट (छोटा प्रारूप)..."
+
+#~ msgid "Takes screenshots."
+#~ msgstr "स्क्रीनशॉट लेता है."
+
+#~ msgid "Stop &Preview"
+#~ msgstr "पूर्वावलोकन बंद (&P)"
+
+#~ msgid "Hidden File Menu"
+#~ msgstr "छिपा हुआ फ़ाइल मेनू"
+
+#~ msgid "&Quick Fix..."
+#~ msgstr "त्वरित समाधान... (&Q)"
+
+#~ msgid "&Getting Started"
+#~ msgstr "आरंभ करें (&G)"
+
+#~ msgid "Audacity &Manual"
+#~ msgstr "Audacity मदद पुस्तिका (&M)"
+
+#, fuzzy
+#~ msgid "&Timeline"
+#~ msgstr "समयरेखा"
+
+#~ msgid "Advanced &Vertical Zooming"
+#~ msgstr "परिष्कृत लंबवत(&V) ज़ूमिंग"
+
+#~ msgid "Show Timeline Tooltips"
+#~ msgstr "समयरेखा टूलटिप्स दिखाएं"
+
+#~ msgid "Show Scrub Ruler"
+#~ msgstr "स्क्रब मापक दिखाएं"
+
+#~ msgid ""
+#~ "These are experimental modules. Enable them only if you've read the Audacity Manual\n"
+#~ "and know what you are doing."
+#~ msgstr ""
+#~ "ये केवल प्रयोगात्मक मोड्यूल्स हैं. उन्हें तभी सक्रिय करें जब आपने Audacity मदद पुस्तिका पढ़ी हो\n"
+#~ "और आपको पता है आप क्या कर रहे हैं."
+
+#~ msgid "  'Ask' means Audacity will ask if you want to load the module each time it starts."
+#~ msgstr " 'पूछें' का मतलब है कि Audacity हर बार शुरू होते समय पूछेगी कि क्या आप मॉड्यूल को लोड करना चाहते हैं."
+
+#~ msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
+#~ msgstr "  'विफल' का अर्थ है कि Audacity को लगता है कि मॉड्यूल टूट गया है और इसे नहीं चलाएगा."
+
+#~ msgid "  'New' means no choice has been made yet."
+#~ msgstr " 'नया' का मतलब अभी तक कोई विकल्प नहीं चुना गया है."
+
+#~ msgid "Ask"
+#~ msgstr "पूछिए"
+
+#~ msgid "No modules were found"
+#~ msgstr "कोई भी मॉड्यूल नहीं मिला"
+
+#~ msgid "Ctrl"
+#~ msgstr "Ctrl"
+
+#~ msgid "Mouse"
+#~ msgstr "माउस"
+
+#~ msgid "Mouse Bindings (default values, not configurable)"
+#~ msgstr "माउस जुड़ाव (डिफ़ाल्ट वैल्यू, अपरिवर्तनीय)"
+
+#~ msgid "Command Action"
+#~ msgstr "आदेश पालन"
+
+#~ msgid "Buttons"
+#~ msgstr "बटन"
+
+#~ msgid "Left-Click"
+#~ msgstr "बायाँ-क्लिक"
+
+#~ msgid "Set Selection Point"
+#~ msgstr "चयन बिंदु बताएं"
+
+#~ msgid "Left-Drag"
+#~ msgstr "बायाँ-खीचें"
+
+#~ msgid "Set Selection Range"
+#~ msgstr "चयन क्षेत्र बताएं"
+
+#~ msgid "Extend Selection Range"
+#~ msgstr "चयन क्षेत्र बढ़ाएं"
+
+#~ msgid "Left-Double-Click"
+#~ msgstr "बायाँ-दोहरा-क्लिक"
+
+#~ msgid "Select Clip or Entire Track"
+#~ msgstr "क्लिप या पूरा ट्रैक चुनें"
+
+#~ msgid "Wheel-Rotate"
+#~ msgstr "चक्का-घुमाएं"
+
+#~ msgid "Change scrub speed"
+#~ msgstr "खुरचन गति बदलें"
+
+#~ msgid "Zoom in on Point"
+#~ msgstr "इस जगह पर बड़ा करें"
+
+#~ msgid "Zoom in on a Range"
+#~ msgstr "इस क्षेत्र पर बड़ा करें"
+
+#~ msgid "same as right-drag"
+#~ msgstr "दाएं-खींचने के जैसा"
+
+#~ msgid "Right-Click"
+#~ msgstr "दायां बटन-क्लिक"
+
+#~ msgid "Zoom out one step"
+#~ msgstr "एक बार बड़ा करें"
+
+#~ msgid "Right-Drag"
+#~ msgstr "दायां बटन-खींचें"
+
+#~ msgid "same as left-drag"
+#~ msgstr "बाएं-खींचने के जैसा"
+
+#~ msgid "Shift-Drag"
+#~ msgstr "शिफ्ट-खींचें"
+
+#~ msgid "Zoom out on a Range"
+#~ msgstr "इस क्षेत्र पर छोटा करें"
+
+#~ msgid "Middle-Click"
+#~ msgstr "मध्य-क्लिक"
+
+#~ msgid "Zoom default"
+#~ msgstr "ज़ूम - डिफ़ाल्ट"
+
+#~ msgid "Change Amplification Envelope"
+#~ msgstr "Change Amplification Envelope"
+
+#~ msgid "Pencil"
+#~ msgstr "पेंसिल"
+
+#~ msgid "Change Sample"
+#~ msgstr "सैंपल रेट बदलें"
+
+#~ msgid "Alt-Left-Click"
+#~ msgstr "Alt-बायाँ-क्लिक"
+
+#~ msgid "Smooth at Sample"
+#~ msgstr "सैंपल को एकसार करें"
+
+#~ msgid "Change Several Samples"
+#~ msgstr "विविध नमूनों को परिवर्तित करें"
+
+#~ msgid "-Left-Drag"
+#~ msgstr "-बायाँ-खीचें"
+
+#~ msgid "Change ONE Sample only"
+#~ msgstr "बदलें केवल एक नमूना"
+
+#~ msgid "Multi"
+#~ msgstr "विभिन्न औजार"
+
+#~ msgid "same as select tool"
+#~ msgstr "चयन औजार के जैसा"
+
+#~ msgid "same as zoom tool"
+#~ msgstr "बड़ा-छोटा औजार के जैसा"
+
+#~ msgid "Any"
+#~ msgstr "कोई"
+
+#~ msgid "Scroll tracks up or down"
+#~ msgstr "ट्रैक ऊपर या नीचे स्क्रौल करें"
+
+#~ msgid "Shift-Wheel-Rotate"
+#~ msgstr "Shift-चक्करघिन्नी"
+
+#~ msgid "Scroll waveform"
+#~ msgstr "तरंगरूप स्क्रौल करें"
+
+#~ msgid "-Wheel-Rotate"
+#~ msgstr "-चक्का-घुमाएं"
+
+#~ msgid "Zoom waveform in or out"
+#~ msgstr "तरंग बड़ा या छोटा करें"
+
+#~ msgid "-Shift-Wheel-Rotate"
+#~ msgstr "Shift-चक्करघिन्नी"
+
+#~ msgid "Vertical Scale Waveform (dB) range"
+#~ msgstr "लंबवत तरंग-रुप (dB) सीमाक्षेत्र"
+
+#~ msgid "Shift-Left-Drag"
+#~ msgstr "उच्च-बायाँ-खीचें"
+
+#~ msgid "Move all clips in track left/right"
+#~ msgstr "ट्रैक में सभी क्लिप्स को दाएं/बाएं खिसकाएं"
+
+#~ msgid "Move clip up/down between tracks"
+#~ msgstr "क्लिप को ट्रैकों के बीच ऊपर/नीचे स्थानांतरित करें"
+
+#~ msgid "Move clip left/right or between tracks"
+#~ msgstr "क्लिप को दाएं/बाएं या ट्रैकों के बीच स्थानांतरित करें"
+
+#~ msgid "Enable &dragging selection edges"
+#~ msgstr "चयन किनारों को खींचना सक्षम करें"
+
+#~ msgid "Enable scrolling left of &zero"
+#~ msgstr "शून्य से पहले स्क्रॉलिंग सक्रिय करें (&z)"
+
+#~ msgid "Advanced &vertical zooming"
+#~ msgstr "परिष्कृत लंबवत(&v) ज़ूमिंग"
+
+#~ msgid "Mixing down to &mono during export"
+#~ msgstr "निर्यात के दौरान मिश्रित कर मोनो बना रहे हैं"
+
+#~ msgid "Mixing down to &stereo during export"
+#~ msgstr "निर्यात के दौरान मिश्रित कर स्टीरियो बना रहे हैं"
+
+#~ msgid "Mixing down on export (&Custom FFmpeg or external program)"
+#~ msgstr "निर्यात पर निम्न मिश्रण (कस्टम FFmpeg या बाहरी प्रोग्राम)"
+
+#~ msgid "Missing file &name extension during export"
+#~ msgstr "निर्यात के दौरान फ़ाइल नाम एक्सटेंशन नहीं मिला"
+
+#~ msgid "Scrub"
+#~ msgstr "Scrub"
+
+#~ msgid "Seek"
+#~ msgstr "खोज"
+
+#~ msgid "Scrub Ruler"
+#~ msgstr "स्क्रब मापक"
+
+#~ msgid "Stop Scrubbing"
+#~ msgstr "स्क्रबिंग बंद करें"
+
+#~ msgid "Start Scrubbing"
+#~ msgstr "स्क्रबिंग आरंभ"
+
+#~ msgid "Stop Seeking"
+#~ msgstr "खोजना बंद करें"
+
+#~ msgid "Start Seeking"
+#~ msgstr "खोजना आरंभ"
+
+#~ msgid "Hide Scrub Ruler"
+#~ msgstr "स्क्रब मापक छुपाएं"
+
+#~ msgid "Scru&b Toolbar"
+#~ msgstr "स्क्रब औजार-पट्टी"
+
+#, fuzzy
+#~ msgid "Invalid clip speed"
+#~ msgstr "अमान्य सैंपल रेट"
+
+#, fuzzy
+#~ msgid "Clip speed must be a positive value"
+#~ msgstr "क्षेत्र धनात्मक पूर्णांक ही होना चाहिए"
+
+#, fuzzy
+#~ msgid "Change &Speed..."
+#~ msgstr "गति बदलें"
+
+#~ msgid "Zoom x1/2"
+#~ msgstr "छोटा करें x1/2"
+
+#~ msgid "Zoom x2"
+#~ msgstr "बड़ा करें x2"
+
+#~ msgid "&Name..."
+#~ msgstr "नाम..."
+
+#~ msgid "EQ XML to TXT Converter"
+#~ msgstr "EQ XML से TXT कनवर्टर"
+
+#~ msgid "Select target EQ effect"
+#~ msgstr "लक्ष्य EQ प्रभाव चुनें"
+
+#~ msgid "Equalization XML file"
+#~ msgstr "इक्वलाइजेशन XML फ़ाइल"
+
+#~ msgid "XML file"
+#~ msgstr "XML फ़ाइल"
+
+#~ msgid "If output text file exists"
+#~ msgstr "यदि आउटपुट टेक्स्ट फ़ाइल मौजूद है"
+
+#~ msgid "Append number"
+#~ msgstr "नंबर संलग्न करें"
+
+#~ msgid "Overwrite"
+#~ msgstr "ओवरराइट"
+
+#, lisp-format
+#~ msgid "Error.~%Unable to open file~%~s"
+#~ msgstr "त्रुटि.~%फ़ाइल खोलने में अक्षम~%~s"
+
+#, lisp-format
+#~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
+#~ msgstr "त्रुटि.~%Fफ़ाइल ओवरराइट की अनुमति नहीं:~%\"~a.txt\""
+
+#, lisp-format
+#~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
+#~ msgstr "त्रुटि.%Fफ़ाइल में नहीं लिखा जा सकता :~%\"~a.txt\""
+
+#~ msgid "Robert Haenggi"
+#~ msgstr "रॉबर्ट हयेंगी"
+
+#~ msgid "Remove Vocals: to mono"
+#~ msgstr "गायन हटाएं: मोनो में"
+
+#~ msgid "Remove Vocals"
+#~ msgstr "गायन हटाएं"
+
+#~ msgid "Isolate Vocals"
+#~ msgstr "गायन अलग करें"
+
+#~ msgid "Isolate Vocals and Invert"
+#~ msgstr "गायन अलग कर उलटें"
+
+#~ msgid "Remove Center: to mono"
+#~ msgstr "मध्य हटाएं : मोनो में"
+
+#~ msgid "Remove Center"
+#~ msgstr "मध्य हटाएं"
+
+#~ msgid "Isolate Center"
+#~ msgstr "केंद्र अलग करें"
+
+#~ msgid "Isolate Center and Invert"
+#~ msgstr "केंद्र अलग कर उलटें"
+
+#~ msgid "Strength"
+#~ msgstr "ताकत"
+
+#~ msgid "Low Cut for Vocals (Hz)"
+#~ msgstr "गायन हेतु निम्नतम काट सीमा (Hz)"
+
+#~ msgid "High Cut for Vocals (Hz)"
+#~ msgstr "गायन की ऊच्चतम काट सीमा (Hz)"
+
+#, lisp-format
+#~ msgid ""
+#~ "Average x: ~a, y: ~a\n"
+#~ "                    Covariance x y: ~a\n"
+#~ "                    Average variance x: ~a, y: ~a\n"
+#~ "                    Standard deviation x: ~a, y: ~a\n"
+#~ "                    Coefficient of correlation: ~a\n"
+#~ "                    Coefficient of determination: ~a\n"
+#~ "                    Variation of residuals: ~a\n"
+#~ "                    y equals ~a plus ~a times x~%"
+#~ msgstr ""
+#~ "औसत x: ~a, y: ~a\n"
+#~ "                    कोवैरिएन्स x y: ~a\n"
+#~ "                    औसत वैरिएन्स x: ~a, y: ~a\n"
+#~ "                    स्टैन्डर्ड डेव्हीएसन x: ~a, y: ~a\n"
+#~ "                    केरीलेशन गुणांक : ~a\n"
+#~ "                    डिटरमिनेशन गुणांक: ~a\n"
+#~ "                    रेसिड्यूल वैरिएसन: ~a\n"
+#~ "                    y बराबर है ~a जोड़ ~a गुणा x~%"
+
+#, lisp-format
+#~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
+#~ msgstr "पैन की स्थिति : ~a~%बाएं और दाएं चैनल लगभग ~a % सहसंबंधित हैं. इसका मतलब है:~%~a~%"
+
+#~ msgid ""
+#~ " - The two channels are identical, i.e. dual mono.\n"
+#~ "                The center can't be removed.\n"
+#~ "                Any remaining difference may be caused by lossy encoding."
+#~ msgstr ""
+#~ " - दो चैनल समान हैं, यानी दोहरी मोनो.\n"
+#~ "               केंद्र को हटाया नहीं जा सकता.\n"
+#~ "               बचा-खुचा अंतर हानिपूर्ण एन्कोडिंग के कारण हो सकता है."
+
+#~ msgid ""
+#~ " - The two Channels are strongly related, i.e. nearly mono or extremely panned.\n"
+#~ "                Most likely, the center extraction will be poor."
+#~ msgstr ""
+#~ " - दो चैनल दृढ़ता से संबंधित हैं, यानी लगभग मोनो या बेहद छितराए.\n"
+#~ "               अधिक संभावना है, कि केंद्र निष्कर्षण खराब होगा."
+
+#~ msgid " - A fairly good value, at least stereo in average and not too wide spread."
+#~ msgstr " - एक काफी अच्छा मूल्य, कम से कम औसत स्टीरियो और जिसका विस्तार कम हो."
+
+#~ msgid ""
+#~ " - An ideal value for Stereo.\n"
+#~ "                However, the center extraction depends also on the used reverb."
+#~ msgstr ""
+#~ " - स्टीरियो के लिए एक आदर्श मूल्य।\n"
+#~ "                हालांकि, केंद्र निष्कर्षण गूँज के इस्तेमाल पर भी निर्भर करता है."
+
+#~ msgid ""
+#~ " - The two channels are almost not related.\n"
+#~ "                Either you have only noise or the piece is mastered in a unbalanced manner.\n"
+#~ "                The center extraction can still be good though."
+#~ msgstr ""
+#~ " - दो चैनल लगभग संबंधित नहीं हैं।\n"
+#~ "                या तो आपके पास केवल शोर है या यह असंतुलित तरीके से अंकित हुआ है.\n"
+#~ "                केंद्र निष्कर्षण हालांकि अभी भी अच्छा हो सकता है."
+
+#~ msgid ""
+#~ " - Although the Track is stereo, the field is obviously extra wide.\n"
+#~ "                This can cause strange effects.\n"
+#~ "                Especially when played by only one speaker."
+#~ msgstr ""
+#~ " - हालांकि ट्रैक स्टीरियो है, पर स्पष्ट रूप से अतिरिक्त विस्तृत लगाता है.\n"
+#~ " यह अजीब प्रभाव पैदा कर सकता है.\n"
+#~ " खासकर जब केवल एक स्पीकर द्वारा बजाया जाता है."
+
+#~ msgid ""
+#~ " - The two channels are nearly identical.\n"
+#~ "                  Obviously, a pseudo stereo effect has been used\n"
+#~ "                  to spread the signal over the physical distance between the speakers.\n"
+#~ "                  Don't expect good results from a center removal."
+#~ msgstr ""
+#~ " - दोनों चैनल लगभग समान हैं.\n"
+#~ "                  जाहिर है, एक छद्म स्टीरियो प्रभाव का उपयोग किया गया है\n"
+#~ "                  वक्ताओं के बीच भौतिक दूरी पर संकेत फैलाने के लिए.\n"
+#~ "                  केंद्र निष्कासन से अच्छे परिणाम की उम्मीद न करें."
+
+#~ msgid "This plug-in works only with stereo tracks."
+#~ msgstr "यह प्लग-इन केवल स्टीरियो ट्रैक के साथ काम करता है."
 
 #, c-format
 #~ msgid ""
@@ -21484,9 +22265,6 @@ msgstr "स्पेक्ट्रल टूल्स"
 #~ "आपके पास कोई अमूक ऑडियो ट्रैक और सक्रिय लेबल नहीं है,\n"
 #~ "इसलिए आप अलग-अलग ऑडियो फ़ाइलों में निर्यात नहीं कर सकते."
 
-#~ msgid "Export files to:"
-#~ msgstr "फ़ाइलों का निर्यात यहाँ करें:"
-
 #~ msgid "Create"
 #~ msgstr "बनाएं"
 
@@ -21541,9 +22319,6 @@ msgstr "स्पेक्ट्रल टूल्स"
 #~ "लेबल या ट्रैक \"%s\" एक वैध फ़ाईल नाम नहीं है. आप \"%s\" का प्रयोग नहीं कर सकते.\n"
 #~ "\n"
 #~ "सुझाया गया प्रतिस्थापन :"
-
-#~ msgid "Save As..."
-#~ msgstr "जैसा सुरक्षित करें..."
 
 #~ msgid "Unable to export - problem with metadata"
 #~ msgstr "निर्यात में असमर्थ - मेटाडेटा के साथ समस्या"
@@ -21704,12 +22479,6 @@ msgstr "स्पेक्ट्रल टूल्स"
 
 #~ msgid "1024 - default"
 #~ msgstr "1024 - डिफ़ाल्ट"
-
-#~ msgid "Saving &projects"
-#~ msgstr "परियोजनाएं संचित कर रहे हैं(&p)"
-
-#~ msgid "Left-Click to merge clips"
-#~ msgstr "बड़ा करें बायाँ-क्लिक या बायाँ-क्लिक खीचें"
 
 #~ msgid "Merged Clips"
 #~ msgstr "जुड़ी कतरन"

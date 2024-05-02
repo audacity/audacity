@@ -9,8 +9,6 @@
  **********************************************************************/
 #include "NoteTrackSliderHandles.h"
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-
 #include "NoteTrackControls.h"
 #include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
@@ -117,5 +115,3 @@ UIHandlePtr VelocitySliderHandle::HitTest
    else
       return {};
 }
-
-#endif

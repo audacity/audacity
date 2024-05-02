@@ -1,0 +1,141 @@
+truth,score,tatumRate,bpm,ts,octaveFactor,octaveError,lag,filename
+true,0.825775,200,100,4/4,1,0,0,loops/100 BPM Dm Chords.wav
+true,0.954577,428,107,4/4,1,-1.77202e-07,0,loops/107bpm_808_Trance_beatz.wav
+true,0.924623,464,116,4/4,1,-3.27142e-07,0,loops/116bpm-berserk-beatz.wav
+true,0.909435,240,120,4/4,1,0,1,loops/20161229 - Piano Chord Sequence C-Dmin-A7-Dmin-Emin-B7-Emin 120 bpm.wav
+true,0.689355,510,127.5,4/4,0.5,-0.415037,0,loops/85 BPM Lofi Vibes Melody.wav
+true,0.634631,348.75,174.375,4/4,0.5,-0.0458037,4,loops/90 bpm C Key Low Bass.wav
+true,0.861098,198,98.9999,4/4,1,-2.14687e-06,1,loops/99bpm tama break.wav
+true,0.556855,485.426,161.809,3/4,1,0.480163,2,loops/Acoustic Loop Lucaz Collab 116BPM.wav
+true,0.70617,672,112,4/4,1,0,0,loops/Always With You 112 BPM.wav
+true,0.808462,300,100,4/4,1,0.415037,0,loops/Ambient Lofi Melody Loop 75 BPM.wav
+true,0.959993,519.999,130,4/4,1,-2.04463e-06,0,loops/BANGIN' TECHNO BEAT LOOP 130 BPM.wav
+true,0.782825,396.002,132.001,4/4,1,5.72499e-06,1,loops/Bamboo Flute  Quenacho Jethro Tull style Loop 5 D 132 BPM
+true,0.750947,518.024,129.506,4/4,1,-0.00549148,0,loops/Bass 130 Bpm
+true,0.972239,240,120,4/4,1,0,1,loops/Bass loops 001 with drums short loop 120 bpm.wav
+true,0.859055,480,120,4/4,1,0,0,loops/Bass loops 024 short loop 120 bpm.wav
+true,0.925319,240,120,4/4,1,0,1,loops/Bass loops 025 with drums short loop 120 bpm.wav
+true,0.929387,240,120,4/4,1,0,1,loops/Bass loops 027 with drums short loop 120 bpm.wav
+true,0.775334,240,120,4/4,1,0,2,loops/Bass loops 037 short loop 120 bpm.wav
+true,0.846895,240,120,4/4,1,0,1,loops/Bass loops 068 with drums short loop 120 bpm.wav
+true,0.997974,320,80,4/4,1,0,0,loops/Beat Loop 4_4 80BPM
+true,0.904569,267.999,134,4/4,1,-3.0891e-06,2,loops/CUSTOMIZE YOUR PAN FLUTE LOOP  Cm 134 BPM
+true,0.930952,252,126,4/4,1,-6.2617e-07,0,loops/Cinematic Kalimba Loopable Am 126 BPM
+true,0.912139,240,120,4/4,0.5,0,1,loops/Dark loops 203 piano without melody short loop 60 bpm.wav
+true,0.808112,240,120,4/4,0.5,0,1,loops/Dark loops 209 piano with melody efect short loop 60 bpm.wav
+true,0.978777,240,120,4/4,0.5,0,1,loops/Dark loops 214  piano with melody short loop 60 bpm.wav
+true,0.946695,120,120,4/4,0.5,0,1,loops/Dark loops 220 octave piano short loop 60 bpm.wav
+true,0.90043,480.091,120.023,4/4,1,0.00027241,5,loops/DeepHouse Loop - 120 BpM - Dminor - synthesizer beat
+true,0.978607,480,120,4/4,1,0,2,loops/Disco funk loops 001 remix 1 short loop 120 bpm.wav
+true,0.955963,480,120,4/4,1,0,1,loops/Disco funk loops 001 remix 3 short loop with drums 120 bpm.wav
+true,0.953262,480,120,4/4,1,0,1,loops/Disco funk loops 001 simple mix 1 short loop 120 bpm.wav
+true,0.758854,150,75,4/4,1,0,0,loops/Dusty Lofi Melody Loop 75 BPM.wav
+true,0.785887,352,88,4/4,1,-3.75702e-07,3,loops/Dusty Lofi Melody Loop 88 BPM.wav
+true,0.839178,380,94.9999,4/4,1,-9.54163e-07,3,loops/Dusty Lofi Melody Loop 95 BPM.wav
+true,0.832438,248.503,248.503,4/4,0.5,0.00292434,0,loops/Guiro 2....124bpm.wav
+true,0.900408,480,120,4/4,1,0,2,loops/Guitar loops 001 with drums short loop 120 bpm.wav
+true,0.970012,480,120,4/4,1,1.02232e-06,1,loops/Guitar loops 003 with drums short loop 120 bpm.wav
+true,1,487.08,121.77,4/4,1,-0.00272306,1,loops/Industrial house loop (1) 122 bpm
+true,0.917528,280.001,140,4/4,0.5,3.75702e-06,0,loops/Lofi Drum Loop 70 BPM.wav
+true,0.760347,239.203,119.601,4/4,1,-0.00479895,1,loops/MellifluousAnonymous 120bpm Loop YouAreEvil.mp3
+true,0.948199,240,120,4/4,1,0,1,loops/Piano loops 006 octave short loop 120 bpm.wav
+true,0.741519,240,120,4/4,1,0,2,loops/Piano loops 020 octave down short loop 120 bpm.wav
+true,0.974325,400,100,4/4,1,0,0,loops/Random Reggaeton 100 BPM Drum Loop
+true,0.906646,360,90,4/4,1,-7.66738e-07,0,loops/Rap beat 001 simple mix 03 short loop 90 bpm.wav
+true,0.6813,119.791,119.791,4/4,1,-0.00252088,3,loops/Rock Pattern Key of E 120 BPM C.wav
+true,0.870426,511.44,127.86,4/4,1,-0.00157741,0,loops/Sample 128 Bpm
+true,0.697211,106.875,213.75,4/4,0.5,0.169925,1,loops/Simple Lofi Vinyl E-Piano Loop 95 BPM.wav
+true,0.694479,180,90,4/4,1,0,0,loops/Spacey Lofi Loop 90 BPM.wav
+true,0.777064,320,80,4/4,1,0,1,loops/Spacey Lofi Melody Loop 80 BPM.wav
+true,0.845934,677.558,112.926,4/4,1,-0.000939783,0,loops/SynTomBeat_113bpm
+true,0.914352,419.999,105,4/4,1,-3.57811e-06,0,loops/Tambourine_Loop_105bpm.wav
+true,0.638851,365.001,182.5,4/4,0.333333,-0.263031,1,loops/Vinyl Keyboard Loop 73 BPM.wav
+true,0.962131,240,120,4/4,1,0,1,loops/Voice loop 001 only guitar synth simple mix 120 bpm.wav
+true,0.849359,480,120,4/4,1,0,0,loops/Voice loop 001 simple mix 1 120 bpm.wav
+true,0.980643,480.12,120.03,4/4,1,0.000360719,0,loops/[Drumbeats (Melodic)] 120 bpm house loop
+true,0.933552,480,120,4/4,1,0,3,loops/[Drumbeats (Melodic)] 120 bpm ravish loop
+true,0.928914,220.005,110.002,4/4,1,3.27145e-05,1,loops/[Drumloop] 110 BPM Drums 001
+true,0.971985,476.001,119,4/4,1,2.86249e-06,1,loops/[Drumloop] 119 bpm edm drum loop 001
+true,0.997067,240.03,120.015,4/4,1,0.000179939,7,loops/[Drumloop] 120 bpm edm drum loop 010
+true,0.947332,480,120,4/4,1,0,0,loops/[Drumloop] 120 bpm edm drum loop 033
+true,0.974603,480,120,4/4,1,0,2,loops/[Drumloop] 120 bpm edm perc loop 017
+true,0.999413,519.999,130,4/4,1,-2.04463e-06,1,loops/[Drumloop] 130 bpm edm drum loop 001
+true,0.982432,128.125,128.125,4/4,1,0.00140958,1,loops/[SFX] 128 bpm house lead fx
+true,0.719398,360,90,4/4,1,0,0,loops/backside of the moon Elec git loop 1 90bpm.WAV
+true,0.896658,559.956,139.989,4/4,1,-0.00011211,0,loops/compelectro_140bpm
+true,0.99723,270,135,4/4,1,0,0,loops/drum loop 135bpm
+true,0.96677,560,140,4/4,1,0,0,loops/dubstep_drumloop_amped_glitch_140BPM
+true,0.91339,480,120,4/4,1,0,2,loops/funky breakbeat loop - 1 bar - 120 bpm
+true,0.545272,112.5,225,4/4,1,0.169925,1,loops/glitch_stutter_loop_200BPM
+true,0.953838,564.001,94.0002,4/4,1,3.13511e-06,0,loops/loop_94bpm_2bars.wav
+true,0.715913,465.609,116.402,4/4,1,-0.0439142,2,loops/pearly blips 120bpm.wav
+false,0.560098,446.816,148.939,4/4,0,0,2,non-loops/50 Caliber MG.flac
+false,0.64177,185.323,61.7744,4/4,0,0,0,non-loops/7-11-14 Wind Chimes.mp3
+false,0.59232,101.367,101.367,4/4,0,0,1,non-loops/Air_PowerTool.wav
+false,0.598484,584.445,97.4074,3/4,0,0,0,non-loops/BangingOilTank.wav
+false,0.55054,531.042,132.76,4/4,0,0,1,non-loops/Bathroom Extractor Fan, A.wav
+false,0.585986,131.78,131.78,4/4,0,0,0,non-loops/Big Cinematic Spinning Sound.wav
+false,0.366096,480,240,2/2,0,0,2,non-loops/Bow Loading
+false,0.558974,327.464,163.732,3/4,0,0,0,non-loops/Breaking Bones
+false,0.627518,364.798,182.399,3/4,0,0,0,non-loops/Cat 1
+false,0.788209,171.329,171.329,3/4,0,0,0,non-loops/Crash
+false,0,0,0,none,0,0,0,non-loops/Cup set Down
+false,0.546273,229.86,76.6199,4/4,0,0,0,non-loops/Dark_Emptiness_003
+false,0.551229,617.765,154.441,4/4,0,0,2,non-loops/Drone_BowedCybmal.wav
+false,0.865518,111.797,111.797,3/4,0,0,0,non-loops/Exploding lightbulb 1
+false,0.90173,179.588,89.7939,4/4,0,0,0,non-loops/Fairy Tale Synth Bells
+false,0.619888,480.203,120.051,4/4,0,0,2,non-loops/Footsteps_MountainBoots_Gravel_Mono.wav
+false,0,0,0,none,0,0,0,non-loops/Footsteps_Water_Light_006.wav
+false,0.648798,508.545,127.136,4/4,0,0,1,non-loops/G38-15-Perfect Horse Whinny.wav
+false,0.704209,698.182,174.545,4/4,0,0,3,non-loops/Game Pickup
+false,0.631619,239.646,79.882,4/4,0,0,3,non-loops/Glass_ Putting down 1
+false,0.658271,160,80,4/4,0,0,1,non-loops/Healing Spell
+false,0.642019,451.468,112.867,4/4,0,0,1,non-loops/Heatpress squeaking and creaking.wav
+false,0,0,0,none,0,0,0,non-loops/Interface3.wav
+false,0.63742,349.138,174.569,3/4,0,0,4,non-loops/Jetski.wav
+false,0,0,0,none,0,0,0,non-loops/Left Gravel Footstep 2
+false,0.706364,320.14,106.713,4/4,0,0,2,non-loops/Location Crows NR.WAV
+false,0.722274,583.291,145.823,4/4,0,0,0,non-loops/Magic Fire Impact
+false,0.823445,377.224,125.741,3/4,0,0,2,non-loops/Magic Sound.wav
+false,0.934543,397.488,198.744,3/4,0,0,0,non-loops/Magic.mp3
+false,0.574034,407.292,101.823,4/4,0,0,0,non-loops/Metal Squeak Door
+false,0.710042,452.811,150.937,3/4,0,0,0,non-loops/Monster Tripod horn.wav
+false,0,0,0,none,0,0,0,non-loops/OpenBag.wav
+false,0.709426,600,100,3/4,0,0,3,non-loops/Orchestra Lurking Cue
+false,0.684817,613.636,204.545,4/4,0,0,0,non-loops/Paper drawn with rustle
+false,0,0,0,none,0,0,0,non-loops/Pickup.wav
+false,0,0,0,none,0,0,0,non-loops/Ping pong ball hit
+false,0,0,0,none,0,0,0,non-loops/Pound of Flesh 2
+false,0.644858,683.996,113.999,3/4,0,0,2,non-loops/Prison Cell Door sound effect.mp3
+false,0.815188,496.812,165.604,3/4,0,0,0,non-loops/Rock Splash
+false,0.655418,414.158,207.079,4/4,0,0,0,non-loops/Rock_Movement_Friction_01.wav
+false,0.646962,142.758,142.758,4/4,0,0,6,non-loops/Rock_Movement_Friction_02.wav
+false,0.658582,112.347,112.347,4/4,0,0,3,non-loops/Rustling Paper
+false,0.681521,449.122,224.561,4/4,0,0,2,non-loops/Screechy Toaster Oven
+false,0.698567,324.297,108.099,3/4,0,0,0,non-loops/Success.wav
+false,0.588024,338.899,112.966,4/4,0,0,0,non-loops/Thunder Clap And Rumble #2
+false,0.617572,160.522,160.522,4/4,0,0,0,non-loops/Treadmill
+false,0.598969,289.826,144.913,3/4,0,0,0,non-loops/Tribal
+false,0.549435,191.981,95.9906,4/4,0,0,0,non-loops/TunnelDrone.wav
+false,0.582287,176.226,176.226,3/4,0,0,0,non-loops/Wind Chime.wav
+false,0.558293,184.57,92.2852,4/4,0,0,0,non-loops/Winding Toy 2.wav
+false,0.629398,456.942,152.314,3/4,0,0,1,non-loops/Wood Creak Single V3
+false,0.556815,415.815,138.605,3/4,0,0,1,non-loops/Wood Creak.wav
+false,0,0,0,none,0,0,0,non-loops/Wood Snare (Sample 3).wav
+false,0.574523,184.426,92.2131,4/4,0,0,2,non-loops/Wood_Creak_ 01
+false,0.6594,665.24,110.873,3/4,0,0,4,non-loops/Zombie Pack(Clean Record)
+false,0.563807,296.646,98.8822,4/4,0,0,0,non-loops/bottle blow processed
+false,0,0,0,none,0,0,0,non-loops/chair hydraulic.wav
+false,0.632704,416.964,104.241,4/4,0,0,4,non-loops/cough.wav
+false,0,0,0,none,0,0,0,non-loops/fairy-twinklemp3
+false,0.614323,519.82,173.273,3/4,0,0,2,non-loops/fire ambience, flames, crackles, pops, burning
+false,0.594425,398.841,132.947,4/4,0,0,1,non-loops/flute2 katarina rose.wav
+false,0.65072,380.996,190.498,4/4,0,0,3,non-loops/fly.aif
+false,0,0,0,none,0,0,0,non-loops/infobleep.wav
+false,0.58639,614.352,102.392,3/4,0,0,0,non-loops/moving plant
+false,0.554342,260.591,86.8635,4/4,0,0,0,non-loops/portal 40 sec
+false,0,0,0,none,0,0,0,non-loops/single firework.wav
+false,0.576729,213.831,106.916,4/4,0,0,2,non-loops/stone_on_stone_ST.wav
+false,0,0,0,none,0,0,0,non-loops/tone beep lower slower.wav
+false,0.673711,120.205,240.411,4/4,0,0,1,non-loops/vintage camera flash bulb pops sound design.wav
+false,0.69592,698.182,174.545,4/4,0,0,0,non-loops/win.wav

@@ -58,8 +58,7 @@ std::unique_ptr<ClientData::Cloneable<>> MuteAndSolo::Clone() const {
 }
 
 MuteAndSolo &MuteAndSolo::Get(PlayableTrack &track) {
-   return track.GetGroupData().Attachments
-      ::Get<MuteAndSolo>(muteAndSoloFactory);
+   return track.Attachments::Get<MuteAndSolo>(muteAndSoloFactory);
 }
 
 const MuteAndSolo &MuteAndSolo::Get(const PlayableTrack &track)
@@ -189,9 +188,9 @@ EnumSetting<SoloBehavior> TracksBehaviorsSolo{
    wxT("/GUI/Solo"),
    {
       ByColumns,
-      { XO("Multi-track"), XO("Simple"),  XO("None") },
-      { wxT("Multi"),     wxT("Simple"), wxT("None") }
+      { XO("Multi-track"), XO("Simple")},
+      { wxT("Multi"),     wxT("Simple")}
    },
-   0, // "Simple"
-   { SoloBehaviorMulti, SoloBehaviorSimple, SoloBehaviorNone },
+   0, // "Multi-track"
+   { SoloBehaviorMulti, SoloBehaviorSimple },
 };

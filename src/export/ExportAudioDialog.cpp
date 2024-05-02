@@ -14,6 +14,8 @@
 
 #include <numeric>
 
+#include <wx/frame.h>
+
 #include "Export.h"
 #include "ExportUtils.h"
 #include "WaveTrack.h"
@@ -34,6 +36,7 @@
 
 #include "ShuttleGui.h"
 #include "AudacityMessageBox.h"
+#include "ProjectWindows.h"
 #include "Theme.h"
 #include "HelpSystem.h"
 #include "TagsEditor.h"
@@ -48,6 +51,17 @@
 
 namespace
 {
+const bool hookRegistered = [] {
+   ExportUtils::RegisterExportHook(
+      [](AudacityProject& project, const FileExtension& format)
+      {
+         ExportAudioDialog dialog { &GetProjectFrame(project), project,
+                                    project.GetProjectName(), format };
+         dialog.ShowModal();
+         return ExportUtils::ExportHookResult::Handled;
+      });
+   return true;
+}();
 
 ChoiceSetting ExportAudioExportRange { L"/ExportAudioDialog/ExportRange",
    {
@@ -231,6 +245,7 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
 
    Layout();
    Fit();
+   Center();
 }
 
 ExportAudioDialog::~ExportAudioDialog() = default;
@@ -465,11 +480,13 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       return;
    auto selectedFormat = mExportOptionsPanel->GetFormat();
    auto parameters = mExportOptionsPanel->GetParameters();
+   if(!parameters.has_value())
+      return;
 
    const auto path = mExportOptionsPanel->GetPath();
 
    if(!wxDirExists(path))
-      wxMkdir(path);
+      wxFileName::Mkdir(path, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
    
    if(!wxDirExists(path))
    {
@@ -489,9 +506,9 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       UpdateExportSettings();
 
       if(mSplitByLabels->GetValue())
-         result = DoExportSplitByLabels(*selectedPlugin, selectedFormat, parameters, exportedFiles);
+         result = DoExportSplitByLabels(*selectedPlugin, selectedFormat, *parameters, exportedFiles);
       else if(mSplitByTracks->GetValue())
-         result = DoExportSplitByTracks(*selectedPlugin, selectedFormat, parameters, exportedFiles);
+         result = DoExportSplitByTracks(*selectedPlugin, selectedFormat, *parameters, exportedFiles);
       
       auto msg = (result == ExportResult::Success
          ? XO("Successfully exported the following %lld file(s).")
@@ -535,7 +552,7 @@ void ExportAudioDialog::OnExport(wxCommandEvent &event)
       ExportTaskBuilder builder;
       builder.SetFileName(filename)
          .SetPlugin(selectedPlugin, selectedFormat)
-         .SetParameters(parameters)
+         .SetParameters(*parameters)
          .SetSampleRate(mExportOptionsPanel->GetSampleRate());
       
       const auto& viewInfo = ViewInfo::Get(mProject);
@@ -659,26 +676,6 @@ void ExportAudioDialog::UpdateExportSettings()
    }
 }
 
-namespace {
-
-unsigned GetNumExportChannels( const TrackList &tracks )
-{
-   bool anySolo =
-      !((tracks.Any<const WaveTrack>() + &WaveTrack::GetSolo).empty());
-
-   // Want only unmuted wave tracks.
-   const auto range = tracks.Any<const WaveTrack>() -
-      (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
-   return std::all_of(range.begin(), range.end(),
-      [](auto *pTrack){ return IsMono(*pTrack); }
-   )
-      ? 1
-      : 2;
-}
-
-}
-
-
 void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, int formatIndex, bool byName, bool addNumber, const wxString& prefix)
 {
    const auto& tracks = TrackList::Get(mProject);
@@ -702,7 +699,7 @@ void ExportAudioDialog::UpdateLabelExportSettings(const ExportPlugin& plugin, in
    // don't duplicate them
    ExportSetting setting;   // the current batch of settings
    setting.filename.SetPath(mExportOptionsPanel->GetPath());
-   setting.channels = GetNumExportChannels(tracks);
+   setting.channels = mExportOptionsPanel->GetChannels();
    setting.filename.SetFullName(mExportOptionsPanel->GetFullName());
    
    wxString name;    // used to hold file name whilst we mess with it
@@ -816,9 +813,7 @@ void ExportAudioDialog::UpdateTrackExportSettings(const ExportPlugin& plugin, in
       setting.t0 = skipSilenceAtBeginning ? tr->GetStartTime() : 0;
       setting.t1 = tr->GetEndTime();
 
-      // number of export channels?
-      // It's 1 only for a center-panned mono track
-      setting.channels = (IsMono(*tr) && tr->GetPan() == 0.0) ? 1 : 2;
+      setting.channels = mExportOptionsPanel->GetChannels();
       // Get name and title
       title = tr->GetName();
       if( title.empty() )

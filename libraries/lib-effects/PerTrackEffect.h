@@ -95,7 +95,7 @@ private:
       const Factory &factory, EffectSettings &settings,
       AudioGraph::Source &source, AudioGraph::Sink &sink,
       std::optional<sampleCount> genLength,
-      double sampleRate, const SampleTrack &leader,
+      double sampleRate, const SampleTrack &wt,
       Buffers &inBuffers, Buffers &outBuffers);
 
    // TODO: put this in struct EffectContext? (Which doesn't exist yet)

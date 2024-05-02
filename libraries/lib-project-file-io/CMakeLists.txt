@@ -12,6 +12,8 @@ set( SOURCES
    ActiveProjects.h
    DBConnection.cpp
    DBConnection.h
+   ProjectFileIOExtension.cpp
+   ProjectFileIOExtension.h
    ProjectFileIO.cpp
    ProjectFileIO.h
    ProjectSerializer.cpp
@@ -34,7 +36,7 @@ list( APPEND LIBRARIES
 # Only this library needs sqlite, so make the dependency private
 list( APPEND LIBRARIES
    PRIVATE
-      sqlite
+      lib-sqlite-helpers-interface
 )
 
 audacity_library( lib-project-file-io "${SOURCES}" "${LIBRARIES}"

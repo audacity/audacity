@@ -26,8 +26,6 @@ public:
    //! Width and height in pixels of proper viewport area (excluding scrollbars)
    virtual std::pair<int, int> ViewportSize() const = 0;
 
-   virtual bool MayScrollBeyondZero() const = 0;
-
    virtual unsigned MinimumTrackHeight() = 0;
    virtual bool IsTrackMinimized(const Track &track) = 0;
    virtual void SetMinimized(Track &track, bool minimized) = 0;
@@ -149,9 +147,6 @@ public:
    //! visible
    void ZoomFitHorizontallyAndShowTrack(Track *pTrack);
 
-   /*!
-    @pre `track.IsLeader()`
-    */
    void ShowTrack(const Track &track);
 
    //! Find pixels-per-second that would fit all tracks on the timeline

@@ -251,7 +251,7 @@ bool EffectTruncSilence::ProcessIndependently()
       for (auto track : inputTracks()->Selected<const WaveTrack>()) {
          if (syncLock) {
             auto otherTracks =
-               SyncLock::Group(track).Filter<const WaveTrack>()
+               SyncLock::Group(*track).Filter<const WaveTrack>()
                   + &Track::IsSelected
                   - [&](const Track *pTrack){ return pTrack == track; };
             if (otherTracks) {
@@ -288,7 +288,7 @@ bool EffectTruncSilence::ProcessIndependently()
          // Treat tracks in the sync lock group only
          Track *groupFirst, *groupLast;
          auto range = syncLock
-            ? SyncLock::Group(track)
+            ? SyncLock::Group(*track)
             : TrackList::SingletonRange<Track>(track);
          double totalCutLen = 0.0;
          if (!DoRemoval(silences, range, iGroup, nGroups, totalCutLen))
@@ -340,7 +340,6 @@ bool EffectTruncSilence::FindSilences(RegionList &silences,
    // Remove non-silent regions in each track
    int whichTrack = 0;
    for (auto wt : range) {
-      assert(wt->IsLeader());
       // Smallest silent region to detect in frames
       auto minSilenceFrames =
          sampleCount(std::max(mInitialAllowedSilence, DEF_MinTruncMs)
@@ -438,14 +437,13 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
       double cutStart = (r->start + r->end - cutLen) / 2;
       double cutEnd = cutStart + cutLen;
       (range
-         + &SyncLock::IsSelectedOrSyncLockSelected
+         + &SyncLock::IsSelectedOrSyncLockSelectedP
          - [&](const Track *pTrack) { return
            // Don't waste time past the end of a track
            pTrack->GetEndTime() < r->start;
          }
       ).VisitWhile(success,
          [&](WaveTrack &wt) {
-            assert(wt.IsLeader());
             // In WaveTracks, clear with a cross-fade
             auto blendFrames = mBlendFrameCount;
             // Round start/end times to frame boundaries
@@ -483,7 +481,6 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
                ++iChannel;
             }
 
-            assert(wt.IsLeader()); // given range visits leaders only
             wt.Clear(cutStart, cutEnd);
 
             iChannel = 0;
@@ -491,7 +488,7 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
                // Write cross-faded data
                auto &buffer = buffers[iChannel];
                success = success &&
-               pChannel->Set((samplePtr)buffer.buf1.get(), floatSample, t1,
+               pChannel->SetFloats(buffer.buf1.get(), t1,
                   blendFrames,
                   // This effect mostly shifts samples to remove silences, and
                   // does only a little bit of floating point calculations to
@@ -502,7 +499,6 @@ bool EffectTruncSilence::DoRemoval(const RegionList &silences,
             }
          },
          [&](Track &t) {
-            assert(t.IsLeader());
             // Non-wave tracks: just do a sync-lock adjust
             t.SyncLockAdjust(cutEnd, cutStart);
          }
@@ -520,7 +516,6 @@ bool EffectTruncSilence::Analyze(RegionList& silenceList,
    sampleCount* index, int whichTrack, double* inputLength,
    double* minInputLength) const
 {
-   assert(wt.IsLeader());
    const auto rate = wt.GetRate();
 
    // Smallest silent region to detect in frames

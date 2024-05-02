@@ -28,9 +28,11 @@ of sample block storage.
 #include <wx/valgen.h>
 #include <wx/valtext.h>
 
+#include "Project.h"
+#include "ProjectTimeSignature.h"
 #include "SampleBlock.h"
 #include "ShuttleGui.h"
-#include "Project.h"
+#include "TempoChange.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "Sequence.h"
@@ -367,8 +369,9 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       WaveTrackFactory{ mRate,
                     SampleBlockFactory::New( mProject )  }
          .Create(SampleFormat, mRate.GetRate());
-   const auto tmp0 = TrackList::Temporary(nullptr, t, nullptr);
-   assert(t->IsLeader()); // because it's new and not grouped
+   const auto tmp0 = TrackList::Temporary(nullptr, t);
+   const auto tempo = ProjectTimeSignature::Get(mProject).GetTempo();
+   DoProjectTempoChange(*t, tempo);
 
    t->SetRate(1);
 
@@ -415,7 +418,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
       for (uint64_t b = 0; b < chunkSize; b++)
          block[b] = v;
 
-      t->Append((samplePtr)block.get(), SampleFormat, chunkSize);
+      t->Append(0, (samplePtr)block.get(), SampleFormat, chunkSize);
    }
    t->Flush();
 
@@ -424,11 +427,11 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    // as we're about to do).
    t->GetEndTime();
 
-   if (t->GetClipByIndex(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
+   if (t->GetClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
       Printf( XO("Expected len %lld, track len %lld.\n")
          .Format(
             nChunks * chunkSize,
-            t->GetClipByIndex(0)->GetVisibleSampleCount()
+            t->GetClip(0)->GetVisibleSampleCount()
                .as_long_long() ) );
       goto fail;
    }
@@ -450,7 +453,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Cut: %lld - %lld \n")
             .Format( x0 * chunkSize, (x0 + xlen) * chunkSize) );
 
-      TrackListHolder tmp;
+      Track::Holder tmp;
       try {
          tmp =
             t->Cut(double (x0 * chunkSize), double ((x0 + xlen) * chunkSize));
@@ -462,7 +465,7 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetClipByIndex(0)->GetVisibleSampleCount()
+               t->GetClip(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }
@@ -482,12 +485,12 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
          goto fail;
       }
 
-      if (t->GetClipByIndex(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
+      if (t->GetClip(0)->GetVisibleSampleCount() != nChunks * chunkSize) {
          Printf( XO("Trial %d\n").Format( z ) );
          Printf( XO("Expected len %lld, track len %lld.\n")
             .Format(
                nChunks * chunkSize,
-               t->GetClipByIndex(0)->GetVisibleSampleCount()
+               t->GetClip(0)->GetVisibleSampleCount()
                   .as_long_long() ) );
          goto fail;
       }
@@ -502,7 +505,8 @@ void BenchmarkDialog::OnRun( wxCommandEvent & WXUNUSED(event))
    elapsed = timer.Time();
 
    if (mBlockDetail) {
-      auto seq = t->GetClipByIndex(0)->GetSequence(0);
+      // One remaining old direct use of narrow clips, only for debugging
+      auto seq = t->GetClip(0)->GetSequence(0);
       seq->DebugPrintf(seq->GetBlockArray(), seq->GetNumSamples(), &tempStr);
       mToPrint += tempStr;
    }

@@ -97,14 +97,15 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](auto &&fallthrough){ return [&](LabelTrack &lt) {
          if ( !(lt.GetSelected() ||
-                (mustSync && SyncLock::IsSyncLockSelected(&lt))) )
+                (mustSync && SyncLock::IsSyncLockSelected(lt))) )
             return fallthrough();
          if (!ProcessLabelTrack(&lt, warper))
             bGoodResult = false;
       }; },
 #ifdef USE_MIDI
       [&](auto &&fallthrough){ return [&](NoteTrack &nt) {
-         if ( !(nt.GetSelected() || (mustSync && SyncLock::IsSyncLockSelected(&nt))) )
+         if (!(nt.GetSelected() ||
+               (mustSync && SyncLock::IsSyncLockSelected(nt))))
             return fallthrough();
          if (!ProcessNoteTrack(&nt, warper))
             bGoodResult = false;
@@ -120,8 +121,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
             const auto start = orig.TimeToLongSamples(mT0);
             const auto end = orig.TimeToLongSamples(mT1);
 
-            const auto tempList = orig.WideEmptyCopy();
-            auto &out = **tempList->Any<WaveTrack>().begin();
+            const auto tempTrack = orig.EmptyCopy();
+            auto &out = *tempTrack;
 
             const auto pSoundTouch = std::make_unique<soundtouch::SoundTouch>();
             initer(pSoundTouch.get());
@@ -143,8 +144,8 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
                pSoundTouch->setChannels(1);
 
                //ProcessOne() (implemented below) processes a single track
-               if (!ProcessOne(
-                  pSoundTouch.get(), orig, out, start, end, warper))
+               if (!ProcessOne(pSoundTouch.get(), **channels.begin(),
+                     out, start, end, warper))
                   bGoodResult = false;
             }
             // pSoundTouch is destroyed here
@@ -152,9 +153,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
          mCurTrackNum++;
       }; },
       [&](Track &t) {
-         // Outer loop is over leaders, so fall-through must check for
-         // multiple channels
-         if (mustSync && SyncLock::IsSyncLockSelected(&t))
+         if (mustSync && SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, warper.Warp(mT1));
       }
    );
@@ -168,10 +167,14 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
 bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
-   WaveTrack &orig, WaveTrack &out,
+   WaveChannel &orig, WaveTrack &out,
    sampleCount start, sampleCount end,
    const TimeWarper &warper)
 {
+   // ProcessStereo handles the stereo case instead.  This is a precondition
+   // for Append:
+   assert(out.NChannels() == 1);
+
    pSoundTouch->setSampleRate(
       static_cast<unsigned int>((orig.GetRate() + 0.5)));
 
@@ -204,7 +207,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
          if (outputCount > 0) {
             Floats buffer2{ outputCount };
             pSoundTouch->receiveSamples(buffer2.get(), outputCount);
-            out.Append((samplePtr)buffer2.get(), floatSample, outputCount);
+            out.Append(0, (samplePtr)buffer2.get(), floatSample, outputCount);
          }
 
          //Increment s one blockfull of samples
@@ -222,14 +225,14 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
       if (outputCount > 0) {
          Floats buffer2{ outputCount };
          pSoundTouch->receiveSamples(buffer2.get(), outputCount);
-         out.Append((samplePtr)buffer2.get(), floatSample, outputCount);
+         out.Append(0, (samplePtr)buffer2.get(), floatSample, outputCount);
       }
 
       out.Flush();
    }
 
    // Transfer output samples to the original
-   Finalize(orig, out, warper);
+   Finalize(orig.GetTrack(), out, warper);
 
    double newLength = out.GetEndTime();
    m_maxNewLength = std::max(m_maxNewLength, newLength);
@@ -368,8 +371,6 @@ bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
 void EffectSoundTouch::Finalize(
    WaveTrack &orig, WaveTrack &out, const TimeWarper &warper)
 {
-   assert(orig.IsLeader());
-   assert(out.IsLeader());
    assert(out.NChannels() == orig.NChannels());
    if (mPreserveLength) {
       auto newLen = out.GetVisibleSampleCount();
@@ -392,7 +393,7 @@ void EffectSoundTouch::Finalize(
    // these gaps are for later deletion
    std::vector<std::pair<double, double>> gaps;
    double last = mT0;
-   auto clips = orig.SortedClipArray();
+   auto clips = orig.SortedIntervalArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {

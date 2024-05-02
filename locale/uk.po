@@ -1,20 +1,17 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Yuri Chornoivan <yurchor@ukr.net>, 2023
 #
-#, fuzzy
+# Yuri Chornoivan <yurchor@ukr.net>, 2024.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.4.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2023-10-17 15:22+0300\n"
-"PO-Revision-Date: 2020-11-02 10:15+0000\n"
-"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>, 2023\n"
-"Language-Team: Ukrainian (https://app.transifex.com/klyok/teams/690/uk/)\n"
+"POT-Creation-Date: 2024-04-04 16:26+0300\n"
+"PO-Revision-Date: 2024-04-03 19:15+0300\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,41 +20,50 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Lokalize 23.04.1\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
 msgstr "Активовано потокове передавання… неможливо зібрати дані.\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default recording device number: %d\n"
 msgstr "Номер типового пристрою записування: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
 msgstr "Номер типового пристрою відтворення: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 msgid "No devices found\n"
 msgstr "Пристроїв не знайдено\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
 msgstr "Недоступні дані щодо пристрою: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device ID: %d\n"
 msgstr "Ідентифікатор пристрою: %d\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device name: %s\n"
 msgstr "Назва пристрою: %s\n"
 
-#: libraries/lib-audio-devices/AudioIOBase.cpp src/NoteTrack.cpp
+#: libraries/lib-audio-devices/AudioIOBase.cpp
+#: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Host name: %s\n"
 msgstr "Назва вузла: %s\n"
@@ -119,7 +125,8 @@ msgstr "Не знайдено пристрою відтворення для «%
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Неможливо перевірити взаємні частоти дискретизації без обох пристроїв.\n"
+msgstr ""
+"Неможливо перевірити взаємні частоти дискретизації без обох пристроїв.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -167,8 +174,8 @@ msgstr ""
 "Ви не зможете відтворювати та записувати звук.\n"
 "\n"
 
-#: libraries/lib-audio-io/AudioIO.cpp src/MIDIPlay.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Помилка: %s"
@@ -201,7 +208,6 @@ msgstr ""
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny
 msgid "Error"
 msgstr "Помилка"
 
@@ -220,7 +226,8 @@ msgstr ""
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr "Інструмент встановлення автоматичної гучності запису знизив гучність до %f."
+msgstr ""
+"Інструмент встановлення автоматичної гучності запису знизив гучність до %f."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid ""
@@ -373,8 +380,48 @@ msgstr "Повідомлення"
 msgid "Cannot proceed to upload."
 msgstr "Не вдалося перейти до вивантаження."
 
-#: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
-#: src/effects/nyquist/Nyquist.cpp src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#. i18n-hint: database operation has failed because the requested item was not found
+#: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File not found"
+msgstr "Файл не знайдено"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+msgid "Project was closed before snapshot was created"
+msgstr "Проєкт було закрито до завершення створення знімка"
+
+#: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
+#, c-format
+msgid "Invalid Response: %s"
+msgstr "Некоректна відповідь: %s"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+msgid "Export failed"
+msgstr "Не вдалося експортувати"
+
+#: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Export error"
+msgstr "Помилка експортування"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to attach to the Cloud project database"
+msgstr "Не вдалося долучити дані до бази даних проєктів у хмарі"
+
+#: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
+msgid "Failed to decompress the Cloud project block"
+msgstr "Не вдалося розпакувати блок проєкту у хмарі"
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Failed to deserialize the response"
+msgstr "Не вдалося перетворити відповідь у послідовну форму"
+
+#: libraries/lib-effects/Effect.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
+#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -407,7 +454,7 @@ msgstr "Застосовуємо %s…"
 msgid "Nyquist"
 msgstr "Найквіст"
 
-#: libraries/lib-effects/LoadEffects.cpp
+#: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
 msgstr "Вбудовані ефекти"
 
@@ -451,6 +498,55 @@ msgstr ""
 msgid "Internal Error"
 msgstr "Внутрішня помилка"
 
+#: libraries/lib-fft/FFT.cpp
+msgid "Rectangular"
+msgstr "Прямокутне"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Bartlett"
+msgstr "Бартлетт"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hamming"
+msgstr "Гаммінґ"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Hann"
+msgstr "Ганн"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman"
+msgstr "Блекмен"
+
+#. i18n-hint two proper names
+#: libraries/lib-fft/FFT.cpp
+msgid "Blackman-Harris"
+msgstr "Блекмен-Гарріс"
+
+#. i18n-hint a proper name
+#: libraries/lib-fft/FFT.cpp
+msgid "Welch"
+msgstr "Велч"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=2.5)"
+msgstr "Гаусіан(a=2,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=3.5)"
+msgstr "Гаусіан(a=3,5)"
+
+#. i18n-hint a mathematical function named for C. F. Gauss
+#: libraries/lib-fft/FFT.cpp
+msgid "Gaussian(a=4.5)"
+msgstr "Гаусіан(a=4,5)"
+
 #. i18n-hint: %s will be the error message from the libsndfile software library
 #: libraries/lib-file-formats/FileFormats.cpp
 #, c-format
@@ -475,7 +571,7 @@ msgstr ""
 "його на %s."
 
 #: libraries/lib-files/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
@@ -487,9 +583,8 @@ msgstr ""
 msgid "File Error"
 msgstr "Файлова помилка"
 
-#: libraries/lib-files/FileNames.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/nyquist-plug-in-installer.ny plug-ins/sample-data-export.ny
-#: plug-ins/sample-data-import.ny
+#: libraries/lib-files/FileNames.cpp plug-ins/nyquist-plug-in-installer.ny
+#: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 msgid "All files"
 msgstr "усі файли"
 
@@ -565,6 +660,7 @@ msgstr ""
 "Щоб отримати підказки щодо належних дисків, натисніть кнопку «Довідка»."
 
 #: libraries/lib-import-export/Export.cpp
+#: libraries/lib-import-export/ExportProgressUI.h
 #: libraries/lib-project-file-io/DBConnection.cpp
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
@@ -572,10 +668,9 @@ msgstr ""
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
 #: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
 #: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.h
-#: src/import/RawAudioGuess.cpp src/menus/FileMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
-#: src/widgets/Warning.cpp
+#: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
+#: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
 msgid "Warning"
 msgstr "Попередження"
 
@@ -588,22 +683,18 @@ msgstr ""
 "Не вдалося експортувати.\n"
 "Помилка %s"
 
+#: libraries/lib-import-export/ExportProgressUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "Export"
+msgstr "Експорт"
+
+#: libraries/lib-import-export/ExportProgressUI.cpp
+msgid "Export completed with error."
+msgstr "Спроба експортування завершилася помилкою."
+
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
 msgstr "всі файли, що підтримуються"
-
-#: libraries/lib-import-export/Import.cpp
-#, c-format
-msgid ""
-"\"%s\" \n"
-"is a MIDI file, not an audio file. \n"
-"Audacity cannot open this type of file for playing, but you can\n"
-"edit it by clicking File > Import > MIDI."
-msgstr ""
-"«%s» \n"
-"є нотним файлом MIDI, а не файлом аудіо. \n"
-"Audacity не може відкривати цей тип файлів для відтворення, але ви можете "
-"редагувати їх, якщо виберете пункт меню Файл > Імпорт > MIDI."
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -881,8 +972,7 @@ msgstr "Ефекти LV2"
 msgid "Provides LV2 Effects support to Audacity"
 msgstr "Надає підтримку ефектів LV2 у Audacity"
 
-#: libraries/lib-math/Dither.cpp libraries/lib-playable-track/PlayableTrack.cpp
-#: src/commands/ScreenshotCommand.cpp src/effects/EffectManager.cpp
+#: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
 #: plug-ins/sample-data-export.ny
 msgid "None"
@@ -900,55 +990,6 @@ msgstr "Трикутник"
 #: libraries/lib-math/Dither.cpp
 msgid "Shaped"
 msgstr "За формою"
-
-#: libraries/lib-math/FFT.cpp
-msgid "Rectangular"
-msgstr "Прямокутне"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Bartlett"
-msgstr "Бартлетт"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hamming"
-msgstr "Гаммінґ"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Hann"
-msgstr "Ганн"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman"
-msgstr "Блекмен"
-
-#. i18n-hint two proper names
-#: libraries/lib-math/FFT.cpp
-msgid "Blackman-Harris"
-msgstr "Блекмен-Гарріс"
-
-#. i18n-hint a proper name
-#: libraries/lib-math/FFT.cpp
-msgid "Welch"
-msgstr "Велч"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=2.5)"
-msgstr "Гаусіан(a=2,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=3.5)"
-msgstr "Гаусіан(a=3,5)"
-
-#. i18n-hint a mathematical function named for C. F. Gauss
-#: libraries/lib-math/FFT.cpp
-msgid "Gaussian(a=4.5)"
-msgstr "Гаусіан(a=4,5)"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
@@ -985,6 +1026,57 @@ msgstr "32-бітовий float"
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
 msgstr "Невідомий формат"
+
+#: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
+msgid "Command"
+msgstr "Команда"
+
+#. i18n-hint: %s will be the name of the effect which will be
+#. * repeated if this menu item is chosen
+#: libraries/lib-menus/CommandManager.cpp src/BatchProcessDialog.cpp
+#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
+#, c-format
+msgid "Repeat %s"
+msgstr "Повторити %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid ""
+"\n"
+"* %s, because you have assigned the shortcut %s to %s"
+msgstr ""
+"\n"
+"* %s, оскільки ви призначили клавіатурне скорочення %s для %s"
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid ""
+"There was a problem with your last action. If you think\n"
+"this is a bug, please tell us exactly where it occurred."
+msgstr ""
+"Під час виконання попередньої дії сталася помилка. Якщо ви вважаєте, що її\n"
+"причиною є вада у програмі, повідомте розробникам, де саме сталася помилка."
+
+#: libraries/lib-menus/CommandManager.cpp
+msgid "Disallowed"
+msgstr "Заборонено"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Undo %s"
+msgstr "В&ернути «%s»"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Undo"
+msgstr "В&ернути"
+
+#: libraries/lib-menus/CommandManager.cpp
+#, c-format
+msgid "&Redo %s"
+msgstr "Повт&орити «%s»"
+
+#: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
+msgid "&Redo"
+msgstr "Повт&орити"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
@@ -1124,6 +1216,74 @@ msgstr "Запит до Nyquist"
 #, c-format
 msgid "Failed to open the file for upload: %s"
 msgstr "Не вдалося відкрити файл для вивантаження: %s"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "There was an error initializing the midi i/o layer.\n"
+msgstr "Під час спроби ініціалізації шару вводу-виводу midi сталася помилка.\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid ""
+"You will not be able to play midi.\n"
+"\n"
+msgstr ""
+"Ви не зможете відтворювати midi.\n"
+"\n"
+
+#: libraries/lib-note-track/MIDIPlay.cpp
+msgid "Error Initializing Midi"
+msgstr "Помилка при ініціалізації MIDI"
+
+#. i18n-hint: This is for screen reader software and indicates that
+#. this is a Note track.
+#: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
+msgid "Note Track"
+msgstr "Доріжка приміток"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Seconds"
+msgstr "с&екундах"
+
+#. i18n-hint: The music theory "beat"
+#: libraries/lib-note-track/NoteTrack.cpp
+msgid "&Beats"
+msgstr "&тактах"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports output: %d\n"
+msgstr "Підтримує вихід: %d\n"
+
+#. i18n-hint: Supported, meaning made available by the system
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Supports input: %d\n"
+msgstr "Підтримує вхід: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Opened: %d\n"
+msgstr "Відкрито: %d\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI recording device: %d - %s\n"
+msgstr "Вибраний пристрій записування MIDI: %d – %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI recording device found for '%s'.\n"
+msgstr "Не знайдено пристрою записування MIDI для «%s».\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "Selected MIDI playback device: %d - %s\n"
+msgstr "Вибраний пристрій відтворення MIDI: %d – %s\n"
+
+#: libraries/lib-note-track/NoteTrack.cpp
+#, c-format
+msgid "No MIDI playback device found for '%s'.\n"
+msgstr "Не знайдено пристрою відтворення MIDI для «%s».\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -1553,7 +1713,8 @@ msgstr "Не вдалося встановити безпечний режим �
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "Failed to set safe mode on checkpoint connection to %s"
-msgstr "Не вдалося встановити безпечний режим при з'єднанні контрольної точки із %s"
+msgstr ""
+"Не вдалося встановити безпечний режим при з'єднанні контрольної точки із %s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 msgid "Checkpointing project"
@@ -2132,6 +2293,141 @@ msgstr "Мілісекунди"
 msgid "Samples"
 msgstr "семпли"
 
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "SQLite3 error"
+msgstr "Помилка SQLite3"
+
+#. i18n-hint: database operation was successful
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "No error"
+msgstr "Без помилок"
+
+#. i18n-hint: database operation has failed, but there is no specific reason
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Generic error"
+msgstr "Загальна помилка"
+
+#. i18n-hint: database operation has failed due to the internal error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Internal logic error in SQLite"
+msgstr "Помилка внутрішньої логіки у SQLite"
+
+#. i18n-hint: database operation has failed due to the permission error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Access permission denied"
+msgstr "Заборонено доступ за правами"
+
+#. i18n-hint: database operation was aborted by the callback
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Callback routine requested an abort"
+msgstr "Підпрограма зворотного виклику надіслала запит щодо переривання"
+
+#. i18n-hint: database operation has failed because database is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database file is locked"
+msgstr "Файл бази даних заблоковано"
+
+#. i18n-hint: database operation has failed because table is locked
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A table in the database is locked"
+msgstr "Таблицю у базі даних заблоковано"
+
+#. i18n-hint: database operation has failed due to the lack of memory
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "A malloc() failed"
+msgstr "Помилка malloc()"
+
+#. i18n-hint: database operation has failed because database is read-only
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Attempt to write a read-only database"
+msgstr "Спроба запису до придатної лише для читання бази даних"
+
+#. i18n-hint: database operation was interrupted
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Operation terminated"
+msgstr "Дію перервано"
+
+#. i18n-hint: database operation has failed due to the I/O failure
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "I/O error occurred"
+msgstr "Сталася помилка введення-виведення"
+
+#. i18n-hint: database operation has failed due to the database corruption
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database disk image is malformed"
+msgstr "Помилкове форматування образу диска бази даних"
+
+#. i18n-hint: database operation has failed because the drive is full
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Insertion failed because the drive is full"
+msgstr "Не вдалося вставити через переповнення диска"
+
+#. i18n-hint: database operation has failed because the file cannot be opened
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Unable to open the database file"
+msgstr "Не вдалося відкрити файл бази даних"
+
+#. i18n-hint: database operation has failed because the lock protocol has failed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Database lock protocol error"
+msgstr "Помилка протоколу блокування бази даних"
+
+#. i18n-hint: database operation has failed because the database schema has changed
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The database schema changed"
+msgstr "Змінено схему бази даних"
+
+#. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "String or BLOB exceeds size limit"
+msgstr "Перевищення обмеження на розмір рядка або двійкового об'єкта"
+
+#. i18n-hint: database operation has failed due to the constraint violation
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Abort due to constraint violation"
+msgstr "Переривання роботи через перевищення обмежень"
+
+#. i18n-hint: database operation has failed due to the data type mismatch
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Data type mismatch"
+msgstr "Невідповідність типів даних"
+
+#. i18n-hint: database operation has failed due to the library misuse
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Library used incorrectly"
+msgstr "Неправильне використання бібліотеки"
+
+#. i18n-hint: database operation has failed because the large file support is disabled
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "The large file support is disabled"
+msgstr "Підтримку великих файлів вимкнено"
+
+#. i18n-hint: database operation has failed due to the authorization error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Authorization denied"
+msgstr "Відмовлено в уповноваженні"
+
+#. i18n-hint: database operation has failed due to the format error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "Not used"
+msgstr "Не використано"
+
+#. i18n-hint: database operation has failed because the parameter is out of range
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "2nd parameter to sqlite3_bind out of range"
+msgstr "Перевищення припустимого діапазону у другому параметрі sqlite3_bind"
+
+#. i18n-hint: database operation has failed because the file opened is not a database file
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+msgid "File opened that is not a database file "
+msgstr "Відкрито файл, який не є файлом бази даних"
+
+#. i18n-hint: database operation has failed due to the unknown error
+#: libraries/lib-sqlite-helpers/sqlite/Error.cpp
+#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+msgid "Unknown error"
+msgstr "Невідома помилка"
+
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
 msgstr "Вирізати/Копіювати/Вставити"
@@ -2515,8 +2811,8 @@ msgid "Pre-processing"
 msgstr "Попередня обробка"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.h
-msgid "Rendering Time-Stretched Audio"
-msgstr "Обробка звуку із розтягнутою часовою шкалою"
+msgid "Rendering Clip"
+msgstr "Обробляємо кліп"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2551,7 +2847,6 @@ msgid "Problem details"
 msgstr "Подробиці проблеми"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
-#: src/prefs/MousePrefs.cpp
 msgid "Comments"
 msgstr "Коментарі"
 
@@ -2585,7 +2880,7 @@ msgstr ">"
 
 #. i18n-hint verb
 #: libraries/lib-wx-init/HelpSystem.cpp src/Benchmark.cpp
-#: src/RealtimeEffectPanel.cpp src/tracks/ui/TrackButtonHandles.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Close"
 msgstr "Закрити"
 
@@ -2687,17 +2982,6 @@ msgstr ""
 #: libraries/lib-wx-init/HelpText.cpp
 msgid ""
 "The Manual does not appear to be installed. Please [[*URL*|view the Manual "
-"online]].<br><br>To always view the Manual online, change \"Location of "
-"Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
-"У вашій системі не встановлено дані до каталогу «help». Будь ласка, [[*URL*|"
-"ознайомтеся з підручником у інтернеті]].<br><br>Щоб завжди звертатися до "
-"підручника у інтернеті, змініть «Розташування підручника» у налаштуваннях "
-"інтерфейсу на «У інтернеті»."
-
-#: libraries/lib-wx-init/HelpText.cpp
-msgid ""
-"The Manual does not appear to be installed. Please [[*URL*|view the Manual "
 "online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| "
 "download the Manual]].<br><br>To always view the Manual online, change "
 "\"Location of Manual\" in Interface Preferences to \"From Internet\"."
@@ -2741,18 +3025,24 @@ msgid "Show Log for Details"
 msgstr "Показувати журнал повідомлень"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
-#: libraries/lib-wx-init/MultiDialog.cpp src/AboutDialog.cpp
-#: src/Dependencies.cpp src/SplashDialog.cpp src/effects/nyquist/Nyquist.cpp
+#: libraries/lib-wx-init/MultiDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Гаразд"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/PluginStartupRegistration.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Час, що минув:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Час, що залишився:"
 
@@ -2761,7 +3051,13 @@ msgstr "Час, що залишився:"
 msgid "Stop"
 msgstr "Зупинити"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp src/AudioPasteDialog.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "Скасувати"
 
@@ -2799,6 +3095,10 @@ msgstr ""
 #: libraries/lib-wx-init/SelectFile.cpp
 msgid "Specify New Filename:"
 msgstr "Вкажіть нову назву файла:"
+
+#: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
+msgid "Don't ask me again"
+msgstr "Більше не питати"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -3103,13 +3403,764 @@ msgid "Command Output"
 msgstr "Виведення команди"
 
 #: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&Гаразд"
 
-#: modules/mod-cl/ExportCL.cpp
-msgid "You've specified a file name without an extension. Are you sure?"
-msgstr "Вами вказано назву файла без суфікса. Ви справді цього хочете?"
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "Waiting for audio.com"
+msgstr "Очікуємо на audio.com"
+
+#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid ""
+"An action on audio.com is required before you can continue. You can cancel "
+"this operation."
+msgstr ""
+"Перш, ніж продовжувати, потрібна дія на audio.com. Ви можете скасувати цю "
+"дію."
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr "Зберегти на audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+msgid "Generating audio preview..."
+msgstr "Створюємо дані попереднього прослуховування..."
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Відкрити з audio.com"
+
+#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+msgid "Synchronizing project"
+msgstr "Синхронізуємо проєкт"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+"Дані попереднього прослуховування може бути оновлено лише для хмарних "
+"проєктів"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Save &To Cloud..."
+msgstr "Зберегти до хмари..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr "Оновити дані попереднього прослуховування у хмарі"
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Open Fro&m Cloud..."
+msgstr "Відкрити з хмари..."
+
+#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "S&hare Audio..."
+msgstr "Оприлюднити аудіо…"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr "Хмара"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Account"
+msgstr "Обліковий запис"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Export behavior"
+msgstr "Поведінка при експортуванні"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Show 'How would you like to export?' dialog"
+msgstr "Показувати вікно «У який спосіб хочете експортувати?»"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Save behavior"
+msgstr "Поведінка при збереженні"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/ModulePrefs.cpp
+msgid "Always ask"
+msgstr "Завжди питати"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to cloud"
+msgstr "Завжди зберігати до хмари"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always save to the computer"
+msgstr "Завжди зберігати на комп'ютері"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Temporary Cloud files directory"
+msgstr "Каталог тимчасових файлів хмари"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "&Адреса:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Brow&se..."
+msgstr "Ви&брати…"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Remove temporary files after:"
+msgstr "Період до вилучення тимчасових файлів:"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr "днів"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Preferences for Cloud"
+msgstr "Налаштування для хмари"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Виберіть розташування каталогу тимчасових файлів"
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
+
+#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "Не вдалося встановити налаштування."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+msgid "Failed."
+msgstr "Помилка."
+
+#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr "Синхронізація з audio.com... (%d%%)"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid ""
+"Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+"Проєкт синхронізується із audio.com. Хочете припинити процедуру "
+"синхронізації?"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr "Очікуємо на вивільнення місця"
+
+#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+"Щойно буде отримано місце для зберігання на audio.com, натисніть кнопку "
+"«Повторити»"
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "Оприлюднити аудіо"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "Панель &оприлюднення звукових даних"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr "Обліковий запис не пов'язано"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "Пр&ив'язати обліковий запис"
+
+#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "В&ідв'язати обліковий запис"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Don't show this again"
+msgstr "Більше не показувати"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr "У який спосіб хочете зберегти?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to the Cloud"
+msgstr "Зберегти до хмари"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Your project is backed up privately on audio.com. You can access your work "
+"from any device and collaborate on your project with others"
+msgstr ""
+"Резервні конфіденційні копії вашого проєкту зберігаються на audio.com. Ви "
+"можете отримати доступ до вашої роботи з будь-якого пристрою і співпрацювати "
+"над вашими проєктом із іншими користувачами"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Save to Cloud"
+msgstr "З&берегти до хмари"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr "На вашому комп'ютері"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device"
+msgstr "Файли зберігаються на вашому пристрої"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr "Зберегти на &комп'ютері"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr "З&апам'ятати вибір і більше не питати"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr "У який спосіб хочете експортувати?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Share to audio.com"
+msgstr "Оприлюднити на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid ""
+"Uploads an uncompressed audio file and generates a shareable link. This link "
+"allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+"Вивантажує незапакований файл звукових даних і створює придатне для "
+"поширення посилання. За допомогою цього посилання інші користувачі зможуть "
+"отримати файл у форматі .wav або .mp3."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Share to audio.com"
+msgstr "&Оприлюднити на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr "Експортувати до MP3, WAV, FLAC та інших форматів на ваш комп'ютер."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export to &computer"
+msgstr "Експортувати на &комп'ютер"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Don't show again"
+msgstr "&Не показувати знову"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid ""
+"Cloud saving requires a free audio.com account linked to Audacity. Press "
+"\"Link account\" above to proceed."
+msgstr ""
+"Для зберігання даних у хмарі потрібне безкоштовний обліковий запис на audio."
+"com, який пов'язано із Audacity. Натисніть «Пов'язати обліковий запис», щоб "
+"продовжити."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr "Особисте"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "Поза списком"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "Загальнодоступний"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Save"
+msgstr "Зберегти"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to computer..."
+msgstr "Зберегти на комп'ютері..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Project Name"
+msgstr "Назва проєкту"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr "Виникли проблеми із синхронізацією вашого файла"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid ""
+"Don't worry, your changes will be saved to a temporary location and will be "
+"synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+"Не переймайтеся: внесені вами зміни буде збережено до теки тимчасових "
+"файлів. Дані буде синхронізовано із копією у хмарі, щойно буде відновлено "
+"з'єднання з інтернетом."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr "Ви не увійшли до системи"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr "Увійдіть до системи audio.com, щоб продовжити."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Sign in"
+msgstr "Увійти"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "Пов'язати обліковий запис"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+"Нам не вдалося пов'язати ваш обліковий запис. Будь ласка, повторіть спробу."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Скасувати"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "С&пробувати ще раз"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Обліковий запис успішно пов'язано!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "&Ok"
+msgstr "&Гаразд"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "Введіть жетон для прив'язки вашого облікового запису"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Жетон"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "П&родовжити"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "П&рив'язати обліковий audio.com..."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr "Дані цього проєкту більше не зберігаються у хмарі"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"This project was removed from audio.com and therefore cannot be saved at "
+"this time. "
+msgstr ""
+"Цей проєкт не вилучено з audio.com, тому його не може бути збережено зараз. "
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid ""
+"You can either save it to the Cloud as a new project, or save it to your "
+"computer."
+msgstr ""
+"Ви можете зберегти його до хмари як новий проєкт або зберегти його на вашому "
+"комп'ютері."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr "Зберегти на комп'ютері"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "Save to Cloud"
+msgstr "Зберегти до хмари"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr "Досягнуто обмеження на об'єм зберігання даних для вашого проєкту."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid ""
+"You may need to remove older projects to make space available. For more "
+"options, visit audio.com"
+msgstr ""
+"Можливо, вам слід вилучити застарілі проєкти для отримання додаткового "
+"місця. Додаткові варіанти дій наведено на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+"Ви також можете зберегти цей проєкт локально, щоб уникнути втрати "
+"результатів внесення змін."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Visit audio.com"
+msgstr "Відвідати audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr "Виявлено конфлікт версій проєкту"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"There's a newer version of this Audacity project on Audio.com. Saving this "
+"project will replace it as the newest version instead."
+msgstr ""
+"На audio.com виявлено новішу версію цього проєкту Audacity. У результаті "
+"збереження цього проєкту його дані замінять цю новішу версію."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Save this project"
+msgstr "Зберегти цей проєкт"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr "Відкинути і відкрити найсвіжішу версію"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"Project contains unsaved changes. There's a newer version of this Audacity "
+"project on Audio.com. Discarding changes will open the latest version "
+"instead."
+msgstr ""
+"У проєкті містяться незбережені дані. На audio.com виявлено новішу версію "
+"цього проєкту Audacity. У результаті відкидання буде відкрито цю найсвіжішу "
+"версію."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open local project"
+msgstr "Відкрити локальний проєкт"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Cloud project conflict"
+msgstr "Конфлікт проєктів хмари"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid ""
+"You are attempting to open a new active version of this project when there "
+"is already one open. Please select which version you wish to remain open."
+msgstr ""
+"Ви намагаєтеся відкрити нову активну версію цього проєкту, маючи відкритою "
+"іншу версію цього проєкту. Будь ласка, виберіть версію, яку ви хочете мати "
+"відкритою."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr "Зберегти поточну відкриту версію"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Open new version"
+msgstr "Відкрити нову версію"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr "Відкрити з хмари"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr "менше, ніж за хвилину"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] "%d хвилину тому"
+msgstr[1] "%d хвилини тому"
+msgstr[2] "%d хвилин тому"
+msgstr[3] "%d хвилину тому"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "%d годину тому"
+msgstr[1] "%d години тому"
+msgstr[2] "%d годин тому"
+msgstr[3] "%d годину тому"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Modified"
+msgstr "Змінено"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to authorize account"
+msgstr "Не вдалося уповноважити обліковий запис"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Loading projects list..."
+msgstr "Завантажуємо список проєктів…"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Failed to get projects list"
+msgstr "Не вдалося отримати список проєктів"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Cloud saved projects"
+msgstr "Проєкти, які збережено у хмарі"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr "Шукати:"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Prev"
+msgstr "Назад"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Next"
+msgstr "Наступний"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
+msgid "Open"
+msgstr "Відкрити"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr "Прослухати на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "Page %d of %d"
+msgstr "Сторінка %d з %d"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "Прослуховувати цей звуковий файл зможе кожен."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"Only you and people you share a link with will be able to listen to this "
+"audio."
+msgstr ""
+"Прослуховувати цей звуковий файл зможуть лише ті, з ким ви поділилися "
+"посиланням."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "Ви справді бажаєте скасувати дію?"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Скасувати вивантаження на Audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "Вивантажуємо звукові дані…"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid ""
+"We are unable to upload this file. Please try again and make sure to link to "
+"your audio.com account before uploading."
+msgstr ""
+"Не вдалося вивантажити цей файл. Будь ласка, повторіть спробу і "
+"переконайтеся у правильності прив'язки вашого облікового запису audio.com "
+"перед вивантаженням даних."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "Помилка під час вивантаження"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "Програмі не вдалося приготувати цей файл до вивантаження."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "Завершуємо вивантаження…"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Назва доріжки"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid ""
+"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
+"account\" above to proceed."
+msgstr ""
+"Оприлюднення звукових даних потребує пов'язування Audacity із безкоштовним "
+"обліковим записом %s. %%Для продовження натисніть кнопку «Пов'язати "
+"обліковий запис» вище."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Натисніть «Продовжити», щоб вивантажити дані на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "Готуємо звукові дані…"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr "Вас не уповноважено на доступ до цього проєкту."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr "Ви намагалися отримати доступ до проєкту, строк дії якого вичерпано."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr "Audacity не вдалося встановити з'єднання із сервером."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid ""
+"The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+"Проєкт є надто великим для вивантаження. Будь ласка, збережіть його на "
+"вашому комп'ютері."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr "У вас немає доступу до цього проєкту."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project could not be found."
+msgstr "Не вдалося знайти проєкт."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr "Audacity не вдалося зрозуміти відповідь сервера."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr "Сталася внутрішня помилка в Audacity."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr "Сталася внутрішня помилка на audio.com."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an unknown error."
+msgstr "Сталася невідома помилка в Audacity."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Sync failed"
+msgstr "Спроба синхронізації зазнала невдачі"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr ""
+"Подробиці щодо помилки:\n"
+"%s"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "Syncing your project"
+msgstr "Синхронізуємо ваш проєкт"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid ""
+"The project will sync in background while you work. You can check the sync "
+"status on the bottom right corner of Audacity at any time"
+msgstr ""
+"Синхронізацію вашого проєкту буде виконано у фоновому режимі, поки ви "
+"працюватимете. Ви зможете стежити за станом синхронізації у правому нижньому "
+"куті вікна Audacity"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Продовжити"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr "Успіх!"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid ""
+"All saved changes will now update to the cloud. You can manage this file "
+"from your uploaded projects page on audio.com"
+msgstr ""
+"Усі збережені зміни буде оновлено за даними у хмарі. Ви можете керувати цим "
+"файлом зі сторінки ваших вивантажених проєктів на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "View online"
+msgstr "Прослухати в інтернеті"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr "Виконано"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Cloud project incomplete"
+msgstr "Незавершений проєкт у хмарі"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"The latest version of this project was not fully uploaded to audio.com. You "
+"can load the last complete version instead."
+msgstr ""
+"Найсвіжішу версію цього проєкту не було повністю вивантажено на audio.com. "
+"Ви можете завантажити замість нього найсвіжішу повну версію."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "Load latest"
+msgstr "Завантажити найсвіжіший"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid ""
+"No version of this project has been fully uploaded to audio.com. It cannot "
+"be loaded."
+msgstr ""
+"На audio.com не вивантажено повністю жодної версії цього проєкту. Його не "
+"може бути завантажено."
+
+#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr "Вами скасовано це вивантаження даних на audio.com"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr "Повторити"
+
+#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid ""
+"An action on audio.com is required before you can continue. Once you are "
+"done with it, click Retry"
+msgstr ""
+"Перш, ніж продовжувати, потрібна дія на audio.com. Щойно ви завершите, "
+"натисніть кнопку «Повторити»"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -3200,7 +4251,8 @@ msgid "Cutoff"
 msgstr "Пропускання"
 
 #: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
+#: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
+#: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Вимкнено"
 
@@ -3511,6 +4563,14 @@ msgstr "Показувати всі формати"
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Показувати всі кодеки"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Formats"
+msgstr "Формати"
+
+#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+msgid "Codecs"
+msgstr "Кодеки"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4156,6 +5216,90 @@ msgstr ""
 msgid "Invalid track offset in LOF file."
 msgstr "Неправильний зсув доріжок у LOF-файлі."
 
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "Експортовані файли Allegro (.gro) містять час збереження у:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Одночасно можна вибирати лише одну доріжку нотаток."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "Будь ласка, виберіть доріжку нотаток."
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Експортувати MIDI як:"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "файл MIDI"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "файл Allegro"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Ви вибрали назву файла з незрозумілим програмі суфіксом.\n"
+"Бажаєте продовжити?"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Експортувати до MIDI"
+
+#: modules/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "Експорт&увати до MIDI…"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Імпортовано MIDI-файл з «%s»"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Імпорт MIDI-файла"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Не вдалося відкрити файл %s: назва файла є надто короткою."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Не вдалося відкрити файл %s: помилковий тип файла."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "Не вдалося відкрити файл %s."
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "Виберіть MIDI-файл"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "файли MIDI і Allegro"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "файли MIDI"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "файли Allegro"
+
+#: modules/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI…"
+
 #: modules/mod-mp2/ExportMP2.cpp
 msgid "Version"
 msgstr "Версія"
@@ -4354,8 +5498,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "Лише libmp3lame.dylib"
 
 #: modules/mod-mp3/ExportMP3.cpp
-msgid "Only libmp3lame.so.0"
-msgstr "Лише libmp3lame.so.0"
+msgid "Only libmp3lame.so"
+msgstr "Лише libmp3lame.so"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -4364,6 +5508,10 @@ msgstr "Основні файли спільних об'єктів"
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "Додаткові бібліотеки"
+
+#: modules/mod-mp3/ExportMP3.cpp
+msgid "Only libmp3lame.so.0"
+msgstr "Лише libmp3lame.so.0"
 
 #: modules/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
@@ -4643,8 +5791,7 @@ msgstr "Без назви"
 msgid "Nyquist Effect Workbench - "
 msgstr "Стенд ефектів Nyquist – "
 
-#: modules/mod-nyq-bench/NyqBench.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
 msgstr "Новий"
 
@@ -4653,16 +5800,8 @@ msgid "New script"
 msgstr "Новий скрипт"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "Відкрити"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Open script"
 msgstr "Відкрити скрипт"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "Зберегти"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Save script"
@@ -4783,10 +5922,6 @@ msgid "Go to previous S-expr"
 msgstr "Перейти до попереднього S-виразу"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "Наступний"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Go to next S-expr"
 msgstr "Перейти до наступного S-виразу"
 
@@ -4898,10 +6033,6 @@ msgid "memory allocation has failed"
 msgstr "помилка під час спроби отримання пам'яті"
 
 #: modules/mod-opus/ExportOpus.cpp
-msgid "Unknown error"
-msgstr "Невідома помилка"
-
-#: modules/mod-opus/ExportOpus.cpp
 msgid "Auto"
 msgstr "Авто"
 
@@ -4990,8 +6121,8 @@ msgid "Opus files"
 msgstr "файли Opus"
 
 #: modules/mod-opus/ImportOpus.cpp
-msgid "file has changed the number of channels in the middle."
-msgstr "у процесі у файлі було змінено кількість каналів."
+msgid "File has changed the number of channels in the middle."
+msgstr "У процесі у файлі було змінено кількість каналів."
 
 #: modules/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
@@ -5478,7 +6609,8 @@ msgstr "Заслужені колишні учасники:"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "Distinguished %s Team members, not currently active"
-msgstr "Визначні учасники команди розробників %s, які припинили участь у проєкті"
+msgstr ""
+"Визначні учасники команди розробників %s, які припинили участь у проєкті"
 
 #: src/AboutDialog.cpp
 msgid "Contributors"
@@ -5517,8 +6649,8 @@ msgstr "Сайт %s: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2023 %s Team."
-msgstr "Права на програмне забезпечення %s належать %s 1999-2023 команді %s."
+msgid "%s software is copyright %s 1999-2024 %s Team."
+msgstr "Права на програмне забезпечення %s належать %s 1999-2024 команді %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -5530,8 +6662,8 @@ msgstr "Назва %s є зареєстрованою торговельною �
 msgid "Build Information"
 msgstr "Інформація про випуск"
 
-#: src/AboutDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/prefs/ModulePrefs.cpp
+#: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
 msgstr "Увімкнено"
 
@@ -5726,10 +6858,10 @@ msgstr "Клацніть і перетягніть для коригування
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-msgid "Record/Play head"
-msgstr "Початок запису/відтворення"
+msgid "Record/Playhead"
+msgstr "Позиція запису/відтворення"
 
-#: src/AdornedRulerPanel.cpp src/prefs/GUIPrefs.cpp
+#: src/AdornedRulerPanel.cpp
 msgid "Timeline"
 msgstr "Монтажний стіл"
 
@@ -5777,11 +6909,13 @@ msgstr "Пересування — прокручування"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release to stop seeking."
-msgstr "Перетягування для позиціювання. Відпускання для припинення позиціювання."
+msgstr ""
+"Перетягування для позиціювання. Відпускання для припинення позиціювання."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Drag to Seek. Release and move to Scrub."
-msgstr "Перетягування — позиціювання. Відпускання і пересування — прокручування."
+msgstr ""
+"Перетягування — позиціювання. Відпускання і пересування — прокручування."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Move to Scrub. Drag to Seek."
@@ -5814,10 +6948,6 @@ msgid "Setting a loop region also makes an audio selection"
 msgstr ""
 "Встановлення циклічної ділянки призведе також до позначення звукових даних"
 
-#: src/AdornedRulerPanel.cpp
-msgid "Update display while playing"
-msgstr "Оновлювати відображення під час відтворення"
-
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
 msgid "Clear Loop"
@@ -5828,12 +6958,12 @@ msgid "Set Loop To Selection"
 msgstr "Цикл за позначеним"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Pinned Play Head"
-msgstr "Пришпилений початок відтворення"
+msgid "Scroll view to playhead"
+msgstr "Гортати перегляд до позиції відтворення"
 
 #: src/AdornedRulerPanel.cpp
-msgid "Enable pinned play &head"
-msgstr "Увімкнути при&шпилену позицію відтворення"
+msgid "Continuous scrolling"
+msgstr "Неперервне гортання"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -5843,22 +6973,6 @@ msgstr "Не вдалося вилучити «%s»"
 #: src/AudacityApp.cpp
 msgid "Failed!"
 msgstr "Помилка!"
-
-#: src/AudacityApp.cpp
-msgid ""
-"Reset Preferences?\n"
-"\n"
-"This is a one-time question, after an 'install' where you asked to have the "
-"Preferences reset."
-msgstr ""
-"Відновити початкові значення параметрів?\n"
-"\n"
-"Це питання буде задано лише один раз, після встановлення, де програма "
-"запитувала вас щодо відновлення початкових значень налаштувань."
-
-#: src/AudacityApp.cpp
-msgid "Reset Audacity Preferences"
-msgstr "Відновити налаштування Audacity"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -6121,7 +7235,7 @@ msgid "Audacity Configuration Error"
 msgstr "Помилка у налаштуваннях Audacity"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
 "\n"
@@ -6156,6 +7270,36 @@ msgstr "Ви&йти з Audacity"
 #: src/AudacityFileConfig.cpp
 msgid "&Retry"
 msgstr "&Повторити"
+
+#: src/AudacityMirProject.cpp
+msgid "Configure Project from Music File"
+msgstr "Налаштувати проєкт на основі файла музики"
+
+#: src/AudacityMirProject.cpp
+msgid "Automatic Music Configuration"
+msgstr "Автоматичне налаштовування музики"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected this file to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+"Audacity виявлено ритм у %s бітів на хвилину у цьому файлі.\n"
+"Хочете увімкнути перегляд музики і встановити ритм проєкту у %s?"
+
+#: src/AudacityMirProject.cpp
+#, c-format
+msgid ""
+"Audacity detected one or more files to be %s bpm.\n"
+"Would you like to enable music view and set the project tempo to %s?"
+msgstr ""
+"Audacity виявлено ритм у %s бітів на хвилину в одному або декількох файлах.\n"
+"Хочете увімкнути перегляд музики і встановити ритм проєкту у %s?"
+
+#: src/AudacityMirProject.cpp
+msgid "Music Import"
+msgstr "Імпортування музики"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -6196,10 +7340,6 @@ msgstr ""
 msgid "Remember my choice and don't ask again"
 msgstr "Запам'ятати вибір і більше не питати"
 
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Продовжити"
-
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
 msgstr "Автоматичне відновлення після краху"
@@ -6222,14 +7362,14 @@ msgid "Recoverable &projects"
 msgstr "Придатні до відновлення &проєкти"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
-#: src/AutoRecoveryDialog.cpp src/TrackInfo.cpp src/commands/SelectCommand.cpp
-#: src/prefs/MousePrefs.cpp
+#: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Позначення"
 
 #. i18n-hint: (noun).  It's the name of the project to recover.
-#: src/AutoRecoveryDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TrackInfo.cpp
+#: src/AutoRecoveryDialog.cpp src/PluginDataViewCtrl.cpp
+#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Name"
 msgstr "Назва"
 
@@ -6309,7 +7449,7 @@ msgstr "У системі вже існує макрос із назвою %s. �
 msgid "Export Macro"
 msgstr "Експортувати макрос"
 
-#: src/BatchCommands.cpp
+#: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
 msgstr "Ефект"
 
@@ -6442,14 +7582,6 @@ msgstr "Застосування…"
 msgid "File"
 msgstr "Файл"
 
-#: src/BatchProcessDialog.cpp src/TimerRecordExportDialog.cpp
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportAudioDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Cancel"
-msgstr "&Скасувати"
-
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
 msgstr "Ви&лучити"
@@ -6562,14 +7694,6 @@ msgstr "Ви справді бажаєте вилучити %s?"
 msgid "&Repeat %s"
 msgstr "&Повторити %s"
 
-#. i18n-hint: %s will be the name of the effect which will be
-#. * repeated if this menu item is chosen
-#: src/BatchProcessDialog.cpp src/commands/CommandManager.cpp
-#: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
-#, c-format
-msgid "Repeat %s"
-msgstr "Повторити %s"
-
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
 msgstr "Повторити останній інструмент"
@@ -6656,7 +7780,8 @@ msgstr "Обсяг тестових даних має бути у діапазо
 #: src/Benchmark.cpp
 #, c-format
 msgid "Using %lld chunks of %lld samples each, for a total of %.1f MB.\n"
-msgstr "Використовуємо %lld фрагментів з %lld семплів кожен, загалом %.1f МБ.\n"
+msgstr ""
+"Використовуємо %lld фрагментів з %lld семплів кожен, загалом %.1f МБ.\n"
 
 #: src/Benchmark.cpp
 msgid "Preparing...\n"
@@ -6767,18 +7892,6 @@ msgstr "ТЕСТУВАННЯ НЕ ПРОЙДЕНО!!!\n"
 #: src/Benchmark.cpp
 msgid "Benchmark completed successfully.\n"
 msgstr "Тестування успішно пройдено.\n"
-
-#. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
-#: src/CommonCommandFlags.cpp
-#, c-format
-msgid ""
-"You must first select some audio for '%s' to act on.\n"
-"\n"
-"Ctrl + A selects all audio."
-msgstr ""
-"Спочатку слід позначити область звукових даних для виконання дії «%s».\n"
-"\n"
-"Ctrl + A позначає усі звукові дані."
 
 #. i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.
 #: src/CommonCommandFlags.cpp
@@ -7075,7 +8188,7 @@ msgstr "дБ"
 msgid "Scroll"
 msgstr "Гортати"
 
-#: src/FreqWindow.cpp src/prefs/MousePrefs.cpp
+#: src/FreqWindow.cpp
 msgid "Zoom"
 msgstr "Масштабування"
 
@@ -7124,19 +8237,24 @@ msgstr ""
 
 #: src/FreqWindow.cpp
 msgid ""
-"Audio could not be analyzed. This may be due to a stretched clip.\n"
+"Audio could not be analyzed. This may be due to a stretched or pitch-shifted "
+"clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before "
 "analyzing"
 msgstr ""
 "Не вдалося проаналізувати звукові дані. Причиною може бути розтягування "
-"кліпу.\n"
+"кліпу або зсування тону.\n"
 "Спробуйте відновити початкову тривалість усіх розтягнутих кліпів або "
 "виконайте мікшування та обробку доріжок до виконання аналізу"
 
 #: src/FreqWindow.cpp
 #, c-format
-msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr "Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f секунд звуку."
+msgid ""
+"Too much audio was selected. Only the first %.1f seconds of audio will be "
+"analyzed."
+msgstr ""
+"Вибрано надто велику звукову ділянку. Будуть проаналізовані лише перші %.1f "
+"секунд звуку."
 
 #: src/FreqWindow.cpp
 msgid "Not enough data selected."
@@ -7211,7 +8329,7 @@ msgstr "Журнал"
 msgid "&Manage History"
 msgstr "&Керування журналом"
 
-#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp plug-ins/vocalrediso.ny
+#: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
 msgstr "Дія"
 
@@ -7270,11 +8388,6 @@ msgstr "Виявлено несумісні додатки"
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
 msgstr "&Керування додатками"
-
-#: src/IncompatiblePluginsDialog.cpp src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "C&ontinue"
-msgstr "П&родовжити"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -7381,10 +8494,34 @@ msgstr "Введіть назву доріжки"
 msgid "Label Track"
 msgstr "Позначити доріжку"
 
+#: src/LabelTrack.cpp
+msgid "SubRip text file"
+msgstr "текстовий файл SubRip"
+
+#: src/LabelTrack.cpp
+msgid "WebVTT file"
+msgstr "файл WebVTT"
+
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
 msgid "Labels"
 msgstr "Мітки"
+
+#: src/LabelTrack.cpp
+msgid "S&tandard"
+msgstr "С&тандартний"
+
+#: src/LabelTrack.cpp
+msgid "E&xtended (with frequency ranges)"
+msgstr "Роз&ширений (із діапазонами частот)"
+
+#: src/LabelTrack.cpp
+msgid "Exported Label Style:"
+msgstr "Стиль експортованих міток:"
+
+#: src/LabelTrack.cpp
+msgid "Importing WebVTT files is not currently supported."
+msgstr "У поточній версії не передбачено підтримки імпортування файлів WebVTT."
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -7428,60 +8565,19 @@ msgstr ""
 msgid "Opening Audacity Project"
 msgstr "Відкривається проєкт Audacity"
 
-#: src/LyricsWindow.cpp
-#, c-format
-msgid "Audacity Karaoke%s"
-msgstr "Audacity Караоке%s"
-
-#: src/LyricsWindow.cpp
-msgid "&Karaoke"
-msgstr "&Караоке"
-
-#: src/MIDIPlay.cpp
-msgid "There was an error initializing the midi i/o layer.\n"
-msgstr "Під час спроби ініціалізації шару вводу-виводу midi сталася помилка.\n"
-
-#: src/MIDIPlay.cpp
+#: src/MenuCreator.cpp
 msgid ""
-"You will not be able to play midi.\n"
-"\n"
+"The following commands have had their shortcuts removed, because their "
+"default shortcut is new or changed, and is the same shortcut that you have "
+"assigned to another command."
 msgstr ""
-"Ви не зможете відтворювати midi.\n"
-"\n"
+"Клавіатурні скорочення для вказаних нижче команд було вилучено, оскільки "
+"їхнє типове клавіатурне скорочення є новим або зміненим, і ви призначили те "
+"саме скорочення для іншої команди."
 
-#: src/MIDIPlay.cpp
-msgid "Error Initializing Midi"
-msgstr "Помилка при ініціалізації MIDI"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Undo %s"
-msgstr "В&ернути «%s»"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Undo"
-msgstr "В&ернути"
-
-#: src/Menus.cpp
-#, c-format
-msgid "&Redo %s"
-msgstr "Повт&орити «%s»"
-
-#: src/Menus.cpp src/menus/EditMenus.cpp
-msgid "&Redo"
-msgstr "Повт&орити"
-
-#: src/Menus.cpp
-msgid ""
-"There was a problem with your last action. If you think\n"
-"this is a bug, please tell us exactly where it occurred."
-msgstr ""
-"Під час виконання попередньої дії сталася помилка. Якщо ви вважаєте, що її\n"
-"причиною є вада у програмі, повідомте розробникам, де саме сталася помилка."
-
-#: src/Menus.cpp
-msgid "Disallowed"
-msgstr "Заборонено"
+#: src/MenuCreator.cpp
+msgid "Shortcuts have been removed"
+msgstr "Скорочення було вилучено"
 
 #: src/MixerBoard.cpp
 #, c-format
@@ -7551,49 +8647,6 @@ msgstr "Регулятор панорами переміщено"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Мікшер"
-
-#. i18n-hint: This is for screen reader software and indicates that
-#. this is a Note track.
-#: src/NoteTrack.cpp src/TrackPanelAx.cpp
-msgid "Note Track"
-msgstr "Доріжка приміток"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports output: %d\n"
-msgstr "Підтримує вихід: %d\n"
-
-#. i18n-hint: Supported, meaning made available by the system
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Supports input: %d\n"
-msgstr "Підтримує вхід: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Opened: %d\n"
-msgstr "Відкрито: %d\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Вибраний пристрій записування MIDI: %d – %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI recording device found for '%s'.\n"
-msgstr "Не знайдено пристрою записування MIDI для «%s».\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "Selected MIDI playback device: %d - %s\n"
-msgstr "Вибраний пристрій відтворення MIDI: %d – %s\n"
-
-#: src/NoteTrack.cpp
-#, c-format
-msgid "No MIDI playback device found for '%s'.\n"
-msgstr "Не знайдено пристрою відтворення MIDI для «%s».\n"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -7705,112 +8758,7 @@ msgstr "G♯/A♭"
 msgid "A♯/B♭"
 msgstr "A♯/B♭"
 
-#: src/PluginRegistrationDialog.cpp
-msgid "Manage Plugins"
-msgstr "Керування додатками"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Select effects, click the Enable or Disable button, then click OK."
-msgstr ""
-"Виберіть ефекти, натисніть кнопку «Увімкнути» або «Вимкнути», потім "
-"натисніть кнопку «Гаразд»."
-
-#. i18n-hint: This is before radio buttons selecting which effects to show
-#: src/PluginRegistrationDialog.cpp
-msgid "Show:"
-msgstr "Показ:"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show all"
-msgstr "Показати усе"
-
-#. i18n-hint: Radio button to show all effects
-#: src/PluginRegistrationDialog.cpp src/menus/SelectMenus.cpp
-msgid "&All"
-msgstr "&Все"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show disabled"
-msgstr "Показати вимкнені"
-
-#. i18n-hint: Radio button to show just the currently disabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "D&isabled"
-msgstr "Ви&мкнені"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show enabled"
-msgstr "Показати увімкнені"
-
-#. i18n-hint: Radio button to show just the currently enabled effects
-#: src/PluginRegistrationDialog.cpp
-msgid "E&nabled"
-msgstr "&Увімкнені"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Show new"
-msgstr "Показати нові"
-
-#. i18n-hint: Radio button to show just the newly discovered effects
-#: src/PluginRegistrationDialog.cpp
-msgid "Ne&w"
-msgstr "Но&ві"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "State"
-msgstr "Стан"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Path"
-msgstr "Шлях"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Select All"
-msgstr "&Позначити усі"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "C&lear All"
-msgstr "З&няти позначення з усіх"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "Rescan"
-msgstr "Повторно сканувати"
-
-#: src/PluginRegistrationDialog.cpp src/prefs/RecordingPrefs.cpp
-msgid "&Enable"
-msgstr "&Увімкнути"
-
-#: src/PluginRegistrationDialog.cpp
-msgid "&Disable"
-msgstr "Ви&мкнути"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effects or commands:\n"
-"\n"
-"%s"
-msgstr ""
-"Вмикаємо ефекти або команди:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
-#, c-format
-msgid ""
-"Enabling effect or command:\n"
-"\n"
-"%s"
-msgstr ""
-"Вмикаємо ефект або команду:\n"
-"\n"
-"%s"
-
-#: src/PluginRegistrationDialog.cpp
+#: src/PluginDataModel.cpp
 #, c-format
 msgid ""
 "Effect or Command at %s failed to register:\n"
@@ -7819,26 +8767,73 @@ msgstr ""
 "Не вдалося зареєструвати ефект або команду з %s:\n"
 "%s"
 
+#: src/PluginDataViewCtrl.cpp
+msgid "Disable"
+msgstr "Вимкнути"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Enable"
+msgstr "Увімкнути"
+
+#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+msgid "Type"
+msgstr "Тип"
+
+#: src/PluginDataViewCtrl.cpp
+msgid "Path"
+msgstr "Шлях"
+
+#: src/PluginRegistrationDialog.cpp plug-ins/sample-data-export.ny
+msgid "All"
+msgstr "Всі"
+
+#: src/PluginRegistrationDialog.cpp src/effects/lv2/LV2Editor.cpp
+msgid "Generator"
+msgstr "Генератор"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Analyzer"
+msgstr "Аналізатор"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Tool"
+msgstr "Інструмент"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Manage Plugins"
+msgstr "Керування додатками"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Native Audacity"
+msgstr "Власний Audacity"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Show:"
+msgstr "&Показ:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Type:"
+msgstr "&Тип:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "C&ategory:"
+msgstr "К&атегорія:"
+
+#: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
+msgid "Searc&h:"
+msgstr "&Шукати:"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "Plugin"
+msgstr "Додаток"
+
+#: src/PluginRegistrationDialog.cpp
+msgid "&Rescan"
+msgstr "П&овторно сканувати"
+
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
 msgstr "Пошук додатків"
-
-#: src/Printing.cpp
-msgid "There was a problem printing."
-msgstr "Виникла проблема при друкуванні."
-
-#: src/Printing.cpp
-msgid "Print"
-msgstr "Друк"
-
-#: src/Printing.cpp
-msgid "Pa&ge Setup..."
-msgstr "Пара&метри сторінки…"
-
-#. i18n-hint: (verb) It's item on a menu.
-#: src/Printing.cpp
-msgid "&Print..."
-msgstr "Д&рукувати…"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -7911,8 +8906,8 @@ msgstr "Закрити проєкт негайно без змін"
 #: src/ProjectFSCK.cpp
 msgid ""
 "Continue with repairs noted in log, and check for more errors. This will "
-"save the project in its current state, unless you \"Close project immediately"
-"\" on further error alerts."
+"save the project in its current state, unless you \"Close project "
+"immediately\" on further error alerts."
 msgstr ""
 "Продовжити роботу з виправленими відповідно до журналу дій даними і виконати "
 "пошук інших помилок. Проєкт буде збережено у поточному стані, якщо ви не "
@@ -8182,7 +9177,7 @@ msgstr ""
 "Перевищено максимальний розмір файла проєкту у 4 ГБ під час запису на "
 "форматовану у FAT32 файлову систему."
 
-#: src/ProjectFileManager.cpp src/commands/ScreenshotCommand.cpp
+#: src/ProjectFileManager.cpp
 #, c-format
 msgid "Saved %s"
 msgstr "Збережено %s"
@@ -8380,6 +9375,14 @@ msgstr "Оберіть потоки для імпортування"
 #, c-format
 msgid "Importing %s"
 msgstr "Імпортування %s"
+
+#: src/ProjectFileManager.cpp
+msgid "Music Information Retrieval"
+msgstr "Отримання відомостей щодо музики"
+
+#: src/ProjectFileManager.cpp
+msgid "Analyzing imported audio"
+msgstr "Аналіз імпортованих звукових даних"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -8603,13 +9606,14 @@ msgstr "Немає ефектів"
 msgid "Get more effects..."
 msgstr "Отримати додаткові ефекти…"
 
-#: src/RealtimeEffectPanel.cpp plug-ins/vocalrediso.ny
+#: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "Проаналізувати"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr "Ефекти реального часу є неруйнівними, їхні параметри можна будь-коли змінити."
+msgstr ""
+"Ефекти реального часу є неруйнівними, їхні параметри можна будь-коли змінити."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -8651,164 +9655,6 @@ msgstr "Ефекти реального часу"
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "Ефекти реального часу %s"
-
-#: src/Screenshot.cpp
-msgid "Screen Capture Frame"
-msgstr "Оболонка створення знімків екрана"
-
-#: src/Screenshot.cpp
-msgid "Choose location to save files"
-msgstr "Оберіть адресу для зберігання файлів"
-
-#: src/Screenshot.cpp
-msgid "Save images to:"
-msgstr "Зберігати зображення до:"
-
-#: src/Screenshot.cpp
-msgid "Choose..."
-msgstr "Вибрати…"
-
-#: src/Screenshot.cpp
-msgid "Capture entire window or screen"
-msgstr "Створити знімок всього вікна або екрана"
-
-#: src/Screenshot.cpp
-msgid "Resize Small"
-msgstr "Масштабувати мале"
-
-#: src/Screenshot.cpp
-msgid "Resize Large"
-msgstr "Масштабувати велике"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'Blue'
-#: src/Screenshot.cpp
-msgid "Blue Bkgnd"
-msgstr "Синє тло"
-
-#. i18n-hint: Bkgnd is short for background and appears on a small button
-#. * It is OK to just translate this item as if it said 'White'
-#: src/Screenshot.cpp
-msgid "White Bkgnd"
-msgstr "Біле тло"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Only"
-msgstr "Створити знімок лише вікна"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Window"
-msgstr "Створити знімок всього вікна"
-
-#: src/Screenshot.cpp
-msgid "Capture Window Plus"
-msgstr "Створити знімок вікна+"
-
-#: src/Screenshot.cpp
-msgid "Capture Full Screen"
-msgstr "Створити знімок всього екрана"
-
-#: src/Screenshot.cpp
-msgid "Wait 5 seconds and capture frontmost window/dialog"
-msgstr "Чекати 5 секунд і зняти верхнє вікно"
-
-#: src/Screenshot.cpp
-msgid "Capture part of a project window"
-msgstr "Створити знімок частини вікна проєкту"
-
-#: src/Screenshot.cpp
-msgid "All Toolbars"
-msgstr "Всі панелі інструментів"
-
-#: src/Screenshot.cpp
-msgid "All Effects"
-msgstr "Усі ефекти"
-
-#: src/Screenshot.cpp
-msgid "All Scriptables"
-msgstr "Усі скрипти"
-
-#: src/Screenshot.cpp
-msgid "All Preferences"
-msgstr "Усі налаштування"
-
-#: src/Screenshot.cpp src/TrackPanel.cpp
-msgid "Track Panel"
-msgstr "Панель доріжки"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Ruler"
-msgstr "Лінійка"
-
-#. i18n-hint: "Tracks" include audio recordings but also other collections of
-#. * data associated with a time line, such as sequences of labels, and musical
-#. * notes
-#: src/Screenshot.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/GetTrackInfoCommand.cpp src/commands/ScreenshotCommand.cpp
-#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
-#: src/prefs/TracksPrefs.h
-msgid "Tracks"
-msgstr "Доріжки"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "First Track"
-msgstr "Перша доріжка"
-
-#: src/Screenshot.cpp src/commands/ScreenshotCommand.cpp
-msgid "Second Track"
-msgstr "Друга доріжка"
-
-#: src/Screenshot.cpp src/prefs/SpectrumPrefs.cpp
-msgid "Scale"
-msgstr "Шкала"
-
-#: src/Screenshot.cpp
-msgid "One Sec"
-msgstr "Одна секунда"
-
-#: src/Screenshot.cpp
-msgid "Ten Sec"
-msgstr "Десять секунд"
-
-#: src/Screenshot.cpp
-msgid "One Min"
-msgstr "Одна хвилина"
-
-#: src/Screenshot.cpp
-msgid "Five Min"
-msgstr "П’ять хвилин"
-
-#: src/Screenshot.cpp
-msgid "One Hour"
-msgstr "Одна година"
-
-#: src/Screenshot.cpp
-msgid "Short Tracks"
-msgstr "Низькі доріжки"
-
-#: src/Screenshot.cpp
-msgid "Medium Tracks"
-msgstr "Середні доріжки"
-
-#: src/Screenshot.cpp
-msgid "Tall Tracks"
-msgstr "Високі доріжки"
-
-#: src/Screenshot.cpp
-msgid "Choose a location to save screenshot images"
-msgstr "Оберіть адресу, за якою слід зберігати знімки"
-
-#: src/Screenshot.cpp
-msgid "Capture failed!"
-msgstr "Спроба захоплення зазнала невдачі!"
-
-#: src/Screenshot.cpp src/commands/CommandTargets.cpp
-msgid "Long Message"
-msgstr "Довге повідомлення"
-
-#: src/Screenshot.cpp
-msgid "&Screenshot..."
-msgstr "З&німок вікна…"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -8972,10 +9818,6 @@ msgstr "Не показувати цього знову під час запус
 #: src/TagsEditor.cpp
 msgid "Artist Name"
 msgstr "Ім'я виконавця"
-
-#: src/TagsEditor.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Track Title"
-msgstr "Назва доріжки"
 
 #: src/TagsEditor.cpp
 msgid "Album Title"
@@ -9466,6 +10308,10 @@ msgstr "Експортовані мітки"
 msgid "Stereo, 999999Hz"
 msgstr "Стерео, 999999Гц"
 
+#: src/TrackPanel.cpp
+msgid "Track Panel"
+msgstr "Панель доріжки"
+
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
 msgid "(Esc to cancel)"
@@ -9636,145 +10482,6 @@ msgstr "Змін напрямку  — в середньому: %1.4f  пд: (%1
 msgid "Calibration Complete"
 msgstr "Калібрування завершено"
 
-#. i18n-hint: Share audio button text, keep as short as possible
-#: src/cloud/ShareAudioToolbar.cpp src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "Оприлюднити аудіо"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: src/cloud/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "Панель &оприлюднення звукових даних"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Link account"
-msgstr "Посилання на обліковий запис"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Enter token to link your account"
-msgstr "Введіть жетон для прив'язки вашого облікового запису"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "Token"
-msgstr "Жетон"
-
-#: src/cloud/audiocom/LinkAccountDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "П&рив'язати обліковий audio.com..."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "Нам не вдалося пов'язати ваш обліковий запис. Будь ласка, повторіть спробу."
-
-#: src/cloud/audiocom/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "С&пробувати ще раз"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "Обліковий запис успішно пов'язано!"
-
-#: src/cloud/audiocom/LinkSucceededDialog.cpp
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "&Ok"
-msgstr "&Гаразд"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "Загальнодоступний"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "Прослуховувати цей звуковий файл зможе кожен."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "Поза списком"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"Only you and people you share a link with will be able to listen to this "
-"audio."
-msgstr ""
-"Прослуховувати цей звуковий файл зможуть лише ті, з ким ви поділилися "
-"посиланням."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "Ви справді бажаєте скасувати дію?"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Скасувати вивантаження на Audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "Вивантажуємо звукові дані…"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid ""
-"We are unable to upload this file. Please try again and make sure to link to "
-"your audio.com account before uploading."
-msgstr ""
-"Не вдалося вивантажити цей файл. Будь ласка, повторіть спробу і "
-"переконайтеся у правильності прив'язки вашого облікового запису audio.com "
-"перед вивантаженням даних."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "Помилка під час вивантаження"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp src/export/ExportProgressUI.cpp
-#: src/export/ExportProgressUI.h
-msgid "Export error"
-msgstr "Помилка експортування"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "Програмі не вдалося приготувати цей файл до вивантаження."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "Завершуємо вивантаження…"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Anonymous"
-msgstr "Анонімний"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Link Account"
-msgstr "Пр&ив'язати обліковий запис"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-#, c-format
-msgid ""
-"Sharing audio requires a free %s account linked to Audacity. %%Press \"Link "
-"account\" above to proceed."
-msgstr ""
-"Оприлюднення звукових даних потребує пов'язування Audacity із безкоштовним "
-"обліковим записом %s. %%Для продовження натисніть кнопку «Пов'язати "
-"обліковий запис» вище."
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Натисніть «Продовжити», щоб вивантажити дані на audio.com"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "&Unlink Account"
-msgstr "В&ідв'язати обліковий запис"
-
-#: src/cloud/audiocom/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "Готуємо звукові дані…"
-
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -9803,34 +10510,6 @@ msgstr "%s не є прийнятним параметром для %s"
 #, c-format
 msgid "Invalid value for parameter '%s': should be %s"
 msgstr "Некоректне значення параметра «%s»: має бути %s"
-
-#: src/commands/CommandManager.cpp src/prefs/MousePrefs.cpp
-#: src/widgets/KeyView.cpp
-msgid "Command"
-msgstr "Команда"
-
-#: src/commands/CommandManager.cpp
-#, c-format
-msgid ""
-"\n"
-"* %s, because you have assigned the shortcut %s to %s"
-msgstr ""
-"\n"
-"* %s, оскільки ви призначили клавіатурне скорочення %s для %s"
-
-#: src/commands/CommandManager.cpp
-msgid ""
-"The following commands have had their shortcuts removed, because their "
-"default shortcut is new or changed, and is the same shortcut that you have "
-"assigned to another command."
-msgstr ""
-"Клавіатурні скорочення для вказаних нижче команд було вилучено, оскільки "
-"їхнє типове клавіатурне скорочення є новим або зміненим, і ви призначили те "
-"саме скорочення для іншої команди."
-
-#: src/commands/CommandManager.cpp
-msgid "Shortcuts have been removed"
-msgstr "Скорочення було вилучено"
 
 #: src/commands/CompareAudioCommand.cpp
 msgid "Compare Audio"
@@ -9925,9 +10604,18 @@ msgstr "Команди"
 msgid "Menus"
 msgstr "Меню"
 
-#: src/commands/GetInfoCommand.cpp src/commands/ScreenshotCommand.cpp
+#: src/commands/GetInfoCommand.cpp
 msgid "Preferences"
 msgstr "Налаштування"
+
+#. i18n-hint: "Tracks" include audio recordings but also other collections of
+#. * data associated with a time line, such as sequences of labels, and musical
+#. * notes
+#: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
+#: src/export/ExportAudioDialog.cpp src/prefs/TracksPrefs.cpp
+#: src/prefs/TracksPrefs.h
+msgid "Tracks"
+msgstr "Доріжки"
 
 #: src/commands/GetInfoCommand.cpp src/commands/GetTrackInfoCommand.cpp
 msgid "Clips"
@@ -10147,113 +10835,6 @@ msgstr "Отримує значення окремого налаштуванн�
 msgid "Sets the value of a single preference."
 msgstr "Встановлює значення окремого налаштування."
 
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot"
-msgstr "Знімок вікна"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window"
-msgstr "Вікно"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Full Window"
-msgstr "Усе вікно"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Window Plus"
-msgstr "Вікно+"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Fullscreen"
-msgstr "На весь екран"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Toolbars"
-msgstr "Панелі інструментів"
-
-#: src/commands/ScreenshotCommand.cpp src/prefs/EffectsPrefs.cpp
-#: src/prefs/EffectsPrefs.h
-#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
-#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
-msgid "Effects"
-msgstr "Ефекти"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Scriptables"
-msgstr "Скрипти"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Trackpanel"
-msgstr "Панель доріжок"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Two Tracks"
-msgstr "Перші дві доріжки"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Three Tracks"
-msgstr "Перші три доріжки"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Four Tracks"
-msgstr "Перші чотири доріжки"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Tracks Plus"
-msgstr "Додаткові доріжки"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "First Track Plus"
-msgstr "Перша доріжка+"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks"
-msgstr "Усі доріжки"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "All Tracks Plus"
-msgstr "Усі доріжки+"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Blue"
-msgstr "Синій"
-
-#. i18n-hint:  This really means the color, not as in "white noise"
-#: src/commands/ScreenshotCommand.cpp
-msgctxt "color"
-msgid "White"
-msgstr "Білий"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Path:"
-msgstr "Шлях:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Capture What:"
-msgstr "Об'єкт захоплення:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Background:"
-msgstr "Тло:"
-
-#: src/commands/ScreenshotCommand.cpp
-msgid "Bring To Top"
-msgstr "Перенести на передній план"
-
-#: src/commands/ScreenshotCommand.cpp
-#, c-format
-msgid "Error trying to save file: %s"
-msgstr "Помилка під час спроби зберегти файл: %s"
-
-#. i18n-hint: Screenshot in the help menu has a much bigger dialog.
-#: src/commands/ScreenshotCommand.cpp
-msgid "Screenshot (short format)..."
-msgstr "Знімок вікна (скорочений формат)…"
-
-#: src/commands/ScreenshotCommand.h
-msgid "Takes screenshots."
-msgstr "Створює знімок вікна."
-
 #: src/commands/SelectCommand.cpp
 msgid "Select Time"
 msgstr "Позначити час"
@@ -10418,8 +10999,7 @@ msgid "Edited Envelope"
 msgstr "Редагована обгортка"
 
 #. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/commands/SetEnvelopeCommand.cpp src/prefs/MousePrefs.cpp
-#: src/tracks/ui/EnvelopeHandle.cpp
+#: src/commands/SetEnvelopeCommand.cpp src/tracks/ui/EnvelopeHandle.cpp
 msgid "Envelope"
 msgstr "Обвідна"
 
@@ -10583,7 +11163,6 @@ msgstr "Вибір спектра"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Sche&me:"
 msgstr "С&хема:"
@@ -10611,6 +11190,10 @@ msgstr "Налаштувати доріжку…"
 #: src/commands/SetTrackInfoCommand.h
 msgid "Sets various values for a track."
 msgstr "Встановлює різноманітні параметри для доріжки."
+
+#: src/commands/wxCommandTargets.cpp
+msgid "Long Message"
+msgstr "Довге повідомлення"
 
 #: src/effects/Amplify.cpp resources/EffectsMenuDefaults.xml
 msgid "Amplify"
@@ -11868,10 +12451,6 @@ msgid "Preview effect"
 msgstr "Прослуховування ефекту"
 
 #: src/effects/EffectUI.cpp
-msgid "Stop &Preview"
-msgstr "Припинити &прослуховування"
-
-#: src/effects/EffectUI.cpp
 msgid "&Apply"
 msgstr "&Застосувати"
 
@@ -11943,13 +12522,12 @@ msgstr ""
 msgid "Equalization"
 msgstr "Еквалайзер"
 
-#: src/effects/Equalization.cpp plug-ins/eq-xml-to-txt-converter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/Equalization.cpp resources/EffectsMenuDefaults.xml
 msgid "Filter Curve EQ"
 msgstr "Крива фільтрування еквалайзера"
 
 #: src/effects/Equalization.cpp src/effects/EqualizationUI.cpp
-#: plug-ins/eq-xml-to-txt-converter.ny resources/EffectsMenuDefaults.xml
+#: resources/EffectsMenuDefaults.xml
 msgid "Graphic EQ"
 msgstr "Графічний EQ"
 
@@ -12182,7 +12760,8 @@ msgstr "Експортувати криві EQ як…"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot export 'unnamed' curve, it is special."
-msgstr "Не можна експортувати криву з назвою «unnamed». Цю назву зарезервовано."
+msgstr ""
+"Не можна експортувати криву з назвою «unnamed». Цю назву зарезервовано."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Cannot Export 'unnamed'"
@@ -12513,7 +13092,8 @@ msgstr "Попередження: типи вікон не є тими сами�
 
 #: src/effects/NoiseReduction.cpp
 msgid "All noise profile data must have the same sample rate."
-msgstr "Усі дані профілю шуму повинні мати мати однакову частоту дискретизації."
+msgstr ""
+"Усі дані профілю шуму повинні мати мати однакову частоту дискретизації."
 
 #: src/effects/NoiseReduction.cpp
 msgid ""
@@ -13371,7 +13951,8 @@ msgstr "Тон"
 
 #: src/effects/ToneGen.cpp
 msgid "Generates an ascending or descending tone of one of four types"
-msgstr "Створює тон зі зростанням або спаданням частоти одного з чотирьох типів"
+msgstr ""
+"Створює тон зі зростанням або спаданням частоти одного з чотирьох типів"
 
 #: src/effects/ToneGen.cpp
 msgid "Generates a constant frequency tone of one of four types"
@@ -13759,10 +14340,6 @@ msgstr ""
 "пункту надасть змогу компенсувати затримку, але таке компенсування працює не "
 "для усіх ефектів LADSPA."
 
-#: src/effects/lv2/LV2Editor.cpp
-msgid "Generator"
-msgstr "Генератор"
-
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
 msgstr "Не вдалося обробити ефект"
@@ -13921,7 +14498,8 @@ msgstr ""
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "У цій версії Audacity не передбачено підтримки додатків Nyquist версії %ld"
+msgstr ""
+"У цій версії Audacity не передбачено підтримки додатків Nyquist версії %ld"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -14061,7 +14639,7 @@ msgid "M&ultiple Files"
 msgstr "Д&екілька файлів"
 
 #: src/export/ExportAudioDialog.cpp
-msgid "Curren&t selection"
+msgid "Curren&t Selection"
 msgstr "П&оточне позначене"
 
 #: src/export/ExportAudioDialog.cpp
@@ -14168,10 +14746,6 @@ msgstr "Всі позначені ділянки звукових доріжок
 msgid "Continue to export remaining files?"
 msgstr "Продовжити експортування решти файлів?"
 
-#: src/export/ExportAudioDialog.cpp src/export/ExportProgressUI.cpp
-msgid "Export"
-msgstr "Експорт"
-
 #: src/export/ExportFilePanel.cpp
 msgid "Custom Sample Rate"
 msgstr "Нетипова частота дискретизації"
@@ -14248,42 +14822,6 @@ msgstr "%d Гц (нетипова)"
 msgid "Other..."
 msgstr "Інша…"
 
-#: src/export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Одночасно можна вибирати лише одну доріжку нотаток."
-
-#: src/export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "Будь ласка, виберіть доріжку нотаток."
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Експортувати MIDI як:"
-
-#: src/export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "файл MIDI"
-
-#: src/export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "файл Allegro"
-
-#: src/export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Ви вибрали назву файла з незрозумілим програмі суфіксом.\n"
-"Бажаєте продовжити?"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Експортувати до MIDI"
-
-#: src/export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "Експорт&увати до MIDI…"
-
 #. i18n-hint: track name and L abbreviating Left channel
 #: src/export/ExportMixerDialog.cpp
 #, c-format
@@ -14313,54 +14851,6 @@ msgstr "Канал: %2d"
 #: src/export/ExportOptionsHandler.cpp
 msgid "No format specific options"
 msgstr "Немає специфічних для формату параметрів"
-
-#: src/export/ExportProgressUI.cpp
-msgid "Export completed with error."
-msgstr "Спроба експортування завершилася помилкою."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Імпортовано MIDI-файл з «%s»"
-
-#: src/import/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Імпорт MIDI-файла"
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Не вдалося відкрити файл %s: назва файла є надто короткою."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Не вдалося відкрити файл %s: помилковий тип файла."
-
-#: src/import/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "Не вдалося відкрити файл %s."
-
-#: src/import/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "Виберіть MIDI-файл"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "файли MIDI і Allegro"
-
-#: src/import/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "файли MIDI"
-
-#: src/import/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "файли Allegro"
-
-#: src/import/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI…"
 
 #. i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.
 #: src/import/ImportRaw.cpp
@@ -14857,7 +15347,7 @@ msgid "&Export Audio..."
 msgstr "&Експортувати звукові дані…"
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "Ексопртувати інше"
 
 #: src/menus/FileMenus.cpp
@@ -14882,14 +15372,6 @@ msgid "E&xit"
 msgstr "Ви&йти"
 
 #: src/menus/FileMenus.cpp
-msgid "Hidden File Menu"
-msgstr "Приховане меню «Файл»"
-
-#: src/menus/FileMenus.cpp
-msgid "Export as FLAC"
-msgstr "Експортувати як FLAC"
-
-#: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
 msgstr "Експортувати як MP&3"
 
@@ -14900,6 +15382,10 @@ msgstr "Експортувати як &WAV"
 #: src/menus/FileMenus.cpp
 msgid "Export as &OGG"
 msgstr "Експортувати як &OGG"
+
+#: src/menus/FileMenus.cpp
+msgid "Export as FLAC"
+msgstr "Експортувати як FLAC"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -14940,18 +15426,6 @@ msgstr "Виправлено"
 #: src/menus/HelpMenus.cpp
 msgid "Audio Device Info"
 msgstr "Інформація про аудіопристрої"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Quick Fix..."
-msgstr "&Швидке виправлення…"
-
-#: src/menus/HelpMenus.cpp
-msgid "&Getting Started"
-msgstr "По&чаток роботи"
-
-#: src/menus/HelpMenus.cpp
-msgid "Audacity &Manual"
-msgstr "&Підручник з Audacity"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
@@ -15057,7 +15531,8 @@ msgstr "Копіювати позначений звук"
 #. audio (a point or a region)
 #: src/menus/LabelMenus.cpp
 msgid "Split labeled audio (points or regions)"
-msgstr "Позначені ділянки звукових доріжок розрізано (у пунктах або за ділянками)"
+msgstr ""
+"Позначені ділянки звукових доріжок розрізано (у пунктах або за ділянками)"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15068,7 +15543,8 @@ msgstr "Розрізати позначений звук"
 #. regions)
 #: src/menus/LabelMenus.cpp
 msgid "Joined labeled audio (points or regions)"
-msgstr "Позначені ділянки звукових доріжок з’єднано (у пунктах або за ділянками)"
+msgstr ""
+"Позначені ділянки звукових доріжок з’єднано (у пунктах або за ділянками)"
 
 #. i18n-hint: (verb)
 #: src/menus/LabelMenus.cpp
@@ -15333,6 +15809,10 @@ msgid "&Select"
 msgstr "&Вибір"
 
 #: src/menus/SelectMenus.cpp
+msgid "&All"
+msgstr "&Все"
+
+#: src/menus/SelectMenus.cpp
 msgid "&None"
 msgstr "&Нічого"
 
@@ -15581,7 +16061,7 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "Довгий перехід п&раворуч під час відтворення"
 
 #: src/menus/TimelineMenus.cpp
-msgid "&Timeline"
+msgid "Tim&eline"
 msgstr "&Монтажний стіл"
 
 #: src/menus/ToolbarMenus.cpp
@@ -16224,10 +16704,6 @@ msgid "Zoom &Toggle"
 msgstr "&Перемкнути масштаб"
 
 #: src/menus/ViewMenus.cpp
-msgid "Advanced &Vertical Zooming"
-msgstr "Розширене &вертикальне масштабування"
-
-#: src/menus/ViewMenus.cpp
 msgid "T&rack Size"
 msgstr "Р&озмір доріжки"
 
@@ -16264,7 +16740,7 @@ msgid "Skip to Selection End"
 msgstr "Прокрутити до кінця позначено"
 
 #: src/menus/ViewMenus.cpp
-msgid "Enable &Extra Menus"
+msgid "Enable E&xtra Menus"
 msgstr "Увімкнути &додаткові меню"
 
 #: src/menus/ViewMenus.cpp
@@ -16475,28 +16951,8 @@ msgid "Temporary files directory"
 msgstr "Тека для тимчасових файлів"
 
 #: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "&Адреса:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Каталог тимчасових файлів не може зберігатися на диску FAT."
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Brow&se..."
-msgstr "Ви&брати…"
-
-#: src/prefs/DirectoriesPrefs.cpp
 msgid "&Free Space:"
 msgstr "Ві&льне місце:"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Виберіть розташування каталогу тимчасових файлів"
-
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "Не вдалося встановити налаштування."
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
@@ -16580,6 +17036,12 @@ msgstr "Не вдалося встановити каталог «Експорт
 msgid "'Macro Output' directory cannot be set."
 msgstr "Не вдалося встановити каталог «Виведення макросу»."
 
+#: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
+#: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
+#: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
+msgid "Effects"
+msgstr "Ефекти"
+
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
 msgstr "Налаштування ефектів"
@@ -16625,6 +17087,10 @@ msgid "Realtime effect o&rganization:"
 msgstr "Упо&рядкування ефектів реального часу"
 
 #: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr "П&пропустити пошук ефектів під час запуску"
+
+#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "Набір інструкцій"
 
@@ -16633,8 +17099,8 @@ msgid "&Use SSE/SSE2/.../AVX"
 msgstr "Ви&користовувати SSE/SSE2/…/AVX"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "Open Plugin Manager"
-msgstr "Відкрити керування додатками"
+msgid "Open Plugin &Manager"
+msgstr "Відкрити &керування додатками"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -16813,14 +17279,6 @@ msgstr "Використовувати компонування зліва пр�
 msgid "Never use comma as decimal point"
 msgstr "Ніколи не використовувати кому замість десяткової крапки"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "Show Timeline Tooltips"
-msgstr "Показувати підказки монтажного столу"
-
-#: src/prefs/GUIPrefs.cpp src/toolbars/ScrubbingToolBar.cpp
-msgid "Show Scrub Ruler"
-msgstr "Показати лінійку прокручування"
-
 #: src/prefs/GUIPrefs.h
 msgid "GUI"
 msgstr "Інтерфейс"
@@ -16839,29 +17297,25 @@ msgid "Preferences for ImportExport"
 msgstr "Налаштування імпортування/експортування"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "S&tandard"
-msgstr "С&тандартний"
+msgid "S&witch view to Beats and Measures and align with musical grid"
+msgstr "П&еремкнути перегляд на біти і розміри і вирівняти за музичною ґраткою"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "E&xtended (with frequency ranges)"
-msgstr "Роз&ширений (із діапазонами частот)"
+msgid "&Ask me each time"
+msgstr "&Питати кожного разу"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "&Seconds"
-msgstr "с&екундах"
-
-#. i18n-hint: The music theory "beat"
-#: src/prefs/ImportExportPrefs.cpp
-msgid "&Beats"
-msgstr "&тактах"
+msgid "Do &nothing"
+msgstr "&Нічого не робити"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Label Style:"
-msgstr "Стиль експортованих міток:"
+msgid "Music Imports"
+msgstr "Імпортування музики"
 
 #: src/prefs/ImportExportPrefs.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "Експортовані файли Allegro (.gro) містять час збереження у:"
+msgid "When Audacity detects music in file imported on empty project"
+msgstr ""
+"Якщо Audacity виявляє музику у файлі, який імпортовано до порожнього проєкту"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -16918,10 +17372,6 @@ msgstr "Перегляд за назвою"
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "View by key"
 msgstr "Перегляд за клавішами"
-
-#: src/prefs/KeyConfigPrefs.cpp
-msgid "Searc&h:"
-msgstr "&Шукати:"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Bindings"
@@ -17110,264 +17560,35 @@ msgstr "Налаштування модуля"
 
 #: src/prefs/ModulePrefs.cpp
 msgid ""
-"These are experimental modules. Enable them only if you've read the Audacity "
-"Manual\n"
-"and know what you are doing."
+"Modules are optional components of Audacity that enable some functionality, "
+"such as importing and exporting. \n"
+"It is generally not necessary to change these settings."
 msgstr ""
-"Ці модулі є недостатньо перевіреними. Вмикайте їх, лише якщо ви "
-"ознайомилися\n"
-"з підручником із Audacity, і вам відомі наслідки ваших дій."
+"Модулі є необов'язковими компонентами Audacity, які уможливлюють "
+"користування певними можливостями, зокрема імпортування та експортування. \n"
+"Зазвичай, потреби у зміні цих параметрів не повинно бути."
 
-#. i18n-hint preserve the leading spaces
 #: src/prefs/ModulePrefs.cpp
-msgid ""
-"  'Ask' means Audacity will ask if you want to load the module each time it "
-"starts."
+msgid "Changes to these settings only take effect when restarting Audacity.\n"
 msgstr ""
-"  «Запитувати» — під час кожного запуску запитувати, чи слід завантажувати "
-"модуль."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'Failed' means Audacity thinks the module is broken and won't run it."
-msgstr "  «Помилка» — модуль непрацездатний, він не завантажуватиметься."
-
-#. i18n-hint preserve the leading spaces
-#: src/prefs/ModulePrefs.cpp
-msgid "  'New' means no choice has been made yet."
-msgstr "  «Новий» означає, що вибору ще не було зроблено."
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Changes to these settings only take effect when Audacity starts up."
-msgstr "Зміни цих параметрів набудуть чинності лише після перезапуску Audacity."
-
-#: src/prefs/ModulePrefs.cpp
-msgid "Ask"
-msgstr "Запитувати"
+"Зміни цих параметрів набудуть чинності лише після перезапуску Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
 msgstr "Помилка"
 
 #: src/prefs/ModulePrefs.cpp
-msgid "No modules were found"
-msgstr "Модулів не знайдено"
+msgid "No choice made"
+msgstr "Вибір не зроблено"
+
+#: src/prefs/ModulePrefs.cpp
+msgid "Error: No modules were found. This may indicate a faulty installation."
+msgstr ""
+"Помилка: модулів не знайдено. Це може означати помилки під час встановлення."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
 msgstr "Модуль"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Ctrl"
-msgstr "Ctrl"
-
-#: src/prefs/MousePrefs.cpp src/prefs/MousePrefs.h
-msgid "Mouse"
-msgstr "Миша"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Preferences for Mouse"
-msgstr "Налаштування миші"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Mouse Bindings (default values, not configurable)"
-msgstr "Використання миші (незмінні типові параметри)"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Tool"
-msgstr "Інструмент"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Command Action"
-msgstr "Дія команди"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Buttons"
-msgstr "Кнопки"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Click"
-msgstr "← — Клацання"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Point"
-msgstr "Встановити точку вибору"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Drag"
-msgstr "← — Перетягування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Set Selection Range"
-msgstr "Встановити область вибору"
-
-#: src/prefs/MousePrefs.cpp
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Shift-Left-Click"
-msgstr "Shift — ← — Клацання"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Extend Selection Range"
-msgstr "Розширити область вибору"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Left-Double-Click"
-msgstr "Подвійне-клацання-лівою"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Select Clip or Entire Track"
-msgstr "Вибрати ділянку або всю доріжку"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Wheel-Rotate"
-msgstr "Обертання коліщатка"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change scrub speed"
-msgstr "Змінити швидкість прокручування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on Point"
-msgstr "Збільшити за точкою"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom in on a Range"
-msgstr "Збільшити за областю"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as right-drag"
-msgstr "теж, що і клацання правою і перетаскування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Click"
-msgstr "→ — Клацання"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out one step"
-msgstr "Зменшити на крок"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Right-Drag"
-msgstr "→ — Перетягування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as left-drag"
-msgstr "теж, що і клацання лівою і перетаскування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Drag"
-msgstr "Shift — Перетягування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom out on a Range"
-msgstr "Збільшення за областю"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Middle-Click"
-msgstr "Клацання середньою"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom default"
-msgstr "Типовий масштаб"
-
-#. i18n-hint: The envelope is a curve that controls the audio loudness.
-#: src/prefs/MousePrefs.cpp
-msgid "Change Amplification Envelope"
-msgstr "Змінити обвідну підсилення"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Pencil"
-msgstr "«Олівець»"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Sample"
-msgstr "Змінити семпл"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Alt-Left-Click"
-msgstr "Alt-клацання лівою кнопкою"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Smooth at Sample"
-msgstr "Згладжувати семпл"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change Several Samples"
-msgstr "Змінити декілька семплів"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Left-Drag"
-msgstr "-перетягування лівою"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Change ONE Sample only"
-msgstr "Змінити лише ОДИН семпл"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Multi"
-msgstr "Декілька"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as select tool"
-msgstr "те саме, що й інструмент вибору"
-
-#: src/prefs/MousePrefs.cpp
-msgid "same as zoom tool"
-msgstr "те саме, що й інструмент масштабування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Any"
-msgstr "Будь-який"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll tracks up or down"
-msgstr "Прокрутити доріжки вгору чи вниз"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Wheel-Rotate"
-msgstr "Shift-Прокручування-коліщатка"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Scroll waveform"
-msgstr "Прокручування форми сигналу"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Wheel-Rotate"
-msgstr "-обертання коліщатка"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Zoom waveform in or out"
-msgstr "Збільшити або зменшити форму сигналу"
-
-#: src/prefs/MousePrefs.cpp
-msgid "-Shift-Wheel-Rotate"
-msgstr "-Shift-Прокручування-коліщатка"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Vertical Scale Waveform (dB) range"
-msgstr "Діапазон вертикального масштабування форми у дБ"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Shift-Left-Drag"
-msgstr "Shift-Ліва-Перетягування"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move all clips in track left/right"
-msgstr "Пересунути усі кліпи у доріжці ліворуч або праворуч"
-
-#: src/prefs/MousePrefs.cpp
-msgid "using clip handles"
-msgstr "за допомогою засобів керування кліпом"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip up/down between tracks"
-msgstr "Пересунути ділянку вгору або вниз між доріжками"
-
-#: src/prefs/MousePrefs.cpp
-msgid "Move clip left/right or between tracks"
-msgstr "Пересунути ділянку ліворуч або праворуч чи між доріжками"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Preferences for Playback"
@@ -17486,6 +17707,10 @@ msgid "Sound Activated Recording"
 msgstr "Запис з активацією звуком"
 
 #: src/prefs/RecordingPrefs.cpp
+msgid "&Enable"
+msgstr "&Увімкнути"
+
+#: src/prefs/RecordingPrefs.cpp
 msgid "Le&vel (dB):"
 msgstr "&Рівень (дБ):"
 
@@ -17590,7 +17815,6 @@ msgstr "Період"
 
 #. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
 msgstr "Колір (рожева тема)"
@@ -17667,6 +17891,10 @@ msgstr "Налаштування спектрограми"
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "&Use Preferences"
 msgstr "Ви&користати налаштування"
+
+#: src/prefs/SpectrumPrefs.cpp
+msgid "Scale"
+msgstr "Шкала"
 
 #: src/prefs/SpectrumPrefs.cpp src/prefs/WaveformPrefs.cpp
 msgid "S&cale:"
@@ -17795,7 +18023,8 @@ msgstr "Максимальна кількість нот має бути ціл�
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The maximum number of notes must be in the range 1..128"
-msgstr "Максимальна кількість нот має бути цілим значенням у межах від 1 до 128"
+msgstr ""
+"Максимальна кількість нот має бути цілим значенням у межах від 1 до 128"
 
 #. i18n-hint: A theme is a consistent visual style across an application's
 #. graphical user interface, including choices of colors, and similarity of images
@@ -17896,12 +18125,12 @@ msgid "Enable cut &lines"
 msgstr "Дозволити &лінії розрізання"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable &dragging selection edges"
-msgstr "Увімкнути п&еретягування країв позначеного"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Editing a clip can &move other clips"
 msgstr "Редагування ві&дрізку може пересувати інші інші"
+
+#: src/prefs/TracksBehaviorsPrefs.cpp
+msgid "&Always paste audio as new clips"
+msgstr "З&авжди вставляти звукові дані як нові кліпи"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -17914,14 +18143,6 @@ msgstr "&Натискання клавіші для створення мітк�
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Use dialog for the &name of a new label"
 msgstr "Діалогове вікно для &назви нової мітки"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Enable scrolling left of &zero"
-msgstr "Увімкнути гортання ліворуч від &нуля"
-
-#: src/prefs/TracksBehaviorsPrefs.cpp
-msgid "Advanced &vertical zooming"
-msgstr "Розширене &вертикальне масштабування"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
@@ -18079,22 +18300,6 @@ msgstr "З&береження проєктів або експортування
 #: src/prefs/WarningsPrefs.cpp
 msgid "Saving &empty project"
 msgstr "Збереження &порожнього проєкту"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &mono during export"
-msgstr "Мікшування у &моно під час експорту"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down to &stereo during export"
-msgstr "Мікшування у &стерео під час експорту"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Mixing down on export (&Custom FFmpeg or external program)"
-msgstr "Мікшування при експортуванні (&нетиповий FFmpeg або зовнішня програма)"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Missing file &name extension during export"
-msgstr "Під час експортування &не вказано суфікс назви файла"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -18418,64 +18623,6 @@ msgstr "З&більшити гучність запису"
 #: src/toolbars/MeterToolBar.cpp
 msgid "D&ecrease Recording Volume"
 msgstr "З&меншити гучність запису"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub"
-msgstr "Прокрутити"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Seek"
-msgstr "Позиціювання"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scrub Ruler"
-msgstr "Лінійка прокручування"
-
-#: src/toolbars/ScrubbingToolBar.cpp src/tracks/ui/Scrubbing.cpp
-msgid "Scrubbing"
-msgstr "Прокручування"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Scrubbing"
-msgstr "Зупинити прокручування"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Scrubbing"
-msgstr "Почати прокручування"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Stop Seeking"
-msgstr "Зупинити позиціювання"
-
-#. i18n-hint: These commands assist the user in finding a sound by ear. ...
-#. "Scrubbing" is variable-speed playback, ...
-#. "Seeking" is normal speed playback but with skips
-#.
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Start Seeking"
-msgstr "Почати позиціювання"
-
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Hide Scrub Ruler"
-msgstr "Приховати лінійку прокручування"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that enables Scrub or Seek playback and Scrub Ruler
-#: src/toolbars/ScrubbingToolBar.cpp
-msgid "Scru&b Toolbar"
-msgstr "Панель про&кручування"
 
 #. i18n-hint noun
 #: src/toolbars/SelectionBar.cpp
@@ -18816,7 +18963,6 @@ msgid "&MIDI Device Info..."
 msgstr "Дані &щодо пристрою MIDI…"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
 msgid ""
 "Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom "
 "region."
@@ -18825,28 +18971,20 @@ msgstr ""
 "— визначення області масштабування."
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
-msgid "Right-click for menu."
-msgstr "Меню викликається клацанням правою кнопкою."
-
-#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Zoom Reset"
 msgstr "Відновити початковий масштаб"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Shift-Right-Click"
 msgstr "Shift — Клацання правою"
 
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Left-Click/Left-Drag"
 msgstr "Клацання лівою/Перетягування лівою"
+
+#: src/tracks/playabletrack/notetrack/ui/NoteTrackVZoomHandle.cpp
+msgid "Shift-Left-Click"
+msgstr "Shift — ← — Клацання"
 
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Click and drag to stretch selected region."
@@ -18868,26 +19006,49 @@ msgstr "Розтягнути нотну доріжку"
 msgid "Stretch"
 msgstr "Розтягнути"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Change Speed"
-msgstr "Зміна швидкості"
+#: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
+msgid "Click to open clip context menu."
+msgstr "Клацніть, щоб відкрити контекстне меню кліпу."
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed"
-msgstr "Швидкість кліпу"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Pitch"
+msgstr "Скинути тон кліпу"
 
-#. i18n-hint: Title of an error message shown, when invalid clip speed is set
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Invalid clip speed"
-msgstr "Некоректна швидкість кліпу"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Not enough space"
+msgstr "Недостатньо місця"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "Clip speed must be a positive value"
-msgstr "Швидкість кліпу має бути додатним значенням"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "There is not enough space to expand the clip to its original speed."
+msgstr "Для розтягування кліпу до початкової швидкості недостатньо місця"
 
-#: src/tracks/playabletrack/wavetrack/ui/ChangeClipSpeedDialog.cpp
-msgid "There is not enough space to stretch the clip to the selected speed"
-msgstr "Для розтягування кліпу до вибраної швидкості недостатньо місця"
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Reset Clip Speed"
+msgstr "Скинути швидкість кліпу"
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip pitch."
+msgstr "Натисніть, щоб скинути тон кліпу."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Cmd + click to reset."
+msgstr "Натисніть, щоб змінити тон кліпу, Cmd + клацання — скинути."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip pitch, Ctrl + click to reset."
+msgstr "Натисніть, щоб змінити тон кліпу, Ctrl + клацання — скинути."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to reset clip speed."
+msgstr "Натисніть, щоб скинути швидкість кліпу."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Cmd + click to reset."
+msgstr "Натисніть, щоб змінити швидкість кліпу, Cmd + клацання — скинути."
+
+#: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
+msgid "Click to change clip speed, Ctrl + click to reset."
+msgstr "Натисніть, щоб змінити швидкість кліпу, Ctrl + клацання — скинути."
 
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Left-Click to expand, Right-Click to remove"
@@ -18905,6 +19066,46 @@ msgstr "Розгорнути"
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Removed Cut Line"
 msgstr "Вилучено лінію розрізу"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Pitch and Speed"
+msgstr "Тон і швидкість"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Pitch"
+msgstr "Тон кліпу"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "se&mitones:"
+msgstr "н&апівтони:"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&cents:"
+msgstr "&відсотки:"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Clip Speed"
+msgstr "Швидкість кліпу"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&speed %: "
+msgstr "% &швидкості: "
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "General"
+msgstr "Загальне"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "&Optimize for Voice"
+msgstr "&Оптимізація для голосових даних"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Speed"
+msgstr "Змінено швидкість"
+
+#: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
+msgid "Changed Pitch"
+msgstr "Змінено тон"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -18932,6 +19133,11 @@ msgstr "к"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 msgid "Zoom to Fit"
 msgstr "Підібрати за розмірами"
+
+#: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
+msgid "Reset Zoom"
+msgstr "Скинути масштабування"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -18968,6 +19174,17 @@ msgstr "Наступна &верхня пікова частота"
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "Next &Lower Peak Frequency"
 msgstr "Наступна &нижня пікова частота"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid ""
+"Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom."
+msgstr ""
+"Перетягування — визначення ділянки. Клацання правою — меню. Ctrl+гортання — "
+"масштабування."
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
+msgid "Right-click for menu. Ctrl+scroll to zoom."
+msgstr "Клацання правою — меню. Ctrl+гортання — масштабування.'"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid ""
@@ -19050,20 +19267,22 @@ msgid "Rename Clip..."
 msgstr "Перейменувати кліп…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Change Speed..."
-msgstr "Зміна швидкості…"
+msgid "Pitch and Speed..."
+msgstr "Тон і швидкість…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Render Clip Stretching"
-msgstr "Обробити розтягування кліпу"
+msgid "Render Pitch and Speed"
+msgstr "Обробити тон і швидкість"
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr "Швидкість кліпу змінено до %.01f%%"
 
-#. i18n-hint: This is about changing the clip playback speed, speed is in percent
+#. i18n-hint: This is about changing the clip playback speed, speed is in
+#. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
 #, c-format
 msgid "Changed Speed to %.01f%%"
@@ -19090,16 +19309,32 @@ msgid "Rendered time-stretched audio"
 msgstr "Оброблено розтягнуті за часом звукові дані"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch Shift"
+msgstr "Зсув тону"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Changed Pitch Shift"
+msgstr "Змінено зсув тону"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "&Rename Clip..."
 msgstr "Пере&йменувати кліп…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Change &Speed..."
-msgstr "Змінити &швидкість…"
+msgid "&Pitch and Speed..."
+msgstr "&Тон і швидкість…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-msgid "Render Clip S&tretching"
-msgstr "Обробити &розтягування кліпу"
+msgid "Render Pitch and &Speed"
+msgstr "Обробити тон і &швидкість"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Up"
+msgstr "Тон &вище"
+
+#: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
+msgid "Pitch &Down"
+msgstr "Тон &нижче"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19326,14 +19561,6 @@ msgid "%.0f%% Right"
 msgstr "%.0f%% правий"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x1/2"
-msgstr "Масштаб x1/2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-msgid "Zoom x2"
-msgstr "Масштаб x2"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
 msgid "Half Wave"
 msgstr "Півхвиля"
 
@@ -19435,6 +19662,10 @@ msgstr "Створено нову доріжку часу"
 msgid "&Time Track"
 msgstr "Доріжку &часу"
 
+#: src/tracks/timetrack/ui/TimeTrackVZoomHandle.cpp
+msgid "Right-click for menu."
+msgstr "Меню викликається клацанням правою кнопкою."
+
 #. i18n-hint Appears on hovering mouse over clip affordance
 #: src/tracks/ui/AffordanceHandle.cpp
 msgid ""
@@ -19473,8 +19704,8 @@ msgid "Brush tool selection"
 msgstr "Позначення інструментом «Пензель»"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-msgid "&Name..."
-msgstr "&Назва…"
+msgid "Re&name Track..."
+msgstr "Пере&йменувати доріжку…"
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19525,6 +19756,10 @@ msgstr "Обвідна скорегована."
 #: src/tracks/ui/Scrubbing.cpp
 msgid "&Scrub"
 msgstr "П&рокрутити"
+
+#: src/tracks/ui/Scrubbing.cpp
+msgid "Scrubbing"
+msgstr "Прокручування"
 
 #: src/tracks/ui/Scrubbing.cpp
 msgid "Seeking"
@@ -19596,7 +19831,8 @@ msgstr ""
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to adjust frequency bandwidth."
-msgstr "Затисніть кнопку миші і перетягніть вказівник для коригування смуги частот."
+msgstr ""
+"Затисніть кнопку миші і перетягніть вказівник для коригування смуги частот."
 
 #. i18n-hint: These are the names of a menu and a command in that menu
 #: src/tracks/ui/SelectHandle.cpp
@@ -19607,15 +19843,18 @@ msgstr "Зміни, Параметри…"
 #: src/tracks/ui/SelectHandle.cpp
 #, c-format
 msgid "Multi-Tool Mode: %s for Mouse and Keyboard Preferences."
-msgstr "Універсальний інструмент: натисніть %s для налаштовування миші та клавіатури"
+msgstr ""
+"Універсальний інструмент: натисніть %s для налаштовування миші та клавіатури"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to set frequency bandwidth."
-msgstr "Натисніть кнопку миші і перетягніть вказівник, щоб встановити смугу частот."
+msgstr ""
+"Натисніть кнопку миші і перетягніть вказівник, щоб встановити смугу частот."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to select audio"
-msgstr "Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані"
+msgstr ""
+"Натисніть кнопку миші і перетягніть вказівник, щоб позначити звукові дані"
 
 #. i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries
 #: src/tracks/ui/SelectHandle.cpp
@@ -19663,6 +19902,10 @@ msgstr "Позначити доріжку"
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Ctrl+Click to deselect"
 msgstr "Ctrl+клацання для скасування позначення"
+
+#: src/tracks/ui/TrackButtonHandles.cpp
+msgid "Delete Track"
+msgstr "Вилучити доріжку"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19713,7 +19956,8 @@ msgstr "Клацніть, щоб збільшити, клацніть із Shift
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Перетягніть, щоб масштабувати за областю, клацніть правою, щоб зменшити"
+msgstr ""
+"Перетягніть, щоб масштабувати за областю, клацніть правою, щоб зменшити"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
@@ -20094,8 +20338,7 @@ msgstr "Поличний фільтр"
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/delay.ny
-#: plug-ins/eq-xml-to-txt-converter.ny plug-ins/equalabel.ny
+#: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
 #: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20105,7 +20348,7 @@ msgstr "Steve Daulton"
 #: plug-ins/ShelfFilter.ny plug-ins/SpectralEditMulti.ny
 #: plug-ins/SpectralEditParametricEQ.ny plug-ins/beat.ny plug-ins/clipfix.ny
 #: plug-ins/delay.ny plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/pluck.ny
-#: plug-ins/rhythmtrack.ny plug-ins/vocalrediso.ny plug-ins/vocoder.ny
+#: plug-ins/rhythmtrack.ny plug-ins/vocoder.ny
 msgid "GNU General Public License v2.0"
 msgstr "GNU General Public License версії 2.0"
 
@@ -20231,9 +20474,8 @@ msgstr "Полиці редагування спектра"
 
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
-#: plug-ins/crossfadetracks.ny plug-ins/eq-xml-to-txt-converter.ny
-#: plug-ins/equalabel.ny plug-ins/label-sounds.ny plug-ins/limiter.ny
-#: plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
+#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20247,7 +20489,8 @@ msgstr "Студійне спадання"
 #: plug-ins/StudioFadeOut.ny
 #, lisp-format
 msgid "Selection too short.~%It must be more than 2 samples."
-msgstr "Позначено надто малий фрагмент.~%У фрагменті має бути більше за 2 семпли."
+msgstr ""
+"Позначено надто малий фрагмент.~%У фрагменті має бути більше за 2 семпли."
 
 #: plug-ins/adjustable-fade.ny resources/EffectsMenuDefaults.xml
 msgid "Adjustable Fade"
@@ -20369,7 +20612,7 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aЗначення у відсотках не можуть перевищувати 1000 %."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                      Hint: 6 dB doubles the amplitude~%~\n"
@@ -20526,50 +20769,6 @@ msgstr "Кількість відлунь"
 #: plug-ins/delay.ny
 msgid "Allow duration to change"
 msgstr "Дозволити зміну тривалості"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "EQ XML to TXT Converter"
-msgstr "Засіб перетворення EQ XML на TXT"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Select target EQ effect"
-msgstr "Виберіть ефект вирівнювання цілі"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Equalization XML file"
-msgstr "Файл XML вирівнювання"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "XML file"
-msgstr "файл XML"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "If output text file exists"
-msgstr "Якщо текстовий файл результатів існує"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Append number"
-msgstr "Дописати номер"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-msgid "Overwrite"
-msgstr "Перезаписати"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%Unable to open file~%~s"
-msgstr "Помилка.~%Не вдалося відкрити файл~%~s"
-
-#. i18n-hint: Do not translate "~a".txt
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
-msgstr "Помилка.~%Перезапис файла заборонено:~%«~a.txt»"
-
-#: plug-ins/eq-xml-to-txt-converter.ny
-#, lisp-format
-msgid "Error.~%File cannot be written:~%\"~a.txt\""
-msgstr "Помилка.~%Не вдалося записати:~%«~a.txt»"
 
 #: plug-ins/equalabel.ny
 msgid "Regular Interval Labels"
@@ -20728,7 +20927,7 @@ msgid "Frequency must be at least 0.1 Hz."
 msgstr "Значення частоти має бути не нижчим за 0.1 Гц."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz~%~\n"
@@ -20840,10 +21039,6 @@ msgid "Limiter"
 msgstr "Обмежувач"
 
 #: plug-ins/limiter.ny
-msgid "Type"
-msgstr "Тип"
-
-#: plug-ins/limiter.ny
 msgid "Soft Limit"
 msgstr "М'яке обмеження"
 
@@ -20941,7 +21136,7 @@ msgid "Decay (ms)"
 msgstr "Спадання (мс)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                             Gate frequencies above: ~s kHz~%~\n"
@@ -20954,7 +21149,7 @@ msgstr ""
 "                             Встановіть керування нижчим за ~a кГц."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                            Insufficient audio selected.~%~\n"
@@ -20992,7 +21187,7 @@ msgid "Q (higher value reduces width)"
 msgstr "Q (вище значення зменшує ширину)"
 
 #: plug-ins/notch.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "               Track sample rate is ~a Hz.~%~\n"
@@ -21309,10 +21504,6 @@ msgstr "Включити інформацію заголовка"
 #: plug-ins/sample-data-export.ny
 msgid "Minimal"
 msgstr "Мінімальний"
-
-#: plug-ins/sample-data-export.ny
-msgid "All"
-msgstr "Всі"
 
 #: plug-ins/sample-data-export.ny
 msgid "Optional header text"
@@ -21644,163 +21835,6 @@ msgstr "Початкова фаза (у градусах)"
 msgid "Wet level (percent)"
 msgstr "Рівень теплого (у відсотках)"
 
-#: plug-ins/vocalrediso.ny resources/EffectsMenuDefaults.xml
-msgid "Vocal Reduction and Isolation"
-msgstr "Усування та ізоляція вокалу"
-
-#: plug-ins/vocalrediso.ny
-msgid "Robert Haenggi"
-msgstr "Robert Haenggi"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals: to mono"
-msgstr "Вилучення вокалу: моно"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Vocals"
-msgstr "Вилучити вокал"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals"
-msgstr "Ізолювати вокал"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Vocals and Invert"
-msgstr "Ізолювати вокал і інвертувати"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center: to mono"
-msgstr "Вилучення центру: моно"
-
-#: plug-ins/vocalrediso.ny
-msgid "Remove Center"
-msgstr "Вилучити центр"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center"
-msgstr "Ізолювати центр"
-
-#: plug-ins/vocalrediso.ny
-msgid "Isolate Center and Invert"
-msgstr "Ізолювати центр і інвертувати"
-
-#: plug-ins/vocalrediso.ny
-msgid "Strength"
-msgstr "Потужність"
-
-#: plug-ins/vocalrediso.ny
-msgid "Low Cut for Vocals (Hz)"
-msgstr "Нижнє обрізання вокалу (у Гц)"
-
-#: plug-ins/vocalrediso.ny
-msgid "High Cut for Vocals (Hz)"
-msgstr "Верхнє обрізання вокалу (у Гц)"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Average x: ~a, y: ~a\n"
-"                    Covariance x y: ~a\n"
-"                    Average variance x: ~a, y: ~a\n"
-"                    Standard deviation x: ~a, y: ~a\n"
-"                    Coefficient of correlation: ~a\n"
-"                    Coefficient of determination: ~a\n"
-"                    Variation of residuals: ~a\n"
-"                    y equals ~a plus ~a times x~%"
-msgstr ""
-"Середнє за x: ~a, y: ~a\n"
-"Коваріація x y: ~a\n"
-"Середня дисперсія x: ~a, y: ~a\n"
-"Стандартне відхилення x: ~a, y: ~a\n"
-"Коефіцієнт кореляції: ~a\n"
-"Коефіцієнт визначеності: ~a\n"
-"Дисперсія лишків: ~a\n"
-"y дорівнює ~a плюс ~a помножити на x~%"
-
-#: plug-ins/vocalrediso.ny
-#, lisp-format
-msgid ""
-"Pan position: ~a~%The left and right channels are correlated by about ~a %. "
-"This means:~%~a~%"
-msgstr ""
-"Позиція панорамування: ~a~%Лівий і правий канали скорельовано приблизно на "
-"~a %. Це означає:~%~a~%"
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are identical, i.e. dual mono.\n"
-"                The center can't be removed.\n"
-"                Any remaining difference may be caused by lossy encoding."
-msgstr ""
-" - Канали є ідентичним, тобто маємо подвійне моно.\n"
-"   Центральний сигнал не можна вилучити.\n"
-"      Залишкові відмінності можуть бути наслідком кодування з втратами."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two Channels are strongly related, i.e. nearly mono or extremely "
-"panned.\n"
-"                Most likely, the center extraction will be poor."
-msgstr ""
-" - Два канали сильно пов'язано, тобто маємо майже моно або надзвичайне "
-"панорамування.\n"
-"   Найімовірніше, якість видобування центрального сигналу буде низькою."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - A fairly good value, at least stereo in average and not too wide spread."
-msgstr ""
-" - Доволі добре значення, принаймні, стерео у середньому без надто великого "
-"розсіювання."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - An ideal value for Stereo.\n"
-"                However, the center extraction depends also on the used "
-"reverb."
-msgstr ""
-" - Ідеальне значення для стерео.\n"
-"  Втім, видобування центральних даних залежить також від використання "
-"ревербації."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are almost not related.\n"
-"                Either you have only noise or the piece is mastered in a "
-"unbalanced manner.\n"
-"                The center extraction can still be good though."
-msgstr ""
-" - Два канали майже не пов'язано.\n"
-"   Це або шум або незбалансований запис.\n"
-"   Втім, з цих даних можна видобути якісний центральний сигнал."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - Although the Track is stereo, the field is obviously extra wide.\n"
-"                This can cause strange effects.\n"
-"                Especially when played by only one speaker."
-msgstr ""
-" - Хоча маємо стереодоріжку, поле, очевидно занадто широке.\n"
-"   Це може спричинити дивні ефекти.\n"
-"   Особливо, якщо відтворення відбуватиметься лише з одного динаміка."
-
-#: plug-ins/vocalrediso.ny
-msgid ""
-" - The two channels are nearly identical.\n"
-"                  Obviously, a pseudo stereo effect has been used\n"
-"                  to spread the signal over the physical distance between "
-"the speakers.\n"
-"                  Don't expect good results from a center removal."
-msgstr ""
-" - Два канали майже ідентичні.\n"
-"   Очевидно, було застосовано ефект створення псевдостерео\n"
-"   для розширення сигналу на фізичну відстань між динаміками.\n"
-" Не слід очікувати добрих результатів від вилучення центрального сигналу."
-
-#: plug-ins/vocalrediso.ny
-msgid "This plug-in works only with stereo tracks."
-msgstr "Цей додаток може працювати лише із стереодоріжками."
-
 #: plug-ins/vocoder.ny resources/EffectsMenuDefaults.xml
 msgid "Vocoder"
 msgstr "Вокодер"
@@ -21886,9 +21920,14 @@ msgid "Special"
 msgstr "Спеціальні"
 
 #: resources/EffectsMenuDefaults.xml
+msgid "Vocal Reduction and Isolation"
+msgstr "Усування та ізоляція вокалу"
+
+#: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
 msgstr "Вилучення вокалу"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Спектральні інструменти"
+

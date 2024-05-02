@@ -350,18 +350,14 @@ AButton* MakeBitmapToggleButton(wxWindow *parent,
    pBtn->SetImages(ImageOff, ImageOff, ImageOn, ImageOn, ImageOff);
    return pBtn;
 }
+   constexpr int InnerMargin = 3;
 }
 
-void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
+void EffectUIHost::BuildTopBar(ShuttleGui &S)
 {
-   mIsGUI = graphicalUI;
-   mIsBatch = mEffectUIHost.IsBatchProcessing();
-
-   constexpr int margin = 3;
-
    S.StartPanel();
    {
-      S.SetBorder( margin );
+      S.SetBorder( InnerMargin );
 
       S.StartHorizontalLay(wxEXPAND, 0);
       {
@@ -381,36 +377,7 @@ void EffectUIHost::BuildButtonBar(ShuttleGui &S, bool graphicalUI)
 
          S.AddSpace(1, 0, 1);
 
-         if (!mIsBatch)
-         {
-            if (!IsOpenedFromEffectPanel() &&
-               (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze) &&
-               (mEffectUIHost.GetDefinition().GetType() != EffectTypeTool) )
-            {
-               mPlayToggleBtn = S.Id(kPlayID)
-                  .ToolTip(XO("Preview effect"))
-                  .AddButton( { },
-                              wxALIGN_CENTER | wxTOP | wxBOTTOM );
-            }
-            if(mPlayToggleBtn != nullptr)
-            {
-               //wxButton does not implement GetSizeFromText
-               //set button minimum size so that largest text fits
-               mPlayToggleBtn->SetLabel(_("Stop &Preview"));
-               auto a = mPlayToggleBtn->GetBestSize();
-               mPlayToggleBtn->SetLabel(_("&Preview"));
-               auto b = mPlayToggleBtn->GetBestSize();
-               mPlayToggleBtn->SetMinSize(a.x > b.x ? a : b);
-            }
-         }
-
-         if (!IsOpenedFromEffectPanel())
-         {
-            mApplyBtn = S.Id(wxID_APPLY)
-               .AddButton( XXO("&Apply"),
-                           wxALIGN_CENTER | wxTOP | wxBOTTOM );
-            mApplyBtn->SetDefault();
-         }
+         
 
          if (mEffectUIHost.GetDefinition().EnablesDebug())
          {
@@ -433,6 +400,8 @@ bool EffectUIHost::Initialize()
    EffectPanel *w {};
    ShuttleGui S{ this, eIsCreating };
    {
+      BuildTopBar(S);
+
       // Make the panel for the client
       Destroy_ptr<EffectPanel> uw{ safenew EffectPanel( S.GetParent() ) };
       RTL_WORKAROUND(uw.get());
@@ -448,7 +417,8 @@ bool EffectUIHost::Initialize()
       if (!mpEditor)
          return false;
 
-      BuildButtonBar(S, mpEditor->IsGraphicalUI());
+      mIsGUI = mpEditor->IsGraphicalUI();
+      mIsBatch = mEffectUIHost.IsBatchProcessing();
 
       S.StartHorizontalLay( wxEXPAND );
       {
@@ -457,6 +427,38 @@ bool EffectUIHost::Initialize()
             .AddWindow((w = uw.release()));
       }
       S.EndHorizontalLay();
+
+      if (!IsOpenedFromEffectPanel())
+      {
+         S.StartPanel();
+         {
+            S.SetBorder( InnerMargin );
+            S.StartHorizontalLay(wxEXPAND, 0);
+            {
+               if (!mIsBatch)
+               {
+                  if (mEffectUIHost.GetDefinition().GetType() != EffectTypeAnalyze &&
+                     mEffectUIHost.GetDefinition().GetType() != EffectTypeTool)
+                  {
+                     S.Id(kPlayID)
+                        .ToolTip(XO("Preview effect"))
+                        .AddButton( XXO("&Preview"),
+                                    wxALIGN_CENTER | wxTOP | wxBOTTOM );
+                  }
+               }
+
+               S.AddSpace(1, 1, 1);
+               S.Id(wxID_CANCEL)
+                  .AddButton(XXO("&Cancel"));
+               
+               mApplyBtn = S.Id(wxID_APPLY)
+                  .AddButton( XXO("&Apply"));
+               mApplyBtn->SetDefault();
+            }
+            S.EndHorizontalLay();
+         }
+         S.EndPanel();
+      }
    }
 
    Layout();

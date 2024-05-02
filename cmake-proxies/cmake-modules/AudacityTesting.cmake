@@ -54,9 +54,20 @@ if( ${_OPT}has_tests )
       endif()
 
       if (ADD_UNIT_TEST_WAV_FILE_IO)
-         target_sources( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests/WavFileIO.cpp" "${CMAKE_SOURCE_DIR}/tests/WavFileIO.h" )
+         target_sources( ${test_executable_name} PRIVATE
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileInfo.h"
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileIO.cpp"
+            "${CMAKE_SOURCE_DIR}/tests/AudioFileIO.h"
+            "${CMAKE_SOURCE_DIR}/tests/Mp3FileReader.cpp"
+            "${CMAKE_SOURCE_DIR}/tests/Mp3FileReader.h"
+            "${CMAKE_SOURCE_DIR}/tests/WavFileIO.cpp"
+            "${CMAKE_SOURCE_DIR}/tests/WavFileIO.h"
+             )
          target_include_directories( ${test_executable_name} PRIVATE "${CMAKE_SOURCE_DIR}/tests" )
-         target_link_libraries( ${test_executable_name} PRIVATE SndFile::sndfile )
+         target_link_libraries( ${test_executable_name} PRIVATE
+            SndFile::sndfile
+            mpg123::libmpg123
+         )
       endif()
 
       set( OPTIONS )

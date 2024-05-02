@@ -60,9 +60,9 @@ public:
    ImportProgressResultProxy(ImportProgressListener* listener)
       : mListener(listener)
    {
-      
+
    }
-   
+
    bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
    {
       mResult = ImportResult::Error;
@@ -70,20 +70,20 @@ public:
          return mListener->OnImportFileOpened(importFileHandle);
       return true;
    }
-   
+
    void OnImportProgress(double progress) override
    {
       if(mListener)
          mListener->OnImportProgress(progress);
    }
-   
+
    void OnImportResult(ImportResult result) override
    {
       mResult = result;
       if(mListener)
          mListener->OnImportResult(result);
    }
-   
+
    ImportResult GetResult() const noexcept
    {
       return mResult;
@@ -483,13 +483,12 @@ std::unique_ptr<ExtImportItem> Importer::CreateDefaultImportItem()
 }
 
 // returns number of tracks imported
-bool Importer::Import( AudacityProject &project,
-                     const FilePath &fName,
-                     ImportProgressListener* importProgressListener,
-                     WaveTrackFactory *trackFactory,
-                     TrackHolders &tracks,
-                     Tags *tags,
-                     TranslatableString &errorMessage)
+bool Importer::Import(
+   AudacityProject& project, const FilePath& fName,
+   ImportProgressListener* importProgressListener,
+   WaveTrackFactory* trackFactory, TrackHolders& tracks, Tags* tags,
+   std::optional<LibFileFormats::AcidizerTags>& outAcidTags,
+   TranslatableString& errorMessage)
 {
    AudacityProject *pProj = &project;
    auto cleanup = valueRestorer( pProj->mbBusyImporting, true );
@@ -624,7 +623,7 @@ bool Importer::Import( AudacityProject &project,
    }
 
    ImportProgressResultProxy importResultProxy(importProgressListener);
-   
+
    // Try the import plugins, in the permuted sequences just determined
    for (const auto plugin : importPlugins)
    {
@@ -636,8 +635,9 @@ bool Importer::Import( AudacityProject &project,
          wxLogMessage(wxT("Open(%s) succeeded"), fName);
          if(!importResultProxy.OnImportFileOpened(*inFile))
             return false;
-         
-         inFile->Import(importResultProxy, trackFactory, tracks, tags);
+
+         inFile->Import(
+            importResultProxy, trackFactory, tracks, tags, outAcidTags);
          const auto importResult = importResultProxy.GetResult();
          if (importResult == ImportProgressListener::ImportResult::Success ||
              importResult == ImportProgressListener::ImportResult::Stopped)
@@ -654,15 +654,6 @@ bool Importer::Import( AudacityProject &project,
                return true;
             }
 
-            auto end = tracks.end();
-            auto iter = std::remove_if(tracks.begin(), end,
-               [](auto &pList){ return pList->empty(); });
-            if (iter != end) {
-               // importer shouldn't give us empty groups of channels!
-               assert(false);
-               // But correct that and proceed anyway
-               tracks.erase(iter, end);
-            }
             if (tracks.size() > 0)
                // success!
                return true;

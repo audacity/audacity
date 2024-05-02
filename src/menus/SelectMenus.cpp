@@ -16,6 +16,7 @@
 #include "Viewport.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
+#include "WaveTrackUtilities.h"
 #include "../LabelTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
@@ -451,7 +452,7 @@ void OnSelectAll(const CommandContext &context)
    //Presumably, there might be not more than one track
    //that expects text input
    for (auto wt : tracks.Any<WaveTrack>()) {
-      auto& view = WaveChannelView::Get(*wt);
+      auto& view = WaveChannelView::GetFirst(*wt);
       if (view.SelectAllText(context.project)) {
          trackPanel.Refresh(false);
          return;
@@ -484,7 +485,7 @@ void OnSelectSyncLockSel(const CommandContext &context)
 
    bool selected = false;
    for (auto t : tracks.Any() + &Track::SupportsBasicEditing
-         + &SyncLock::IsSyncLockSelected - &Track::IsSelected) {
+         + &SyncLock::IsSyncLockSelectedP - &Track::IsSelected) {
       t->SetSelected(true);
       selected = true;
    }
@@ -641,21 +642,21 @@ void OnZeroCrossing(const CommandContext &context)
    // it if any stretched clip is involved.
    const auto projectRate = ProjectRate(project).GetRate();
    const auto searchWindowDuration = GetWindowSize(projectRate) / projectRate;
-   const auto wouldSearchStretchedClip =
+   const auto wouldSearchClipWithPitchOrSpeed =
       [searchWindowDuration](const WaveTrack& track, double t) {
-         const auto clips = track.GetClipsIntersecting(
+         const auto clips = WaveTrackUtilities::GetClipsIntersecting(track,
             t - searchWindowDuration / 2, t + searchWindowDuration / 2);
-         return std::any_of(
+         return any_of(
             clips.begin(), clips.end(),
-            [](const std::shared_ptr<const WaveClip>& clip) {
-               return !clip->StretchRatioEquals(1);
-            });
+            [](const auto& clip) { return clip->HasPitchOrSpeed(); });
       };
    const auto selected = tracks.Selected<const WaveTrack>();
    if (std::any_of(
           selected.begin(), selected.end(), [&](const WaveTrack* track) {
-             return wouldSearchStretchedClip(*track, selectedRegion.t0()) ||
-                    wouldSearchStretchedClip(*track, selectedRegion.t1());
+             return wouldSearchClipWithPitchOrSpeed(
+                       *track, selectedRegion.t0()) ||
+                    wouldSearchClipWithPitchOrSpeed(
+                       *track, selectedRegion.t1());
           }))
    {
       using namespace BasicUI;

@@ -12,6 +12,7 @@ Paul Licameli split from TrackInfo.h
 
 #include "TrackInfo.h"
 
+class Channel;
 class wxPoint;
 
 static const int TitleSoloBorderOverlap = 1;
@@ -41,7 +42,7 @@ namespace CommonTrackInfo
 
    AUDACITY_DLL_API
    void DrawCloseButton(TrackPanelDrawingContext &context, const wxRect &bev,
-      const Track *pTrack, UIHandle *target);
+      const Channel *pChannel, UIHandle *target);
 
    AUDACITY_DLL_API
    void CloseTitleDrawFunction
@@ -71,11 +72,6 @@ namespace CommonTrackInfo
    void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );
    AUDACITY_DLL_API
    void GetMinimizeRect(const wxRect & rect, wxRect &dest);
-
-   AUDACITY_DLL_API
-   void GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest );
-   AUDACITY_DLL_API
-   void GetSelectButtonRect(const wxRect & rect, wxRect &dest);
 
    AUDACITY_DLL_API
    void GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &dest );

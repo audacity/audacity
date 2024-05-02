@@ -21,7 +21,7 @@ class TimeTrackView final : public CommonChannelView
    TimeTrackView &operator=( const TimeTrackView& ) = delete;
 
 public:
-   explicit TimeTrackView(const std::shared_ptr<Track> &pTrack);
+   explicit TimeTrackView(const std::shared_ptr<Channel> &pChannel);
    ~TimeTrackView() override;
 
    std::shared_ptr<ChannelVRulerControls> DoGetVRulerControls() override;

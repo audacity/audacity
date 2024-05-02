@@ -16,6 +16,7 @@
 #include <wx/debug.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
+#include <wx/display.h>
 
 enum { DontShowID = wxID_HIGHEST + 1 };
 
@@ -47,7 +48,7 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& vers
             {
                 S.Id(DontShowID).AddCheckBox(
                     XO("Don't show this again at start up"),
-                    !DefaultUpdatesCheckingFlag.Read());
+                    !DefaultUpdatesCheckingFlag->Read());
             }
 
             S.Prop(1).AddSpace(1, 0, 1);
@@ -64,6 +65,11 @@ UpdatePopupDialog::UpdatePopupDialog (wxWindow* parent, const VersionPatch& vers
     Layout();
     Fit();
     Center();
+
+    wxSize sz = GetSize();
+    const auto maxHeight = std::max(1, wxDisplay().GetGeometry().GetHeight() - 100);
+    const auto minHeight = std::min({ sz.y, 600, maxHeight });
+    SetSizeHints(sz.x, minHeight, wxDefaultCoord, maxHeight);
 }
 
 UpdatePopupDialog::~UpdatePopupDialog()
@@ -83,7 +89,7 @@ void UpdatePopupDialog::OnSkip (wxCommandEvent&)
 
 void UpdatePopupDialog::OnDontShow (wxCommandEvent& event)
 {
-    DefaultUpdatesCheckingFlag.Write(!event.IsChecked());
+    DefaultUpdatesCheckingFlag->Write(!event.IsChecked());
 }
 
 HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
@@ -91,10 +97,21 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     wxStringOutputStream o;
     wxTextOutputStream informationStr (o);
 
+#if AUDACITY_BUILD_LEVEL == 0
+    const auto versionPostfix = " Alpha";
+#elif AUDACITY_BUILD_LEVEL == 1
+    const auto versionPostfix = " Beta";
+#else
+    const auto versionPostfix = "";
+#endif
+
     informationStr
         << wxT("<html><body><h3>")
         // i18n-hint Substitution of version number for %s.
-        << XC("Audacity %s is available!", "update dialog").Format(mVersionPatch.version.GetString()).Translation()
+                   << XC("Audacity %s is available!", "update dialog")
+                         .Format(
+                            mVersionPatch.version.GetString() + versionPostfix)
+                         .Translation()
         << wxT("</h3><h5>")
         << XC("Changelog", "update dialog")
         << wxT("</h5><p>");

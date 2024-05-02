@@ -7,34 +7,41 @@ ChannelView.cpp
 Paul Licameli split from TrackPanel.cpp
 
 **********************************************************************/
-
 #include "ChannelView.h"
-#include "Track.h"
+#include "ChannelAttachments.h"
+#include "ChannelVRulerControls.h"
 
 #include "ClientData.h"
+#include "PendingTracks.h"
 #include "Project.h"
 #include "XMLTagHandler.h"
 #include "XMLWriter.h"
 
-#include <sstream>
 
-ChannelView::ChannelView(const std::shared_ptr<Track> &pTrack, size_t iChannel)
-   : CommonTrackCell{ pTrack, iChannel }
-   , vrulerSize{ 36, 0 }
+ChannelView::ChannelView(const std::shared_ptr<Channel> &pChannel)
+   : CommonChannelCell{ pChannel }
 {
-   DoSetHeight( GetDefaultTrackHeight::Call( *pTrack ) );
+   DoSetHeight(GetDefaultTrackHeight::Call(*pChannel));
 }
 
 ChannelView::~ChannelView()
 {
 }
 
+void ChannelView::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
+{
+   CommonChannelCell::Reparent(parent, iChannel);
+   if (mpVRulerControls)
+      mpVRulerControls->Reparent(parent, iChannel);
+}
+
 int ChannelView::GetChannelGroupHeight(const Track *pTrack)
 {
-   const auto GetTrackHeight = [](const Track *pTrack) -> int {
-      return pTrack ? GetFromChannelGroup(*pTrack).GetHeight() : 0;
+   const auto GetChannelHeight = [](const auto &pChannel) -> int {
+      return pChannel ? Get(*pChannel).GetHeight() : 0;
    };
-   return pTrack ? TrackList::Channels(pTrack).sum(GetTrackHeight) : 0;
+   return pTrack ? pTrack->Channels().sum(GetChannelHeight) : 0;
 }
 
 int ChannelView::GetCumulativeHeight(const Channel *pChannel)
@@ -57,9 +64,9 @@ int ChannelView::GetTotalHeight(const TrackList &list)
    return GetCumulativeHeight(*list.rbegin());
 }
 
-void ChannelView::CopyTo(Track &track) const
+void ChannelView::CopyTo(Track &track, size_t index) const
 {
-   auto &other = GetFromChannelGroup(track);
+   auto &other = GetFromChannelGroup(track, index);
 
    other.mMinimized = mMinimized;
    other.vrulerSize = vrulerSize;
@@ -89,12 +96,6 @@ ChannelView &ChannelView::GetFromChannelGroup(
    return ChannelViewAttachments::Get(keyC, track, iChannel);
 }
 
-const ChannelView &ChannelView::GetFromChannelGroup(
-   const ChannelGroup &group, size_t iChannel)
-{
-   return GetFromChannelGroup(const_cast<ChannelGroup &>(group), iChannel);
-}
-
 ChannelView *ChannelView::FindFromChannelGroup(
    ChannelGroup *pGroup, size_t iChannel)
 {
@@ -106,43 +107,46 @@ void ChannelView::SetMinimized(bool isMinimized)
 {
    // Do special changes appropriate to subclass
    DoSetMinimized(isMinimized);
+   AdjustPositions();
+}
 
-   // Update positions and heights starting from the first track in the group
-   auto leader = *TrackList::Channels( FindTrack().get() ).begin();
-   if ( leader )
-      leader->AdjustPositions();
+void ChannelView::AdjustPositions()
+{
+   // Update positions and heights starting from the first track in the group,
+   // causing TrackList events
+   if (const auto pTrack = FindTrack())
+      pTrack->AdjustPositions();
 }
 
 namespace {
 // Append a channel number to a base attribute name unless it is 0
-std::string AttributeName(const ChannelView &view, std::string name) {
-   const auto index = view.GetChannelIndex();
+std::string AttributeName(const std::string& name, size_t index) {
    if (index == 0)
-      return move(name);
-   std::stringstream stream{ name };
-   stream << index;
-   return stream.str();
+      return name;
+
+   return name + std::to_string(index);
 }
-std::string HeightAttributeName(const ChannelView &view) {
-   return AttributeName(view, "height");
+std::string HeightAttributeName(size_t index) {
+   return AttributeName("height", index);
 }
-std::string MinimizedAttributeName(const ChannelView &view) {
-   return AttributeName(view, "minimized");
+std::string MinimizedAttributeName(size_t index) {
+   return AttributeName("minimized", index);
 }
 }
 
-void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile) const
+void ChannelView::WriteXMLAttributes(XMLWriter &xmlFile, size_t index) const
 {
-   xmlFile.WriteAttr(HeightAttributeName(*this), GetExpandedHeight());
-   xmlFile.WriteAttr(MinimizedAttributeName(*this), GetMinimized());
+   xmlFile.WriteAttr(HeightAttributeName(index), GetExpandedHeight());
+   xmlFile.WriteAttr(MinimizedAttributeName(index), GetMinimized());
 }
 
 bool ChannelView::HandleXMLAttribute(
-   const std::string_view& attr, const XMLAttributeValueView& valueView)
+   const std::string_view& attr, const XMLAttributeValueView& valueView,
+   size_t index)
 {
    long nValue;
 
-   if (attr == HeightAttributeName(*this) && valueView.TryGet(nValue)) {
+   if (attr == HeightAttributeName(index) && valueView.TryGet(nValue)) {
       // Bug 2803: Extreme values for track height (caused by integer overflow)
       // will stall Audacity as it tries to create an enormous vertical ruler.
       // So clamp to reasonable values.
@@ -150,7 +154,7 @@ bool ChannelView::HandleXMLAttribute(
       SetExpandedHeight(nValue);
       return true;
    }
-   else if (attr == MinimizedAttributeName(*this) && valueView.TryGet(nValue)) {
+   else if (attr == MinimizedAttributeName(index) && valueView.TryGet(nValue)) {
       SetMinimized(nValue != 0);
       return true;
    }
@@ -203,7 +207,7 @@ int ChannelView::GetHeight() const
 void ChannelView::SetExpandedHeight(int h)
 {
    DoSetHeight(h);
-   FindTrack()->AdjustPositions();
+   AdjustPositions();
 }
 
 void ChannelView::DoSetHeight(int h)
@@ -218,8 +222,8 @@ std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
 
 ChannelView &ChannelView::Get(Channel &channel)
 {
-   return GetFromChannelGroup(channel.GetChannelGroup(),
-      channel.GetChannelIndex());
+   return
+      GetFromChannelGroup(channel.GetChannelGroup(), channel.GetChannelIndex());
 }
 
 const ChannelView &ChannelView::Get(const Channel &channel)
@@ -253,7 +257,7 @@ struct TrackPositioner final : ClientData::Base
    explicit TrackPositioner( AudacityProject &project )
       : mProject{ project }
    {
-      mSubscription = TrackList::Get( project )
+      mSubscription = PendingTracks::Get(project)
          .Subscribe(*this, &TrackPositioner::OnUpdate);
    }
    TrackPositioner( const TrackPositioner & ) = delete;

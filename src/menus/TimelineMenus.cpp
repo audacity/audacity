@@ -48,7 +48,7 @@ using namespace MenuRegistry;
 auto ExtraSelectionMenu()
 {
    static auto menu = std::shared_ptr{ Menu(
-      wxT("Timeline"), XXO("&Timeline"),
+      wxT("Timeline"), XXO("Tim&eline"),
       Command(
          wxT("MinutesAndSeconds"), XXO("Minutes and Seconds"),
          OnSetMinutesSeconds, AlwaysEnabledFlag,
@@ -69,6 +69,6 @@ auto ExtraSelectionMenu()
 }
 
 AttachedItem sAttachment2 { Indirect(ExtraSelectionMenu()),
-   wxT("Optional/Extra/Part1") };
+   wxT("View/Other/Toolbars") };
 
 } // namespace

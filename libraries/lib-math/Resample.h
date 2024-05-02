@@ -65,12 +65,12 @@ class MATH_API Resample final
     created by this call
    */
    std::pair<size_t, size_t>
-                Process(double  factor,
-                        float  *inBuffer,
-                        size_t  inBufferLen,
-                        bool    lastFlag,
-                        float  *outBuffer,
-                        size_t  outBufferLen);
+                Process(double       factor,
+                        const float *inBuffer,
+                        size_t       inBufferLen,
+                        bool         lastFlag,
+                        float       *outBuffer,
+                        size_t       outBufferLen);
 
  protected:
    void SetMethod(const bool useBestMethod);

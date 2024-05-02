@@ -8,6 +8,8 @@ set( IMAGE_LIST
    AudacityLogo48x48.png
    BandWidthCursor.png
    BottomFrequencyCursor.png
+   Cloud.png
+   CloudProgress.png
    Cogwheel.png
    Colors.txt
    Copy.png
@@ -17,6 +19,8 @@ set( IMAGE_LIST
    CutDisabled.png
    CutPreview.png
    CutPreviewDisabled.png
+   Delete.png
+   DeleteDisabled.png
    DisabledCursor.png
    DownButtonExpand.png
    DownButtonExpandSel.png
@@ -73,10 +77,11 @@ set( IMAGE_LIST
    PasteDisabled.png
    Pause.png
    PauseDisabled.png
+   PitchDownIndicator.png
+   PitchUpIndicator.png
    Play.png
    PlayDisabled.png
    PlayPointer.png
-   PlayPointerPinned.png
    Record.png
    RecordBelow.png
    RecordBelowDisabled.png
@@ -84,7 +89,6 @@ set( IMAGE_LIST
    RecordBesideDisabled.png
    RecordDisabled.png
    RecordPointer.png
-   RecordPointerPinned.png
    Redo.png
    RedoDisabled.png
    Rewind.png
@@ -103,6 +107,7 @@ set( IMAGE_LIST
    SliderThumbRotatedHilited.png
    Speaker.png
    SpectralBrush.png
+   SpeedIndicator.png
    Stop.png
    StopDisabled.png
    SubViewsCursor.png

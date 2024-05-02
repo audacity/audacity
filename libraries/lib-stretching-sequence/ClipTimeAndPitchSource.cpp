@@ -55,7 +55,7 @@ void ClipTimeAndPitchSource::Pull(
       constexpr auto mayThrow = false;
       const auto start =
          forward ? mLastReadSample : mLastReadSample - numSamplesToRead;
-      const auto nChannels = mClip.GetWidth();
+      const auto nChannels = mClip.NChannels();
       ChannelSampleViews newViews;
       for (auto i = 0u; i < nChannels; ++i)
       {
@@ -80,9 +80,14 @@ void ClipTimeAndPitchSource::Pull(
             // become a reasonably small value again :)
             -sampleCount { numSamplesToRead };
    }
+   else
+   {
+      for (auto i = 0u; i < mClip.NChannels(); ++i)
+         std::fill(buffers[i], buffers[i] + samplesPerChannel, 0.f);
+   }
 }
 
-size_t ClipTimeAndPitchSource::GetWidth() const
+size_t ClipTimeAndPitchSource::NChannels() const
 {
-   return mClip.GetWidth();
+   return mClip.NChannels();
 }

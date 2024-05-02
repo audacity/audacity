@@ -128,7 +128,7 @@ TEST_CASE("StretchingSequence with real audio")
    {
       const auto ratio = GENERATE(0.75, 1.5);
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info, 7s));
       const auto clip =
          std::make_shared<FloatVectorClip>(info.sampleRate, input);
@@ -136,7 +136,7 @@ TEST_CASE("StretchingSequence with real audio")
       const auto mockSequence = std::make_shared<MockPlayableSequence>(
          info.sampleRate, info.numChannels);
       const auto sut =
-         StretchingSequence::Create(*mockSequence, ClipHolders { clip });
+         StretchingSequence::Create(*mockSequence, ClipConstHolders { clip });
       const size_t numOutputSamples = clip->stretchRatio * input[0].size() + .5;
       AudioContainer container(numOutputSamples, input.size());
       sut->GetFloats(
@@ -156,7 +156,7 @@ TEST_CASE("StretchingSequence with real audio")
    SECTION("with several clips")
    {
       std::vector<std::vector<float>> input;
-      WavFileIO::Info info;
+      AudioFileInfo info;
       REQUIRE(WavFileIO::Read(inputPath, input, info, 7s));
       const auto clip1 =
          std::make_shared<FloatVectorClip>(info.sampleRate, input);
@@ -173,7 +173,7 @@ TEST_CASE("StretchingSequence with real audio")
       const auto mockSequence =
          std::make_shared<MockPlayableSequence>(info.sampleRate, 2u);
       const auto sut = StretchingSequence::Create(
-         *mockSequence, ClipHolders { clip1, clip2 });
+         *mockSequence, ClipConstHolders { clip1, clip2 });
       const size_t numOutputSamples =
          totalDuration * info.sampleRate /*assuming both have same sample rate*/
          + .5;

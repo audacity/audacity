@@ -9,8 +9,8 @@
 
 **********************************************************************/
 #include "AudioContainerHelper.h"
-#include "MockSampleBlockFactory.h"
 #include "MockPlayableSequence.h"
+#include "MockSampleBlockFactory.h"
 #include "SampleFormat.h"
 #include "StretchingSequence.h"
 #include "TestWaveClipMaker.h"

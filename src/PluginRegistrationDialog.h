@@ -11,74 +11,37 @@
 #define __AUDACITY_PLUGIN_REGISTRATION_DIALOG__
 
 #include "wxPanelWrapper.h" // to inherit
-#include <vector>
-#include <unordered_map> // member
+#include "PluginDataModel.h"
 
-class CheckListAx;
-enum EffectType : int;
-class PluginDescriptor;
-class PluginManager;
 class ShuttleGui;
-class wxListEvent;
-class wxListCtrl;
+class wxDataViewCtrl;
+class wxCommandEvent;
 
 class PluginRegistrationDialog final : public wxDialogWrapper
 {
 public:
-   // constructors and destructors
-   PluginRegistrationDialog(wxWindow *parent);
+   ///@param defaultCategory - sets the default effect plugins filter.
+   ///Could be one of EffectType or set to -1 to disable it.
+   PluginRegistrationDialog(wxWindow *parent, int defaultEffectCategory = -1);
 
 private:
-   struct ItemData
-   {
-      std::vector<PluginDescriptor*> plugs;
-      wxString name;
-      PluginPath path;
-      int state;
-      bool valid;
-      int nameWidth;
-      int pathWidth;
-      int stateWidth;
-   };
-
-   using ItemDataMap = std::unordered_map<PluginPath, ItemData>;
 
    void Populate();
    void PopulateOrExchange(ShuttleGui & S);
-   void PopulateItemsList(PluginManager& pm);
-   void RegenerateEffectsList(int iShowWhat);
-   void SetState(int i, bool toggle, bool state = true);
+   void ReloadModel();
 
-   static int wxCALLBACK SortCompare(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
-   int SortCompare(ItemData *item1, ItemData *item2);
-
-   void OnChangedVisibility(wxCommandEvent & evt);
-   void OnSort(wxListEvent & evt);
-   void DoSort( int col );
-   void OnListChar(wxKeyEvent & evt);
+   void OnSearchTextChanged(wxCommandEvent& evt);
+   void OnStateFilterValueChanged(wxCommandEvent& evt);
+   void OnTypeFilterValueChanged(wxCommandEvent& evt);
+   void OnCategoryFilterValueChanged(wxCommandEvent& evt);
    void OnOK(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
-   void OnSelectAll(wxCommandEvent & evt);
-   void OnClearAll(wxCommandEvent & evt);
    void OnRescan(wxCommandEvent & evt);
-   void OnEnable(wxCommandEvent & evt);
-   void OnDisable(wxCommandEvent & evt);
 
-private:
-   int mFilter;
+   wxArrayString mPluginProviderIDs;
 
-   wxArrayString mStates;
-   ItemDataMap mItems;
-
-   int mSortColumn;
-   int mSortDirection;
-
-   PluginPath mLongestPath;
-
-   wxListCtrl *mEffects;
-#if wxUSE_ACCESSIBILITY
-   CheckListAx *mAx;
-#endif
+   wxDataViewCtrl* mPluginList{};
+   wxObjectDataPtr<PluginDataModel> mPluginsModel;
 
    DECLARE_EVENT_TABLE()
 };

@@ -7,22 +7,18 @@ addlib( libsoxr            soxr        SOXR        YES   YES   "soxr >= 0.1.1" )
 set( SOURCES
    Dither.cpp
    Dither.h
-   FFT.cpp
-   FFT.h
    InterpolateAudio.cpp
    InterpolateAudio.h
+   LinearFit.h
    Matrix.cpp
    Matrix.h
-   RealFFTf.cpp
-   RealFFTf.h
    Resample.cpp
    Resample.h
+   RoundUpUnsafe.h
    SampleCount.cpp
    SampleCount.h
    SampleFormat.cpp
    SampleFormat.h
-   Spectrum.cpp
-   Spectrum.h
    float_cast.h
    Gain.h
 )

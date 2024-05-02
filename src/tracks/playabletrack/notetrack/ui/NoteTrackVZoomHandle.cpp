@@ -97,7 +97,7 @@ NoteTrackVZoomHandle::~NoteTrackVZoomHandle()
 {
 }
 
-std::shared_ptr<const Channel> NoteTrackVZoomHandle::FindChannel() const
+std::shared_ptr<const Track> NoteTrackVZoomHandle::FindTrack() const
 {
    return mpTrack.lock();
 }

@@ -134,9 +134,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Martin Keary"), roleTeamMember);
    AddCredit(wxT("Sergey Lapysh"), testerFormat, roleTeamMember);
    AddCredit(wxT("Yana Larina"), roleTeamMember);
-   AddCredit(wxT("Paul Licameli"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
-   AddCredit(wxT("K. Soze"), developerFormat, roleTeamMember);
    AddCredit(wxT("Anita Sudan"), roleTeamMember);
    AddCredit(wxT("Vitaly Sverchinsky"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dmitry Vedenko"), developerFormat, roleTeamMember);
@@ -163,6 +161,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Ruslan Ijbulatov"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Vaughan Johnson"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Greg Kozikowski"), documentationAndSupportFormat, roleEmeritusTeam);
+   AddCredit(wxT("Paul Licameli"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Leland Lucius"), developerFormat, roleEmeritusTeam);
    AddCredit(wxT("Dominic Mazzoni"), coFounderFormat, roleEmeritusTeam);
    AddCredit(wxT("Markus Meyer"), developerFormat, roleEmeritusTeam);
@@ -224,6 +223,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Benjamin Schwartz"), developerFormat, roleContributor);
    AddCredit(wxT("Cliff Scott"), testerFormat, roleContributor);
    AddCredit(wxT("David R. Sky"), NyquistPluginsFormat, roleContributor);
+   AddCredit(wxT("K. Soze"), developerFormat, roleContributor);
    AddCredit(wxT("Rob Sykes"), developerFormat, roleContributor);
    AddCredit(wxT("Mike Underwood"), developerFormat, roleContributor);
    AddCredit(wxT("Philip Van Baren"), developerFormat, roleContributor);
@@ -433,7 +433,7 @@ void AboutDialog::PopulateAudacityPage( ShuttleGui & S )
       << wxT("<p><br>&nbsp; &nbsp; ")
       /* i18n-hint Audacity's name substitutes for first and third %s,
        and a "copyright" symbol for the second */
-      << XO("%s software is copyright %s 1999-2023 %s Team.")
+      << XO("%s software is copyright %s 1999-2024 %s Team.")
          .Format(
             Verbatim("<b>%s<sup>&reg;</sup></b>").Format( ProgramName ),
             wxT("&copy;"),

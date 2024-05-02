@@ -26,8 +26,6 @@ other settings.
 
 #include "MidiIOPrefs.h"
 
-#ifdef EXPERIMENTAL_MIDI_OUT
-
 #include <wx/defs.h>
 
 #include <wx/choice.h>
@@ -296,7 +294,6 @@ bool MidiIOPrefs::Validate()
    return true;
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 namespace{
 PrefsPanel::Registration sAttachment{ "MidiIO",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)
@@ -310,6 +307,3 @@ PrefsPanel::Registration sAttachment{ "MidiIO",
    { "", { Registry::OrderingHint::After, "Recording" } }
 };
 }
-#endif
-
-#endif

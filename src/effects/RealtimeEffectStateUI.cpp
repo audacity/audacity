@@ -115,7 +115,10 @@ void RealtimeEffectStateUI::Show(AudacityProject& project)
       });
 
    mParameterChangedSubscription = mEffectUIHost->GetEditor()->Subscribe(
-      [this](auto) { UndoManager::Get(*mpProject).MarkUnsaved(); });
+      [this](auto) { if (mpProject) {  // This can be null if closing an effect without making changes.
+                        UndoManager::Get(*mpProject).MarkUnsaved();
+                     }
+                   });
 }
 
 void RealtimeEffectStateUI::Hide(AudacityProject* project)

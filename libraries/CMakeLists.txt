@@ -35,6 +35,7 @@ set( LIBRARIES
    lib-realtime-effects
    lib-audio-io
    lib-wave-track
+   lib-wave-track-paint
    lib-track-selection
    lib-project-file-io
    lib-command-parameters
@@ -56,6 +57,10 @@ set( LIBRARIES
    lib-note-track
    lib-viewport
    lib-music-information-retrieval
+   lib-crypto
+   lib-fft
+   lib-concurrency
+   lib-sqlite-helpers
 )
 
 if ( ${_OPT}use_lv2 )

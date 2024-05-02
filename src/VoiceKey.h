@@ -18,7 +18,7 @@
 
 #include "SampleCount.h"
 
-class WaveTrack;
+class WaveChannel;
 
 enum VoiceKeyTypes
   {
@@ -35,16 +35,16 @@ class VoiceKey {
  public:
    VoiceKey();
    ~VoiceKey();
-   sampleCount OnForward   (const WaveTrack & t, sampleCount start, sampleCount len);
-   sampleCount OnBackward  (const WaveTrack & t, sampleCount start, sampleCount len);
-   sampleCount OffForward  (const WaveTrack & t, sampleCount start, sampleCount len);
-   sampleCount OffBackward (const WaveTrack & t, sampleCount start, sampleCount len);
+   sampleCount OnForward   (const WaveChannel & t, sampleCount start, sampleCount len);
+   sampleCount OnBackward  (const WaveChannel & t, sampleCount start, sampleCount len);
+   sampleCount OffForward  (const WaveChannel & t, sampleCount start, sampleCount len);
+   sampleCount OffBackward (const WaveChannel & t, sampleCount start, sampleCount len);
 
-   void CalibrateNoise(const WaveTrack & t, sampleCount start, sampleCount len);
+   void CalibrateNoise(const WaveChannel & t, sampleCount start, sampleCount len);
    void AdjustThreshold(double t);
 
 
-   bool AboveThreshold(const WaveTrack & t, sampleCount start,sampleCount len);
+   bool AboveThreshold(const WaveChannel & t, sampleCount start,sampleCount len);
 
    void SetKeyType(bool erg, bool scLow, bool scHigh,
                    bool dcLow, bool dcHigh);
@@ -79,11 +79,11 @@ class VoiceKey {
    double mSilentWindowSize;           //Time in milliseconds of below-threshold windows required for silence
    double mSignalWindowSize;           //Time in milliseconds of above-threshold windows required for speech
 
-   double TestEnergy (const WaveTrack & t, sampleCount start,sampleCount len);
+   double TestEnergy (const WaveChannel & t, sampleCount start,sampleCount len);
    double TestSignChanges (
-      const WaveTrack & t, sampleCount start, sampleCount len);
+      const WaveChannel & t, sampleCount start, sampleCount len);
    double TestDirectionChanges(
-      const WaveTrack & t, sampleCount start, sampleCount len);
+      const WaveChannel & t, sampleCount start, sampleCount len);
 
    void TestEnergyUpdate (double & prevErg, int length, const float & drop, const float & add);
    void TestSignChangesUpdate(double & currentsignchanges,int length, const float & a1,

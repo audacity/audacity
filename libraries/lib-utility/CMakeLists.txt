@@ -16,6 +16,8 @@ correspond to things in the standard.
 ]]#
 
 set( SOURCES
+   AppEvents.cpp
+   AppEvents.h
    BufferedStreamReader.cpp
    BufferedStreamReader.h
    CFResources.cpp
@@ -28,6 +30,9 @@ set( SOURCES
    Composite.cpp
    Composite.h
    GlobalVariable.h
+   IteratorX.cpp
+   IteratorX.h
+   MathApprox.h
    MemoryX.cpp
    MemoryX.h
    MessageBuffer.h

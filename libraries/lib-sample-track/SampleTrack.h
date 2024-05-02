@@ -33,7 +33,6 @@ public:
    // Fix the otherwise ambiguous lookup of these virtual function names
    using ChannelGroup::GetStartTime;
    using ChannelGroup::GetEndTime;
-   using Track::IsLeader;
 
    const TypeInfo &GetTypeInfo() const override;
    static const TypeInfo &ClassTypeInfo();
@@ -41,16 +40,6 @@ public:
    virtual sampleFormat GetSampleFormat() const = 0;
 
    using WideSampleSequence::GetFloats;
-
-   //! "narrow" overload fetches first channel only
-   bool GetFloats(float *buffer, sampleCount start, size_t len,
-      fillFormat fill = FillFormat::fillZero, bool mayThrow = true,
-      sampleCount * pNumWithinClips = nullptr) const
-   {
-      constexpr auto backwards = false;
-      return GetFloats(
-         0, 1, &buffer, start, len, backwards, fill, mayThrow, pNumWithinClips);
-   }
 };
 
 ENUMERATE_TRACK_TYPE(SampleTrack)
@@ -66,7 +55,6 @@ public:
    ~WritableSampleTrack() override;
 
    // Resolve ambiguous lookups
-   using Track::IsLeader;
    using ChannelGroup::NChannels;
 
    // Needed to resolve ambiguity with WideSampleSequence::GetRate, when this

@@ -28,12 +28,10 @@ void SelectedRegion::WriteXMLAttributes
 {
    xmlFile.WriteAttr(legacyT0Name, t0(), 10);
    xmlFile.WriteAttr(legacyT1Name, t1(), 10);
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    if (f0() >= 0)
       xmlFile.WriteAttr(sDefaultF0Name, f0(), 10);
    if (f1() >= 0)
       xmlFile.WriteAttr(sDefaultF1Name, f1(), 10);
-#endif
 }
 
 bool SelectedRegion::HandleXMLAttribute
@@ -47,12 +45,10 @@ bool SelectedRegion::HandleXMLAttribute
       setter = &SelectedRegion::setT0;
    else if (attr == legacyT1Name)
       setter = &SelectedRegion::setT1;
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
    else if (attr == sDefaultF0Name)
       setter = &SelectedRegion::setF0;
    else if (attr == sDefaultF1Name)
       setter = &SelectedRegion::setF1;
-#endif
    else
       return false;
 
@@ -82,7 +78,6 @@ SelectedRegion::Mutators(
             .HandleXMLAttribute(legacyT1Name, value,
                                 legacyT0Name, legacyT1Name);
       } },
-#ifdef EXPERIMENTAL_SPECTRAL_EDITING
       { sDefaultF0Name, [=](auto &selectedRegion, auto value){
          selectedRegion
             .HandleXMLAttribute(sDefaultF0Name, value, "", "");
@@ -91,6 +86,5 @@ SelectedRegion::Mutators(
          selectedRegion
             .HandleXMLAttribute(sDefaultF1Name, value, "", "");
       } },
-#endif
    };
 };

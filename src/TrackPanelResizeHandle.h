@@ -33,7 +33,7 @@ public:
 
    virtual ~TrackPanelResizeHandle();
 
-   std::shared_ptr<const Channel> FindChannel() const override;
+   std::shared_ptr<const Track> FindTrack() const override;
    std::shared_ptr<Channel> FindChannel();
 
    Result Click

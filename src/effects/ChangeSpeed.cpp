@@ -188,7 +188,7 @@ auto EffectChangeSpeed::FindGaps(
       gaps.emplace_back(track.SnapToSample(st), track.SnapToSample(et));
    };
    double last = curT0;
-   auto clips = track.SortedClipArray();
+   auto clips = track.SortedIntervalArray();
    auto front = clips.front();
    auto back = clips.back();
    for (auto &clip : clips) {
@@ -223,7 +223,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
    outputs.Get().Any().VisitWhile(bGoodResult,
       [&](LabelTrack &lt) {
-         if (SyncLock::IsSelectedOrSyncLockSelected(&lt)) {
+         if (SyncLock::IsSelectedOrSyncLockSelected(lt)) {
             if (!ProcessLabelTrack(&lt))
                bGoodResult = false;
          }
@@ -249,23 +249,21 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 
             const auto gaps = FindGaps(outWaveTrack, mCurT0, mCurT1);
 
-            auto newTracks = outWaveTrack.WideEmptyCopy();
-            auto iter =
-               (*newTracks->Any<WaveTrack>().begin())->Channels().begin();
+            auto pNewTrack = outWaveTrack.EmptyCopy();
+            auto iter = pNewTrack->Channels().begin();
             for (const auto pChannel : outWaveTrack.Channels()) {
                // ProcessOne() (implemented below) processes a single channel
                if (ProcessOne(*pChannel, **iter++, start, end))
                   ++mCurTrackNum;
                else {
-                  newTracks.reset();
+                  pNewTrack.reset();
                   break;
                }
             }
-            if (!newTracks) {
+            if (!pNewTrack) {
                bGoodResult = false;
                return;
             }
-            const auto pNewTrack = *newTracks->Any<WaveTrack>().begin();
             pNewTrack->Flush();
 
             const double newLength = pNewTrack->GetEndTime();
@@ -273,7 +271,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
                mCurT0, mCurT0, mCurT1, mCurT0 + newLength };
 
             outWaveTrack.ClearAndPaste(mCurT0, mCurT1,
-               *newTracks, true, true, &warper);
+               *pNewTrack, true, true, &warper);
 
                // Finally, recreate the gaps
             for (const auto [st, et] : gaps)
@@ -284,7 +282,7 @@ bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
             mCurTrackNum += outWaveTrack.NChannels();
       }; },
       [&](Track &t) {
-         if (SyncLock::IsSyncLockSelected(&t))
+         if (SyncLock::IsSyncLockSelected(t))
             t.SyncLockAdjust(mT1, mT0 + (mT1 - mT0) * mFactor);
       }
    );

@@ -68,8 +68,7 @@ ENUMERATE_TRACK_TYPE(PlayableTrack);
 
 enum SoloBehavior {
    SoloBehaviorSimple,
-   SoloBehaviorMulti,
-   SoloBehaviorNone,
+   SoloBehaviorMulti
 };
 
 extern PLAYABLE_TRACK_API EnumSetting<SoloBehavior> TracksBehaviorsSolo;

@@ -45,12 +45,12 @@ but little else.
 #ifndef __AUDACITY_IMPORTER__
 #define __AUDACITY_IMPORTER__
 
-
-
-#include <memory>
+#include "AcidizerTags.h"
 #include "Identifier.h"
 #include "Internat.h"
 #include "wxArrayStringEx.h"
+#include <memory>
+#include <optional>
 
 class AudacityProject;
 class WaveTrackFactory;
@@ -105,7 +105,7 @@ protected:
 
 
 class WaveTrack;
-using TrackHolders = std::vector<std::shared_ptr<TrackList>>;
+using TrackHolders = std::vector<std::shared_ptr<Track>>;
 
 class IMPORT_EXPORT_API ImportFileHandle /* not final */
 {
@@ -114,9 +114,9 @@ public:
    using ByteCount = unsigned long long;
 
    virtual ~ImportFileHandle();
-   
+
    virtual FilePath GetFilename() const = 0;
-   
+
    virtual TranslatableString GetErrorMessage() const;
 
    // This is similar to GetPluginFormatDescription, but if possible the
@@ -141,18 +141,17 @@ public:
    // do the actual import, creating whatever tracks are necessary with
    // the WaveTrackFactory and calling the progress callback every iteration
    // through the importing loop
-   // The given Tags structure may also be modified.
-   // In case of errors or exceptions, it is not necessary to leave outTracks
-   // or tags unmodified.
-   // If resulting outTracks is not empty,
-   // then each member of it must be a nonempty vector.
-   virtual void Import(ImportProgressListener &progressListener,
-                       WaveTrackFactory *trackFactory,
-                       TrackHolders &outTracks,
-                       Tags *tags) = 0;
+   // The given Tags and AcidizerTags structures may also be modified.
+   // In case of errors or exceptions, it is not necessary to leave outTracks,
+   // tags or acidTags unmodified. If resulting outTracks is not empty, then
+   // each member of it must be a nonempty vector.
+   virtual void Import(
+      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
+      TrackHolders& outTracks, Tags* tags,
+      std::optional<LibFileFormats::AcidizerTags>& acidTags) = 0;
 
    virtual void Cancel() = 0;
-   
+
    virtual void Stop() = 0;
 };
 
@@ -163,7 +162,7 @@ class IMPORT_EXPORT_API ImportFileHandleEx : public ImportFileHandle
    bool mStopped{false};
 public:
    ImportFileHandleEx(const FilePath& filename);
-   
+
    FilePath GetFilename() const override;
    void Cancel() override;
    void Stop() override;

@@ -79,6 +79,7 @@ It handles initialization and termination by subclassing wxApp.
 #include "Languages.h"
 #include "MenuCreator.h"
 #include "PathList.h"
+#include "PendingTracks.h"
 #include "PluginManager.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
@@ -161,6 +162,7 @@ It handles initialization and termination by subclassing wxApp.
 
 #include "ExportPluginRegistry.h"
 #include "SettingsWX.h"
+#include "prefs/EffectsPrefs.h"
 
 #ifdef HAS_CUSTOM_URL_HANDLING
 #include "URLSchemesRegistry.h"
@@ -407,6 +409,12 @@ void PopulatePreferences()
    {
       if (gPrefs->Exists(wxT("/GUI/ToolBars")))
          gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 5 })
+   {
       if (gPrefs->Exists("/GUI/ShowSplashScreen"))
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
    }
@@ -1188,7 +1196,7 @@ bool AudacityApp::OnExceptionInMainLoop()
             ProjectHistory::Get( *pProject ).RollbackState();
 
             // Forget pending changes in the TrackList
-            TrackList::Get( *pProject ).ClearPendingTracks();
+            PendingTracks::Get(*pProject).ClearPendingTracks();
             Viewport::Get(*pProject).Redraw();
          }
 
@@ -1568,7 +1576,7 @@ bool AudacityApp::InitPart2()
 
    //Search for the new plugins
    std::vector<wxString> failedPlugins;
-   if(!playingJournal)
+   if(!playingJournal && !SkipEffectsScanAtStartup.Read())
    {
       auto newPlugins = PluginManager::Get().CheckPluginUpdates();
       if(!newPlugins.empty())
@@ -1731,6 +1739,8 @@ bool AudacityApp::InitPart2()
    }
 #endif
 
+   HandleAppInitialized();
+
    return TRUE;
 }
 
@@ -1748,6 +1758,8 @@ void AudacityApp::OnIdle( wxIdleEvent &evt )
 {
    evt.Skip();
    try {
+      HandleAppIdle();
+
       if ( Journal::Dispatch() )
          evt.RequestMore();
    }
@@ -2426,6 +2438,8 @@ int AudacityApp::OnExit()
    {
       Dispatch();
    }
+
+   HandleAppClosing();
 
    Importer::Get().Terminate();
 

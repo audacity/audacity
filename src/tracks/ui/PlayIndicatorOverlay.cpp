@@ -62,10 +62,8 @@ namespace {
 std::pair< wxPoint, wxBitmap > GetIndicatorBitmap( AudacityProject &project,
    wxCoord xx, bool playing)
 {
-   bool pinned = Scrubber::Get( project ).IsTransportingPinned();
-   wxBitmap & bmp = theTheme.Bitmap( pinned ?
-      (playing ? bmpPlayPointerPinned : bmpRecordPointerPinned) :
-      (playing ? bmpPlayPointer : bmpRecordPointer)
+   wxBitmap & bmp = theTheme.Bitmap(
+      playing ? bmpPlayPointer : bmpRecordPointer
    );
    const int IndicatorHalfWidth = bmp.GetWidth() / 2;
    return {

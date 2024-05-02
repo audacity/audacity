@@ -77,7 +77,7 @@ void ApplicationPrefs::PopulateOrExchange(ShuttleGui & S)
       S.TieCheckBox(
          /* i18n-hint: Check-box title that configures periodic updates checking. */
          XXC("&Check for updates", "application preferences"),
-         DefaultUpdatesCheckingFlag);
+         *DefaultUpdatesCheckingFlag);
 
       S.StartVerticalLay();
       {
@@ -107,7 +107,7 @@ bool ApplicationPrefs::Commit()
 {
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
-   DefaultUpdatesCheckingFlag.Invalidate();
+   DefaultUpdatesCheckingFlag->Invalidate();
 
    return true;
 }

@@ -47,6 +47,7 @@
 #include "Track.h"
 #include "CommandManager.h"
 #include "Effect.h"
+#include "effects/EffectManager.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
@@ -184,7 +185,7 @@ void ApplyMacroDialog::PopulateOrExchange(ShuttleGui &S)
 }
 
 /// This clears and updates the contents of mMacros, the list of macros.
-/// It has cut-and-paste code from PopulateList, and both should call 
+/// It has cut-and-paste code from PopulateList, and both should call
 /// a shared function.
 void ApplyMacroDialog::PopulateMacros()
 {
@@ -297,7 +298,7 @@ void ApplyMacroDialog::ApplyMacroToProject( int iMacro, bool bHasGui )
    wxYield();
 #endif
 
-   //Since we intend to keep this dialog open, there is no reason to hide it 
+   //Since we intend to keep this dialog open, there is no reason to hide it
    //and then show it again.
    //if( bHasGui )
    //   Hide();
@@ -368,7 +369,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
       return;
    }
    Raise();
-   
+
    wxArrayString files;
    dlog.GetPaths(files);
 
@@ -439,7 +440,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
    // and hiding this one temporarily has some advantages.
    Hide();
 
-   mMacroCommands.ReadMacro(name); 
+   mMacroCommands.ReadMacro(name);
    {
       auto &globalClipboard = Clipboard::Get();
 
@@ -461,7 +462,7 @@ void ApplyMacroDialog::OnApplyToFiles(wxCommandEvent & WXUNUSED(event))
          fileList->SetItemImage(i, 1, 1);
          fileList->EnsureVisible(i);
 
-         auto success = GuardedCall< bool >([&] {
+         auto success = GuardedCall<bool>([&] {
             ProjectFileManager::Get(*project).Import(files[i]);
             Viewport::Get(*project).ZoomFitHorizontallyAndShowTrack(nullptr);
             SelectUtilities::DoSelectAll(*project);
@@ -665,7 +666,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
             S.StartVerticalLay(wxALIGN_TOP, 0);
             {
                S.Id(InsertButtonID).AddButton(XXO("&Insert"), wxALIGN_LEFT);
-               S.Id(EditButtonID).AddButton(XXO("&Edit..."), wxALIGN_LEFT);
+               mEdit = S.Id(EditButtonID).AddButton(XXO("&Edit..."), wxALIGN_LEFT);
                S.Id(DeleteButtonID).AddButton(XXO("De&lete"), wxALIGN_LEFT);
                S.Id(UpButtonID).AddButton(XXO("Move &Up"), wxALIGN_LEFT);
                S.Id(DownButtonID).AddButton(XXO("Move &Down"), wxALIGN_LEFT);
@@ -681,7 +682,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
    S.EndHorizontalLay();
 
    S.StartHorizontalLay(wxEXPAND, 0);
-   {  
+   {
       /* i18n-hint: The Shrink button makes the dialog smaller, with less in it */
       mResize = S.Id(ShrinkID).AddButton(XXO("Shrin&k"));
       // Using variable text just to get the positioning options.
@@ -713,7 +714,7 @@ void MacrosWindow::PopulateOrExchange(ShuttleGui & S)
 
    S.EndHorizontalLay();
 
-   
+
    return;
 }
 
@@ -777,7 +778,7 @@ void MacrosWindow::UpdateMenus()
 
 void MacrosWindow::UpdateDisplay( bool bExpanded )
 {
-   // If we failed to save changes, we abandon the attempt to 
+   // If we failed to save changes, we abandon the attempt to
    // change the expand/shrink state of the GUI.
    if( !SaveChanges() )
       return;
@@ -785,8 +786,8 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    mbExpanded = bExpanded;
 
    mChanged = false;
-   // if we try to access the about to be destroyed mSave button 
-   // inappropriately, we need to crash rather than (sometimes) silently 
+   // if we try to access the about to be destroyed mSave button
+   // inappropriately, we need to crash rather than (sometimes) silently
    // succeed.
    mSave = nullptr;
 
@@ -799,7 +800,7 @@ void MacrosWindow::UpdateDisplay( bool bExpanded )
    // Get and set position for optical stability.
    // Expanded and shrunk dialogs 'stay where they were'.
    // That's OK , and what we want, even if we exapnd off-screen.
-   // We won't shrink to being off-screen, since the shrink button 
+   // We won't shrink to being off-screen, since the shrink button
    // was clicked, so must have been on screen.
    wxPoint p = GetPosition( );
    if( mbExpanded )
@@ -819,7 +820,7 @@ void MacrosWindow::OnExpand(wxCommandEvent &WXUNUSED(event))
 {  UpdateDisplay( true );}
 
 void MacrosWindow::OnShrink(wxCommandEvent &WXUNUSED(event))
-{  
+{
    if( ChangeOK() )
       UpdateDisplay( false );
 }
@@ -872,7 +873,7 @@ void MacrosWindow::ShowActiveMacro()
    mMacroCommands.ReadMacro(mActiveMacro);
    if( !mbExpanded )
       return;
-   
+
    if (mMacroCommands.IsFixed(mActiveMacro)) {
       mRemove->Disable();
       mRename->Disable();
@@ -888,8 +889,19 @@ void MacrosWindow::ShowActiveMacro()
 }
 
 /// An item in the macros list has been selected.
-void MacrosWindow::OnListSelected(wxListEvent & WXUNUSED(event))
+void MacrosWindow::OnListSelected(wxListEvent &event)
 {
+   const auto &command = mCatalog.ByTranslation(mList->GetItemText(event.GetIndex(), ActionColumn));
+
+   if (command != mCatalog.end())
+   {
+      EffectManager &em = EffectManager::Get();
+      PluginID ID = em.GetEffectByIdentifier(command->name.Internal());
+
+      mEdit->Enable(!ID.empty());
+   }
+
+
    FitColumns();
 }
 
@@ -979,7 +991,7 @@ void MacrosWindow::OnMacrosEndEdit(wxListEvent &event)
       mActiveMacro = newname;
    mMacroBeingRenamed="";
    PopulateMacros();
-   UpdateMenus();   
+   UpdateMenus();
    event.Veto();
 }
 
@@ -1068,7 +1080,7 @@ void MacrosWindow::OnRemove(wxCommandEvent & WXUNUSED(event))
       item--;
    }
 
-   // Bug 2284.  The macro we have just removed might have been 
+   // Bug 2284.  The macro we have just removed might have been
    // changed.  Since we've just deleted the macro, we should
    // forget about that change.
    mChanged = false;
@@ -1352,7 +1364,7 @@ void MacrosWindow::OnCancel(wxCommandEvent &WXUNUSED(event))
    }
    // If we've rejected a change, we need to restore the display
    // of the active macro.
-   // That's because next time we open this dialog we want to see the 
+   // That's because next time we open this dialog we want to see the
    // unedited macro.
    if( bWasChanged )
       ShowActiveMacro();

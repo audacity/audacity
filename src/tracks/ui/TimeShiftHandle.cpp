@@ -32,10 +32,6 @@ Paul Licameli split from TrackPanel.cpp
 TimeShiftHandle::TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit)
    : mGripHit{ gripHit }
 {
-   //! Substitute the leader track before assigning mCapturedTrack
-   if (pTrack)
-      if (const auto pOwner = pTrack->GetOwner())
-         pTrack = (*pOwner->Find(pTrack.get()))->SharedPointer();
    mClipMoveState.mCapturedTrack = pTrack;
 }
 
@@ -119,9 +115,9 @@ TimeShiftHandle::~TimeShiftHandle()
 {
 }
 
-std::shared_ptr<const Channel> TimeShiftHandle::FindChannel() const
+std::shared_ptr<const Track> TimeShiftHandle::FindTrack() const
 {
-   return std::dynamic_pointer_cast<const Channel>(GetTrack());
+   return GetTrack();
 }
 
 void ClipMoveState::DoHorizontalOffset(double offset)
@@ -159,12 +155,12 @@ void TrackShifter::UnfixAll()
    mAllFixed = false;
 }
 
-void TrackShifter::SelectInterval(const ChannelGroupInterval &)
+void TrackShifter::SelectInterval(TimeInterval)
 {
    UnfixAll();
 }
 
-void TrackShifter::CommonSelectInterval(const ChannelGroupInterval &interval)
+void TrackShifter::CommonSelectInterval(TimeInterval interval)
 {
    UnfixIntervals( [&](auto &myInterval){
       return !(interval.End() < myInterval.Start() ||
@@ -194,7 +190,6 @@ bool TrackShifter::MayMigrateTo(Track &)
 
 bool TrackShifter::CommonMayMigrateTo(Track &otherTrack)
 {
-   assert(otherTrack.IsLeader());
    auto &track = GetTrack();
    // Both tracks need to be owned to decide this
    auto pMyList = track.GetOwner().get();
@@ -246,16 +241,14 @@ double TrackShifter::AdjustT0(double t0) const
 void TrackShifter::InitIntervals()
 {
    auto &track = GetTrack();
-   assert(track.IsLeader()); // postcondition
    mMoving.clear();
-   auto range = track.Intervals();
+   const auto &range = track.Intervals();
    std::copy(range.begin(), range.end(), back_inserter(mFixed));
 }
 
 CoarseTrackShifter::CoarseTrackShifter(Track &track)
    : mpTrack{ track.SharedPointer() }
 {
-   assert(track.IsLeader());
    InitIntervals();
 }
 
@@ -274,7 +267,6 @@ bool CoarseTrackShifter::SyncLocks()
 
 DEFINE_ATTACHED_VIRTUAL(MakeTrackShifter) {
    return [](Track &track, AudacityProject&) {
-      assert(track.IsLeader()); // pre of the open method
       return std::make_unique<CoarseTrackShifter>(track);
    };
 }
@@ -288,7 +280,6 @@ void ClipMoveState::Init(
    const ViewInfo &viewInfo,
    TrackList &trackList, bool syncLocked )
 {
-   assert(capturedTrack.IsLeader());
    shifters.clear();
 
    initialized = true;
@@ -327,7 +318,7 @@ void ClipMoveState::Init(
 
    if ( state.movingSelection ) {
       // All selected tracks may move some intervals
-      const ChannelGroupInterval interval{
+      const TrackShifter::TimeInterval interval{
          viewInfo.selectedRegion.t0(),
          viewInfo.selectedRegion.t1()
       };
@@ -355,7 +346,7 @@ void ClipMoveState::Init(
             if (!shifter.SyncLocks())
                continue;
             auto &track = shifter.GetTrack();
-            auto group = SyncLock::Group(&track);
+            auto group = SyncLock::Group(track);
             if (group.size() <= 1)
                continue;
 
@@ -367,10 +358,10 @@ void ClipMoveState::Init(
                for (auto pTrack2 : group) {
                   if (pTrack2 == &track)
                      continue;
-                  // shifters maps from leader tracks only
                   auto &shifter2 = *shifters[pTrack2];
                   auto size = shifter2.MovingIntervals().size();
-                  shifter2.SelectInterval(*interval);
+                  shifter2.SelectInterval({
+                     interval->Start(), interval->End() });
                   change = change ||
                      (shifter2.SyncLocks() &&
                       size != shifter2.MovingIntervals().size());
@@ -475,15 +466,11 @@ UIHandle::Result TimeShiftHandle::Click(
    const wxRect &rect = evt.rect;
    auto &viewInfo = ViewInfo::Get( *pProject );
 
-   const auto pView = std::static_pointer_cast<ChannelView>(evt.pCell);
-   const auto clickedTrack = pView ? pView->FindTrack().get() : nullptr;
-   if (!clickedTrack)
+   const auto pView =
+      std::dynamic_pointer_cast<CommonTrackPanelCell>(evt.pCell);
+   const auto pTrack = pView ? pView->FindTrack() : nullptr;
+   if (!pTrack)
       return RefreshCode::Cancelled;
-
-   auto &trackList = TrackList::Get(*pProject);
-   // Substitute the leader track before giving it to MakeTrackShifter
-   // and ClipMoveState::Init
-   const auto pTrack = *trackList.Find(clickedTrack);
 
    mClipMoveState.clear();
    mDidSlideVertically = false;
@@ -513,6 +500,7 @@ UIHandle::Result TimeShiftHandle::Click(
       // just do shifting of one whole track
    }
 
+   auto &trackList = TrackList::Get(*pProject);
    mClipMoveState.Init(*pProject, *pTrack,
       hitTestResult, move(pShifter), clickTime,
       viewInfo, trackList,
@@ -638,7 +626,6 @@ namespace {
                // No corresponding track
                return false;
 
-            assert(pOther->IsLeader()); // by construction of range
             if (!pShifter->MayMigrateTo(*pOther))
                // Rejected for other reason
                return false;
@@ -741,9 +728,6 @@ void TimeShiftHandle::DoSlideVertical(
 {
    Correspondence correspondence;
 
-   // Substitute leader track before reassigning mCapturedTrack
-   dstTrack = *trackList.Find(dstTrack);
-
    // See if captured track corresponds to another
    auto &capturedTrack = *mClipMoveState.mCapturedTrack;
    if (!FindCorrespondence(
@@ -816,7 +800,6 @@ void TimeShiftHandle::DoSlideVertical(
       viewInfo.selectedRegion.move( slideAmount );
 
    // Make the offset permanent; start from a "clean slate"
-   assert(dstTrack->IsLeader());
    mClipMoveState.mCapturedTrack = dstTrack->SharedPointer();
    mClipMoveState.mMouseClickX = xx;
    mDidSlideVertically = true;
@@ -838,8 +821,10 @@ UIHandle::Result TimeShiftHandle::Drag
 
    auto &trackList = TrackList::Get(*pProject);
    ChannelView *trackView = dynamic_cast<ChannelView*>(evt.pCell.get());
-   Track *track =
-      *trackList.Find(trackView ? trackView->FindTrack().get() : nullptr);
+   const auto pChannel = trackView ? trackView->FindChannel() : nullptr;
+   auto track = pChannel
+      ? dynamic_cast<Track *>(&pChannel->GetChannelGroup())
+      : nullptr;
 
    // Uncommenting this permits drag to continue to work even over the controls area
    /*
@@ -959,8 +944,6 @@ UIHandle::Result TimeShiftHandle::Release
    if (mDidSlideVertically) {
       msg = XO("Moved clips to another track");
       consolidate = false;
-      for (auto& pair : mClipMoveState.shifters)
-         pair.first->LinkConsistencyFix();
    }
    else {
       msg = ( mClipMoveState.hSlideAmount > 0

@@ -10,6 +10,7 @@ Paul Licameli split from ProjectWindow.cpp
 #include "Viewport.h"
 
 #include "BasicUI.h"
+#include "PendingTracks.h"
 #include "PlayableTrack.h" // just for AudioTrack
 #include "Project.h"
 #include "ProjectSnap.h"
@@ -182,13 +183,7 @@ void Viewport::OnScrollRightButton()
 
 double Viewport::ScrollingLowerBoundTime() const
 {
-   auto &project = mProject;
-   auto &tracks = TrackList::Get(project);
-   auto &viewInfo = ViewInfo::Get(project);
-   if (!(mpCallbacks && mpCallbacks->MayScrollBeyondZero()))
-      return 0;
-   const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
-   return std::min(tracks.GetStartTime(), -screen);
+   return 0;
 }
 
 // PRL: Bug1197: we seem to need to compute all in double, to avoid differing results on Mac
@@ -209,14 +204,15 @@ void Viewport::SetHorizontalThumb(double scrollto, bool doScroll)
       return;
    auto &project = mProject;
    const auto unscaled = PixelWidthBeforeTime(scrollto);
-   const int max =
-      mpCallbacks->GetHorizontalRange() - mpCallbacks->GetHorizontalThumbSize();
+   const int max = std::max(
+      0, mpCallbacks->GetHorizontalRange() -
+            mpCallbacks->GetHorizontalThumbSize());
    const int pos = std::clamp<int>(floor(0.5 + unscaled * sbarScale), 0, max);
    mpCallbacks->SetHorizontalThumbPosition(pos);
    sbarH = floor(0.5 + unscaled - PixelWidthBeforeTime(0.0));
-   sbarH = std::clamp<wxInt64>(sbarH,
-      -PixelWidthBeforeTime(0.0),
-      sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen);
+   sbarH = std::clamp<wxInt64>(
+      sbarH, -PixelWidthBeforeTime(0.0),
+      std::max(sbarTotal - PixelWidthBeforeTime(0.0) - sbarScreen, 0.));
 
    if (doScroll)
       DoScroll();
@@ -279,28 +275,20 @@ void Viewport::UpdateScrollbarsForTracks()
    const bool oldhstate = (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    const bool oldvstate = panelHeight < totalHeight;
 
+   auto &pendingTracks = PendingTracks::Get(mProject);
    const auto LastTime = std::accumulate(tracks.begin(), tracks.end(),
       viewInfo.selectedRegion.t1(),
-      [](double acc, const Track *track){
+      [&pendingTracks](double acc, const Track *track){
          // Iterate over pending changed tracks if present.
-         track = track->SubstitutePendingChangedTrack().get();
+         track = &pendingTracks.SubstitutePendingChangedTrack(*track);
          return std::max(acc, track->GetEndTime());
       });
 
    const double screen = viewInfo.GetScreenEndTime() - viewInfo.hpos;
    const double halfScreen = screen / 2.0;
 
-   // If we can scroll beyond zero,
-   // Add 1/2 of a screen of blank space to the end
-   // and another 1/2 screen before the beginning
-   // so that any point within the union of the selection and the track duration
-   // may be scrolled to the midline.
-   // May add even more to the end, so that you can always scroll a negative
-   // starting time up to the left edge.
    const double lowerBound = ScrollingLowerBoundTime();
-   const double additional = mpCallbacks && mpCallbacks->MayScrollBeyondZero()
-      ? -lowerBound + std::max(halfScreen, screen - LastTime)
-      : screen / 4.0;
+   const double additional = screen / 4.0;
 
    total = LastTime + additional;
 
@@ -434,17 +422,7 @@ void Viewport::DoScroll()
 
    auto width = viewInfo.GetTracksUsableWidth();
    const auto zoom = viewInfo.GetZoom();
-   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, total - width / zoom);
-
-   if (mpCallbacks && mpCallbacks->MayScrollBeyondZero()) {
-      enum { SCROLL_PIXEL_TOLERANCE = 10 };
-      if (std::abs(viewInfo.TimeToPosition(0.0, 0
-                                   )) < SCROLL_PIXEL_TOLERANCE) {
-         // Snap the scrollbar to 0
-         viewInfo.hpos = 0;
-         SetHorizontalThumb(0.0, false);
-      }
-   }
+   viewInfo.hpos = std::clamp(sbarH / zoom, lowerBound, std::max(lowerBound, total - width / zoom));
 
    const auto pos = mpCallbacks ? mpCallbacks->GetVerticalThumbPosition() : 0;
    viewInfo.vpos = pos * scrollStep;
@@ -477,7 +455,6 @@ void Viewport::ZoomFitHorizontallyAndShowTrack(Track *pTrack)
 
 void Viewport::ShowTrack(const Track &track)
 {
-   assert(track.IsLeader());
    auto &viewInfo = ViewInfo::Get(mProject);
 
    int trackTop = 0;
@@ -692,9 +669,7 @@ double Viewport::GetZoomOfToFit() const
    auto &viewInfo = ViewInfo::Get(project);
 
    const double end = tracks.GetEndTime();
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
+   const double start = 0;
    const double len = end - start;
 
    if (len <= 0.0)
@@ -711,9 +686,7 @@ void Viewport::ZoomFitHorizontally()
    auto &viewInfo = ViewInfo::Get(project);
    auto &tracks = TrackList::Get(project);
 
-   const double start = viewInfo.bScrollBeyondZero
-      ? std::min(tracks.GetStartTime(), 0.0)
-      : 0;
+   const double start = 0;
 
    Zoom(GetZoomOfToFit());
    SetHorizontalThumb(start);
@@ -739,7 +712,7 @@ void Viewport::ZoomFitVertically()
    // Find total height to apportion
    auto height = viewInfo.GetHeight();
    height -= 28;
-   
+
    // The height of minimized and non-audio tracks cannot be apportioned
    const auto fn = [this](const Track *pTrack){
       return mpCallbacks->GetTrackHeight(*pTrack);

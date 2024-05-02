@@ -23,7 +23,6 @@ Paul Licameli split from TrackMenus.cpp
 #include "HelpUtilities.h"
 #include "NoteTrack.h"
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 namespace {
 void OnMidiDeviceInfo(const CommandContext &context)
 {
@@ -42,4 +41,3 @@ AttachedItem sAttachment{
       { OrderingHint::After, wxT("DeviceInfo") } }
 };
 }
-#endif

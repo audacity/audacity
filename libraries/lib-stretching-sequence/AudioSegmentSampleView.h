@@ -35,8 +35,7 @@ public:
     * @pre length <= sum(sizes(blockViews)) - start
     */
    AudioSegmentSampleView(
-      std::vector<BlockSampleView> blockViews, size_t start,
-      size_t length);
+      std::vector<BlockSampleView> blockViews, size_t start, size_t length);
 
    /**
     * @brief Constructs a silent `AudioSegmentSampleView`.
@@ -51,12 +50,19 @@ public:
    void Copy(float* buffer, size_t bufferSize) const;
 
    /**
+    * @brief Adds up to `GetSampleCount()` or `bufferSize` samples, whichever
+    * is less, into `buffer`. Samples after that are left unchanged.
+    */
+   void AddTo(float* buffer, size_t bufferSize) const;
+
+   /**
     * @brief The number of samples in this view.
     */
    size_t GetSampleCount() const;
 
 private:
    void DoCopy(float* buffer, size_t bufferSize) const;
+   void DoAdd(float* buffer, size_t bufferSize) const;
 
    const std::vector<BlockSampleView> mBlockViews;
    const size_t mStart = 0;

@@ -10,6 +10,8 @@
 **********************************************************************/
 #pragma once
 
+#include "AudioFileInfo.h"
+
 #include <chrono>
 #include <optional>
 #include <string>
@@ -17,15 +19,8 @@
 
 struct WavFileIO
 {
-   struct Info
-   {
-      int sampleRate = 0;
-      int numChannels = 0;
-      int numFrames = 0;
-   };
-
    static bool Read(
-      const std::string& path, std::vector<std::vector<float>>&, Info&,
+      const std::string& path, std::vector<std::vector<float>>&, AudioFileInfo&,
       const std::optional<std::chrono::seconds>& upTo = std::nullopt);
 
    static bool Write(

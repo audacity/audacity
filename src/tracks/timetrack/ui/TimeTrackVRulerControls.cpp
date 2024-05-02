@@ -34,6 +34,11 @@ TimeTrackVRulerControls::~TimeTrackVRulerControls()
 {
 }
 
+std::shared_ptr<TimeTrack> TimeTrackVRulerControls::FindTimeTrack()
+{
+   return FindChannel<TimeTrack>();
+}
+
 namespace {
    Ruler &ruler()
    {
@@ -51,8 +56,7 @@ std::vector<UIHandlePtr> TimeTrackVRulerControls::HitTest(
    std::vector<UIHandlePtr> results;
 
    if ( st.state.GetX() <= st.rect.GetRight() - kGuard ) {
-      auto pTrack = FindTrack()->SharedPointer<TimeTrack>(  );
-      if (pTrack) {
+      if (const auto pTrack = FindTimeTrack()) {
          auto result = std::make_shared<TimeTrackVZoomHandle>(
             pTrack, st.rect, st.state.m_y );
          result = AssignUIHandlePtr(mVZoomHandle, result);
@@ -76,7 +80,7 @@ void TimeTrackVRulerControls::Draw(
    // out of bounds on the bottom
 
    if (iPass == TrackArtist::PassControls) {
-      auto t = FindTrack();
+      auto t = FindTimeTrack();
       if (!t)
          return;
 
@@ -89,11 +93,11 @@ void TimeTrackVRulerControls::Draw(
       bev.Inflate(-1, 0);
       bev.width += 1;
       AColor::BevelTrackInfo(*dc, true, bev);
-      
+
       // Right align the ruler
       wxRect rr = rect;
       rr.width--;
-      auto &size =
+      const auto &size =
          ChannelView::Get(*static_cast<TimeTrack*>(t.get())).vrulerSize;
       if (size.first < rect.GetWidth()) {
          int adj = rr.GetWidth() - size.first;
@@ -112,7 +116,7 @@ void TimeTrackVRulerControls::Draw(
 
 void TimeTrackVRulerControls::UpdateRuler(const wxRect &rect)
 {
-   const auto tt = std::static_pointer_cast<TimeTrack>(FindTrack());
+   const auto tt = FindTimeTrack();
    if (!tt)
       return;
    auto vruler = &ruler();

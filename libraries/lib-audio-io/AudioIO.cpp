@@ -141,10 +141,10 @@ struct AudioIoCallback::TransportState {
             move(wOwningProject), sampleRate, numPlaybackChannels);
          // The following adds a new effect processor for each logical sequence.
          for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
-            // An array only of non-null leaders should be given to us
+            // An array only of non-null pointers should be given to us
             const auto vt = playbackSequences[i].get();
             const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
-            if (!(pGroup && pGroup->IsLeader())) {
+            if (!pGroup) {
                assert(false);
                continue;
             }
@@ -347,7 +347,6 @@ std::shared_ptr<RealtimeEffectState>
 AudioIO::AddState(AudacityProject &project,
    ChannelGroup *pGroup, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
@@ -359,7 +358,6 @@ std::shared_ptr<RealtimeEffectState>
 AudioIO::ReplaceState(AudacityProject &project,
    ChannelGroup *pGroup, size_t index, const PluginID & id)
 {
-   assert(!pGroup || pGroup->IsLeader());
    RealtimeEffects::InitializationScope *pInit = nullptr;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       if (auto pProject = GetOwningProject(); pProject.get() == &project)
@@ -695,7 +693,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
                (latencyDuration / 1000.0) :
                // Otherwise, use the (likely incorrect) latency reported by PA
                stream->outputLatency;
-         
+
          mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
 #ifdef __WXGTK__
          // DV: When using ALSA PortAudio does not report the buffer size.
@@ -834,7 +832,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       [](const auto &pSequence){
          const auto pGroup =
             pSequence ? pSequence->FindChannelGroup() : nullptr;
-         return pGroup && pGroup->IsLeader(); }
+         return pGroup; }
    ));
 
    const auto &pStartTime = options.pStartTime;
@@ -984,7 +982,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // previous call.
    mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    auto range = Extensions();
    successAudio = successAudio &&
       std::all_of(range.begin(), range.end(),
@@ -993,7 +990,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
               (mPortStreamV19 != NULL && mLastPaError == paNoError)
                  ? Pa_GetStreamInfo(mPortStreamV19) : nullptr,
               t0, mRate ); });
-#endif
 
    if (!successAudio) {
       if (pListener && numCaptureChannels > 0)
@@ -1290,7 +1286,6 @@ bool AudioIO::AllocateBuffers(
                // By the precondition of StartStream which is sole caller of
                // this function:
                assert(pSequence->FindChannelGroup());
-               assert(pSequence->FindChannelGroup()->IsLeader());
                // use sequence time for the end time, not real time!
                double startTime, endTime;
                if (!sequences.prerollSequences.empty())
@@ -1321,7 +1316,7 @@ bool AudioIO::AllocateBuffers(
                   mRate, floatSample,
                   false, // low quality dithering and resampling
                   nullptr, // no custom mix-down
-                  false // don't apply gains
+                  Mixer::ApplyGain::Discard // don't apply gains
                ));
             }
 
@@ -1632,7 +1627,6 @@ void AudioIO::StopStream()
 
    mInputMeter.reset();
    mOutputMeter.reset();
-   ResetOwningProject();
 
    if (pListener && mNumCaptureChannels > 0)
       pListener->OnAudioIOStopRecording();
@@ -1669,6 +1663,8 @@ void AudioIO::StopStream()
                : AudioIOEvent::CAPTURE,
             false });
    }
+
+   ResetOwningProject();
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
@@ -2141,6 +2137,8 @@ void AudioIO::DrainRecordBuffers()
       // boxes.
       StopStream();
       DefaultDelayedHandlerAction( pException );
+      for (auto &pSequence: mCaptureSequences)
+         pSequence->RepairChannels();
    };
 
    GuardedCall( [&] {
@@ -2185,9 +2183,9 @@ void AudioIO::DrainRecordBuffers()
                   size_t size = floor( correction * mRate * mFactor);
                   SampleBuffer temp(size, mCaptureFormat);
                   ClearSamples(temp.ptr(), mCaptureFormat, 0, size);
-                  (*iter)->Append(temp.ptr(), mCaptureFormat, size, 1,
+                  (*iter)->Append(iChannel, temp.ptr(), mCaptureFormat, size, 1,
                      // Do not dither recordings
-                     narrowestSampleFormat, iChannel);
+                     narrowestSampleFormat);
                }
                else {
                   // Leftward shift
@@ -2290,10 +2288,10 @@ void AudioIO::DrainRecordBuffers()
 
             // Now append
             // see comment in second handler about guarantee
-            newBlocks = (*iter)->Append(
+            newBlocks = (*iter)->Append(iChannel,
                temp.ptr(), format, size, 1,
                // Do not dither recordings
-               narrowestSampleFormat, iChannel
+               narrowestSampleFormat
             ) || newBlocks;
          } // end loop over capture channels
 

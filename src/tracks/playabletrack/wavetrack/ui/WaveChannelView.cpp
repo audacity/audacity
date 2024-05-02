@@ -19,36 +19,37 @@ Paul Licameli split from TrackPanel.cpp
 #include <wx/graphics.h>
 
 #include "AColor.h"
-#include "WaveClip.h"
 #include "WaveTrack.h"
 
 #include "../../../../../images/Cursors.h"
 #include "AllThemeResources.h"
 
-#include "CommandContext.h"
 #include "../../../../HitTestResult.h"
-#include "ProjectHistory.h"
 #include "../../../../RefreshCode.h"
-#include "SyncLock.h"
 #include "../../../../TrackArtist.h"
 #include "../../../../TrackPanel.h"
-#include "TrackFocus.h"
 #include "../../../../TrackPanelDrawingContext.h"
 #include "../../../../TrackPanelMouseEvent.h"
 #include "../../../../TrackPanelResizeHandle.h"
-#include "ViewInfo.h"
 #include "../../../../prefs/TracksPrefs.h"
+#include "CommandContext.h"
+#include "PitchAndSpeedDialog.h"
+#include "ProjectHistory.h"
+#include "SyncLock.h"
+#include "TrackFocus.h"
+#include "ViewInfo.h"
 
 #include "../../../ui/TimeShiftHandle.h"
 #include "../../../ui/ButtonHandle.h"
 #include "../../../ui/CommonTrackInfo.h"
 
-#include "../WaveTrackUtils.h"
-
+#include "ClipParameters.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrackAffordanceControls.h"
 #include "WaveTrackAffordanceHandle.h"
+#include "WaveTrackUtilities.h"
 #include "WaveClipAdjustBorderHandle.h"
-#include "WaveClipUtilities.h"
+#include "WaveClipUIUtilities.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -71,8 +72,7 @@ key { [](auto &) { return std::make_unique<PlacementArray>(); } };
 // Access for per-track effect list
 PlacementArray &PlacementArray::Get(Track &track)
 {
-   return track.GetGroupData().Attachments
-      ::Get<PlacementArray>(key);
+   return track.Attachments::Get<PlacementArray>(key);
 }
 
 const PlacementArray &PlacementArray::Get(const Track &track)
@@ -83,8 +83,8 @@ const PlacementArray &PlacementArray::Get(const Track &track)
 
 WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements()
 {
-   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
-   return PlacementArray::Get(waveTrack).mPlacements;
+   auto &waveChannel = *FindWaveChannel();
+   return PlacementArray::Get(waveChannel.GetTrack()).mPlacements;
 }
 
 const WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements() const
@@ -94,7 +94,7 @@ const WaveChannelSubViewPlacements &WaveChannelView::DoGetPlacements() const
 
 bool &WaveChannelView::DoGetMultiView()
 {
-   auto &waveTrack = *std::dynamic_pointer_cast<WaveTrack>(FindTrack());
+   auto &waveTrack = FindWaveChannel()->GetTrack();
    return PlacementArray::Get(waveTrack).mMultiView;
 }
 
@@ -250,8 +250,7 @@ struct SubViewAdjuster
    {
       auto pView = mwView.lock();
       if ( pView ) {
-         auto pTrack = static_cast< WaveTrack* >( pView->FindTrack().get() );
-         WaveChannelView::Get(*pTrack).RestorePlacements(
+         WaveChannelView::Get(*pView->FindWaveChannel()).RestorePlacements(
             rollback ? mOrigPlacements : mNewPlacements);
       }
    }
@@ -306,11 +305,11 @@ public:
          --mMySubView;
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 
@@ -540,11 +539,11 @@ public:
    {
    }
 
-   std::shared_ptr<const Channel> FindChannel() const override
+   std::shared_ptr<const Track> FindTrack() const override
    {
       auto pView = mAdjuster.mwView.lock();
       if (pView)
-         return pView->FindChannel();
+         return TrackFromChannel(pView->FindChannel());
       return nullptr;
    }
 
@@ -707,15 +706,18 @@ public:
          return {};
       auto index = adjuster.FindIndex( subView );
       auto result = std::make_shared<SubViewCloseHandle>(
-         std::move( adjuster ), index, view.FindTrack(), rect );
+         std::move(adjuster), index, view.FindChannel(), rect);
       result = AssignUIHandlePtr( holder, result );
       return result;
    }
 
    SubViewCloseHandle(
       SubViewAdjuster &&adjuster, size_t index,
-      const std::shared_ptr<Track> &pTrack, const wxRect &rect )
-      : ButtonHandle{ pTrack, rect }
+      const std::shared_ptr<Channel> &pChannel, const wxRect &rect )
+      : ButtonHandle{ static_cast<Track&>(pChannel->GetChannelGroup())
+            .SharedPointer(),
+         rect }
+      , mpChannel{ pChannel }
       , mAdjuster{ std::move( adjuster ) }
       , mMySubView{ index }
    {
@@ -744,13 +746,14 @@ public:
       TrackPanelDrawingContext &context, const wxRect &rect, unsigned iPass )
       override
    {
-      if ( iPass == TrackArtist::PassMargins ) { // after PassTracks
-          CommonTrackInfo::DrawCloseButton(
-             context, GetButtonRect(rect), GetTrack().get(), this );
+      if (iPass == TrackArtist::PassMargins) { // after PassTracks
+         CommonTrackInfo::DrawCloseButton(
+            context, GetButtonRect(rect), mpChannel.lock().get(), this);
       }
    }
 
 private:
+   std::weak_ptr<Channel> mpChannel;
    SubViewAdjuster mAdjuster;
    size_t mMySubView{};
 };
@@ -761,11 +764,12 @@ std::pair<
 > WaveChannelSubView::DoDetailedHitTest(
    const TrackPanelMouseState &state,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &wt)
+   const std::shared_ptr<WaveChannel> &wc)
 {
+   const auto waveTrack = wc->GetTrack().SharedPointer<WaveTrack>();
    auto results = WaveChannelView::DoDetailedHitTest(
-      state, pProject, currentTool, bMultiTool, wt, *this);
-   if ( results.first )
+      state, pProject, currentTool, bMultiTool, wc, *this);
+   if (results.first)
       return results;
 
    auto pWaveChannelView = mwWaveChannelView.lock();
@@ -775,7 +779,7 @@ std::pair<
          *pWaveChannelView, *this, state ) )
          results.second.push_back( pHandle );
 
-      auto channels = TrackList::Channels(wt.get());
+      auto &&channels = waveTrack->Channels();
       if(channels.size() > 1) {
          // Only one cell is tested and we need to know
          // which one and it's relative location to the border.
@@ -794,8 +798,8 @@ std::pair<
             const auto bottomBorderHit = std::abs(py - state.rect.GetBottom())
                <= WaveChannelView::kChannelSeparatorThickness / 2;
 
-            auto currentChannel = channels.find(wt.get());
-            auto currentChannelIndex = std::distance(channels.begin(), currentChannel);
+            auto it = channels.find(wc);
+            auto currentChannelIndex = std::distance(channels.begin(), it);
 
             if (//for not-last-view check the bottom border hit
                ((currentChannelIndex != channels.size() - 1)
@@ -807,9 +811,9 @@ std::pair<
             {
                //depending on which border hit test succeeded on we
                //need to choose a proper target for resizing
-               auto it = bottomBorderHit ? currentChannel : currentChannel.advance(-1);
-               auto result = std::make_shared<TrackPanelResizeHandle>(
-                  (*it)->GetChannel(0), py);
+               if (!bottomBorderHit)
+                  --it;
+               auto result = std::make_shared<TrackPanelResizeHandle>(*it, py);
                result = AssignUIHandlePtr(mResizeHandle, result);
                results.second.push_back(result);
             }
@@ -833,8 +837,7 @@ std::pair<
           results.second.push_back(pHandle);
    }
    if (auto result = CutlineHandle::HitTest(
-      mCutlineHandle, state.state, state.rect,
-      pProject, wt ))
+      mCutlineHandle, state.state, state.rect, pProject, waveTrack))
       // This overriding test applies in all tools
       results.second.push_back(result);
 
@@ -843,7 +846,7 @@ std::pair<
 
 
 void WaveChannelSubView::DrawBoldBoundaries(
-   TrackPanelDrawingContext &context, const WaveTrack &track,
+   TrackPanelDrawingContext &context, const WaveChannel &channel,
    const wxRect &rect)
 {
    auto &dc = context.dc;
@@ -854,11 +857,12 @@ void WaveChannelSubView::DrawBoldBoundaries(
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
    auto target2 = dynamic_cast<CutlineHandle*>(context.target.get());
 #endif
-   for (const auto loc : FindWaveTrackLocations(track)) {
+   // x coordinates for bold lines will be the same across channels
+   for (const auto loc : FindWaveTrackLocations(channel.GetTrack())) {
       bool highlightLoc = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
       highlightLoc =
-         target2 && target2->GetTrack().get() == &track &&
+         target2 && target2->GetTrack().get() == &channel &&
          target2->GetLocation() == loc;
 #endif
       const int xx = zoomInfo.TimeToPosition(loc.pos);
@@ -882,18 +886,21 @@ auto WaveChannelSubView::GetMenuItems(
    const wxRect &rect, const wxPoint *pPosition, AudacityProject *pProject)
       -> std::vector<MenuItem>
 {
-   auto pTrack = static_cast<WaveTrack*>( FindTrack().get() );
-   if(pTrack != nullptr && pPosition != nullptr)
+   auto pChannel = FindWaveChannel();
+   if (pChannel != nullptr && pPosition != nullptr)
    {
+      auto &track = pChannel->GetTrack();
       const auto &viewInfo = ViewInfo::Get(*pProject);
       const auto t = viewInfo.PositionToTime(pPosition->x, rect.x);
-      if((pTrack->IsSelected() &&
+      if ((track.IsSelected() &&
          t > viewInfo.selectedRegion.t0() && t < viewInfo.selectedRegion.t1() &&
-         !pTrack->GetClipsIntersecting(viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1()).empty())
+         !WaveTrackUtilities::GetClipsIntersecting(track,
+            viewInfo.selectedRegion.t0(), viewInfo.selectedRegion.t1())
+               .empty())
          ||
-         pTrack->GetClipAtTime(t))
+         WaveChannelUtilities::GetClipAtTime(**track.Channels().begin(), t))
       {
-         return GetWaveClipMenuItems();
+         return WaveClipUIUtilities::GetWaveClipMenuItems();
       }
    }
    return {
@@ -923,18 +930,37 @@ const WaveChannelView *WaveChannelView::Find(const WaveChannel *pChannel)
    return Find(const_cast<WaveChannel*>(pChannel));
 }
 
-WaveChannelView::WaveChannelView(
-   const std::shared_ptr<Track> &pTrack, size_t channel
-)  : CommonChannelView{ pTrack, channel }
+WaveChannelView &WaveChannelView::GetFirst(WaveTrack &wt)
 {
+   assert(wt.Channels().size() > 0);
+   return Get(**wt.Channels().begin());
+}
+
+const WaveChannelView &WaveChannelView::GetFirst(const WaveTrack &wt)
+{
+   return GetFirst(const_cast<WaveTrack&>(wt));
+}
+
+WaveChannelView *WaveChannelView::FindFirst(WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
+}
+
+const WaveChannelView *WaveChannelView::FindFirst(const WaveTrack *pWt)
+{
+   return pWt ? &GetFirst(*pWt): nullptr;
 }
 
 WaveChannelSubView::WaveChannelSubView(WaveChannelView &waveChannelView)
-   : CommonChannelView{
-      waveChannelView.FindTrack(), waveChannelView.GetChannelIndex() }
+   : CommonChannelView{ waveChannelView.FindChannel() }
 {
    mwWaveChannelView = std::static_pointer_cast<WaveChannelView>(
       waveChannelView.shared_from_this() );
+}
+
+std::shared_ptr<WaveChannel> WaveChannelSubView::FindWaveChannel()
+{
+   return FindChannel<WaveChannel>();
 }
 
 void WaveChannelSubView::CopyToSubView(WaveChannelSubView *destSubView) const {
@@ -945,9 +971,14 @@ WaveChannelView::~WaveChannelView()
 {
 }
 
-void WaveChannelView::CopyTo(Track &track) const
+std::shared_ptr<WaveChannel> WaveChannelView::FindWaveChannel()
 {
-   ChannelView::CopyTo(track);
+   return FindChannel<WaveChannel>();
+}
+
+void WaveChannelView::CopyTo(Track &track, size_t iChannel) const
+{
+   ChannelView::CopyTo(track, iChannel);
    auto &other = ChannelView::Get(*track.GetChannel(0));
    if (const auto pOther = dynamic_cast<WaveChannelView*>(&other)) {
       // only these fields are important to preserve in undo/redo history
@@ -979,7 +1010,7 @@ std::pair< bool, std::vector<UIHandlePtr> >
 WaveChannelView::DoDetailedHitTest(
    const TrackPanelMouseState &st,
    const AudacityProject *pProject, int currentTool, bool bMultiTool,
-   const std::shared_ptr<WaveTrack> &pTrack,
+   const std::shared_ptr<WaveChannel> &pChannel,
    CommonChannelView &view)
 {
    // common hit-testing for different sub-view types, to help implement their
@@ -993,13 +1024,14 @@ WaveChannelView::DoDetailedHitTest(
    std::vector<UIHandlePtr> results;
 
    const auto& viewInfo = ViewInfo::Get(*pProject);
+   const auto pTrack = pChannel->GetTrack().SharedPointer<WaveTrack>();
 
-   for (auto& clip : pTrack->GetClips())
+   for (const auto &clip : pChannel->Intervals())
    {
       if (!WaveChannelView::ClipDetailsVisible(*clip, viewInfo, st.rect)
          && HitTest(*clip, viewInfo, st.rect, st.state.GetPosition()))
       {
-         auto &waveChannelView = WaveChannelView::Get(*pTrack);
+         auto &waveChannelView = WaveChannelView::Get(*pChannel);
          results.push_back(
             AssignUIHandlePtr(
                waveChannelView.mAffordanceHandle,
@@ -1013,8 +1045,8 @@ WaveChannelView::DoDetailedHitTest(
       // Ctrl modifier key in multi-tool overrides everything else
       // (But this does not do the time shift constrained to the vertical only,
       //  which is what happens when you hold Ctrl in the Time Shift tool mode)
-      auto result = TimeShiftHandle::HitAnywhere(
-         view.mTimeShiftHandle, pTrack, false);
+      auto result = TimeShiftHandle::HitAnywhere(view.mTimeShiftHandle,
+         pTrack, false);
       if (result)
          results.push_back(result);
       return { true, results };
@@ -1144,10 +1176,23 @@ void WaveChannelView::DoSetDisplay(Display display, bool exclusive)
 }
 
 namespace {
-   template<typename Iter, typename Comp>
-   const WaveClip* NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
+   template<typename Iter>
+   Iter SelectedClip(const ViewInfo& viewInfo, Iter begin, Iter end)
    {
-      auto it = WaveTrackUtils::SelectedClip(viewInfo, begin, end);
+      //! Decide whether a clip is selected from its start and end times (only)
+      const auto isClipSelected =
+      [&viewInfo](const std::shared_ptr<WaveChannelInterval> &pClip) {
+         return pClip->GetPlayStartTime() == viewInfo.selectedRegion.t0() &&
+           pClip->GetPlayEndTime() == viewInfo.selectedRegion.t1();
+      };
+      return std::find_if(begin, end, isClipSelected);
+   }
+
+   template<typename Iter, typename Comp>
+   std::shared_ptr<WaveChannelInterval>
+   NextClipLooped(ViewInfo& viewInfo, Iter begin, Iter end, Comp comp)
+   {
+      auto it = SelectedClip(viewInfo, begin, end);
       if (it == end)
          it = std::find_if(begin, end, comp);
       else
@@ -1163,23 +1208,25 @@ bool WaveChannelView::SelectNextClip(
    ViewInfo& viewInfo, AudacityProject* project, bool forward)
 {
    //Iterates through clips in a looped manner
-   auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(FindTrack());
-   if (!waveTrack)
+   const auto pChannel = FindWaveChannel();
+   if (!pChannel)
       return false;
-   auto clips = waveTrack->SortedClipArray();
+   auto clips = WaveChannelUtilities::SortedClipArray(*pChannel);
    if (clips.empty())
       return false;
 
-   const WaveClip* clip{ };
+   std::shared_ptr<WaveChannelInterval> clip{};
    if (forward)
    {
-      clip = NextClipLooped(viewInfo, clips.begin(), clips.end(), [&](const WaveClip* other) {
+      clip = NextClipLooped(viewInfo, clips.begin(), clips.end(),
+      [&](const auto &other) {
          return other->GetPlayStartTime() >= viewInfo.selectedRegion.t1();
       });
    }
    else
    {
-      clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(), [&](const WaveClip* other) {
+      clip = NextClipLooped(viewInfo, clips.rbegin(), clips.rend(),
+      [&](const auto &other) {
          return other->GetPlayStartTime() <= viewInfo.selectedRegion.t0();
       });
    }
@@ -1191,6 +1238,12 @@ bool WaveChannelView::SelectNextClip(
    auto it = std::find(clips.begin(), clips.end(), clip);
    auto index = std::distance(clips.begin(), it);
 
+   auto &waveTrack = pChannel->GetTrack();
+   auto wideClipIt = waveTrack.Intervals().first;
+   std::advance(wideClipIt, waveTrack.GetClipIndex(clip->GetClip()));
+   PitchAndSpeedDialog::Get(*project)
+      .Retarget(waveTrack.SharedPointer<WaveTrack>(), *wideClipIt);
+
    auto message = XP(
    /* i18n-hint:
        string is the name of a clip
@@ -1200,7 +1253,7 @@ bool WaveChannelView::SelectNextClip(
        "%s, %d of %d clips",
        2
    )(
-      clip->GetName(),
+      clip->GetClip().GetName(),
       static_cast<int>(index + 1),
       static_cast<int>(clips.size())
   );
@@ -1288,8 +1341,11 @@ unsigned WaveChannelView::CaptureKey(
    AudacityProject* project)
 {
    unsigned result{ RefreshCode::RefreshNone };
-   auto pTrack = static_cast<WaveTrack*>(FindTrack().get());
-   for (auto pChannel : pTrack->Channels()) {
+   const auto pChannel = FindWaveChannel();
+   if (!pChannel)
+      return result;
+   auto &track = pChannel->GetTrack();
+   for (auto pChannel : track.Channels()) {
       event.Skip(false);
       auto &waveChannelView = WaveChannelView::Get(*pChannel);
       // Give sub-views first chance to handle the event
@@ -1396,9 +1452,9 @@ namespace {
 using PMF = bool (WaveTrackAffordanceControls::*)(AudacityProject &);
 bool AnyAffordance(AudacityProject& project, WaveChannelView &view, PMF pmf)
 {
-   const auto pLeader = static_cast<WaveTrack*>(
-      *TrackList::Channels(view.FindTrack().get()).begin());
-   auto& channelView = ChannelView::Get(*pLeader);
+   const auto pWaveChannel = view.FindWaveChannel();
+   const auto pTrack = &pWaveChannel->GetTrack();
+   auto& channelView = ChannelView::Get(**pTrack->Channels().begin());
    if (const auto affordance =
       std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
          channelView.GetAffordanceControls()).get()
@@ -1432,7 +1488,7 @@ bool WaveChannelView::ClipDetailsVisible(const ClipTimes& clip,
    return showSamples || clipRect.width >= kClipDetailedViewMinimumWidth;
 }
 
-wxRect WaveChannelView::ClipHitTestArea(const WaveClip& clip,
+wxRect WaveChannelView::ClipHitTestArea(const ClipTimes& clip,
    const ZoomInfo& zoomInfo, const wxRect& viewRect)
 {
    bool showSamples{ false };
@@ -1443,7 +1499,7 @@ wxRect WaveChannelView::ClipHitTestArea(const WaveClip& clip,
    return clipRect.Inflate(2, 0);
 }
 
-bool WaveChannelView::HitTest(const WaveClip& clip,
+bool WaveChannelView::HitTest(const ClipTimes& clip,
    const ZoomInfo& viewInfo, const wxRect& viewRect, const wxPoint& pos)
 {
    return ClipHitTestArea(clip, viewInfo, viewRect).Contains(pos);
@@ -1476,9 +1532,13 @@ WaveChannelView::GetAllSubViews()
 
 std::shared_ptr<CommonTrackCell> WaveChannelView::GetAffordanceControls()
 {
-   auto track = FindTrack();
-   if (track->IsLeader())
-      return DoGetAffordance(track);
+   auto pChannel = FindWaveChannel();
+   if (pChannel) {
+      auto &track = pChannel->GetTrack();
+      if (pChannel == *track.Channels().begin()) {
+         return DoGetAffordance(track);
+      }
+   }
    return {};
 }
 
@@ -1494,206 +1554,38 @@ void WaveChannelView::DoSetMinimized(bool minimized)
 }
 
 std::shared_ptr<CommonTrackCell>
-WaveChannelView::DoGetAffordance(const std::shared_ptr<Track>& track)
+WaveChannelView::DoGetAffordance(Track& track)
 {
     if (mpAffordanceCellControl == nullptr)
-        mpAffordanceCellControl = std::make_shared<WaveTrackAffordanceControls>(track);
+        mpAffordanceCellControl =
+          std::make_shared<WaveTrackAffordanceControls>(track.SharedPointer());
     return mpAffordanceCellControl;
 }
 
 using DoGetWaveChannelView = DoGetView::Override<WaveTrack>;
 DEFINE_ATTACHED_VIRTUAL_OVERRIDE(DoGetWaveChannelView) {
    return [](WaveTrack &track, size_t iChannel) {
-      assert(iChannel < track.NChannels());
-      return std::make_shared<WaveChannelView>(track.SharedPointer(), iChannel);
+      auto channels = track.Channels();
+      assert(iChannel < channels.size());
+      auto &iter = channels.first;
+      std::advance(iter, iChannel);
+      return std::make_shared<WaveChannelView>(*iter);
    };
 }
 
 std::shared_ptr<ChannelVRulerControls> WaveChannelView::DoGetVRulerControls()
 {
-   // This should never be called because of delegation to the spectrum or
-   // waveform sub-view
-   wxASSERT( false );
    return {};
 }
 
-namespace
-{
-// Returns an offset in seconds to be applied to the right clip
-// boundary so that it does not overlap the last sample
-double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
-{
-   constexpr double pixelsOffset { 2 }; // The desired offset in pixels
-   if (showSamples)
-      // adjustment so that the last circular point doesn't appear
-      // to be hanging off the end
-      return pixelsOffset /
-             avgPixPerSecond; // pixels / ( pixels / second ) = seconds
-   return .0;
-}
-
-double GetBlankSpaceBeforePlayEndTime(const ClipTimes &clip)
-{
-   return 0.99 * clip.GetStretchRatio() / clip.GetRate();
-}
-
-double GetPixelsPerSecond(const wxRect& viewRect, const ZoomInfo& zoomInfo)
-{
-   const auto h = zoomInfo.PositionToTime(0, 0, true);
-   const auto trackRectT1 = zoomInfo.PositionToTime(viewRect.width, 0, true);
-   return viewRect.width / (trackRectT1 - h);
-}
-
-bool ShowIndividualSamples(
-   int sampleRate, double stretchRatio, double pixelsPerSecond)
-{
-   const auto secondsPerSample = stretchRatio / sampleRate;
-   const auto pixelsPerSample = pixelsPerSecond * secondsPerSample;
-   return pixelsPerSample > 0.5;
-}
-}
-
-ClipParameters::ClipParameters(
-   const ClipTimes &clip, const wxRect& rect, const ZoomInfo& zoomInfo
-)  : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
-   , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
-   , showIndividualSamples { ShowIndividualSamples(
-      clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
-{
-   const auto trackRectT1 = zoomInfo.PositionToTime(rect.width, 0, true);
-   const auto stretchRatio = clip.GetStretchRatio();
-   const auto playStartTime = clip.GetPlayStartTime();
-
-   const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
-
-   // Hidden duration because too far left.
-   const auto tpre = trackRectT0 - playStartTime;
-   const auto tpost = trackRectT1 - playStartTime;
-
-   const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
-
-   // Calculate actual selection bounds so that t0 > 0 and t1 < the
-   // end of the track
-   t0 = std::max(tpre, .0);
-   t1 = std::min(tpost, clipLength - blank) +
-        CalculateAdjustmentForZoomLevel(
-           averagePixelsPerSecond, showIndividualSamples);
-
-   // Make sure t1 (the right bound) is greater than 0
-   if (t1 < 0.0) {
-      t1 = 0.0;
-   }
-
-   // Make sure t1 is greater than t0
-   if (t0 > t1) {
-      t0 = t1;
-   }
-
-   // The variable "hiddenMid" will be the rectangle containing the
-   // actual waveform, as opposed to any blank area before
-   // or after the track, as it would appear without the fisheye.
-   hiddenMid = rect;
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some unused area to the
-   // left of the track.  Reduce the "hiddenMid"
-   hiddenLeftOffset = 0;
-   if (tpre < 0) {
-      // Fix Bug #1296 caused by premature conversion to (int).
-      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
-      if( time64 < 0 )
-         time64 = 0;
-      hiddenLeftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
-
-      hiddenMid.x += hiddenLeftOffset;
-      hiddenMid.width -= hiddenLeftOffset;
-   }
-
-   // If the right edge of the track is to the left of the right
-   // edge of the display, then there's some unused area to the right
-   // of the track.  Reduce the "hiddenMid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
-      if( time64 < 0 )
-         time64 = 0;
-      const int hiddenRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
-
-      hiddenMid.width = std::max(0, hiddenRightOffset - hiddenLeftOffset);
-   }
-   // The variable "mid" will be the rectangle containing the
-   // actual waveform, as distorted by the fisheye,
-   // as opposed to any blank area before or after the track.
-   mid = rect;
-
-   // If the left edge of the track is to the right of the left
-   // edge of the display, then there's some unused area to the
-   // left of the track.  Reduce the "mid"
-   leftOffset = 0;
-   if (tpre < 0) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
-      if( time64 < 0 )
-         time64 = 0;
-      leftOffset = (time64 < rect.width) ? (int)time64 : rect.width;
-
-      mid.x += leftOffset;
-      mid.width -= leftOffset;
-   }
-
-   // If the right edge of the track is to the left of the right
-   // edge of the display, then there's some unused area to the right
-   // of the track.  Reduce the "mid" rect by the
-   // size of the blank area.
-   if (tpost > t1) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
-      if( time64 < 0 )
-         time64 = 0;
-      const int distortedRightOffset = (time64 < rect.width) ? (int)time64 : rect.width;
-
-      mid.width = std::max(0, distortedRightOffset - leftOffset);
-   }
-}
-
-wxRect ClipParameters::GetClipRect(const ClipTimes& clip,
-   const ZoomInfo& zoomInfo, const wxRect& viewRect, bool* outShowSamples)
-{
-   const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
-   const auto showIndividualSamples = ShowIndividualSamples(
-      clip.GetRate(), clip.GetStretchRatio(), pixelsPerSecond);
-   const auto clipEndingAdjustment =
-      CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
-   if (outShowSamples != nullptr)
-      *outShowSamples = showIndividualSamples;
-   constexpr auto edgeLeft =
-      static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
-   constexpr auto edgeRight =
-      static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
-   const auto left = std::clamp(
-      zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x, true),
-      edgeLeft, edgeRight);
-   const auto right = std::clamp(
-      zoomInfo.TimeToPosition(
-         clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip) +
-            clipEndingAdjustment,
-         viewRect.x, true),
-      edgeLeft, edgeRight);
-   if (right >= left)
-   {
-      // after clamping we can expect that left and right
-      // are small enough to be put into int
-      return wxRect(
-         static_cast<int>(left), viewRect.y,
-         std::max(1, static_cast<int>(right - left)), viewRect.height);
-    }
-    return wxRect();
-}
-
-void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
+void WaveChannelView::Reparent(
+   const std::shared_ptr<Track> &parent, size_t iChannel)
 {
    // BuildSubViews(); // not really needed
-   CommonChannelView::Reparent(parent);
-   WaveChannelSubViews::ForEach([&parent](WaveChannelSubView &subView){
-      subView.Reparent(parent);
+   CommonChannelView::Reparent(parent, iChannel);
+   WaveChannelSubViews::ForEach([&parent, iChannel](WaveChannelSubView &subView)
+   {
+      subView.Reparent(parent, iChannel);
    });
    if (mpAffordanceCellControl)
       mpAffordanceCellControl->Reparent(parent);
@@ -1701,26 +1593,17 @@ void WaveChannelView::Reparent(const std::shared_ptr<Track> &parent)
 
 WaveTrack::IntervalHolder WaveChannelView::GetSelectedClip()
 {
-   // Find the leader
-   const auto pChannel = static_cast<WaveChannel*>(FindChannel().get());
+   const auto pChannel = FindWaveChannel();
    if (!pChannel)
       return {};
-   auto &track = pChannel->ReallyGetTrack();
-   auto &leaderView = Get(**track.Channels().begin());
+   auto &track = pChannel->GetTrack();
+   auto &topmostView = Get(**track.Channels().begin());
    if (auto affordance = std::dynamic_pointer_cast<WaveTrackAffordanceControls>(
-      leaderView.GetAffordanceControls()))
+      topmostView.GetAffordanceControls()))
    {
-      assert(leaderView.GetChannelIndex() == 0);
       return *affordance->GetSelectedInterval();
    }
    return {};
-}
-
-bool WaveChannelView::WideClipContains(
-   const WaveTrack::Interval &wideClip, const WaveClip &clip)
-{
-   return &clip == wideClip.GetClip(0).get()
-      || &clip == wideClip.GetClip(1).get();
 }
 
 void WaveChannelView::BuildSubViews() const
@@ -1738,7 +1621,6 @@ void WaveChannelView::BuildSubViews() const
       if (placements.empty()) {
          placements.resize(WaveChannelSubViews::size());
 
-         auto pTrack = pThis->FindTrack();
          auto display = TracksPrefs::ViewModeChoice();
          bool multi = (display == WaveChannelViewConstants::MultiView);
          if (multi) {

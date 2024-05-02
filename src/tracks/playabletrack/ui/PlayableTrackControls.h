@@ -25,7 +25,7 @@ public:
    static const TCPLines& StaticWaveTCPLines();
 
    static void GetMuteSoloRect(
-      const wxRect & rect, wxRect & dest, bool solo, bool bHasSoloButton,
+      const wxRect & rect, wxRect & dest, bool solo,
       const Track *pTrack);
 
    static void GetEffectsRect(

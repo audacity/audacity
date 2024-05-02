@@ -540,14 +540,12 @@ LWSlider::LWSlider(wxWindow *parent,
       maxValue = 3.0f;
       stepValue = STEP_CONTINUOUS;
       break;
-#ifdef EXPERIMENTAL_MIDI_OUT
    case VEL_SLIDER:
       minValue = VEL_MIN;
       maxValue = VEL_MAX;
       stepValue = 1.0f;
       speed = 0.5;
       break;
-#endif
    default:
       minValue = 0.0f;
       maxValue = 1.0f;
@@ -1038,7 +1036,6 @@ TranslatableString LWSlider::GetTip(float value) const
          val = XO("%.2fx").Format( value );
          break;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
          if (value > 0.0f)
             // Signed
@@ -1047,7 +1044,6 @@ TranslatableString LWSlider::GetTip(float value) const
             // Zero, or signed negative
             val = Verbatim("%d").Format( (int) value );
          break;
-#endif
       }
 
       if(!mName.empty())
@@ -1102,11 +1098,9 @@ TranslatableStrings LWSlider::GetWidestTips() const
          results.push_back( GetTip( 9.99f ) );
          break;
 
-#ifdef EXPERIMENTAL_MIDI_OUT
       case VEL_SLIDER:
           results.push_back( GetTip( 999.f ) );
           break;
-#endif
       }
    }
    else
@@ -1444,10 +1438,8 @@ wxString LWSlider::GetStringValue() const
       return wxString::Format(wxT("%.0f"), mCurrentValue * 100);
    case SPEED_SLIDER:
       return wxString::Format(wxT("%.0f"), mCurrentValue * 100 );
-#ifdef EXPERIMENTAL_MIDI_OUT
    case VEL_SLIDER:
       return wxString::Format(wxT("%.0f"), mCurrentValue);
-#endif
    default:
       return {};
    }

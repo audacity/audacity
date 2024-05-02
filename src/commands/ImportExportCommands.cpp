@@ -33,7 +33,7 @@
 #include "ExportUtils.h"
 #include "ProjectRate.h"
 #include "ExportPluginRegistry.h"
-#include "export/ExportProgressUI.h"
+#include "ExportProgressUI.h"
 
 
 const ComponentInterfaceSymbol ImportCommand::Symbol
@@ -67,13 +67,11 @@ void ImportCommand::PopulateOrExchange(ShuttleGui & S)
 bool ImportCommand::Apply(const CommandContext & context)
 {
    bool wasEmpty = TrackList::Get(context.project).empty();
-   bool success = ProjectFileManager::Get( context.project )
-      .Import(mFileName, false);
+   const bool success =
+      ProjectFileManager::Get(context.project).Import(mFileName, false);
 
    if (success && wasEmpty)
-   {
       SelectUtilities::SelectAllIfNone( context.project );
-   }
 
    return success;
 }

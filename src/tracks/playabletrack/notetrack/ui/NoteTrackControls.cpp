@@ -53,14 +53,12 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
          if (NULL != (result = SoloButtonHandle::HitTest(
             mSoloHandle, state, rect, pProject, track)))
             return result;
-#ifdef EXPERIMENTAL_MIDI_OUT
          if (NULL != (result = VelocitySliderHandle::HitTest(
             mVelocityHandle, state, rect, track)))
             return result;
          if (NULL != (result = NoteTrackButtonHandle::HitTest(
             mClickHandle, state, rect, track)))
             return result;
-#endif
          return result;
       }();
       if (result) {
@@ -69,7 +67,7 @@ std::vector<UIHandlePtr> NoteTrackControls::HitTest
       }
    }
 
-   return NoteTrackControlsBase::HitTest(st, pProject);
+   return PlayableTrackControls::HitTest(st, pProject);
 }
 
 class NoteTrackMenuTable : public PopupMenuTable
@@ -85,10 +83,10 @@ public:
 private:
    void InitUserData(void *pUserData) override
    {
-      mpData = static_cast<NoteTrackControlsBase::InitMenuData*>(pUserData);
+      mpData = static_cast<PlayableTrackControls::InitMenuData*>(pUserData);
    }
 
-   NoteTrackControlsBase::InitMenuData *mpData{};
+   PlayableTrackControls::InitMenuData *mpData{};
 
    void OnChangeOctave(wxCommandEvent &);
 };
@@ -107,13 +105,13 @@ enum {
 /// Scrolls the note track up or down by an octave
 void NoteTrackMenuTable::OnChangeOctave(wxCommandEvent &event)
 {
-   NoteTrack *const pTrack = static_cast<NoteTrack*>(mpData->pTrack);
+   auto &track = static_cast<NoteTrack&>(mpData->track);
 
    wxASSERT(event.GetId() == OnUpOctaveID
       || event.GetId() == OnDownOctaveID);
 
    const bool bDown = (OnDownOctaveID == event.GetId());
-   NoteTrackRange::Get(*pTrack).ShiftNoteRange((bDown) ? -12 : 12);
+   NoteTrackRange::Get(track).ShiftNoteRange((bDown) ? -12 : 12);
 
    AudacityProject *const project = &mpData->project;
    ProjectHistory::Get( *project )
@@ -178,7 +176,6 @@ void SliderDrawFunction
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 void VelocitySliderDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
@@ -195,7 +192,6 @@ void VelocitySliderDrawFunction
       &NoteTrackControls::VelocitySlider, dc, rect, pTrack,
       pParent, captured, hit);
 }
-#endif
 
 // Draws the midi channel toggle buttons within the given rect.
 // The rect should be evenly divisible by 4 on both axes.
@@ -312,14 +308,12 @@ void MidiControlsDrawFunction
 static const struct NoteTrackTCPLines
    : TCPLines { NoteTrackTCPLines() {
    *static_cast<TCPLines*>(this) =
-      NoteTrackControlsBase::StaticNoteTCPLines();
+      PlayableTrackControls::StaticNoteTCPLines();
    insert( end(), {
       { TCPLine::kItemMidiControlsRect, kMidiCellHeight * 4, 0,
         MidiControlsDrawFunction },
-#ifdef EXPERIMENTAL_MIDI_OUT
       { TCPLine::kItemVelocity, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         VelocitySliderDrawFunction },
-#endif
    } );
 } } noteTrackTCPLines;
 
@@ -352,16 +346,13 @@ const TCPLines &NoteTrackControls::GetTCPLines() const
 
 namespace {
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    std::unique_ptr<LWSlider>
      gVelocityCaptured
    , gVelocity
    ;
-#endif
 
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 LWSlider * NoteTrackControls::VelocitySlider
 (const wxRect &sliderRect, const NoteTrack *t, bool captured, wxWindow *pParent)
 {
@@ -381,13 +372,11 @@ LWSlider * NoteTrackControls::VelocitySlider
    slider->SetParent( pParent );
    return slider;
 }
-#endif
 
 void NoteTrackControls::ReCreateVelocitySlider(ThemeChangeMessage message)
 {
    if (message.appearance)
       return;
-#ifdef EXPERIMENTAL_MIDI_OUT
    wxPoint point{ 0, 0 };
    wxRect sliderRect;
    GetVelocityRect(point, sliderRect);
@@ -403,7 +392,6 @@ void NoteTrackControls::ReCreateVelocitySlider(ThemeChangeMessage message)
       wxSize(sliderRect.width, sliderRect.height),
       VEL_SLIDER);
    gVelocityCaptured->SetDefaultValue(0.0);
-#endif
 }
 
 using DoGetNoteTrackControls = DoGetControls::Override< NoteTrack >;

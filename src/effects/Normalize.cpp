@@ -27,6 +27,7 @@
 #include "Prefs.h"
 #include "../ProjectFileManager.h"
 #include "ShuttleGui.h"
+#include "WaveChannelUtilities.h"
 #include "WaveTrack.h"
 #include "../widgets/valnum.h"
 #include "ProgressDialog.h"
@@ -172,7 +173,7 @@ bool EffectNormalize::Process(EffectInstance &, EffectSettings &)
          }
 
          if (oneChannel) {
-            if (TrackList::NChannels(*track) == 1)
+            if (track->NChannels() == 1)
                // really mono
                msg = topMsg +
                   XO("Processing: %s").Format(trackName);
@@ -305,7 +306,8 @@ bool EffectNormalize::AnalyseTrack(const WaveChannel &track,
    float min, max;
    if (gain) {
       // set mMin, mMax.  No progress bar here as it's fast.
-      auto pair = track.GetMinMax(curT0, curT1); // may throw
+      auto pair =
+         WaveChannelUtilities::GetMinMax(track, curT0, curT1); // may throw
       min = pair.first, max = pair.second;
 
       if (dc) {
@@ -433,7 +435,7 @@ bool EffectNormalize::ProcessOne(WaveChannel &track,
       ProcessData(buffer.get(), block, offset);
 
       //Copy the newly-changed samples back onto the track.
-      if (!track.Set((samplePtr) buffer.get(), floatSample, s, block)) {
+      if (!track.SetFloats(buffer.get(), s, block)) {
          rc = false;
          break;
       }

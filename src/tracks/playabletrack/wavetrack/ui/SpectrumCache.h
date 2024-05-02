@@ -13,7 +13,8 @@
 
 class sampleCount;
 class SpectrogramSettings;
-class WaveChannelInterval;
+class WaveClipChannel;
+using WaveChannelInterval = WaveClipChannel;
 class WideSampleSequence;
 
 #include <vector>
@@ -106,14 +107,16 @@ struct WaveClipSpectrumCache final : WaveClipListener
    explicit WaveClipSpectrumCache(size_t nChannels);
    ~WaveClipSpectrumCache() override;
 
+   std::unique_ptr<WaveClipListener> Clone() const override;
+
    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
    std::vector<std::unique_ptr<SpecPxCache>> mSpecPxCaches;
    std::vector<std::unique_ptr<SpecCache>> mSpecCaches;
    int mDirty { 0 };
 
-   static WaveClipSpectrumCache &Get( const WaveClip &clip );
+   static WaveClipSpectrumCache &Get(const WaveChannelInterval &clip);
 
-   void MarkChanged() override; // NOFAIL-GUARANTEE
+   void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
    void Invalidate() override; // NOFAIL-GUARANTEE
 
    /** Getting high-level data for screen display */
@@ -126,6 +129,10 @@ struct WaveClipSpectrumCache final : WaveClipListener
       SpectrogramSettings &spectrogramSettings,
       const sampleCount *&where, size_t numPixels,
       double t0 /*absolute time*/, double pixelsPerSecond);
+
+   void MakeStereo(WaveClipListener &&other, bool aligned) override;
+   void SwapChannels() override;
+   void Erase(size_t index) override;
 };
 
 #endif

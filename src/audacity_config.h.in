@@ -119,3 +119,5 @@
 
 /* Define if opusfile support should be enabled */
 #cmakedefine USE_OPUSFILE 1
+
+#cmakedefine AUDACITY_BUILD_LEVEL @AUDACITY_BUILD_LEVEL@

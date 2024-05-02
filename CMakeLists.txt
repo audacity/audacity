@@ -31,7 +31,7 @@ endif()
 # Increment as appropriate after release of a new version, and set back
 # AUDACITY_BUILD_LEVEL to 0
 set( AUDACITY_VERSION 3 )
-set( AUDACITY_RELEASE 5 )
+set( AUDACITY_RELEASE 6 )
 set( AUDACITY_REVISION 0 )
 set( AUDACITY_MODLEVEL 0 )
 
@@ -160,17 +160,24 @@ endif()
 # Our very own project
 project( Audacity )
 
-# XCode 14 no longer allows building unsigned binaries.
-# So for the XCode 14 `-` is passed as the code sign identity, which stands for
-# local signing. `--deep` is passed, because 3d party libraries are copied unsigned.
-# XCODE_VERSION is defined only after the project() command
-
 if( APPLE )
+   # XCode 14 no longer allows building unsigned binaries.
+   # So for the XCode 14 `-` is passed as the code sign identity, which stands for
+   # local signing. `--deep` is passed, because 3d party libraries are copied unsigned.
+   # XCODE_VERSION is defined only after the project() command
    if (XCODE_VERSION VERSION_LESS 14)
       set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "" CACHE INTERNAL "" )
    else()
       set( CMAKE_XCODE_ATTRIBUTE_CODE_SIGN_IDENTITY "-" CACHE INTERNAL "" )
       set( CMAKE_XCODE_ATTRIBUTE_OTHER_CODE_SIGN_FLAGS "--deep -o linker-signed --timestamp" CACHE INTERNAL "")
+   endif()
+
+   # Xcode 15 breaks compatibility with macOS vesions older than 12
+   # https://developer.apple.com/documentation/xcode-release-notes/xcode-15-release-notes#Linking
+   if (XCODE_VERSION VERSION_GREATER_EQUAL 15)
+      # link_libraries is guaranteed to set the flag for all
+      # linker invocations
+      link_libraries("-Wl,-ld_classic")
    endif()
 endif()
 
@@ -696,7 +703,8 @@ string( JOIN "\n" GRAPH_EDGES ${GRAPH_EDGES} )
 # Choose edge attributes making it easy to hover at either end of edge
 # and see a tooltip describing the edge, in svg image
 file( WRITE "${CMAKE_CURRENT_BINARY_DIR}/modules.dot" "digraph {
-   graph [rankdir=LR] edge [dir=both,arrowtail=inv] \n"
+   graph [rankdir=LR newrank=true] edge [dir=both,arrowtail=inv] \n"
+   "${GRAPH_SUBGRAPHS}\n"
    "${GRAPH_EDGES}"
    "\n}\n"
 )

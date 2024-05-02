@@ -41,7 +41,7 @@ NoteTrackButtonHandle::~NoteTrackButtonHandle()
 {
 }
 
-std::shared_ptr<const Channel> NoteTrackButtonHandle::FindChannel() const
+std::shared_ptr<const Track> NoteTrackButtonHandle::FindTrack() const
 {
    return mpTrack.lock();
 }

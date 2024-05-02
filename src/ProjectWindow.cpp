@@ -24,7 +24,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "prefs/ThemePrefs.h"
 #include "prefs/TracksPrefs.h"
 #include "toolbars/ToolManager.h"
-#include "tracks/ui/Scrubbing.h"
 #include "tracks/ui/ChannelView.h"
 #include "wxPanelWrapper.h"
 #include "WindowAccessible.h"
@@ -453,8 +452,6 @@ struct Adapter final : ViewportCallbacks {
 
    std::pair<int, int> ViewportSize() const override
    { return mwWindow ? mwWindow->ViewportSize() : std::pair{ 1, 1 }; }
-   bool MayScrollBeyondZero() const override
-   { return mwWindow ? mwWindow->MayScrollBeyondZero() : false; }
 
    unsigned MinimumTrackHeight() override
    { return mwWindow ? mwWindow->MinimumTrackHeight() : 0; }
@@ -701,30 +698,6 @@ std::pair<int, int> ProjectWindow::ViewportSize() const
    return { width, height };
 }
 
-bool ProjectWindow::MayScrollBeyondZero() const
-{
-   auto pProject = FindProject();
-   if (!pProject)
-      return false;
-   auto &project = *pProject;
-   auto &scrubber = Scrubber::Get( project );
-   auto &viewInfo = ViewInfo::Get( project );
-   if (viewInfo.bScrollBeyondZero)
-      return true;
-
-   if (scrubber.HasMark() ||
-       ProjectAudioIO::Get( project ).IsAudioActive()) {
-      if (mPlaybackScroller) {
-         auto mode = mPlaybackScroller->GetMode();
-         if (mode == PlaybackScroller::Mode::Pinned ||
-             mode == PlaybackScroller::Mode::Right)
-            return true;
-      }
-   }
-
-   return false;
-}
-
 unsigned ProjectWindow::MinimumTrackHeight()
 {
    return CommonTrackInfo::MinimumTrackHeight();
@@ -899,35 +872,106 @@ void ProjectWindow::SetToDefaultSize()
    SetSize(defaultRect.width, defaultRect.height);
 }
 
+wxStatusBar* ProjectWindow::CreateProjectStatusBar()
+{
+   auto statusBar = GetStatusBar();
+
+   if (statusBar != nullptr)
+      statusBar->Destroy();
+
+   auto pProject = FindProject();
+
+   // Note that the first field of the status bar is a dummy, and its width is
+   // set to zero latter in the code. This field is needed for wxWidgets 2.8.12
+   // because if you move to the menu bar, the first field of the menu bar is
+   // cleared, which is undesirable behaviour. In addition, the help strings of
+   // menu items are by default sent to the first field. Currently there are no
+   // such help strings, but it they were introduced, then there would need to
+   // be an event handler to send them to the appropriate field.
+   statusBar = CreateStatusBar(
+         1 + ProjectStatusFieldsRegistry::Count(pProject.get()));
+
+   statusBar->Bind(
+      wxEVT_SIZE,
+      [this](auto& evt)
+      {
+         evt.Skip();
+         auto pProject = FindProject();
+         if (pProject != nullptr)
+            ProjectStatusFieldsRegistry::OnSize(*pProject);
+      });
+
+   // We have a new status bar now, we need a full content update
+   if (pProject)
+   {
+      int index = 1;
+      ProjectStatusFieldsRegistry::Visit(
+         [&](const StatusBarFieldItem& field, const auto&)
+         {
+            if (field.IsVisible(*pProject))
+               statusBar->SetStatusText(
+                  field.GetText(*pProject).Translation(), index++);
+         });
+   }
+
+   return statusBar;
+}
+
 void ProjectWindow::UpdateStatusWidths()
 {
    auto pProject = FindProject();
    if (!pProject)
       return;
-   auto &project = *pProject;
-   enum { nWidths = nStatusBarFields + 1 };
-   int widths[ nWidths ]{ 0 };
-   widths[ rateStatusBarField ] = 150;
-   const auto statusBar = GetStatusBar();
-   const auto &functions = ProjectStatus::GetStatusWidthFunctions();
-   // Start from 1 not 0
-   // Specifying a first column always of width 0 was needed for reasons
-   // I forget now
-   for ( int ii = 1; ii <= nStatusBarFields; ++ii ) {
-      int &width = widths[ ii ];
-      for ( const auto &function : functions ) {
-         auto results =
-            function( project, static_cast< StatusBarField >( ii ) );
-         for ( const auto &string : results.first ) {
-            int w;
-            statusBar->GetTextExtent(string.Translation(), &w, nullptr);
-            width = std::max<int>( width, w + results.second );
-         }
-      }
+
+   const auto fieldsCount =
+      ProjectStatusFieldsRegistry::Count(pProject.get()) + 1;
+   auto statusBar = GetStatusBar();
+
+   bool statusBarRecreated = false;
+
+   if (!statusBar || fieldsCount != statusBar->GetFieldsCount())
+   {
+      statusBar = CreateProjectStatusBar();
+      statusBarRecreated = true;
    }
-   // The main status field is not fixed width
-   widths[ mainStatusBarField ] = -1;
-   statusBar->SetStatusWidths( nWidths, widths );
+
+   const auto& functions = ProjectStatus::GetStatusWidthFunctions();
+
+   auto& project = *pProject;
+
+   std::vector<int> widths(fieldsCount, 0);
+
+   // The old behavior with zero-width first field is kept
+   int index = 1;
+
+   ProjectStatusFieldsRegistry::Visit(
+      [&](const StatusBarFieldItem& field, const auto&)
+      {
+         if (!field.IsVisible(project))
+            return;
+
+         auto width = field.GetDefaultWidth(project);
+
+         // Negative width indicates that the field is expandable
+         if (width >= 0)
+         {
+            for (const auto& function : functions)
+            {
+               auto results = function(project, field.name);
+               for (const auto& string : results.first)
+               {
+                  int w;
+                  statusBar->GetTextExtent(string.Translation(), &w, nullptr);
+                  width = std::max<int>(width, w + results.second);
+               }
+            }
+         }
+
+         widths[index++] = width;
+      });
+
+   statusBar->SetStatusWidths(fieldsCount, widths.data());
+   ProjectStatusFieldsRegistry::OnSize(project);
 }
 
 void ProjectWindow::MacShowUndockedToolbars(bool show)
@@ -1239,7 +1283,6 @@ void ProjectWindow::PlaybackScroller::OnTimer()
       }
       viewInfo.hpos =
          viewInfo.OffsetTimeByPixels(viewInfo.hpos, deltaX, true);
-      if (!ProjectWindow::Get( *mProject ).MayScrollBeyondZero())
          // Can't scroll too far left
          viewInfo.hpos = std::max(0.0, viewInfo.hpos);
       trackPanel.Refresh(false);

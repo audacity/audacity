@@ -12,12 +12,7 @@
 \brief A Track that is used for Midi notes.  (Somewhat old code).
 
 *//*******************************************************************/
-
-
-
 #include "NoteTrack.h"
-
-
 
 #include <wx/wxcrtvararg.h>
 
@@ -30,9 +25,7 @@
 
 #include "Prefs.h"
 #include "Project.h"
-
 #include "InconsistencyException.h"
-
 #include "TimeWarper.h"
 
 #ifdef SONIFY
@@ -97,7 +90,26 @@ SONFNS(AutoSave)
 #endif
 
 
+NoteTrack::Interval::Interval(const NoteTrack &track)
+   : mpTrack{ track.SharedPointer<const NoteTrack>() }
+{}
+
 NoteTrack::Interval::~Interval() = default;
+
+double NoteTrack::Interval::Start() const
+{
+   return mpTrack->mOrigin;
+}
+
+double NoteTrack::Interval::End() const
+{
+   return Start() + mpTrack->GetSeq().get_real_dur();
+}
+
+size_t NoteTrack::Interval::NChannels() const
+{
+   return 1;
+}
 
 std::shared_ptr<ChannelInterval>
 NoteTrack::Interval::DoGetChannel(size_t iChannel)
@@ -165,7 +177,7 @@ Alg_seq &NoteTrack::GetSeq() const
    return *mSeq;
 }
 
-TrackListHolder NoteTrack::Clone() const
+Track::Holder NoteTrack::Clone(bool) const
 {
    auto duplicate = std::make_shared<NoteTrack>();
    duplicate->Init(*this);
@@ -201,27 +213,8 @@ TrackListHolder NoteTrack::Clone() const
 
    duplicate->SetVisibleChannels(GetVisibleChannels());
    duplicate->MoveTo(mOrigin);
-#ifdef EXPERIMENTAL_MIDI_OUT
    duplicate->SetVelocity(GetVelocity());
-#endif
-   return TrackList::Temporary(nullptr, duplicate, nullptr);
-}
-
-
-void NoteTrack::DoOnProjectTempoChange(
-   const std::optional<double>& oldTempo, double newTempo)
-{
-   assert(IsLeader());
-   if (!oldTempo.has_value())
-      return;
-   const auto ratio = *oldTempo / newTempo;
-   auto& seq = GetSeq();
-   seq.convert_to_beats();
-   const auto b1 = seq.get_dur();
-   seq.convert_to_seconds();
-   const auto newDuration = seq.get_dur() * ratio;
-   seq.stretch_region(0, b1, newDuration);
-   seq.set_real_dur(newDuration);
+   return duplicate;
 }
 
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
@@ -324,9 +317,8 @@ void NoteTrack::PrintSequence()
    fclose(debugOutput);
 }
 
-TrackListHolder NoteTrack::Cut(double t0, double t1)
+Track::Holder NoteTrack::Cut(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -352,10 +344,10 @@ TrackListHolder NoteTrack::Cut(double t0, double t1)
    //(mBottomNote,
    // mSerializationBuffer, mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return newTrack;
 }
 
-TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
+Track::Holder NoteTrack::Copy(double t0, double t1, bool) const
 {
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
@@ -375,7 +367,7 @@ TrackListHolder NoteTrack::Copy(double t0, double t1, bool) const
    // (mBottomNote, mSerializationBuffer,
    // mSerializationLength, mVisibleChannels)
 
-   return TrackList::Temporary(nullptr, newTrack, nullptr);
+   return newTrack;
 }
 
 bool NoteTrack::Trim(double t0, double t1)
@@ -404,7 +396,6 @@ bool NoteTrack::Trim(double t0, double t1)
 
 void NoteTrack::Clear(double t0, double t1)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -488,7 +479,6 @@ void NoteTrack::Paste(double t, const Track &src)
 
 void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 {
-   assert(IsLeader());
    if (t1 < t0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -504,7 +494,6 @@ void NoteTrack::Silence(double t0, double t1, ProgressReporter)
 
 void NoteTrack::InsertSilence(double t, double len)
 {
-   assert(IsLeader());
    if (len < 0)
       THROW_INCONSISTENCY_EXCEPTION;
 
@@ -516,7 +505,6 @@ void NoteTrack::InsertSilence(double t, double len)
    // AddToDuration( len );
 }
 
-#ifdef EXPERIMENTAL_MIDI_OUT
 void NoteTrack::SetVelocity(float velocity)
 {
    if (GetVelocity() != velocity) {
@@ -529,7 +517,6 @@ void NoteTrack::DoSetVelocity(float velocity)
 {
    mVelocity.store(velocity, std::memory_order_relaxed);
 }
-#endif
 
 // Call this function to manipulate the underlying sequence data. This is
 // NOT the function that handles horizontal dragging.
@@ -591,7 +578,6 @@ auto NoteTrack::ClassTypeInfo() -> const TypeInfo &
 
 Track::Holder NoteTrack::PasteInto(AudacityProject &, TrackList &list) const
 {
-   assert(IsLeader());
    auto pNewTrack = std::make_shared<NoteTrack>();
    pNewTrack->Init(*this);
    pNewTrack->Paste(0.0, *this);
@@ -607,12 +593,9 @@ size_t NoteTrack::NIntervals() const
 std::shared_ptr<WideChannelGroupInterval>
 NoteTrack::DoGetInterval(size_t iInterval)
 {
-   if (iInterval == 0) {
+   if (iInterval == 0)
       // Just one, and no extra info in it!
-      const auto start = mOrigin;
-      const auto end = start + GetSeq().get_real_dur();
-      return std::make_shared<Interval>(*this, start, end);
-   }
+      return std::make_shared<Interval>(*this);
    return {};
 }
 
@@ -834,7 +817,7 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
             return attachment.HandleAttribute(pair);
          }))
             ;
-         else if (this->NoteTrackBase::HandleXMLAttribute(attr, value))
+         else if (this->PlayableTrack::HandleXMLAttribute(attr, value))
          {}
          else if (attr == "offset" && value.TryGet(dblValue))
             MoveTo(dblValue);
@@ -844,10 +827,8 @@ bool NoteTrack::HandleXMLTag(const std::string_view& tag, const AttributesList &
                  return false;
              SetVisibleChannels(nValue);
          }
-#ifdef EXPERIMENTAL_MIDI_OUT
          else if (attr == "velocity" && value.TryGet(dblValue))
             DoSetVelocity(static_cast<float>(dblValue));
-#endif
          else if (attr == "data") {
              std::string s(value.ToWString());
              std::istringstream data(s);
@@ -867,28 +848,25 @@ XMLTagHandler *NoteTrack::HandleXMLChild(const std::string_view&  WXUNUSED(tag))
 void NoteTrack::WriteXML(XMLWriter &xmlFile) const
 // may throw
 {
-   assert(IsLeader());
    std::ostringstream data;
    Track::Holder holder;
    const NoteTrack *saveme = this;
    if (!mSeq) {
       // replace saveme with an (unserialized) duplicate, which is
       // destroyed at end of function.
-      holder = (*Clone()->begin())->SharedPointer();
+      holder = Clone(false);
       saveme = static_cast<NoteTrack*>(holder.get());
    }
    saveme->GetSeq().write(data, true);
    xmlFile.StartTag(wxT("notetrack"));
    saveme->Track::WriteCommonXMLAttributes( xmlFile );
-   this->NoteTrackBase::WriteXMLAttributes(xmlFile);
+   this->PlayableTrack::WriteXMLAttributes(xmlFile);
    xmlFile.WriteAttr(wxT("offset"), saveme->mOrigin);
    xmlFile.WriteAttr(wxT("visiblechannels"),
       static_cast<int>(saveme->GetVisibleChannels()));
 
-#ifdef EXPERIMENTAL_MIDI_OUT
    xmlFile.WriteAttr(wxT("velocity"),
       static_cast<double>(saveme->GetVelocity()));
-#endif
    saveme->Attachments::ForEach([&](auto &attachment){
       attachment.WriteXML(xmlFile);
    });
@@ -991,11 +969,6 @@ wxString GetMIDIDeviceInfo()
 
    // Not internationalizing these alpha-only messages
    s << wxT("==============================\n");
-#ifdef EXPERIMENTAL_MIDI_OUT
-   s << wxT("EXPERIMENTAL_MIDI_OUT is enabled\n");
-#else
-   s << wxT("EXPERIMENTAL_MIDI_OUT is NOT enabled\n");
-#endif
 #ifdef EXPERIMENTAL_MIDI_IN
    s << wxT("EXPERIMENTAL_MIDI_IN is enabled\n");
 #else

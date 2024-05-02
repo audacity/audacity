@@ -173,22 +173,20 @@ void CommonTrackInfo::DrawItems
 
 void CommonTrackInfo::DrawCloseButton(
    TrackPanelDrawingContext &context, const wxRect &bev,
-   const Track *pTrack, UIHandle *target)
+   const Channel *pChannel, UIHandle *target)
 {
    auto dc = &context.dc;
+   auto pTrack = pChannel
+      ? dynamic_cast<const Track*>(&pChannel->GetChannelGroup())
+      : nullptr;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool hit = target &&
-      target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+   bool hit = target && target->FindTrack().get() == pTrack;
    bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
    AColor::Bevel2(*dc, !down, bev, selected, hit );
 
-#ifdef EXPERIMENTAL_THEMING
    wxPen pen( theTheme.Colour( clrTrackPanelText ));
    dc->SetPen( pen );
-#else
-   dc->SetPen(*wxBLACK_PEN);
-#endif
    bev.Inflate( -1, -1 );
    // Draw the "X"
    const int s = 6;
@@ -215,7 +213,8 @@ void CommonTrackInfo::CloseTitleDrawFunction
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
       auto target = context.target.get();
-      DrawCloseButton( context, bev, pTrack, target );
+      DrawCloseButton(context, bev,
+         (*pTrack->Channels().begin()).get(), target);
    }
 
    {
@@ -223,7 +222,7 @@ void CommonTrackInfo::CloseTitleDrawFunction
       GetTitleBarHorizontalBounds( rect, bev );
       auto target = context.target.get();
       bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+         target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
       wxString titleStr =
@@ -249,11 +248,7 @@ void CommonTrackInfo::CloseTitleDrawFunction
       }
 
       // Pop-up triangle
-   #ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour( clrTrackPanelText );
-   #else
-      wxColour c = *wxBLACK;
-   #endif
 
       // wxGTK leaves little scraps (antialiasing?) of the
       // characters if they are repeatedly drawn.  This
@@ -286,15 +281,15 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 {
    auto dc = &context.dc;
    bool selected = pTrack ? pTrack->GetSelected() : true;
-   bool syncLockSelected = pTrack ? SyncLock::IsSyncLockSelected(pTrack) : true;
+   bool syncLockSelected =
+      pTrack ? SyncLock::IsSyncLockSelected(*pTrack) : true;
    bool minimized =
       pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
    {
       wxRect bev = rect;
       GetMinimizeHorizontalBounds(rect, bev);
       auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
+      bool hit = target && target->FindTrack().get() == pTrack;
       bool captured = hit && target->IsDragging();
       bool down = captured && bev.Contains( context.lastState.GetPosition());
 
@@ -304,49 +299,15 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 
       AColor::Bevel2(*dc, !down, bev, selected, hit);
 
-#ifdef EXPERIMENTAL_THEMING
       wxColour c = theTheme.Colour(clrTrackPanelText);
       dc->SetBrush(c);
       dc->SetPen(c);
-#else
-      AColor::Dark(dc, selected);
-#endif
 
       AColor::Arrow(*dc,
                     bev.x - 5 + bev.width / 2,
                     bev.y - 2 + bev.height / 2,
                     10,
                     minimized);
-   }
-
-   {
-      wxRect bev = rect;
-      GetSelectButtonHorizontalBounds(rect, bev);
-      auto target = context.target.get();
-      bool hit = target &&
-         target->FindChannel().get() == dynamic_cast<const Channel*>(pTrack);
-      bool captured = hit && target->IsDragging();
-      bool down = captured && bev.Contains( context.lastState.GetPosition());
-
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
-
-#ifdef EXPERIMENTAL_THEMING
-      wxColour c = theTheme.Colour(clrTrackPanelText);
-      dc->SetBrush(c);
-      dc->SetPen(c);
-#else
-      AColor::Dark(dc, selected);
-#endif
-
-      wxString str = _("Select");
-      wxCoord textWidth;
-      wxCoord textHeight;
-      TrackInfo::SetTrackInfoFont(dc);
-      dc->GetTextExtent(str, &textWidth, &textHeight);
-
-      dc->SetTextForeground( c );
-      dc->SetTextBackground( wxTRANSPARENT );
-      dc->DrawText(str, bev.x + 2 + (bev.width-textWidth)/2, bev.y + (bev.height - textHeight) / 2);
    }
 
 
@@ -419,32 +380,6 @@ void CommonTrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &d
 void CommonTrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
 {
    GetMinimizeHorizontalBounds( rect, dest );
-   auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
-   dest.y = rect.y + results.first;
-   dest.height = results.second;
-}
-
-void CommonTrackInfo::GetSelectButtonHorizontalBounds( const wxRect &rect, wxRect &dest )
-{
-   const int space = 0;// was 3.
-   dest.x = rect.x + space;
-
-   wxRect syncLockRect;
-   GetSyncLockHorizontalBounds( rect, syncLockRect );
-   wxRect minimizeRect;
-   GetMinimizeHorizontalBounds( rect, minimizeRect );
-
-   dest.x = dest.x + space + minimizeRect.width;
-   // Width is rect.width less space on left for track select
-   // and on right for sync-lock icon.
-   dest.width = rect.width - (space + syncLockRect.width) - (space + minimizeRect.width);
-}
-
-
-void CommonTrackInfo::GetSelectButtonRect(const wxRect & rect, wxRect &dest)
-{
-   GetSelectButtonHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
    dest.y = rect.y + results.first;

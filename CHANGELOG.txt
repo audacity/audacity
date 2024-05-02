@@ -1,5 +1,82 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.5.1
+
+ This is a hotfix release. It fixes the following bugs:
+ 
+   * #6322 Fixed a crash on launch on macOS 11 and older.
+   * #6324 Fixed the update notification looking for alpha versions instead of release versions.
+   * #6321 Fixed a freeze when using macros on multiple files.
+
+Changes in version 3.5.0
+
+Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
+
+ Major changes
+   
+   * Cloud project saving
+     We've introduced a new cloud-saving feature that allows you to save your Audacity projects to audio.com. This allows you to work from any device, share & collaborate with others and restore previous versions if something went wrong.
+   * Automatic tempo detection
+     Audacity can now automatically detect the tempo of imported loops, and adjust them to be in tempo. 
+     Tempo detection is done via both audio analysis and metadata checking. If you want to prepare your loop for automatic tempo detection without relying on audio analysis, both acidizer tempo tags or simply writing "123 bpm" anywhere into the filename work.
+     Automatic tempo detection can be turned off via Preferences -> Import/Export.
+   * Pitch shifting 
+     You now can non-destructively change the pitch of a clip by holding Alt and pressing the Up and Down arrow keys. Alternatively, you can click on the overflow menu (...) and select "Pitch and speed...". When changing the pitch this way, an arrow in the UI indicates how much you've shifted it. 
+
+ Other changes
+
+  Additions
+   * Added an option to skip plugin scanning to Preferences -> Effects.
+   * Added an overflow menu, as well as speed and pitch indicators to clips.
+   * Added subtitle formats for labels. Export to WebVTT and SubRip and import of SubRip files is now supported. (Thanks, Pokechu22 and Larry Bordowitz!)
+
+  Changes
+  
+   * Reworked the plugin manager. 
+   * Improved accessibility. (Thanks, David Bailes!)
+   * When zooming in vertically (Ctrl+scroll on the vertical scale), the zeroline now remains centered. Moving the vertical zoom off-center still is possible via Shift+scroll on the vertical scale. 
+   * Changed the look of the selection adjust cursors (previously pointing fingers on Windows and macOS, now look like >| everywhere).
+   * Changed the timeline options button from a green triangle to a settings gear. From it, you can switch between Beats & Measures or hh:mm:ss timeline rulers, set various preferences regarding to looping, as well as playhead behaviors: "Scroll view to playhead" (previously: "Update display while playing") and "Continuous scrolling" (previously: Pinned Play Head).
+   * Improved BSD support. (Thanks, Brad Smith!)
+   * macOS: Changed the Audacity.app icon on macOS to fit new design guidelines.
+   * Reordered some menus. 
+   * Moved OK/Cancel buttons of effects to the bottom.
+
+  Removals
+
+  There have been a number of removals of niche features to simplify the app. This should make the app a bit less overwhelming to use, and also will speed up future development as fewer things need to be considered.
+   * Removed the read-only mouse preferences page.
+   * Removed Printing options. 
+   * Removed Screenshot tool. To make a screenshot, use Win+Shift+S (Windows) or Cmd+Shift+4 (Mac) instead. 
+   * Removed Karaoke view.
+   * Removed the "solo=none" preference.
+   * Removed timeline tooltips preference.
+   * Removed "dragging selection edges" preference.
+   * Removed some warning dialogs and associated preferences.
+   * Removed "scrolling left of zero" preference.
+   * Replaced "Advanced Vertical Zooming" with new always-on behavior.
+   * Removed some vertical zoom presets.
+   * Removed EQ XML to TXT converter, which was needed for the Audacity 2.3 -> 2.4 transition. It is now a plugin instead, downloadable at https://plugins.audacityteam.org/additional-resources/eq-curves/eq-xml-to-txt-converter. 
+   * Removed the "Vocal reduction and isolation" effect. As a replacement on Windows and Linux, the Intel OpenVINO plugins work better and on a wider array of content, including mono tracks. The old effect still can be downloaded from https://plugins.audacityteam.org/nyquist-plugins/effect-plugins/filters-and-eq#vocal-reduction-and-isolation
+
+  Bugfixes
+
+   * Fixed a number of dialogs that were able to grow too large to fit on the screen.
+   * #2133 Fixed the playback cursor sometimes desynchronizing with actual playback. (Thanks, David Bailes!)
+   * #3723 #5615 Fixed the GetInfo scripting command.
+   * #5283 Fixed "Reset configuration" command breaking modules preference page.
+   * #5389 Fixed stereo tracks randomly splitting into mono.
+   * #5500 The Export Audio -> (external program) option remembers the command line argument again.
+   * #5670 #3903 Fixed the Compressor effect sometimes corrupting audio. (Thanks, David Bailes!)
+   * #5580 #4952 Fixed Timer Record sometimes failing to export. (Thanks, David Bailes!)
+   * #5681 Fixed incorrect level measurements for mono tracks in Noise Gate effect. (Thanks, Steve Daulton!)
+   * #5750 When exporting multiple files, the mono/stereo setting is now honored properly.
+   * #5848 Fixed some effects failing when language is set to German, Korean, Dutch, Slovenian, or Turkish.
+   * #5868 #1548 Fixed 8 and 9 inputs not working on keyboard inputs which have AltGr+8/9 mean [ and ]. (Thanks, David Bailes!)
+   * #5858 Fixed Audacity crashing when making a stereo track using keyboard. (Thanks, Joe Souza!)
+   * #5976 Fixed the "Set default" button not working in the metadata editor. (Thanks, dg-no-9!)
+   * #5977 Linux: Fixed a memory leak in Wayland by explicitly running on X11. (Thanks, Takahashi, Naoki!)
+
 Changes in version 3.4.2
 
  This is a hotfix release. It fixes the following issues:
