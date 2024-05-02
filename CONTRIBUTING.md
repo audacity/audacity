@@ -1,4 +1,4 @@
-There are several ways to contribute to Audacity: 
+There are several ways to contribute to Audacity:
 
 ## Developing
 
@@ -21,15 +21,15 @@ You can download current development builds in the [Actions tab on Github](https
 
 When reporting bugs, try to find the most general form of it. For example, if you encounter a bug when amplifying a clip 2 hours into a project, try to see if it also happens when you're using a different effect (Normalize, for example), and if it also happens if the clip is near the beginning.
 
-Bugs must be reproducible. If you can't find steps to reproduce a bug, try asking if you went wrong somewhere [in the Audacity forum](https://forum.audacityteam.org/) instead. 
+Bugs must be reproducible. If you can't find steps to reproduce a bug, try asking if you went wrong somewhere [in the Audacity forum](https://forum.audacityteam.org/) instead.
 
 ## Translating
 
-See [our translators page](https://www.audacityteam.org/community/translators/) for more information on how to translate Audacity. 
+See [our translators page](https://www.audacityteam.org/community/translators/) for more information on how to translate Audacity.
 
 ## Feedback & Feature requests
 
-If you have anything you think Audacity can do better, you can voice it in [the relevant section in the forum](https://forum.audacityteam.org/c/feedback-and-discussion-forum/adding-features-to-audacity/22). If you have a very concrete idea something in the code which should be added or changed, you can also  [make an enhancement request in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
+If you have anything you think Audacity can do better, you can voice it in [the relevant section in the forum](https://forum.audacityteam.org/c/feedback-and-discussion-forum/adding-features-to-audacity/22). If you have a very concrete idea something in the code which should be added or changed, you can also [make an enhancement request in the issue tracker](https://github.com/audacity/audacity/issues/new/choose).
 
 ## Supporting Users
 
