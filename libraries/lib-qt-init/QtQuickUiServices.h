@@ -39,4 +39,5 @@ public:
    std::unique_ptr<BasicUI::WindowPlacement> DoFindFocus() override;
    void DoSetFocus(const BasicUI::WindowPlacement& focus) override;
    bool IsUsingRtlLayout() const override;
+   bool IsUiThread() const override;
 };

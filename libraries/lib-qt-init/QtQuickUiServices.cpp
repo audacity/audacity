@@ -17,6 +17,7 @@
 #include <QQmlComponent>
 #include <QQmlProperty>
 #include <QDialogButtonBox>
+#include <qthread.h>
 
 using namespace BasicUI;
 
@@ -184,7 +185,7 @@ namespace
          QQmlProperty::write(mDialog.get(), "text", text);
       }
 
-      void Pulse() override
+      ProgressResult Pulse() override
       {
          if(!mOpened)
          {
@@ -192,6 +193,7 @@ namespace
             mOpened = true;
          }
          Yield();
+         return ProgressResult::Success;
       }
    };
 }
@@ -358,4 +360,11 @@ void QtQuickUiServices::DoSetFocus(const WindowPlacement& focus)
 bool QtQuickUiServices::IsUsingRtlLayout() const
 {
    return QGuiApplication::isRightToLeft();
+}
+
+bool QtQuickUiServices::IsUiThread() const
+{
+   if(auto app = QApplication::instance())
+      return app->thread() == QThread::currentThread();
+   return false;
 }
