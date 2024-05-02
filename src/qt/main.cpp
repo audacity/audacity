@@ -152,7 +152,7 @@ static ExtraMenu::Item openItem {
    }
 };
 
-static ExtraMenu::Item generateItem {
+/*static ExtraMenu::Item generateItem {
    XO("Generate"),
    [](AudacityProject& project)
    {
@@ -176,7 +176,7 @@ static ExtraMenu::Item generateItem {
             track->Paste(static_cast<double>(i), *copy);
       }
    }
-};
+};*/
 
 static ExtraMenu::Item exitMenuItem {
    XO("&Exit"),

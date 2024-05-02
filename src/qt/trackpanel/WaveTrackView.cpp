@@ -32,13 +32,15 @@ void WaveTrackView::setTrack(WaveTrackAdapter* track)
       mTrackEventsSubscription.Reset();
       disconnect(mTrack, nullptr, this, nullptr);
    }
-   mTrackEventsSubscription =
-      track->GetAsWaveTrack()->Subscribe(*this, &WaveTrackView::OnWaveTrackClipEvent);
+   if(track != nullptr)
+   {
+      mTrackEventsSubscription =
+         track->GetAsWaveTrack()->Subscribe(*this, &WaveTrackView::OnWaveTrackClipEvent);
 
-   //requests repaint
-   connect(track, &WaveTrackAdapter::muteChanged, this, &WaveTrackView::OnMuteChanged);
-   connect(track, &WaveTrackAdapter::soloChanged, this, &WaveTrackView::OnSoloChanged);
-
+      //requests repaint
+      connect(track, &WaveTrackAdapter::muteChanged, this, &WaveTrackView::OnMuteChanged);
+      connect(track, &WaveTrackAdapter::soloChanged, this, &WaveTrackView::OnSoloChanged);
+   }
    ResetItemsCache();
    mTrack = track;
 
