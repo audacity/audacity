@@ -1,0 +1,74 @@
+name: CI_Windows
+
+on:
+  pull_request:
+    paths: ["au4/**"]
+    branches:
+    - master
+    
+  schedule:
+    - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
+    - cron: '0 5 */1 */1 *' # At 05:00 on every day-of-month for current release branch
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: 'Build mode: devel_build, nightly_build, testing_build, stable_build'
+        required: true
+        default: 'devel_build'
+env:
+  CI_DIR: au4/buildscripts/ci   
+
+jobs:
+  build_mu4_x64:
+    runs-on: windows-2022
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 3
+    - name: "Configure workflow"
+      shell: bash
+      env:
+        pull_request_title: ${{ github.event.pull_request.title }}
+      run: |
+        ADD_INFO="_${GITHUB_REF#refs/heads/}"
+        if [ "${{ github.event_name }}" == "schedule" ] && [ "${{ github.event.schedule }}" == "0 5 */1 */1 *" ]; then ADD_INFO="_${{ env.CURRENT_RELEASE_BRANCH }}"; fi
+        if [ "${{ github.event_name }}" == "pull_request" ]; then ADD_INFO="_${{ github.event.pull_request.number }}_${pull_request_title}"; fi
+
+        cmake -DEVENT=${{ github.event_name }} \
+              -DBUILD_MODE=${{ github.event.inputs.build_mode }} \
+              -DARTIFACT_INFO="Lin_${ADD_INFO}" \
+              -P ${CI_DIR}/common/ci_configure.cmake 
+
+        DO_BUILD='true'
+        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/artifact_name.env)
+
+        echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
+        echo "DO_BUILD: $DO_BUILD"
+        echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV
+        echo "UPLOAD_ARTIFACT_NAME: $UPLOAD_ARTIFACT_NAME"   
+
+    - name: Setup environment
+      if: env.DO_BUILD == 'true'
+      shell: bash
+      run: |
+        cmake -P ${CI_DIR}/windows/setup.cmake
+    - name: Build
+      if: env.DO_BUILD == 'true'
+      shell: bash
+      run: |
+        source /c/build_tools/environment.sh
+        cmake -P ${CI_DIR}/windows/ci_build.cmake 
+    - name: Package 
+      if: env.DO_BUILD == 'true'
+      shell: bash
+      run: |
+        cmake -P ${CI_DIR}/windows/package.cmake 
+    - name: Upload artifacts on GitHub
+      if: env.DO_BUILD == 'true'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.UPLOAD_ARTIFACT_NAME }}
+        path: ./build.artifacts/      
+  
+

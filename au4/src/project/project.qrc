@@ -1,0 +1,35 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/Project/qmldir</file>
+        <file>qml/Audacity/Project/NewProjectDialog.qml</file>
+        <file>qml/Audacity/Project/ProjectsPage.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/ProjectListItem.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/ProjectThumbnail.qml</file>
+        <file>qml/Audacity/Project/AskSaveLocationTypeDialog.qml</file>
+        <file>qml/Audacity/Project/SaveToCloudDialog.qml</file>
+        <file>qml/Audacity/Project/internal/NewProject/GeneralInfoItem.qml</file>
+        <file>qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml</file>
+        <file>qml/Audacity/Project/internal/NewProject/ProjectInfoPage.qml</file>
+        <file>qml/Audacity/Project/internal/NewProject/TitleListView.qml</file>
+        <file>qml/Audacity/Project/internal/SaveToCloud/SaveLocationOption.qml</file>
+        <file alias="SaveToCloud/images/Cloud.png">qml/Audacity/Project/internal/SaveToCloud/images/Cloud.png</file>
+        <file alias="SaveToCloud/images/Laptop.png">qml/Audacity/Project/internal/SaveToCloud/images/Laptop.png</file>
+        <file>qml/Audacity/Project/ProjectPropertiesDialog.qml</file>
+        <file>qml/Audacity/Project/ProjectUploadedDialog.qml</file>
+        <file>qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml</file>
+        <file>qml/Audacity/Project/internal/Properties/ProjectPropertiesView.qml</file>
+        <file>qml/Audacity/Project/internal/Properties/PropertyItem.qml</file>
+        <file>resources/CloudProject.svg</file>
+        <file>resources/PublishProjects.png</file>
+        <file>qml/Audacity/Project/UploadProgressDialog.qml</file>
+        <file>qml/Audacity/Project/AlsoShareAudioComDialog.qml</file>
+        <file>resources/AudioCom_Waveform.png</file>
+        <file>qml/Audacity/Project/ProjectsView.qml</file>
+        <file>qml/Audacity/Project/Message.qml</file>
+        <file>qml/Audacity/Project/ProjectsListView.qml</file>
+        <file>qml/Audacity/Project/ProjectsGridView.qml</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>@Variables_substituted_by_CMAKE_on_installation@
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+    <!-- MuseScore documents -->
+
+    <mime-type type="application/x-musescore">
+        <comment>MuseScore File</comment>
+        <glob pattern="*.mscz"/>
+        <sub-class-of type="application/zip"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@"/>
+    </mime-type>
+
+    <mime-type type="application/x-musescore+xml">
+        <comment>MuseScore Uncompressed File</comment>
+        <glob pattern="*.mscx"/>
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="museScore"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="&lt;museScore" offset="0:128">
+                    <match type="string" value="&lt;Score" offset="0:512"/>
+                </match>
+            </match>
+        </magic>
+    </mime-type>
+
+    <mime-type type="application/x-musescore+xml">
+        <comment>MuseScore Uncompressed File</comment>
+        <glob pattern="*.mscsx"/>
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="museScore"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="&lt;museScore" offset="0:128">
+                    <match type="string" value="&lt;Score" offset="0:512"/>
+                </match>
+            </match>
+        </magic>
+    </mime-type>
+
+    <mime-type type="application/x-musescore">
+        <comment>MuseScore compressed backup score</comment>
+        <glob pattern="*.mscz,"/>
+        <sub-class-of type="application/zip"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@"/>
+    </mime-type>
+
+    <mime-type type="application/x-musescore+xml">
+        <comment>MuseScore uncompressed backup score</comment>
+        <glob pattern="*.mscx,"/>
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="museScore"/>
+        <icon name="application-x-musescore@MUSE_APP_INSTALL_SUFFIX@+xml"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="&lt;museScore" offset="0:128">
+                    <match type="string" value="&lt;Score" offset="0:512"/>
+                </match>
+            </match>
+        </magic>
+    </mime-type>
+
+    <!-- MuseScore URL Protocol -->
+
+    <mime-type type="x-scheme-handler/musescore">
+        <comment>MuseScore URL Protocol</comment>
+    </mime-type>
+
+    <!-- MuseScore internal formats -->
+
+    <mime-type type="application/x-musescore.drumset+xml">
+        <comment>MuseScore drumset</comment>
+        <glob pattern="*.drm"/>
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="museScore"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="&lt;museScore" offset="0:128">
+                    <match type="string" value="&lt;Drum" offset="0:512"/>
+                </match>
+            </match>
+        </magic>
+    </mime-type>
+
+    <mime-type type="application/x-musescore.palette">
+        <comment>MuseScore palette</comment>
+        <glob pattern="*.mpal"/>
+        <sub-class-of type="application/zip"/>
+    </mime-type>
+
+    <mime-type type="application/x-musescore.style+xml">
+        <comment>MuseScore style</comment>
+        <glob pattern="*.mss"/>
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="museScore"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="&lt;museScore" offset="0:128">
+                    <match type="string" value="&lt;Style" offset="0:512"/>
+                </match>
+            </match>
+        </magic>
+    </mime-type>
+
+    <!-- MusicXML documents -->
+
+    <mime-type type="application/vnd.recordare.musicxml">
+        <!-- See "Container file" at http://www.musicxml.com/for-developers/musicxml-dtd/ -->
+        <comment>MusicXML compressed score</comment>
+        <glob pattern="*.mxl"/>
+        <sub-class-of type="application/zip"/>
+        <icon name="application-vnd.recordare.musicxml@MUSE_APP_INSTALL_SUFFIX@"/>
+    </mime-type>
+
+    <mime-type type="application/vnd.recordare.musicxml+xml">
+        <!-- http://www.musicxml.com/for-developers/musicxml-dtd/ -->
+        <comment>MusicXML uncompressed score</comment>
+        <glob pattern="*.musicxml"/><!-- preferred extension must go first -->
+        <glob pattern="*.xml" weight="40"/><!-- reduced weight (default 50) to avoid matching ordinary XML files -->
+        <sub-class-of type="application/xml"/>
+        <root-XML namespaceURI="" localName="score-partwise"/>
+        <root-XML namespaceURI="" localName="score-timewise"/>
+        <icon name="application-vnd.recordare.musicxml@MUSE_APP_INSTALL_SUFFIX@+xml"/>
+        <magic>
+            <match type="string" value="&lt;?xml" offset="0">
+                <match type="string" value="score-partwise" offset="0:128"/>
+                <match type="string" value="score-timewise" offset="0:128"/>
+            </match>
+            <match type="string" value="&lt;!--" offset="0">
+                <match type="string" value="score-partwise" offset="0:128"/>
+                <match type="string" value="score-timewise" offset="0:128"/>
+            </match>
+        </magic>
+    </mime-type>
+
+    <!--
+        Specialist file formats that MuseScore can import or export
+
+        If the format doesn't have a MIME type yet then you need to invent
+        one (e.g. "application/x-newtype"). This enables us to reference the
+        MIME type in other places (e.g. the .desktop file).
+
+        Common types like "audio/midi" do not need to be declared here unless
+        you want to provide custom icons for them.
+    -->
+
+    <mime-type type="application/x-bww"><!-- invented -->
+        <comment>Bagpipe Music Writer score</comment>
+        <glob pattern="*.bww"/>
+    </mime-type>
+
+    <mime-type type="application/x-biab"><!-- invented -->
+        <comment>Band-in-a-Box score</comment>
+        <glob pattern="*.mgu"/>
+        <glob pattern="*.sgu"/>
+    </mime-type>
+
+    <mime-type type="application/x-capella"><!-- invented -->
+        <comment>Capella score</comment>
+        <glob pattern="*.cap"/>
+        <glob pattern="*.capx"/>
+    </mime-type>
+
+    <mime-type type="audio/x-gtp"><!-- See https://sourceforge.net/p/tuxguitar/bugs/117/ -->
+        <comment>Guitar Pro tablature</comment>
+        <glob pattern="*.gpx"/><!-- Version 6 -->
+        <glob pattern="*.gp5"/>
+        <glob pattern="*.gp4"/>
+        <glob pattern="*.gp3"/>
+        <glob pattern="*.gtp"/><!-- Versions 1 and 2 -->
+    </mime-type>
+
+    <mime-type type="application/x-musedata"><!-- invented -->
+        <!-- https://wiki.ccarh.org/wiki/MuseData_file_specification -->
+        <comment>MuseData score</comment>
+        <glob pattern="*.md" weight="40"/><!-- Avoid matching Markdown .md files -->
+        <sub-class-of type="text/plain"/>
+        <magic>
+            <match type="string" value="WK#:" offset="0:512">
+                <match type="string" value="Group memberships:" offset="0:1024"/>
+            </match>
+        </magic>
+    </mime-type>
+
+    <mime-type type="application/x-overture"><!-- invented -->
+        <comment>Overture score</comment>
+        <glob pattern="*.ove"/>
+    </mime-type>
+
+    <mime-type type="audio/x-ptb"><!-- See https://sourceforge.net/p/tuxguitar/bugs/117/ -->
+        <comment>Power Tab Editor tablature</comment>
+        <glob pattern="*.ptb"/>
+    </mime-type>
+
+    <mime-type type="application/x-sf2"><!-- invented -->
+        <comment>SoundFont audio bank</comment>
+        <glob pattern="*.sf2"/>
+        <sub-class-of type="application/x-riff"/>
+    </mime-type>
+
+    <mime-type type="application/x-sf3"><!-- invented -->
+        <comment>Vorbis compressed soundfont</comment><!-- NOT SoundFont since that is a trademarked term. -->
+        <glob pattern="*.sf3"/>
+        <sub-class-of type="application/x-riff"/><!-- NOT a subclass of application/x-sf2 (SF3 files are not valid SF2 files). -->
+    </mime-type>
+
+    <mime-type type="application/x-sfz"><!-- invented -->
+        <comment>SFZ soundfont descriptor</comment><!-- NOT SoundFont since that is a trademarked term. -->
+        <glob pattern="*.sfz"/>
+        <sub-class-of type="text/plain"/>
+    </mime-type>
+
+</mime-info>
