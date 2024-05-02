@@ -56,8 +56,8 @@ Item {
             isAddingAvailable: tracksModel.isAddingAvailable
             isRemovingAvailable: tracksModel.isRemovingAvailable
 
-            onAddRequested: {
-                tracksModel.addTrack()
+            onAddRequested: function(type, quantity) {
+                tracksModel.addTracks(type, quantity)
             }
 
             onMoveUpRequested: {

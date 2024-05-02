@@ -93,6 +93,13 @@ void TracksListModel::addTrack()
     NOT_IMPLEMENTED;
 }
 
+void TracksListModel::addTracks(TrackTypes::Type type, int quantity)
+{
+    UNUSED(type);
+    UNUSED(quantity);
+    NOT_IMPLEMENTED;
+}
+
 void TracksListModel::duplicateTrack(int index)
 {
     UNUSED(index);
