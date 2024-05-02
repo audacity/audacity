@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Popup {
    id: root
@@ -106,8 +106,8 @@ Popup {
       y: 96
       height: 16
       text: prv.numberOfTracksPrompt
-      color: UiTheme.fontColor1
-      font.family: UiTheme.bodyFont.family
+      color: ui.theme.fontColor1
+      font.family: ui.theme.bodyFont.family
       font.pixelSize: 12
       anchors.left: mono.left
       anchors.right: label.right
@@ -146,23 +146,23 @@ Popup {
       y: 120
       width: 79
       height: 28
-      color: UiTheme.textFieldColor
+      color: ui.theme.textFieldColor
       radius: 3
       smooth: true
       clip: true
       border.color: prv.validNumberOfTracks
-         ? (input.focus ? UiTheme.accentColor : UiTheme.strokeColor2)
-         : (input.focus ? UiTheme.recordColor : UiTheme.invalidInputColor)
+         ? (input.focus ? ui.theme.accentColor : ui.theme.strokeColor2)
+         : (input.focus ? ui.theme.recordColor : ui.theme.invalidInputColor)
 
       TextInput {
          id: input
          anchors.fill: parent
          anchors.margins: 2
-         font.family: UiTheme.bodyFont.family
+         font.family: ui.theme.bodyFont.family
          font.pixelSize: 12
-         color: UiTheme.fontColor1
-         selectedTextColor: UiTheme.fontColor1
-         selectionColor: UiTheme.textHighlightColor
+         color: ui.theme.fontColor1
+         selectedTextColor: ui.theme.fontColor1
+         selectionColor: ui.theme.textHighlightColor
          clip: true
          cursorVisible: focus && selectedText.length === 0
          text: numberOfTracksValidator.bottom
@@ -254,11 +254,11 @@ Popup {
       y: 8
       width: root.width
       height: root.height - 8
-      color: UiTheme.backgroundColor2
+      color: ui.theme.backgroundColor2
       radius: 4
 
       border {
-         color: UiTheme.strokeColor2
+         color: ui.theme.strokeColor2
          width: 1
       }
    }
@@ -278,14 +278,14 @@ Popup {
          }
 
          context.lineWidth = 2
-         context.strokeStyle = UiTheme.strokeColor2
+         context.strokeStyle = ui.theme.strokeColor2
          context.beginPath()
          context.moveTo(0, 9)
          context.lineTo(7, 0)
          context.lineTo(14, 9)
          context.stroke()
 
-         context.fillStyle = UiTheme.backgroundColor2
+         context.fillStyle = ui.theme.backgroundColor2
          context.fill()
       }
    }
@@ -295,7 +295,7 @@ Popup {
       y: root.height - 52
       width: parent.width
       height: 1
-      color: UiTheme.strokeColor1
-      opacity: UiTheme.opacityLight
+      color: ui.theme.strokeColor1
+      opacity: ui.theme.opacityLight
    }
 }

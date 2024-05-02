@@ -18,9 +18,7 @@
 #include "FrameStatistics.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "WaveformCache.h"
 #include "WaveformScale.h"
-#include "../../uithemes/UiTheme.h"
 #include "graphics/Color.h"
 
 #include "waveform/WaveBitmapCache.h"
@@ -28,6 +26,8 @@
 
 #include "TimelineContext.h"
 #include "TimelineViewUIHandle.h"
+#include "ProjectQMLEnvironment.h"
+#include "../../ui/Ui.h"
 #include "handles/WaveClipShiftHandle.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
@@ -1078,6 +1078,10 @@ void WaveClipItem::Paint(QQmlEngine& engine,
                               const TimelineContext& trackPanel)
 {
    assert(mInterval);
+   auto project = audacity::ProjectQMLEnvironment::GetProject(engine);
+   if(project == nullptr)
+      return;
+   auto& ui = audacity::Ui::Get(*project);
 
    auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
@@ -1087,9 +1091,9 @@ void WaveClipItem::Paint(QQmlEngine& engine,
    highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
 #endif
 
-   const auto brush = QBrush(UiTheme::Get(engine)->backgroundColor1());
-   const auto textColor = UiTheme::Get(engine)->fontColor1();
-   auto textFont = UiTheme::Get(engine)->bodyFont();
+   const auto brush = QBrush(ui.theme()->backgroundColor1());
+   const auto textColor = ui.theme()->fontColor1();
+   auto textFont = ui.theme()->bodyFont();
    textFont.setPixelSize(12);
 
    painter.setBrush(brush);
@@ -1149,9 +1153,9 @@ void WaveClipItem::Paint(QQmlEngine& engine,
 
    painter.setBrush(Qt::NoBrush);
    if(mHovered)
-      painter.setPen(UiTheme::Get(engine)->strokeColor3());
+      painter.setPen(ui.theme()->strokeColor3());
    else
-      painter.setPen(UiTheme::Get(engine)->strokeColor1());
+      painter.setPen(ui.theme()->strokeColor1());
    painter.drawRoundedRect(
       mClipRect,
       FrameRadius, FrameRadius);

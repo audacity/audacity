@@ -3,7 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Window {
    id : dialog
@@ -11,7 +11,7 @@ Window {
    modality : Qt.ApplicationModal
    flags : Qt.Dialog
 
-   color: UiTheme.backgroundColor2
+   color: ui.theme.backgroundColor2
 
    minimumWidth : Math.max(250, rootLayout.Layout.minimumWidth)
    minimumHeight : Math.max(128, rootLayout.Layout.minimumHeight)
@@ -29,14 +29,14 @@ Window {
       RadioButton {
          id : control
          font {
-            family : UiTheme.bodyFont.family
+            family : ui.theme.bodyFont.family
             pixelSize : 12
          }
          property int tag
          contentItem: Text {
             text: control.text
             font: control.font
-            color: UiTheme.fontColor1
+            color: ui.theme.fontColor1
             leftPadding: control.indicator.width + control.spacing
          }
       }
@@ -51,8 +51,8 @@ Window {
          id : message
          padding : 16
 
-         color: UiTheme.fontColor1
-         font.family: UiTheme.bodyFont.family
+         color: ui.theme.fontColor1
+         font.family: ui.theme.bodyFont.family
       }
 
       GroupBox
@@ -69,7 +69,7 @@ Window {
             width: parent.width
             height: parent.height - group.topPadding + group.bottomPadding
             color: "transparent"
-            border.color: UiTheme.strokeColor
+            border.color: ui.theme.strokeColor
             radius: 3
          }
 

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import Audacity.UiThemes
+import Audacity.Ui
 
 ProgressBar {
    id: control
@@ -12,7 +12,7 @@ ProgressBar {
       implicitHeight : 8
 
       radius: 8
-      color: UiTheme.buttonColor
+      color: ui.theme.buttonColor
    }
    contentItem : Item {
       implicitWidth : parent.width
@@ -21,7 +21,7 @@ ProgressBar {
       Rectangle {
          width: control.visualPosition * parent.width
          height: parent.height
-         color: UiTheme.accentColor
+         color: ui.theme.accentColor
          radius: 8
       }
    }

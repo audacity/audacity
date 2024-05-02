@@ -758,9 +758,24 @@ function( audacity_qml_module MODULE_NAME )
          FOLDER "${MODULE_NAME}"
    )
 
+   # collect all dependant modules into a single group
    set( MODULE_GROUP )
-   get_target_property( MODULE_GROUP ${MODULE_NAME} MANUALLY_ADDED_DEPENDENCIES )
+
+   set( MANUAL_DEPENDENCIES )
+   get_target_property( MANUAL_DEPENDENCIES ${MODULE_NAME} MANUALLY_ADDED_DEPENDENCIES )
+   if( NOT MANUAL_DEPENDENCIES STREQUAL "MANUAL_DEPENDENCIES-NOTFOUND")
+      list( APPEND MODULE_GROUP ${MANUALLY_ADDED_DEPENDENCIES})
+   endif()
+
+   # not added as dependencies in MSVC
    list( APPEND MODULE_GROUP ${MODULE_NAME} ${MODULE_NAME}_qmltyperegistration )
+   list( APPEND MODULE_GROUP ${MODULE_NAME} ${MODULE_NAME}_other_files ) 
+
+   # TODO: find parent target
+   list( APPEND MODULE_GROUP ${MODULE_NAME} ${MODULE_NAME}_automoc_json_extraction )
+   if( TARGET ${MODULE_NAME}_tooling)
+      list( APPEND MODULE_GROUP ${MODULE_NAME} ${MODULE_NAME}_tooling )
+   endif()
 
    set( PLUGIN_TARGET )
    get_target_property( PLUGIN_TARGET ${MODULE_NAME} QT_QML_MODULE_PLUGIN_TARGET )
@@ -781,6 +796,10 @@ function( audacity_qml_module MODULE_NAME )
             FOLDER "${MODULE_NAME}"
       )
    endforeach()
+
+   if ( EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests")
+      add_subdirectory(tests)
+   endif()
 
 endfunction()
 

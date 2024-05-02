@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Qt.labs.qmlmodels
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 import Audacity.TrackPanel
 
 Item
@@ -21,7 +21,7 @@ Item
    height : 126
 
    z : dragArea.drag.active ? 1 : 0
-   opacity : dragArea.drag.active ? UiTheme.opacityLight : UiTheme.opacityOpaque
+   opacity : dragArea.drag.active ? ui.theme.opacityLight : ui.theme.opacityOpaque
 
    Drag.active : dragArea.drag.active
    Drag.hotSpot.y : height / 2
@@ -35,9 +35,18 @@ Item
       drag.target : container
       drag.axis : Drag.YAxis
 
+      property real containerInitialY : 0
+
+      onPressed : {
+         containerInitialY = container.y
+      }
+
       onReleased : {
-         if(drag.active && drag.target != null)
-            container.Drag.drop()
+         if(drag.active)
+         {
+            if(drag.target == null || !container.Drag.drop())
+               container.y = containerInitialY
+         }
       }
    }
 
@@ -50,7 +59,7 @@ Item
          left : parent.left
          bottom : parent.bottom
       }
-      color : UiTheme.backgroundColor3
+      color : ui.theme.backgroundColor3
 
       Rectangle {
          id: bottomBorder
@@ -62,8 +71,8 @@ Item
 
          height: 2
 
-         color: dropArea.entered ? UiTheme.brandColor : UiTheme.strokeColor1
-         opacity: UiTheme.opacityLight
+         color: dropArea.entered ? ui.theme.brandColor : ui.theme.strokeColor1
+         opacity: ui.theme.opacityLight
       }
 
       MouseArea

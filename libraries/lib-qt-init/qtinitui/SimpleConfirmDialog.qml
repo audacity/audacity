@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Dialog {
     
@@ -14,14 +14,14 @@ Dialog {
 
     background: Rectangle {
         anchors.fill : parent
-        color: UiTheme.backgroundColor2
+        color: ui.theme.backgroundColor2
     }
 
     Text {
         id : text
         padding : 16
-        color: UiTheme.fontColor1
-        font.family: UiTheme.bodyFont.family
+        color: ui.theme.fontColor1
+        font.family: ui.theme.bodyFont.family
     }
     footer : RowLayout {
         spacing : 8

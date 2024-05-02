@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Canvas {
    id: root
@@ -15,7 +15,7 @@ Canvas {
    objectName: "WaveClipBody"
 
    property int radius: 3
-   property color color: UiTheme.backgroundColor2
+   property color color: ui.theme.backgroundColor2
 
    function colorWithAlpha(color, alpha) {
       return Qt.rgba(color.r, color.g, color.b, alpha)
@@ -27,7 +27,7 @@ Canvas {
 
    onPaint: {
       var ctx = getContext("2d")
-      ctx.fillStyle = colorWithAlpha(root.color, UiTheme.opacityMedium)
+      ctx.fillStyle = colorWithAlpha(root.color, ui.theme.opacityMedium)
 
       ctx.beginPath()
          // top edge

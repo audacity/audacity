@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Window
 {
@@ -14,7 +14,7 @@ Window
    modality : Qt.ApplicationModal
    flags : Qt.Dialog
 
-   color: UiTheme.backgroundColor2
+   color: ui.theme.backgroundColor2
 
    minimumWidth : 400
    minimumHeight : Math.max(128, contentLayout.Layout.minimumHeight)
@@ -49,8 +49,8 @@ Window
 
       Text {
          id : message
-         color: UiTheme.fontColor1
-         font.family: UiTheme.bodyFont.family
+         color: ui.theme.fontColor1
+         font.family: ui.theme.bodyFont.family
       }
       RowLayout {
          spacing : 8
@@ -80,8 +80,8 @@ Window
       }
       Text {
          id : remaining
-         color: UiTheme.fontColor1
-         font.family: UiTheme.bodyFont.family
+         color: ui.theme.fontColor1
+         font.family: ui.theme.bodyFont.family
       }
 
       Timer {

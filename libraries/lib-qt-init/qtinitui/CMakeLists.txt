@@ -18,8 +18,8 @@ audacity_qml_module(${MODULE_NAME}
    VERSION 1.0
    DEPENDENCIES
       QtQuick
+      Audacity.Ui
       Audacity.UiComponents
-      Audacity.UiThemes
    QML_FILES
       ${QML_SOURCES}
 )

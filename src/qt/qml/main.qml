@@ -3,9 +3,10 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import Qt.labs.platform
 
+import "."
 import Audacity
+import Audacity.Ui
 import Audacity.UiComponents
-import Audacity.UiThemes
 import Audacity.TrackPanel
 
 ApplicationWindow {
@@ -17,7 +18,6 @@ ApplicationWindow {
    minimumWidth: 480
    minimumHeight: 540
 
-   //readonly property string theme: UiTheme.currentTheme
    property alias workspaceMode: toolsToolbar.workspaceMode
    property alias enableVolumeTester: toolsToolbar.enableVolumeTester
    property string language: "en"
@@ -134,14 +134,14 @@ ApplicationWindow {
          title: qsTr("Theme")
 
          Instantiator {
-            model: UiTheme.themes
+            model: ui.availableThemes
             MenuItem {
                required property string modelData
                text: modelData
-               //checkable: true
-               //checked: theme === text
+               checkable: true
+               checked: ui.theme.name === text
                onTriggered: {
-                  UiTheme.applyTheme(text)
+                  ui.applyTheme(text)
                   toolsToolbar.refreshSetup()
                   //timelineRuler.updateTheme()
                }
@@ -214,7 +214,7 @@ ApplicationWindow {
 
       model : projectTrackList
 
-      color: UiTheme.backgroundColor3
+      color: ui.theme.backgroundColor3
    }
 
    /*
@@ -232,7 +232,7 @@ ApplicationWindow {
 
       Rectangle {
          id: trackCanvasBackground
-         color: UiTheme.backgroundColor3
+         color: ui.theme.backgroundColor3
 
          width: {
             var contentWidth = trackCanvasBackground.childrenRect.x + trackCanvasBackground.childrenRect.width
@@ -297,11 +297,11 @@ ApplicationWindow {
             width: 3
             anchors.top: trackCanvasBackground.top
             anchors.bottom: trackCanvasBackground.bottom
-            color: UiTheme.fontColor2
+            color: ui.theme.fontColor2
             visible: false
 
             border {
-               color: UiTheme.backgroundColor4
+               color: ui.theme.backgroundColor4
                width: 1
             }
          }
@@ -334,11 +334,11 @@ ApplicationWindow {
       id: footerId
       width: parent.width
       height: 30
-      color: UiTheme.backgroundColor1
+      color: ui.theme.backgroundColor1
 
       Text {
          id: statusBar
-         color: UiTheme.fontColor1
+         color: ui.theme.fontColor1
          anchors.centerIn: parent
       }
 
@@ -346,7 +346,7 @@ ApplicationWindow {
          anchors.bottom: parent.top
          height: 1
          width: parent.width
-         color: UiTheme.strokeColor2
+         color: ui.theme.strokeColor2
       }
    }
 

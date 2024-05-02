@@ -25,8 +25,8 @@ qt_add_resources(QT_RESOURCES
    ${RESOURCES}
 )
 
+add_subdirectory(ui)
 add_subdirectory(uicomponents)
-add_subdirectory(uithemes)
 add_subdirectory(numeric-formats)
 add_subdirectory(trackpanel)
 
@@ -44,6 +44,8 @@ qt_add_translations(
 )
 
 set(QML_SOURCES
+   qml/themes/Dark.qml
+   qml/themes/Light.qml
    qml/main.qml
    qml/AddNewTrackPanel.qml
    qml/CustomiseToolbar.qml
@@ -65,8 +67,8 @@ audacity_qml_module(
 	VERSION 1.0
    DEPENDENCIES
       QtQuick
+      Audacity.Ui
       Audacity.UiComponents
-      Audacity.UiThemes
       Audacity.NumericFormats
       Audacity.TrackPanel
    QML_FILES
@@ -79,8 +81,8 @@ audacity_qml_module(
       Qt6::Gui
       Qt6::Quick
       KDAB::kddockwidgets
+      uiplugin
       uicomponentsplugin
-      uithemesplugin
       numeric-formatsplugin
       trackpanelplugin
       lib-qt-init

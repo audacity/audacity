@@ -3,7 +3,7 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Item {
    id: root
@@ -24,8 +24,8 @@ Item {
    Rectangle {
       id: background
       anchors.fill: parent
-      color: UiTheme.backgroundColor2
-      opacity: UiTheme.opacityOpaque
+      color: ui.theme.backgroundColor2
+      opacity: ui.theme.opacityOpaque
 
       states: [
          State {
@@ -34,8 +34,8 @@ Item {
 
             PropertyChanges {
                target: background
-               color: UiTheme.backgroundColor1
-               opacity: UiTheme.opacityStrong
+               color: ui.theme.backgroundColor1
+               opacity: ui.theme.opacityStrong
             }
          }
       ]
@@ -53,11 +53,11 @@ Item {
             y: 14
             width: 16
             height: 16
-            color: UiTheme.fontColor1
+            color: ui.theme.fontColor1
             text: String.fromCharCode(IconCode.TV)
 
             font {
-               family: UiTheme.iconFont.family
+               family: ui.theme.iconFont.family
                pixelSize: 16
             }
          }
@@ -67,11 +67,11 @@ Item {
             y: 14
             height: 16
             horizontalAlignment: Text.AlignLeft
-            color: UiTheme.fontColor1
+            color: ui.theme.fontColor1
             text: name
 
             font {
-               family: UiTheme.bodyFont.family
+               family: ui.theme.bodyFont.family
                pixelSize: 12
             }
          }
@@ -132,8 +132,8 @@ Item {
             x: 255
             width: 1
             height: root.height
-            color: UiTheme.strokeColor1
-            opacity: UiTheme.opacityLight
+            color: ui.theme.strokeColor1
+            opacity: ui.theme.opacityLight
          }
 
          TrackVolumeMeter {
@@ -150,7 +150,7 @@ Item {
       y: root.height - horizontalSeparator.height
       height: 2
       width: root.width
-      color: UiTheme.strokeColor1
-      opacity: UiTheme.opacityLight
+      color: ui.theme.strokeColor1
+      opacity: ui.theme.opacityLight
    }
 }

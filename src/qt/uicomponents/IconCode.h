@@ -68,6 +68,9 @@ public:
 
       AUTOMATION = 0xF3CB,
 
+      MUTE = 0xF3D5,
+      SOLO = 0xF3D6,
+
       MICROPHONE = 0xF41B,
 
       ZOOM_TOGGLE = 0xF437,

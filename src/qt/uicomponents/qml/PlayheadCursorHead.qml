@@ -1,7 +1,7 @@
 import QtQuick
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Canvas {
    id: root
@@ -13,8 +13,8 @@ Canvas {
    smooth: true
 
    property int radius: 2
-   readonly property color strokeColor: UiTheme.backgroundColor4
-   readonly property color fillColor: UiTheme.fontColor2
+   readonly property color strokeColor: ui.theme.backgroundColor4
+   readonly property color fillColor: ui.theme.fontColor2
 
    onStrokeColorChanged: root.requestPaint()
    onFillColorChanged: root.requestPaint()

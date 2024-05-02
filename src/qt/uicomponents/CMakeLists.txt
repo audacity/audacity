@@ -15,6 +15,7 @@ set(MODULE_SOURCES
 
 set(MODULE_QML_SOURCES
    qml/FlatButton.qml
+   qml/FlatToggleButton.qml
    qml/LabelTrackControlPanel.qml
    qml/MeterPanel.qml
    qml/MonoTrackControlPanel.qml
@@ -43,7 +44,7 @@ audacity_qml_module( ${MODULE_NAME}
    VERSION 1.0
    DEPENDENCIES
       QtQuick
-      Audacity.UiThemes
+      Audacity.Ui
    QML_FILES
       ${MODULE_QML_SOURCES}
    SOURCES

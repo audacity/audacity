@@ -109,6 +109,11 @@ void WaveTrackAdapter::setMute(bool mute)
    }
 }
 
+int WaveTrackAdapter::getChannels() const
+{
+   return static_cast<int>(mWaveTrack->NChannels());
+}
+
 void WaveTrackAdapter::OnTrackListEvent(TrackListEvent event)
 {
    if(event.mType == TrackListEvent::TRACK_DATA_CHANGE && event.mpTrack.lock() == mWaveTrack)

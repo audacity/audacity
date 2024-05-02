@@ -32,7 +32,8 @@
 #include "ProjectSerializer.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
-#include "uithemes/UiTheme.h"
+#include "ui/Theme.h"
+#include "ui/Ui.h"
 
 //Takes an ownership, ensures that window is properly deleted
 class ProjectWindow final : public ClientData::Base
@@ -89,8 +90,29 @@ static std::shared_ptr<AudacityProject> CreateProjectWindow()
    try
    {
       const auto project = AudacityProject::Create();
+      auto& engine = audacity::ProjectQMLEnvironment::Get(*project).GetEngine();
+      auto& ui = audacity::Ui::Get(*project);
       
+      const QStringList themePathList = {
+         "qrc:/qml/themes/Dark.qml",
+         "qrc:/qml/themes/Light.qml"
+      };
+
+      for(auto& path : themePathList)
+      {
+         auto component = QQmlComponent(&engine, path);
+         const auto object = component.create();
+         if(object == nullptr)
+            qDebug() << component.errorString();
+         else
+            ui.registerTheme(
+               dynamic_cast<audacity::Theme*>(object)
+            );
+      }
+      ui.applyTheme("Dark");
+
       ProjectWindow::GetWindow(*project);//request the window
+
       Projects::Get().push_back(project);
       return project;
    }
@@ -132,6 +154,8 @@ static ExtraMenu::Item openItem {
          BasicUI::Yield();
       }
       auto url = QQmlProperty::read(openProjectDialogObj, "currentFile").toUrl();
+      if(url.isEmpty())
+         return;
 
       auto openProject = [&](AudacityProject& project)
       {
@@ -344,8 +368,6 @@ static audacity::QMLEngineFactory::Scope qmlEngineFactory {
    [] {
       auto engine = std::make_unique<QQmlEngine>();
       engine->addImportPath(QString(":%1").arg(AUDACITY_QML_RESOURCE_PREFIX));
-      const auto uiTheme = UiTheme::Get(*engine);
-      uiTheme->applyTheme(uiTheme->themes()[0]);
       return engine;
    }
 };
@@ -356,8 +378,6 @@ int main(int argc, char *argv[])
 
    QtQuickUiServices::Get();//install
    QGuiApplication app(argc, argv);
-
-   UiTheme::Register();
 
    QFontDatabase::addApplicationFont(":/fonts/MusescoreIcon.ttf");
    QFontDatabase::addApplicationFont(":/fonts/Lato-Bold.ttf");

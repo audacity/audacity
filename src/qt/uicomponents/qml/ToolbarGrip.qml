@@ -1,7 +1,7 @@
 import QtQuick
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Item {
    id: root
@@ -14,7 +14,7 @@ Item {
    Rectangle {
       id: background
       anchors.fill: parent
-      color: UiTheme.backgroundColor1
+      color: ui.theme.backgroundColor1
       opacity: 1.0
 
       states: [
@@ -24,7 +24,7 @@ Item {
 
             PropertyChanges {
                target: background
-               color: UiTheme.buttonColor
+               color: ui.theme.buttonColor
                opacity: 0.4
             }
          },
@@ -35,7 +35,7 @@ Item {
 
             PropertyChanges {
                target: background
-               color: UiTheme.buttonColor
+               color: ui.theme.buttonColor
                opacity: 0.2
             }
          }
@@ -48,7 +48,7 @@ Item {
       height: 16
       iconCode: IconCode.TOOLBAR_GRIP
       color: "#838393"
-      font.family: UiTheme.iconFont.family
+      font.family: ui.theme.iconFont.family
       font.pixelSize: 8
       anchors.centerIn: background
    }
@@ -58,8 +58,8 @@ Item {
       id: gripEdge
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor1
-      opacity: UiTheme.opacityMedium
+      color: ui.theme.strokeColor1
+      opacity: ui.theme.opacityMedium
    }
 
    MouseArea {

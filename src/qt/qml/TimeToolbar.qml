@@ -4,7 +4,7 @@ import QtQuick.Layouts
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 import Audacity.NumericFormats
 
 Item {
@@ -73,7 +73,7 @@ Item {
          Rectangle {
             height: root.height
             width: root.gripVisible ? 2 : 6
-            color: UiTheme.backgroundColor1
+            color: ui.theme.backgroundColor1
          }
 
          NumericTextControl {

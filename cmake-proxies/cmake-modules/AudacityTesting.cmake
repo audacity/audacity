@@ -9,22 +9,23 @@ if( ${_OPT}has_tests )
    enable_testing()
 
    #[[
-      add_unit_test(NAME name [MOCK_PREFS] [MOCK_AUDIO] SOURCES file1 ... LIBRARIES lib1 ...)
+      add_unit_test(NAME name [MOCK_PREFS] [MOCK_AUDIO] [WAV_FILE] [QTEST] SOURCES file1 ... LIBRARIES lib1 ...)
 
+      if QTEST is specified, Qt test executable will be generated instead of Catch2 
       If MOCK_PREFS is specified, a test can instantiate a mocked Prefs object.
       If MOCK_AUDIO is specified, a test will initialize PortAudio.
 
       Audio mocking is a subject to change when Audio I/O is refactored.
 
       Creates an executable called ${name}-test from the source files ${file1}, ... and linked
-      to libraries ${lib1}, ... Catch2 is linked implicitly.
+      to libraries ${lib1}, ... Catch2 or QTest is linked implicitly.
 
       Create a CTest test called ${name}, that expects 0 code on success
    ]]
    function( add_unit_test )
       cmake_parse_arguments(
          ADD_UNIT_TEST # Prefix
-         "MOCK_PREFS;MOCK_AUDIO;WAV_FILE_IO" # Options
+         "MOCK_PREFS;MOCK_AUDIO;WAV_FILE_IO;QTEST" # Options
          "NAME" # One value keywords
          "SOURCES;LIBRARIES"
          ${ARGN}
@@ -38,8 +39,13 @@ if( ${_OPT}has_tests )
 
       # Create test executable
 
-      add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
-      target_link_libraries( ${test_executable_name} PRIVATE ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
+      if ( NOT ADD_UNIT_TEST_QTEST )
+         add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES} "${CMAKE_SOURCE_DIR}/tests/Catch2Main.cpp")
+         target_link_libraries( ${test_executable_name} PRIVATE ${ADD_UNIT_TEST_LIBRARIES} Catch2::Catch2 )
+      else()
+         qt_add_executable( ${test_executable_name} ${ADD_UNIT_TEST_SOURCES})
+         target_link_libraries( ${test_executable_name} PRIVATE ${ADD_UNIT_TEST_LIBRARIES} Qt6::Test )
+      endif()
 
       if (ADD_UNIT_TEST_MOCK_PREFS)
          target_compile_definitions( ${test_executable_name} PRIVATE MOCK_PREFS )
@@ -74,15 +80,28 @@ if( ${_OPT}has_tests )
       audacity_append_common_compiler_options( OPTIONS NO )
       target_compile_options( ${test_executable_name} ${OPTIONS} )
 
-      set_target_properties(
-         ${test_executable_name}
-         PROPERTIES
-            FOLDER "tests" # for IDE organization
-            RUNTIME_OUTPUT_DIRECTORY "${TESTS_DIR}"
-            BUILD_RPATH "${_DESTDIR}/${_PKGLIB}"
-            # Allow running tests from Visual Studio by setting up the proper PATH
-            VS_DEBUGGER_ENVIRONMENT "PATH=${_DESTDIR}/${_PKGLIB};%PATH%"
-      )
+      if( NOT ADD_UNIT_TEST_QTEST )
+         set_target_properties(
+            ${test_executable_name}
+            PROPERTIES
+               FOLDER "tests" # for IDE organization
+               RUNTIME_OUTPUT_DIRECTORY "${TESTS_DIR}"
+               BUILD_RPATH "${_DESTDIR}/${_PKGLIB}"
+               # Allow running tests from Visual Studio by setting up the proper PATH
+               VS_DEBUGGER_ENVIRONMENT "PATH=${_DESTDIR}/${_PKGLIB};%PATH%"
+         )
+      else()
+         # Qtest executables need to know where qt plugin files are.
+         # The non-standard paths are stored in qt.conf which is not
+         # yet deployed with the test itself, but there is a qt.conf
+         # installed into app's build folder. So we can temporary
+         # put qtest files into same folder to make them work.
+         set_target_properties(
+            ${test_executable_name}
+            PROPERTIES
+               FOLDER "tests" # for IDE organization
+            )
+      endif()
 
       # Register unit test with CTest
 

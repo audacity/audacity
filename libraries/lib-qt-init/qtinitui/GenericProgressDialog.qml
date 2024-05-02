@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import Audacity.UiThemes
+import Audacity.Ui
 import Audacity.UiComponents
 
 Window {
@@ -13,7 +13,7 @@ Window {
    modality : Qt.ApplicationModal
    flags : Qt.Dialog | Qt.CustomizeWindowHint
 
-   color: UiTheme.backgroundColor2
+   color: ui.theme.backgroundColor2
 
    minimumWidth : 400
    minimumHeight : 128
@@ -31,8 +31,8 @@ Window {
       Text {
          id : message
 
-         color: UiTheme.fontColor1
-         font.family: UiTheme.bodyFont.family
+         color: ui.theme.fontColor1
+         font.family: ui.theme.bodyFont.family
       }
       StyledProgressBar {
          Layout.fillWidth : true

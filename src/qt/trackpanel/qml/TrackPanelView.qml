@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import Qt.labs.qmlmodels
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 import Audacity.TrackPanel
 
 TimelineContext
@@ -53,7 +53,7 @@ TimelineContext
             y: parent.height - 1
             width: parent.width
             height: 1
-            color: UiTheme.strokeColor2
+            color: ui.theme.strokeColor2
          }
 
       }

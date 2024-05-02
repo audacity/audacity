@@ -5,12 +5,12 @@ import Qt.labs.qmlmodels
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Rectangle {
    id: root
    width: 280
-   color: UiTheme.backgroundColor2
+   color: ui.theme.backgroundColor2
    objectName: "Sidebar"
 
    QtObject {
@@ -63,7 +63,7 @@ Rectangle {
       x: parent.width
       width: 1
       height: parent.height
-      color: UiTheme.strokeColor2
+      color: ui.theme.strokeColor2
    }
 
    FlatButton {
@@ -81,7 +81,7 @@ Rectangle {
          y: parent.height - 1
          width: parent.width
          height: 1
-         color: UiTheme.strokeColor2
+         color: ui.theme.strokeColor2
       }
 
       AddNewTrackPanel {

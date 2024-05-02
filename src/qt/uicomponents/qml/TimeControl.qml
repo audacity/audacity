@@ -3,7 +3,7 @@ import QtQuick.Controls
 
 import Audacity
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Item {
    id: root
@@ -13,7 +13,7 @@ Item {
    objectName: "TimeControl"
 
    property alias formatType: display.formatType
-   property color iconColor: UiTheme.fontColor1
+   property color iconColor: ui.theme.fontColor1
    property int icon: IconCode.TIMECODE
 
    enum FormatType {
@@ -57,7 +57,7 @@ Item {
       height: parent.height
       width: root.width - 17
       radius: 3
-      color: UiTheme.backgroundColor4
+      color: ui.theme.backgroundColor4
 
       QtObject {
          id: display
@@ -105,8 +105,8 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             width: 12
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          },
          Text {
             x: 20
@@ -114,40 +114,40 @@ Item {
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
             width: 12
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          },
          Text {
             width: 12
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          },
          Text {
             width: 12
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          },
          Text {
             width: 12
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          },
          Text {
             width: 12
             height: root.height
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: UiTheme.fontColor2
-            font: UiTheme.timecodeFont
+            color: ui.theme.fontColor2
+            font: ui.theme.timecodeFont
          }
       ]
 
@@ -158,8 +158,8 @@ Item {
          width: 4
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: UiTheme.fontColor2
-         font: UiTheme.bodyFont.family
+         color: ui.theme.fontColor2
+         font: ui.theme.bodyFont.family
       }
 
       Text {
@@ -168,9 +168,9 @@ Item {
          width: 10
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: UiTheme.fontColor2
-         font: UiTheme.bodyFont.family
-         opacity: UiTheme.opacityStrong
+         color: ui.theme.fontColor2
+         font: ui.theme.bodyFont.family
+         opacity: ui.theme.opacityStrong
       }
 
       Text {
@@ -179,9 +179,9 @@ Item {
          width: 14
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: UiTheme.fontColor2
-         font: UiTheme.bodyFont.family
-         opacity: UiTheme.opacityStrong
+         color: ui.theme.fontColor2
+         font: ui.theme.bodyFont.family
+         opacity: ui.theme.opacityStrong
       }
 
       Text {
@@ -190,16 +190,16 @@ Item {
          width: 9
          height: root.height
          verticalAlignment: Text.AlignVCenter
-         color: UiTheme.fontColor2
-         font: UiTheme.bodyFont.family
-         opacity: UiTheme.opacityStrong
+         color: ui.theme.fontColor2
+         font: ui.theme.bodyFont.family
+         opacity: ui.theme.opacityStrong
       }
 
       Rectangle {
          x: displayPart.width - width
          width: displayPart.radius
          height: displayPart.height
-         color: UiTheme.backgroundColor4
+         color: ui.theme.backgroundColor4
       }
 
       Component.onCompleted: {
@@ -246,7 +246,7 @@ Item {
       radius: 3
       width: 16
       height: root.height
-      color: UiTheme.backgroundColor4
+      color: ui.theme.backgroundColor4
 
       states: [
          State {
@@ -255,13 +255,13 @@ Item {
 
             PropertyChanges {
                target: buttonPart
-               color: UiTheme.backgroundColor3
-               opacity: UiTheme.opacityOpaque
+               color: ui.theme.backgroundColor3
+               opacity: ui.theme.opacityOpaque
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
-               color: UiTheme.backgroundColor3
+               color: ui.theme.backgroundColor3
                opacity: opacityOpaque
             }
          },
@@ -272,13 +272,13 @@ Item {
 
             PropertyChanges {
                target: buttonPart
-               color: UiTheme.backgroundColor3
+               color: ui.theme.backgroundColor3
                opacity: opacityMedium
             }
 
             PropertyChanges {
                target: buttonPartLeftEdge
-               color: UiTheme.backgroundColor3
+               color: ui.theme.backgroundColor3
                opacity: opacityMedium
             }
          },
@@ -305,7 +305,7 @@ Item {
          id: buttonPartLeftEdge
          width: buttonPart.radius
          height: buttonPart.height
-         color: UiTheme.backgroundColor4
+         color: ui.theme.backgroundColor4
       }
 
       Text {
@@ -314,11 +314,11 @@ Item {
          anchors.fill: buttonPart
          verticalAlignment: Text.AlignVCenter
          horizontalAlignment: Text.AlignHCenter
-         color: UiTheme.fontColor2
+         color: ui.theme.fontColor2
          text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)
 
          font {
-            family: UiTheme.iconFont.family
+            family: ui.theme.iconFont.family
             pixelSize: 16
          }
       }

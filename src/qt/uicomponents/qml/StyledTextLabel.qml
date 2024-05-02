@@ -21,14 +21,14 @@
  */
 import QtQuick
 
-import Audacity.UiThemes
+import Audacity.Ui
 
 Text {
    id: root
 
    readonly property bool isEmpty: text.length === 0
 
-   color: UiTheme.fontColor1
+   color: ui.theme.fontColor1
    linkColor: "gray"
    opacity: root.enabled ? 1.0 : 0.5
 

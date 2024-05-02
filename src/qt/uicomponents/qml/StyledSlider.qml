@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import Audacity.UiThemes
+import Audacity.Ui
 
 Slider {
    id: root
@@ -12,7 +12,7 @@ Slider {
       y: root.availableHeight / 2 - height / 2
       width: root.visualPosition * fill.width
       height: fill.height
-      color: UiTheme.brandColor
+      color: ui.theme.brandColor
       radius: 2
    }
 
@@ -23,8 +23,8 @@ Slider {
       width: root.availableWidth - handleId.width
       height: 4
       radius: 2
-      color: UiTheme.strokeColor1
-      opacity: UiTheme.opacityLight
+      color: ui.theme.strokeColor1
+      opacity: ui.theme.opacityLight
    }
 
    handle: Rectangle {
@@ -35,8 +35,8 @@ Slider {
       implicitWidth: 16
       implicitHeight: 16
       radius: 8
-      color: UiTheme.backgroundColor2
-      border.color: UiTheme.strokeColor1
+      color: ui.theme.backgroundColor2
+      border.color: ui.theme.strokeColor1
       antialiasing: true
    }
 }

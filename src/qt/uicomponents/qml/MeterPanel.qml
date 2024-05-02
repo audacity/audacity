@@ -2,14 +2,14 @@ import QtQuick
 import QtQuick.Controls
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 Rectangle {
    id: root
    height: 6
    width: 100
-   color: UiTheme.strokeColor1
-   opacity: UiTheme.opacityLight
+   color: ui.theme.strokeColor1
+   opacity: ui.theme.opacityLight
    objectName: "MeterPanel"
 
    property alias value: meterPanelHandler.value
@@ -104,7 +104,7 @@ Rectangle {
       id: currentPeakIndicator
       height: parent.height
       width: peaks.current
-      color: isBeingClipped() ? UiTheme.dangerColor : UiTheme.brandColor
+      color: isBeingClipped() ? ui.theme.dangerColor : ui.theme.brandColor
    }
 
    Rectangle {
@@ -112,7 +112,7 @@ Rectangle {
       x: peaks.recent
       height: parent.height
       width: 1
-      color: UiTheme.brandColor
+      color: ui.theme.brandColor
       visible: peaks.recent !== -1
    }
 
@@ -121,7 +121,7 @@ Rectangle {
       x: peaks.maximum
       height: parent.height
       width: 1
-      color: UiTheme.fontColor1
+      color: ui.theme.fontColor1
       visible: peaks.maximum !== -1
    }
 
@@ -130,8 +130,8 @@ Rectangle {
       x: parent.width - clippingZone.width
       height: parent.height
       width: clippingZone.width
-      opacity: peaks.hasBeenClipped ? UiTheme.opacityOpaque : UiTheme.opacityMedium
-      color: peaks.hasBeenClipped ? UiTheme.dangerColor : UiTheme.strokeColor1
+      opacity: peaks.hasBeenClipped ? ui.theme.opacityOpaque : ui.theme.opacityMedium
+      color: peaks.hasBeenClipped ? ui.theme.dangerColor : ui.theme.strokeColor1
    }
 
    Component.onCompleted: {

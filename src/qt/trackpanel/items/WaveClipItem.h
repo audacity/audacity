@@ -16,6 +16,11 @@ public:
    WaveClipItem(WaveTrack& waveTrack);
    ~WaveClipItem() override;
 
+   WaveClipItem(const WaveClipItem&) = delete;
+   WaveClipItem& operator=(const WaveClipItem&) = delete;
+   WaveClipItem(WaveClipItem&&) = delete;
+   WaveClipItem operator=(WaveClipItem&&) = delete;
+
    void SetInterval(std::shared_ptr<WaveTrack::Interval> interval);
 
    void Paint(QQmlEngine& engine,

@@ -17,6 +17,7 @@ class WaveTrackAdapter : public TrackAdapterBase
    Q_PROPERTY(qreal pan READ getPan WRITE setPan NOTIFY panChanged)
    Q_PROPERTY(bool solo READ getSolo WRITE setSolo NOTIFY soloChanged)
    Q_PROPERTY(bool mute READ getMute WRITE setMute NOTIFY muteChanged)
+   Q_PROPERTY(int channels READ getChannels CONSTANT)
 
    std::shared_ptr<WaveTrack> mWaveTrack;
 public:
@@ -45,6 +46,8 @@ public:
 
    bool getMute() const;
    void setMute(bool mute);
+
+   int getChannels() const;
 
 signals:
 

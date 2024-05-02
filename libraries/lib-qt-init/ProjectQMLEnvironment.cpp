@@ -21,8 +21,10 @@ ProjectQMLEnvironment::Property::Property(const QString& name, PropertyFactory f
 auto ProjectQMLEnvironment::Property::CreateProperty(Properties& properties,
    const QString& name, const PropertyFactory& factory) -> Properties::DataPointer
 {
-   auto property = factory(*properties.mEnv.mEngine, properties.mEnv.mProject);
-   properties.mEnv.mEngine->rootContext()->setContextProperty(name, property.get());
+   const auto& engine = properties.mEnv.mEngine;
+   auto property = factory(*engine, properties.mEnv.mProject);
+   engine->setContextForObject(property.get(), engine->rootContext());
+   engine->rootContext()->setContextProperty(name, property.get());
    return property;
 }
 

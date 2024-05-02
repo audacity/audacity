@@ -23,7 +23,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 
 FocusScope {
    id: root
@@ -32,18 +32,18 @@ FocusScope {
    property string text: ""
    property int textFormat: Text.AutoText
 
-   property font iconFont: UiTheme.iconFont
-   property font textFont: UiTheme.bodyFont
+   property font iconFont: ui.theme.iconFont
+   property font textFont: ui.theme.bodyFont
 
    property bool transparent: false
    property bool accentButton: false
 
    property color normalColor:
-      transparent ? "transparent" : accentButton ? accentColor : UiTheme.buttonColor
-   property color hoverHitColor: accentButton ? accentColor : UiTheme.buttonColor
-   property color accentColor: UiTheme.brandColor
+      transparent ? "transparent" : accentButton ? accentColor : ui.theme.buttonColor
+   property color hoverHitColor: accentButton ? accentColor : ui.theme.buttonColor
+   property color accentColor: ui.theme.brandColor
 
-   property color iconColor: UiTheme.fontColor1
+   property color iconColor: ui.theme.fontColor1
    property int iconSize: 16
 
    property real radius: 3
@@ -89,9 +89,9 @@ FocusScope {
    objectName: root.text
 
    implicitWidth: contentLoader.implicitWidth + 2 * margins
-   implicitHeight: Math.max(contentLoader.implicitHeight, UiTheme.defaultButtonSize)
+   implicitHeight: Math.max(contentLoader.implicitHeight, ui.theme.defaultButtonSize)
 
-   opacity: root.enabled ? UiTheme.opacityOpaque : UiTheme.itemOpacityDisabled
+   opacity: root.enabled ? ui.theme.opacityOpaque : ui.theme.itemOpacityDisabled
 
    Loader {
       anchors.fill: parent
@@ -106,11 +106,11 @@ FocusScope {
          id: background
 
          color: root.normalColor
-         opacity: UiTheme.opacityMedium
+         opacity: ui.theme.opacityMedium
 
          radius: root.radius
-         border.width: UiTheme.borderWidth
-         border.color: UiTheme.strokeColor1
+         border.width: ui.theme.borderWidth
+         border.color: ui.theme.strokeColor1
 
          states: [
             State {
@@ -120,7 +120,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: transparent ? UiTheme.opacityMedium : UiTheme.opacityOpaque
+                  opacity: transparent ? ui.theme.opacityMedium : ui.theme.opacityOpaque
                }
             },
 
@@ -131,7 +131,7 @@ FocusScope {
                PropertyChanges {
                   target: background
                   color: root.hoverHitColor
-                  opacity: transparent ? UiTheme.opacityLight : UiTheme.opacityStrong
+                  opacity: transparent ? ui.theme.opacityLight : ui.theme.opacityStrong
                }
             }
          ]
@@ -207,8 +207,8 @@ FocusScope {
 
          PropertyChanges {
             target: root
-            implicitWidth: UiTheme.defaultButtonSize
-            implicitHeight: UiTheme.defaultButtonSize
+            implicitWidth: ui.theme.defaultButtonSize
+            implicitHeight: ui.theme.defaultButtonSize
          }
       },
 
@@ -220,7 +220,7 @@ FocusScope {
             target: root
             implicitWidth: Math.max(contentLoader.implicitWidth + 2 * root.margins,
                                     root.minWidth)
-            implicitHeight: UiTheme.defaultButtonSize
+            implicitHeight: ui.theme.defaultButtonSize
          }
       },
 
@@ -230,7 +230,7 @@ FocusScope {
 
          PropertyChanges {
             target: root
-            implicitHeight: UiTheme.defaultButtonSize
+            implicitHeight: ui.theme.defaultButtonSize
          }
       },
 

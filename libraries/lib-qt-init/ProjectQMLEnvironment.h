@@ -36,6 +36,7 @@ public:
    ///Returned QObject will be owned by hosting environment.
    class QT_INIT_API Property final
    {
+      friend class ProjectQMLEnvironment;
    public:
       /// \brief Factory adapter type
       using PropertyFactory = std::function<std::unique_ptr<QObject>(QQmlEngine&, AudacityProject&)>;
@@ -51,6 +52,14 @@ public:
 
       Properties::RegisteredFactory mFactory;
    };
+
+   //!Complementary adapter function that returns property value
+   //!using attachment registration object as a key.
+   template< typename ValueType = QObject >
+   ValueType &GetProperty( const Property &key )
+   {
+      return mProperties.Get<ValueType>(key.mFactory);
+   }
 
    explicit ProjectQMLEnvironment(AudacityProject& project);
    ~ProjectQMLEnvironment() override;

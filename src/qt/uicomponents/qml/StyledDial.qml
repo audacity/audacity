@@ -22,7 +22,7 @@
 import QtQuick
 import QtQuick.Controls
 
-import Audacity.UiThemes
+import Audacity.Ui
 
 Dial {
    id: root
@@ -43,11 +43,11 @@ Dial {
       readonly property real innerArcLineWidth: 2
       readonly property real dialOffset: outerArcLineWidth + innerArcLineWidth
 
-      readonly property color valueArcColor: UiTheme.brandColor
-      readonly property color outerArcColor: colorWithAlpha(UiTheme.strokeColor1, UiTheme.opacityLight)
-      readonly property color innerArcColor: UiTheme.strokeColor1
-      readonly property color dialNeedleColor: UiTheme.strokeColor3
-      readonly property color dialBackgroundColor: UiTheme.backgroundColor1
+      readonly property color valueArcColor: ui.theme.brandColor
+      readonly property color outerArcColor: colorWithAlpha(ui.theme.strokeColor1, ui.theme.opacityLight)
+      readonly property color innerArcColor: ui.theme.strokeColor1
+      readonly property color dialNeedleColor: ui.theme.strokeColor3
+      readonly property color dialBackgroundColor: ui.theme.backgroundColor1
 
       property int initialValue: 0
       property real dragStartX: 0

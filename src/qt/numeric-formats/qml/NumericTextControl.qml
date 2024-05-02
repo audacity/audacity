@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 
 import Audacity.UiComponents
-import Audacity.UiThemes
+import Audacity.Ui
 import Audacity.NumericFormats
 
 Item {
@@ -14,7 +14,7 @@ Item {
    property int formatIndex
    property NumericConverterFormatterAdapter formatter : formatterFactory.create(type, formatIndex)
    property real value : 0
-   property color iconColor: UiTheme.fontColor1
+   property color iconColor: ui.theme.fontColor1
    property int icon: IconCode.TIMECODE
 
    implicitWidth : mainLayout.Layout.minimumWidth
@@ -55,9 +55,9 @@ Item {
    Component {
       id : timeUnitComponent
       Text {
-         color: UiTheme.fontColor2
+         color: ui.theme.fontColor2
          font {
-            family: UiTheme.bodyFont.family
+            family: ui.theme.bodyFont.family
             pointSize: 14
          }
          leftPadding : 1
@@ -71,9 +71,9 @@ Item {
       id : separatorSymbolComponent
       Text {
 
-         color: UiTheme.fontColor2
+         color: ui.theme.fontColor2
          font {
-            family: UiTheme.timecodeFont.family
+            family: ui.theme.timecodeFont.family
             pointSize: 14
             bold : true
          }
@@ -99,7 +99,7 @@ Item {
             anchors.fill : parent
 
             id : highlight
-            color : UiTheme.backgroundColor3
+            color : ui.theme.backgroundColor3
             opacity : 0
          }
 
@@ -109,9 +109,9 @@ Item {
             anchors.baselineOffset : -8
 
             id : text
-            color: UiTheme.fontColor2
+            color: ui.theme.fontColor2
             font {
-               family : UiTheme.timecodeFont.family
+               family : ui.theme.timecodeFont.family
                pointSize : 14
                bold : true
             }
@@ -167,7 +167,7 @@ Item {
          implicitWidth : timeLayout.Layout.minimumWidth + timeLayout.anchors.leftMargin + timeLayout.anchors.rightMargin
 
          radius : 3
-         color : UiTheme.backgroundColor4
+         color : ui.theme.backgroundColor4
 
          RowLayout
          {
@@ -188,18 +188,18 @@ Item {
          implicitWidth : 16
 
          radius : 3
-         color : UiTheme.backgroundColor4
+         color : ui.theme.backgroundColor4
          Text
          {
             anchors.fill : parent
 
             verticalAlignment: Text.AlignVCenter
             horizontalAlignment: Text.AlignHCenter
-            color: UiTheme.fontColor2
+            color: ui.theme.fontColor2
             text: String.fromCharCode(IconCode.SMALL_ARROW_DOWN)
 
             font {
-               family: UiTheme.iconFont.family
+               family: ui.theme.iconFont.family
                pointSize: 16
             }
          }
