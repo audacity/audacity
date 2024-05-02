@@ -191,7 +191,7 @@ if( ${_OPT}conan_enabled )
    endif()
 
    execute_process(
-      COMMAND ${PYTHON} "${CONAN_RUNNER_DIR}/conan_runner.py"
+      COMMAND ${PYTHON} "${CMAKE_SOURCE_DIR}/conan/conan_runner.py"
          --build-dir ${CMAKE_BINARY_DIR}
          --compiler ${CMAKE_CXX_COMPILER_ID}
          --compiler-version ${CMAKE_CXX_COMPILER_VERSION}
