@@ -21,8 +21,6 @@ set(MODULE_SOURCES
    TrackAdapter.h
    TrackListModel.cpp
    TrackListModel.h
-   WaveformCache.cpp
-   WaveformCache.h
    WaveTrackAdapter.cpp
    WaveTrackAdapter.h
    WaveTrackView.cpp

@@ -1,6 +1,7 @@
 #include "WaveTrackView.h"
 
 #include <QPainter>
+#include <unordered_set>
 
 #include "WaveTrack.h"
 #include "WaveClip.h"
@@ -64,7 +65,7 @@ void WaveTrackView::UpdateItemsCache(TimelineContext& trackPanelView)
    std::unordered_set<const WaveClip*> usedKeys;
    for(const auto& interval : track->Intervals())
    {
-      const auto key = interval->GetClip(0).get();
+      const auto key = interval.get();
       //If clip is "too small" draw a placeholder instead of
       //attempting to fit the contents into a few pixels
       if (!WaveClipItem::ClipDetailsVisible(*key, viewInfo, viewRect))
@@ -110,7 +111,7 @@ void WaveTrackView::UpdateItemsCache(TimelineContext& trackPanelView)
    }
 }
 
-void WaveTrackView::OnWaveTrackClipEvent(WaveTrackClipEvent)
+void WaveTrackView::OnWaveTrackClipEvent(WaveTrackMessage)
 {
    //TODO: add/remove individual clip, don't reset the whole cache
    ResetItemsCache();

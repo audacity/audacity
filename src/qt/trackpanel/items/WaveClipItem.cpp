@@ -97,20 +97,43 @@ namespace
       std::vector<uint8_t> mBytes;
    };
 
-   class WaveformPainter final : public ClientData::Base
+   class WaveformPainter final : public WaveClipListener
    {
    public:
 
-      static WaveformPainter& Get(const WaveClipWaveformCache& cache);
+      static WaveformPainter& Get(const WaveClip& cache);
 
-      WaveformPainter(const std::shared_ptr<WaveDataCache>& dataCache)
-         :  mBitmapCache(dataCache,
-            [] { return std::make_unique<WaveBitmapCacheElementQt>(); },
-                         dataCache->GetSampleRate())
+      WaveformPainter& EnsureClip (const WaveClip& clip)
       {
+         if (&clip != mWaveClip)
+            mChannelCaches.clear();
+
+         const auto nChannels = clip.NChannels();
+
+         if (mChannelCaches.size() == nChannels)
+            return *this;
+
+         mWaveClip = &clip;
+
+         mChannelCaches.reserve(nChannels);
+
+         for (auto channelIndex = 0; channelIndex < nChannels; ++channelIndex)
+         {
+            auto dataCache = std::make_shared<WaveDataCache>(clip, channelIndex);
+
+            auto bitmapCache = std::make_unique<WaveBitmapCache>(
+               clip, dataCache,
+               [] { return std::make_unique<WaveBitmapCacheElementQt>(); });
+
+            mChannelCaches.push_back(
+               { std::move(dataCache), std::move(bitmapCache) });
+         }
+
+         return *this;
       }
 
-      void Draw(QPainter& painter, const
+      void Draw(int channelIndex,
+                QPainter& painter, const
                 WavePaintParameters& params,
                 const ZoomInfo& zoomInfo,
                 const QRect& targetRect,
@@ -118,9 +141,14 @@ namespace
                 double from,
                 double to)
       {
-         mBitmapCache.SetPaintParameters(params);
+         assert(channelIndex >= 0 && channelIndex < mChannelCaches.size());
+         if(channelIndex < 0 || channelIndex >= mChannelCaches.size())
+            return;
 
-         auto range = mBitmapCache.PerformLookup(zoomInfo, from, to);
+         auto& bitmapCache = mChannelCaches[channelIndex].BitmapCache;
+         bitmapCache->SetPaintParameters(params);
+
+         auto range = bitmapCache->PerformLookup(zoomInfo, from, to);
 
          auto left = targetRect.x() + leftOffset;
          auto height = targetRect.height();
@@ -154,8 +182,32 @@ namespace
          }
       }
 
+      void MarkChanged() noexcept override { }
+
+      void Invalidate() override
+      {
+         for (auto& channelCache : mChannelCaches)
+         {
+            channelCache.DataCache->Invalidate();
+            channelCache.BitmapCache->Invalidate();
+         }
+      }
+
+      std::unique_ptr<WaveClipListener> Clone() const override
+      {
+         return std::make_unique<WaveformPainter>();
+      }
+
    private:
-      WaveBitmapCache mBitmapCache;
+      const WaveClip* mWaveClip {};
+
+      struct ChannelCaches final
+      {
+         std::shared_ptr<WaveDataCache> DataCache;
+         std::unique_ptr<WaveBitmapCache> BitmapCache;
+      };
+
+      std::vector<ChannelCaches> mChannelCaches;
    };
 }
 
@@ -166,8 +218,7 @@ key1{ [](auto &) {
 WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return mutTrack.GetGroupData().Attachments
-      ::Get<WaveformSettings>(key1);
+   return mutTrack.Attachments::Get<WaveformSettings>(key1);
 }
 
 WaveformSettings& WaveformSettings::defaults()
@@ -181,14 +232,14 @@ auto WaveformSettings::Clone() const -> PointerType
    return std::make_unique<WaveformSettings>(*this);
 }
 
-static WaveClipWaveformCache::RegisteredFactory sKeyW { [](WaveClipWaveformCache& cache) {
-   return std::make_unique<WaveformPainter>(cache.GetDataCache());
+static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip&) {
+   return std::make_unique<WaveformPainter>();
 } };
 
-WaveformPainter& WaveformPainter::Get(const WaveClipWaveformCache& cache)
+WaveformPainter &WaveformPainter::Get( const WaveClip &clip )
 {
-   return const_cast<WaveClipWaveformCache&>(cache) // Consider it mutable data
-      .ClientData::Site<WaveClipWaveformCache>::Get<WaveformPainter>(sKeyW);
+   return const_cast< WaveClip& >( clip ) // Consider it mutable data
+      .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
 }
 
 bool ShowIndividualSamples(
@@ -508,7 +559,7 @@ QRect ClipParameters::GetClipRect(const ClipTimes& clip,
     return {};
 }
 
-void DrawIndividualSamples(QPainter& painter, const QRect& rect,
+void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
                                  const ZoomInfo& zoomInfo,
                                  const WaveClip& clip,
                                  int leftOffset,
@@ -535,7 +586,7 @@ void DrawIndividualSamples(QPainter& painter, const QRect& rect,
       return;
 
    Floats buffer{ size_t(slen) };
-   clip.GetSamples(0, (samplePtr)buffer.get(), floatSample, s0, slen,
+   clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen,
                     // Suppress exceptions in this drawing operation:
                     false);
 
@@ -565,7 +616,7 @@ void DrawIndividualSamples(QPainter& painter, const QRect& rect,
 
       // Calculate sample as it would be rendered, so quantize time
       double value =
-         clip.GetEnvelope()->GetValue( time, 1.0 / clip.GetRate() );
+         clip.GetEnvelope().GetValue( time, 1.0 / clip.GetRate() );
       const double tt = buffer[s] * value;
 
       if (clipped && bShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
@@ -783,7 +834,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
    }
 }
 
-void DrawMinMaxRMS(QPainter& painter, const QRect& rect,
+void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
                          const ZoomInfo& zoomInfo,
                          const WaveClip& clip,
                          double t0, double t1, int leftOffset,
@@ -793,8 +844,7 @@ void DrawMinMaxRMS(QPainter& painter, const QRect& rect,
 {
    const ZoomInfo localZoomInfo(0.0, zoomInfo.GetZoom());
 
-   auto& clipCache = WaveClipWaveformCache::Get(clip);
-   auto& waveformPainter = WaveformPainter::Get(clipCache);
+   auto& waveformPainter = WaveformPainter::Get(clip);
 
    const auto trimLeft = clip.GetTrimLeft();
 
@@ -829,17 +879,18 @@ void DrawMinMaxRMS(QPainter& painter, const QRect& rect,
       .SetClippingColors(
          ColorFromQColor(muted ? muteClippedPen : clippedPen),
          ColorFromQColor(muted ? muteClippedPen : clippedPen))
-      .SetEnvelope(*clip.GetEnvelope());
+      .SetEnvelope(clip.GetEnvelope());
 
    //TODO: uncomment and fix
    //clipPainter.SetSelection(
    //   zoomInfo, artist->pSelectedRegion->t0() - sequenceStartTime,
    //   artist->pSelectedRegion->t1() - sequenceStartTime);
 
-   waveformPainter.Draw(painter, paintParameters, localZoomInfo, rect, leftOffset, t0 + trimLeft, t1 + trimLeft);
+   waveformPainter.Draw(channelIndex, painter, paintParameters, localZoomInfo, rect, leftOffset, t0 + trimLeft, t1 + trimLeft);
 }
 
-void DrawWaveform(QPainter& painter,
+void DrawWaveform(int channelIndex,
+                  QPainter& painter,
                   WaveTrack& track,
                   const WaveClip& clip,
                   const ZoomInfo& zoomInfo,
@@ -896,7 +947,7 @@ void DrawWaveform(QPainter& painter,
    std::vector<double> vEnv(mid.width());
    double *const env = &vEnv[0];
    GetEnvelopeValues(
-      *clip.GetEnvelope(),
+      clip.GetEnvelope(),
       playStartTime,
 
       // PRL: change back to make envelope evaluate only at sample times
@@ -911,7 +962,7 @@ void DrawWaveform(QPainter& painter,
    // part of the waveform
    {
       double tt0, tt1;
-      if (SyncLock::IsSelectedOrSyncLockSelected(&track)) {
+      if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
          tt0 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t0())),
             tt1 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t1()));
       }
@@ -942,7 +993,8 @@ void DrawWaveform(QPainter& painter,
 
    if (!showIndividualSamples)
    {
-      DrawMinMaxRMS(painter, rect,
+      DrawMinMaxRMS(channelIndex,
+                   painter, rect,
                     zoomInfo,
                     clip,
                     t0, t1, leftOffset,
@@ -957,6 +1009,7 @@ void DrawWaveform(QPainter& painter,
       highlight = target && target->GetTrack().get() == track;
 #endif
       DrawIndividualSamples(
+         channelIndex,
          painter, rect,
          zoomInfo,
          clip, leftOffset,
@@ -1089,8 +1142,7 @@ void WaveClipItem::Paint(QQmlEngine& engine,
    SelectedRegion selectedRegion{};
    for(unsigned i = 0; i < mInterval->NChannels(); ++i)
    {
-      const auto& clip = mInterval->GetClip(i);
-      DrawWaveform(painter, mWaveTrack, *clip, zoomInfo, selectedRegion,
+      DrawWaveform(i, painter, mWaveTrack, *mInterval, zoomInfo, selectedRegion,
          QRect(viewRect.left(), top, viewRect.width(), channelHeight), dB, mWaveTrack.GetMute(), false);
       top += channelHeight;
    }

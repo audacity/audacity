@@ -13,6 +13,7 @@
 #include <wx/gdicmn.h>
 #include "ClientData.h"
 
+class WaveChannel;
 class WaveTrack;
 
 class WAVE_TRACK_API WaveformScale
@@ -21,6 +22,11 @@ class WAVE_TRACK_API WaveformScale
 public:
    //! Mutative access to attachment even if the track argument is const
    static WaveformScale &Get(const WaveTrack &track);
+
+   /*!
+    @copydoc Get(const WaveTrack &)
+    */
+   static WaveformScale &Get(const WaveChannel &channel);
 
    ~WaveformScale() override;
    PointerType Clone() const override;

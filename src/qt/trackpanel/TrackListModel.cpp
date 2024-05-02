@@ -60,13 +60,13 @@ void TrackListModel::move(int from, int to)
    {
       const auto distance = to - from;
       for(int i = 0; i < distance; ++i)
-         mTrackList->MoveDown(track);
+         mTrackList->MoveDown(*track);
    }
    else if(to < from)
    {
       const auto distance = from - to;
       for(int i = 0; i < distance; ++i)
-         mTrackList->MoveUp(track);
+         mTrackList->MoveUp(*track);
    }
 }
 

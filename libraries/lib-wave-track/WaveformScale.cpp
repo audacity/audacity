@@ -9,7 +9,6 @@
 
 #include "WaveformScale.h"
 
-#include "Channel.h"
 #include "WaveTrack.h"
 
 static const ChannelGroup::Attachments::RegisteredFactory
@@ -18,8 +17,12 @@ key2{ [](auto &) { return std::make_unique<WaveformScale>(); } };
 WaveformScale &WaveformScale::Get(const WaveTrack &track)
 {
    auto &mutTrack = const_cast<WaveTrack&>(track);
-   return mutTrack.GetGroupData().Attachments
-      ::Get<WaveformScale>(key2);
+   return mutTrack.Attachments::Get<WaveformScale>(key2);
+}
+
+WaveformScale &WaveformScale::Get(const WaveChannel &channel)
+{
+   return Get(channel.GetTrack());
 }
 
 WaveformScale::~WaveformScale() = default;

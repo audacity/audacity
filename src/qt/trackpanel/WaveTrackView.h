@@ -29,7 +29,7 @@ private:
 
    void UpdateItemsCache(TimelineContext& trackPanelView) override;
 
-   void OnWaveTrackClipEvent(WaveTrackClipEvent);
+   void OnWaveTrackClipEvent(WaveTrackMessage);
 
 private slots:
 
