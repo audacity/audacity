@@ -332,17 +332,17 @@ ProjectStatus::DefaultFieldsRegistrator::DefaultFieldsRegistrator()
 {
    static StatusBarFieldItemRegistrator stateStatusBarField {
       std::make_unique<ProjectStatusTextField>(StateStatusBarField(), 0),
-      { {}, { Registry::OrderingHint::Begin } }
+      { PathStart, { Registry::OrderingHint::Begin } }
    };
 
    static StatusBarFieldItemRegistrator mainStatusBarField {
       // Main field is always expandable, hence the size is -1
       std::make_unique<ProjectStatusTextField>(MainStatusBarField(), -1),
-      { {}, { Registry::OrderingHint::After, StateStatusBarField().GET() } }
+      { PathStart, { Registry::OrderingHint::After, StateStatusBarField().GET() } }
    };
 
    static StatusBarFieldItemRegistrator rateStatusBarField {
       std::make_unique<ProjectStatusTextField>(RateStatusBarField(), 150),
-      { {}, { Registry::OrderingHint::After, MainStatusBarField().GET() } }
+      { PathStart, { Registry::OrderingHint::After, MainStatusBarField().GET() } }
    };
 }
