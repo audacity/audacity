@@ -1,22 +1,3 @@
-# SPDX-License-Identifier: GPL-3.0-only
-# MuseScore-CLA-applies
-#
-# MuseScore
-# Music Composition & Notation
-#
-# Copyright (C) 2021-2024 MuseScore BVBA and others
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License version 3 as
-# published by the Free Software Foundation.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ###########################################
 # Setup main application
@@ -65,12 +46,12 @@ elseif(OS_IS_LIN)
 elseif(OS_IS_MAC)
     set(EXECUTABLE_NAME audacity MACOSX_BUNDLE)
     set(MACOSX_BUNDLE_ICON_FILE AppIcon.icns)
-    set(MACOSX_BUNDLE_GUI_IDENTIFIER org.musescore.${MUSESCORE_NAME})
-    set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSESCORE_NAME})
-    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSESCORE_VERSION})
-    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MUSESCORE_VERSION})
+    set(MACOSX_BUNDLE_GUI_IDENTIFIER ${MUSE_APP_GUI_IDENTIFIER})
+    set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSE_APP_TITLE})
+    set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSE_APP_VERSION})
+    set(MACOSX_BUNDLE_SHORT_VERSION_STRING ${MUSE_APP_VERSION})
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_BUILD_NUMBER})
-    set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 1999-2024 MuseScore BVBA and others. Published under the GNU General Public License version 3.")
+    set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 1999-2024. Published under the GNU General Public License version 3.")
 
     set(CMAKE_INSTALL_RPATH ${QT_INSTALL_LIBS})
 
@@ -116,7 +97,7 @@ qt_add_resources(APP_RCC_SOURCES app.qrc)
 # Executable declaration
 ###########################################
 
-add_executable(audacity
+add_executable(${EXECUTABLE_NAME}
     ${APP_RCC_SOURCES}
     main.cpp
     app.cpp
@@ -140,8 +121,10 @@ if (APP_OUTPUT_NAME)
 endif (APP_OUTPUT_NAME)
 
 if (OS_IS_MAC)
-    set_target_properties(audacity PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/../cmake-proxies/cmake-modules/MacOSXBundleInfo.plist.in
-                                            XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER})
+    set_target_properties(audacity
+        PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in
+        XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${MACOSX_BUNDLE_GUI_IDENTIFIER}
+    )
 endif (OS_IS_MAC)
 
 if (CC_IS_MINGW)
@@ -306,12 +289,13 @@ elseif(OS_IS_FBSD)
 ###########################################
 elseif(OS_IS_MAC)
 
+    message("~~~~~~CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
     install(TARGETS audacity BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
 
     if(MU_COMPILE_INSTALL_QTQML_FILES)
         install(DIRECTORY
                 ${QT_INSTALL_QML}
-                DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}
+                DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}${AU4_FRAMEWORKS_NAME}
                 REGEX ".*QtWebkit.*" EXCLUDE
                 REGEX ".*QtTest.*" EXCLUDE
                 REGEX ".*QtSensors.*" EXCLUDE

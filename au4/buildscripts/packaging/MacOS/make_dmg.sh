@@ -137,7 +137,7 @@ macdeployqt ${VOLUME}/${APPNAME}.app
 cp -f $HERE/qt.conf ${VOLUME}/${APPNAME}.app/Contents/Resources
 
 # fix the libs, qt5.6 has @rpath...
-BIN_FILE=${VOLUME}/${APPNAME}.app/Contents/MacOS/mscore
+BIN_FILE=${VOLUME}/${APPNAME}.app/Contents/MacOS/${APPNAME}
 change_rpath $BIN_FILE
 
 # Workaround:
@@ -166,7 +166,7 @@ do
   lipo -remove ppc "$f" -output "$f" > /dev/null 2>&1
 done
 
-otool -L ${VOLUME}/${APPNAME}.app/Contents/MacOS/audacity
+otool -L ${VOLUME}/${APPNAME}.app/Contents/MacOS/${APPNAME}
 
 echo "Rename ${APPNAME}.app to ${VOLUME}/${LONGER_NAME}.app"
 mv ${VOLUME}/${APPNAME}.app "${VOLUME}/${LONGER_NAME}.app"
