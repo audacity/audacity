@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# APPDIR and APPIMAGE are environment variables which are set when the user
+# runs the AppImage. They won't be set if you try to run this outside of an
+# AppImage, so here we set them to something sensible instead for testing.
+[[  "${APPDIR}"  ]] || export APPDIR="$(dirname "$(readlink -f "${0}")")"
+[[ "${APPIMAGE}" ]] || export APPIMAGE="${APPDIR}/AppRun"
+
+# Check system libraries and load a fallback if necessary
+fallback_libs="" # start empty
+for fb_dir in "${APPDIR}/fallback"/*; do
+  if [[ -d "${fb_dir}" ]]; then
+    library="${fb_dir##*/}" # library named like directory
+    if ! "${APPDIR}/bin/findlib" "${library}" >&2; then
+      echo "${APPIMAGE}: Using fallback for library '${library}'" >&2
+      fallback_libs="${fallback_libs}:${fb_dir}" # append path
+    fi
+  fi
+done
+
+# Add fallback directories to LD_LIBRARY_PATH. Don't add the main lib
+# directory because linuxdeploy sets RUNPATH to point to it anyway.
+export LD_LIBRARY_PATH="${APPDIR}/lib:${APPDIR}/lib/audacity:${LD_LIBRARY_PATH}${fallback_libs}"
+
+# Launch MuseScore or an accompanying script
+case "$1" in
+  -h|--help|install|update|upgrade|uninstall|remove|man|manual|manpage|check-depends|check-dependencies )
+    "${APPDIR}/bin/portable-utils" "$@"
+    ;;
+  * )
+    "${APPDIR}/bin/audacity@MUSE_APP_INSTALL_SUFFIX@" "$@"
+    ;;
+esac

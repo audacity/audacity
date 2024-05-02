@@ -1,0 +1,10 @@
+module Audacity.Project
+ProjectsPage 1.0 ProjectsPage.qml
+NewProjectDialog 1.0 NewProjectDialog.qml
+AskSaveLocationTypeDialog 1.0 AskSaveLocationTypeDialog.qml
+ProjectPropertiesDialog 1.0 ProjectPropertiesDialog.qml
+AudioGenerationSettings 1.0 AudioGenerationSettings.qml
+ProjectsView 1.0 ProjectsView.qml
+ProjectsListView 1.0 ProjectsListView.qml
+ProjectsGridView 1.0 ProjectsGridView.qml
+Message 1.0 Message.qml

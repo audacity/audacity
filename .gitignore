@@ -176,3 +176,8 @@ appimagetool/*
 .build.*/
 .conan/
 .debug/
+build-*
+build.release/
+build.debug/
+build.install/
+build.artifacts/

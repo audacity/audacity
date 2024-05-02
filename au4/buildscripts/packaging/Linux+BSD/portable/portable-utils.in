@@ -1,0 +1,398 @@
+#!/bin/bash
+
+# This file exists to keep AppRun as small as possible.
+# TODO: rewrite this file in a more portable language (e.g. C)
+
+function main() {
+  case "$1" in
+    -h|--help )
+      showHelp
+      ;;
+    install )
+      installResources "$2" "$3" || errorMsg "Unable to install to '${prefix}'"
+      ;;
+    update|upgrade )
+      update "$2" "$3"
+      ;;
+    uninstall|remove )
+      removeResources "$2" "$3" || errorMsg "Unable to remove from '${prefix}'"
+      ;;
+    man|manual|manpage )
+      man "${APPDIR}/share/man/man1/mscore@MUSE_APP_INSTALL_SUFFIX@.1.gz"
+      ;;
+    check-depends|check-dependencies )
+      checkDependencies "$2"
+      ;;
+    * )
+      echo "Unknown option: '$1'."
+      return 1
+  esac
+}
+
+function showHelp() {
+cat <<EOF
+$(printVersion centered)
+
+ This portable version of MuseScore has all of MuseScore's normal features, but
+it does not need to be installed. There is an option to install it if you would
+like full integration with other applications and the desktop environment.
+
+Usage: $(basename "${APPIMAGE}") [options] [scorefile]
+
+Special options for MuseScore Portable AppImage:
+  -h, --help                    Displays this help and the normal help (below).
+  man, manual, manpage          Displays MuseScore's man page.
+  install [-i] [PREFIX]         Installs resources for desktop integration.
+  update, upgrade [-i] [PREFIX] Update MuseScore to the latest version.
+  remove, uninstall [PREFIX]    Removes resources from desktop environment.
+  check-depends [exes-only]     Displays system information for developers.
+
+Ordinary MuseScore options:
+$("${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" --help | tail -n +5)
+EOF
+}
+
+function printVersion() {
+  local pretty=$(sed -rn "s|^Name=([^#]*)|\1|p" "${APPDIR}/org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop")
+  local long=$("${APPDIR}/bin/mscore@MUSE_APP_INSTALL_SUFFIX@" --long-version 2>&1 | tail -n 1)
+  if [ "$1" == "centered" ]; then
+    printf "%*s\n" "$(((${#pretty}+80)/2))" "$pretty"
+    printf "%*s\n" "$(((${#long}+80)/2))" "$long"
+    return
+  fi
+  echo $pretty
+  echo $long
+}
+
+function readYes() {
+  read -s -n 1 answer
+  if [ "$answer" == "n" ] || [ "$answer" == "N" ] ; then
+    echo " N"
+    return 1
+  fi
+  echo " Y" # Default is Y
+  return 0
+}
+
+function installResources() {
+  local interactive=""
+  if [ "$2" == "-i" ]; then
+    interactive=true
+  elif [ "$1" == "-i" ]; then
+    interactive=true
+    shift
+  fi
+  if [ "$1" != "" ]; then
+    # User specified a directory
+    local prefix="$1"
+    local bin="$prefix/bin"
+    local bin_str="PREFIX/bin"
+    local question="The default location might be better. Proceed anyway [Y/n]?"
+    local cancelled="Cancelled: rerun without a PREFIX to use the default."
+  elif [ "${EUID}" == "0" ]; then
+    # Running as root (sudo)
+    local prefix="/usr/local"
+    local bin="$prefix/bin"
+    local bin_str="PREFIX/bin"
+    local question="Install resources for all users [Y/n]?"
+    local cancelled="Cancelled: rerun without root (sudo) to install for one user only."
+  else
+    # Not running as root
+    prefix="${HOME}/.local"
+    local bin="$prefix/bin"
+    local bin_str="PREFIX/bin"
+    local question="Install resources for one user only (${USER}) [Y/n]?"
+    local cancelled="Cancelled: rerun as root (sudo) to install for all users."
+  fi
+cat <<EOF
+Installation step 1 of 3.
+PREFIX is '$prefix'.
+Preparing to install resources to:
+     PREFIX/share/applications/*
+     PREFIX/share/icons/*
+     PREFIX/share/man/*
+     PREFIX/share/mime/*
+EOF
+  if [ "$interactive" ]; then
+    printf "$question"
+    readYes || { echo "$cancelled" && exit 0 ;}
+  fi
+  cd "${APPDIR}"
+  xargs < "install_manifest.txt" -I '%%%' cp -P --parents '%%%' -t "$prefix" \
+    || errorMsg "Could not copy files" fatal
+  updateCache "$prefix" || errorMsg "Had trouble updating resource caches"
+  cd "$prefix"
+  echo "Resources installed to '$PWD'."
+cat <<EOF
+Step 2 of 3.
+MuseScore is at: ${APPIMAGE}
+EOF
+  name="$(basename "${APPIMAGE}")"
+  dest="${bin}/${name}"
+  if [ ! "$interactive" ] && [ ! "${APPIMAGE}" -ef "${dest}" ]; then
+    echo "Moving AppImage to 'PREFIX/bin'."
+    mkdir -p "${bin}"
+    mv "${APPIMAGE}" "${dest}" && APPIMAGE="${dest}" || errorMsg "Couldn't move to '${bin}'"
+  elif [ ! "${APPIMAGE}" -ef "${dest}" ]; then
+cat <<EOF
+You can leave it there, but it is recommended that you move it to 'PREFIX/bin'.
+Options: move (m) or copy (c) MuseScore, do nothing (n), or show help (h)?
+EOF
+    local answer
+    while [ true ]; do
+      read answer
+      case "${answer[0]}" in
+        N|n )
+          break
+          ;;
+        M|m )
+          echo "Moving AppImage to 'PREFIX/bin'."
+          mkdir -p "${bin}"
+          mv "${APPIMAGE}" "${dest}" && APPIMAGE="${dest}" || errorMsg "Couldn't move to '${bin}'"
+          break
+          ;;
+        C|c )
+          echo "Copying AppImage to 'PREFIX/bin'."
+          mkdir -p "${bin}"
+          cp "${APPIMAGE}" "${dest}" && APPIMAGE="${dest}" || errorMsg "Couldn't copy to '${bin}'"
+          break
+          ;;
+        H|h )
+less <<EOF
+Moving or copying MuseScore to 'PREFIX/bin' has these benefits:
+
+ 1) It will have the same permissions as the resources. (I.e. it will be
+    available to the same user(s) as the resources were installed for.)
+
+ 2) If 'PREFIX/bin' is in your PATH environment variable then you can launch
+    MuseScore by typing '${name}' instead of the full path.
+    The default locations for PREFIX are in PATH on most systems.
+
+You should move rather than copy unless you want to keep another copy at the
+current location. (E.g if you're installing MuseScore from a USB stick.)
+
+If you choose not to move or copy MuseScore then you will still be able to
+launch it by clicking on its icon or by typing the full path
+
+  '${APPIMAGE}'
+
+but it is not guaranteed to be available to the same users as the resources are.
+EOF
+          ;;
+      esac
+      echo "Please enter 'm', 'c', 'n', or 'h'. ('h' shows help)"
+    done
+  fi
+  sed -ri "s|^Exec=[^#%]*(.*)\$|Exec=${APPIMAGE} \1|" "share/applications/org.musescore.MuseScore@MUSE_APP_INSTALL_SUFFIX@.desktop"
+  echo "Finished installing MuseScore to $prefix"
+cat <<EOF
+Step 3 of 3.
+Symlinks can be created to make it easier to launch MuseScore from
+the command line. (Symlinks are like shortcuts or aliases.)
+EOF
+  [ "$interactive" ] && printf "Create symlinks 'mscore@MUSE_APP_INSTALL_SUFFIX@' and 'musescore@MUSE_APP_INSTALL_SUFFIX@' [Y/n]?"
+  if [ ! "$interactive" ] || readYes ; then
+    cd bin
+    ln -sf "${name}" "mscore@MUSE_APP_INSTALL_SUFFIX@"
+    ln -sf "${name}" "musescore@MUSE_APP_INSTALL_SUFFIX@"
+  fi
+  if ! which "${name}" >/dev/null; then
+cat <<EOF
+INFORMATION: MuseScore is not in PATH. If you want to run MuseScore from
+the command line you will have to type the full file path, like this:
+
+  ${APPIMAGE}
+
+This does not affect you if you launch MuseScore by clicking on the icon.
+EOF
+  fi
+}
+
+function update() {
+  local interactive="" install=true
+  if [ "$1" == "-i" ]; then
+    interactive="$1"
+    prefix="$2"
+  elif [ "$2" == "-i" ]; then
+    interactive="$2"
+    prefix="$1"
+  fi
+  checkUpdate
+  if [ "${interactive}" ]; then
+    echo -n "Apply the update [Y/n]?"
+    readYes || exit 0
+  fi
+  doUpdate
+  if "${NEW_APPIMAGE}" --version; then
+    echo "New version appears to work properly."
+  else
+    echo "Error: Could not run new version"
+    exit 1
+  fi
+  echo "Removing old version..." # always interactive
+  removeResources "${prefix}"
+  if [ "${interactive}" ]; then
+    echo -n "Install the new version [Y/n]?"
+    readYes || install=""
+  fi
+  if [ "${install}" ]; then
+    "${NEW_APPIMAGE}" install "${interactive}" "${prefix}"
+  fi
+}
+
+function checkUpdate() {
+  echo "Checking for updates..."
+  "${APPDIR}/bin/appimageupdatetool" --check-for-update -- "${APPIMAGE}"
+  local -r result=$?
+  case ${result} in
+    0) echo "No update is available.";;
+    1) echo "An update is available."; return 0;; # don't exit
+    *) echo "Error: Unable to check for updates (status: ${result}).";;
+  esac
+  exit ${result} # don't return
+}
+
+function doUpdate() {
+  echo "Updating to the latest version..."
+  local -r output="$(stdouterr "${APPDIR}/bin/appimageupdatetool" -- "${APPIMAGE}")"
+  local -r result=$?
+  NEW_APPIMAGE="$(sed -n "s|^Update successful. New file created: ||p" <<<"${output}")"
+  case ${result} in
+    0) return 0;; # don't exit
+    *) echo "Error: Unable to apply update (status: ${result}).";;
+  esac
+  exit ${result} # don't return
+}
+
+function removeResources() {
+  [ "$1" == "-i" ] && shift # ignore option. Remove is always interactive
+  if [ "$1" != "" ]; then
+    # User specified a directory
+    prefix="$1"
+    echo -n "Remove MuseScore resources from ${prefix} [Y/n]?"
+  elif [ "${EUID}" == "0" ]; then
+    prefix=/usr/local
+    echo -n "Running as root. Remove MuseScore resources from '$prefix' for all users [Y/n]?"
+  else
+    prefix=~/.local
+    echo -n "Not running as root. Remove MuseScore resources from '$prefix' for current user only [Y/n]?"
+  fi
+  readYes || return 0
+  cd "$prefix" && <"${APPDIR}/install_manifest.txt" xargs rm || return 1
+  actual_location="$(readlink -f "${APPIMAGE}")" # get before deleting symlinks
+  rm "bin/mscore@MUSE_APP_INSTALL_SUFFIX@"
+  rm "bin/musescore@MUSE_APP_INSTALL_SUFFIX@"
+  <"${APPDIR}/install_manifest.txt" xargs "${APPDIR}/bin/rm-empty-dirs"
+  updateCache "${prefix}"
+  echo -ne "Resources removed from ${PWD}.\nRemove MuseScore itself (delete ${actual_location}) [Y/n]?"
+  readYes || { echo -e "MuseScore remains at ${actual_location}.\nYou may delete it yourself or install again at any time." && return 0 ; }
+  rm "${actual_location}" && echo "Successfully removed MuseScore from $prefix"
+  "${APPDIR}/bin/rm-empty-dirs" bin "${APPIMAGE}" "${actual_location}"
+  return 0
+}
+
+function checkDependencies() {
+  export LC_ALL=C # Using `sort` a lot. Order depends on locale so override it.
+  tmp="$(mktemp -d)"
+  cd "${APPDIR}"
+  find . -executable -type f \! -name "lib*.so*" > "${tmp}/exes.txt"
+  find . -name "lib*.so*"    \! -type l          > "${tmp}/libs.txt"
+
+  num_exes=$(<"${tmp}/exes.txt" xargs -n1 basename 2>/dev/null | tee "${tmp}/exes2.txt" | wc -l)
+  num_libs=$(<"${tmp}/libs.txt" xargs -n1 basename 2>/dev/null | tee "${tmp}/libs2.txt" | wc -l)
+
+  echo "AppImage contains ${num_exes} executables and ${num_libs} libraries." >&2
+
+  if [ "$1" == "exes-only" ]; then
+    echo "Checking dependencies for executables..." >&2
+    include_libs=""
+    num_includes="${num_exes}"
+  else
+    echo "Checking dependencies for executables and libraries..." >&2
+    include_libs="${tmp}/libs.txt"
+    num_includes="$((${num_libs}+${num_exes}))"
+  fi
+
+  # Check dependencies against system. See 'checkFile()' function.
+  export -f checkFile && echo 0 > "${tmp}/.counter"
+  cat "${tmp}/exes.txt" "${include_libs}" | xargs -n1 -I '%%%' bash -c \
+    'checkFile "${0}" "${1}" "${2}"' "%%%" "${tmp}" "${num_includes}" \; \
+    | sort | uniq > "${tmp}/deps.txt"
+  echo "Processing results." >&2
+
+  mv "${tmp}/libs2.txt" "${tmp}/libs.txt"
+  mv "${tmp}/exes2.txt" "${tmp}/exes.txt"
+
+  # Have only checked system libraries. Now consider those in package:
+  <"${tmp}/libs.txt" xargs -n1 -I '%%%' sed -i 's|^%%% => not found$|%%% => package|' "${tmp}/deps.txt"
+  <"${tmp}/libs.txt" xargs -n1 -I '%%%' sed -i 's|%%%$|%%% => both|' "${tmp}/deps.txt"
+
+  # Remaining dependencies must be system:
+  sed -ri 's/^(.*[^(not found|package|both)])$/\1 => system/' "${tmp}/deps.txt"
+
+  # TODO: Might want to ignore some indirect dependencies. E.g. MuseScore depends on libX.so,
+  # and libX.so depends on libY.so, but MuseScore doesn't need any features from libY.so.
+
+  num_package=$(prepResult "${tmp}/deps.txt" ' => package$'   "${tmp}/package.txt")
+  num_system=$(prepResult  "${tmp}/deps.txt" ' => system$'    "${tmp}/system.txt")
+  num_both=$(prepResult    "${tmp}/deps.txt" ' => both$'      "${tmp}/both.txt")
+  num_neither=$(prepResult "${tmp}/deps.txt" ' => not found$' "${tmp}/neither.txt")
+
+  # Any libraries included in package that don't appear in 'deps.txt' **might**
+  # not actually be needed. Careful: they might be needed by a plugin!
+  num_extra=$(<"${tmp}/libs.txt" xargs -n1 -I '%%%' sh -c \
+          "grep -q '%%%' \"${tmp}/deps.txt\" || echo '%%%'" \
+           | sort -f | tee "${tmp}/extra.txt" | wc -l)
+
+  cat <(echo "# Package:" && printVersion && printf "\n# System:\n" && uname -srmo) /etc/*release* \
+      <(printf "\n# In package only: ${num_package}\n") "${tmp}/package.txt" \
+      <(printf "\n# System only: ${num_system}\n")      "${tmp}/system.txt" \
+      <(printf "\n# Provided by both: ${num_both}\n")   "${tmp}/both.txt" \
+      <(printf "\n# Provided by neither: ${num_neither}\n") "${tmp}/neither.txt" \
+      <(printf "\n# Extra: (in package but unlinked. Possibly needed by plugins) ${num_extra}\n") "${tmp}/extra.txt" \
+    | less
+
+  rm -r "${tmp}"
+}
+
+# PROBLEM: We want to check dependencies provided by the system, but `ldd` looks
+# in the current directory first so will find the other package libraries first.
+# SOLUTION: Copy lib to tmp and test it there, delete and repeat with next, etc.
+function checkFile() {
+  counter=$(($(cat "$2/.counter")+1)) && echo ${counter} > "$2/.counter"
+  printf "Done ${counter} of $3.\r" >&2
+  cp "$1" "$2"
+  file="$(basename "$1")"
+  LANG=C LD_LIBRARY_PATH="" bin/ldd-recursive -uniq "$2/${file}" 2>/dev/null
+  rm "$2/${file}"
+}
+
+function prepResult() {
+  sed -n "s|$2||p" "$1" | sort -f | tee "$3" | wc -l
+}
+
+function updateCache() {
+  local ret=0
+  update-mime-database "$1/share/mime" ; ret=$(($ret+$?))
+  gtk-update-icon-cache -f -t "$1/share/icons/hicolor" ; ret=$(($ret+$?))
+  update-desktop-database "$1/share/applications"; ret=$(($ret+$?))
+  return $ret
+}
+
+function stdouterr() {
+  # Run command & pipe output to both stdout and stderr, enabling you to
+  # capture the output while simultaneously printing it in the terminal.
+  set -o pipefail # preserve command exit status
+  "$@" 2>&1 | tee >(cat >&2) # duplicate output on stdout and stderr
+}
+
+function errorMsg() {
+cat <<EOF
+$1. Things to check:
+  - do the files and/or directories exist?
+  - do you have the right privileges?
+EOF
+[ "$2" == "fatal" ] && echo "Error: $1. Terminating." && exit 1
+}
+
+main "$@" || exit 1

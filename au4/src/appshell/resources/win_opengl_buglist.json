@@ -1,0 +1,169 @@
+{
+    "name": "Qt built-in GPU driver blacklist",
+    "version": "5.6",
+    "entries": [
+        {
+            "id": 1,
+            "description": "Desktop OpenGL is unreliable on some Intel HD laptops (QTBUG-43263)",
+            "vendor_id": "0x8086",
+            "device_id": [ "0x0A16" ],
+            "os": {
+                "type": "win"
+            },
+            "driver_version": {
+                "op": "<=",
+                "value": "10.18.10.3277"
+            },
+            "features": [
+                "disable_desktopgl"
+            ]
+        },
+        {
+            "id": 2,
+            "description": "Intel Q965/Q963 - GMA 3000 has insufficient support of opengl and directx",
+            "vendor_id": "0x8086",
+            "device_id": [ "0x2992" ],
+            "os": {
+                "type": "win"
+            },
+            "features": [
+                "disable_desktopgl",
+                "disable_angle"
+            ]
+       },
+       {
+           "id": 3,
+           "description": "No OpenGL on Intel G33/G31 (QTBUG-47522)",
+           "vendor_id": "0x8086",
+           "device_id": [ "0x29C2" ],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_desktopgl"
+           ]
+       },
+       {
+           "id": 4,
+          "description": "Intel HD Graphics 3000 crashes when initializing the OpenGL driver (QTBUG-42240)",
+          "vendor_id": "0x8086",
+          "device_id": [ "0x0102", "0x0106", "0x010A", "0x0112", "0x0116", "0x0122", "0x0126" ],
+          "os": {
+              "type": "win"
+          },
+          "features": [
+              "disable_desktopgl"
+          ]
+       },
+       {
+           "id": 5,
+           "description": "Intel GMA 3150 (QTBUG-43243), Mobile Intel 945GM (QTBUG-47435) crash",
+           "vendor_id": "0x8086",
+           "device_id": [ "0xA001", "0xA011", "0x27A0" ],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_desktopgl", "disable_angle"
+           ]
+        },
+        {
+           "id": 6,
+           "description": "Intel(R) HD Graphics 4000 / 5500 cause crashes on orientation changes in fullscreen mode (QTBUG-49541)",
+           "vendor_id": "0x8086",
+           "device_id": [ "0x0166", "0x1616" ],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_rotation"
+           ]
+        },
+        {
+           "id": 7,
+           "description": "AMD FirePro V5900 driver causes crashes in Direct3D on Windows.",
+           "vendor_id": "0x1002",
+           "device_id": ["0x6707"],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_angle"
+           ]
+        },
+        {
+           "id": 8,
+           "description": "Standard VGA: Insufficient support for OpenGL, D3D9 and D3D11",
+           "vendor_id": "0x0000",
+           "device_id": ["0x0000"],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_desktopgl", "disable_d3d11", "disable_d3d9"
+           ]
+        },
+        {
+           "id": 9,
+           "description": "Intel 945 crash (QTBUG-40991)",
+           "vendor_id": "0x8086",
+           "device_id": [ "0x27A2" ],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_desktopgl"
+           ]
+        },
+        {
+          "id": 10,
+          "description": "Intel(R) HD Graphics IronLake (Arrandale) crashes on makeCurrent QTBUG-53888",
+          "vendor_id": "0x8086",
+          "device_id": [ "0x0046" ],
+          "os": {
+              "type": "win"
+          },
+          "features": [
+              "disable_desktopgl"
+          ]
+        },
+        {
+          "id": 11,
+          "description": "Intel driver version 8.15.10.1749 causes GPU process hangs (QTBUG-56360)",
+          "vendor_id": "0x8086",
+          "os": {
+            "type": "win"
+          },
+          "driver_version": {
+            "op": "=",
+            "value": "8.15.10.1749"
+          },
+          "features": [
+            "disable_desktopgl", "disable_d3d11", "disable_d3d9"
+          ]
+        },
+        {
+           "id": 12,
+           "description": "Intel HD Graphics crash in conjunction with shader caches (QTBUG-64697) - disable for all Intel GPUs",
+           "vendor_id": "0x8086",
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_program_cache"
+           ]
+        },
+        {
+           "id": 13,
+           "description": "Disable DesktopGL on Windows with Mobile Intel(R) 4 Series Express Chipset Family graphics card (QTBUG-58772)",
+           "vendor_id": "0x8086",
+           "device_id": [ "0x2A42" ],
+           "os": {
+               "type": "win"
+           },
+           "features": [
+               "disable_desktopgl"
+           ]
+       }
+    ]
+}

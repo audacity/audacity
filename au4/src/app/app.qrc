@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>configs/learn.cfg</file>
+    </qresource>
+</RCC>
