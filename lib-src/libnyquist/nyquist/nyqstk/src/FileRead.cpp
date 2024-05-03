@@ -171,7 +171,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   while ( strncmp(id, "fmt ", 4) ) {
     if ( fread(&chunkSize, 4, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-    swap32((unsigned char *)&chunkSize);
+    byteSwap32((unsigned char *)&chunkSize);
 #endif
     if ( fseek(fd_, chunkSize, SEEK_CUR) == -1 ) goto error;
     if ( fread(&id, 4, 1, fd_) != 1 ) goto error;
@@ -182,8 +182,8 @@ bool FileRead :: getWavInfo( const char *fileName )
   if ( fread(&chunkSize, 4, 1, fd_) != 1 ) goto error; // Read fmt chunk size.
   if ( fread(&format_tag, 2, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-  swap16((unsigned char *)&format_tag);
-  swap32((unsigned char *)&chunkSize);
+  byteSwap16((unsigned char *)&format_tag);
+  byteSwap32((unsigned char *)&chunkSize);
 #endif
   if ( format_tag == 0xFFFE ) { // WAVE_FORMAT_EXTENSIBLE
     dataOffset_ = ftell(fd_);
@@ -191,13 +191,13 @@ bool FileRead :: getWavInfo( const char *fileName )
     unsigned short extSize;
     if ( fread(&extSize, 2, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-    swap16((unsigned char *)&extSize);
+    byteSwap16((unsigned char *)&extSize);
 #endif
     if ( extSize == 0 ) goto error;
     if ( fseek(fd_, 6, SEEK_CUR) == -1 ) goto error;
     if ( fread(&format_tag, 2, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-    swap16((unsigned char *)&format_tag);
+    byteSwap16((unsigned char *)&format_tag);
 #endif
     if ( fseek(fd_, dataOffset_, SEEK_SET) == -1 ) goto error;
   }
@@ -210,7 +210,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   SINT16 temp;
   if ( fread(&temp, 2, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-  swap16((unsigned char *)&temp);
+  byteSwap16((unsigned char *)&temp);
 #endif
   channels_ = (unsigned int ) temp;
 
@@ -218,7 +218,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   SINT32 srate;
   if ( fread(&srate, 4, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&srate);
+  byteSwap32((unsigned char *)&srate);
 #endif
   fileRate_ = (StkFloat) srate;
 
@@ -227,7 +227,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   if ( fseek(fd_, 6, SEEK_CUR) == -1 ) goto error;   // Locate bits_per_sample info.
   if ( fread(&temp, 2, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-  swap16((unsigned char *)&temp);
+  byteSwap16((unsigned char *)&temp);
 #endif
   if ( format_tag == 1 ) {
     if (temp == 8)
@@ -257,7 +257,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   while ( strncmp(id, "data", 4) ) {
     if ( fread(&chunkSize, 4, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-    swap32((unsigned char *)&chunkSize);
+    byteSwap32((unsigned char *)&chunkSize);
 #endif
     chunkSize += chunkSize % 2; // chunk sizes must be even
     if ( fseek(fd_, chunkSize, SEEK_CUR) == -1 ) goto error;
@@ -268,7 +268,7 @@ bool FileRead :: getWavInfo( const char *fileName )
   SINT32 bytes;
   if ( fread(&bytes, 4, 1, fd_) != 1 ) goto error;
 #ifndef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&bytes);
+  byteSwap32((unsigned char *)&bytes);
 #endif
   fileSize_ = 8 * bytes / temp / channels_;  // sample frames
 
@@ -293,7 +293,7 @@ bool FileRead :: getSndInfo( const char *fileName )
   if ( fseek(fd_, 12, SEEK_SET) == -1 ) goto error;   // Locate format
   if ( fread(&format, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-    swap32((unsigned char *)&format);
+    byteSwap32((unsigned char *)&format);
 #endif
   if (format == 2) dataType_ = STK_SINT8;
   else if (format == 3) dataType_ = STK_SINT16;
@@ -310,7 +310,7 @@ bool FileRead :: getSndInfo( const char *fileName )
   UINT32 srate;
   if ( fread(&srate, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&srate);
+  byteSwap32((unsigned char *)&srate);
 #endif
   fileRate_ = (StkFloat) srate;
 
@@ -318,20 +318,20 @@ bool FileRead :: getSndInfo( const char *fileName )
   UINT32 chans;
   if ( fread(&chans, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&chans);
+  byteSwap32((unsigned char *)&chans);
 #endif
   channels_ = chans;
 
   if ( fseek(fd_, 4, SEEK_SET) == -1 ) goto error;
   if ( fread(&dataOffset_, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&dataOffset_);
+  byteSwap32((unsigned char *)&dataOffset_);
 #endif
 
   // Get length of data from the header.
   if ( fread(&fileSize_, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&fileSize_);
+  byteSwap32((unsigned char *)&fileSize_);
 #endif
   // Convert to sample frames.
   if ( dataType_ == STK_SINT8 )
@@ -373,7 +373,7 @@ bool FileRead :: getAifInfo( const char *fileName )
   while ( strncmp(id, "COMM", 4) ) {
     if ( fread(&chunkSize, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-    swap32((unsigned char *)&chunkSize);
+    byteSwap32((unsigned char *)&chunkSize);
 #endif
     chunkSize += chunkSize % 2; // chunk sizes must be even
     if ( fseek(fd_, chunkSize, SEEK_CUR) == -1 ) goto error;
@@ -385,7 +385,7 @@ bool FileRead :: getAifInfo( const char *fileName )
   if ( fseek(fd_, 4, SEEK_CUR) == -1 ) goto error; // Jump over chunk size
   if ( fread(&temp, 2, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap16((unsigned char *)&temp);
+  byteSwap16((unsigned char *)&temp);
 #endif
   channels_ = temp;
 
@@ -393,14 +393,14 @@ bool FileRead :: getAifInfo( const char *fileName )
   SINT32 frames;
   if ( fread(&frames, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&frames);
+  byteSwap32((unsigned char *)&frames);
 #endif
   fileSize_ = frames; // sample frames
 
   // Read the number of bits per sample.
   if ( fread(&temp, 2, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-  swap16((unsigned char *)&temp);
+  byteSwap16((unsigned char *)&temp);
 #endif
 
   // Get file sample rate from the header.  For AIFF files, this value
@@ -413,7 +413,7 @@ bool FileRead :: getAifInfo( const char *fileName )
   if ( fread(&srate, 10, 1, fd_) != 1 ) goto error;
   mantissa = (unsigned long) *(unsigned long *)(srate+2);
 #ifdef __LITTLE_ENDIAN__
-  swap32((unsigned char *)&mantissa);
+  byteSwap32((unsigned char *)&mantissa);
 #endif
   exp = 30 - *(srate+1);
   last = 0;
@@ -456,7 +456,7 @@ bool FileRead :: getAifInfo( const char *fileName )
   while ( strncmp(id, "SSND", 4) ) {
     if ( fread(&chunkSize, 4, 1, fd_) != 1 ) goto error;
 #ifdef __LITTLE_ENDIAN__
-    swap32((unsigned char *)&chunkSize);
+    byteSwap32((unsigned char *)&chunkSize);
 #endif
     chunkSize += chunkSize % 2; // chunk sizes must be even
     if ( fseek(fd_, chunkSize, SEEK_CUR) == -1 ) goto error;
@@ -514,7 +514,7 @@ bool FileRead :: getMatInfo( const char *fileName )
   // Check the data element type
   SINT32 datatype;
   if ( fread(&datatype, 4, 1, fd_) != 1 ) goto error;
-  if ( byteswap_ ) swap32((unsigned char *)&datatype);
+  if ( byteswap_ ) byteSwap32((unsigned char *)&datatype);
   if (datatype != 14) {
     errorString_ << "FileRead: The file does not contain a single Matlab array (or matrix) data element.";
     return false;
@@ -525,10 +525,10 @@ bool FileRead :: getMatInfo( const char *fileName )
   SINT32 size;
   if ( fseek(fd_, 168, SEEK_SET) == -1 ) goto error;
   if ( fread(&tmp, 4, 1, fd_) != 1 ) goto error;
-  if (byteswap_) swap32((unsigned char *)&tmp);
+  if (byteswap_) byteSwap32((unsigned char *)&tmp);
   if (tmp == 1) {  // array name > 4 characters
     if ( fread(&tmp, 4, 1, fd_) != 1 ) goto error;  // get array name length
-    if (byteswap_) swap32((unsigned char *)&tmp);
+    if (byteswap_) byteSwap32((unsigned char *)&tmp);
     size = (SINT32) ceil((float)tmp / 8);
     if ( fseek(fd_, size*8, SEEK_CUR) == -1 ) goto error;  // jump over array name
   }
@@ -536,7 +536,7 @@ bool FileRead :: getMatInfo( const char *fileName )
     if ( fseek(fd_, 4, SEEK_CUR) == -1 ) goto error;
   }
   if ( fread(&tmp, 4, 1, fd_) != 1 ) goto error;
-  if (byteswap_) swap32((unsigned char *)&tmp);
+  if (byteswap_) byteSwap32((unsigned char *)&tmp);
   if ( tmp == 1 ) dataType_ = STK_SINT8;
   else if ( tmp == 3 ) dataType_ = STK_SINT16;
   else if ( tmp == 5 ) dataType_ = STK_SINT32;
@@ -551,12 +551,12 @@ bool FileRead :: getMatInfo( const char *fileName )
   SINT32 rows;
   if ( fseek(fd_, 160, SEEK_SET) == -1 ) goto error;
   if ( fread(&rows, 4, 1, fd_) != 1 ) goto error;
-  if (byteswap_) swap32((unsigned char *)&rows);
+  if (byteswap_) byteSwap32((unsigned char *)&rows);
 
   // Get number of columns from the header.
   SINT32 columns;
   if ( fread(&columns, 4, 1, fd_) != 1 ) goto error;
-  if (byteswap_) swap32((unsigned char *)&columns);
+  if (byteswap_) byteSwap32((unsigned char *)&columns);
 
   // Assume channels = smaller of rows or columns.
   if (rows < columns) {
@@ -572,7 +572,7 @@ bool FileRead :: getMatInfo( const char *fileName )
   SINT32 headsize;
   if ( fseek(fd_, 132, SEEK_SET) == -1 ) goto error;
   if ( fread(&headsize, 4, 1, fd_) != 1 ) goto error; // file size from 132nd byte
-  if (byteswap_) swap32((unsigned char *)&headsize);
+  if (byteswap_) byteSwap32((unsigned char *)&headsize);
   headsize -= fileSize_ * 8 * channels_;
   if ( fseek(fd_, headsize, SEEK_CUR) == -1 ) goto error;
   dataOffset_ = ftell(fd_);
@@ -624,7 +624,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     if ( byteswap_ ) {
       SINT16 *ptr = buf;
       for ( i=nSamples-1; i>=0; i-- )
-        swap16( (unsigned char *) ptr++ );
+        byteSwap16( (unsigned char *) ptr++ );
     }
     if ( doNormalize ) {
       StkFloat gain = 1.0 / 32768.0;
@@ -643,7 +643,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     if ( byteswap_ ) {
       SINT32 *ptr = buf;
       for ( i=nSamples-1; i>=0; i-- )
-        swap32( (unsigned char *) ptr++ );
+        byteSwap32( (unsigned char *) ptr++ );
     }
     if ( doNormalize ) {
       StkFloat gain = 1.0 / 2147483648.0;
@@ -662,7 +662,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     if ( byteswap_ ) {
       FLOAT32 *ptr = buf;
       for ( i=nSamples-1; i>=0; i-- )
-        swap32( (unsigned char *) ptr++ );
+        byteSwap32( (unsigned char *) ptr++ );
     }
     for ( i=nSamples-1; i>=0; i-- )
       buffer[i] = buf[i];
@@ -674,7 +674,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
     if ( byteswap_ ) {
       FLOAT64 *ptr = buf;
       for ( i=nSamples-1; i>=0; i-- )
-        swap64( (unsigned char *) ptr++ );
+        byteSwap64( (unsigned char *) ptr++ );
     }
     for ( i=nSamples-1; i>=0; i-- )
       buffer[i] = buf[i];
@@ -718,7 +718,7 @@ void FileRead :: read( StkFrames& buffer, unsigned long startFrame, bool doNorma
       if ( fread( &buf, 3, 1, fd_ ) != 1 ) goto error;
       buf >>= 8;
       if ( byteswap_ )
-        swap32( (unsigned char *) &buf );
+        byteSwap32( (unsigned char *) &buf );
       if ( doNormalize )
         buffer[i] = buf * gain;
       else
