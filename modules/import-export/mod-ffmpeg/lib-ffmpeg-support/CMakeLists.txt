@@ -113,7 +113,6 @@ if (${_OPT}use_ffmpeg)
    )
 
    set( LIBRARIES
-      PRIVATE
       lib-files
       lib-math
    )

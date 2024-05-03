@@ -70,6 +70,7 @@ set( LIBRARIES
    lib-fft
    lib-concurrency
    lib-sqlite-helpers
+   lib-preference-pages
 )
 
 if ( ${_OPT}use_lv2 )

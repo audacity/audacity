@@ -16,7 +16,7 @@
 #include <wx/radiobut.h>
 #include <wx/textctrl.h>
 
-#include "prefs/PrefsPanel.h"
+#include "PrefsPanel.h"
 
 #include "CloudLibrarySettings.h"
 #include "CloudModuleSettings.h"
