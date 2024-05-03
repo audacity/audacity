@@ -162,13 +162,13 @@ public:
   static void setRawwavePath(std::string path);
 
   //! Static method which byte-swaps a 16-bit data type.
-  static void swap16(unsigned char *ptr);
+  static void byteSwap16(unsigned char *ptr);
 
   //! Static method which byte-swaps a 32-bit data type.
-  static void swap32(unsigned char *ptr);
+  static void byteSwap32(unsigned char *ptr);
 
   //! Static method which byte-swaps a 64-bit data type.
-  static void swap64(unsigned char *ptr);
+  static void byteSwap64(unsigned char *ptr);
 
   //! Static cross-platform method to sleep for a number of milliseconds.
   static void sleep(unsigned long milliseconds);
