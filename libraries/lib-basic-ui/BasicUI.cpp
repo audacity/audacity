@@ -12,9 +12,11 @@ Paul Licameli
 #include <mutex>
 #include <vector>
 
-#define HAS_XDG_OPEN_HELPER (defined(__linux__) && !defined __ANDROID__) || defined (__FreeBSD__) || defined (__NetBSD__) || defined(__OpenBSD__)
+#if (defined(__linux__) && !defined(__ANDROID__)) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__)
+#define HAS_XDG_OPEN_HELPER
+#endif
 
-#if HAS_XDG_OPEN_HELPER
+#if defined(HAS_XDG_OPEN_HELPER)
 
 #include <sys/types.h>
 #include <sys/wait.h>
@@ -243,7 +245,7 @@ void Yield()
 
 bool OpenInDefaultBrowser(const wxString &url)
 {
-#if HAS_XDG_OPEN_HELPER
+#if defined(HAS_XDG_OPEN_HELPER)
    if (RunXDGOpen(url.ToStdString()))
       return true;
 #endif
