@@ -61,7 +61,7 @@ GetProjectSyncInfo(const ProjectSyncInfoInput& in)
       bpm = in.tags->bpm;
       usedMethod = TempoObtainedFrom::Header;
    }
-   else if (bpm = GetBpmFromFilename(in.filename))
+   else if ((bpm = GetBpmFromFilename(in.filename)))
       usedMethod = TempoObtainedFrom::Title;
    else if (
       const auto meter = GetMusicalMeterFromSignal(
