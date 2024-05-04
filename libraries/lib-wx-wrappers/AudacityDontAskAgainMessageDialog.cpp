@@ -54,7 +54,7 @@ AudacityDontAskAgainMessageDialog::AudacityDontAskAgainMessageDialog(
 
    SetSizerAndFit(mainSizer);
    // Manually implement wxCENTRE flag behavior
-   if (style | wxCENTRE != 0)
+   if ((style | wxCENTRE) != 0)
       CentreOnParent();
 
    SetEscapeId(wxID_NO);
