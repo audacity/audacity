@@ -29,6 +29,7 @@
 #include "actions/iactionsdispatcher.h"
 #include "iinteractive.h"
 #include "cloud/musescorecom/imusescorecomservice.h"
+#include "cloud/audiocom/iaudiocomservice.h"
 
 class QString;
 
@@ -40,7 +41,7 @@ class ProjectsPageModel : public QObject
     muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
+    muse::Inject<muse::cloud::IAudioComService> audioComService;
 
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)
