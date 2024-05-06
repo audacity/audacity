@@ -284,7 +284,12 @@ public:
       }
    }
 
-   void MarkChanged() noexcept override { }
+   void MarkChanged() noexcept override
+   {
+      //Triggered when any part of the waveform has changed
+      //TODO: invalidate parts of the cache that intersect changes
+      mChannelCaches.clear();
+   }
 
    void Invalidate() override
    {
