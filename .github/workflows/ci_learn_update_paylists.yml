@@ -1,0 +1,60 @@
+name: Collect playlists for Home->Learn page
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode: stable, testing'
+        required: true
+        default: 'testing'
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  update-get-started-playlist:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Update info about the get started playlist in s3
+        run: |
+          S3_URL="s3://extensions.musescore.org/4.0/learn/started_playlist.json"
+          if [ ${{ github.event.inputs.mode }} == "testing" ]; then
+            S3_URL="s3://extensions.musescore.org/4.0/learn/started_playlist.test.json"
+          fi
+
+          sudo bash ./buildscripts/ci/learn/make_playlists_info_file.sh \
+            --youtube_api_key ${{ secrets.YOUTUBE_API_KEY }} \
+            --youtube_playlist_id 'PLTYuWi2LmaPEhcwZJwFZqoyQ2xXx_maPa'
+
+          sudo bash ./buildscripts/ci/learn/push_file_to_s3.sh \
+            --s3_key ${{ secrets.S3_KEY }} \
+            --s3_secret ${{ secrets.S3_SECRET }} \
+            --s3_url ${S3_URL} \
+            --file_name "playlist.json"
+
+  update-advanced-playlist:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+
+      - name: Update info about the advanced playlist in s3
+        run: |
+          S3_URL="s3://extensions.musescore.org/4.0/learn/advanced_playlist.json"
+          if [ ${{ github.event.inputs.mode }} == "testing" ]; then
+            S3_URL="s3://extensions.musescore.org/4.0/learn/advanced_playlist.test.json"
+          fi
+
+          sudo bash ./buildscripts/ci/learn/make_playlists_info_file.sh \
+            --youtube_api_key ${{ secrets.YOUTUBE_API_KEY }} \
+            --youtube_playlist_id 'PL24C760637A625BB6'
+
+          sudo bash ./buildscripts/ci/learn/push_file_to_s3.sh \
+            --s3_key ${{ secrets.S3_KEY }} \
+            --s3_secret ${{ secrets.S3_SECRET }} \
+            --s3_url ${S3_URL} \
+            --file_name "playlist.json"
