@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-only
-# MuseScore-Studio-CLA-applies
+# Audacity-CLA-applies
 #
-# MuseScore Studio
-# Music Composition & Notation
+# Audacity
+# A Digital Audio Editor
 #
-# Copyright (C) 2021 MuseScore Limited
+# Copyright (C) 2024 Audacity Limited
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License version 3 as
@@ -38,7 +38,7 @@ while [[ "$#" -gt 0 ]]; do
     shift
 done
 
-sudo bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${S3_KEY} --s3_secret ${S3_SECRET}
+sudo bash ./au4/buildscripts/ci/tools/s3_install.sh --s3_key ${S3_KEY} --s3_secret ${S3_SECRET}
 
 echo "=== Publish to S3 ==="
 
