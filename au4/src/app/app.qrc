@@ -1,5 +1,9 @@
 <RCC>
     <qresource prefix="/">
         <file>configs/learn.cfg</file>
+        <file>configs/light.cfg</file>
+        <file>configs/dark.cfg</file>
+        <file>configs/high_contrast_black.cfg</file>
+        <file>configs/high_contrast_white.cfg</file>
     </qresource>
 </RCC>
