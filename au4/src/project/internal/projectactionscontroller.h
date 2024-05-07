@@ -50,6 +50,7 @@ private:
 
     void newProject();
     void openProject(const muse::actions::ActionData& args);
+    void importProject();
     muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     //! TODO AU4
@@ -62,6 +63,13 @@ private:
 
     RecentFile makeRecentFile(IAudacityProjectPtr project);
     void clearRecentProjects();
+
+    void exportAudio();
+    void exportLabels();
+    void exportMIDI();
+
+    void undo();
+    void redo();
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 

@@ -42,7 +42,7 @@ Q_MOC_INCLUDE(< QWindow >)
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
-// #include "project/irecentfilescontroller.h"
+#include "project/irecentfilescontroller.h"
 // #include "extensions/iextensionsprovider.h"
 // #include "update/iupdateconfiguration.h"
 
@@ -62,7 +62,7 @@ class AppMenuModel : public muse::uicomponents::AbstractMenuModel
 
 //! TODO AU4
     // INJECT(workspace::IWorkspaceManager, workspacesManager)
-    // INJECT(project::IRecentFilesController, recentFilesController)
+    INJECT(au::project::IRecentFilesController, recentFilesController)
     // INJECT(extensions::IExtensionsProvider, extensionsProvider)
     // INJECT(update::IUpdateConfiguration, updateConfiguration)
 
@@ -80,26 +80,34 @@ private:
 
     muse::uicomponents::MenuItem* makeFileMenu();
     muse::uicomponents::MenuItem* makeEditMenu();
+    muse::uicomponents::MenuItem* makeSelectMenu();
     muse::uicomponents::MenuItem* makeViewMenu();
-    muse::uicomponents::MenuItem* makeAddMenu();
-    muse::uicomponents::MenuItem* makeFormatMenu();
-    muse::uicomponents::MenuItem* makeToolsMenu();
-    muse::uicomponents::MenuItem* makePluginsMenu();
+    muse::uicomponents::MenuItem* makeRecordMenu();
+    muse::uicomponents::MenuItem* makeTracksMenu();
+    muse::uicomponents::MenuItem* makeGenerateMenu();
+    muse::uicomponents::MenuItem* makeEffectMenu();
+    muse::uicomponents::MenuItem* makeAnalyzeMenu();
     muse::uicomponents::MenuItemList makePluginsMenuSubitems();
+    muse::uicomponents::MenuItem* makeToolsMenu();
+    muse::uicomponents::MenuItem* makeExtraMenu();
     muse::uicomponents::MenuItem* makeHelpMenu();
-    muse::uicomponents::MenuItem* makeDiagnosticMenu();
+    // muse::uicomponents::MenuItem* makeDiagnosticMenu();
 
-    muse::uicomponents::MenuItemList makeRecentScoresItems();
+    muse::uicomponents::MenuItemList makeRecentProjectsItems();
     muse::uicomponents::MenuItemList appendClearRecentSection(const muse::uicomponents::MenuItemList& recentScores);
 
-    muse::uicomponents::MenuItemList makeNotesItems();
-    muse::uicomponents::MenuItemList makeIntervalsItems();
-    muse::uicomponents::MenuItemList makeTupletsItems();
-    muse::uicomponents::MenuItemList makeMeasuresItems();
+    muse::uicomponents::MenuItemList makeExportItems();
+    muse::uicomponents::MenuItemList makeClipItems();
+    muse::uicomponents::MenuItemList makeAudioActionsItems();
+    muse::uicomponents::MenuItemList makeLoopingItems();
+    muse::uicomponents::MenuItemList makeZoomItems();
+    muse::uicomponents::MenuItemList makeSkipToItems();
+    muse::uicomponents::MenuItemList makeAlignItems();
+    muse::uicomponents::MenuItemList makeSortItems();
+    muse::uicomponents::MenuItemList makeVolumeAndCompressionItems();
+    muse::uicomponents::MenuItemList makeMacrosItems();
+    muse::uicomponents::MenuItemList makeDiagnosticsItems();
     muse::uicomponents::MenuItemList makeFramesItems();
-    muse::uicomponents::MenuItemList makeTextItems();
-    muse::uicomponents::MenuItemList makeLinesItems();
-    muse::uicomponents::MenuItemList makeToolbarsItems();
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makePluginsItems();
