@@ -278,8 +278,8 @@ bool WaveDataCache::InitializeElement(
 
    int64_t firstSample = key.FirstSample;
 
-   const size_t samplesPerColumn =
-      static_cast<size_t>(std::max(0.0, GetScaledSampleRate() / key.PixelsPerSecond));
+   const auto samplesPerColumn =
+      std::max(0.0, GetScaledSampleRate() / key.PixelsPerSecond);
 
    const size_t elementSamplesCount =
       samplesPerColumn * WaveDataCache::CacheElementWidth;
@@ -299,7 +299,9 @@ bool WaveDataCache::InitializeElement(
    for (; columnIndex < WaveDataCache::CacheElementWidth; ++columnIndex)
    {
       WaveCacheSampleBlock::Summary summary;
-      size_t samplesLeft = samplesPerColumn;
+
+      auto samplesLeft =
+         static_cast<size_t>(std::round(samplesPerColumn * (columnIndex + 1)) - std::round(samplesPerColumn * columnIndex));
 
       while (samplesLeft != 0)
       {
@@ -308,6 +310,8 @@ bool WaveDataCache::InitializeElement(
                break;
 
          summary = mCachedBlock.GetSummary(firstSample, samplesLeft, summary);
+         if(summary.SamplesCount == 0)
+            break;
 
          samplesLeft -= summary.SamplesCount;
          firstSample += summary.SamplesCount;
