@@ -4,11 +4,25 @@
 #include "TrackAdapter.h"
 #include "WaveTrack.h"
 
-TrackListModel::TrackListModel(std::shared_ptr<TrackList> trackList, QObject* parent)
+TracksListClipsModel::TracksListClipsModel(QObject* parent)
     : QAbstractListModel(parent)
-    , mTrackList(std::move(trackList))
 {
-    mTrackListSubscription = mTrackList->Subscribe(*this, &TrackListModel::OnTrackListEvent);
+}
+
+void TracksListClipsModel::load()
+{
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj) {
+        return;
+    }
+
+    beginResetModel();
+
+    AudacityProject* project = reinterpret_cast<AudacityProject*>(prj->au3ProjectPtr());
+
+    mTrackList = TrackList::Get(*project).shared_from_this();
+
+    mTrackListSubscription = mTrackList->Subscribe(*this, &TracksListClipsModel::OnTrackListEvent);
 
     for (auto track : mTrackList->Any<>()) {
         auto adapter = track->TypeSwitch<TrackAdapterBase*>([this](auto& track)
@@ -17,14 +31,16 @@ TrackListModel::TrackListModel(std::shared_ptr<TrackList> trackList, QObject* pa
         });
         mTrackAdapters.push_back(adapter);
     }
+
+    endResetModel();
 }
 
-int TrackListModel::rowCount(const QModelIndex& parent) const
+int TracksListClipsModel::rowCount(const QModelIndex& parent) const
 {
     return static_cast<int>(mTrackAdapters.size());
 }
 
-QVariant TrackListModel::data(const QModelIndex& index, int role) const
+QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
 {
     if (index.row() >= 0 && index.row() < mTrackAdapters.size()) {
         auto adapter = mTrackAdapters[index.row()];
@@ -39,7 +55,7 @@ QVariant TrackListModel::data(const QModelIndex& index, int role) const
     return {};
 }
 
-QHash<int, QByteArray> TrackListModel::roleNames() const
+QHash<int, QByteArray> TracksListClipsModel::roleNames() const
 {
     static QHash<int, QByteArray> mapping
     {
@@ -49,7 +65,7 @@ QHash<int, QByteArray> TrackListModel::roleNames() const
     return mapping;
 }
 
-void TrackListModel::move(int from, int to)
+void TracksListClipsModel::move(int from, int to)
 {
     auto track = mTrackAdapters[from]->GetTrack();
 
@@ -66,7 +82,7 @@ void TrackListModel::move(int from, int to)
     }
 }
 
-void TrackListModel::OnTrackListEvent(TrackListEvent event)
+void TracksListClipsModel::OnTrackListEvent(TrackListEvent event)
 {
     switch (event.mType) {
     case TrackListEvent::SELECTION_CHANGE:
@@ -115,7 +131,7 @@ void TrackListModel::OnTrackListEvent(TrackListEvent event)
     }
 }
 
-void TrackListModel::HandleTrackAdded(Track& track)
+void TracksListClipsModel::HandleTrackAdded(Track& track)
 {
     auto it = mTrackList->Find(&track);
     if (it == mTrackList->end()) {
@@ -138,7 +154,7 @@ void TrackListModel::HandleTrackAdded(Track& track)
     endInsertRows();
 }
 
-void TrackListModel::HandleTrackRemoved(Track& track)
+void TracksListClipsModel::HandleTrackRemoved(Track& track)
 {
     int row = 0;
     for (auto adapterIt = mTrackAdapters.begin(); adapterIt != mTrackAdapters.end(); ++adapterIt) {

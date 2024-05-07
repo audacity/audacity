@@ -15,13 +15,6 @@ class TimelineContext : public QQuickItem
 
     Q_PROPERTY(int tracksOriginOffset READ tracksOriginOffset WRITE setTracksOriginOffset NOTIFY tracksOriginOffsetChanged)
 
-    double mOffset {}
-    double mZoom { 44100.0 / 512.0 };
-    double mSelecitonStartTime{};
-    double mSelectionEndTime{};
-
-    int mTracksOriginOffset{};
-
 public:
 
     TimelineContext(QQuickItem* parent = nullptr);
@@ -52,4 +45,13 @@ signals:
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
     void tracksOriginOffsetChanged();
+
+private:
+
+    double mOffset {};
+    double mZoom { 44100.0 / 512.0 };
+    double mSelecitonStartTime{};
+    double mSelectionEndTime{};
+
+    int mTracksOriginOffset{};
 };

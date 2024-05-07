@@ -2,7 +2,7 @@
 
 #include <QRect>
 
-#include "TimelineViewItem.h"
+#include "../TimelineViewItem.h"
 #include "WaveTrack.h"
 
 class ZoomInfo;

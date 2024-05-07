@@ -1,6 +1,6 @@
 #pragma once
 
-#include "TimelineViewUIHandle.h"
+#include "../TimelineViewUIHandle.h"
 
 class TimeSelectionHandle : public TimelineViewUIHandle
 {

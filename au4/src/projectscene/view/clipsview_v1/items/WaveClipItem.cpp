@@ -18,17 +18,20 @@
 #include "FrameStatistics.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "WaveformScale.h"
+#include "../WaveformScale.h"
 #include "graphics/Color.h"
 
 #include "waveform/WaveBitmapCache.h"
 #include "waveform/WaveDataCache.h"
 
-#include "TimelineContext.h"
-#include "TimelineViewUIHandle.h"
-#include "ProjectQMLEnvironment.h"
-#include "../../ui/Ui.h"
-#include "handles/WaveClipShiftHandle.h"
+#include "../TimelineContext.h"
+#include "../TimelineViewUIHandle.h"
+// #include "ProjectQMLEnvironment.h"
+// #include "../../ui/Ui.h"
+#include "../handles/WaveClipShiftHandle.h"
+
+#include "../converter.h"
+#include "../ui.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -1078,10 +1081,8 @@ void WaveClipItem::Paint(QQmlEngine& engine,
                               const TimelineContext& trackPanel)
 {
    assert(mInterval);
-   auto project = audacity::ProjectQMLEnvironment::GetProject(engine);
-   if(project == nullptr)
-      return;
-   auto& ui = audacity::Ui::Get(*project);
+
+   audacity::Ui ui;
 
    auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 

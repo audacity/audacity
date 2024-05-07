@@ -1,5 +1,6 @@
 #pragma once
-#include "TimelineViewUIHandle.h"
+
+#include "../TimelineViewUIHandle.h"
 
 class WaveClipShiftHandle : public TimelineViewUIHandle
 {

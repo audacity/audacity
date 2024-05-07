@@ -13,11 +13,6 @@ class WaveTrackView : public TimelineView
 
     Q_PROPERTY(WaveTrackAdapter* track READ getTrack WRITE setTrack)
 
-    WaveTrackAdapter* mTrack {}
-    Observer::Subscription mTrackEventsSubscription;
-
-    std::unordered_map<const WaveClip*, std::unique_ptr<WaveClipItem>> mClipItems;
-    std::vector<std::unique_ptr<WaveClipItem>> mClipItemsPool;
 public:
     WaveTrackView(QQuickItem* parent = nullptr);
     ~WaveTrackView() override;
@@ -35,4 +30,11 @@ private slots:
 
     void OnMuteChanged(bool mute);
     void OnSoloChanged(bool solo);
+
+private:
+    WaveTrackAdapter* mTrack {};
+    Observer::Subscription mTrackEventsSubscription;
+
+    std::unordered_map<const WaveClip*, std::unique_ptr<WaveClipItem>> mClipItems;
+    std::vector<std::unique_ptr<WaveClipItem>> mClipItemsPool;
 };

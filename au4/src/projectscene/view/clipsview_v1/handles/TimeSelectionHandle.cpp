@@ -2,7 +2,7 @@
 
 #include <QCursor>
 
-#include "TimelineView.h"
+#include "../TimelineView.h"
 
 TimeSelectionHandle::~TimeSelectionHandle() = default;
 

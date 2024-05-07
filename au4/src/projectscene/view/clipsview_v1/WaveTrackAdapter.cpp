@@ -3,6 +3,8 @@
 #include "CodeConversions.h"
 #include "WaveTrack.h"
 
+#include "converter.h"
+
 WaveTrackAdapter::WaveTrackAdapter(std::shared_ptr<WaveTrack> waveTrack, QObject* parent)
    : TrackAdapterBase(parent), mWaveTrack(std::move(waveTrack))
 {

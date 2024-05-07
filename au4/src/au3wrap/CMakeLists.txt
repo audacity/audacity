@@ -91,6 +91,9 @@ set(AU3_DEF
     -DSCREEN_GEOMETRY_API=
     -DSQLITE_HELPERS_API=
 
+    -DGRAPHICS_API=
+    -DWAVE_TRACK_PAINT_API=
+
     -DEXPERIMENTAL_SPECTRAL_EDITING
 )
 
@@ -145,6 +148,11 @@ set(AU3_INCLUDE
 
     # compile after update 04.26
     ${AU3_LIBRARIES}/lib-sqlite-helpers
+
+    # track paint
+    ${AU3_LIBRARIES}/lib-time-frequency-selection
+    ${AU3_LIBRARIES}/lib-graphics
+    ${AU3_LIBRARIES}/lib-wave-track-paint
 )
 
 set(AU3_ADD_AS_SRC ON)
@@ -443,6 +451,24 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-screen-geometry/ZoomInfo.h
 
     # end dependencies of lib-audio-io
+
+    # track paint
+    ${AU3_LIBRARIES}/lib-wave-track-paint/GraphicsDataCache.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/GraphicsDataCache.h
+    ${AU3_LIBRARIES}/lib-wave-track-paint/PixelSampleMapper.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/PixelSampleMapper.h
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveBitmapCache.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveBitmapCache.h
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveDataCache.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveDataCache.h
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveData.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WaveData.h
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.cpp
+    ${AU3_LIBRARIES}/lib-wave-track-paint/waveform/WavePaintParameters.h
+
+    ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.cpp
+    ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.h
+
 
     # Requires wxApp, so we won't use it
     # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp

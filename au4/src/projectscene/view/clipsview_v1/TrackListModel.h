@@ -8,19 +8,17 @@
 #include "Observer.h"
 #include "TrackAdapter.h"
 
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
+
 class TrackList;
 class TrackListEvent;
 
-class TrackListModel : public QAbstractListModel
+class TracksListClipsModel : public QAbstractListModel
 {
     Q_OBJECT
-    QML_ELEMENT
 
-    using TrackAdapterList = std::vector<TrackAdapterBase*>;
-
-    std::shared_ptr<TrackList> mTrackList;
-    Observer::Subscription mTrackListSubscription;
-    TrackAdapterList mTrackAdapters;
+    muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
 
@@ -30,15 +28,14 @@ public:
         TrackRole
     };
 
-    TrackListModel(std::shared_ptr<TrackList> trackList, QObject* parent = nullptr);
+    TracksListClipsModel(QObject* parent = nullptr);
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
-
     QHash<int, QByteArray> roleNames() const override;
 
-    Q_INVOKABLE
-    void move(int from, int to);
+    Q_INVOKABLE void load();
+    Q_INVOKABLE void move(int from, int to);
 
 private:
 
@@ -46,4 +43,10 @@ private:
 
     void HandleTrackAdded(Track& track);
     void HandleTrackRemoved(Track& track);
+
+    using TrackAdapterList = std::vector<TrackAdapterBase*>;
+
+    std::shared_ptr<TrackList> mTrackList;
+    Observer::Subscription mTrackListSubscription;
+    TrackAdapterList mTrackAdapters;
 };

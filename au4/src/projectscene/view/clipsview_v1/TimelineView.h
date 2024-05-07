@@ -13,14 +13,6 @@ class TimelineView : public QQuickPaintedItem
 
     Q_PROPERTY(TimelineContext* context READ GetContext WRITE setTimelineContext FINAL)
 
-    bool mNeedsCacheUpdate { true }
-
-    std::vector<TimelineViewItem*> mItems;
-    TimelineViewItem* mFocusedItem{};
-    TimelineViewItem* mActiveItem{};
-    std::unique_ptr<TimelineViewUIHandle> mUIHandle;
-    QPointer<TimelineContext> mTimelineContext;
-
 public:
 
     TimelineView(QQuickItem* parent = nullptr);
@@ -63,4 +55,12 @@ private:
 
     void onTrackPanelOffsetChanged();
     void onTrackPanelZoomChanged();
+
+    bool mNeedsCacheUpdate { true };
+
+    std::vector<TimelineViewItem*> mItems;
+    TimelineViewItem* mFocusedItem{};
+    TimelineViewItem* mActiveItem{};
+    std::unique_ptr<TimelineViewUIHandle> mUIHandle;
+    QPointer<TimelineContext> mTimelineContext;
 };
