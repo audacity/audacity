@@ -855,9 +855,23 @@ void DrawClipWaveform(TrackPanelDrawingContext &context,
    }
    else
    {
-      DrawIndividualSamples(
-         context, leftOffset, rect, zoomMin, zoomMax, dB, dBRange, clip,
-         showPoints, muted, highlight);
+      std::vector<WavePortion> portions;
+      FindWavePortions(portions, rect, zoomInfo, params);
+      auto offset = leftOffset;
+      for(const auto& portion : portions)
+      {
+         assert(!portion.inFisheye && portion.averageZoom > threshold1);
+         if(portion.inFisheye || portion.averageZoom <= threshold1)
+            continue;
+
+         wxRect rectPortion = portion.rect;
+         rectPortion.Intersect(mid);
+         DrawIndividualSamples(
+            context, offset, rectPortion, zoomMin, zoomMax, dB, dBRange, clip,
+            showPoints, muted, highlight);
+         offset += rectPortion.width;
+      }
+      
    }
 
    const auto drawEnvelope = artist->drawEnvelope;
