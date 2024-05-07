@@ -71,6 +71,7 @@ set( LIBRARIES
    lib-concurrency
    lib-sqlite-helpers
    lib-preference-pages
+   lib-dynamic-range-processor
 )
 
 if ( ${_OPT}use_lv2 )

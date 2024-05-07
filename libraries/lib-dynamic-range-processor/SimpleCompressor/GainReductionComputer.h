@@ -33,6 +33,11 @@ public:
     GainReductionComputer();
     ~GainReductionComputer() {}
 
+    static float getCharacteristicSample(float inputLevelInDecibels,
+                                         float kneeInDecibels,
+                                         float thresholdInDecibels, float ratio,
+                                         float makeUpGainInDecibels);
+
     // ======================================================================
     /**
      Sets the attack time of the compressor in seconds.
@@ -103,6 +108,9 @@ public:
     const float getMaxGainReductionInDecibels() { return maxGainReduction; }
 
 private:
+    static float applyCharacteristicToOverShoot(float overShootInDecibels,
+                                                float knee, float slope);
+
     inline const float timeToGain (const float timeInSeconds);
     inline const float applyCharacteristicToOverShoot (const float overShootInDecibels);
 

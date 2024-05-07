@@ -17,8 +17,27 @@
  */
 
 #include "GainReductionComputer.h"
+#include "MathApprox.h"
 
 namespace DanielRudrich {
+namespace
+{
+float getSlope(float ratio) { return 1 / ratio - 1; }
+float getRatio(float slope) { return 1 / (slope + 1); }
+} // namespace
+
+float GainReductionComputer::getCharacteristicSample(float inputLevelInDecibels,
+                                                     float kneeInDecibels,
+                                                     float thresholdInDecibels,
+                                                     float ratio,
+                                                     float makeUpGainInDecibels)
+{
+   const auto slope = getSlope(ratio);
+   float overShoot = inputLevelInDecibels - thresholdInDecibels;
+   overShoot = applyCharacteristicToOverShoot(overShoot, kneeInDecibels, slope);
+   return overShoot + inputLevelInDecibels + makeUpGainInDecibels;
+}
+
 GainReductionComputer::GainReductionComputer()
 {
     sampleRate = 0.0f;
@@ -76,12 +95,19 @@ void GainReductionComputer::setMakeUpGain (const float makeUpGainInDecibels)
 
 void GainReductionComputer::setRatio (const float ratio)
 {
-    slope = 1.0f / ratio - 1.0f;
+    slope = getSlope(ratio);
 }
 
 
 inline const float GainReductionComputer::applyCharacteristicToOverShoot (const float overShootInDecibels)
 {
+    return applyCharacteristicToOverShoot(overShootInDecibels, knee, slope);
+}
+
+float GainReductionComputer::applyCharacteristicToOverShoot(
+    float overShootInDecibels, float knee, float slope)
+{
+    const auto kneeHalf = knee / 2;
     if (overShootInDecibels <= -kneeHalf)
         return 0.0f;
     else if (overShootInDecibels > -kneeHalf && overShootInDecibels <= kneeHalf)
@@ -98,7 +124,8 @@ void GainReductionComputer::computeGainInDecibelsFromSidechainSignal (const floa
     for (int i = 0; i < numSamples; ++i)
     {
         // convert sample to decibels
-        const float levelInDecibels = 20.0f * std::log10 (abs (sideChainSignal[i]));
+        const float levelInDecibels =
+           log2ToDb * FastLog2(std::abs(sideChainSignal[i]));
 
         if (levelInDecibels > maxInputLevel)
             maxInputLevel = levelInDecibels;
@@ -138,8 +165,7 @@ void GainReductionComputer::getCharacteristic (float* inputLevelsInDecibels, flo
 
 float GainReductionComputer::getCharacteristicSample (const float inputLevelInDecibels)
 {
-    float overShoot = inputLevelInDecibels - threshold;
-    overShoot = applyCharacteristicToOverShoot (overShoot);
-    return overShoot + inputLevelInDecibels + makeUpGain;
+    return getCharacteristicSample(inputLevelInDecibels, knee, threshold,
+                                   getRatio(slope), makeUpGain);
 }
 } // namespace DanielRudrich
