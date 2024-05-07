@@ -10,6 +10,8 @@
 #include "TimelineContext.h"
 #include "ViewInfo.h"
 
+#include "log.h"
+
 WaveTrackView::WaveTrackView(QQuickItem* parent)
    : TimelineView(parent)
 {

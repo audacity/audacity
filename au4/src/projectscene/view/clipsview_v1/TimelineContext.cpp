@@ -1,5 +1,7 @@
 #include "TimelineContext.h"
 
+#include "log.h"
+
 TimelineContext::TimelineContext(QQuickItem* parent)
    : QQuickItem(parent)
 {

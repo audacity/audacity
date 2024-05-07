@@ -1080,6 +1080,15 @@ void WaveClipItem::Paint(QQmlEngine& engine,
                               const QRect& viewRect,
                               const TimelineContext& trackPanel)
 {
+    // test
+    // {
+    //     static int count = 0;
+    //     painter.setBrush(QBrush(Qt::red));
+    //     painter.setPen(Qt::NoPen);
+    //     painter.drawRect(viewRect);
+    //     return;
+    // }
+
    assert(mInterval);
 
    audacity::Ui ui;

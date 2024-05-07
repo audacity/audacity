@@ -48,8 +48,8 @@ signals:
 
 private:
 
-    double mOffset {};
-    double mZoom { 44100.0 / 512.0 };
+    double mOffset = 0.0;
+    double mZoom = 1.0;//{ 44100.0 / 512.0 };
     double mSelecitonStartTime{};
     double mSelectionEndTime{};
 

@@ -12,10 +12,10 @@ TimelineContext
 {
    id : view
 
-   tracksOriginOffset : 280
+   tracksOriginOffset : 0//280
 
    property alias model : proxyModel.model
-   property alias color : background.color
+   //property alias color : background.color
 
    model: TracksListClipsModel {
        id: trackListClipsModel
@@ -25,12 +25,12 @@ TimelineContext
        trackListClipsModel.load()
    }
 
-   Rectangle {
+   // Rectangle {
 
-      anchors.fill : parent
+   //    anchors.fill : parent
 
-      id : background
-   }
+   //    id : background
+   // }
 
    Item {
       id : header
