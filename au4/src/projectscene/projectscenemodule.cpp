@@ -26,10 +26,14 @@
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
 
-#include "view/clipsview/waveview.h"
-#include "view/clipsview/clipsmodel.h"
-#include "view/clipsview/trackclipsitem.h"
-#include "view/clipsview/clipitem.h"
+// #include "view/clipsview/waveview.h"
+// #include "view/clipsview/clipsmodel.h"
+// #include "view/clipsview/trackclipsitem.h"
+// #include "view/clipsview/clipitem.h"
+
+#include "view/clipsview_v1/TrackListModel.h"
+#include "view/clipsview_v1/TimelineContext.h"
+#include "view/clipsview_v1/WaveTrackView.h"
 
 #include "types/tracktypes.h"
 
@@ -65,11 +69,16 @@ void ProjectSceneModule::registerUiTypes()
                                            "Not creatable as it is an enum type");
 
     // clips view
-    qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
-    qmlRegisterType<ClipsModel>("Audacity.ProjectScene", 1, 0, "ClipsModel");
-    qmlRegisterUncreatableType<WaveSource>("Audacity.ProjectScene", 1, 0, "WaveSource", "Not creatable from QML");
-    qmlRegisterUncreatableType<TrackClipsItem>("Audacity.ProjectScene", 1, 0, "TrackClipsItem", "Not creatable from QML");
-    qmlRegisterUncreatableType<ClipItem>("Audacity.ProjectScene", 1, 0, "ClipItem", "Not creatable from QML");
+    // qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
+    // qmlRegisterType<ClipsModel>("Audacity.ProjectScene", 1, 0, "ClipsModel");
+    // qmlRegisterUncreatableType<WaveSource>("Audacity.ProjectScene", 1, 0, "WaveSource", "Not creatable from QML");
+    // qmlRegisterUncreatableType<TrackClipsItem>("Audacity.ProjectScene", 1, 0, "TrackClipsItem", "Not creatable from QML");
+    // qmlRegisterUncreatableType<ClipItem>("Audacity.ProjectScene", 1, 0, "ClipItem", "Not creatable from QML");
+
+    qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
+    qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
+    qmlRegisterType<WaveTrackView>("Audacity.ProjectScene", 1, 0, "WaveTrackView");
+    qmlRegisterUncreatableType<WaveTrackAdapter>("Audacity.ProjectScene", 1, 0, "WaveTrackAdapter", "Not creatable from QML");
 }
 
 void ProjectSceneModule::registerResources()
