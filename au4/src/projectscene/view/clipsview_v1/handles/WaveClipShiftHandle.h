@@ -4,12 +4,11 @@
 class WaveClipShiftHandle : public TimelineViewUIHandle
 {
 public:
-   ~WaveClipShiftHandle() override;
+    ~WaveClipShiftHandle() override;
 
-   void OnMouseEnter(TimelineView&) override;
+    void OnMouseEnter(TimelineView&) override;
 
-   void OnMousePress(TimelineView&) override;
-   void OnMouseMove(TimelineView&) override;
-   void OnMouseRelease(TimelineView&) override;
-
+    void OnMousePress(TimelineView&) override;
+    void OnMouseMove(TimelineView&) override;
+    void OnMouseRelease(TimelineView&) override;
 };

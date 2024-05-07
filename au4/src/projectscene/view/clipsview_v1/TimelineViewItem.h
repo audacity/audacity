@@ -14,12 +14,9 @@ class TimelineViewItem
 {
 public:
 
-   virtual ~TimelineViewItem();
+    virtual ~TimelineViewItem();
 
-   virtual void Paint(QQmlEngine& engine,
-                      QPainter& painter,
-                      const QRect& viewRect,
-                      const TimelineContext& trackPanel);
+    virtual void Paint(QQmlEngine& engine, QPainter& painter, const QRect& viewRect, const TimelineContext& trackPanel);
 
-   virtual std::unique_ptr<TimelineViewUIHandle> HitTest(const QPoint& at) const;
+    virtual std::unique_ptr<TimelineViewUIHandle> HitTest(const QPoint& at) const;
 };

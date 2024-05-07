@@ -6,11 +6,11 @@ class TimelineContext;
 class TimelineViewUIHandle
 {
 public:
-   virtual ~TimelineViewUIHandle();
+    virtual ~TimelineViewUIHandle();
 
-   virtual void OnMouseEnter(TimelineView&);
+    virtual void OnMouseEnter(TimelineView&);
 
-   virtual void OnMouseMove(TimelineView&);
-   virtual void OnMousePress(TimelineView&);
-   virtual void OnMouseRelease(TimelineView&);
+    virtual void OnMouseMove(TimelineView&);
+    virtual void OnMousePress(TimelineView&);
+    virtual void OnMouseRelease(TimelineView&);
 };

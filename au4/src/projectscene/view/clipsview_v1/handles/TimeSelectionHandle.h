@@ -5,10 +5,10 @@
 class TimeSelectionHandle : public TimelineViewUIHandle
 {
 public:
-   ~TimeSelectionHandle() override;
+    ~TimeSelectionHandle() override;
 
-   void OnMouseEnter(TimelineView&) override;
-   void OnMouseMove(TimelineView&) override;
-   void OnMousePress(TimelineView&) override;
-   void OnMouseRelease(TimelineView&) override;
+    void OnMouseEnter(TimelineView&) override;
+    void OnMouseMove(TimelineView&) override;
+    void OnMousePress(TimelineView&) override;
+    void OnMouseRelease(TimelineView&) override;
 };
