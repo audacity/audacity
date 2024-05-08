@@ -5,7 +5,6 @@
 class TimelineContext : public QQuickItem
 {
     Q_OBJECT
-    QML_ELEMENT
 
     Q_PROPERTY(double offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged)
@@ -49,7 +48,7 @@ signals:
 private:
 
     double mOffset = 0.0;
-    double mZoom = 1.0;//{ 44100.0 / 512.0 };
+    double mZoom = 2.0;//{ 44100.0 / 512.0 };
     double mSelecitonStartTime{};
     double mSelectionEndTime{};
 

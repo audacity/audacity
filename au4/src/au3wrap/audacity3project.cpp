@@ -2,6 +2,8 @@
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-wave-track/WaveClip.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -110,6 +112,41 @@ muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() con
     }
 
     return au4tracks;
+}
+
+muse::async::NotifyList<au::processing::Clip> Audacity3Project::clipList(const au::processing::TrackId& trackId) const
+{
+    TrackId au3TrackId = TrackId(trackId);
+    const Track* track = nullptr;
+    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    for (const Track* t : tracks) {
+        if (t->GetId() == au3TrackId) {
+            track = t;
+            break;
+        }
+    }
+
+    IF_ASSERT_FAILED(track) {
+        return muse::async::NotifyList<au::processing::Clip>();
+    }
+
+    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    IF_ASSERT_FAILED(waveTrack) {
+        return muse::async::NotifyList<au::processing::Clip>();
+    }
+
+    muse::async::NotifyList<au::processing::Clip> clips;
+    for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
+        au::processing::Clip clip;
+        clip.au3WaveClipPtr = reinterpret_cast<uintptr_t>(interval.get());
+        clip.title = wxToSting(interval->GetName());
+        clip.startTime = interval->GetPlayStartTime();
+        clip.endTime = interval->GetPlayEndTime();
+
+        clips.push_back(std::move(clip));
+    }
+
+    return clips;
 }
 
 uintptr_t Audacity3Project::au3ProjectPtr() const

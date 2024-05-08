@@ -26,6 +26,7 @@ public:
     std::string title() const;
 
     muse::async::NotifyList<processing::Track> trackList() const;
+    muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const;
 
     uintptr_t au3ProjectPtr() const;
 

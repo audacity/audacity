@@ -6,14 +6,31 @@ Item {
 
     id: root
 
-    property int trackId: -1
-    property var context: null
+    property alias trackId: clipsModel.trackId
+    property alias context: clipsModel.context
 
-    WaveTrackView {
-
-        anchors.fill: parent
-        context : root.context
-        trackId : root.trackId
+    ClipsListModel {
+        id: clipsModel
     }
 
+    Component.onCompleted: {
+        clipsModel.load()
+    }
+
+    Repeater {
+        model: clipsModel
+
+        delegate: ClipItem {
+
+            height: parent.height
+            width: clipWidthData
+            x: clipLeftData
+
+            title: clipTitleData
+
+            context : root.context
+            trackId : root.trackId
+            clipIndex: clipIndexData
+        }
+    }
 }

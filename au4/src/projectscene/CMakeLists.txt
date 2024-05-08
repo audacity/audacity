@@ -66,4 +66,3 @@ set(MODULE_DEF
 )
 
 setup_module()
-

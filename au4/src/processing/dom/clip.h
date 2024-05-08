@@ -3,20 +3,16 @@
 
 #include <vector>
 
-#include "wave.h"
+#include "global/types/string.h"
 
 namespace au::processing {
-class Clip
-{
-public:
-    Clip() = default;
+struct Clip {
+    muse::String title;
+    double startTime = 0.0;
+    double endTime = 0.0;
 
-    const Wave& wave() const;
-    void setWave(const Wave& w);
-
-private:
-
-    Wave m_wave;
+    //! NOTE Temporary
+    uintptr_t au3WaveClipPtr = 0; // WaveClip*
 };
 
 using Clips = std::vector<Clip>;

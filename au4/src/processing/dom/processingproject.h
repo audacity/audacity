@@ -21,6 +21,7 @@ public:
     void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
 
     muse::async::NotifyList<Track> trackList() const;
+    muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 
     //! NOTE Just for debug
     void dump();

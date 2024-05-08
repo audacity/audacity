@@ -74,15 +74,21 @@ void WaveTrackView::UpdateItemsCache(TimelineContext& trackPanelView)
     const ViewInfo viewInfo(trackPanelView.offset(),  trackPanelView.zoom());
 
     std::unordered_set<const WaveClip*> usedKeys;
+    int index = -1;
     for(const auto& interval : m_waveTrack->Intervals())
     {
+        ++index;
+        if (index != m_clipIndex) {
+            continue;
+        }
+
         const auto key = interval.get();
         //If clip is "too small" draw a placeholder instead of
         //attempting to fit the contents into a few pixels
         if (!WaveClipItem::ClipDetailsVisible(*key, viewInfo, viewRect))
             continue;
 
-        const auto left = (interval->GetPlayStartTime() - trackPanelView.offset()) * trackPanelView.zoom();
+        const auto left = 0;//(interval->GetPlayStartTime() - trackPanelView.offset()) * trackPanelView.zoom();
         const auto width = (interval->GetPlayEndTime() - interval->GetPlayStartTime()) * trackPanelView.zoom();
 
         if(left >= viewRect.right() || left + width <= viewRect.left())
@@ -123,3 +129,16 @@ void WaveTrackView::UpdateItemsCache(TimelineContext& trackPanelView)
 }
 
 
+
+int WaveTrackView::clipIndex() const
+{
+    return m_clipIndex;
+}
+
+void WaveTrackView::setClipIndex(int newClipIndex)
+{
+    if (m_clipIndex == newClipIndex)
+        return;
+    m_clipIndex = newClipIndex;
+    emit clipIndexChanged();
+}

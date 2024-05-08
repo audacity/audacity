@@ -8,7 +8,7 @@ TimelineContext
 {
     id: root
 
-    TracksClipsModel {
+    TracksListClipsModel {
         id: tracksModel
     }
 

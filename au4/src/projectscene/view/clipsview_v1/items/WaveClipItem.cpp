@@ -32,7 +32,7 @@
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
 constexpr int FrameRadius { 4 };
-constexpr int HeaderHeight { 20 };
+constexpr int HeaderHeight { 0 };
 constexpr int HeaderVMargin { 2 };
 
 namespace WaveChannelViewConstants
@@ -499,7 +499,7 @@ ClipParameters::ClipParameters(
    // left of the track.  Reduce the "mid"
    leftOffset = 0;
    if (tpre < 0) {
-      wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, false);
+      wxInt64 time64 = 0;//zoomInfo.TimeToPosition(playStartTime, 0, false);
       if( time64 < 0 )
          time64 = 0;
       leftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
@@ -1096,7 +1096,7 @@ void WaveClipItem::Paint(QQmlEngine& engine,
    painter.setBrush(brush);
    painter.setPen(Qt::NoPen);
    
-   const auto frameLeft = static_cast<int>(trackPanel.timeToPosition(mInterval->GetPlayStartTime()));
+   const auto frameLeft = 0;//static_cast<int>(trackPanel.timeToPosition(mInterval->GetPlayStartTime()));
    const auto frameWidth = static_cast<int>(trackPanel.timeToPosition(mInterval->GetPlayEndTime()) - frameLeft);
 
    mClipRect = QRect(
@@ -1116,23 +1116,6 @@ void WaveClipItem::Paint(QQmlEngine& engine,
 
    painter.setPen(textColor);
    painter.setFont(textFont);
-
-   mHeaderRect = QRect(mClipRect.topLeft(), mClipRect.topRight() + QPoint(0, HeaderHeight));
-
-   const auto textRect = QRect(
-      mHeaderRect.topLeft() + QPoint(FrameRadius, HeaderVMargin),
-      mHeaderRect.bottomRight() - QPoint(FrameRadius, HeaderVMargin));
-
-   if(textRect.isValid())
-   {
-      QFontMetrics metrics(textFont);
-      auto title = metrics.elidedText(audacity::ToQString(mInterval->GetName()), Qt::ElideRight, textRect.width());
-
-      painter.drawText(
-         textRect,
-         Qt::AlignLeft | Qt::AlignVCenter,
-         title);
-   }
 
    const bool dB = !WaveformSettings::Get(mWaveTrack).isLinear();
 

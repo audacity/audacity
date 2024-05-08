@@ -10,5 +10,6 @@
         <file>qml/Audacity/ProjectScene/internal/TracksControlPanel.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview_v1/TracksClipsView.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview_v1/TrackClipsItem.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview_v1/ClipItem.qml</file>
     </qresource>
 </RCC>

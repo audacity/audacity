@@ -15,6 +15,7 @@ class WaveTrackView : public TimelineView
     Q_OBJECT
 
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId)
+    Q_PROPERTY(int clipIndex READ clipIndex WRITE setClipIndex NOTIFY clipIndexChanged FINAL)
 
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -25,6 +26,12 @@ public:
     QVariant trackId() const { return QVariant::fromValue(m_trackId); }
     void setTrackId(QVariant trackId);
 
+    int clipIndex() const;
+    void setClipIndex(int newClipIndex);
+
+signals:
+    void clipIndexChanged();
+
 private:
     void UpdateItemsCache(TimelineContext& trackPanelView) override;
 
@@ -34,6 +41,7 @@ private:
 
     au::processing::TrackId m_trackId = -1;
     WaveTrack* m_waveTrack = nullptr;
+    int m_clipIndex = -1;
 
     std::unordered_map<const WaveClip*, std::unique_ptr<WaveClipItem>> mClipItems;
     std::vector<std::unique_ptr<WaveClipItem>> mClipItemsPool;

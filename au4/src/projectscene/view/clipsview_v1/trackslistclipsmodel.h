@@ -10,7 +10,7 @@
 #include "processing/dom/track.h"
 
 namespace au::projectscene {
-class TracksClipsModel : public QAbstractListModel
+class TracksListClipsModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -18,13 +18,13 @@ class TracksClipsModel : public QAbstractListModel
 
 public:
 
-    TracksClipsModel(QObject* parent = nullptr);
+    TracksListClipsModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void load();
 
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
-
-    Q_INVOKABLE void load();
 
 private:
 

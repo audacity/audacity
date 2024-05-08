@@ -1,10 +1,10 @@
 
 
 set(CLIPSVIEW_V1_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/tracksclipsmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/tracksclipsmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/clipsmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/clipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/trackslistclipsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/trackslistclipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/clipslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/clipslistmodel.h
 
    ${CMAKE_CURRENT_LIST_DIR}/items/WaveClipItem.cpp
    ${CMAKE_CURRENT_LIST_DIR}/items/WaveClipItem.h

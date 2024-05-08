@@ -30,6 +30,5 @@ private:
     WaveTrack& mWaveTrack;
     std::shared_ptr<WaveTrack::Interval> mInterval;
     QRect mClipRect;
-    QRect mHeaderRect;
     QRect mMenuButtonRect;
 };

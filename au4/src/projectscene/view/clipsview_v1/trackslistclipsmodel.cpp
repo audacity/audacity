@@ -1,13 +1,13 @@
-#include "tracksclipsmodel.h"
+#include "trackslistclipsmodel.h"
 
 using namespace au::projectscene;
 
-TracksClipsModel::TracksClipsModel(QObject* parent)
+TracksListClipsModel::TracksListClipsModel(QObject* parent)
     : QAbstractListModel(parent)
 {
 }
 
-void TracksClipsModel::load()
+void TracksListClipsModel::load()
 {
     au::processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     if (!prj) {
@@ -23,12 +23,12 @@ void TracksClipsModel::load()
     endResetModel();
 }
 
-int TracksClipsModel::rowCount(const QModelIndex&) const
+int TracksListClipsModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_trackList.size());
 }
 
-QVariant TracksClipsModel::data(const QModelIndex& index, int role) const
+QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -45,7 +45,7 @@ QVariant TracksClipsModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-QHash<int, QByteArray> TracksClipsModel::roleNames() const
+QHash<int, QByteArray> TracksListClipsModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
