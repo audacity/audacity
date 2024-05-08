@@ -1,5 +1,7 @@
 import QtQuick
 
+import Muse.UiComponents
+
 import Audacity.ProjectScene
 
 Item {
@@ -28,9 +30,10 @@ Item {
 
             title: clipTitleData
 
-            context : root.context
-            trackId : root.trackId
-            clipIndex: clipIndexData
+            context: root.context
+            clipKey: clipKeyData
         }
     }
+
+    SeparatorLine { anchors.bottom: parent.bottom }
 }

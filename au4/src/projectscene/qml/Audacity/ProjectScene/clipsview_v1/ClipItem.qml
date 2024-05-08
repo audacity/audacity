@@ -1,5 +1,6 @@
 import QtQuick
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
@@ -11,24 +12,36 @@ Rectangle {
     property var context: null
 
     property alias title: titleLabel.text
+    property alias clipKey: waveView.clipKey
 
-    property int trackId: -1
-    property int clipIndex: -1
+    radius: 4
+    color: ui.theme.backgroundPrimaryColor
+    border.width: 1
+    border.color: ui.theme.strokeColor
+    clip: true
 
-    StyledTextLabel {
-        id: titleLabel
+    Rectangle {
+        id: header
         anchors.left: parent.left
         anchors.right: parent.right
+        height: 20
+
+        color: ui.theme.backgroundSecondaryColor
+
+        StyledTextLabel {
+            id: titleLabel
+            anchors.fill: parent
+        }
     }
 
-    WaveTrackView {
-        anchors.top: titleLabel.bottom
+    WaveView {
+        id: waveView
+        anchors.top: header.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.margins: 1
 
         context : root.context
-        trackId : root.trackId
-        clipIndex: root.clipIndex
     }
 }

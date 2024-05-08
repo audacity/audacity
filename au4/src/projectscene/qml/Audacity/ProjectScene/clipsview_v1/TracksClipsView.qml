@@ -25,6 +25,8 @@ TimelineContext
         anchors.right: parent.right
 
         height: 76
+
+        SeparatorLine { anchors.bottom: parent.bottom }
     }
 
     ListView {

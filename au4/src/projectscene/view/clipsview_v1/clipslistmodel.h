@@ -40,7 +40,7 @@ signals:
 private:
 
     enum RoleNames {
-        ClipIndexRole = Qt::UserRole + 1,
+        ClipKeyRole = Qt::UserRole + 1,
         ClipTitleRole,
         ClipWidthRole,
         ClipLeftRole

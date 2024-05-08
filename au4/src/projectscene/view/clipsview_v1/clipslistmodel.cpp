@@ -1,5 +1,7 @@
 #include "clipslistmodel.h"
 
+#include "clipkey.h"
+
 #include "log.h"
 
 using namespace au::projectscene;
@@ -42,8 +44,12 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
 
     const au::processing::Clip& clip = m_clipList.at(index.row());
     switch (role) {
-    case ClipIndexRole:
-        return QVariant::fromValue(index.row());
+    case ClipKeyRole: {
+        ClipKey key;
+        key.au3WaveTrackPtr = clip.au3WaveTrackPtr;
+        key.au3WaveClipPtr = clip.au3WaveClipPtr;
+        return QVariant::fromValue(key);
+    } break;
     case ClipTitleRole:
         return clip.title.toQString();
     case ClipWidthRole: {
@@ -65,7 +71,7 @@ QHash<int, QByteArray> ClipsListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
-        { ClipIndexRole, "clipIndexData" },
+        { ClipKeyRole, "clipKeyData" },
         { ClipTitleRole, "clipTitleData" },
         { ClipWidthRole, "clipWidthData" },
         { ClipLeftRole, "clipLeftData" }

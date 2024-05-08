@@ -33,9 +33,10 @@
 
 #include "view/clipsview_v1/trackslistclipsmodel.h"
 #include "view/clipsview_v1/clipslistmodel.h"
+#include "view/clipsview_v1/clipkey.h"
 
 #include "view/clipsview_v1/TimelineContext.h"
-#include "view/clipsview_v1/WaveTrackView.h"
+#include "view/clipsview_v1/WaveView.h"
 
 #include "types/tracktypes.h"
 
@@ -79,8 +80,9 @@ void ProjectSceneModule::registerUiTypes()
 
     qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
     qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
+    qmlRegisterUncreatableType<ClipKey>("Audacity.ProjectScene", 1, 0, "ClipKey", "Not creatable from QML");
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
-    qmlRegisterType<WaveTrackView>("Audacity.ProjectScene", 1, 0, "WaveTrackView");
+    qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
 }
 
 void ProjectSceneModule::registerResources()

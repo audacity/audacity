@@ -138,6 +138,7 @@ muse::async::NotifyList<au::processing::Clip> Audacity3Project::clipList(const a
     muse::async::NotifyList<au::processing::Clip> clips;
     for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
         au::processing::Clip clip;
+        clip.au3WaveTrackPtr = reinterpret_cast<uintptr_t>(waveTrack);
         clip.au3WaveClipPtr = reinterpret_cast<uintptr_t>(interval.get());
         clip.title = wxToSting(interval->GetName());
         clip.startTime = interval->GetPlayStartTime();

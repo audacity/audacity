@@ -12,6 +12,7 @@ struct Clip {
     double endTime = 0.0;
 
     //! NOTE Temporary
+    uintptr_t au3WaveTrackPtr = 0; // WaveTrack*
     uintptr_t au3WaveClipPtr = 0; // WaveClip*
 };
 
