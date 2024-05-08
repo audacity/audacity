@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "global/types/id.h"
+#include "../processingtypes.h"
 #include "global/types/string.h"
 
 #include "clip.h"
@@ -17,7 +17,7 @@ enum class TrackType {
 };
 
 struct Track {
-    muse::ID id;
+    TrackId id;
     muse::String title;
     TrackType type = TrackType::Undefined;
 };

@@ -1,6 +1,11 @@
 
 
 set(CLIPSVIEW_V1_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/tracksclipsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tracksclipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/clipsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/clipsmodel.h
+
    ${CMAKE_CURRENT_LIST_DIR}/handles/TimeSelectionHandle.cpp
    ${CMAKE_CURRENT_LIST_DIR}/handles/TimeSelectionHandle.h
    ${CMAKE_CURRENT_LIST_DIR}/handles/WaveClipShiftHandle.cpp
@@ -17,12 +22,6 @@ set(CLIPSVIEW_V1_SRC
    ${CMAKE_CURRENT_LIST_DIR}/TimelineViewItem.h
    ${CMAKE_CURRENT_LIST_DIR}/TimelineViewUIHandle.cpp
    ${CMAKE_CURRENT_LIST_DIR}/TimelineViewUIHandle.h
-   ${CMAKE_CURRENT_LIST_DIR}/TrackAdapter.cpp
-   ${CMAKE_CURRENT_LIST_DIR}/TrackAdapter.h
-   ${CMAKE_CURRENT_LIST_DIR}/TrackListModel.cpp
-   ${CMAKE_CURRENT_LIST_DIR}/TrackListModel.h
-   ${CMAKE_CURRENT_LIST_DIR}/WaveTrackAdapter.cpp
-   ${CMAKE_CURRENT_LIST_DIR}/WaveTrackAdapter.h
    ${CMAKE_CURRENT_LIST_DIR}/WaveTrackView.cpp
    ${CMAKE_CURRENT_LIST_DIR}/WaveTrackView.h
 

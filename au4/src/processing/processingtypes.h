@@ -5,6 +5,7 @@
 #define AU_PROСESSING_PROСESSINGTYPES_H
 
 #include "global/realfn.h"
+#include "global/types/id.h"
 
 namespace au::processing {
 using msecs_t = int64_t;
@@ -17,7 +18,7 @@ using volume_dbfs_t = float;
 using gain_t = float;
 using balance_t = float;
 
-using TrackId = int32_t;
+using TrackId = long;
 
 struct AudioOutputParams {
     volume_db_t volume = 0.f;

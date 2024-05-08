@@ -102,7 +102,7 @@ muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() con
     for (const Track* t : tracks) {
         TrackId id = t->GetId();
         au::processing::Track au4t;
-        au4t.id = muse::ID(*(reinterpret_cast<long*>(&id)));
+        au4t.id = *(reinterpret_cast<long*>(&id));
         au4t.title = wxToSting(t->GetName());
         au4t.type = trackType(t);
 

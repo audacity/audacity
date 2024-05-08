@@ -1,25 +1,19 @@
 import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import Qt.labs.qmlmodels
 
 import Muse.UiComponents
-import Muse.Ui
 
 import Audacity.ProjectScene
 
 TimelineContext
 {
-    id: view
+    id: root
 
-    tracksOriginOffset: 0//280
-
-    TracksListClipsModel {
-        id: trackListClipsModel
+    TracksClipsModel {
+        id: tracksModel
     }
 
     Component.onCompleted: {
-        trackListClipsModel.load()
+        tracksModel.load()
     }
 
 
@@ -30,11 +24,11 @@ TimelineContext
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: 32
+        height: 76
     }
 
     ListView {
-        id: trackListView
+        id: tracksView
 
         anchors.top: header.bottom
         anchors.left: parent.left
@@ -47,14 +41,13 @@ TimelineContext
 
         flickableDirection: Flickable.VerticalFlick
 
-        model: trackListClipsModel
-        delegate: WaveTrackView {
-
+        model: tracksModel
+        delegate: TrackClipsItem {
             anchors.left: parent.left
             anchors.right: parent.right
-            height: 126
-            context : view
-            track : trackData
+            height: 144
+            context: root
+            trackId: trackIdData
         }
     }
 }
