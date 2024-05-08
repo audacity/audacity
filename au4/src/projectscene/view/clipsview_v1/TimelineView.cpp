@@ -1,9 +1,7 @@
 #include "TimelineView.h"
 
 #include "TimelineViewItem.h"
-#include "TimelineViewUIHandle.h"
 #include "TimelineContext.h"
-#include "handles/TimeSelectionHandle.h"
 
 TimelineView::TimelineView(QQuickItem* parent)
    : QQuickPaintedItem(parent)
@@ -29,64 +27,43 @@ void TimelineView::paint(QPainter* painter)
       item->Paint(*engine, *painter, viewRect, *trackPanelView);
 }
 
-void TimelineView::hoverMoveEvent(QHoverEvent* event)
+void TimelineView::hoverMoveEvent(QHoverEvent* )
 {
-   processHoverEvent(event);
 }
 
-void TimelineView::hoverEnterEvent(QHoverEvent* event)
+void TimelineView::hoverEnterEvent(QHoverEvent* )
 {
-   mFocusedItem = nullptr;
 
-   UnsetUIHandle();
-
-   processHoverEvent(event);
 }
 
 void TimelineView::hoverLeaveEvent(QHoverEvent*)
 {
-   mFocusedItem = nullptr;
-   UnsetUIHandle();
+
 }
 
-void TimelineView::mouseMoveEvent(QMouseEvent* event)
+void TimelineView::mouseMoveEvent(QMouseEvent* )
 {
-   if(mUIHandle)
-      mUIHandle->OnMouseMove(*this);
+
 }
 
-void TimelineView::mousePressEvent(QMouseEvent* event)
+void TimelineView::mousePressEvent(QMouseEvent* )
 {
-   if(mUIHandle)
-   {
-      mActiveItem = mActiveItem;
-      mUIHandle->OnMousePress(*this);
-   }
+
 }
 
-void TimelineView::mouseReleaseEvent(QMouseEvent* event)
+void TimelineView::mouseReleaseEvent(QMouseEvent* )
 {
-   if(mUIHandle)
-   {
-      mUIHandle->OnMouseRelease(*this);
-      UnsetUIHandle();
-   }
+
 }
 
-void TimelineView::keyPressEvent(QKeyEvent* event)
+void TimelineView::keyPressEvent(QKeyEvent* )
 {
-   if(mActiveItem != nullptr)
-   {
-      
-   }
+
 }
 
-void TimelineView::keyReleaseEvent(QKeyEvent* event)
+void TimelineView::keyReleaseEvent(QKeyEvent* )
 {
-   if(mActiveItem != nullptr)
-   {
-      
-   }
+
 }
 
 void TimelineView::setTimelineContext(TimelineContext* context)
@@ -128,10 +105,6 @@ TimelineContext* TimelineView::GetContext() const
 
 void TimelineView::ResetItemsCache()
 {
-   UnsetUIHandle();
-   
-   mFocusedItem = nullptr;
-   mActiveItem = nullptr;
    mItems.clear();
    mNeedsCacheUpdate = true;
 
@@ -140,11 +113,6 @@ void TimelineView::ResetItemsCache()
 
 void TimelineView::ItemRemoved(const TimelineViewItem* item)
 {
-   if(item == mFocusedItem)
-      mFocusedItem = nullptr;
-   if(item == mActiveItem)
-      mActiveItem = nullptr;
-
    auto it = std::find(mItems.begin(), mItems.end(), item);
    if(it != mItems.end())
       mItems.erase(it);
@@ -153,15 +121,6 @@ void TimelineView::ItemRemoved(const TimelineViewItem* item)
 void TimelineView::ItemAdded(TimelineViewItem* item)
 {
    mItems.push_back(item);
-}
-
-void TimelineView::UnsetUIHandle()
-{
-   mUIHandle.reset();
-   unsetCursor();
-   setKeepMouseGrab(false);
-   setKeepTouchGrab(false);
-   setAcceptedMouseButtons(Qt::NoButton);
 }
 
 TimelineContext* TimelineView::FindContext(QQuickItem* item)
@@ -175,24 +134,9 @@ TimelineContext* TimelineView::FindContext(QQuickItem* item)
    return nullptr;
 }
 
-void TimelineView::processHoverEvent(QHoverEvent* event)
+void TimelineView::processHoverEvent(QHoverEvent* )
 {
-   UnsetUIHandle();
 
-   for(const auto item : mItems)
-   {
-      if(auto handle = item->HitTest(event->pos()))
-      {
-         mFocusedItem = item;
-         mUIHandle = std::move(handle);
-         break;
-      }
-   }
-
-   if(!mUIHandle)
-      mUIHandle = std::make_unique<TimeSelectionHandle>();
-   
-   mUIHandle->OnMouseEnter(*this);
 }
 
 void TimelineView::onTrackPanelOffsetChanged()

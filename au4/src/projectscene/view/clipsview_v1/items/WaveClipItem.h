@@ -25,8 +25,6 @@ public:
 
     void Paint(QQmlEngine& engine, QPainter& painter, const QRect& viewRect, const TimelineContext& trackPanel) override;
 
-    std::unique_ptr<TimelineViewUIHandle> HitTest(const QPoint& at) const override;
-
 private:
     bool mHovered{ false };
     WaveTrack& mWaveTrack;

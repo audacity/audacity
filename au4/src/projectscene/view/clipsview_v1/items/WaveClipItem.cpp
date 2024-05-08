@@ -25,10 +25,6 @@
 #include "waveform/WaveDataCache.h"
 
 #include "../TimelineContext.h"
-#include "../TimelineViewUIHandle.h"
-// #include "ProjectQMLEnvironment.h"
-// #include "../../ui/Ui.h"
-#include "../handles/WaveClipShiftHandle.h"
 
 #include "../converter.h"
 #include "../ui.h"
@@ -1064,15 +1060,6 @@ void WaveClipItem::SetInterval(std::shared_ptr<WaveTrack::Interval> interval)
 {
    mInterval = std::move(interval);
    mHovered = false;
-}
-
-std::unique_ptr<TimelineViewUIHandle> WaveClipItem::HitTest(const QPoint& at) const
-{
-   if(mHeaderRect.contains(at))
-   {
-      return std::make_unique<WaveClipShiftHandle>();
-   }
-   return {};
 }
 
 void WaveClipItem::Paint(QQmlEngine& engine,

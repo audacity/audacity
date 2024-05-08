@@ -45,8 +45,6 @@ protected:
     void ItemRemoved(const TimelineViewItem* item);
     void ItemAdded(TimelineViewItem* item);
 
-    void UnsetUIHandle();
-
 private:
 
     static TimelineContext* FindContext(QQuickItem* item);
@@ -59,8 +57,5 @@ private:
     bool mNeedsCacheUpdate { true };
 
     std::vector<TimelineViewItem*> mItems;
-    TimelineViewItem* mFocusedItem{};
-    TimelineViewItem* mActiveItem{};
-    std::unique_ptr<TimelineViewUIHandle> mUIHandle;
     QPointer<TimelineContext> mTimelineContext;
 };
