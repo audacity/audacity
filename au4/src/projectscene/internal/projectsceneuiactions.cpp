@@ -28,7 +28,7 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom"),
              TranslatableString("action", "Zoom"),
-             IconCode::Code::ZOOM
+             IconCode::Code::ZOOM_TOGGLE
              ),
     UiAction("zoomin",
              au::context::UiCtxNotationOpened,

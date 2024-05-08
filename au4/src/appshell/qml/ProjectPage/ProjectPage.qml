@@ -148,7 +148,6 @@ DockPage {
             ]
 
             PlaybackToolBar {
-                orientation: playbackToolBar.orientation
                 floating: playbackToolBar.floating
 
                 maximumWidth: playbackToolBar.width

@@ -13,7 +13,7 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
 static const ActionCode STOP_CODE("stop");
-static const ActionCode REWIND_CODE("rewind");
+static const ActionCode REWIND_START_CODE("rewind-start");
 static const ActionCode LOOP_CODE("loop");
 static const ActionCode LOOP_IN_CODE("loop-in");
 static const ActionCode LOOP_OUT_CODE("loop-out");
@@ -31,7 +31,7 @@ void PlaybackController::init()
 {
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
     dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::pause);
-    dispatcher()->reg(this, REWIND_CODE, this, &PlaybackController::rewind);
+    dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
     dispatcher()->reg(this, LOOP_CODE, this, &PlaybackController::toggleLoopPlayback);
     // dispatcher()->reg(this, LOOP_IN_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopIn); });
     // dispatcher()->reg(this, LOOP_OUT_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopOut); });
@@ -187,7 +187,7 @@ void PlaybackController::play()
     setCurrentPlaybackStatus(PlaybackStatus::Running);
 }
 
-void PlaybackController::rewind(const ActionData& args)
+void PlaybackController::rewindToStart(const ActionData& args)
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();

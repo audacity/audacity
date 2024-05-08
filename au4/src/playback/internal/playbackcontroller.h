@@ -70,7 +70,7 @@ private:
     void seekRangeSelection();
 
     void togglePlay();
-    void rewind(const muse::actions::ActionData& args);
+    void rewindToStart(const muse::actions::ActionData& args);
     void play();
     void pause();
     void stop();

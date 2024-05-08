@@ -5,7 +5,7 @@
 
 #include "internal/playbackuiactions.h"
 
-#include "log.h"
+#include "view/toolbars/playbacktoolbarabstractitem.h"
 
 using namespace muse::uicomponents;
 using namespace muse::ui;
@@ -14,10 +14,29 @@ using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
+static const ActionCode SECTION_CODE("");
 static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode PLAYBACK_LEVEL("playback-level");
+
+static PlaybackToolBarAbstractItem::ItemType itemType(const ActionCode& actionCode)
+{
+    if (actionCode == SECTION_CODE) {
+        return PlaybackToolBarAbstractItem::ItemType::SECTION;
+    }
+
+    if (actionCode == PLAYBACK_LEVEL) {
+        return PlaybackToolBarAbstractItem::ItemType::PLAYBACK_LEVEL;
+    }
+
+    return PlaybackToolBarAbstractItem::ItemType::ACTION;
+}
 
 PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
-    : AbstractMenuModel(parent)
+    : QAbstractListModel(parent)
+{
+}
+
+void PlaybackToolBarModel::load()
 {
     uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
         load();
@@ -26,13 +45,31 @@ PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
     context()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
-}
 
-void PlaybackToolBarModel::load()
-{
-    AbstractMenuModel::load();
     updateActions();
     setupConnections();
+}
+
+void PlaybackToolBarModel::handleMenuItem(const QString& itemId)
+{
+    PlaybackToolBarAbstractItem* item = findItem(itemId.toStdString());
+    dispatcher()->dispatch(item->action().code, item->args());
+}
+
+QVariantMap PlaybackToolBarModel::get(int index)
+{
+    QVariantMap result;
+
+    QHash<int, QByteArray> names = roleNames();
+    QHashIterator<int, QByteArray> i(names);
+    while (i.hasNext()) {
+        i.next();
+        QModelIndex idx = this->index(index, 0);
+        QVariant data = idx.data(i.key());
+        result[i.value()] = data;
+    }
+
+    return result;
 }
 
 QVariant PlaybackToolBarModel::data(const QModelIndex& index, int role) const
@@ -41,22 +78,26 @@ QVariant PlaybackToolBarModel::data(const QModelIndex& index, int role) const
 
     int row = index.row();
 
-    if (!isIndexValid(row)) {
+    if (!index.isValid() || row >= rowCount()) {
         return QVariant();
     }
 
-    const MenuItem* item = items()[row];
+    const PlaybackToolBarAbstractItem* item = m_items[row];
+    const ActionCode actionCode = item->action().code;
+
     switch (role) {
-    case IsMenuSecondaryRole: return isMenuSecondary(item->action().code);
+    case ItemRole: return QVariant::fromValue(item);
+    case IsMenuSecondaryRole: return isMenuSecondary(actionCode);
     case OrderRole: return row;
     case SectionRole: return item->section();
-    default: return AbstractMenuModel::data(index, role);
+    default: return QVariant();
     }
 }
 
 QHash<int, QByteArray> PlaybackToolBarModel::roleNames() const
 {
-    QHash<int, QByteArray> roles = AbstractMenuModel::roleNames();
+    QHash<int, QByteArray> roles;
+    roles[ItemRole] = "item";
     roles[IsMenuSecondaryRole] = "isMenuSecondary";
     roles[OrderRole] = "order";
     roles[SectionRole] = "section";
@@ -64,13 +105,27 @@ QHash<int, QByteArray> PlaybackToolBarModel::roleNames() const
     return roles;
 }
 
+int PlaybackToolBarModel::rowCount(const QModelIndex&) const
+{
+    return m_items.size();
+}
+
+PlaybackToolBarAbstractItem* PlaybackToolBarModel::findItem(const muse::actions::ActionCode& actionCode)
+{
+    for (PlaybackToolBarAbstractItem* item : m_items) {
+        if (item->action().code == actionCode) {
+            return item;
+        }
+    }
+
+    return nullptr;
+}
+
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    AbstractMenuModel::onActionsStateChanges(codes);
-
     if (containsAction(codes, PLAY_ACTION_CODE)) {
-        MenuItem& item = findItem(PLAY_ACTION_CODE);
-        item.setAction(playAction());
+        PlaybackToolBarAbstractItem* item = findItem(PLAY_ACTION_CODE);
+        item->setAction(playAction());
     }
 }
 
@@ -83,12 +138,13 @@ void PlaybackToolBarModel::setupConnections()
 
 void PlaybackToolBarModel::onProjectChanged()
 {
-    updateState();
 }
 
 void PlaybackToolBarModel::updateActions()
 {
-    MenuItemList items;
+    m_items.clear();
+
+    beginResetModel();
 
     muse::ui::ToolConfig playbackConfig
         = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
@@ -99,31 +155,18 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
-        if (citem.action.empty()) {
-            section++;
-            continue;
-        }
-
-        MenuItem* item = makeActionItem(uiActionsRegister()->action(citem.action), QString::number(section));
+        PlaybackToolBarAbstractItem* item = makeItem(uiActionsRegister()->action(citem.action), QString::number(section));
 
         if (citem.action == PLAY_ACTION_CODE) {
             item->setAction(playAction());
         }
 
-        items << item;
+        m_items << item;
     }
 
-    setItems(items);
-}
+    endResetModel();
 
-void PlaybackToolBarModel::updateState()
-{
-    for (int i = 0; i < rowCount(); ++i) {
-        MenuItem& item = this->item(i);
-        muse::ui::UiActionState state = item.state();
-        state.checked = false;
-        item.setState(state);
-    }
+    emit itemsChanged();
 }
 
 bool PlaybackToolBarModel::isMenuSecondary(const muse::actions::ActionCode& actionCode) const
@@ -133,12 +176,10 @@ bool PlaybackToolBarModel::isMenuSecondary(const muse::actions::ActionCode& acti
     return false;
 }
 
-MenuItem* PlaybackToolBarModel::makeActionItem(const muse::ui::UiAction& action, const QString& section,
-                                               const muse::uicomponents::MenuItemList& subitems)
+PlaybackToolBarAbstractItem* PlaybackToolBarModel::makeItem(const muse::ui::UiAction& action, const QString& section)
 {
-    MenuItem* item = new MenuItem(action, this);
+    PlaybackToolBarAbstractItem* item = new PlaybackToolBarAbstractItem(action, itemType(action.code), this);
     item->setSection(section);
-    item->setSubitems(subitems);
     return item;
 }
 
