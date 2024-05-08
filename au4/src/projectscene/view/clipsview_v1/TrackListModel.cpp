@@ -59,8 +59,8 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
 {
     static QHash<int, QByteArray> mapping
     {
-        { TypeRole, "type" },
-        { TrackRole, "track" }
+        { TypeRole, "typeData" },
+        { TrackRole, "trackData" }
     };
     return mapping;
 }
