@@ -1,9 +1,8 @@
-#include "WaveClipItem.h"
+#include "au3wavepainter.h"
 
 #include <QColor>
 #include <QPainter>
 #include <QPen>
-#include <QQmlEngine>
 
 #include <wx/types.h>
 #include <wx/utils.h>
@@ -18,16 +17,13 @@
 #include "FrameStatistics.h"
 #include "SyncLock.h"
 #include "ViewInfo.h"
-#include "../WaveformScale.h"
+#include "WaveformScale.h"
 #include "graphics/Color.h"
 
 #include "waveform/WaveBitmapCache.h"
 #include "waveform/WaveDataCache.h"
 
-#include "../TimelineContext.h"
-
-#include "../converter.h"
-#include "../ui.h"
+#include "domaccessor.h"
 
 constexpr int kClipDetailedViewMinimumWidth{ 3 };
 
@@ -35,8 +31,7 @@ constexpr int FrameRadius { 4 };
 constexpr int HeaderHeight { 0 };
 constexpr int HeaderVMargin { 2 };
 
-namespace WaveChannelViewConstants
-{
+namespace WaveChannelViewConstants {
 // Only two types of sample display for now, but
 // others (eg sinc interpolation) may be added later.
 enum SampleDisplay {
@@ -45,22 +40,21 @@ enum SampleDisplay {
 };
 }
 
-namespace
-{
+namespace {
 class WaveformSettings final : public ClientData::Cloneable<>
 {
 public:
     //! Create waveform settings for the track on demand
     //! Mutative access to attachment even if the track argument is const
-    static WaveformSettings &Get(const WaveTrack &track);
+    static WaveformSettings& Get(const WaveTrack& track);
 
-    static WaveformSettings &defaults();
+    static WaveformSettings& defaults();
 
     PointerType Clone() const override;
 
     bool isLinear() const { return true; }
 
-    float dBRange{60.0};
+    float dBRange{ 60.0 };
 };
 
 struct WaveBitmapCacheElementQt final : public WaveBitmapCacheElement
@@ -89,7 +83,6 @@ struct WaveBitmapCacheElementQt final : public WaveBitmapCacheElement
         return mHeight;
     }
 
-
 private:
     size_t mWidth{};
     size_t mHeight{};
@@ -102,30 +95,31 @@ public:
 
     static WaveformPainter& Get(const WaveClip& cache);
 
-    WaveformPainter& EnsureClip (const WaveClip& clip)
+    WaveformPainter& EnsureClip(const WaveClip& clip)
     {
-        if (&clip != mWaveClip)
+        if (&clip != mWaveClip) {
             mChannelCaches.clear();
+        }
 
         const auto nChannels = clip.NChannels();
 
-        if (mChannelCaches.size() == nChannels)
+        if (mChannelCaches.size() == nChannels) {
             return *this;
+        }
 
         mWaveClip = &clip;
 
         mChannelCaches.reserve(nChannels);
 
-        for (auto channelIndex = 0; channelIndex < nChannels; ++channelIndex)
-        {
+        for (auto channelIndex = 0; channelIndex < nChannels; ++channelIndex) {
             auto dataCache = std::make_shared<WaveDataCache>(clip, channelIndex);
 
             auto bitmapCache = std::make_unique<WaveBitmapCache>(
-                        clip, dataCache,
-                        [] { return std::make_unique<WaveBitmapCacheElementQt>(); });
+                clip, dataCache,
+                [] { return std::make_unique<WaveBitmapCacheElementQt>(); });
 
             mChannelCaches.push_back(
-                        { std::move(dataCache), std::move(bitmapCache) });
+                { std::move(dataCache), std::move(bitmapCache) });
         }
 
         return *this;
@@ -141,8 +135,9 @@ public:
               double to)
     {
         assert(channelIndex >= 0 && channelIndex < mChannelCaches.size());
-        if(channelIndex < 0 || channelIndex >= mChannelCaches.size())
+        if (channelIndex < 0 || channelIndex >= mChannelCaches.size()) {
             return;
+        }
 
         auto& bitmapCache = mChannelCaches[channelIndex].BitmapCache;
         bitmapCache->SetPaintParameters(params);
@@ -154,29 +149,28 @@ public:
 
         const auto top = targetRect.y();
 
-        for (auto it = range.begin(); it != range.end(); ++it)
-        {
+        for (auto it = range.begin(); it != range.end(); ++it) {
             const auto elementLeftOffset = it.GetLeftOffset();
             const auto elementRightOffset = it.GetRightOffset();
 
-            const auto width = WaveBitmapCache::CacheElementWidth -
-                    elementLeftOffset - elementRightOffset;
+            const auto width = WaveBitmapCache::CacheElementWidth
+                               - elementLeftOffset - elementRightOffset;
 
             const auto drawableWidth = std::min<int32_t>(
-                        width, it->Width() - elementLeftOffset);
+                width, it->Width() - elementLeftOffset);
 
             const auto image = static_cast<const WaveBitmapCacheElementQt&>(*it).GetImage();
             painter.drawImage(
-                        QRectF(left, targetRect.y(), drawableWidth, height),
-                        image,
-                        QRectF(
-                            elementLeftOffset,
-                            0,
-                            std::clamp(drawableWidth, 0, image.width() - static_cast<int>(elementLeftOffset)),
-                            std::clamp(height, 0, image.height())
-                            )
-                        );
-            
+                QRectF(left, targetRect.y(), drawableWidth, height),
+                image,
+                QRectF(
+                    elementLeftOffset,
+                    0,
+                    std::clamp(drawableWidth, 0, image.width() - static_cast<int>(elementLeftOffset)),
+                    std::clamp(height, 0, image.height())
+                    )
+                );
+
             left += width;
         }
     }
@@ -185,8 +179,7 @@ public:
 
     void Invalidate() override
     {
-        for (auto& channelCache : mChannelCaches)
-        {
+        for (auto& channelCache : mChannelCaches) {
             channelCache.DataCache->Invalidate();
             channelCache.BitmapCache->Invalidate();
         }
@@ -211,12 +204,13 @@ private:
 }
 
 static const ChannelGroup::Attachments::RegisteredFactory
-key1{ [](auto &) {
-        return std::make_unique<WaveformSettings>(WaveformSettings::defaults()); } };
+    key1{ [](auto&) {
+        return std::make_unique<WaveformSettings>(WaveformSettings::defaults());
+    } };
 
-WaveformSettings &WaveformSettings::Get(const WaveTrack &track)
+WaveformSettings& WaveformSettings::Get(const WaveTrack& track)
 {
-    auto &mutTrack = const_cast<WaveTrack&>(track);
+    auto& mutTrack = const_cast<WaveTrack&>(track);
     return mutTrack.Attachments::Get<WaveformSettings>(key1);
 }
 
@@ -235,14 +229,14 @@ static WaveClip::Attachments::RegisteredFactory sKeyW{ [](WaveClip&) {
         return std::make_unique<WaveformPainter>();
     } };
 
-WaveformPainter &WaveformPainter::Get( const WaveClip &clip )
+WaveformPainter& WaveformPainter::Get(const WaveClip& clip)
 {
-    return const_cast< WaveClip& >( clip ) // Consider it mutable data
-            .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
+    return const_cast< WaveClip& >(clip)   // Consider it mutable data
+           .Attachments::Get<WaveformPainter>(sKeyW).EnsureClip(clip);
 }
 
 bool ShowIndividualSamples(
-        int sampleRate, double stretchRatio, double pixelsPerSecond)
+    int sampleRate, double stretchRatio, double pixelsPerSecond)
 {
     const auto secondsPerSample = stretchRatio / sampleRate;
     const auto pixelsPerSample = pixelsPerSecond * secondsPerSample;
@@ -256,7 +250,7 @@ double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
     return viewRect.width() / (trackRectT1 - h);
 }
 
-double GetBlankSpaceBeforePlayEndTime(const ClipTimes &clip)
+double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 {
     return 0.99 * clip.GetStretchRatio() / clip.GetRate();
 }
@@ -282,8 +276,9 @@ R GetThemeValue(const QString& propertyName)
         { "bodyFont", QFont() }
     };
     const auto it = table.find(propertyName);
-    if(it != table.end())
+    if (it != table.end()) {
         return it.value().value<R>();
+    }
     return {};
 }
 
@@ -297,51 +292,53 @@ static graphics::Color ColorFromQColor(const QColor& color)
 double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
 {
     constexpr double pixelsOffset { 2 }; // The desired offset in pixels
-    if (showSamples)
+    if (showSamples) {
         // adjustment so that the last circular point doesn't appear
         // to be hanging off the end
-        return pixelsOffset /
-                avgPixPerSecond; // pixels / ( pixels / second ) = seconds
+        return pixelsOffset
+               / avgPixPerSecond; // pixels / ( pixels / second ) = seconds
+    }
     return .0;
 }
 
-void GetEnvelopeValues( const Envelope &env,
-                        double alignedTime, double sampleDur,
-                        double *buffer, int bufferLen, int leftOffset,
-                        const ZoomInfo& zoomInfo)
+void GetEnvelopeValues(const Envelope& env,
+                       double alignedTime, double sampleDur,
+                       double* buffer, int bufferLen, int leftOffset,
+                       const ZoomInfo& zoomInfo)
 {
     // Getting many envelope values, corresponding to pixel columns, which may
     // not be uniformly spaced in time when there is a fisheye.
 
     double prevDiscreteTime=0.0, prevSampleVal=0.0, nextSampleVal=0.0;
-    for ( int xx = 0; xx < bufferLen; ++xx ) {
-        auto time = zoomInfo.PositionToTime( xx, -leftOffset );
-        if ( sampleDur <= 0 )
+    for (int xx = 0; xx < bufferLen; ++xx) {
+        auto time = zoomInfo.PositionToTime(xx, -leftOffset);
+        if (sampleDur <= 0) {
             // Sample interval not defined (as for time track)
-            buffer[xx] = env.GetValue( time );
-        else {
+            buffer[xx] = env.GetValue(time);
+        } else {
             // The level of zoom-in may resolve individual samples.
             // If so, then instead of evaluating the envelope directly,
             // we draw a piecewise curve with knees at each sample time.
             // This actually makes clearer what happens as you drag envelope
             // points and make discontinuities.
-            auto leftDiscreteTime = alignedTime +
-                    sampleDur * floor( ( time - alignedTime ) / sampleDur );
-            if ( xx == 0 || leftDiscreteTime != prevDiscreteTime ) {
+            auto leftDiscreteTime = alignedTime
+                                    + sampleDur * floor((time - alignedTime) / sampleDur);
+            if (xx == 0 || leftDiscreteTime != prevDiscreteTime) {
                 prevDiscreteTime = leftDiscreteTime;
-                prevSampleVal =
-                        env.GetValue( prevDiscreteTime, sampleDur );
-                nextSampleVal =
-                        env.GetValue( prevDiscreteTime + sampleDur, sampleDur );
+                prevSampleVal
+                    =env.GetValue(prevDiscreteTime, sampleDur);
+                nextSampleVal
+                    =env.GetValue(prevDiscreteTime + sampleDur, sampleDur);
             }
-            auto ratio = ( time - leftDiscreteTime ) / sampleDur;
-            if ( env.GetExponential() )
+            auto ratio = (time - leftDiscreteTime) / sampleDur;
+            if (env.GetExponential()) {
                 buffer[ xx ] = exp(
-                            ( 1.0 - ratio ) * log( prevSampleVal )
-                            + ratio * log( nextSampleVal ) );
-            else
-                buffer[ xx ] =
-                        ( 1.0 - ratio ) * prevSampleVal + ratio * nextSampleVal;
+                    (1.0 - ratio) * log(prevSampleVal)
+                    + ratio * log(nextSampleVal));
+            } else {
+                buffer[ xx ]
+                    =(1.0 - ratio) * prevSampleVal + ratio * nextSampleVal;
+            }
         }
     }
 }
@@ -370,13 +367,11 @@ int GetWaveYPos(float value, float min, float max,
             }
             value *= sign;
         }
-    }
-    else {
+    } else {
         if (!outer) {
             if (value >= 0.0) {
                 value -= 0.5;
-            }
-            else {
+            } else {
                 value += 0.5;
             }
         }
@@ -392,13 +387,13 @@ int GetWaveYPos(float value, float min, float max,
     }
 
     value = (max - value) / (max - min);
-    return (int) (value * (height - 1) + 0.5);
+    return (int)(value * (height - 1) + 0.5);
 }
 
 struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.
-    ClipParameters(const ClipTimes &clip, const QRect& rect, const ZoomInfo& zoomInfo);
+    ClipParameters(const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo);
 
     const double trackRectT0; // absolute time of left edge of track
 
@@ -419,16 +414,15 @@ struct ClipParameters
     // returns a clip rectangle restricted by viewRect,
     // and with clipOffsetX - clip horizontal origin offset within view rect
     static QRect GetClipRect(
-            const ClipTimes& clip, const ZoomInfo& zoomInfo,
-            const QRect& viewRect, bool* outShowSamples = nullptr);
+        const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples = nullptr);
 };
 
 ClipParameters::ClipParameters(
-        const ClipTimes &clip, const QRect& rect, const ZoomInfo& zoomInfo
-        )  : trackRectT0 { zoomInfo.PositionToTime(0, 0, true) }
-  , averagePixelsPerSecond { GetPixelsPerSecond(rect, zoomInfo) }
-  , showIndividualSamples { ShowIndividualSamples(
-                                clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond) }
+    const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
+    : trackRectT0{zoomInfo.PositionToTime(0, 0, true)}
+    , averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)}
+    , showIndividualSamples{ShowIndividualSamples(
+                                clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond)}
 {
     const auto trackRectT1 = zoomInfo.PositionToTime(rect.width(), 0, true);
     const auto playStartTime = clip.GetPlayStartTime();
@@ -444,9 +438,9 @@ ClipParameters::ClipParameters(
     // Calculate actual selection bounds so that t0 > 0 and t1 < the
     // end of the track
     t0 = std::max(tpre, .0);
-    t1 = std::min(tpost, clipLength - blank) +
-            CalculateAdjustmentForZoomLevel(
-                averagePixelsPerSecond, showIndividualSamples);
+    t1 = std::min(tpost, clipLength - blank)
+         + CalculateAdjustmentForZoomLevel(
+        averagePixelsPerSecond, showIndividualSamples);
 
     // Make sure t1 (the right bound) is greater than 0
     if (t1 < 0.0) {
@@ -470,8 +464,9 @@ ClipParameters::ClipParameters(
     if (tpre < 0) {
         // Fix Bug #1296 caused by premature conversion to (int).
         wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
-        if( time64 < 0 )
+        if (time64 < 0) {
             time64 = 0;
+        }
         hiddenLeftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
         hiddenMid.setLeft(hiddenMid.left() + hiddenLeftOffset);
@@ -483,8 +478,9 @@ ClipParameters::ClipParameters(
     // size of the blank area.
     if (tpost > t1) {
         wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
-        if( time64 < 0 )
+        if (time64 < 0) {
             time64 = 0;
+        }
         const int hiddenRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
         hiddenMid.setWidth(std::max(0, hiddenRightOffset - hiddenLeftOffset));
@@ -500,11 +496,12 @@ ClipParameters::ClipParameters(
     leftOffset = 0;
     if (tpre < 0) {
         wxInt64 time64 = 0;//zoomInfo.TimeToPosition(playStartTime, 0, false);
-        if( time64 < 0 )
+        if (time64 < 0) {
             time64 = 0;
+        }
         leftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
-        mid.setLeft(mid.left() +  leftOffset);
+        mid.setLeft(mid.left() + leftOffset);
     }
 
     // If the right edge of the track is to the left of the right
@@ -513,8 +510,9 @@ ClipParameters::ClipParameters(
     // size of the blank area.
     if (tpost > t1) {
         wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
-        if( time64 < 0 )
+        if (time64 < 0) {
             time64 = 0;
+        }
         const int distortedRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
 
         mid.setWidth(std::max(0, distortedRightOffset - leftOffset));
@@ -526,33 +524,33 @@ QRect ClipParameters::GetClipRect(const ClipTimes& clip,
 {
     const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
     const auto showIndividualSamples = ShowIndividualSamples(
-                clip.GetRate(), clip.GetStretchRatio(), pixelsPerSecond);
-    const auto clipEndingAdjustment =
-            CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
-    if (outShowSamples != nullptr)
+        clip.GetRate(), clip.GetStretchRatio(), pixelsPerSecond);
+    const auto clipEndingAdjustment
+        =CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
+    if (outShowSamples != nullptr) {
         *outShowSamples = showIndividualSamples;
-    constexpr auto edgeLeft =
-            static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight =
-            static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
+    }
+    constexpr auto edgeLeft
+        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
+    constexpr auto edgeRight
+        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
     const auto left = std::clamp(
-                zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x(), true),
-                edgeLeft, edgeRight);
+        zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x(), true),
+        edgeLeft, edgeRight);
     const auto right = std::clamp(
-                zoomInfo.TimeToPosition(
-                    clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip) +
-                    clipEndingAdjustment,
-                    viewRect.x(), true),
-                edgeLeft, edgeRight);
-    if (right >= left)
-    {
+        zoomInfo.TimeToPosition(
+            clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip)
+            + clipEndingAdjustment,
+            viewRect.x(), true),
+        edgeLeft, edgeRight);
+    if (right >= left) {
         // after clamping we can expect that left and right
         // are small enough to be put into int
         return {
             static_cast<int>(left),
-                    viewRect.y(),
-                    std::max(1, static_cast<int>(right - left)),
-                    viewRect.height()
+            viewRect.y(),
+            std::max(1, static_cast<int>(right - left)),
+            viewRect.height()
         };
     }
     return {};
@@ -571,8 +569,9 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
     const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
     const auto s0 = sampleCount(floor(t0 * rate));
     const auto snSamples = clip.GetVisibleSampleCount();
-    if (s0 > snSamples)
+    if (s0 > snSamples) {
         return;
+    }
 
     const double t1 = zoomInfo.PositionToTime(rect.width() - 1, -leftOffset) - toffset;
     const auto s1 = sampleCount(ceil(t1 * rate));
@@ -581,8 +580,9 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
     // few individual samples
     auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
 
-    if (slen <= 0)
+    if (slen <= 0) {
         return;
+    }
 
     Floats buffer{ size_t(slen) };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen,
@@ -597,36 +597,37 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
     //TODO: uncomment and fix
     //const auto bShowClipping = artist->mShowClipping;
     const auto bShowClipping = false;
-    if (bShowClipping)
-        clipped.reinit( size_t(slen) );
+    if (bShowClipping) {
+        clipped.reinit(size_t(slen));
+    }
 
     const auto muteSamplePen = GetThemeValue<QColor>("muteSamplePen");
     const auto samplePen = GetThemeValue<QColor>("samplePen");
 
-    painter.setPen(highlight ? QColor("#FF00FF") :
-                               (muted ? muteSamplePen : samplePen));
+    painter.setPen(highlight ? QColor("#FF00FF")
+                   : (muted ? muteSamplePen : samplePen));
 
     for (decltype(slen) s = 0; s < slen; s++) {
         const double time = toffset + (s + s0).as_double() / rate;
-        const int xx = // An offset into the rectangle rect
-                std::max(-10000, std::min(10000,
-                                          (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
+        const int xx   // An offset into the rectangle rect
+            =std::max(-10000, std::min(10000,
+                                       (int)(zoomInfo.TimeToPosition(time, -leftOffset))));
         xpos[s] = xx;
 
         // Calculate sample as it would be rendered, so quantize time
-        double value =
-                clip.GetEnvelope().GetValue( time, 1.0 / clip.GetRate() );
+        double value
+            =clip.GetEnvelope().GetValue(time, 1.0 / clip.GetRate());
         const double tt = buffer[s] * value;
 
-        if (clipped && bShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)))
+        if (clipped && bShowClipping && ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO))) {
             clipped[clipcnt++] = xx;
-        ypos[s] =
-                std::max(-1,
-                         std::min(rect.height(),
-                                  GetWaveYPos(tt, zoomMin, zoomMax,
-                                              rect.height(), dB, true, dBRange, false)));
+        }
+        ypos[s]
+            =std::max(-1,
+                      std::min(rect.height(),
+                               GetWaveYPos(tt, zoomMin, zoomMax,
+                                           rect.height(), dB, true, dBRange, false)));
     }
-
 
     if (showPoints) {
         // Draw points where spacing is enough
@@ -639,15 +640,15 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
         //different colour when draggable.
         const auto dragsampleBrush = QBrush(GetThemeValue<QColor>("dragsampleBrush"));
         const auto sampleBrush = QBrush(GetThemeValue<QColor>("sampleBrush"));
-        auto brush = highlight ? QBrush("#FF00FF") :
-                                 (bigPoints ? dragsampleBrush : sampleBrush);
+        auto brush = highlight ? QBrush("#FF00FF")
+                     : (bigPoints ? dragsampleBrush : sampleBrush);
 
         painter.setBrush(brush);
 
         for (decltype(slen) s = 0; s < slen; s++) {
             if (ypos[s] >= 0 && ypos[s] < rect.height()) {
-                pr.moveLeft(rect.x() + xpos[s] - tickSize/2);
-                pr.moveTop(rect.y() + ypos[s] - tickSize/2);
+                pr.moveLeft(rect.x() + xpos[s] - tickSize / 2);
+                pr.moveTop(rect.y() + ypos[s] - tickSize / 2);
 
                 //painter.drawEllipse(pr);
             }
@@ -657,22 +658,21 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
     //TODO: uncomment and fix
     //const auto sampleDisplay = artist->mSampleDisplay;
     const auto sampleDisplay = true;
-    if (showPoints && (sampleDisplay == (int) WaveChannelViewConstants::StemPlot)) {
+    if (showPoints && (sampleDisplay == (int)WaveChannelViewConstants::StemPlot)) {
         // Draw vertical lines
         int yZero = GetWaveYPos(0.0, zoomMin, zoomMax, rect.height(), dB, true, dBRange, false);
         yZero = rect.y() + std::max(-1, std::min(rect.height(), yZero));
         for (decltype(slen) s = 0; s < slen; s++) {
             painter.drawLine(
-                        rect.x() + xpos[s], rect.y() + ypos[s],
-                        rect.x() + xpos[s], yZero);
+                rect.x() + xpos[s], rect.y() + ypos[s],
+                rect.x() + xpos[s], yZero);
         }
-    }
-    else {
+    } else {
         // Connect samples with straight lines
         for (decltype(slen) s = 0; s < slen - 1; s++) {
             painter.drawLine(
-                        rect.x() + xpos[s], rect.y() + ypos[s],
-                        rect.x() + xpos[s + 1], rect.y() + ypos[s + 1]);
+                rect.x() + xpos[s], rect.y() + ypos[s],
+                rect.x() + xpos[s + 1], rect.y() + ypos[s + 1]);
         }
     }
 
@@ -765,11 +765,11 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
         // We don't draw selection color for sync-lock selected tracks.
         sel = sel && !bIsSyncLockSelected;
 
-        if (lmaxtop == maxtop &&
-                lmintop == mintop &&
-                lmaxbot == maxbot &&
-                lminbot == minbot &&
-                lsel == sel) {
+        if (lmaxtop == maxtop
+            && lmintop == mintop
+            && lmaxbot == maxbot
+            && lminbot == minbot
+            && lsel == sel) {
             continue;
         }
 
@@ -780,13 +780,11 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
         if (lmaxbot < lmintop - 1) {
             painter.drawRect(l, rect.y() + lmaxtop, w, lmaxbot - lmaxtop);
             painter.drawRect(l, rect.y() + lmintop, w, lminbot - lmintop);
-        }
-        else {
+        } else {
             painter.drawRect(l, rect.y() + lmaxtop, w, lminbot - lmaxtop);
         }
 
-        if (highlightEnvelope && lmaxbot < lmintop - 1)
-        {
+        if (highlightEnvelope && lmaxbot < lmintop - 1) {
             painter.setBrush(uglyBrush);
             painter.drawRect(l, rect.y() + lmaxbot, w, lmintop - lmaxbot);
         }
@@ -805,8 +803,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
     if (lmaxbot < lmintop - 1) {
         painter.drawRect(l, rect.y() + lmaxtop, w, lmaxbot - lmaxtop);
         painter.drawRect(l, rect.y() + lmintop, w, lminbot - lmintop);
-    }
-    else {
+    } else {
         painter.drawRect(l, rect.y() + lmaxtop, w, lminbot - lmaxtop);
     }
     if (highlightEnvelope && lmaxbot < lmintop - 1) {
@@ -825,8 +822,8 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
 
     //OK, the display bounds are between min and max, which
     //is spread across rect.height.  Draw the line at the proper place.
-    if (zeroLevelYCoordinate >= rect.top() &&
-            zeroLevelYCoordinate <= rect.bottom()) {
+    if (zeroLevelYCoordinate >= rect.top()
+        && zeroLevelYCoordinate <= rect.bottom()) {
         painter.setPen(Qt::black);
         painter.drawLine(rect.x(), zeroLevelYCoordinate,
                          rect.x() + rect.width() - 1, zeroLevelYCoordinate);
@@ -861,24 +858,24 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
     const auto clippedPen = GetThemeValue<QColor>("clippedPen");
 
     paintParameters
-            .SetDisplayParameters(
-                //TODO: uncomment and fix
-                rect.height(), zoomMin, zoomMax, false/*artist->mShowClipping*/)
-            .SetDBParameters(dbRange, dB)
-            .SetBlankColor(ColorFromQColor(blankBrush))
-            .SetSampleColors(
-                ColorFromQColor(muted ? muteSamplePen : samplePen),
-                ColorFromQColor(muted ? muteSamplePen : selsamplePen))
-            .SetRMSColors(
-                ColorFromQColor(muted ? muteRmsPen : rmsPen),
-                ColorFromQColor(muted ? muteRmsPen : rmsPen))
-            .SetBackgroundColors(
-                ColorFromQColor(unselectedBrush),
-                ColorFromQColor(selectedBrush))
-            .SetClippingColors(
-                ColorFromQColor(muted ? muteClippedPen : clippedPen),
-                ColorFromQColor(muted ? muteClippedPen : clippedPen))
-            .SetEnvelope(clip.GetEnvelope());
+    .SetDisplayParameters(
+        //TODO: uncomment and fix
+        rect.height(), zoomMin, zoomMax, false /*artist->mShowClipping*/)
+    .SetDBParameters(dbRange, dB)
+    .SetBlankColor(ColorFromQColor(blankBrush))
+    .SetSampleColors(
+        ColorFromQColor(muted ? muteSamplePen : samplePen),
+        ColorFromQColor(muted ? muteSamplePen : selsamplePen))
+    .SetRMSColors(
+        ColorFromQColor(muted ? muteRmsPen : rmsPen),
+        ColorFromQColor(muted ? muteRmsPen : rmsPen))
+    .SetBackgroundColors(
+        ColorFromQColor(unselectedBrush),
+        ColorFromQColor(selectedBrush))
+    .SetClippingColors(
+        ColorFromQColor(muted ? muteClippedPen : clippedPen),
+        ColorFromQColor(muted ? muteClippedPen : clippedPen))
+    .SetEnvelope(clip.GetEnvelope());
 
     //TODO: uncomment and fix
     //clipPainter.SetSelection(
@@ -886,6 +883,16 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
     //   artist->pSelectedRegion->t1() - sequenceStartTime);
 
     waveformPainter.Draw(channelIndex, painter, paintParameters, localZoomInfo, rect, leftOffset, t0 + trimLeft, t1 + trimLeft);
+}
+
+static bool ClipDetailsVisible(const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect)
+{
+    //Do not fold clips to line at sample zoom level, as
+    //it may become impossible to 'unfold' it when clip is trimmed
+    //to a single sample
+    bool showSamples{ false };
+    auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
+    return showSamples || clipRect.width() >= kClipDetailedViewMinimumWidth;
 }
 
 void DrawWaveform(int channelIndex,
@@ -899,8 +906,7 @@ void DrawWaveform(int channelIndex,
 {
     //If clip is "too small" draw a placeholder instead of
     //attempting to fit the contents into a few pixels
-    if (!WaveClipItem::ClipDetailsVisible(clip, zoomInfo, rect))
-    {
+    if (!ClipDetailsVisible(clip, zoomInfo, rect)) {
         //TODO: uncomment and fix me
         /*
       auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
@@ -916,7 +922,7 @@ void DrawWaveform(int channelIndex,
 #endif
 
     const ClipParameters params(clip, rect, zoomInfo);
-    const auto &hiddenMid = params.hiddenMid;
+    const auto& hiddenMid = params.hiddenMid;
     // The "hiddenMid" rect contains the part of the display actually
     // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
     if (hiddenMid.width() <= 0) {
@@ -932,7 +938,7 @@ void DrawWaveform(int channelIndex,
     const int leftOffset = params.leftOffset;
     const QRect mid = params.mid;
 
-    auto &settings = WaveformSettings::Get(track);
+    auto& settings = WaveformSettings::Get(track);
     const float dBRange = settings.dBRange;
 
     painter.setPen(Qt::NoPen);
@@ -940,21 +946,21 @@ void DrawWaveform(int channelIndex,
     // The bounds (controlled by vertical zooming; -1.0...1.0
     // by default)
     float zoomMin, zoomMax;
-    auto &cache = WaveformScale::Get(track);
+    auto& cache = WaveformScale::Get(track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
     std::vector<double> vEnv(mid.width());
-    double *const env = &vEnv[0];
+    double* const env = &vEnv[0];
     GetEnvelopeValues(
-                clip.GetEnvelope(),
-                playStartTime,
+        clip.GetEnvelope(),
+        playStartTime,
 
-                // PRL: change back to make envelope evaluate only at sample times
-                // and then interpolate the display
-                0, // 1.0 / sampleRate,
+        // PRL: change back to make envelope evaluate only at sample times
+        // and then interpolate the display
+        0,         // 1.0 / sampleRate,
 
-                env, mid.width(), leftOffset, zoomInfo
-                );
+        env, mid.width(), leftOffset, zoomInfo
+        );
 
     // Draw the background of the track, outlining the shape of
     // the envelope and using a colored pen for the selected
@@ -963,20 +969,20 @@ void DrawWaveform(int channelIndex,
         double tt0, tt1;
         if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
             tt0 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t0())),
-                    tt1 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t1()));
-        }
-        else
+            tt1 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t1()));
+        } else {
             tt0 = tt1 = 0.0;
+        }
 
         DrawWaveformBackground(
-                    painter, mid,
-                    zoomInfo,
-                    env, leftOffset,
-                    zoomMin, zoomMax,
-                    tt0, tt1,
-                    dB, dBRange,
-                    cache.ZeroLevelYCoordinate({ mid.x(), mid.y(), mid.width(), mid.height()}),
-                    !track.GetSelected(), highlightEnvelope);
+            painter, mid,
+            zoomInfo,
+            env, leftOffset,
+            zoomMin, zoomMax,
+            tt0, tt1,
+            dB, dBRange,
+            cache.ZeroLevelYCoordinate({ mid.x(), mid.y(), mid.width(), mid.height() }),
+            !track.GetSelected(), highlightEnvelope);
     }
 
     //const double pps =
@@ -990,8 +996,7 @@ void DrawWaveform(int channelIndex,
     const bool showIndividualSamples = zoomInfo.GetZoom() > threshold1;
     const bool showPoints = zoomInfo.GetZoom() > threshold2;
 
-    if (!showIndividualSamples)
-    {
+    if (!showIndividualSamples) {
         DrawMinMaxRMS(channelIndex,
                       painter, rect,
                       zoomInfo,
@@ -999,22 +1004,20 @@ void DrawWaveform(int channelIndex,
                       t0, t1, leftOffset,
                       zoomMin, zoomMax,
                       dB, dBRange, muted);
-    }
-    else
-    {
+    } else {
         bool highlight = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
         auto target = dynamic_cast<SampleHandle*>(context.target.get());
         highlight = target && target->GetTrack().get() == track;
 #endif
         DrawIndividualSamples(
-                    channelIndex,
-                    painter, rect,
-                    zoomInfo,
-                    clip, leftOffset,
-                    zoomMin, zoomMax,
-                    dB, dBRange,
-                    showPoints, muted, highlight);
+            channelIndex,
+            painter, rect,
+            zoomInfo,
+            clip, leftOffset,
+            zoomMin, zoomMax,
+            dB, dBRange,
+            showPoints, muted, highlight);
     }
 
     //TODO: uncomment and fix me
@@ -1038,38 +1041,34 @@ void DrawWaveform(int channelIndex,
    }*/
 }
 
-bool WaveClipItem::ClipDetailsVisible(const ClipTimes& clip,
-                                      const ZoomInfo& zoomInfo, const QRect& viewRect)
+using namespace au::au3;
+
+AudacityProject& Au3WavePainter::projectRef() const
 {
-    //Do not fold clips to line at sample zoom level, as
-    //it may become impossible to 'unfold' it when clip is trimmed
-    //to a single sample
-    bool showSamples{ false };
-    auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
-    return showSamples || clipRect.width() >= kClipDetailedViewMinimumWidth;
+    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    return *project;
 }
 
-WaveClipItem::WaveClipItem(WaveTrack& waveTrack)
-    : mWaveTrack(waveTrack)
+void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params)
 {
+    WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(track) {
+        return;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(track, clipKey.index);
+    IF_ASSERT_FAILED(clip) {
+        return;
+    }
+
+    doPaint(painter, track, clip.get(), params);
 }
 
-WaveClipItem::~WaveClipItem() = default;
-
-void WaveClipItem::SetClip(WaveClip* clip)
+void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const WaveClip* clip, const Params& params)
 {
-    mClip = clip;
-    mHovered = false;
-}
-
-void WaveClipItem::Paint(QPainter& painter,
-                         const QRect& viewRect,
-                         const TimelineContext& trackPanel)
-{
-
-    assert(mClip);
-
     auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
+
+    WaveTrack* track = const_cast<WaveTrack*>(_track);
 
     bool highlightEnvelope = false;
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
@@ -1077,18 +1076,16 @@ void WaveClipItem::Paint(QPainter& painter,
     highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
 #endif
 
-    const bool dB = !WaveformSettings::Get(mWaveTrack).isLinear();
+    const bool dB = !WaveformSettings::Get(*track).isLinear();
 
-    auto top = viewRect.top();
-    const auto channelHeight = (viewRect.height()) / static_cast<int>(mClip->NChannels());
+    auto top = params.viewRect.top();
+    const auto channelHeight = (params.viewRect.height()) / static_cast<int>(clip->NChannels());
 
-    ZoomInfo zoomInfo{trackPanel.offset(), trackPanel.zoom()};
+    ZoomInfo zoomInfo{ params.zoom.offset, params.zoom.zoom };
     SelectedRegion selectedRegion{};
-    for(unsigned i = 0; i < mClip->NChannels(); ++i)
-    {
-        DrawWaveform(i, painter, mWaveTrack, *mClip, zoomInfo, selectedRegion,
-                     QRect(viewRect.left(), top, viewRect.width(), channelHeight), dB, mWaveTrack.GetMute(), false);
+    for (unsigned i = 0; i < clip->NChannels(); ++i) {
+        QRect rect = QRect(params.viewRect.left(), top, params.viewRect.width(), channelHeight);
+        DrawWaveform(i, painter, *track, *clip, zoomInfo, selectedRegion, rect, dB, track->GetMute(), false);
         top += channelHeight;
     }
 }
-

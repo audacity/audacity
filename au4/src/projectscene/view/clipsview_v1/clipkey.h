@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include "processing/processingtypes.h"
 
 namespace au::projectscene {
 class ClipKey
@@ -10,7 +11,6 @@ class ClipKey
 public:
     ClipKey();
 
-    uintptr_t au3WaveTrackPtr = 0; // WaveTrack*
-    uintptr_t au3WaveClipPtr = 0; // WaveClip*
+    processing::ClipKey key;
 };
 }

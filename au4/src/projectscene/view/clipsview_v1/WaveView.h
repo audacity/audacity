@@ -2,6 +2,9 @@
 
 #include <QQuickPaintedItem>
 
+#include "modularity/ioc.h"
+#include "au3wrap/iau3wavepainter.h"
+
 #include "clipkey.h"
 #include "TimelineContext.h"
 
@@ -13,6 +16,8 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 
+    muse::Inject<au3::IAu3WavePainter> wavePainter;
+
 public:
     WaveView(QQuickItem* parent = nullptr);
     ~WaveView() override;
@@ -23,7 +28,6 @@ public:
     void setTimelineContext(TimelineContext* newContext);
 
     void paint(QPainter* painter) override;
-    void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
 
 signals:
     void clipKeyChanged();
@@ -33,8 +37,6 @@ private:
     void UpdateItemsCache(TimelineContext& trackPanelView);
 
     ClipKey m_clipKey;
-    WaveClipItem* m_item = nullptr;
     TimelineContext* m_context = nullptr;
-    bool m_needsCacheUpdate = false;
 };
 }
