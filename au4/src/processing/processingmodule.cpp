@@ -23,7 +23,16 @@
 
 #include "modularity/ioc.h"
 
+#include "internal/processinguiactions.h"
+#include "internal/processingcontroller.h"
+
+#include "ui/iuiactionsregister.h"
+
 using namespace au::processing;
+using namespace muse;
+using namespace muse::modularity;
+using namespace muse::ui;
+using namespace muse::actions;
 
 //! NOTE This is essentially the core of the application;
 //! here is the application’s domain model and its main functions for audio processing.
@@ -35,10 +44,24 @@ std::string ProcessingModule::moduleName() const
 
 void ProcessingModule::registerExports()
 {
+    m_processingController = std::make_shared<ProcessingController>();
+    m_processingUiActions = std::make_shared<ProcessingUiActions>(m_processingController);
+
+    ioc()->registerExport<IProcessingController>(moduleName(), m_processingController);
+}
+
+void ProcessingModule::resolveImports()
+{
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
+    if (ar) {
+        ar->reg(std::make_shared<ProcessingUiActions>(m_processingController));
+    }
 }
 
 void ProcessingModule::onInit(const muse::IApplication::RunMode&)
 {
+    m_processingController->init();
+    m_processingUiActions->init();
 }
 
 void ProcessingModule::onDeinit()

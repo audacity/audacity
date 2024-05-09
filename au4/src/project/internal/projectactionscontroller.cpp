@@ -21,10 +21,25 @@ void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::openProject);
+    dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
+    dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importProject);
+
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
+    dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
 
-    dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
+    dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
+    dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
+    dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
+
+    dispatcher()->reg(this, "file-close", [this]() {
+        //! TODO AU4
+        bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
+        closeOpenedProject(quitApp);
+    });
+
+    dispatcher()->reg(this, "undo", this, &ProjectActionsController::undo);
+    dispatcher()->reg(this, "redo", this, &ProjectActionsController::redo);
 }
 
 IAudacityProjectPtr ProjectActionsController::currentProject() const
@@ -113,6 +128,11 @@ void ProjectActionsController::openProject(const muse::actions::ActionData& args
     openProject(ProjectFile(url, displayNameOverride));
 }
 
+void ProjectActionsController::importProject()
+{
+    NOT_IMPLEMENTED;
+}
+
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const
 {
     //! TODO AU4
@@ -128,6 +148,7 @@ bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) con
 bool ProjectActionsController::closeOpenedProject(bool quitApp)
 {
     //! TODO AU4
+    NOT_IMPLEMENTED;
     return false;
 }
 
@@ -455,6 +476,31 @@ RecentFile ProjectActionsController::makeRecentFile(IAudacityProjectPtr project)
 void ProjectActionsController::clearRecentProjects()
 {
     recentFilesController()->clearRecentFiles();
+}
+
+void ProjectActionsController::exportAudio()
+{
+    NOT_IMPLEMENTED;
+}
+
+void ProjectActionsController::exportLabels()
+{
+    NOT_IMPLEMENTED;
+}
+
+void ProjectActionsController::exportMIDI()
+{
+    NOT_IMPLEMENTED;
+}
+
+void ProjectActionsController::undo()
+{
+    NOT_IMPLEMENTED;
+}
+
+void ProjectActionsController::redo()
+{
+    NOT_IMPLEMENTED;
 }
 
 muse::Ret ProjectActionsController::openPageIfNeed(muse::Uri pageUri)

@@ -46,8 +46,8 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("quit",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Quit"),
-             TranslatableString("action", "Quit")
+             TranslatableString("action", "Exit"),
+             TranslatableString("action", "Exit")
              ),
     UiAction("restart",
              au::context::UiCtxAny,
