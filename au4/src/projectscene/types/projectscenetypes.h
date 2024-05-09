@@ -24,6 +24,8 @@
 
 #include "qobjectdefs.h"
 
+#include "processing/processingtypes.h"
+
 namespace au::projectscene {
 class TrackTypes
 {
@@ -38,6 +40,15 @@ public:
         LABEL
     };
     Q_ENUM(Type)
+};
+
+class ClipKey
+{
+    Q_GADGET
+
+public:
+
+    processing::ClipKey key;
 };
 }
 

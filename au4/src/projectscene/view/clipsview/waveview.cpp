@@ -1,74 +1,58 @@
 #include "waveview.h"
 
-#include <QSGGeometryNode>
-#include <QSGFlatColorMaterial>
+#include <QPainter>
 
-#include "processing/dom/wave.h"
+#include "TimelineContext.h"
 
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace au::processing;
 
 WaveView::WaveView(QQuickItem* parent)
-    : QQuickItem(parent)
+    : QQuickPaintedItem(parent)
 {
-    setFlag(ItemHasContents, true);
-
-    setClip(true);
+    setAcceptHoverEvents(true);
 }
 
-QSGNode* WaveView::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* updatePaintNodeData)
+WaveView::~WaveView()
 {
-    UNUSED(updatePaintNodeData);
+}
 
-    Wave wave = m_source.wave();
-    size_t count = wave.size();
+void WaveView::setClipKey(const ClipKey& newClipKey)
+{
+    m_clipKey = newClipKey;
+    emit clipKeyChanged();
 
-    QSGGeometryNode* node = nullptr;
-    QSGGeometry* geometry = nullptr;
+    update();
+}
 
-    if (!oldNode) {
-        node = new QSGGeometryNode;
-        geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), int(count));
-        geometry->setLineWidth(1);
-        geometry->setDrawingMode(QSGGeometry::DrawLineStrip);
-        node->setGeometry(geometry);
-        node->setFlag(QSGNode::OwnsGeometry);
+void WaveView::paint(QPainter* painter)
+{
+    au3::IAu3WavePainter::Params params;
+    params.viewRect = QRect(0, 0, width(), height());
+    params.zoom.offset = 0; //m_context->offset();
+    params.zoom.zoom = m_context->zoom();
 
-        QSGFlatColorMaterial* material = new QSGFlatColorMaterial;
-        material->setColor(QColor("#707DE5"));
-        node->setMaterial(material);
-        node->setFlag(QSGNode::OwnsMaterial);
-    } else {
-        node = static_cast<QSGGeometryNode*>(oldNode);
-        geometry = node->geometry();
-        geometry->allocate(int(count));
+    wavePainter()->paint(*painter, m_clipKey.key, params);
+}
+
+ClipKey WaveView::clipKey() const
+{
+    return m_clipKey;
+}
+
+TimelineContext* WaveView::timelineContext() const
+{
+    return m_context;
+}
+
+void WaveView::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
     }
 
-    QSGGeometry::Point2D* vertices = geometry->vertexDataAsPoint2D();
-
-    QSizeF sz = this->size();
-    float scaleY = sz.height() / (32767 * 2);
-    for (size_t i = 0; i < count; ++i) {
-        int16_t v = wave[i];
-        float x = i * 0.5;
-        float y = (v * scaleY + sz.height() / 2);
-
-        vertices[i].set(x, y);
-    }
-    node->markDirty(QSGNode::DirtyGeometry);
-
-    return node;
-}
-
-WaveSource WaveView::source() const
-{
-    return m_source;
-}
-
-void WaveView::setSource(const WaveSource& newSource)
-{
-    m_source = newSource;
-    emit sourceChanged();
+    //! TODO Subscribe on context props changes
+    m_context = newContext;
+    emit timelineContextChanged();
 }

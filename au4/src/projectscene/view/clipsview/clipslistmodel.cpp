@@ -1,6 +1,6 @@
 #include "clipslistmodel.h"
 
-#include "clipkey.h"
+#include "types/projectscenetypes.h"
 
 #include "log.h"
 
@@ -54,8 +54,7 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case ClipKeyRole: {
         ClipKey key;
-        key.au3WaveTrackPtr = clip.au3WaveTrackPtr;
-        key.au3WaveClipPtr = clip.au3WaveClipPtr;
+        key.key = clip.key;
         return QVariant::fromValue(key);
     } break;
     case ClipTitleRole:

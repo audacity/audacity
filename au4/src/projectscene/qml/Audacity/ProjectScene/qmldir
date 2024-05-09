@@ -1,5 +1,4 @@
 module Audacity.ProjectScene
 ProjectToolBar 1.0 ProjectToolBar.qml
 TracksPanel 1.0 TracksPanel.qml
-TracksClipsView 1.0 clipsview_v1/TracksClipsView.qml
-TrackRow 1.0 clipsview_v1/TrackRow.qml
+TracksClipsView 1.0 clipsview/TracksClipsView.qml

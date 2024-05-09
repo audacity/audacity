@@ -30,6 +30,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audacity3project.h
     ${CMAKE_CURRENT_LIST_DIR}/audacity3playback.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audacity3playback.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3wavepainter.h
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
@@ -42,6 +43,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.h
     )
 
 # ==================================

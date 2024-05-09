@@ -31,6 +31,7 @@
 
 #include "internal/wxlogwrap.h"
 #include "internal/processinginteraction.h"
+#include "internal/au3wavepainter.h"
 
 #include "modularity/ioc.h"
 #include "audacity3playback.h"
@@ -51,6 +52,7 @@ void Au3WrapModule::registerExports()
 
     ioc()->registerExport<IAudacity3Playback>(moduleName(), m_playback);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
+    ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
