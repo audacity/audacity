@@ -67,6 +67,31 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
+bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, int role)
+{
+    LOGDA() << "" << index.row() << ", value: " << value << ", role: " << role;
+    switch (role) {
+    case ClipLeftRole: {
+        au::processing::Clip& clip = m_clipList[index.row()];
+        double sec = m_context->positionToTime(value.toDouble());
+        bool ok = changeClipStartPosition(clip, sec);
+        if (ok) {
+            emit dataChanged(index, index, { role });
+        }
+    } break;
+    default:
+        break;
+    }
+    return false;
+}
+
+bool ClipsListModel::changeClipStartPosition(au::processing::Clip& clip, double sec)
+{
+    LOGDA() << "sec: " << sec;
+    clip.startTime = sec;
+    return true;
+}
+
 QHash<int, QByteArray> ClipsListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles

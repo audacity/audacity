@@ -25,8 +25,9 @@ public:
     Q_INVOKABLE void load();
 
     int rowCount(const QModelIndex& parent) const override;
-    QVariant data(const QModelIndex& index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
+    QVariant data(const QModelIndex& index, int role) const override;
+    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
@@ -45,6 +46,8 @@ private:
         ClipWidthRole,
         ClipLeftRole
     };
+
+    bool changeClipStartPosition(processing::Clip& clip, double sec);
 
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_clipList;
