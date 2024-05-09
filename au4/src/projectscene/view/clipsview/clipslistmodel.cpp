@@ -23,6 +23,8 @@ void ClipsListModel::load()
         return;
     }
 
+    connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextChanged);
+
     beginResetModel();
 
     m_clipList = prj->clipList(m_trackId);
@@ -33,8 +35,6 @@ void ClipsListModel::load()
         QModelIndex idx = this->index(clip.key.index);
         emit dataChanged(idx, idx);
     });
-
-    //! TODO Subscribe
 
     endResetModel();
 }
@@ -85,6 +85,14 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
         break;
     }
     return false;
+}
+
+void ClipsListModel::onTimelineContextChanged()
+{
+    for (size_t i = 0; i < m_clipList.size(); ++i) {
+        QModelIndex idx = this->index(int(i));
+        emit dataChanged(idx, idx, { ClipWidthRole, ClipLeftRole });
+    }
 }
 
 bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVariant& value)

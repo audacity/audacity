@@ -2,7 +2,7 @@
 
 #include <QPainter>
 
-#include "TimelineContext.h"
+#include "timelinecontext.h"
 
 #include "log.h"
 

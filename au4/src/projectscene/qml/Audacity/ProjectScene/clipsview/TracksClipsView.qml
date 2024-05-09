@@ -24,6 +24,13 @@ Item {
         anchors.right: parent.right
     }
 
+    MouseArea {
+        anchors.fill: parent
+        onWheel: function(wheel) {
+            timeline.onWheel(wheel.angleDelta.y)
+        }
+    }
+
     ListView {
         id: tracksView
 
@@ -47,4 +54,6 @@ Item {
             trackId: trackIdData
         }
     }
+
+
 }

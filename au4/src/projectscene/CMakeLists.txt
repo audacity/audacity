@@ -39,8 +39,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/TimelineContext.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/TimelineContext.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelinecontext.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelinecontext.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp

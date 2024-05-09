@@ -31,7 +31,7 @@
 #include "view/clipsview/trackslistclipsmodel.h"
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/waveview.h"
-#include "view/clipsview/TimelineContext.h"
+#include "view/clipsview/timelinecontext.h"
 
 using namespace au::projectscene;
 using namespace muse::modularity;
