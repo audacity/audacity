@@ -21,7 +21,6 @@
  */
 #include "au3wrapmodule.h"
 
-#include <iostream>
 #include <wx/log.h>
 
 #include "libraries/lib-preferences/Prefs.h"
@@ -31,6 +30,7 @@
 #include "mocks/au3settingsmock.h"
 
 #include "internal/wxlogwrap.h"
+#include "internal/processinginteraction.h"
 
 #include "modularity/ioc.h"
 #include "audacity3playback.h"
@@ -38,6 +38,7 @@
 #include "log.h"
 
 using namespace au::au3;
+using namespace muse::modularity;
 
 std::string Au3WrapModule::moduleName() const
 {
@@ -48,7 +49,8 @@ void Au3WrapModule::registerExports()
 {
     m_playback = std::make_shared<Audacity3Playback>();
 
-    muse::modularity::ioc()->registerExport<IAudacity3Playback>(moduleName(), m_playback);
+    ioc()->registerExport<IAudacity3Playback>(moduleName(), m_playback);
+    ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)

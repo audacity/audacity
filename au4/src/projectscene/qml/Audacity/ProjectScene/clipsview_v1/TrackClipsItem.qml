@@ -25,13 +25,18 @@ Item {
         delegate: ClipItem {
 
             height: parent.height
-            width: clipWidthData
-            x: clipLeftData
+            width: model.clipWidthData
+            x: model.clipLeftData
 
-            title: clipTitleData
+            title: model.clipTitleData
 
             context: root.context
-            clipKey: clipKeyData
+            clipKey: model.clipKeyData
+
+            onPositionChanged: function(x) {
+                console.log("[ClipItem] onXChanged: " + x)
+                model.clipLeftData = x
+            }
         }
     }
 

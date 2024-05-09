@@ -34,16 +34,21 @@ WindowDropArea::WindowDropArea(QQuickItem* parent)
 
 void WindowDropArea::dragEnterEvent(QDragEnterEvent* event)
 {
-    applicationActionController()->onDragEnterEvent(event);
+    if (applicationActionController()) {
+        applicationActionController()->onDragEnterEvent(event);
+    }
 }
 
 void WindowDropArea::dragMoveEvent(QDragMoveEvent* event)
 {
-    applicationActionController()->onDragMoveEvent(event);
+    if (applicationActionController()) {
+        applicationActionController()->onDragMoveEvent(event);
+    }
 }
 
 void WindowDropArea::dropEvent(QDropEvent* event)
 {
-    LOGI() << event;
-    applicationActionController()->onDropEvent(event);
+    if (applicationActionController()) {
+        applicationActionController()->onDropEvent(event);
+    }
 }

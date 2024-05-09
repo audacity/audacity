@@ -4,9 +4,11 @@
 #include <vector>
 
 #include "global/types/string.h"
+#include "../processingtypes.h"
 
 namespace au::processing {
 struct Clip {
+    ClipKey key;
     muse::String title;
     double startTime = 0.0;
     double endTime = 0.0;
