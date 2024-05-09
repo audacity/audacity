@@ -8,6 +8,8 @@ Item {
 
     id: root
 
+    clip: true
+
     TracksListClipsModel {
         id: tracksModel
     }
@@ -31,29 +33,21 @@ Item {
         }
     }
 
-    ListView {
-        id: tracksView
-
+    Column {
         anchors.top: timeline.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        clip: true
-
-        pixelAligned: true
-
-        flickableDirection: Flickable.VerticalFlick
-
-        model: tracksModel
-        delegate: TrackClipsItem {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 144
-            context: timeline.context
-            trackId: trackIdData
+        Repeater {
+            model: tracksModel
+            delegate: TrackClipsItem {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 144
+                context: timeline.context
+                trackId: trackIdData
+            }
         }
     }
-
-
 }

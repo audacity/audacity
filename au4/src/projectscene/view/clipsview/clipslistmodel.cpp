@@ -61,7 +61,7 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     case ClipTitleRole:
         return clip.title.toQString();
     case ClipWidthRole: {
-        qint64 width = m_context->timeToPosition(clip.endTime - clip.startTime);
+        qint64 width = (clip.endTime - clip.startTime) * m_context->zoom();
         return width;
     } break;
     case ClipLeftRole: {

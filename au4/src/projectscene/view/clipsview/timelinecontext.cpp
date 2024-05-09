@@ -13,8 +13,6 @@ TimelineContext::TimelineContext(QQuickItem* parent)
 
 void TimelineContext::onWheel(double y)
 {
-    LOGD() << y;
-
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
     if (modifiers.testFlag(Qt::ControlModifier)) {
         changeZoom(y < 0 ? -1 : 1);
