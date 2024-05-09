@@ -69,6 +69,8 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     if (!ok) {
         LOGE() << "failed init sql";
     }
+
+    m_playback->init();
 }
 
 void Au3WrapModule::onDeinit()

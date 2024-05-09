@@ -157,8 +157,6 @@ Item {
                         Connections {
                             target: btn.mouseArea
 
-                            // Make sure we only connect to `pressAndHold` if necessary
-                            // See https://github.com/musescore/MuseScore/issues/16012
                             enabled: btn.hasMenu && !menuLoader.isMenuOpened
 
                             function onPressAndHold() {
@@ -210,7 +208,13 @@ Item {
                     id: playbackLevelComp
 
                     PlaybackLevel {
+                        property var item: loader.itemData
+
                         width: 128
+
+                        onVolumeLevelChangeRequested: function(level) {
+                            item.level = level
+                        }
                     }
                 }
             }

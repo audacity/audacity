@@ -11,7 +11,7 @@
 
 #include "playback/audiotypes.h"
 
-class AudacityProject;
+#include "iaudacity3audiooutput.h"
 
 namespace au::au3 {
 class IAudacity3Playback : MODULE_EXPORT_INTERFACE
@@ -32,6 +32,8 @@ public:
 
     virtual muse::async::Channel<audio::msecs_t> playbackPositionMsecs() const = 0;
     virtual muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const = 0;
+
+    virtual std::shared_ptr<IAudacity3AudioOutput> audioOutput() const = 0;
 };
 using IAudacity3PlaybackPtr = std::shared_ptr<IAudacity3Playback>;
 }

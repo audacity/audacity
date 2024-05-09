@@ -6,6 +6,7 @@
 #include "internal/playbackuiactions.h"
 
 #include "view/toolbars/playbacktoolbarabstractitem.h"
+#include "view/toolbars/playbacktoolbarlevelitem.h"
 
 using namespace muse::uicomponents;
 using namespace muse::ui;
@@ -82,8 +83,8 @@ QVariant PlaybackToolBarModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const PlaybackToolBarAbstractItem* item = m_items[row];
-    const ActionCode actionCode = item->action().code;
+    PlaybackToolBarAbstractItem* item = m_items[row];
+    ActionCode actionCode = item->action().code;
 
     switch (role) {
     case ItemRole: return QVariant::fromValue(item);
@@ -149,13 +150,12 @@ void PlaybackToolBarModel::updateActions()
     muse::ui::ToolConfig playbackConfig
         = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
 
-    int section = 0;
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {
             continue;
         }
 
-        PlaybackToolBarAbstractItem* item = makeItem(uiActionsRegister()->action(citem.action), QString::number(section));
+        PlaybackToolBarAbstractItem* item = makeItem(uiActionsRegister()->action(citem.action));
 
         if (citem.action == PLAY_ACTION_CODE) {
             item->setAction(playAction());
@@ -176,11 +176,17 @@ bool PlaybackToolBarModel::isMenuSecondary(const muse::actions::ActionCode& acti
     return false;
 }
 
-PlaybackToolBarAbstractItem* PlaybackToolBarModel::makeItem(const muse::ui::UiAction& action, const QString& section)
+PlaybackToolBarAbstractItem* PlaybackToolBarModel::makeItem(const muse::ui::UiAction& action)
 {
-    PlaybackToolBarAbstractItem* item = new PlaybackToolBarAbstractItem(action, itemType(action.code), this);
-    item->setSection(section);
-    return item;
+    PlaybackToolBarAbstractItem::ItemType type = itemType(action.code);
+
+    switch (type) {
+    case PlaybackToolBarAbstractItem::PLAYBACK_LEVEL: return new PlaybackToolBarLevelItem(action, type, this);
+    default:
+        break;
+    }
+
+    return new PlaybackToolBarAbstractItem(action, type, this);
 }
 
 UiAction PlaybackToolBarModel::playAction() const

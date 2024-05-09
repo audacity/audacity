@@ -64,7 +64,7 @@ private:
 
     bool isMenuSecondary(const muse::actions::ActionCode& actionCode) const;
 
-    PlaybackToolBarAbstractItem* makeItem(const muse::ui::UiAction& action, const QString& section);
+    PlaybackToolBarAbstractItem* makeItem(const muse::ui::UiAction& action);
 
     muse::ui::UiAction playAction() const;
 

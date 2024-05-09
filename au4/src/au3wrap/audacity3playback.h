@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 
 #include "iaudacity3playback.h"
+#include "iaudacity3audiooutput.h"
 
 class AudacityProject;
 class TrackList;
@@ -22,6 +23,8 @@ class Audacity3Playback : public IAudacity3Playback, public muse::async::Asyncab
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
+    void init();
+
     void play() override;
     void seek(const audio::msecs_t newPositionMsecs) override;
     void stop() override;
@@ -35,6 +38,8 @@ public:
     muse::async::Channel<audio::msecs_t> playbackPositionMsecs() const override;
     muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const override;
 
+    IAudacity3AudioOutputPtr audioOutput() const override;
+
 private:
     AudacityProject& projectRef() const;
 
@@ -43,6 +48,8 @@ private:
 
     mutable muse::async::Channel<audio::msecs_t> m_playbackPositionMsecsChanged;
     mutable muse::async::Channel<audio::PlaybackStatus> m_playbackStatusChanged;
+
+    IAudacity3AudioOutputPtr m_audioOutputPtr;
 };
 }
 

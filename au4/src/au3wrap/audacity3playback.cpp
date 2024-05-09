@@ -14,9 +14,16 @@
 
 #include "wxtypes_convert.h"
 
+#include "internal/audacity3audiooutput.h"
+
 #include "log.h"
 
 using namespace au::au3;
+
+void Audacity3Playback::init()
+{
+    m_audioOutputPtr = std::make_shared<Audacity3AudioOutput>();
+}
 
 void Audacity3Playback::play()
 {
@@ -262,6 +269,11 @@ muse::async::Channel<au::audio::msecs_t> Audacity3Playback::playbackPositionMsec
 muse::async::Channel<au::audio::PlaybackStatus> Audacity3Playback::playbackStatusChanged() const
 {
     return m_playbackStatusChanged;
+}
+
+IAudacity3AudioOutputPtr Audacity3Playback::audioOutput() const
+{
+    return m_audioOutputPtr;
 }
 
 AudacityProject& Audacity3Playback::projectRef() const

@@ -15,6 +15,8 @@ Item {
 
     height: 32
 
+    signal volumeLevelChangeRequested(var level)
+
     RowLayout {
         anchors.fill: parent
         anchors.margins: 6
@@ -35,7 +37,7 @@ Item {
             Layout.alignment: Qt.AlighVCenter
 
             onVolumeLevelMoved: function(level) {
-                volumeLevel = Math.round(level * 10) / 10
+                root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
             }
         }
     }
