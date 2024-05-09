@@ -12,6 +12,8 @@
 #include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
 
 #include "wxtypes_convert.h"
+#include "internal/domconverter.h"
+#include "internal/domaccessor.h"
 
 #include "log.h"
 
@@ -116,34 +118,16 @@ muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() con
 
 muse::async::NotifyList<au::processing::Clip> Audacity3Project::clipList(const au::processing::TrackId& trackId) const
 {
-    TrackId au3TrackId = TrackId(trackId);
-    const Track* track = nullptr;
-    TrackList& tracks = TrackList::Get(m_data->projectRef());
-    for (const Track* t : tracks) {
-        if (t->GetId() == au3TrackId) {
-            track = t;
-            break;
-        }
-    }
-
-    IF_ASSERT_FAILED(track) {
-        return muse::async::NotifyList<au::processing::Clip>();
-    }
-
-    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    const WaveTrack* waveTrack = DomAccessor::findWaveTrack(m_data->projectRef(), TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return muse::async::NotifyList<au::processing::Clip>();
     }
 
     muse::async::NotifyList<au::processing::Clip> clips;
+    int index = -1;
     for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
-        au::processing::Clip clip;
-        clip.au3WaveTrackPtr = reinterpret_cast<uintptr_t>(waveTrack);
-        clip.au3WaveClipPtr = reinterpret_cast<uintptr_t>(interval.get());
-        clip.title = wxToSting(interval->GetName());
-        clip.startTime = interval->GetPlayStartTime();
-        clip.endTime = interval->GetPlayEndTime();
-
+        ++index;
+        au::processing::Clip clip = DomConverter::clip(waveTrack, interval.get(), index);
         clips.push_back(std::move(clip));
     }
 

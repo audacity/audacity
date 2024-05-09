@@ -5,6 +5,7 @@
 #define AU_PROСESSING_PROСESSINGTYPES_H
 
 #include "global/realfn.h"
+#include "global/containers.h"
 #include "global/types/id.h"
 
 namespace au::processing {
@@ -19,6 +20,12 @@ using gain_t = float;
 using balance_t = float;
 
 using TrackId = long;
+
+struct ClipKey
+{
+    TrackId trackId = -1;
+    size_t index = muse::nidx;
+};
 
 struct AudioOutputParams {
     volume_db_t volume = 0.f;

@@ -5,6 +5,7 @@
 #include "log.h"
 
 using namespace au::projectscene;
+using namespace au::processing;
 
 ClipsListModel::ClipsListModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -17,7 +18,7 @@ void ClipsListModel::load()
         return;
     }
 
-    au::processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     if (!prj) {
         return;
     }
@@ -25,6 +26,13 @@ void ClipsListModel::load()
     beginResetModel();
 
     m_clipList = prj->clipList(m_trackId);
+
+    m_clipList.onItemChanged(this, [this](const Clip& clip) {
+        LOGD() << "onClipChanged, track: " << clip.key.trackId << ", index: " << clip.key.index;
+        m_clipList[clip.key.index] = clip;
+        QModelIndex idx = this->index(clip.key.index);
+        emit dataChanged(idx, idx);
+    });
 
     //! TODO Subscribe
 
@@ -69,15 +77,10 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
 
 bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    LOGDA() << "" << index.row() << ", value: " << value << ", role: " << role;
+    LOGD() << "" << index.row() << ", value: " << value << ", role: " << role;
     switch (role) {
     case ClipLeftRole: {
-        au::processing::Clip& clip = m_clipList[index.row()];
-        double sec = m_context->positionToTime(value.toDouble());
-        bool ok = changeClipStartPosition(clip, sec);
-        if (ok) {
-            emit dataChanged(index, index, { role });
-        }
+        return changeClipStartTime(index, value);
     } break;
     default:
         break;
@@ -85,11 +88,13 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
     return false;
 }
 
-bool ClipsListModel::changeClipStartPosition(au::processing::Clip& clip, double sec)
+bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVariant& value)
 {
-    LOGDA() << "sec: " << sec;
-    clip.startTime = sec;
-    return true;
+    au::processing::Clip& clip = m_clipList[index.row()];
+    double sec = m_context->positionToTime(value.toDouble());
+
+    bool ok = processingInteraction()->changeClipStartTime(clip.key, sec);
+    return ok;
 }
 
 QHash<int, QByteArray> ClipsListModel::roleNames() const

@@ -19,9 +19,12 @@ public:
     ProcessingProject();
 
     void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
+    const std::shared_ptr<au::au3::Audacity3Project>& audacity3Project() const { return m_au3; }
 
     muse::async::NotifyList<Track> trackList() const;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
+
+    void onClipChanged(const Clip& clip);
 
     //! NOTE Just for debug
     void dump();
@@ -29,6 +32,8 @@ public:
 private:
 
     std::shared_ptr<au::au3::Audacity3Project> m_au3;
+
+    mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
 };
 
 using ProcessingProjectPtr = std::shared_ptr<ProcessingProject>;

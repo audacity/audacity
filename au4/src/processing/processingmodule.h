@@ -4,8 +4,6 @@
 #ifndef AU_PROСESSING_PROСESSINGMODULE_H
 #define AU_PROСESSING_PROСESSINGMODULE_H
 
-#include <memory>
-
 #include "modularity/imodulesetup.h"
 
 namespace au::processing {

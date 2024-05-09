@@ -36,6 +36,12 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.h
     )
 
 # ==================================
@@ -540,4 +546,5 @@ set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
 
 set(MODULE_USE_PCH_NONE ON)
 set(MODULE_USE_UNITY_NONE ON)
+
 setup_module()
