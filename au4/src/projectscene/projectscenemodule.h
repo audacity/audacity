@@ -4,8 +4,6 @@
 #ifndef AU_PROJECTSCENE_PROJECTSCENEMODULE_H
 #define AU_PROJECTSCENE_PROJECTSCENEMODULE_H
 
-#include <memory>
-
 #include "modularity/imodulesetup.h"
 
 namespace au::projectscene {
@@ -18,7 +16,6 @@ public:
     void resolveImports() override;
     void registerUiTypes() override;
     void registerResources() override;
-
 };
 }
 

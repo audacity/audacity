@@ -18,6 +18,11 @@ muse::async::NotifyList<Track> ProcessingProject::trackList() const
     return m_au3->trackList();
 }
 
+muse::async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) const
+{
+    return m_au3->clipList(trackId);
+}
+
 void ProcessingProject::dump()
 {
     muse::async::NotifyList<Track> tracks = trackList();
