@@ -4,8 +4,8 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-TimelineContext
-{
+Item {
+
     id: root
 
     TracksListClipsModel {
@@ -16,23 +16,18 @@ TimelineContext
         tracksModel.load()
     }
 
-
-    Item {
-        id: header
+    Timeline {
+        id: timeline
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-
-        height: 76
-
-        SeparatorLine { anchors.bottom: parent.bottom }
     }
 
     ListView {
         id: tracksView
 
-        anchors.top: header.bottom
+        anchors.top: timeline.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -48,7 +43,7 @@ TimelineContext
             anchors.left: parent.left
             anchors.right: parent.right
             height: 144
-            context: root
+            context: timeline.context
             trackId: trackIdData
         }
     }
