@@ -9,7 +9,7 @@
 #include "global/async/asyncable.h"
 #include "processing/processingtypes.h"
 
-#include "TimelineContext.h"
+#include "timelinecontext.h"
 
 namespace au::projectscene {
 class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable
@@ -40,6 +40,9 @@ public:
 
 signals:
     void trackIdChanged();
+
+private slots:
+    void onTimelineContextChanged();
 
 private:
 

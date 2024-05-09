@@ -4,9 +4,11 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-TimelineContext
-{
+Item {
+
     id: root
+
+    clip: true
 
     TracksListClipsModel {
         id: tracksModel
@@ -16,40 +18,36 @@ TimelineContext
         tracksModel.load()
     }
 
-
-    Item {
-        id: header
+    Timeline {
+        id: timeline
 
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
-
-        height: 76
-
-        SeparatorLine { anchors.bottom: parent.bottom }
     }
 
-    ListView {
-        id: tracksView
+    MouseArea {
+        anchors.fill: parent
+        onWheel: function(wheel) {
+            timeline.onWheel(wheel.angleDelta.y)
+        }
+    }
 
-        anchors.top: header.bottom
+    Column {
+        anchors.top: timeline.bottom
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
-        clip: true
-
-        pixelAligned: true
-
-        flickableDirection: Flickable.VerticalFlick
-
-        model: tracksModel
-        delegate: TrackClipsItem {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: 144
-            context: root
-            trackId: trackIdData
+        Repeater {
+            model: tracksModel
+            delegate: TrackClipsItem {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: 144
+                context: timeline.context
+                trackId: trackIdData
+            }
         }
     }
 }

@@ -23,6 +23,9 @@ void ClipsListModel::load()
         return;
     }
 
+    connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextChanged);
+    connect(m_context, &TimelineContext::offsetChanged, this, &ClipsListModel::onTimelineContextChanged);
+
     beginResetModel();
 
     m_clipList = prj->clipList(m_trackId);
@@ -33,8 +36,6 @@ void ClipsListModel::load()
         QModelIndex idx = this->index(clip.key.index);
         emit dataChanged(idx, idx);
     });
-
-    //! TODO Subscribe
 
     endResetModel();
 }
@@ -60,7 +61,7 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     case ClipTitleRole:
         return clip.title.toQString();
     case ClipWidthRole: {
-        qint64 width = m_context->timeToPosition(clip.endTime - clip.startTime);
+        qint64 width = (clip.endTime - clip.startTime) * m_context->zoom();
         return width;
     } break;
     case ClipLeftRole: {
@@ -85,6 +86,14 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
         break;
     }
     return false;
+}
+
+void ClipsListModel::onTimelineContextChanged()
+{
+    for (size_t i = 0; i < m_clipList.size(); ++i) {
+        QModelIndex idx = this->index(int(i));
+        emit dataChanged(idx, idx, { ClipWidthRole, ClipLeftRole });
+    }
 }
 
 bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVariant& value)

@@ -17,7 +17,8 @@ class TimelineContext : public QQuickItem
 public:
 
     TimelineContext(QQuickItem* parent = nullptr);
-    ~TimelineContext() override;
+
+    Q_INVOKABLE void onWheel(double y);
 
     Q_INVOKABLE qint64 timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(qint64 position) const;
@@ -46,6 +47,9 @@ signals:
     void tracksOriginOffsetChanged();
 
 private:
+
+    void changeZoom(int direction);
+    void changeOffset(int direction);
 
     double mOffset = 0.0;
     double mZoom = 2.0;//{ 44100.0 / 512.0 };

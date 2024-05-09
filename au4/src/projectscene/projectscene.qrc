@@ -11,5 +11,6 @@
         <file>qml/Audacity/ProjectScene/clipsview/TracksClipsView.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/TrackClipsItem.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipItem.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/Timeline.qml</file>
     </qresource>
 </RCC>

@@ -6,7 +6,7 @@
 #include "au3wrap/iau3wavepainter.h"
 
 #include "types/projectscenetypes.h"
-#include "TimelineContext.h"
+#include "timelinecontext.h"
 
 class WaveClipItem;
 namespace au::projectscene {
