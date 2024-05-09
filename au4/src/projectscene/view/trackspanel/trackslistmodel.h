@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "types/tracktypes.h"
+#include "types/projectscenetypes.h"
 
 #include "trackitem.h"
 

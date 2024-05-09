@@ -1,31 +1,42 @@
-#ifndef AU_PROJECTSCENE_WAVEVIEW_H
-#define AU_PROJECTSCENE_WAVEVIEW_H
+#pragma once
 
-#include <QQuickItem>
+#include <QQuickPaintedItem>
 
-#include "wavesource.h"
+#include "modularity/ioc.h"
+#include "au3wrap/iau3wavepainter.h"
 
+#include "types/projectscenetypes.h"
+#include "TimelineContext.h"
+
+class WaveClipItem;
 namespace au::projectscene {
-class WaveView : public QQuickItem
+class WaveView : public QQuickPaintedItem
 {
     Q_OBJECT
-    Q_PROPERTY(WaveSource source READ source WRITE setSource NOTIFY sourceChanged FINAL)
+    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
+
+    muse::Inject<au3::IAu3WavePainter> wavePainter;
 
 public:
-    explicit WaveView(QQuickItem* parent = nullptr);
+    WaveView(QQuickItem* parent = nullptr);
+    ~WaveView() override;
 
-    WaveSource source() const;
-    void setSource(const WaveSource& newSource);
+    ClipKey clipKey() const;
+    void setClipKey(const ClipKey& newClipKey);
+    TimelineContext* timelineContext() const;
+    void setTimelineContext(TimelineContext* newContext);
+
+    void paint(QPainter* painter) override;
 
 signals:
-    void sourceChanged();
-
-protected:
-    QSGNode* updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData* updatePaintNodeData) override;
+    void clipKeyChanged();
+    void timelineContextChanged();
 
 private:
-    WaveSource m_source;
+    void UpdateItemsCache(TimelineContext& trackPanelView);
+
+    ClipKey m_clipKey;
+    TimelineContext* m_context = nullptr;
 };
 }
-
-#endif // AU_PROJECTSCENE_WAVEVIEW_H

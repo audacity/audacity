@@ -1,6 +1,6 @@
 #include "clipslistmodel.h"
 
-#include "clipkey.h"
+#include "types/projectscenetypes.h"
 
 #include "log.h"
 

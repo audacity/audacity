@@ -23,11 +23,11 @@ declare_module(projectscene)
 
 set(MODULE_QRC projectscene.qrc)
 
-include(${CMAKE_CURRENT_LIST_DIR}/view/clipsview_v1/clipsview_v1.cmake)
-
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
@@ -37,20 +37,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
 
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavesource.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/wavesource.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipsmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipsmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackclipsitem.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackclipsitem.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipitem.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipitem.h
-
-    ${CLIPSVIEW_V1_SRC}
-
-    ${CMAKE_CURRENT_LIST_DIR}/types/tracktypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/TimelineContext.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/TimelineContext.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
     )
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
