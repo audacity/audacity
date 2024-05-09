@@ -38,8 +38,8 @@ void ProjectActionsController::init()
         closeOpenedProject(quitApp);
     });
 
-    dispatcher()->reg(this, "undo", this, &ProjectActionsController::exportMIDI);
-    dispatcher()->reg(this, "redo", this, &ProjectActionsController::exportMIDI);
+    dispatcher()->reg(this, "undo", this, &ProjectActionsController::undo);
+    dispatcher()->reg(this, "redo", this, &ProjectActionsController::redo);
 }
 
 IAudacityProjectPtr ProjectActionsController::currentProject() const

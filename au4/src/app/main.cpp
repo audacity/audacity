@@ -50,6 +50,7 @@
 #include "project/projectmodule.h"
 #include "projectscene/projectscenemodule.h"
 #include "playback/playbackmodule.h"
+#include "processing/processingmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -120,6 +121,7 @@ int main(int argc, char** argv)
     app.addModule(new au::projectscene::ProjectSceneModule());
     app.addModule(new au::au3::Au3WrapModule());
     app.addModule(new au::playback::PlaybackModule());
+    app.addModule(new au::processing::ProcessingModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.
