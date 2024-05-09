@@ -49,6 +49,7 @@ signals:
 private:
 
     void changeZoom(int direction);
+    void changeOffset(int direction);
 
     double mOffset = 0.0;
     double mZoom = 2.0;//{ 44100.0 / 512.0 };

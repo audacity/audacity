@@ -18,6 +18,8 @@ void TimelineContext::onWheel(double y)
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
     if (modifiers.testFlag(Qt::ControlModifier)) {
         changeZoom(y < 0 ? -1 : 1);
+    } else if (modifiers.testFlag(Qt::ShiftModifier)) {
+        changeOffset(y < 0 ? -1 : 1);
     }
 }
 
@@ -34,6 +36,12 @@ void TimelineContext::changeZoom(int direction)
     _zoom = std::max(_zoom, ZOOM_MIN);
 
     setZoom(_zoom);
+}
+
+void TimelineContext::changeOffset(int direction)
+{
+    double step = 10;
+    setOffset(offset() + (step * direction));
 }
 
 qint64 TimelineContext::timeToPosition(double time) const
