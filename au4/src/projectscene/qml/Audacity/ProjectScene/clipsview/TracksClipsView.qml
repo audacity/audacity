@@ -41,6 +41,18 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        Rectangle {
+            height: 44
+            width: parent.width
+
+            StyledTextLabel {
+                anchors.fill: parent
+                anchors.leftMargin: 16
+                font: ui.theme.bodyBoldFont
+                text: "zoom: " + timeline.context.zoom + ", offset: " + timeline.context.offset
+            }
+        }
+
         Repeater {
             model: tracksModel
             delegate: TrackClipsItem {

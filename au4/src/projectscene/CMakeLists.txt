@@ -53,6 +53,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelineruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelineruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timeformat.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timeformat.h
     )
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )

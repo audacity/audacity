@@ -10,7 +10,7 @@ Rectangle {
 
     property alias context: timelineContext
 
-    height: 76
+    height: 32
     color: ui.theme.backgroundPrimaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
@@ -42,13 +42,11 @@ Rectangle {
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    StyledTextLabel {
+    TimelineRuler {
+        id: ruler
+        context: timelineContext
         anchors.fill: parent
         anchors.leftMargin: 16
-        text: "zoom: " + timelineContext.zoom
-              + ", frame start time: " + timelineContext.frameStartTime
-              + ", end time: " + timelineContext.frameEndTime
-              + ", root.width: " + root.width
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

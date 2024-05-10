@@ -38,6 +38,7 @@
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/waveview.h"
 #include "view/clipsview/timelinecontext.h"
+#include "view/clipsview/timelineruler.h"
 
 using namespace au::projectscene;
 using namespace muse::modularity;
@@ -90,6 +91,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
     qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
+    qmlRegisterType<TimelineRuler>("Audacity.ProjectScene", 1, 0, "TimelineRuler");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
 }
 
