@@ -23,8 +23,10 @@ void ClipsListModel::load()
         return;
     }
 
-    connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextChanged);
-    connect(m_context, &TimelineContext::offsetChanged, this, &ClipsListModel::onTimelineContextChanged);
+    if (m_context) {
+        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+        connect(m_context, &TimelineContext::offsetChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+    }
 
     beginResetModel();
 
@@ -43,6 +45,18 @@ void ClipsListModel::load()
 int ClipsListModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(m_clipList.size());
+}
+
+QHash<int, QByteArray> ClipsListModel::roleNames() const
+{
+    static QHash<int, QByteArray> roles
+    {
+        { ClipKeyRole, "clipKeyData" },
+        { ClipTitleRole, "clipTitleData" },
+        { ClipWidthRole, "clipWidthData" },
+        { ClipLeftRole, "clipLeftData" }
+    };
+    return roles;
 }
 
 QVariant ClipsListModel::data(const QModelIndex& index, int role) const
@@ -88,7 +102,7 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
     return false;
 }
 
-void ClipsListModel::onTimelineContextChanged()
+void ClipsListModel::onTimelineContextValuesChanged()
 {
     for (size_t i = 0; i < m_clipList.size(); ++i) {
         QModelIndex idx = this->index(int(i));
@@ -105,16 +119,24 @@ bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVarian
     return ok;
 }
 
-QHash<int, QByteArray> ClipsListModel::roleNames() const
+void ClipsListModel::onSelected(double x1, double x2)
 {
-    static QHash<int, QByteArray> roles
-    {
-        { ClipKeyRole, "clipKeyData" },
-        { ClipTitleRole, "clipTitleData" },
-        { ClipWidthRole, "clipWidthData" },
-        { ClipLeftRole, "clipLeftData" }
-    };
-    return roles;
+    onSelectedTime(m_context->positionToTime(x1), m_context->positionToTime(x2));
+}
+
+void ClipsListModel::onSelectedTime(double startTime, double endTime)
+{
+    if (startTime > endTime) {
+        std::swap(startTime, endTime);
+    }
+
+    LOGDA() << "m_trackId: " << m_trackId << ", startTime: " << startTime << ", endTime: " << endTime;
+    NOT_IMPLEMENTED;
+}
+
+void ClipsListModel::resetSelection()
+{
+    NOT_IMPLEMENTED;
 }
 
 QVariant ClipsListModel::trackId() const
@@ -139,5 +161,9 @@ TimelineContext* ClipsListModel::timelineContext() const
 
 void ClipsListModel::setTimelineContext(TimelineContext* newContext)
 {
+    if (m_context == newContext) {
+        return;
+    }
     m_context = newContext;
+    emit timelineContextChanged();
 }

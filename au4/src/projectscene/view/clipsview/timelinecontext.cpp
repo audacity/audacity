@@ -2,6 +2,8 @@
 
 #include <QApplication>
 
+#include "global/types/number.h"
+
 #include "log.h"
 
 static constexpr double ZOOM_MIN = 0.1;
@@ -42,9 +44,30 @@ void TimelineContext::changeOffset(int direction)
     setOffset(offset() + (step * direction));
 }
 
+void TimelineContext::onSelection(double x1, double x2)
+{
+    onSelectionTime(positionToTime(x1), positionToTime(x2));
+}
+
+void TimelineContext::resetSelection()
+{
+    onSelectionTime(0.0, 0.0);
+}
+
+void TimelineContext::onSelectionTime(double startTime, double endTime)
+{
+    if (startTime > endTime) {
+        std::swap(startTime, endTime);
+    }
+
+    setSelectionStartTime(startTime);
+    setSelectionEndTime(endTime);
+    setSelectionActive(!muse::is_zero(startTime) && !muse::is_zero(endTime));
+}
+
 qint64 TimelineContext::timeToPosition(double time) const
 {
-    double t = 0.5 + mZoom * (time - mOffset);
+    double t = 0.5 + m_zoom * (time - m_offset);
     if (t < INT64_MIN) {
         return INT64_MIN;
     }
@@ -57,70 +80,71 @@ qint64 TimelineContext::timeToPosition(double time) const
 
 double TimelineContext::positionToTime(qint64 position) const
 {
-    return mOffset + position / mZoom;
+    return m_offset + position / m_zoom;
 }
 
 double TimelineContext::offset() const
 {
-    return mOffset;
+    return m_offset;
 }
 
 void TimelineContext::setOffset(double newOffset)
 {
-    if (mOffset != newOffset) {
-        mOffset = newOffset;
+    if (m_offset != newOffset) {
+        m_offset = newOffset;
         emit offsetChanged();
     }
 }
 
 double TimelineContext::zoom() const
 {
-    return mZoom;
+    return m_zoom;
 }
 
 void TimelineContext::setZoom(double zoom)
 {
-    if (mZoom != zoom) {
-        mZoom = zoom;
+    if (m_zoom != zoom) {
+        m_zoom = zoom;
         emit zoomChanged();
     }
 }
 
 double TimelineContext::selectionStartTime() const
 {
-    return mSelecitonStartTime;
+    return m_selecitonStartTime;
 }
 
 void TimelineContext::setSelectionStartTime(double time)
 {
-    if (mSelecitonStartTime != time) {
-        mSelecitonStartTime = time;
+    if (m_selecitonStartTime != time) {
+        m_selecitonStartTime = time;
         emit selectionEndTimeChanged();
     }
 }
 
 double TimelineContext::selectionEndTime() const
 {
-    return mSelectionEndTime;
+    return m_selectionEndTime;
 }
 
 void TimelineContext::setSelectionEndTime(double time)
 {
-    if (mSelectionEndTime != time) {
-        mSelectionEndTime = time;
+    if (m_selectionEndTime != time) {
+        m_selectionEndTime = time;
         emit selectionEndTimeChanged();
     }
 }
 
-int TimelineContext::tracksOriginOffset() const
+bool TimelineContext::selectionActive() const
 {
-    return mTracksOriginOffset;
+    return m_selectionActive;
 }
 
-void TimelineContext::setTracksOriginOffset(int offset)
+void TimelineContext::setSelectionActive(bool newSelectionActive)
 {
-    if (mTracksOriginOffset != offset) {
-        mTracksOriginOffset = offset;
-        emit tracksOriginOffsetChanged();
+    if (m_selectionActive == newSelectionActive) {
+        return;
     }
+    m_selectionActive = newSelectionActive;
+    emit selectionActiveChanged();
 }
