@@ -17,6 +17,14 @@ Rectangle {
         timelineContext.onWheel(y)
     }
 
+    function onSelection(x1, x2) {
+        timelineContext.onSelection(x1, x2)
+    }
+
+    function resetSelection() {
+        timelineContext.resetSelection()
+    }
+
     TimelineContext {
         id: timelineContext
     }

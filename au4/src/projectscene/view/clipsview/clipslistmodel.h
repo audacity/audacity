@@ -16,7 +16,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext FINAL)
+    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
@@ -26,6 +26,8 @@ public:
     ClipsListModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void load();
+    Q_INVOKABLE void onSelected(double x1, double x2);
+    Q_INVOKABLE void resetSelection();
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -40,9 +42,10 @@ public:
 
 signals:
     void trackIdChanged();
+    void timelineContextChanged();
 
 private slots:
-    void onTimelineContextChanged();
+    void onTimelineContextValuesChanged();
 
 private:
 
@@ -54,6 +57,7 @@ private:
     };
 
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
+    void onSelectedTime(double startTime, double endTime);
 
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_clipList;

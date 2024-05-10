@@ -34,10 +34,21 @@ Item {
             clipKey: model.clipKeyData
 
             onPositionChanged: function(x) {
-                console.log("[ClipItem] onXChanged: " + x)
                 model.clipLeftData = x
             }
         }
+    }
+
+    ClipsSelection {
+        id: clipsSelection
+
+        anchors.fill: parent
+
+        onSelected: function(x1, x2) {
+            clipsModel.onSelected(x1, x2)
+        }
+
+        onReset: clipsModel.resetSelection()
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }
