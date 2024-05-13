@@ -923,6 +923,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       }
    });
 
+   for (auto &buffer : mMasterBuffers)
+      buffer.reset();
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
@@ -1236,6 +1238,8 @@ bool AudioIO::AllocateBuffers(
             // mPlaybackSequences
             // Except, always make at least one playback buffer, in case of
             // MIDI playback without any audio
+            for (auto &buffer : mMasterBuffers)
+               buffer.reset();
             mPlaybackBuffers.resize(0);
             mPlaybackBuffers.resize(
                std::max<size_t>(1, totalWidth));
@@ -1264,6 +1268,9 @@ bool AudioIO::AllocateBuffers(
             mPlaybackQueueMinimum = mPlaybackSamplesToCopy *
                ((mPlaybackQueueMinimum + mPlaybackSamplesToCopy - 1) / mPlaybackSamplesToCopy);
 
+            for (size_t ii = 0; ii < numPlaybackChannels; ++ii)
+               mMasterBuffers[ii] = std::make_unique<RingBuffer>(
+                  floatSample, playbackBufferSize);
             if (mPlaybackSequences.empty())
                // Make at least one playback buffer
                mPlaybackBuffers[0] =
@@ -1387,6 +1394,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 {
    mpTransportState.reset();
 
+   for (auto &buffer : mMasterBuffers)
+      buffer.reset();
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
@@ -1550,6 +1559,8 @@ void AudioIO::StopStream()
    // Everything is taken care of.  Now, just free all the resources
    // we allocated in StartStream()
    //
+   for (auto &buffer : mMasterBuffers)
+      buffer.reset();
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();

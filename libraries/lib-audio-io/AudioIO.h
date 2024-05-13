@@ -17,6 +17,7 @@
 #include "AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 
+#include <array>
 #include <functional>
 #include <memory>
 #include <mutex>
@@ -275,6 +276,7 @@ public:
    RingBuffers mPlaybackBuffers;
    // TODO more-than-two-channels
    static constexpr size_t MaxPlaybackChannels = 2;
+   std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mMasterBuffers;
    ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
