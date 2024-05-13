@@ -31,6 +31,8 @@ constexpr int FrameRadius { 4 };
 constexpr int HeaderHeight { 0 };
 constexpr int HeaderVMargin { 2 };
 
+using Style = au::au3::Au3WavePainter::Style;
+
 namespace WaveChannelViewConstants {
 // Only two types of sample display for now, but
 // others (eg sinc interpolation) may be added later.
@@ -253,33 +255,6 @@ double GetPixelsPerSecond(const QRect& viewRect, const ZoomInfo& zoomInfo)
 double GetBlankSpaceBeforePlayEndTime(const ClipTimes& clip)
 {
     return 0.99 * clip.GetStretchRatio() / clip.GetRate();
-}
-
-template<typename R>
-R GetThemeValue(const QString& propertyName)
-{
-    static QVariantMap table = {
-        { "blankBrush", QColor("#262c30") },
-        { "selectedBrush", QColor("#262c30") },
-        { "unselectedBrush", QColor("#262c30") },
-        { "muteSamplePen", QColor("#8b8b8b") },
-        { "samplePen", QColor("#7386e5") },
-        { "selsamplePen", QColor("#7386e5") },
-        { "muteRmsPen", QColor("#b9b9b9") },
-        { "rmsPen", QColor("#abb6ef") },
-        { "muteClippedPen", QColor("#b9b9b9") },
-        { "clippedPen", QColor("#abb6ef") },
-        { "dragsampleBrush", QColor("#abb6ef") },
-        { "backgroundColor1", QColor("#2F353B") },//3d454c
-        { "outlineColor1", QColor("#3d454c") },
-        { "fontColor1", QColor("#F0F5FA") },
-        { "bodyFont", QFont() }
-    };
-    const auto it = table.find(propertyName);
-    if (it != table.end()) {
-        return it.value().value<R>();
-    }
-    return {};
 }
 
 static graphics::Color ColorFromQColor(const QColor& color)
@@ -557,6 +532,7 @@ QRect ClipParameters::GetClipRect(const ClipTimes& clip,
 }
 
 void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
+                           const Style& style,
                            const ZoomInfo& zoomInfo,
                            const WaveClip& clip,
                            int leftOffset,
@@ -564,6 +540,8 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
                            bool dB, float dBRange,
                            bool showPoints, bool muted, bool highlight)
 {
+    UNUSED(muted);
+
     const double toffset = clip.GetPlayStartTime();
     double rate = clip.GetRate();
     const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
@@ -601,11 +579,7 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
         clipped.reinit(size_t(slen));
     }
 
-    const auto muteSamplePen = GetThemeValue<QColor>("muteSamplePen");
-    const auto samplePen = GetThemeValue<QColor>("samplePen");
-
-    painter.setPen(highlight ? QColor("#FF00FF")
-                   : (muted ? muteSamplePen : samplePen));
+    painter.setPen(highlight ? style.highlight : style.samplePen);
 
     for (decltype(slen) s = 0; s < slen; s++) {
         const double time = toffset + (s + s0).as_double() / rate;
@@ -637,11 +611,8 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
         const int tickSize = bigPoints ? 4 : 3;// Bigger ellipses when draggable.
         auto pr = QRect(0, 0, tickSize, tickSize);
 
-        //different colour when draggable.
-        const auto dragsampleBrush = QBrush(GetThemeValue<QColor>("dragsampleBrush"));
-        const auto sampleBrush = QBrush(GetThemeValue<QColor>("sampleBrush"));
-        auto brush = highlight ? QBrush("#FF00FF")
-                     : (bigPoints ? dragsampleBrush : sampleBrush);
+        //maybe need different colour when draggable.
+        auto brush = highlight ? style.highlight : (bigPoints ? style.sampleBrush : style.sampleBrush);
 
         painter.setBrush(brush);
 
@@ -678,10 +649,7 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
 
     // Draw clipping
     if (clipcnt) {
-        const auto muteClippedPen = QPen(GetThemeValue<QColor>("muteClippedPen"));
-        const auto clippedPen = QPen(GetThemeValue<QColor>("clippedPen"));
-
-        painter.setPen(muted ? muteClippedPen : clippedPen);
+        painter.setPen(style.clippedPen);
         while (--clipcnt >= 0) {
             auto s = clipped[clipcnt];
             painter.drawLine(rect.x() + s, rect.y(), rect.x() + s, rect.y() + rect.height());
@@ -690,6 +658,7 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
 }
 
 void DrawWaveformBackground(QPainter& painter, const QRect& rect,
+                            const Style& style,
                             const ZoomInfo& zoomInfo,
                             const double* env, int leftOffset,
                             float zoomMin, float zoomMax,
@@ -718,13 +687,8 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
     int xx, lx = 0;
     int l, w;
 
-    const auto blankBrush =  QBrush(GetThemeValue<QColor>("blankBrush"));
-    const auto selectedBrush = QBrush(GetThemeValue<QColor>("selectedBrush"));
-    const auto unselectedBrush = QBrush(GetThemeValue<QColor>("unselectedBrush"));
-    const auto uglyBrush = QBrush("#FF00FF");
-
     painter.setPen(Qt::NoPen);
-    painter.setBrush(blankBrush);
+    painter.setBrush(style.blankBrush);
 
     painter.drawRect(rect);
 
@@ -773,7 +737,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
             continue;
         }
 
-        painter.setBrush(lsel ? selectedBrush : unselectedBrush);
+        painter.setBrush(style.blankBrush);
 
         l = rect.x() + lx;
         w = xx - lx;
@@ -785,7 +749,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
         }
 
         if (highlightEnvelope && lmaxbot < lmintop - 1) {
-            painter.setBrush(uglyBrush);
+            painter.setBrush(style.highlight);
             painter.drawRect(l, rect.y() + lmaxbot, w, lmintop - lmaxbot);
         }
 
@@ -797,7 +761,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
         lx = xx;
     }
 
-    painter.setBrush(lsel ? selectedBrush : unselectedBrush);
+    painter.setBrush(style.blankBrush);
     l = rect.x() + lx;
     w = xx - lx;
     if (lmaxbot < lmintop - 1) {
@@ -807,7 +771,7 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
         painter.drawRect(l, rect.y() + lmaxtop, w, lminbot - lmaxtop);
     }
     if (highlightEnvelope && lmaxbot < lmintop - 1) {
-        painter.setBrush(uglyBrush);
+        painter.setBrush(style.highlight);
         painter.drawRect(l, rect.y() + lmaxbot, w, lmintop - lmaxbot);
     }
 
@@ -830,7 +794,9 @@ void DrawWaveformBackground(QPainter& painter, const QRect& rect,
     }
 }
 
-void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
+void DrawMinMaxRMS(int channelIndex, QPainter& painter,
+                   const QRect& rect,
+                   const Style& style,
                    const ZoomInfo& zoomInfo,
                    const WaveClip& clip,
                    double t0, double t1, int leftOffset,
@@ -838,6 +804,8 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
                    bool dB, double dbRange,
                    bool muted)
 {
+    UNUSED(muted);
+
     const ZoomInfo localZoomInfo(0.0, zoomInfo.GetZoom());
 
     auto& waveformPainter = WaveformPainter::Get(clip);
@@ -846,35 +814,24 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter, const QRect& rect,
 
     WavePaintParameters paintParameters;
 
-    const auto blankBrush = GetThemeValue<QColor>("blankBrush");
-    const auto muteSamplePen = GetThemeValue<QColor>("muteSamplePen");
-    const auto samplePen = GetThemeValue<QColor>("samplePen");
-    const auto selsamplePen = GetThemeValue<QColor>("selsamplePen");
-    const auto muteRmsPen = GetThemeValue<QColor>("muteRmsPen");
-    const auto rmsPen = GetThemeValue<QColor>("rmsPen");
-    const auto unselectedBrush = GetThemeValue<QColor>("unselectedBrush");
-    const auto selectedBrush = GetThemeValue<QColor>("selectedBrush");
-    const auto muteClippedPen = GetThemeValue<QColor>("muteClippedPen");
-    const auto clippedPen = GetThemeValue<QColor>("clippedPen");
-
     paintParameters
     .SetDisplayParameters(
         //TODO: uncomment and fix
         rect.height(), zoomMin, zoomMax, false /*artist->mShowClipping*/)
     .SetDBParameters(dbRange, dB)
-    .SetBlankColor(ColorFromQColor(blankBrush))
+    .SetBlankColor(ColorFromQColor(style.blankBrush))
     .SetSampleColors(
-        ColorFromQColor(muted ? muteSamplePen : samplePen),
-        ColorFromQColor(muted ? muteSamplePen : selsamplePen))
+        ColorFromQColor(style.samplePen),
+        ColorFromQColor(style.samplePen))
     .SetRMSColors(
-        ColorFromQColor(muted ? muteRmsPen : rmsPen),
-        ColorFromQColor(muted ? muteRmsPen : rmsPen))
+        ColorFromQColor(style.rmsPen),
+        ColorFromQColor(style.rmsPen))
     .SetBackgroundColors(
-        ColorFromQColor(unselectedBrush),
-        ColorFromQColor(selectedBrush))
+        ColorFromQColor(style.blankBrush),
+        ColorFromQColor(style.blankBrush))
     .SetClippingColors(
-        ColorFromQColor(muted ? muteClippedPen : clippedPen),
-        ColorFromQColor(muted ? muteClippedPen : clippedPen))
+        ColorFromQColor(style.clippedPen),
+        ColorFromQColor(style.clippedPen))
     .SetEnvelope(clip.GetEnvelope());
 
     //TODO: uncomment and fix
@@ -902,6 +859,7 @@ void DrawWaveform(int channelIndex,
                   const ZoomInfo& zoomInfo,
                   const SelectedRegion& selectedRegion,
                   const QRect& rect,
+                  const Style& style,
                   bool dB, bool muted, bool selected)
 {
     //If clip is "too small" draw a placeholder instead of
@@ -976,6 +934,7 @@ void DrawWaveform(int channelIndex,
 
         DrawWaveformBackground(
             painter, mid,
+            style,
             zoomInfo,
             env, leftOffset,
             zoomMin, zoomMax,
@@ -999,6 +958,7 @@ void DrawWaveform(int channelIndex,
     if (!showIndividualSamples) {
         DrawMinMaxRMS(channelIndex,
                       painter, rect,
+                      style,
                       zoomInfo,
                       clip,
                       t0, t1, leftOffset,
@@ -1013,6 +973,7 @@ void DrawWaveform(int channelIndex,
         DrawIndividualSamples(
             channelIndex,
             painter, rect,
+            style,
             zoomInfo,
             clip, leftOffset,
             zoomMin, zoomMax,
@@ -1089,7 +1050,7 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
     SelectedRegion selectedRegion{};
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
         QRect rect = QRect(params.viewRect.left(), top, params.viewRect.width(), channelHeight);
-        DrawWaveform(i, painter, *track, *clip, zoomInfo, selectedRegion, rect, dB, track->GetMute(), false);
+        DrawWaveform(i, painter, *track, *clip, zoomInfo, selectedRegion, rect, params.style, dB, track->GetMute(), false);
         top += channelHeight;
     }
 }

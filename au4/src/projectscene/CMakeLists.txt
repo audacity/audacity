@@ -26,8 +26,13 @@ set(MODULE_QRC projectscene.qrc)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneconfiguration.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/types/wavestyle.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
