@@ -235,13 +235,6 @@ public:
       unsigned long framesPerBuffer
    );
 
-   /** \brief Get the number of audio samples ready in all of the playback
-   * buffers.
-   *
-   * Returns the smallest of the buffer ready space values in the event that
-   * they are different. */
-   size_t GetCommonlyReadyPlayback();
-
    size_t GetCommonlyWrittenForPlayback();
 
    /// How many frames of zeros were output due to pauses?

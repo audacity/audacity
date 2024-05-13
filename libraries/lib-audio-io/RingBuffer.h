@@ -51,6 +51,13 @@ class RingBuffer final : public NonInterferingBase {
    size_t Get(samplePtr buffer, sampleFormat format, size_t samples);
    size_t Discard(size_t samples);
 
+   //! For the writer only
+   /*!
+    Assuming this has produced at least as many samples as other, but by less
+    than one buffer size; report how many more
+    */
+   size_t Excess(const RingBuffer &other) const;
+
  private:
    size_t Filled(size_t start, size_t end) const;
    size_t Free(size_t start, size_t end) const;

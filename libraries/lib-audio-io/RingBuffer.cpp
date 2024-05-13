@@ -215,17 +215,15 @@ void RingBuffer::Flush()
    mLastPadding = 0;
 }
 
-//
-// For the reader only:
-// Only reader writes the start, so it can read it again relaxed
-// But it reads the end written by the writer, who also sends sample data
-// with the changes of end; therefore that must be read with acquire order
-// if we do more than merely query the size or throw samples away
-//
-
+/*!
+ For the reader only:
+ Only reader writes the start, so it can read it again relaxed
+ But it reads the end written by the writer, who also sends sample data
+ if we do more than merely query the size or throw samples away
+*/
 size_t RingBuffer::AvailForGet() const
 {
-   auto end = mEnd.load( std::memory_order_relaxed ); // get away with it here
+   auto end = mEnd.load(std::memory_order_acquire);
    auto start = mStart.load( std::memory_order_relaxed );
    return Filled( start, end );
 
@@ -275,4 +273,12 @@ size_t RingBuffer::Discard(size_t samplesToDiscard)
                 std::memory_order_relaxed);
 
    return samplesToDiscard;
+}
+
+size_t RingBuffer::Excess(const RingBuffer &other) const
+{
+   size_t written = this->mWritten;
+   if (written < other.mWritten)
+      written += mBufferSize;
+   return written - other.mWritten;
 }

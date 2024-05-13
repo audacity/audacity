@@ -1888,11 +1888,6 @@ size_t AudioIO::GetCommonlyFreePlayback()
    return commonlyAvail - std::min(size_t(10), commonlyAvail);
 }
 
-size_t AudioIoCallback::GetCommonlyReadyPlayback()
-{
-   return MinValue(mPlaybackBuffers, &RingBuffer::AvailForGet);
-}
-
 size_t AudioIoCallback::GetCommonlyWrittenForPlayback()
 {
    return MinValue(mPlaybackBuffers, &RingBuffer::WrittenForGet);
@@ -1964,6 +1959,13 @@ void AudioIO::FillPlayBuffers()
       */
       for (const auto &pBuffer : mPlaybackBuffers)
          pBuffer->Flush();
+      // Flush the master AFTER other RingBuffers, and expect consumer to
+      // read it BEFORE, so that its atomic variables achieve the
+      // synchronization
+      // And flush the zero-th one last, as it will be read first!
+      for (auto &pBuffer : make_iterator_range(mMasterBuffers).reversal())
+         if (pBuffer)
+            pBuffer->Flush();
    };
 
    while (true) {
@@ -2003,13 +2005,14 @@ bool AudioIO::ProcessPlaybackSlices(
    // user interface.
    bool done = false;
    bool progress = false;
+   size_t allProduced = 0;
    do {
       const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
       const auto &[frames, toProduce] = slice;
       progress = progress || toProduce > 0;
 
-      // Update the time queue.  This must be done before writing to the
+      // Update the time queue.  This must be done before flushing the
       // ring buffers of samples, for proper synchronization with the
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
@@ -2046,6 +2049,7 @@ bool AudioIO::ProcessPlaybackSlices(
          // Produce silence in the single ring buffer
          mPlaybackBuffers[0]->Put(nullptr, floatSample, 0, frames);
 
+      allProduced += frames;
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
 
@@ -2056,6 +2060,15 @@ bool AudioIO::ProcessPlaybackSlices(
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per sequence, after all the little slices have been written.
    TransformPlayBuffers(pScope);
+
+   // For now just generate sufficient silence
+   auto &pMaster = mMasterBuffers[0];
+   auto nn = accumulate(mPlaybackBuffers.begin(), mPlaybackBuffers.end(),
+      allProduced, [&](size_t acc, auto &pBuffer){
+         return std::min(acc, pBuffer->Excess(*pMaster));
+      });
+   pMaster->Put(nullptr, floatSample, 0, nn);
+
    return progress;
 }
 
@@ -2674,7 +2687,7 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // Choose a common size to take from all ring buffers
    const auto toGet =
-      std::min<size_t>(framesPerBuffer, GetCommonlyReadyPlayback());
+      std::min<size_t>(framesPerBuffer, mMasterBuffers[0]->AvailForGet());
 
    // The drop and dropQuickly booleans are so named for historical reasons.
    // JKC: The original code attempted to be faster by doing nothing on silenced audio.
@@ -2724,7 +2737,9 @@ bool AudioIoCallback::FillOutputBuffers(
          else {
             len = mPlaybackBuffers[iBuffer]
                ->Get((samplePtr)tempBufs[c], floatSample, toGet);
-            // wxASSERT( len == toGet );
+            // This should be guaranteed by the producer thread, populating
+            // the master buffer with the minumum of available lengths
+            assert(len == toGet);
             if (len < framesPerBuffer)
                // This used to happen normally at the end of non-looping
                // plays, but it can also be an anomalous case where the
@@ -2773,6 +2788,8 @@ bool AudioIoCallback::FillOutputBuffers(
       if (discardable) // no samples to process, they've been discarded
          continue;
    }
+
+   mMasterBuffers[0]->Discard(toGet);
 
    // Poke: If there are no playback sequences, then the earlier check
    // about the time indicator being past the end won't happen;
@@ -3223,6 +3240,8 @@ int AudioIoCallback::AudioCallback(
 
 
 
+// TODO:  eliminate this function, which does too much in the low-latency thread
+// and reuse the scrubbing mechanism
 int AudioIoCallback::CallbackDoSeek()
 {
    const int token = mStreamToken;
@@ -3263,6 +3282,9 @@ int AudioIoCallback::CallbackDoSeek()
    // Reset mixer positions and flush buffers for all sequences
    for (auto &mixer : mPlaybackMixers)
       mixer->Reposition( time, true );
+   for (auto &pBuffer : mMasterBuffers)
+      if (pBuffer)
+         pBuffer->Discard(pBuffer->AvailForGet());
    for (auto &buffer : mPlaybackBuffers) {
       const auto toDiscard = buffer->AvailForGet();
       const auto discarded = buffer->Discard( toDiscard );
