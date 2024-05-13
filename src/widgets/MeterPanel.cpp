@@ -1295,7 +1295,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar &bar, Stats &stats)
 
    // Setup for erasing the background
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+   dc.SetBrush(mBkgndBrush);
 
    if (mGradient)
    {
