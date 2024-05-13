@@ -1066,6 +1066,10 @@ void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey
 
 void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const WaveClip* clip, const Params& params)
 {
+    // debug
+    // const auto& vr = params.viewRect;
+    // LOGDA() << "viewRect: w: " << vr.width() << ", h: " << vr.height() << ", x: " << vr.x() << ", y: " << vr.y();
+
     auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
     WaveTrack* track = const_cast<WaveTrack*>(_track);
@@ -1081,7 +1085,7 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
     auto top = params.viewRect.top();
     const auto channelHeight = (params.viewRect.height()) / static_cast<int>(clip->NChannels());
 
-    ZoomInfo zoomInfo{ params.zoom.offset, params.zoom.zoom };
+    ZoomInfo zoomInfo{ clip->GetPlayStartTime(), params.zoom };
     SelectedRegion selectedRegion{};
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
         QRect rect = QRect(params.viewRect.left(), top, params.viewRect.width(), channelHeight);

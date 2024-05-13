@@ -30,8 +30,7 @@ void WaveView::paint(QPainter* painter)
 {
     au3::IAu3WavePainter::Params params;
     params.viewRect = QRect(0, 0, width(), height());
-    params.zoom.offset = 0; //m_context->offset();
-    params.zoom.zoom = m_context->zoom();
+    params.zoom = m_context->zoom();
 
     wavePainter()->paint(*painter, m_clipKey.key, params);
 }

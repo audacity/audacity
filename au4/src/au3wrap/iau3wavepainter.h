@@ -10,14 +10,9 @@ class IAu3WavePainter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IAu3WavePainter() = default;
 
-    struct Zoom {
-        double offset = 0.0;
-        double zoom = 0.0;
-    };
-
     struct Params {
         QRect viewRect;
-        Zoom zoom;
+        double zoom = 0.0;
     };
 
     virtual void paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params) = 0;
