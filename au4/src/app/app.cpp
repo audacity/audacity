@@ -36,6 +36,7 @@
 #include "ui/internal/uiengine.h"
 
 #include "framework/global/globalmodule.h"
+#include "framework/global/internal/baseapplication.h"
 
 #include "log.h"
 
@@ -149,6 +150,7 @@ int App::run(int argc, char** argv)
     globalModule.registerUiTypes();
 
     for (modularity::IModuleSetup* m : m_modules) {
+        m->setApplication(muapplication());
         m->registerResources();
     }
 
@@ -167,7 +169,8 @@ int App::run(int argc, char** argv)
     // ====================================================
     // Setup modules: apply the command line options
     // ====================================================
-    muapplication()->setRunMode(runMode);
+    //! TODO Temporary fix
+    dynamic_cast<muse::BaseApplication*>(muapplication().get())->setRunMode(runMode);
     //applyCommandLineOptions(commandLineParser.options(), runMode);
 
     // ====================================================
@@ -273,7 +276,7 @@ int App::run(int argc, char** argv)
         // ====================================================
         // Setup Qml Engine
         // ====================================================
-        QQmlApplicationEngine* engine = modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
+        QQmlApplicationEngine* engine = modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
 #if defined(Q_OS_WIN)
         const QString mainQmlFile = "/platform/win/Main.qml";
@@ -363,7 +366,7 @@ int App::run(int argc, char** argv)
 
 #ifdef MU_BUILD_APPSHELL_MODULE
     // Engine quit
-    modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
+    modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
 #endif
 
     // Deinit
@@ -385,7 +388,7 @@ int App::run(int argc, char** argv)
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
-    modularity::ioc()->reset();
+    modularity::_ioc()->reset();
 
     delete app;
 
