@@ -25,6 +25,8 @@
 
 #include "types/projectscenetypes.h"
 
+#include "internal/projectsceneconfiguration.h"
+
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
 
@@ -46,8 +48,16 @@ std::string ProjectSceneModule::moduleName() const
     return "projectscene";
 }
 
+void ProjectSceneModule::registerResources()
+{
+    projectscene_init_qrc();
+}
+
 void ProjectSceneModule::registerExports()
 {
+    m_configuration = std::make_shared<ProjectSceneConfiguration>();
+
+    ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
 }
 
 void ProjectSceneModule::resolveImports()
@@ -73,7 +83,11 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
 }
 
-void ProjectSceneModule::registerResources()
+void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
 {
-    projectscene_init_qrc();
+    if (mode != muse::IApplication::RunMode::GuiApp) {
+        return;
+    }
+
+    m_configuration->init();
 }

@@ -32,6 +32,15 @@ void WaveView::paint(QPainter* painter)
     params.viewRect = QRect(0, 0, width(), height());
     params.zoom = m_context->zoom();
 
+    const WaveStyle& style = configuration()->waveStyle();
+
+    params.style.blankBrush = style.blankBrush;
+    params.style.samplePen = style.samplePen;
+    params.style.sampleBrush = style.sampleBrush;
+    params.style.rmsPen = style.rmsPen;
+    params.style.clippedPen = style.clippedPen;
+    params.style.highlight = style.highlight;
+
     wavePainter()->paint(*painter, m_clipKey.key, params);
 }
 
