@@ -1441,7 +1441,10 @@ bool ProjectFileManager::Import(
             resultingReaders.push_back(std::move(resultingReader));
          return success;
       });
-   if (success && !resultingReaders.empty())
+   // At the moment, one failing import doesn't revert the project state, hence
+   // we still run the analysis on what was successfully imported.
+   // TODO implement reverting of the project state on failure.
+   if (!resultingReaders.empty())
    {
       const auto pProj = mProject.shared_from_this();
       BasicUI::CallAfter([=] {
