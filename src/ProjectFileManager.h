@@ -98,6 +98,10 @@ public:
    bool
    Import(const std::vector<FilePath>& fileNames, bool addToHistory = true);
    bool Import(const FilePath& fileName, bool addToHistory = true);
+   bool ImportAndArrange(
+      // wxArrayString because that's the readily available type where this
+      // method is used, no other reason
+      wxArrayString fileNames);
 
    void Compact();
 

@@ -53,6 +53,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "TrackPanel.h"
 #include "UndoTracks.h"
 #include "UserException.h"
+#include "ViewInfo.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
@@ -284,7 +285,6 @@ bool ProjectFileManager::Save()
 {
    auto &projectFileIO = ProjectFileIO::Get(mProject);
 
-   
    if (auto action = ProjectFileIOExtensionRegistry::OnSave(
           mProject, [this](auto& path, bool rename)
           { return DoSave(audacity::ToWXString(path), rename); });
@@ -1365,6 +1365,30 @@ bool ProjectFileManager::Import(const FilePath& fileName, bool addToHistory)
    return Import(std::vector<FilePath> { fileName }, addToHistory);
 }
 
+bool ProjectFileManager::ImportAndArrange(wxArrayString fileNames)
+{
+   fileNames.Sort(FileNames::CompareNoCase);
+   if (!ProjectFileManager::Get(mProject).Import(
+          std::vector<wxString> { fileNames.begin(), fileNames.end() }))
+      return false;
+   auto& viewPort = Viewport::Get(mProject);
+   // Last track in the project is the one that was just added. Use it for
+   // focus, selection, etc.
+   Track* lastTrack = nullptr;
+   const auto range = TrackList::Get(mProject).Any<Track>();
+   assert(!range.empty());
+   if(range.empty())
+      return false;
+   lastTrack = *(range.rbegin());
+   TrackFocus::Get(mProject).Set(lastTrack, true);
+   viewPort.ZoomFitHorizontally();
+   viewPort.ShowTrack(*lastTrack);
+   viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
+   ViewInfo::Get(mProject).selectedRegion.setTimes(
+      lastTrack->GetStartTime(), lastTrack->GetEndTime());
+   return true;
+}
+
 namespace
 {
 std::vector<std::shared_ptr<MIR::AnalyzedAudioClip>> RunTempoDetection(
@@ -1417,7 +1441,10 @@ bool ProjectFileManager::Import(
             resultingReaders.push_back(std::move(resultingReader));
          return success;
       });
-   if (success && !resultingReaders.empty())
+   // At the moment, one failing import doesn't revert the project state, hence
+   // we still run the analysis on what was successfully imported.
+   // TODO implement reverting of the project state on failure.
+   if (!resultingReaders.empty())
    {
       const auto pProj = mProject.shared_from_this();
       BasicUI::CallAfter([=] {

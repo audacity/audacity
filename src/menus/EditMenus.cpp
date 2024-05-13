@@ -5,6 +5,7 @@
 #include "../MenuCreator.h"
 #include "NoteTrack.h"
 #include "Project.h"
+#include "ProjectFileManager.h"
 #include "ProjectHistory.h"
 #include "ProjectRate.h"
 #include "ProjectTimeSignature.h"
@@ -35,6 +36,7 @@
 #include "UserException.h"
 #include "Viewport.h"
 
+#include <wx/clipbrd.h>
 #include <wx/frame.h>
 
 // private helper classes and functions
@@ -354,6 +356,17 @@ void OnDelete(const CommandContext &context)
 
 void OnCopy(const CommandContext &context)
 {
+   if (wxTheClipboard->Open())
+   {
+      // Clear the data from the clipboard, so that the next paste doesn't
+      // attempt to import whatever the user copied from the OS in a prior
+      // action.
+      const auto success = wxTheClipboard->SetData(safenew wxTextDataObject);
+      assert(success);
+      wxTheClipboard->Clear();
+      wxTheClipboard->Close();
+   }
+
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -525,6 +538,19 @@ Correspondence FindCorrespondence(
 
 void OnPaste(const CommandContext &context)
 {
+   if (wxTheClipboard->IsSupported(wxDF_FILENAME) && wxTheClipboard->Open())
+   {
+      wxFileDataObject data;
+      const auto hadData = wxTheClipboard->GetData(data);
+      wxTheClipboard->Close();
+      if (hadData)
+      {
+         ProjectFileManager::Get(context.project)
+            .ImportAndArrange(data.GetFilenames());
+         return;
+      }
+   }
+
    auto &project = context.project;
 
    // Handle text paste first.

@@ -17,7 +17,6 @@
 #include "Project.h"
 #include "ProjectFileManager.h"
 #include "TrackPanel.h"
-#include "Viewport.h"
 
 #if wxUSE_DRAG_AND_DROP
 class FileObject final : public wxFileDataObject
@@ -157,22 +156,9 @@ public:
    {
       // Experiment shows that this function can be reached while there is no
       // catch block above in wxWidgets.  So stop all exceptions here.
-      return GuardedCall< bool > ( [&] {
-         wxArrayString sortednames(filenames);
-         sortednames.Sort(FileNames::CompareNoCase);
-
-         auto cleanup = finally( [&] {
-            Viewport::Get(*mProject).HandleResize(); // Adjust scrollers for NEW track sizes.
-         } );
-
-         ProjectFileManager::Get(*mProject).Import(
-            std::vector<FilePath> { sortednames.begin(), sortednames.end() });
-
-         auto &viewport = Viewport::Get(*mProject);
-         viewport.ZoomFitHorizontallyAndShowTrack(nullptr);
-
-         return true;
-      } );
+      return GuardedCall<bool>([&] {
+         return ProjectFileManager::Get(*mProject).ImportAndArrange(filenames);
+      });
    }
 
 private:
