@@ -25,7 +25,7 @@ void ClipsListModel::load()
 
     if (m_context) {
         connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
-        connect(m_context, &TimelineContext::offsetChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
     }
 
     beginResetModel();
