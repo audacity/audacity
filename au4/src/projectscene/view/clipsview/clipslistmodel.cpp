@@ -91,7 +91,7 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
 
 bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
-    LOGD() << "" << index.row() << ", value: " << value << ", role: " << role;
+    //LOGD() << "" << index.row() << ", value: " << value << ", role: " << role;
     switch (role) {
     case ClipLeftRole: {
         return changeClipStartTime(index, value);
@@ -104,6 +104,10 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
 
 void ClipsListModel::onTimelineContextValuesChanged()
 {
+    // LOGDA() << "zoom: " << m_context->zoom()
+    //         << " frameStartTime: " << m_context->frameStartTime()
+    //         << " frameEndTime: " << m_context->frameEndTime();
+
     for (size_t i = 0; i < m_clipList.size(); ++i) {
         QModelIndex idx = this->index(int(i));
         emit dataChanged(idx, idx, { ClipWidthRole, ClipLeftRole });

@@ -37,7 +37,7 @@ void TimelineContext::onWheel(double y)
 
 void TimelineContext::changeZoom(int direction)
 {
-    double step = std::max(zoom() / 2.0, ZOOM_MIN);
+    double step = std::round(std::max(zoom() / 2.0, ZOOM_MIN) * 10) / 10;
 
     double _zoom = zoom() + (step * direction);
     _zoom = std::floor(_zoom * 10.0) / 10.0;
@@ -52,8 +52,8 @@ void TimelineContext::changeZoom(int direction)
 
 void TimelineContext::onResizeFrameWidth(double frameWidth)
 {
-    setFrameEndTime(m_frameStartTime + positionToTime(frameWidth));
-    emit frameTimeChanged();
+    m_frameWidth = frameWidth;
+    updateFrameTime();
 }
 
 void TimelineContext::shiftFrameTime(int direction)
@@ -64,6 +64,12 @@ void TimelineContext::shiftFrameTime(int direction)
     setFrameStartTime(m_frameStartTime + shift);
     setFrameEndTime(m_frameEndTime + shift);
 
+    emit frameTimeChanged();
+}
+
+void TimelineContext::updateFrameTime()
+{
+    setFrameEndTime(m_frameStartTime + positionToTime(m_frameWidth));
     emit frameTimeChanged();
 }
 
@@ -110,6 +116,7 @@ void TimelineContext::setZoom(double zoom)
     if (m_zoom != zoom) {
         m_zoom = zoom;
         emit zoomChanged();
+        updateFrameTime();
     }
 }
 

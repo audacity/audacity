@@ -149,6 +149,13 @@ public:
         auto left = targetRect.x() + leftOffset;
         auto height = targetRect.height();
 
+        LOGDA() << "zoom: " << zoomInfo.GetZoom()
+                << " leftOffset: " << leftOffset
+                << " targetRect.x() : " << targetRect.x()
+                << " left: " << left
+                << " from: " << from
+                << " to: " << to;
+
         const auto top = targetRect.y();
 
         for (auto it = range.begin(); it != range.end(); ++it) {
@@ -888,6 +895,7 @@ void DrawWaveform(int channelIndex,
     }
 
     const double t0 = params.t0;
+    LOGDA() << "t0: " << t0;
     const double sampleRate = clip.GetRate();
     const double playStartTime = clip.GetPlayStartTime();
     const double trackRectT0 = params.trackRectT0;
@@ -1012,6 +1020,7 @@ AudacityProject& Au3WavePainter::projectRef() const
 
 void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params)
 {
+    LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
     WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(track) {
         return;
@@ -1043,13 +1052,27 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
 
     const bool dB = !WaveformSettings::Get(*track).isLinear();
 
-    auto top = params.viewRect.top();
-    const auto channelHeight = (params.viewRect.height()) / static_cast<int>(clip->NChannels());
+    const auto channelHeight = (params.geometry.height) / static_cast<int>(clip->NChannels());
 
-    ZoomInfo zoomInfo{ clip->GetPlayStartTime(), params.zoom };
+    const Geometry& g = params.geometry;
+
+    double width = std::min(g.left + g.width, g.frameLeft + g.frameWidth) - g.left;
+    double left = std::min(g.left - g.frameLeft, 0.0);
+    double clipStartTime = clip->GetPlayStartTime();// + (left / params.zoom);
+    LOGDA() << "g.width: " << g.width
+            << " g.left: " << g.left
+            << " g.frameWidth: " << g.frameWidth
+            << " g.frameLeft: " << g.frameLeft
+            << " (g.left + g.width): " << (g.left + g.width)
+            << " (g.frameLeft + g.frameWidth): " << (g.frameLeft + g.frameWidth)
+            << " width: " << width
+            << " left: " << left;
+
+    ZoomInfo zoomInfo(clipStartTime, params.zoom);
     SelectedRegion selectedRegion{};
+    double top = 0.0;
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
-        QRect rect = QRect(params.viewRect.left(), top, params.viewRect.width(), channelHeight);
+        QRect rect(0, top, width, channelHeight);
         DrawWaveform(i, painter, *track, *clip, zoomInfo, selectedRegion, rect, params.style, dB, track->GetMute(), false);
         top += channelHeight;
     }

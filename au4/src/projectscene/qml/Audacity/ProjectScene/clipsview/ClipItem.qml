@@ -55,5 +55,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.margins: 1
+
+        clipLeft: root.x
     }
 }

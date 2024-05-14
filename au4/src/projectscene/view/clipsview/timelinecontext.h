@@ -68,6 +68,7 @@ private:
     void shiftFrameTime(int direction);
     void setFrameStartTime(double newFrameStartTime);
     void setFrameEndTime(double newFrameEndTime);
+    void updateFrameTime();
 
     void changeZoom(int direction);
 
@@ -75,6 +76,7 @@ private:
     void updateSelectionActive();
     void setSelectionActive(bool newSelectionActive);
 
+    double m_frameWidth = 0.0;
     double m_frameStartTime = 0.0;
     double m_frameEndTime = 0.0;
 
