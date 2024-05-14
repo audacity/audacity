@@ -294,6 +294,12 @@ set_from_env(SENTRY_HOST)
 set_from_env(SENTRY_PROJECT)
 set_from_env(CRASH_REPORT_URL)
 
+option(
+   ${_OPT}has_whats_new
+   "Show \"What's New\" dialog on startup"
+   On
+)
+
 cmake_dependent_option(
    ${_OPT}has_crashreports
    "Enables crash reporting for Audacity"

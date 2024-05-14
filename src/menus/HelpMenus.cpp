@@ -19,7 +19,6 @@
 #include "../ProjectWindows.h"
 #include "SelectFile.h"
 #include "ShuttleGui.h"
-#include "../SplashDialog.h"
 #include "SyncLock.h"
 #include "Theme.h"
 #include "CommandContext.h"
@@ -403,11 +402,6 @@ void MayCheckForUpdates(AudacityProject &project)
 #ifdef IS_ALPHA
    OnCheckForUpdates(project);
 #endif
-}
-
-void OnHelpWelcome(const CommandContext &context)
-{
-   SplashDialog::DoHelpWelcome( context.project );
 }
 
 #endif

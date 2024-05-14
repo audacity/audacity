@@ -193,8 +193,6 @@ set( SOURCES
       SpectrumAnalyst.h
       SpectrumTransformer.cpp
       SpectrumTransformer.h
-      SplashDialog.cpp
-      SplashDialog.h
       SseMathFuncs.cpp
       SseMathFuncs.h
       TagsEditor.cpp
@@ -240,6 +238,11 @@ set( SOURCES
       VoiceKey.h
       WaveTrackLocation.cpp
       WaveTrackLocation.h
+
+      $<$<BOOL:${_OPT}has_whats_new>:
+         WhatsNewDialog.cpp
+         WhatsNewDialog.h
+      >
 
       # Commands
 
@@ -1258,7 +1261,7 @@ if(CRASH_REPORT_URL)
     list(APPEND DEFINES PRIVATE -DCRASH_REPORT_URL="${CRASH_REPORT_URL}")
 endif()
 
-if(SHOW_WHATS_NEW_SECTION)
+if(${_OPT}has_whats_new)
    list(APPEND DEFINES PRIVATE HAS_WHATS_NEW )
 endif()
 
