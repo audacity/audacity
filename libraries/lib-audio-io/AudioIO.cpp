@@ -1236,13 +1236,10 @@ bool AudioIO::AllocateBuffers(
 
             // mPlaybackBuffers buffers correspond many-to-one with
             // mPlaybackSequences
-            // Except, always make at least one playback buffer, in case of
-            // MIDI playback without any audio
             for (auto &buffer : mMasterBuffers)
                buffer.reset();
             mPlaybackBuffers.resize(0);
-            mPlaybackBuffers.resize(
-               std::max<size_t>(1, totalWidth));
+            mPlaybackBuffers.resize(totalWidth);
             // Number of scratch buffers depends on device playback channels
             mScratchBuffers.resize(numPlaybackChannels * 2 + 1);
             mScratchPointers.clear();
@@ -1271,10 +1268,6 @@ bool AudioIO::AllocateBuffers(
             for (size_t ii = 0; ii < numPlaybackChannels; ++ii)
                mMasterBuffers[ii] = std::make_unique<RingBuffer>(
                   floatSample, playbackBufferSize);
-            if (mPlaybackSequences.empty())
-               // Make at least one playback buffer
-               mPlaybackBuffers[0] =
-                  std::make_unique<RingBuffer>(floatSample, playbackBufferSize);
 
             mOldChannelGains.resize(mPlaybackSequences.size());
             size_t iBuffer = 0;
@@ -2045,10 +2038,6 @@ bool AudioIO::ProcessPlaybackSlices(
          }
       }
 
-      if (mPlaybackSequences.empty())
-         // Produce silence in the single ring buffer
-         mPlaybackBuffers[0]->Put(nullptr, floatSample, 0, frames);
-
       allProduced += frames;
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
@@ -2794,11 +2783,8 @@ bool AudioIoCallback::FillOutputBuffers(
    // Poke: If there are no playback sequences, then the earlier check
    // about the time indicator being past the end won't happen;
    // do it here instead (but not if looping or scrubbing)
-   // PRL:  Also consume from the single playback ring buffer
-   if (numPlaybackSequences == 0) {
-      mMaxFramesOutput = mPlaybackBuffers[0]->Discard(toGet);
+   if (numPlaybackSequences == 0)
       CallbackCheckCompletion(mCallbackReturn, 0);
-   }
 
    // wxASSERT( maxLen == toGet );
 
