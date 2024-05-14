@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "audacity3playback.h"
+#include "au3playback.h"
 
 #include "libraries/lib-time-frequency-selection/SelectedRegion.h"
 #include "libraries/lib-track/Track.h"
@@ -14,18 +14,18 @@
 
 #include "wxtypes_convert.h"
 
-#include "internal/audacity3audiooutput.h"
+#include "internal/au3audiooutput.h"
 
 #include "log.h"
 
 using namespace au::au3;
 
-void Audacity3Playback::init()
+void Au3Playback::init()
 {
-    m_audioOutputPtr = std::make_shared<Audacity3AudioOutput>();
+    m_audioOutputPtr = std::make_shared<Au3AudioOutput>();
 }
 
-void Audacity3Playback::play()
+void Au3Playback::play()
 {
     //! NOTE: copied from ProjectAudioManager::PlayPlayRegion
 
@@ -186,7 +186,7 @@ void Audacity3Playback::play()
     }
 }
 
-void Audacity3Playback::seek(const audio::msecs_t newPositionMsecs)
+void Au3Playback::seek(const audio::msecs_t newPositionMsecs)
 {
     AudacityProject& project = projectRef();
 
@@ -194,7 +194,7 @@ void Audacity3Playback::seek(const audio::msecs_t newPositionMsecs)
     playRegion.SetStart(newPositionMsecs);
 }
 
-void Audacity3Playback::stop()
+void Au3Playback::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop
     bool stopStream = true;
@@ -217,7 +217,7 @@ void Audacity3Playback::stop()
     gAudioIO->SetPaused(false);
 }
 
-void Audacity3Playback::pause()
+void Au3Playback::pause()
 {
     if (!canStopAudioStream()) {
         return;
@@ -228,7 +228,7 @@ void Audacity3Playback::pause()
     gAudioIO->SetPaused(true);
 }
 
-void Audacity3Playback::resume()
+void Au3Playback::resume()
 {
     if (!canStopAudioStream()) {
         return;
@@ -239,13 +239,13 @@ void Audacity3Playback::resume()
     gAudioIO->SetPaused(false);
 }
 
-void Audacity3Playback::setDuration(const audio::msecs_t durationMsec)
+void Au3Playback::setDuration(const audio::msecs_t durationMsec)
 {
     UNUSED(durationMsec);
     NOT_IMPLEMENTED;
 }
 
-muse::async::Promise<bool> Audacity3Playback::setLoop(const audio::msecs_t fromMsec, const audio::msecs_t toMsec)
+muse::async::Promise<bool> Au3Playback::setLoop(const audio::msecs_t fromMsec, const audio::msecs_t toMsec)
 {
     UNUSED(fromMsec);
     UNUSED(toMsec);
@@ -257,32 +257,32 @@ muse::async::Promise<bool> Audacity3Playback::setLoop(const audio::msecs_t fromM
     });
 }
 
-void Audacity3Playback::resetLoop()
+void Au3Playback::resetLoop()
 {
 }
 
-muse::async::Channel<au::audio::msecs_t> Audacity3Playback::playbackPositionMsecs() const
+muse::async::Channel<au::audio::msecs_t> Au3Playback::playbackPositionMsecs() const
 {
     return m_playbackPositionMsecsChanged;
 }
 
-muse::async::Channel<au::audio::PlaybackStatus> Audacity3Playback::playbackStatusChanged() const
+muse::async::Channel<au::audio::PlaybackStatus> Au3Playback::playbackStatusChanged() const
 {
     return m_playbackStatusChanged;
 }
 
-IAudacity3AudioOutputPtr Audacity3Playback::audioOutput() const
+IAu3AudioOutputPtr Au3Playback::audioOutput() const
 {
     return m_audioOutputPtr;
 }
 
-AudacityProject& Audacity3Playback::projectRef() const
+AudacityProject& Au3Playback::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
-bool Audacity3Playback::canStopAudioStream() const
+bool Au3Playback::canStopAudioStream() const
 {
     auto gAudioIO = AudioIO::Get();
     AudacityProject& project = projectRef();
@@ -291,7 +291,7 @@ bool Audacity3Playback::canStopAudioStream() const
            || gAudioIO->GetOwningProject().get() == &project;
 }
 
-TransportSequences Audacity3Playback::makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo)
+TransportSequences Au3Playback::makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo)
 {
     TransportSequences result;
     {

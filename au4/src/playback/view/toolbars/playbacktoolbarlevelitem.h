@@ -7,7 +7,7 @@
 #include <QString>
 
 #include "modularity/ioc.h"
-#include "au3wrap/iaudacity3playback.h"
+#include "au3wrap/iau3playback.h"
 
 #include "playbacktoolbarabstractitem.h"
 
@@ -18,7 +18,7 @@ class PlaybackToolBarLevelItem : public PlaybackToolBarAbstractItem
 
     Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
-    muse::Inject<au3::IAudacity3Playback> playback;
+    muse::Inject<au3::IAu3Playback> playback;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent = nullptr);

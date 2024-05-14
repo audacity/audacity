@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "audacity3audiooutput.h"
+#include "au3audiooutput.h"
 
 #include "types/ret.h"
 #include "global/async/async.h"
@@ -15,7 +15,7 @@ using namespace muse;
 using namespace muse::async;
 using namespace au::au3;
 
-muse::async::Promise<au::audio::volume_dbfs_t> Audacity3AudioOutput::playbackVolume() const
+muse::async::Promise<au::audio::volume_dbfs_t> Au3AudioOutput::playbackVolume() const
 {
     return muse::async::Promise<float>([](auto resolve, auto /*reject*/) {
         float inputVolume;
@@ -29,7 +29,7 @@ muse::async::Promise<au::audio::volume_dbfs_t> Audacity3AudioOutput::playbackVol
     });
 }
 
-void Audacity3AudioOutput::setPlaybackVolume(float volume)
+void Au3AudioOutput::setPlaybackVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
         float inputVolume;
@@ -45,12 +45,12 @@ void Audacity3AudioOutput::setPlaybackVolume(float volume)
     });
 }
 
-muse::async::Channel<au::audio::volume_dbfs_t> Audacity3AudioOutput::playbackVolumeChanged() const
+muse::async::Channel<au::audio::volume_dbfs_t> Au3AudioOutput::playbackVolumeChanged() const
 {
     return m_playbackVolumeChanged;
 }
 
-muse::async::Promise<au::audio::AudioSignalChanges> Audacity3AudioOutput::playbackSignalChanges() const
+muse::async::Promise<au::audio::AudioSignalChanges> Au3AudioOutput::playbackSignalChanges() const
 {
     return muse::async::Promise<audio::AudioSignalChanges>([](auto, auto reject) {
         muse::Ret ret = make_ret(muse::Ret::Code::NotImplemented);

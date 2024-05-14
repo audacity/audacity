@@ -1,8 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_AU3WRAP_AUDACITY3PLAYBACK_H
-#define AU_AU3WRAP_AUDACITY3PLAYBACK_H
+#ifndef AU_AU3WRAP_AU3PLAYBACK_H
+#define AU_AU3WRAP_AU3PLAYBACK_H
 
 #include "async/asyncable.h"
 
@@ -10,15 +10,15 @@
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 
-#include "iaudacity3playback.h"
-#include "iaudacity3audiooutput.h"
+#include "iau3playback.h"
+#include "iau3audiooutput.h"
 
 class AudacityProject;
 class TrackList;
 struct TransportSequences;
 
 namespace au::au3 {
-class Audacity3Playback : public IAudacity3Playback, public muse::async::Asyncable
+class Au3Playback : public IAu3Playback, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -38,7 +38,7 @@ public:
     muse::async::Channel<audio::msecs_t> playbackPositionMsecs() const override;
     muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const override;
 
-    IAudacity3AudioOutputPtr audioOutput() const override;
+    IAu3AudioOutputPtr audioOutput() const override;
 
 private:
     AudacityProject& projectRef() const;
@@ -49,8 +49,8 @@ private:
     mutable muse::async::Channel<audio::msecs_t> m_playbackPositionMsecsChanged;
     mutable muse::async::Channel<audio::PlaybackStatus> m_playbackStatusChanged;
 
-    IAudacity3AudioOutputPtr m_audioOutputPtr;
+    IAu3AudioOutputPtr m_audioOutputPtr;
 };
 }
 
-#endif // AU_AU3WRAP_AUDACITY3PLAYBACK_H
+#endif // AU_AU3WRAP_AU3PLAYBACK_H

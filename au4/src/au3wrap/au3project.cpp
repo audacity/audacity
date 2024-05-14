@@ -1,4 +1,4 @@
-#include "audacity3project.h"
+#include "au3project.h"
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
@@ -35,26 +35,26 @@ static au::processing::TrackType trackType(const Track* track)
     return au::processing::TrackType::Undefined;
 }
 
-struct au::au3::Audacity3ProjectData
+struct au::au3::Au3ProjectData
 {
     std::shared_ptr<AudacityProject> project;
 
     AudacityProject& projectRef() { return *project.get(); }
 };
 
-Audacity3Project::Audacity3Project()
+Au3Project::Au3Project()
 {
-    m_data = std::make_shared<Audacity3ProjectData>();
+    m_data = std::make_shared<Au3ProjectData>();
 }
 
-std::shared_ptr<Audacity3Project> Audacity3Project::create()
+std::shared_ptr<Au3Project> Au3Project::create()
 {
-    std::shared_ptr<Audacity3Project> p = std::make_shared<Audacity3Project>();
+    std::shared_ptr<Au3Project> p = std::make_shared<Au3Project>();
     p->m_data->project = AudacityProject::Create();
     return p;
 }
 
-bool Audacity3Project::load(const muse::io::path_t& filePath)
+bool Au3Project::load(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     std::string sstr = filePath.toStdString();
@@ -70,7 +70,7 @@ bool Audacity3Project::load(const muse::io::path_t& filePath)
     return bParseSuccess;
 }
 
-bool Audacity3Project::save(const muse::io::path_t& filePath, const bool fromSaveAs)
+bool Au3Project::save(const muse::io::path_t& filePath, const bool fromSaveAs)
 {
     //! TODO AU4
     // auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
@@ -81,13 +81,13 @@ bool Audacity3Project::save(const muse::io::path_t& filePath, const bool fromSav
     return false;
 }
 
-void Audacity3Project::close()
+void Au3Project::close()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.CloseProject();
 }
 
-std::string Audacity3Project::title() const
+std::string Au3Project::title() const
 {
     if (!m_data->project) {
         return std::string();
@@ -96,7 +96,7 @@ std::string Audacity3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
-muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() const
+muse::async::NotifyList<au::processing::Track> Au3Project::trackList() const
 {
     muse::async::NotifyList<au::processing::Track> au4tracks;
     au4tracks.setNotify(m_trackChangedNotifier.notify());
@@ -116,7 +116,7 @@ muse::async::NotifyList<au::processing::Track> Audacity3Project::trackList() con
     return au4tracks;
 }
 
-muse::async::NotifyList<au::processing::Clip> Audacity3Project::clipList(const au::processing::TrackId& trackId) const
+muse::async::NotifyList<au::processing::Clip> Au3Project::clipList(const au::processing::TrackId& trackId) const
 {
     const WaveTrack* waveTrack = DomAccessor::findWaveTrack(m_data->projectRef(), TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -134,7 +134,7 @@ muse::async::NotifyList<au::processing::Clip> Audacity3Project::clipList(const a
     return clips;
 }
 
-uintptr_t Audacity3Project::au3ProjectPtr() const
+uintptr_t Au3Project::au3ProjectPtr() const
 {
     return reinterpret_cast<uintptr_t>(m_data->project.get());
 }

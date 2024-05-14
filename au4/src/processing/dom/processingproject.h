@@ -8,7 +8,7 @@
 #include "track.h"
 
 namespace au::au3 {
-class Audacity3Project;
+class Au3Project;
 }
 
 namespace au::processing {
@@ -18,8 +18,8 @@ class ProcessingProject
 public:
     ProcessingProject();
 
-    void setAudacity3Project(std::shared_ptr<au::au3::Audacity3Project> au3);
-    const std::shared_ptr<au::au3::Audacity3Project>& audacity3Project() const { return m_au3; }
+    void setAudacity3Project(std::shared_ptr<au::au3::Au3Project> au3);
+    const std::shared_ptr<au::au3::Au3Project>& audacity3Project() const { return m_au3; }
 
     muse::async::NotifyList<Track> trackList() const;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
@@ -31,7 +31,7 @@ public:
 
 private:
 
-    std::shared_ptr<au::au3::Audacity3Project> m_au3;
+    std::shared_ptr<au::au3::Au3Project> m_au3;
 
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
 };

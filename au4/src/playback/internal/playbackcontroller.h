@@ -11,7 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
 
-#include "au3wrap/iaudacity3playback.h"
+#include "au3wrap/iau3playback.h"
 
 #include "../iplaybackcontroller.h"
 
@@ -21,7 +21,7 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
     INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
     INJECT_STATIC(au::context::IGlobalContext, globalContext)
     INJECT_STATIC(muse::IInteractive, interactive)
-    INJECT_STATIC(au3::IAudacity3Playback, au3Playback)
+    INJECT_STATIC(au3::IAu3Playback, au3Playback)
 
 public:
     void init();

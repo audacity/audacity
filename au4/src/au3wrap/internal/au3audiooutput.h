@@ -2,15 +2,15 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AUDIOOUTPUT_H
-#define AU_AU3WRAP_AUDIOOUTPUT_H
+#ifndef AU_AU3WRAP_AU3AUDIOOUTPUT_H
+#define AU_AU3WRAP_AU3AUDIOOUTPUT_H
 
 #include "global/async/asyncable.h"
 
-#include "../iaudacity3audiooutput.h"
+#include "../iau3audiooutput.h"
 
 namespace au::au3 {
-class Audacity3AudioOutput : public IAudacity3AudioOutput, public muse::async::Asyncable
+class Au3AudioOutput : public IAu3AudioOutput, public muse::async::Asyncable
 {
 public:
     muse::async::Promise<float> playbackVolume() const override;
@@ -24,4 +24,4 @@ private:
 };
 }
 
-#endif // AU_AU3WRAP_AUDIOOUTPUT_H
+#endif // AU_AU3WRAP_AU3AUDIOOUTPUT_H
