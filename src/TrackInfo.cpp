@@ -37,7 +37,7 @@ struct Settings : PrefsListener {
 
    void UpdatePrefs() override
    {
-      int fontSize = 10;
+      int fontSize = 9;
       gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
       mInitialized = true;
