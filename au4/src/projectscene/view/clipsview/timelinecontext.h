@@ -1,12 +1,23 @@
 #pragma once
 
-#include <QQuickItem>
+#include <QObject>
 
-class TimelineContext : public QQuickItem
+//! NOTE This class does two things:
+//! 1. This is a context that is passed to other classes
+//! 2. This is a controller that interprets mouse and view resize events into context values
+//!
+//! If this class becomes more complex,
+//! or we notice that its "controller" methods are being called in unexpected places,
+//! then we should split it into two separate classes.
+
+class TimelineContext : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(double offset READ offset WRITE setOffset NOTIFY offsetChanged FINAL)
+    //  0 sec     visible frame          end
+    //          | ~~~~~ ~~~~ ~~~|
+    Q_PROPERTY(double frameStartTime READ frameStartTime NOTIFY frameStartTimeChanged FINAL)
+    Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged FINAL)
 
     Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
@@ -15,17 +26,11 @@ class TimelineContext : public QQuickItem
 
 public:
 
-    TimelineContext(QQuickItem* parent = nullptr);
+    TimelineContext(QObject* parent = nullptr);
 
-    Q_INVOKABLE void onWheel(double y);
-    Q_INVOKABLE void onSelection(double x1, double x2);
-    Q_INVOKABLE void resetSelection();
+    double frameStartTime() const;
+    double frameEndTime() const;
 
-    Q_INVOKABLE qint64 timeToPosition(double time) const;
-    Q_INVOKABLE double positionToTime(qint64 position) const;
-
-    double offset() const;
-    void setOffset(double newOffset);
     double zoom() const;
     void setZoom(double zoom);
 
@@ -35,9 +40,23 @@ public:
     void setSelectionEndTime(double time);
     bool selectionActive() const;
 
+    Q_INVOKABLE void init(double frameWidth);
+
+    Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
+    Q_INVOKABLE void onWheel(double y);
+
+    Q_INVOKABLE void onSelection(double x1, double x2);
+    Q_INVOKABLE void resetSelection();
+
+    Q_INVOKABLE double timeToPosition(double time) const;
+    Q_INVOKABLE double positionToTime(double position) const;
+
 signals:
 
-    void offsetChanged();
+    void frameStartTimeChanged();
+    void frameEndTimeChanged();
+    void frameTimeChanged(); // any or both together
+
     void zoomChanged();
 
     void selectionStartTimeChanged();
@@ -46,15 +65,22 @@ signals:
 
 private:
 
+    void shiftFrameTime(int direction);
+    void setFrameStartTime(double newFrameStartTime);
+    void setFrameEndTime(double newFrameEndTime);
+    void updateFrameTime();
+
     void changeZoom(int direction);
-    void changeOffset(int direction);
 
     void onSelectionTime(double t1, double t2);
     void updateSelectionActive();
     void setSelectionActive(bool newSelectionActive);
 
-    double m_offset = 0.0;
-    double m_zoom = 2.0;//{ 44100.0 / 512.0 };
+    double m_frameWidth = 0.0;
+    double m_frameStartTime = 0.0;
+    double m_frameEndTime = 0.0;
+
+    double m_zoom = 1.0; // see init
 
     double m_selecitonStartTime = 0.0;
     double m_selectionEndTime = 0.0;

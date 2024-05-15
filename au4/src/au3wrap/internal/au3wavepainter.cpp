@@ -8,15 +8,11 @@
 #include <wx/utils.h>
 
 #include "ClipInterface.h"
-#include "CodeConversions.h"
-#include "SelectedRegion.h"
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "ZoomInfo.h"
 #include "Envelope.h"
 #include "FrameStatistics.h"
-#include "SyncLock.h"
-#include "ViewInfo.h"
 #include "WaveformScale.h"
 #include "graphics/Color.h"
 
@@ -25,11 +21,7 @@
 
 #include "domaccessor.h"
 
-constexpr int kClipDetailedViewMinimumWidth{ 3 };
-
-constexpr int FrameRadius { 4 };
-constexpr int HeaderHeight { 0 };
-constexpr int HeaderVMargin { 2 };
+constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
 
 using Style = au::au3::Au3WavePainter::Style;
 
@@ -120,19 +112,25 @@ public:
                 clip, dataCache,
                 [] { return std::make_unique<WaveBitmapCacheElementQt>(); });
 
-            mChannelCaches.push_back(
-                { std::move(dataCache), std::move(bitmapCache) });
+            mChannelCaches.push_back({ std::move(dataCache), std::move(bitmapCache) });
         }
 
         return *this;
     }
 
+    struct Geometry
+    {
+        double top = 0.0;
+        double left = 0.0;
+        double height = 0.0;
+        double width = 0.0;    // not used for draw, just info
+    };
+
     void Draw(int channelIndex,
               QPainter& painter, const
               WavePaintParameters& params,
-              const ZoomInfo& zoomInfo,
-              const QRect& targetRect,
-              int leftOffset,
+              const Geometry& geometry,
+              double zoom,
               double from,
               double to)
     {
@@ -144,26 +142,24 @@ public:
         auto& bitmapCache = mChannelCaches[channelIndex].BitmapCache;
         bitmapCache->SetPaintParameters(params);
 
+        const ZoomInfo zoomInfo(0.0, zoom);
+
         auto range = bitmapCache->PerformLookup(zoomInfo, from, to);
 
-        auto left = targetRect.x() + leftOffset;
-        auto height = targetRect.height();
-
-        const auto top = targetRect.y();
+        int left = geometry.left;
+        int height = geometry.height;
 
         for (auto it = range.begin(); it != range.end(); ++it) {
             const auto elementLeftOffset = it.GetLeftOffset();
             const auto elementRightOffset = it.GetRightOffset();
 
-            const auto width = WaveBitmapCache::CacheElementWidth
-                               - elementLeftOffset - elementRightOffset;
+            const auto width = WaveBitmapCache::CacheElementWidth - elementLeftOffset - elementRightOffset;
 
-            const auto drawableWidth = std::min<int32_t>(
-                width, it->Width() - elementLeftOffset);
+            const auto drawableWidth = std::min<int32_t>(width, it->Width() - elementLeftOffset);
 
             const auto image = static_cast<const WaveBitmapCacheElementQt&>(*it).GetImage();
             painter.drawImage(
-                QRectF(left, targetRect.y(), drawableWidth, height),
+                QRectF(left, geometry.top, drawableWidth, height),
                 image,
                 QRectF(
                     elementLeftOffset,
@@ -271,7 +267,7 @@ double CalculateAdjustmentForZoomLevel(double avgPixPerSecond, bool showSamples)
         // adjustment so that the last circular point doesn't appear
         // to be hanging off the end
         return pixelsOffset
-               / avgPixPerSecond; // pixels / ( pixels / second ) = seconds
+               / avgPixPerSecond;   // pixels / ( pixels / second ) = seconds
     }
     return .0;
 }
@@ -365,170 +361,57 @@ int GetWaveYPos(float value, float min, float max,
     return (int)(value * (height - 1) + 0.5);
 }
 
+struct WaveGeometry
+{
+    double waveTop = 0.0;       // wave channel view top
+    double waveHeight = 0.0;    // wave channel view height
+    double clipWidth = 0.0;     // clip view width
+    double relClipLeft = 0.0;   // relatively to frameLeft
+    double frameLeft = 0.0;     // track line shift
+    double frameWidth = 0.0;    // track line visible width
+};
+
 struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.
-    ClipParameters(const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo);
+    ClipParameters(const WaveGeometry& geometry, double zoom);
 
-    const double trackRectT0; // absolute time of left edge of track
+    const WaveGeometry geometry;
+
+    WaveformPainter::Geometry drawGeometry;
 
     // Lower and upper visible time boundaries (relative to clip). If completely
     // off-screen, `t0 == t1`.
-    double t0;
-    double t1;
-
-    const double averagePixelsPerSecond;
-    const bool showIndividualSamples;
-
-    QRect hiddenMid;
-    int hiddenLeftOffset;
-
-    QRect mid;
-    int leftOffset;
-
-    // returns a clip rectangle restricted by viewRect,
-    // and with clipOffsetX - clip horizontal origin offset within view rect
-    static QRect GetClipRect(
-        const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples = nullptr);
+    double t0 = 0.0;
+    double t1 = 0.0;
 };
 
-ClipParameters::ClipParameters(
-    const ClipTimes& clip, const QRect& rect, const ZoomInfo& zoomInfo)
-    : trackRectT0{zoomInfo.PositionToTime(0, 0, true)}
-    , averagePixelsPerSecond{GetPixelsPerSecond(rect, zoomInfo)}
-    , showIndividualSamples{ShowIndividualSamples(
-                                clip.GetRate(), clip.GetStretchRatio(), averagePixelsPerSecond)}
+ClipParameters::ClipParameters(const WaveGeometry& geomet, double zoom)
+    : geometry(geomet)
 {
-    const auto trackRectT1 = zoomInfo.PositionToTime(rect.width(), 0, true);
-    const auto playStartTime = clip.GetPlayStartTime();
-
-    const double clipLength = clip.GetPlayEndTime() - clip.GetPlayStartTime();
-
-    // Hidden duration because too far left.
-    const auto tpre = trackRectT0 - playStartTime;
-    const auto tpost = trackRectT1 - playStartTime;
-
-    const auto blank = GetBlankSpaceBeforePlayEndTime(clip);
-
-    // Calculate actual selection bounds so that t0 > 0 and t1 < the
-    // end of the track
-    t0 = std::max(tpre, .0);
-    t1 = std::min(tpost, clipLength - blank)
-         + CalculateAdjustmentForZoomLevel(
-        averagePixelsPerSecond, showIndividualSamples);
-
-    // Make sure t1 (the right bound) is greater than 0
-    if (t1 < 0.0) {
-        t1 = 0.0;
+    double drawWidth = std::min(geometry.relClipLeft + geometry.clipWidth, geometry.frameWidth) - geometry.relClipLeft;
+    double drawLeft = 0.0;
+    if (geometry.relClipLeft < 0) {
+        drawLeft = -geometry.relClipLeft;
     }
 
-    // Make sure t1 is greater than t0
-    if (t0 > t1) {
-        t0 = t1;
-    }
+    drawGeometry.top = geometry.waveTop;
+    drawGeometry.left = drawLeft;
+    drawGeometry.height = geometry.waveHeight;
+    drawGeometry.width = drawWidth;
 
-    // The variable "hiddenMid" will be the rectangle containing the
-    // actual waveform, as opposed to any blank area before
-    // or after the track, as it would appear without the fisheye.
-    hiddenMid = rect;
+    t0 = drawLeft / zoom;
+    t1 = drawWidth / zoom;
 
-    // If the left edge of the track is to the right of the left
-    // edge of the display, then there's some unused area to the
-    // left of the track.  Reduce the "hiddenMid"
-    hiddenLeftOffset = 0;
-    if (tpre < 0) {
-        // Fix Bug #1296 caused by premature conversion to (int).
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime, 0, true);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        hiddenLeftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-
-        hiddenMid.setLeft(hiddenMid.left() + hiddenLeftOffset);
-    }
-
-    // If the right edge of the track is to the left of the right
-    // edge of the display, then there's some unused area to the right
-    // of the track.  Reduce the "hiddenMid" rect by the
-    // size of the blank area.
-    if (tpost > t1) {
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, true);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        const int hiddenRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-
-        hiddenMid.setWidth(std::max(0, hiddenRightOffset - hiddenLeftOffset));
-    }
-    // The variable "mid" will be the rectangle containing the
-    // actual waveform, as distorted by the fisheye,
-    // as opposed to any blank area before or after the track.
-    mid = rect;
-
-    // If the left edge of the track is to the right of the left
-    // edge of the display, then there's some unused area to the
-    // left of the track.  Reduce the "mid"
-    leftOffset = 0;
-    if (tpre < 0) {
-        wxInt64 time64 = 0;//zoomInfo.TimeToPosition(playStartTime, 0, false);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        leftOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-
-        mid.setLeft(mid.left() + leftOffset);
-    }
-
-    // If the right edge of the track is to the left of the right
-    // edge of the display, then there's some unused area to the right
-    // of the track.  Reduce the "mid" rect by the
-    // size of the blank area.
-    if (tpost > t1) {
-        wxInt64 time64 = zoomInfo.TimeToPosition(playStartTime + t1, 0, false);
-        if (time64 < 0) {
-            time64 = 0;
-        }
-        const int distortedRightOffset = (time64 < rect.width()) ? (int)time64 : rect.width();
-
-        mid.setWidth(std::max(0, distortedRightOffset - leftOffset));
-    }
-}
-
-QRect ClipParameters::GetClipRect(const ClipTimes& clip,
-                                  const ZoomInfo& zoomInfo, const QRect& viewRect, bool* outShowSamples)
-{
-    const auto pixelsPerSecond = GetPixelsPerSecond(viewRect, zoomInfo);
-    const auto showIndividualSamples = ShowIndividualSamples(
-        clip.GetRate(), clip.GetStretchRatio(), pixelsPerSecond);
-    const auto clipEndingAdjustment
-        =CalculateAdjustmentForZoomLevel(pixelsPerSecond, showIndividualSamples);
-    if (outShowSamples != nullptr) {
-        *outShowSamples = showIndividualSamples;
-    }
-    constexpr auto edgeLeft
-        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::min());
-    constexpr auto edgeRight
-        =static_cast<ZoomInfo::int64>(std::numeric_limits<int>::max());
-    const auto left = std::clamp(
-        zoomInfo.TimeToPosition(clip.GetPlayStartTime(), viewRect.x(), true),
-        edgeLeft, edgeRight);
-    const auto right = std::clamp(
-        zoomInfo.TimeToPosition(
-            clip.GetPlayEndTime() - GetBlankSpaceBeforePlayEndTime(clip)
-            + clipEndingAdjustment,
-            viewRect.x(), true),
-        edgeLeft, edgeRight);
-    if (right >= left) {
-        // after clamping we can expect that left and right
-        // are small enough to be put into int
-        return {
-            static_cast<int>(left),
-            viewRect.y(),
-            std::max(1, static_cast<int>(right - left)),
-            viewRect.height()
-        };
-    }
-    return {};
+    LOGDA() << " relClipLeft: " << geometry.relClipLeft
+            << " clipWidth: " << geometry.clipWidth
+            << " frameLeft: " << geometry.frameLeft
+            << " frameWidth: " << geometry.frameWidth
+            << " draw width: " << drawWidth
+            << " draw left: " << drawLeft
+            << " t0: " << t0
+            << " t1: " << t1
+    ;
 }
 
 void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
@@ -538,10 +421,8 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
                            int leftOffset,
                            float zoomMin, float zoomMax,
                            bool dB, float dBRange,
-                           bool showPoints, bool muted, bool highlight)
+                           bool showPoints, bool highlight)
 {
-    UNUSED(muted);
-
     const double toffset = clip.GetPlayStartTime();
     double rate = clip.GetRate();
     const double t0 = std::max(0.0, zoomInfo.PositionToTime(0, -leftOffset) - toffset);
@@ -657,167 +538,22 @@ void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rec
     }
 }
 
-void DrawWaveformBackground(QPainter& painter, const QRect& rect,
-                            const Style& style,
-                            const ZoomInfo& zoomInfo,
-                            const double* env, int leftOffset,
-                            float zoomMin, float zoomMax,
-                            double t0, double t1,
-                            bool dB, float dBRange,
-                            int zeroLevelYCoordinate,
-                            bool bIsSyncLockSelected,
-                            bool highlightEnvelope)
-{
-    // Visually (one vertical slice of the waveform background, on its side;
-    // the "*" is the actual waveform background we're drawing
-    //
-    //1.0                              0.0                             -1.0
-    // |--------------------------------|--------------------------------|
-    //      ***************                           ***************
-    //      |             |                           |             |
-    //    maxtop        maxbot                      mintop        minbot
-
-    int h = rect.height();
-    int halfHeight = wxMax(h / 2, 1);
-    int maxtop, lmaxtop = 0;
-    int mintop, lmintop = 0;
-    int maxbot, lmaxbot = 0;
-    int minbot, lminbot = 0;
-    bool sel, lsel = false;
-    int xx, lx = 0;
-    int l, w;
-
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(style.blankBrush);
-
-    painter.drawRect(rect);
-
-    // Bug 2389 - always draw at least one pixel of selection.
-    int selectedX = zoomInfo.TimeToPosition(t0, -leftOffset);
-
-    double time = zoomInfo.PositionToTime(0, -leftOffset), nextTime;
-    for (xx = 0; xx < rect.width(); ++xx, time = nextTime) {
-        nextTime = zoomInfo.PositionToTime(xx + 1, -leftOffset);
-        // First we compute the truncated shape of the waveform background.
-        // If drawEnvelope is true, then we compute the lower border of the
-        // envelope.
-
-        maxtop = GetWaveYPos(env[xx], zoomMin, zoomMax,
-                             h, dB, true, dBRange, true);
-        maxbot = GetWaveYPos(env[xx], zoomMin, zoomMax,
-                             h, dB, false, dBRange, true);
-
-        mintop = GetWaveYPos(-env[xx], zoomMin, zoomMax,
-                             h, dB, false, dBRange, true);
-        minbot = GetWaveYPos(-env[xx], zoomMin, zoomMax,
-                             h, dB, true, dBRange, true);
-
-        // Make sure it's odd so that a that max and min mirror each other
-        mintop +=1;
-        minbot +=1;
-
-        //TODO: uncomment and fix
-        //const auto drawEnvelope = artist->drawEnvelope;
-        const auto drawEnvelope = false;
-        if (!drawEnvelope || maxbot > mintop) {
-            maxbot = halfHeight;
-            mintop = halfHeight;
-        }
-
-        sel = (t0 <= time && nextTime < t1);
-        sel = sel || (xx == selectedX);
-        // We don't draw selection color for sync-lock selected tracks.
-        sel = sel && !bIsSyncLockSelected;
-
-        if (lmaxtop == maxtop
-            && lmintop == mintop
-            && lmaxbot == maxbot
-            && lminbot == minbot
-            && lsel == sel) {
-            continue;
-        }
-
-        painter.setBrush(style.blankBrush);
-
-        l = rect.x() + lx;
-        w = xx - lx;
-        if (lmaxbot < lmintop - 1) {
-            painter.drawRect(l, rect.y() + lmaxtop, w, lmaxbot - lmaxtop);
-            painter.drawRect(l, rect.y() + lmintop, w, lminbot - lmintop);
-        } else {
-            painter.drawRect(l, rect.y() + lmaxtop, w, lminbot - lmaxtop);
-        }
-
-        if (highlightEnvelope && lmaxbot < lmintop - 1) {
-            painter.setBrush(style.highlight);
-            painter.drawRect(l, rect.y() + lmaxbot, w, lmintop - lmaxbot);
-        }
-
-        lmaxtop = maxtop;
-        lmintop = mintop;
-        lmaxbot = maxbot;
-        lminbot = minbot;
-        lsel = sel;
-        lx = xx;
-    }
-
-    painter.setBrush(style.blankBrush);
-    l = rect.x() + lx;
-    w = xx - lx;
-    if (lmaxbot < lmintop - 1) {
-        painter.drawRect(l, rect.y() + lmaxtop, w, lmaxbot - lmaxtop);
-        painter.drawRect(l, rect.y() + lmintop, w, lminbot - lmintop);
-    } else {
-        painter.drawRect(l, rect.y() + lmaxtop, w, lminbot - lmaxtop);
-    }
-    if (highlightEnvelope && lmaxbot < lmintop - 1) {
-        painter.setBrush(style.highlight);
-        painter.drawRect(l, rect.y() + lmaxbot, w, lmintop - lmaxbot);
-    }
-
-    //TODO: uncomment and fix
-    // If sync-lock selected, draw in linked graphics.
-    /*if (bIsSyncLockSelected && t0 < t1) {
-      const int begin = std::max(0, std::min(rect.width, (int)(zoomInfo.TimeToPosition(t0, -leftOffset))));
-      const int end = std::max(0, std::min(rect.width, (int)(zoomInfo.TimeToPosition(t1, -leftOffset))));
-      TrackArt::DrawSyncLockTiles( context,
-         { rect.x + begin, rect.y, end - 1 - begin, rect.height } );
-   }*/
-
-    //OK, the display bounds are between min and max, which
-    //is spread across rect.height.  Draw the line at the proper place.
-    if (zeroLevelYCoordinate >= rect.top()
-        && zeroLevelYCoordinate <= rect.bottom()) {
-        painter.setPen(Qt::black);
-        painter.drawLine(rect.x(), zeroLevelYCoordinate,
-                         rect.x() + rect.width() - 1, zeroLevelYCoordinate);
-    }
-}
-
 void DrawMinMaxRMS(int channelIndex, QPainter& painter,
-                   const QRect& rect,
+                   const ClipParameters& params,
+                   double zoom,
                    const Style& style,
-                   const ZoomInfo& zoomInfo,
                    const WaveClip& clip,
-                   double t0, double t1, int leftOffset,
                    double zoomMin, double zoomMax,
-                   bool dB, double dbRange,
-                   bool muted)
+                   bool dB, double dbRange)
 {
-    UNUSED(muted);
-
-    const ZoomInfo localZoomInfo(0.0, zoomInfo.GetZoom());
-
     auto& waveformPainter = WaveformPainter::Get(clip);
-
-    const auto trimLeft = clip.GetTrimLeft();
 
     WavePaintParameters paintParameters;
 
     paintParameters
     .SetDisplayParameters(
         //TODO: uncomment and fix
-        rect.height(), zoomMin, zoomMax, false /*artist->mShowClipping*/)
+        params.drawGeometry.height, zoomMin, zoomMax, false /*artist->mShowClipping*/)
     .SetDBParameters(dbRange, dB)
     .SetBlankColor(ColorFromQColor(style.blankBrush))
     .SetSampleColors(
@@ -834,37 +570,35 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
         ColorFromQColor(style.clippedPen))
     .SetEnvelope(clip.GetEnvelope());
 
-    //TODO: uncomment and fix
-    //clipPainter.SetSelection(
-    //   zoomInfo, artist->pSelectedRegion->t0() - sequenceStartTime,
-    //   artist->pSelectedRegion->t1() - sequenceStartTime);
+    const auto trimLeft = clip.GetTrimLeft();
 
-    waveformPainter.Draw(channelIndex, painter, paintParameters, localZoomInfo, rect, leftOffset, t0 + trimLeft, t1 + trimLeft);
+    waveformPainter.Draw(channelIndex, painter, paintParameters, params.drawGeometry, zoom, params.t0 + trimLeft, params.t1 + trimLeft);
 }
 
-static bool ClipDetailsVisible(const ClipTimes& clip, const ZoomInfo& zoomInfo, const QRect& viewRect)
+static bool showIndividualSamples(const WaveClip& clip, bool zoom)
 {
-    //Do not fold clips to line at sample zoom level, as
-    //it may become impossible to 'unfold' it when clip is trimmed
-    //to a single sample
-    bool showSamples{ false };
-    auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, viewRect, &showSamples);
-    return showSamples || clipRect.width() >= kClipDetailedViewMinimumWidth;
+    const double sampleRate = clip.GetRate();
+    const double stretchRatio = clip.GetStretchRatio();
+
+    // Require at least 1/2 pixel per sample for drawing individual samples.
+    const double threshold1 = 0.5 * sampleRate / stretchRatio;
+
+    bool showIndividualSamples = zoom > threshold1;
+    return showIndividualSamples;
 }
 
-void DrawWaveform(int channelIndex,
-                  QPainter& painter,
-                  WaveTrack& track,
-                  const WaveClip& clip,
-                  const ZoomInfo& zoomInfo,
-                  const SelectedRegion& selectedRegion,
-                  const QRect& rect,
-                  const Style& style,
-                  bool dB, bool muted, bool selected)
+static void DrawWaveform(int channelIndex,
+                         QPainter& painter,
+                         WaveTrack& track,
+                         const WaveClip& clip,
+                         const WaveGeometry& geometry,
+                         double zoom,
+                         const Style& style,
+                         bool dB)
 {
     //If clip is "too small" draw a placeholder instead of
     //attempting to fit the contents into a few pixels
-    if (!ClipDetailsVisible(clip, zoomInfo, rect)) {
+    if (geometry.clipWidth < CLIPVIEW_WIDTH_MIN) {
         //TODO: uncomment and fix me
         /*
       auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
@@ -873,28 +607,10 @@ void DrawWaveform(int channelIndex,
         return;
     }
 
-    bool highlightEnvelope = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-    highlightEnvelope = target && target->GetEnvelope() == clip.GetEnvelope();
-#endif
-
-    const ClipParameters params(clip, rect, zoomInfo);
-    const auto& hiddenMid = params.hiddenMid;
-    // The "hiddenMid" rect contains the part of the display actually
-    // containing the waveform, as it appears without the fisheye.  If it's empty, we're done.
-    if (hiddenMid.width() <= 0) {
+    const ClipParameters params(geometry, zoom);
+    if (params.drawGeometry.width < 0.1) {
         return;
     }
-
-    const double t0 = params.t0;
-    const double sampleRate = clip.GetRate();
-    const double playStartTime = clip.GetPlayStartTime();
-    const double trackRectT0 = params.trackRectT0;
-    const double stretchRatio = clip.GetStretchRatio();
-    const double t1 = params.t1;
-    const int leftOffset = params.leftOffset;
-    const QRect mid = params.mid;
 
     auto& settings = WaveformSettings::Get(track);
     const float dBRange = settings.dBRange;
@@ -907,99 +623,28 @@ void DrawWaveform(int channelIndex,
     auto& cache = WaveformScale::Get(track);
     cache.GetDisplayBounds(zoomMin, zoomMax);
 
-    std::vector<double> vEnv(mid.width());
-    double* const env = &vEnv[0];
-    GetEnvelopeValues(
-        clip.GetEnvelope(),
-        playStartTime,
-
-        // PRL: change back to make envelope evaluate only at sample times
-        // and then interpolate the display
-        0,         // 1.0 / sampleRate,
-
-        env, mid.width(), leftOffset, zoomInfo
-        );
-
-    // Draw the background of the track, outlining the shape of
-    // the envelope and using a colored pen for the selected
-    // part of the waveform
-    {
-        double tt0, tt1;
-        if (SyncLock::IsSelectedOrSyncLockSelected(track)) {
-            tt0 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t0())),
-            tt1 = track.LongSamplesToTime(track.TimeToLongSamples(selectedRegion.t1()));
-        } else {
-            tt0 = tt1 = 0.0;
-        }
-
-        DrawWaveformBackground(
-            painter, mid,
-            style,
-            zoomInfo,
-            env, leftOffset,
-            zoomMin, zoomMax,
-            tt0, tt1,
-            dB, dBRange,
-            cache.ZeroLevelYCoordinate({ mid.x(), mid.y(), mid.width(), mid.height() }),
-            !track.GetSelected(), highlightEnvelope);
-    }
-
-    //const double pps =
-    //   averagePixelsPerSample * rate;
-
-    // Require at least 1/2 pixel per sample for drawing individual samples.
-    const double threshold1 = 0.5 * sampleRate / stretchRatio;
-    // Require at least 3 pixels per sample for drawing the draggable points.
-    const double threshold2 = 3 * sampleRate / stretchRatio;
-
-    const bool showIndividualSamples = zoomInfo.GetZoom() > threshold1;
-    const bool showPoints = zoomInfo.GetZoom() > threshold2;
-
-    if (!showIndividualSamples) {
-        DrawMinMaxRMS(channelIndex,
-                      painter, rect,
+    if (!showIndividualSamples(clip, zoom)) {
+        DrawMinMaxRMS(channelIndex, painter,
+                      params, zoom,
                       style,
-                      zoomInfo,
                       clip,
-                      t0, t1, leftOffset,
                       zoomMin, zoomMax,
-                      dB, dBRange, muted);
+                      dB, dBRange);
     } else {
-        bool highlight = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-        auto target = dynamic_cast<SampleHandle*>(context.target.get());
-        highlight = target && target->GetTrack().get() == track;
-#endif
-        DrawIndividualSamples(
-            channelIndex,
-            painter, rect,
-            style,
-            zoomInfo,
-            clip, leftOffset,
-            zoomMin, zoomMax,
-            dB, dBRange,
-            showPoints, muted, highlight);
+        // Require at least 3 pixels per sample for drawing the draggable points.
+        // const double threshold2 = 3 * sampleRate / stretchRatio;
+        // const bool showPoints =zoom > threshold2;
+        // bool highlight = false;
+        // DrawIndividualSamples(
+        //     channelIndex,
+        //     painter, rect,
+        //     style,
+        //     zoomInfo,
+        //     clip, leftOffset,
+        //     zoomMin, zoomMax,
+        //     dB, dBRange,
+        //     showPoints, highlight);
     }
-
-    //TODO: uncomment and fix me
-    /*const auto drawEnvelope = artist->drawEnvelope;
-   if (drawEnvelope) {
-      DrawEnvelope(
-         context, mid, env, zoomMin, zoomMax, dB, dBRange, highlightEnvelope );
-      EnvelopeEditor::DrawPoints( *clip->GetEnvelope(),
-          context, mid, dB, dBRange, zoomMin, zoomMax, true, rect.x - mid.x );
-   }*/
-
-    // Draw arrows on the left side if the track extends to the left of the
-    // beginning of time.  :)
-    //TODO: uncomment and fix me
-    /*if (trackRectT0 == 0.0 && playStartTime < 0.0) {
-      TrackArt::DrawNegativeOffsetTrackArrows( context, rect );
-   }
-   {
-      auto clipRect = ClipParameters::GetClipRect(*clip, zoomInfo, rect);
-      TrackArt::DrawClipEdges(context.painter, clipRect, selected);
-   }*/
 }
 
 using namespace au::au3;
@@ -1012,6 +657,12 @@ AudacityProject& Au3WavePainter::projectRef() const
 
 void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params)
 {
+    //! NOTE Please don't remove, need for debug
+    // if (!(clipKey.trackId == 2 && clipKey.index == 0)) {
+    //     return;
+    // }
+    // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
+
     WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(track) {
         return;
@@ -1027,30 +678,26 @@ void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey
 
 void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const WaveClip* clip, const Params& params)
 {
-    // debug
-    // const auto& vr = params.viewRect;
-    // LOGDA() << "viewRect: w: " << vr.width() << ", h: " << vr.height() << ", x: " << vr.x() << ", y: " << vr.y();
-
     auto sw = FrameStatistics::CreateStopwatch(FrameStatistics::SectionID::WaveformView);
 
     WaveTrack* track = const_cast<WaveTrack*>(_track);
 
-    bool highlightEnvelope = false;
-#ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
-    auto target = dynamic_cast<EnvelopeHandle*>(context.target.get());
-    highlightEnvelope = target && target->GetEnvelope() == clip->GetEnvelope();
-#endif
-
     const bool dB = !WaveformSettings::Get(*track).isLinear();
 
-    auto top = params.viewRect.top();
-    const auto channelHeight = (params.viewRect.height()) / static_cast<int>(clip->NChannels());
+    const auto channelHeight = (params.geometry.clipHeight) / static_cast<int>(clip->NChannels());
 
-    ZoomInfo zoomInfo{ clip->GetPlayStartTime(), params.zoom };
-    SelectedRegion selectedRegion{};
+    const Geometry& g = params.geometry;
+
+    WaveGeometry cg;
+    cg.waveHeight = channelHeight;
+    cg.clipWidth = g.clipWidth;
+    cg.relClipLeft = g.relClipLeft;
+    cg.frameLeft = g.frameLeft;
+    cg.frameWidth = g.frameWidth;
+
+    cg.waveTop = 0.0;
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
-        QRect rect = QRect(params.viewRect.left(), top, params.viewRect.width(), channelHeight);
-        DrawWaveform(i, painter, *track, *clip, zoomInfo, selectedRegion, rect, params.style, dB, track->GetMute(), false);
-        top += channelHeight;
+        DrawWaveform(i, painter, *track, *clip, cg, params.zoom, params.style, dB);
+        cg.waveTop += channelHeight;
     }
 }

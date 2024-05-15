@@ -29,7 +29,12 @@ void WaveView::setClipKey(const ClipKey& newClipKey)
 void WaveView::paint(QPainter* painter)
 {
     au3::IAu3WavePainter::Params params;
-    params.viewRect = QRect(0, 0, width(), height());
+    params.geometry.clipHeight = height();
+    params.geometry.clipWidth = width();
+    params.geometry.relClipLeft = m_clipLeft;
+    params.geometry.frameLeft = m_context->frameStartTime() * m_context->zoom();
+    params.geometry.frameWidth = (m_context->frameEndTime() - m_context->frameStartTime()) * m_context->zoom();
+
     params.zoom = m_context->zoom();
 
     const WaveStyle& style = configuration()->waveStyle();
@@ -60,7 +65,36 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
         return;
     }
 
-    //! TODO Subscribe on context props changes
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
     m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::onFrameTimeChanged);
+    }
+
     emit timelineContextChanged();
+}
+
+void WaveView::onFrameTimeChanged()
+{
+    update();
+}
+
+double WaveView::clipLeft() const
+{
+    return m_clipLeft;
+}
+
+void WaveView::setClipLeft(double newClipLeft)
+{
+    if (qFuzzyCompare(m_clipLeft, newClipLeft)) {
+        return;
+    }
+    m_clipLeft = newClipLeft;
+    emit clipLeftChanged();
+
+    update();
 }

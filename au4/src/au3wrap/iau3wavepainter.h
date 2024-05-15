@@ -22,8 +22,16 @@ public:
         QColor highlight;
     };
 
+    struct Geometry {
+        double clipHeight = 0.0;    // clip view height
+        double clipWidth = 0.0;     // clip view width
+        double relClipLeft = 0.0;   // relatively to frameLeft
+        double frameLeft = 0.0;     // track line shift
+        double frameWidth = 0.0;    // track line visible width
+    };
+
     struct Params {
-        QRect viewRect;
+        Geometry geometry;
         double zoom = 0.0;
         Style style;
     };

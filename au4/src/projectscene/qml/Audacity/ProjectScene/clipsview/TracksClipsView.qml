@@ -4,11 +4,13 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-Item {
+Rectangle {
 
     id: root
 
     clip: true
+
+    color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
         id: tracksModel
