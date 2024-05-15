@@ -25,6 +25,10 @@
 
 using namespace au::playback;
 using namespace au::au3;
+using namespace au::audio;
+
+static constexpr volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
+static constexpr volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
 
 static int au3VolumeToLocal(float volume)
 {
@@ -61,6 +65,19 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         m_level = au3VolumeToLocal(volume);
         emit levelChanged();
     });
+
+    playback()->audioOutput()->playbackSignalChanges()
+    .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
+        signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+            if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
+            } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+            } else {
+                setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+            }
+        });
+    });
 }
 
 int PlaybackToolBarLevelItem::level() const
@@ -75,4 +92,49 @@ void PlaybackToolBarLevelItem::setLevel(int newLevel)
     }
 
     playback()->audioOutput()->setPlaybackVolume(localVolumeToAu3(newLevel));
+}
+
+float PlaybackToolBarLevelItem::leftChannelPressure() const
+{
+    return m_leftChannelPressure;
+}
+
+float PlaybackToolBarLevelItem::rightChannelPressure() const
+{
+    return m_rightChannelPressure;
+}
+
+void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
+{
+    if (qFuzzyCompare(m_leftChannelPressure, leftChannelPressure)) {
+        return;
+    }
+
+    m_leftChannelPressure = leftChannelPressure;
+    emit leftChannelPressureChanged(m_leftChannelPressure);
+}
+
+void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressure)
+{
+    if (qFuzzyCompare(m_rightChannelPressure, rightChannelPressure)) {
+        return;
+    }
+
+    m_rightChannelPressure = rightChannelPressure;
+    emit rightChannelPressureChanged(m_rightChannelPressure);
+}
+
+void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
+{
+    if (chNum == 0) {
+        setLeftChannelPressure(newValue);
+    } else {
+        setRightChannelPressure(newValue);
+    }
+}
+
+void PlaybackToolBarLevelItem::resetAudioChannelsVolumePressure()
+{
+    setLeftChannelPressure(MIN_DISPLAYED_DBFS);
+    setRightChannelPressure(MIN_DISPLAYED_DBFS);
 }

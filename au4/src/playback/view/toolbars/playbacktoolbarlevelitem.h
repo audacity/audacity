@@ -18,6 +18,9 @@ class PlaybackToolBarLevelItem : public PlaybackToolBarAbstractItem
 
     Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 
+    Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
+    Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
+
     muse::Inject<au3::IAu3Playback> playback;
 
 public:
@@ -26,11 +29,26 @@ public:
     int level() const;
     void setLevel(int newLevel);
 
+    float leftChannelPressure() const;
+    float rightChannelPressure() const;
+
+public slots:
+    void setLeftChannelPressure(float leftChannelPressure);
+    void setRightChannelPressure(float rightChannelPressure);
+
 signals:
     void levelChanged();
+    void leftChannelPressureChanged(float leftChannelPressure);
+    void rightChannelPressureChanged(float rightChannelPressure);
 
 private:
+    void setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue);
+    void resetAudioChannelsVolumePressure();
+
     int m_level = 0;
+
+    float m_leftChannelPressure = 0.0;
+    float m_rightChannelPressure = 0.0;
 };
 }
 

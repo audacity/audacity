@@ -210,7 +210,12 @@ Item {
                     PlaybackLevel {
                         property var item: loader.itemData
 
-                        width: 128
+                        width: 240
+                        height: 28
+
+                        volumeLevel: item.level
+                        leftCurrentVolumePressure: item.leftChannelPressure
+                        rightCurrentVolumePressure: item.rightChannelPressure
 
                         onVolumeLevelChangeRequested: function(level) {
                             item.level = level

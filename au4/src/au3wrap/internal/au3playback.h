@@ -49,7 +49,7 @@ private:
     mutable muse::async::Channel<audio::msecs_t> m_playbackPositionMsecsChanged;
     mutable muse::async::Channel<audio::PlaybackStatus> m_playbackStatusChanged;
 
-    IAu3AudioOutputPtr m_audioOutputPtr;
+    IAu3AudioOutputPtr m_audioOutput;
 };
 }
 
