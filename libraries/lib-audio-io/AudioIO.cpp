@@ -2639,6 +2639,7 @@ bool AudioIoCallback::FillOutputBuffers(
       mMaxFramesOutput = framesPerBuffer;
       return false;
    }
+   assert(numPlaybackChannels > 0);
 
    float *outputFloats = outputBuffer;
 
@@ -2663,63 +2664,35 @@ bool AudioIoCallback::FillOutputBuffers(
    const auto toGet =
       std::min<size_t>(framesPerBuffer, mMasterBuffers[0]->AvailForGet());
 
-   // The drop and dropQuickly booleans are so named for historical reasons.
-   // JKC: The original code attempted to be faster by doing nothing on silenced audio.
-   // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
-   // simply use a gain of 0.0 for silent audio and go on through to the stage of
-   // applying that 0.0 gain to the data mixed into the buffer.
-   // Then (and only then) we would have if needed fast paths for:
-   // - Applying a uniform gain of 0.0.
-   // - Applying a uniform gain of 1.0.
-   // - Applying some other uniform gain.
-   // - Applying a linearly interpolated gain.
-   // I would expect us not to need the fast paths, since linearly interpolated gain
-   // is very cheap to process.
-
-   bool drop = false;        // Sequence should become silent.
-   bool discardable = false; // Sequence has already been faded to silence.
    // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
    for (unsigned tt = 0; tt < numPlaybackSequences; ++tt) {
       auto vt = mPlaybackSequences[tt].get();
 
       // Check for asynchronous user changes in mute, solo, pause status
-      discardable = drop = SequenceShouldBeSilent(*vt);
-
-      if (mbMicroFades)
-         // If micro fading, don't silence tracks instantaneously
-         discardable = discardable &&
-            SequenceHasBeenFadedOut(mOldChannelGains[tt]);
+      const bool drop = SequenceShouldBeSilent(*vt);
 
       decltype(framesPerBuffer) len = 0;
 
+      assert(numPlaybackChannels > 0);
       for (size_t c = 0; c < numPlaybackChannels; ++c) {
-         if (discardable) {
-            len = mPlaybackBuffers[iBuffer]->Discard(toGet);
-            // keep going here.
-            // we may still need to issue a paComplete.
-
-            // Keep tempBufs initialized to avoid NaNs and Infs
-            memset(tempBufs[c], 0, framesPerBuffer * sizeof(float));
-         }
-         else {
-            len = mPlaybackBuffers[iBuffer]
-               ->Get((samplePtr)tempBufs[c], floatSample, toGet);
-            // This should be guaranteed by the producer thread, populating
-            // the master buffer with the minumum of available lengths
-            assert(len == toGet);
-            if (len < framesPerBuffer)
-               // This used to happen normally at the end of non-looping
-               // plays, but it can also be an anomalous case where the
-               // supply from SequenceBufferExchange fails to keep up with the
-               // real-time demand in this thread (see bug 1932).  We
-               // must supply something to the sound card, so pad it with
-               // zeroes and not random garbage.
-               memset((void*)&tempBufs[c][len], 0,
-                  (framesPerBuffer - len) * sizeof(float));
-         }
+         len = mPlaybackBuffers[iBuffer]
+            ->Get((samplePtr)tempBufs[c], floatSample, toGet);
+         // This should be guaranteed by the producer thread, populating
+         // the master buffer with the minumum of available lengths
+         assert(len == toGet);
+         if (len < framesPerBuffer)
+            // This used to happen normally at the end of non-looping
+            // plays, but it can also be an anomalous case where the
+            // supply from SequenceBufferExchange fails to keep up with the
+            // real-time demand in this thread (see bug 1932).  We
+            // must supply something to the sound card, so pad it with
+            // zeroes and not random garbage.
+            memset((void*)&tempBufs[c][len], 0,
+               (framesPerBuffer - len) * sizeof(float));
          ++iBuffer;
       }
+      assert(len == toGet);
 
       // PRL:  More recent rewrites of SequenceBufferExchange should guarantee a
       // padding out of the ring buffers so that equal lengths are
@@ -2748,8 +2721,6 @@ bool AudioIoCallback::FillOutputBuffers(
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
-      if (discardable) // no samples to process, they've been discarded
-         continue;
    }
 
    if (toGet > 0) {
@@ -3070,12 +3041,6 @@ bool AudioIoCallback::SequenceShouldBeSilent(const PlayableSequence &ps)
       // Cut if we're muted (and not soloing)
       ps.GetMute()
    );
-}
-
-// This is about micro-fades.
-bool AudioIoCallback::SequenceHasBeenFadedOut(const OldChannelGains &gains)
-{
-   return gains[0] == 0.0 && gains[1] == 0.0;
 }
 
 AudioIoCallback::AudioIoCallback()
