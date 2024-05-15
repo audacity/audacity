@@ -194,17 +194,15 @@ public:
       unsigned long framesPerBuffer
    );
 
-   /*!
-    @param[in,out] channelGain
-    */
-   void AddToOutputChannel( unsigned int chan, // index into gains
+   void AddToOutputChannel(
+      unsigned int chan,
       float * outputMeterFloats,
       float * outputFloats,
       const float * tempBuf,
       bool drop,
       unsigned long len,
       const PlayableSequence &ps,
-      float &channelGain
+      float &laggingChannelGain
    );
    bool FillOutputBuffers(
       float *outputBuffer,

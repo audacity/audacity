@@ -1894,6 +1894,16 @@ void AudioIO::SequenceBufferExchange()
    DrainRecordBuffers();
 }
 
+static inline float decayFactor(float rate)
+{
+   // Magic numbers here -- let the difference between actual and set-point
+   // decay to 10% in two milliseconds.
+   // This makes fades independent of buffer size.
+   constexpr auto remaining = 0.1f;
+   constexpr auto duration = 0.002f;
+   return powf(remaining, 1.0f / (rate * duration));
+}
+
 void AudioIO::FillPlayBuffers()
 {
    if (GetNumPlaybackChannels() == 0)
@@ -2574,9 +2584,10 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    bool drop,
    const unsigned long len,
    const PlayableSequence &ps,
-   float &channelGain)
+   float &laggingChannelGain)
 {
    const auto numPlaybackChannels = GetNumPlaybackChannels();
+   const auto factor = decayFactor(mRate);
 
    float gain = ps.GetChannelGain(chan);
    if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
@@ -2591,22 +2602,14 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
 
    // DV: We use gain to emulate panning.
    // Let's keep the old behavior for panning.
-   gain *= ExpGain(GetMixerOutputVol());
-
-   float oldGain = channelGain;
-   channelGain = gain;
-   // if no microfades, jump in volume.
-   if (!mbMicroFades)
-      oldGain = gain;
-   wxASSERT(len > 0);
-
-   // Linear interpolate.
-   // PRL todo:  choose denominator differently, so it doesn't depend on
-   // framesPerBuffer, which is influenced by the portAudio implementation in
-   // opaque ways
-   float deltaGain = (gain - oldGain) / len;
-   for (unsigned i = 0; i < len; i++)
-      outputFloats[numPlaybackChannels*i+chan] += (oldGain + deltaGain * i) *tempBuf[i];
+   const float goal = gain * ExpGain(GetMixerOutputVol());
+   float diff = (mbMicroFades ? goal - laggingChannelGain : 0.0f);
+   for (size_t i = 0; i < len; ++i) {
+      outputFloats[numPlaybackChannels * i + chan] +=
+         (goal - diff) * tempBuf[i];
+      diff *= factor;
+   }
+   laggingChannelGain = goal - diff;
 };
 
 // Limit values to -1.0..+1.0
