@@ -29,9 +29,9 @@ void WaveView::setClipKey(const ClipKey& newClipKey)
 void WaveView::paint(QPainter* painter)
 {
     au3::IAu3WavePainter::Params params;
-    params.geometry.height = height();
-    params.geometry.width = width();
-    params.geometry.left = m_clipLeft;
+    params.geometry.clipHeight = height();
+    params.geometry.clipWidth = width();
+    params.geometry.relClipLeft = m_clipLeft;
     params.geometry.frameLeft = m_context->frameStartTime() * m_context->zoom();
     params.geometry.frameWidth = (m_context->frameEndTime() - m_context->frameStartTime()) * m_context->zoom();
 

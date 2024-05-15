@@ -23,9 +23,9 @@ public:
     };
 
     struct Geometry {
-        double height = 0.0;        // wave view height
-        double width = 0.0;         // wave view width
-        double left = 0.0;          // on track line
+        double clipHeight = 0.0;    // clip view height
+        double clipWidth = 0.0;     // clip view width
+        double relClipLeft = 0.0;   // relatively to frameLeft
         double frameLeft = 0.0;     // track line shift
         double frameWidth = 0.0;    // track line visible width
     };

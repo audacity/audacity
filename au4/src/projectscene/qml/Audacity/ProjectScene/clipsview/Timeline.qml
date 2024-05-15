@@ -48,6 +48,7 @@ Rectangle {
         text: "zoom: " + timelineContext.zoom
               + ", frame start time: " + timelineContext.frameStartTime
               + ", end time: " + timelineContext.frameEndTime
+              + ", root.width: " + root.width
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

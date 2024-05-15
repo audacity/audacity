@@ -123,6 +123,7 @@ public:
         double top = 0.0;
         double left = 0.0;
         double height = 0.0;
+        double width = 0.0;    // not used for draw, just info
     };
 
     void Draw(int channelIndex,
@@ -147,14 +148,6 @@ public:
 
         int left = geometry.left;
         int height = geometry.height;
-
-        LOGDA() << " top: " << geometry.top
-                << " left: " << geometry.left
-                << " height: " << geometry.height
-                << " zoom: " << zoom
-                << " from: " << from
-                << " to: " << to
-        ;
 
         for (auto it = range.begin(); it != range.end(); ++it) {
             const auto elementLeftOffset = it.GetLeftOffset();
@@ -368,12 +361,12 @@ int GetWaveYPos(float value, float min, float max,
     return (int)(value * (height - 1) + 0.5);
 }
 
-struct ClipGeometry
+struct WaveGeometry
 {
-    double top = 0.0;           // wave channel view top
-    double height = 0.0;        // wave view height
-    double width = 0.0;         // wave view width
-    double left = 0.0;          // on track line
+    double waveTop = 0.0;       // wave channel view top
+    double waveHeight = 0.0;    // wave channel view height
+    double clipWidth = 0.0;     // clip view width
+    double relClipLeft = 0.0;   // relatively to frameLeft
     double frameLeft = 0.0;     // track line shift
     double frameWidth = 0.0;    // track line visible width
 };
@@ -381,25 +374,44 @@ struct ClipGeometry
 struct ClipParameters
 {
     // Do a bunch of calculations common to waveform and spectrum drawing.
-    ClipParameters(const ClipGeometry& geometry, double zoom);
+    ClipParameters(const WaveGeometry& geometry, double zoom);
 
-    ClipGeometry geometry;
+    const WaveGeometry geometry;
+
+    WaveformPainter::Geometry drawGeometry;
 
     // Lower and upper visible time boundaries (relative to clip). If completely
     // off-screen, `t0 == t1`.
     double t0 = 0.0;
     double t1 = 0.0;
-
-    QRect mid;
 };
 
-ClipParameters::ClipParameters(const ClipGeometry& geomet, double zoom)
+ClipParameters::ClipParameters(const WaveGeometry& geomet, double zoom)
     : geometry(geomet)
 {
-    geometry.left = 0.0;
+    double drawWidth = std::min(geometry.relClipLeft + geometry.clipWidth, geometry.frameWidth) - geometry.relClipLeft;
+    double drawLeft = 0.0;
+    if (geometry.relClipLeft < 0) {
+        drawLeft = -geometry.relClipLeft;
+    }
 
-    t0 = 0;//geomet.left / zoom;
-    t1 = t0 + (geomet.width / zoom);
+    drawGeometry.top = geometry.waveTop;
+    drawGeometry.left = drawLeft;
+    drawGeometry.height = geometry.waveHeight;
+    drawGeometry.width = drawWidth;
+
+    t0 = drawLeft / zoom;
+    t1 = drawWidth / zoom;
+
+    LOGDA() << " relClipLeft: " << geometry.relClipLeft
+            << " clipWidth: " << geometry.clipWidth
+            << " frameLeft: " << geometry.frameLeft
+            << " frameWidth: " << geometry.frameWidth
+            << " draw width: " << drawWidth
+            << " draw left: " << drawLeft
+            << " t0: " << t0
+            << " t1: " << t1
+    ;
 }
 
 void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,
@@ -536,17 +548,12 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
 {
     auto& waveformPainter = WaveformPainter::Get(clip);
 
-    WaveformPainter::Geometry g;
-    g.top = params.geometry.top;
-    g.left = params.geometry.left;
-    g.height = params.geometry.height;
-
     WavePaintParameters paintParameters;
 
     paintParameters
     .SetDisplayParameters(
         //TODO: uncomment and fix
-        g.height, zoomMin, zoomMax, false /*artist->mShowClipping*/)
+        params.drawGeometry.height, zoomMin, zoomMax, false /*artist->mShowClipping*/)
     .SetDBParameters(dbRange, dB)
     .SetBlankColor(ColorFromQColor(style.blankBrush))
     .SetSampleColors(
@@ -565,7 +572,7 @@ void DrawMinMaxRMS(int channelIndex, QPainter& painter,
 
     const auto trimLeft = clip.GetTrimLeft();
 
-    waveformPainter.Draw(channelIndex, painter, paintParameters, g, zoom, params.t0 + trimLeft, params.t1 + trimLeft);
+    waveformPainter.Draw(channelIndex, painter, paintParameters, params.drawGeometry, zoom, params.t0 + trimLeft, params.t1 + trimLeft);
 }
 
 static bool showIndividualSamples(const WaveClip& clip, bool zoom)
@@ -584,14 +591,14 @@ static void DrawWaveform(int channelIndex,
                          QPainter& painter,
                          WaveTrack& track,
                          const WaveClip& clip,
-                         const ClipGeometry& geometry,
+                         const WaveGeometry& geometry,
                          double zoom,
                          const Style& style,
                          bool dB)
 {
     //If clip is "too small" draw a placeholder instead of
     //attempting to fit the contents into a few pixels
-    if (geometry.width < CLIPVIEW_WIDTH_MIN) {
+    if (geometry.clipWidth < CLIPVIEW_WIDTH_MIN) {
         //TODO: uncomment and fix me
         /*
       auto clipRect = ClipParameters::GetClipRect(clip, zoomInfo, rect);
@@ -601,9 +608,9 @@ static void DrawWaveform(int channelIndex,
     }
 
     const ClipParameters params(geometry, zoom);
-    // if (params.mid.width() <= 0) {
-    //     return;
-    // }
+    if (params.drawGeometry.width < 0.1) {
+        return;
+    }
 
     auto& settings = WaveformSettings::Get(track);
     const float dBRange = settings.dBRange;
@@ -650,7 +657,12 @@ AudacityProject& Au3WavePainter::projectRef() const
 
 void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params)
 {
-    LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
+    //! NOTE Please don't remove, need for debug
+    // if (!(clipKey.trackId == 2 && clipKey.index == 0)) {
+    //     return;
+    // }
+    // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
+
     WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(track) {
         return;
@@ -672,20 +684,20 @@ void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const W
 
     const bool dB = !WaveformSettings::Get(*track).isLinear();
 
-    const auto channelHeight = (params.geometry.height) / static_cast<int>(clip->NChannels());
+    const auto channelHeight = (params.geometry.clipHeight) / static_cast<int>(clip->NChannels());
 
     const Geometry& g = params.geometry;
 
-    ClipGeometry cg;
-    cg.height = channelHeight;
-    cg.width = g.width;
-    cg.left = g.left;
+    WaveGeometry cg;
+    cg.waveHeight = channelHeight;
+    cg.clipWidth = g.clipWidth;
+    cg.relClipLeft = g.relClipLeft;
     cg.frameLeft = g.frameLeft;
     cg.frameWidth = g.frameWidth;
 
-    cg.top = 0.0;
+    cg.waveTop = 0.0;
     for (unsigned i = 0; i < clip->NChannels(); ++i) {
         DrawWaveform(i, painter, *track, *clip, cg, params.zoom, params.style, dB);
-        cg.top += channelHeight;
+        cg.waveTop += channelHeight;
     }
 }
