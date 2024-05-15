@@ -2130,6 +2130,9 @@ void AudioIO::ProcessPlaybackSlices(
    // states are not less advanced
    assert(paused || mPlaybackTracks.empty() || !done || allDone);
 
+   // Apply per-track gain and pan and muting and micro-fades, all post-effects
+   ApplyChannelGains();
+
    // For now just generate sufficient silence
    auto &pMaster = mMasterBuffers[0];
 
@@ -2294,6 +2297,45 @@ size_t AudioIO::ApplyEffectStack(
       assert(discarded == discardable);
    }
    return discardable;
+}
+
+void AudioIO::ApplyChannelGains()
+{
+   // Iterate unflushed blocks again, and apply the per-track pan, mute, gain,
+   // and solo, with micro-fading
+
+   const auto factor = decayFactor(mRate);
+   for (auto &track : mPlaybackTracks) {
+      auto &vt = track.mpSequence;
+      // Check for asynchronous user changes in mute, solo, pause status
+      const bool drop = SequenceShouldBeSilent(*vt);
+      for (size_t iChannel = 0, nChannels = GetNumPlaybackChannels();
+           iChannel < nChannels; ++iChannel)
+      {
+         const float goal = (drop ? 0.0f : vt->GetChannelGain(iChannel));
+         auto &laggingChannelGain = track.mOldChannelGains[iChannel];
+         // if no microfades, jump in volume.
+         float diff = (mbMicroFades ? goal - laggingChannelGain : 0.0f);
+         for (unsigned iBlock : {0, 1}) {
+            size_t len = 0;
+            auto &ringBuffer = *track.mBuffers[iChannel];
+            const auto pair = ringBuffer.GetUnflushed(iBlock);
+            // Playback RingBuffers have float format: see AllocateBuffers
+            auto pFloats = reinterpret_cast<float*>(pair.first);
+            // The lengths of corresponding unflushed blocks should be
+            // the same for all channels
+            if (len == 0)
+               len = pair.second;
+            else
+               assert(len == pair.second);
+            for (size_t ii = 0; ii < len; ++ii) {
+               pFloats[ii] *= (goal - diff);
+               diff *= factor;
+            }
+         }
+         laggingChannelGain = goal - diff;
+      }
+   }
 }
 
 void AudioIO::DrainRecordBuffers()
@@ -2744,34 +2786,21 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
    mLastBelow = below;
 }
 
-// A function to apply the requested gain, fading up or down from the
-// most recently applied gain.
 void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    float * outputMeterFloats,
    float * outputFloats,
    const float * tempBuf,
-   bool drop,
-   const unsigned long len,
-   const PlayableSequence &ps,
-   float &laggingChannelGain)
+   const unsigned long len)
 {
    const auto numPlaybackChannels = GetNumPlaybackChannels();
-   const auto factor = decayFactor(mRate);
-
-   const float goal = drop ? 0.0 : ps.GetChannelGain(chan);
-
-   // if no microfades, jump in volume.
-   float diff = (mbMicroFades ? goal - laggingChannelGain : 0.0f);
    for (size_t i = 0; i < len; ++i) {
-      const auto term = (goal - diff) * tempBuf[i];
+      const auto term = tempBuf[i];
       outputFloats[numPlaybackChannels * i + chan] += term;
       if (outputMeterFloats != outputFloats)
          // The level shown in output meters also sums the track level
          // microfaded for gain, pan, and mute, but before applying master gain
          outputMeterFloats[numPlaybackChannels * i + chan] += term;
-      diff *= factor;
    }
-   laggingChannelGain = goal - diff;
 };
 
 // Limit values to -1.0..+1.0
@@ -2800,9 +2829,6 @@ void AudioIoCallback::FillOutputBuffers(
    for (auto &track : mPlaybackTracks) {
       auto vt = track.mpSequence.get();
 
-      // Check for asynchronous user changes in mute, solo, pause status
-      const bool drop = SequenceShouldBeSilent(*vt);
-
       decltype(framesPerBuffer) len = 0;
 
       assert(numPlaybackChannels > 0); // pre
@@ -2827,20 +2853,15 @@ void AudioIoCallback::FillOutputBuffers(
       // Realtime effect transformation of the sound used to happen here
       // but it is now done already on the producer side of the RingBuffer
 
-      // Mix the results with the existing output (software playthrough) and
-      // apply panning.  If post panning effects are desired, the panning would
-      // need to be be split out from the mixing and applied in a separate step.
-
       // Our channels aren't silent.  We need to pass their data on.
       //
       // Each channel in the sequences can output to more than one channel on
       // the device. For example mono channels output to both left and right
       // output channels.
       if (len > 0) {
-         auto &gains = track.mOldChannelGains;
          for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel)
             AddToOutputChannel(iChannel, outputMeterFloats, outputFloats,
-               tempBufs[iChannel], drop, len, *vt, gains[iChannel]);
+               tempBufs[iChannel], len);
       }
    }
 

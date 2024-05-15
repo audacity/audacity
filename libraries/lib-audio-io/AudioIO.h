@@ -190,10 +190,7 @@ public:
       float * outputMeterFloats,
       float * outputFloats,
       const float * tempBuf,
-      bool drop,
-      unsigned long len,
-      const PlayableSequence &ps,
-      float &laggingChannelGain
+      unsigned long len
    );
    //! Mix and copy to PortAudio's output buffer
    //! from our intermediate playback buffers
@@ -645,6 +642,7 @@ private:
       std::optional<RealtimeEffects::ProcessingScope> &scope,
       const ChannelGroup *pGroup,
       std::unique_ptr<RingBuffer> playbackBuffers[]);
+   void ApplyChannelGains();
 
    //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();
