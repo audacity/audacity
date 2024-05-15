@@ -1265,6 +1265,8 @@ bool AudioIO::AllocateBuffers(
                mMasterBuffers[ii] = std::make_unique<RingBuffer>(
                   floatSample, playbackBufferSize);
 
+            // Bug 1763 - We must fade in from zero to avoid a click on starting.
+            mOldMasterGain = 0.0f;
             mOldChannelGains.resize(mPlaybackSequences.size());
             size_t iBuffer = 0;
             for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
@@ -2589,24 +2591,17 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const auto factor = decayFactor(mRate);
 
-   float gain = ps.GetChannelGain(chan);
-   if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
-      gain = 0.0;
+   const float goal = drop ? 0.0 : ps.GetChannelGain(chan);
 
-   // Output volume emulation: possibly copy meter samples, then
-   // apply volume, then copy to the output buffer
-   if (outputMeterFloats != outputFloats)
-      for ( unsigned i = 0; i < len; ++i)
-         outputMeterFloats[numPlaybackChannels*i+chan] +=
-            gain*tempBuf[i];
-
-   // DV: We use gain to emulate panning.
-   // Let's keep the old behavior for panning.
-   const float goal = gain * ExpGain(GetMixerOutputVol());
+   // if no microfades, jump in volume.
    float diff = (mbMicroFades ? goal - laggingChannelGain : 0.0f);
    for (size_t i = 0; i < len; ++i) {
-      outputFloats[numPlaybackChannels * i + chan] +=
-         (goal - diff) * tempBuf[i];
+      const auto term = (goal - diff) * tempBuf[i];
+      outputFloats[numPlaybackChannels * i + chan] += term;
+      if (outputMeterFloats != outputFloats)
+         // The level shown in output meters also sums the track level
+         // microfaded for gain, pan, and mute, but before applying master gain
+         outputMeterFloats[numPlaybackChannels * i + chan] += term;
       diff *= factor;
    }
    laggingChannelGain = goal - diff;
@@ -2755,6 +2750,24 @@ bool AudioIoCallback::FillOutputBuffers(
       CallbackCheckCompletion(mCallbackReturn, len);
       if (discardable) // no samples to process, they've been discarded
          continue;
+   }
+
+   if (toGet > 0) {
+      // Output volume emulation
+      const auto factor = decayFactor(mRate);
+      const float goal =
+         (IsPaused() || mForceFadeOut.load(std::memory_order_relaxed))
+            ? 0.0f
+            : ExpGain(GetMixerOutputVol());
+      // if no microfades, jump in volume.
+      auto diff = (mbMicroFades ? goal - mOldMasterGain : 0);
+      for (size_t i = 0; i < toGet; ++i) {
+         const auto multiplier = goal - diff;
+         outputFloats[numPlaybackChannels * i] *= multiplier;
+         outputFloats[numPlaybackChannels * i + 1] *= multiplier;
+         diff *= factor;
+      }
+      mOldMasterGain = goal - diff;
    }
 
    mMasterBuffers[0]->Discard(toGet);
@@ -3051,29 +3064,18 @@ unsigned AudioIoCallback::CountSoloingSequences(){
 // fading out.
 bool AudioIoCallback::SequenceShouldBeSilent(const PlayableSequence &ps)
 {
-   return IsPaused() || (!ps.GetSolo() && (
+   return !ps.GetSolo() && (
       // Cut if somebody else is soloing
       mbHasSoloSequences ||
       // Cut if we're muted (and not soloing)
       ps.GetMute()
-   ));
+   );
 }
 
 // This is about micro-fades.
 bool AudioIoCallback::SequenceHasBeenFadedOut(const OldChannelGains &gains)
 {
    return gains[0] == 0.0 && gains[1] == 0.0;
-}
-
-bool AudioIoCallback::AllSequencesAlreadySilent()
-{
-   for (size_t ii = 0, nn = mPlaybackSequences.size(); ii < nn; ++ii) {
-      auto vt = mPlaybackSequences[ii];
-      const auto &oldGains = mOldChannelGains[ii];
-      if (!(SequenceShouldBeSilent(*vt) && SequenceHasBeenFadedOut(oldGains)))
-         return false;
-   }
-   return true;
 }
 
 AudioIoCallback::AudioIoCallback()
@@ -3175,7 +3177,7 @@ int AudioIoCallback::AudioCallback(
 
    // Test for no sequence audio to play (because we are paused and have faded
    // out)
-   if( IsPaused() &&  (( !mbMicroFades ) || AllSequencesAlreadySilent() ))
+   if (IsPaused() && (!mbMicroFades || mOldMasterGain == 0.0f))
       return mCallbackReturn;
 
    // To add sequence output to output (to play sound on speaker)

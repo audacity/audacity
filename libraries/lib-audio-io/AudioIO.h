@@ -187,7 +187,6 @@ public:
    bool SequenceShouldBeSilent(const PlayableSequence &ps);
    //! Returns true when playback buffer data from both channels is discardable
    bool SequenceHasBeenFadedOut(const OldChannelGains &gains);
-   bool AllSequencesAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
@@ -272,6 +271,7 @@ public:
    // Old gain is used in playback in linearly interpolating
    // the gain.
    std::vector<OldChannelGains> mOldChannelGains;
+   float mOldMasterGain{};
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
