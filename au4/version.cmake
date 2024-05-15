@@ -1,6 +1,6 @@
 
 set(MUSE_APP_NAME "Audacity")
-set(MUSE_APP_NAME_WITH_SPACE "Audacity")
+set(MUSE_APP_TITLE "Audacity")
 set(MUSE_APP_GUI_IDENTIFIER org.audacity.${MUSE_APP_NAME})
 set(MUSE_APP_VERSION_MAJOR "4")
 set(MUSE_APP_VERSION_MINOR "0")

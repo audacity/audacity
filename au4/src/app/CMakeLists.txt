@@ -53,7 +53,7 @@ elseif(OS_IS_MAC)
     set(MACOSX_BUNDLE_BUNDLE_VERSION ${CMAKE_BUILD_NUMBER})
     set(MACOSX_BUNDLE_COPYRIGHT "Copyright © 1999-2024. Published under the GNU General Public License version 3.")
 
-    set(CMAKE_INSTALL_RPATH ${QT_INSTALL_LIBS})
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH};${QT_INSTALL_LIBS};@loader_path/../Frameworks")
 
     message("MACOSX_BUNDLE_VERSION: ${MACOSX_BUNDLE_LONG_VERSION_STRING}.${MACOSX_BUNDLE_BUNDLE_VERSION}")
 endif()
