@@ -58,6 +58,17 @@ Slider {
         readonly property int fullValueRangeLength: Math.abs(root.from) + Math.abs(root.to)
         readonly property real divisionPixels: rulerLineWidth / fullValueRangeLength
 
+        readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
+        readonly property string unitTextFont: {
+            var pxSize = String('8px')
+            var family = String('\'' + ui.theme.bodyFont.family + '\'')
+
+            return pxSize + ' ' + family
+        }
+
+        onUnitTextColorChanged: { bgCanvas.requestPaint() }
+        onUnitTextFontChanged: { bgCanvas.requestPaint() }
+
         readonly property real handleWidth: 14
         readonly property real handleHeight: 14
 
@@ -114,6 +125,30 @@ Slider {
             ctx.fillRect(originHPos, originVPos, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(volumePressure)), prv.indicatorHeight)
         }
 
+        function drawRuler(ctx, originHPos, originVPos) {
+            var currentStrokeHPos = 0
+            var fullStep = 12
+            var smallStep = 6
+
+            for (var i = 0; i <= prv.fullValueRangeLength; i+=fullStep) {
+                var division = prv.divisionPixels
+
+                if (i === 0) {
+                    currentStrokeHPos = originHPos
+                } else {
+                    currentStrokeHPos += division * fullStep
+                }
+
+                ctx.save()
+
+                ctx.fillStyle = prv.unitTextColor
+                var value = String(root.from + i)
+                ctx.fillText(value, currentStrokeHPos - (value <= -10 ? 8 : (value < 0 ? 6 : 2)), originVPos)
+
+                ctx.restore()
+            }
+        }
+
         onPaint: {
             var ctx = bgCanvas.context
 
@@ -129,8 +164,10 @@ Slider {
             drawMeter(ctx, prv.handleWidth/2, yPos, root.leftCurrentVolumePressure)
 
             yPos += prv.indicatorHeight + prv.spacing
-
             drawMeter(ctx, xPos, yPos, root.rightCurrentVolumePressure)
+
+            yPos = bgCanvas.height
+            drawRuler(ctx, xPos, yPos)
         }
     }
 
