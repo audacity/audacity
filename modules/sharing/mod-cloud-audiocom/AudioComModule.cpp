@@ -10,6 +10,7 @@
 **********************************************************************/
 
 #include "ModuleConstants.h"
+#include "PluginHost.h"
 
 #include "ui/images/CloudImages.hpp"
 
@@ -18,7 +19,8 @@ extern "C" DLL_API int ModuleDispatch(ModuleDispatchTypes type)
 {
    static auto cloudImages = []
    {
-      bin2c_init_CLOUDIMAGES_HPP();
+      if(!PluginHost::IsHostProcess())
+         bin2c_init_CLOUDIMAGES_HPP();
       return true;
    }();
 
