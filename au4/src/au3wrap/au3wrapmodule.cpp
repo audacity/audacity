@@ -29,12 +29,12 @@
 
 #include "mocks/au3settingsmock.h"
 
+#include "modularity/ioc.h"
+
 #include "internal/wxlogwrap.h"
 #include "internal/processinginteraction.h"
 #include "internal/au3wavepainter.h"
-
-#include "modularity/ioc.h"
-#include "audacity3playback.h"
+#include "internal/au3playback.h"
 
 #include "log.h"
 
@@ -48,9 +48,9 @@ std::string Au3WrapModule::moduleName() const
 
 void Au3WrapModule::registerExports()
 {
-    m_playback = std::make_shared<Audacity3Playback>();
+    m_playback = std::make_shared<Au3Playback>();
 
-    ioc()->registerExport<IAudacity3Playback>(moduleName(), m_playback);
+    ioc()->registerExport<IAu3Playback>(moduleName(), m_playback);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
     ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
 }
@@ -69,6 +69,8 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     if (!ok) {
         LOGE() << "failed init sql";
     }
+
+    m_playback->init();
 }
 
 void Au3WrapModule::onDeinit()

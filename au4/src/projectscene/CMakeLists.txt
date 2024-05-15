@@ -34,6 +34,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.cpp

@@ -55,7 +55,7 @@ ListItemBlank {
                 spacing: 8
 
                 StyledIconLabel {
-                    iconCode: IconCode.AUDIO
+                    iconCode: IconCode.MICROPHONE
                 }
 
                 StyledTextLabel {

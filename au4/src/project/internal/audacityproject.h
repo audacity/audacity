@@ -2,12 +2,12 @@
 #define AU_PROJECT_AUDACITYPROJECT_H
 
 #include "../iaudacityproject.h"
-#include "au3wrap/audacity3project.h"
+#include "au3wrap/au3project.h"
 #include "modularity/ioc.h"
 #include "io/ifilesystem.h"
 
 namespace au::au3 {
-class Audacity3Project;
+class Au3Project;
 }
 
 namespace au::project {
@@ -27,7 +27,7 @@ namespace au::project {
 //!
 //! There is also a project from AU3 (::AudacityProject),
 //! through which we receive a lot of data using the AU3 implementation.
-//! And a wrapper in AU4 for this project (au::au3::Audacity3Project)
+//! And a wrapper in AU4 for this project (au::au3::Au3Project)
 //! A wrapper is needed for two reasons:
 //! * Technical - the AU3 code is strongly linked at the linking level,
 //! it cannot be used in parts, therefore, to avoid duplication of symbols,
@@ -85,7 +85,7 @@ private:
     bool m_isImported = false;
     bool m_needAutoSave = false;
 
-    std::shared_ptr<au::au3::Audacity3Project> m_au3Project;
+    std::shared_ptr<au::au3::Au3Project> m_au3Project;
 
     au::processing::ProcessingProjectPtr m_processingProject;
 };

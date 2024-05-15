@@ -9,6 +9,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::projectscene {
+class ProjectSceneUiActions;
 class ProjectSceneConfiguration;
 class ProjectSceneModule : public muse::modularity::IModuleSetup
 {
@@ -22,7 +23,7 @@ public:
     void onInit(const muse::IApplication::RunMode& mode) override;
 
 private:
-
+    std::shared_ptr<ProjectSceneUiActions> m_uiActions;
     std::shared_ptr<ProjectSceneConfiguration> m_configuration;
 };
 }

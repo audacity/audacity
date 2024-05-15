@@ -6,5 +6,7 @@
         <file>qml/Audacity/Playback/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/Playback/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/Playback/qmldir</file>
+        <file>qml/Audacity/Playback/internal/PlaybackLevel.qml</file>
+        <file>qml/Audacity/Playback/internal/VolumeSlider.qml</file>
     </qresource>
 </RCC>
