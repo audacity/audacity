@@ -1229,19 +1229,15 @@ bool AudioIO::AllocateBuffers(
             // Adjust mPlaybackRingBufferSecs correspondingly
             mPlaybackRingBufferSecs = PlaybackPolicy::Duration { playbackBufferSize / mRate };
 
-            const size_t totalWidth = std::accumulate(
-               mPlaybackSequences.begin(), mPlaybackSequences.end(), 0,
-               [](size_t acc, const auto &pSequence){
-                  return acc + pSequence->NChannels(); });
-
             // mPlaybackBuffers buffers correspond many-to-one with
             // mPlaybackSequences
             for (auto &buffer : mMasterBuffers)
                buffer.reset();
             mPlaybackBuffers.resize(0);
-            mPlaybackBuffers.resize(totalWidth);
+            mPlaybackBuffers.resize(
+               mPlaybackSequences.size() * numPlaybackChannels);
             // Number of scratch buffers depends on device playback channels
-            mScratchBuffers.resize(numPlaybackChannels * 2 + 1);
+            mScratchBuffers.resize(numPlaybackChannels + 1);
             mScratchPointers.clear();
             for (auto &buffer : mScratchBuffers) {
                buffer.Allocate(playbackBufferSize, floatSample);
@@ -1277,9 +1273,7 @@ bool AudioIO::AllocateBuffers(
                mOldChannelGains[i][0] = 0.0;
                mOldChannelGains[i][1] = 0.0;
 
-               for (size_t jj = 0, nChannels = pSequence->NChannels();
-                  jj < nChannels; ++jj
-               )
+               for (size_t jj = 0; jj < numPlaybackChannels; ++jj)
                   mPlaybackBuffers[iBuffer++] = std::make_unique<RingBuffer>(
                      floatSample, playbackBufferSize);
 
@@ -1999,6 +1993,7 @@ bool AudioIO::ProcessPlaybackSlices(
    bool done = false;
    bool progress = false;
    size_t allProduced = 0;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
    do {
       const auto slice =
          policy.GetPlaybackSlice(mPlaybackSchedule, available);
@@ -2027,8 +2022,11 @@ bool AudioIO::ProcessPlaybackSlices(
             //wxASSERT(produced <= toProduce);
             // Copy (non-interleaved) mixer outputs to one or more ring buffers
             const auto nChannels = mPlaybackSequences[iSequence++]->NChannels();
-            for (size_t j = 0; j < nChannels; ++j) {
-               auto warpedSamples = mixer->GetBuffer(j);
+            for (size_t j = 0; j < numPlaybackChannels; ++j) {
+               // Replicate into two RingBuffers when playing a mono track into
+               // a stereo device
+               auto warpedSamples =
+                  mixer->GetBuffer(std::min(j, nChannels - 1));
                const auto put = mPlaybackBuffers[iBuffer++]->Put(
                   warpedSamples, floatSample, produced, frames - produced);
                // wxASSERT(put == frames);
@@ -2081,15 +2079,12 @@ void AudioIO::TransformPlayBuffers(
       const auto pGroup = vt->FindChannelGroup();
       if (!pGroup)
          continue;
-      // vt is mono, or is the first of its group of channels
-      const auto nChannels =
-         std::min<size_t>(numPlaybackChannels, vt->NChannels());
 
       // Loop over the blocks of unflushed data, at most two
       for (unsigned iBlock : {0, 1}) {
          size_t len = 0;
          size_t iChannel = 0;
-         for (; iChannel < nChannels; ++iChannel) {
+         for (; iChannel < numPlaybackChannels; ++iChannel) {
             auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
             const auto pair = ringBuffer.GetUnflushed(iBlock);
             // Playback RingBuffers have float format: see AllocateBuffers
@@ -2102,30 +2097,22 @@ void AudioIO::TransformPlayBuffers(
                assert(len == pair.second);
          }
 
-         // Are there more output device channels than channels of vt?
-         // Such as when a mono sequence is processed for stereo play?
-         // Then supply some non-null fake input buffers, because the
-         // various ProcessBlock overrides of effects may crash without it.
-         // But it would be good to find the fixes to make this unnecessary.
-         float **scratch = &mScratchPointers[numPlaybackChannels + 1];
-         while (iChannel < numPlaybackChannels)
-            memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
-
          if (len && pScope) {
+            // Process effect, which maybe treats stereo channels jointly
             auto discardable = pScope->Process(pGroup, &pointers[0],
                mScratchPointers.data(),
                // The single dummy output buffer:
                mScratchPointers[numPlaybackChannels],
                numPlaybackChannels, len);
             iChannel = 0;
-            for (; iChannel < nChannels; ++iChannel) {
+            for (; iChannel < numPlaybackChannels; ++iChannel) {
                auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
                auto discarded = ringBuffer.Unput(discardable);
                // assert(discarded == discardable);
             }
          }
       }
-      iBuffer += vt->NChannels();
+      iBuffer += numPlaybackChannels;
    }
 }
 
@@ -2697,12 +2684,6 @@ bool AudioIoCallback::FillOutputBuffers(
    size_t iBuffer = 0;
    for (unsigned tt = 0; tt < numPlaybackSequences; ++tt) {
       auto vt = mPlaybackSequences[tt].get();
-      const auto width = vt->NChannels();
-
-      // IF mono THEN clear 'the other' channel.
-      if (width < numPlaybackChannels)
-         // TODO: more-than-two-channels
-         memset(tempBufs[1], 0, framesPerBuffer * sizeof(float));
 
       // Check for asynchronous user changes in mute, solo, pause status
       discardable = drop = SequenceShouldBeSilent(*vt);
@@ -2714,7 +2695,7 @@ bool AudioIoCallback::FillOutputBuffers(
 
       decltype(framesPerBuffer) len = 0;
 
-      for (size_t c = 0; c < width; ++c) {
+      for (size_t c = 0; c < numPlaybackChannels; ++c) {
          if (discardable) {
             len = mPlaybackBuffers[iBuffer]->Discard(toGet);
             // keep going here.
@@ -2763,14 +2744,9 @@ bool AudioIoCallback::FillOutputBuffers(
       // output channels.
       if (len > 0) {
          auto &gains = mOldChannelGains[tt];
-         AddToOutputChannel(0, outputMeterFloats, outputFloats,
-            tempBufs[0], drop, len, *vt, gains[0]);
-
-         // If one of mPlaybackSequences is mono, this replicates it in both
-         // device channels
-         const auto iBuffer = std::min<size_t>(1, width - 1);
-         AddToOutputChannel(1, outputMeterFloats, outputFloats,
-            tempBufs[iBuffer], drop, len, *vt, gains[1]);
+         for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel)
+            AddToOutputChannel(iChannel, outputMeterFloats, outputFloats,
+               tempBufs[iChannel], drop, len, *vt, gains[iChannel]);
       }
 
       CallbackCheckCompletion(mCallbackReturn, len);
