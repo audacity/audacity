@@ -2099,7 +2099,6 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const auto pointers = stackAllocate(float*, numPlaybackChannels);
 
-   const auto numPlaybackSequences = mPlaybackSequences.size();
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
    for (const auto vt : mPlaybackSequences) {
@@ -2110,10 +2109,10 @@ void AudioIO::TransformPlayBuffers(
          continue;
 
       // Loop over the blocks of unflushed data, at most two
+      size_t discardable = 0;
       for (unsigned iBlock : {0, 1}) {
          size_t len = 0;
-         size_t iChannel = 0;
-         for (; iChannel < numPlaybackChannels; ++iChannel) {
+         for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
             auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
             const auto pair = ringBuffer.GetUnflushed(iBlock);
             // Playback RingBuffers have float format: see AllocateBuffers
@@ -2128,18 +2127,17 @@ void AudioIO::TransformPlayBuffers(
 
          if (len && pScope) {
             // Process effect, which maybe treats stereo channels jointly
-            auto discardable = pScope->Process(pGroup, &pointers[0],
+            discardable += pScope->Process(pGroup, &pointers[0],
                mScratchPointers.data(),
                // The single dummy output buffer:
                mScratchPointers[numPlaybackChannels],
                numPlaybackChannels, len);
-            iChannel = 0;
-            for (; iChannel < numPlaybackChannels; ++iChannel) {
-               auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
-               auto discarded = ringBuffer.Unput(discardable);
-               // assert(discarded == discardable);
-            }
          }
+      }
+      for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
+         auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
+         auto discarded = ringBuffer.Unput(discardable);
+         // assert(discarded == discardable);
       }
       iBuffer += numPlaybackChannels;
    }
