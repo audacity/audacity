@@ -2132,11 +2132,7 @@ void AudioIO::ProcessPlaybackSlices(
 
    // Apply per-track gain and pan and muting and micro-fades, all post-effects
    ApplyChannelGains();
-
-   // For now just generate sufficient silence
-   auto &pMaster = mMasterBuffers[0];
-
-   pMaster->Put(nullptr, floatSample, 0, orig_demand);
+   MixChannels(orig_demand);
 }
 
 bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
@@ -2336,6 +2332,51 @@ void AudioIO::ApplyChannelGains()
          laggingChannelGain = goal - diff;
       }
    }
+}
+
+void AudioIO::MixChannels(const size_t demand)
+{
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
+   if (mPlaybackTracks.empty()) {
+      // Just generate sufficient silence
+      for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel)
+         mMasterBuffers[iChannel]->Put(nullptr, floatSample, 0, demand);
+      return;
+   }
+   size_t totalLength[MaxPlaybackChannels]{};
+   for (unsigned iBlock : {0, 1}) {
+      for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
+         auto &masterBuffer = *mMasterBuffers[iChannel];
+         bool first = true;
+         size_t len{};
+         float *masterSamples{};
+         for (auto &track : mPlaybackTracks) {
+            auto &ringBuffer = *track.mBuffers[iChannel];
+            auto pair = ringBuffer.GetUnflushed(iBlock);
+            if (first) {
+               len = pair.second;
+               totalLength[iChannel] += len;
+               // Just copy the first track's samples
+               masterBuffer.Put(pair.first, floatSample, len, 0);
+               // Find the pointer to the new samples in the master buffer
+               pair = masterBuffer.GetUnflushed(iBlock);
+               assert(len == pair.second);
+               masterSamples = reinterpret_cast<float*>(pair.first);
+            }
+            else {
+               // Expect equally filled buffers
+               assert(len == pair.second);
+               // Accumulate (that is, mix) samples
+               const auto channelSamples = reinterpret_cast<float*>(pair.first);
+               for (size_t ii = 0; ii < len; ++ii)
+                  masterSamples[ii] += channelSamples[ii];
+            }
+            first = false;
+         }
+      }
+   }
+   assert(std::all_of(std::begin(totalLength), std::end(totalLength),
+      [&](auto length){ return length == demand; }));
 }
 
 void AudioIO::DrainRecordBuffers()
@@ -2786,23 +2827,6 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
    mLastBelow = below;
 }
 
-void AudioIoCallback::AddToOutputChannel(unsigned int chan,
-   float * outputMeterFloats,
-   float * outputFloats,
-   const float * tempBuf,
-   const unsigned long len)
-{
-   const auto numPlaybackChannels = GetNumPlaybackChannels();
-   for (size_t i = 0; i < len; ++i) {
-      const auto term = tempBuf[i];
-      outputFloats[numPlaybackChannels * i + chan] += term;
-      if (outputMeterFloats != outputFloats)
-         // The level shown in output meters also sums the track level
-         // microfaded for gain, pan, and mute, but before applying master gain
-         outputMeterFloats[numPlaybackChannels * i + chan] += term;
-   }
-};
-
 // Limit values to -1.0..+1.0
 void ClampBuffer(float * pBuffer, unsigned long len){
    for(unsigned i = 0; i < len; i++)
@@ -2811,20 +2835,12 @@ void ClampBuffer(float * pBuffer, unsigned long len){
 
 
 void AudioIoCallback::FillOutputBuffers(
-   float *outputBuffer, size_t framesPerBuffer, size_t toGet,
-   float *outputMeterFloats)
+   float *outputBuffer, size_t framesPerBuffer, size_t toGet)
 {
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    float *outputFloats = outputBuffer;
-
-   // ------ MEMORY ALLOCATION ----------------------
-   // These are small structures.
-   const auto tempBufs = stackAllocate(float *, numPlaybackChannels);
-
-   // And these are larger structures....
-   for (unsigned int c = 0; c < numPlaybackChannels; c++)
-      tempBufs[c] = stackAllocate(float, framesPerBuffer);
-   // ------ End of MEMORY ALLOCATION ---------------
+   const auto endOutputFloats =
+      outputFloats + numPlaybackChannels * framesPerBuffer;
 
    for (auto &track : mPlaybackTracks) {
       auto vt = track.mpSequence.get();
@@ -2832,40 +2848,30 @@ void AudioIoCallback::FillOutputBuffers(
       decltype(framesPerBuffer) len = 0;
 
       assert(numPlaybackChannels > 0); // pre
+
+      // Consume from per-track RingBuffers.  For now, just discard.
+      // In future, per-track data will be forwarded inter-thread for updating
+      // meter display, synchronizing as closely as possible with the actual
+      // playback.
       for (size_t c = 0; c < numPlaybackChannels; ++c) {
-         len = track.mBuffers[c]
-            ->Get((samplePtr)tempBufs[c], floatSample, toGet);
+         len = track.mBuffers[c]->Discard(toGet);
          // This should be guaranteed by the producer thread, populating
          // the master buffer with the minumum of available lengths
          assert(len == toGet);
-         if (len < framesPerBuffer)
-            // This used to happen normally at the end of non-looping
-            // plays, but it can also be an anomalous case where the
-            // supply from SequenceBufferExchange fails to keep up with the
-            // real-time demand in this thread (see bug 1932).  We
-            // must supply something to the sound card, so pad it with
-            // zeroes and not random garbage.
-            memset((void*)&tempBufs[c][len], 0,
-               (framesPerBuffer - len) * sizeof(float));
       }
       assert(len == toGet);
-
-      // Realtime effect transformation of the sound used to happen here
-      // but it is now done already on the producer side of the RingBuffer
-
-      // Our channels aren't silent.  We need to pass their data on.
-      //
-      // Each channel in the sequences can output to more than one channel on
-      // the device. For example mono channels output to both left and right
-      // output channels.
-      if (len > 0) {
-         for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel)
-            AddToOutputChannel(iChannel, outputMeterFloats, outputFloats,
-               tempBufs[iChannel], len);
-      }
    }
 
-   mMasterBuffers[0]->Discard(toGet);
+   // Consume from the master buffers, and interleave
+   for (size_t c = 0;
+      c < std::min(MaxPlaybackChannels, numPlaybackChannels); ++c) {
+      const auto buffer = reinterpret_cast<samplePtr>(&outputFloats[c]);
+      mMasterBuffers[c]->Get(buffer, floatSample, toGet,
+         numPlaybackChannels /* stride */);
+   }
+   // In case the RingBuffer was underfilled
+   std::fill(outputFloats + toGet * numPlaybackChannels,
+      endOutputFloats, 0.0f);
 }
 
 void AudioIoCallback::ApplyMasterGain(bool paused,
@@ -3311,8 +3317,10 @@ int AudioIoCallback::AudioCallback(
       const bool paused = !UpdateTimePosition(frames);
 
       OtherSynchronization(paused, framesPerBuffer, timeInfo);
-      FillOutputBuffers(outputBuffer,
-         framesPerBuffer, frames, outputMeterFloats);
+      FillOutputBuffers(outputBuffer, framesPerBuffer, frames);
+      if (outputMeterFloats != outputBuffer)
+         memcpy(outputMeterFloats, outputBuffer,
+            numPlaybackChannels * frames * sizeof(float));
       ApplyMasterGain(paused, outputBuffer, frames);
       ClampBuffer(outputBuffer, framesPerBuffer * numPlaybackChannels);
       if (outputMeterFloats != outputBuffer)

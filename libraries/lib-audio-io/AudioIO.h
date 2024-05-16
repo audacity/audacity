@@ -185,21 +185,13 @@ public:
       unsigned long framesPerBuffer
    );
 
-   void AddToOutputChannel(
-      unsigned int chan,
-      float * outputMeterFloats,
-      float * outputFloats,
-      const float * tempBuf,
-      unsigned long len
-   );
    //! Mix and copy to PortAudio's output buffer
    //! from our intermediate playback buffers
    /*!
     @pre 'GetNumPlaybackChannels() > 0'
     */
    void FillOutputBuffers(
-      float *outputBuffer, size_t framesPerBuffer, size_t toGet,
-      float *outputMeterFloats);
+      float *outputBuffer, size_t framesPerBuffer, size_t toGet);
    void ApplyMasterGain(bool paused, float *outputFloats, size_t len);
    //! @return whether recording is finished
    bool DrainInputBuffers(
@@ -643,6 +635,7 @@ private:
       const ChannelGroup *pGroup,
       std::unique_ptr<RingBuffer> playbackBuffers[]);
    void ApplyChannelGains();
+   void MixChannels(size_t demand);
 
    //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();
