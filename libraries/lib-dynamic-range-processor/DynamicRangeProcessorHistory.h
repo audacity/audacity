@@ -9,9 +9,9 @@
 class DYNAMIC_RANGE_PROCESSOR_API DynamicRangeProcessorHistory final
 {
 public:
-   DynamicRangeProcessorHistory(double framesPerSecond);
+   DynamicRangeProcessorHistory(double sampleRate);
 
-   struct Sample
+   struct Packet
    {
       float time = 0.f;
       float target = 0.f;
@@ -20,17 +20,19 @@ public:
 
    static constexpr auto maxTimeSeconds = 10.f;
 
-   bool Push(const std::vector<DynamicRangeProcessorOutputSample>& samples);
-   std::shared_ptr<const std::vector<DynamicRangeProcessorHistory::Sample>>
-   GetHistory() const;
-   void Reset();
+   using Segment = std::vector<Packet>;
+
+   void Push(const std::vector<DynamicRangeProcessorOutputPacket>& packets);
+   void BeginNewSegment();
+   const std::vector<Segment>& GetSegments() const;
 
 private:
-   const double mFramesPerSecond;
-   const std::shared_ptr<std::vector<Sample>> mHistory;
-   std::optional<int> mLastFrameCounter;
+   float GetPacketTime(const DynamicRangeProcessorOutputPacket& packet) const;
+
+   const double mSampleRate;
+   bool mBeginNewSegment = true;
+   std::vector<Segment> mSegments;
+   std::optional<long long> mFirstPacketFirstSampleIndex;
 };
 
 class DynamicRangeProcessorHistory;
-using DynamicRangeProcessorHistoryUPtr =
-   std::unique_ptr<DynamicRangeProcessorHistory>;

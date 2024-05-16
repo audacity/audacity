@@ -2,75 +2,103 @@
 #pragma once
 
 #include <array>
+#include <limits>
 #include <memory>
 #include <vector>
 
-enum DynamicRangeProcessorType
+struct DynamicRangeProcessorOutputPacket
 {
-   CompressorDynamicRangeProcessor,
-   LimiterDynamicRangeProcessor,
-   NumDynamicRangeProcessorTypes
-};
-
-static constexpr auto limiterRatio = 1000.;
-
-struct DynamicRangeProcessorOutputSample
-{
-   int frameCounter = 0;
+   long long indexOfFirstSample = 0;
    float targetCompressionDb = 0;
    float actualCompressionDb = 0;
 };
 
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   inCompressionThreshDbDefaults { -10., -5. };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   outCompressionThreshDbDefaults { -10., -1. };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   kneeWidthDbDefaults { 0., 0. };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   compressionRatioDefaults { 10., limiterRatio };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   lookaheadMsDefaults { 0., 0. };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   attackMsDefaults { 30., 0. };
-static constexpr std::array<double, NumDynamicRangeProcessorTypes>
-   releaseMsDefaults { 150., 20. };
+struct InitializeProcessingSettings
+{
+   explicit InitializeProcessingSettings(double sampleRate)
+       : sampleRate { sampleRate }
+   {
+   }
+   double sampleRate;
+};
+
+struct Unbypassed
+{
+};
+
+constexpr double compressorThresholdDbDefault = -10;
+constexpr double compressorMakeupGainDbDefault = 0;
+constexpr double compressorKneeWidthDbDefault = 0;
+constexpr double compressorCompressionRatioDefault = 10;
+constexpr double compressorLookaheadMsDefault = 0;
+constexpr double compressorAttackMsDefault = 30;
+constexpr double compressorReleaseMsDefault = 150;
+constexpr double compressorMaxLookaheadMs = 1000.;
+
+constexpr double limiterThresholdDbDefault = -5;
+constexpr double limiterMakeupTargetDbDefault = -1;
+constexpr double limiterKneeWidthDbDefault = 0;
+constexpr double limiterLookaheadMsDefault = 0;
+constexpr double limiterReleaseMsDefault = 20;
+constexpr double limiterMaxLookaheadMs = 50;
 
 struct CompressorSettings
 {
-   double inCompressionThreshDb {
-      inCompressionThreshDbDefaults[CompressorDynamicRangeProcessor]
-   };
-   double outCompressionThreshDb {
-      outCompressionThreshDbDefaults[CompressorDynamicRangeProcessor]
-   };
-   double kneeWidthDb { kneeWidthDbDefaults[CompressorDynamicRangeProcessor] };
-   double compressionRatio {
-      compressionRatioDefaults[CompressorDynamicRangeProcessor]
-   };
-   double lookaheadMs { lookaheadMsDefaults[CompressorDynamicRangeProcessor] };
-   double attackMs { attackMsDefaults[CompressorDynamicRangeProcessor] };
-   double releaseMs { releaseMsDefaults[CompressorDynamicRangeProcessor] };
+   double thresholdDb = compressorThresholdDbDefault;
+   double makeupGainDb = compressorMakeupGainDbDefault;
+   double kneeWidthDb = compressorKneeWidthDbDefault;
+   double compressionRatio = compressorCompressionRatioDefault;
+   double lookaheadMs = compressorLookaheadMsDefault;
+   double attackMs = compressorAttackMsDefault;
+   double releaseMs = compressorReleaseMsDefault;
 };
 
-struct LimiterSettings : CompressorSettings
+struct LimiterSettings
 {
-   LimiterSettings()
-       : CompressorSettings {
-          inCompressionThreshDbDefaults[LimiterDynamicRangeProcessor],
-          outCompressionThreshDbDefaults[LimiterDynamicRangeProcessor],
-          kneeWidthDbDefaults[LimiterDynamicRangeProcessor],
-          compressionRatioDefaults[LimiterDynamicRangeProcessor],
-          lookaheadMsDefaults[LimiterDynamicRangeProcessor],
-          attackMsDefaults[LimiterDynamicRangeProcessor],
-          releaseMsDefaults[LimiterDynamicRangeProcessor]
-       }
+   double thresholdDb = limiterThresholdDbDefault;
+   double makeupTargetDb = limiterMakeupTargetDbDefault;
+   double kneeWidthDb = limiterKneeWidthDbDefault;
+   double lookaheadMs = limiterLookaheadMsDefault;
+   double releaseMs = limiterReleaseMsDefault;
+};
+
+struct DynamicRangeProcessorSettings
+{
+   DynamicRangeProcessorSettings(const CompressorSettings& compressorSettings)
+       : inCompressionThreshDb { compressorSettings.thresholdDb }
+       , outCompressionThreshDb { compressorSettings.thresholdDb +
+                                  compressorSettings.makeupGainDb }
+       , kneeWidthDb { compressorSettings.kneeWidthDb }
+       , compressionRatio { compressorSettings.compressionRatio }
+       , lookaheadMs { compressorSettings.lookaheadMs }
+       , attackMs { compressorSettings.attackMs }
+       , releaseMs { compressorSettings.releaseMs }
    {
    }
+
+   DynamicRangeProcessorSettings(const LimiterSettings& limiterSettings)
+       : inCompressionThreshDb { limiterSettings.thresholdDb }
+       , outCompressionThreshDb { limiterSettings.makeupTargetDb }
+       , kneeWidthDb { limiterSettings.kneeWidthDb }
+       , compressionRatio { std::numeric_limits<double>::infinity() }
+       , lookaheadMs { limiterSettings.lookaheadMs }
+       , attackMs { 0. }
+       , releaseMs { limiterSettings.releaseMs }
+   {
+   }
+
+   double inCompressionThreshDb;
+   double outCompressionThreshDb;
+   double kneeWidthDb;
+   double compressionRatio;
+   double lookaheadMs;
+   double attackMs;
+   double releaseMs;
 };
 
-constexpr bool
-operator==(const CompressorSettings& lhs, const CompressorSettings& rhs)
+constexpr bool operator==(
+   const DynamicRangeProcessorSettings& lhs,
+   const DynamicRangeProcessorSettings& rhs)
 {
    return lhs.inCompressionThreshDb == rhs.inCompressionThreshDb &&
           lhs.outCompressionThreshDb == rhs.outCompressionThreshDb &&
@@ -80,8 +108,9 @@ operator==(const CompressorSettings& lhs, const CompressorSettings& rhs)
           lhs.releaseMs == rhs.releaseMs;
 }
 
-constexpr bool
-operator!=(const CompressorSettings& lhs, const CompressorSettings& rhs)
+constexpr bool operator!=(
+   const DynamicRangeProcessorSettings& lhs,
+   const DynamicRangeProcessorSettings& rhs)
 {
    return !(lhs == rhs);
 }

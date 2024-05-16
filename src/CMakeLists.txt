@@ -339,6 +339,17 @@ set( SOURCES
       effects/Distortion.h
       effects/DtmfGen.cpp
       effects/DtmfGen.h
+      effects/DynamicRangeProcessorEditor.cpp
+      effects/DynamicRangeProcessorEditor.h
+      effects/DynamicRangeProcessorEffectUtils.cpp
+      effects/DynamicRangeProcessorEffectUtils.h
+      effects/DynamicRangeProcessorHistoryPanel.cpp
+      effects/DynamicRangeProcessorHistoryPanel.h
+      effects/DynamicRangeProcessorOutputs.cpp
+      effects/DynamicRangeProcessorOutputs.h
+      effects/DynamicRangeProcessorPanelCommon.h
+      effects/DynamicRangeProcessorTransferFunctionPanel.cpp
+      effects/DynamicRangeProcessorTransferFunctionPanel.h
       effects/EBUR128.cpp
       effects/EBUR128.h
       effects/Echo.cpp
@@ -382,6 +393,10 @@ set( SOURCES
       effects/Generator.h
       effects/Invert.cpp
       effects/Invert.h
+      effects/Limiter.cpp
+      effects/Limiter.h
+      effects/LimiterEditor.cpp
+      effects/LimiterEditor.h
       effects/Loudness.cpp
       effects/Loudness.h
       effects/Noise.cpp
@@ -390,12 +405,16 @@ set( SOURCES
       effects/NoiseReduction.h
       effects/Normalize.cpp
       effects/Normalize.h
-      effects/OfflineCompressor.cpp
-      effects/OfflineCompressor.h
       effects/Paulstretch.cpp
       effects/Paulstretch.h
       effects/Phaser.cpp
       effects/Phaser.h
+      effects/Compressor.cpp
+      effects/Compressor.h
+      effects/CompressorEditor.cpp
+      effects/CompressorEditor.h
+      effects/CompressorInstance.cpp
+      effects/CompressorInstance.h
       effects/RealtimeEffectStateUI.cpp
       effects/RealtimeEffectStateUI.h
       effects/Repair.cpp
@@ -1316,6 +1335,7 @@ set( AUDACITY_LIBRARIES
    lib-wave-track-paint-interface
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
+   lib-dynamic-range-processor-interface
 )
 
 if (USE_VST)

@@ -31,16 +31,23 @@ public:
       float dbAttenuationOfMaxInputSample = 0;
    };
 
-   static float GetMaxCompressionDb(const CompressorSettings& settings);
+   static float
+   GetMaxCompressionDb(const DynamicRangeProcessorSettings& settings);
+   static float EvaluateTransferFunction(
+      const DynamicRangeProcessorSettings& settings, float inputDb);
 
-   CompressorProcessor(const CompressorSettings& settings = {});
+   CompressorProcessor(
+      const DynamicRangeProcessorSettings& settings = {
+         // No reason to initialize with compressor settings other than
+         // convenience.
+         CompressorSettings {} });
    CompressorProcessor(const CompressorProcessor& other) = delete;
    ~CompressorProcessor();
 
-   void ApplySettingsIfNeeded(const CompressorSettings& settings);
+   void ApplySettingsIfNeeded(const DynamicRangeProcessorSettings& settings);
    void Init(int sampleRate, int numChannels, int blockSize);
    void Reinit();
-   const CompressorSettings& GetSettings() const;
+   const DynamicRangeProcessorSettings& GetSettings() const;
    void
    Process(const float* const* inBlock, float* const* outBlock, int blockLen);
    const std::vector<std::vector<float>>& GetDelayedInput() const;
@@ -61,7 +68,7 @@ private:
       mGainReductionComputer;
    const std::unique_ptr<DanielRudrich::LookAheadGainReduction>
       mLookAheadGainReduction;
-   CompressorSettings mSettings;
+   DynamicRangeProcessorSettings mSettings;
    int mSampleRate = 0;
    int mNumChannels = 0;
    int mBlockSize = 0;

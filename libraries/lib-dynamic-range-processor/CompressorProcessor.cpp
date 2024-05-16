@@ -18,25 +18,31 @@
 
 namespace
 {
-float GetMakeupGainDb(const CompressorSettings& settings)
+float GetMakeupGainDb(const DynamicRangeProcessorSettings& settings)
 {
    return settings.outCompressionThreshDb - settings.inCompressionThreshDb;
 }
 } // namespace
 
 float CompressorProcessor::GetMaxCompressionDb(
-   const CompressorSettings& settings)
+   const DynamicRangeProcessorSettings& settings)
 {
-   const auto tfEval =
-      DanielRudrich::GainReductionComputer::getCharacteristicSample(
-         0.f, settings.kneeWidthDb, settings.inCompressionThreshDb,
-         settings.compressionRatio, GetMakeupGainDb(settings));
+   const auto tfEval = EvaluateTransferFunction(settings, 0);
    const auto netGain =
       settings.outCompressionThreshDb - settings.inCompressionThreshDb;
    return netGain - tfEval;
 }
 
-CompressorProcessor::CompressorProcessor(const CompressorSettings& settings)
+float CompressorProcessor::EvaluateTransferFunction(
+   const DynamicRangeProcessorSettings& settings, float inputDb)
+{
+   return DanielRudrich::GainReductionComputer::getCharacteristicSample(
+      inputDb, settings.kneeWidthDb, settings.inCompressionThreshDb,
+      settings.compressionRatio, GetMakeupGainDb(settings));
+}
+
+CompressorProcessor::CompressorProcessor(
+   const DynamicRangeProcessorSettings& settings)
     : mGainReductionComputer { std::make_unique<
          DanielRudrich::GainReductionComputer>() }
     , mLookAheadGainReduction { std::make_unique<
@@ -48,7 +54,7 @@ CompressorProcessor::CompressorProcessor(const CompressorSettings& settings)
 CompressorProcessor::~CompressorProcessor() = default;
 
 void CompressorProcessor::ApplySettingsIfNeeded(
-   const CompressorSettings& settings)
+   const DynamicRangeProcessorSettings& settings)
 {
    if (settings == mSettings)
       return;
@@ -79,7 +85,7 @@ void CompressorProcessor::Init(int sampleRate, int numChannels, int blockSize)
    Reinit();
 }
 
-const CompressorSettings& CompressorProcessor::GetSettings() const
+const DynamicRangeProcessorSettings& CompressorProcessor::GetSettings() const
 {
    return mSettings;
 }
@@ -180,8 +186,8 @@ void CompressorProcessor::ApplyEnvelope(
 {
    const auto makeupGainDb = mGainReductionComputer->getMakeUpGain();
    const auto d = mLookAheadGainReduction->getDelayInSamples();
-   std::array<float, 2> chanAbsMax;
-   std::array<int, 2> chanAbsMaxIndex;
+   std::array<float, 2> chanAbsMax { 0.f, 0.f };
+   std::array<int, 2> chanAbsMaxIndex { 0, 0 };
    for (auto i = 0; i < mNumChannels; ++i)
    {
       const auto in = mDelayedInput[i].data();
@@ -211,9 +217,14 @@ void CompressorProcessor::Reinit()
    // In this order: setDelayTime, then prepare:
    mLookAheadGainReduction->setDelayTime(mSettings.lookaheadMs / 1000);
    mLookAheadGainReduction->prepare(mSampleRate, mBlockSize);
+   const auto maxDelay =
+      std::max(compressorMaxLookaheadMs, limiterMaxLookaheadMs) * mSampleRate /
+      1000;
    const auto d = mLookAheadGainReduction->getDelayInSamples();
+   assert(d <= maxDelay);
    mDelayedInput.resize(mNumChannels);
    std::for_each(mDelayedInput.begin(), mDelayedInput.end(), [&](auto& v) {
+      v.reserve(maxDelay + mBlockSize);
       v.resize(d + mBlockSize);
       std::fill(v.begin(), v.end(), 0.f);
    });

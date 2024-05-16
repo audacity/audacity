@@ -9,15 +9,18 @@ TEST_CASE("DynamicRangeProcessorHistory")
    constexpr auto numFramesInHistory = 10;
    constexpr int framesPerSecond = numFramesInHistory / SUT::maxTimeSeconds;
    SUT sut { framesPerSecond };
-   const auto& history = *sut.GetHistory();
-
-   REQUIRE(history.empty());
+   const auto& segments = sut.GetSegments();
+   REQUIRE(segments.empty());
 
    // Pushing two samples
    sut.Push({ { 1 }, { 2 } });
+   REQUIRE(!segments.empty());
+
+   const auto& history = segments.front();
    REQUIRE(history.size() == 2);
 
-   // Pushing one new sample, and two old samples are also pushed redundantly.
+   // Pushing one new sample, and two old samples are also pushed
+   // redundantly.
    sut.Push({ { 1 }, { 2 }, { 3 } });
    REQUIRE(history.size() == 3);
 
@@ -25,7 +28,10 @@ TEST_CASE("DynamicRangeProcessorHistory")
    sut.Push({ { 4 }, { 5 } });
    REQUIRE(history.size() == 5);
 
-   // Big drop-out, data was lost.
-   sut.Push({ { 20 } });
-   REQUIRE(history.size() == 1);
+   SECTION("Discards outdates samples")
+   {
+      // Big drop-out, data was lost.
+      sut.Push({ { 20 } });
+      REQUIRE(history.size() == 1);
+   }
 }

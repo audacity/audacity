@@ -15,7 +15,7 @@
 
 TEST_CASE("GetMaxCompressionDb", "simple test")
 {
-   CompressorSettings settings;
+   DynamicRangeProcessorSettings settings { LimiterSettings {} };
    settings.inCompressionThreshDb = -20;
    settings.outCompressionThreshDb = -10;
    settings.kneeWidthDb = 0;

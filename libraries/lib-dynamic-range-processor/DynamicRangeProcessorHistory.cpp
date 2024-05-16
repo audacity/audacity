@@ -1,56 +1,87 @@
 #include "DynamicRangeProcessorHistory.h"
 #include "DynamicRangeProcessorTypes.h"
 #include <algorithm>
+#include <cassert>
+#include <iterator>
 
-DynamicRangeProcessorHistory::DynamicRangeProcessorHistory(
-   double framesPerSecond)
-    : mFramesPerSecond { framesPerSecond }
-    , mHistory { std::make_shared<std::vector<Sample>>() }
+DynamicRangeProcessorHistory::DynamicRangeProcessorHistory(double sampleRate)
+    : mSampleRate { sampleRate }
 {
 }
 
-bool DynamicRangeProcessorHistory::Push(
-   const std::vector<DynamicRangeProcessorOutputSample>& samples)
+void DynamicRangeProcessorHistory::Push(
+   const std::vector<DynamicRangeProcessorOutputPacket>& packets)
 {
-   if (samples.empty())
-      return false;
+   if (packets.empty())
+      return;
 
-   const auto elapsed =
-      mLastFrameCounter.has_value() ?
-         (samples.back().frameCounter - *mLastFrameCounter) / mFramesPerSecond :
-         0.0;
-   mLastFrameCounter = samples.back().frameCounter;
-   auto& hist = *mHistory;
-   std::for_each(hist.begin(), hist.end(), [&](Sample& sample) {
-      sample.time -= elapsed;
-   });
-   const int numNewSamples = samples.size();
-   for (auto i = 0; i < numNewSamples; ++i)
+   if (!mFirstPacketFirstSampleIndex.has_value())
+      mFirstPacketFirstSampleIndex = packets.front().indexOfFirstSample;
+
+   const int numNewPackets = packets.size();
+   const auto lastPacketTime = !mSegments.empty() && !mSegments[0].empty() ?
+                                  std::make_optional(mSegments[0].back().time) :
+                                  std::nullopt;
+
+   const auto firstPacketToInsertIt =
+      std::find_if(packets.begin(), packets.end(), [&](const auto& packet) {
+         return !lastPacketTime.has_value() ||
+                GetPacketTime(packet) > *lastPacketTime;
+      });
+
+   if (firstPacketToInsertIt == packets.end())
+      return;
+
+   if (mSegments.empty() || mBeginNewSegment)
    {
-      const auto& sample = samples[i];
-      const float t = (i + 1 - numNewSamples) / mFramesPerSecond;
-      if (!hist.empty() && t <= hist.back().time)
-         continue;
-      hist.push_back(
-         { t, sample.targetCompressionDb, sample.actualCompressionDb });
+      mSegments.emplace_back();
+      mBeginNewSegment = false;
    }
 
-   const auto it =
-      std::find_if(hist.begin(), hist.end(), [](const Sample& sample) {
-         return sample.time >= -maxTimeSeconds;
+   auto& lastSegment = mSegments.back();
+
+   std::transform(
+      firstPacketToInsertIt, packets.end(), std::back_inserter(lastSegment),
+      [&](const auto& packet) -> Packet {
+         const auto t = GetPacketTime(packet);
+         return { t, packet.targetCompressionDb, packet.actualCompressionDb };
       });
-   hist.erase(hist.begin(), it);
 
-   return true;
+   // Clean up older packets.
+   // Algorithmically it's not completely correct to only do this for the oldest
+   // segment, but in practice, `Push` is called much more often than
+   // `BeginNewSegment`, so a simpler implementation is sufficient.
+   const auto lastTime = lastSegment.back().time;
+   auto& firstSegment = mSegments.front();
+   const auto it = std::find_if(
+      firstSegment.begin(), firstSegment.end(),
+      [lastTime](const Packet& packet) {
+         // Extend a little bit the time window, to avoid the extremities of a
+         // display to tremble.
+         return lastTime - packet.time < maxTimeSeconds * 1.1f;
+      });
+   firstSegment.erase(firstSegment.begin(), it);
+
+   if (firstSegment.empty())
+      mSegments.erase(mSegments.begin());
 }
 
-std::shared_ptr<const std::vector<DynamicRangeProcessorHistory::Sample>>
-DynamicRangeProcessorHistory::GetHistory() const
+void DynamicRangeProcessorHistory::BeginNewSegment()
 {
-   return mHistory;
+   mBeginNewSegment = true;
 }
 
-void DynamicRangeProcessorHistory::Reset()
+const std::vector<DynamicRangeProcessorHistory::Segment>&
+DynamicRangeProcessorHistory::GetSegments() const
 {
-   mHistory->clear();
+   return mSegments;
+}
+
+float DynamicRangeProcessorHistory::GetPacketTime(
+   const DynamicRangeProcessorOutputPacket& packet) const
+{
+   assert(mFirstPacketFirstSampleIndex.has_value());
+   return (packet.indexOfFirstSample -
+           mFirstPacketFirstSampleIndex.value_or(0)) /
+          mSampleRate;
 }
