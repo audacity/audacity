@@ -343,7 +343,7 @@ void DrawWaveform(
       .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
       .SetSampleColors(
          ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen),
-         ColorFromWXPen(muted ? artist->muteSamplePen : artist->selsamplePen))
+         ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen))
       .SetRMSColors(
          ColorFromWXPen(muted ? artist->muteRmsPen : artist->rmsPen),
          ColorFromWXPen(muted ? artist->muteRmsPen : artist->rmsPen))
