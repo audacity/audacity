@@ -227,7 +227,7 @@ size_t RingBuffer::AvailForGet() const
 }
 
 size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
-                       size_t samplesToCopy)
+   size_t samplesToCopy, size_t dstStride)
 {
    // Must match the writer's release with acquire for well defined reads of
    // the buffer
@@ -242,9 +242,9 @@ size_t RingBuffer::Get(samplePtr buffer, sampleFormat format,
 
       CopySamples(mBuffer.ptr() + start * SAMPLE_SIZE(mFormat), mFormat,
                   dest, format,
-                  block, DitherType::none);
+                  block, DitherType::none, 1, dstStride);
 
-      dest += block * SAMPLE_SIZE(format);
+      dest += block * SAMPLE_SIZE(format) * dstStride;
       start = (start + block) % mBufferSize;
       samplesToCopy -= block;
       copied += block;

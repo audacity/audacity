@@ -48,7 +48,8 @@ class RingBuffer final : public NonInterferingBase {
 
    size_t AvailForGet() const;
    //! Does not apply dithering
-   size_t Get(samplePtr buffer, sampleFormat format, size_t samples);
+   size_t Get(samplePtr buffer, sampleFormat format, size_t samples,
+      size_t dstStride = 1);
    size_t Discard(size_t samples);
 
    //! For the writer only
