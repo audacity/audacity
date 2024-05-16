@@ -58,7 +58,8 @@ Slider {
         readonly property int fullValueRangeLength: Math.abs(root.from) + Math.abs(root.to)
         readonly property real divisionPixels: rulerLineWidth / fullValueRangeLength
 
-        readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
+        readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
+        readonly property color unitTextColor: ui.theme.fontPrimaryColor
         readonly property string unitTextFont: {
             var pxSize = String('8px')
             var family = String('\'' + ui.theme.bodyFont.family + '\'')
@@ -66,6 +67,7 @@ Slider {
             return pxSize + ' ' + family
         }
 
+        onMeterBackgroundColorChanged: { bgCanvas.requestPaint() }
         onUnitTextColorChanged: { bgCanvas.requestPaint() }
         onUnitTextFontChanged: { bgCanvas.requestPaint() }
 
@@ -112,20 +114,28 @@ Slider {
             navigationCtrl: navCtrl
         }
 
-        function drawMeter(ctx, originHPos, originVPos, volumePressure) {
-            ctx.fillStyle = "#4D4D4D"
+        function drawMeter(ctx, originHPos, originVPos, volumePressure, recentPeak, maxPeak) {
+            ctx.fillStyle = prv.meterBackgroundColor
             ctx.fillRect(originHPos, originVPos, prv.indicatorWidth , prv.indicatorHeight)
 
             var isClipping = volumePressure >= root.maxDisplayedVolumePressure
+            var clipingColor = "#EF476F"
 
-            ctx.fillStyle = isClipping ? "#FF1C1C" : "#666666"
+            ctx.fillStyle = isClipping ? clipingColor : ui.theme.strokeColor
             ctx.fillRect(originHPos + prv.indicatorWidth, originVPos, prv.overloadWidth, prv.indicatorHeight)
 
-            ctx.fillStyle = ui.theme.accentColor
+            ctx.fillStyle = isClipping ? clipingColor : ui.theme.accentColor
             ctx.fillRect(originHPos, originVPos, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(volumePressure)), prv.indicatorHeight)
+
+            ctx.fillRect(originHPos + recentPeak * prv.rulerLineWidth, originVPos, 1, prv.indicatorHeight)
+
+            ctx.fillStyle = prv.unitTextColor
+            ctx.fillRect(originHPos + maxPeak * prv.rulerLineWidth, originVPos, 1, prv.indicatorHeight)
         }
 
         function drawRuler(ctx, originHPos, originVPos) {
+            ctx.font = prv.unitTextFont
+
             var currentStrokeHPos = 0
             var fullStep = 12
             var smallStep = 6
@@ -161,10 +171,10 @@ Slider {
             var xPos = prv.handleWidth/2
             var yPos = prv.margin
 
-            drawMeter(ctx, prv.handleWidth/2, yPos, root.leftCurrentVolumePressure)
+            drawMeter(ctx, xPos, yPos, root.leftCurrentVolumePressure, root.leftRecentPeak, root.leftMaxPeak)
 
             yPos += prv.indicatorHeight + prv.spacing
-            drawMeter(ctx, xPos, yPos, root.rightCurrentVolumePressure)
+            drawMeter(ctx, xPos, yPos, root.rightCurrentVolumePressure, root.rightRecentPeak, root.rightMaxPeak)
 
             yPos = bgCanvas.height
             drawRuler(ctx, xPos, yPos)
@@ -211,9 +221,17 @@ Slider {
             id: handleRect
             anchors.fill: parent
             radius: width / 2
-            color: "white"
-            border.color: "black"
-            opacity: 0.3
+            color: "transparent"
+            border.color: ui.theme.fontPrimaryColor
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 1
+                radius: width / 2
+                color: ui.theme.backgroundPrimaryColor
+                opacity: 0.3
+            }
+
         }
     }
 

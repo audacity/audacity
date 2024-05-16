@@ -138,3 +138,63 @@ void PlaybackToolBarLevelItem::resetAudioChannelsVolumePressure()
     setLeftChannelPressure(MIN_DISPLAYED_DBFS);
     setRightChannelPressure(MIN_DISPLAYED_DBFS);
 }
+
+float PlaybackToolBarLevelItem::leftRecentPeak() const
+{
+    return m_leftRecentPeak;
+}
+
+void PlaybackToolBarLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
+{
+    if (qFuzzyCompare(m_leftRecentPeak, newLeftRecentPeak)) {
+        return;
+    }
+
+    m_leftRecentPeak = newLeftRecentPeak;
+    emit leftRecentPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::leftMaxPeak() const
+{
+    return m_leftMaxPeak;
+}
+
+void PlaybackToolBarLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
+{
+    if (qFuzzyCompare(m_leftMaxPeak, newLeftMaxPeak)) {
+        return;
+    }
+
+    m_leftMaxPeak = newLeftMaxPeak;
+    emit leftMaxPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::rightRecentPeak() const
+{
+    return m_rightRecentPeak;
+}
+
+void PlaybackToolBarLevelItem::setRightRecentPeak(float newRightRecentPeak)
+{
+    if (qFuzzyCompare(m_rightRecentPeak, newRightRecentPeak)) {
+        return;
+    }
+
+    m_rightRecentPeak = newRightRecentPeak;
+    emit rightRecentPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::rightMaxPeak() const
+{
+    return m_rightMaxPeak;
+}
+
+void PlaybackToolBarLevelItem::setRightMaxPeak(float newRightMaxPeak)
+{
+    if (qFuzzyCompare(m_rightMaxPeak, newRightMaxPeak)) {
+        return;
+    }
+
+    m_rightMaxPeak = newRightMaxPeak;
+    emit rightMaxPeakChanged();
+}
