@@ -12,14 +12,15 @@
 #include <numeric>
 #include <unordered_map>
 
+#include "AudacityMessageBox.h"
 #include "EffectInterface.h"
+#include "HelpSystem.h"
 #include "IncompatiblePluginsDialog.h"
 #include "ModuleManager.h"
 #include "PluginManager.h"
 #include "PluginStartupRegistration.h"
-#include "ShuttleGui.h"
-#include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
+#include "ShuttleGui.h"
 
 #include <set>
 #include <wx/setup.h> // for wxUSE_* macros
@@ -43,13 +44,15 @@ enum
    ID_FilterType,
    ID_FilterCategory,
    ID_List,
-   ID_Rescan
+   ID_Rescan,
+   ID_GetMoreEffects,
 };
 
 BEGIN_EVENT_TABLE(PluginRegistrationDialog, wxDialogWrapper)
    EVT_BUTTON(wxID_OK, PluginRegistrationDialog::OnOK)
    EVT_BUTTON(wxID_CANCEL, PluginRegistrationDialog::OnCancel)
    EVT_BUTTON(ID_Rescan, PluginRegistrationDialog::OnRescan)
+   EVT_BUTTON(ID_GetMoreEffects, PluginRegistrationDialog::OnGetMoreEffects)
    EVT_CHOICE(ID_FilterState, PluginRegistrationDialog::OnStateFilterValueChanged)
    EVT_CHOICE(ID_FilterType, PluginRegistrationDialog::OnTypeFilterValueChanged)
    EVT_CHOICE(ID_FilterCategory, PluginRegistrationDialog::OnCategoryFilterValueChanged)
@@ -200,6 +203,9 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          {
             S.AddSpace(Margin, 1);
             S.Id(ID_Rescan).AddButton(XXO("&Rescan"));
+#if defined(__WXMSW__) || defined(__WXMAC__)
+            S.Id(ID_GetMoreEffects).AddButton(XXO("&Get more effects..."));
+#endif
             S.AddSpace(1, 1, 1);
 
             S.Id(wxID_OK).AddButton(XXO("&OK"));
@@ -222,7 +228,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
    sz.SetWidth(wxMin(sz.GetWidth(), r.GetWidth()));
    sz.SetHeight(wxMin(sz.GetHeight(), r.GetHeight()));
    SetMinSize(sz);
-   
+
    mPluginList->GetColumn(PluginDataModel::ColumnName)->SetWidth(200);
    mPluginList->GetColumn(PluginDataModel::ColumnType)->SetWidth(80);
    mPluginList->GetColumn(PluginDataModel::ColumnPath)->SetWidth(350);
@@ -251,7 +257,7 @@ void PluginRegistrationDialog::OnSearchTextChanged(wxCommandEvent& evt)
 void PluginRegistrationDialog::OnStateFilterValueChanged(wxCommandEvent& evt)
 {
    const auto index = evt.GetInt();
-   
+
    mPluginsModel->SetFilterState(
       index == 2 ? 1 : (index == 1 ? 0 : -1)
    );
@@ -336,6 +342,11 @@ void PluginRegistrationDialog::OnRescan(wxCommandEvent& WXUNUSED(evt))
    });
 }
 
+void PluginRegistrationDialog::OnGetMoreEffects(wxCommandEvent& WXUNUSED(evt))
+{
+   OpenInDefaultBrowser("https://www.musehub.com");
+}
+
 void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
 {
    auto result = ProgressResult::Success;
@@ -369,14 +380,14 @@ void PluginRegistrationDialog::OnOK(wxCommandEvent & WXUNUSED(evt))
       auto onError = [](const TranslatableString& error) {
          AudacityMessageBox(error);
       };
-      
+
       mPluginsModel->ApplyChanges(updateProgress, onError);
    }
    if(result == ProgressResult::Success)
       EndModal(wxID_OK);
    else
       ReloadModel();
-   
+
 }
 
 void PluginRegistrationDialog::OnCancel(wxCommandEvent & WXUNUSED(evt))

@@ -37,6 +37,7 @@ private:
    void OnOK(wxCommandEvent & evt);
    void OnCancel(wxCommandEvent & evt);
    void OnRescan(wxCommandEvent & evt);
+   void OnGetMoreEffects(wxCommandEvent & evt);
 
    wxArrayString mPluginProviderIDs;
 
