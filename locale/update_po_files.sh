@@ -2,7 +2,7 @@
 # Run this script with locale as the current directory
 set -o errexit
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
-for path in ../modules/mod-* ../libraries/lib-* ../include ../src ../crashreports ; do
+for path in ../modules/* ../libraries/lib-* ../include ../src ../crashreports ; do
    find $path -name \*.h -o -name \*.cpp -o -name \*.mm
 done | LANG=c sort | \
 sed -E 's/\.\.\///g' |\
