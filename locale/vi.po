@@ -13,9 +13,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.5.0\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 21:13+0300\n"
+"POT-Creation-Date: 2024-05-17 23:19+0300\n"
 "PO-Revision-Date: 2023-04-11 11:59+0300\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/klyok/teams/690/vi/)\n"
@@ -176,7 +176,7 @@ msgid ""
 msgstr "Bạn không thể phát hoặc ghi âm.\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Lỗi: %s"
@@ -201,12 +201,13 @@ msgstr ""
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp
-#: src/effects/EffectPreview.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -380,7 +381,7 @@ msgstr "Xuất file đến:"
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: libraries/lib-import-export/ExportProgressUI.h
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Export error"
 msgstr "Xuất ra bị lỗi"
 
@@ -395,14 +396,19 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Lỗi khi mở cơ sở dữ liệu của dự án"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Local project data was removed before the sync has completed"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Không truy xuất được nội dung đặt trước"
 
 #: libraries/lib-effects/Effect.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: libraries/lib-preference-pages/PrefsPanel.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#: plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -643,8 +649,10 @@ msgstr ""
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
-#: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
+#: libraries/lib-wx-init/LogWindow.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
 #: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
 #: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
@@ -1647,6 +1655,19 @@ msgstr "Nhiều track"
 msgid "Simple"
 msgstr "Đơn giản"
 
+#. i18n-hint: refers to optional plug-in software libraries
+#: libraries/lib-preference-pages/LibraryPrefs.cpp src/AboutDialog.cpp
+msgid "Libraries"
+msgstr "Thư viện"
+
+#: libraries/lib-preference-pages/LibraryPrefs.cpp
+msgid "Preferences for Library"
+msgstr "Tuỳ chọn thư viện"
+
+#: libraries/lib-preference-pages/LibraryPrefs.h
+msgid "Library"
+msgstr "Thư viện"
+
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "(%d): %s"
@@ -2373,7 +2394,7 @@ msgstr ""
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
 #, fuzzy
 msgid "Unknown error"
 msgstr "Đuôi tập tin không xác định"
@@ -2711,12 +2732,23 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Cảnh báo - Đang cắt ngắn khối tập tin dài quá mức tối đa"
 
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Pre-processing"
+msgstr " Đang Xử lý: %s"
+
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "Đặt lại tên clip..."
+
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
 msgstr "Lấy mẫu thất bại."
 
-#: libraries/lib-wave-track/WaveTrack.cpp modules/mod-ffmpeg/ExportFFmpeg.cpp
-#: modules/mod-opus/ExportOpus.cpp
+#: libraries/lib-wave-track/WaveTrack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Audio"
 msgstr "Audio"
 
@@ -2746,19 +2778,9 @@ msgstr "Không đủ chỗ để dán vùng chọn"
 msgid "A track has a corrupted sample sequence."
 msgstr ""
 
-#: libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "Không đủ chỗ để mở rộng đường cắt"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.cpp
-#, fuzzy
-msgid "Pre-processing"
-msgstr " Đang Xử lý: %s"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
-msgid "Rendering Clip"
-msgstr "Đặt lại tên clip..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2946,38 +2968,38 @@ msgstr "Hiển thị chi tiết nhật ký máy "
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: libraries/lib-wx-init/MultiDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Thời gian trước đó:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Thời gian còn lại:"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
-#: src/toolbars/ControlToolBar.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
 msgid "Stop"
 msgstr "Dừng"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
 msgid "Cancel"
 msgstr "Hủy bỏ"
 
@@ -3065,11 +3087,19 @@ msgstr "Không thể nạp tập tin: \"%s\""
 msgid "Could not parse XML"
 msgstr "Không thể phân tích XML"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/etc/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr "Lệnh thực nghiệm đầu tiên..."
+
+#: modules/etc/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr "Lệnh thực nghiệm thứ 2"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
 msgstr "Tập tin dự án AUP (*.aup)"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Couldn't import the project:\n"
@@ -3084,7 +3114,7 @@ msgstr ""
 #. to import an AUP project.
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "%s\n"
@@ -3093,7 +3123,7 @@ msgid ""
 "Please verify that everything works as intended before saving."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
 "This project was saved by Audacity version 1.0 or earlier. The format has\n"
 "changed and this version of Audacity is unable to import the project.\n"
@@ -3107,68 +3137,68 @@ msgstr ""
 "Hãy sử dụng phiên bản Audacity trước v3.0.0 để nâng cấp dự án và sau đó\n"
 "bạn có thể nhập dự án bằng phiên bản Audacity này."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
 msgstr "Lỗi nội bộ trong trình nhập ... không nhận dạng được thẻ"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr "Thuộc tính 'vpos' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
 msgstr "Thuộc tính 'h' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
 msgstr "Thuộc tính 'zoom' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
 msgstr "Thuộc tính 'sel0' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
 msgstr "Thuộc tính 'sel1' của  dự án không hợp lệ. "
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
 msgstr "Thuộc tính 'selLow' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
 msgstr "Thuộc tính 'selHigh' của dự án không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Không tìm thấy thư mục dữ liệu của dự án: \"%s\""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Đã tìm thấy track MIDI trong tệp dự án này, tuy nhiên phiên bản Audacity này không hỗ trợ MIDI."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr "Dự án đang hoạt động hiện có một chuỗi track và một trong số chúng đã gây ra sung đột với dự án đang được chèn vào, bỏ qua chuỗi track được chèn."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "Thuộc tính 'maxsamples' của chuỗi không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
 msgstr "Thuộc tính 'sampleformat' của chuỗi không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'numsamples' attribute."
 msgstr "Thuộc tính 'numsamples' của chuỗi không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
 msgstr "Không thể phân tích cú pháp thuộc tính \"start\" của waveblock"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing project file %s\n"
@@ -3179,15 +3209,15 @@ msgstr ""
 "\n"
 "Đang chèn khoảng lặng vào thay thế."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
 msgstr "Thuộc tính simpleblockfile 'len' bị thiếu hoặc không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
 msgstr "Thiếu hoặc không hợp lệ thuộc tính 'len' silentblockfile."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing alias file %s\n"
@@ -3198,15 +3228,15 @@ msgstr ""
 "\n"
 "Chèn khoảng lặng."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
 msgstr "Thuộc tính 'aliaslen' pcmaliasblockfile bị thiếu hoặc không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
 msgstr "Thuộc tính 'aliaslen' pcmaliasblockfile bị thiếu hoặc không hợp lệ."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Error while processing %s\n"
@@ -3217,31 +3247,33 @@ msgstr ""
 "\n"
 "Chèn khoảng lặng."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Failed to open %s"
 msgstr "Lỗi mở %s"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Failed to seek to position %lld in %s"
 msgstr "Không tìm được vị trí %lld trong %s"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Unable to read %lld samples from %s"
 msgstr "Không thể đọc %lld mẫu từ %s"
 
-#: modules/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
 msgid "Command:"
 msgstr "Lệnh:"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-ffmpeg/FFmpeg.cpp
-#: modules/mod-mp3/ExportMP3.cpp plug-ins/nyquist-plug-in-installer.ny
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Duyệt..."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Show output"
 msgstr "Hiển thị đầu ra"
 
@@ -3250,925 +3282,241 @@ msgstr "Hiển thị đầu ra"
 #. and "standard in" means the default input stream that the external program,
 #. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr "Dữ liệu sẽ được chuyển về tiêu chuẩn trong \"%f\" sử dụng tên tập tin trong cửa sổ xuất file."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
 msgstr "Tên chương trình xuất hiện bị thiếu."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "\"%s\" couldn't be found."
 msgstr "\"%s\" không tìm được "
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
 msgstr "Không thể tìm thấy \" %s\" trong đường dẫn của bạn."
 
 #. i18n-hint files that can be run as programs
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Executables"
 msgstr "Tập tin hành lệnh "
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Find path to command"
 msgstr "Tìm thấy đường dẫn điều khiển"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "(external program)"
 msgstr "(Chương trình bên ngoài)"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
 msgstr "Không thể xuất âm thanh ra %s"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr "Xuất âm thanh đã chọn dùng bộ mã hoá bằng dòng lệnh"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
 msgstr "Xuất âm thanh sử dụng bộ mã hoá dòng lệnh"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
 msgstr "Đầu ra của lệnh"
 
-#: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
-msgid "Waiting for audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
-msgid "Generating audio preview..."
-msgstr "Đang chuẩn bị audio ..."
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
-msgid "Open from audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
-msgid "Synchronizing project"
-msgstr "Đang lưu dự án"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Previews can be updated only for Cloud projects"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Save To Cloud..."
-msgstr "Lưu mới..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open From Cloud..."
-msgstr "&Mở  menu..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Share Audio..."
-msgstr "Chia sẻ audio"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Account"
-msgstr "&Liên kết Tài khoản"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Export behavior"
-msgstr "Xuất ra bị lỗi"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "S&how 'How would you like to export?' dialog"
-msgstr "Bạn muốn dán audio của mình như thế nào?"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Save behavior"
-msgstr "Hành vi"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always &ask"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always &save to cloud"
-msgstr "&Máu sóng"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always save to the co&mputer"
-msgstr "Lưu nội dung nhật ký."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Temporary Cloud files directory"
-msgstr "Thư mục tạm thời"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "&Vị trí"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "&Duyệt..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "days"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "&Remove temporary files after:"
-msgstr "Thư mục tạm thời"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Preferences for Cloud"
-msgstr "Tuỳ chọn chuột"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Chọn vị trí đặt thư mục tạm thời"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Thư mục tệp tạm thời không thể nằm trên ổ đĩa FAT."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "Lỗi đặt tùy chọn..."
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
-msgid "Failed."
-msgstr "Thất bại"
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, c-format
-msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Waiting for space to free up"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-
-#. i18n-hint: Share audio button text, keep as short as possible
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "Chia sẻ audio"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "&Thanh công cụ Chia sẻ Audio"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
-msgid "Account not linked"
-msgstr "Tài khoản đã được liên kết thành công!"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Liên kết Tài khoản"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "&Hủy liên kết Tài khoản"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
-msgid "Don't show this again"
-msgstr "Không hiện cảnh báo này nữa"
-
-#. i18n-hint: A title that is shown on the first project save that allows the
-#. user to select Cloud or local save.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "How would you like to save?"
-msgstr "Bạn muốn dán audio của mình như thế nào?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to the Cloud"
-msgstr "Lưu lại tập nhật ký vào:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Save to Cloud"
-msgstr "&Máu sóng"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "On your computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to &computer"
-msgstr "Lưu nội dung nhật ký."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Remember my choice and don't show again"
-msgstr "Hãy nhớ lựa chọn của tôi và đừng hỏi lại"
-
-#. i18n-hint: A title that is shown on export that allows the user to select
-#. Cloud or local export.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "How would you like to export?"
-msgstr "Bạn muốn dán audio của mình như thế nào?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Share to audio.com"
-msgstr "Chia sẻ audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Share to audio.com"
-msgstr "Chia sẻ audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Export to &computer"
-msgstr "Xuất ra bị lỗi"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Don't show again"
-msgstr "Không hiện cảnh báo này nữa"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Private"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "Không có trong danh sách"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "Xuất bản"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "&Lưu"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to computer..."
-msgstr "Lưu Dụ Ấn..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Project Name"
-msgstr "Dự án"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "We encountered an issue syncing your file"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "You are not signed in"
-msgstr "Bạn không thể cấp chìa khóa cho cổng truy cập này"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Log in to audio.com to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "Sign in"
-msgstr "Xếp kết thúc"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Link account"
-msgstr "Liên kết tài khoản"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "Chúng tôi không thể liên kết tài khoản của bạn. Vui lòng thử lại."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "&Cancel"
-msgstr "&Hủy bỏ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "&Thử lại"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "Tài khoản đã được liên kết thành công!"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "&Ok"
-msgstr "&Ok"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Enter token to link your account"
-msgstr "Nhập token để liên kết tài khoản của bạn"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Token"
-msgstr "Token"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/IncompatiblePluginsDialog.cpp
-msgid "C&ontinue"
-msgstr "Tiếp&tục"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "L&iên kết tài khoản audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project is no longer saved to the Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#, fuzzy
-msgid "Save to computer"
-msgstr "Lưu nội dung nhật ký."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
-msgid "Save to Cloud"
-msgstr "Lưu lại tập nhật ký vào:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Your project storage limit has been reached."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Visit audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project version conflict detected"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Save this project"
-msgstr "Lưu lại một dự án."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Discard and open latest version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open local project"
-msgstr "Mở một dự án. "
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Cloud project conflict"
-msgstr "Tập tin dự án đã được nén"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Keep currently open version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open new version"
-msgstr "Chuyển đổi tốc độ lấy mẫu"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Open from Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "less than 1 minute"
-msgstr "Còn lại chưa đến 1 phút"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one minutes ago"
-msgid_plural "%d minutes ago"
-msgstr[0] ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "Độ dài tone:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Modified"
-msgstr "Đã sửa lại nhãn"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to authorize account"
-msgstr "Lỗi phục hồi kết nối"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Loading projects list..."
-msgstr "Đang lưu các dự án"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to get projects list"
-msgstr "Lỗi khi nhập dự án."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Cloud saved projects"
-msgstr "Tập tin dự án đã được nén"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Search:"
-msgstr "&Tìm:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Prev"
-msgstr "&Xem trước"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "Tiếp theo"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "&Mở"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "View in audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "Page %d of %d"
-msgstr "%s %d of %d"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "Mọi người sẽ có thể nghe được audio này."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Chỉ bạn và những người mà bạn chia sẻ liên kết mới có thể nghe audio này."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "Bạn có chắc muốn hủy bỏ?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Hủy bỏ tải lên Audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "Đang tải lên audio..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Chúng tôi không thể tải lên tập tin này. Vui lòng thử lại và đảm bảo liên kết với tài khoản audio.com của bạn trước khi tải lên."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "Tải lên bị lỗi"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "Chúng tôi không thể chuẩn bị tập tin này để tải lên."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "Đang hoàn thiện tải lên ..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/TagsEditor.cpp
-msgid "Track Title"
-msgstr "Tiêu đề của track"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr "audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Nhấn \"Tiếp tục\" để tải lên audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "Đang chuẩn bị audio ..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You are not authorized to access this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You tried to access a project that has expired."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity had trouble connecting to the server."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You don't have access to this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "The project could not be found."
-msgstr "Không thể tách bản ghi dự án"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The server responded with something Audacity could not understand."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audio.com encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Audacity encountered an unknown error."
-msgstr "Lỗi cấu trúc Audacity"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Sync failed"
-msgstr "Sync đã bị khóa"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Error details:\n"
-"%s"
-msgstr "Chi tiết lỗi"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
-msgid "Syncing your project"
-msgstr "Đang phục hồi dự án"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Tiếp tục"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "Success!"
-msgstr "Thành công"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Thời gian biểu"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Done"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Cloud project incomplete"
-msgstr "Không tìm được thành phần"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Load latest"
-msgstr "Nạp tập tin"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#, fuzzy
-msgid "You have canceled this upload to audio.com"
-msgstr "Hủy bỏ tải lên Audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#, fuzzy
-msgid "Retry"
-msgstr "&Thử lại"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr ""
-
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "%.2f kbps"
 msgstr "%.2f kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Bit Rate"
 msgstr "Tốc độ bit:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Quality (kbps)"
 msgstr "Chất lượng (kbps):"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Compression"
 msgstr "Bộ nén"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Frame Duration"
 msgstr "Thời lượng khung hình:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "2.5 ms"
 msgstr "2.5 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "5 ms"
 msgstr "5 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "10 ms"
 msgstr "10 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "20 ms"
 msgstr "20 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "40 ms"
 msgstr "40 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "60 ms"
 msgstr "60 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Vbr Mode"
 msgstr "Chế độ VBR"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Off"
 msgstr "Tắt"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "On"
 msgstr "On"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Constrained"
 msgstr "Constrained"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/commands/DragCommand.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/NoUpdatesAvailableDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Áp dụng quy trình"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "VOIP"
 msgstr "VOIP"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Low Delay"
 msgstr "Độ trễ ngắn"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Cutoff"
 msgstr "Cắt:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
 #: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Đã Tắt"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Narrowband"
 msgstr "Narrowband"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Mediumband"
 msgstr "Mediumband"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Wideband"
 msgstr "Wideband"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Super Wideband"
 msgstr "Super Wideband"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Fullband"
 msgstr "Fullband"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Open custom FFmpeg format options"
 msgstr "Mở tùy chọn định dạng FFmpeg tùy biến"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Format:"
 msgstr "Định dạng hiện tại:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Codec:"
 msgstr "Bộ giải mã hiện tại:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
 msgstr "Lỗi FFmpeg: Không thể xác định mô tả định dạng cho tập tin \"%s\"."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
 msgstr "FFmpeg: LỖI - không thể xác định phạm vi định dạng đầu ra."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
 msgstr "FFmpeg : LỖI  - Không thể thêm chuỗi âm thanh vào tệp tin đầu ra \"%s\"."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr "Lỗi FFmpeg - Không thể mở tập tin đầu ra \"%s\"  Mã lỗi là %d."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr "FFmpeg : LỖI - Không thể viết tiêu đề lên tệp đầu ra \"%s\". Lỗi code là %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
@@ -4177,16 +3525,16 @@ msgstr ""
 "FFmpeg không tìm thấy bộ giải mã audio 0x%x.\n"
 "Có lẻ bộ giải mã này chưa được tích hợp."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
 msgstr "Codec  có lỗi  (EPERM)"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
 msgstr "Bộ giải mã đã báo cáo một tham số không hợp lệ (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
@@ -4197,39 +3545,39 @@ msgstr ""
 "\n"
 "%s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr "FFmpeg: LỖI - Không thể xác định bộ đệm để đọc từ FIFO audio."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
 msgstr "FFmpeg: LỖI - Không thể ghi cấu trúc audio lên tập tin đầu ra."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr "FFmpeg: LỖI - Không thể lấy mẫu kích thước bộ đệm"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
 msgstr "FFmpeg: LỖI - Không thể xác định số bytes cho mẫu bộ đệm"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
 msgstr "FFmpeg: LỖI - Không thể cài đặt audio frame"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
 msgstr "FFmpeg: LỖI - Lổi giải mã frame"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
 msgstr "FFmpeg: LỖI - Quá nhiều dữ liệu tồn động."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
 msgstr "FFmpeg: LỖI -nAudioFrameSizeOut quá lớn."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
@@ -4237,31 +3585,33 @@ msgstr ""
 "Cần định dạng chuẩn FFmpeg để tiếp tục.\n"
 "Bạn có thể định dạng nó trong mục tùy chọn > thư viện."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr "Đã thử xuất %dkênh, nhưng số lượng kênh lớn nhất để chọn định dạng đầu ra chỉ là %d"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
 msgstr "Đang xuất âm thanh đã chọn ra%s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
 msgstr "Đang xuất âm thanh ra%s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Invalid sample rate"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
-#: src/menus/TrackMenus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
 msgid "Resample"
 msgstr "Đổi tốc độ lấy mẫu"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
@@ -4270,7 +3620,7 @@ msgstr ""
 "Định dạng file đầu ra không hổ trợ \n"
 "Tốc độ lấy mẫu dự án (%d)"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -4279,159 +3629,163 @@ msgstr ""
 "Định dạng file đầu ra không hỗ trợ\n"
 "Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
 msgstr "Bạn có thể đổi tốc độ lấy mẫu sang các giá trị dưới đây."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Sample Rates"
 msgstr "Tốc độ lấy mẫu"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LC"
 msgstr "LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Main"
 msgstr "Chính"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LTP"
 msgstr "LTP"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
 msgstr "M4A (AAC) tập tin (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AC3 Files (FFmpeg)"
 msgstr "Tập tin AC3 (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "Tập tin AMR (narrow band) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
 msgstr "Tệp Opus (OggOpus) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
 msgstr "Tập tin WMA (version 2) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Custom FFmpeg Export"
 msgstr "Chỉnh sửa xuất tập tin FFmpeg"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Estimate"
 msgstr "Ước lượng"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "2-level"
 msgstr "Cập-2"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "4-level"
 msgstr "Cập"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "8-level"
 msgstr "Cấp-8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Full search"
 msgstr "Tìm kiếm tất cả"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Log search"
 msgstr "Tìm kiếm bản ghi"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Configure custom FFmpeg options"
 msgstr "Đình dạng tùy chọn FFmpeg tùy biến"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
 msgstr "Preset  - Thiết lập sẵn:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Load Preset"
 msgstr "Tải Thiết lập sẵn"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Save Preset"
 msgstr "Lưu thiết lập sẵn"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Delete Preset"
 msgstr "Xòa thiết lập sẵn"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
 msgstr "Nhập Thiết lập sẵn"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Export Presets"
 msgstr "Xuất thiết lập sẵn"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/HelpCommand.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "Format:"
 msgstr "Định dạng:"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codec:"
 msgstr "Bộ giải mã"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr "Không phải tất cả các định dạng và bộ giải mã đều tương thích. và cũng không phải tổ hợp tùy chọn nào cũng tương thíc với tất cả bộ giải mã."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
 msgstr "Hiển thị tất cả định dạng"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Hiển thị tất cả Codecs"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Formats"
 msgstr "Định dạng:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Codecs"
 msgstr "Bộ giải mã"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
 msgstr "Tùy chọn chung"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
 "empty - automatic"
 msgstr "SO 639 3-"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
 msgstr "Ngôn ngữ:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Reservoir"
 msgstr "Nguồn bit "
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "VBL"
 msgstr "VBL"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Codec tag (FOURCC)\n"
 "Optional\n"
@@ -4441,11 +3795,11 @@ msgstr ""
 "Tùy chọn\n"
 "Trống - tự động"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Tag:"
 msgstr "Tag-Thẻ:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
@@ -4457,11 +3811,11 @@ msgstr ""
 "0 - tự động\n"
 "đề suất - 192000"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
 msgstr "Tốc độ bit:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
@@ -4471,11 +3825,11 @@ msgstr ""
 "Tất cả thiết lập chất lượng, được dùng khác nhau tùy theo bộ giải mã khác nhau\n"
 "cần có vorbis"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
 msgstr "Chất lượng:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Sample rate (Hz)\n"
 "0 - don't change sample rate"
@@ -4483,11 +3837,11 @@ msgstr ""
 "Tốc độ lấy mẫu (Hz)\n"
 "0 - Không được thay đổi tốc độ lấy mẫu"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Sample Rate:"
 msgstr "Tốc độ lấy mẫu:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
@@ -4497,11 +3851,11 @@ msgstr ""
 "Tùy chọn\n"
 "0 - Tự động"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Cutoff:"
 msgstr "Cắt:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "AAC Profile\n"
 "Low Complexity - default\n"
@@ -4511,15 +3865,15 @@ msgstr ""
 "Độ phực tạp thấp - mặc định\n"
 "Không thể chạy được cái gì ngoài LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Profile:"
 msgstr "Hồ sơ:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "FLAC options"
 msgstr "Tùy chọn FLAC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Compression level\n"
 "Required for FLAC\n"
@@ -4533,11 +3887,11 @@ msgstr ""
 "Thấp nhất - 0 (mã hoá nhanh, tệp đầu ra lớn)\n"
 "Cao nhất - 10 (mã hoá chậm, tệp đầu ra nhỏ)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
 msgstr "Bộ nén:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Frame size\n"
 "Optional\n"
@@ -4551,11 +3905,11 @@ msgstr ""
 "tối thiểu - 16\n"
 "tối đa - 65535"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Frame:"
 msgstr "Khung hình:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "LPC coefficients precision\n"
 "Optional\n"
@@ -4569,11 +3923,11 @@ msgstr ""
 "Tối thiểu- 1\n"
 "Tối đa - 15"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LPC"
 msgstr "LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
@@ -4585,11 +3939,11 @@ msgstr ""
 "Tìm trên bản ghi - chậm nhất, nén nhanh nhất\n"
 "Tìm toàn diện - mặt định"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "PdO Method:"
 msgstr "Hệ thống PdO:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal prediction order\n"
 "Optional\n"
@@ -4603,11 +3957,11 @@ msgstr ""
 "Thấp nhất - 0\n"
 "Cao nhất - 32 (có LPC) hoặc 4 (không dùng LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PdO"
 msgstr "Tối thiểu PdO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal prediction order\n"
 "Optional\n"
@@ -4621,11 +3975,11 @@ msgstr ""
 "Thấp nhất - 0\n"
 "Cao nhất - 32 (có LPC) hoặc 4 (không dùng LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PdO"
 msgstr "Tối đa PdO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal partition order\n"
 "Optional\n"
@@ -4638,11 +3992,11 @@ msgstr ""
 "-Thấp nhất - 0\n"
 "Cao nhất - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PtO"
 msgstr "Tối thiểu PtO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal partition order\n"
 "Optional\n"
@@ -4656,21 +4010,21 @@ msgstr ""
 "Thấp nhất - 0\n"
 "Cao nhất - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PtO"
 msgstr "Tối đa PtO"
 
 #. i18n-hint:  Abbreviates "Linear Predictive Coding",
 #. but this text needs to be kept very short
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Use LPC"
 msgstr "Dụng LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "MPEG container options"
 msgstr "Tùy chọn nơi chứa MPEG"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
@@ -4683,13 +4037,13 @@ msgstr ""
 #. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
 #. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Tốc độ mux"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
 "Optional\n"
@@ -4701,61 +4055,61 @@ msgstr ""
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Kích thước gói:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't delete a preset without name"
 msgstr "Bạn có thể xóa một thiết lập sẵn không có tên"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
 msgstr "Bạn có muốn xóa thiết lập sẵn '%s' không?"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Confirm Deletion"
 msgstr "Xác nhận việc xoá bỏ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't save a preset without a name"
 msgstr "Bạn không thể lưu một thiết lập sẵn mà không có tên"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file with presets to import"
 msgstr "Chọn tập tin XML vời thiết lập sẵn để nhập vào "
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "No presets to export"
 msgstr "Không có thiết lập sẵn để xuất"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file to export presets into"
 msgstr "Xuất thiết lập sẵn vào tập tin XML nào? "
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
 msgstr "Định dạng %s không tương thích với codec %s."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
 msgstr "Lỗi định dạng và codec (bộ giải mã)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
 msgstr "Lỗi đọc định dạng"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to find the codec"
 msgstr "Không tìm thấy codec"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
 "but this time Audacity failed to load it at startup. \n"
@@ -4767,67 +4121,68 @@ msgstr ""
 "\n"
 "Bạn có thể vào mục Tùy chọn Ưu tiên > Thư viện và cấu hình lại nó."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
 msgstr "FFmpeg khởi động không thành công"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg library not found"
 msgstr "Không thể tìm thấy thư viện FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Locate FFmpeg"
 msgstr "Tìm thấy FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Audacity cần tập tin '%s' để nhập và xuất ra audio thông qua FFmpeg."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
 msgstr "Địa điểm '%s':"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
 msgstr "Để tìm '%s'  click vào đây -->"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "Để nhận một bản sao chép FFmpeg miễn phí, hãy nhấp chuột vào ->>"
 
 #. i18n-hint: (verb)
-#: modules/mod-ffmpeg/FFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Download"
 msgstr "Tải về"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only avformat.dll"
 msgstr "Chỉ avformat.dll"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.dylib"
 msgstr "Chỉ libavformat.dylib"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.so"
 msgstr "Chỉ libavformat.so"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Where is '%s'?"
 msgstr "%s ở đâu thế?"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg not found"
 msgstr "FFmpeg không tìm được"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -4840,35 +4195,35 @@ msgstr ""
 "\n"
 "Để sử dụng chức năng nhập bằng FFmpeg, hãy vào Chỉnh sửa > Tùy chọn ưu tiên > Thư viện để tải về hoặc định vị các thư viện FFmpeg."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Không hiện cảnh báo này nữa"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Thư viện  Nhập/ Xuất FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "No compatible FFmpeg library was found"
 msgstr "Không tìm thấy thư viện FFmpeg tương thích"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library Version:"
 msgstr "Phiên bản thư viện FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library:"
 msgstr "Thư viện FFmpeg:"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Loca&te..."
 msgstr "&Tìm Vị Trí"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Dow&nload"
 msgstr "Tải xuố&ng"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -4876,118 +4231,121 @@ msgstr ""
 "Audacity đã tự động xóa đi các thư viện FFmpeg hợp lệ.\n"
 "Bạn có muốn định vị chúng bằng tay không?"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Success"
 msgstr "Thành công"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Error Saving FFmpeg Presets"
 msgstr "Lỗi khi lưu thiết lập sẵn FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Overwrite preset '%s'?"
 msgstr "Bạn có muốn thay thế thiết lập sẵn '%s' không?"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Confirm Overwrite"
 msgstr "Xác nhận thay thế"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select format before saving a profile"
 msgstr "Hãy chọn định dạng trước khi lưu hồ sơ"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select codec before saving a profile"
 msgstr "Hãy chọn bộ giải mã trước khi lưu hồ sơ"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
 msgstr "Thiết lập '%s' không tồn tại."
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Replace preset '%s'?"
 msgstr "Bạn có muốn ghi đè lên thiết lập sẵn '%s' không?"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "Tập tin tương thích FFmpeg"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "Try installing FFmpeg.\n"
 msgstr "Thử cài đặt FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
 msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr "Chỉ mục [ %02x] Codec [ %s], Ngôn ngữ [ %s], Tốc độ bit [ %s], Kênh [ %d], Thời lượng [ %d]"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Bit Depth"
 msgstr "Độ sâu của bit"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 bit"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 bit"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
 msgid "Level"
 msgstr "Mức"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "0 (fastest)"
 msgstr "0 (nhanh nhất)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "1"
 msgstr "1"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "3"
 msgstr "3"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "4"
 msgstr "4"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "5"
 msgstr "5"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "6"
 msgstr "6"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "7"
 msgstr "7"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "8 (best)"
 msgstr "8 (tốt nhất)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "FLAC Files"
 msgstr "Tập tìn FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
 msgstr "Xuất FLAC không thể mở %s"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid ""
 "FLAC encoder failed to initialize\n"
@@ -4996,301 +4354,221 @@ msgstr ""
 "Bộ mã hóa FLAC không thể khởi động\n"
 "trạng thái:%d"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
 msgstr "Xuất âm thanh đã chọn thành FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
 msgstr "Xuất âm thanh thành FLAC"
 
-#: modules/mod-flac/ImportFLAC.cpp
+#: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
 msgstr "Tập tin FLAC"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "List of Files in basic text format"
 msgstr "Danh sách các tập tin ở dạng văn bản gốc"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
 msgstr "Tập tin LOF chứa offset cửa sổ không hợp lệ."
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid duration in LOF file."
 msgstr "Tập tin LOF có độ dài không hợp lệ. "
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
 msgstr "Chỉ có thể offset riêng các tập tin âm thanh, không thể làm với các MIDI track."
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
 msgstr "Tập tin LOF chứa track offset  không hợp lệ."
 
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "Các tập tin Allegro (.gro) lưu thời gian thành:"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Chỉ được chọn một Note Track trong mỗi lần."
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "Hãy chọn một Note Track"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Xuất  MIDI  tên tập tin: "
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "Tập tin MIDI"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Tập tin Allegro"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Bạn đã chọn một tên tập tin có đuôi không xác định.\n"
-"Bạn có muốn tiếp tục không?"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Xuất  MIDI"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "Xuất MI&DI..."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Đã nhập MIDI từ '%s'"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Nhập MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Không mở được tập tin %s: tên tập tin quá ngắn."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Không mở được tập tin %s: định dạng tệp không đúng."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "Không mở được tập tin %s. "
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "Chọn một tập tin MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "Tập tin MIDI  và Allegro"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "Tập tin MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Tập tin Allegro"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
 msgstr "Phiên bản: %s"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "Tập tin MP2"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Không xuất được MP2 với tốc độ lấy mẫu và tốc độ bit này"
 
-#: modules/mod-mp2/ExportMP2.cpp modules/mod-mp3/ExportMP3.cpp
-#: modules/mod-ogg/ExportOGG.cpp modules/mod-opus/ExportOpus.cpp
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Không thể ghi tập tin đích"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
 msgstr "Xuất âm thanh đã chọn với tốc độ %ld kbps"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
 msgstr "Đang xuất âm thanh với tốc độ %ld Kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
 msgstr "220-260 kbps (Chất Lượng Cao Nhất)"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "200-250 kbps"
 msgstr "200-250 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "170-210 kbps"
 msgstr "170-210 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "155-195 kbps"
 msgstr "155-195 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "145-185 kbps"
 msgstr "145-185 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "110-150 kbps"
 msgstr "110-150 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "95-135 kbps"
 msgstr "95-135 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "80-120 kbps"
 msgstr "80-120 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "65-105 kbps"
 msgstr "65-105 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (Tệp nhỏ hơn)"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane, 320 kbps"
 msgstr "Tối đa, 320 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
 msgstr "Hết sức, 220-260 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
 msgstr "Mặc định, 170-210 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
 msgstr "Trung bình, 145-185 kbps"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane"
 msgstr "Trên cả tuyệt"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Cực kỳ"
 
-#: modules/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Chuẩn"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium"
 msgstr "Trung bình"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Bit Rate Mode"
 msgstr "Chế độ bit:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
 msgstr "Preset - Thiết lập sẵn"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Variable"
 msgstr "Biến thiên"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Average"
 msgstr "Trung bình"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Constant"
 msgstr "Không đổi"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-ogg/ExportOGG.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
 #: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Chất lượng"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "Định vị Lame"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Audacity yêu cầu tập tin %s để tạo MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Location of %s:"
 msgstr "Vị trí của %s:"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "To find %s, click here -->"
 msgstr "Để tìm %s, nhấn vào đây -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
 msgstr "Để lấy một bản sao của LAME, nhấn vào đây -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Where is %s?"
 msgstr "%s ở đâu thế?"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
@@ -5299,91 +4577,91 @@ msgstr ""
 "Bạn đang liên kết đến lame_enc.dll v %d. %d. Phiên bản này không tương thích với Audacity %d.%d.%d.\n"
 "Vui lòng tải xuống phiên bản mới nhất của 'LAME for Audacity'."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only lame_enc.dll"
 msgstr "Chỉ lame_enc.dll"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
 msgstr "Chỉ  libmp3lame64bit.dylib"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
 msgstr "Chỉ  libmp3lame.dylib"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Only libmp3lame.so"
 msgstr "Chỉ libmp3lame.so.0"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
 msgstr "Tệp đối tượng được chia sẻ chính"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "Các thư viện bổ sung - extended"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
 msgstr "Chỉ libmp3lame.so.0"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
 msgstr "Tập tin MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
 msgstr "Không mở được thư viện mã hoá MP3!"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not initialize MP3 encoding library!"
 msgstr "Không thể khởi tạo thư viện mã hóa MP3!"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "Thư viện mã hoá MP3 này không hợp lệ hoặc không được hỗ trợ!"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
 msgstr "Không thể khởi tạo dòng MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "Đang xuất âm thanh đã chọn với thiết lập sẵn %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
 msgstr "Đang xuất âm thanh vời thiết lập sẵn %s "
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "Đang xuất âm thanh đã chọn với VBR chất lượng %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
 msgstr "Đang xuất âm thanh với VBR chất lượng %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "Đang xuất âm thanh đã chọn với tốc độ %d Kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
 msgstr "Đang xuất âm thanh với tốc độ %d Kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Error %ld returned from MP3 encoder"
 msgstr "Gặp %ld lỗi khi mã hoá MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -5392,7 +4670,7 @@ msgstr ""
 "Định dạng MP3 không hỗ trợ\n"
 "Tốc độ lấy mẫu của dự án (%d)."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -5401,641 +4679,317 @@ msgstr ""
 "Định dạng MP3 không hỗ trợ\n"
 "Tốc độ lấy mẫu (%d) và tốc độ bit (%d kbps) của dự án."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "Không thể tìm thấy thư viện xuất MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "(Built-in)"
 msgstr "(Tích hợp sẵn)"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "LAME MP3 Export Library"
 msgstr "Thư viện xuất LAME MP3"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
 msgstr "Phiên bản thư viện MP3:"
 
-#: modules/mod-mpg123/ImportMP3_MPG123.cpp
+#: modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "Tập tin MP3"
 
-#: modules/mod-null/ModNullCallback.cpp
-msgid "1st Experimental Command..."
-msgstr "Lệnh thực nghiệm đầu tiên..."
-
-#: modules/mod-null/ModNullCallback.cpp
-msgid "2nd Experimental Command"
-msgstr "Lệnh thực nghiệm thứ 2"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Nyquist Workbench..."
-msgstr "&Nyquist Workbench (bàn làm việc)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Undo\tCtrl+Z"
-msgstr "H&uỷ\tCtrl+Z"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Redo\tCtrl+Y"
-msgstr "&Làm lại\tCtrl+Y"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cu&t\tCtrl+X"
-msgstr "Cắ&t\tCtrl+X"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Copy\tCtrl+C"
-msgstr "&Chép\tCtrl+C"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Paste\tCtrl+V"
-msgstr "&Dán Ctrl+V"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cle&ar\tCtrl+L"
-msgstr "&Xoá\tCtrl+L"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select A&ll\tCtrl+A"
-msgstr "Chọn &tất cả\tCtrl+A"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Find...\tCtrl+F"
-msgstr "&Tìm...\tCtrl+F"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Matching Paren\tF8"
-msgstr "&Bộ ngoặc đơn\tF8"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Top S-expr\tF9"
-msgstr "S-expr  &đỉnh cao\tF9"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Higher S-expr\tF10"
-msgstr "&S-expr cao hơn\tF10"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Previous S-expr\tF11"
-msgstr "&S-expr trước\tF11"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Next S-expr\tF12"
-msgstr "&S-expr tiếp theo\tF12"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go to"
-msgstr "&Đi đến"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select &Font..."
-msgstr "Chọn &Phông chữ..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Split &Vertically"
-msgstr "Chia theo chiều &Thẳng đứng "
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Split &Horizontally"
-msgstr "Chia theo chiều &Ngang"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Show S&cript"
-msgstr "Hiển thị S&cript - Kịch bản"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Show &Output"
-msgstr "Hiển thị &Đầu ra"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Large Icons"
-msgstr "Các biểu tượng &Lớn"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Small Icons"
-msgstr "Các biểu tượng &Nhỏ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Toolbar"
-msgstr "Thanh công cụ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go\tF5"
-msgstr "&Đi\tF5"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Stop\tF6"
-msgstr "&Dừng\tF6"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&About"
-msgstr "&Về"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script"
-msgstr "Script - Tập lệnh"
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
-msgid "Output"
-msgstr "Đầu ra"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Load Nyquist script"
-msgstr "Tải tập lệnh Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Tập lệnh Nyquist (*.ny)|*.ny|kịch bàn Lisp (*.lsp)|*.lsp|All files|*"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script was not saved."
-msgstr "Tập lệnh chưa lưu."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Save Nyquist script"
-msgstr "Lưu Tập lệnh Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find dialog"
-msgstr "Tìm hộp thoại"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Harvey Lubin (logo)"
-msgstr "Harvey Lubin (logo)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Tango Icon Gallery (toolbar icons)"
-msgstr "Bộ biểu tượng Tango (biểu tượng thanh công cụ)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Leland Lucius"
-msgstr "Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "(C) 2009 by Leland Lucius"
-msgstr "(C) 2009 by Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Mô-đun ngoài của Audacity cung cấp bộ IDE đơn giản về hiểu ứng chữ viết."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist Effect Workbench"
-msgstr "Workbench - Bàn làm việc hiệu ứng Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "No matches found"
-msgstr "Không tìm thấy"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified. Are you sure?"
-msgstr "Mã lệnh đã được chỉnh sửa. Bạn đã chắc chắn chưa?"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Untitled"
-msgstr "Chưa có tên"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist Effect Workbench - "
-msgstr "Workbench - Bàn làm việc hiệu ứng Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New"
-msgstr "&Mới"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New script"
-msgstr "Tập lệnh mới"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open script"
-msgstr "Mở script - Tập lệnh"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save script"
-msgstr "Lưu Tập lệnh"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save As"
-msgstr "Lưu mới..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save script as..."
-msgstr "Lưu Tập lệnh thành..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Copy"
-msgstr "Chép"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Copy to clipboard"
-msgstr "Sao chép vào bộ nhớ sao chép Clipboard "
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Cut"
-msgstr "Cắt"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cut to clipboard"
-msgstr "Cắt vào bộ nhớ sao chép Clipboard"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Paste"
-msgstr "Dán"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Paste from clipboard"
-msgstr "Dán từ bộ nhớ sao chép Clipboard"
-
-#. i18n-hint verb; to empty or erase
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Clear"
-msgstr "Xoá"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Clear selection"
-msgstr "Xoá phần đã chọn"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
-#: src/tracks/ui/BackgroundCell.cpp
-msgid "Select All"
-msgstr "Chọn tất cả"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select all text"
-msgstr "Chọn tất cả văn bản"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Undo"
-msgstr "Huỷ bỏ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Undo last change"
-msgstr "Hoàn tác vụ gần đây nhất"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Redo"
-msgstr "Làm lại"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Redo previous change"
-msgstr "Thực hiện lại tác vụ kế trước"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find"
-msgstr "Tìm"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find text"
-msgstr "Tìm bằng chữ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Match"
-msgstr "Kết hợp"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to matching paren"
-msgstr "Đi đến ngoặc đơn cùng bộ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Top"
-msgstr "Trên cùng"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to top S-expr"
-msgstr "Lên đầu trang S-expr"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Up"
-msgstr "Lên trên"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to higher S-expr"
-msgstr "Đi tới S-expr ỏ trên"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Previous"
-msgstr "Kế trước"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to previous S-expr"
-msgstr "Đi tới S-expr ở dưới"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to next S-expr"
-msgstr "Chuyển đến S-expr &Tiếp theo"
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
-#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
-msgid "Start"
-msgstr "Bắt đầu"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Start script"
-msgstr "Bắt đầu Tập lệnh"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Stop script"
-msgstr "Dừng Tập lệnh"
-
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
 msgstr "Tập tin Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
 msgstr "Không thể xuất  vì vấn đề tốc độ hoặc chất lượng "
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
 msgstr "Không thể xuất - lỗi khởi chạy"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
 msgstr "Không thể xuất - lỗi khởi tạo dòng"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
 msgstr "Không thể xuất - lỗi gói"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with file"
 msgstr "Không thể xuất - lỗi tập tin"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Đang xuất âm thanh đã chọn ra tập tin dạng Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
 msgstr "Đang xuất âm thanh ra tập tin dạng Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
 msgstr "Tập tin Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 #, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
 msgstr "Chỉ mục[%02x] Phiên bản[%d], Kênh[%d], Tỷ lệ[%ld]"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Media read error"
 msgstr "Lỗi đọc phương tiện"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Not an Ogg Vorbis file"
 msgstr "Không phải là tập tin Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
 msgstr "Sai Phiên bản Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Invalid Vorbis bitstream header"
 msgstr "Dòng bit Vorbis có Phần đầu không hợp lệ"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Internal logic fault"
 msgstr "Lỗi Logic bên trong"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "no error"
 msgstr "Tải lên bị lỗi"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid argument"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "buffer too small"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "internal error"
 msgstr "Lỗi bên trong"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid packet"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not implemented"
 msgstr "không nhấn"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "invalid state"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "memory allocation has failed"
 msgstr "Lỗi tạo thư mục."
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Auto"
 msgstr "Auto Duck - Tự động giảm âm lượng cho đoạn âm"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Maximum"
 msgstr "(Tối đa 0dB)"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "VBR Mode"
 msgstr "Chế độ VBR"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page header"
 msgstr "Không thể ghi tệp vào thư mục: %s."
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page"
 msgstr "Không quyết định được"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Opus Files"
 msgstr "Tập tin %s "
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unsupported sample rate"
 msgstr "Loại tập tin không được hỗ trợ"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting selected audio as Opus"
 msgstr "Đang xuất âm thanh đã chọn ra%s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting the audio as Opus"
 msgstr "Đang xuất âm thanh ra%s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to create Opus encoder"
 msgstr "Không thể dừng 'stream state'."
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bitrate"
 msgstr "Không quyết định được"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set complexity"
 msgstr "Không quyết định được"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bandwidth"
 msgstr "Không thể  lưu %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set VBR mode"
 msgstr "Không quyết định được"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set CVBR mode"
 msgstr "Không quyết định được"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to get lookahead"
 msgstr "Không thể làm đầy vùng đệm"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to calculate correct preskip"
 msgstr "Giải mã thiết lập sẵn \"%s\" thất bại"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to encode input buffer"
 msgstr "Không thể mã hóa thiết lập sẵn từ \"%s\""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "Opus files"
 msgstr "Tập tin %s "
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "File has changed the number of channels in the middle."
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "IO error reading from file"
 msgstr "Lỗi khi cố gắng lưu tập tin"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not an Opus file"
 msgstr "Không phải là tập tin Ogg Vorbis"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid header"
 msgstr "Tùy chọn tiêu đề"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "unsupported version"
 msgstr "Tất cả các tệp được hỗ trợ"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid stream structure"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "stream is not seekable"
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid timestamp"
 msgstr "Tốc độ lấy mẫu không hợp lệ"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy, c-format
 msgid "Failed to decode Opus file: %s"
 msgstr "Không thể mã hóa thiết lập sẵn từ \"%s\""
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
 msgstr "AIFF (Apple/SGI)"
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (Microsoft)"
 msgstr "WAV (Microsoft)"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Encoding"
 msgstr "Mã hoá:"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Header"
 msgstr "Phần đầu:"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Other uncompressed files"
 msgstr "Các tập tin khác không được nén"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
 msgstr "GSM 6.10 phải dụng mono"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
 msgstr "Các định dạng WAVEX và GSM 6.10 không tương thích"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Không xuất được dữ liệu ra định dạng này."
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
@@ -6043,7 +4997,7 @@ msgstr ""
 "Bạn đã cố gắng xuất tệp WAV hoặc AIFF có dung lượng lớn hơn 4GB.\n"
 "Audacity không thể thực hiện được việc này, quá trình xuất tệp đã bị hủy bỏ."
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Đang xuất âm thanh đã chọn ra %s"
@@ -6051,7 +5005,7 @@ msgstr "Đang xuất âm thanh đã chọn ra %s"
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
 #. * error"
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -6060,241 +5014,1354 @@ msgstr ""
 "Lỗi khi lưu tập tin %s  (disk full?).\n"
 "Libsndfile nói \"%s\""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, và các định dạng không nén khác"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
 msgstr "AU (Sun/NeXT)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
 msgstr "AVR (Audio Visual Research)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
 msgstr "CAF (Apple Core Audio File)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
 msgstr "FLAC (FLAC Lossless Audio Codec)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
 msgstr "HTK (HMM Tool Kit)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
 msgstr "IFF (Amiga IFF/SVX8/SV16)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 msgstr "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 msgstr "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
 msgstr "MPC (Akai MPC 2k)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
 msgstr "OGG (OGG Container format)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
 msgstr "PAF (Ensoniq PARIS)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
 msgstr "PVF (Portable Voice Format)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RAW (header-less)"
 msgstr "RAW (header-less)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
 msgstr "RF64 (RIFF 64)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
 msgstr "SD2 (Sound Designer II)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
 msgstr "SDS (Midi Sample Dump Standard)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
 msgstr "SF (Berkeley/IRCAM/CARL)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
 msgstr "VOC (Creative Labs)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
 msgstr "W64 (SoundFoundry WAVE 64)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
 msgstr "WAV (NIST Sphere)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAVEX (Microsoft)"
 msgstr "WAVEX (Microsoft)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
 msgstr "WVE (Psion Series 3)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
 msgstr "XI (FastTracker 2)"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
 msgstr "Signed 8 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 16 bit PCM"
 msgstr "Signed 16 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 24 bit PCM"
 msgstr "Signed 24 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
 msgstr "Signed 32 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
 msgstr "Unsigned 8 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "32 bit float"
 msgstr "32 bit float"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "64 bit float"
 msgstr "64 bit float"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
 msgstr "U-Law"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "A-Law"
 msgstr "A-Law"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IMA ADPCM"
 msgstr "IMA ADPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Microsoft ADPCM"
 msgstr "Microsoft ADPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "GSM 6.10"
 msgstr "GSM 6.10"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
 msgstr "32kbs G721 ADPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
 msgstr "24kbs G723 ADPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "12 bit DWVW"
 msgstr "12 bit DWVW"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "16 bit DWVW"
 msgstr "16 bit DWVW"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24 bit DWVW"
 msgstr "24 bit DWVW"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOX ADPCM"
 msgstr "VOX ADPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "16 bit DPCM"
 msgstr "16 bit DPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "8 bit DPCM"
 msgstr "8 bit DPCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Vorbis"
 msgstr "Vorbis"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Low Quality (Fast)"
 msgstr "Chất lượng thấp (Nhanh)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Normal Quality"
 msgstr "Chất lượng Bình thường"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "High Quality (Slow)"
 msgstr "Chất lượng cao (Chậm)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Very High Quality (Slowest)"
 msgstr "Chất lượng cực cao (Siêu chậm)"
 
 #. i18n-hint bps abbreviates "bits per sample"
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, c-format
 msgid "%.1f bps"
 msgstr "%.1f bps"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Hybrid Mode"
 msgstr "Chế độ Hybrid"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
 msgstr "Tạo tập tin sửa chữa(.wvc)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "WavPack Files"
 msgstr "Tập tin Wavpack"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to create target file for writing"
 msgstr "Không thể tạo tập tin đích để ghi"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Xuất audio đã chọn dưới dạng WavPack"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting the audio as WavPack"
 msgstr "Xuất audio dưới dạng WavPack"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 msgid "WavPack files"
 msgstr "Tập tin WavPack "
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
 msgstr "Đã gặp %d lỗi khi giải mã tập tin WavPack!"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Nyquist Workbench..."
+msgstr "&Nyquist Workbench (bàn làm việc)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Undo\tCtrl+Z"
+msgstr "H&uỷ\tCtrl+Z"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Redo\tCtrl+Y"
+msgstr "&Làm lại\tCtrl+Y"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cu&t\tCtrl+X"
+msgstr "Cắ&t\tCtrl+X"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Copy\tCtrl+C"
+msgstr "&Chép\tCtrl+C"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Paste\tCtrl+V"
+msgstr "&Dán Ctrl+V"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cle&ar\tCtrl+L"
+msgstr "&Xoá\tCtrl+L"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select A&ll\tCtrl+A"
+msgstr "Chọn &tất cả\tCtrl+A"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Find...\tCtrl+F"
+msgstr "&Tìm...\tCtrl+F"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Matching Paren\tF8"
+msgstr "&Bộ ngoặc đơn\tF8"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Top S-expr\tF9"
+msgstr "S-expr  &đỉnh cao\tF9"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Higher S-expr\tF10"
+msgstr "&S-expr cao hơn\tF10"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Previous S-expr\tF11"
+msgstr "&S-expr trước\tF11"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Next S-expr\tF12"
+msgstr "&S-expr tiếp theo\tF12"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go to"
+msgstr "&Đi đến"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select &Font..."
+msgstr "Chọn &Phông chữ..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Split &Vertically"
+msgstr "Chia theo chiều &Thẳng đứng "
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Split &Horizontally"
+msgstr "Chia theo chiều &Ngang"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Show S&cript"
+msgstr "Hiển thị S&cript - Kịch bản"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Show &Output"
+msgstr "Hiển thị &Đầu ra"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Large Icons"
+msgstr "Các biểu tượng &Lớn"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Small Icons"
+msgstr "Các biểu tượng &Nhỏ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Toolbar"
+msgstr "Thanh công cụ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go\tF5"
+msgstr "&Đi\tF5"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Stop\tF6"
+msgstr "&Dừng\tF6"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&About"
+msgstr "&Về"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script"
+msgstr "Script - Tập lệnh"
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: src/effects/BassTreble.cpp
+msgid "Output"
+msgstr "Đầu ra"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Load Nyquist script"
+msgstr "Tải tập lệnh Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
+msgstr "Tập lệnh Nyquist (*.ny)|*.ny|kịch bàn Lisp (*.lsp)|*.lsp|All files|*"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script was not saved."
+msgstr "Tập lệnh chưa lưu."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Save Nyquist script"
+msgstr "Lưu Tập lệnh Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find dialog"
+msgstr "Tìm hộp thoại"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Harvey Lubin (logo)"
+msgstr "Harvey Lubin (logo)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Tango Icon Gallery (toolbar icons)"
+msgstr "Bộ biểu tượng Tango (biểu tượng thanh công cụ)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Leland Lucius"
+msgstr "Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "(C) 2009 by Leland Lucius"
+msgstr "(C) 2009 by Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Mô-đun ngoài của Audacity cung cấp bộ IDE đơn giản về hiểu ứng chữ viết."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist Effect Workbench"
+msgstr "Workbench - Bàn làm việc hiệu ứng Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "No matches found"
+msgstr "Không tìm thấy"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Code has been modified. Are you sure?"
+msgstr "Mã lệnh đã được chỉnh sửa. Bạn đã chắc chắn chưa?"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Untitled"
+msgstr "Chưa có tên"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist Effect Workbench - "
+msgstr "Workbench - Bàn làm việc hiệu ứng Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New"
+msgstr "&Mới"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New script"
+msgstr "Tập lệnh mới"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open"
+msgstr "&Mở"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Open script"
+msgstr "Mở script - Tập lệnh"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: src/Benchmark.cpp
+msgid "Save"
+msgstr "&Lưu"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save script"
+msgstr "Lưu Tập lệnh"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save As"
+msgstr "Lưu mới..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save script as..."
+msgstr "Lưu Tập lệnh thành..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Copy"
+msgstr "Chép"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Copy to clipboard"
+msgstr "Sao chép vào bộ nhớ sao chép Clipboard "
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Cut"
+msgstr "Cắt"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cut to clipboard"
+msgstr "Cắt vào bộ nhớ sao chép Clipboard"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Paste"
+msgstr "Dán"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Paste from clipboard"
+msgstr "Dán từ bộ nhớ sao chép Clipboard"
+
+#. i18n-hint verb; to empty or erase
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Clear"
+msgstr "Xoá"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Clear selection"
+msgstr "Xoá phần đã chọn"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
+msgid "Select All"
+msgstr "Chọn tất cả"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select all text"
+msgstr "Chọn tất cả văn bản"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Undo"
+msgstr "Huỷ bỏ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Undo last change"
+msgstr "Hoàn tác vụ gần đây nhất"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Redo"
+msgstr "Làm lại"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Redo previous change"
+msgstr "Thực hiện lại tác vụ kế trước"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find"
+msgstr "Tìm"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find text"
+msgstr "Tìm bằng chữ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Match"
+msgstr "Kết hợp"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to matching paren"
+msgstr "Đi đến ngoặc đơn cùng bộ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Top"
+msgstr "Trên cùng"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to top S-expr"
+msgstr "Lên đầu trang S-expr"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Up"
+msgstr "Lên trên"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to higher S-expr"
+msgstr "Đi tới S-expr ỏ trên"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Previous"
+msgstr "Kế trước"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to previous S-expr"
+msgstr "Đi tới S-expr ở dưới"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Next"
+msgstr "Tiếp theo"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to next S-expr"
+msgstr "Chuyển đến S-expr &Tiếp theo"
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
+msgid "Start"
+msgstr "Bắt đầu"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Start script"
+msgstr "Bắt đầu Tập lệnh"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Stop script"
+msgstr "Dừng Tập lệnh"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Đang chuẩn bị audio ..."
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Open from audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "Đang lưu dự án"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save &To Cloud..."
+msgstr "Lưu mới..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Fro&m Cloud..."
+msgstr "&Mở  menu..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "S&hare Audio..."
+msgstr "Chia sẻ audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "&Liên kết Tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Xuất ra bị lỗi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "S&how 'How would you like to export?' dialog"
+msgstr "Bạn muốn dán audio của mình như thế nào?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Hành vi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "&Máu sóng"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Lưu nội dung nhật ký."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Thư mục tạm thời"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "&Vị trí"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "&Duyệt..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Thư mục tạm thời"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Tuỳ chọn chuột"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Chọn vị trí đặt thư mục tạm thời"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Thư mục tệp tạm thời không thể nằm trên ổ đĩa FAT."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "Lỗi đặt tùy chọn..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "Thất bại"
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "Chia sẻ audio"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "&Thanh công cụ Chia sẻ Audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "Account not linked"
+msgstr "Tài khoản đã được liên kết thành công!"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "&Liên kết Tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "&Hủy liên kết Tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Không hiện cảnh báo này nữa"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to save?"
+msgstr "Bạn muốn dán audio của mình như thế nào?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "Lưu lại tập nhật ký vào:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "&Máu sóng"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to &computer"
+msgstr "Lưu nội dung nhật ký."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Remember my choice and don't show again"
+msgstr "Hãy nhớ lựa chọn của tôi và đừng hỏi lại"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to export?"
+msgstr "Bạn muốn dán audio của mình như thế nào?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Chia sẻ audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Chia sẻ audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Xuất ra bị lỗi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Không hiện cảnh báo này nữa"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Dự án"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "Không có trong danh sách"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "Xuất bản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Lưu Dụ Ấn..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "Bạn không thể cấp chìa khóa cho cổng truy cập này"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Xếp kết thúc"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "Liên kết tài khoản"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "Chúng tôi không thể liên kết tài khoản của bạn. Vui lòng thử lại."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Hủy bỏ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "&Thử lại"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Tài khoản đã được liên kết thành công!"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "Nhập token để liên kết tài khoản của bạn"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Token"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "Tiếp&tục"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "L&iên kết tài khoản audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#, fuzzy
+msgid "Save to computer"
+msgstr "Lưu nội dung nhật ký."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Lưu lại tập nhật ký vào:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "Lưu lại một dự án."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Mở một dự án. "
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Tập tin dự án đã được nén"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "Chuyển đổi tốc độ lấy mẫu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "less than 1 minute"
+msgstr "Còn lại chưa đến 1 phút"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Độ dài tone:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Đã sửa lại nhãn"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Lỗi phục hồi kết nối"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "Đang lưu các dự án"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Lỗi khi nhập dự án."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Tập tin dự án đã được nén"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "&Tìm:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "&Xem trước"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "View in audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "%s %d of %d"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "Mọi người sẽ có thể nghe được audio này."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "Chỉ bạn và những người mà bạn chia sẻ liên kết mới có thể nghe audio này."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "Bạn có chắc muốn hủy bỏ?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Hủy bỏ tải lên Audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "Đang tải lên audio..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "Chúng tôi không thể tải lên tập tin này. Vui lòng thử lại và đảm bảo liên kết với tài khoản audio.com của bạn trước khi tải lên."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "Tải lên bị lỗi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "Chúng tôi không thể chuẩn bị tập tin này để tải lên."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "Đang hoàn thiện tải lên ..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Tiêu đề của track"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr "audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Nhấn \"Tiếp tục\" để tải lên audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "Đang chuẩn bị audio ..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "Không thể tách bản ghi dự án"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Lỗi cấu trúc Audacity"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr "Sync đã bị khóa"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Chi tiết lỗi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "Đang phục hồi dự án"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Tiếp tục"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "Success!"
+msgstr "Thành công"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Thời gian biểu"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Không tìm được thành phần"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Nạp tập tin"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#, fuzzy
+msgid "You have canceled this upload to audio.com"
+msgstr "Hủy bỏ tải lên Audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#, fuzzy
+msgid "Retry"
+msgstr "&Thử lại"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "Các tập tin Allegro (.gro) lưu thời gian thành:"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Chỉ được chọn một Note Track trong mỗi lần."
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "Hãy chọn một Note Track"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Xuất  MIDI  tên tập tin: "
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "Tập tin MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Tập tin Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Bạn đã chọn một tên tập tin có đuôi không xác định.\n"
+"Bạn có muốn tiếp tục không?"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Xuất  MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "Xuất MI&DI..."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Đã nhập MIDI từ '%s'"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Nhập MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Không mở được tập tin %s: tên tập tin quá ngắn."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Không mở được tập tin %s: định dạng tệp không đúng."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "Không mở được tập tin %s. "
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "Chọn một tập tin MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "Tập tin MIDI  và Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "Tập tin MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Tập tin Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
@@ -6457,11 +6524,6 @@ msgstr "Trang mạng và đồ họa"
 #: src/AboutDialog.cpp
 msgid "Translators"
 msgstr "Người dịch"
-
-#. i18n-hint: refers to optional plug-in software libraries
-#: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
-msgid "Libraries"
-msgstr "Thư viện"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -7168,7 +7230,6 @@ msgstr "Có thể khôi phục &dự án"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
-#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Chọn"
 
@@ -8392,6 +8453,161 @@ msgstr "Đã di chuyển thanh trượt cân bằng trái/phải"
 msgid "&Mixer"
 msgstr "&Bộ trộn"
 
+#: src/PendingStrings.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+msgid "View tutorials"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "audio.com"
+
+#. i18n-hint: Title of the buttons that adds new effects plugin search path
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "&Thêm thước mới"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Chọn vị trí"
+
+#. i18n-hint: master channel display name
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Dán"
+
+#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master effects"
+msgstr "Hiệu ứng thời gian thực"
+
+#. i18n-hint: Hint for a master effects section of realtime effects panel
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Apply to all tracks"
+msgstr "Phần chia tạo thành track mới"
+
+#: src/PendingStrings.cpp
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Bộ nén"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Không làm gì cả"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Input gain (dB)"
+msgstr "Đầu ra Gain (dB)"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Ceiling (dB)"
+msgstr "Gain (dB)"
+
+#: src/PendingStrings.cpp
+msgid "Input"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attenuation"
+msgstr "Định hướng"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Mức ngưỡng (dB)"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Tăng Gain"
+
+#: src/PendingStrings.cpp
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Rati&o:"
+msgstr "&Tỉ lệ"
+
+#: src/PendingStrings.cpp
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Sự đánh nhạc"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Thời gian phát hành"
+
+#: src/PendingStrings.cpp
+msgid "awaiting playback"
+msgstr ""
+
+#: src/PendingStrings.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Limiter (beta)"
+msgstr "Limiter - Bộ định giới hạn"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compressor (beta)"
+msgstr "Compressor - Bộ nén"
+
+#: src/PendingStrings.cpp
+msgid "&Show graph (beta)"
+msgstr ""
+
+#. i18n-hint: import progress dialog title, progress dialog
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Đang nhập %s"
+
+#. i18n-hint: import progress dialot text, where %s is the filename
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Đang nhập %s"
+
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C"
@@ -8583,6 +8799,11 @@ msgstr "Plug-in \"điện toán\""
 #, fuzzy
 msgid "&Rescan"
 msgstr "Quét lại"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Get more effects..."
+msgstr "Lấy thêm hiệu ứng..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9300,7 +9521,7 @@ msgstr "Thay đổi thứ tự hiệu ứng"
 msgid "No Effect"
 msgstr "Không hiệu ứng"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
 msgstr "Lấy thêm hiệu ứng..."
 
@@ -9970,10 +10191,6 @@ msgstr "OK"
 msgid "Exported Tags"
 msgstr "Thẻ đã xuất"
 
-#: src/TrackInfo.cpp
-msgid "Stereo, 999999Hz"
-msgstr "Stereo, 999999Hz"
-
 #: src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Bảng điều khiển track"
@@ -10291,6 +10508,11 @@ msgstr "Đường bao biên độ"
 msgid "Boxes"
 msgstr "Boxes"
 
+#: src/commands/GetInfoCommand.cpp src/commands/SelectCommand.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Vùng chọn"
+
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "JSON"
@@ -10516,10 +10738,6 @@ msgstr "Kết Thúc Dự Án"
 #: src/commands/SelectCommand.cpp
 msgid "Selection Start"
 msgstr "Bắt đầu vùng chọn"
-
-#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Vùng chọn"
 
 #: src/commands/SelectCommand.cpp
 msgid "Selection End"
@@ -12734,7 +12952,7 @@ msgstr "Dữ liệu tiếng ồn được chọn quá ngắn."
 msgid "&Noise reduction (dB):"
 msgstr "&Noise reduction - Giảm Nhiễu (dB):"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise reduction"
 msgstr "Noise reduction - Giảm Nhiễu"
 
@@ -12742,7 +12960,7 @@ msgstr "Noise reduction - Giảm Nhiễu"
 msgid "&Sensitivity:"
 msgstr "&Độ nhạy:"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Sensitivity"
 msgstr "Độ nhạy"
 
@@ -12766,7 +12984,7 @@ msgstr "Thời gian phát hành"
 msgid "&Frequency smoothing (bands):"
 msgstr "&Làm mượt tần số (dải):"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Frequency smoothing"
 msgstr "Làm mượt tần số"
 
@@ -12778,11 +12996,11 @@ msgstr "Độ &nhạy (dB):"
 msgid "Old Sensitivity"
 msgstr "Độ nhạy cũ"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 1"
 msgstr "Bước 1"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -12790,11 +13008,11 @@ msgstr ""
 "Chọn vùng có nhiễu để phân tích,\n"
 "Bấm nút 'Phân tích nhiễu' sau khi chọn:"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Get Noise Profile"
 msgstr "&Nhận dữ liệu tiếng ồn"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 2"
 msgstr "Bước 2"
 
@@ -12806,7 +13024,7 @@ msgstr ""
 "Chọn tất cả các vùng bạn cần lọc nhiễu, chọn hệ số lọc nhiễu, \n"
 "sau đó nhấn 'OK' để bắt đầu lọc nhiễu.\n"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise:"
 msgstr "Nhiễu:"
 
@@ -12815,7 +13033,7 @@ msgstr "Nhiễu:"
 msgid "Re&duce"
 msgstr "Giảm &xuống"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Isolate"
 msgstr "&Tách lọc"
 
@@ -12895,46 +13113,6 @@ msgstr "4 (mặc định)"
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method:"
 msgstr "Phương pháp& phân tách:"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise Removal"
-msgstr "Xoá nhiễu"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr "Xóa tạp âm nền khó chịu như tiếng quạt, tiếng chạy băng, hoặc tiếng vo ve"
-
-#: src/effects/NoiseRemoval.cpp
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
-"filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Chọn tất cả các vùng bạn cần xoá nhiễu, chọn hệ số lọc nhiễu, sau đó\n"
-"nhấn 'OK' để bắt đầu xoá nhiễu.\n"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise re&duction (dB):"
-msgstr "Giảm biên &độ nhiễu (dB):"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "&Sensitivity (dB):"
-msgstr "&Độ nhạy (dB):"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Fr&equency smoothing (Hz):"
-msgstr "Làm &mượt tần số (Hz):"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Attac&k/decay time (secs):"
-msgstr "Thời gian khởi& chạy/kéo đuôi (giây):"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Attack/decay time"
-msgstr "Thời gian khởi chạy/kéo đuôi (giây):"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Re&move"
-msgstr "X&óa"
 
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
@@ -14852,7 +15030,7 @@ msgstr "&Xuất Audio..."
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "Xuất ra bị lỗi"
 
 #: src/menus/FileMenus.cpp
@@ -14891,6 +15069,10 @@ msgstr "Xuất thành &OGG"
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
 msgstr "Xuất tập tin định dạng FLAC"
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Xuấ&t audio đã chọn"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -16248,11 +16430,6 @@ msgstr "Bật cắt &dòng"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show Track &Name as overlay"
-msgstr "Hiển thị tên track dưới dạng lớp phủ"
-
-#: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "&Show Clipping in Waveform"
 msgstr "Hiển thị Clipping (những âm thanh quá giới hạn) (bật/tắt) "
 
@@ -16753,10 +16930,6 @@ msgstr "&Bíp khi hoàn thành các tác vụ kéo dài"
 msgid "Re&tain labels if selection snaps to a label"
 msgstr "Giữ nguyên các nhãn dáng khác khi một nhãn dáng được chọn"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
-msgstr "Trộn hệ thống và chủ đề Audacity"
-
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
@@ -16988,14 +17161,6 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
 msgstr "Tổ hợp phím tùy biến"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Preferences for Library"
-msgstr "Tuỳ chọn thư viện"
-
-#: src/prefs/LibraryPrefs.h
-msgid "Library"
-msgstr "Thư viện"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -17707,10 +17872,6 @@ msgstr "Tùy chỉnh cho Track"
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
 msgstr "Tự đồng điều chỉnh cao độ của track"
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w track name as overlay"
-msgstr "Hiển thị tên track dưới dạng lớp phủ"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -18684,7 +18845,7 @@ msgid "Close sub-view"
 msgstr "Đóng chế độ xem phụ đề"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Mute/Unmute Track"
 msgstr "&Tắt/bật âm thanh của track đã chọn"
 
@@ -18730,38 +18891,38 @@ msgstr "Nhấp và kéo để di chuyển ranh giới clip trong thời gian"
 msgid "Click and drag to stretch clip"
 msgstr "Click và kéo chuột để chọn vùng"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Split Clip"
 msgstr "Tách Clip"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Join Clips"
 msgstr "Clips"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Rename Clip..."
 msgstr "Đặt lại tên clip..."
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Pitch and Speed..."
 msgstr "Change Speed - Thay đổi tốc độ"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
 msgstr "Change Speed - Thay đổi tốc độ"
@@ -19352,18 +19513,6 @@ msgid "Collapse"
 msgstr "Phân mãnh"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Command+Click to deselect"
-msgstr "Command + Click để bỏ chọn"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Select track"
-msgstr "Chọn track"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Ctrl+Click to deselect"
-msgstr "Ctrl+Click để bỏ chọn"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
 msgid "Delete Track"
 msgstr "Chọn track"
@@ -19569,9 +19718,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, c-format
-msgid "%.2fx"
-msgstr "%.2fx"
+#, fuzzy, c-format
+msgid "%.3fx"
+msgstr "%.3f"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -21342,7 +21491,65 @@ msgstr "Trình xoá giọng hát"
 msgid "Spectral Tools"
 msgstr "Spectral Tools-Công cụ âm phổ"
 
-#, c-format
+#~ msgid "&Ok"
+#~ msgstr "&Ok"
+
+#~ msgid "Stereo, 999999Hz"
+#~ msgstr "Stereo, 999999Hz"
+
+#~ msgid "Noise Removal"
+#~ msgstr "Xoá nhiễu"
+
+#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
+#~ msgstr "Xóa tạp âm nền khó chịu như tiếng quạt, tiếng chạy băng, hoặc tiếng vo ve"
+
+#~ msgid ""
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
+#~ "filtered out, and then click 'OK' to remove noise.\n"
+#~ msgstr ""
+#~ "Chọn tất cả các vùng bạn cần xoá nhiễu, chọn hệ số lọc nhiễu, sau đó\n"
+#~ "nhấn 'OK' để bắt đầu xoá nhiễu.\n"
+
+#~ msgid "Noise re&duction (dB):"
+#~ msgstr "Giảm biên &độ nhiễu (dB):"
+
+#~ msgid "&Sensitivity (dB):"
+#~ msgstr "&Độ nhạy (dB):"
+
+#~ msgid "Fr&equency smoothing (Hz):"
+#~ msgstr "Làm &mượt tần số (Hz):"
+
+#~ msgid "Attac&k/decay time (secs):"
+#~ msgstr "Thời gian khởi& chạy/kéo đuôi (giây):"
+
+#~ msgid "Attack/decay time"
+#~ msgstr "Thời gian khởi chạy/kéo đuôi (giây):"
+
+#~ msgid "Re&move"
+#~ msgstr "X&óa"
+
+#, fuzzy
+#~ msgid "Show Track &Name as overlay"
+#~ msgstr "Hiển thị tên track dưới dạng lớp phủ"
+
+#~ msgid "B&lend system and Audacity theme"
+#~ msgstr "Trộn hệ thống và chủ đề Audacity"
+
+#~ msgid "Sho&w track name as overlay"
+#~ msgstr "Hiển thị tên track dưới dạng lớp phủ"
+
+#~ msgid "Command+Click to deselect"
+#~ msgstr "Command + Click để bỏ chọn"
+
+#~ msgid "Select track"
+#~ msgstr "Chọn track"
+
+#~ msgid "Ctrl+Click to deselect"
+#~ msgstr "Ctrl+Click để bỏ chọn"
+
+#~ msgid "%.2fx"
+#~ msgstr "%.2fx"
+
 #~ msgid ""
 #~ "\"%s\" \n"
 #~ "is a MIDI file, not an audio file. \n"
@@ -21382,7 +21589,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Reset Audacity Preferences"
 #~ msgstr "Khởi động lại Cài đặt Ưu tiên của Audacity"
 
-#, c-format
 #~ msgid ""
 #~ "You must first select some audio for '%s' to act on.\n"
 #~ "\n"
@@ -21392,7 +21598,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "\n"
 #~ "Ctrl + A để chọn toàn bộ audio."
 
-#, c-format
 #~ msgid "Audacity Karaoke%s"
 #~ msgstr "Audacity Karaoke%s"
 
@@ -21435,7 +21640,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "&Disable"
 #~ msgstr "&Tắt bỏ"
 
-#, c-format
 #~ msgid ""
 #~ "Enabling effects or commands:\n"
 #~ "\n"
@@ -21445,7 +21649,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "\n"
 #~ "%s"
 
-#, c-format
 #~ msgid ""
 #~ "Enabling effect or command:\n"
 #~ "\n"
@@ -21633,7 +21836,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Bring To Top"
 #~ msgstr "Đưa lên đầu"
 
-#, c-format
 #~ msgid "Error trying to save file: %s"
 #~ msgstr "Lỗi khi cố gắng lưu tập tin: %s"
 
@@ -21925,15 +22127,12 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Overwrite"
 #~ msgstr "Ghi đè"
 
-#, lisp-format
 #~ msgid "Error.~%Unable to open file~%~s"
 #~ msgstr "Lỗi.~% Không thể mở tập tin ~%~s"
 
-#, lisp-format
 #~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
 #~ msgstr "Lỗi.~%File không thể thay thế tập tin:~%\"~a.txt\""
 
-#, lisp-format
 #~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
 #~ msgstr "Lỗi.~%File tập tin không được lưu:~%\"~a.txt\""
 
@@ -21973,7 +22172,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "High Cut for Vocals (Hz)"
 #~ msgstr "Cắt bớt vocals cao (Hz)"
 
-#, lisp-format
 #~ msgid ""
 #~ "Average x: ~a, y: ~a\n"
 #~ "                    Covariance x y: ~a\n"
@@ -21993,7 +22191,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "Biến đổi của phần dư: ~a\n"
 #~ "y bằng ~a cộng ~a lần x~%"
 
-#, lisp-format
 #~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
 #~ msgstr "Vị trí Pan  ~a~%tỷ lệ tương quan hai kênh trái phải là ~a %. có nghĩa là:~%~a~%"
 
@@ -22055,7 +22252,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "This plug-in works only with stereo tracks."
 #~ msgstr "Plug-in này chỉ dùng được với các track stereo."
 
-#, c-format
 #~ msgid ""
 #~ "Disk is full.\n"
 #~ "%s\n"
@@ -22104,7 +22300,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Upload complete!"
 #~ msgstr "Tải lên hoàn tất!"
 
-#, c-format
 #~ msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
 #~ msgstr "Audio của bạn sẽ được tải lên dịch vụ chia sẻ của chúng tôi: %s %%dịch vụ này yêu cầu phải có tài khoản miễn phí để sử dụng."
 
@@ -22138,7 +22333,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 #~ msgstr "Không thể áp dụng hiệu ứng lên các track stereo có các kênh khác nhau."
 
-#, c-format
 #~ msgid ""
 #~ "Selection too long for Nyquist code.\n"
 #~ "Maximum allowed selection is %ld samples\n"
@@ -22151,11 +22345,9 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Phần bổ sung Vamp không áp dụng cho các track stereo có các kênh khác nhau."
 
-#, c-format
 #~ msgid "Are you sure you want to export the file as \"%s\"?\n"
 #~ msgstr "Bạn có chắc mình muốn xuât tập tin thanh \"%s\" hay không?\n"
 
-#, c-format
 #~ msgid ""
 #~ "You are about to export a %s file with the name \"%s\".\n"
 #~ "\n"
@@ -22242,11 +22434,9 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "File name prefix"
 #~ msgstr "Tiền tố của tên tập tin"
 
-#, c-format
 #~ msgid "\"%s\" successfully created."
 #~ msgstr "Đã tạo xong \"%s\"."
 
-#, c-format
 #~ msgid ""
 #~ "\"%s\" doesn't exist.\n"
 #~ "\n"
@@ -22256,7 +22446,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "\n"
 #~ "Bạn có muốn tạo nó không?"
 
-#, c-format
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name.\n"
 #~ "You cannot use any of these characters:\n"
@@ -22273,7 +22462,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "\n"
 #~ "Thay thế được đề xuất:"
 
-#, c-format
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 #~ "\n"
@@ -22314,7 +22502,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "GStreamer Importer"
 #~ msgstr "Trình nhập GStreamer"
 
-#, c-format
 #~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
 #~ msgstr "Chỉ mục [%02d], Loại[%s], Kênh[%d], Tỉ lệ[%d]"
 
@@ -22324,7 +22511,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Unable to import file, state change failed."
 #~ msgstr "Không thể chèn tệp, lỗi thay đổi trạng thái."
 
-#, c-format
 #~ msgid "GStreamer Error: %s"
 #~ msgstr "Lỗi GStreamer: %s"
 
@@ -22363,11 +22549,9 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "WavPack Importer"
 #~ msgstr "Trình nhập Wavpack"
 
-#, c-format
 #~ msgid "%s left"
 #~ msgstr "%sbên trái "
 
-#, c-format
 #~ msgid "%s right"
 #~ msgstr "%sbên phải"
 
@@ -22388,9 +22572,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 
 #~ msgid "&Full Screen (on/off)"
 #~ msgstr "&Toàn màn hình (tắt/bật)"
-
-#~ msgid "Expo&rt Selected Audio..."
-#~ msgstr "Xuấ&t audio đã chọn"
 
 #~ msgid "Export &Multiple..."
 #~ msgstr "Xuất ra &nhiều tập tin"
@@ -22470,11 +22651,9 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Channel"
 #~ msgstr "Kênh"
 
-#, c-format
 #~ msgid "Left, %dHz"
 #~ msgstr "Trái, %dHz"
 
-#, c-format
 #~ msgid "Right, %dHz"
 #~ msgstr "Phải, %dHz"
 
@@ -22484,7 +22663,6 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ msgid "Fade type"
 #~ msgstr "Loại mờ dần"
 
-#, lisp-format
 #~ msgid ""
 #~ "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 #~ "                   Track sample rate is ~a Hz~%~\n"
@@ -22494,11 +22672,9 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #~ "Tốc độ lấy mẫu track là ~a Hz~%~\n"
 #~ " Tần số phải nhỏ hơn ~a Hz."
 
-#, lisp-format
 #~ msgid "Error.~%Selection must be less than ~a."
 #~ msgstr "Lỗi.~%Lựa chọn phải nhỏ hơn ~a."
 
-#, lisp-format
 #~ msgid ""
 #~ "Error.\n"
 #~ "Selection too long.\n"

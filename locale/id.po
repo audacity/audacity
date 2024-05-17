@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.5.0\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 21:13+0300\n"
+"POT-Creation-Date: 2024-05-17 23:19+0300\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -175,7 +175,7 @@ msgstr ""
 "\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy, c-format
 msgid "Error: %s"
 msgstr "Error:"
@@ -199,12 +199,13 @@ msgstr "Error ketika membuka perangkat suara."
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp
-#: src/effects/EffectPreview.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -390,7 +391,7 @@ msgstr "Lokasi ekspor:"
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: libraries/lib-import-export/ExportProgressUI.h
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Export error"
 msgstr "Ekspor MIDI"
@@ -406,14 +407,19 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Local project data was removed before the sync has completed"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Tidak bisa menerima deskripsi aliran"
 
 #: libraries/lib-effects/Effect.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: libraries/lib-preference-pages/PrefsPanel.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#: plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Proyek Audacity"
@@ -655,8 +661,10 @@ msgstr ""
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
-#: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
+#: libraries/lib-wx-init/LogWindow.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
 #: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
 #: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
@@ -1669,6 +1677,21 @@ msgstr "Banyak"
 msgid "Simple"
 msgstr "Sederhana"
 
+#. i18n-hint: refers to optional plug-in software libraries
+#: libraries/lib-preference-pages/LibraryPrefs.cpp src/AboutDialog.cpp
+msgid "Libraries"
+msgstr "Referensi"
+
+#: libraries/lib-preference-pages/LibraryPrefs.cpp
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Preferensi..."
+
+#: libraries/lib-preference-pages/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Referensi"
+
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "(%d): %s"
@@ -2381,7 +2404,7 @@ msgstr "Tidak bisa membuang '%s'"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
 #, fuzzy
 msgid "Unknown error"
 msgstr "Opsi baris komando tidak diketahui: %s\n"
@@ -2727,13 +2750,24 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Anak file blok: (%s)"
 
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Pre-processing"
+msgstr "Memproses Auto Duck..."
+
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "&Sampel Ulang..."
+
 #: libraries/lib-wave-track/WaveClip.cpp
 #, fuzzy
 msgid "Resampling failed."
 msgstr "Sampel ulang dimatikan."
 
-#: libraries/lib-wave-track/WaveTrack.cpp modules/mod-ffmpeg/ExportFFmpeg.cpp
-#: modules/mod-opus/ExportOpus.cpp
+#: libraries/lib-wave-track/WaveTrack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Audio"
 msgstr "&Audio..."
@@ -2765,19 +2799,9 @@ msgstr "Tidak ada ruang cukup untuk menempel itu"
 msgid "A track has a corrupted sample sequence."
 msgstr ""
 
-#: libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "Tidak ada ruang yang tersedia untuk menyebarkan garis potong"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.cpp
-#, fuzzy
-msgid "Pre-processing"
-msgstr "Memproses Auto Duck..."
-
-#: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
-msgid "Rendering Clip"
-msgstr "&Sampel Ulang..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2970,38 +2994,38 @@ msgstr ""
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: libraries/lib-wx-init/MultiDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Waktu Berjalan:"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Waktu Tersisa:"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
-#: src/toolbars/ControlToolBar.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
 msgid "Stop"
 msgstr "Berhenti"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
 msgid "Cancel"
 msgstr "Batal"
 
@@ -3100,11 +3124,21 @@ msgstr "Tidak bisa mengambil file: \"%s\""
 msgid "Could not parse XML"
 msgstr "Tidak bisa membuka file"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/etc/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Pilih Komando"
+
+#: modules/etc/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Pilih Komando"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid ""
 "Couldn't import the project:\n"
@@ -3118,7 +3152,7 @@ msgstr ""
 #. to import an AUP project.
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "%s\n"
@@ -3127,7 +3161,7 @@ msgid ""
 "Please verify that everything works as intended before saving."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
 "This project was saved by Audacity version 1.0 or earlier. The format has\n"
 "changed and this version of Audacity is unable to import the project.\n"
@@ -3136,70 +3170,70 @@ msgid ""
 "you may import it with this version of Audacity."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Tidak bisa menemukan folder data proyek: \"%s\""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing project file %s\n"
@@ -3207,15 +3241,15 @@ msgid ""
 "Inserting silence instead."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing alias file %s\n"
@@ -3223,15 +3257,15 @@ msgid ""
 "Inserting silence instead."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Error while processing %s\n"
@@ -3239,31 +3273,33 @@ msgid ""
 "Inserting silence."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Failed to open %s"
 msgstr "Tidak bisa membuang '%s'"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Failed to seek to position %lld in %s"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Unable to read %lld samples from %s"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: modules/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
 msgid "Command:"
 msgstr "Perintah:"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-ffmpeg/FFmpeg.cpp
-#: modules/mod-mp3/ExportMP3.cpp plug-ins/nyquist-plug-in-installer.ny
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Jelajah..."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Show output"
 msgstr "Tunjukkan output"
 
@@ -3272,940 +3308,253 @@ msgstr "Tunjukkan output"
 #. and "standard in" means the default input stream that the external program,
 #. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr "Data akan distandarkan. \"%f\" menguunakan nama file pada jendela ekspor."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
 msgstr ""
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy, c-format
 msgid "\"%s\" couldn't be found."
 msgstr "FFmpeg tidak ada"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
 msgstr ""
 
 #. i18n-hint files that can be run as programs
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy
 msgid "Executables"
 msgstr "Variabel"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Find path to command"
 msgstr ""
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "(external program)"
 msgstr "(program eksternal)"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
 msgstr "Tidak dapat mengekspor audio ke %s"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr "Mengekspor audio terpilih dengan encoder baris perintah"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy
 msgid "Exporting the audio using command-line encoder"
 msgstr "Mengekspor audio terpilih dengan encoder baris perintah"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
 msgstr "Output Perintah"
 
-#: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "&OK"
 
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
-msgid "Waiting for audio.com"
-msgstr "Meinyimpan audio yang direkam"
-
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Save to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
-msgid "Generating audio preview..."
-msgstr "Membuat Bising"
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
-msgid "Synchronizing project"
-msgstr "Menyimpan &proyek"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Previews can be updated only for Cloud projects"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Save To Cloud..."
-msgstr "Simpan Sebagai..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open From Cloud..."
-msgstr "Buka yang &Sebelumnya..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Share Audio..."
-msgstr "Salin Label"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Account"
-msgstr "Distorsi"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Export behavior"
-msgstr "Ekspor MIDI"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "S&how 'How would you like to export?' dialog"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Save behavior"
-msgstr "Kelakuan"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always &ask"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always &save to cloud"
-msgstr "Waveform"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always save to the co&mputer"
-msgstr "Simpan &Proyek Sebagai..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Temporary Cloud files directory"
-msgstr "Direktori file sementara"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "&Lokasi:"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Jelajah..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "days"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "&Remove temporary files after:"
-msgstr "Direktori file sementara"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Preferences for Cloud"
-msgstr "Preferensi..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Pilih lokasi untuk meletakkan direktori temporer"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Direktori file sementara"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Cannot set the preference."
-msgstr "Preferensi..."
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-msgid "Failed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, c-format
-msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Waiting for space to free up"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-
-#. i18n-hint: Share audio button text, keep as short as possible
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Share Audio"
-msgstr "Salin Label"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#, fuzzy
-msgid "&Share Audio Toolbar"
-msgstr "Toolbar &Terpilih"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
-msgid "Don't show this again"
-msgstr "Jangan perlihatkan peringatan lagi"
-
-#. i18n-hint: A title that is shown on the first project save that allows the
-#. user to select Cloud or local save.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "How would you like to save?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to the Cloud"
-msgstr "Simpan Gambar ke:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Save to Cloud"
-msgstr "Waveform"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "On your computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Save to &computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "&Remember my choice and don't show again"
-msgstr ""
-
-#. i18n-hint: A title that is shown on export that allows the user to select
-#. Cloud or local export.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "How would you like to export?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Share to audio.com"
-msgstr "Salin Label"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Share to audio.com"
-msgstr "Salin Label"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Export to &computer"
-msgstr "Ekspor MIDI"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Don't show again"
-msgstr "Jangan perlihatkan peringatan lagi"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Private"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Public"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#, fuzzy
-msgid "Save"
-msgstr "Simpan"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to computer..."
-msgstr "Simpan &Proyek Sebagai..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Project Name"
-msgstr "Proyek"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "We encountered an issue syncing your file"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "You are not signed in"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Log in to audio.com to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "Sign in"
-msgstr "Perataan"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
-msgid "Link account"
-msgstr "Distorsi"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "&Cancel"
-msgstr "&Batal"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#, fuzzy
-msgid "&Ok"
-msgstr "&OK"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Enter token to link your account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Token"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/IncompatiblePluginsDialog.cpp
-msgid "C&ontinue"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project is no longer saved to the Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Save to computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
-msgid "Save to Cloud"
-msgstr "Simpan Gambar ke:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Your project storage limit has been reached."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Visit audio.com"
-msgstr "Salin Label"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project version conflict detected"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Save this project"
-msgstr "&Simpan Proyek"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Discard and open latest version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open local project"
-msgstr "Membuka Proyek Audacity"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Cloud project conflict"
-msgstr "Tidak bisa membuka file proyek"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Keep currently open version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open new version"
-msgstr "Konversi sample rate"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Open from Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one minutes ago"
-msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "Durasi nada:"
-msgstr[1] "Durasi nada:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Modified"
-msgstr "Label yang Telah Diubah"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to authorize account"
-msgstr "Tidak bisa menerima deskripsi aliran"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Loading projects list..."
-msgstr "Menyimpan &proyek"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to get projects list"
-msgstr "Gagal mencari codec"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Cloud saved projects"
-msgstr "Proyek Audacity"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Search:"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Prev"
-msgstr "Pre&view"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Next"
-msgstr "Alat Selanjutnya"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Open"
-msgstr "B&uka..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "Page %d of %d"
-msgstr "Plugin %i ke %i"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
-"\n"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Are you sure you want to cancel?"
-msgstr "anda yakin mau menghapus %s?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Uploading audio..."
-msgstr "Membuat cache audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "We are unable to prepare this file for uploading."
-msgstr "Tidak dapat membuka file target untuk ditulis"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Finalizing upload..."
-msgstr "Mencari Clipping..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/TagsEditor.cpp
-msgid "Track Title"
-msgstr "Judul Trek"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Preparing audio..."
-msgstr "Membuat cache audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You are not authorized to access this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You tried to access a project that has expired."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity had trouble connecting to the server."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You don't have access to this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "The project could not be found."
-msgstr "FFmpeg tidak ada"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The server responded with something Audacity could not understand."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audio.com encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Audacity encountered an unknown error."
-msgstr "Informasi Perubahan"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Sync failed"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Error details:\n"
-"%s"
-msgstr "Error:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
-msgid "Syncing your project"
-msgstr "M&enyimpan proyek kosong"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "Kontributor Lainnya"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Success!"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Pengubah Nama"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Done"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Cloud project incomplete"
-msgstr "Tidak bisa membuka file"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Load latest"
-msgstr "Ambil File"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-msgid "You have canceled this upload to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-msgid "Retry"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr ""
-
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid "%.2f kbps"
 msgstr "kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Bit Rate"
 msgstr "Bit Rate:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Quality (kbps)"
 msgstr "Kualitas:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Compression"
 msgstr "Kompresi:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Frame Duration"
 msgstr "Durasi"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "2.5 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "5 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "10 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "20 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "40 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "60 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Vbr Mode"
 msgstr "Mode"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Off"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "On"
 msgstr "B&uka..."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Constrained"
 msgstr "Konstan"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/commands/DragCommand.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/NoUpdatesAvailableDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 #, fuzzy
 msgid "Application"
 msgstr "dB Amplifikasi"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "VOIP"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Low Delay"
 msgstr "Pembeda"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Cutoff"
 msgstr "Potong:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
 #: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Dilarang"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Narrowband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Mediumband"
 msgstr "Sedang"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Wideband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Super Wideband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Fullband"
 msgstr "Banyak band"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Open custom FFmpeg format options"
 msgstr "Pengeksporan FFmpeg Pilihan Sendiri"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Current Format:"
 msgstr "Aplikasikan ke proyek yang tersedia"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Current Codec:"
 msgstr "Aplikasikan ke proyek yang tersedia"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
@@ -4214,16 +3563,16 @@ msgstr ""
 "FFmpeg tidak bisa mencari codec audio 0x%x.\n"
 "Pendukuk codec ini mungkin belum dibuat."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
@@ -4231,39 +3580,39 @@ msgid ""
 "%s"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
@@ -4271,31 +3620,33 @@ msgstr ""
 "FFMpeg yang dikonfigurasi diperlukan sebelumnya untuk diproses.\n"
 "Anda bisa mengaturnya di Preferensi > referensi."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr "Sedang mengekspor %d saluran, tapi saluran maksimal untuk format ini adalah %d"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio as %s"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Invalid sample rate"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
-#: src/menus/TrackMenus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
 msgid "Resample"
 msgstr "Sampel Ulang"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
@@ -4304,7 +3655,7 @@ msgstr ""
 "Rate Sampel proyek (%d) tidak mendukung \n"
 "file format output yang ada.  "
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -4313,141 +3664,145 @@ msgstr ""
 "Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
 "mendukung format file output yang ada."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
 msgstr "Anda harus menyampel ulang ke salah satu rate di bawah ini."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Sample Rates"
 msgstr "Rate Sampel"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LC"
 msgstr "LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Main"
 msgstr "Utama"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LTP"
 msgstr "LTP"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
 msgstr "File M4A (AAC) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AC3 Files (FFmpeg)"
 msgstr "File AC3 (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (jangkuan sempit) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Opus (OggOpus) Files (FFmpeg)"
 msgstr "File M4A (AAC) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
 msgstr "File WMA (v2) (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Custom FFmpeg Export"
 msgstr "Pengeksporan FFmpeg Pilihan Sendiri"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Estimate"
 msgstr "Mapan"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "2-level"
 msgstr "2 level"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "4-level"
 msgstr "4 level"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "8-level"
 msgstr "8 level"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Full search"
 msgstr "Pencarian Penuh"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Log search"
 msgstr "Pencarian Log"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Configure custom FFmpeg options"
 msgstr "Pengeksporan FFmpeg Pilihan Sendiri"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
 msgstr "Aturan Lanjut:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Load Preset"
 msgstr "Ambil Aturan Lanjut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Save Preset"
 msgstr "Simpan Aturan Lanjut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Delete Preset"
 msgstr "Hapus Aturan Lanjut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
 msgstr "Impor Aturan Lajut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Export Presets"
 msgstr "Ekspor Aturan Lanjut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/HelpCommand.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "Format:"
 msgstr "Format:"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codec:"
 msgstr "Codec:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr "Tidak semua format dan codec kompetibel. Begitu pula kombinasi opsi yang belum tentu kompetibel dengan semua codec."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
 msgstr "Tunjukkan Semua Format"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Tunjukkan Semua Codec"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Formats"
 msgstr "Format:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Codecs"
 msgstr "Codec:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
 msgstr "Opsi General"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
@@ -4457,20 +3812,20 @@ msgstr ""
 "Opsi\n"
 "kosong - otomatis"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
 msgstr "Bahasa:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Reservoir"
 msgstr "Penampung Bit"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "VBL"
 msgstr "VBL"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Codec tag (FOURCC)\n"
 "Optional\n"
@@ -4480,11 +3835,11 @@ msgstr ""
 "Opsi\n"
 "kosong - otomatis"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Tag:"
 msgstr "Tag:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
@@ -4496,11 +3851,11 @@ msgstr ""
 "0 - otomatis\n"
 "Direkomendasikan - 192000"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
 msgstr "Bit Rate:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
@@ -4512,11 +3867,11 @@ msgstr ""
 "0 - otomatis\n"
 "-1 - mati (gunakan bitrate)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
 msgstr "Kualitas:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Sample rate (Hz)\n"
 "0 - don't change sample rate"
@@ -4524,11 +3879,11 @@ msgstr ""
 "Rate sampel (Hz)\n"
 "0 - jangan ubah rate sampel"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Sample Rate:"
 msgstr "Rate Sampel:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
@@ -4538,11 +3893,11 @@ msgstr ""
 "Opsi\n"
 "0 - otomatis"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Cutoff:"
 msgstr "Potong:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "AAC Profile\n"
 "Low Complexity - default\n"
@@ -4552,15 +3907,15 @@ msgstr ""
 "Kompleksitas Rendah (LC) -biasa\n"
 "Kebannyakan player tidak mau mainkan apapun selain LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Profile:"
 msgstr "Profil:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "FLAC options"
 msgstr "Opsi FLAC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Compression level\n"
 "Required for FLAC\n"
@@ -4574,11 +3929,11 @@ msgstr ""
 "min - 0 (encoding cepat, file output besar)\n"
 "maks - 10 (encoding lambat, file output kecil)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
 msgstr "Kompresi:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Frame size\n"
 "Optional\n"
@@ -4592,11 +3947,11 @@ msgstr ""
 "min - 16\n"
 "maks - 65535"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Frame:"
 msgstr "Bingkai:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "LPC coefficients precision\n"
 "Optional\n"
@@ -4610,11 +3965,11 @@ msgstr ""
 "min - 1\n"
 "maks - 15"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LPC"
 msgstr "LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
@@ -4626,11 +3981,11 @@ msgstr ""
 "Pencarian Log - terlambat, kompresi lebih tinggi\n"
 "Pencarian Penuh - biasa"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "PdO Method:"
 msgstr "Metode PdO:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal prediction order\n"
 "Optional\n"
@@ -4644,11 +3999,11 @@ msgstr ""
 "min - 0\n"
 "maks - 32 (dengan LPC) atau 4 (tanpa LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PdO"
 msgstr "PdO Min."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal prediction order\n"
 "Optional\n"
@@ -4662,11 +4017,11 @@ msgstr ""
 "min - 0\n"
 "maks - 32 (dengan LPC) atau 4 (tanpa LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PdO"
 msgstr "PdO Maks."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal partition order\n"
 "Optional\n"
@@ -4680,11 +4035,11 @@ msgstr ""
 "min - 0\n"
 "maks - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PtO"
 msgstr "PtO Min."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal partition order\n"
 "Optional\n"
@@ -4698,21 +4053,21 @@ msgstr ""
 "min - 0\n"
 "maks - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PtO"
 msgstr "PtO Maks."
 
 #. i18n-hint:  Abbreviates "Linear Predictive Coding",
 #. but this text needs to be kept very short
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Use LPC"
 msgstr "Gunakan LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "MPEG container options"
 msgstr "Opsi kontainer MPEG"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
@@ -4725,13 +4080,13 @@ msgstr ""
 #. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
 #. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Mux Rate:"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
 "Optional\n"
@@ -4743,63 +4098,63 @@ msgstr ""
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Ukuran paket:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't delete a preset without name"
 msgstr "Anda tidak bisa menghapus preset tanpa nama"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
 msgstr "Hapus aturan lanjut '%s'?"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Confirm Deletion"
 msgstr "Konfirmasi Penghapusan"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "You can't save a preset without a name"
 msgstr "And tidak bisa menyimpan aturan lanjut tanpa nama"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file with presets to import"
 msgstr "Pilih file xml dengan aturan lanjut untuk diimpor"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "No presets to export"
 msgstr "Tidak ada label untuk diekspor."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file to export presets into"
 msgstr "Pilih file xml untuk mengekspor aturan lanjut ke dalam"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
 msgstr "Gagal menebak format"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to find the codec"
 msgstr "Gagal mencari codec"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
@@ -4812,67 +4167,68 @@ msgstr ""
 "\n"
 "Anda butuh kembali ke Preferensi > Impor/Ekspor dan mengkonfigurasikan ulang."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
 msgstr "Awalan FFMpeg gagal"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg library not found"
 msgstr "FFmpeg library not found"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Locate FFmpeg"
 msgstr "Tempatkan FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Audacity memerlukan file %s untuk menegkspor dan mengimpor dengan FFmpeg.."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy, c-format
 msgid "Location of '%s':"
 msgstr "Lokasi %s:"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy, c-format
 msgid "To find '%s', click here -->"
 msgstr "Untuk mencari %s, click here -->"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "Untuk mendapatkan salinan FFmpeg gratis, klik di sini ==>"
 
 #. i18n-hint: (verb)
-#: modules/mod-ffmpeg/FFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Download"
 msgstr "Unduh"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only avformat.dll"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.dylib"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.so"
 msgstr ""
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy, c-format
 msgid "Where is '%s'?"
 msgstr "Dimana %s?"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg not found"
 msgstr "FFmpeg tidak ada"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
@@ -4887,35 +4243,35 @@ msgstr ""
 "Untuk menggunakan fitur impor FFmpeg, silahkan ke Preferensi > Referensi\n"
 "untuk mendownload atau menaruh refereni FFMpeg."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Jangan tunjukkan peringatan ini lagi"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Referensi Impor/Ekspor FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "No compatible FFmpeg library was found"
 msgstr "Referensi FFmpeg yang tidak kompetibel ditemukan"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library Version:"
 msgstr "Versi Referensi FFmpeg:"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library:"
 msgstr "Referensi FFmpeg:"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Loca&te..."
 msgstr "Loca&te..."
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Dow&nload"
 msgstr "U&nduh"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -4923,121 +4279,124 @@ msgstr ""
 "Audacity telah mendeteksi referensi FFmpeg yang valid.\n"
 "Apakah Anda tetap ingin meletakkannya sendiri?"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Success"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, fuzzy
 msgid "Error Saving FFmpeg Presets"
 msgstr "Error Meyimpan Proyek"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Overwrite preset '%s'?"
 msgstr "Tiban aturan lanjut '%s'?"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Confirm Overwrite"
 msgstr "Konfirmasi Penibanan"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select format before saving a profile"
 msgstr "Silahkan pilih format sebelium menyimpan profil"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select codec before saving a profile"
 msgstr "Silahkan pilih codec sebelium menyimpan profil"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
 msgstr "Preset '%s' tidak ada."
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, fuzzy, c-format
 msgid "Replace preset '%s'?"
 msgstr "Hapus aturan lanjut '%s'?"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "File yang berkompetibel dengan FFmpeg"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "Try installing FFmpeg.\n"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
 msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr "Indeks[%02x] Codec[%s], Bahasa[%s], Bitrate[%s], Saluran[%d], Durasi[%d]"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Bit Depth"
 msgstr "Kedalaman bit:"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 bit"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 bit"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
 #, fuzzy
 msgid "Level"
 msgstr "Tingkat:"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "0 (fastest)"
 msgstr "0 (tercepat)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "1"
 msgstr "1"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "3"
 msgstr "3"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "4"
 msgstr "4"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "5"
 msgstr "5"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "6"
 msgstr "6"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "7"
 msgstr "7"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "8 (best)"
 msgstr "8 (terbaik)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "FLAC Files"
 msgstr "File FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
 msgstr "Eksortir FLAC tidak bisa membuka %s"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid ""
 "FLAC encoder failed to initialize\n"
@@ -5046,304 +4405,214 @@ msgstr ""
 "Encoder FLAC gagal menginisialisasi\n"
 "Status: %d"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
 msgstr "Mengekspor audio yang dipilih ke FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, fuzzy
 msgid "Exporting the audio as FLAC"
 msgstr "Mengekspor audio yang dipilih ke FLAC"
 
-#: modules/mod-flac/ImportFLAC.cpp
+#: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
 msgstr "File FLAC"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "List of Files in basic text format"
 msgstr "Daftar file dalam format teks dasar"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
 msgstr "Penyeimbang jendela tidak valid pada file LOF"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid duration in LOF file."
 msgstr "Durasi file LOF tidak valid"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
 msgstr "Trek MIDI tidak bisa diseimbangkan dengan sendirinya, hanya file audio yang bisa."
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
 msgstr "trek offset pada file LOF tidak valid."
 
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr ""
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Silahkan pilih aksinya"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Silahkan pilih aksinya"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Ekspor MIDI Sebagai:"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "MIDI file"
-msgstr "Pilih file MIDI..."
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Allegro file"
-msgstr "Semua File (*)|*"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
-" Anda ingin meneruskan?"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Ekspor MIDI"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "Ekspor MIDI..."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "MIDI diimpor dari '%s'"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Impor MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr ""
-"Tidak bisa membuka file:\n"
-"  %s"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr ": Tipe file tidak benar."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s."
-msgstr "Tidak bisa membuka file"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Pilih file MIDI..."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr ""
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "MIDI files"
-msgstr "File MP3"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "Allegro files"
-msgstr "Semua File (*)|*"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI..."
-
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
 msgstr "Menukar Balik"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "File MP2"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Tidak bisa mengekspor MP2 dengan rate sampel dan bit rate ini"
 
-#: modules/mod-mp2/ExportMP2.cpp modules/mod-mp3/ExportMP3.cpp
-#: modules/mod-ogg/ExportOGG.cpp modules/mod-opus/ExportOpus.cpp
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Tidak dapat membuka file target untuk ditulis"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
 msgstr "Mengekspor audio terpilih pada %ld kbps"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio at %ld kbps"
 msgstr "Mengekspor audio terpilih pada %ld kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "220-260 kbps (Best Quality)"
 msgstr "(Kualitas Terbaik)"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "200-250 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "170-210 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "155-195 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "145-185 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "110-150 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "95-135 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "80-120 kbps"
 msgstr "kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "65-105 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "45-85 kbps (Smaller files)"
 msgstr "(File yang lebih kecil)"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane, 320 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
 msgstr ""
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane"
 msgstr "Parah"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Ekstrim"
 
-#: modules/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Standar"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium"
 msgstr "Sedang"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Bit Rate Mode"
 msgstr "Mode Bit Rate:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
 msgstr "Aturan Lanjut"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Variable"
 msgstr "Variabel"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Average"
 msgstr "Rata-rata"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Constant"
 msgstr "Konstan"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-ogg/ExportOGG.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
 #: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Kualitas"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Locate LAME"
 msgstr "Tempatkan Lame"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Audacity memerlukan file %s untuk membuat MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Location of %s:"
 msgstr "Lokasi %s:"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "To find %s, click here -->"
 msgstr "Untuk mencari %s, click here -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "To get a free copy of LAME, click here -->"
 msgstr "Untuk mendapatkan salinan Lame gratis, klik di sini ==>"
@@ -5351,12 +4620,12 @@ msgstr "Untuk mendapatkan salinan Lame gratis, klik di sini ==>"
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Where is %s?"
 msgstr "Dimana %s?"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
@@ -5365,92 +4634,92 @@ msgstr ""
 "Anda menghubungkan lame_enc.dll v%d.%d. Viersi ini tidak cocok dengan Audacity %d.%d.%d.\n"
 "Silahkan download versi akhir referensi LAME MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only lame_enc.dll"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Extended libraries"
 msgstr "Referensi Utama"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
 msgstr "File MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
 msgstr "Tidak bisa membuka referensi encoding MP3!"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Could not initialize MP3 encoding library!"
 msgstr "Tidak bisa membuka referensi encoding MP3!"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "Referensi encoding MP3 tidak valid atau terdukung"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
 msgstr "Tidak bisa menginisialisasi strim MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "Mengekspor audio terpilih dengan %s aturan lanjut"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio with %s preset"
 msgstr "Mengekspor audio terpilih dengan %s aturan lanjut"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "Mengekspor audio terpilih dengan kualitas VBR %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio with VBR quality %s"
 msgstr "Mengekspor audio terpilih dengan kualitas VBR %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "Mengekspor audio terpilih pada %d Kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio at %d Kbps"
 msgstr "Mengekspor audio terpilih pada %d Kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Error %ld returned from MP3 encoder"
 msgstr "Error %ld ditolak dari encoder MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -5459,7 +4728,7 @@ msgstr ""
 "Rate Sampel proyek (%d) tidak mendukung \n"
 "file format MP3.  "
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -5468,694 +4737,330 @@ msgstr ""
 "Kombinasi rate Sampel proyek (%d) dan bit ratenya (%d kbps) tidak\n"
 "mendukung format file MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "Referensi Ekspor MP3 tidak ditemukan"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "(Built-in)"
 msgstr "Efek Unit Audio"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 #, fuzzy
 msgid "LAME MP3 Export Library"
 msgstr "Referensi Pengeksporan  MP3"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
 msgstr "Versi Referensi MP3:"
 
-#: modules/mod-mpg123/ImportMP3_MPG123.cpp
+#: modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "File MP3"
 
-#: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
-msgid "1st Experimental Command..."
-msgstr "Pilih Komando"
-
-#: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
-msgid "2nd Experimental Command"
-msgstr "Pilih Komando"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Nyquist Workbench..."
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Undo\tCtrl+Z"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Redo\tCtrl+Y"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cu&t\tCtrl+X"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Copy\tCtrl+C"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Paste\tCtrl+V"
-msgstr "&Tempel"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cle&ar\tCtrl+L"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select A&ll\tCtrl+A"
-msgstr "Pilih"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Find...\tCtrl+F"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Matching Paren\tF8"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Top S-expr\tF9"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Higher S-expr\tF10"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Previous S-expr\tF11"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Next S-expr\tF12"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go to"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select &Font..."
-msgstr "Huruf..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Split &Vertically"
-msgstr "Samakan Secara &Vertikal"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Split &Horizontally"
-msgstr "Stereo Horizontal"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Show S&cript"
-msgstr "Tunjukkan output"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Show &Output"
-msgstr "Tunjukkan output"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Large Icons"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Small Icons"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Toolbar"
-msgstr "&Toolbar"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go\tF5"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Stop\tF6"
-msgstr "&Berhenti"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&About"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script"
-msgstr ""
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
-#, fuzzy
-msgid "Output"
-msgstr "Meter Output"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Load Nyquist script"
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script was not saved."
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Save Nyquist script"
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find dialog"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Harvey Lubin (logo)"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Leland Lucius"
-msgstr "dari Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "(C) 2009 by Leland Lucius"
-msgstr "dari Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Nyquist Effect Workbench"
-msgstr "Efek"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "No matches found"
-msgstr "Tidak ada perangkat"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified. Are you sure?"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Untitled"
-msgstr "tak berjudul"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Nyquist Effect Workbench - "
-msgstr "Efek"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "New"
-msgstr "&Baru"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New script"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Open script"
-msgstr "Buka yang Sebelumnya"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save script"
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save As"
-msgstr "Simpan Sebagai..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save script as..."
-msgstr "Simpan &Proyek Sebagai..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Copy"
-msgstr "Salin"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Copy to clipboard"
-msgstr "Potong ke Clipboard"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Cut"
-msgstr "Potong"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Cut to clipboard"
-msgstr "Potong ke Clipboard"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Paste"
-msgstr "Tempel"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Paste from clipboard"
-msgstr "Ditempel dari clipboard"
-
-#. i18n-hint verb; to empty or erase
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#, fuzzy
-msgid "Clear"
-msgstr "&Hapus"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Clear selection"
-msgstr "Seleksi pengukuran"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
-#: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
-msgid "Select All"
-msgstr "Pilih"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select all text"
-msgstr "Pilih"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Undo"
-msgstr "Batalkan"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Undo last change"
-msgstr "Perubahan Format"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Redo"
-msgstr "Lakukan Kembali"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Redo previous change"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Find text"
-msgstr "&Cari Nada"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Match"
-msgstr "Batch"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to matching paren"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Top"
-msgstr "Ke:"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to top S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Up"
-msgstr "Atas"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to higher S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Previous"
-msgstr "Alat Sebelumnya"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to previous S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to next S-expr"
-msgstr ""
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
-#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
-msgid "Start"
-msgstr "Awal"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Start script"
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Stop script"
-msgstr "Prompt Nyquist..."
-
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
 msgstr "File Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Unable to export - rate or quality problem"
 msgstr "Tidak bisa mengatur kualitas render Quicktime"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Unable to export - problem with file"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Mengekspor audio terpilih sebagai Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Exporting the audio as Ogg Vorbis"
 msgstr "Mengekspor audio terpilih sebagai Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
 msgstr "File Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 #, fuzzy, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
 msgstr "Indeks[%02x] Codec[%s], Bahasa[%s], Bitrate[%s], Saluran[%d], Durasi[%d]"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Media read error"
 msgstr "Pembaca media error"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Not an Ogg Vorbis file"
 msgstr "Bukan file Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
 msgstr "Versi Vorbis tidak cocok"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Invalid Vorbis bitstream header"
 msgstr "Vorbis bitstream header tidak valid"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Internal logic fault"
 msgstr "Kesalahan logika internal"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "no error"
 msgstr "Ekspor MIDI"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid argument"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "buffer too small"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "internal error"
 msgstr "(program eksternal)"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid packet"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not implemented"
 msgstr "Komando %s belum bisa diimplementasikan"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "invalid state"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "memory allocation has failed"
 msgstr "Direktori"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Auto"
 msgstr "Auto Duck"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Maximum"
 msgstr "Tunda maksimum:"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "VBR Mode"
 msgstr "Mode"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Speech"
 msgstr "Clean Speech"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page header"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page"
 msgstr "Tidak bisa medeterminasi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Opus Files"
 msgstr "File MP3"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unsupported sample rate"
 msgstr "Nama file:"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting selected audio as Opus"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting the audio as Opus"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to create Opus encoder"
 msgstr "Tidak bisa membuka atau membuat file tes"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bitrate"
 msgstr "Tidak bisa medeterminasi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set complexity"
 msgstr "Tidak bisa medeterminasi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bandwidth"
 msgstr "Tidak bisa membuang '%s'"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set VBR mode"
 msgstr "Tidak bisa medeterminasi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set CVBR mode"
 msgstr "Tidak bisa medeterminasi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to get lookahead"
 msgstr "Tidak bisa mendapatkan penyanggah isi"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to calculate correct preskip"
 msgstr "Tidak bisa membuang '%s'"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to encode input buffer"
 msgstr "Tidak bisa membuang '%s'"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "Opus files"
 msgstr "File MP3"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "File has changed the number of channels in the middle."
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "IO error reading from file"
 msgstr "Error menulis ke file"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not an Opus file"
 msgstr "Bukan file Ogg Vorbis"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid header"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "unsupported version"
 msgstr "Semua file|*|Semua file yang terdukung|"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid stream structure"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "stream is not seekable"
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid timestamp"
 msgstr "Rate sampel tidak valid"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy, c-format
 msgid "Failed to decode Opus file: %s"
 msgstr "Tidak bisa membuang '%s'"
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "WAV (Microsoft)"
 msgstr "WAV (Microsoft) tertanda 16 bit PCM"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Encoding"
 msgstr "Encoding:"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Header"
 msgstr "Catatan Kepala:"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Other uncompressed files"
 msgstr "File tanpa terkompres lainnya"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Tidak bisa mengekspor audio pada format ini."
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Mengekspor audio terpilih sebagai %s"
@@ -6163,7 +5068,7 @@ msgstr "Mengekspor audio terpilih sebagai %s"
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
 #. * error"
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -6172,260 +5077,1423 @@ msgstr ""
 "Error ketika menulis %s file (diska penuh?). \n"
 "Libsndfile bilang \"%s\""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, dan tipe tanpa terkompres lainnya"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RAW (header-less)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "WAVEX (Microsoft)"
 msgstr "WAV (Microsoft) tertanda 16 bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "Signed 16 bit PCM"
 msgstr "16-bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "Signed 24 bit PCM"
 msgstr "24-bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "32 bit float"
 msgstr "32-bit float"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "64 bit float"
 msgstr "32-bit float"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "A-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IMA ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Microsoft ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "GSM 6.10"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "12 bit DWVW"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "16 bit DWVW"
 msgstr "16 bit"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "24 bit DWVW"
 msgstr "24 bit"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOX ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "16 bit DPCM"
 msgstr "16-bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "8 bit DPCM"
 msgstr "16-bit PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Vorbis"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Low Quality (Fast)"
 msgstr "Kualitas:"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Normal Quality"
 msgstr "Kualitas"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "High Quality (Slow)"
 msgstr "Kualitas"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Very High Quality (Slowest)"
 msgstr "(Kualitas Terbaik)"
 
 #. i18n-hint bps abbreviates "bits per sample"
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy, c-format
 msgid "%.1f bps"
 msgstr "%.1f detik"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Hybrid Mode"
 msgstr "Mode"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "WavPack Files"
 msgstr "Simpan File"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Unable to create target file for writing"
 msgstr "Tidak dapat membuka file target untuk ditulis"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting selected audio as WavPack"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting the audio as WavPack"
 msgstr "Exporting selected audio as %s"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, fuzzy
 msgid "WavPack files"
 msgstr "Simpan File"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
 msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Nyquist Workbench..."
+msgstr "Prompt Nyquist..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Undo\tCtrl+Z"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Redo\tCtrl+Y"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cu&t\tCtrl+X"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Copy\tCtrl+C"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Paste\tCtrl+V"
+msgstr "&Tempel"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cle&ar\tCtrl+L"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select A&ll\tCtrl+A"
+msgstr "Pilih"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Find...\tCtrl+F"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Matching Paren\tF8"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Top S-expr\tF9"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Higher S-expr\tF10"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Previous S-expr\tF11"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Next S-expr\tF12"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go to"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select &Font..."
+msgstr "Huruf..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Split &Vertically"
+msgstr "Samakan Secara &Vertikal"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Split &Horizontally"
+msgstr "Stereo Horizontal"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Show S&cript"
+msgstr "Tunjukkan output"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Show &Output"
+msgstr "Tunjukkan output"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Large Icons"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Small Icons"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Toolbar"
+msgstr "&Toolbar"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go\tF5"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Stop\tF6"
+msgstr "&Berhenti"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&About"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script"
+msgstr ""
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: src/effects/BassTreble.cpp
+#, fuzzy
+msgid "Output"
+msgstr "Meter Output"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Load Nyquist script"
+msgstr "Prompt Nyquist..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script was not saved."
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Save Nyquist script"
+msgstr "Prompt Nyquist..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find dialog"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Harvey Lubin (logo)"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Tango Icon Gallery (toolbar icons)"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Leland Lucius"
+msgstr "dari Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "(C) 2009 by Leland Lucius"
+msgstr "dari Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Nyquist Effect Workbench"
+msgstr "Efek"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "No matches found"
+msgstr "Tidak ada perangkat"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Code has been modified. Are you sure?"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Untitled"
+msgstr "tak berjudul"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Nyquist Effect Workbench - "
+msgstr "Efek"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "New"
+msgstr "&Baru"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New script"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Open"
+msgstr "B&uka..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Open script"
+msgstr "Buka yang Sebelumnya"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: src/Benchmark.cpp
+#, fuzzy
+msgid "Save"
+msgstr "Simpan"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save script"
+msgstr "Prompt Nyquist..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save As"
+msgstr "Simpan Sebagai..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save script as..."
+msgstr "Simpan &Proyek Sebagai..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Copy"
+msgstr "Salin"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Copy to clipboard"
+msgstr "Potong ke Clipboard"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Cut"
+msgstr "Potong"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Cut to clipboard"
+msgstr "Potong ke Clipboard"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Paste"
+msgstr "Tempel"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Paste from clipboard"
+msgstr "Ditempel dari clipboard"
+
+#. i18n-hint verb; to empty or erase
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#, fuzzy
+msgid "Clear"
+msgstr "&Hapus"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Clear selection"
+msgstr "Seleksi pengukuran"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Select All"
+msgstr "Pilih"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select all text"
+msgstr "Pilih"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Undo"
+msgstr "Batalkan"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Undo last change"
+msgstr "Perubahan Format"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Redo"
+msgstr "Lakukan Kembali"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Redo previous change"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Find text"
+msgstr "&Cari Nada"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Match"
+msgstr "Batch"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to matching paren"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Top"
+msgstr "Ke:"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to top S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Up"
+msgstr "Atas"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to higher S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Previous"
+msgstr "Alat Sebelumnya"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to previous S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Next"
+msgstr "Alat Selanjutnya"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to next S-expr"
+msgstr ""
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
+msgid "Start"
+msgstr "Awal"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Start script"
+msgstr "Prompt Nyquist..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Stop script"
+msgstr "Prompt Nyquist..."
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "Meinyimpan audio yang direkam"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Membuat Bising"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "Menyimpan &proyek"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save &To Cloud..."
+msgstr "Simpan Sebagai..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Fro&m Cloud..."
+msgstr "Buka yang &Sebelumnya..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "S&hare Audio..."
+msgstr "Salin Label"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "Distorsi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Ekspor MIDI"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "S&how 'How would you like to export?' dialog"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Kelakuan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Waveform"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Simpan &Proyek Sebagai..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Direktori file sementara"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "&Lokasi:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Browse..."
+msgstr "Jelajah..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Direktori file sementara"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Preferensi..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Pilih lokasi untuk meletakkan direktori temporer"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Direktori file sementara"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Cannot set the preference."
+msgstr "Preferensi..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+msgid "Failed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Salin Label"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Toolbar &Terpilih"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Jangan perlihatkan peringatan lagi"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "Simpan Gambar ke:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "Waveform"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr ""
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Salin Label"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Salin Label"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Ekspor MIDI"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Jangan perlihatkan peringatan lagi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Proyek"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Simpan &Proyek Sebagai..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "You are not signed in"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Perataan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Link account"
+msgstr "Distorsi"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Batal"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Simpan Gambar ke:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "Salin Label"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "&Simpan Proyek"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Membuka Proyek Audacity"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Tidak bisa membuka file proyek"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "Konversi sample rate"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Durasi nada:"
+msgstr[1] "Durasi nada:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Label yang Telah Diubah"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Tidak bisa menerima deskripsi aliran"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "Menyimpan &proyek"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Gagal mencari codec"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Proyek Audacity"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Search:"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "Pre&view"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "Plugin %i ke %i"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Anda tidak akan bisa memainkan ataupun merekam audio.\n"
+"\n"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "anda yakin mau menghapus %s?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Membuat cache audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Tidak dapat membuka file target untuk ditulis"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Mencari Clipping..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Judul Trek"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Membuat cache audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "FFmpeg tidak ada"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Informasi Perubahan"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Sync failed"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Error:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "M&enyimpan proyek kosong"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Kontributor Lainnya"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Pengubah Nama"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Tidak bisa membuka file"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Ambil File"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Silahkan pilih aksinya"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Silahkan pilih aksinya"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Ekspor MIDI Sebagai:"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "MIDI file"
+msgstr "Pilih file MIDI..."
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Allegro file"
+msgstr "Semua File (*)|*"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Anda memilih nama file yang ekstensinya tidak bisa dibaca.\n"
+" Anda ingin meneruskan?"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Ekspor MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "Ekspor MIDI..."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "MIDI diimpor dari '%s'"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Impor MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr ""
+"Tidak bisa membuka file:\n"
+"  %s"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr ": Tipe file tidak benar."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s."
+msgstr "Tidak bisa membuka file"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Pilih file MIDI..."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "MIDI files"
+msgstr "File MP3"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Allegro files"
+msgstr "Semua File (*)|*"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI..."
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
@@ -6590,11 +6658,6 @@ msgstr ""
 #, fuzzy
 msgid "Translators"
 msgstr "T&ransportasi"
-
-#. i18n-hint: refers to optional plug-in software libraries
-#: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
-msgid "Libraries"
-msgstr "Referensi"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -7300,7 +7363,6 @@ msgstr "Proyek yang dipindahkan"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
-#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Pilih"
 
@@ -8596,6 +8658,163 @@ msgstr "Pindahkan slider pan"
 msgid "&Mixer"
 msgstr "Mixer"
 
+#: src/PendingStrings.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+msgid "View tutorials"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Salin Label"
+
+#. i18n-hint: Title of the buttons that adds new effects plugin search path
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "Tambahkan label pada yang dipilih"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Aturan Plugin"
+
+#. i18n-hint: master channel display name
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Tempel"
+
+#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master effects"
+msgstr "Pre&view"
+
+#. i18n-hint: Hint for a master effects section of realtime effects panel
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Apply to all tracks"
+msgstr "Sekaliguskan ke trek baru"
+
+#: src/PendingStrings.cpp
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Kompresi:"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Urutkan dari waktu"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Input gain (dB)"
+msgstr "Pen&guatan (dB):"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Ceiling (dB)"
+msgstr "Pen&guatan (dB):"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Input"
+msgstr "Meter Input"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attenuation"
+msgstr "Durasi"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Ambang Batas %d dB"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Pen&guatan (dB):"
+
+#: src/PendingStrings.cpp
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Rati&o:"
+msgstr "Ratio:"
+
+#: src/PendingStrings.cpp
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Waktu baru/usang"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Versi Rilis"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "Memainkan"
+
+#: src/PendingStrings.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Limiter (beta)"
+msgstr "Pembatas"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compressor (beta)"
+msgstr "Kompresor"
+
+#: src/PendingStrings.cpp
+msgid "&Show graph (beta)"
+msgstr ""
+
+#. i18n-hint: import progress dialog title, progress dialog
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Mengimpor %s"
+
+#. i18n-hint: import progress dialot text, where %s is the filename
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Mengimpor %s"
+
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 #, fuzzy
@@ -8791,6 +9010,11 @@ msgstr "Output Nyquist:"
 #, fuzzy
 msgid "&Rescan"
 msgstr "Efek"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Get more effects..."
+msgstr "Preferensi..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9497,7 +9721,7 @@ msgstr "Mengubah Kecepatan"
 msgid "No Effect"
 msgstr "Efek"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 #, fuzzy
 msgid "Get more effects..."
 msgstr "Preferensi..."
@@ -10187,10 +10411,6 @@ msgstr "OK"
 msgid "Exported Tags"
 msgstr "Ekspor"
 
-#: src/TrackInfo.cpp
-msgid "Stereo, 999999Hz"
-msgstr "Stereo, 999999Hz"
-
 #: src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Panel Trek"
@@ -10535,6 +10755,11 @@ msgstr "Amplop"
 msgid "Boxes"
 msgstr ""
 
+#: src/commands/GetInfoCommand.cpp src/commands/SelectCommand.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Pilihan"
+
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "JSON"
@@ -10797,10 +11022,6 @@ msgstr "Proyek"
 #, fuzzy
 msgid "Selection Start"
 msgstr "Awal Pilihan:"
-
-#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Pilihan"
 
 #: src/commands/SelectCommand.cpp
 #, fuzzy
@@ -13221,7 +13442,7 @@ msgstr "Pilhan terlalu kecil untuk menggunakan kunci suara."
 msgid "&Noise reduction (dB):"
 msgstr "Reduksi bising (dB):"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise reduction"
 msgstr "Pengurangan bising"
 
@@ -13230,7 +13451,7 @@ msgstr "Pengurangan bising"
 msgid "&Sensitivity:"
 msgstr "Senstivitas"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Sensitivity"
 msgstr "Senstivitas"
 
@@ -13259,7 +13480,7 @@ msgstr "Versi Rilis"
 msgid "&Frequency smoothing (bands):"
 msgstr "Frekuensi pelembut (Hz):"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Frequency smoothing"
 msgstr "penghalusan frekuensi"
 
@@ -13273,11 +13494,11 @@ msgstr "Senstivitas"
 msgid "Old Sensitivity"
 msgstr "Senstivitas"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 1"
 msgstr "Tahap 1"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -13285,12 +13506,12 @@ msgstr ""
 "Pilih beberapa detik bising agar Audacity tahu apa yang harus dibuang,\n"
 "kemudian klik Ambil Profil Bising:"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 #, fuzzy
 msgid "&Get Noise Profile"
 msgstr "Ambil Profil Bising"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 2"
 msgstr "Tahap 2"
 
@@ -13303,7 +13524,7 @@ msgstr ""
 "Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
 "yang Anda ingin buang, dan klik 'OK' untuk membuangnya.\n"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 #, fuzzy
 msgid "Noise:"
 msgstr "Bising..."
@@ -13313,7 +13534,7 @@ msgstr "Bising..."
 msgid "Re&duce"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Isolate"
 msgstr ""
 
@@ -13399,52 +13620,6 @@ msgstr "Normalkan"
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method:"
 msgstr ""
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise Removal"
-msgstr "Pembuang Bising"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr ""
-
-#: src/effects/NoiseRemoval.cpp
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
-"filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
-"yang Anda ingin buang, dan klik 'OK' untuk membuangnya.\n"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "Noise re&duction (dB):"
-msgstr "Reduksi bising (dB):"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "&Sensitivity (dB):"
-msgstr "Senstivitas"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "Fr&equency smoothing (Hz):"
-msgstr "Frekuensi pelembut (Hz):"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "Attac&k/decay time (secs):"
-msgstr "Waktu serang/kurang (dtk):"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "Attack/decay time"
-msgstr "Waktu baru/usang"
-
-#: src/effects/NoiseRemoval.cpp
-#, fuzzy
-msgid "Re&move"
-msgstr "Buang"
 
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
@@ -15477,7 +15652,7 @@ msgstr "&Ekspor"
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "Ekspor MIDI"
 
 #: src/menus/FileMenus.cpp
@@ -15520,6 +15695,11 @@ msgstr "Ekspor"
 #, fuzzy
 msgid "Export as FLAC"
 msgstr "Ekspor label sebagai:"
+
+#: src/menus/FileMenus.cpp
+#, fuzzy
+msgid "Expo&rt Selected Audio..."
+msgstr "Eksp&or Terpilih..."
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -17096,10 +17276,6 @@ msgid "Enable E&xtra Menus"
 msgstr "Bolehkan memotong ba&tas"
 
 #: src/menus/ViewMenus.cpp
-msgid "Show Track &Name as overlay"
-msgstr ""
-
-#: src/menus/ViewMenus.cpp
 #, fuzzy
 msgid "&Show Clipping in Waveform"
 msgstr "&Lihat Clipping"
@@ -17654,10 +17830,6 @@ msgstr "&Beep pada penyelesaian aktivitas lama"
 msgid "Re&tain labels if selection snaps to a label"
 msgstr ""
 
-#: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
-msgstr ""
-
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
@@ -17876,16 +18048,6 @@ msgstr ""
 #, fuzzy
 msgid "Key Config"
 msgstr "Kombinasi Tombol Keyboard"
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "Preferences for Library"
-msgstr "Preferensi..."
-
-#: src/prefs/LibraryPrefs.h
-#, fuzzy
-msgid "Library"
-msgstr "Referensi"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -18664,10 +18826,6 @@ msgstr "Preferensi..."
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
-msgstr ""
-
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w track name as overlay"
 msgstr ""
 
 #: src/prefs/TracksPrefs.cpp
@@ -19769,7 +19927,7 @@ msgid "Close sub-view"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Mute/Unmute Track"
 msgstr "Diam/Hidupkan suara trek yang terfokus"
@@ -19819,40 +19977,40 @@ msgstr "Klik dan dorong ubtuk memindahkan trek ke waktu tertentu"
 msgid "Click and drag to stretch clip"
 msgstr "Klik dan dorong untuk memilih audio"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Split Clip"
 msgstr "Alat Selanjutnya"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Join Clips"
 msgstr "Clipping"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Rename Clip..."
 msgstr "&Sampel Ulang..."
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Pitch and Speed..."
 msgstr "Udah Kecepatan..."
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
 msgstr "Mengubah Kecepatan"
@@ -20497,21 +20655,6 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
-msgid "Command+Click to deselect"
-msgstr "Perintah"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
-msgid "Select track"
-msgstr "Trek Kecil"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
-msgid "Ctrl+Click to deselect"
-msgstr "Perintah"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Delete Track"
 msgstr "Trek Kecil"
 
@@ -20731,8 +20874,8 @@ msgstr "R"
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
 #, fuzzy, c-format
-msgid "%.2fx"
-msgstr "%.1f dB"
+msgid "%.3fx"
+msgstr "%.0f:1"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -22649,7 +22792,63 @@ msgstr "Pembuangan Trek"
 msgid "Spectral Tools"
 msgstr "Spektrum"
 
-#, c-format
+#, fuzzy
+#~ msgid "&Ok"
+#~ msgstr "&OK"
+
+#~ msgid "Stereo, 999999Hz"
+#~ msgstr "Stereo, 999999Hz"
+
+#~ msgid "Noise Removal"
+#~ msgstr "Pembuang Bising"
+
+#~ msgid ""
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
+#~ "filtered out, and then click 'OK' to remove noise.\n"
+#~ msgstr ""
+#~ "Pilih seluruh audio yang anda mau disaring, pilih seberapa banyak bising\n"
+#~ "yang Anda ingin buang, dan klik 'OK' untuk membuangnya.\n"
+
+#, fuzzy
+#~ msgid "Noise re&duction (dB):"
+#~ msgstr "Reduksi bising (dB):"
+
+#, fuzzy
+#~ msgid "&Sensitivity (dB):"
+#~ msgstr "Senstivitas"
+
+#, fuzzy
+#~ msgid "Fr&equency smoothing (Hz):"
+#~ msgstr "Frekuensi pelembut (Hz):"
+
+#, fuzzy
+#~ msgid "Attac&k/decay time (secs):"
+#~ msgstr "Waktu serang/kurang (dtk):"
+
+#, fuzzy
+#~ msgid "Attack/decay time"
+#~ msgstr "Waktu baru/usang"
+
+#, fuzzy
+#~ msgid "Re&move"
+#~ msgstr "Buang"
+
+#, fuzzy
+#~ msgid "Command+Click to deselect"
+#~ msgstr "Perintah"
+
+#, fuzzy
+#~ msgid "Select track"
+#~ msgstr "Trek Kecil"
+
+#, fuzzy
+#~ msgid "Ctrl+Click to deselect"
+#~ msgstr "Perintah"
+
+#, fuzzy
+#~ msgid "%.2fx"
+#~ msgstr "%.1f dB"
+
 #~ msgid ""
 #~ "\"%s\" \n"
 #~ "is a MIDI file, not an audio file. \n"
@@ -22683,14 +22882,13 @@ msgstr "Spektrum"
 #~ msgid "Reset Audacity Preferences"
 #~ msgstr "Preferensi Audacity"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "You must first select some audio for '%s' to act on.\n"
 #~ "\n"
 #~ "Ctrl + A selects all audio."
 #~ msgstr "Anda harus pilih beberapa audio terlebih dahulu."
 
-#, c-format
 #~ msgid "Audacity Karaoke%s"
 #~ msgstr "Karaoke%s Audacity"
 
@@ -22730,14 +22928,14 @@ msgstr "Spektrum"
 #~ msgid "&Disable"
 #~ msgstr "Dilarang"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Enabling effects or commands:\n"
 #~ "\n"
 #~ "%s"
 #~ msgstr "Bolehkan efek"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Enabling effect or command:\n"
 #~ "\n"
@@ -22925,7 +23123,7 @@ msgstr "Spektrum"
 #~ msgid "Background:"
 #~ msgstr "Latar Belakang:"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Error trying to save file: %s"
 #~ msgstr "error dalam menyimpan file:"
 
@@ -23198,11 +23396,11 @@ msgstr "Spektrum"
 #~ msgid "Overwrite"
 #~ msgstr "Konfirmasi Penibanan"
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%Unable to open file~%~s"
 #~ msgstr "Tidak bisa membuka file genre."
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
 #~ msgstr "Error (file tidak mungkin ditulis): %s"
 
@@ -23314,11 +23512,11 @@ msgstr "Spektrum"
 #~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Maaf, Plug-in Vamp tidak bisa dipakai pada trek stereo yang masing-masing salurannya tidak cocok."
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Are you sure you want to export the file as \"%s\"?\n"
 #~ msgstr "Anda yakin ingin menyimpan file sebagai \""
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "You are about to export a %s file with the name \"%s\".\n"
 #~ "\n"
@@ -23406,11 +23604,9 @@ msgstr "Spektrum"
 #~ msgid "File name prefix"
 #~ msgstr "Awalan naman file"
 
-#, c-format
 #~ msgid "\"%s\" successfully created."
 #~ msgstr "\"%s\" telah dibuat."
 
-#, c-format
 #~ msgid ""
 #~ "\"%s\" doesn't exist.\n"
 #~ "\n"
@@ -23420,7 +23616,7 @@ msgstr "Spektrum"
 #~ "\n"
 #~ "Apakah Anda mingin membuatnya?"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name.\n"
 #~ "You cannot use any of these characters:\n"
@@ -23432,7 +23628,7 @@ msgstr "Spektrum"
 #~ "Label %s bukan nama file yang legal. Anda tidak bisa menggunakan:   %s\n"
 #~ "Gunakan..."
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 #~ "\n"
@@ -23472,7 +23668,7 @@ msgstr "Spektrum"
 #~ msgid "Unable to set stream state to paused."
 #~ msgstr "Tidak bisa meganti nama '%s' ke '%s'"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
 #~ msgstr "Indeks[%02x] Codec[%s], Bahasa[%s], Bitrate[%s], Saluran[%d], Durasi[%d]"
 
@@ -23480,7 +23676,7 @@ msgstr "Spektrum"
 #~ msgid "Unable to import file, state change failed."
 #~ msgstr "Tidak bisa membuka atau membuat file tes"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "GStreamer Error: %s"
 #~ msgstr "GStreamer %s: %s"
 
@@ -23509,11 +23705,11 @@ msgstr "Spektrum"
 #~ msgid "WavPack Importer"
 #~ msgstr "Proyek"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s left"
 #~ msgstr "kiri"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s right"
 #~ msgstr "kanan"
 
@@ -23533,10 +23729,6 @@ msgstr "Spektrum"
 #, fuzzy
 #~ msgid "&Full Screen (on/off)"
 #~ msgstr "Layar penuh hidup/mati"
-
-#, fuzzy
-#~ msgid "Expo&rt Selected Audio..."
-#~ msgstr "Eksp&or Terpilih..."
 
 #~ msgid "Export &Multiple..."
 #~ msgstr "Ekspor &Multipel..."
@@ -23621,11 +23813,11 @@ msgstr "Spektrum"
 #~ msgid "Channel"
 #~ msgstr "Saluran"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Left, %dHz"
 #~ msgstr "Kiri,"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Right, %dHz"
 #~ msgstr "Kanan,"
 
@@ -23636,7 +23828,7 @@ msgstr "Spektrum"
 #~ msgid "Fade type"
 #~ msgstr "Penyaring"
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%Selection must be less than ~a."
 #~ msgstr "Nama seharusnya tidak kosong"
 
@@ -23682,7 +23874,7 @@ msgstr "Spektrum"
 #~ msgid "Cannot open file"
 #~ msgstr "Tidak bisa membuka file"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "Tidak bisa membuka file proyek"
 
@@ -23725,7 +23917,7 @@ msgstr "Spektrum"
 #~ msgid "Snap To"
 #~ msgstr "Patokan"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Selection %s. %s won't change."
 #~ msgstr "Pilih file MIDI..."
 
@@ -23739,7 +23931,7 @@ msgstr "Spektrum"
 #~ msgid "Location of &Manual:"
 #~ msgstr "Lokasi &Manual:"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Audacity adalah program bebas dan gratis yang dicanangkan oleh para<a href=\"http://audacity.sourceforge.net/community/developers\">pengembang</a> di seluruh dunia. Kami berterima kasih kepada <a href=\"http://sourceforge.net\">Sourceforge.net</a> dan <a href=\"http://code.google.com\">Google Code</a> untuk penempatan proyek kami. Audacity tersedia untuk Windows 98 atau yang lebih baru, Mac OS X, Linux, atau sistem operasi lainnya yang mirip dengan sistem operasi Unix. Untuk Mac OS 9, gunakan versi 1.0.0."
 
@@ -23747,7 +23939,7 @@ msgstr "Spektrum"
 #~ msgid "available"
 #~ msgstr "Variabel"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
 #~ msgstr "Ini adalah versi yang sudah stabil. Tetapi, jika Anda menemukan bug atau mempunyai saran, silahkan hubungi ke alamat <a href=\"mailto:feedback@audacityteam.org\">Tanggapan</a> kami. Untuk bantuan, gunakan menu Bantuan di program, lihat tips dan trik di <a href=\"http://wiki.audacityteam.org/index.php?title=Audacity_Wiki_Home_Page\">Wiki</a> kami, atau kunjungi <a href=\"http://audacityteam.org/forum/\">Forum</a> kami."
 
@@ -23792,17 +23984,13 @@ msgstr "Spektrum"
 #~ msgid "Move effect down in the rack"
 #~ msgstr "Telah dipindah ke trek yang lain"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Latency: %4d"
 #~ msgstr "Laten"
 
 #, fuzzy
 #~ msgid "Some Command"
 #~ msgstr "Pilih Komando"
-
-#, fuzzy
-#~ msgid "Start &Playback"
-#~ msgstr "Memainkan"
 
 #, fuzzy
 #~ msgid "&Preview effect"
@@ -23828,7 +24016,7 @@ msgstr "Spektrum"
 #~ msgid "Stop &Playback"
 #~ msgstr "Memainkan"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Reverb: %s"
 #~ msgstr "Reverb"
 
@@ -23852,10 +24040,6 @@ msgstr "Spektrum"
 #~ msgstr "Efek VST"
 
 #, fuzzy
-#~ msgid "Plugin Options"
-#~ msgstr "Aturan Plugin"
-
-#, fuzzy
 #~ msgid "Rescan plugins next time Audacity is started"
 #~ msgstr "Pindai ulang efek VST sewaktu Audacity dimulai"
 
@@ -23875,7 +24059,7 @@ msgstr "Spektrum"
 #~ msgid "Playback Volume"
 #~ msgstr "Memainkan"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Recording Volume: %.2f"
 #~ msgstr "Selesai merekam"
 
@@ -23883,7 +24067,7 @@ msgstr "Spektrum"
 #~ msgid "Recording Volume (Unavailable; use system mixer.)"
 #~ msgstr "Tak dapat mengendalikan level input; gunakan mixer sistem."
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Playback Volume: %.2f"
 #~ msgstr "Memainkan"
 
@@ -24042,7 +24226,7 @@ msgstr "Spektrum"
 #~ msgid "Decoding Waveform"
 #~ msgstr "Men-decode Waveform"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s %2.0f%% complete. Click to change task focal point."
 #~ msgstr "%s %2.0f%% selesai.  Klik untuk mengubah titik tugas."
 
@@ -24053,7 +24237,7 @@ msgstr "Spektrum"
 #~ msgid "Loop Play"
 #~ msgstr "Maikan Be&rkali-kali"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Playback Volume: %.2f (emulated)"
 #~ msgstr "Memainkan"
 
@@ -26011,9 +26195,6 @@ msgstr "Spektrum"
 #~ msgid "&Rescan VST effects next time Audacity is started"
 #~ msgstr "Pindai ulang e&fek VST sewaktu Audacity dimulai"
 
-#~ msgid "Input Meter"
-#~ msgstr "Meter Input"
-
 #~ msgid "Recovering a project will not change any files on disk before you save it."
 #~ msgstr "Mengembalikan proyek tidak akan mengubah file apapun pada disk sebelum anda menyimpan ini."
 
@@ -26462,9 +26643,6 @@ msgstr "Spektrum"
 
 #~ msgid "Automatically make labels from words"
 #~ msgstr "Membuat label dari kata-kata secara otomatis"
-
-#~ msgid "Add label at selection"
-#~ msgstr "Tambahkan label pada yang dipilih"
 
 #~ msgid "Calibrate voicekey"
 #~ msgstr "Kalibrasi kunci suara"

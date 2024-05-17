@@ -17,9 +17,9 @@
 # Leaumonte, 2023
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.5.0\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 21:13+0300\n"
+"POT-Creation-Date: 2024-05-17 23:19+0300\n"
 "PO-Revision-Date: 2023-02-02 22:00+0100\n"
 "Last-Translator: Leaumonte\n"
 "Language-Team: French\n"
@@ -182,7 +182,7 @@ msgstr ""
 "\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
 msgstr "Erreur : %s"
@@ -207,12 +207,13 @@ msgstr ""
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp
-#: src/effects/EffectPreview.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -386,7 +387,7 @@ msgstr "Exporter les fichiers vers :"
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: libraries/lib-import-export/ExportProgressUI.h
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Export error"
 msgstr "Erreur d'export"
 
@@ -401,14 +402,19 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Impossible d’ouvrir la base de données du projet"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Local project data was removed before the sync has completed"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Impossible de récupérer le contenu du préréglage"
 
 #: libraries/lib-effects/Effect.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: libraries/lib-preference-pages/PrefsPanel.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#: plug-ins/beat.ny
 msgid "Audacity"
 msgstr "Audacity"
 
@@ -649,8 +655,10 @@ msgstr ""
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
-#: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
+#: libraries/lib-wx-init/LogWindow.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
 #: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
 #: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
@@ -1659,6 +1667,19 @@ msgstr "Multi-piste"
 msgid "Simple"
 msgstr "Simple"
 
+#. i18n-hint: refers to optional plug-in software libraries
+#: libraries/lib-preference-pages/LibraryPrefs.cpp src/AboutDialog.cpp
+msgid "Libraries"
+msgstr "Bibliothèques"
+
+#: libraries/lib-preference-pages/LibraryPrefs.cpp
+msgid "Preferences for Library"
+msgstr "Préférences pour les bilbliothèques "
+
+#: libraries/lib-preference-pages/LibraryPrefs.h
+msgid "Library"
+msgstr "Bibliothèque"
+
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "(%d): %s"
@@ -2388,7 +2409,7 @@ msgstr ""
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
 msgid "Unknown error"
 msgstr "Erreur inconnue"
 
@@ -2728,12 +2749,23 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Attention - Tronquage un fichier de bloc top long"
 
+# trebmuh to check (accélérateur)
+#: libraries/lib-wave-track/TimeStretching.cpp
+msgid "Pre-processing"
+msgstr "Pré-traitement"
+
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "Renommer le clip…"
+
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
 msgstr "Échec du ré-échantillonnage."
 
-#: libraries/lib-wave-track/WaveTrack.cpp modules/mod-ffmpeg/ExportFFmpeg.cpp
-#: modules/mod-opus/ExportOpus.cpp
+#: libraries/lib-wave-track/WaveTrack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Audio"
 msgstr "Audio"
 
@@ -2763,19 +2795,9 @@ msgstr "Il n’y a pas assez de place pour pouvoir coller la sélection"
 msgid "A track has a corrupted sample sequence."
 msgstr "Une piste a une séquence d'échantillons corrompue."
 
-#: libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "Pas assez de place pour étendre la ligne de coupe"
-
-# trebmuh to check (accélérateur)
-#: libraries/lib-wave-track/WaveTrackUtilities.cpp
-msgid "Pre-processing"
-msgstr "Pré-traitement"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
-msgid "Rendering Clip"
-msgstr "Renommer le clip…"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2964,38 +2986,38 @@ msgstr "Afficher le journal pour les détails"
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: libraries/lib-wx-init/MultiDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Valider"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Temps écoulé :"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Temps restant :"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
-#: src/toolbars/ControlToolBar.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
 msgid "Stop"
 msgstr "Arrêt"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -3085,11 +3107,19 @@ msgstr "Impossible de charger le fichier : \"%s\""
 msgid "Could not parse XML"
 msgstr "Impossible d’analyser le XML"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/etc/mod-null/ModNullCallback.cpp
+msgid "1st Experimental Command..."
+msgstr "Première commande expérimentale…"
+
+#: modules/etc/mod-null/ModNullCallback.cpp
+msgid "2nd Experimental Command"
+msgstr "Seconde commande expérimentale"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
 msgstr "Fichiers de projet AUP (*.aup)"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Couldn't import the project:\n"
@@ -3104,7 +3134,7 @@ msgstr ""
 #. to import an AUP project.
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "%s\n"
@@ -3118,7 +3148,7 @@ msgstr ""
 "Ces pistes stéréo ont été divisées en pistes mono.\n"
 "Veuillez vérifier que tout fonctionne comme prévu avant de sauvegarder."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
 "This project was saved by Audacity version 1.0 or earlier. The format has\n"
 "changed and this version of Audacity is unable to import the project.\n"
@@ -3132,68 +3162,68 @@ msgstr ""
 "Utilisez une version d’Audacity antérieure à la v3.0.0 pour mettre à jour le\n"
 "projet et vous pourrez ensuite l’importer avec cette version d’Audacity."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Internal error in importer...tag not recognized"
 msgstr "Erreur interne dans l’importateur…balise non reconnue"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr "Attribut 'vpos' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
 msgstr "Attribut 'h' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
 msgstr "Attribut 'zoom' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
 msgstr "Attribut 'sel0' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
 msgstr "Attribut 'sel1' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
 msgstr "Attribut 'selLow' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
 msgstr "Attribut 'selHigh' du projet invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Impossible de trouver le répertoire de données du projet : \"%s\""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr "Les pistes MIDI trouvées dans le fichier du projet, mais cette construction d’Audacity n’inclut pas la prise en charge du MIDI, court-circuitage de la piste."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr "Le projet actif a déjà une piste temporelle et une a été rencontré dans le projet en cours d’importation, court-circuitage de la piste temporelle importée."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "Attribut 'maxsamples' de la séquence n'est pas valide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
 msgstr "Attribut 'sampleformat' de la séquence n'est pas valide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'numsamples' attribute."
 msgstr "Attribut 'numsamples' de la séquence n'est pas valide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
 msgstr "Impossible d’analyser l’attribut 'start' du bloc d’onde"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing project file %s\n"
@@ -3204,15 +3234,15 @@ msgstr ""
 "\n"
 "Insertion d’un silence à la place."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
 msgstr "Attribut 'len' de simpleblockfile manquant ou invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
 msgstr "Attribut 'len' de silentblockfile manquant ou invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing alias file %s\n"
@@ -3223,15 +3253,15 @@ msgstr ""
 "\n"
 "Insertion d’un silence à la place."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
 msgstr "Attribut 'aliasstart' de pcmaliasblockfile manquant ou invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
 msgstr "Attribut 'aliaslen' de pcmaliasblockfile manquant ou invalide."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Error while processing %s\n"
@@ -3242,31 +3272,33 @@ msgstr ""
 "\n"
 "Insertion d’un silence."
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Failed to open %s"
 msgstr "Échec à l’ouverture %s"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Failed to seek to position %lld in %s"
 msgstr "Échec lors de la recherche de la position en %lld en %s"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Unable to read %lld samples from %s"
 msgstr "Impossible de lire les échantillons %lld depuis %s"
 
-#: modules/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
 msgid "Command:"
 msgstr "Commande :"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-ffmpeg/FFmpeg.cpp
-#: modules/mod-mp3/ExportMP3.cpp plug-ins/nyquist-plug-in-installer.ny
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Parcourir…"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Show output"
 msgstr "Montrer la sortie"
 
@@ -3275,929 +3307,237 @@ msgstr "Montrer la sortie"
 #. and "standard in" means the default input stream that the external program,
 #. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr "Les données seront dirigées vers l’entrée standard. \"%f\" utilise le nom de fichier dans la fenêtre d’exportation."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
 msgstr "Le nom du programme semble être manquant."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "\"%s\" couldn't be found."
 msgstr "Fichier \"%s\" non trouvé."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
 msgstr "Impossible de trouver \"%s\" dans votre chemin."
 
 #. i18n-hint files that can be run as programs
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Executables"
 msgstr "Exécutables"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Find path to command"
 msgstr "Chercher le chemin de la commande"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "(external program)"
 msgstr "(programme externe)"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
 msgstr "Impossible d’exporter l’audio vers %s"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr "Exportation de la sélection audio en utilisant un encodeur en ligne de commande"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the audio using command-line encoder"
 msgstr "Exportation de l’audio en utilisant un encodeur en ligne de commande"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
 msgstr "Sortie de la commande"
 
 #  trebmuh to check (accélérateur)
-#: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "Valider (&o)"
 
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "Waiting for audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to audio.com"
-msgstr "Annuler le téléchargement sur Audio.com"
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
-msgid "Generating audio preview..."
-msgstr "Génération d’une batterie Risset…"
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
-msgid "Synchronizing project"
-msgstr "Sauvegarde du projet"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Previews can be updated only for Cloud projects"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Save To Cloud..."
-msgstr "Sauvegarder sous…"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open From Cloud..."
-msgstr "Ouvrir le menu…"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Share Audio..."
-msgstr "Partager l’audio"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Account"
-msgstr "&Lier le compte"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Export behavior"
-msgstr "Erreur d'export"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "S&how 'How would you like to export?' dialog"
-msgstr "De quelle manière voulez-vous coller votre audio ?"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Save behavior"
-msgstr "Comportements"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always &ask"
-msgstr ""
-
-# trebmuh to check (accélérateur)
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always &save to cloud"
-msgstr "Couleur d’onde (&w)"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always save to the co&mputer"
-msgstr "Sauvegarde le contenu du journal."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Temporary Cloud files directory"
-msgstr "Répertoire des fichiers temporaires"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "Emp&lacement :"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-msgid "&Browse..."
-msgstr "&Parcourir…"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "days"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "&Remove temporary files after:"
-msgstr "Répertoire des fichiers temporaires"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Preferences for Cloud"
-msgstr "Préférences pour la souris"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Choisir un emplacement pour placer le répertoire temporaire"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Le répertoire des fichiers temporaires ne peut pas se trouver sur un lecteur FAT"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Cannot set the preference."
-msgstr "Impossible de paramétrer les préférences."
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
-msgid "Failed."
-msgstr "Échec"
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, c-format
-msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Waiting for space to free up"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-
-#. i18n-hint: Share audio button text, keep as short as possible
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Share Audio"
-msgstr "Partager l’audio"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-msgid "&Share Audio Toolbar"
-msgstr "&Partager la barre audio"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
-msgid "Account not linked"
-msgstr "Compte lié avec succès !"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr "&Lier le compte"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr "Dissocier le compte"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
-msgid "Don't show this again"
-msgstr "Ne plus montrer cet avertissement"
-
-#. i18n-hint: A title that is shown on the first project save that allows the
-#. user to select Cloud or local save.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "How would you like to save?"
-msgstr "De quelle manière voulez-vous coller votre audio ?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to the Cloud"
-msgstr "Sauvegarder le journal dans :"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
-msgstr ""
-
-# trebmuh to check (accélérateur)
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Save to Cloud"
-msgstr "Couleur d’onde (&w)"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "On your computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to &computer"
-msgstr "Sauvegarde le contenu du journal."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Remember my choice and don't show again"
-msgstr "Se souvenir de mon choix et ne plus me demander"
-
-#. i18n-hint: A title that is shown on export that allows the user to select
-#. Cloud or local export.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "How would you like to export?"
-msgstr "De quelle manière voulez-vous coller votre audio ?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Share to audio.com"
-msgstr "Partager l’audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Share to audio.com"
-msgstr "Partager l’audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Export to &computer"
-msgstr "Exporter autre"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Don't show again"
-msgstr "Ne plus montrer cet avertissement"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "Le partage d'audio nécessite un compte gratuit %s lié à Audacity. %%Appuyez sur \"Compte lié\" ci-dessus pour continuer."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Private"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr "Non répertorié"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Public"
-msgstr "Publique"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Save"
-msgstr "Sauvegarder"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to computer..."
-msgstr "Sauvegarder le projet…"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Project Name"
-msgstr "Projet"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "We encountered an issue syncing your file"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "You are not signed in"
-msgstr "Vous ne pouvez pas assigner une clé à cette entrée"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Log in to audio.com to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "Sign in"
-msgstr "Aligner la fin"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Link account"
-msgstr "Compte lié"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr "Nous n'avons pas pu lier votre compte. Veuillez réessayer."
-
-# trebmuh to check (accélérateur)
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "&Cancel"
-msgstr "&Annuler"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr "Essayer à nouveau (&T)"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr "Compte lié avec succès !"
-
-#  trebmuh to check (accélérateur)
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "&Ok"
-msgstr "&Valider"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Enter token to link your account"
-msgstr "Entrez le jeton pour lier votre compte"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Token"
-msgstr "Jeton"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/IncompatiblePluginsDialog.cpp
-msgid "C&ontinue"
-msgstr "C&ontinuez"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr "Assoc&ier le compte audio.com..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project is no longer saved to the Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#, fuzzy
-msgid "Save to computer"
-msgstr "Sauvegarde le contenu du journal."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
-msgid "Save to Cloud"
-msgstr "Sauvegarder le journal dans :"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Your project storage limit has been reached."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Visit audio.com"
-msgstr "Coller l’audio"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project version conflict detected"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Save this project"
-msgstr "Sauvegarde un projet."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Discard and open latest version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open local project"
-msgstr "Ouvre un projet."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Cloud project conflict"
-msgstr "Fichier projet compacté"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Keep currently open version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open new version"
-msgstr "Conversion de taux d’échantillonnage"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Open from Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "less than 1 minute"
-msgstr "Moins d’une minute"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one minutes ago"
-msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "Durée de son :"
-msgstr[1] "Durée de son :"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Modified"
-msgstr "Marqueur modifié"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to authorize account"
-msgstr "Échec du rétablisssement de la connexion"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Loading projects list..."
-msgstr "Sauvegarde de &projets"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to get projects list"
-msgstr "Impossible d’importer un projet"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Cloud saved projects"
-msgstr "Fichier projet compacté"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Search:"
-msgstr "Rec&hercher :"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Prev"
-msgstr "&Pré-écoute"
-
-# trebmuh to check (besoin d’ajouter "outil"?)
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Next"
-msgstr "Outil suivant"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open"
-msgstr "Ouvrir"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "Page %d of %d"
-msgstr "%s %d de %d"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Anyone will be able to listen to this audio."
-msgstr "Tout le monde pourra écouter cet audio."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Seuls vous et les personnes avec lesquelles vous partagez un lien pourrez écouter cet audio."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Are you sure you want to cancel?"
-msgstr "Voulez-vous vraiment annuler ?"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr "Annuler le téléchargement sur Audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Uploading audio..."
-msgstr "Téléversement de l'audio…"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "Nous ne pouvons pas télécharger ce fichier. Veuillez réessayer et assurez-vous de vous connecter à votre compte audio.com avant de le télécharger."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr "Erreur de téléversement"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to prepare this file for uploading."
-msgstr "Nous sommes incapable de préparer ce fichier pour téléversement."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Finalizing upload..."
-msgstr "Finalisation du téléversement…"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/TagsEditor.cpp
-msgid "Track Title"
-msgstr "Titre de la piste"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Le partage d'audio nécessite un compte gratuit %s lié à Audacity. %%Appuyez sur \"Compte lié\" ci-dessus pour continuer."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Appuyez sur \"Continuer\" pour télécharger sur audio.com"
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Preparing audio..."
-msgstr "Préparation de l'audio…"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You are not authorized to access this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You tried to access a project that has expired."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity had trouble connecting to the server."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You don't have access to this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "The project could not be found."
-msgstr "Le projet de destination n’a pas pu être détaché"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The server responded with something Audacity could not understand."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audio.com encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Audacity encountered an unknown error."
-msgstr "Erreur de configuration d’Audacity"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Sync failed"
-msgstr " Verrouillage de synchronisation"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Error details:\n"
-"%s"
-msgstr "Détails du problème"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
-msgid "Syncing your project"
-msgstr "Sauvegarde du projet"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-msgid "Continue"
-msgstr "Continuer"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "Success!"
-msgstr "Succès"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Ligne temporelle"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Done"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Cloud project incomplete"
-msgstr "Impossible de trouver le composant"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Load latest"
-msgstr "Charger les fichiers"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#, fuzzy
-msgid "You have canceled this upload to audio.com"
-msgstr "Annuler le téléchargement sur Audio.com"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#, fuzzy
-msgid "Retry"
-msgstr "&Réessayer"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr ""
-
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, c-format
 msgid "%d kbps"
 msgstr "%d kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "%.2f kbps"
 msgstr "%.2f kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Bit Rate"
 msgstr "Débit binaire"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Quality (kbps)"
 msgstr "Qualité (kbps)"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Compression"
 msgstr "Compression"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Frame Duration"
 msgstr "Durée de la trame"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "2.5 ms"
 msgstr "2,5 ms"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "5 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "10 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "20 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "40 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "60 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Vbr Mode"
 msgstr "Mode vbr"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Off"
 msgstr "Éteint"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "On"
 msgstr "Actif"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Constrained"
 msgstr "Contraint"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/commands/DragCommand.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/NoUpdatesAvailableDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 msgid "Application"
 msgstr "Application"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "VOIP"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Low Delay"
 msgstr "Délai faible"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Cutoff"
 msgstr "Coupure"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
 #: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Désactivé"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Narrowband"
 msgstr "Bande étroite"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Mediumband"
 msgstr "Bande moyenne"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Wideband"
 msgstr "Bande large"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Super Wideband"
 msgstr "Bande super large"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Fullband"
 msgstr "Bande complète"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Open custom FFmpeg format options"
 msgstr "Ouvrir les options personnalisées du format FFmpeg"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Format:"
 msgstr "Format actuel :"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Current Codec:"
 msgstr "Codec actuel :"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
 msgstr "FFmpeg : ERREUR - Ne peut déterminer la description du format pour le fichier \"%s\"."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
 msgstr "FFmpeg : ERREUR - Ne peut allouer de contexte de format de sortie."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
 msgstr "FFmpeg : ERREUR - Ne peut ajouter de flux audio au fichier de sortie \"%s\"."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr "FFmpeg : ERREUR - Ne peut ouvrir le fichier \"%s\" pour écrire. Le code d’erreur est %d."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr "FFmpeg : ERREUR - Ne peut pas écrire les entêtes dans le fichier de sortie \"%s\". Le code d’erreur est %d."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
@@ -4206,16 +3546,16 @@ msgstr ""
 "FFmpeg ne peut pas trouver le codec audio 0x%x.\n"
 "Le support de ce codec n’est probablement pas compilé."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
 msgstr "Le codec a signalé une erreur générique (EPERM)"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
 msgstr "Le codec a signalé un paramètre invalide (EINVAL)"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
@@ -4226,39 +3566,39 @@ msgstr ""
 "\n"
 "%s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr "FFmpeg : ERREUR - Ne peux allouer de tampon pour y lire into depuis le FIFO audio."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
 msgstr "FFmpeg : ERREUR - Ne peut écrire la trame audio dans le fichier de sortie."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr "FFmpeg : ERREUR - Ne peut pas obtenir la taille de tampon d’échantillon"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
 msgstr "FFmpeg : ERREUR - Ne peut allouer des octets pour le tampon d’échantillons"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
 msgstr "FFmpeg : - ERREUR - Ne peut pas paramétrer la trame audio"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
 msgstr "FFmpeg : ERREUR - la trame d’encodage a échouée"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
 msgstr "FFmpeg : ERREUR - Trop de données restantes."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
 msgstr "FFmpeg : ERREUR - nAudioFrameSizeOut trop large."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
@@ -4266,31 +3606,33 @@ msgstr ""
 "Il est nécessaire de configurer correctement FFmpeg.\n"
 "Vous pouvez le configurer dans Préférences > Bibliothèques."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr "Tentative d’exporter %d canaux, mais le maximum de canaux est de %d pour le format de sortie sélectionné"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
 msgstr "Exporter la sélection audio sous %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the audio as %s"
 msgstr "Exporter l’audio sous %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Invalid sample rate"
 msgstr "Taux d’échantillonnage invalide"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
-#: src/menus/TrackMenus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
 msgid "Resample"
 msgstr "Rééchantillonner"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
@@ -4299,147 +3641,151 @@ msgstr ""
 "Le taux d’échantillonnage du projet (%d) n’est pas supporté par le format\n"
 "de fichier de sortie actuel.  "
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
 "supported by the current output file format. "
 msgstr "La combinaison du taux d’échantillonnage (%d) et du débit binaire (%d kbps) du projet n’est pas supportée par le format de fichier de sortie actuel. "
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
 msgstr "Vous devez rééchantillonner à un des taux ci-dessous."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Sample Rates"
 msgstr "Taux d’échantillonnage"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LC"
 msgstr "LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Main"
 msgstr "Principal"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LTP"
 msgstr "LTP"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
 msgstr "Fichiers (FFmpeg) M4A (AAC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AC3 Files (FFmpeg)"
 msgstr "Fichiers AC3 (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "Fichiers (FFmpeg) AMR (bande étroite)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Opus (OggOpus) Files (FFmpeg)"
 msgstr "Fichiers (OggOpus) Opus (OggOpus)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
 msgstr "Fichiers (FFmpeg) WMA (version 2)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Custom FFmpeg Export"
 msgstr "Personnalisation de l’export FFmpeg"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Estimate"
 msgstr "Estimer"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "2-level"
 msgstr "Niveau 2"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "4-level"
 msgstr "Niveau 4"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "8-level"
 msgstr "Niveau 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Full search"
 msgstr "Recherche complète"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Log search"
 msgstr "Recherche dans le journal"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Configure custom FFmpeg options"
 msgstr "Configurer les options personnalisées de FFmpeg"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
 msgstr "Préréglage :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Load Preset"
 msgstr "Charger un préréglage"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Save Preset"
 msgstr "Sauvegarder le préréglage"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Delete Preset"
 msgstr "Effacer le préréglage"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
 msgstr "Importer les préréglages"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Export Presets"
 msgstr "Exporter les préréglages"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/HelpCommand.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "Format:"
 msgstr "Format :"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codec:"
 msgstr "Codec :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr "Tous les formats et codecs ne sont pas compatibles. Certaines combinaisons d’option ne sont pas non plus compatibles avec tous les codecs."
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
 msgstr "Montrer tous les formats"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Montrer tous les Codecs"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Formats"
 msgstr "Format :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Codecs"
 msgstr "Codec :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
 msgstr "Options générales"
 
 # trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
@@ -4449,20 +3795,20 @@ msgstr ""
 "Optionnel\n"
 "vide - automatique"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
 msgstr "Langue :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Reservoir"
 msgstr "Bit Reservoir"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "VBL"
 msgstr "VBL"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Codec tag (FOURCC)\n"
 "Optional\n"
@@ -4472,12 +3818,12 @@ msgstr ""
 "Optionnel\n"
 "vide - automatique"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Tag:"
 msgstr "Balise :"
 
 # trebmuh to check (vérifier l’alignement des \n)
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
@@ -4489,11 +3835,11 @@ msgstr ""
 "0 - automatique\n"
 "Recommandé - 192000"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
 msgstr "Débit binaire :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
@@ -4505,11 +3851,11 @@ msgstr ""
 "0 - automatique\n"
 "-1 - Arrêté (remplacé par débit )"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
 msgstr "Qualité :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Sample rate (Hz)\n"
 "0 - don't change sample rate"
@@ -4517,11 +3863,11 @@ msgstr ""
 "Taux d’échantillonnage (Hz)\n"
 "0 - ne change pas le taux d’échantillonnage"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Sample Rate:"
 msgstr "Taux d’échantillonnage :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
@@ -4531,11 +3877,11 @@ msgstr ""
 "Optionnel\n"
 "0 - automatique"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Cutoff:"
 msgstr "Coupure :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "AAC Profile\n"
 "Low Complexity - default\n"
@@ -4545,15 +3891,15 @@ msgstr ""
 "Basse complexité - par défaut\n"
 "La plupart des lecteurs n’acceptent rien d’autre"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Profile:"
 msgstr "Profil :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "FLAC options"
 msgstr "Options FLAC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Compression level\n"
 "Required for FLAC\n"
@@ -4567,11 +3913,11 @@ msgstr ""
 "min - 0 (encodage rapide, fichier de sortie important)\n"
 "max - 10 (encodage lent, fichier de sortie réduit)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
 msgstr "Compression :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Frame size\n"
 "Optional\n"
@@ -4585,11 +3931,11 @@ msgstr ""
 "min - 16\n"
 "max - 65535"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Frame:"
 msgstr "Trame :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "LPC coefficients precision\n"
 "Optional\n"
@@ -4603,11 +3949,11 @@ msgstr ""
 "min - 1\n"
 "max - 15"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LPC"
 msgstr "LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
@@ -4619,11 +3965,11 @@ msgstr ""
 "Recherche log - plus lent, meilleure compression\n"
 "Recherche complète - par défaut"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "PdO Method:"
 msgstr "Méthode d’ordre de prédiction :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal prediction order\n"
 "Optional\n"
@@ -4637,11 +3983,11 @@ msgstr ""
 "min - 0\n"
 "max - 32 (avec LPC) ou 4 (sans LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PdO"
 msgstr "PdO minimum"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal prediction order\n"
 "Optional\n"
@@ -4655,11 +4001,11 @@ msgstr ""
 "min - 0\n"
 "max - 32 (avec LPC) ou 4 (sans LPC)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PdO"
 msgstr "PdO maximum"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal partition order\n"
 "Optional\n"
@@ -4673,11 +4019,11 @@ msgstr ""
 "min - 0\n"
 "max - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PtO"
 msgstr "PtO minimum"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal partition order\n"
 "Optional\n"
@@ -4691,21 +4037,21 @@ msgstr ""
 "min - 0\n"
 "max - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PtO"
 msgstr "PtO maximum"
 
 #. i18n-hint:  Abbreviates "Linear Predictive Coding",
 #. but this text needs to be kept very short
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Use LPC"
 msgstr "Utilise LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "MPEG container options"
 msgstr "Options de conteneur MPEG"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
@@ -4718,13 +4064,13 @@ msgstr ""
 #. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
 #. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Taux de mixage :"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
 "Optional\n"
@@ -4736,62 +4082,62 @@ msgstr ""
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Taille de paquet :"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't delete a preset without name"
 msgstr "Vous ne pouvez effacer un préréglage sans nom"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
 msgstr "Effacer le préréglage '%s' ?"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Confirm Deletion"
 msgstr "Confirmer l’effacement"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't save a preset without a name"
 msgstr "Vous ne pouvez pas sauvegarder un préréglage sans lui donner un nom"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file with presets to import"
 msgstr "Sélectionnez un fichier XML contenant les préréglages à importer"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "No presets to export"
 msgstr "Aucun préréglage à exporter."
 
 # trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file to export presets into"
 msgstr "Sélectionner un fichier XML pour exporter les préréglages dedans "
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
 msgstr "Le format %s n’est pas compatible avec le codec %s."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
 msgstr "Format et codec incompatible"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
 msgstr "Impossible de reconnaître le format"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to find the codec"
 msgstr "Impossible de trouver le codec"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
 "but this time Audacity failed to load it at startup. \n"
@@ -4804,67 +4150,68 @@ msgstr ""
 "Vous pourriez vouloir retourner dans Préférences > Bibliothèques et le re-\n"
 "configurer."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
 msgstr "Échec du démarrage de FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg library not found"
 msgstr "La bibliothèque FFmpeg est absente"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Locate FFmpeg"
 msgstr "Localiser FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Audacity nécessite le fichier '%s' pour importer et exporter de l’audio via FFmpeg."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
 msgstr "Localisation de '%s' :"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
 msgstr "Pour trouver '%s', cliquer ici -->"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "Pour obtenir une copie gratuite de FFmpeg, cliquer ici -->"
 
 #. i18n-hint: (verb)
-#: modules/mod-ffmpeg/FFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Download"
 msgstr "Téléchargement"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only avformat.dll"
 msgstr "Seulement avformat.dll"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.dylib"
 msgstr "Seulement libavformat.dylib"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.so"
 msgstr "Seulement libavformat.so"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Where is '%s'?"
 msgstr "Où se trouve '%s' ?"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg not found"
 msgstr "FFmpeg absent"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
 "but the libraries were not found.\n"
@@ -4877,36 +4224,36 @@ msgstr ""
 "Si vous voulez utiliser la fonction d’importation FFmpeg, allez dans Édition->Préférences->Bibliothèques\n"
 "pour télécharger les bibliothèques FFmpeg ou indiquer leur emplacement ."
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Ne plus montrer cet avertissement"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "Bibliothèque d’import/export FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "No compatible FFmpeg library was found"
 msgstr "Aucune bibliothèque FFmpeg compatible n’a été trouvée"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library Version:"
 msgstr "Version de la bibliothèque FFmpeg :"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library:"
 msgstr "Bibliothèque FFmpeg :"
 
 # trebmuh to check (accélérateur)
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Loca&te..."
 msgstr "Locali&ser…"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Dow&nload"
 msgstr "Téléchargeme&nt"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -4914,118 +4261,121 @@ msgstr ""
 "Audacity a détecté automatiquement des bibliothèques FFmpeg valides.\n"
 "Voulez-vous toujours les localiser manuellement ?"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Success"
 msgstr "Succès"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Error Saving FFmpeg Presets"
 msgstr "Erreur lors de la sauvegarde des préréglages FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Overwrite preset '%s'?"
 msgstr "Écraser le préréglage '%s' ?"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Confirm Overwrite"
 msgstr "Confirmer l’écrasement"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select format before saving a profile"
 msgstr "Veuillez sélectionner le format avant de sauvegarder un profil"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select codec before saving a profile"
 msgstr "Veuillez sélectionner le codec avant de sauvegarder un profil"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
 msgstr "Le préréglage '%s' n’existe pas."
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Replace preset '%s'?"
 msgstr "Remplacer le préréglage '%s' ?"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "Fichiers compatibles - FFmpeg"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "Try installing FFmpeg.\n"
 msgstr "Essayez d’installer FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, c-format
 msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr "Index[%02x] Codec[%s], Langue[%s], Débit binaire[%s], Canaux[%d], Durée[%d]"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Bit Depth"
 msgstr "Profondeur binaire"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 bits"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 bits"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
 msgid "Level"
 msgstr "Volume"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "0 (fastest)"
 msgstr "0 (plus rapide)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "1"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "3"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "4"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "5"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "6"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "7"
 msgstr ""
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "8 (best)"
 msgstr "8 (meilleur)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "FLAC Files"
 msgstr "Fichiers FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
 msgstr "L’export FLAC ne peut ouvrir %s"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid ""
 "FLAC encoder failed to initialize\n"
@@ -5034,301 +4384,219 @@ msgstr ""
 "L’encodeur FLAC n’a pas pu s’initialiser\n"
 "Statut : %d"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
 msgstr "Exportation de la sélection audio en FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the audio as FLAC"
 msgstr "Exportation de l’audio en FLAC"
 
-#: modules/mod-flac/ImportFLAC.cpp
+#: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
 msgstr "Fichiers FLAC"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "List of Files in basic text format"
 msgstr "Liste des fichiers en format texte"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
 msgstr "Décalage de fenêtre invalide dans le fichier LOF."
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid duration in LOF file."
 msgstr "Durée invalide dans le fichier LOF."
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
 msgstr "Les pistes MIDI ne peuvent être compensées individuellement, seules les pistes audio le peuvent."
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
 msgstr "Décalage de piste invalide dans le fichier LOF."
 
-# trebmuh to check (à vérifier, la chaîne en anglais n’est pas très explicite)
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr "L’heure d’enregistrement des fichiers Allegro exportés (.gro) :"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Please select only one Note Track at a time."
-msgstr "Veuillez ne sélectionner qu’une seule note à la fois."
-
-# trebmuh to check (vérifier dans un contexte graphique)
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Please select a Note Track."
-msgstr "Veuillez sélectionner une piste de note."
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Exporter MIDI sous :"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "MIDI file"
-msgstr "Fichier MIDI"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Allegro file"
-msgstr "Fichier Allegro"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Vous avez sélectionné un nom de fichier comportant une extension inconnue.\n"
-"Souhaitez-vous continuer ?"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Exporter MIDI"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MI&DI..."
-msgstr "Exporter en MI&DI…"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Midi importé depuis '%s'"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Importer MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr "Impossible d’ouvrir le fichier %s : nom de fichier trop court."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr "Impossible d’ouvrir le fichier %s : type de fichier incorrect."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Could not open file %s."
-msgstr "Impossible d’ouvrir le fichier %s."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Select a MIDI file"
-msgstr "Choisir un fichier MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr "Fichiers MIDI et Allegro"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI files"
-msgstr "Fichiers MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Allegro files"
-msgstr "Fichiers Allegro"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "&MIDI…"
-
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Version"
 msgstr "Version"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "Fichiers MP2"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Impossible d’exporter en MP2 à ce taux d’échantillonnage et ce débit binaire"
 
-#: modules/mod-mp2/ExportMP2.cpp modules/mod-mp3/ExportMP3.cpp
-#: modules/mod-ogg/ExportOGG.cpp modules/mod-opus/ExportOpus.cpp
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Impossible d’ouvrir le fichier cible en écriture"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting selected audio at %ld kbps"
 msgstr "Exportation de l’audio sélectionnée à %ld kbps"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, c-format
 msgid "Exporting the audio at %ld kbps"
 msgstr "Exportation de l’audio à %ld kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "220-260 kbps (Best Quality)"
 msgstr "220-260 kbps (meilleure qualité)"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "200-250 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "170-210 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "155-195 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "145-185 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "110-150 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "95-135 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "80-120 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "65-105 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "45-85 kbps (Smaller files)"
 msgstr "45-85 kbps (petits fichiers)"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane, 320 kbps"
 msgstr "Dément, 320 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
 msgstr "Extrême, 220-260 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
 msgstr "Standard, 170-220 kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
 msgstr "Moyen, 145-185 kbps"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane"
 msgstr "Délirant"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Extrême"
 
-#: modules/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Standard"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium"
 msgstr "Moyen"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Bit Rate Mode"
 msgstr "Mode de débit binaire"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
 msgstr "Préréglage"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Variable"
 msgstr "Variable"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Average"
 msgstr "Moyenne"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Constant"
 msgstr "Constant"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-ogg/ExportOGG.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
 #: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Qualité"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Locate LAME"
 msgstr "Localiser LAME"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Audacity requiert le fichier %s pour pouvoir créer des MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Location of %s:"
 msgstr "Localisation de %s :"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "To find %s, click here -->"
 msgstr "Pour trouver %s, cliquer ici -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "To get a free copy of LAME, click here -->"
 msgstr "Pour obtenir une copie gratuite de LAME, cliquer ici -->"
 
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Where is %s?"
 msgstr "Où se trouve %s ?"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
@@ -5337,91 +4605,91 @@ msgstr ""
 "Vous liez vers lame_enc.dll v%d.%d. Cette version n’est pas compatible avec Audacity %d.%d.%d.\n"
 "Veuillez télécharger la dernière version 'LAME pour Audacity'."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only lame_enc.dll"
 msgstr "Seulement lame_enc.dll"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
 msgstr "Seulement libmp3lame64bit.dylib"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
 msgstr "Seulement libmp3lame.dylib"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Only libmp3lame.so"
 msgstr "Seulement libmp3lame.so.0"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
 msgstr "Fichiers primaires d’objets partagés"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extended libraries"
 msgstr "Bibliothèques étendues"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
 msgstr "Seulement libmp3lame.so.0"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
 msgstr "Fichiers MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
 msgstr "Impossible d’ouvrir la bibliothèque d’encodage MP3 !"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not initialize MP3 encoding library!"
 msgstr "Impossible d’initialiser la bibliothèque d’encodage MP3 !"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "La bibliothèque d’encodage MP3 n’est pas valide ou pas supportée !"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
 msgstr "Impossible d’initialiser le flux MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "Exportation de la sélection audio avec le préréglage %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with %s preset"
 msgstr "Exportation de l’audio avec le préréglage %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "Exportation de la sélection audio avec la qualité VBR %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio with VBR quality %s"
 msgstr "Exportation de l’audio avec la qualité VBR %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "Exportation de la sélection audio à %d kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting the audio at %d Kbps"
 msgstr "Exportation de l’audio à %d kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Error %ld returned from MP3 encoder"
 msgstr "Erreur %ld retournée depuis l’encodeur MP3"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -5430,7 +4698,7 @@ msgstr ""
 "Le taux d’échantillonnage du projet (%d) n’est pas supporté\n"
 "par le format de fichier MP3."
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -5439,628 +4707,285 @@ msgstr ""
 "La combinaison du taux d’échantillonnage (%d) et du débit binaire (%d kbps)\n"
 "du projet n’est pas supportée par le format de fichier MP3. "
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "Bibliothèque d’exportation MP3 non trouvée"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "(Built-in)"
 msgstr "(Intégré)"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "LAME MP3 Export Library"
 msgstr "Bibliothèque d’export MP3 LAME"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
 msgstr "Version de la bibliothèque MP3 :"
 
-#: modules/mod-mpg123/ImportMP3_MPG123.cpp
+#: modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "Fichiers MP3"
 
-#: modules/mod-null/ModNullCallback.cpp
-msgid "1st Experimental Command..."
-msgstr "Première commande expérimentale…"
-
-#: modules/mod-null/ModNullCallback.cpp
-msgid "2nd Experimental Command"
-msgstr "Seconde commande expérimentale"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Nyquist Workbench..."
-msgstr "Panoplie &Nyquist…"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Undo\tCtrl+Z"
-msgstr "&Annuler\tCtrl+Z"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Redo\tCtrl+Y"
-msgstr "&Refaire\tCtrl+Y"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cu&t\tCtrl+X"
-msgstr "&Couper\tCtrl+X"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Copy\tCtrl+C"
-msgstr "Co&pier\tCtrl+C"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Paste\tCtrl+V"
-msgstr "Co&ller\tCtrl+V"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cle&ar\tCtrl+L"
-msgstr "Nettoyer\tCtrl+L"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select A&ll\tCtrl+A"
-msgstr "Sé&lectionner Tout\tCtrl+A"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Find...\tCtrl+F"
-msgstr "Trouver…\tCtrl+F"
-
-#  trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Matching Paren\tF8"
-msgstr "Parenthèse correspondante (&m)\tF8"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Top S-expr\tF9"
-msgstr "S-expr du hau&t\tF9"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Higher S-expr\tF10"
-msgstr "S-expr plus &haut\tF10"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Previous S-expr\tF11"
-msgstr "S-expr &précédent\tF11"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Next S-expr\tF12"
-msgstr "S-expr suiva&nt\tF12"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go to"
-msgstr "Aller à"
-
-# trebmuh to check (accélérateur + "select" à traduire ou pas ?)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select &Font..."
-msgstr "&Police…"
-
-# trebmuh to check ("split" à traduire ou pas ?)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Split &Vertically"
-msgstr "&Vertical"
-
-# trebmuh to check ("split" à traduire ou pas ?)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Split &Horizontally"
-msgstr "&Horizontal"
-
-# trebmuh to check ("le script" ou "les scripts" pluriel peut être ?)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Show S&cript"
-msgstr "Montrer le s&cript"
-
-# trebmuh to check (voir l’action précise dans l’interface)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Show &Output"
-msgstr "Montrer la s&ortie"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Large Icons"
-msgstr "Icônes &larges"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Small Icons"
-msgstr "Petit&s icônes"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Toolbar"
-msgstr "Barre d’outils"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go\tF5"
-msgstr "Aller (&g)\tF5"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Stop\tF6"
-msgstr "&Arrêt\tF6"
-
-# trebmuh to check (accélérateur)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&About"
-msgstr "À propos (&a)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script"
-msgstr "Script"
-
-# trebmuh to check (voir dans un contexte graphique)
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
-msgid "Output"
-msgstr "Sortie"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Load Nyquist script"
-msgstr "Charger un script Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Scripts Nyquist (*.ny)|*.ny|scripts Lisp (*.lsp)|*.lsp|Tous les fichiers|*"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script was not saved."
-msgstr "Le script n’a pas été sauvé."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-msgid "Save Nyquist script"
-msgstr "Sauvegarder le script Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find dialog"
-msgstr "Dialogue de recherche"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Harvey Lubin (logo)"
-msgstr "Harvey Lubin (logo)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Tango Icon Gallery (toolbar icons)"
-msgstr "Galerie d’icône Tango (icônes de barre d’outils)"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Leland Lucius"
-msgstr "Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "(C) 2009 by Leland Lucius"
-msgstr "(C) 2009 par Leland Lucius"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "Module Audacity externe qui fournit un IDE simple pour l’écriture d’effets."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist Effect Workbench"
-msgstr "Panoplie d’effet Nyquist"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "No matches found"
-msgstr "Aucune correspondance trouvée"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified. Are you sure?"
-msgstr "Le code a été modifié. Êtes-vous sûr(e) ?"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Untitled"
-msgstr "Sans titre"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist Effect Workbench - "
-msgstr "Panoplie d’effet Nyquist - "
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New"
-msgstr "Nouveau"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New script"
-msgstr "Nouveau script"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Open script"
-msgstr "Ouvrir un script"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save script"
-msgstr "Sauvegarder le script"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save As"
-msgstr "Sauvegarder sous"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Save script as..."
-msgstr "Sauvegarder le script sous…"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Copy"
-msgstr "Copier"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Copy to clipboard"
-msgstr "Copier vers le presse-papier"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Cut"
-msgstr "Couper et raccorder"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cut to clipboard"
-msgstr "Couper vers le presse-papier"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Paste"
-msgstr "Coller"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Paste from clipboard"
-msgstr "Coller depuis le presse-papier"
-
-#. i18n-hint verb; to empty or erase
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-msgid "Clear"
-msgstr "Effacer"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Clear selection"
-msgstr "Effacer la sélection"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
-#: src/tracks/ui/BackgroundCell.cpp
-msgid "Select All"
-msgstr "Tout sélectionner"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Select all text"
-msgstr "Sélectionner tout le texte"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Undo"
-msgstr "Annuler"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Undo last change"
-msgstr "Annuler la dernière modification"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Redo"
-msgstr "Refaire"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Redo previous change"
-msgstr "Refaire la dernière modification"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find"
-msgstr "Chercher"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find text"
-msgstr "Chercher du texte"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Match"
-msgstr "Correspondance"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to matching paren"
-msgstr "Aller à la parenthèse correspondante"
-
-# trebmuh to check (voir dans un contexte graphique)
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Top"
-msgstr "Tout en haut"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to top S-expr"
-msgstr "Aller au S-expr du haut"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Up"
-msgstr "Haut"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to higher S-expr"
-msgstr "Aller au S-expr du dessus"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Previous"
-msgstr "Précédent"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to previous S-expr"
-msgstr "Aller au S-expr précédent"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to next S-expr"
-msgstr "Aller au S-expr suivant"
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
-#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
-msgid "Start"
-msgstr "Début"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Start script"
-msgstr "Démarrer le script"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Stop script"
-msgstr "Arrêter le script"
-
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
 msgstr "Fichiers Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - rate or quality problem"
 msgstr "Impossible d’exporter - problème de taux ou de qualité"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
 msgstr "Impossible d’exporter - problème d’initialisation"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
 msgstr "Impossible d’exporter - problème de création du flux"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
 msgstr "Impossible d’exporter - problème avec les paquets"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with file"
 msgstr "Incapable d’exporter - problème avec le fichier"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Exportation de la sélection audio en Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the audio as Ogg Vorbis"
 msgstr "Exportation de l’audio en Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
 msgstr "Fichiers Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 #, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
 msgstr "Index[%02x] Version[%d], Canaux[%d], Durée[%ld]"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Media read error"
 msgstr "Erreur de lecture du média"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Not an Ogg Vorbis file"
 msgstr "N’est pas un fichier Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
 msgstr "Mauvaise version de Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Invalid Vorbis bitstream header"
 msgstr "Entête Vorbis bitstream invalide"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Internal logic fault"
 msgstr "Erreur de logique interne"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "no error"
 msgstr "pas d'erreur"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid argument"
 msgstr "argument invalide"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "buffer too small"
 msgstr "tampon trop petit"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "internal error"
 msgstr "erreur interne"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid packet"
 msgstr "paquet invalide"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not implemented"
 msgstr "pas implémenté"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "invalid state"
 msgstr "état invalide"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "memory allocation has failed"
 msgstr "échec de l'allocation mémoire"
 
 # trebmuh to check
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Auto"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Maximum"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "VBR Mode"
 msgstr "Mode VBR"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
 msgstr "Optimisé pour"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
 msgstr "Discours"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
 msgstr "Débordement de mémoire tampon dans un paquet OGG"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to write OGG page header"
 msgstr "Incapable d'écrire l'entête de page OGG"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to write OGG page"
 msgstr "Incapable d'écrire la page OGG"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Opus Files"
 msgstr "Fichiers Opus"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unsupported sample rate"
 msgstr "Taux d'échantillon non-supportés"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting selected audio as Opus"
 msgstr "Exporter la sélection audio en tant qu'Opus"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Exporting the audio as Opus"
 msgstr "Exporter l’audio en tant qu'Opus"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to create Opus encoder"
 msgstr "Incapable de créer un encodeur Opus"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to set bitrate"
 msgstr "Incapable de paramétrer le débit binaire"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to set complexity"
 msgstr "Incapable de paramétrer la complexité"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to set bandwidth"
 msgstr "Incapable de paramétrer la bande passante"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to set VBR mode"
 msgstr "Incapable de paramétrer le mode VBR"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to set CVBR mode"
 msgstr "Incapable de paramétrer le mode CVBR"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Unable to get lookahead"
 msgstr "Impossible d'obtenir l'anticipation"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Failed to calculate correct preskip"
 msgstr "Impossible de calculer le preskip correct"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Failed to encode input buffer"
 msgstr "échec de l'encodage du tampon d'entrée"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "Opus files"
 msgstr "Fichiers Opus"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "File has changed the number of channels in the middle."
 msgstr "fichier a modifié le nombre de canaux au centre."
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "IO error reading from file"
 msgstr "Erreur IO lors de l’écriture du fichier"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not an Opus file"
 msgstr "pas un fichier Opus"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid header"
 msgstr "entête invalide"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "unsupported version"
 msgstr "version non-supportée"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid stream structure"
 msgstr "structure de flux invalide"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "stream is not seekable"
 msgstr "flux n'est pas cherchable"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid timestamp"
 msgstr "horodatage non valide"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, c-format
 msgid "Failed to decode Opus file: %s"
 msgstr "Échec du décodage du fichier Opus : %s"
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (Microsoft)"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Encoding"
 msgstr "Encodage"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Header"
 msgstr "Entête"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Other uncompressed files"
 msgstr "Autres formats non-compressés"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
 msgstr "GSM 6.10 nécessite mono"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
 msgstr "Les formats WAVEX et GSM 6.10 ne sont pas compatibles"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Impossible d’exporter l’audio dans ce format."
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
@@ -6068,7 +4993,7 @@ msgstr ""
 "Vous avez tenté d’exporter un fichier WAV ou AIFF de plus de 4 Go.\n"
 "Audacity ne peut pas faire cela, l’exportation a été abandonnée."
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Exportation de la sélection audio sous %s"
@@ -6076,7 +5001,7 @@ msgstr "Exportation de la sélection audio sous %s"
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
 #. * error"
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -6085,241 +5010,1382 @@ msgstr ""
 "Erreur d’écriture du fichier %s (disque plein ?).\n"
 "Information Libsndfile \"%s\""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, et autres formats non-compressés"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RAW (header-less)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAVEX (Microsoft)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
 msgstr "8 bits PCM signé"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 16 bit PCM"
 msgstr "16 bits PCM signé"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 24 bit PCM"
 msgstr "24 bits PCM signé"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
 msgstr "32 bits PCM signé"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
 msgstr "8 bit PCM non-signé"
 
-#: modules/mod-pcm/ImportPCM.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "32 bit float"
 msgstr "32 bits flottant"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "64 bit float"
 msgstr "64 bits flottant"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "A-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IMA ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Microsoft ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "GSM 6.10"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "12 bit DWVW"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "16 bit DWVW"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24 bit DWVW"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOX ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "16 bit DPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "8 bit DPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Vorbis"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Low Quality (Fast)"
 msgstr "Basse qualité (rapide)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Normal Quality"
 msgstr "Qualité normale"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "High Quality (Slow)"
 msgstr "Haute qualité (lent)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Very High Quality (Slowest)"
 msgstr "Très haute qualité (le plus lent)"
 
 #. i18n-hint bps abbreviates "bits per sample"
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, c-format
 msgid "%.1f bps"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Hybrid Mode"
 msgstr "Mode hybride"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
 msgstr "Créer un fichier de correction (.wvc)"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "WavPack Files"
 msgstr "Fichiers WavPack"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to create target file for writing"
 msgstr "Impossible de créer le fichier cible pour écriture"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Exporter la sélection audio en tant que WavPack"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting the audio as WavPack"
 msgstr "Exporter l’audio en tant que WavPack"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 msgid "WavPack files"
 msgstr "Fichier WavPack"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
 msgstr "%d erreurs rencontrées lors du décodage du fichier WavPack !"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Nyquist Workbench..."
+msgstr "Panoplie &Nyquist…"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Undo\tCtrl+Z"
+msgstr "&Annuler\tCtrl+Z"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Redo\tCtrl+Y"
+msgstr "&Refaire\tCtrl+Y"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cu&t\tCtrl+X"
+msgstr "&Couper\tCtrl+X"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Copy\tCtrl+C"
+msgstr "Co&pier\tCtrl+C"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Paste\tCtrl+V"
+msgstr "Co&ller\tCtrl+V"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cle&ar\tCtrl+L"
+msgstr "Nettoyer\tCtrl+L"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select A&ll\tCtrl+A"
+msgstr "Sé&lectionner Tout\tCtrl+A"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Find...\tCtrl+F"
+msgstr "Trouver…\tCtrl+F"
+
+#  trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Matching Paren\tF8"
+msgstr "Parenthèse correspondante (&m)\tF8"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Top S-expr\tF9"
+msgstr "S-expr du hau&t\tF9"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Higher S-expr\tF10"
+msgstr "S-expr plus &haut\tF10"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Previous S-expr\tF11"
+msgstr "S-expr &précédent\tF11"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Next S-expr\tF12"
+msgstr "S-expr suiva&nt\tF12"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go to"
+msgstr "Aller à"
+
+# trebmuh to check (accélérateur + "select" à traduire ou pas ?)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select &Font..."
+msgstr "&Police…"
+
+# trebmuh to check ("split" à traduire ou pas ?)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Split &Vertically"
+msgstr "&Vertical"
+
+# trebmuh to check ("split" à traduire ou pas ?)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Split &Horizontally"
+msgstr "&Horizontal"
+
+# trebmuh to check ("le script" ou "les scripts" pluriel peut être ?)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Show S&cript"
+msgstr "Montrer le s&cript"
+
+# trebmuh to check (voir l’action précise dans l’interface)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Show &Output"
+msgstr "Montrer la s&ortie"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Large Icons"
+msgstr "Icônes &larges"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Small Icons"
+msgstr "Petit&s icônes"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Toolbar"
+msgstr "Barre d’outils"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go\tF5"
+msgstr "Aller (&g)\tF5"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Stop\tF6"
+msgstr "&Arrêt\tF6"
+
+# trebmuh to check (accélérateur)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&About"
+msgstr "À propos (&a)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script"
+msgstr "Script"
+
+# trebmuh to check (voir dans un contexte graphique)
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: src/effects/BassTreble.cpp
+msgid "Output"
+msgstr "Sortie"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Load Nyquist script"
+msgstr "Charger un script Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
+msgstr "Scripts Nyquist (*.ny)|*.ny|scripts Lisp (*.lsp)|*.lsp|Tous les fichiers|*"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script was not saved."
+msgstr "Le script n’a pas été sauvé."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+msgid "Save Nyquist script"
+msgstr "Sauvegarder le script Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find dialog"
+msgstr "Dialogue de recherche"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Harvey Lubin (logo)"
+msgstr "Harvey Lubin (logo)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Tango Icon Gallery (toolbar icons)"
+msgstr "Galerie d’icône Tango (icônes de barre d’outils)"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Leland Lucius"
+msgstr "Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "(C) 2009 by Leland Lucius"
+msgstr "(C) 2009 par Leland Lucius"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr "Module Audacity externe qui fournit un IDE simple pour l’écriture d’effets."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist Effect Workbench"
+msgstr "Panoplie d’effet Nyquist"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "No matches found"
+msgstr "Aucune correspondance trouvée"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Code has been modified. Are you sure?"
+msgstr "Le code a été modifié. Êtes-vous sûr(e) ?"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Untitled"
+msgstr "Sans titre"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist Effect Workbench - "
+msgstr "Panoplie d’effet Nyquist - "
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New"
+msgstr "Nouveau"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New script"
+msgstr "Nouveau script"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open"
+msgstr "Ouvrir"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Open script"
+msgstr "Ouvrir un script"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: src/Benchmark.cpp
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save script"
+msgstr "Sauvegarder le script"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save As"
+msgstr "Sauvegarder sous"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Save script as..."
+msgstr "Sauvegarder le script sous…"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Copy"
+msgstr "Copier"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Copy to clipboard"
+msgstr "Copier vers le presse-papier"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Cut"
+msgstr "Couper et raccorder"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cut to clipboard"
+msgstr "Couper vers le presse-papier"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Paste"
+msgstr "Coller"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Paste from clipboard"
+msgstr "Coller depuis le presse-papier"
+
+#. i18n-hint verb; to empty or erase
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+msgid "Clear"
+msgstr "Effacer"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Clear selection"
+msgstr "Effacer la sélection"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
+msgid "Select All"
+msgstr "Tout sélectionner"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Select all text"
+msgstr "Sélectionner tout le texte"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Undo"
+msgstr "Annuler"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Undo last change"
+msgstr "Annuler la dernière modification"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Redo"
+msgstr "Refaire"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Redo previous change"
+msgstr "Refaire la dernière modification"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find"
+msgstr "Chercher"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find text"
+msgstr "Chercher du texte"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Match"
+msgstr "Correspondance"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to matching paren"
+msgstr "Aller à la parenthèse correspondante"
+
+# trebmuh to check (voir dans un contexte graphique)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Top"
+msgstr "Tout en haut"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to top S-expr"
+msgstr "Aller au S-expr du haut"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Up"
+msgstr "Haut"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to higher S-expr"
+msgstr "Aller au S-expr du dessus"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Previous"
+msgstr "Précédent"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to previous S-expr"
+msgstr "Aller au S-expr précédent"
+
+# trebmuh to check (besoin d’ajouter "outil"?)
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Next"
+msgstr "Outil suivant"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to next S-expr"
+msgstr "Aller au S-expr suivant"
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
+msgid "Start"
+msgstr "Début"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Start script"
+msgstr "Démarrer le script"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Stop script"
+msgstr "Arrêter le script"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "Waiting for audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to audio.com"
+msgstr "Annuler le téléchargement sur Audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Génération d’une batterie Risset…"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "Sauvegarde du projet"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save &To Cloud..."
+msgstr "Sauvegarder sous…"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Fro&m Cloud..."
+msgstr "Ouvrir le menu…"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "S&hare Audio..."
+msgstr "Partager l’audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "&Lier le compte"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Erreur d'export"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "S&how 'How would you like to export?' dialog"
+msgstr "De quelle manière voulez-vous coller votre audio ?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Comportements"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+# trebmuh to check (accélérateur)
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Couleur d’onde (&w)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Sauvegarde le contenu du journal."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Répertoire des fichiers temporaires"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "Emp&lacement :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+msgid "&Browse..."
+msgstr "&Parcourir…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Répertoire des fichiers temporaires"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Préférences pour la souris"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Choisir un emplacement pour placer le répertoire temporaire"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Le répertoire des fichiers temporaires ne peut pas se trouver sur un lecteur FAT"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Cannot set the preference."
+msgstr "Impossible de paramétrer les préférences."
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "Échec"
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Share Audio"
+msgstr "Partager l’audio"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+msgid "&Share Audio Toolbar"
+msgstr "&Partager la barre audio"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+#, fuzzy
+msgid "Account not linked"
+msgstr "Compte lié avec succès !"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr "&Lier le compte"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr "Dissocier le compte"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Ne plus montrer cet avertissement"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to save?"
+msgstr "De quelle manière voulez-vous coller votre audio ?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "Sauvegarder le journal dans :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+# trebmuh to check (accélérateur)
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "Couleur d’onde (&w)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to &computer"
+msgstr "Sauvegarde le contenu du journal."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Remember my choice and don't show again"
+msgstr "Se souvenir de mon choix et ne plus me demander"
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "How would you like to export?"
+msgstr "De quelle manière voulez-vous coller votre audio ?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Partager l’audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Partager l’audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Exporter autre"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Ne plus montrer cet avertissement"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Projet"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr "Le partage d'audio nécessite un compte gratuit %s lié à Audacity. %%Appuyez sur \"Compte lié\" ci-dessus pour continuer."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr "Non répertorié"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr "Publique"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Sauvegarder le projet…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "Vous ne pouvez pas assigner une clé à cette entrée"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Aligner la fin"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Link account"
+msgstr "Compte lié"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr "Nous n'avons pas pu lier votre compte. Veuillez réessayer."
+
+# trebmuh to check (accélérateur)
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Annuler"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr "Essayer à nouveau (&T)"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr "Compte lié avec succès !"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr "Entrez le jeton pour lier votre compte"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr "Jeton"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr "C&ontinuez"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr "Assoc&ier le compte audio.com..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#, fuzzy
+msgid "Save to computer"
+msgstr "Sauvegarde le contenu du journal."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Sauvegarder le journal dans :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "Coller l’audio"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "Sauvegarde un projet."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Ouvre un projet."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Fichier projet compacté"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "Conversion de taux d’échantillonnage"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "less than 1 minute"
+msgstr "Moins d’une minute"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Durée de son :"
+msgstr[1] "Durée de son :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Marqueur modifié"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Échec du rétablisssement de la connexion"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "Sauvegarde de &projets"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Impossible d’importer un projet"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Fichier projet compacté"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "Rec&hercher :"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "&Pré-écoute"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "%s %d de %d"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Anyone will be able to listen to this audio."
+msgstr "Tout le monde pourra écouter cet audio."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr "Seuls vous et les personnes avec lesquelles vous partagez un lien pourrez écouter cet audio."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Are you sure you want to cancel?"
+msgstr "Voulez-vous vraiment annuler ?"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr "Annuler le téléchargement sur Audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Uploading audio..."
+msgstr "Téléversement de l'audio…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr "Nous ne pouvons pas télécharger ce fichier. Veuillez réessayer et assurez-vous de vous connecter à votre compte audio.com avant de le télécharger."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr "Erreur de téléversement"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to prepare this file for uploading."
+msgstr "Nous sommes incapable de préparer ce fichier pour téléversement."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Finalizing upload..."
+msgstr "Finalisation du téléversement…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Titre de la piste"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr "Le partage d'audio nécessite un compte gratuit %s lié à Audacity. %%Appuyez sur \"Compte lié\" ci-dessus pour continuer."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr "Appuyez sur \"Continuer\" pour télécharger sur audio.com"
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Preparing audio..."
+msgstr "Préparation de l'audio…"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "Le projet de destination n’a pas pu être détaché"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Erreur de configuration d’Audacity"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr " Verrouillage de synchronisation"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Détails du problème"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "Sauvegarde du projet"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+msgid "Continue"
+msgstr "Continuer"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "Success!"
+msgstr "Succès"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Ligne temporelle"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Impossible de trouver le composant"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Charger les fichiers"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#, fuzzy
+msgid "You have canceled this upload to audio.com"
+msgstr "Annuler le téléchargement sur Audio.com"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#, fuzzy
+msgid "Retry"
+msgstr "&Réessayer"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
+
+# trebmuh to check (à vérifier, la chaîne en anglais n’est pas très explicite)
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr "L’heure d’enregistrement des fichiers Allegro exportés (.gro) :"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select only one Note Track at a time."
+msgstr "Veuillez ne sélectionner qu’une seule note à la fois."
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Please select a Note Track."
+msgstr "Veuillez sélectionner une piste de note."
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Exporter MIDI sous :"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "MIDI file"
+msgstr "Fichier MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Allegro file"
+msgstr "Fichier Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Vous avez sélectionné un nom de fichier comportant une extension inconnue.\n"
+"Souhaitez-vous continuer ?"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Exporter MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MI&DI..."
+msgstr "Exporter en MI&DI…"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Midi importé depuis '%s'"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Importer MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr "Impossible d’ouvrir le fichier %s : nom de fichier trop court."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr "Impossible d’ouvrir le fichier %s : type de fichier incorrect."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Could not open file %s."
+msgstr "Impossible d’ouvrir le fichier %s."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Select a MIDI file"
+msgstr "Choisir un fichier MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr "Fichiers MIDI et Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI files"
+msgstr "Fichiers MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Allegro files"
+msgstr "Fichiers Allegro"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "&MIDI…"
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
@@ -6491,11 +6557,6 @@ msgstr "Site web et graphiques"
 #: src/AboutDialog.cpp
 msgid "Translators"
 msgstr "Traducteurs"
-
-#. i18n-hint: refers to optional plug-in software libraries
-#: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
-msgid "Libraries"
-msgstr "Bibliothèques"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -7204,7 +7265,6 @@ msgstr "&Projets récupérables"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
-#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Sélection"
 
@@ -8471,6 +8531,165 @@ msgstr "Curseur de panoramique déplacé"
 msgid "&Mixer"
 msgstr "&Mixeur"
 
+#: src/PendingStrings.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+msgid "View tutorials"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Coller l’audio"
+
+#. i18n-hint: Title of the buttons that adds new effects plugin search path
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "&Ajouter nouvelle règle"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Options de greffon"
+
+#. i18n-hint: master channel display name
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Coller"
+
+#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master effects"
+msgstr "Effets temps-réel"
+
+#. i18n-hint: Hint for a master effects section of realtime effects panel
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Apply to all tracks"
+msgstr "Séparer vers une nouvelle piste"
+
+#: src/PendingStrings.cpp
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Compression"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Ne rien faire"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Input gain (dB)"
+msgstr "Gain de sortie (dB)"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Ceiling (dB)"
+msgstr "Gain (dB)"
+
+#: src/PendingStrings.cpp
+msgid "Input"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attenuation"
+msgstr "Orientation"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Seuil de déclenchement (dB)"
+
+# trebmuh to check (vérifier dans le contexte graphique)
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Gain appliqué en entrée"
+
+#: src/PendingStrings.cpp
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Rati&o:"
+msgstr "&Ratio :"
+
+#: src/PendingStrings.cpp
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Attaque (ms)"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Temps de relâche"
+
+# trebmuh to check (accélérateur)
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "Démarrer la lecture (&p)"
+
+#: src/PendingStrings.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
+# trebmuh to check (vérifier dans un contexte graphique)
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Limiter (beta)"
+msgstr "Limiteur"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compressor (beta)"
+msgstr "Compresseur"
+
+#: src/PendingStrings.cpp
+msgid "&Show graph (beta)"
+msgstr ""
+
+#. i18n-hint: import progress dialog title, progress dialog
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Importation de %s"
+
+#. i18n-hint: import progress dialot text, where %s is the filename
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Importation de %s"
+
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 msgid "C"
@@ -8661,6 +8880,11 @@ msgstr "Greffon"
 #, fuzzy
 msgid "&Rescan"
 msgstr "Rescanner"
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Get more effects..."
+msgstr "Obtenir davantage d'effets…"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9390,7 +9614,7 @@ msgstr "Changer l'ordre des effets"
 msgid "No Effect"
 msgstr "Pas d'effet"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
 msgstr "Obtenir davantage d'effets…"
 
@@ -10061,10 +10285,6 @@ msgstr "&Valider"
 msgid "Exported Tags"
 msgstr "Balises exportées"
 
-#: src/TrackInfo.cpp
-msgid "Stereo, 999999Hz"
-msgstr "Stéréo, 999999Hz"
-
 #: src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Panneau de piste"
@@ -10384,6 +10604,11 @@ msgstr "Outils de niveau (enveloppes)"
 msgid "Boxes"
 msgstr "Boîtes"
 
+#: src/commands/GetInfoCommand.cpp src/commands/SelectCommand.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Sélection"
+
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "JSON"
@@ -10611,10 +10836,6 @@ msgstr "Fin du projet"
 #: src/commands/SelectCommand.cpp
 msgid "Selection Start"
 msgstr "Début de la sélection"
-
-#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Sélection"
 
 #: src/commands/SelectCommand.cpp
 msgid "Selection End"
@@ -12882,7 +13103,7 @@ msgstr "Le profil de bruit sélectionné est trop court."
 msgid "&Noise reduction (dB):"
 msgstr "Réduction de bruit (dB) (&n) :"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise reduction"
 msgstr "Réduction de bruit"
 
@@ -12890,7 +13111,7 @@ msgstr "Réduction de bruit"
 msgid "&Sensitivity:"
 msgstr "&Sensibilité :"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Sensitivity"
 msgstr "Sensibilité"
 
@@ -12916,7 +13137,7 @@ msgstr "Durée de relâche"
 msgid "&Frequency smoothing (bands):"
 msgstr "Adoucissement de &fréquence (bandes) :"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Frequency smoothing"
 msgstr "Lissage de fréquence"
 
@@ -12930,11 +13151,11 @@ msgstr "Sensibilité (dB) (&v) :"
 msgid "Old Sensitivity"
 msgstr "Ancienne sensibilité"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 1"
 msgstr "Étape 1"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -12943,11 +13164,11 @@ msgstr ""
 "afin qu’Audacity sache ce qu’il doit filtrer.\n"
 "Cliquer ensuite sur Prendre le profil du bruit :"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Get Noise Profile"
 msgstr "Prendre le profil du bruit"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 2"
 msgstr "Étape 2"
 
@@ -12959,7 +13180,7 @@ msgstr ""
 "Sélectionnez toute l’audio devant être filtrée, choisissez la quantité de\n"
 "bruit que vous souhaitez retirer, et cliquez sur 'Valider' pour réduire le bruit.\n"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise:"
 msgstr "Bruit :"
 
@@ -12968,7 +13189,7 @@ msgstr "Bruit :"
 msgid "Re&duce"
 msgstr "Ré&duire"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Isolate"
 msgstr "&Isoler"
 
@@ -13050,49 +13271,6 @@ msgstr "4 (par défaut)"
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method:"
 msgstr "&Méthode de discrimination :"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise Removal"
-msgstr "Réduction du bruit"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr "Retire un bruit de fond constant comme les ventilateurs, les bruits de lecteur de bande, ou les ronflements"
-
-#: src/effects/NoiseRemoval.cpp
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
-"filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Sélectionnez toute l’audio devant être filtrée,\n"
-"choisissez la quantité de bruit que vous souhaitez retirer,\n"
-"cliquez ensuite sur 'Valider' pour supprimer le bruit.\n"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise re&duction (dB):"
-msgstr "Ré&duction de bruit (dB) :"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "&Sensitivity (dB):"
-msgstr "&Sensibilité (dB) :"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Fr&equency smoothing (Hz):"
-msgstr "Lissage de fréqu&ence (Hz) :"
-
-# trebmuh to check (accélérateur)
-#: src/effects/NoiseRemoval.cpp
-msgid "Attac&k/decay time (secs):"
-msgstr "Durée de l’attaque et du déclin (secondes) (&k) :"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Attack/decay time"
-msgstr "Durée d’attaque/déclin"
-
-# trebmuh to check (accélérateur)
-#: src/effects/NoiseRemoval.cpp
-msgid "Re&move"
-msgstr "Retirer (&m)"
 
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
@@ -15038,7 +15216,8 @@ msgid "&Export Audio..."
 msgstr "&Exporter l’audio…"
 
 #: src/menus/FileMenus.cpp
-msgid "Export Other"
+#, fuzzy
+msgid "Expo&rt Other"
 msgstr "Exporter autre"
 
 # trebmuh to check (accélérateur)
@@ -15081,6 +15260,10 @@ msgstr "Exporter en &OGG"
 #: src/menus/FileMenus.cpp
 msgid "Export as FLAC"
 msgstr "Exporter en FLAC"
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Expo&rter l’audio sélectionné…"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -16507,11 +16690,6 @@ msgstr "Commencer à la fin de la sélection"
 msgid "Enable E&xtra Menus"
 msgstr "Autoriser les menus &extra"
 
-# trebmuh to check (accélérateur)
-#: src/menus/ViewMenus.cpp
-msgid "Show Track &Name as overlay"
-msgstr "Afficher le &nom de piste en superposition"
-
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
 msgstr "Montrer la &saturation dans la forme d'onde"
@@ -17016,10 +17194,6 @@ msgstr "&Bip à l’achèvement des travaux de longue durée"
 msgid "Re&tain labels if selection snaps to a label"
 msgstr "Conserver les marqueurs si la sélec&tion s’aligne sur un marqueur"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
-msgstr "Mé&langer les thèmes Audacity et système"
-
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
@@ -17253,14 +17427,6 @@ msgstr ""
 #: src/prefs/KeyConfigPrefs.h
 msgid "Key Config"
 msgstr "Configuration clavier"
-
-#: src/prefs/LibraryPrefs.cpp
-msgid "Preferences for Library"
-msgstr "Préférences pour les bilbliothèques "
-
-#: src/prefs/LibraryPrefs.h
-msgid "Library"
-msgstr "Bibliothèque"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -17998,11 +18164,6 @@ msgstr "Préférences pour les pistes"
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
 msgstr "Adaptation-automatique de la hauteur de la piste (&f)"
-
-# trebmuh to check (accélérateur)
-#: src/prefs/TracksPrefs.cpp
-msgid "Sho&w track name as overlay"
-msgstr "Afficher le nom de piste en superposition (&w)"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -18997,7 +19158,7 @@ msgstr "Fermer les vues secondaires"
 
 # trebmuh to check (accélérateur)
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Mute/Unmute Track"
 msgstr "Silencer/désilencer la piste"
 
@@ -19043,37 +19204,37 @@ msgstr "Cliquer et glisser pour déplacer les limites du clip dans le temps"
 msgid "Click and drag to stretch clip"
 msgstr "Cliquer et glisser pour étirer le clip"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Split Clip"
 msgstr "Diviser le clip"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Join Clips"
 msgstr "Joindre les clips"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Rename Clip..."
 msgstr "Renommer le clip…"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Pitch and Speed..."
 msgstr "Changer la vitesse…"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr "Modification de la vitesse du clip à %.01f%%"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Speed to %.01f%%"
 msgstr "Changer la vitesse pour %.01f%%"
@@ -19690,19 +19851,6 @@ msgstr "Déplacer le clip"
 msgid "Collapse"
 msgstr "Réduire"
 
-#: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Command+Click to deselect"
-msgstr "Commande+clic pour désélectionner"
-
-# trebmuh to check (accélérateur)
-#: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Select track"
-msgstr "Sélectionner la piste"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-msgid "Ctrl+Click to deselect"
-msgstr "Ctrl+clic pour désélectionner"
-
 # trebmuh to check (accélérateur)
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
@@ -19912,7 +20060,7 @@ msgstr "D"
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
 #, c-format
-msgid "%.2fx"
+msgid "%.3fx"
 msgstr ""
 
 #: src/widgets/FileHistory.cpp
@@ -21710,7 +21858,68 @@ msgstr "Suppresseur de voix"
 msgid "Spectral Tools"
 msgstr "Outils spectraux"
 
-#, c-format
+#  trebmuh to check (accélérateur)
+#~ msgid "&Ok"
+#~ msgstr "&Valider"
+
+#~ msgid "Stereo, 999999Hz"
+#~ msgstr "Stéréo, 999999Hz"
+
+#~ msgid "Noise Removal"
+#~ msgstr "Réduction du bruit"
+
+#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
+#~ msgstr "Retire un bruit de fond constant comme les ventilateurs, les bruits de lecteur de bande, ou les ronflements"
+
+#~ msgid ""
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
+#~ "filtered out, and then click 'OK' to remove noise.\n"
+#~ msgstr ""
+#~ "Sélectionnez toute l’audio devant être filtrée,\n"
+#~ "choisissez la quantité de bruit que vous souhaitez retirer,\n"
+#~ "cliquez ensuite sur 'Valider' pour supprimer le bruit.\n"
+
+#~ msgid "Noise re&duction (dB):"
+#~ msgstr "Ré&duction de bruit (dB) :"
+
+#~ msgid "&Sensitivity (dB):"
+#~ msgstr "&Sensibilité (dB) :"
+
+#~ msgid "Fr&equency smoothing (Hz):"
+#~ msgstr "Lissage de fréqu&ence (Hz) :"
+
+# trebmuh to check (accélérateur)
+#~ msgid "Attac&k/decay time (secs):"
+#~ msgstr "Durée de l’attaque et du déclin (secondes) (&k) :"
+
+#~ msgid "Attack/decay time"
+#~ msgstr "Durée d’attaque/déclin"
+
+# trebmuh to check (accélérateur)
+#~ msgid "Re&move"
+#~ msgstr "Retirer (&m)"
+
+# trebmuh to check (accélérateur)
+#~ msgid "Show Track &Name as overlay"
+#~ msgstr "Afficher le &nom de piste en superposition"
+
+#~ msgid "B&lend system and Audacity theme"
+#~ msgstr "Mé&langer les thèmes Audacity et système"
+
+# trebmuh to check (accélérateur)
+#~ msgid "Sho&w track name as overlay"
+#~ msgstr "Afficher le nom de piste en superposition (&w)"
+
+#~ msgid "Command+Click to deselect"
+#~ msgstr "Commande+clic pour désélectionner"
+
+# trebmuh to check (accélérateur)
+#~ msgid "Select track"
+#~ msgstr "Sélectionner la piste"
+
+#~ msgid "Ctrl+Click to deselect"
+#~ msgstr "Ctrl+clic pour désélectionner"
+
 #~ msgid ""
 #~ "\"%s\" \n"
 #~ "is a MIDI file, not an audio file. \n"
@@ -21754,7 +21963,6 @@ msgstr "Outils spectraux"
 #~ msgid "Reset Audacity Preferences"
 #~ msgstr "Réinitialiser les préférences d’Audacity"
 
-#, c-format
 #~ msgid ""
 #~ "You must first select some audio for '%s' to act on.\n"
 #~ "\n"
@@ -21764,7 +21972,6 @@ msgstr "Outils spectraux"
 #~ "\n"
 #~ "Ctrl + A sélectionne tout l’audio."
 
-#, c-format
 #~ msgid "Audacity Karaoke%s"
 #~ msgstr "Karaoké%s Audacity "
 
@@ -21813,7 +22020,6 @@ msgstr "Outils spectraux"
 #~ msgid "&Disable"
 #~ msgstr "&Désactivé"
 
-#, c-format
 #~ msgid ""
 #~ "Enabling effects or commands:\n"
 #~ "\n"
@@ -21823,7 +22029,6 @@ msgstr "Outils spectraux"
 #~ "\n"
 #~ "%s"
 
-#, c-format
 #~ msgid ""
 #~ "Enabling effect or command:\n"
 #~ "\n"
@@ -22014,7 +22219,6 @@ msgstr "Outils spectraux"
 #~ msgid "Bring To Top"
 #~ msgstr "Mettre en haut"
 
-#, c-format
 #~ msgid "Error trying to save file: %s"
 #~ msgstr "Erreur à la sauvegarde du fichier : %s"
 
@@ -22324,15 +22528,12 @@ msgstr "Outils spectraux"
 #~ msgid "Overwrite"
 #~ msgstr "Écraser"
 
-#, lisp-format
 #~ msgid "Error.~%Unable to open file~%~s"
 #~ msgstr "Erreur.~%Incapable d’ouvrir le fichier~%~s"
 
-#, lisp-format
 #~ msgid "Error.~%File overwrite disallowed:~%\"~a.txt\""
 #~ msgstr "Erreur.~%Écrasement de fichier interdit:~%\"~a.txt\""
 
-#, lisp-format
 #~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
 #~ msgstr "Erreur.~%Le fichier ne peut pas être écrit :~%\"~a.txt\""
 
@@ -22372,7 +22573,6 @@ msgstr "Outils spectraux"
 #~ msgid "High Cut for Vocals (Hz)"
 #~ msgstr "Coupe-haut pour les voix (Hz)"
 
-#, lisp-format
 #~ msgid ""
 #~ "Average x: ~a, y: ~a\n"
 #~ "                    Covariance x y: ~a\n"
@@ -22392,7 +22592,6 @@ msgstr "Outils spectraux"
 #~ "                    Variation des résiduels : ~a\n"
 #~ "                    y égale ~a plus ~a temps x~%"
 
-#, lisp-format
 #~ msgid "Pan position: ~a~%The left and right channels are correlated by about ~a %. This means:~%~a~%"
 #~ msgstr "Position panoramique : ~a~%Les canaux gauche et droit sont corrélés par environ ~a %. Ceci signifie :~%~a~%"
 
@@ -22454,7 +22653,6 @@ msgstr "Outils spectraux"
 #~ msgid "This plug-in works only with stereo tracks."
 #~ msgstr "Ce greffon fonctionne uniquement avec des pistes stéréo."
 
-#, c-format
 #~ msgid ""
 #~ "Disk is full.\n"
 #~ "%s\n"
@@ -22506,7 +22704,6 @@ msgstr "Outils spectraux"
 #~ msgid "Upload complete!"
 #~ msgstr "Téléchargement complet!"
 
-#, c-format
 #~ msgid "Your audio will be uploaded to our sharing service: %s,%%which requires a free account to use."
 #~ msgstr "Votre audio sera téléchargé sur notre service de partage : %s,%%qui nécessite un compte gratuit pour être utilisé."
 
@@ -22541,7 +22738,6 @@ msgstr "Outils spectraux"
 #~ msgid "Sorry, cannot apply effect on stereo tracks where the tracks don't match."
 #~ msgstr "Désolé, ne peut pas appliquer l’effet sur des pistes stéréo dans lesquelles les pistes ne correspondent pas."
 
-#, c-format
 #~ msgid ""
 #~ "Selection too long for Nyquist code.\n"
 #~ "Maximum allowed selection is %ld samples\n"
@@ -22554,11 +22750,9 @@ msgstr "Outils spectraux"
 #~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Désolé, les greffons Vamp ne peuvent être réalisés sur des pistes en stéréo dans lesquelles les canaux individuels de la piste ne correspondent pas."
 
-#, c-format
 #~ msgid "Are you sure you want to export the file as \"%s\"?\n"
 #~ msgstr "Voulez-vous vraiment exporter le fichier sous \"%s\" ?\n"
 
-#, c-format
 #~ msgid ""
 #~ "You are about to export a %s file with the name \"%s\".\n"
 #~ "\n"
@@ -22637,11 +22831,9 @@ msgstr "Outils spectraux"
 #~ msgid "File name prefix"
 #~ msgstr "Préfixe de nom de fichier"
 
-#, c-format
 #~ msgid "\"%s\" successfully created."
 #~ msgstr "\"%s\" a été créé avec succès."
 
-#, c-format
 #~ msgid ""
 #~ "\"%s\" doesn't exist.\n"
 #~ "\n"
@@ -22651,7 +22843,6 @@ msgstr "Outils spectraux"
 #~ "\n"
 #~ "Voulez-vous le créer ?"
 
-#, c-format
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name.\n"
 #~ "You cannot use any of these characters:\n"
@@ -22667,7 +22858,6 @@ msgstr "Outils spectraux"
 #~ "\n"
 #~ "Suggestion de remplacement :"
 
-#, c-format
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 #~ "\n"
@@ -22706,7 +22896,6 @@ msgstr "Outils spectraux"
 #~ msgid "GStreamer Importer"
 #~ msgstr "Assistant d’importation GStreamer"
 
-#, c-format
 #~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
 #~ msgstr "Index[%02d], Type[%s], Canaux[%d], Taux[%d]"
 
@@ -22716,7 +22905,6 @@ msgstr "Outils spectraux"
 #~ msgid "Unable to import file, state change failed."
 #~ msgstr "Impossible d’importer le fichier, le changement d’état a échoué."
 
-#, c-format
 #~ msgid "GStreamer Error: %s"
 #~ msgstr "Erreur GStreamer : %s"
 
@@ -22756,11 +22944,9 @@ msgstr "Outils spectraux"
 #~ msgid "WavPack Importer"
 #~ msgstr "Importer un projet"
 
-#, c-format
 #~ msgid "%s left"
 #~ msgstr "%s gauche"
 
-#, c-format
 #~ msgid "%s right"
 #~ msgstr "%s droite"
 
@@ -22782,9 +22968,6 @@ msgstr "Outils spectraux"
 # trebmuh to check (accélérateur)
 #~ msgid "&Full Screen (on/off)"
 #~ msgstr "Plein écran (marche/arrêt) (&f)"
-
-#~ msgid "Expo&rt Selected Audio..."
-#~ msgstr "Expo&rter l’audio sélectionné…"
 
 #~ msgid "Export &Multiple..."
 #~ msgstr "Export &multiple…"
@@ -22860,11 +23043,9 @@ msgstr "Outils spectraux"
 #~ msgid "Channel"
 #~ msgstr "Canal"
 
-#, c-format
 #~ msgid "Left, %dHz"
 #~ msgstr "Gauche, %dHz"
 
-#, c-format
 #~ msgid "Right, %dHz"
 #~ msgstr "Droit, %dMixageHz"
 
@@ -22874,7 +23055,6 @@ msgstr "Outils spectraux"
 #~ msgid "Fade type"
 #~ msgstr "Type de fondu"
 
-#, lisp-format
 #~ msgid ""
 #~ "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 #~ "                   Track sample rate is ~a Hz~%~\n"
@@ -22884,11 +23064,9 @@ msgstr "Outils spectraux"
 #~ "                   Le taux d’échantillonnage de la piste est de ~a Hz~%~\n"
 #~ "                   la fréquence doit être plus petite que ~a Hz."
 
-#, lisp-format
 #~ msgid "Error.~%Selection must be less than ~a."
 #~ msgstr "Erreur.~%La sélection doit être moins que ~a."
 
-#, lisp-format
 #~ msgid ""
 #~ "Error.\n"
 #~ "Selection too long.\n"
@@ -22898,7 +23076,6 @@ msgstr "Outils spectraux"
 #~ "La sélection est trop longue.\n"
 #~ "La longueur maximale est ~a."
 
-#, c-format
 #~ msgid "Exception code 0x%x"
 #~ msgstr "Code d’exception 0x%x"
 
@@ -22965,11 +23142,11 @@ msgstr "Outils spectraux"
 #~ msgid "Cannot open file"
 #~ msgstr "Impossible d’ouvrir le fichier"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "Impossible d’ouvrir le fichier projet"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Plugin %d to %d"
 #~ msgstr "Greffons %d à %d"
 
@@ -23033,16 +23210,13 @@ msgstr "Outils spectraux"
 #~ msgid "Snap To"
 #~ msgstr "Se coller à"
 
-#, c-format
 #~ msgid "Snap Clicks/Selections to %s"
 #~ msgstr "Aligner les clics/sélections sur %s"
 
 # trebmuh to check (vérifier dans un contexte graphique)
-#, c-format
 #~ msgid "%s - driven"
 #~ msgstr "%s - déterminé"
 
-#, c-format
 #~ msgid "Selection %s. %s won't change."
 #~ msgstr "Sélection %s. %s ne changera pas."
 
@@ -23060,7 +23234,6 @@ msgstr "Outils spectraux"
 #~ msgid "Location of &Manual:"
 #~ msgstr "Localisation du &manuel :"
 
-#, c-format
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "%s est un programme libre écrit par une équipe planétaire de %s. %s est %s pour Windows, Mac, et GNU/Linux (et d’autres systèmes Unix-like)."
 
@@ -23070,7 +23243,6 @@ msgstr "Outils spectraux"
 #~ msgid "available"
 #~ msgstr "disponible"
 
-#, c-format
 #~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
 #~ msgstr "Si vous trouvez un bogue ou que vous avez une suggestion pour nous, veuillez nous écrire, en anglais, à notre %s. Pour de l’aide, consultez les trucs et astuces sur notre %s ou visitez notre %s."
 
@@ -23091,7 +23263,6 @@ msgstr "Outils spectraux"
 #~ msgid "&Mixer Board..."
 #~ msgstr "Table de &mixage…"
 
-#, c-format
 #~ msgid ""
 #~ "Failed to retrieve data from the project file.\n"
 #~ "The following command failed:\n"
@@ -23161,16 +23332,11 @@ msgstr "Outils spectraux"
 #~ msgid "Name of the effect"
 #~ msgstr "Nom de l’effet"
 
-#, c-format
 #~ msgid "Latency: %4d"
 #~ msgstr "Latence : %4d"
 
 #~ msgid "Some Command"
 #~ msgstr "Certaine commande"
-
-# trebmuh to check (accélérateur)
-#~ msgid "Start &Playback"
-#~ msgstr "Démarrer la lecture (&p)"
 
 #~ msgid "&Preview effect"
 #~ msgstr "A&perçu de l’effet"
@@ -23194,7 +23360,6 @@ msgstr "Outils spectraux"
 #~ msgid "Stop &Playback"
 #~ msgstr "Arrêter la lecture (&p)"
 
-#, c-format
 #~ msgid "Reverb: %s"
 #~ msgstr "Réverbération : %s"
 
@@ -23202,7 +23367,6 @@ msgstr "Outils spectraux"
 #~ msgid "Scanning Shell VST"
 #~ msgstr "Scan des VST 'Shell'"
 
-#, c-format
 #~ msgid "Registering %d of %d: %-64.64s"
 #~ msgstr "Inscription %d de %d : %-64.64s"
 
@@ -23212,15 +23376,12 @@ msgstr "Outils spectraux"
 #~ msgid "Location"
 #~ msgstr "Emplacement"
 
-#, c-format
 #~ msgid "%s requires unsupported feature %s\n"
 #~ msgstr "%s nécessite une fonction non-supportée %s\n"
 
-#, c-format
 #~ msgid "%s requires unsupported option %s\n"
 #~ msgstr "%s nécessite une option non-supportée %s\n"
 
-#, c-format
 #~ msgid "Invalid project '%s' attribute."
 #~ msgstr "Attribut '%s' du projet invalide."
 
@@ -23240,9 +23401,6 @@ msgstr "Outils spectraux"
 #~ msgid "Show Effects Rack"
 #~ msgstr "Afficher le rack d’effets"
 
-#~ msgid "Plugin Options"
-#~ msgstr "Options de greffon"
-
 #~ msgid "Check for updated plugins when Audacity starts"
 #~ msgstr "Vérifier les mises à jour de greffons lors du démarrage d’Audacity"
 
@@ -23261,14 +23419,12 @@ msgstr "Outils spectraux"
 #~ msgid "Playback Volume"
 #~ msgstr "Volume de lecture"
 
-#, c-format
 #~ msgid "Recording Volume: %.2f"
 #~ msgstr "Volume d’enregistrement : %.2f"
 
 #~ msgid "Recording Volume (Unavailable; use system mixer.)"
 #~ msgstr "Volume d’enregistrement (indisponible ; utilisez le mixeur système.)"
 
-#, c-format
 #~ msgid "Playback Volume: %.2f"
 #~ msgstr "Volume de lecture : %.2f"
 
@@ -23365,7 +23521,6 @@ msgstr "Outils spectraux"
 #~ msgid "Amplitude of original audio (percent)"
 #~ msgstr "Amplitude de l’audio originel (pourcent)"
 
-#, lisp-format
 #~ msgid "Error.~%Stereo track required."
 #~ msgstr "Erreur.~%Piste stéréo nécessaire."
 
@@ -23384,7 +23539,6 @@ msgstr "Outils spectraux"
 #~ msgid "Failed to find compatible FFmpeg libraries."
 #~ msgstr "Impossible de trouver des bibliothèques FFmpeg compatibles."
 
-#, c-format
 #~ msgid "This operation cannot be done until importation of %s completes."
 #~ msgstr "Ne peut pas faire cette opération avant la fin de l’importation de %s."
 
@@ -23403,7 +23557,6 @@ msgstr "Outils spectraux"
 #~ msgid "Hamming, Reciprocal Hamming"
 #~ msgstr "Hamming, Hamming réciproque"
 
-#, c-format
 #~ msgid "%d of %d clip %s"
 #~ msgid_plural "%d of %d clips %s"
 #~ msgstr[0] "%d de %d clip %s"
@@ -23439,7 +23592,6 @@ msgstr "Outils spectraux"
 #~ msgid "Decoding Waveform"
 #~ msgstr "Décodage de la forme d’onde"
 
-#, c-format
 #~ msgid "%s %2.0f%% complete. Click to change task focal point."
 #~ msgstr "%s %2.0f%% achevé. Cliquer pour modifier le point focal de la tâche."
 
@@ -23449,7 +23601,6 @@ msgstr "Outils spectraux"
 #~ msgid "Loop Play"
 #~ msgstr "Lecture en boucle"
 
-#, c-format
 #~ msgid "Playback Volume: %.2f (emulated)"
 #~ msgstr "Volume de lecture : %.2f (émulé)"
 

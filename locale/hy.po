@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.5.0\n"
+"Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-04-04 21:13+0300\n"
+"POT-Creation-Date: 2024-05-17 23:19+0300\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -173,7 +173,7 @@ msgstr ""
 "\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-note-track/MIDIPlay.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy, c-format
 msgid "Error: %s"
 msgstr "Եղավ սխալ՝"
@@ -197,12 +197,13 @@ msgstr "Սխալ, երբ բացվում է ձայնի սարքը:"
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
-#: modules/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp src/ProjectAudioManager.cpp
-#: src/TimerRecordDialog.cpp src/effects/Contrast.cpp
-#: src/effects/EffectPreview.cpp src/effects/Generator.cpp
-#: src/effects/nyquist/Nyquist.cpp src/menus/SelectMenus.cpp
-#: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
-#: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/FreqWindow.cpp
+#: src/ProjectAudioManager.cpp src/TimerRecordDialog.cpp
+#: src/effects/Contrast.cpp src/effects/EffectPreview.cpp
+#: src/effects/Generator.cpp src/effects/nyquist/Nyquist.cpp
+#: src/menus/SelectMenus.cpp src/menus/TrackMenus.cpp
+#: src/menus/TransportMenus.cpp src/prefs/DirectoriesPrefs.cpp
+#: src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
@@ -384,7 +385,7 @@ msgstr "Վերցման տեղ՝"
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
 #: libraries/lib-import-export/ExportProgressUI.h
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy
 msgid "Export error"
 msgstr "Վերցնել MIDI-ն"
@@ -400,14 +401,19 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
+msgid "Local project data was removed before the sync has completed"
+msgstr ""
+
+#: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 #, fuzzy
 msgid "Failed to deserialize the response"
 msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
 
 #: libraries/lib-effects/Effect.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#: libraries/lib-preference-pages/PrefsPanel.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #: src/commands/AudacityCommand.cpp src/effects/nyquist/Nyquist.cpp
-#: src/prefs/PrefsPanel.cpp plug-ins/beat.ny
+#: plug-ins/beat.ny
 #, fuzzy
 msgid "Audacity"
 msgstr "Աուդասիթի պատմության գրքույկ"
@@ -649,8 +655,10 @@ msgstr ""
 #: libraries/lib-project-file-io/SqliteSampleBlock.cpp
 #: libraries/lib-transactions/TransactionScope.cpp
 #: libraries/lib-wave-track/WaveClip.cpp libraries/lib-wave-track/WaveTrack.cpp
-#: libraries/lib-wx-init/LogWindow.cpp modules/mod-cl/ExportCL.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
+#: libraries/lib-wx-init/LogWindow.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/TimerRecordDialog.cpp
 #: src/export/ExportAudioDialog.cpp src/import/RawAudioGuess.cpp
 #: src/menus/FileMenus.cpp src/prefs/DirectoriesPrefs.cpp
 #: src/prefs/KeyConfigPrefs.cpp src/widgets/Warning.cpp
@@ -1669,6 +1677,21 @@ msgstr "Բազմակողմանի"
 msgid "Simple"
 msgstr "Պարզ"
 
+#. i18n-hint: refers to optional plug-in software libraries
+#: libraries/lib-preference-pages/LibraryPrefs.cpp src/AboutDialog.cpp
+msgid "Libraries"
+msgstr "Գրադարաններ"
+
+#: libraries/lib-preference-pages/LibraryPrefs.cpp
+#, fuzzy
+msgid "Preferences for Library"
+msgstr "Կարգավորումներ՝"
+
+#: libraries/lib-preference-pages/LibraryPrefs.h
+#, fuzzy
+msgid "Library"
+msgstr "Գրադարաններ"
+
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
 msgid "(%d): %s"
@@ -2374,7 +2397,7 @@ msgstr "Անհաջող հեռացում %s"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#: modules/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp src/PluginDataModel.cpp
 #, fuzzy
 msgid "Unknown error"
 msgstr "Անհայտ հրահանգ՝ %s\n"
@@ -2720,13 +2743,24 @@ msgstr ""
 msgid "Warning - Truncating Overlong Block File"
 msgstr "Ուշադրություն - Առանձնացած բլոկ ֆայլ(եր)"
 
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Pre-processing"
+msgstr "Ընթացքում է՝"
+
+#: libraries/lib-wave-track/TimeStretching.cpp
+#, fuzzy
+msgid "Rendering Clip"
+msgstr "Անվանափոխել..."
+
 #: libraries/lib-wave-track/WaveClip.cpp
 #, fuzzy
 msgid "Resampling failed."
 msgstr "Վերահաճախավորում ձայնագրության %d"
 
-#: libraries/lib-wave-track/WaveTrack.cpp modules/mod-ffmpeg/ExportFFmpeg.cpp
-#: modules/mod-opus/ExportOpus.cpp
+#: libraries/lib-wave-track/WaveTrack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Audio"
 msgstr "Աուդիո..."
@@ -2758,19 +2792,9 @@ msgstr "Բավարար տարածք չկա նշվածի տեղադրման հա�
 msgid "A track has a corrupted sample sequence."
 msgstr ""
 
-#: libraries/lib-wave-track/WaveTrack.cpp
+#: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
 msgstr "Բավարար տարածք չկա կտրված ֆայլի տարածման համար"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.cpp
-#, fuzzy
-msgid "Pre-processing"
-msgstr "Ընթացքում է՝"
-
-#: libraries/lib-wave-track/WaveTrackUtilities.h
-#, fuzzy
-msgid "Rendering Clip"
-msgstr "Անվանափոխել..."
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2962,38 +2986,38 @@ msgstr "Ցուցադրել պատմության ֆայլերի մանրամաս�
 
 #. i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.
 #: libraries/lib-wx-init/MultiDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 #: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Լավ"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/PluginStartupRegistration.cpp
 msgid "Elapsed Time:"
 msgstr "Լրացած ժամանակ՝"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Remaining Time:"
 msgstr "Մնացած ժամանակ՝"
 
-#: libraries/lib-wx-init/ProgressDialog.cpp modules/mod-nyq-bench/NyqBench.cpp
-#: src/toolbars/ControlToolBar.cpp
+#: libraries/lib-wx-init/ProgressDialog.cpp
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/ControlToolBar.cpp
 msgid "Stop"
 msgstr "Դադարեցնել"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
 msgid "Cancel"
 msgstr "Չեղարկել"
 
@@ -3091,11 +3115,21 @@ msgstr "Չի ստացվում բեռնել ֆայլը՝ \"%s\""
 msgid "Could not parse XML"
 msgstr "Չի ստացվում բացել ֆայլը"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/etc/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "1st Experimental Command..."
+msgstr "Ընտրել հրահանգ"
+
+#: modules/etc/mod-null/ModNullCallback.cpp
+#, fuzzy
+msgid "2nd Experimental Command"
+msgstr "Ընտրել հրահանգ"
+
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid ""
 "Couldn't import the project:\n"
@@ -3109,7 +3143,7 @@ msgstr ""
 #. to import an AUP project.
 #. %s will be replaced with an explanation of the actual reason of
 #. project modification.
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "%s\n"
@@ -3118,7 +3152,7 @@ msgid ""
 "Please verify that everything works as intended before saving."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
 "This project was saved by Audacity version 1.0 or earlier. The format has\n"
 "changed and this version of Audacity is unable to import the project.\n"
@@ -3127,71 +3161,71 @@ msgid ""
 "you may import it with this version of Audacity."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy
 msgid "Internal error in importer...tag not recognized"
 msgstr "Ներքին սխալ է հաղորդվում հավասարման գործընթացից:"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'vpos' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'h' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'zoom' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel0' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'sel1' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selLow' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'selHigh' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
 msgstr "Չի գտնվում պրոեկտի ինֆորմացիոն թղթապանակը՝ \"%s\""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy
 msgid "Invalid sequence 'maxsamples' attribute."
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'sampleformat' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy
 msgid "Invalid sequence 'numsamples' attribute."
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Unable to parse the waveblock 'start' attribute"
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing project file %s\n"
@@ -3199,15 +3233,15 @@ msgid ""
 "Inserting silence instead."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid simpleblockfile 'len' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid silentblockfile 'len' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Missing alias file %s\n"
@@ -3215,15 +3249,15 @@ msgid ""
 "Inserting silence instead."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliasstart' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Missing or invalid pcmaliasblockfile 'aliaslen' attribute."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid ""
 "Error while processing %s\n"
@@ -3231,31 +3265,33 @@ msgid ""
 "Inserting silence."
 msgstr ""
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Failed to open %s"
 msgstr "Անհաջող հեռացում %s"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Failed to seek to position %lld in %s"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
-#: modules/mod-aup/ImportAUP.cpp
+#: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Unable to read %lld samples from %s"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
-#: modules/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp src/commands/HelpCommand.cpp
 msgid "Command:"
 msgstr "Հրահանգ՝"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-ffmpeg/FFmpeg.cpp
-#: modules/mod-mp3/ExportMP3.cpp plug-ins/nyquist-plug-in-installer.ny
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Ընտրել..."
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Show output"
 msgstr "ցուցադրել ելքը"
 
@@ -3264,944 +3300,253 @@ msgstr "ցուցադրել ելքը"
 #. and "standard in" means the default input stream that the external program,
 #. named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
 #. in the program as a format string.  Keep %f unchanged.
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Data will be piped to standard in. \"%f\" uses the file name in the export window."
 msgstr "Տվյալները պետք է ուղղվեն ստանդարտ: \"%f\" ֆայլի անվան օգտագործում վերցման պատուհանում:"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
 msgstr ""
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy, c-format
 msgid "\"%s\" couldn't be found."
 msgstr "Մոդուլ \"%s\" -ը գտնված է:"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
 msgstr ""
 
 #. i18n-hint files that can be run as programs
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy
 msgid "Executables"
 msgstr "Փոփոխական"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Find path to command"
 msgstr "Գտնել հրահանգի ճանապարհը"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "(external program)"
 msgstr "(արտաքին ծրագիր)"
 
-#: modules/mod-cl/ExportCL.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Cannot export audio to %s"
 msgstr "Չի ստացվում աուդիոյից %s վերցնում"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Exporting the selected audio using command-line encoder"
 msgstr "Նշված աուդիոյի վերցնում հրահանգագծի կոդավորմամբ"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 #, fuzzy
 msgid "Exporting the audio using command-line encoder"
 msgstr "Նշված աուդիոյի վերցնում հրահանգագծի կոդավորմամբ"
 
-#: modules/mod-cl/ExportCL.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Command Output"
 msgstr "Հրահանգի ելք"
 
-#: modules/mod-cl/ExportCL.cpp src/IncompatiblePluginsDialog.cpp
-#: src/PluginRegistrationDialog.cpp src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-cl/ExportCL.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/update/UpdateNoticeDialog.cpp
 msgid "&OK"
 msgstr "Լավ"
 
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
-msgid "Waiting for audio.com"
-msgstr "Պահպանվում է ձայնագրվաձ աուդիոն"
-
-#: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
-msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Save to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
-msgid "Generating audio preview..."
-msgstr "Ստեղծված աղմուկ"
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
-msgid "Synchronizing project"
-msgstr "Պրոեկտների պահպանում"
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Previews can be updated only for Cloud projects"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Save To Cloud..."
-msgstr "Պահպանել որպես..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Open From Cloud..."
-msgstr "Բացել &նախկիններից..."
-
-#: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
-msgid "Share Audio..."
-msgstr "Պատճենել նշված աուդիոն"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Account"
-msgstr "Այլակերպում"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Export behavior"
-msgstr "Վերցնել MIDI-ն"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "S&how 'How would you like to export?' dialog"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Save behavior"
-msgstr "Վարքագծեր"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "Always &ask"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always &save to cloud"
-msgstr "Ալիքաձև"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Always save to the co&mputer"
-msgstr "Պահպանել պրոեկտը &որպես..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Temporary Cloud files directory"
-msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "&Location:"
-msgstr "Գտնվելու վայր՝"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "&Browse..."
-msgstr "Ընտրել..."
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-msgid "days"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "&Remove temporary files after:"
-msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
-msgid "Preferences for Cloud"
-msgstr "Կարգավորումներ՝"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-msgid "Choose a location to place the temporary directory"
-msgstr "Ընտրեք վայր, տեղադրելու ժամանակավոր ցուցակը"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Temporary files directory cannot be on a FAT drive."
-msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
-
-#: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#: src/prefs/DirectoriesPrefs.cpp
-#, fuzzy
-msgid "Cannot set the preference."
-msgstr "Կարգավորումներ..."
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
-msgid "Failed."
-msgstr "Չհաջողվեց"
-
-#: modules/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, c-format
-msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Waiting for space to free up"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
-msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr ""
-
-#. i18n-hint: Share audio button text, keep as short as possible
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Share Audio"
-msgstr "Պատճենել նշված աուդիոն"
-
-#. i18n-hint: Clicking this menu item shows the toolbar
-#. that opens Share Audio dialog
-#: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
-#, fuzzy
-msgid "&Share Audio Toolbar"
-msgstr "Գործիքադարակի ընտրություն"
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "Account not linked"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Link Account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/UserPanel.cpp
-msgid "&Unlink Account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
-msgid "Don't show this again"
-msgstr "Չցուցադրել այս զգուշացումը կրկին"
-
-#. i18n-hint: A title that is shown on the first project save that allows the
-#. user to select Cloud or local save.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "How would you like to save?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Save to the Cloud"
-msgstr "Պահպանել պատմության գրքույկը ... տեղում՝"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Save to Cloud"
-msgstr "Ալիքաձև"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "On your computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Save to &computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "&Remember my choice and don't show again"
-msgstr ""
-
-#. i18n-hint: A title that is shown on export that allows the user to select
-#. Cloud or local export.
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "How would you like to export?"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Share to audio.com"
-msgstr "Պատճենել նշված աուդիոն"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Share to audio.com"
-msgstr "Պատճենել նշված աուդիոն"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "Export to &computer"
-msgstr "Վերցնել MIDI-ն"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
-msgid "&Don't show again"
-msgstr "Չցուցադրել այս զգուշացումը կրկին"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-msgid "Private"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Unlisted"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Public"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#, fuzzy
-msgid "Save"
-msgstr "&Պահպանել"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
-msgid "Save to computer..."
-msgstr "Պահպանել պրոեկտը &որպես..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Project Name"
-msgstr "Պրոեկտներ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "We encountered an issue syncing your file"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
-msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "You are not signed in"
-msgstr "Դուք չեք կարող նշել բանալի այս գրառման մեջ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-msgid "Log in to audio.com to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
-msgid "Sign in"
-msgstr "Հավասարենցել %s"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#, fuzzy
-msgid "Link account"
-msgstr "Այլակերպում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "We were unable to link your account. Please try again."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
-#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
-#: src/export/ExportAudioDialog.cpp
-msgid "&Cancel"
-msgstr "&Դադարեցնել"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
-msgid "&Try again"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-msgid "Account linked successfully!"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
-#, fuzzy
-msgid "&Ok"
-msgstr "Լավ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Enter token to link your account"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "Token"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/IncompatiblePluginsDialog.cpp
-msgid "C&ontinue"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
-msgid "L&ink audio.com account..."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project is no longer saved to the Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Save to computer"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
-msgid "Save to Cloud"
-msgstr "Պահպանել պատմության գրքույկը ... տեղում՝"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "Your project storage limit has been reached."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Visit audio.com"
-msgstr "Պատճենել նշված աուդիոն"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project version conflict detected"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Save this project"
-msgstr "Պահպանել պրոեկտը"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Discard and open latest version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open local project"
-msgstr "Բացված Աուդասիթի պրոեկտ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Cloud project conflict"
-msgstr "Չի հաջողվում բացել պրոեկտ ֆայլը"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid "Keep currently open version"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
-msgid "Open new version"
-msgstr "Հաճախականության փոփոխում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "Open from Cloud"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "less than 1 minute"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, c-format
-msgid "one minutes ago"
-msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "one hour ago"
-msgid_plural "%d hours ago"
-msgstr[0] "Տոնի ժամաչափ՝"
-msgstr[1] "Տոնի ժամաչափ՝"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Modified"
-msgstr "Փոփոխված նշում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to authorize account"
-msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Loading projects list..."
-msgstr "Պրոեկտների պահպանում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Failed to get projects list"
-msgstr "Չհաջողվեց գտնել կոդեկը"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Cloud saved projects"
-msgstr "Աուդասիթի պրոեկտներ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Search:"
-msgstr "Որոնում՝"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
-msgid "Prev"
-msgstr "Դիտում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Next"
-msgstr "Հաջորդը գործիք"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Open"
-msgstr "&Բացել..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-msgid "View in audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
-msgid "Page %d of %d"
-msgstr "Պլագիններ %i ից %i"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Դուք չեք կարող նվագարկել կամ ձայնագրել աուդիոն:\n"
-"\n"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Are you sure you want to cancel?"
-msgstr "Իսկապե՞ս ցանկանում եք ջնջել %s"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Cancel upload to Audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Uploading audio..."
-msgstr "Աուդիո կեշավորում (cach)"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Upload error"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "We are unable to prepare this file for uploading."
-msgstr "Անհար է բացել ֆայլը գրման համար"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Finalizing upload..."
-msgstr "Գտնել մասնատված..."
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#: src/TagsEditor.cpp
-msgid "Track Title"
-msgstr "Երգի վերնագիրը"
-
-#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, c-format
-msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-msgid "Press \"Continue\" to upload to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
-msgid "Preparing audio..."
-msgstr "Աուդիո կեշավորում (cach)"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You are not authorized to access this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You tried to access a project that has expired."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity had trouble connecting to the server."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "You don't have access to this project."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "The project could not be found."
-msgstr "Մոդուլ \"%s\" -ը գտնված է:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "The server responded with something Audacity could not understand."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audacity encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-msgid "Audio.com encountered an internal error."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Audacity encountered an unknown error."
-msgstr "Կանոնի ջնջման հաստատում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
-msgid "Sync failed"
-msgstr "Սինք-փակ նշված"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
-msgid ""
-"Error details:\n"
-"%s"
-msgstr "Եղավ սխալ՝"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
-msgid "Syncing your project"
-msgstr "Դատարկ պրոեկտի պահպանում"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#: src/AudioPasteDialog.cpp
-#, fuzzy
-msgid "Continue"
-msgstr "Այլ ներդրողներ"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Success!"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Ժամատարածքի փոխող"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "Done"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Cloud project incomplete"
-msgstr "Չի ստացվում բեռնել ֆայլը կամ աջակցող ծավալը:"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
-msgid "Load latest"
-msgstr "Բեռնել ֆայլերը"
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-msgid "You have canceled this upload to audio.com"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-msgid "Retry"
-msgstr ""
-
-#: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr ""
-
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy, c-format
 msgid "%d kbps"
 msgstr "%i kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "%.2f kbps"
 msgstr "%.2f kbps"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp2/ExportMP2.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Bit Rate"
 msgstr "Բիթի չափ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Quality (kbps)"
 msgstr "Որակը՝"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Compression"
 msgstr "Խտացում՝"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Frame Duration"
 msgstr "Ժամաչափ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "2.5 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "5 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "10 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "20 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "40 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "60 ms"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Vbr Mode"
 msgstr "Չափագրում"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Off"
 msgstr "Անջատել"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "On"
 msgstr "&Բացել..."
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Constrained"
 msgstr "Հաստատուն"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/commands/DragCommand.cpp
-#: src/prefs/ApplicationPrefs.cpp src/update/NoUpdatesAvailableDialog.cpp
-#: src/update/UpdateNoticeDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: src/commands/DragCommand.cpp src/prefs/ApplicationPrefs.cpp
+#: src/update/NoUpdatesAvailableDialog.cpp src/update/UpdateNoticeDialog.cpp
 #, fuzzy
 msgid "Application"
 msgstr "Ընդլայնում դԲ"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "VOIP"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Low Delay"
 msgstr "Ուշացնող"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Cutoff"
 msgstr "Կտրվածք՝"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
 #: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
 #: src/prefs/ModulePrefs.cpp
 msgid "Disabled"
 msgstr "Անջատված է"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Narrowband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Mediumband"
 msgstr "Միջին"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Wideband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Super Wideband"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Fullband"
 msgstr "Բազմաբենդ"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Open custom FFmpeg format options"
 msgstr "Ընտրովի FFmpeg վերցնում"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Current Format:"
 msgstr "Հաստատել ընթացիկ &պրոեկտում"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy
 msgid "Current Codec:"
 msgstr "Հաստատել ընթացիկ &պրոեկտում"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't determine format description for file \"%s\"."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate output format context."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't add audio stream to output file \"%s\"."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't open output file \"%s\" to write. Error code is %d."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "FFmpeg : ERROR - Can't write headers to output file \"%s\". Error code is %d."
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "FFmpeg cannot find audio codec 0x%x.\n"
@@ -4210,16 +3555,16 @@ msgstr ""
 "FFmpeg-ն չգտավ աուդիո կոդեկը 0x%x.\n"
 "Հավանաբար այս կոդեկը չի աջակցում:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported a generic error (EPERM)"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "The codec reported an invalid parameter (EINVAL)"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid ""
 "Can't open audio codec \"%s\" (0x%x)\n"
@@ -4227,39 +3572,39 @@ msgid ""
 "%s"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Couldn't write audio frame to output file."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not get sample buffer size"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not allocate bytes for samples buffer"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Could not setup audio frame"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - encoding frame failed"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - Too much remaining data."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "FFmpeg : ERROR - nAudioFrameSizeOut too large."
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid ""
 "Properly configured FFmpeg is required to proceed.\n"
 "You can configure it at Preferences > Libraries."
@@ -4267,31 +3612,33 @@ msgstr ""
 "FFmpeg-ի պատշաճ կարգավորումը պահանջում է շարունակում:\n"
 "Կարող եք կարգավորել այն մտնելով՝ Կարգավորումներ> Գրադարան:"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
 msgstr "Փորձվում է վերցնել %d ալիքներ, բայց նշված ելքայի ֆորմատի ալիքների առավելագույն քանակը %d է"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Exporting selected audio as %s"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio as %s"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Invalid sample rate"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
-#: src/menus/TrackMenus.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/menus/TrackMenus.cpp
 msgid "Resample"
 msgstr "Վերահաճախավորել"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the current output\n"
@@ -4300,7 +3647,7 @@ msgstr ""
 "Պրոեկտի ձայնաչափի բաժինը (%d) չի աջակցում ներկա ելքային \n"
 "ֆայլի ֆորմատը:  "
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -4309,141 +3656,145 @@ msgstr ""
 "Պրոեկտի ձայնաչափի բաժինը (%d) բիթերի չափի (%d kbps) չի\n"
 "աջակցում ներկա ֆայլի ֆորմատին:  "
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "You may resample to one of the rates below."
 msgstr "Դուք կարող եք վերանշել մեկը ներգևում դրված"
 
-#: modules/mod-ffmpeg/ExportFFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Sample Rates"
 msgstr "Ձայնի բաժին"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LC"
 msgstr "LC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Main"
 msgstr "Գլխավոր"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LTP"
 msgstr "LTP"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "M4A (AAC) Files (FFmpeg)"
 msgstr "M4A (AAC) Ֆայլեր (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AC3 Files (FFmpeg)"
 msgstr "AC3 Ֆայլեր (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "AMR (narrow band) Files (FFmpeg)"
 msgstr "AMR (նեղ խումբ) Ֆայլեր (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Opus (OggOpus) Files (FFmpeg)"
 msgstr "M4A (AAC) Ֆայլեր (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "WMA (version 2) Files (FFmpeg)"
 msgstr "WMA (տարբերակ 2) Ֆայլեր (FFmpeg)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Custom FFmpeg Export"
 msgstr "Ընտրովի FFmpeg վերցնում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Estimate"
 msgstr "Գնահատում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "2-level"
 msgstr "2 փուլ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "4-level"
 msgstr "4 փուլ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "8-level"
 msgstr "8 փուլ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Full search"
 msgstr "Ամբողջական որոնում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Log search"
 msgstr "Պատմ. ֆայլերի որոնում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Configure custom FFmpeg options"
 msgstr "Ընտրովի FFmpeg վերցնում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
 msgstr "Վերագրում՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Load Preset"
 msgstr "Վերագրամն բենում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Save Preset"
 msgstr "Պահպանել վերագրումը"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/effects/EffectUI.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/effects/EffectUI.cpp
 msgid "Delete Preset"
 msgstr "Ջնջել վերագրումը"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
 msgstr "Ներմուծել վերագրումներ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Export Presets"
 msgstr "Վերցնել վերագրումները"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp src/commands/GetInfoCommand.cpp
-#: src/commands/HelpCommand.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "Format:"
 msgstr "Ֆորմատ՝"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Codec:"
 msgstr "Կոդեկ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs."
 msgstr "Ոչ բոլոր կոդեկներն ու ֆորմատներն են համատեղելի: Բոլոր կոդեկների հետ ոչ բոլոր հավաքման կարգավորումներն են համատեղելի:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Formats"
 msgstr "Ցուցադրել բոլոր ֆորմատները"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Show All Codecs"
 msgstr "Ցուցադրել բոլոր կոդեկները"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Formats"
 msgstr "Ֆորմատ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "Codecs"
 msgstr "Կոդեկ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
 msgstr "Գլխավոր կարգավորումներ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "ISO 639 3-letter language code\n"
 "Optional\n"
@@ -4453,20 +3804,20 @@ msgstr ""
 "Ճիշտ\n"
 "դատարկ - ավտոմատ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Language:"
 msgstr "Լեզու՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Reservoir"
 msgstr "Բիթ ամբար"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "VBL"
 msgstr "VBL"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Codec tag (FOURCC)\n"
 "Optional\n"
@@ -4476,11 +3827,11 @@ msgstr ""
 "Ոչ կարևոր\n"
 "դատարկ - ավտոմատ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Tag:"
 msgstr "Տեգ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Bit Rate (bits/second) - influences the resulting file size and quality\n"
 "Some codecs may only accept specific values (128k, 192k, 256k etc)\n"
@@ -4492,11 +3843,11 @@ msgstr ""
 "0 - ավտոմատ\n"
 "Առաջարկված - 192000"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Bit Rate:"
 msgstr "Բիթի չափ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Overall quality, used differently by different codecs\n"
 "Required for vorbis\n"
@@ -4508,11 +3859,11 @@ msgstr ""
 "0 - ավտոմատ\n"
 "-1 - անջատված (օգտագործում որակի փոխարեն)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Quality:"
 msgstr "Որակը՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Sample rate (Hz)\n"
 "0 - don't change sample rate"
@@ -4520,11 +3871,11 @@ msgstr ""
 "Ձայնաչափի բաժին (Hz)\n"
 "0 - չփոխել չայնաչափի բաժինը"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Sample Rate:"
 msgstr "Ձայնաչափի բաժին՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Audio cutoff bandwidth (Hz)\n"
 "Optional\n"
@@ -4534,11 +3885,11 @@ msgstr ""
 "Ոչ կարևոր\n"
 "0 - ավտոմատ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Cutoff:"
 msgstr "Կտրվածք՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "AAC Profile\n"
 "Low Complexity - default\n"
@@ -4548,15 +3899,15 @@ msgstr ""
 "Ցածր բարդություն -լռելյայն\n"
 "Որոշ նվագարկիչներ կարող են նվագարկել ամեն բան, քան LC-ն"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Profile:"
 msgstr "Պրոֆիլ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "FLAC options"
 msgstr "FLAC ընտրանքներ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Compression level\n"
 "Required for FLAC\n"
@@ -4570,11 +3921,11 @@ msgstr ""
 "նվազագ - 0 (արագ կոդավորում, մեծ ֆայլ)\n"
 "առավ - 10 (դանդաղ կոդավորում, փոքր ֆայլ)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
 msgstr "Խտացում՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Frame size\n"
 "Optional\n"
@@ -4588,11 +3939,11 @@ msgstr ""
 "min - 16\n"
 "max - 65535"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Frame:"
 msgstr "Շրջանակ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "LPC coefficients precision\n"
 "Optional\n"
@@ -4606,11 +3957,11 @@ msgstr ""
 "նվազ - 1\n"
 "առավ - 15"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "LPC"
 msgstr "LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Prediction Order Method\n"
 "Estimate - fastest, lower compression\n"
@@ -4622,11 +3973,11 @@ msgstr ""
 "Պտմ ֆայլի որոնում - ցածր, լավագույն խտացում\n"
 "Ամբողջական որոնում - լռելյայն"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "PdO Method:"
 msgstr "PdO մեթոդ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal prediction order\n"
 "Optional\n"
@@ -4640,11 +3991,11 @@ msgstr ""
 "նվազագ - 0\n"
 "առավելագ - 32 (LPC-ով) կամ 4 (LPC-ով)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PdO"
 msgstr "Նվազագ. PdO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal prediction order\n"
 "Optional\n"
@@ -4658,11 +4009,11 @@ msgstr ""
 "նվազագ - 0\n"
 "առավելագ - 32 (LPC-ով) կամ 4 (LPC-ով)"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PdO"
 msgstr "Առավելագ. PdO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Minimal partition order\n"
 "Optional\n"
@@ -4676,11 +4027,11 @@ msgstr ""
 "նվազագ - 0\n"
 "առավելագ - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Min. PtO"
 msgstr "Նվազագ. PtO"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximal partition order\n"
 "Optional\n"
@@ -4694,21 +4045,21 @@ msgstr ""
 "նվազագ - 0\n"
 "առավելագ - 8"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Max. PtO"
 msgstr "Առավելագ. PtO"
 
 #. i18n-hint:  Abbreviates "Linear Predictive Coding",
 #. but this text needs to be kept very short
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Use LPC"
 msgstr "Օգտագործեք LPC"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "MPEG container options"
 msgstr "MPEG կոնտեյների ընտրանքներ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Maximum bit rate of the multiplexed stream\n"
 "Optional\n"
@@ -4721,13 +4072,13 @@ msgstr ""
 #. i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
 #. 'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
 #. it has a hard to predict effect on the degree of compression
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
 msgstr "Մուլտիպլեքս բաժին՝"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
 "Packet size\n"
 "Optional\n"
@@ -4739,63 +4090,63 @@ msgstr ""
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Packet Size:"
 msgstr "Փաթեթային չափ՝"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't delete a preset without name"
 msgstr "Չեք կարող ջնջել վերագրումը անվան հետ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
 msgstr "Ջնջե՞լ վերագրումը '%s':"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Confirm Deletion"
 msgstr "Ջնջման հաստատում"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "You can't save a preset without a name"
 msgstr "Չեք կարող ջնջել վերագրումը անվան հետ"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file with presets to import"
 msgstr "Նշել xml ֆայլ վերագրման հետ, ներմուծման համար"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, fuzzy
 msgid "No presets to export"
 msgstr "Չկան նշումներ վերցման համար:"
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file to export presets into"
 msgstr "Նշել xml ֆայլ, վերցնելու վերագրումը -ից"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Incompatible format and codec"
 msgstr ""
 
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to guess format"
 msgstr "Չհաջողվեց կռահել ֆորմատը"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
+#: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Failed to find the codec"
 msgstr "Չհաջողվեց գտնել կոդեկը"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy
 msgid ""
 "FFmpeg was configured in Preferences and successfully loaded before, \n"
@@ -4808,67 +4159,68 @@ msgstr ""
 "\n"
 "Դուք պետք է մտնեք կարգավորումներ > Գրադարան և վերակազմեք դա:"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg startup failed"
 msgstr "FFmpeg բացումը ձախողվեց"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg library not found"
 msgstr "FFmpeg գրադարանը գույություն չունի"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Locate FFmpeg"
 msgstr "տեղադրում FFmpeg"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
 msgstr "Աուդասիթիին պետք է ֆայլ '%s' ներմուծման և աուդիո ֆայլի վերցման համար FFmpeg-ի միջոցով:"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
 msgstr "Տեղը '%s':"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
 msgstr "Գտնելու համար '%s', սեղմեք այստեղ -->"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
 msgstr "FFmpeg-ի անվճար պատճենի համար, սեղմեք այստեղ -->"
 
 #. i18n-hint: (verb)
-#: modules/mod-ffmpeg/FFmpeg.cpp modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Download"
 msgstr "Բեռնել"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only avformat.dll"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.dylib"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.so"
 msgstr ""
 
 #. i18n-hint: It's asking for the location of a file, for
 #. example, "Where is lame_enc.dll?" - you could translate
 #. "Where would I find the file '%s'?" instead if you want.
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Where is '%s'?"
 msgstr "Որտեղ է '%s'?"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg not found"
 msgstr "FFmpeg-ն գոյություն չունի"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, fuzzy
 msgid ""
 "Audacity attempted to use FFmpeg to import an audio file,\n"
@@ -4883,35 +4235,35 @@ msgstr ""
 "FFmpeg ներմուծումն օգտագործելու համար, մտեք Կարգավորումներ > Գրադարան\n"
 "բեռնելու կամ FFmpeg-ի տեղը նշելու համար:"
 
-#: modules/mod-ffmpeg/FFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Do not show this warning again"
 msgstr "Չցուցադրել այս զգուշացումը կրկին"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Import/Export Library"
 msgstr "FFmpeg ներմուծման/վերցման գրադարան"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "No compatible FFmpeg library was found"
 msgstr "Չկա աջակցող FFmpeg գրադարան"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library Version:"
 msgstr "FFmpeg գրադարանի տարբերակ՝"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "FFmpeg Library:"
 msgstr "FFmpeg գրադարան՝"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Loca&te..."
 msgstr "Տեղավորել..."
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Dow&nload"
 msgstr "Բեռնել"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid ""
 "Audacity has automatically detected valid FFmpeg libraries.\n"
 "Do you still want to locate them manually?"
@@ -4919,120 +4271,123 @@ msgstr ""
 "Աուդասիթին ավտոմատ գտավ լավ FFmpeg գրադարաններ:\n"
 "Վստա՞հ եք, որ ցանկաում եք դրանք կարգավորել ձոռքվ:"
 
-#: modules/mod-ffmpeg/FFmpegPrefs.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Success"
 msgstr ""
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, fuzzy
 msgid "Error Saving FFmpeg Presets"
 msgstr "VST սկզբնաբերման պահպանման սխալ"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Overwrite preset '%s'?"
 msgstr "Վերագրե՞լ նախադրված '%s'"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Confirm Overwrite"
 msgstr "Վերագրման հաստատում"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select format before saving a profile"
 msgstr "Խնդրում ենք ընտրել ֆորմատ, մինչ պրոֆիլի պահպանում"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Please select codec before saving a profile"
 msgstr "Խնդրում ենք ընտրել կոդեկ, մինչ պրոֆիլի պահպանում"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
 msgstr "Վերագրումը '%s' գոյություն չունի:"
 
-#: modules/mod-ffmpeg/FFmpegPresets.cpp
+#: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, fuzzy, c-format
 msgid "Replace preset '%s'?"
 msgstr "Ջնջե՞լ վերագրումը '%s':"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
 msgstr "FFmpeg համատեղելի ֆայլեր"
 
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "Try installing FFmpeg.\n"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-ffmpeg/ImportFFmpeg.cpp
+#: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
 #, fuzzy, c-format
 msgid "Index[%02x] Codec[%s], Language[%s], Bitrate[%s], Channels[%d], Duration[%d]"
 msgstr "Ինդեքս[%02x] Կոդեկ[%S], Լեզու[%S], Բիթաչափ[%S], Ալիքներ[%d], Տևողություն[%d]"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Bit Depth"
 msgstr "Բիթի խորություն՝"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "16 bit"
 msgstr "16 բիթ"
 
-#: modules/mod-flac/ExportFLAC.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "24 bit"
 msgstr "24 բիթ"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/BassTreble.cpp
 msgid "Level"
 msgstr "Փուլ"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "0 (fastest)"
 msgstr "0 (արագ)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "1"
 msgstr "1"
 
-#: modules/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp src/effects/NoiseReduction.cpp
 msgid "2"
 msgstr "2"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "3"
 msgstr "3"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "4"
 msgstr "4"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "5"
 msgstr "5"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "6"
 msgstr "6"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "7"
 msgstr "7"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "8 (best)"
 msgstr "8 (լավագույն)"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "FLAC Files"
 msgstr "FLAC Ֆայլեր"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid "FLAC export couldn't open %s"
 msgstr "FLAC վերցնումը չի բացվում %s"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, c-format
 msgid ""
 "FLAC encoder failed to initialize\n"
@@ -5041,302 +4396,214 @@ msgstr ""
 "FLAC կոդավորման անհաջող մեկնարկ\n"
 "Կարգավիճակ՝ %d"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 msgid "Exporting the selected audio as FLAC"
 msgstr "Վերցնում նշված աուդիոն որպես FLAC"
 
-#: modules/mod-flac/ExportFLAC.cpp
+#: modules/import-export/mod-flac/ExportFLAC.cpp
 #, fuzzy
 msgid "Exporting the audio as FLAC"
 msgstr "Վերցնում նշված աուդիոն որպես FLAC"
 
-#: modules/mod-flac/ImportFLAC.cpp
+#: modules/import-export/mod-flac/ImportFLAC.cpp
 msgid "FLAC files"
 msgstr "FLAC ֆայլեր"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "List of Files in basic text format"
 msgstr "Ֆայլերի ցանկ տեքստ բազային ֆորմատով"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid window offset in LOF file."
 msgstr "Սխալ պատուհանի ցուցադրում LOF ֆայլերում:"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid duration in LOF file."
 msgstr "Վնասված տևողություն LOF ֆայլերում:"
 
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
 msgstr "MIDI ձայնագրությունները չեն կարող հատուցվել առանձին, միայն աուդիո ֆայլերն են կարող:"
 
 #. i18n-hint: You do not need to translate "LOF"
-#: modules/mod-lof/ImportLOF.cpp
+#: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "Invalid track offset in LOF file."
 msgstr "Ձայնագրության վնասված հատուցում LOF ֆայլում:"
 
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Exported Allegro (.gro) files save time as:"
-msgstr ""
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select only one Note Track at a time."
-msgstr "Դուք կարող եք չափել միայն մեկ ձայնագրություն ժամանակի հետ:"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Please select a Note Track."
-msgstr "Խնդրում ենք ընտրել որևէ գործողություն"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI As:"
-msgstr "Վերցնել MIDI-ն որպես"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "MIDI file"
-msgstr "Ընտրել MIDI ֆայլ..."
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Allegro file"
-msgstr "Բոլոր ֆայլերը (*)|*"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid ""
-"You have selected a filename with an unrecognized file extension.\n"
-"Do you want to continue?"
-msgstr ""
-"Դուք ընտրել եք ֆայլի անունը չընդունված ֆորմատային ձևաչափով:\n"
-"Ցանկանու՞մ եք շարունակել:"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-msgid "Export MIDI"
-msgstr "Վերցնել MIDI-ն"
-
-#: modules/mod-midi-import-export/ExportMIDI.cpp
-#, fuzzy
-msgid "Export MI&DI..."
-msgstr "Վերցնել որպես MIDI..."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, c-format
-msgid "Imported MIDI from '%s'"
-msgstr "Ներմուծված MIDI '%s' -ից"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "Import MIDI"
-msgstr "Ներմուծել MIDI"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Filename too short."
-msgstr ": Ֆայլի անունը շատ կարճ է:"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s: Incorrect filetype."
-msgstr ": ոչ ճիշտ ֆայլի տեսակ:"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy, c-format
-msgid "Could not open file %s."
-msgstr "Չի ստացվում բացել ֆայլը"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "Select a MIDI file"
-msgstr "Ընտրել MIDI ֆայլ..."
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "MIDI and Allegro files"
-msgstr ""
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "MIDI files"
-msgstr "MP3 ֆայլեր"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-#, fuzzy
-msgid "Allegro files"
-msgstr "Բոլոր ֆայլերը (*)|*"
-
-#: modules/mod-midi-import-export/ImportMIDI.cpp
-msgid "&MIDI..."
-msgstr "MIDI..."
-
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy
 msgid "Version"
 msgstr "Հետդարձում"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
 msgstr ""
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
 msgstr "MP2 Ֆայլեր"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "Cannot export MP2 with this sample rate and bit rate"
 msgstr "Չի ստացվում վերցնել MP2-ը այս ձայնի բաժնով և բիթաչափով"
 
-#: modules/mod-mp2/ExportMP2.cpp modules/mod-mp3/ExportMP3.cpp
-#: modules/mod-ogg/ExportOGG.cpp modules/mod-opus/ExportOpus.cpp
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unable to open target file for writing"
 msgstr "Անհար է բացել ֆայլը գրման համար"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "Exporting selected audio at %ld kbps"
 msgstr "Վերցնում նշված աուդիոյի %d kbps-ով"
 
-#: modules/mod-mp2/ExportMP2.cpp
+#: modules/import-export/mod-mp2/ExportMP2.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio at %ld kbps"
 msgstr "Վերցնում նշված աուդիոյի %d kbps-ով"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "220-260 kbps (Best Quality)"
 msgstr "(Լավագույն որակ)"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "200-250 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "170-210 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "155-195 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "145-185 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "110-150 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "95-135 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "80-120 kbps"
 msgstr "%.2f kbps"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "65-105 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "45-85 kbps (Smaller files)"
 msgstr "(Փոքր ֆայլեր)"
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane, 320 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Standard, 170-210 kbps"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium, 145-185 kbps"
 msgstr ""
 
 #. i18n-hint: Slightly humorous - as in use an insane precision with MP3.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Insane"
 msgstr "ահռելի"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme"
 msgstr "Ծայրահեղ"
 
-#: modules/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
 msgstr "Ստանդարտ"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Medium"
 msgstr "Միջին"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Bit Rate Mode"
 msgstr "Բիթաչափի ձև՝"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
 msgstr "Վերագրում"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Variable"
 msgstr "Փոփոխական"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Average"
 msgstr "Միջին"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Constant"
 msgstr "Հաստատուն"
 
 #. i18n-hint: meaning accuracy in reproduction of sounds
-#: modules/mod-mp3/ExportMP3.cpp modules/mod-ogg/ExportOGG.cpp
-#: modules/mod-opus/ExportOpus.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/QualityPrefs.cpp
 #: src/prefs/QualityPrefs.h
 msgid "Quality"
 msgstr "Որակ"
 
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Locate LAME"
 msgstr "Տեղադրել անունը"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Audacity needs the file %s to create MP3s."
 msgstr "Աուդասիթիին պետք է %s  ֆայլը, որպեսզի ստեղծի MP3-ները:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Location of %s:"
 msgstr "Տեղը %s -ի՝"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "To find %s, click here -->"
 msgstr "Գտնելու համար %s -ը, սեղմե՛ք այստեղ -->"
 
 #. i18n-hint: There is a  button to the right of the arrow.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "To get a free copy of LAME, click here -->"
 msgstr "Lame-ի անվճար պատճենի համար՝ սեղմե՛ք այստեղ -->"
@@ -5344,12 +4611,12 @@ msgstr "Lame-ի անվճար պատճենի համար՝ սեղմե՛ք այստ
 #. i18n-hint: It's asking for the location of a file, for
 #. * example, "Where is lame_enc.dll?" - you could translate
 #. * "Where would I find the file %s" instead if you want.
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Where is %s?"
 msgstr "Որտե՞ղ է %s -ը:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\n"
@@ -5358,91 +4625,91 @@ msgstr ""
 "Դուք նշել եք՝ lame_enc.dll v%d.%d. Այս տարբերակը չի աջակցում Աուդասիթիին %d.%d.%d.\n"
 "Խնդրում ենք, բեռնլ LAME MP3 գրադարան-ի վերջին տարբերակը:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only lame_enc.dll"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame64bit.dylib"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.dylib"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "Extended libraries"
 msgstr "Հիմնական գրադարան"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Only libmp3lame.so.0"
 msgstr ""
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 Files"
 msgstr "MP3 ֆայլեր"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not open MP3 encoding library!"
 msgstr "Չի ստացվում բացել MP3 կոդավորման գրադարանը:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Could not initialize MP3 encoding library!"
 msgstr "Չի ստացվում մեկնարկել MP3 կոդավորման գրադարանը:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Not a valid or supported MP3 encoding library!"
 msgstr "Ոչ ճիշտ կամ աջակցող MP3 կոդավորման գրադարան:"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Unable to initialize MP3 stream"
 msgstr "Չի ստացվում մեկանարկել MP3 հոսքը"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with %s preset"
 msgstr "Վերցնում նշված աուդիոն %s վերագրմամբ"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio with %s preset"
 msgstr "Վերցնում նշված աուդիոն %s վերագրմամբ"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio with VBR quality %s"
 msgstr "Վերցնում նշված աուդիոն VBR որակով %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio with VBR quality %s"
 msgstr "Վերցնում նշված աուդիոն VBR որակով %s"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Exporting selected audio at %d Kbps"
 msgstr "Վերցնում նշված աուդիոն %d Kbps-ով"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Exporting the audio at %d Kbps"
 msgstr "Վերցնում նշված աուդիոն %d Kbps-ով"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid "Error %ld returned from MP3 encoder"
 msgstr "Սխալ %d վերադարձ MP3 կոդավորումից"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) is not supported by the MP3\n"
@@ -5451,7 +4718,7 @@ msgstr ""
 "Պրոեկտի ձայնաչափի բաժինը (%d) չի աջակցում MP3\n"
 "ֆորմատի ֆայլին:  "
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy, c-format
 msgid ""
 "The project sample rate (%d) and bit rate (%d kbps) combination is not\n"
@@ -5460,691 +4727,329 @@ msgstr ""
 "Պրոեկտի ձայնաչափի բաժինը (%d) և բիթաչափի (%d kbps) հավաքումը չի\n"
 "աջակցում MP3 ֆայլի ֆորմտը:  "
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "MP3 export library not found"
 msgstr "MP3 վերցման գրադարանը գոյություն չունի"
 
-#: modules/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp
 #, fuzzy
 msgid "(Built-in)"
 msgstr "Աուդիո յունիթ էֆեկտներ"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 #, fuzzy
 msgid "LAME MP3 Export Library"
 msgstr "MP3 վերցման գրադարան"
 
-#: modules/mod-mp3/MP3Prefs.cpp
+#: modules/import-export/mod-mp3/MP3Prefs.cpp
 msgid "MP3 Library Version:"
 msgstr "MP3 գրադարանի տարբերակ՝"
 
-#: modules/mod-mpg123/ImportMP3_MPG123.cpp
+#: modules/import-export/mod-mpg123/ImportMP3_MPG123.cpp
 msgid "MP3 files"
 msgstr "MP3 ֆայլեր"
 
-#: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
-msgid "1st Experimental Command..."
-msgstr "Ընտրել հրահանգ"
-
-#: modules/mod-null/ModNullCallback.cpp
-#, fuzzy
-msgid "2nd Experimental Command"
-msgstr "Ընտրել հրահանգ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Nyquist Workbench..."
-msgstr "Nyquist հրահանգ..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Undo\tCtrl+Z"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Redo\tCtrl+Y"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cu&t\tCtrl+X"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Copy\tCtrl+C"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Paste\tCtrl+V"
-msgstr "Տեղադրել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Cle&ar\tCtrl+L"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select A&ll\tCtrl+A"
-msgstr "Նշել &բոլորը"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Find...\tCtrl+F"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Matching Paren\tF8"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Top S-expr\tF9"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Higher S-expr\tF10"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Previous S-expr\tF11"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Next S-expr\tF12"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go to"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select &Font..."
-msgstr "&Տառատեսակ..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Split &Vertically"
-msgstr "Ուղղահայաց"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Split &Horizontally"
-msgstr "Հորիզոնական ստերեո"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Show S&cript"
-msgstr "ցուցադրել ելքը"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Show &Output"
-msgstr "ցուցադրել ելքը"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Large Icons"
-msgstr "Մեծ տարածք"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Small Icons"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Toolbar"
-msgstr "Գործիքադարակներ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&Go\tF5"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "&Stop\tF6"
-msgstr "Դադարեցնել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "&About"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script"
-msgstr ""
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
-#, fuzzy
-msgid "Output"
-msgstr "Էֆեկտի կարգավորումներ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Load Nyquist script"
-msgstr "Nyquist հրահանգ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Script was not saved."
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
-#, fuzzy
-msgid "Save Nyquist script"
-msgstr "Nyquist հրահանգ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find dialog"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Harvey Lubin (logo)"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Tango Icon Gallery (toolbar icons)"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Leland Lucius"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "(C) 2009 by Leland Lucius"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Nyquist Effect Workbench"
-msgstr "Nyquist էֆեկտի հաստատում..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "No matches found"
-msgstr "Սարքեր չեն գտնվել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Code has been modified. Are you sure?"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Untitled"
-msgstr "անվերնագիր"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Nyquist Effect Workbench - "
-msgstr "Nyquist էֆեկտի հաստատում..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New"
-msgstr "Նոր"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "New script"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Open script"
-msgstr "Բացել նախկիններից"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save script"
-msgstr "Nyquist հրահանգ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save As"
-msgstr "Պահպանել որպես..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Save script as..."
-msgstr "Պահպանել պրոեկտը &որպես..."
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Copy"
-msgstr "Պատճենել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Copy to clipboard"
-msgstr "Կտրել ժամանակավոր փոխանցողի մեջ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Cut"
-msgstr "Կտրել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Cut to clipboard"
-msgstr "Կտրել ժամանակավոր փոխանցողի մեջ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
-#: src/toolbars/CutCopyPasteToolBar.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
-msgid "Paste"
-msgstr "Տեղադրել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Paste from clipboard"
-msgstr "Տեղադրում ժամանակավոր փոխանցողից"
-
-#. i18n-hint verb; to empty or erase
-#: modules/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#, fuzzy
-msgid "Clear"
-msgstr "Մաքրել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Clear selection"
-msgstr "Հավասարեցման նշում"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
-#: src/tracks/ui/BackgroundCell.cpp
-#, fuzzy
-msgid "Select All"
-msgstr "Նշել &բոլորը"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Select all text"
-msgstr "Նշել &բոլորը"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Undo"
-msgstr "Քայլ հետ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Undo last change"
-msgstr "Ֆորմատի փոխում"
-
-#: modules/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
-#: src/widgets/KeyView.cpp
-msgid "Redo"
-msgstr "Քայլ առաջ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Redo previous change"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Find"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Find text"
-msgstr "Գտնել գրառում"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Match"
-msgstr "Կապոց"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to matching paren"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Top"
-msgstr "Մեջտեղ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to top S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Up"
-msgstr "Վերև"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to higher S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Previous"
-msgstr "Նախորդը գործիք"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to previous S-expr"
-msgstr ""
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-msgid "Go to next S-expr"
-msgstr ""
-
-#. i18n-hint noun
-#: modules/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
-#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
-msgid "Start"
-msgstr "Սկսել"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Start script"
-msgstr "Nyquist հրահանգ"
-
-#: modules/mod-nyq-bench/NyqBench.cpp
-#, fuzzy
-msgid "Stop script"
-msgstr "Nyquist հրահանգ"
-
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Ogg Vorbis Files"
 msgstr "Ogg Vorbis Ֆայլեր"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Unable to export - rate or quality problem"
 msgstr "Անհնար է նշել QuickTime պատրաստման որակ"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem initialising"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem creating stream"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Unable to export - problem with packets"
 msgstr ""
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Unable to export - problem with file"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 msgid "Exporting the selected audio as Ogg Vorbis"
 msgstr "Վերցնել նշված աուդիոն որպես Ogg Vorbis"
 
-#: modules/mod-ogg/ExportOGG.cpp
+#: modules/import-export/mod-ogg/ExportOGG.cpp
 #, fuzzy
 msgid "Exporting the audio as Ogg Vorbis"
 msgstr "Վերցնել նշված աուդիոն որպես Ogg Vorbis"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Ogg Vorbis files"
 msgstr "Ogg Vorbis ֆայլեր"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 #, fuzzy, c-format
 msgid "Index[%02x] Version[%d], Channels[%d], Rate[%ld]"
 msgstr "Ինդեքս[%02x] Կոդեկ[%S], Լեզու[%S], Բիթաչափ[%S], Ալիքներ[%d], Տևողություն[%d]"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Media read error"
 msgstr "Մեդիայի կարդացման սխալ"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Not an Ogg Vorbis file"
 msgstr "Ոչ Ogg Vorbis ֆայլ"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Vorbis version mismatch"
 msgstr "Vorbis տարբերակի անհավասարություն"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Invalid Vorbis bitstream header"
 msgstr "Սխալ Vorbis բիթ հոսքային վերնագիր"
 
-#: modules/mod-ogg/ImportOGG.cpp
+#: modules/import-export/mod-ogg/ImportOGG.cpp
 msgid "Internal logic fault"
 msgstr "Ներքին տրամաբանության սխալ"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "no error"
 msgstr "Վերցնել MIDI-ն"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid argument"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "buffer too small"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "internal error"
 msgstr "(արտաքին ծրագիր)"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid packet"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not implemented"
 msgstr "Հրահանգ %s չի իրականացվել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "invalid state"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "memory allocation has failed"
 msgstr "Հիշողության բաժանումն ձախողվեց -- Նոր Sample-եր"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Auto"
 msgstr "Ինքնախուսափում"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Maximum"
 msgstr "Առավելագույն դադար՝"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "VBR Mode"
 msgstr "Չափագրում"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
 msgstr ""
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page header"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to write OGG page"
 msgstr "Անհնար է որոշել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Opus Files"
 msgstr "MP3 ֆայլեր"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unsupported sample rate"
 msgstr "Չվերցված զտումներ՝"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting selected audio as Opus"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Exporting the audio as Opus"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to create Opus encoder"
 msgstr "Անհնար է բացել/ստեղծել թեստային ֆայլ:"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bitrate"
 msgstr "Անհնար է որոշել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set complexity"
 msgstr "Անհնար է որոշել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bandwidth"
 msgstr "Անհնար է հեռացնել '%s'."
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set VBR mode"
 msgstr "Անհնար է որոշել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set CVBR mode"
 msgstr "Անհնար է որոշել"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to get lookahead"
 msgstr "Անհնար է ստանալ բուֆերի լրացումը"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to calculate correct preskip"
 msgstr "Անհաջող հեռացում %s"
 
-#: modules/mod-opus/ExportOpus.cpp
+#: modules/import-export/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to encode input buffer"
 msgstr "Անհաջող հեռացում %s"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "Opus files"
 msgstr "MP3 ֆայլեր"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "File has changed the number of channels in the middle."
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "IO error reading from file"
 msgstr "Ֆայլի գրման սխալ"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not an Opus file"
 msgstr "Ոչ Ogg Vorbis ֆայլ"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid header"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "unsupported version"
 msgstr "Բոլոր ֆայլերը|*|Բոլոր աջակցող ֆայլերը|"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid stream structure"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "stream is not seekable"
 msgstr ""
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "invalid timestamp"
 msgstr "Սխալ ձայնաչափի բաժին"
 
-#: modules/mod-opus/ImportOpus.cpp
+#: modules/import-export/mod-opus/ImportOpus.cpp
 #, fuzzy, c-format
 msgid "Failed to decode Opus file: %s"
 msgstr "Անհաջող հեռացում %s"
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "WAV (Microsoft)"
 msgstr "WAV (Microsoft) միացված 16 բիթ PCM"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Encoding"
 msgstr "Կոդավորում՝"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, fuzzy
 msgid "Header"
 msgstr "Վերնագիր՝"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Other uncompressed files"
 msgstr "Այլ չխտացված ֆայլեր"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "GSM 6.10 requires mono"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "WAVEX and GSM 6.10 formats are not compatible"
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Cannot export audio in this format."
 msgstr "Հնարավոր չէ վերցնել աուդիո այս ֆորմատով:"
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid ""
 "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid "Exporting the selected audio as %s"
 msgstr "Վերցնում նշված աուդիոն որպես %s"
@@ -6152,7 +5057,7 @@ msgstr "Վերցնում նշված աուդիոն որպես %s"
 #. i18n-hint: %s will be the error message from libsndfile, which
 #. * is usually something unhelpful (and untranslated) like "system
 #. * error"
-#: modules/mod-pcm/ExportPCM.cpp
+#: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
 msgid ""
 "Error while writing %s file (disk full?).\n"
@@ -6161,260 +5066,1423 @@ msgstr ""
 "Սխալ գրելիս %s ֆայլը (տեղ չկա՞ սկավառակում):\n"
 "Libsnd ֆայլն ասում է \"%s\""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
 msgstr "WAV, AIFF, և այլ ոչ խտացված տեսակներ"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AU (Sun/NeXT)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "AVR (Audio Visual Research)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "CAF (Apple Core Audio File)"
 msgstr ""
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "FLAC (FLAC Lossless Audio Codec)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "HTK (HMM Tool Kit)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IFF (Amiga IFF/SVX8/SV16)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT4 (GNU Octave 2.0 / Matlab 4.2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MAT5 (GNU Octave 2.1 / Matlab 5.0)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "MPC (Akai MPC 2k)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "OGG (OGG Container format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PAF (Ensoniq PARIS)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "PVF (Portable Voice Format)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RAW (header-less)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "RF64 (RIFF 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SD2 (Sound Designer II)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SDS (Midi Sample Dump Standard)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "SF (Berkeley/IRCAM/CARL)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOC (Creative Labs)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "W64 (SoundFoundry WAVE 64)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WAV (NIST Sphere)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "WAVEX (Microsoft)"
 msgstr "WAV (Microsoft) միացված 16 բիթ PCM"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "WVE (Psion Series 3)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "XI (FastTracker 2)"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 8 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "Signed 16 bit PCM"
 msgstr "16-բիթ Պրոց. հիշ."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "Signed 24 bit PCM"
 msgstr "24-բիթ Պրոց. հիշ."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Signed 32 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Unsigned 8 bit PCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "32 bit float"
 msgstr "32-բիթ վերբեռն."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "64 bit float"
 msgstr "32-բիթ վերբեռն."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "U-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "A-Law"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "IMA ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Microsoft ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "GSM 6.10"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "32kbs G721 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "24kbs G723 ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "12 bit DWVW"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "16 bit DWVW"
 msgstr "16 բիթ"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "24 bit DWVW"
 msgstr "24 բիթ"
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "VOX ADPCM"
 msgstr ""
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "16 bit DPCM"
 msgstr "16-բիթ Պրոց. հիշ."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "8 bit DPCM"
 msgstr "16-բիթ Պրոց. հիշ."
 
-#: modules/mod-pcm/ImportPCM.cpp
+#: modules/import-export/mod-pcm/ImportPCM.cpp
 msgid "Vorbis"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Low Quality (Fast)"
 msgstr "Որակը՝"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Normal Quality"
 msgstr "Որակ"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "High Quality (Slow)"
 msgstr "Որակ"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Very High Quality (Slowest)"
 msgstr "(Լավագույն որակ)"
 
 #. i18n-hint bps abbreviates "bits per sample"
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy, c-format
 msgid "%.1f bps"
 msgstr "%.1f վարկյ."
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Hybrid Mode"
 msgstr "Չափագրում"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
 msgstr ""
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "WavPack Files"
 msgstr "Պահպանել ֆայլերը"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Unable to create target file for writing"
 msgstr "Անհար է բացել ֆայլը գրման համար"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting selected audio as WavPack"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-wavpack/ExportWavPack.cpp
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting the audio as WavPack"
 msgstr "Վերցնել նշված աուդիոն որպես %s"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, fuzzy
 msgid "WavPack files"
 msgstr "Պահպանել ֆայլերը"
 
-#: modules/mod-wavpack/ImportWavPack.cpp
+#: modules/import-export/mod-wavpack/ImportWavPack.cpp
 #, c-format
 msgid "Encountered %d errors decoding WavPack file!"
 msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Nyquist Workbench..."
+msgstr "Nyquist հրահանգ..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Undo\tCtrl+Z"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Redo\tCtrl+Y"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cu&t\tCtrl+X"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Copy\tCtrl+C"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Paste\tCtrl+V"
+msgstr "Տեղադրել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Cle&ar\tCtrl+L"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select A&ll\tCtrl+A"
+msgstr "Նշել &բոլորը"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Find...\tCtrl+F"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Matching Paren\tF8"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Top S-expr\tF9"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Higher S-expr\tF10"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Previous S-expr\tF11"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Next S-expr\tF12"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go to"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select &Font..."
+msgstr "&Տառատեսակ..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Split &Vertically"
+msgstr "Ուղղահայաց"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Split &Horizontally"
+msgstr "Հորիզոնական ստերեո"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Show S&cript"
+msgstr "ցուցադրել ելքը"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Show &Output"
+msgstr "ցուցադրել ելքը"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Large Icons"
+msgstr "Մեծ տարածք"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Small Icons"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Toolbar"
+msgstr "Գործիքադարակներ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&Go\tF5"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "&Stop\tF6"
+msgstr "Դադարեցնել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "&About"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script"
+msgstr ""
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#: src/effects/BassTreble.cpp
+#, fuzzy
+msgid "Output"
+msgstr "Էֆեկտի կարգավորումներ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Load Nyquist script"
+msgstr "Nyquist հրահանգ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Script was not saved."
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
+#, fuzzy
+msgid "Save Nyquist script"
+msgstr "Nyquist հրահանգ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find dialog"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Harvey Lubin (logo)"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Tango Icon Gallery (toolbar icons)"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Leland Lucius"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "(C) 2009 by Leland Lucius"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "External Audacity module which provides a simple IDE for writing effects."
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Nyquist Effect Workbench"
+msgstr "Nyquist էֆեկտի հաստատում..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "No matches found"
+msgstr "Սարքեր չեն գտնվել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Code has been modified. Are you sure?"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Untitled"
+msgstr "անվերնագիր"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Nyquist Effect Workbench - "
+msgstr "Nyquist էֆեկտի հաստատում..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New"
+msgstr "Նոր"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "New script"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Open"
+msgstr "&Բացել..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Open script"
+msgstr "Բացել նախկիններից"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: src/Benchmark.cpp
+#, fuzzy
+msgid "Save"
+msgstr "&Պահպանել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save script"
+msgstr "Nyquist հրահանգ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save As"
+msgstr "Պահպանել որպես..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Save script as..."
+msgstr "Պահպանել պրոեկտը &որպես..."
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Copy"
+msgstr "Պատճենել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Copy to clipboard"
+msgstr "Կտրել ժամանակավոր փոխանցողի մեջ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Cut"
+msgstr "Կտրել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Cut to clipboard"
+msgstr "Կտրել ժամանակավոր փոխանցողի մեջ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/EditMenus.cpp
+#: src/toolbars/CutCopyPasteToolBar.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
+msgid "Paste"
+msgstr "Տեղադրել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Paste from clipboard"
+msgstr "Տեղադրում ժամանակավոր փոխանցողից"
+
+#. i18n-hint verb; to empty or erase
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
+#, fuzzy
+msgid "Clear"
+msgstr "Մաքրել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Clear selection"
+msgstr "Հավասարեցման նշում"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/menus/SelectMenus.cpp
+#: src/tracks/ui/BackgroundCell.cpp
+#, fuzzy
+msgid "Select All"
+msgstr "Նշել &բոլորը"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Select all text"
+msgstr "Նշել &բոլորը"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Undo"
+msgstr "Քայլ հետ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Undo last change"
+msgstr "Ֆորմատի փոխում"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/toolbars/EditToolBar.cpp
+#: src/widgets/KeyView.cpp
+msgid "Redo"
+msgstr "Քայլ առաջ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Redo previous change"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Find"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Find text"
+msgstr "Գտնել գրառում"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Match"
+msgstr "Կապոց"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to matching paren"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Top"
+msgstr "Մեջտեղ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to top S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Up"
+msgstr "Վերև"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to higher S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Previous"
+msgstr "Նախորդը գործիք"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to previous S-expr"
+msgstr ""
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Next"
+msgstr "Հաջորդը գործիք"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+msgid "Go to next S-expr"
+msgstr ""
+
+#. i18n-hint noun
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/effects/Contrast.cpp
+#: src/effects/ToneGen.cpp src/toolbars/SelectionBar.cpp
+msgid "Start"
+msgstr "Սկսել"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Start script"
+msgstr "Nyquist հրահանգ"
+
+#: modules/nyquist/mod-nyq-bench/NyqBench.cpp
+#, fuzzy
+msgid "Stop script"
+msgstr "Nyquist հրահանգ"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+#, fuzzy
+msgid "Waiting for audio.com"
+msgstr "Պահպանվում է ձայնագրվաձ աուդիոն"
+
+#: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
+msgid "An action on audio.com is required before you can continue. You can cancel this operation."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Save to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
+#, fuzzy
+msgid "Generating audio preview..."
+msgstr "Ստեղծված աղմուկ"
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
+#, fuzzy
+msgid "Synchronizing project"
+msgstr "Պրոեկտների պահպանում"
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "Previews can be updated only for Cloud projects"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Save &To Cloud..."
+msgstr "Պահպանել որպես..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+msgid "&Update Cloud Audio Preview"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "Open Fro&m Cloud..."
+msgstr "Բացել &նախկիններից..."
+
+#: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
+#, fuzzy
+msgid "S&hare Audio..."
+msgstr "Պատճենել նշված աուդիոն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Account"
+msgstr "Այլակերպում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Export behavior"
+msgstr "Վերցնել MIDI-ն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "S&how 'How would you like to export?' dialog"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Save behavior"
+msgstr "Վարքագծեր"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "Always &ask"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always &save to cloud"
+msgstr "Ալիքաձև"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Always save to the co&mputer"
+msgstr "Պահպանել պրոեկտը &որպես..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Temporary Cloud files directory"
+msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "&Location:"
+msgstr "Գտնվելու վայր՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "&Browse..."
+msgstr "Ընտրել..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+msgid "days"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "&Remove temporary files after:"
+msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#, fuzzy
+msgid "Preferences for Cloud"
+msgstr "Կարգավորումներ՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+msgid "Choose a location to place the temporary directory"
+msgstr "Ընտրեք վայր, տեղադրելու ժամանակավոր ցուցակը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Temporary files directory cannot be on a FAT drive."
+msgstr "Ժամանակավոր ֆայլերի ճանապարհներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
+#: src/prefs/DirectoriesPrefs.cpp
+#, fuzzy
+msgid "Cannot set the preference."
+msgstr "Կարգավորումներ..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, fuzzy
+msgid "Failed."
+msgstr "Չհաջողվեց"
+
+#: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
+#, c-format
+msgid "Syncing to audio.com... (%d%%)"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Waiting for space to free up"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
+msgid "Once you have made storage space available on audio.com, click Retry."
+msgstr ""
+
+#. i18n-hint: Share audio button text, keep as short as possible
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Share Audio"
+msgstr "Պատճենել նշված աուդիոն"
+
+#. i18n-hint: Clicking this menu item shows the toolbar
+#. that opens Share Audio dialog
+#: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
+#, fuzzy
+msgid "&Share Audio Toolbar"
+msgstr "Գործիքադարակի ընտրություն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "Account not linked"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Link Account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
+msgid "&Unlink Account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+#, fuzzy
+msgid "Don't show this again"
+msgstr "Չցուցադրել այս զգուշացումը կրկին"
+
+#. i18n-hint: A title that is shown on the first project save that allows the
+#. user to select Cloud or local save.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to save?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Save to the Cloud"
+msgstr "Պահպանել պատմության գրքույկը ... տեղում՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Save to Cloud"
+msgstr "Ալիքաձև"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "On your computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Files are saved on your device."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Save to &computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "&Remember my choice and don't show again"
+msgstr ""
+
+#. i18n-hint: A title that is shown on export that allows the user to select
+#. Cloud or local export.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "How would you like to export?"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Share to audio.com"
+msgstr "Պատճենել նշված աուդիոն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Share to audio.com"
+msgstr "Պատճենել նշված աուդիոն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "Export to &computer"
+msgstr "Վերցնել MIDI-ն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
+#, fuzzy
+msgid "&Don't show again"
+msgstr "Չցուցադրել այս զգուշացումը կրկին"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Project Name"
+msgstr "Պրոեկտներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+msgid "Private"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Unlisted"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Public"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
+#, fuzzy
+msgid "Save to computer..."
+msgstr "Պահպանել պրոեկտը &որպես..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "We encountered an issue syncing your file"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
+msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "You are not signed in"
+msgstr "Դուք չեք կարող նշել բանալի այս գրառման մեջ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+msgid "Log in to audio.com to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
+#, fuzzy
+msgid "Sign in"
+msgstr "Հավասարենցել %s"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#, fuzzy
+msgid "Link account"
+msgstr "Այլակերպում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "We were unable to link your account. Please try again."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/BatchProcessDialog.cpp src/PluginRegistrationDialog.cpp
+#: src/TimerRecordExportDialog.cpp src/effects/EffectUI.cpp
+#: src/export/ExportAudioDialog.cpp
+msgid "&Cancel"
+msgstr "&Դադարեցնել"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
+msgid "&Try again"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
+msgid "Account linked successfully!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Enter token to link your account"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "Token"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/IncompatiblePluginsDialog.cpp
+msgid "C&ontinue"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
+msgid "L&ink audio.com account..."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project is no longer saved to the Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+msgid "You can either save it to the Cloud as a new project, or save it to your computer."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Save to computer"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
+#, fuzzy
+msgid "Save to Cloud"
+msgstr "Պահպանել պատմության գրքույկը ... տեղում՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "Your project storage limit has been reached."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+msgid "You can also save this project locally to avoid losing changes."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Visit audio.com"
+msgstr "Պատճենել նշված աուդիոն"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project version conflict detected"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Save this project"
+msgstr "Պահպանել պրոեկտը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Discard and open latest version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open local project"
+msgstr "Բացված Աուդասիթի պրոեկտ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Cloud project conflict"
+msgstr "Չի հաջողվում բացել պրոեկտ ֆայլը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+msgid "Keep currently open version"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
+#, fuzzy
+msgid "Open new version"
+msgstr "Հաճախականության փոփոխում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "Open from Cloud"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "less than 1 minute"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, c-format
+msgid "one minutes ago"
+msgid_plural "%d minutes ago"
+msgstr[0] ""
+msgstr[1] ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "one hour ago"
+msgid_plural "%d hours ago"
+msgstr[0] "Տոնի ժամաչափ՝"
+msgstr[1] "Տոնի ժամաչափ՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Modified"
+msgstr "Փոփոխված նշում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to authorize account"
+msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Loading projects list..."
+msgstr "Պրոեկտների պահպանում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Failed to get projects list"
+msgstr "Չհաջողվեց գտնել կոդեկը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Cloud saved projects"
+msgstr "Աուդասիթի պրոեկտներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Search:"
+msgstr "Որոնում՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy
+msgid "Prev"
+msgstr "Դիտում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+msgid "View in audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
+#, fuzzy, c-format
+msgid "Page %d of %d"
+msgstr "Պլագիններ %i ից %i"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Anyone will be able to listen to this audio."
+msgstr ""
+"Դուք չեք կարող նվագարկել կամ ձայնագրել աուդիոն:\n"
+"\n"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Only you and people you share a link with will be able to listen to this audio."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Are you sure you want to cancel?"
+msgstr "Իսկապե՞ս ցանկանում եք ջնջել %s"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Cancel upload to Audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Uploading audio..."
+msgstr "Աուդիո կեշավորում (cach)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Upload error"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "We are unable to prepare this file for uploading."
+msgstr "Անհար է բացել ֆայլը գրման համար"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Finalizing upload..."
+msgstr "Գտնել մասնատված..."
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#: src/TagsEditor.cpp
+msgid "Track Title"
+msgstr "Երգի վերնագիրը"
+
+#. i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, c-format
+msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+msgid "Press \"Continue\" to upload to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
+#, fuzzy
+msgid "Preparing audio..."
+msgstr "Աուդիո կեշավորում (cach)"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You are not authorized to access this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You tried to access a project that has expired."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity had trouble connecting to the server."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The project is too large to upload. Please save it to your computer instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "You don't have access to this project."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "The project could not be found."
+msgstr "Մոդուլ \"%s\" -ը գտնված է:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "The server responded with something Audacity could not understand."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audacity encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+msgid "Audio.com encountered an internal error."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Audacity encountered an unknown error."
+msgstr "Կանոնի ջնջման հաստատում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy
+msgid "Sync failed"
+msgstr "Սինք-փակ նշված"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
+#, fuzzy, c-format
+msgid ""
+"Error details:\n"
+"%s"
+msgstr "Եղավ սխալ՝"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#, fuzzy
+msgid "Syncing your project"
+msgstr "Դատարկ պրոեկտի պահպանում"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
+#: src/AudioPasteDialog.cpp
+#, fuzzy
+msgid "Continue"
+msgstr "Այլ ներդրողներ"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Success!"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+#, fuzzy
+msgid "View online"
+msgstr "Ժամատարածքի փոխող"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
+msgid "Done"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Cloud project incomplete"
+msgstr "Չի ստացվում բեռնել ֆայլը կամ աջակցող ծավալը:"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+#, fuzzy
+msgid "Load latest"
+msgstr "Բեռնել ֆայլերը"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
+msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
+msgid "You have canceled this upload to audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
+msgid "Retry"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
+msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Exported Allegro (.gro) files save time as:"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select only one Note Track at a time."
+msgstr "Դուք կարող եք չափել միայն մեկ ձայնագրություն ժամանակի հետ:"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Please select a Note Track."
+msgstr "Խնդրում ենք ընտրել որևէ գործողություն"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI As:"
+msgstr "Վերցնել MIDI-ն որպես"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "MIDI file"
+msgstr "Ընտրել MIDI ֆայլ..."
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Allegro file"
+msgstr "Բոլոր ֆայլերը (*)|*"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid ""
+"You have selected a filename with an unrecognized file extension.\n"
+"Do you want to continue?"
+msgstr ""
+"Դուք ընտրել եք ֆայլի անունը չընդունված ֆորմատային ձևաչափով:\n"
+"Ցանկանու՞մ եք շարունակել:"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+msgid "Export MIDI"
+msgstr "Վերցնել MIDI-ն"
+
+#: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
+#, fuzzy
+msgid "Export MI&DI..."
+msgstr "Վերցնել որպես MIDI..."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, c-format
+msgid "Imported MIDI from '%s'"
+msgstr "Ներմուծված MIDI '%s' -ից"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "Import MIDI"
+msgstr "Ներմուծել MIDI"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Filename too short."
+msgstr ": Ֆայլի անունը շատ կարճ է:"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s: Incorrect filetype."
+msgstr ": ոչ ճիշտ ֆայլի տեսակ:"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy, c-format
+msgid "Could not open file %s."
+msgstr "Չի ստացվում բացել ֆայլը"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Select a MIDI file"
+msgstr "Ընտրել MIDI ֆայլ..."
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "MIDI and Allegro files"
+msgstr ""
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "MIDI files"
+msgstr "MP3 ֆայլեր"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+#, fuzzy
+msgid "Allegro files"
+msgstr "Բոլոր ֆայլերը (*)|*"
+
+#: modules/track-ui/mod-midi-import-export/ImportMIDI.cpp
+msgid "&MIDI..."
+msgstr "MIDI..."
 
 #: src/AboutDialog.cpp
 msgid "No revision identifier was provided"
@@ -6579,11 +6647,6 @@ msgstr ""
 #, fuzzy
 msgid "Translators"
 msgstr "Շարժ"
-
-#. i18n-hint: refers to optional plug-in software libraries
-#: src/AboutDialog.cpp src/prefs/LibraryPrefs.cpp
-msgid "Libraries"
-msgstr "Գրադարաններ"
 
 #. i18n-hint: The program's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -7285,7 +7348,6 @@ msgstr "Վերականգնվող պրոեկտներ"
 
 #. i18n-hint: (verb).  It instruct the user to select items.
 #: src/AutoRecoveryDialog.cpp src/commands/SelectCommand.cpp
-#: src/tracks/ui/CommonTrackInfo.cpp
 msgid "Select"
 msgstr "Ընտրել"
 
@@ -8576,6 +8638,162 @@ msgstr "Տեղափոխվել է պան սլայդ"
 msgid "&Mixer"
 msgstr "Միախառնող"
 
+#: src/PendingStrings.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+msgid "View tutorials"
+msgstr ""
+
+#. i18n-hint: hyperlink
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Պատճենել նշված աուդիոն"
+
+#. i18n-hint: Title of the buttons that adds new effects plugin search path
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "Ավելացնել նոր կանոն"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Պլագին կարգավորումներ"
+
+#. i18n-hint: master channel display name
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Տեղադրել"
+
+#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Master effects"
+msgstr "Դիտում"
+
+#. i18n-hint: Hint for a master effects section of realtime effects panel
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Apply to all tracks"
+msgstr "Անջատել որպես նոր ձայնաֆայլի"
+
+#: src/PendingStrings.cpp
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Խտացում՝"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Առանձնացնել ժամանակի տեսակետից"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Input gain (dB)"
+msgstr "Խոնա&վացում (դԲ)՝"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Ceiling (dB)"
+msgstr "Հզորացում (դԲ)՝"
+
+#: src/PendingStrings.cpp
+msgid "Input"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attenuation"
+msgstr "Ժամաչափը"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Շեմը %d դԲ"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Խոնա&վացում (դԲ)՝"
+
+#: src/PendingStrings.cpp
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Rati&o:"
+msgstr "Հարաբերակցում՝"
+
+#: src/PendingStrings.cpp
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Հարձակման/հետ քաշման ժամ"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Ազատ ժամանակ"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "Փոփոխվող նվագարկում"
+
+#: src/PendingStrings.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Limiter (beta)"
+msgstr "Սահմանափակիչ"
+
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Compressor (beta)"
+msgstr "Խտացնող"
+
+#: src/PendingStrings.cpp
+msgid "&Show graph (beta)"
+msgstr ""
+
+#. i18n-hint: import progress dialog title, progress dialog
+#: src/PendingStrings.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Ներմուծվում են՝ %s"
+
+#. i18n-hint: import progress dialot text, where %s is the filename
+#: src/PendingStrings.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Ներմուծվում են՝ %s"
+
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 #, fuzzy
@@ -8770,6 +8988,11 @@ msgstr "Պլագինի անուն"
 #: src/PluginRegistrationDialog.cpp
 msgid "&Rescan"
 msgstr ""
+
+#: src/PluginRegistrationDialog.cpp
+#, fuzzy
+msgid "&Get more effects..."
+msgstr "Կարգավորումներ..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9489,7 +9712,7 @@ msgstr "Փոխված արագություն"
 msgid "No Effect"
 msgstr "Էֆեկտներ"
 
-#: src/RealtimeEffectPanel.cpp
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 #, fuzzy
 msgid "Get more effects..."
 msgstr "Կարգավորումներ..."
@@ -10171,10 +10394,6 @@ msgstr "Լավ"
 msgid "Exported Tags"
 msgstr "Վերցնում"
 
-#: src/TrackInfo.cpp
-msgid "Stereo, 999999Hz"
-msgstr "Ստերեո, 999999Հց"
-
 #: src/TrackPanel.cpp
 msgid "Track Panel"
 msgstr "Ձայնագրության պանել"
@@ -10520,6 +10739,11 @@ msgstr "Պատիչ"
 msgid "Boxes"
 msgstr ""
 
+#: src/commands/GetInfoCommand.cpp src/commands/SelectCommand.cpp
+#: src/toolbars/SelectionBar.cpp
+msgid "Selection"
+msgstr "Ընտրվածը"
+
 #. i18n-hint JavaScript Object Notation
 #: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
 msgid "JSON"
@@ -10783,10 +11007,6 @@ msgstr "Պրոեկտներ"
 #, fuzzy
 msgid "Selection Start"
 msgstr "Ընտրված սկիզբ՝"
-
-#: src/commands/SelectCommand.cpp src/toolbars/SelectionBar.cpp
-msgid "Selection"
-msgstr "Ընտրվածը"
 
 #: src/commands/SelectCommand.cpp
 #, fuzzy
@@ -13179,7 +13399,7 @@ msgstr "Նշվածը շատ կարճ է կրկնման համար"
 msgid "&Noise reduction (dB):"
 msgstr "Աղմուկի կր&ճատում (դԲ)՝"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise reduction"
 msgstr "Աղմուկի կրճատում"
 
@@ -13188,7 +13408,7 @@ msgstr "Աղմուկի կրճատում"
 msgid "&Sensitivity:"
 msgstr "Զգայունություն"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Sensitivity"
 msgstr "Զգայունություն"
 
@@ -13217,7 +13437,7 @@ msgstr "Ազատ ժամանակ"
 msgid "&Frequency smoothing (bands):"
 msgstr "Հա&ճախականության հարթում (Հց)՝"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Frequency smoothing"
 msgstr "Հաճախականության հարթում"
 
@@ -13231,11 +13451,11 @@ msgstr "&Զգայունություն (դԲ)՝"
 msgid "Old Sensitivity"
 msgstr "Զգայունություն"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 1"
 msgstr "Քայլ 1"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid ""
 "Select a few seconds of just noise so Audacity knows what to filter out,\n"
 "then click Get Noise Profile:"
@@ -13243,11 +13463,11 @@ msgstr ""
 "Նշել մի քանի վարկյան աղմուկի համար, որ Աուդասիթին իմանա, որ մասը զտի հանի,\n"
 "ապա սեղմել Ստանալ աղմուկի պրոֆիլ՝"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Get Noise Profile"
 msgstr "&Ստանալ աղմուկի պրոֆիլ"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Step 2"
 msgstr "Քայլ 2"
 
@@ -13260,7 +13480,7 @@ msgstr ""
 "Նշել բոլոր ձեր զտած աուդիոները, ընտրել ինչքան աղմուկ եք ուզում լինի\n"
 "զտել հանել և սեղմել 'Լավ' հեռացնելու համար աղմուկը:\n"
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "Noise:"
 msgstr "Աղմուկ՝"
 
@@ -13269,7 +13489,7 @@ msgstr "Աղմուկ՝"
 msgid "Re&duce"
 msgstr ""
 
-#: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
+#: src/effects/NoiseReduction.cpp
 msgid "&Isolate"
 msgstr "&Մեկուսացում"
 
@@ -13357,46 +13577,6 @@ msgstr "Խոշորացնել լռելյայն"
 #: src/effects/NoiseReduction.cpp
 msgid "Discrimination &method:"
 msgstr ""
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise Removal"
-msgstr "Աղմուկի հեռացում"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Removes constant background noise such as fans, tape noise, or hums"
-msgstr ""
-
-#: src/effects/NoiseRemoval.cpp
-msgid ""
-"Select all of the audio you want filtered, choose how much noise you want\n"
-"filtered out, and then click 'OK' to remove noise.\n"
-msgstr ""
-"Նշել բոլոր ձեր զտած աուդիոները, ընտրել ինչքան աղմուկ եք ուզում լինի\n"
-"զտել հանել և սեղմել 'Լավ' հեռացնելու համար աղմուկը:\n"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Noise re&duction (dB):"
-msgstr "Աղմուկի կր&ճատում (դԲ)՝"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "&Sensitivity (dB):"
-msgstr "&Զգայունություն (դԲ)՝"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Fr&equency smoothing (Hz):"
-msgstr "Հա&ճախականության հարթում (Հց)՝"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Attac&k/decay time (secs):"
-msgstr "Հարձակ&ման/հետ քաշման ժամ (վարկյան)՝"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Attack/decay time"
-msgstr "Հարձակման/հետ քաշման ժամ"
-
-#: src/effects/NoiseRemoval.cpp
-msgid "Re&move"
-msgstr "Հե&ռացնել"
 
 #: src/effects/Normalize.cpp resources/EffectsMenuDefaults.xml
 msgid "Normalize"
@@ -15411,7 +15591,7 @@ msgstr "Վերցնել աուդիոն..."
 
 #: src/menus/FileMenus.cpp
 #, fuzzy
-msgid "Export Other"
+msgid "Expo&rt Other"
 msgstr "Վերցնել MIDI-ն"
 
 #: src/menus/FileMenus.cpp
@@ -15454,6 +15634,10 @@ msgstr "Վերցնում"
 #, fuzzy
 msgid "Export as FLAC"
 msgstr "Վերցնել նշումները որպես՝"
+
+#: src/menus/FileMenus.cpp
+msgid "Expo&rt Selected Audio..."
+msgstr "Վերցնել նշված աուդիոն..."
 
 #: src/menus/HelpMenus.cpp
 #, fuzzy
@@ -16994,11 +17178,6 @@ msgstr "Կտրման գծերի միացում"
 
 #: src/menus/ViewMenus.cpp
 #, fuzzy
-msgid "Show Track &Name as overlay"
-msgstr "Ցուցադրել ձայնագրության անունը ալիքաձև էկրանին"
-
-#: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "&Show Clipping in Waveform"
 msgstr "Ցուցադրել անջատվածությունը"
 
@@ -17540,10 +17719,6 @@ msgstr "Ազդանշան երկար գործունեություն ավարտե�
 msgid "Re&tain labels if selection snaps to a label"
 msgstr "Պահպանել նշումները, եթե ընրությունը գտնվում է նշման եզրին"
 
-#: src/prefs/GUIPrefs.cpp
-msgid "B&lend system and Audacity theme"
-msgstr ""
-
 #. i18n-hint: RTL stands for 'Right to Left'
 #: src/prefs/GUIPrefs.cpp
 msgid "Use mostly Left-to-Right layouts in RTL languages"
@@ -17764,16 +17939,6 @@ msgstr ""
 #, fuzzy
 msgid "Key Config"
 msgstr "Հավաքական կոճակ"
-
-#: src/prefs/LibraryPrefs.cpp
-#, fuzzy
-msgid "Preferences for Library"
-msgstr "Կարգավորումներ՝"
-
-#: src/prefs/LibraryPrefs.h
-#, fuzzy
-msgid "Library"
-msgstr "Գրադարաններ"
 
 #. i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"
 #: src/prefs/MidiIOPrefs.cpp
@@ -18549,11 +18714,6 @@ msgstr "Կարգավորումներ՝"
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
 msgstr ""
-
-#: src/prefs/TracksPrefs.cpp
-#, fuzzy
-msgid "Sho&w track name as overlay"
-msgstr "Ցուցադրել ձայնագրության անունը ալիքաձև էկրանին"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -19626,7 +19786,7 @@ msgid "Close sub-view"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Mute/Unmute Track"
 msgstr "Ձայնազրկել/Ձայն տալ կենտրոնացված ձայնագրությունը"
@@ -19676,40 +19836,40 @@ msgstr "Սեղմեք և քաշեք, ձայնագրության չափը փոփո
 msgid "Click and drag to stretch clip"
 msgstr "Սեղմեք և քաշեք, ձգելու համար նշված տարածքը:"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Split Clip"
 msgstr "Հաջորդը գործիք"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Join Clips"
 msgstr "Կտրում"
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Rename Clip..."
 msgstr "Անվանափոխել..."
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy
 msgid "Pitch and Speed..."
 msgstr "Փոխել արագությունը..."
 
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
 msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
-#: src/tracks/playabletrack/wavetrack/ui/WaveClipUtilities.cpp
+#: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, fuzzy, c-format
 msgid "Changed Speed to %.01f%%"
 msgstr "Փոխված արագություն"
@@ -20343,21 +20503,6 @@ msgstr ""
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 #, fuzzy
-msgid "Command+Click to deselect"
-msgstr "Կատարող"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
-msgid "Select track"
-msgstr "Ձայնային ֆայլի ֆիլտր"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
-msgid "Ctrl+Click to deselect"
-msgstr "Կատարող"
-
-#: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Delete Track"
 msgstr "Ձայնային ֆայլի ֆիլտր"
 
@@ -20576,9 +20721,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
-msgid "%.2fx"
-msgstr "%.1f դԲ"
+#, c-format
+msgid "%.3fx"
+msgstr ""
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -22494,7 +22639,65 @@ msgstr "Հեռացնել ձայնագրություն"
 msgid "Spectral Tools"
 msgstr "Սպեկտր"
 
-#, c-format
+#, fuzzy
+#~ msgid "&Ok"
+#~ msgstr "Լավ"
+
+#~ msgid "Stereo, 999999Hz"
+#~ msgstr "Ստերեո, 999999Հց"
+
+#~ msgid "Noise Removal"
+#~ msgstr "Աղմուկի հեռացում"
+
+#~ msgid ""
+#~ "Select all of the audio you want filtered, choose how much noise you want\n"
+#~ "filtered out, and then click 'OK' to remove noise.\n"
+#~ msgstr ""
+#~ "Նշել բոլոր ձեր զտած աուդիոները, ընտրել ինչքան աղմուկ եք ուզում լինի\n"
+#~ "զտել հանել և սեղմել 'Լավ' հեռացնելու համար աղմուկը:\n"
+
+#~ msgid "Noise re&duction (dB):"
+#~ msgstr "Աղմուկի կր&ճատում (դԲ)՝"
+
+#~ msgid "&Sensitivity (dB):"
+#~ msgstr "&Զգայունություն (դԲ)՝"
+
+#~ msgid "Fr&equency smoothing (Hz):"
+#~ msgstr "Հա&ճախականության հարթում (Հց)՝"
+
+#~ msgid "Attac&k/decay time (secs):"
+#~ msgstr "Հարձակ&ման/հետ քաշման ժամ (վարկյան)՝"
+
+#~ msgid "Attack/decay time"
+#~ msgstr "Հարձակման/հետ քաշման ժամ"
+
+#~ msgid "Re&move"
+#~ msgstr "Հե&ռացնել"
+
+#, fuzzy
+#~ msgid "Show Track &Name as overlay"
+#~ msgstr "Ցուցադրել ձայնագրության անունը ալիքաձև էկրանին"
+
+#, fuzzy
+#~ msgid "Sho&w track name as overlay"
+#~ msgstr "Ցուցադրել ձայնագրության անունը ալիքաձև էկրանին"
+
+#, fuzzy
+#~ msgid "Command+Click to deselect"
+#~ msgstr "Կատարող"
+
+#, fuzzy
+#~ msgid "Select track"
+#~ msgstr "Ձայնային ֆայլի ֆիլտր"
+
+#, fuzzy
+#~ msgid "Ctrl+Click to deselect"
+#~ msgstr "Կատարող"
+
+#, fuzzy
+#~ msgid "%.2fx"
+#~ msgstr "%.1f դԲ"
+
 #~ msgid ""
 #~ "\"%s\" \n"
 #~ "is a MIDI file, not an audio file. \n"
@@ -22540,14 +22743,13 @@ msgstr "Սպեկտր"
 #~ msgid "Reset Audacity Preferences"
 #~ msgstr "Վերնշել Աուդասիթի կարգավորումները"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "You must first select some audio for '%s' to act on.\n"
 #~ "\n"
 #~ "Ctrl + A selects all audio."
 #~ msgstr "Դուք պետք է առաջինը ընտրեք որևէ աուդիո սրանից օգտվելու համար:"
 
-#, c-format
 #~ msgid "Audacity Karaoke%s"
 #~ msgstr "Աուդասիթի Կարաոկե%s"
 
@@ -22587,14 +22789,14 @@ msgstr "Սպեկտր"
 #~ msgid "&Disable"
 #~ msgstr "Անջատված է"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Enabling effects or commands:\n"
 #~ "\n"
 #~ "%s"
 #~ msgstr "Միացնել էֆեկտներ"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Enabling effect or command:\n"
 #~ "\n"
@@ -22786,7 +22988,7 @@ msgstr "Սպեկտր"
 #~ msgid "Background:"
 #~ msgstr "Հետևի պլան ֆոն:"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Error trying to save file: %s"
 #~ msgstr "Ֆայլի պահպանման սխալ"
 
@@ -23072,11 +23274,11 @@ msgstr "Սպեկտր"
 #~ msgid "Overwrite"
 #~ msgstr "Վերագրման հաստատում"
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%Unable to open file~%~s"
 #~ msgstr "Չի հաջողվում բացել ոճի ֆայլը:"
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%File cannot be written:~%\"~a.txt\""
 #~ msgstr "Սխալ (ֆայլը կարող է չգրվել)՝ %s"
 
@@ -23183,11 +23385,10 @@ msgstr "Սպեկտր"
 #~ msgid "Sorry, Vamp Plug-ins cannot be run on stereo tracks where the individual channels of the track do not match."
 #~ msgstr "Ներեցեք, Vamp պլագինները չեն կարող բացվել ստերեո ձայնագրությունների վրա, որտեղ ձայնագրության անհատական ալիքները անհավասար են:"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Are you sure you want to export the file as \"%s\"?\n"
 #~ msgstr "Դուք իսկապե՞ս ցանկանում եք վերցնել ֆայլը որպես՝ \""
 
-#, c-format
 #~ msgid ""
 #~ "You are about to export a %s file with the name \"%s\".\n"
 #~ "\n"
@@ -23271,11 +23472,9 @@ msgstr "Սպեկտր"
 #~ msgid "File name prefix"
 #~ msgstr "Ֆայլի անվան նախածանց"
 
-#, c-format
 #~ msgid "\"%s\" successfully created."
 #~ msgstr "\"%s\" հաջողությամբ ստեղծվեց:"
 
-#, c-format
 #~ msgid ""
 #~ "\"%s\" doesn't exist.\n"
 #~ "\n"
@@ -23285,7 +23484,7 @@ msgstr "Սպեկտր"
 #~ "\n"
 #~ "Ցանկանու՞մ եք ստեղծել այն:"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name.\n"
 #~ "You cannot use any of these characters:\n"
@@ -23297,7 +23496,7 @@ msgstr "Սպեկտր"
 #~ "Նշումը կամ ձայնագրությունը \"%s\" ոչ իրավական ֆայլի անուն է: Դուք չեք կարող օգտագործել որևէ՝ %s\n"
 #~ "Օգտվել..."
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid ""
 #~ "Label or track \"%s\" is not a legal file name. You cannot use \"%s\".\n"
 #~ "\n"
@@ -23338,7 +23537,7 @@ msgstr "Սպեկտր"
 #~ msgid "Unable to set stream state to paused."
 #~ msgstr "Անհնար է անվանափոխել '%s' ից '%s'."
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
 #~ msgstr "Ինդեքս[%02x] Կոդեկ[%S], Լեզու[%S], Բիթաչափ[%S], Ալիքներ[%d], Տևողություն[%d]"
 
@@ -23371,11 +23570,11 @@ msgstr "Սպեկտր"
 #~ msgid "WavPack Importer"
 #~ msgstr "Պրոեկտներ"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s left"
 #~ msgstr "Ձախ"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s right"
 #~ msgstr "Աջ"
 
@@ -23395,9 +23594,6 @@ msgstr "Սպեկտր"
 #, fuzzy
 #~ msgid "&Full Screen (on/off)"
 #~ msgstr "Լիաէկրան միացնել/անջատել"
-
-#~ msgid "Expo&rt Selected Audio..."
-#~ msgstr "Վերցնել նշված աուդիոն..."
 
 #~ msgid "Export &Multiple..."
 #~ msgstr "Վերցնել կոլեկտիվ..."
@@ -23478,11 +23674,11 @@ msgstr "Սպեկտր"
 #~ msgid "Channel"
 #~ msgstr "Ալիք"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Left, %dHz"
 #~ msgstr "Ձախ"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Right, %dHz"
 #~ msgstr "Աջ"
 
@@ -23493,7 +23689,7 @@ msgstr "Սպեկտր"
 #~ msgid "Fade type"
 #~ msgstr "&Զտման տեսակը՝"
 
-#, fuzzy, lisp-format
+#, fuzzy
 #~ msgid "Error.~%Selection must be less than ~a."
 #~ msgstr "Նշվածը պետք է մեծ լինի քան %d նշումները:"
 
@@ -23559,7 +23755,7 @@ msgstr "Սպեկտր"
 #~ msgid "Cannot open file"
 #~ msgstr "Չի ստացվում բացել ֆայլը"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Cannot open VST3 preset file %s"
 #~ msgstr "Չի հաջողվում բացել պրոեկտ ֆայլը"
 
@@ -23602,11 +23798,10 @@ msgstr "Սպեկտր"
 #~ msgid "Snap To"
 #~ msgstr "Ճաքեցում"
 
-#, c-format
 #~ msgid "Snap Clicks/Selections to %s"
 #~ msgstr "Իսկույ նսեղմում/Ընտրվածը %s"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Selection %s. %s won't change."
 #~ msgstr "Ընտրել MIDI ֆայլ..."
 
@@ -23620,7 +23815,7 @@ msgstr "Սպեկտր"
 #~ msgid "Location of &Manual:"
 #~ msgstr "Ձեռքով կառավարման տեղ՝"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s is a free program written by a worldwide team of %s. %s is %s for Windows, Mac, and GNU/Linux (and other Unix-like systems)."
 #~ msgstr "Աուդասիթին անվճար ծրագիր է գրված համաշխարհային խմբի կամավորների կողմից <a href=\"http://audacity.sourceforge.net/community/developers\">մշակողներ</a>: Շնորհակալ ենք <a href=\"http://code.google.com\">Գուգլ կոդին</a> և <a href=\"http://sourceforge.net\">SourceForge-ին</a> մեր ծրագրին աջակցելու համար: Աուդասիթին կարող եք <a href=\"http://audacity.sourceforge.net/download/\">բեռնել</a> Windows-ի, Mac-ի, և GNU/Linux-ի (և այլ Յունիքսանման համակարգերի համար):"
 
@@ -23628,7 +23823,7 @@ msgstr "Սպեկտր"
 #~ msgid "available"
 #~ msgstr "Փոփոխական"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "If you find a bug or have a suggestion for us, please write, in English, to our %s. For help, view the tips and tricks on our %s or visit our %s."
 #~ msgstr "Եթե գտել եք սխալ կամ ունեք առաջարկություն մեզ, խնդրում ենք գրել անգլերեն մեր <a href=\"mailto:feedback@audacityteam.org\">հետադարձ կապին</a>: Օգնության համար տես խորհուրդներն ու հնարքները մեր <a href=\"http://wiki.audacityteam.org/\">Վիկի էջում</a> կամ այցելիր <a href=\"http://forum.audacityteam.org/\">ֆորում</a>:"
 
@@ -23673,17 +23868,13 @@ msgstr "Սպեկտր"
 #~ msgid "Move effect down in the rack"
 #~ msgstr "Տեղափոխվածը միացնել այլ ձայնագրության"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Latency: %4d"
 #~ msgstr "Թաքնված"
 
 #, fuzzy
 #~ msgid "Some Command"
 #~ msgstr "Ընտրել հրահանգ"
-
-#, fuzzy
-#~ msgid "Start &Playback"
-#~ msgstr "Փոփոխվող նվագարկում"
 
 #, fuzzy
 #~ msgid "&Preview effect"
@@ -23701,7 +23892,7 @@ msgstr "Սպեկտր"
 #~ msgid "Stop &Playback"
 #~ msgstr "Նվագարկում"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Reverb: %s"
 #~ msgstr "Արտացոլում"
 
@@ -23713,11 +23904,11 @@ msgstr "Սպեկտր"
 #~ msgid "Location"
 #~ msgstr "Գտնվելու վայր՝"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s requires unsupported feature %s\n"
 #~ msgstr "%d կորերը վերցվեցին դեպի %s"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s requires unsupported option %s\n"
 #~ msgstr "%d կորերը վերցվեցին դեպի %s"
 
@@ -23736,10 +23927,6 @@ msgstr "Սպեկտր"
 #~ msgstr "VST էֆեկտներ"
 
 #, fuzzy
-#~ msgid "Plugin Options"
-#~ msgstr "Պլագին կարգավորումներ"
-
-#, fuzzy
 #~ msgid "Rescan plugins next time Audacity is started"
 #~ msgstr "VST էֆեկտների վերստուգում հաջորդ Աուդասիթի մեկնարկին"
 
@@ -23756,14 +23943,13 @@ msgstr "Սպեկտր"
 #~ msgid "Playback Volume"
 #~ msgstr "Նվագարկման ձայնաչափ"
 
-#, c-format
 #~ msgid "Recording Volume: %.2f"
 #~ msgstr "Ձայնագրման ձայնաչափ՝ %.2f"
 
 #~ msgid "Recording Volume (Unavailable; use system mixer.)"
 #~ msgstr "Ձայնագրման ձայնաչափ (Անհասանելի է; օգտվե՛ք համակարգի միախառնումից)"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Playback Volume: %.2f"
 #~ msgstr "Նվագարկման ձայնաչափ՝ %.2f%s"
 
@@ -23920,7 +24106,7 @@ msgstr "Սպեկտր"
 #~ msgid "Decoding Waveform"
 #~ msgstr "Ալիքաձև կոդավորում"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "%s %2.0f%% complete. Click to change task focal point."
 #~ msgstr "%s %2.0f%% ավարտվեց:  Սեղմեք փոխելու համար համակարգողի հրահանգը:"
 
@@ -23931,7 +24117,7 @@ msgstr "Սպեկտր"
 #~ msgid "Loop Play"
 #~ msgstr "Գործիքային նվագարկում"
 
-#, fuzzy, c-format
+#, fuzzy
 #~ msgid "Playback Volume: %.2f (emulated)"
 #~ msgstr "Նվագարկման ձայնաչափ՝ %.2f%s"
 
