@@ -13,6 +13,7 @@
 #include "AudioIO.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
+#include "HelpSystem.h"
 #include "Journal.h"
 #include "MenuHelper.h"
 #include "PluginManager.h"
@@ -356,8 +357,16 @@ auto EffectMenu()
          "RealtimeEffects",
          Command(
             wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            OnAddRealtimeEffects, HasTrackFocusFlag(), wxT("E"))),
-
+            OnAddRealtimeEffects, HasTrackFocusFlag(), wxT("E"))
+#if defined(__WXMSW__) || defined(__WXMAC__)
+         , Command(
+            wxT("GetMoreEffects"), XXO("Get more effects..."),
+            [](const CommandContext&) {
+               OpenInDefaultBrowser("https://www.musehub.com");
+            },
+            AlwaysEnabledFlag)
+#endif
+            ),
       Section(
          "RepeatLast",
          // Delayed evaluation:
