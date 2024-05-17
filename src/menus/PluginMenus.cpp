@@ -1,39 +1,39 @@
-#include "AudioIO.h"
 #include "../Benchmark.h"
-#include "../commands/CommandDispatch.h"
 #include "../CommonCommandFlags.h"
-#include "Journal.h"
 #include "../MenuCreator.h"
-#include "PluginManager.h"
 #include "../PluginRegistrationDialog.h"
+#include "../ProjectWindows.h"
+#include "../commands/CommandDispatch.h"
+#include "../effects/EffectManager.h"
+#include "../effects/EffectUI.h"
+#include "../prefs/PrefsDialog.h"
+#include "../toolbars/SelectionBar.h"
+#include "../toolbars/ToolManager.h"
+#include "AudacityMessageBox.h"
+#include "AudioIO.h"
+#include "CommandContext.h"
+#include "CommandManager.h"
+#include "HelpSystem.h"
+#include "Journal.h"
+#include "MenuHelper.h"
+#include "PluginManager.h"
 #include "Prefs.h"
 #include "Project.h"
 #include "ProjectRate.h"
 #include "ProjectSnap.h"
-#include "../ProjectWindows.h"
+#include "RealtimeEffectManager.h"
 #include "RealtimeEffectPanel.h"
 #include "SampleTrack.h"
 #include "SyncLock.h"
-#include "../toolbars/ToolManager.h"
-#include "../toolbars/SelectionBar.h"
-#include "TrackFocus.h"
 #include "TempDirectory.h"
+#include "TrackFocus.h"
 #include "UndoManager.h"
 #include "Viewport.h"
-#include "CommandContext.h"
-#include "CommandManager.h"
-#include "../effects/EffectManager.h"
-#include "../effects/EffectUI.h"
-#include "RealtimeEffectManager.h"
-#include "../prefs/PrefsDialog.h"
-#include "AudacityMessageBox.h"
-#include "MenuHelper.h"
 #include "prefs/EffectsPrefs.h"
-
 
 // private helper classes and functions
 namespace {
-   
+
 bool ShowManager(wxWindow *parent, int effectsCategory)
 {
    PluginRegistrationDialog dlg(parent, effectsCategory);
@@ -100,7 +100,7 @@ void OnResetConfig(const CommandContext &context)
    ToolManager::OnResetToolBars(context);
 
    // These are necessary to preserve the newly correctly laid out toolbars.
-   // In particular the Device Toolbar ends up short on next restart, 
+   // In particular the Device Toolbar ends up short on next restart,
    // if they are left out.
    gPrefs->Write(wxT("/PrefsVersion"), wxString(wxT(AUDACITY_PREFS_VERSION_STRING)));
 
@@ -113,7 +113,7 @@ void OnResetConfig(const CommandContext &context)
 
    ProjectSnap::Get(project).SetSnapTo(SnapToSetting.Read());
    ProjectSnap::Get(project).SetSnapMode(SnapModeSetting.ReadEnum());
-   
+
    ProjectRate::Get( project )
       .SetRate(gPrefs->ReadDouble("/DefaultProjectSampleRate", 44100.0));
 }
@@ -346,22 +346,31 @@ auto EffectMenu()
 {
    // All of this is a bit hacky until we can get more things connected into
    // the plugin manager...sorry! :-(
-   static auto menu = std::shared_ptr{
-   Menu( wxT("Effect"), XXO("Effe&ct"),
-      Section( "Manage",
-         Command( wxT("ManageEffects"), XXO("Plugin Manager"),
-            OnManageEffects, AudioIONotBusyFlag() )
-      ),
+   static auto menu = std::shared_ptr { Menu(
+      wxT("Effect"), XXO("Effe&ct"),
+      Section(
+         "Manage", Command(
+                      wxT("ManageEffects"), XXO("Plugin Manager"),
+                      OnManageEffects, AudioIONotBusyFlag())),
 
-      Section( "RealtimeEffects",
-         Command ( wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
-            OnAddRealtimeEffects,  HasTrackFocusFlag(), wxT("E") )
-      ),
-
-      Section( "RepeatLast",
+      Section(
+         "RealtimeEffects",
+         Command(
+            wxT("AddRealtimeEffects"), XXO("Add Realtime Effects"),
+            OnAddRealtimeEffects, HasTrackFocusFlag(), wxT("E"))
+#if defined(__WXMSW__) || defined(__WXMAC__)
+         , Command(
+            wxT("GetMoreEffects"), XXO("Get more effects..."),
+            [](const CommandContext&) {
+               OpenInDefaultBrowser("https://www.musehub.com");
+            },
+            AlwaysEnabledFlag)
+#endif
+            ),
+      Section(
+         "RepeatLast",
          // Delayed evaluation:
-         [](AudacityProject &project)
-         {
+         [](AudacityProject& project) {
             const auto &lastEffect = CommandManager::Get(project).mLastEffect;
             TranslatableString buildMenuLabel;
             if (!lastEffect.empty())
@@ -375,12 +384,12 @@ auto EffectMenu()
                AudioIONotBusyFlag() | TimeSelectedFlag() |
                   WaveTracksSelectedFlag() | HasLastEffectFlag(),
                wxT("Ctrl+R") );
-         }
-      ),
+         }),
 
-      Section( "Effects",
+      Section(
+         "Effects",
          // Delayed evaluation:
-         [](AudacityProject &) {
+         [](AudacityProject&) {
             auto result = Items("");
             MenuHelper::PopulateEffectsMenu(
                *result,
@@ -389,9 +398,7 @@ auto EffectMenu()
                EffectsGroupBy.Read(),
                &OnEffect);
             return result;
-         }
-      )
-   ) };
+         })) };
    return menu;
 }
 
