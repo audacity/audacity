@@ -150,7 +150,7 @@ namespace
          wxWindow::SetBackgroundStyle(wxBG_STYLE_PAINT);
          Bind(wxEVT_PAINT, &DropHintLine::OnPaint, this);
       }
-      
+
       bool AcceptsFocus() const override { return false; }
 
    private:
@@ -179,7 +179,7 @@ namespace
       {
          Create(parent, id, label, url, pos, size, style, name);
       }
-      
+
       void Create(wxWindow *parent,
                   wxWindowID id,
                   const wxString& label,
@@ -192,7 +192,7 @@ namespace
          ListNavigationEnabled<wxHyperlinkCtrl>::Create(parent, id, label, url, pos, size, style, name);
          Bind(wxEVT_PAINT, &HyperLinkCtrlWrapper::OnPaint, this);
       }
-              
+
       void OnPaint(wxPaintEvent& evt)
       {
          wxPaintDC dc(this);
@@ -201,7 +201,7 @@ namespace
          dc.SetTextBackground(GetBackgroundColour());
 
          auto labelRect = GetLabelRect();
-         
+
          dc.DrawText(GetLabel(), labelRect.GetTopLeft());
          if (HasFocus())
             AColor::DrawFocus(dc, labelRect);
@@ -218,7 +218,7 @@ namespace
       {
          if(childId != wxACC_SELF)
             return wxACC_NOT_IMPLEMENTED;
-         
+
          if(auto movable = wxDynamicCast(GetWindow(), MovableControl))
             //i18n-hint: argument - position of the effect in the effect stack
             *name = wxString::Format(_("Effect %d"), movable->FindIndexInParent() + 1);
@@ -290,7 +290,7 @@ namespace
       std::shared_ptr<SampleTrack> mTrack;
       std::shared_ptr<RealtimeEffectState> mEffectState;
       std::shared_ptr<EffectSettingsAccess> mSettingsAccess;
-      
+
       RealtimeEffectPicker* mEffectPicker { nullptr };
 
       ThemedAButtonWrapper<AButton>* mChangeButton{nullptr};
@@ -318,7 +318,7 @@ namespace
                    const wxSize& size = wxDefaultSize)
       {
          mEffectPicker = effectPicker;
-         
+
          //Prevents flickering and paint order issues
          MovableControl::SetBackgroundStyle(wxBG_STYLE_PAINT);
          MovableControl::Create(parent, winid, pos, size, wxNO_BORDER | wxWANTS_CHARS);
@@ -363,7 +363,7 @@ namespace
          changeButton->SetBackgroundColorIndex(clrEffectListItemBackground);
          changeButton->SetTranslatableLabel(XO("Replace effect"));
          changeButton->Bind(wxEVT_BUTTON, &RealtimeEffectControl::OnChangeButtonClicked, this);
-         
+
          auto dragArea = safenew wxStaticBitmap(this, wxID_ANY, theTheme.Bitmap(bmpDragArea));
          dragArea->Disable();
          sizer->Add(dragArea, 0, wxLEFT | wxCENTER, 5);
@@ -408,8 +408,8 @@ namespace
          mEffectState = pState;
 
          mSubscription = mEffectState->Subscribe([this](RealtimeEffectStateChange state) {
-            state == RealtimeEffectStateChange::EffectOn 
-               ? mEnableButton->PushDown() 
+            state == RealtimeEffectStateChange::EffectOn
+               ? mEnableButton->PushDown()
                : mEnableButton->PopUp();
 
             if (mProject)
@@ -491,13 +491,13 @@ namespace
          const auto effectID = mEffectPicker->PickEffect(mChangeButton, mEffectState->GetID());
          if(!effectID)
             return;//nothing
-         
+
          if(effectID->empty())
          {
             RemoveFromList();
             return;
          }
-         
+
          auto &em = RealtimeEffectManager::Get(*mProject);
          auto oIndex = em.FindState(&*mTrack, mEffectState);
          if (!oIndex)
@@ -571,7 +571,7 @@ class RealtimeEffectListWindow
    wxWindow* mEffectListContainer{nullptr};
 
    std::unique_ptr<MenuRegistry::MenuItem> mEffectMenuRoot;
-   
+
    Observer::Subscription mEffectListItemMovedSubscription;
    Observer::Subscription mPluginsChangedSubscription;
 
@@ -621,7 +621,7 @@ public:
          this, wxID_ANY, _("Watch video"),
          "https://www.audacityteam.org/realtime-video", wxDefaultPosition,
          wxDefaultSize, wxHL_ALIGN_LEFT | wxHL_CONTEXTMENU);
-      
+
       //i18n-hint: Hyperlink to the effects stack panel tutorial video
       addEffectTutorialLink->SetTranslatableLabel(XO("Watch video"));
 #if wxUSE_ACCESSIBILITY
@@ -720,7 +720,7 @@ public:
          }
       });
       SetScrollRate(0, 20);
-      
+
       mPluginsChangedSubscription = PluginManager::Get().Subscribe(
          [this](PluginsChangedMessage)
          {
@@ -733,12 +733,12 @@ public:
    {
       UpdateEffectMenuItems();
    }
-   
+
    std::optional<wxString> PickEffect(wxWindow* parent, const wxString& selectedEffectID) override
    {
       if (mProject == nullptr)
          return {};
-   
+
       wxMenu menu;
       if(!selectedEffectID.empty())
       {
@@ -746,18 +746,18 @@ public:
          menu.Append(wxID_REMOVE, _("No Effect"));
          menu.AppendSeparator();
       }
-      
+
       RealtimeEffectsMenuVisitor visitor { menu };
-      
+
       Registry::VisitWithFunctions(visitor, mEffectMenuRoot.get(), {}, *mProject);
-      
+
       int commandId = wxID_NONE;
-      
+
       menu.AppendSeparator();
       menu.Append(wxID_MORE, _("Get more effects..."));
-      
+
       menu.Bind(wxEVT_MENU, [&](wxCommandEvent evt) { commandId = evt.GetId(); });
-      
+
       if(parent->PopupMenu(&menu, parent->GetClientRect().GetLeftBottom()) && commandId != wxID_NONE)
       {
          if(commandId == wxID_REMOVE)
@@ -767,10 +767,10 @@ public:
          else
             return visitor.GetPluginID(commandId).GET();
       }
-      
+
       return {};
    }
-   
+
    void UpdateEffectMenuItems()
    {
       using namespace MenuRegistry;
@@ -792,22 +792,22 @@ public:
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
-      
+
       if(!submenu->empty())
       {
          root->push_back(move(analyzeSection));
       }
-   
+
       MenuHelper::PopulateEffectsMenu(
          *root,
          EffectTypeProcess,
          {}, groupby, nullptr,
          realtimeEffectPredicate
       );
-      
+
       mEffectMenuRoot.swap(root);
    }
-   
+
    void OnSizeChanged(wxSizeEvent& event)
    {
       if(auto sizerItem = GetSizer()->GetItem(mAddEffectHint))
@@ -838,18 +838,18 @@ public:
          // Don't need to auto-save changed settings of effect that is deleted
          // Undo history push will do it anyway
          ui.Hide();
-         
+
          auto window = sizer->GetItem(msg.srcIndex)->GetWindow();
          sizer->Remove(msg.srcIndex);
          wxTheApp->CallAfter([ref = wxWeakRef { window }] {
             if(ref) ref->Destroy();
          });
-         
+
          if(sizer->IsEmpty())
          {
             if(mEffectListContainer->IsDescendant(FindFocus()))
                mAddEffect->SetFocus();
-            
+
             mEffectListContainer->Hide();
             mAddEffectHint->Show();
             mAddEffectTutorialLink->Show();
@@ -872,7 +872,7 @@ public:
             window->MoveAfterInTabOrder(sizer->GetItem(msg.dstIndex)->GetWindow());
          else
             window->MoveBeforeInTabOrder(sizer->GetItem(msg.dstIndex)->GetWindow());
-         
+
          sizer->Remove(msg.srcIndex);
          sizer->Insert(msg.dstIndex, window, proportion, flag, border);
       }
@@ -935,16 +935,16 @@ public:
    void ReloadEffectsList()
    {
       wxWindowUpdateLocker freeze(this);
-      
+
       const auto hadFocus = mEffectListContainer->IsDescendant(FindFocus());
       //delete items that were added to the sizer
       mEffectListContainer->Hide();
       mEffectListContainer->GetSizer()->Clear(true);
 
-      
+
       if(!mTrack || RealtimeEffectList::Get(*mTrack).GetStatesCount() == 0)
          mEffectListContainer->Hide();
-      
+
       auto isEmpty{true};
       if(mTrack)
       {
@@ -959,7 +959,7 @@ public:
       mEffectListContainer->Show(!isEmpty);
       mAddEffectHint->Show(isEmpty);
       mAddEffectTutorialLink->Show(isEmpty);
-      
+
       SendSizeEventToParent();
    }
 
@@ -969,7 +969,7 @@ public:
          return;
 
       const auto effectID = PickEffect(dynamic_cast<wxWindow*>(event.GetEventObject()), {});
-      
+
       if(!effectID || effectID->empty())
          return;
 
@@ -1092,7 +1092,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          if (mEffectList)
          {
             mEffectList->EnableEffects(mToggleEffects->IsDown());
-         
+
             ProjectHistory::Get(mProject).ModifyState(false);
             UndoManager::Get(mProject).MarkUnsaved();
          }
@@ -1146,7 +1146,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
          if (waveTrack == nullptr)
             return;
-         
+
          switch (evt.mType)
          {
          case TrackListEvent::TRACK_DATA_CHANGE:
@@ -1182,7 +1182,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
 
          // Realtime effect UI is only updated on Undo or Redo
          auto waveTracks = trackList.Any<WaveTrack>();
-         
+
          if (
             message.type == UndoRedoMessage::Type::UndoOrRedo ||
             message.type == UndoRedoMessage::Type::Reset)
@@ -1200,7 +1200,7 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          // Collect RealtimeEffectUIs that are currently shown
          // for the potentially removed tracks
          std::vector<RealtimeEffectStateUI*> shownUIs;
-         
+
          for (auto track : mPotentiallyRemovedTracks)
          {
             // By construction, track cannot be null
@@ -1220,9 +1220,9 @@ RealtimeEffectPanel::RealtimeEffectPanel(
          for (auto effectUI : shownUIs)
          {
             bool reachable = false;
-            
+
             for (auto track : waveTracks)
-            {               
+            {
                VisitRealtimeEffectStateUIs(
                   *track,
                   [effectUI, &reachable](auto& ui)
