@@ -754,7 +754,9 @@ public:
       int commandId = wxID_NONE;
 
       menu.AppendSeparator();
+#if defined(__WXMSW__) || defined(__WXMAC__)
       menu.Append(wxID_MORE, _("Get more effects..."));
+#endif
 
       menu.Bind(wxEVT_MENU, [&](wxCommandEvent evt) { commandId = evt.GetId(); });
 
@@ -763,7 +765,7 @@ public:
          if(commandId == wxID_REMOVE)
             return wxString {};
          else if(commandId == wxID_MORE)
-            OpenInDefaultBrowser("https://plugins.audacityteam.org/");
+            OpenInDefaultBrowser("https://www.musehub.com");
          else
             return visitor.GetPluginID(commandId).GET();
       }
