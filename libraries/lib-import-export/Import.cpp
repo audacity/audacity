@@ -47,6 +47,7 @@ ImportFileHandle
 #include "Prefs.h"
 
 #include "ImportProgressListener.h"
+#include "BasicUI.h"
 
 namespace {
 
@@ -629,6 +630,28 @@ bool Importer::Import(
    {
       // Try to open the file with this plugin (probe it)
       wxLogMessage(wxT("Opening with %s"),plugin->GetPluginStringID());
+
+#ifdef __WXMAC__
+      struct stat s;
+      memset(&s, 0, sizeof(struct stat));
+      auto err = stat(fName.data(), &s);
+      if(err != 0 || (S_ISREG(s.st_mode) && s.st_blocks == 0))
+      {
+         int dialogStyle = BasicUI::ProgressCanAbort | BasicUI::ProgressAppModal | BasicUI::ProgressShowElapsedTime | BasicUI::ProgressSmooth;
+         auto dialog = BasicUI::MakeGenericProgress({}, XO("Importing files"), XO("Importing %s...").Format(fName.AfterLast(wxFileName::GetPathSeparator())), dialogStyle);
+         while(err != 0 || s.st_blocks == 0)
+         {
+            BasicUI::Yield();
+            if(dialog->Pulse() != BasicUI::ProgressResult::Success)
+            {
+               errorMessage = XO("Operation was canceled by user");
+               return false;
+            }
+            memset(&s, 0, sizeof(struct stat));
+            err = stat(fName.data(), &s);
+         }
+      }
+#endif
       auto inFile = plugin->Open(fName, pProj);
       if ( (inFile != NULL) && (inFile->GetStreamCount() > 0) )
       {

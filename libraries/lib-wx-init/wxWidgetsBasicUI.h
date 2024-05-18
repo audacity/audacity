@@ -40,7 +40,8 @@ protected:
    std::unique_ptr<BasicUI::GenericProgressDialog>
    DoMakeGenericProgress(const BasicUI::WindowPlacement &placement,
       const TranslatableString &title,
-      const TranslatableString &message) override;
+      const TranslatableString &message,
+      int style) override;
    int DoMultiDialog(const TranslatableString &message,
       const TranslatableString &title,
       const TranslatableStrings &buttons,
