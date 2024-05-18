@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-04-18 02:29+0200\n"
+"PO-Revision-Date: 2024-05-18 15:05+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (http://www.transifex.com/klyok/audacity/language/co/)\n"
 "Language: co\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -390,9 +390,8 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Impussibule di fà a scumpressione di u bloccu di prughjettu in u nivulu"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Local project data was removed before the sync has completed"
-msgstr "U prughjettu hè statu chjosu nanzu a creazione di a fotò istantanea"
+msgstr "U prughjettu lucale hè statu cacciatu nanzu chì a sincrunizazione fussi compia"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -8353,158 +8352,140 @@ msgstr "&Mischiadore"
 
 #: src/PendingStrings.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "Ottene moduli d’estensione è soni di rigalu"
 
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>Fighjate a nostra [[%s|appiecazione Hub Muse]] per una scelta tamanta di moduli d’estensione audio per l’utilizatori d’Audacity</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "Fighjate e furmazioni autonome"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "Visitate audio.com"
+msgstr "Visitate u nostru foru"
 
 #. i18n-hint: Title of the buttons that adds new effects plugin search path
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "&Aghjunghje una nova regula"
+msgstr "Aghjunghje un locu novu"
 
 #. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "Sceglie un locu"
+msgstr "Lochi di moduli d’estensione %s"
 
 #. i18n-hint: master channel display name
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master"
-msgstr "Incullà"
+msgstr "Principale"
 
 #. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master effects"
-msgstr "Effetti in tempu reale"
+msgstr "Effetti principale"
 
 #. i18n-hint: Hint for a master effects section of realtime effects panel
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Apply to all tracks"
-msgstr "Sparte versu una traccia nova"
+msgstr "Appiecà à tutte e traccie"
 
 #: src/PendingStrings.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "Riduce l’« intervallu dinamicu », o e sfarenze trà e parti forte è tranquille."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "Cumpressione"
+msgstr "Curva di cumpressione"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "Ùn fà nunda"
+msgstr "Allisciata"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Input gain (dB)"
-msgstr "Guadagnu d’esciuta (dB)"
+msgstr "Guadagnu d’entrata (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Ceiling (dB)"
-msgstr "Guadagnu (dB)"
+msgstr "Suffittu (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Input"
-msgstr ""
+msgstr "Entrata"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attenuation"
-msgstr "Orientazione"
+msgstr "Attenuazione"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "Livellu di sogliu (dB)"
+msgstr "&Sogliu (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "Guadagnu di cumpensazione"
+msgstr "&Guadagnu di cumpensazione (dB)"
 
 #: src/PendingStrings.cpp
 msgid "&Make-up target (dB)"
-msgstr ""
+msgstr "&Destinazione di cumpensazione (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Knee &width (dB)"
-msgstr ""
+msgstr "Larghezza di u ghjinochju (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Rati&o:"
 msgstr "&Prupurzione :"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
-msgstr ""
+msgstr "&Anticipazione (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "Attaccu (ms)"
+msgstr "A&ttaccu (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "Tempu di dillinata"
+msgstr "&Dillinata (ms)"
 
 #: src/PendingStrings.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "lettura in attesa"
 
 #: src/PendingStrings.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "Aumenteghja a sunurità bench’è riducendu a disturzione."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Limiter (beta)"
-msgstr "Limitatore"
+msgstr "Limitatore (beta)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compressor (beta)"
-msgstr "Cumpressore"
+msgstr "Cumpressore (beta)"
 
 #: src/PendingStrings.cpp
 msgid "&Show graph (beta)"
-msgstr ""
+msgstr "&Affissà u graficu (beta)"
 
 #. i18n-hint: import progress dialog title, progress dialog
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "Impurtazione di %s"
+msgstr "Impurtazione di schedarii"
 
 #. i18n-hint: import progress dialot text, where %s is the filename
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "Impurtazione di %s"
+msgstr "Impurtazione di %s…"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8690,9 +8671,8 @@ msgid "&Rescan"
 msgstr "&Analizà torna"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "Ottene d’altri effetti…"
+msgstr "&Ottene d’altri effetti…"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -19560,9 +19540,9 @@ msgstr "D"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "x %.3f"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
