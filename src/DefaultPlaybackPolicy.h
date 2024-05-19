@@ -27,6 +27,8 @@ public:
       bool loopEnabled, bool variableSpeed);
    ~DefaultPlaybackPolicy() override;
 
+   std::unique_ptr<PlaybackState> CreateState() const override;
+
    void Initialize(const PlaybackSchedule &schedule,
       PlaybackState &state, double rate) override;
 
@@ -52,7 +54,8 @@ public:
    bool Looping( const PlaybackSchedule & ) const override;
 
 private:
-   bool RevertToOldDefault( const PlaybackSchedule &schedule ) const;
+   bool RevertToOldDefault(const PlaybackSchedule &schedule,
+      const PlaybackState &state) const;
    void WriteMessage();
    double GetPlaySpeed();
 
@@ -71,14 +74,12 @@ private:
    Observer::Subscription mRegionSubscription,
       mSpeedSubscription;
 
-   double mLastPlaySpeed{ 1.0 };
    const double mTrackEndTime;
    double mLoopEndTime;
    std::optional<double> mpStartTime;
-   size_t mRemaining{ 0 };
    bool mProgress{ true };
-   bool mLoopEnabled{ true };
    bool mVariableSpeed{ false };
+   const bool mInitLoopEnabled;
 };
 
 #endif

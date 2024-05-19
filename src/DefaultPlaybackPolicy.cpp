@@ -13,26 +13,43 @@
 #include "SampleCount.h"
 #include "ViewInfo.h"
 
-DefaultPlaybackPolicy::DefaultPlaybackPolicy( AudacityProject &project,
+namespace {
+struct DPPState : PlaybackState {
+   double mLastPlaySpeed{ 1.0 };
+   size_t mRemaining{ 0 };
+   bool mLoopEnabled;
+};
+}
+
+DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject &project,
    double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
-   bool loopEnabled, bool variableSpeed )
-   : mProject{ project }
+   bool loopEnabled, bool variableSpeed
+)  : mProject{ project }
    , mTrackEndTime{ trackEndTime }
    , mLoopEndTime{ loopEndTime }
    , mpStartTime{ pStartTime }
-   , mLoopEnabled{ loopEnabled }
    , mVariableSpeed{ variableSpeed }
+   , mInitLoopEnabled{ loopEnabled }
 {}
 
 DefaultPlaybackPolicy::~DefaultPlaybackPolicy() = default;
 
-void DefaultPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
-   PlaybackState &state, double rate)
+std::unique_ptr<PlaybackState> DefaultPlaybackPolicy::CreateState() const
 {
-   PlaybackPolicy::Initialize(schedule, state, rate);
+   return std::make_unique<DPPState>();
+}
+
+void DefaultPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
+   PlaybackState &st, double rate)
+{
+   PlaybackPolicy::Initialize(schedule, st, rate);
+   auto &state = static_cast<DPPState&>(st);
+   state.mLoopEnabled = mInitLoopEnabled;
+
+   auto &mLastPlaySpeed = state.mLastPlaySpeed;
    mLastPlaySpeed = GetPlaySpeed();
    mMessageChannel.Write( { mLastPlaySpeed,
-      state.mT0, mLoopEndTime, mLoopEnabled } );
+      state.mT0, mLoopEndTime, state.mLoopEnabled } );
 
    auto callback = [this](auto&){ WriteMessage(); };
    mRegionSubscription =
@@ -60,21 +77,24 @@ DefaultPlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
    return { 0.05s, 0.05s, 0.25s };
 }
 
-bool DefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedule) const
+bool DefaultPlaybackPolicy::RevertToOldDefault(
+   const PlaybackSchedule &schedule, const PlaybackState &st) const
 {
-   return !mLoopEnabled ||
+   auto &state = static_cast<const DPPState&>(st);
+   return !state.mLoopEnabled ||
       // Even if loop is enabled, ignore it if right of looping region
       schedule.mTimeQueue.GetLastTime() > mLoopEndTime;
 }
 
 double DefaultPlaybackPolicy::OffsetSequenceTime(
-   const PlaybackSchedule& schedule, PlaybackState &state, double offset)
+   const PlaybackSchedule& schedule, PlaybackState &st, double offset)
 {
+   auto &state = static_cast<DPPState&>(st);
    auto time = schedule.GetSequenceTime();
 
    // Assuming that mpStartTime always has a value when this policy is used
    if (mpStartTime) {
-      if (mLoopEnabled) {
+      if (state.mLoopEnabled) {
          if (time < state.mT0)
             time = std::clamp(time + offset, *mpStartTime, state.mT1);
          else
@@ -93,8 +113,11 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
 
 PlaybackSlice
 DefaultPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &schedule, PlaybackState &state, size_t available)
+   const PlaybackSchedule &schedule, PlaybackState &st, size_t available)
 {
+   auto &state = static_cast<DPPState&>(st);
+   auto &mLastPlaySpeed = state.mLastPlaySpeed;
+   auto &mRemaining = state.mRemaining;
    // How many samples to produce for each channel.
    const auto realTimeRemaining = std::max(0.0, state.RealDurationRemaining());
    mRemaining = realTimeRemaining * mRate / mLastPlaySpeed;
@@ -107,7 +130,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
       toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
       auto realTime = realTimeRemaining;
       double extra = 0;
-      if (RevertToOldDefault(schedule)) {
+      if (RevertToOldDefault(schedule, st)) {
          // Produce some extra silence so that the time queue consumer can
          // satisfy its end condition
          const double extraRealTime =
@@ -132,16 +155,18 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
 }
 
 double DefaultPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &schedule, PlaybackState &state,
+   const PlaybackSchedule &schedule, PlaybackState &st,
    double trackTime, size_t nSamples)
 {
-   bool revert = RevertToOldDefault(schedule);
+   auto &state = static_cast<DPPState&>(st);
+   auto &mRemaining = state.mRemaining;
+   bool revert = RevertToOldDefault(schedule, st);
    if (!mVariableSpeed && revert)
       return PlaybackPolicy
          ::AdvancedTrackTime(schedule, state, trackTime, nSamples);
 
    mRemaining -= std::min(mRemaining, nSamples);
-   if ( mRemaining == 0 && !revert )
+   if (mRemaining == 0 && !revert)
       // Wrap to start
       return state.mT0;
 
@@ -149,7 +174,7 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
    if (fabs(state.mT0 - state.mT1) < 1e-9)
       return state.mT0;
 
-   auto realDuration = (nSamples / mRate) * mLastPlaySpeed;
+   auto realDuration = (nSamples / mRate) * state.mLastPlaySpeed;
    if (state.ReversedTime())
       realDuration *= -1.0;
 
@@ -163,8 +188,13 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
-   PlaybackState &state, const Mixers &playbackMixers, size_t available)
+   PlaybackState &st, const Mixers &playbackMixers, size_t available)
 {
+   auto &state = static_cast<DPPState&>(st);
+   auto &mLastPlaySpeed = state.mLastPlaySpeed;
+   auto &mRemaining = state.mRemaining;
+   auto &mLoopEnabled = state.mLoopEnabled;
+
    // This executes in the SequenceBufferExchange thread
    auto data = mMessageChannel.Read();
 
@@ -184,7 +214,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    // Looping may become enabled if the main thread said so, but require too
    // that the loop region is non-empty and the play head is not far to its
    // right
-   bool loopWasEnabled = !RevertToOldDefault(schedule);
+   bool loopWasEnabled = !RevertToOldDefault(schedule, st);
    mLoopEnabled = data.mLoopEnabled && !empty &&
       schedule.mTimeQueue.GetLastTime() <= data.mT1 + allowance;
 
@@ -233,7 +263,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    else {
       // ... else the region did not change, or looping is now off, in
       // which case we have nothing special to do
-      if (RevertToOldDefault(schedule))
+      if (RevertToOldDefault(schedule, st))
          return PlaybackPolicy::RepositionPlayback(schedule, state,
             playbackMixers, available);
    }
@@ -261,9 +291,14 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    return false;
 }
 
-bool DefaultPlaybackPolicy::Looping( const PlaybackSchedule & ) const
+bool DefaultPlaybackPolicy::Looping(const PlaybackSchedule &) const
 {
-   return mLoopEnabled;
+   // TODO Midi playback
+   // This does not correctly reflect the switching on and off of the loop
+   // region during play.  But this function is only used for synchronization
+   // of MIDI play with audio, and there are plans to rewrite that and
+   // eliminate this function.
+   return mInitLoopEnabled;
 }
 
 void DefaultPlaybackPolicy::WriteMessage()
