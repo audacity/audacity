@@ -132,16 +132,13 @@ bool EffectStereoToMono::ProcessOne(TrackList &outputs,
    tracks.emplace_back(
       track.SharedPointer<const SampleTrack>(), GetEffectStages(track));
 
-   Mixer mixer(move(tracks),
-      true,                // Throw to abort mix-and-render if read fails:
-      Mixer::WarpOptions{ inputTracks()->GetOwner() },
-      start,
-      end,
-      1,
+   Mixer mixer(
+      move(tracks), std::nullopt,
+      true, // Throw to abort mix-and-render if read fails:
+      Mixer::WarpOptions { inputTracks()->GetOwner() }, start, end, 1,
       idealBlockLen,
-      false,               // Not interleaved
-      track.GetRate(),
-      floatSample);
+      false, // Not interleaved
+      track.GetRate(), floatSample);
 
    // Always make mono output; don't use EmptyCopy
    auto outTrack = track.EmptyCopy(1);

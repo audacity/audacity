@@ -41,17 +41,16 @@ public:
 
     @pre `channel < sequence.NChannels()`
     */
-   EffectStage(CreateToken, int channel, Source &upstream, Buffers &inBuffers,
-      const Factory &factory, EffectSettings &settings,
-      double sampleRate,
-      std::optional<sampleCount> genLength, const WideSampleSequence &sequence);
+   EffectStage(
+      CreateToken, int channel, int nInputChannels, Source& upstream,
+      Buffers& inBuffers, const Factory& factory, EffectSettings& settings,
+      double sampleRate, std::optional<sampleCount> genLength);
 
    //! Satisfies postcondition of constructor or returns null
-   static std::unique_ptr<EffectStage> Create(int channel,
-      Source &upstream, Buffers &inBuffers,
-      const Factory &factory, EffectSettings &settings,
-      double sampleRate,
-      std::optional<sampleCount> genLength, const WideSampleSequence &sequence);
+   static std::unique_ptr<EffectStage> Create(
+      int channel, int nInputChannels, Source& upstream, Buffers& inBuffers,
+      const Factory& factory, EffectSettings& settings, double sampleRate,
+      std::optional<sampleCount> genLength);
 
    EffectStage(const EffectStage&) = delete;
    EffectStage &operator =(const EffectStage &) = delete;
@@ -106,10 +105,11 @@ private:
  @param[out] map terminated with ChannelNameEOL
  @return 1 if `channel >= 0`, else the number of channels
 
- @pre `channel < sequence.NChannels()`
+ @pre `channel < nInputChannels`
  */
 MIXER_API
-unsigned MakeChannelMap(const WideSampleSequence &sequence, int channel,
+unsigned MakeChannelMap(
+   int nInputChannels, int channel,
    // TODO: more-than-two-channels
    ChannelName map[3]);
 

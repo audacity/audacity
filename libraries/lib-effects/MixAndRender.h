@@ -16,6 +16,7 @@ Paul Licameli split from Mix.h
 #include "SampleFormat.h"
 #include "Track.h"
 
+class AudacityProject;
 class WaveTrack;
 class WaveTrackFactory;
 
@@ -53,5 +54,9 @@ using ChannelNames = const ChannelName *;
 EFFECTS_API
 std::vector<MixerOptions::StageSpecification>
 GetEffectStages(const WaveTrack &track);
+
+EFFECTS_API
+std::vector<MixerOptions::StageSpecification>
+GetMasterEffectStages(const AudacityProject& project);
 
 #endif

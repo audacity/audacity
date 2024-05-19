@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ExportPluginHelpers.h
- 
+
   Dominic Mazzoni
 
   Vitaly Sverchinsky split from ExportPlugin.h
@@ -28,16 +28,14 @@ class Downmix;
 }
 
 ///\brief Utility class that provides helper functions for ExportPlugin
-class IMPORT_EXPORT_API ExportPluginHelpers final 
+class IMPORT_EXPORT_API ExportPluginHelpers final
 {
 public:
-
-   static std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
-         bool selectionOnly,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         MixerOptions::Downmix *mixerSpec);
+   static std::unique_ptr<Mixer> CreateMixer(
+      const AudacityProject& project, bool selectionOnly, double startTime,
+      double stopTime, unsigned numOutChannels, size_t outBufferSize,
+      bool outInterleaved, double outRate, sampleFormat outFormat,
+      MixerOptions::Downmix* mixerSpec);
 
    ///\brief Sends progress update to delegate and retrieves state update from it.
    ///Typically used inside each export iteration.

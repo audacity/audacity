@@ -130,7 +130,7 @@ bool PerTrackEffect::ProcessPass(TrackList &outputs,
          WaveChannel *pRight{};
 
          const int channel = (multichannel ? -1 : iChannel++);
-         const auto numChannels = MakeChannelMap(wt, channel, map);
+         const auto numChannels = MakeChannelMap(wt.NChannels(), channel, map);
          if (multichannel) {
             assert(numAudioIn > 1);
             if (numChannels == 2) {
@@ -369,8 +369,9 @@ bool PerTrackEffect::ProcessTrack(int channel, const Factory &factory,
    assert(upstream.AcceptsBlockSize(blockSize));
    assert(blockSize == outBuffers.BlockSize());
 
-   auto pSource = EffectStage::Create(channel, upstream, inBuffers,
-      factory, settings, sampleRate, genLength, wt);
+   auto pSource = EffectStage::Create(
+      channel, static_cast<const WideSampleSequence&>(wt).NChannels(), upstream,
+      inBuffers, factory, settings, sampleRate, genLength);
    if (!pSource)
       return false;
    assert(pSource->AcceptsBlockSize(blockSize)); // post of ctor

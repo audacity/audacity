@@ -212,7 +212,7 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
+
    bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
 
    std::vector<std::string> GetMimeTypes(int) const override;
@@ -303,14 +303,12 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
    context.numChannels = numChannels;
    context.fName = fName;
 
-   const auto &tracks = TrackList::Get( project );
-
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
 
    long levelPref = std::stol(ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDLevel));
    auto bitDepthPref = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FlacOptionIDBitDepth);
 
-   
+
    auto& encoder = context.encoder;
 
    bool success = true;
@@ -338,7 +336,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
       success = encoder.set_metadata(&p, 1);
    }
 
-   
+
    if (bitDepthPref == "24") {
       context.format = int24Sample;
       success = success && encoder.set_bits_per_sample(24);
@@ -402,10 +400,9 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
 
    metadata.reset();
 
-   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-                            t0, t1,
-                            numChannels, SAMPLES_PER_RUN, false,
-                            sampleRate, context.format, mixerSpec);
+   context.mixer = ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, t0, t1, numChannels, SAMPLES_PER_RUN, false,
+      sampleRate, context.format, mixerSpec);
 
    context.status = selectionOnly
       ? XO("Exporting the selected audio as FLAC")

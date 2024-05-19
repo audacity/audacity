@@ -53,7 +53,7 @@ const TranslatableStrings ExportBitDepthNames {
    XO("32 bit float"),
 };
 
-/* 
+/*
 Copied from ExportMP2.cpp by
    Joshua Haberman
    Markus Meyer
@@ -78,7 +78,7 @@ const TranslatableStrings BitRateNames {
 
 const std::initializer_list<ExportOption> ExportWavPackOptions {
    {
-      
+
       OptionIDQuality, XO("Quality"),
       1,
       ExportOption::TypeEnum,
@@ -171,7 +171,7 @@ public:
       }
       return true;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       return {};
@@ -190,7 +190,7 @@ public:
       config.Read(L"/FileFormats/WavPackHybridMode", hybridMode);
       config.Read(L"/FileFormats/WavPackCreateCorrectionFile", createCorrection);
       config.Read(L"/FileFormats/WavPackBitrate", bitRate);
-      
+
       OnHybridModeChange(*hybridMode);
    }
 
@@ -216,7 +216,7 @@ public:
       if(it != mValues.end())
          config.Write(L"/FileFormats/WavPackBitrate", *std::get_if<int>(&it->second));
    }
-   
+
 private:
    void OnHybridModeChange(bool hybridMode)
    {
@@ -317,7 +317,7 @@ std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
 
 bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
 {
-   if(!config.IsObject() || 
+   if(!config.IsObject() ||
       !config.HasMember("quality") || !config["quality"].IsNumber() ||
       !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber() ||
       !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber() ||
@@ -397,8 +397,6 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file->IsOpened()) {
       throw ExportException(_("Unable to open target file for writing"));
    }
-   
-   const auto &tracks = TrackList::Get( project );
 
    const auto quality = ExportPluginHelpers::GetParameterValue<int>(
       parameters,
@@ -474,21 +472,20 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
    if (!WavpackSetConfiguration64(context.wpc, &config, -1, nullptr) || !WavpackPackInit(context.wpc)) {
       throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
    }
-   
+
    context.status = selectionOnly
       ? XO("Exporting selected audio as WavPack")
       : XO("Exporting the audio as WavPack");
-   
+
    context.metadata = std::make_unique<Tags>(
       metadata == nullptr
          ? Tags::Get( project )
          : *metadata
       );
 
-   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         numChannels, SAMPLES_PER_RUN, true,
-         sampleRate, context.format, mixerSpec);
+   context.mixer = ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, t0, t1, numChannels, SAMPLES_PER_RUN, true,
+      sampleRate, context.format, mixerSpec);
 
    return true;
 }
@@ -509,7 +506,7 @@ ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
 
          if (samplesThisRun == 0)
             break;
-         
+
          if (context.format == int16Sample) {
             const int16_t *mixed = reinterpret_cast<const int16_t*>(context.mixer->GetBuffer());
             for (decltype(samplesThisRun) j = 0; j < samplesThisRun; j++) {
@@ -537,7 +534,7 @@ ExportResult WavPackExportProcessor::Process(ExportProcessorDelegate& delegate)
    if (!WavpackFlushSamples(context.wpc)) {
       throw ExportErrorException( WavpackGetErrorMessage(context.wpc) );
    } else {
-      
+
 
       wxString n;
       for (const auto &pair : context.metadata->GetRange()) {
@@ -591,9 +588,9 @@ int WavPackExportProcessor::WriteBlock(void *id, void *data, int32_t length)
     WriteId *outId = static_cast<WriteId*>(id);
 
     if (!outId->file)
-        // This does not match the wavpack.c but in our case if file is nullptr - 
+        // This does not match the wavpack.c but in our case if file is nullptr -
         // the stream error has occured
-        return false; 
+        return false;
 
    //  if (!outId->file->Write(data, length).IsOk()) {
     if (outId->file->Write(data, length) != length) {

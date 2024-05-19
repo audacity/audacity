@@ -330,7 +330,7 @@ class OpusExportProcessor final : public ExportProcessor
       }
 
       ogg_packet packet {};
-  
+
    private:
       std::vector<byte_type> buffer;
       bool resizable { false };
@@ -368,7 +368,7 @@ class OpusExportProcessor final : public ExportProcessor
          uint8_t nbCoupled {};
          uint8_t streamMap[255] {};
       } opus;
-      
+
       // Bitstream properties
       struct OggState final
       {
@@ -755,10 +755,8 @@ bool OpusExportProcessor::Initialize(
 
    WriteTags();
 
-   const auto& tracks = TrackList::Get(project);
-
    context.mixer = ExportPluginHelpers::CreateMixer(
-      tracks, selectionOnly, t0, t1, numChannels, context.opus.frameSize, true,
+      project, selectionOnly, t0, t1, numChannels, context.opus.frameSize, true,
       sampleRate, floatSample, mixerSpec);
 
    return true;
@@ -836,7 +834,7 @@ ExportResult OpusExportProcessor::Process(ExportProcessorDelegate& delegate)
       context.ogg.WriteOut(context.outFile);
 
       context.ogg.audioStreamPacket.packet.packetno++;
-      
+
       exportResult = ExportPluginHelpers::UpdateProgress(
          delegate, *context.mixer, context.t0, context.t1);
    }

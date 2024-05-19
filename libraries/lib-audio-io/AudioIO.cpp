@@ -1243,7 +1243,7 @@ bool AudioIO::AllocateBuffers(
                ));
                for(auto& buffer : mProcessingBuffers)
                   buffer.reserve(playbackBufferSize);
-               
+
                mMasterBuffers.resize(mNumPlaybackChannels);
                for(auto& buffer : mMasterBuffers)
                   buffer.reserve(playbackBufferSize);
@@ -1287,7 +1287,7 @@ bool AudioIO::AllocateBuffers(
             mOldPlaybackGain = 0.0f;
             for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
                const auto &pSequence = mPlaybackSequences[i];
-               
+
                // By the precondition of StartStream which is sole caller of
                // this function:
                assert(pSequence->FindChannelGroup());
@@ -1312,17 +1312,17 @@ bool AudioIO::AllocateBuffers(
                Mixer::Inputs mixSequences;
                mixSequences.push_back(Mixer::Input{ pSequence });
                mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
-                  std::move(mixSequences),
+                  std::move(mixSequences), std::nullopt,
                   // Don't throw for read errors, just play silence:
-                  false,
-                  warpOptions, startTime, endTime, pSequence->NChannels(),
-                  std::max( mPlaybackSamplesToCopy, mPlaybackQueueMinimum ),
+                  false, warpOptions, startTime, endTime,
+                  pSequence->NChannels(),
+                  std::max(mPlaybackSamplesToCopy, mPlaybackQueueMinimum),
                   false, // not interleaved
                   mRate, floatSample,
-                  false, // low quality dithering and resampling
+                  false,   // low quality dithering and resampling
                   nullptr, // no custom mix-down
                   Mixer::ApplyGain::Discard // don't apply gains
-               ));
+                  ));
             }
 
             const auto timeQueueSize = 1 +
@@ -2029,7 +2029,7 @@ bool AudioIO::ProcessPlaybackSlices(
          // warping
          if (frames > 0) {
             size_t produced = 0;
-            
+
             if (toProduce)
                produced = mixer->Process(toProduce);
 
@@ -2063,7 +2063,7 @@ bool AudioIO::ProcessPlaybackSlices(
                   toConsume - produced,
                   .0f);
             }
-            
+
             iBuffer += nChannels;
             ++iSequence;
          }
@@ -2085,7 +2085,7 @@ bool AudioIO::ProcessPlaybackSlices(
 
    // Do any realtime effect processing for each individual sample source,
    // after all the little slices have been written.
-   if (pScope) 
+   if (pScope)
    {
       const auto pointers = stackAllocate(float*, mNumPlaybackChannels);
 
@@ -2114,7 +2114,7 @@ bool AudioIO::ProcessPlaybackSlices(
          {
             for(unsigned i = 0; i < seq->NChannels(); ++i)
                pointers[i] = mProcessingBuffers[bufferIndex + i].data() + offset;
-            
+
             for(unsigned i = seq->NChannels(); i < mNumPlaybackChannels; ++i)
             {
                pointers[i] = *scratch++;
@@ -2241,7 +2241,10 @@ bool AudioIO::ProcessPlaybackSlices(
          );
       }
    }
-   
+
+   for(auto& buffer : mMasterBuffers)
+      buffer.clear();
+
    return progress;
 }
 
@@ -2769,7 +2772,7 @@ bool AudioIoCallback::FillOutputBuffers(
    for (unsigned int c = 0; c < numPlaybackChannels; c++)
       tempBufs[c] = stackAllocate(float, framesPerBuffer);
    // ------ End of MEMORY ALLOCATION ---------------
-   
+
    auto gain = ExpGain(GetMixerOutputVol());
    if (mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
       gain = 0.0;
