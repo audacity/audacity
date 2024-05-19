@@ -103,6 +103,14 @@ auto ProjectAudioManager::StatusWidthFunction(
 }
 
 namespace {
+struct CPPPState : PlaybackState {
+   struct Data {
+      // Non-negative real time durations
+      double mDuration1 = 0, mDuration2 = 0;
+      bool mDiscontinuity{ false };
+   } mData{};
+};
+
 // The implementation is general enough to allow backwards play too
 class CutPreviewPlaybackPolicy final : public PlaybackPolicy {
 public:
@@ -111,6 +119,8 @@ public:
       double gapLength //!< Non-negative track duration
    );
    ~CutPreviewPlaybackPolicy() override;
+
+   std::unique_ptr<PlaybackState> CreateState() const override;
 
    void Initialize(const PlaybackSchedule &schedule,
       PlaybackState &state, double rate) override;
@@ -143,10 +153,8 @@ private:
    double mStart = 0, mEnd = 0;
 
    // Non-negative real time durations
-   double mDuration1 = 0, mDuration2 = 0;
    double mInitDuration1 = 0, mInitDuration2 = 0;
 
-   bool mDiscontinuity{ false };
    bool mReversed{ false };
 };
 
@@ -159,9 +167,17 @@ CutPreviewPlaybackPolicy::CutPreviewPlaybackPolicy(
 
 CutPreviewPlaybackPolicy::~CutPreviewPlaybackPolicy() = default;
 
-void CutPreviewPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
-   PlaybackState &state, double rate)
+std::unique_ptr<PlaybackState> CutPreviewPlaybackPolicy::CreateState() const
 {
+   return std::make_unique<CPPPState>();
+}
+
+void CutPreviewPlaybackPolicy::Initialize(
+   const PlaybackSchedule &schedule, PlaybackState &st, double rate)
+{
+   auto &state = static_cast<CPPPState&>(st);
+   auto &[mDuration1, mDuration2, _] = state.mData;
+
    PlaybackPolicy::Initialize(schedule, state, rate);
 
    // Examine mT0 and mT1 in the schedule only now; ignore changes during play
@@ -185,8 +201,11 @@ void CutPreviewPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
 }
 
 double CutPreviewPlaybackPolicy::OffsetSequenceTime(
-   const PlaybackSchedule &schedule, PlaybackState &state, double offset)
+   const PlaybackSchedule &schedule, PlaybackState &st, double offset)
 {
+   auto &state = static_cast<CPPPState&>(st);
+   auto &[mDuration1, mDuration2, mDiscontinuity] = state.mData;
+
    // Compute new time by applying the offset, jumping over the gap
    auto time = schedule.GetSequenceTime();
    if (offset >= 0) {
@@ -222,8 +241,10 @@ double CutPreviewPlaybackPolicy::OffsetSequenceTime(
 }
 
 PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &, PlaybackState &, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available)
 {
+   auto &state = static_cast<CPPPState&>(st);
+   auto &[mDuration1, mDuration2, mDiscontinuity] = state.mData;
    size_t frames = available;
    size_t toProduce = frames;
    sampleCount samples1(mDuration1 * mRate + 0.5);
@@ -243,9 +264,11 @@ PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
 }
 
 double CutPreviewPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &schedule, PlaybackState &state,
+   const PlaybackSchedule &schedule, PlaybackState &st,
    double trackTime, size_t nSamples)
 {
+   auto &state = static_cast<CPPPState&>(st);
+   auto &[mDuration1, mDuration2, mDiscontinuity] = state.mData;
    auto realDuration = nSamples / mRate;
    if (mDuration1 > 0) {
       mDuration1 = std::max(0.0, mDuration1 - realDuration);
@@ -271,9 +294,10 @@ double CutPreviewPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback(const PlaybackSchedule &,
-   PlaybackState &, const Mixers &playbackMixers, size_t)
+   PlaybackState &st, const Mixers &playbackMixers, size_t)
 {
-   if (mDiscontinuity) {
+   auto &state = static_cast<CPPPState&>(st);
+   if (auto &mDiscontinuity = state.mData.mDiscontinuity) {
       mDiscontinuity = false;
       auto newTime = GapEnd();
       for (auto &pMixer : playbackMixers)
