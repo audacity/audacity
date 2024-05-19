@@ -935,8 +935,9 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mResample.clear();
    mPlaybackSchedule.mTimeQueue.Clear();
 
-   mPlaybackSchedule.Init(
+   mpState = mPlaybackSchedule.Init(
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
+   auto &state = *mpState;
 
    unsigned int playbackChannels = 0;
    size_t numCaptureChannels = 0;
@@ -984,7 +985,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
-   mPlaybackSchedule.GetPolicy().Initialize( mPlaybackSchedule, mRate );
+   mPlaybackSchedule.GetPolicy()
+      .Initialize(mPlaybackSchedule, state, mRate);
 
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1027,7 +1029,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
       // Main thread's initialization of mTime
       mPlaybackSchedule.SetSequenceTime( time );
-      mPlaybackSchedule.GetPolicy().OffsetSequenceTime( mPlaybackSchedule, 0 );
+      mPlaybackSchedule.GetPolicy()
+         .OffsetSequenceTime(mPlaybackSchedule, state, 0);
 
       // Reset mixer positions for all playback sequences
       for (auto &mixer : mPlaybackMixers)
@@ -1287,7 +1290,7 @@ bool AudioIO::AllocateBuffers(
                // use sequence time for the end time, not real time!
                double startTime, endTime;
                if (!sequences.prerollSequences.empty())
-                  startTime = mPlaybackSchedule.mT0;
+                  startTime = mPlaybackSchedule.mInitT0;
                else
                   startTime = t0;
 
@@ -1403,7 +1406,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
       mStreamToken = 0;
    }
 
-   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
+   mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
+   mpState.reset();
 }
 
 bool AudioIO::IsAvailable(AudacityProject &project) const
@@ -1674,7 +1678,8 @@ void AudioIO::StopStream()
    mPlaybackSequences.clear();
    mCaptureSequences.clear();
 
-   mPlaybackSchedule.GetPolicy().Finalize( mPlaybackSchedule );
+   mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
+   mpState.reset();
 
    if (pListener) {
       // Tell UI to hide sample rate
@@ -2002,6 +2007,7 @@ bool AudioIO::ProcessPlaybackSlices(
    std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
+   auto &state = *mpState;
 
    // msmeyer: When playing a very short selection in looped
    // mode, the selection must be copied to the buffer multiple
@@ -2019,7 +2025,7 @@ bool AudioIO::ProcessPlaybackSlices(
          ? // satisfy entire demand with 0s; just one loop pass
             PlaybackSlice{ demand, demand, 0 }
          : // maybe multiple loop passes, for non-contiguous fetches from tracks
-            policy.GetPlaybackSlice(mPlaybackSchedule, demand);
+            policy.GetPlaybackSlice(mPlaybackSchedule, state, demand);
       const auto &[frames, toProduce] = slice;
       progress = progress || toProduce > 0;
 
@@ -2028,7 +2034,8 @@ bool AudioIO::ProcessPlaybackSlices(
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
+      mPlaybackSchedule.mTimeQueue
+         .Producer(mPlaybackSchedule, state, slice);
 
       // mPlaybackMixers correspond one-to-one with mPlaybackSequences
       size_t iSequence = 0;
@@ -2063,7 +2070,8 @@ bool AudioIO::ProcessPlaybackSlices(
       demand -= frames;
 
       done = !paused &&
-         policy.RepositionPlayback(mPlaybackSchedule, mPlaybackMixers, demand);
+         policy.RepositionPlayback(mPlaybackSchedule, state, mPlaybackMixers,
+            demand);
    } while (demand && !done);
 
    // Do any realtime effect processing, more efficiently in at most
@@ -2758,7 +2766,8 @@ bool AudioIoCallback::DrainInputBuffers(
    // earlier checks for being past the end won't happen, so do it here.
    bool result = false;
    if (const auto diff =
-       mPlaybackSchedule.GetSequenceTime() - mPlaybackSchedule.mT1;
+       // (note, assume that when recording, T1 does not vary)
+       mPlaybackSchedule.GetSequenceTime() - mPlaybackSchedule.mInitT1;
       sampleCount(floor(diff * mRate + 0.5)) >= 0
    ) {
       result = true;
@@ -3200,8 +3209,8 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    // Calculate the NEW time position, in the PortAudio callback
-   const auto time =
-      mPlaybackSchedule.GetPolicy().OffsetSequenceTime( mPlaybackSchedule, mSeek );
+   const auto time = mPlaybackSchedule.GetPolicy()
+      .OffsetSequenceTime(mPlaybackSchedule, *mpState, mSeek);
 
    mPlaybackSchedule.SetSequenceTime( time );
    mSeek = 0.0;
@@ -3284,15 +3293,14 @@ void AudioIoCallback::ProcessOnceAndWait(std::chrono::milliseconds sleepTime)
    }
 }
 
-
-
 bool AudioIO::IsCapturing() const
 {
    // Includes a test of mTime, used in the main thread
+   // (note, assume that when recording, T0 does not vary)
    return IsStreamActive() &&
       GetNumCaptureChannels() > 0 &&
       mPlaybackSchedule.GetSequenceTime() >=
-         mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
+         mPlaybackSchedule.mInitT0 + mRecordingSchedule.mPreRoll;
 }
 
 BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };

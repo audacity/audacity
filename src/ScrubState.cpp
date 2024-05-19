@@ -297,16 +297,16 @@ ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
 
 ScrubbingPlaybackPolicy::~ScrubbingPlaybackPolicy() = default;
 
-void ScrubbingPlaybackPolicy::Initialize( PlaybackSchedule &schedule,
-   double rate )
+void ScrubbingPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
+   PlaybackState &state, double rate)
 {
-   PlaybackPolicy::Initialize(schedule, rate);
+   PlaybackPolicy::Initialize(schedule, state, rate);
    mScrubDuration = mStartSample = mEndSample = 0;
    mNewStartTime = 0;
    mScrubSpeed = 0;
    mSilentScrub = mReplenish = false;
    mUntilDiscontinuity = 0;
-   ScrubQueue::Instance.Init( schedule.mT0, rate, mOptions );
+   ScrubQueue::Instance.Init(schedule.mInitT0, rate, mOptions);
 }
 
 void ScrubbingPlaybackPolicy::Finalize(  PlaybackSchedule & )
@@ -356,7 +356,7 @@ ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
-   PlaybackSchedule &, size_t available)
+   const PlaybackSchedule &, PlaybackState &, size_t available)
 {
    if (mReplenish)
       return { available, 0, 0 };
@@ -393,7 +393,8 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
 }
 
 double ScrubbingPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &schedule, double trackTime, size_t nSamples)
+   const PlaybackSchedule &schedule, PlaybackState &,
+   double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
    auto result = trackTime + realDuration * mScrubSpeed;
@@ -407,8 +408,8 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &schedule, const Mixers &playbackMixers,
-   size_t available)
+   PlaybackSchedule &schedule, PlaybackState &,
+   const Mixers &playbackMixers, size_t available)
 {
    auto gAudioIO = AudioIO::Get();
 

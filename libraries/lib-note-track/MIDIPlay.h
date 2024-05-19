@@ -86,7 +86,10 @@ struct MIDIPlay : AudioIOExt
    ~MIDIPlay() override;
 
    double AudioTime(double rate) const
-   { return mPlaybackSchedule.mT0 + mNumFrames / rate; }
+   {
+      // TODO correct this in case of varying left loop bound
+      return mPlaybackSchedule.mInitT0 + mNumFrames / rate;
+   }
 
    const PlaybackSchedule &mPlaybackSchedule;
    NoteTrackConstArray mMidiPlaybackTracks;
@@ -111,7 +114,9 @@ struct MIDIPlay : AudioIOExt
    int     mMidiLoopPasses = 0;
    //
    inline double MidiLoopOffset() {
-      return mMidiLoopPasses * (mPlaybackSchedule.mT1 - mPlaybackSchedule.mT0);
+      // TODO correct this in case of varying loop bounds
+      return mMidiLoopPasses *
+         (mPlaybackSchedule.mInitT1 - mPlaybackSchedule.mInitT0);
    }
 
    long    mAudioFramesPerBuffer = 0;

@@ -50,7 +50,8 @@ public:
    explicit ScrubbingPlaybackPolicy(const ScrubbingOptions &);
    ~ScrubbingPlaybackPolicy() override;
 
-   void Initialize( PlaybackSchedule &schedule, double rate ) override;
+   void Initialize(const PlaybackSchedule &schedule,
+      PlaybackState &state, double rate) override;
    void Finalize( PlaybackSchedule &schedule ) override;
 
    Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
@@ -62,14 +63,14 @@ public:
    std::chrono::milliseconds
       SleepInterval( PlaybackSchedule & ) override;
 
-   PlaybackSlice GetPlaybackSlice(
-      PlaybackSchedule &schedule, size_t available) override;
+   PlaybackSlice GetPlaybackSlice(const PlaybackSchedule &schedule,
+      PlaybackState &state, size_t available) override;
 
    double
-      AdvancedTrackTime(const PlaybackSchedule &schedule,
+      AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) override;
 
-   bool RepositionPlayback(PlaybackSchedule &schedule,
+   bool RepositionPlayback(PlaybackSchedule &schedule, PlaybackState &state,
       const Mixers &playbackMixers, size_t available) override;
 
 private:

@@ -402,6 +402,7 @@ public:
 protected:
    RecordingSchedule mRecordingSchedule{};
    PlaybackSchedule mPlaybackSchedule;
+   std::unique_ptr<PlaybackState> mpState;
 
    struct TransportState;
    //! Holds some state for duration of playback or recording

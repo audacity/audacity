@@ -61,6 +61,37 @@ struct PlaybackSlice {
    {}
 };
 
+class AUDIO_IO_API PlaybackState
+{
+public:
+   virtual ~PlaybackState();
+
+   double RealDurationElapsed() const;
+
+   //! How much real time left?
+   double RealDurationRemaining() const;
+
+   //! Advance the real time position
+   void RealTimeAdvance(double increment);
+
+   //! Determine starting duration within the first pass -- sometimes not
+   //! zero
+   void RealDurationInit(double duration);
+
+   void RealTimeRestart();
+
+   bool ReversedTime() const { return mT1 < mT0; }
+
+   double mT0{};
+   double mT1{};
+   double mWarpedLength;
+
+private:
+   //! Accumulated real time (not track position), starting at zero,
+   /// and wrapping back to zero each time around looping play.
+   double              mWarpedTime{};
+};
+
 //! Directs which parts of tracks to fetch for playback
 /*!
  A non-default policy object may be created each time playback begins, and if so it is destroyed when
@@ -76,8 +107,19 @@ public:
 
    virtual ~PlaybackPolicy() = 0;
 
-   //! Called before starting an audio stream
-   virtual void Initialize( PlaybackSchedule &schedule, double rate );
+   //! Allow extension of PlaybackState; call only when starting playback
+   /*!
+    @post result: `result != nullptr`
+    */
+   virtual std::unique_ptr<PlaybackState> CreateState() const;
+
+   //! Called to update schedule and state for rate, before starting an audio
+   //! stream
+   /*!
+    @param state was made by `this->CreateState()`
+    */
+   virtual void Initialize(const PlaybackSchedule &schedule,
+      PlaybackState &state, double rate);
 
    //! Called after stopping of an audio stream or an unsuccessful start
    virtual void Finalize( PlaybackSchedule &schedule );
@@ -100,10 +142,13 @@ public:
    virtual bool AllowSeek( PlaybackSchedule &schedule );
 
    //! Called when the play head needs to jump a certain distance
-   /*! @param offset signed amount requested to be added to schedule::GetSequenceTime()
+   /*!
+      @param state was made by `this->CreateState()`
+      @param offset signed amount requested to be added to schedule::GetSequenceTime()
       @return the new value that will be set as the schedule's track time
     */
-   virtual double OffsetSequenceTime( PlaybackSchedule &schedule, double offset );
+   virtual double OffsetSequenceTime(
+      const PlaybackSchedule &schedule, PlaybackState &state, double offset);
 
    //! @section Called by the AudioIO::SequenceBufferExchange thread
 
@@ -112,7 +157,11 @@ public:
       SleepInterval( PlaybackSchedule &schedule );
 
    //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
-   virtual PlaybackSlice GetPlaybackSlice( PlaybackSchedule &schedule,
+   /*!
+    @param state was made by `this->CreateState()`
+    */
+   virtual PlaybackSlice GetPlaybackSlice(
+      const PlaybackSchedule &schedule, PlaybackState &state,
       size_t available //!< upper bound for the length of the fetch
    );
 
@@ -124,20 +173,23 @@ public:
     until the sum of the nSamples values equals the most recent playback slice
     (including any trailing silence).
     
+    @param state was made by `this->CreateState()`
     @return updated track time, or infinity to enqueue a stop signal
     */
    virtual double
-      AdvancedTrackTime(const PlaybackSchedule &schedule,
+      AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples);
 
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
    //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
    /*!
+    @param state was made by `this->CreateState()`
     @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
     */
    virtual bool RepositionPlayback(
-      PlaybackSchedule &schedule, const Mixers &playbackMixers,
+      PlaybackSchedule &schedule, PlaybackState &state,
+      const Mixers &playbackMixers,
       size_t available //!< how many more samples may be buffered
    );
 
@@ -149,21 +201,15 @@ protected:
    double mRate = 0;
 };
 
-
 struct AUDIO_IO_API PlaybackSchedule {
-   /// Playback starts at offset of mT0, which is measured in seconds.
-   double              mT0;
-   /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
-   double              mT1;
-   /// Accumulated real time (not track position), starting at zero (unlike
-   /// mTime), and wrapping back to zero each time around looping play.
-   /// Thus, it is the length in real seconds between mT0 and mTime.
-   double              mWarpedTime;
+   /// Playback starts at offset of mInitT0, which is measured in seconds.
+   double              mInitT0;
+   /// Playback ends at offset of mInitT1, which is measured in seconds.
+   double              mInitT1;
 
-   /// Real length to be played (if looping, for each pass) after warping via a
-   /// time track, computed just once when starting the stream.
-   /// Length in real seconds between mT0 and mT1.  Always positive.
-   double              mWarpedLength;
+   /// Positive, real length in seconds to be played (if looping, for each
+   /// pass) after warping via a time track
+   double              mInitWarpedLength;
 
    // mWarpedTime and mWarpedLength are irrelevant when scrubbing,
    // else they are used in updating mTime,
@@ -204,7 +250,11 @@ struct AUDIO_IO_API PlaybackSchedule {
       //! @section Called by the AudioIO::SequenceBufferExchange thread
 
       //! Enqueue track time value advanced by the slice according to `schedule`'s PlaybackPolicy
-      void Producer( PlaybackSchedule &schedule, PlaybackSlice slice );
+      /*!
+         @param state was made by `schedule.GetPolicy().CreateState()`
+       */
+      void Producer(PlaybackSchedule &schedule,
+         PlaybackState &state, PlaybackSlice slice);
 
       //! Return the last time saved by Producer
       double GetLastTime() const;
@@ -244,7 +294,7 @@ struct AUDIO_IO_API PlaybackSchedule {
    PlaybackPolicy &GetPolicy();
    const PlaybackPolicy &GetPolicy() const;
 
-   void Init(
+   std::unique_ptr<PlaybackState> Init(
       double t0, double t1,
       const AudioIOStartStreamOptions &options,
       const RecordingSchedule *pRecordingSchedule );
@@ -269,12 +319,6 @@ struct AUDIO_IO_API PlaybackSchedule {
     */
    double SolveWarpedLength(double t0, double length) const;
 
-   /** \brief True if the end time is before the start time */
-   bool ReversedTime() const
-   {
-      return mT1 < mT0;
-   }
-
    /** \brief Get current track time value, unadjusted
     *
     * Returns a time in seconds.
@@ -291,25 +335,14 @@ struct AUDIO_IO_API PlaybackSchedule {
       mPolicyValid.store(false, std::memory_order_release);
    }
 
-   // Convert time between mT0 and argument to real duration, according to
-   // time track if one is given; result is always nonnegative
-   double RealDuration(double trackTime1) const;
+   //! Convert time between arguments to real duration, according to
+   //! time track if one is given; result is always nonnegative
+   double RealDuration(double trackTime0, double trackTime1) const;
 
-   // Convert time between mT0 and argument to real duration, according to
-   // time track if one is given; may be negative
-   double RealDurationSigned(double trackTime1) const;
-
-   // How much real time left?
-   double RealTimeRemaining() const;
-
-   // Advance the real time position
-   void RealTimeAdvance( double increment );
-
-   // Determine starting duration within the first pass -- sometimes not
-   // zero
-   void RealTimeInit( double trackTime );
-   
-   void RealTimeRestart();
+   //! Convert time between arguments to real duration, according to
+   //! time track if one is given; may be negative
+   double
+   RealDurationSigned(double trackTime0, double trackTime1) const;
 
 private:
    /// Current track time position during playback, in seconds.

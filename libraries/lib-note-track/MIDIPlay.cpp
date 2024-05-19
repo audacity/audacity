@@ -728,7 +728,7 @@ bool MIDIPlay::StartPortMidiStream(double rate)
       mMidiLoopPasses = 0;
       mMidiOutputComplete = false;
       mMaxMidiTimestamp = 0;
-      PrepareMidiIterator(true, mPlaybackSchedule.mT0, 0);
+      PrepareMidiIterator(true, mPlaybackSchedule.mInitT0, 0);
 
       // It is ok to call this now, but do not send timestamped midi
       // until after the first audio callback, which provides necessary
@@ -780,12 +780,14 @@ void MIDIPlay::StopOtherStream()
 double Iterator::UncorrectedMidiEventTime(double pauseTime)
 {
    double time;
+   // TODO correct this in case of varying loop bounds
+   const double t0 = mPlaybackSchedule.mInitT0;
    if (mPlaybackSchedule.mEnvelope)
       time =
-         mPlaybackSchedule.RealDuration(
+         mPlaybackSchedule.RealDuration(t0,
             GetNextEventTime() - mMIDIPlay.MidiLoopOffset())
-         + mPlaybackSchedule.mT0 +
-           (mMIDIPlay.mMidiLoopPasses * mPlaybackSchedule.mWarpedLength);
+         + t0 +
+           (mMIDIPlay.mMidiLoopPasses * mPlaybackSchedule.mInitWarpedLength);
    else
       time = GetNextEventTime();
 
@@ -967,6 +969,8 @@ bool Iterator::OutputEvent(double pauseTime, bool midiStateOnly, bool hasSolo)
 
 void Iterator::GetNextEvent()
 {
+   // TODO correct this in case of varying loop bounds
+   const auto t1 = mPlaybackSchedule.mInitT1;
    mNextEventTrack = nullptr; // clear it just to be safe
    // now get the next event and the track from which it came
    double nextOffset;
@@ -974,16 +978,16 @@ void Iterator::GetNextEvent()
    mNextEvent = it.next(&mNextIsNoteOn,
       // Allegro retrieves the "cookie" for the event, which is a NoteTrack
       reinterpret_cast<void **>(&mNextEventTrack),
-      &nextOffset, mPlaybackSchedule.mT1 + midiLoopOffset);
+      &nextOffset, t1 + midiLoopOffset);
 
-   mNextEventTime  = mPlaybackSchedule.mT1 + midiLoopOffset + 1;
+   mNextEventTime  = t1 + midiLoopOffset + 1;
    if (mNextEvent) {
       mNextEventTime = (mNextIsNoteOn ? mNextEvent->time :
                               mNextEvent->get_end_time()) + nextOffset;;
    }
-   if (mNextEventTime > (mPlaybackSchedule.mT1 + midiLoopOffset)){ // terminate playback at mT1
+   if (mNextEventTime > (t1 + midiLoopOffset)) { // terminate playback at t1
       mNextEvent = &gAllNotesOff;
-      mNextEventTime = mPlaybackSchedule.mT1 + midiLoopOffset;
+      mNextEventTime = t1 + midiLoopOffset;
       mNextIsNoteOn = true; // do not look at duration
    }
 }
@@ -1009,6 +1013,8 @@ void MIDIPlay::FillOtherBuffers(
    if (actual_latency > mAudioOutLatency) {
        time += actual_latency - mAudioOutLatency;
    }
+   // TODO correct this in case of varying left loop bound
+   const double t0 = mPlaybackSchedule.mInitT0;
    while (mIterator &&
           mIterator->mNextEvent &&
           mIterator->UncorrectedMidiEventTime(PauseTime(rate, pauseFrames)) < time) {
@@ -1016,7 +1022,7 @@ void MIDIPlay::FillOtherBuffers(
          if (mPlaybackSchedule.GetPolicy().Looping(mPlaybackSchedule)) {
             // jump back to beginning of loop
             ++mMidiLoopPasses;
-            PrepareMidiIterator(false, mPlaybackSchedule.mT0, MidiLoopOffset());
+            PrepareMidiIterator(false, t0, MidiLoopOffset());
          }
          else
             mIterator.reset();
@@ -1119,8 +1125,10 @@ void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
    )
 {
    if (mCallbackCount++ == 0) {
+      // TODO correct this in case of varying left loop bound
+      const double t0 = mPlaybackSchedule.mInitT0;
        // This is effectively mSystemMinusAudioTime when the buffer is empty:
-       mStartTime = SystemTime(mUsingAlsa) - mPlaybackSchedule.mT0;
+       mStartTime = SystemTime(mUsingAlsa) - t0;
        // later, mStartTime - mSystemMinusAudioTime will tell us latency
    }
 

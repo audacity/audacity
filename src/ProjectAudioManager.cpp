@@ -112,19 +112,20 @@ public:
    );
    ~CutPreviewPlaybackPolicy() override;
 
-   void Initialize(PlaybackSchedule &schedule, double rate) override;
+   void Initialize(const PlaybackSchedule &schedule,
+      PlaybackState &state, double rate) override;
 
-   double OffsetSequenceTime( PlaybackSchedule &schedule, double offset ) override;
+   double OffsetSequenceTime(const PlaybackSchedule &schedule,
+      PlaybackState &state, double offset) override;
 
-   PlaybackSlice GetPlaybackSlice(
-      PlaybackSchedule &schedule, size_t available) override;
+   PlaybackSlice GetPlaybackSlice(const PlaybackSchedule &schedule,
+      PlaybackState &state, size_t available) override;
 
    double AdvancedTrackTime(const PlaybackSchedule &schedule,
-      double trackTime, size_t nSamples) override;
+      PlaybackState &state, double trackTime, size_t nSamples) override;
 
-   bool RepositionPlayback(
-      PlaybackSchedule &schedule, const Mixers &playbackMixers,
-      size_t available) override;
+   bool RepositionPlayback(PlaybackSchedule &schedule, PlaybackState &state,
+      const Mixers &playbackMixers, size_t available) override;
 
 private:
    double GapStart() const
@@ -157,14 +158,14 @@ CutPreviewPlaybackPolicy::CutPreviewPlaybackPolicy(
 
 CutPreviewPlaybackPolicy::~CutPreviewPlaybackPolicy() = default;
 
-void CutPreviewPlaybackPolicy::Initialize(
-   PlaybackSchedule &schedule, double rate)
+void CutPreviewPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
+   PlaybackState &state, double rate)
 {
-   PlaybackPolicy::Initialize(schedule, rate);
+   PlaybackPolicy::Initialize(schedule, state, rate);
 
    // Examine mT0 and mT1 in the schedule only now; ignore changes during play
-   double left = mStart = schedule.mT0;
-   double right = mEnd = schedule.mT1;
+   double left = mStart = schedule.mInitT0;
+   double right = mEnd = schedule.mInitT1;
    mReversed = left > right;
    if (mReversed)
       std::swap(left, right);
@@ -183,7 +184,7 @@ void CutPreviewPlaybackPolicy::Initialize(
 }
 
 double CutPreviewPlaybackPolicy::OffsetSequenceTime(
-   PlaybackSchedule &schedule, double offset )
+   const PlaybackSchedule &schedule, PlaybackState &state, double offset)
 {
    // Compute new time by applying the offset, jumping over the gap
    auto time = schedule.GetSequenceTime();
@@ -220,7 +221,7 @@ double CutPreviewPlaybackPolicy::OffsetSequenceTime(
 }
 
 PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
-   PlaybackSchedule &, size_t available)
+   const PlaybackSchedule &, PlaybackState &, size_t available)
 {
    size_t frames = available;
    size_t toProduce = frames;
@@ -241,7 +242,8 @@ PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
 }
 
 double CutPreviewPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &schedule, double trackTime, size_t nSamples)
+   const PlaybackSchedule &schedule, PlaybackState &state,
+   double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
    if (mDuration1 > 0) {
@@ -267,8 +269,8 @@ double CutPreviewPlaybackPolicy::AdvancedTrackTime(
       return time;
 }
 
-bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,
-   const Mixers &playbackMixers, size_t)
+bool CutPreviewPlaybackPolicy::RepositionPlayback(PlaybackSchedule &,
+   PlaybackState &, const Mixers &playbackMixers, size_t)
 {
    if (mDiscontinuity) {
       mDiscontinuity = false;
