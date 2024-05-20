@@ -46,6 +46,11 @@ void PlaybackState::RealTimeRestart()
 
 PlaybackPolicy::~PlaybackPolicy() = default;
 
+void PlaybackState::Assign(const PlaybackState &other)
+{
+   *this = other;
+}
+
 std::unique_ptr<PlaybackState> PlaybackPolicy::CreateState() const
 {
    return std::make_unique<PlaybackState>();

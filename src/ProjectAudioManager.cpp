@@ -103,7 +103,7 @@ auto ProjectAudioManager::StatusWidthFunction(
 }
 
 namespace {
-struct CPPPState : PlaybackState {
+struct CPPPState : AssignablePlaybackState<CPPPState> {
    struct Data {
       // Non-negative real time durations
       double mDuration1 = 0, mDuration2 = 0;

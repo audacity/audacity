@@ -298,7 +298,7 @@ private:
 
 ScrubQueue ScrubQueue::Instance;
 
-struct SPPState : PlaybackState {
+struct SPPState : AssignablePlaybackState<SPPState> {
    struct Data {
       sampleCount mScrubDuration{ 0 };
       sampleCount mStartSample{ 0 };

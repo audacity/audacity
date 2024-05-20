@@ -81,10 +81,26 @@ public:
 
    double mLastTime{};
 
+   //! Rather than a Clone() method, this assumes pre-allocation
+   /*!
+    @pre `other` was created by the same `PlaybackPolicy::CreateState` override
+    as was `*this`
+    */
+   virtual void Assign(const PlaybackState &other);
+
 private:
    //! Accumulated real time (not track position), starting at zero,
    /// and wrapping back to zero each time around looping play.
    double              mWarpedTime{};
+};
+
+// CRTP to generate Assign() override
+template<typename Derived> struct AssignablePlaybackState : PlaybackState
+{
+   void Assign(const PlaybackState &other) override
+   {
+      *static_cast<Derived*>(this) = static_cast<const Derived&>(other);
+   }
 };
 
 //! Directs which parts of tracks to fetch for playback

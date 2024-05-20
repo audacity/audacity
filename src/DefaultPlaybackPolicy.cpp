@@ -14,7 +14,7 @@
 #include "ViewInfo.h"
 
 namespace {
-struct DPPState : PlaybackState {
+struct DPPState : AssignablePlaybackState<DPPState> {
    double mLastPlaySpeed{ 1.0 };
    double mLoopEndTime{};
    size_t mRemaining{ 0 };
