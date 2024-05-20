@@ -288,6 +288,21 @@ private:
 };
 
 ScrubQueue ScrubQueue::Instance;
+
+struct SPPState : PlaybackState {
+   struct Data {
+      sampleCount mScrubDuration{ 0 };
+      sampleCount mStartSample{ 0 };
+      sampleCount mEndSample{ 0 };
+      bool mDiscontinuity{ false };
+      bool mSilentScrub{ false };
+   } mData;
+   struct Times {
+      double mNewStartTime{ 0 };
+      size_t mUntilDiscontinuity{ 0 };
+   } mTimes;
+   double mScrubSpeed{ 0 };
+};
 }
 
 ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
@@ -297,15 +312,15 @@ ScrubbingPlaybackPolicy::ScrubbingPlaybackPolicy(
 
 ScrubbingPlaybackPolicy::~ScrubbingPlaybackPolicy() = default;
 
+std::unique_ptr<PlaybackState> ScrubbingPlaybackPolicy::CreateState() const
+{
+   return std::make_unique<SPPState>();
+}
+
 void ScrubbingPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
    PlaybackState &state, double rate)
 {
    PlaybackPolicy::Initialize(schedule, state, rate);
-   mScrubDuration = mStartSample = mEndSample = 0;
-   mNewStartTime = 0;
-   mScrubSpeed = 0;
-   mSilentScrub = mDiscontinuity = false;
-   mUntilDiscontinuity = 0;
    ScrubQueue::Instance.Init(schedule.mInitT0, rate, mOptions);
 }
 
@@ -357,8 +372,14 @@ ScrubbingPlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &, PlaybackState &, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available)
 {
+   auto &state = static_cast<SPPState&>(st);
+   auto &[mScrubDuration, _, __,
+      mDiscontinuity, mSilentScrub
+   ] = state.mData;
+   auto &mUntilDiscontinuity = state.mTimes.mUntilDiscontinuity;
+
    auto gAudioIO = AudioIO::Get();
 
    // How many samples to produce for each channel.
@@ -384,11 +405,13 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
 // zero for the first slice (so mUntilDiscontinuity and mNewStartTime do not
 // matter then)
 double ScrubbingPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &, PlaybackState &,
+   const PlaybackSchedule &, PlaybackState &st,
    double trackTime, size_t nSamples)
 {
+   auto &state = static_cast<SPPState&>(st);
+   auto &[mNewStartTime, mUntilDiscontinuity] = state.mTimes;
    auto realDuration = nSamples / mRate;
-   auto result = trackTime + realDuration * mScrubSpeed;
+   auto result = trackTime + realDuration * state.mScrubSpeed;
    bool discontinuity = nSamples > 0 &&
       mUntilDiscontinuity > 0 &&
       0 == (mUntilDiscontinuity -= std::min(mUntilDiscontinuity, nSamples));
@@ -399,9 +422,16 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
-   const PlaybackSchedule &schedule,
-   PlaybackState &, const Mixers &playbackMixers, size_t available)
+   const PlaybackSchedule &schedule, PlaybackState &st,
+   const Mixers &playbackMixers, size_t available)
 {
+   auto &state = static_cast<SPPState&>(st);
+   auto &[mScrubDuration, mStartSample, mEndSample,
+      mDiscontinuity, mSilentScrub
+   ] = state.mData;
+   auto &mNewStartTime = state.mTimes.mNewStartTime;
+   auto &mScrubSpeed = state.mScrubSpeed;
+
    auto gAudioIO = AudioIO::Get();
 
    if (available > 0 && mScrubDuration <= 0) {

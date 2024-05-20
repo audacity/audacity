@@ -50,6 +50,8 @@ public:
    explicit ScrubbingPlaybackPolicy(const ScrubbingOptions &);
    ~ScrubbingPlaybackPolicy() override;
 
+   std::unique_ptr<PlaybackState> CreateState() const override;
+
    void Initialize(const PlaybackSchedule &schedule,
       PlaybackState &state, double rate) override;
    void Finalize(const PlaybackSchedule &schedule) override;
@@ -76,13 +78,6 @@ public:
    override;
 
 private:
-   sampleCount mScrubDuration{ 0 }, mStartSample{ 0 }, mEndSample{ 0 };
-   double mNewStartTime{ 0 };
-   double mScrubSpeed{ 0 };
-   bool mSilentScrub{ false };
-   bool mDiscontinuity{ false };
-   size_t mUntilDiscontinuity{ 0 };
-
    const ScrubbingOptions mOptions;
 };
 
