@@ -30,6 +30,8 @@ using namespace au::audio;
 static constexpr volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
 static constexpr volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
 
+#define LINEAR_TO_DB(x) (20.0 * log10(x))
+
 static int au3VolumeToLocal(float volume)
 {
     //! convert from range 0-1 to -60-0
@@ -78,6 +80,8 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
             }
         });
     });
+
+    resetAudioChannelsVolumePressure();
 }
 
 int PlaybackToolBarLevelItem::level() const

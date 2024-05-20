@@ -12,20 +12,18 @@ Item {
 
     property alias volumeLevel: volumeSlider.volumeLevel
 
-    property alias leftCurrentVolumePressure: volumeSlider.leftCurrentVolumePressure
-    property alias leftRecentPeak: volumeSlider.leftRecentPeak
-    property alias leftMaxPeak: volumeSlider.leftMaxPeak
+    property alias leftCurrentVolumePressure: leftVolumePressure.currentVolumePressure
+    property alias leftRecentPeak: leftVolumePressure.recentPeak
+    property alias leftMaxPeak: leftVolumePressure.maxPeak
 
-    property alias rightCurrentVolumePressure: volumeSlider.rightCurrentVolumePressure
-    property alias rightRecentPeak: volumeSlider.rightRecentPeak
-    property alias rightMaxPeak: volumeSlider.rightMaxPeak
+    property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
+    property alias rightRecentPeak: rightVolumePressure.recentPeak
+    property alias rightMaxPeak: rightVolumePressure.maxPeak
 
     signal volumeLevelChangeRequested(var level)
 
     RowLayout {
         anchors.fill: parent
-
-        spacing: 4
 
         StyledIconLabel {
             Layout.preferredWidth: parent.height
@@ -34,14 +32,38 @@ Item {
             iconCode: IconCode.AUDIO
         }
 
-        VolumeSlider {
-            id: volumeSlider
-
+        Item {
             Layout.fillWidth: true
             Layout.preferredHeight: parent.height
 
-            onVolumeLevelMoved: function(level) {
-                root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+            Column {
+                id: volumePressureContainer
+
+                anchors.fill: parent
+                anchors.margins: 4
+
+                spacing: 2
+
+                VolumePressureMeter {
+                    id: leftVolumePressure
+                }
+                VolumePressureMeter {
+                    id: rightVolumePressure
+                    showRuler: true
+                }
+            }
+
+            VolumeSlider {
+                id: volumeSlider
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.top: parent.top
+                anchors.topMargin: 3
+
+                onVolumeLevelMoved: function(level) {
+                    root.volumeLevelChangeRequested(Math.round(level * 10) / 10)
+                }
             }
         }
     }

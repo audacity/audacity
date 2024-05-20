@@ -8,5 +8,6 @@
         <file>qml/Audacity/Playback/qmldir</file>
         <file>qml/Audacity/Playback/internal/PlaybackLevel.qml</file>
         <file>qml/Audacity/Playback/internal/VolumeSlider.qml</file>
+        <file>qml/Audacity/Playback/internal/VolumePressureMeter.qml</file>
     </qresource>
 </RCC>

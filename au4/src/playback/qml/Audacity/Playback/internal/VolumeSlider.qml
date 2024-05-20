@@ -1,7 +1,6 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
@@ -11,20 +10,13 @@ import Muse.UiComponents 1.0
 Slider {
     id: root
 
-    property real leftCurrentVolumePressure: -60.0
-    property real leftRecentPeak: -60
-    property real leftMaxPeak: -60
-
-    property real rightCurrentVolumePressure: -60.0
-    property real rightRecentPeak: -60
-    property real rightMaxPeak: -60
-
-    property real maxDisplayedVolumePressure: 0.0
-
     property real volumeLevel: 0.0
     property real readableVolumeLevel: Math.round(root.volumeLevel * 10) / 10
 
     property alias navigation: navCtrl
+
+    readonly property real handleWidth: 16
+    readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
 
@@ -35,44 +27,18 @@ Slider {
     orientation: Qt.Horizontal
     wheelEnabled: true
 
+    width: parent.width
+    height: handleWidth
+
     signal increaseRequested()
     signal decreaseRequested()
 
     QtObject {
         id: prv
 
-        property int margin: 2
-        readonly property int spacing: 2
+        readonly property real rulerLineWidth: root.width - root.handleWidth
 
-        property var gradient: null
-        readonly property int overloadWidth: 4
-
-        readonly property real indicatorWidth: root.width - handleWidth - overloadWidth
-        readonly property real indicatorHeight: 6
-
-        readonly property real rulerLineWidth: root.width - handleWidth
-        readonly property real rulerLineHeight: 2
-
-        readonly property int rulerYPos: margin + indicatorHeight + spacing / 2
-
-        readonly property int fullValueRangeLength: Math.abs(root.from) + Math.abs(root.to)
-        readonly property real divisionPixels: rulerLineWidth / fullValueRangeLength
-
-        readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
-        readonly property color unitTextColor: ui.theme.fontPrimaryColor
-        readonly property string unitTextFont: {
-            var pxSize = String('8px')
-            var family = String('\'' + ui.theme.bodyFont.family + '\'')
-
-            return pxSize + ' ' + family
-        }
-
-        onMeterBackgroundColorChanged: { bgCanvas.requestPaint() }
-        onUnitTextColorChanged: { bgCanvas.requestPaint() }
-        onUnitTextFontChanged: { bgCanvas.requestPaint() }
-
-        readonly property real handleWidth: 14
-        readonly property real handleHeight: 14
+        readonly property int rulerYPos: root.height / 2
 
         property real dragStartOffset: 0.0
     }
@@ -104,7 +70,7 @@ Slider {
         }
     }
 
-    background: Canvas {
+    background: Item {
         id: bgCanvas
 
         height: root.height
@@ -113,79 +79,13 @@ Slider {
         NavigationFocusBorder {
             navigationCtrl: navCtrl
         }
-
-        function drawMeter(ctx, originHPos, originVPos, volumePressure, recentPeak, maxPeak) {
-            ctx.fillStyle = prv.meterBackgroundColor
-            ctx.fillRect(originHPos, originVPos, prv.indicatorWidth , prv.indicatorHeight)
-
-            var isClipping = volumePressure >= root.maxDisplayedVolumePressure
-            var clipingColor = "#EF476F"
-
-            ctx.fillStyle = isClipping ? clipingColor : ui.theme.strokeColor
-            ctx.fillRect(originHPos + prv.indicatorWidth, originVPos, prv.overloadWidth, prv.indicatorHeight)
-
-            ctx.fillStyle = isClipping ? clipingColor : ui.theme.accentColor
-            ctx.fillRect(originHPos, originVPos, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(volumePressure)), prv.indicatorHeight)
-
-            ctx.fillRect(originHPos + recentPeak * prv.rulerLineWidth, originVPos, 1, prv.indicatorHeight)
-
-            ctx.fillStyle = prv.unitTextColor
-            ctx.fillRect(originHPos + maxPeak * prv.rulerLineWidth, originVPos, 1, prv.indicatorHeight)
-        }
-
-        function drawRuler(ctx, originHPos, originVPos) {
-            ctx.font = prv.unitTextFont
-
-            var currentStrokeHPos = 0
-            var fullStep = 12
-            var smallStep = 6
-
-            for (var i = 0; i <= prv.fullValueRangeLength; i+=fullStep) {
-                var division = prv.divisionPixels
-
-                if (i === 0) {
-                    currentStrokeHPos = originHPos
-                } else {
-                    currentStrokeHPos += division * fullStep
-                }
-
-                ctx.save()
-
-                ctx.fillStyle = prv.unitTextColor
-                var value = String(root.from + i)
-                ctx.fillText(value, currentStrokeHPos - (value <= -10 ? 8 : (value < 0 ? 6 : 2)), originVPos)
-
-                ctx.restore()
-            }
-        }
-
-        onPaint: {
-            var ctx = bgCanvas.context
-
-            if (!ctx) {
-                ctx = getContext("2d")
-            }
-
-            ctx.clearRect(0, 0, bgCanvas.height, bgCanvas.width)
-
-            var xPos = prv.handleWidth/2
-            var yPos = prv.margin
-
-            drawMeter(ctx, xPos, yPos, root.leftCurrentVolumePressure, root.leftRecentPeak, root.leftMaxPeak)
-
-            yPos += prv.indicatorHeight + prv.spacing
-            drawMeter(ctx, xPos, yPos, root.rightCurrentVolumePressure, root.rightRecentPeak, root.rightMaxPeak)
-
-            yPos = bgCanvas.height
-            drawRuler(ctx, xPos, yPos)
-        }
     }
 
     handle: Item {
         x: root.position * prv.rulerLineWidth
-        y: prv.rulerYPos - prv.handleHeight / 2
-        implicitWidth: prv.handleWidth
-        implicitHeight: prv.handleHeight
+        y: prv.rulerYPos - root.handleHeight / 2
+        implicitWidth: root.handleWidth
+        implicitHeight: root.handleHeight
 
         MouseArea {
             anchors.fill: parent
@@ -237,11 +137,6 @@ Slider {
 
     onMoved: {
         navigation.requestActiveByInteraction()
-
         root.volumeLevelMoved(value)
-    }
-
-    Component.onCompleted: {
-        bgCanvas.requestPaint()
     }
 }
