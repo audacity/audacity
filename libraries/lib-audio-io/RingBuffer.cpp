@@ -180,13 +180,17 @@ size_t RingBuffer::Clear(sampleFormat format, size_t samplesToClear)
    return cleared;
 }
 
-std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
+std::pair<samplePtr, size_t>
+RingBuffer::GetUnflushed(size_t offset, unsigned iBlock)
 {
    // This function is called by the writer
 
    // Find total number of samples unflushed:
    auto end = mEnd.load(std::memory_order_relaxed);
-   const size_t size = Filled(end, mWritten);
+   const size_t fullSize = Filled(end, mWritten);
+   offset = std::min(offset, fullSize);
+   const auto size = fullSize - offset;
+   end = (end + offset) % mBufferSize;
 
    // How many in the first part:
    const size_t size0 = std::min(size, mBufferSize - end);

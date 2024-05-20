@@ -2268,7 +2268,7 @@ size_t AudioIO::ApplyEffectStack(
       size_t len = 0;
       for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
          auto &ringBuffer = *playbackBuffers[iChannel];
-         const auto pair = ringBuffer.GetUnflushed(iBlock);
+         const auto pair = ringBuffer.GetUnflushed(0, iBlock);
          // Playback RingBuffers have float format: see AllocateBuffers
          pointers[iChannel] = reinterpret_cast<float*>(pair.first);
          // The lengths of corresponding unflushed blocks should be
@@ -2315,7 +2315,7 @@ void AudioIO::ApplyChannelGains()
          for (unsigned iBlock : {0, 1}) {
             size_t len = 0;
             auto &ringBuffer = *track.mBuffers[iChannel];
-            const auto pair = ringBuffer.GetUnflushed(iBlock);
+            const auto pair = ringBuffer.GetUnflushed(0, iBlock);
             // Playback RingBuffers have float format: see AllocateBuffers
             auto pFloats = reinterpret_cast<float*>(pair.first);
             // The lengths of corresponding unflushed blocks should be
@@ -2352,14 +2352,14 @@ void AudioIO::MixChannels(const size_t demand)
          float *masterSamples{};
          for (auto &track : mPlaybackTracks) {
             auto &ringBuffer = *track.mBuffers[iChannel];
-            auto pair = ringBuffer.GetUnflushed(iBlock);
+            auto pair = ringBuffer.GetUnflushed(0, iBlock);
             if (first) {
                len = pair.second;
                totalLength[iChannel] += len;
                // Just copy the first track's samples
                masterBuffer.Put(pair.first, floatSample, len, 0);
                // Find the pointer to the new samples in the master buffer
-               pair = masterBuffer.GetUnflushed(iBlock);
+               pair = masterBuffer.GetUnflushed(0, iBlock);
                assert(len == pair.second);
                masterSamples = reinterpret_cast<float*>(pair.first);
             }
