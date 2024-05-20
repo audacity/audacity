@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-04-13 00:00+0000\n"
+"PO-Revision-Date: 2024-05-20 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -388,9 +388,8 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Nie udało się zdekompresować bloku projektu chmury"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Local project data was removed before the sync has completed"
-msgstr "Projekt został zamknięty przed utworzeniem migawki"
+msgstr "Dane projektu lokalnego zostały usunięte przed zakończeniem synchronizacji"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -4116,7 +4115,7 @@ msgstr "Nie znaleziono biblioteki FFmpeg"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Locate FFmpeg"
-msgstr "Ustal położenie FFmpeg"
+msgstr "Ustal lokalizację FFmpeg"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -4126,7 +4125,7 @@ msgstr "Audacity potrzebuje pliku „%s” do importu i eksportu dźwięku przez
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
-msgstr "Położenie „%s”:"
+msgstr "Lokalizacja „%s”:"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 #, c-format
@@ -4179,7 +4178,7 @@ msgstr ""
 "pliku dźwiękowego, ale nie znaleziono bibliotek.\n"
 "\n"
 "Aby użyć importowania FFmpeg, idź do „Edycja > Ustawienia... > Biblioteki”,\n"
-"aby pobrać lub ustalić położenie bibliotek FFmpeg."
+"aby pobrać lub ustalić lokalizację bibliotek FFmpeg."
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Do not show this warning again"
@@ -4215,7 +4214,7 @@ msgid ""
 "Do you still want to locate them manually?"
 msgstr ""
 "Audacity automatycznie wykrył prawidłowe biblioteki FFmpeg.\n"
-"Nadal chcesz ustalić ich położenie ręcznie?"
+"Nadal chcesz ustalić ich lokalizację ręcznie?"
 
 #: modules/import-export/mod-ffmpeg/FFmpegPrefs.cpp
 msgid "Success"
@@ -4521,7 +4520,7 @@ msgstr "Jakość"
 #. i18n-hint: LAME is the name of an MP3 converter and should not be translated
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Locate LAME"
-msgstr "Ustal położenie LAME"
+msgstr "Ustal lokalizację LAME"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
@@ -4531,7 +4530,7 @@ msgstr "Audacity potrzebuje pliku %s do utworzenia pliku MP3."
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 #, c-format
 msgid "Location of %s:"
-msgstr "Położenie %s:"
+msgstr "Lokalizacja %s:"
 
 #. i18n-hint: There is a  button to the right of the arrow.
 #: modules/import-export/mod-mp3/ExportMP3.cpp
@@ -4944,7 +4943,7 @@ msgid ""
 "Audacity cannot do this, the Export was abandoned."
 msgstr ""
 "Próbowano wyeksportować plik WAV lub AIFF, który był większy niż 4 GB.\n"
-"Audacity nie może tego zrobić, eksport został przerwany."
+"Audacity nie może tego zrobić. Eksport został przerwany."
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #, c-format
@@ -5627,7 +5626,7 @@ msgstr "Katalog plików tymczasowych w chmurze"
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "&Location:"
-msgstr "&Położenie:"
+msgstr "&Lokalizacja:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/export/ExportFilePanel.cpp src/prefs/DirectoriesPrefs.cpp
@@ -5649,7 +5648,7 @@ msgstr "Ustawienia chmury"
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location to place the temporary directory"
-msgstr "Wybierz miejsce dla katalogu tymczasowego"
+msgstr "Wybierz lokalizację dla katalogu tymczasowego"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -7748,7 +7747,7 @@ msgstr ""
 "\n"
 "\n"
 "Pliki pokazane jako BRAKUJĄCE zostały przeniesione lub usunięte i nie mogą zostać skopiowane.\n"
-"Przywróć je do ich pierwotnych położeń, aby móc je skopiować do projektu."
+"Przywróć je do ich pierwotnej lokalizacji, aby móc je skopiować do projektu."
 
 #: src/Dependencies.cpp
 msgid "Project Dependencies"
@@ -8355,158 +8354,140 @@ msgstr "&Mikser"
 
 #: src/PendingStrings.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "Uzyskaj darmowe wtyczki i dźwięki"
 
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>Sprawdź naszą [[%s|aplikację Muse Hub]] dla szerokiego zakresu wtyczek dźwiękowych dla użytkowników Audacity</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "Wyświetl samouczki"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "Odwiedź Audio.com"
+msgstr "Odwiedź nasze forum"
 
 #. i18n-hint: Title of the buttons that adds new effects plugin search path
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "Dod&aj nową zasadę"
+msgstr "Dodaj nową lokalizację"
 
 #. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "Wybierz miejsce"
+msgstr "Lokalizacje wtyczek %s"
 
 #. i18n-hint: master channel display name
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master"
-msgstr "Wklej"
+msgstr "Główny"
 
 #. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master effects"
-msgstr "Efekty w czasie rzeczywistym"
+msgstr "Efekty główne"
 
 #. i18n-hint: Hint for a master effects section of realtime effects panel
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Apply to all tracks"
-msgstr "Podziel do nowej ścieżki"
+msgstr "Zastosuj do wszystkich ścieżek"
 
 #: src/PendingStrings.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "Redukuje „zakres dynamiki” lub różnice między partiami głośnymi i cichymi."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "Kompresja"
+msgstr "Krzywa kompresji"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "Nic nie rób"
+msgstr "Wygładzanie"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Input gain (dB)"
-msgstr "Wzmocnienie wyjściowe (dB)"
+msgstr "Wzmocnienie wejściowe (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Ceiling (dB)"
-msgstr "Wzmocnienie (dB)"
+msgstr "Podbicie (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Input"
-msgstr ""
+msgstr "Wejście"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attenuation"
-msgstr "Orientacja"
+msgstr "Tłumienie"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "Poziom progowy (dB)"
+msgstr "&Próg (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "Upiększanie wzmocnienia"
+msgstr "Upiększanie wz&mocnienia (dB)"
 
 #: src/PendingStrings.cpp
 msgid "&Make-up target (dB)"
-msgstr ""
+msgstr "Upiększa&nie celu (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Knee &width (dB)"
-msgstr ""
+msgstr "&Szerokość kolana (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Rati&o:"
-msgstr "&Stosunek:"
+msgstr "St&osunek:"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
-msgstr ""
+msgstr "&Spojrzenie w przód (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "Narastanie (ms)"
+msgstr "&Narastanie (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "Czas zanikania"
+msgstr "&Zanikanie (ms)"
 
 #: src/PendingStrings.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "oczekiwanie na odtwarzanie"
 
 #: src/PendingStrings.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "Zwiększa głośność, minimalizując jednocześnie zniekształcenie."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Limiter (beta)"
-msgstr "Limiter"
+msgstr "Limiter (beta)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compressor (beta)"
-msgstr "Kompresor"
+msgstr "Kompresor (beta)"
 
 #: src/PendingStrings.cpp
 msgid "&Show graph (beta)"
-msgstr ""
+msgstr "Pokaż wykre&s (beta)"
 
 #. i18n-hint: import progress dialog title, progress dialog
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "Importowanie %s"
+msgstr "Importowanie plików"
 
 #. i18n-hint: import progress dialot text, where %s is the filename
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "Importowanie %s"
+msgstr "Importowanie %s..."
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8692,9 +8673,8 @@ msgid "&Rescan"
 msgstr "Skanuj &ponownie"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "Uzyskaj więcej efektów..."
+msgstr "Uzyskaj więcej e&fektów..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -8802,8 +8782,8 @@ msgstr ""
 "odzyskania tych plików automatycznie. \n"
 "\n"
 "Jeśli wybierzesz pierwszą lub drugą opcję poniżej, \n"
-"to możesz spróbować znaleźć i przywrócić \n"
-"brakujące pliki na ich poprzednie położenia. \n"
+"to możesz spróbować znaleźć i przywrócić brakujące \n"
+"pliki na ich poprzednią lokalizację. \n"
 "\n"
 "Zauważ, że dla drugiej opcji, kształt fali może nie \n"
 "pokazywać ciszy. \n"
@@ -8877,7 +8857,7 @@ msgstr ""
 "\n"
 "Jeśli wybierzesz pierwszą lub drugą opcję poniżej, \n"
 "to możesz spróbować znaleźć i przywrócić brakujące \n"
-"pliki na ich poprzednie położenia. \n"
+"pliki na ich poprzednią lokalizację. \n"
 "\n"
 "Zauważ, że dla drugiej opcji, kształt fali może nie \n"
 "pokazywać ciszy."
@@ -14388,7 +14368,7 @@ msgstr "Częstotliwość p&róbkowania"
 
 #: src/export/ExportFilePanel.cpp
 msgid "Choose a location to save the exported files"
-msgstr "Wybierz miejsce do zapisania wyeksportowanych plików"
+msgstr "Wybierz lokalizację do zapisania wyeksportowanych plików"
 
 #: src/export/ExportFilePanel.cpp
 msgid "Advanced Mixing Options"
@@ -14961,9 +14941,8 @@ msgid "Export as FLAC"
 msgstr "Eksportuj jako FLAC"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "Eksportuj dźwięk..."
+msgstr "Ekspo&rtuj zaznaczony dźwięk..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -16514,11 +16493,11 @@ msgstr "&Wolne miejsce:"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "unavailable - above location doesn't exist"
-msgstr "niedostępne - powyższe położenie nie istnieje"
+msgstr "niedostępne - powyższa lokalizacja nie istnieje"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Choose a location"
-msgstr "Wybierz miejsce"
+msgstr "Wybierz lokalizację"
 
 #: src/prefs/DirectoriesPrefs.cpp
 #, c-format
@@ -19575,9 +19554,9 @@ msgstr "P"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -21351,61 +21330,3 @@ msgstr "Narzędzie do usuwania wokalu"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Narzędzia widma"
-
-#~ msgid "&Ok"
-#~ msgstr "&OK"
-
-#~ msgid "Stereo, 999999Hz"
-#~ msgstr "Stereo, 999999 Hz"
-
-#~ msgid "Noise Removal"
-#~ msgstr "Usuwanie szumu"
-
-#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
-#~ msgstr "Usuwa stałe szumy tła, takie jak wentylatory, szumy taśmy lub buczenie"
-
-#~ msgid ""
-#~ "Select all of the audio you want filtered, choose how much noise you want\n"
-#~ "filtered out, and then click 'OK' to remove noise.\n"
-#~ msgstr ""
-#~ "Zaznacz cały dźwięk, który chcesz przefiltrować, wybierz ilość szumów do\n"
-#~ "przefiltrowania i kliknij na przycisk „OK”, aby usunąć szumy.\n"
-
-#~ msgid "Noise re&duction (dB):"
-#~ msgstr "Re&dukcja szumu (dB):"
-
-#~ msgid "&Sensitivity (dB):"
-#~ msgstr "C&zułość (dB):"
-
-#~ msgid "Fr&equency smoothing (Hz):"
-#~ msgstr "Wygładzani&e częstotliwości (Hz):"
-
-#~ msgid "Attac&k/decay time (secs):"
-#~ msgstr "Czas narastania/zani&kania (sekundy):"
-
-#~ msgid "Attack/decay time"
-#~ msgstr "Czas narastania/zanikania"
-
-#~ msgid "Re&move"
-#~ msgstr "U&suń"
-
-#~ msgid "Show Track &Name as overlay"
-#~ msgstr "Pokaż &nazwę ścieżki jako nakładki"
-
-#~ msgid "B&lend system and Audacity theme"
-#~ msgstr "B&lend systemu i motyw Audacity"
-
-#~ msgid "Sho&w track name as overlay"
-#~ msgstr "Pokaż naz&wę ścieżki jako nakładki"
-
-#~ msgid "Command+Click to deselect"
-#~ msgstr "Polecenie+kliknij, aby odznaczyć"
-
-#~ msgid "Select track"
-#~ msgstr "Zaznacz ścieżkę"
-
-#~ msgid "Ctrl+Click to deselect"
-#~ msgstr "Ctrl+kliknij, aby odznaczyć"
-
-#~ msgid "%.2fx"
-#~ msgstr "%.2fx"
