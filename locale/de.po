@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-04-16 00:00+0000\n"
+"PO-Revision-Date: 2024-05-20 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -393,9 +393,8 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "Der Cloud-Projektblock konnte nicht dekomprimiert werden"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Local project data was removed before the sync has completed"
-msgstr "Das Projekt wurde geschlossen, bevor der Snapshot erstellt wurde"
+msgstr "Die lokalen Projektdaten wurden entfernt, bevor die Synchronisierung abgeschlossen ist"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -8358,158 +8357,140 @@ msgstr "&Mixer"
 
 #: src/PendingStrings.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "Kostenlose Erweiterungen und Geräuschen holen"
 
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>Schauen Sie sich unsere [[%s|Muse Hub Anwendung]] für eine breite Palette von Audio-Erweiterungen für Audacity-Benutzer</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "Tutorials ansehen"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "Besuchen Sie Audio.com"
+msgstr "Besuchen Sie unser Forum"
 
 #. i18n-hint: Title of the buttons that adds new effects plugin search path
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "&Neue Regel erstellen"
+msgstr "Neu Ort hinzufügen"
 
 #. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "Wählen Sie einen Ort"
+msgstr "%s Erweiterung-Speicherorte"
 
 #. i18n-hint: master channel display name
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master"
-msgstr "Einfügen"
+msgstr "Meister"
 
 #. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master effects"
-msgstr "Echtzeit-Effekte"
+msgstr "Meistereffekte"
 
 #. i18n-hint: Hint for a master effects section of realtime effects panel
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Apply to all tracks"
-msgstr "Trennen zu neuer Spur"
+msgstr "Alle Spuren anwenden"
 
 #: src/PendingStrings.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "Reduziert den „dynamische Reichweite“ oder Unterschiede zwischen lauten und leisen Teilen."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "Kompression"
+msgstr "Kompressionskurve"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "Nichts tun"
+msgstr "Glättung"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Input gain (dB)"
-msgstr "Ausgangsverstärkung (dB)"
+msgstr "Eingangsverstärkung (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Ceiling (dB)"
-msgstr "Verstärkung (dB)"
+msgstr "Decke (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Input"
-msgstr ""
+msgstr "Eingang"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attenuation"
-msgstr "Orientierung"
+msgstr "Dämpfung"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "Schwellenwertpegel (dB)"
+msgstr "Schwellenwer&t (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "Makeup gain"
+msgstr "&Makeup gain (dB)"
 
 #: src/PendingStrings.cpp
 msgid "&Make-up target (dB)"
-msgstr ""
+msgstr "&Makeup target (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Knee &width (dB)"
-msgstr ""
+msgstr "&Kniebreit (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Rati&o:"
 msgstr "&Verhältnis:"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
-msgstr ""
+msgstr "&Lookahead (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "Ansprechen (ms)"
+msgstr "&Ansprechen (ms)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "Abklingzeit"
+msgstr "&Abklingen (ms)"
 
 #: src/PendingStrings.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "wartet auf die Wiedergabe"
 
 #: src/PendingStrings.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "Erhöht die Lautstärke und minimiert gleichzeitig Verzerrungen."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Limiter (beta)"
-msgstr "Begrenzer"
+msgstr "Begrenzer (Beta)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compressor (beta)"
-msgstr "Kompressor"
+msgstr "Kompressor (Beta)"
 
 #: src/PendingStrings.cpp
 msgid "&Show graph (beta)"
-msgstr ""
+msgstr "&Grafik anzeigen (Beta)"
 
 #. i18n-hint: import progress dialog title, progress dialog
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "Importiere %s"
+msgstr "Dateien importieren"
 
 #. i18n-hint: import progress dialot text, where %s is the filename
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "Importiere %s"
+msgstr "Importiere %s..."
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8695,9 +8676,8 @@ msgid "&Rescan"
 msgstr "E&rneut scannen"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "Mehr Effekte holen..."
+msgstr "Me&hr Effekte holen..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -14956,9 +14936,8 @@ msgid "Export as FLAC"
 msgstr "Als FLAC exportieren"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "Audio exportieren..."
+msgstr "Ausgewähltes Audio expo&rtieren..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -19569,9 +19548,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -21347,61 +21326,3 @@ msgstr "Gesang-Entferner"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Spektralwerkzeuge"
-
-#~ msgid "&Ok"
-#~ msgstr "&OK"
-
-#~ msgid "Stereo, 999999Hz"
-#~ msgstr "Stereo, 999999Hz"
-
-#~ msgid "Noise Removal"
-#~ msgstr "Rausch-Entfernung"
-
-#~ msgid "Removes constant background noise such as fans, tape noise, or hums"
-#~ msgstr "Entfernt konstante Hintergrundgeräusche wie Lüfter, Kassettengeräusche oder Summen"
-
-#~ msgid ""
-#~ "Select all of the audio you want filtered, choose how much noise you want\n"
-#~ "filtered out, and then click 'OK' to remove noise.\n"
-#~ msgstr ""
-#~ "Wählen Sie sämtliches zu filterndes Audio aus. Wählen Sie dann, wieviel Rauschen heraus\n"
-#~ "gefiltert werden soll und klicken Sie auf „OK“, um die Rausch-Entfernung zu starten.\n"
-
-#~ msgid "Noise re&duction (dB):"
-#~ msgstr "Absenkung (dB):"
-
-#~ msgid "&Sensitivity (dB):"
-#~ msgstr "&Empfindlichkeit (dB):"
-
-#~ msgid "Fr&equency smoothing (Hz):"
-#~ msgstr "Frequenz-Glättung (Hz):"
-
-#~ msgid "Attac&k/decay time (secs):"
-#~ msgstr "Ansprec&h-/Abklingzeit (Sekunden):"
-
-#~ msgid "Attack/decay time"
-#~ msgstr "Ansprech-/Abklingzeit"
-
-#~ msgid "Re&move"
-#~ msgstr "&Entfernen"
-
-#~ msgid "Show Track &Name as overlay"
-#~ msgstr "Spur&name als Overlay anzeigen"
-
-#~ msgid "B&lend system and Audacity theme"
-#~ msgstr "System- und Audacity-Thema mischen"
-
-#~ msgid "Sho&w track name as overlay"
-#~ msgstr "Sp&urname als Overlay anzeigen"
-
-#~ msgid "Command+Click to deselect"
-#~ msgstr "Befehl+Klick zum abwählen"
-
-#~ msgid "Select track"
-#~ msgstr "Spur wählen"
-
-#~ msgid "Ctrl+Click to deselect"
-#~ msgstr "Strg+Klick zum abwählen"
-
-#~ msgid "%.2fx"
-#~ msgstr "%.2fx"
