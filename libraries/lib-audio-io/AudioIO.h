@@ -623,10 +623,17 @@ private:
 
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
-   void TransformPlayBuffers(
-      std::optional<RealtimeEffects::ProcessingScope> &scope);
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
+   void ConsumeFromMixer(size_t frames, size_t toProduce,
+      Mixer &mixer, size_t nChannels,
+      std::unique_ptr<RingBuffer> playbackBuffers[]);
+   void TransformPlayBuffers(
+      std::optional<RealtimeEffects::ProcessingScope> &scope);
+   void ApplyEffectStack(
+      std::optional<RealtimeEffects::ProcessingScope> &scope,
+      const ChannelGroup *pGroup,
+      std::unique_ptr<RingBuffer> playbackBuffers[]);
 
    //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();

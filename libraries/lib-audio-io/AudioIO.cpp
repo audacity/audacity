@@ -2036,33 +2036,24 @@ bool AudioIO::ProcessPlaybackSlices(
       // atomic variables, the time queue doesn't.
       mTimeQueue.Producer(mPlaybackSchedule, state, slice);
 
-      // mPlaybackMixers correspond one-to-one with mPlaybackSequences
-      size_t iSequence = 0;
-      // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
+      // Mixers correspond one-to-one with channel groups
+      // but ring buffers may be many-to-one with channel groups
       size_t iBuffer = 0;
-      for (auto &mixer : mPlaybackMixers) {
-         // The mixer here isn't actually mixing: it's just doing
-         // resampling, format conversion, and possibly time track
-         // warping
-         if (frames > 0) {
-            size_t produced = 0;
-            if (toProduce)
-               produced = mixer->Process(toProduce);
-            //wxASSERT(produced <= toProduce);
-            // Copy (non-interleaved) mixer outputs to one or more ring buffers
-            const auto nChannels = mPlaybackSequences[iSequence++]->NChannels();
-            for (size_t j = 0; j < numPlaybackChannels; ++j) {
-               // Replicate into two RingBuffers when playing a mono track into
-               // a stereo device
-               auto warpedSamples =
-                  mixer->GetBuffer(std::min(j, nChannels - 1));
-               const auto put = mPlaybackBuffers[iBuffer++]->Put(
-                  warpedSamples, floatSample, produced, frames - produced);
-               // wxASSERT(put == frames);
-               // but we can't assert in this thread
-               wxUnusedVar(put);
-            }
-         }
+      size_t iSequence = 0;
+      for (const auto vt : mPlaybackSequences) {
+         Finally Do{ [&]{
+            ++iSequence;
+            iBuffer += numPlaybackChannels;
+         } };
+
+         if (!vt)
+            continue;
+         const auto pGroup = vt->FindChannelGroup();
+         if (!pGroup)
+            continue;
+         auto &mixer = *mPlaybackMixers[iSequence];
+         const auto buffers = &mPlaybackBuffers[iBuffer];
+         ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
       }
 
       allProduced += frames;
@@ -2088,58 +2079,89 @@ bool AudioIO::ProcessPlaybackSlices(
    return progress;
 }
 
+void AudioIO::ConsumeFromMixer(size_t frames, size_t toProduce,
+   Mixer &mixer, size_t nChannels,
+   std::unique_ptr<RingBuffer> playbackBuffers[])
+{
+   // The mixer here isn't actually mixing: it's just doing
+   // resampling, format conversion, and possibly time track
+   // warping
+   if (frames > 0) {
+      size_t produced = 0;
+      if (toProduce)
+         produced = mixer.Process(toProduce);
+      // assert(produced <= toProduce);
+      // Copy (non-interleaved) mixer outputs to one or more ring buffers
+      for (size_t jj = 0; jj < GetNumPlaybackChannels(); ++jj) {
+         // Replicate into two RingBuffers when playing a mono track into
+         // a stereo device
+         const auto warpedSamples =
+            mixer.GetBuffer(std::min(jj, nChannels - 1));
+         const auto put [[maybe_unused]] = playbackBuffers[jj]->Put(
+            warpedSamples, floatSample, produced, frames - produced);
+         // assert(put == frames);
+      }
+   }
+}
+
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
 void AudioIO::TransformPlayBuffers(
    std::optional<RealtimeEffects::ProcessingScope> &pScope)
 {
    // Transform written but un-flushed samples in the RingBuffers in-place.
-
-   // Avoiding std::vector
    const auto numPlaybackChannels = GetNumPlaybackChannels();
-   const auto pointers = stackAllocate(float*, numPlaybackChannels);
-
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
    for (const auto vt : mPlaybackSequences) {
+      Finally Do{ [&]{ iBuffer += numPlaybackChannels; } };
       if (!vt)
          continue;
       const auto pGroup = vt->FindChannelGroup();
       if (!pGroup)
          continue;
+      ApplyEffectStack(pScope, pGroup, &mPlaybackBuffers[iBuffer]);
+   }
+}
 
-      // Loop over the blocks of unflushed data, at most two
-      size_t discardable = 0;
-      for (unsigned iBlock : {0, 1}) {
-         size_t len = 0;
-         for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
-            auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
-            const auto pair = ringBuffer.GetUnflushed(iBlock);
-            // Playback RingBuffers have float format: see AllocateBuffers
-            pointers[iChannel] = reinterpret_cast<float*>(pair.first);
-            // The lengths of corresponding unflushed blocks should be
-            // the same for all channels
-            if (len == 0)
-               len = pair.second;
-            else
-               assert(len == pair.second);
-         }
+void AudioIO::ApplyEffectStack(
+   std::optional<RealtimeEffects::ProcessingScope> &pScope,
+   const ChannelGroup *pGroup,
+   std::unique_ptr<RingBuffer> playbackBuffers[])
+{
+   // Avoiding std::vector
+   std::array<float *, MaxPlaybackChannels> pointers{};
 
-         if (len && pScope) {
-            // Process effect, which maybe treats stereo channels jointly
-            discardable += pScope->Process(pGroup, &pointers[0],
-               mScratchPointers.data(),
-               // The single dummy output buffer:
-               mScratchPointers[numPlaybackChannels],
-               numPlaybackChannels, len);
-         }
-      }
+   // Loop over the blocks of unflushed data, at most two
+   size_t discardable = 0;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
+   for (unsigned iBlock : {0, 1}) {
+      size_t len = 0;
       for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
-         auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
-         auto discarded = ringBuffer.Unput(discardable);
-         // assert(discarded == discardable);
+         auto &ringBuffer = *playbackBuffers[iChannel];
+         const auto pair = ringBuffer.GetUnflushed(iBlock);
+         // Playback RingBuffers have float format: see AllocateBuffers
+         pointers[iChannel] = reinterpret_cast<float*>(pair.first);
+         // The lengths of corresponding unflushed blocks should be
+         // the same for all channels
+         if (len == 0)
+            len = pair.second;
+         else
+            assert(len == pair.second);
       }
-      iBuffer += numPlaybackChannels;
+
+      if (len && pScope) {
+         // Process effect, which maybe treats stereo channels jointly
+         discardable += pScope->Process(pGroup, &pointers[0],
+            mScratchPointers.data(),
+            // The single dummy output buffer:
+            mScratchPointers[numPlaybackChannels], numPlaybackChannels, len);
+      }
+   }
+   for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
+      auto &ringBuffer = *playbackBuffers[iChannel];
+      auto discarded = ringBuffer.Unput(discardable);
+      // assert(discarded == discardable);
    }
 }
 
