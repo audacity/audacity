@@ -382,7 +382,7 @@ ScrubbingPlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 }
 
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &, PlaybackState &st, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available) const
 {
    auto &state = static_cast<SPPState&>(st);
    auto &[mScrubDuration, _, __,
@@ -416,7 +416,7 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
 // matter then)
 double ScrubbingPlaybackPolicy::AdvancedTrackTime(
    const PlaybackSchedule &, PlaybackState &st,
-   double trackTime, size_t nSamples)
+   double trackTime, size_t nSamples) const
 {
    auto &state = static_cast<SPPState&>(st);
    auto &[mNewStartTime, mUntilDiscontinuity] = state.mTimes;
@@ -433,7 +433,7 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
    const PlaybackSchedule &schedule, PlaybackState &st,
-   const Mixers &playbackMixers, size_t available)
+   const Mixers &playbackMixers, size_t available) const
 {
    auto &state = static_cast<SPPState&>(st);
    auto &[mScrubDuration, mStartSample, mEndSample,

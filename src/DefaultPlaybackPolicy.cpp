@@ -114,7 +114,7 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
 
 PlaybackSlice
 DefaultPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &, PlaybackState &st, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available) const
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mLastPlaySpeed = state.mLastPlaySpeed;
@@ -157,7 +157,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
 
 double DefaultPlaybackPolicy::AdvancedTrackTime(
    const PlaybackSchedule &schedule, PlaybackState &st,
-   double trackTime, size_t nSamples)
+   double trackTime, size_t nSamples) const
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mRemaining = state.mRemaining;
@@ -190,7 +190,7 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
 
 bool DefaultPlaybackPolicy::RepositionPlayback(
    const PlaybackSchedule &schedule,
-   PlaybackState &st, const Mixers &playbackMixers, size_t available)
+   PlaybackState &st, const Mixers &playbackMixers, size_t available) const
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mLastPlaySpeed = state.mLastPlaySpeed;

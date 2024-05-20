@@ -67,15 +67,15 @@ public:
       SleepInterval(const PlaybackSchedule &) override;
 
    PlaybackSlice GetPlaybackSlice(const PlaybackSchedule &schedule,
-      PlaybackState &state, size_t available) override;
+      PlaybackState &state, size_t available) const override;
 
    double
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
-         double trackTime, size_t nSamples) override;
+         double trackTime, size_t nSamples) const override;
 
    bool RepositionPlayback(const PlaybackSchedule &schedule,
       PlaybackState &state, const Mixers &playbackMixers, size_t available)
-   override;
+   const override;
 
 private:
    const ScrubbingOptions mOptions;

@@ -152,14 +152,14 @@ public:
    virtual std::chrono::milliseconds
       SleepInterval(const PlaybackSchedule &schedule);
 
-   //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
+   //! Choose length of one fetch of samples from tracks (in a worker thread)
    /*!
     @param state was made by `this->CreateState()`
     */
    virtual PlaybackSlice GetPlaybackSlice(
       const PlaybackSchedule &schedule, PlaybackState &state,
       size_t available //!< upper bound for the length of the fetch
-   );
+   ) const;
 
    //! Compute a new point in a track's timeline from an old point and a real duration
    /*!
@@ -174,11 +174,12 @@ public:
     */
    virtual double
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
-         double trackTime, size_t nSamples);
+         double trackTime, size_t nSamples) const;
 
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
-   //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
+   //! A worker thread calls this to update its cursors into tracks for changes
+   //! of position or speed
    /*!
     @param state was made by `this->CreateState()`
     @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
@@ -187,7 +188,7 @@ public:
       const PlaybackSchedule &schedule, PlaybackState &state,
       const Mixers &playbackMixers,
       size_t available //!< how many more samples may be buffered
-   );
+   ) const;
 
    //! @section To be removed
 

@@ -116,7 +116,7 @@ PlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 }
 
 PlaybackSlice PlaybackPolicy::GetPlaybackSlice(const PlaybackSchedule &,
-   PlaybackState &state, size_t available)
+   PlaybackState &state, size_t available) const
 {
    // How many samples to produce for each channel.
    const auto realTimeRemaining = state.RealDurationRemaining();
@@ -142,7 +142,7 @@ PlaybackSlice PlaybackPolicy::GetPlaybackSlice(const PlaybackSchedule &,
 }
 
 double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
-   PlaybackState &state, double trackTime, size_t nSamples)
+   PlaybackState &state, double trackTime, size_t nSamples) const
 {
    auto realDuration = nSamples / mRate;
    const bool reversed = state.ReversedTime();
@@ -165,7 +165,7 @@ double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
 }
 
 bool PlaybackPolicy::RepositionPlayback(
-   const PlaybackSchedule &, PlaybackState &, const Mixers &, size_t)
+   const PlaybackSchedule &, PlaybackState &, const Mixers &, size_t) const
 {
    return true;
 }

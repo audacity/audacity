@@ -129,14 +129,14 @@ public:
       PlaybackState &state, double offset) override;
 
    PlaybackSlice GetPlaybackSlice(const PlaybackSchedule &schedule,
-      PlaybackState &state, size_t available) override;
+      PlaybackState &state, size_t available) const override;
 
    double AdvancedTrackTime(const PlaybackSchedule &schedule,
-      PlaybackState &state, double trackTime, size_t nSamples) override;
+      PlaybackState &state, double trackTime, size_t nSamples) const override;
 
    bool RepositionPlayback(const PlaybackSchedule &schedule,
       PlaybackState &state, const Mixers &playbackMixers, size_t available)
-   override;
+   const override;
 
 private:
    double GapStart() const
@@ -241,7 +241,7 @@ double CutPreviewPlaybackPolicy::OffsetSequenceTime(
 }
 
 PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &, PlaybackState &st, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available) const
 {
    auto &state = static_cast<CPPPState&>(st);
    auto &[mDuration1, mDuration2, mDiscontinuity] = state.mData;
@@ -265,7 +265,7 @@ PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
 
 double CutPreviewPlaybackPolicy::AdvancedTrackTime(
    const PlaybackSchedule &schedule, PlaybackState &st,
-   double trackTime, size_t nSamples)
+   double trackTime, size_t nSamples) const
 {
    auto &state = static_cast<CPPPState&>(st);
    auto &[mDuration1, mDuration2, mDiscontinuity] = state.mData;
@@ -294,7 +294,7 @@ double CutPreviewPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback(const PlaybackSchedule &,
-   PlaybackState &st, const Mixers &playbackMixers, size_t)
+   PlaybackState &st, const Mixers &playbackMixers, size_t) const
 {
    auto &state = static_cast<CPPPState&>(st);
    if (auto &mDiscontinuity = state.mData.mDiscontinuity) {
