@@ -24,7 +24,7 @@ template<typename Data>
 class MessageBuffer {
    struct UpdateSlot {
       Data mData;
-      std::atomic<bool> mBusy{ false };
+      mutable std::atomic<bool> mBusy{ false };
    };
    NonInterfering<UpdateSlot> mSlots[2];
 
@@ -33,12 +33,20 @@ class MessageBuffer {
 public:
    void Initialize();
 
-   //! Move data out (if available), or else copy it out
+   //! Copy data out
+   /*!
+    @tparam Result is constructible from const Data& and forwards of other
+    arguments
+   */
+   template<typename Result = Data, typename... ConstructorArgs>
+   Result Read(ConstructorArgs &&...args) const &;
+
+   //! Move data out
    /*!
     @tparam Result is constructible from Data&& and forwards of other arguments
    */
    template<typename Result = Data, typename... ConstructorArgs>
-   Result Read(ConstructorArgs &&...args);
+   Result Read(ConstructorArgs &&...args) &&;
    
    //! Reassign a slot by move or copy
    template<typename Arg = Data&&> void Write( Arg &&arg );
@@ -62,7 +70,7 @@ void MessageBuffer<Data>::Initialize()
 
 template<typename Data>
 template<typename Result, typename... ConstructorArgs>
-Result MessageBuffer<Data>::Read(ConstructorArgs &&...args)
+Result MessageBuffer<Data>::Read(ConstructorArgs &&...args) const &
 {
    // Whichever slot was last written, prefer to read that.
    auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
@@ -76,6 +84,30 @@ Result MessageBuffer<Data>::Read(ConstructorArgs &&...args)
    } while ( wasBusy );
 
    // Copy the slot
+   Result result(
+      mSlots[idx].mData, std::forward<ConstructorArgs>(args)... );
+
+   mSlots[idx].mBusy.store( false, std::memory_order_release );
+
+   return result;
+}
+
+template<typename Data>
+template<typename Result, typename... ConstructorArgs>
+Result MessageBuffer<Data>::Read(ConstructorArgs &&...args) &&
+{
+   // Whichever slot was last written, prefer to read that.
+   auto idx = mLastWrittenSlot.load( std::memory_order_relaxed );
+   idx = 1 - idx;
+   bool wasBusy = false;
+   do {
+      // This loop is unlikely to execute twice, but it might because the
+      // producer thread is writing a slot.
+      idx = 1 - idx;
+      wasBusy = mSlots[idx].mBusy.exchange( true, std::memory_order_acquire );
+   } while ( wasBusy );
+
+   // Move the slot
    Result result(
       std::move( mSlots[idx].mData ), std::forward<ConstructorArgs>(args)... );
 

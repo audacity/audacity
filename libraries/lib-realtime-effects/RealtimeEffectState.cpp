@@ -50,8 +50,8 @@ public:
    }
 
    void MainRead() {
-      mChannelToMain.Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(),
-         mCounter);
+      std::move(mChannelToMain)
+         .Read<ToMainSlot::Reader>(mState.mMovedOutputs.get(), mCounter);
    }
    void MainWrite(SettingsAndCounter &&settings,
       std::unique_ptr<EffectInstance::Message> pMessage) {
@@ -71,7 +71,8 @@ public:
    };
    void WorkerRead() {
       // Worker thread avoids memory allocation.  It copies the contents of any
-      mChannelFromMain.Read<FromMainSlot::Reader>(mEffect, mState);
+      std::move(mChannelFromMain)
+         .Read<FromMainSlot::Reader>(mEffect, mState);
    }
    void WorkerWrite() {
 
