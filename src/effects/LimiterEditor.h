@@ -77,4 +77,8 @@ public:
                                                  0,
                                                  1000,
                                                  1 };
+
+   static constexpr LimiterParameter showGraph {
+      &LimiterSettings::showGraph, L"showGraph", showGraphDefault, 0, 1, 1
+   };
 };

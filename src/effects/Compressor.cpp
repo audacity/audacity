@@ -30,7 +30,8 @@ const EffectParameterMethods& EffectCompressor::Parameters() const
       EffectCompressor, CompressorEditor::thresholdDb,
       CompressorEditor::makeupGainDb, CompressorEditor::kneeWidthDb,
       CompressorEditor::compressionRatio, CompressorEditor::lookaheadMs,
-      CompressorEditor::attackMs, CompressorEditor::releaseMs>
+      CompressorEditor::attackMs, CompressorEditor::releaseMs,
+      CompressorEditor::showGraph>
       parameters;
    return parameters;
 }

@@ -129,6 +129,7 @@ private:
    bool ValidateUI() final override;
    bool UpdateUI() final override;
    void OnClose() final override;
+   void OnCheckbox(bool checked);
 
    struct HistoryPanels
    {
@@ -136,9 +137,9 @@ private:
       RulerPanel* rulerPanel;
    };
 
-   std::optional<HistoryPanels> GetHistoryPanels() const;
-
    wxWeakRef<wxWindow> mUIParent;
    std::vector<ExtendedCompressorParameter> mParameters;
    DynamicRangeProcessorOutputs* mOutputs;
+   wxDialog& mTopLevelParent;
+   int mFullHeight { 0 };
 };

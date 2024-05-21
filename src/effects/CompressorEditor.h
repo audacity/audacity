@@ -85,6 +85,10 @@ public:
       1
    };
 
+   static constexpr CompressorParameter showGraph {
+      &CompressorSettings::showGraph, L"showGraph", showGraphDefault, 0, 1, 1
+   };
+
 private:
    const CompressorSettings* GetCompressorSettings() const override
    {

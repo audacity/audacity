@@ -43,6 +43,8 @@ constexpr double limiterLookaheadMsDefault = 0;
 constexpr double limiterReleaseMsDefault = 20;
 constexpr double limiterMaxLookaheadMs = 50;
 
+constexpr double showGraphDefault = 0;
+
 struct CompressorSettings
 {
    double thresholdDb = compressorThresholdDbDefault;
@@ -52,6 +54,7 @@ struct CompressorSettings
    double lookaheadMs = compressorLookaheadMsDefault;
    double attackMs = compressorAttackMsDefault;
    double releaseMs = compressorReleaseMsDefault;
+   double showGraph = showGraphDefault;
 };
 
 struct LimiterSettings
@@ -61,6 +64,7 @@ struct LimiterSettings
    double kneeWidthDb = limiterKneeWidthDbDefault;
    double lookaheadMs = limiterLookaheadMsDefault;
    double releaseMs = limiterReleaseMsDefault;
+   double showGraph = showGraphDefault;
 };
 
 struct DynamicRangeProcessorSettings
@@ -74,6 +78,7 @@ struct DynamicRangeProcessorSettings
        , lookaheadMs { compressorSettings.lookaheadMs }
        , attackMs { compressorSettings.attackMs }
        , releaseMs { compressorSettings.releaseMs }
+       , showGraph { compressorSettings.showGraph }
    {
    }
 
@@ -85,6 +90,7 @@ struct DynamicRangeProcessorSettings
        , lookaheadMs { limiterSettings.lookaheadMs }
        , attackMs { 0. }
        , releaseMs { limiterSettings.releaseMs }
+       , showGraph { limiterSettings.showGraph }
    {
    }
 
@@ -95,6 +101,7 @@ struct DynamicRangeProcessorSettings
    double lookaheadMs;
    double attackMs;
    double releaseMs;
+   double showGraph;
 };
 
 constexpr bool operator==(
@@ -106,7 +113,7 @@ constexpr bool operator==(
           lhs.kneeWidthDb == rhs.kneeWidthDb &&
           lhs.compressionRatio == rhs.compressionRatio &&
           lhs.lookaheadMs == rhs.lookaheadMs && lhs.attackMs == rhs.attackMs &&
-          lhs.releaseMs == rhs.releaseMs;
+          lhs.releaseMs == rhs.releaseMs && lhs.showGraph == rhs.showGraph;
 }
 
 constexpr bool operator!=(

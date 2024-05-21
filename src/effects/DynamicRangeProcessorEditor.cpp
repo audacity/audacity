@@ -1,5 +1,6 @@
 #include "DynamicRangeProcessorEditor.h"
 #include "AllThemeResources.h"
+#include "BasicUI.h"
 #include "CompressorProcessor.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
 #include "DynamicRangeProcessorOutputs.h"
@@ -10,6 +11,8 @@
 #include "widgets/LinearDBFormat.h"
 #include "widgets/RulerPanel.h"
 #include "widgets/valnum.h"
+#include <wx/checkbox.h>
+#include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 
@@ -21,7 +24,9 @@ using HistPanel = DynamicRangeProcessorHistoryPanel;
 constexpr auto historyPanelId = wxID_HIGHEST + 1;
 constexpr auto historyRulerPanelId = wxID_HIGHEST + 2;
 constexpr auto transferFunctionPanelId = wxID_HIGHEST + 3;
+constexpr auto checkboxId = wxID_HIGHEST + 4;
 constexpr auto rulerWidth = 30;
+constexpr auto borderSize = 5;
 
 float GetDbRange(float maxCompressionDb)
 {
@@ -131,7 +136,21 @@ DynamicRangeProcessorEditor::DynamicRangeProcessorEditor(
     : EffectEditor { services, access }
     , mUIParent { parent }
     , mOutputs { outputs }
+    , mTopLevelParent(static_cast<wxDialog&>(*wxGetTopLevelParent(parent)))
 {
+   mTopLevelParent.Bind(wxEVT_SIZE, [this](wxSizeEvent& evt) {
+      evt.Skip();
+      // Once the parent dialog reaches its final size as indicated by
+      // a non-default minimum size, we set the maximum size to match.
+      wxWindow* const w = static_cast<wxWindow*>(evt.GetEventObject());
+      const wxSize sz = w->GetMinSize();
+      if (sz != wxDefaultSize)
+         w->SetMaxSize(sz);
+   });
+   // Disable resize arrows for top parent:
+   mTopLevelParent.SetWindowStyleFlag(
+      mTopLevelParent.GetWindowStyleFlag() & ~wxRESIZE_BORDER &
+      ~wxMAXIMIZE_BOX);
    if (outputs)
       MakeHistoryPanels(
          parent, instance, *outputs, access, [parent](float newDbRange) {
@@ -156,7 +175,6 @@ void DynamicRangeProcessorEditor::Initialize(
 
 void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
 {
-   constexpr auto borderSize = 5;
    S.SetBorder(borderSize);
    S.AddSpace(0, borderSize);
 
@@ -226,13 +244,24 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.EndMultiColumn();
    }
 
-   S.AddSpace(0, borderSize);
-
-   const auto hPanels = GetHistoryPanels();
-   if (!hPanels)
+   if (!mOutputs)
+      // Not a real-time effect editor, no need for a graph or its reveal
+      // checkbox.
       return;
 
-   // History panels
+   const auto showGraph = compressorSettings ? compressorSettings->showGraph :
+                                               GetLimiterSettings()->showGraph;
+
+   S.StartHorizontalLay(wxALIGN_LEFT, 0);
+   {
+      S.AddSpace(borderSize, 0);
+      S.Id(checkboxId)
+         .AddCheckBox(XO("&Show graph (beta)"), showGraph)
+         ->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& evt) {
+            OnCheckbox(evt.IsChecked());
+         });
+   }
+   S.EndHorizontalLay();
 
    S.AddSpace(0, borderSize);
 
@@ -244,16 +273,20 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.AddSpace(borderSize, 0);
       S.Prop(1)
          .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
-         .AddWindow(hPanels->historyPanel);
+         .AddWindow(wxWindow::FindWindowById(historyPanelId, mUIParent));
 
       S.Prop(1)
          .Position(wxEXPAND | wxALIGN_TOP)
          .MinSize({ rulerWidth, HistPanel::minHeight })
-         .AddWindow(hPanels->rulerPanel);
+         .AddWindow(wxWindow::FindWindowById(historyRulerPanelId, mUIParent));
    }
    S.EndMultiColumn();
 
    S.AddSpace(0, borderSize);
+
+   if (!showGraph)
+      // To hide the bottom-most part.
+      BasicUI::CallAfter([this] { OnCheckbox(false); });
 }
 
 void DynamicRangeProcessorEditor::AddTextboxAndSlider(
@@ -328,16 +361,35 @@ void DynamicRangeProcessorEditor::OnClose()
    EffectEditor::OnClose();
 }
 
-std::optional<DynamicRangeProcessorEditor::HistoryPanels>
-DynamicRangeProcessorEditor::GetHistoryPanels() const
+void DynamicRangeProcessorEditor::OnCheckbox(bool checked)
 {
-   auto* historyPanel = dynamic_cast<HistPanel*>(
-      wxWindow::FindWindowById(historyPanelId, mUIParent));
-   auto* rulerPanel = dynamic_cast<RulerPanel*>(
-      wxWindow::FindWindowById(historyRulerPanelId, mUIParent));
-   if (!historyPanel || !rulerPanel)
-      return {};
-   return HistoryPanels { historyPanel, rulerPanel };
+   auto& showGraph = GetCompressorSettings() ?
+                        GetCompressorSettings()->showGraph :
+                        GetLimiterSettings()->showGraph;
+   showGraph = checked;
+
+   if (mFullHeight == 0)
+      // First time, calculate the total height
+      mFullHeight = mTopLevelParent.GetSize().GetHeight();
+   constexpr auto graphPanelHeight = HistPanel::minHeight + borderSize;
+   const auto width = mTopLevelParent.GetSize().GetWidth();
+   const auto newHeight = mFullHeight - (showGraph ? 0 : graphPanelHeight);
+   if (!showGraph)
+   {
+      // Reduce min size first
+      mTopLevelParent.SetMinSize({ width, newHeight });
+      mTopLevelParent.SetMaxSize({ width, newHeight });
+   }
+   else
+   {
+      // Increase max size first
+      mTopLevelParent.SetMaxSize({ width, newHeight });
+      mTopLevelParent.SetMinSize({ width, newHeight });
+   }
+   mTopLevelParent.Fit();
+
+   ValidateUI();
+   Publish(EffectSettingChanged {});
 }
 
 // Committing some strings for translation we might want to use after the string
