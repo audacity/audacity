@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-05-20 00:00+0000\n"
+"PO-Revision-Date: 2024-05-26 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -2903,7 +2903,7 @@ msgstr "Wypal na płycie"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "No Local Help"
-msgstr "Brak lokalnej pomocy"
+msgstr "Brak pomocy lokalnej"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
@@ -3284,7 +3284,7 @@ msgstr "Nie można znaleźć „%s”."
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "Unable to locate \"%s\" in your path."
-msgstr "Nie można znaleźć „%s” w Twojej ścieżce."
+msgstr "Nie można ustalić lokalizacji „%s” w Twojej ścieżce."
 
 #. i18n-hint files that can be run as programs
 #: modules/import-export/mod-cl/ExportCL.cpp
@@ -6051,7 +6051,7 @@ msgstr "Tytuł ścieżki"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Sharing audio requires a free %s account linked to Audacity. %%Press \"Link account\" above to proceed."
-msgstr "Udostępnianie nagrania wymaga darmowego %s konta połączonego z Audacity. %%Naciśnij „Połącz konto” powyżej, aby przejść."
+msgstr "Udostępnianie nagrania wymaga darmowego konta na %s połączonego z Audacity. %%Naciśnij „Połącz konto” powyżej, aby przejść."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "audio.com"
@@ -8359,7 +8359,7 @@ msgstr "Uzyskaj darmowe wtyczki i dźwięki"
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr "<p>Sprawdź naszą [[%s|aplikację Muse Hub]] dla szerokiego zakresu wtyczek dźwiękowych dla użytkowników Audacity</p>"
+msgstr "<p>Sprawdź naszą [[%s|aplikację Muse Hub]], w której znajdziesz szeroką gamę wtyczek dźwiękowych dla użytkowników Audacity</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
@@ -8444,7 +8444,7 @@ msgstr "&Szerokość kolana (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Rati&o:"
-msgstr "St&osunek:"
+msgstr "Współczynnik k&ompresji:"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
@@ -11422,12 +11422,12 @@ msgstr "%.1f:1"
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "Ratio %.0f to 1"
-msgstr "Stosunek %.0f do 1"
+msgstr "Współczynnik kompresji %.0f do 1"
 
 #: src/effects/Compressor.cpp
 #, c-format
 msgid "Ratio %.1f to 1"
-msgstr "Stosunek %.1f do 1"
+msgstr "Współczynnik kompresji %.1f do 1"
 
 #: src/effects/Compressor.cpp
 msgid "&Noise Floor:"
@@ -11439,11 +11439,11 @@ msgstr "Poziom szumu"
 
 #: src/effects/Compressor.cpp
 msgid "&Ratio:"
-msgstr "&Stosunek:"
+msgstr "Współczynnik komp&resji:"
 
 #: src/effects/Compressor.cpp
 msgid "Ratio"
-msgstr "Stosunek"
+msgstr "Współczynnik kompresji"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
