@@ -22,7 +22,7 @@ using namespace au::au3;
 
 void Au3Playback::init()
 {
-    m_audioOutputPtr = std::make_shared<Au3AudioOutput>();
+    m_audioOutput = std::make_shared<Au3AudioOutput>();
 }
 
 void Au3Playback::play()
@@ -273,7 +273,7 @@ muse::async::Channel<au::audio::PlaybackStatus> Au3Playback::playbackStatusChang
 
 IAu3AudioOutputPtr Au3Playback::audioOutput() const
 {
-    return m_audioOutputPtr;
+    return m_audioOutput;
 }
 
 AudacityProject& Au3Playback::projectRef() const

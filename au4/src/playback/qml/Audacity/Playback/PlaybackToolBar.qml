@@ -19,7 +19,7 @@ Item {
     property int maximumHeight: 0
 
     width: gridView.width + /*spacing*/ 4 + customizeButton.width
-    height: gridView.height
+    height: 48 // todo
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "PlaybackToolBar"
@@ -37,6 +37,8 @@ Item {
 
     Flow {
         id: gridView
+
+        anchors.verticalCenter: parent.verticalCenter
 
         clip: true
 
@@ -60,14 +62,14 @@ Item {
                     switch(loader.itemData.type) {
                     case PlaybackToolBarItem.SECTION: return Qt.size(1, 32)
                     case PlaybackToolBarItem.ACTION: return Qt.size(32, 32)
-                    case PlaybackToolBarItem.PLAYBACK_LEVEL: return Qt.size(128, 32)
+                    case PlaybackToolBarItem.PLAYBACK_LEVEL: return Qt.size(240, 28)
                     }
 
                     return null
                 }
 
-                width: Boolean(item) ? item.width : 0
-                height: 32
+                width: itemSize.width // todo
+                height: itemSize.height // todo
 
                 sourceComponent: {
                     if (!Boolean(loader.itemData)) {
@@ -107,7 +109,6 @@ Item {
                         height: width
 
                         accentButton: item.checked || menuLoader.isMenuOpened
-                        transparent: !accentButton
 
                         icon: item.icon
                         iconFont: ui.theme.toolbarIconsFont
@@ -210,7 +211,12 @@ Item {
                     PlaybackLevel {
                         property var item: loader.itemData
 
-                        width: 128
+                        width: 240
+                        height: 28
+
+                        volumeLevel: item.level
+                        leftCurrentVolumePressure: item.leftChannelPressure
+                        rightCurrentVolumePressure: item.rightChannelPressure
 
                         onVolumeLevelChangeRequested: function(level) {
                             item.level = level
@@ -236,7 +242,6 @@ Item {
         iconFont: ui.theme.toolbarIconsFont
         toolTipTitle: qsTrc("playback", "Customize toolbar")
         toolTipDescription: qsTrc("playback", "Show/hide toolbar buttons")
-        transparent: true
 
         navigation.panel: root.navigationPanel
         navigation.order: 100

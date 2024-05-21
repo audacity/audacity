@@ -22,7 +22,7 @@ public:
     virtual void setPlaybackVolume(float volume) = 0;
     virtual muse::async::Channel<float> playbackVolumeChanged() const = 0;
 
-    virtual muse::async::Promise<au::audio::AudioSignalChanges> playbackSignalChanges() const = 0;
+    virtual muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> playbackSignalChanges() const = 0;
 };
 
 using IAu3AudioOutputPtr = std::shared_ptr<IAu3AudioOutput>;

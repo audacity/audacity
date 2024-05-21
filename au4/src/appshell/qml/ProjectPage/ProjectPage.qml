@@ -140,11 +140,11 @@ DockPage {
             objectName: pageModel.playbackToolBarName()
             title: qsTrc("appshell", "Play Tool Bar")
 
+            thickness: 48 // todo
+
             dropDestinations: [
                 root.toolBarTopDropDestination,
-                root.toolBarBottomDropDestination,
-                root.toolBarLeftDropDestination,
-                root.toolBarRightDropDestination
+                root.toolBarBottomDropDestination
             ]
 
             PlaybackToolBar {

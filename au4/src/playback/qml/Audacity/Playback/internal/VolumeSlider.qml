@@ -1,7 +1,6 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 
@@ -11,20 +10,13 @@ import Muse.UiComponents 1.0
 Slider {
     id: root
 
-    property real leftCurrentVolumePressure: -60.0
-    property real leftRecentPeak: -60
-    property real leftMaxPeak: -60
-
-    property real rightCurrentVolumePressure: -60.0
-    property real rightRecentPeak: -60
-    property real rightMaxPeak: -60
-
-    property real maxDisplayedVolumePressure: 0.0
-
     property real volumeLevel: 0.0
     property real readableVolumeLevel: Math.round(root.volumeLevel * 10) / 10
 
     property alias navigation: navCtrl
+
+    readonly property real handleWidth: 16
+    readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
 
@@ -35,31 +27,18 @@ Slider {
     orientation: Qt.Horizontal
     wheelEnabled: true
 
+    width: parent.width
+    height: handleWidth
+
     signal increaseRequested()
     signal decreaseRequested()
 
     QtObject {
         id: prv
 
-        property int margin: 2
-        readonly property int spacing: 2
+        readonly property real rulerLineWidth: root.width - root.handleWidth
 
-        property var gradient: null
-        readonly property int overloadWidth: 4
-
-        readonly property real indicatorWidth: root.width - handleWidth - overloadWidth
-        readonly property real indicatorHeight: 6
-
-        readonly property real rulerLineWidth: root.width - handleWidth
-        readonly property real rulerLineHeight: 2
-
-        readonly property int rulerYPos: margin + indicatorHeight + spacing / 2
-
-        readonly property int fullValueRangeLength: Math.abs(root.from) + Math.abs(root.to)
-        readonly property real divisionPixels: rulerLineWidth / fullValueRangeLength
-
-        readonly property real handleWidth: 14
-        readonly property real handleHeight: 14
+        readonly property int rulerYPos: root.height / 2
 
         property real dragStartOffset: 0.0
     }
@@ -91,7 +70,7 @@ Slider {
         }
     }
 
-    background: Canvas {
+    background: Item {
         id: bgCanvas
 
         height: root.height
@@ -100,45 +79,13 @@ Slider {
         NavigationFocusBorder {
             navigationCtrl: navCtrl
         }
-
-        function drawMeter(ctx, originHPos, originVPos, volumePressure) {
-            ctx.fillStyle = "#4D4D4D"
-            ctx.fillRect(originHPos, originVPos, prv.indicatorWidth , prv.indicatorHeight)
-
-            var isClipping = volumePressure >= root.maxDisplayedVolumePressure
-
-            ctx.fillStyle = isClipping ? "#FF1C1C" : "#666666"
-            ctx.fillRect(originHPos + prv.indicatorWidth, originVPos, prv.overloadWidth, prv.indicatorHeight)
-
-            ctx.fillStyle = ui.theme.accentColor
-            ctx.fillRect(originHPos, originVPos, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(volumePressure)), prv.indicatorHeight)
-        }
-
-        onPaint: {
-            var ctx = bgCanvas.context
-
-            if (!ctx) {
-                ctx = getContext("2d")
-            }
-
-            ctx.clearRect(0, 0, bgCanvas.height, bgCanvas.width)
-
-            var xPos = prv.handleWidth/2
-            var yPos = prv.margin
-
-            drawMeter(ctx, prv.handleWidth/2, yPos, root.leftCurrentVolumePressure)
-
-            yPos += prv.indicatorHeight + prv.spacing
-
-            drawMeter(ctx, xPos, yPos, root.rightCurrentVolumePressure)
-        }
     }
 
     handle: Item {
         x: root.position * prv.rulerLineWidth
-        y: prv.rulerYPos - prv.handleHeight / 2
-        implicitWidth: prv.handleWidth
-        implicitHeight: prv.handleHeight
+        y: prv.rulerYPos - root.handleHeight / 2
+        implicitWidth: root.handleWidth
+        implicitHeight: root.handleHeight
 
         MouseArea {
             anchors.fill: parent
@@ -174,19 +121,22 @@ Slider {
             id: handleRect
             anchors.fill: parent
             radius: width / 2
-            color: "white"
-            border.color: "black"
-            opacity: 0.3
+            color: "transparent"
+            border.color: ui.theme.fontPrimaryColor
+
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: 1
+                radius: width / 2
+                color: ui.theme.backgroundPrimaryColor
+                opacity: 0.3
+            }
+
         }
     }
 
     onMoved: {
         navigation.requestActiveByInteraction()
-
         root.volumeLevelMoved(value)
-    }
-
-    Component.onCompleted: {
-        bgCanvas.requestPaint()
     }
 }
