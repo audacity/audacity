@@ -12,8 +12,10 @@ TEST_CASE("DynamicRangeProcessorHistory")
    const auto& segments = sut.GetSegments();
    REQUIRE(segments.empty());
 
+   constexpr auto sampsPerPacket = 1;
+
    // Pushing two samples
-   sut.Push({ { 1 }, { 2 } });
+   sut.Push({ { 1, sampsPerPacket }, { 2, sampsPerPacket } });
    REQUIRE(!segments.empty());
 
    const auto& history = segments.front();
@@ -21,17 +23,11 @@ TEST_CASE("DynamicRangeProcessorHistory")
 
    // Pushing one new sample, and two old samples are also pushed
    // redundantly.
-   sut.Push({ { 1 }, { 2 }, { 3 } });
+   sut.Push(
+      { { 1, sampsPerPacket }, { 2, sampsPerPacket }, { 3, sampsPerPacket } });
    REQUIRE(history.size() == 3);
 
    // Pushing two fresh samples
-   sut.Push({ { 4 }, { 5 } });
+   sut.Push({ { 4, sampsPerPacket }, { 5, sampsPerPacket } });
    REQUIRE(history.size() == 5);
-
-   SECTION("Discards outdates samples")
-   {
-      // Big drop-out, data was lost.
-      sut.Push({ { 20 } });
-      REQUIRE(history.size() == 1);
-   }
 }

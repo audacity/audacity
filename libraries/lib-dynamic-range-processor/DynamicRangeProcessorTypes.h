@@ -9,6 +9,7 @@
 struct DynamicRangeProcessorOutputPacket
 {
    long long indexOfFirstSample = 0;
+   int numSamples = 0;
    float targetCompressionDb = 0;
    float actualCompressionDb = 0;
 };

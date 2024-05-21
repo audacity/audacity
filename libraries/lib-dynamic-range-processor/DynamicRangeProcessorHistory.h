@@ -33,6 +33,7 @@ private:
    bool mBeginNewSegment = true;
    std::vector<Segment> mSegments;
    std::optional<long long> mFirstPacketFirstSampleIndex;
+   std::optional<long long> mExpectedNextPacketFirstSampleIndex;
 };
 
 class DynamicRangeProcessorHistory;
