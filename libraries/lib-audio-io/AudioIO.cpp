@@ -2619,12 +2619,7 @@ void ClampBuffer(float * pBuffer, unsigned long len){
 };
 
 
-// return true, IFF we have fully handled the callback.
-//
-// Mix and copy to PortAudio's output buffer
-// from our intermediate playback buffers
-//
-bool AudioIoCallback::FillOutputBuffers(bool paused,
+size_t AudioIoCallback::FillOutputBuffers(
    float *outputBuffer,
    unsigned long framesPerBuffer,
    float *outputMeterFloats
@@ -2632,29 +2627,7 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
 {
    const auto numPlaybackSequences = mPlaybackSequences.size();
    const auto numPlaybackChannels = GetNumPlaybackChannels();
-
-   mMaxFramesOutput = 0;
-
-   // Quick returns if next to nothing to do.
-   if (mStreamToken <= 0 ||
-       !outputBuffer ||
-       numPlaybackChannels <= 0) {
-      // So that UpdateTimePosition() will be correct, in case of MIDI play with
-      // no audio output channels
-      mMaxFramesOutput = framesPerBuffer;
-      return false;
-   }
-   assert(numPlaybackChannels > 0);
-
    float *outputFloats = outputBuffer;
-
-   if (mSeek && !mPlaybackSchedule.GetPolicy().AllowSeek(mPlaybackSchedule))
-      mSeek = 0.0;
-
-   if (mSeek){
-      mCallbackReturn = CallbackDoSeek();
-      return true;
-   }
 
    // ------ MEMORY ALLOCATION ----------------------
    // These are small structures.
@@ -2679,7 +2652,7 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
 
       decltype(framesPerBuffer) len = 0;
 
-      assert(numPlaybackChannels > 0);
+      assert(numPlaybackChannels > 0); // pre
       for (size_t c = 0; c < numPlaybackChannels; ++c) {
          len = mPlaybackBuffers[iBuffer]
             ->Get((samplePtr)tempBufs[c], floatSample, toGet);
@@ -2699,13 +2672,6 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
       }
       assert(len == toGet);
 
-      // PRL:  More recent rewrites of SequenceBufferExchange should guarantee a
-      // padding out of the ring buffers so that equal lengths are
-      // available, so maxLen ought to increase from 0 only once
-      mMaxFramesOutput = std::max(mMaxFramesOutput, len);
-
-      len = mMaxFramesOutput;
-
       // Realtime effect transformation of the sound used to happen here
       // but it is now done already on the producer side of the RingBuffer
 
@@ -2724,12 +2690,17 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
             AddToOutputChannel(iChannel, outputMeterFloats, outputFloats,
                tempBufs[iChannel], drop, len, *vt, gains[iChannel]);
       }
-
-      if (!paused)
-         CallbackCheckCompletion(mCallbackReturn, len);
    }
 
-   if (toGet > 0) {
+   mMasterBuffers[0]->Discard(toGet);
+   return toGet;
+}
+
+void AudioIoCallback::ApplyMasterGain(bool paused,
+   float *outputFloats, size_t len)
+{
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
+   if (len > 0) {
       // Output volume emulation
       const auto factor = decayFactor(mRate);
       const float goal =
@@ -2738,7 +2709,7 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
             : ExpGain(GetMixerOutputVol());
       // if no microfades, jump in volume.
       auto diff = (mbMicroFades ? goal - mOldMasterGain : 0);
-      for (size_t i = 0; i < toGet; ++i) {
+      for (size_t i = 0; i < len; ++i) {
          const auto multiplier = goal - diff;
          outputFloats[numPlaybackChannels * i] *= multiplier;
          outputFloats[numPlaybackChannels * i + 1] *= multiplier;
@@ -2746,27 +2717,9 @@ bool AudioIoCallback::FillOutputBuffers(bool paused,
       }
       mOldMasterGain = goal - diff;
    }
-
-   mMasterBuffers[0]->Discard(toGet);
-
-   // Poke: If there are no playback sequences, then the earlier check
-   // about the time indicator being past the end won't happen;
-   // do it here instead (but not if looping or scrubbing)
-   if (numPlaybackSequences == 0 && !paused)
-      CallbackCheckCompletion(mCallbackReturn, 0);
-
-   // wxASSERT( maxLen == toGet );
-
-   mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
-
-   ClampBuffer( outputFloats, framesPerBuffer*numPlaybackChannels );
-   if (outputMeterFloats != outputFloats)
-      ClampBuffer( outputMeterFloats, framesPerBuffer*numPlaybackChannels );
-
-   return false;
 }
 
-void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
+void AudioIoCallback::UpdateTimePosition(size_t frames)
 {
    // Quick returns if next to nothing to do.
    if (mStreamToken <= 0)
@@ -2774,7 +2727,7 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 
    // Update the position seen by drawing code
    mPlaybackSchedule.SetSequenceTime(
-      mPlaybackSchedule.mTimeQueue.Consumer( mMaxFramesOutput, mRate ) );
+      mPlaybackSchedule.mTimeQueue.Consumer(frames, mRate));
 }
 
 // return true, IFF we have fully handled the callback.
@@ -3104,7 +3057,7 @@ int AudioIoCallback::AudioCallback(
    // Poll sequences for change of state.
    // (User might click mute and solo buttons.)
    mbHasSoloSequences = CountSoloingSequences() > 0 ;
-   mCallbackReturn = paContinue;
+   auto callbackReturn = paContinue;
 
    OtherSynchronization(paused, framesPerBuffer, timeInfo);
 
@@ -3166,18 +3119,39 @@ int AudioIoCallback::AudioCallback(
    // Test for no sequence audio to play (because we are paused and have faded
    // out)
    if (paused && (!mbMicroFades || mOldMasterGain == 0.0f))
-      return mCallbackReturn;
+      return callbackReturn;
 
    // To add sequence output to output (to play sound on speaker)
    // possible exit, if we were seeking.
-   if (FillOutputBuffers(paused,
-         outputBuffer,
-         framesPerBuffer,
-         outputMeterFloats))
-      return mCallbackReturn;
 
-   // To move the cursor onwards.  (uses mMaxFramesOutput)
-   UpdateTimePosition(framesPerBuffer);
+   if (mSeek > 0 && mPlaybackSchedule.GetPolicy().AllowSeek(mPlaybackSchedule))
+      return CallbackDoSeek();
+
+   if (mStreamToken <= 0 ||
+       !outputBuffer ||
+       numPlaybackChannels <= 0) {
+      // Nothing to do but move the cursor onwards
+      UpdateTimePosition(framesPerBuffer);
+   }
+   else if (const auto frames = FillOutputBuffers(
+      outputBuffer, framesPerBuffer, outputMeterFloats);
+      frames > 0)
+   {
+      ApplyMasterGain(paused, outputBuffer, frames);
+      ClampBuffer(outputBuffer, framesPerBuffer * numPlaybackChannels);
+      if (outputMeterFloats != outputBuffer)
+         ClampBuffer(outputMeterFloats, framesPerBuffer * numPlaybackChannels);
+      if (!paused &&
+         mPlaybackSchedule.GetPolicy()
+            .Done(mPlaybackSchedule, mPlaybackSequences.empty() ? 0 : frames)) {
+         for (auto &ext : Extensions())
+            ext.SignalOtherCompletion();
+         callbackReturn = paComplete;
+      }
+      // Move the cursor, maybe by less than framesPerBuffer
+      UpdateTimePosition(frames);
+      mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
+   }
 
    // To capture input into sequence (sound from microphone)
    if (DrainInputBuffers(
@@ -3185,11 +3159,11 @@ int AudioIoCallback::AudioCallback(
       framesPerBuffer,
       statusFlags,
       tempFloats))
-      mCallbackReturn = paComplete;
+      callbackReturn = paComplete;
 
    SendVuOutputMeterData( outputMeterFloats, framesPerBuffer);
 
-   return mCallbackReturn;
+   return callbackReturn;
 }
 
 
@@ -3259,19 +3233,6 @@ int AudioIoCallback::CallbackDoSeek()
       .store(true, std::memory_order_relaxed);
 
    return paContinue;
-}
-
-void AudioIoCallback::CallbackCheckCompletion(
-   int &callbackReturn, unsigned long len)
-{
-   bool done =
-      mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, len);
-   if (!done)
-      return;
-
-   for( auto &ext : Extensions() )
-      ext.SignalOtherCompletion();
-   callbackReturn = paComplete;
 }
 
 auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &

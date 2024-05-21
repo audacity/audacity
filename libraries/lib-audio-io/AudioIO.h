@@ -174,12 +174,7 @@ public:
    // Part of the callback
    int CallbackDoSeek();
 
-   // Part of the callback
-   void CallbackCheckCompletion(
-      int &callbackReturn, unsigned long len);
-
    int mbHasSoloSequences;
-   int mCallbackReturn;
    // Helpers to determine if sequences have already been faded out.
    unsigned  CountSoloingSequences();
 
@@ -201,11 +196,19 @@ public:
       const PlayableSequence &ps,
       float &laggingChannelGain
    );
-   bool FillOutputBuffers(bool paused,
+   //! Mix and copy to PortAudio's output buffer
+   //! from our intermediate playback buffers
+   /*!
+    @pre 'GetNumPlaybackChannels() > 0'
+    @return how many samples consumed from each RingBuffer, maybe less than
+    framesPerBuffer
+    */
+   size_t FillOutputBuffers(
       float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
    );
+   void ApplyMasterGain(bool paused, float *outputFloats, size_t len);
    //! @return whether recording is finished
    bool DrainInputBuffers(
       constSamplePtr inputBuffer, 
@@ -213,9 +216,7 @@ public:
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
    );
-   void UpdateTimePosition(
-      unsigned long framesPerBuffer
-   );
+   void UpdateTimePosition(size_t frames);
    void DoPlaythrough(
       constSamplePtr inputBuffer, 
       float *outputBuffer,
@@ -280,8 +281,6 @@ public:
    std::atomic<float>  mMixerOutputVol{ 1.0 };
    static int          mNextStreamToken;
    double              mFactor;
-   unsigned long       mMaxFramesOutput; // The actual number of frames output.
-   /*! Read by a worker thread but unchanging during playback */
    bool                mbMicroFades;
 
    double              mSeek;
