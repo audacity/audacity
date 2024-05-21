@@ -99,11 +99,6 @@ public:
    //! Whether repositioning commands are allowed during playback
    virtual bool AllowSeek( PlaybackSchedule &schedule );
 
-   //! Returns true if schedule.GetSequenceTime() has reached the end of playback
-   virtual bool Done( PlaybackSchedule &schedule,
-      unsigned long outputFrames //!< how many playback frames were taken from RingBuffers
-   );
-
    //! Called when the play head needs to jump a certain distance
    /*! @param offset signed amount requested to be added to schedule::GetSequenceTime()
       @return the new value that will be set as the schedule's track time
@@ -129,12 +124,11 @@ public:
     until the sum of the nSamples values equals the most recent playback slice
     (including any trailing silence).
     
-    @return a pair, which indicates a discontinuous jump when its members are not equal, or
-       specially the end of playback when the second member is infinite
+    @return updated track time, or infinity to enqueue a stop signal
     */
-   virtual std::pair<double, double>
-      AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, size_t nSamples );
+   virtual double
+      AdvancedTrackTime(const PlaybackSchedule &schedule,
+         double trackTime, size_t nSamples);
 
    using Mixers = std::vector<std::unique_ptr<Mixer>>;
 
@@ -161,12 +155,6 @@ struct AUDIO_IO_API PlaybackSchedule {
    double              mT0;
    /// Playback ends at offset of mT1, which is measured in seconds.  Note that mT1 may be less than mT0 during scrubbing.
    double              mT1;
-   /// Current track time position during playback, in seconds.
-   /// Initialized by the main thread but updated by worker threads during
-   /// playback or recording, and periodically reread by the main thread for
-   /// purposes such as display update.
-   std::atomic<double> mTime;
-
    /// Accumulated real time (not track position), starting at zero (unlike
    /// mTime), and wrapping back to zero each time around looping play.
    /// Thus, it is the length in real seconds between mT0 and mTime.
@@ -324,6 +312,12 @@ struct AUDIO_IO_API PlaybackSchedule {
    void RealTimeRestart();
 
 private:
+   /// Current track time position during playback, in seconds.
+   /// Initialized by the main thread but updated by worker threads during
+   /// playback or recording, and periodically reread by the main thread for
+   /// purposes such as display update.
+   std::atomic<double> mTime;
+
    std::unique_ptr<PlaybackPolicy> mpPlaybackPolicy;
    std::atomic<bool> mPolicyValid{ false };
 };

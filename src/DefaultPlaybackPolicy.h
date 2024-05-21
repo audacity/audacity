@@ -33,16 +33,14 @@ public:
 
    BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
 
-   bool Done( PlaybackSchedule &schedule, unsigned long ) override;
-
    double OffsetSequenceTime(PlaybackSchedule& schedule, double offset) override;
 
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available ) override;
 
-   std::pair<double, double>
-      AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, size_t nSamples ) override;
+   double
+      AdvancedTrackTime(const PlaybackSchedule &schedule,
+         double trackTime, size_t nSamples) override;
 
    bool RepositionPlayback(PlaybackSchedule &schedule,
       const Mixers &playbackMixers, size_t available) override;

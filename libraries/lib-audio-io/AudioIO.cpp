@@ -3143,9 +3143,7 @@ int AudioIoCallback::AudioCallback(
       ClampBuffer(outputBuffer, framesPerBuffer * numPlaybackChannels);
       if (outputMeterFloats != outputBuffer)
          ClampBuffer(outputMeterFloats, framesPerBuffer * numPlaybackChannels);
-      if (!paused &&
-         mPlaybackSchedule.GetPolicy()
-            .Done(mPlaybackSchedule, mPlaybackSequences.empty() ? 0 : frames)) {
+      if (!std::isfinite(mPlaybackSchedule.GetSequenceTime())) {
          for (auto &ext : Extensions())
             ext.SignalOtherCompletion();
          callbackReturn = paComplete;

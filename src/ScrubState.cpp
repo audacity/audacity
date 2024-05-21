@@ -302,7 +302,7 @@ void ScrubbingPlaybackPolicy::Initialize( PlaybackSchedule &schedule,
 {
    PlaybackPolicy::Initialize(schedule, rate);
    mScrubDuration = mStartSample = mEndSample = 0;
-   mOldEndTime = mNewStartTime = 0;
+   mNewStartTime = 0;
    mScrubSpeed = 0;
    mSilentScrub = mReplenish = false;
    mUntilDiscontinuity = 0;
@@ -349,12 +349,6 @@ bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
    return false;
 }
 
-bool ScrubbingPlaybackPolicy::Done(
-   PlaybackSchedule &schedule, unsigned long )
-{
-   return false;
-}
-
 std::chrono::milliseconds
 ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
 {
@@ -388,7 +382,6 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    if (mScrubDuration <= 0) {
       mReplenish = true;
       auto oldEndSample = mEndSample;
-      mOldEndTime = oldEndSample.as_long_long() / mRate;
       ScrubQueue::Instance.Get(
          mStartSample, mEndSample, available, mScrubDuration);
       mNewStartTime = mStartSample.as_long_long() / mRate;
@@ -399,8 +392,8 @@ PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-std::pair<double, double> ScrubbingPlaybackPolicy::AdvancedTrackTime(
-   PlaybackSchedule &schedule, double trackTime, size_t nSamples )
+double ScrubbingPlaybackPolicy::AdvancedTrackTime(
+   const PlaybackSchedule &schedule, double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
    auto result = trackTime + realDuration * mScrubSpeed;
@@ -408,9 +401,9 @@ std::pair<double, double> ScrubbingPlaybackPolicy::AdvancedTrackTime(
       mUntilDiscontinuity > 0 &&
       0 == (mUntilDiscontinuity -= std::min(mUntilDiscontinuity, nSamples));
    if (discontinuity)
-      return { mOldEndTime, mNewStartTime };
+      return mNewStartTime;
    else
-      return { result, result };
+      return result;
 }
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(

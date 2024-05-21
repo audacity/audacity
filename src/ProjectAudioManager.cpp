@@ -114,14 +114,12 @@ public:
 
    void Initialize(PlaybackSchedule &schedule, double rate) override;
 
-   bool Done(PlaybackSchedule &schedule, unsigned long) override;
-
    double OffsetSequenceTime( PlaybackSchedule &schedule, double offset ) override;
 
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available) override;
 
-   std::pair<double, double> AdvancedTrackTime( PlaybackSchedule &schedule,
+   double AdvancedTrackTime(const PlaybackSchedule &schedule,
       double trackTime, size_t nSamples) override;
 
    bool RepositionPlayback(
@@ -184,15 +182,6 @@ void CutPreviewPlaybackPolicy::Initialize(
    mInitDuration2 = mDuration2;
 }
 
-bool CutPreviewPlaybackPolicy::Done(PlaybackSchedule &schedule, unsigned long)
-{
-   //! Called in the PortAudio thread
-   auto diff = schedule.GetSequenceTime() - mEnd;
-   if (mReversed)
-      diff *= -1;
-   return sampleCount(diff * mRate) >= 0;
-}
-
 double CutPreviewPlaybackPolicy::OffsetSequenceTime(
    PlaybackSchedule &schedule, double offset )
 {
@@ -251,8 +240,8 @@ PlaybackSlice CutPreviewPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-std::pair<double, double> CutPreviewPlaybackPolicy::AdvancedTrackTime(
-   PlaybackSchedule &schedule, double trackTime, size_t nSamples)
+double CutPreviewPlaybackPolicy::AdvancedTrackTime(
+   const PlaybackSchedule &schedule, double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
    if (mDuration1 > 0) {
@@ -260,7 +249,7 @@ std::pair<double, double> CutPreviewPlaybackPolicy::AdvancedTrackTime(
       if (sampleCount(mDuration1 * mRate) == 0) {
          mDuration1 = 0;
          mDiscontinuity = true;
-         return { GapStart(), GapEnd() };
+         return GapEnd();
       }
    }
    else
@@ -269,10 +258,13 @@ std::pair<double, double> CutPreviewPlaybackPolicy::AdvancedTrackTime(
       realDuration *= -1;
    const double time = schedule.SolveWarpedLength(trackTime, realDuration);
 
-   if ( mReversed ? time <= mEnd : time >= mEnd )
-      return {mEnd, std::numeric_limits<double>::infinity()};
+   const auto halfSample = 0.5 / mRate;
+   if (mReversed
+       ? time - halfSample <= mEnd
+       : time + halfSample >= mEnd)
+      return std::numeric_limits<double>::infinity();
    else
-      return {time, time};
+      return time;
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,

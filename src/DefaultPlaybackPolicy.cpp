@@ -67,18 +67,6 @@ bool DefaultPlaybackPolicy::RevertToOldDefault(const PlaybackSchedule &schedule)
       schedule.mTimeQueue.GetLastTime() > mLoopEndTime;
 }
 
-bool DefaultPlaybackPolicy::Done(
-   PlaybackSchedule &schedule, unsigned long outputFrames )
-{
-   if (RevertToOldDefault(schedule)) {
-      auto diff = schedule.GetSequenceTime() - schedule.mT1;
-      if (schedule.ReversedTime())
-         diff *= -1;
-      return sampleCount(floor(diff * mRate + 0.5)) >= 0;
-   }
-   return false;
-}
-
 double DefaultPlaybackPolicy::OffsetSequenceTime(
    PlaybackSchedule& schedule, double offset)
 {
@@ -143,8 +131,8 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
    return { available, frames, toProduce };
 }
 
-std::pair<double, double> DefaultPlaybackPolicy::AdvancedTrackTime(
-   PlaybackSchedule &schedule, double trackTime, size_t nSamples )
+double DefaultPlaybackPolicy::AdvancedTrackTime(
+   const PlaybackSchedule &schedule, double trackTime, size_t nSamples)
 {
    bool revert = RevertToOldDefault(schedule);
    if (!mVariableSpeed && revert)
@@ -153,11 +141,11 @@ std::pair<double, double> DefaultPlaybackPolicy::AdvancedTrackTime(
    mRemaining -= std::min(mRemaining, nSamples);
    if ( mRemaining == 0 && !revert )
       // Wrap to start
-      return { schedule.mT1, schedule.mT0 };
+      return schedule.mT0;
 
    // Defense against cases that might cause loops not to terminate
    if ( fabs(schedule.mT0 - schedule.mT1) < 1e-9 )
-      return {schedule.mT0, schedule.mT0};
+      return schedule.mT0;
 
    auto realDuration = (nSamples / mRate) * mLastPlaySpeed;
    if (schedule.ReversedTime())
@@ -169,7 +157,7 @@ std::pair<double, double> DefaultPlaybackPolicy::AdvancedTrackTime(
    else
       trackTime += realDuration;
 
-   return { trackTime, trackTime };
+   return trackTime;
 }
 
 bool DefaultPlaybackPolicy::RepositionPlayback(
@@ -219,6 +207,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
          schedule.mT1 = std::max(schedule.mT0, mTrackEndTime);
       schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
 
+      // This may read an infinity
       auto newTime = schedule.mTimeQueue.GetLastTime();
 #if 0
       // This would make play jump forward or backward into the adjusted
@@ -226,7 +215,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
       newTime = std::clamp(newTime, schedule.mT0, schedule.mT1);
 #endif
 
-      if (newTime >= schedule.mT1 && mLoopEnabled)
+      if (std::isfinite(newTime) && newTime >= schedule.mT1 && mLoopEnabled)
          newTime = schedule.mT0;
 
       // So that the play head will redraw in the right place:

@@ -60,18 +60,6 @@ bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
    return true;
 }
 
-bool PlaybackPolicy::Done( PlaybackSchedule &schedule,
-   unsigned long outputFrames)
-{
-   // Called from portAudio thread, use GetSequenceTime()
-   auto diff = schedule.GetSequenceTime() - schedule.mT1;
-   if (schedule.ReversedTime())
-      diff *= -1;
-   return sampleCount(floor(diff * mRate + 0.5)) >= 0 &&
-      // Require also that output frames are all consumed from ring buffer
-      outputFrames == 0;
-}
-
 double PlaybackPolicy::OffsetSequenceTime(
    PlaybackSchedule &schedule, double offset )
 {
@@ -113,12 +101,12 @@ PlaybackPolicy::GetPlaybackSlice(PlaybackSchedule &schedule, size_t available)
    return { available, frames, toProduce };
 }
 
-std::pair<double, double>
-PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
-   double trackTime, size_t nSamples )
+double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
+   double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
-   if (schedule.ReversedTime())
+   const bool reversed = schedule.ReversedTime();
+   if (reversed)
       realDuration *= -1.0;
 
    if (schedule.mEnvelope)
@@ -126,11 +114,14 @@ PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
          schedule.SolveWarpedLength(trackTime, realDuration);
    else
       trackTime += realDuration;
-   
-   if ( trackTime >= schedule.mT1 )
-      return { schedule.mT1, std::numeric_limits<double>::infinity() };
+
+   const auto halfSample = 0.5 / mRate;
+   if (reversed
+       ? trackTime - halfSample <= schedule.mT1
+       : trackTime + halfSample >= schedule.mT1)
+      return std::numeric_limits<double>::infinity();
    else
-      return { trackTime, trackTime };
+      return trackTime;
 }
 
 bool PlaybackPolicy::RepositionPlayback(
@@ -297,10 +288,7 @@ void PlaybackSchedule::TimeQueue::Producer(
    // Produce advancing times
    auto frames = slice.toProduce;
    while ( frames >= space ) {
-      auto times = policy.AdvancedTrackTime( schedule, time, space );
-      time = times.second;
-      if (!std::isfinite(time))
-         time = times.first;
+      time = policy.AdvancedTrackTime(schedule, time, space);
       index = (index + 1) % size;
       mData[ index ].timeValue = time;
       frames -= space;
@@ -309,10 +297,7 @@ void PlaybackSchedule::TimeQueue::Producer(
    }
    // Last odd lot
    if ( frames > 0 ) {
-      auto times = policy.AdvancedTrackTime( schedule, time, frames );
-      time = times.second;
-      if (!std::isfinite(time))
-         time = times.first;
+      time = policy.AdvancedTrackTime(schedule, time, frames);
       remainder += frames;
       space -= frames;
    }

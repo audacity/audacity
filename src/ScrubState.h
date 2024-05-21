@@ -62,21 +62,19 @@ public:
    std::chrono::milliseconds
       SleepInterval( PlaybackSchedule & ) override;
 
-   bool Done( PlaybackSchedule &schedule, unsigned long ) override;
-
    PlaybackSlice GetPlaybackSlice(
       PlaybackSchedule &schedule, size_t available) override;
 
-   std::pair<double, double>
-      AdvancedTrackTime( PlaybackSchedule &schedule,
-         double trackTime, size_t nSamples ) override;
+   double
+      AdvancedTrackTime(const PlaybackSchedule &schedule,
+         double trackTime, size_t nSamples) override;
 
    bool RepositionPlayback(PlaybackSchedule &schedule,
       const Mixers &playbackMixers, size_t available) override;
 
 private:
    sampleCount mScrubDuration{ 0 }, mStartSample{ 0 }, mEndSample{ 0 };
-   double mOldEndTime{ 0 }, mNewStartTime{ 0 };
+   double mNewStartTime{ 0 };
    double mScrubSpeed{ 0 };
    bool mSilentScrub{ false };
    bool mReplenish{ false };
