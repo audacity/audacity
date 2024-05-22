@@ -80,7 +80,7 @@ private:
    double mNewStartTime{ 0 };
    double mScrubSpeed{ 0 };
    bool mSilentScrub{ false };
-   bool mReplenish{ false };
+   bool mDiscontinuity{ false };
    size_t mUntilDiscontinuity{ 0 };
 
    const ScrubbingOptions mOptions;

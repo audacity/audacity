@@ -304,7 +304,7 @@ void ScrubbingPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
    mScrubDuration = mStartSample = mEndSample = 0;
    mNewStartTime = 0;
    mScrubSpeed = 0;
-   mSilentScrub = mReplenish = false;
+   mSilentScrub = mDiscontinuity = false;
    mUntilDiscontinuity = 0;
    ScrubQueue::Instance.Init(schedule.mInitT0, rate, mOptions);
 }
@@ -359,42 +359,32 @@ ScrubbingPlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 PlaybackSlice ScrubbingPlaybackPolicy::GetPlaybackSlice(
    const PlaybackSchedule &, PlaybackState &, size_t available)
 {
-   if (mReplenish)
-      return { available, 0, 0 };
-
    auto gAudioIO = AudioIO::Get();
 
    // How many samples to produce for each channel.
-   auto frames = available;
-   auto toProduce = frames;
+   const auto frames = limitSampleBufferSize(available, mScrubDuration);
+   const auto toProduce = (mSilentScrub ? 0 : frames);
 
-   // scrubbing and play-at-speed are not limited by the real time
-   // and length accumulators
-   toProduce =
-      frames = limitSampleBufferSize(frames, mScrubDuration);
-
-   if (mSilentScrub)
-      toProduce = 0;
+   // The first call to this function during a scrub still has zero
+   // for mScrubDuration, until RepositionPlayback is called
+   if (mScrubDuration >= 0 && mDiscontinuity)
+      // This variable affects AdvancedPlaybackTime
+      mUntilDiscontinuity = frames;
 
    mScrubDuration -= frames;
-   wxASSERT(mScrubDuration >= 0);
+   assert(mScrubDuration >= 0);
 
-   mUntilDiscontinuity = 0;
-   if (mScrubDuration <= 0) {
-      mReplenish = true;
-      auto oldEndSample = mEndSample;
-      ScrubQueue::Instance.Get(
-         mStartSample, mEndSample, available, mScrubDuration);
-      mNewStartTime = mStartSample.as_long_long() / mRate;
-      if(mScrubDuration >= 0 && oldEndSample != mStartSample)
-         mUntilDiscontinuity = frames;
-   }
-
+   // The lesser of available and frames is the first member of the result
+   // and that is frames
    return { available, frames, toProduce };
 }
 
+// Called one or more times between GetPlaybackSlice and RepositionPlayback,
+// and the total values of nSamples is the toProduce of the slice, which is
+// zero for the first slice (so mUntilDiscontinuity and mNewStartTime do not
+// matter then)
 double ScrubbingPlaybackPolicy::AdvancedTrackTime(
-   const PlaybackSchedule &schedule, PlaybackState &,
+   const PlaybackSchedule &, PlaybackState &,
    double trackTime, size_t nSamples)
 {
    auto realDuration = nSamples / mRate;
@@ -414,9 +404,13 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
 {
    auto gAudioIO = AudioIO::Get();
 
-   if (available > 0 && mReplenish)
-   {
-      mReplenish = false;
+   if (available > 0 && mScrubDuration <= 0) {
+      // Find the scrub duration and scrub slice bounds
+      const auto oldEndSample = mEndSample;
+      ScrubQueue::Instance.Get(
+         mStartSample, mEndSample, available, mScrubDuration);
+      mNewStartTime = mStartSample.as_long_long() / mRate;
+      mDiscontinuity = (oldEndSample != mStartSample);
       if (mScrubDuration < 0)
       {
          // Can't play anything
