@@ -676,6 +676,9 @@ void OnDuplicate(const CommandContext &context)
    // This iteration is unusual because we add to the list inside the loop
    auto range = tracks.Selected();
    auto last = *range.rbegin();
+   
+   wxString newTrackPlacement = gPrefs->Read(wxT("/Tracks/NewTrackPlacement"), wxT("BottomOfProject"));
+
    for (auto n : range) {
       if (!n->SupportsBasicEditing())
          continue;
@@ -683,7 +686,16 @@ void OnDuplicate(const CommandContext &context)
       // Make copies not for clipboard but for direct addition to the project
       auto dest = n->Copy(selectedRegion.t0(), selectedRegion.t1(), false);
       dest->MoveTo(std::max(selectedRegion.t0(), n->GetStartTime()));
-      tracks.Add(dest);
+      
+      if (newTrackPlacement == wxT("TopOfProject")) {
+         tracks.Insert(*tracks.begin(), dest);
+      } else if (newTrackPlacement == wxT("AboveCurrentTrack")) {
+         tracks.Insert(n, dest);
+      } else if (newTrackPlacement == wxT("BelowCurrentTrack")) {
+         tracks.Insert(tracks.GetNext(*last), dest);
+      } else {
+         tracks.Add(dest);
+      }
 
       // This break is really needed, else we loop infinitely
       if (n == last)
