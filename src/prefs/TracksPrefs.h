@@ -56,4 +56,11 @@ class AUDACITY_DLL_API TracksPrefs final : public PrefsPanel
    static int iPreferencePinned;
 };
 
+enum NewTracksPlacementEnum {
+  TopOfProject = 0,
+  AboveCurrentTrack = 1,
+  BelowCurrentTrack = 2,
+  BottomOfProject = 3
+};
+
 #endif

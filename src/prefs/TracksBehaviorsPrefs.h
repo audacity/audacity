@@ -39,11 +39,4 @@ class AUDACITY_DLL_API TracksBehaviorsPrefs final : public PrefsPanel
 
 extern AUDACITY_DLL_API ChoiceSetting TracksBehaviorsAudioTrackPastePolicy;
 
-enum NewTracksPlacementEnum {
-  TopOfProject = 0,
-  AboveCurrentTrack = 1,
-  BelowCurrentTrack = 2,
-  BottomOfProject = 3
-};
-
 #endif
