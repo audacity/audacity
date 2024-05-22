@@ -84,6 +84,25 @@ ChoiceSetting TracksBehaviorsAudioTrackPastePolicy {
    2, // "Ask"
 };
 
+static EnumSetting<NewTracksPlacementEnum> NewTracksPlacementSetting{
+   wxT("/Tracks/NewTrackPlacement"),
+   {
+      EnumValueSymbol{ wxT("TopOfProject"), XXO("Top of project") },
+      EnumValueSymbol{ wxT("AboveCurrentTrack"), XXO("Above current track") },
+      EnumValueSymbol{ wxT("BelowCurrentTrack"), XXO("Below current track") },
+      EnumValueSymbol{ wxT("BottomOfProject"), XXO("Bottom of project") }
+   },
+
+   3, // Bottom of project
+
+   {
+      NewTracksPlacementEnum::TopOfProject,
+      NewTracksPlacementEnum::AboveCurrentTrack,
+      NewTracksPlacementEnum::BelowCurrentTrack,
+      NewTracksPlacementEnum::BottomOfProject
+   },
+};
+
 void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
 {
    S.SetBorder(2);
@@ -162,6 +181,16 @@ void TracksBehaviorsPrefs::PopulateOrExchange(ShuttleGui & S)
          S.EndHorizontalLay();
       }
       S.EndRadioButtonGroup();
+   }
+   S.EndStatic();
+
+   S.StartStatic(XO("New tracks"));
+   {
+      S.StartMultiColumn(2);
+      {
+         S.TieChoice(XXO("Placement:"),
+                     NewTracksPlacementSetting );
+      }
    }
    S.EndStatic();
 
