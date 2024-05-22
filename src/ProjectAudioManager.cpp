@@ -1017,7 +1017,7 @@ void ProjectAudioManager::OnPause()
    }
 
    bool paused = !projectAudioManager.Paused();
-   TogglePaused();
+   SetPaused(paused);
 
    auto gAudioIO = AudioIO::Get();
 
@@ -1045,9 +1045,9 @@ void ProjectAudioManager::OnPause()
 }
 
 
-void ProjectAudioManager::TogglePaused()
+void ProjectAudioManager::SetPaused(bool paused)
 {
-   mPaused.fetch_xor(1, std::memory_order::memory_order_relaxed);
+   mPaused.store(paused, std::memory_order::memory_order_relaxed);
 }
 
 void ProjectAudioManager::SetPausedOff()
@@ -1136,21 +1136,17 @@ void ProjectAudioManager::OnCommitRecording()
    PendingTracks::Get(*project).ApplyPendingTracks();
 }
 
-void ProjectAudioManager::OnSoundActivationThreshold()
+void ProjectAudioManager::OnSoundActivationThreshold(bool upward)
 {
    auto& project = mProject;
    auto gAudioIO = AudioIO::Get();
-   if (gAudioIO && &project == gAudioIO->GetOwningProject().get())
-   {
-      bool canStop =  CanStopAudioStream();
-
-      gAudioIO->SetPaused(!gAudioIO->IsPaused());
-
-      if (canStop)
-      {
+   if (gAudioIO && &project == gAudioIO->GetOwningProject().get()) {
+      const bool canStop = CanStopAudioStream();
+      gAudioIO->SetPaused(!upward);
+      if (canStop) {
          // Instead of calling ::OnPause here, we can simply do the only thing it does (i.e. toggling the pause state),
          // because scrubbing can not happen while recording
-         TogglePaused();
+         SetPaused(!upward);
       }
    }
 }

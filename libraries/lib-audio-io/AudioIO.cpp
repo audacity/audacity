@@ -473,6 +473,8 @@ static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
 bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
+   mLastBelow = IsPaused();
+
    auto sampleRate = options.rate;
    mNumPauseFrames = 0;
    SetOwningProject( options.pProject );
@@ -2568,13 +2570,12 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
       }
    }
 
-   bool bShouldBePaused = maxPeak < mSilenceLevel;
-   if( bShouldBePaused != IsPaused() )
-   {
-      auto pListener = GetListener();
-      if ( pListener )
-         pListener->OnSoundActivationThreshold();
+   bool below = maxPeak < mSilenceLevel;
+   if (below != mLastBelow) {
+      if (const auto pListener = GetListener())
+         pListener->OnSoundActivationThreshold(!below);
    }
+   mLastBelow = below;
 }
 
 // A function to apply the requested gain, fading up or down from the

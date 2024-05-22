@@ -403,7 +403,12 @@ protected:
    //! Holds some state for duration of playback or recording
    std::unique_ptr<TransportState> mpTransportState;
 
+   //! Whether the last visit of the callback found volume below the sound
+   //! activation threshold
+   bool mLastBelow{ false };
+
 private:
+
    /*!
     Privatize the inherited array but give access by Extensions().
     This class guarantees that this array is populated only with non-null

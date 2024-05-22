@@ -137,7 +137,7 @@ public:
 
 private:
 
-   void TogglePaused();
+   void SetPaused(bool paused);
    void SetPausedOff();
 
    void SetAppending( bool value ) { mAppending = value; }
@@ -154,7 +154,7 @@ private:
    void OnAudioIOStopRecording() override;
    void OnAudioIONewBlocks() override;
    void OnCommitRecording() override;
-   void OnSoundActivationThreshold() override;
+   void OnSoundActivationThreshold(bool upward) override;
 
    void OnCheckpointFailure(ProjectFileIOMessage);
 
