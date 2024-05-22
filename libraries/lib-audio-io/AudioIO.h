@@ -206,7 +206,8 @@ public:
       unsigned long framesPerBuffer,
       float *outputMeterFloats
    );
-   void DrainInputBuffers(
+   //! @return whether recording is finished
+   bool DrainInputBuffers(
       constSamplePtr inputBuffer, 
       unsigned long framesPerBuffer,
       const PaStreamCallbackFlags statusFlags,

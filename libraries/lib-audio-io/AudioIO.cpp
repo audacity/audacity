@@ -2780,7 +2780,7 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 //
 // Copy from PortAudio input buffers to our intermediate recording buffers.
 //
-void AudioIoCallback::DrainInputBuffers(
+bool AudioIoCallback::DrainInputBuffers(
    constSamplePtr inputBuffer,
    unsigned long framesPerBuffer,
    const PaStreamCallbackFlags statusFlags,
@@ -2791,16 +2791,20 @@ void AudioIoCallback::DrainInputBuffers(
 
    // Quick returns if next to nothing to do.
    if (mStreamToken <= 0)
-      return;
-   if( !inputBuffer )
-      return;
-   if( numCaptureChannels <= 0 )
-      return;
+      return false;
+   if (!inputBuffer)
+      return false;
+   if (numCaptureChannels <= 0)
+      return false;
 
    // If there are no playback sequences, and we are recording, then the
    // earlier checks for being past the end won't happen, so do it here.
-   if (mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0)) {
-      mCallbackReturn = paComplete;
+   bool result = false;
+   if (const auto diff =
+       mPlaybackSchedule.GetSequenceTime() - mPlaybackSchedule.mT1;
+      sampleCount(floor(diff * mRate + 0.5)) >= 0
+   ) {
+      result = true;
    }
 
    // The error likely from a too-busy CPU falling behind real-time data
@@ -2852,7 +2856,7 @@ void AudioIoCallback::DrainInputBuffers(
    }
 
    if (len <= 0)
-      return;
+      return result;
 
    // We have an ASSERT in the AudioIO constructor to alert us to
    // possible issues with the (short*) cast.  We'd have a problem if
@@ -2901,6 +2905,7 @@ void AudioIoCallback::DrainInputBuffers(
       wxUnusedVar(put);
       mCaptureBuffers[t]->Flush();
    }
+   return result;
 }
 
 
@@ -3162,11 +3167,12 @@ int AudioIoCallback::AudioCallback(
    UpdateTimePosition(framesPerBuffer);
 
    // To capture input into sequence (sound from microphone)
-   DrainInputBuffers(
+   if (DrainInputBuffers(
       inputBuffer,
       framesPerBuffer,
       statusFlags,
-      tempFloats);
+      tempFloats))
+      mCallbackReturn = paComplete;
 
    SendVuOutputMeterData( outputMeterFloats, framesPerBuffer);
 
