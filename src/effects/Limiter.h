@@ -3,7 +3,7 @@
 
   Audacity: A Digital Audio Editor
 
-  Compressor.h
+  Limiter.h
 
   Matthieu Hodgkinson
 
@@ -14,15 +14,14 @@
 #include "StatelessPerTrackEffect.h"
 
 class ShuttleGui;
-class DynamicRangeProcessorOutputs;
 
-class EffectCompressor final :
-    public EffectWithSettings<CompressorSettings, StatelessPerTrackEffect>
+class EffectLimiter final :
+    public EffectWithSettings<LimiterSettings, StatelessPerTrackEffect>
 {
 public:
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectCompressor();
+   EffectLimiter();
 
    // ComponentInterface implementation
 

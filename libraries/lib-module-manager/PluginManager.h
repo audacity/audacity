@@ -60,7 +60,7 @@ public:
       const PluginPath &path, const TranslatableString *pSymbol) override;
 
    bool IsPluginLoaded(const wxString& ID) const;
-   
+
    void RegisterPlugin(PluginDescriptor&& desc);
    const PluginID & RegisterPlugin(PluginProvider *provider) override;
    const PluginID & RegisterPlugin(PluginProvider *provider, ComponentInterface *command);
@@ -183,7 +183,7 @@ public:
    void Load();
    //! Save to preferences
    void Save();
-   
+
    void NotifyPluginsChanged();
 
    //! What is the plugin registry version number now in the file?
@@ -249,6 +249,6 @@ private:
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
 // Latest version of the plugin registry config
-constexpr auto REGVERCUR = "1.3";
+constexpr auto REGVERCUR = "1.4";
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */

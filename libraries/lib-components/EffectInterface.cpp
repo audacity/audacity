@@ -173,6 +173,12 @@ size_t EffectInstance::RealtimeProcess(size_t, EffectSettings &,
    return 0;
 }
 
+void EffectInstance::RealtimePassThrough(
+   size_t group, EffectSettings& settings, const float* const* inBuf,
+   size_t numSamples)
+{
+}
+
 bool EffectInstance::RealtimeProcessEnd(EffectSettings &) noexcept
 {
    return true;

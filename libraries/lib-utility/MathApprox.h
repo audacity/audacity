@@ -43,3 +43,4 @@ constexpr float FastLog2(float x)
    log_2 += ((-0.3358287811f) * u.val + 2.0f) * u.val - 0.65871759316667f;
    return log_2;
 }
+static constexpr float log2ToDb = 20 / 3.321928094887362f;

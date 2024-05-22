@@ -279,7 +279,7 @@ struct RealtimeEffectState::Access final : EffectSettingsAccess {
       if (auto pState = mwState.lock()) {
          if (auto pAccessState = pState->GetAccessState()) {
             assert(pAccessState->mMainThreadId == std::this_thread::get_id());
-            
+
             if (pAccessState->mState.mInitialized)
             {
                std::unique_lock lk(pAccessState->mLockForCV);
@@ -537,71 +537,109 @@ size_t RealtimeEffectState::Process(
    const float *const *inbuf, float *const *outbuf, float *const dummybuf,
    size_t numSamples)
 {
-   auto pInstance = mwInstance.lock();
-   if (!mPlugin || !pInstance || !mLastActive) {
+
+   const auto pInstance = mwInstance.lock();
+   const auto& pair = mGroups[&group];
+   const float** const clientIn =
+      pInstance ? stackAllocate(const float*, pInstance->GetAudioInCount()) :
+                  nullptr;
+
+   const auto PointAtCorrectInputBuffers =
+      [&](unsigned numAudioIn, unsigned indx) {
+         // Point at the correct input buffers
+         unsigned copied = std::min(chans - indx, numAudioIn);
+         std::copy(inbuf + indx, inbuf + indx + copied, clientIn);
+         // If there are too few input channels for what the processor requires,
+         // re-use input channels from the beginning
+         while (auto need = numAudioIn - copied)
+         {
+            auto moreCopied = std::min(chans, need);
+            std::copy(inbuf, inbuf + moreCopied, clientIn + copied);
+            copied += moreCopied;
+         }
+      };
+
+   if (!mPlugin || !pInstance || !mLastActive)
+   {
       // Process trivially
       for (size_t ii = 0; ii < chans; ++ii)
          memcpy(outbuf[ii], inbuf[ii], numSamples * sizeof(float));
+      if (pInstance)
+      {
+         auto processor = pair.first;
+         const auto numAudioIn = pInstance->GetAudioInCount();
+         const auto numAudioOut = pInstance->GetAudioOutCount();
+         AllocateChannelsToProcessors(
+            chans, numAudioIn, numAudioOut, [&](unsigned indx, unsigned ondx) {
+
+               PointAtCorrectInputBuffers(numAudioIn, indx);
+
+               // Inner loop over blocks
+               const auto blockSize = pInstance->GetBlockSize();
+               for (size_t block = 0; block < numSamples; block += blockSize)
+               {
+                  auto cnt = std::min(numSamples - block, blockSize);
+                  pInstance->RealtimePassThrough(
+                     processor, mWorkerSettings.settings, clientIn, cnt);
+                  for (size_t i = 0; i < numAudioIn; i++)
+                     if (clientIn[i])
+                        clientIn[i] += cnt;
+               }
+               ++processor;
+               return true;
+            });
+      }
       return 0;
    }
    const auto numAudioIn = pInstance->GetAudioInCount();
    const auto numAudioOut = pInstance->GetAudioOutCount();
-   const auto clientIn = stackAllocate(const float *, numAudioIn);
    const auto clientOut = stackAllocate(float *, numAudioOut);
    size_t len = 0;
-   const auto &pair = mGroups[&group];
    auto processor = pair.first;
    // Outer loop over processors
-   AllocateChannelsToProcessors(chans, numAudioIn, numAudioOut,
-   [&](unsigned indx, unsigned ondx){
-      // Point at the correct input buffers
-      unsigned copied = std::min(chans - indx, numAudioIn);
-      std::copy(inbuf + indx, inbuf + indx + copied, clientIn);
-      // If there are too few input channels for what the processor requires,
-      // re-use input channels from the beginning
-      while (auto need = numAudioIn - copied) {
-         auto moreCopied = std::min(chans, need);
-         std::copy(inbuf, inbuf + moreCopied, clientIn + copied);
-         copied += moreCopied;
-      }
+   AllocateChannelsToProcessors(
+      chans, numAudioIn, numAudioOut, [&](unsigned indx, unsigned ondx) {
 
-      // Point at the correct output buffers
-      copied = std::min(chans - ondx, numAudioOut);
-      std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
-      if (copied < numAudioOut) {
-         // Make determinate pointers
-         std::fill(clientOut + copied, clientOut + numAudioOut, dummybuf);
-      }
+         PointAtCorrectInputBuffers(numAudioIn, indx);
 
-      // Inner loop over blocks
-      const auto blockSize = pInstance->GetBlockSize();
-      for (size_t block = 0; block < numSamples; block += blockSize) {
-         auto cnt = std::min(numSamples - block, blockSize);
-         // Assuming we are in a processing scope, use the worker settings
-         auto processed = pInstance->RealtimeProcess(processor,
-            mWorkerSettings.settings, clientIn, clientOut, cnt);
-         if (!mLatency)
-            // Find latency once only per initialization scope,
-            // after processing one block
-            mLatency.emplace(
-               pInstance->GetLatency(mWorkerSettings.settings, pair.second));
-         for (size_t i = 0 ; i < numAudioIn; i++)
-            if (clientIn[i])
-               clientIn[i] += cnt;
-         for (size_t i = 0 ; i < numAudioOut; i++)
-            if (clientOut[i])
-               clientOut[i] += cnt;
-         if (ondx == 0) {
-            // For the first processor only
-            len += processed;
-            auto discard = limitSampleBufferSize(len, *mLatency);
-            len -= discard;
-            *mLatency -= discard;
+         // Point at the correct output buffers
+         unsigned copied = std::min(chans - ondx, numAudioOut);
+         std::copy(outbuf + ondx, outbuf + ondx + copied, clientOut);
+         if (copied < numAudioOut)
+            // Make determinate pointers
+            std::fill(clientOut + copied, clientOut + numAudioOut, dummybuf);
+
+         // Inner loop over blocks
+         const auto blockSize = pInstance->GetBlockSize();
+         for (size_t block = 0; block < numSamples; block += blockSize)
+         {
+            auto cnt = std::min(numSamples - block, blockSize);
+            // Assuming we are in a processing scope, use the worker settings
+            auto processed = pInstance->RealtimeProcess(
+               processor, mWorkerSettings.settings, clientIn, clientOut, cnt);
+            if (!mLatency)
+               // Find latency once only per initialization scope,
+               // after processing one block
+               mLatency.emplace(
+                  pInstance->GetLatency(mWorkerSettings.settings, pair.second));
+            for (size_t i = 0; i < numAudioIn; i++)
+               if (clientIn[i])
+                  clientIn[i] += cnt;
+            for (size_t i = 0; i < numAudioOut; i++)
+               if (clientOut[i])
+                  clientOut[i] += cnt;
+            if (ondx == 0)
+            {
+               // For the first processor only
+               len += processed;
+               auto discard = limitSampleBufferSize(len, *mLatency);
+               len -= discard;
+               *mLatency -= discard;
+            }
          }
-      }
-      ++processor;
-      return true;
-   });
+         ++processor;
+         return true;
+      });
    // Report the number discardable during the processing scope
    // We are assuming len as calculated above is the same in case of multiple
    // processors

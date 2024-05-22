@@ -1154,7 +1154,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
    {
       finisher = ClearSequence(GetPlayEndTime(), GetSequenceEndTime());
       SetTrimRight(other.GetTrimRight());
-      
+
       auto copy = std::make_shared<WaveClip>(other, factory, true);
       copy->ClearSequence(copy->GetSequenceStartTime(), copy->GetPlayStartTime())
          .Commit();
@@ -1289,7 +1289,7 @@ void WaveClip::Clear(double t0, double t1)
    {
       offset = (t0 - GetPlayStartTime()) + GetTrimLeft();
       st0 = GetSequenceStartTime();
-      
+
       SetTrimLeft(.0);
    }
    if (st1 >= GetPlayEndTime())
@@ -1340,17 +1340,17 @@ auto WaveClip::ClearSequence(double t0, double t1) -> ClearSequenceFinisher
 
    auto clip_t0 = std::max(t0, GetSequenceStartTime());
    auto clip_t1 = std::min(t1, GetSequenceEndTime());
-   
+
    auto s0 = TimeToSequenceSamples(clip_t0);
    auto s1 = TimeToSequenceSamples(clip_t1);
 
    if (s0 == s1)
       return {};
-   
+
    // use Strong-guarantee
    for (auto &pSequence : mSequences)
       pSequence->Delete(s0, s1 - s0);
-   
+
    return { this, t0, t1, clip_t0, clip_t1 };
 }
 
@@ -1360,7 +1360,7 @@ WaveClip::ClearSequenceFinisher::~ClearSequenceFinisher() noexcept
       return;
 
    // use No-fail-guarantee in the remaining
-   
+
    // msmeyer
    //
    // Delete all cutlines that are within the given area, if any.
@@ -1373,7 +1373,7 @@ WaveClip::ClearSequenceFinisher::~ClearSequenceFinisher() noexcept
    // operations want to remove audio. In the latter case, it is the right
    // thing to just remove all cutlines within the area.
    //
-   
+
    // May DELETE as we iterate, so don't use range-for
    for (auto it = pClip->mCutLines.begin(); it != pClip->mCutLines.end();)
    {
@@ -2016,7 +2016,6 @@ bool WaveClip::StrongInvariant() const
       assert(pSequence); // likewise
       return pSequence->GetNumSamples() == pFirst->GetNumSamples();
    });
-   return false;
 }
 
 void WaveClip::AssertOrRepairStrongInvariant()
