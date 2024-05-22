@@ -36,7 +36,20 @@ void OnNewWaveTrack(const CommandContext &context)
 
    auto track = trackFactory.Create(defaultFormat, rate);
    track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
-   tracks.Add(track);
+
+   wxString newTrackPlacement = gPrefs->Read(wxT("/Tracks/NewTrackPlacement"), wxT("BottomOfProject"));
+
+   if (newTrackPlacement == wxT("TopOfProject")) {
+      tracks.Insert(*tracks.begin(), track);
+   } else if (newTrackPlacement == wxT("AboveCurrentTrack")) {
+      tracks.Insert(*tracks.Selected().begin(), track);
+   } else if (newTrackPlacement == wxT("BelowCurrentTrack")) {
+      auto last_selection = *tracks.Selected().rbegin();
+      tracks.Insert(tracks.GetNext(*last_selection), track);
+   } else {
+      tracks.Add(track);
+   }
+
    SelectUtilities::SelectNone( project );
 
    track->SetSelected(true);
@@ -59,16 +72,31 @@ void OnNewStereoTrack(const CommandContext &context)
 
    SelectUtilities::SelectNone( project );
 
-   tracks.Add(trackFactory.Create(2, defaultFormat, rate));
-   auto &newTrack = **tracks.rbegin();
-   newTrack.SetSelected(true);
-   newTrack.SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
+   auto track = trackFactory.Create(2, defaultFormat, rate);
+
+   wxString newTrackPlacement = gPrefs->Read(wxT("/Tracks/NewTrackPlacement"), wxT("BottomOfProject"));
+
+   if (newTrackPlacement == wxT("TopOfProject")) {
+      tracks.Insert(*tracks.begin(), track);
+   } else if (newTrackPlacement == wxT("AboveCurrentTrack")) {
+      auto focusedTrack = TrackFocus::Get(project).Get();
+      tracks.Insert(focusedTrack, track);
+   } else if (newTrackPlacement == wxT("BelowCurrentTrack")) {
+      auto focusedTrack = TrackFocus::Get(project).Get();
+      tracks.Insert(tracks.GetNext(*focusedTrack), track);
+   } else {
+      tracks.Add(track);
+   }
+
+   // auto &newTrack = **tracks.rbegin();
+   track->SetSelected(true);
+   track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
 
    ProjectHistory::Get( project )
       .PushState(XO("Created new stereo audio track"), XO("New Track"));
 
-   TrackFocus::Get(project).Set(&newTrack);
-   Viewport::Get(project).ShowTrack(newTrack);
+   TrackFocus::Get(project).Set(track.get());
+   Viewport::Get(project).ShowTrack(*track);
 }
 
 AttachedItem sAttachment{
