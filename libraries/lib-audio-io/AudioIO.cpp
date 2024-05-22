@@ -2624,7 +2624,7 @@ void ClampBuffer(float * pBuffer, unsigned long len){
 // Mix and copy to PortAudio's output buffer
 // from our intermediate playback buffers
 //
-bool AudioIoCallback::FillOutputBuffers(
+bool AudioIoCallback::FillOutputBuffers(bool paused,
    float *outputBuffer,
    unsigned long framesPerBuffer,
    float *outputMeterFloats
@@ -2725,14 +2725,15 @@ bool AudioIoCallback::FillOutputBuffers(
                tempBufs[iChannel], drop, len, *vt, gains[iChannel]);
       }
 
-      CallbackCheckCompletion(mCallbackReturn, len);
+      if (!paused)
+         CallbackCheckCompletion(mCallbackReturn, len);
    }
 
    if (toGet > 0) {
       // Output volume emulation
       const auto factor = decayFactor(mRate);
       const float goal =
-         (IsPaused() || mForceFadeOut.load(std::memory_order_relaxed))
+         (paused || mForceFadeOut.load(std::memory_order_relaxed))
             ? 0.0f
             : ExpGain(GetMixerOutputVol());
       // if no microfades, jump in volume.
@@ -2751,7 +2752,7 @@ bool AudioIoCallback::FillOutputBuffers(
    // Poke: If there are no playback sequences, then the earlier check
    // about the time indicator being past the end won't happen;
    // do it here instead (but not if looping or scrubbing)
-   if (numPlaybackSequences == 0)
+   if (numPlaybackSequences == 0 && !paused)
       CallbackCheckCompletion(mCallbackReturn, 0);
 
    // wxASSERT( maxLen == toGet );
@@ -3069,19 +3070,10 @@ AudioIoCallback::~AudioIoCallback()
 {
 }
 
-
-int AudioIoCallback::AudioCallback(
-   constSamplePtr inputBuffer, float *outputBuffer,
-   unsigned long framesPerBuffer,
-   const PaStreamCallbackTimeInfo *timeInfo,
-   const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
+void AudioIoCallback::OtherSynchronization(bool paused,
+   size_t framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo)
 {
-   // Poll sequences for change of state.
-   // (User might click mute and solo buttons.)
-   mbHasSoloSequences = CountSoloingSequences() > 0 ;
-   mCallbackReturn = paContinue;
-
-   if (IsPaused()
+   if (paused
        // PRL:  Why was this added?  Was it only because of the mysterious
        // initial leading zeroes, now solved by setting mStreamToken early?
        // JKC: I think it's used for the MIDI time cursor.  See comments
@@ -3091,12 +3083,30 @@ int AudioIoCallback::AudioCallback(
       mNumPauseFrames += framesPerBuffer;
 
    for( auto &ext : Extensions() ) {
-      ext.ComputeOtherTimings(mRate, IsPaused(),
+      ext.ComputeOtherTimings(mRate, paused,
          timeInfo,
          framesPerBuffer);
       ext.FillOtherBuffers(
-         mRate, mNumPauseFrames, IsPaused(), mbHasSoloSequences);
+         mRate, mNumPauseFrames, paused, mbHasSoloSequences);
    }
+}
+
+int AudioIoCallback::AudioCallback(
+   constSamplePtr inputBuffer, float *outputBuffer,
+   unsigned long framesPerBuffer,
+   const PaStreamCallbackTimeInfo *timeInfo,
+   const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
+{
+   // Check this atomic, which the main thread might change, only once during
+   // this callback
+   const bool paused = IsPaused();
+
+   // Poll sequences for change of state.
+   // (User might click mute and solo buttons.)
+   mbHasSoloSequences = CountSoloingSequences() > 0 ;
+   mCallbackReturn = paContinue;
+
+   OtherSynchronization(paused, framesPerBuffer, timeInfo);
 
    // ------ MEMORY ALLOCATIONS -----------------------------------------------
    // tempFloats will be a reusable scratch pad for (possibly format converted)
@@ -3155,12 +3165,12 @@ int AudioIoCallback::AudioCallback(
 
    // Test for no sequence audio to play (because we are paused and have faded
    // out)
-   if (IsPaused() && (!mbMicroFades || mOldMasterGain == 0.0f))
+   if (paused && (!mbMicroFades || mOldMasterGain == 0.0f))
       return mCallbackReturn;
 
    // To add sequence output to output (to play sound on speaker)
    // possible exit, if we were seeking.
-   if( FillOutputBuffers(
+   if (FillOutputBuffers(paused,
          outputBuffer,
          framesPerBuffer,
          outputMeterFloats))
@@ -3254,9 +3264,6 @@ int AudioIoCallback::CallbackDoSeek()
 void AudioIoCallback::CallbackCheckCompletion(
    int &callbackReturn, unsigned long len)
 {
-   if (IsPaused())
-      return;
-
    bool done =
       mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, len);
    if (!done)

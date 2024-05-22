@@ -201,7 +201,7 @@ public:
       const PlayableSequence &ps,
       float &laggingChannelGain
    );
-   bool FillOutputBuffers(
+   bool FillOutputBuffers(bool paused,
       float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
@@ -336,6 +336,9 @@ public:
    PaError             mLastPaError;
 
 protected:
+   void OtherSynchronization(bool paused,
+      size_t framesPerBuffer, const PaStreamCallbackTimeInfo *timeInfo);
+
    static size_t MinValue(
       const RingBuffers &buffers, size_t (RingBuffer::*pmf)() const);
 
