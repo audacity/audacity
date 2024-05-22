@@ -1547,7 +1547,10 @@ bool ProjectFileManager::Import(
 
       if (newTracks.size() == 1)
       {
-         if (const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get()))
+         const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get());
+         // Also check that the track has a clip, as protection against empty
+         // file import.
+         if (waveTrack && !waveTrack->GetClipInterfaces().empty())
             resultingReader.reset(new ClipMirAudioReader {
                std::move(acidTags), fileName.ToStdString(),
                *waveTrack });
