@@ -46,53 +46,32 @@ public:
 } // namespace
 
 CompressorEditor::CompressorEditor(
-   wxWindow* parent, CompressorInstance& instance,
-   DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-   EffectSettingsAccess& access, CompressorSettings settings)
-    : DynamicRangeProcessorEditor { parent, instance, outputs, services,
+   wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+   const EffectUIServices& services, EffectSettingsAccess& access,
+   CompressorSettings settings)
+    : DynamicRangeProcessorEditor { parent, instance, isRealtime, services,
                                     access }
     , mSettings { std::move(settings) }
 {
-   Initialize({ {
-                   mSettings.thresholdDb,
-                   compressorThresholdDbAttributes,
-                   std::make_shared<ParameterWrapper>(thresholdDb),
-                   ControllerCategory::CompressionCurve
-                },
-                {
-                   mSettings.makeupGainDb,
-                   compressorMakupGainDbAttributes,
-                   std::make_shared<ParameterWrapper>(makeupGainDb),
-                   ControllerCategory::CompressionCurve
-                },
-                {
-                   mSettings.kneeWidthDb,
-                   kneeWidthDbAttributes,
-                   std::make_shared<ParameterWrapper>(kneeWidthDb),
-                   ControllerCategory::CompressionCurve
-                },
-                {
-                   mSettings.compressionRatio,
-                   compressionRatioAttributes,
-                   std::make_shared<ParameterWrapper>(compressionRatio),
-                   ControllerCategory::CompressionCurve
-                },
-                {
-                   mSettings.lookaheadMs,
-                   lookaheadMsAttributes,
-                   std::make_shared<ParameterWrapper>(lookaheadMs),
-                   ControllerCategory::TimeSmoothing
-                },
-                {
-                   mSettings.attackMs,
-                   attackMsAttributes,
-                   std::make_shared<ParameterWrapper>(attackMs),
-                   ControllerCategory::TimeSmoothing
-                },
-                {
-                   mSettings.releaseMs,
-                   releaseMsAttributes,
-                   std::make_shared<ParameterWrapper>(releaseMs),
-                   ControllerCategory::TimeSmoothing
-                } });
+   Initialize({ { mSettings.thresholdDb, compressorThresholdDbAttributes,
+                  std::make_shared<ParameterWrapper>(thresholdDb),
+                  ControllerCategory::CompressionCurve },
+                { mSettings.makeupGainDb, compressorMakupGainDbAttributes,
+                  std::make_shared<ParameterWrapper>(makeupGainDb),
+                  ControllerCategory::CompressionCurve },
+                { mSettings.kneeWidthDb, kneeWidthDbAttributes,
+                  std::make_shared<ParameterWrapper>(kneeWidthDb),
+                  ControllerCategory::CompressionCurve },
+                { mSettings.compressionRatio, compressionRatioAttributes,
+                  std::make_shared<ParameterWrapper>(compressionRatio),
+                  ControllerCategory::CompressionCurve },
+                { mSettings.lookaheadMs, lookaheadMsAttributes,
+                  std::make_shared<ParameterWrapper>(lookaheadMs),
+                  ControllerCategory::TimeSmoothing },
+                { mSettings.attackMs, attackMsAttributes,
+                  std::make_shared<ParameterWrapper>(attackMs),
+                  ControllerCategory::TimeSmoothing },
+                { mSettings.releaseMs, releaseMsAttributes,
+                  std::make_shared<ParameterWrapper>(releaseMs),
+                  ControllerCategory::TimeSmoothing } });
 }

@@ -13,7 +13,6 @@
 #include "AllThemeResources.h"
 #include "CompressorInstance.h"
 #include "DynamicRangeProcessorHistory.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "DynamicRangeProcessorPanelCommon.h"
 #include "Theme.h"
 #include "widgets/LinearDBFormat.h"
@@ -44,8 +43,8 @@ EVT_TIMER(timerId, DynamicRangeProcessorHistoryPanel::OnTimer)
 END_EVENT_TABLE()
 
 DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
-   wxWindow* parent, wxWindowID winid, DynamicRangeProcessorOutputs& outputs,
-   CompressorInstance& instance, std::function<void(float)> onDbRangeChanged)
+   wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
+   std::function<void(float)> onDbRangeChanged)
     : wxPanelWrapper { parent, winid }
     , mOnDbRangeChanged { std::move(onDbRangeChanged) }
     , mInitializeProcessingSettingsSubscription { static_cast<

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DynamicRangeProcessorHistory.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "EffectEditor.h"
 #include "Internat.h" // TranslatableString
 #include <optional>
@@ -9,9 +8,11 @@
 
 class DynamicRangeProcessorHistoryPanel;
 class RulerPanel;
+class wxDialog;
 class wxSlider;
 class wxTextCtrl;
 class CompressorInstance;
+class ShuttleGui;
 struct CompressorSettings;
 struct LimiterSettings;
 
@@ -84,9 +85,8 @@ class DynamicRangeProcessorEditor : public EffectEditor
 {
 public:
    DynamicRangeProcessorEditor(
-      wxWindow* parent, CompressorInstance& instance,
-      DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-      EffectSettingsAccess& access);
+      wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+      const EffectUIServices& services, EffectSettingsAccess& access);
 
 protected:
    /*
@@ -128,7 +128,6 @@ private:
 
    bool ValidateUI() final override;
    bool UpdateUI() final override;
-   void OnClose() final override;
    void OnCheckbox(bool checked);
 
    struct HistoryPanels
@@ -139,7 +138,6 @@ private:
 
    wxWeakRef<wxWindow> mUIParent;
    std::vector<ExtendedCompressorParameter> mParameters;
-   DynamicRangeProcessorOutputs* mOutputs;
    wxDialog& mTopLevelParent;
    int mFullHeight { 0 };
 };

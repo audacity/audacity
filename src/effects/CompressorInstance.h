@@ -19,7 +19,6 @@
 #include <vector>
 
 class CompressorProcessor;
-class DynamicRangeProcessorOutputs;
 
 using InitializeProcessingSettingsPublisher =
    Observer::Publisher<std::optional<InitializeProcessingSettings>>;
@@ -69,8 +68,8 @@ private:
       size_t numSamples) override;
 
    void InstanceInit(
-      EffectSettings& settings, DynamicRangeProcessorOutputs* pOutputs,
-      CompressorInstance& instance, int numChannels, float sampleRate);
+      EffectSettings& settings, CompressorInstance& instance, int numChannels,
+      float sampleRate);
 
    size_t InstanceProcess(
       EffectSettings& settings, CompressorProcessor& instance,
@@ -84,7 +83,6 @@ private:
 
    std::unique_ptr<CompressorProcessor> mCompressor;
    std::vector<CompressorInstance> mSlaves;
-   DynamicRangeProcessorOutputs* mpOutputs = nullptr;
    long long mSampleCounter = 0;
    std::optional<double> mSampleRate;
    std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;

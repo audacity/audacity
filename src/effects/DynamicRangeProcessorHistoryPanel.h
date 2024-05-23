@@ -18,7 +18,6 @@
 #include <wx/timer.h>
 
 class CompressorInstance;
-class DynamicRangeProcessorOutputs;
 class wxPaintEvent;
 class wxEraseEvent;
 
@@ -29,8 +28,7 @@ public:
    static constexpr auto minRangeDb = 10.f;
 
    DynamicRangeProcessorHistoryPanel(
-      wxWindow* parent, wxWindowID winid, DynamicRangeProcessorOutputs& outputs,
-      CompressorInstance& instance,
+      wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
       std::function<void(float)> onDbRangeChanged);
 
    struct ClockSynchronization

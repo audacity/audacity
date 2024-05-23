@@ -11,8 +11,8 @@
 
 #include "Limiter.h"
 #include "CompressorInstance.h" // A limiter is just a compressor with hard-coded parameters.
+#include "DynamicRangeProcessorDummyOutputs.h"
 #include "DynamicRangeProcessorEffectUtils.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "LimiterEditor.h"
 #include "LoadEffects.h"
 #include "ShuttleAutomation.h"
@@ -87,5 +87,5 @@ std::unique_ptr<EffectEditor> EffectLimiter::MakeEditor(
 
 std::unique_ptr<EffectOutputs> EffectLimiter::MakeOutputs() const
 {
-   return std::make_unique<DynamicRangeProcessorOutputs>();
+   return std::make_unique<DynamicRangeProcessorDummyOutputs>();
 }

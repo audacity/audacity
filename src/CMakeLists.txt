@@ -339,14 +339,13 @@ set( SOURCES
       effects/Distortion.h
       effects/DtmfGen.cpp
       effects/DtmfGen.h
+      effects/DynamicRangeProcessorDummyOutputs.h
       effects/DynamicRangeProcessorEditor.cpp
       effects/DynamicRangeProcessorEditor.h
       effects/DynamicRangeProcessorEffectUtils.cpp
       effects/DynamicRangeProcessorEffectUtils.h
       effects/DynamicRangeProcessorHistoryPanel.cpp
       effects/DynamicRangeProcessorHistoryPanel.h
-      effects/DynamicRangeProcessorOutputs.cpp
-      effects/DynamicRangeProcessorOutputs.h
       effects/DynamicRangeProcessorPanelCommon.h
       effects/DynamicRangeProcessorTransferFunctionPanel.cpp
       effects/DynamicRangeProcessorTransferFunctionPanel.h

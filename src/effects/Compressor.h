@@ -14,7 +14,6 @@
 #include "StatelessPerTrackEffect.h"
 
 class ShuttleGui;
-class DynamicRangeProcessorOutputs;
 
 class EffectCompressor final :
     public EffectWithSettings<CompressorSettings, StatelessPerTrackEffect>
