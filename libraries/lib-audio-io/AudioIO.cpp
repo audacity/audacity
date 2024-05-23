@@ -1687,17 +1687,21 @@ void AudioIO::StopStream()
 
 void AudioIO::SetPaused(bool state)
 {
-   if (state != IsPaused())
-   {
+   // This may be called from more than one thread
+   constexpr auto order = std::memory_order_relaxed;
+   const auto oldState = mPaused.exchange(state, order);
+   if (state != oldState) {
       if (auto pOwningProject = mOwningProject.lock()) {
          // The realtime effects manager may remain "active" but becomes
          // "suspended" or "resumed".
          auto &em = RealtimeEffectManager::Get(*pOwningProject);
-         em.SetSuspended(state);
+         do
+            em.SetSuspended(state);
+         // Careful, maybe another thread inverted state again and raced through
+         // the block above
+         while (!mPaused.compare_exchange_weak(state, state, order, order));
       }
    }
-
-   mPaused.store(state, std::memory_order_relaxed);
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
