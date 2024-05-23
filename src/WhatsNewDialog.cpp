@@ -17,7 +17,6 @@
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
 #include <wx/hyperlink.h>
-#include <wx/statline.h>
 #include <wx/checkbox.h>
 #include <wx/frame.h>
 #include <wx/statbmp.h>
@@ -28,8 +27,10 @@
 #include "ProjectWindows.h"
 #include "ShuttleGui.h"
 #include "Theme.h"
+#include "AllThemeResources.h"
 
 #include "../images/WhatsNewBtn.jpeg.h"
+#include "../images/MuseHub.jpeg.h"
 
 namespace
 {
@@ -69,11 +70,15 @@ struct FSHelper final
       wxMemoryFSHandler::AddFile(
          "whats_new_btn.jpeg", bin2c_whats_new_btn_jpeg,
          sizeof(bin2c_whats_new_btn_jpeg));
+      wxMemoryFSHandler::AddFile(
+         "musehub.jpeg", bin2c_musehub_jpeg,
+         sizeof(bin2c_musehub_jpeg));
    }
 
    ~FSHelper()
    {
       wxMemoryFSHandler::RemoveFile("whats_new_btn.jpeg");
+      wxMemoryFSHandler::RemoveFile("musehub.jpeg");
       wxFileSystem::RemoveHandler(mMemoryFSHandler.get());
    }
 
@@ -86,9 +91,10 @@ wxString MakeWhatsNewText()
    wxStringOutputStream o;
    wxTextOutputStream s(o);
    s
-      << wxT("<body bgcolor=") << wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE).GetAsString(wxC2S_HTML_SYNTAX) << wxT(">")
+      << wxT("<body>")
       << wxT("<p><center>")
       << wxT(R"(<p><a href=")") << WhatsNewURL << wxT(R"(">)")
+      // Bug: (Windows) specified width and height should match exactly to the size of the image
       << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /><br></a></p>)")
       << wxT("<h3>") << XO("What's new in Audacity %s").Format(AUDACITY_VERSION_STRING) << wxT("</h3>")
       << wxT("<p>")
@@ -102,10 +108,11 @@ wxString MakeGetPluginsText()
    wxStringOutputStream o;
    wxTextOutputStream s(o);
    s
-      << wxT("<body bgcolor=") << wxSystemSettings::GetColour(wxSYS_COLOUR_BTNFACE).GetAsString(wxC2S_HTML_SYNTAX) << wxT(">")
+      << wxT("<body>")
       << wxT("<p><center>")
       << wxT(R"(<p><a href=")") << MuseHubURL << wxT(R"(">)")
-      << wxT(R"(<img src="memory:whats_new_btn.jpeg" width="263" height="148" /><br></a></p>)")
+      // Bug: (Windows) specified width and height should match exactly to the size of the image
+      << wxT(R"(<img src="memory:musehub.jpeg" width="263" height="148" /><br></a></p>)")
       << wxT("<h3>") << XO("Get free plugins & sounds")<< wxT("</h3>")
       << XO("<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>").Format(MuseHubURL);
 
@@ -121,9 +128,16 @@ WhatsNewDialog::WhatsNewDialog(wxWindow* parent, wxWindowID id)
    : wxDialogWrapper(parent, id, XO("Welcome to Audacity!"))
 {
 #if defined(__WXOSX__)
-   SetSize(WindowWidth, 480);
+   SetSize(WindowWidth, 400);
 #else
-   SetSize(FromDIP(wxSize(WindowWidth, 480)));
+   SetSize(FromDIP(wxSize(WindowWidth, 430)));
+#endif
+
+#if defined(__WXMSW__)
+   //On Windows UI controls doesn't use same theme preference
+   //as per application, we should use the latter one to get 
+   //match with LinkingHtmlWindow's theme
+   SetBackgroundColour(theTheme.Colour(clrMedium));
 #endif
    SetName();
    ShuttleGui S( this, eIsCreating );
@@ -153,6 +167,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       S.SetBorder(20);
       const auto whatsnew = safenew LinkingHtmlWindow(S.GetParent());
       whatsnew->SetPage(MakeWhatsNewText());
+      whatsnew->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
       S
          .Prop(1)
 #if defined(SHOW_MUSEHUB)
@@ -167,6 +182,7 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
 
       const auto getplugins = safenew LinkingHtmlWindow(S.GetParent());
       getplugins->SetPage(MakeGetPluginsText());
+      getplugins->SetBackgroundColour(S.GetParent()->GetBackgroundColour());
       S
          .Prop(1)
          .Position(wxEXPAND | wxTOP | wxRIGHT | wxBOTTOM)
@@ -175,10 +191,14 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    }
    S.EndHorizontalLay();
 
+   const auto line = safenew wxWindow(S.GetParent(), wxID_ANY);
+   line->SetBackgroundColour(wxSystemSettings::GetColour(wxSYS_COLOUR_BTNSHADOW));
+   line->SetSize(-1, 1);
+
    S
       .Prop(0)
       .Position(wxEXPAND)
-      .AddWindow(safenew wxStaticLine(this));
+      .AddWindow(line);
 
    S.StartHorizontalLay(wxALIGN_CENTRE, 0);
    {
@@ -211,8 +231,8 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
       {
          S.SetBorder(4);
          mDontShowAgain = S
-            .Position(wxALL)
-            .AddCheckBox( XXO("Don't show this again at start up"), !showSplashScreen );
+            .Position(wxALL | wxALIGN_CENTRE)
+            .AddCheckBox( XXO("Don't show this again at start up"), !showSplashScreen);
          
          S.AddSpace(1,1,1);
 
