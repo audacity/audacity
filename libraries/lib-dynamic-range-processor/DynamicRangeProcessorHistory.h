@@ -1,4 +1,13 @@
-// TODO header
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorHistory.h
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #pragma once
 
 #include "DynamicRangeProcessorTypes.h"
@@ -18,13 +27,14 @@ public:
       float follower = 0.f;
    };
 
-   static constexpr auto maxTimeSeconds = 10.f;
+   static constexpr auto maxTimeSeconds = 5.f;
 
    using Segment = std::vector<Packet>;
 
    void Push(const std::vector<DynamicRangeProcessorOutputPacket>& packets);
    void BeginNewSegment();
    const std::vector<Segment>& GetSegments() const;
+   bool IsEmpty() const;
 
 private:
    float GetPacketTime(const DynamicRangeProcessorOutputPacket& packet) const;

@@ -14,6 +14,7 @@
 #include "EffectInterface.h"
 #include "Observer.h"
 #include "PerTrackEffect.h"
+#include <memory>
 #include <optional>
 #include <vector>
 
@@ -35,6 +36,7 @@ public:
    explicit CompressorInstance(CompressorInstance&& other);
 
    const std::optional<double>& GetSampleRate() const;
+   void SetOutputQueue(std::weak_ptr<DynamicRangeProcessorOutputPacketQueue>);
 
 private:
    bool ProcessInitialize(
@@ -85,4 +87,5 @@ private:
    DynamicRangeProcessorOutputs* mpOutputs = nullptr;
    long long mSampleCounter = 0;
    std::optional<double> mSampleRate;
+   std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
 };

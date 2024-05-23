@@ -1,4 +1,13 @@
-// TODO header
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorHistoryPanel.h
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #pragma once
 
 #include "DynamicRangeProcessorHistory.h"
@@ -37,12 +46,14 @@ private:
    void OnPaint(wxPaintEvent& evt);
    void OnSize(wxSizeEvent& evt);
    void OnTimer(wxTimerEvent& evt);
-   void InitializeForPlayback(double sampleRate);
+   void InitializeForPlayback(CompressorInstance& instance, double sampleRate);
 
    bool AcceptsFocus() const override;
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
    bool AcceptsFocusFromKeyboard() const override;
 
+   std::shared_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
+   std::vector<DynamicRangeProcessorOutputPacket> mPacketBuffer;
    std::optional<DynamicRangeProcessorHistory> mHistory;
    const std::function<void(float)> mOnDbRangeChanged;
    const Observer::Subscription mInitializeProcessingSettingsSubscription;

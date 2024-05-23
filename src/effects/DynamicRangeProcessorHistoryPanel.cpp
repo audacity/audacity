@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorHistoryPanel.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "DynamicRangeProcessorHistoryPanel.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
@@ -41,21 +51,23 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
     , mInitializeProcessingSettingsSubscription { static_cast<
                                                      InitializeProcessingSettingsPublisher&>(
                                                      instance)
-                                                     .Subscribe([this](
-                                                                   const auto&
-                                                                      evt) {
-                                                        if (evt)
-                                                           InitializeForPlayback(
-                                                              evt->sampleRate);
-                                                        else
-                                                           // Stop the
-                                                           // timer-based
-                                                           // update but keep
-                                                           // the history
-                                                           // until playback
-                                                           // is resumed.
-                                                           mTimer.Stop();
-                                                     }) }
+                                                     .Subscribe(
+                                                        [&](const std::optional<
+                                                            InitializeProcessingSettings>&
+                                                               evt) {
+                                                           if (evt)
+                                                              InitializeForPlayback(
+                                                                 instance,
+                                                                 evt->sampleRate);
+                                                           else
+                                                              // Stop the
+                                                              // timer-based
+                                                              // update but keep
+                                                              // the history
+                                                              // until playback
+                                                              // is resumed.
+                                                              mTimer.Stop();
+                                                        }) }
     , mRealtimeResumeSubscription {
        static_cast<RealtimeResumePublisher&>(instance).Subscribe([this](auto) {
           if (mHistory)
@@ -67,26 +79,10 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
        sampleRate.has_value())
       // Playback is ongoing, and so the `InitializeProcessingSettings` event
       // was already fired.
-      InitializeForPlayback(*sampleRate);
+      InitializeForPlayback(instance, *sampleRate);
 
    SetDoubleBuffered(true);
    mTimer.SetOwner(this, timerId);
-   outputs.SetEditorCallback(
-      [&](const std::vector<DynamicRangeProcessorOutputPacket>& packets) {
-         if (mHistory)
-         {
-            mHistory->Push(packets);
-            const auto& segments = mHistory->GetSegments();
-            if (
-               !mSync.has_value() && !segments.empty() &&
-               !segments.front().empty())
-               mSync.emplace(
-                  // Use the first registered packet's time as origin
-                  ClockSynchronization { segments.front().front().time,
-                                         std::chrono::steady_clock::now() });
-         }
-         mPlaybackAboutToStart = false;
-      });
    SetSize({ -1, defaultHeight });
 }
 
@@ -216,21 +212,49 @@ void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
 
 void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
 {
-   if (!mSync)
+   mPacketBuffer.clear();
+   DynamicRangeProcessorOutputPacket packet;
+   while (mOutputQueue->Get(packet))
+      mPacketBuffer.push_back(packet);
+   mHistory->Push(mPacketBuffer);
+
+   if (mHistory->IsEmpty())
       return;
 
    // Do now get `std::chrono::steady_clock::now()` in the `OnPaint` event,
    // because this can be triggered even when playback is paused.
-   mSync->now = std::chrono::steady_clock::now();
+   const auto now = std::chrono::steady_clock::now();
+   if (!mSync)
+      mSync.emplace(ClockSynchronization {
+         mHistory->GetSegments().front().front().time, now });
+   mPlaybackAboutToStart = false;
+
+   mSync->now = now;
 
    Refresh(false);
    wxPanelWrapper::Update();
 }
 
-void DynamicRangeProcessorHistoryPanel::InitializeForPlayback(double sampleRate)
+void DynamicRangeProcessorHistoryPanel::InitializeForPlayback(
+   CompressorInstance& instance, double sampleRate)
 {
    mSync.reset();
    mHistory.emplace(sampleRate);
+   // We don't know for sure the least packet size (which is variable). 100
+   // samples per packet at a rate of 8kHz is 12.5ms, which is quite low
+   // latency. For higher sample rates that will be less.
+   constexpr auto leastPacketSize = 100;
+   const size_t maxQueueSize = DynamicRangeProcessorHistory::maxTimeSeconds *
+                               sampleRate / leastPacketSize;
+   mPacketBuffer.reserve(maxQueueSize);
+   // Although `mOutputQueue` is a shared_ptr, we construct a unique_ptr and
+   // invoke the shared_ptr ctor overload that takes a unique_ptr.
+   // This way, we avoid the `error: aligned deallocation function of type 'void
+   // (void *, std::align_val_t) noexcept' is only available on macOS 10.13 or
+   // newer` compilation error.
+   mOutputQueue =
+      std::make_unique<DynamicRangeProcessorOutputPacketQueue>(maxQueueSize);
+   instance.SetOutputQueue(mOutputQueue);
    mTimer.Start(timerPeriodMs);
    mPlaybackAboutToStart = true;
    Refresh(false);
