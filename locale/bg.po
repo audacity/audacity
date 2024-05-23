@@ -3,13 +3,14 @@
 # This file is distributed under the same license as Audacity.
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 # Михаил Балабанов <mishob@abv.bg>, 2010, 2011, 2012.
+# Хана Бечева <rdclan469@gmail.com>, 2024 
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-07-02 21:05+0300\n"
 "PO-Revision-Date: 2012-06-19 09:34-0000\n"
-"Last-Translator: Mikhail Balabanov\n"
+"Last-Translator: Hana Becheva\n"
 "Language-Team: .\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +22,7 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr ""
+msgstr "Потокът е активен ... неуспешно събиране на информация.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -33,7 +34,7 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
-msgstr ""
+msgstr "Номер на основното устройство за възпроизвеждане по подразбиране: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -83,7 +84,7 @@ msgstr "Край на запис"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Playback Latency: %g\n"
-msgstr ""
+msgstr "Ниска латентност при възпроизвеждане: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
@@ -93,7 +94,7 @@ msgstr "Край на запис"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Playback Latency: %g\n"
-msgstr ""
+msgstr "Висока латентност при възпроизвеждане: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -109,7 +110,7 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr ""
+msgstr "Не е намерено записващо устройство за '%s' .\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
@@ -119,11 +120,11 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr ""
+msgstr "Не е намерено устройство за възпроизвеждане '%s' .\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
+msgstr "Не може да провери взаимните честоти на дискретизация без двете устройства.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -137,7 +138,7 @@ msgstr "Не е възможно да се отвори файл с жанров
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr ""
+msgstr "Налични смесители:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -196,7 +197,9 @@ msgstr "Дневник на Audacity"
 msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
-msgstr "Грешка при отваряне на звуковото устройство."
+msgstr ""
+"Грешка при отваряне на записващото устройство.\n"
+"Код на грешка: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
@@ -307,12 +310,12 @@ msgstr "Екип за поддръжка на Audacity %s"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
+msgstr "Осигурява поддръжка за ефекти от аудио блокове за Audacity"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #, fuzzy
 msgid "Could not find component"
-msgstr "Не бе възможно да се отвори файлът "
+msgstr "Не бе възможно да се отвори файлът"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #, fuzzy
@@ -351,7 +354,7 @@ msgstr "Не е възможно да се извлече описание на 
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "Неуспешно преобразуване на свойствения списък в XML данни"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, fuzzy
@@ -640,11 +643,11 @@ msgstr "Ефекти Audio Unit"
 
 #: libraries/lib-effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
-msgstr ""
+msgstr "Предоставя вградени ефекти за Audacity"
 
 #: libraries/lib-effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
-msgstr ""
+msgstr "Неизвестно име на вграден ефект"
 
 #: libraries/lib-effects/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
@@ -777,7 +780,7 @@ msgstr "Запазват се файловете с данни на проект
 
 #: libraries/lib-files/FileNames.cpp
 msgid "Dynamically Linked Libraries"
-msgstr ""
+msgstr "Динамично свързани библиотеки"
 
 #: libraries/lib-files/FileNames.cpp
 #, fuzzy
@@ -1120,11 +1123,11 @@ msgstr "Ефекти VST"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "Provides LADSPA Effects"
-msgstr ""
+msgstr "Предоставя LADSPA ефекти"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "Audacity no longer uses vst-bridge"
-msgstr ""
+msgstr "Audacity вече не използва vst-bridge"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp src/effects/vamp/LoadVamp.cpp
@@ -1150,7 +1153,7 @@ msgstr "Ефекти VST"
 
 #: libraries/lib-lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Audacity"
-msgstr ""
+msgstr "Предоставя поддръжка за ефекти от LV2 за Audacity"
 
 #: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
@@ -1174,7 +1177,7 @@ msgstr "Сложна форма"
 
 #: libraries/lib-math/Resample.cpp
 msgid "Low Quality (Fastest)"
-msgstr ""
+msgstr "Ниско качество (Най-бързо)"
 
 #: libraries/lib-math/Resample.cpp
 #, fuzzy
@@ -1210,7 +1213,7 @@ msgstr "32-битов с ПЗ"
 
 #: libraries/lib-math/SampleFormat.cpp
 msgid "Unknown format"
-msgstr ""
+msgstr "Неизвестен формат"
 
 #: libraries/lib-menus/CommandManager.cpp src/widgets/KeyView.cpp
 msgid "Command"
@@ -1263,7 +1266,7 @@ msgstr "&Връщане"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Module Unsuitable"
-msgstr ""
+msgstr "Модулът не е подходящ"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, fuzzy, c-format
@@ -1313,7 +1316,7 @@ msgstr ""
 #: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
-msgstr ""
+msgstr "Да"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
 #: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
@@ -1328,7 +1331,7 @@ msgstr "Модулатор"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 msgid "Try and load this module?"
-msgstr ""
+msgstr "Опитайте да заредите този модул?"
 
 #: libraries/lib-module-manager/ModuleManager.cpp
 #, c-format
@@ -1345,11 +1348,11 @@ msgstr "Презаписване на съществуващи файлове"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in already exists"
-msgstr ""
+msgstr "Добавката вече съществува"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in file is in use. Failed to overwrite"
-msgstr ""
+msgstr "Файлът с добавката се използва. Неуспешно презаписване"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 #, fuzzy, c-format
@@ -1419,18 +1422,18 @@ msgstr "Повтаряне"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Supports output: %d\n"
-msgstr ""
+msgstr "Поддържа изход: %d\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Supports input: %d\n"
-msgstr ""
+msgstr "Поддържа вход: %d\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Opened: %d\n"
-msgstr ""
+msgstr "Отворено: %d\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
@@ -1440,7 +1443,7 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "No MIDI recording device found for '%s'.\n"
-msgstr ""
+msgstr "Не е намерено MIDI записващо устройство за '%s'.\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
@@ -1450,7 +1453,7 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "No MIDI playback device found for '%s'.\n"
-msgstr ""
+msgstr "Не е намерено MIDI устройство за възпроизвеждане за '%s'.\n"
 
 #. i18n-hint: Name of time display format that shows time in hours,
 #. * minutes, seconds and samples (at the current project sample rate)
@@ -1835,7 +1838,7 @@ msgstr ""
 #. i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "hundredths of cents"
-msgstr ""
+msgstr "стотни части от цента"
 
 #. i18n-hint: Name of display format that shows log of frequency
 #. * in decades
@@ -2485,22 +2488,22 @@ msgstr "Вътрешна логическа грешка"
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Access permission denied"
-msgstr ""
+msgstr "Достъпът е отказан"
 
 #. i18n-hint: database operation was aborted by the callback
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Callback routine requested an abort"
-msgstr ""
+msgstr "Обратната рутина поиска прекратяване"
 
 #. i18n-hint: database operation has failed because database is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database file is locked"
-msgstr ""
+msgstr "Файлът с базата данни е заключен"
 
 #. i18n-hint: database operation has failed because table is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A table in the database is locked"
-msgstr ""
+msgstr "Таблицата в базата данни е заключена"
 
 #. i18n-hint: database operation has failed due to the lack of memory
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2510,7 +2513,7 @@ msgstr ""
 #. i18n-hint: database operation has failed because database is read-only
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Attempt to write a read-only database"
-msgstr ""
+msgstr "Опит за запис в база данни само за четене"
 
 #. i18n-hint: database operation was interrupted
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2521,17 +2524,17 @@ msgstr "Записването не е разрешено."
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "Възникна грешка във входно-изходната система"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database disk image is malformed"
-msgstr ""
+msgstr "Изображението на диска с база данни е повредено"
 
 #. i18n-hint: database operation has failed because the drive is full
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Insertion failed because the drive is full"
-msgstr ""
+msgstr "Вмъкването е неуспешно, защото диска е пълен"
 
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2542,42 +2545,42 @@ msgstr "Не е възможно да се премахне „%s“"
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
-msgstr ""
+msgstr "Грешка в протокола за заключване на базата данни"
 
 #. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
-msgstr ""
+msgstr "Схемата на базата данни е променена"
 
 #. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
-msgstr ""
+msgstr "Низът или BLOB превишава лимита за размер"
 
 #. i18n-hint: database operation has failed due to the constraint violation
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Abort due to constraint violation"
-msgstr ""
+msgstr "Прекратяване поради нарушаване на ограничението"
 
 #. i18n-hint: database operation has failed due to the data type mismatch
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Data type mismatch"
-msgstr ""
+msgstr "Несъответствие на типовете данни"
 
 #. i18n-hint: database operation has failed due to the library misuse
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Library used incorrectly"
-msgstr ""
+msgstr "Библиотеката е използвана неправилно"
 
 #. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
-msgstr ""
+msgstr "Поддръжката на големи файлове е забранена"
 
 #. i18n-hint: database operation has failed due to the authorization error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Authorization denied"
-msgstr ""
+msgstr "Отказано разрешение"
 
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2588,7 +2591,7 @@ msgstr "Пауза"
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
-msgstr ""
+msgstr "Вторият параметър на sqlite3_bind е извън обхвата"
 
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2605,11 +2608,11 @@ msgstr "Непознат параметър в командния ред: %s\n"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Изрязване/Копиране/Поставяне"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "&Инструментна лента за изрязване/копиране/поставяне"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -2652,11 +2655,11 @@ msgstr "Начална дата"
 #. appearance of older versions of Audacity
 #: libraries/lib-theme-resources/ClassicThemeAsCeeCode.cpp
 msgid "Classic"
-msgstr ""
+msgstr "Класически"
 
 #: libraries/lib-theme-resources/DarkThemeAsCeeCode.cpp
 msgid "Dark"
-msgstr ""
+msgstr "Тъмен"
 
 #. i18n-hint: greater difference between foreground and
 #. background colors
@@ -2993,7 +2996,7 @@ msgstr "Няма достатъчно място за поставяне на с
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr ""
+msgstr "Песен има повредена последователност от образци."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
@@ -3010,11 +3013,11 @@ msgstr "Не е достъпна информация за устройство�
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "here"
-msgstr ""
+msgstr "Тук"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr ""
+msgstr "Искате ли да изпратите отзив, за да ни помогнете да оправим този проблем?"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 #, fuzzy, c-format
@@ -3025,11 +3028,11 @@ msgstr "Изберете един или няколко звукови файл�
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr ""
+msgstr "нашата политика за поверителност"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Problem details"
-msgstr ""
+msgstr "Детайли за проблема"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/TagsEditor.cpp
 msgid "Comments"
@@ -3043,7 +3046,7 @@ msgstr ""
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgctxt "crash reporter button"
 msgid "&Send"
-msgstr ""
+msgstr "Изпрати"
 
 #: libraries/lib-wx-init/HelpSystem.cpp
 msgid "Backwards"
@@ -3154,7 +3157,7 @@ msgstr "Освен това може да прочетете помощта за
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr ""
+msgstr "Ръководството не изглежда инсталирано. Моля, [[*URL*|вижте ръководството онлайн]] или [[https://manual.audacityteam.org/man/unzipping_the_manual.html|изтеглете ръководството]].<br><br>За винаги да виждате ръководството онлайн, променете „Местоположение на ръководството“ в настройките на интерфейса на „От Интернет“."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -3295,7 +3298,7 @@ msgstr "Панел на писта"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Dialog"
-msgstr ""
+msgstr "Диалог"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 #, fuzzy
@@ -3304,7 +3307,7 @@ msgstr "Директории"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "File Dialog"
-msgstr ""
+msgstr "Диалог за файлове"
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy, c-format
@@ -3333,7 +3336,7 @@ msgstr "Избор на команда"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "AUP project files (*.aup)"
-msgstr ""
+msgstr "Файлове с проекти AUP (*.aup)"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
