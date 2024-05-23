@@ -184,69 +184,6 @@ wxString MeterUpdateMsg::toStringIfClipped()
 }
 
 //
-// The MeterPanel passes itself messages via this queue so that it can
-// communicate between the audio thread and the GUI thread.
-// This class uses lock-free synchronization with atomics.
-//
-
-MeterUpdateQueue::MeterUpdateQueue(size_t maxLen):
-   mBufferSize(maxLen)
-{
-   Clear();
-}
-
-// destructor
-MeterUpdateQueue::~MeterUpdateQueue()
-{
-}
-
-void MeterUpdateQueue::Clear()
-{
-   mStart.store(0);
-   mEnd.store(0);
-}
-
-// Add a message to the end of the queue.  Return false if the
-// queue was full.
-bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
-{
-   auto start = mStart.load(std::memory_order_acquire);
-   auto end = mEnd.load(std::memory_order_relaxed);
-   // mStart can be greater than mEnd because it is all mod mBufferSize
-   assert( (end + mBufferSize - start) >= 0 );
-   int len = (end + mBufferSize - start) % mBufferSize;
-
-   // Never completely fill the queue, because then the
-   // state is ambiguous (mStart==mEnd)
-   if (len + 1 >= (int)(mBufferSize))
-      return false;
-
-   //wxLogDebug(wxT("Put: %s"), msg.toString());
-
-   mBuffer[end] = msg;
-   mEnd.store((end + 1) % mBufferSize, std::memory_order_release);
-
-   return true;
-}
-
-// Get the next message from the start of the queue.
-// Return false if the queue was empty.
-bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
-{
-   auto start = mStart.load(std::memory_order_relaxed);
-   auto end = mEnd.load(std::memory_order_acquire);
-   int len = (end + mBufferSize - start) % mBufferSize;
-
-   if (len == 0)
-      return false;
-
-   msg = mBuffer[start];
-   mStart.store((start + 1) % mBufferSize, std::memory_order_release);
-
-   return true;
-}
-
-//
 // MeterPanel class
 //
 

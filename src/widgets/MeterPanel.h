@@ -23,11 +23,12 @@
 #include <wx/timer.h> // member variable
 
 #include "ASlider.h"
-#include "SampleFormat.h"
-#include "Prefs.h"
+#include "LockFreeQueue.h"
 #include "MeterPanelBase.h" // to inherit
 #include "Observer.h"
+#include "Prefs.h"
 #include "Ruler.h" // member variable
+#include "SampleFormat.h"
 
 class AudacityProject;
 struct AudioIOEvent;
@@ -71,26 +72,12 @@ class MeterUpdateMsg
    wxString toStringIfClipped();
 };
 
-// Thread-safe queue of update messages
-class MeterUpdateQueue
-{
- public:
-   explicit MeterUpdateQueue(size_t maxLen);
-   ~MeterUpdateQueue();
-
-   bool Put(MeterUpdateMsg &msg);
-   bool Get(MeterUpdateMsg &msg);
-
-   void Clear();
-
- private:
-   // Align the two atomics to avoid false sharing
-   // mStart is written only by the reader, mEnd by the writer
-   NonInterfering< std::atomic<size_t> > mStart{ 0 }, mEnd{ 0 };
-
-   const size_t mBufferSize;
-   ArrayOf<MeterUpdateMsg> mBuffer{mBufferSize};
-};
+//
+// The MeterPanel passes itself messages via this queue so that it can
+// communicate between the audio thread and the GUI thread.
+// This class uses lock-free synchronization with atomics.
+//
+using MeterUpdateQueue = LockFreeQueue<MeterUpdateMsg>;
 
 class MeterAx;
 
@@ -202,7 +189,7 @@ class AUDACITY_DLL_API MeterPanel final
    void Increase(float steps);
    void Decrease(float steps);
    void UpdateSliderControl();
-   
+
    void ShowMenu(const wxPoint & pos);
 
    void SetName(const TranslatableString& name);

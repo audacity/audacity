@@ -31,6 +31,7 @@ set( SOURCES
    GlobalVariable.h
    IteratorX.cpp
    IteratorX.h
+   LockFreeQueue.h
    MathApprox.h
    MemoryX.cpp
    MemoryX.h
