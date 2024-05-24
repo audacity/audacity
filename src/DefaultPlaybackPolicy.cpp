@@ -16,8 +16,17 @@
 namespace {
 struct DPPState : PlaybackState {
    double mLastPlaySpeed{ 1.0 };
+   double mLoopEndTime{};
    size_t mRemaining{ 0 };
    bool mLoopEnabled;
+
+   bool RevertToOldDefault() const
+   {
+      // mLastTime is updated when putting into the time queue
+      return !mLoopEnabled ||
+         // Even if loop is enabled, ignore it if right of looping region
+         mLastTime > mLoopEndTime;
+   }
 };
 }
 
@@ -26,7 +35,7 @@ DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject &project,
    bool loopEnabled, bool variableSpeed
 )  : mProject{ project }
    , mTrackEndTime{ trackEndTime }
-   , mLoopEndTime{ loopEndTime }
+   , mInitLoopEndTime{ loopEndTime }
    , mpStartTime{ pStartTime }
    , mVariableSpeed{ variableSpeed }
    , mInitLoopEnabled{ loopEnabled }
@@ -44,12 +53,13 @@ void DefaultPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
 {
    PlaybackPolicy::Initialize(schedule, st, rate);
    auto &state = static_cast<DPPState&>(st);
+   state.mLoopEndTime = mInitLoopEndTime;
    state.mLoopEnabled = mInitLoopEnabled;
 
    auto &mLastPlaySpeed = state.mLastPlaySpeed;
    mLastPlaySpeed = GetPlaySpeed();
    mMessageChannel.Write( { mLastPlaySpeed,
-      state.mT0, mLoopEndTime, state.mLoopEnabled } );
+      state.mT0, state.mLoopEndTime, state.mLoopEnabled } );
 
    auto callback = [this](auto&){ WriteMessage(); };
    mRegionSubscription =
@@ -75,15 +85,6 @@ DefaultPlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
    // loop region or speed slider don't lag too much
    using namespace std::chrono;
    return { 0.05s, 0.05s, 0.25s };
-}
-
-bool DefaultPlaybackPolicy::RevertToOldDefault(const PlaybackState &st) const
-{
-   auto &state = static_cast<const DPPState&>(st);
-   // state.mLastTime is updated when putting into the time queue
-   return !state.mLoopEnabled ||
-      // Even if loop is enabled, ignore it if right of looping region
-      state.mLastTime > mLoopEndTime;
 }
 
 double DefaultPlaybackPolicy::OffsetSequenceTime(
@@ -130,7 +131,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
       toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
       auto realTime = realTimeRemaining;
       double extra = 0;
-      if (RevertToOldDefault(st)) {
+      if (state.RevertToOldDefault()) {
          // Produce some extra silence so that the time queue consumer can
          // satisfy its end condition
          const double extraRealTime =
@@ -160,7 +161,7 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mRemaining = state.mRemaining;
-   bool revert = RevertToOldDefault(st);
+   bool revert = state.RevertToOldDefault();
    if (!mVariableSpeed && revert)
       return PlaybackPolicy
          ::AdvancedTrackTime(schedule, state, trackTime, nSamples);
@@ -215,7 +216,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    // Looping may become enabled if the main thread said so, but require too
    // that the loop region is non-empty and the play head is not far to its
    // right
-   bool loopWasEnabled = !RevertToOldDefault(st);
+   bool loopWasEnabled = !state.RevertToOldDefault();
    mLoopEnabled = data.mLoopEnabled && !empty &&
       state.mLastTime <= data.mT1 + allowance;
 
@@ -225,7 +226,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
 
    // If looping transitions on, or remains on and the region changed,
    // adjust the schedule...
-   auto mine = std::tie(state.mT0, mLoopEndTime);
+   auto mine = std::tie(state.mT0, state.mLoopEndTime);
    auto theirs = std::tie(data.mT0, data.mT1);
    if ((loopWasEnabled != mLoopEnabled) || (mLoopEnabled && mine != theirs))
    {
@@ -264,7 +265,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    else {
       // ... else the region did not change, or looping is now off, in
       // which case we have nothing special to do
-      if (RevertToOldDefault(st))
+      if (state.RevertToOldDefault())
          return PlaybackPolicy::RepositionPlayback(schedule, state,
             playbackMixers, available);
    }

@@ -55,7 +55,6 @@ public:
    bool Looping( const PlaybackSchedule & ) const override;
 
 private:
-   bool RevertToOldDefault(const PlaybackState &state) const;
    void WriteMessage();
    double GetPlaySpeed();
 
@@ -75,7 +74,7 @@ private:
       mSpeedSubscription;
 
    const double mTrackEndTime;
-   double mLoopEndTime;
+   double mInitLoopEndTime{};
    std::optional<double> mpStartTime;
    bool mProgress{ true };
    bool mVariableSpeed{ false };
