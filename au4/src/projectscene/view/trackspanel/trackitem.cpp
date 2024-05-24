@@ -43,12 +43,18 @@ TrackItem::~TrackItem()
 
 void TrackItem::init(const processing::Track& track)
 {
+    m_trackId = track.id;
     setTitle(track.title);
 }
 
-muse::ID TrackItem::id() const
+au::processing::TrackId TrackItem::trackId() const
 {
     return m_trackId;
+}
+
+QVariant TrackItem::trackId_property() const
+{
+    return QVariant::fromValue(m_trackId);
 }
 
 QString TrackItem::title() const

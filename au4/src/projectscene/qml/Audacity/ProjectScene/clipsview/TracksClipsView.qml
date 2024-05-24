@@ -46,7 +46,6 @@ Rectangle {
             delegate: TrackClipsItem {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 144
                 context: timeline.context
                 trackId: trackIdData
             }

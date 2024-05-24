@@ -10,6 +10,7 @@
 using namespace muse;
 using namespace au::project;
 using namespace au::processing;
+using namespace au::projectscene;
 
 static QString projectDefaultTitle()
 {
@@ -74,6 +75,9 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     m_processingProject->setAudacity3Project(m_au3Project);
 
     m_processingProject->dump();
+
+    //! NOTE At the moment, view state don't saved and loaded
+    m_viewState = viewStateCreator()->createViewState();
 
     return muse::make_ret(Ret::Code::Ok);
 }
@@ -379,6 +383,11 @@ void Audacity4Project::setNeedSave(bool needSave)
 const ProcessingProjectPtr Audacity4Project::processingProject() const
 {
     return m_processingProject;
+}
+
+IProjectViewStatePtr Audacity4Project::viewState() const
+{
+    return m_viewState;
 }
 
 uintptr_t Audacity4Project::au3ProjectPtr() const

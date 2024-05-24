@@ -28,8 +28,10 @@
 #include "ui/iuiactionsregister.h"
 
 #include "internal/projectsceneuiactions.h"
-
 #include "internal/projectsceneconfiguration.h"
+#include "internal/projectviewstatecreator.h"
+
+#include "view/common/trackgeometrymodel.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
@@ -64,6 +66,7 @@ void ProjectSceneModule::registerExports()
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
 }
 
 void ProjectSceneModule::resolveImports()
@@ -79,6 +82,9 @@ void ProjectSceneModule::registerUiTypes()
     // types
     qmlRegisterUncreatableType<TrackTypes>("Audacity.ProjectScene", 1, 0, "TrackType", "Not creatable from QML");
     qmlRegisterUncreatableType<ClipKey>("Audacity.ProjectScene", 1, 0, "ClipKey", "Not creatable from QML");
+
+    // common
+    qmlRegisterType<TrackViewStateModel>("Audacity.ProjectScene", 1, 0, "TrackViewStateModel");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");

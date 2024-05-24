@@ -88,7 +88,7 @@ private:
     void onProjectChanged();
 
     TrackItem* buildTrackItem(const processing::Track& track);
-    TrackItem* findTrackItem(const muse::ID& trackId);
+    TrackItem* findTrackItem(const processing::TrackId& trackId);
 
     void setLoadingBlocked(bool blocked);
 

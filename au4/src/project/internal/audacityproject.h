@@ -5,6 +5,7 @@
 #include "au3wrap/au3project.h"
 #include "modularity/ioc.h"
 #include "io/ifilesystem.h"
+#include "projectscene/iprojectviewstatecreator.h"
 
 namespace au::au3 {
 class Au3Project;
@@ -36,6 +37,7 @@ namespace au::project {
 class Audacity4Project : public IAudacityProject
 {
     muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
 
 public:
     Audacity4Project();
@@ -62,6 +64,8 @@ public:
 
     const au::processing::ProcessingProjectPtr processingProject() const override;
 
+    projectscene::IProjectViewStatePtr viewState() const override;
+
     uintptr_t au3ProjectPtr() const override;
 
 private:
@@ -87,7 +91,9 @@ private:
 
     std::shared_ptr<au::au3::Au3Project> m_au3Project;
 
-    au::processing::ProcessingProjectPtr m_processingProject;
+    processing::ProcessingProjectPtr m_processingProject;
+
+    projectscene::IProjectViewStatePtr m_viewState;
 };
 }
 
