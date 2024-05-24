@@ -15,7 +15,7 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    m_zoom = 2.0;//{ 44100.0 / 512.0 };
+    m_zoom = 2.0; //{ 44100.0 / 512.0 };
     emit zoomChanged();
 
     m_frameStartTime = 0.0;
