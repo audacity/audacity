@@ -20,15 +20,15 @@ Canvas {
 
     property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
 
+    readonly property int overloadWidth: 4
+
     width: parent.width
     height: root.showRuler ? prv.indicatorHeight + prv.unitsTextWidth : prv.indicatorHeight
 
     QtObject {
         id: prv
 
-        readonly property int overloadWidth: 4
-
-        readonly property real indicatorWidth: root.width - overloadWidth
+        readonly property real indicatorWidth: root.width - root.overloadWidth
         readonly property real indicatorHeight: 6
 
         // value ranges
@@ -101,7 +101,7 @@ Canvas {
         var clipingColor = "#EF476F"
 
         ctx.fillStyle = isClipping ? clipingColor : ui.theme.strokeColor
-        ctx.fillRect(xPos + prv.indicatorWidth, yPos, prv.overloadWidth, prv.indicatorHeight)
+        ctx.fillRect(xPos + prv.indicatorWidth, yPos, root.overloadWidth, prv.indicatorHeight)
 
         ctx.fillStyle = isClipping ? clipingColor : ui.theme.accentColor
         ctx.fillRect(xPos, yPos, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(root.currentVolumePressure)), prv.indicatorHeight)
@@ -118,6 +118,7 @@ Canvas {
     }
 
     onCurrentVolumePressureChanged: {
+        console.log("============== onCurrentVolumePressureChanged " + currentVolumePressure)
         requestPaint()
     }
 

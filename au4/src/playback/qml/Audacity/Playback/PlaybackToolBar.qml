@@ -7,6 +7,7 @@ import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
 import Audacity.Playback 1.0
+import Audacity.Record 1.0
 
 import "internal"
 
@@ -63,6 +64,7 @@ Item {
                     case PlaybackToolBarItem.SECTION: return Qt.size(1, 32)
                     case PlaybackToolBarItem.ACTION: return Qt.size(32, 32)
                     case PlaybackToolBarItem.PLAYBACK_LEVEL: return Qt.size(240, 28)
+                    case PlaybackToolBarItem.RECORD_LEVEL: return Qt.size(32, 32)
                     }
 
                     return null
@@ -80,6 +82,7 @@ Item {
                     case PlaybackToolBarItem.SECTION: return sectionComp
                     case PlaybackToolBarItem.ACTION: return actionComp
                     case PlaybackToolBarItem.PLAYBACK_LEVEL: return playbackLevelComp
+                    case PlaybackToolBarItem.RECORD_LEVEL: return recordLevelComp
                     }
 
                     return null
@@ -218,6 +221,36 @@ Item {
                         leftCurrentVolumePressure: item.leftChannelPressure
                         rightCurrentVolumePressure: item.rightChannelPressure
 
+                        navigationPanel: root.navigationPanel
+                        navigationOrder: loader.itemOrder
+
+                        onVolumeLevelChangeRequested: function(level) {
+                            item.level = level
+                        }
+                    }
+                }
+
+                Component {
+                    id: recordLevelComp
+
+                    RecordLevel {
+                        property var item: loader.itemData
+
+                        width: 32
+                        height: width
+
+                        icon: item.icon
+
+                        toolTipTitle: item.title
+                        toolTipDescription: item.description
+
+                        volumeLevel: item.level
+                        leftCurrentVolumePressure: item.leftChannelPressure
+                        rightCurrentVolumePressure: item.rightChannelPressure
+
+                        navigationPanel: root.navigationPanel
+                        navigationOrder: loader.itemOrder
+
                         onVolumeLevelChangeRequested: function(level) {
                             item.level = level
                         }
@@ -225,7 +258,6 @@ Item {
                 }
             }
         }
-
     }
 
     FlatButton {

@@ -15,6 +15,7 @@
 #include "ui/iuiconfiguration.h"
 #include "actions/iactionsdispatcher.h"
 #include "playback/iplaybackcontroller.h"
+#include "record/irecordcontroller.h"
 
 namespace au::playback {
 class PlaybackToolBarAbstractItem;
@@ -28,6 +29,7 @@ class PlaybackToolBarModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> context;
     muse::Inject<au::playback::IPlaybackController> controller;
+    muse::Inject<au::record::IRecordController> recordController;
 
     Q_PROPERTY(int length READ rowCount NOTIFY itemsChanged)
 
@@ -67,6 +69,7 @@ private:
     PlaybackToolBarAbstractItem* makeItem(const muse::ui::UiAction& action);
 
     muse::ui::UiAction playAction() const;
+    muse::ui::UiAction recordAction() const;
 
     QList<PlaybackToolBarAbstractItem*> m_items;
 };

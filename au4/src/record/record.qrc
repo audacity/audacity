@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/Record/qmldir</file>
+        <file>qml/Audacity/Record/RecordLevel.qml</file>
+    </qresource>
+</RCC>

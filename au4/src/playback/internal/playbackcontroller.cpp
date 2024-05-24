@@ -51,6 +51,11 @@ void PlaybackController::init()
     });
 }
 
+void PlaybackController::deinit()
+{
+    stop();
+}
+
 bool PlaybackController::isPlayAllowed() const
 {
     return isLoaded();

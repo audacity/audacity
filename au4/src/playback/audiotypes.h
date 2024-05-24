@@ -40,6 +40,9 @@ static constexpr TrackId INVALID_TRACK_ID = -1;
 
 static constexpr int MINIMUM_BUFFER_SIZE = 1024;
 
+static constexpr volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
+static constexpr volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
+
 struct AudioOutputParams {
     volume_db_t volume = 0.f;
     balance_t balance = 0.f;

@@ -44,5 +44,8 @@ if (MU_BUILD_PLAYBACK_MODULE)
     add_subdirectory(playback)
 endif()
 
+if (MU_BUILD_RECORD_MODULE)
+    add_subdirectory(record)
+endif()
 
 # ...

@@ -25,6 +25,7 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
 
 public:
     void init();
+    void deinit();
 
     bool isPlayAllowed() const override;
     muse::async::Notification isPlayAllowedChanged() const override;

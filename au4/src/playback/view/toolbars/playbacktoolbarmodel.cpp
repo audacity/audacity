@@ -7,6 +7,9 @@
 
 #include "view/toolbars/playbacktoolbarabstractitem.h"
 #include "view/toolbars/playbacktoolbarlevelitem.h"
+#include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
+
+#include "containers.h"
 
 using namespace muse::uicomponents;
 using namespace muse::ui;
@@ -18,18 +21,18 @@ static const QString TOOLBAR_NAME("playbackToolBar");
 static const ActionCode SECTION_CODE("");
 static const ActionCode PLAY_ACTION_CODE("play");
 static const ActionCode PLAYBACK_LEVEL("playback-level");
+static const ActionCode RECORD_ACTION_CODE("record");
+static const ActionCode RECORD_LEVEL("record-level");
 
 static PlaybackToolBarAbstractItem::ItemType itemType(const ActionCode& actionCode)
 {
-    if (actionCode == SECTION_CODE) {
-        return PlaybackToolBarAbstractItem::ItemType::SECTION;
-    }
+    std::map<ActionCode, PlaybackToolBarAbstractItem::ItemType> types = {
+        { SECTION_CODE, PlaybackToolBarAbstractItem::ItemType::SECTION },
+        { PLAYBACK_LEVEL, PlaybackToolBarAbstractItem::ItemType::PLAYBACK_LEVEL },
+        { RECORD_LEVEL, PlaybackToolBarAbstractItem::ItemType::RECORD_LEVEL }
+    };
 
-    if (actionCode == PLAYBACK_LEVEL) {
-        return PlaybackToolBarAbstractItem::ItemType::PLAYBACK_LEVEL;
-    }
-
-    return PlaybackToolBarAbstractItem::ItemType::ACTION;
+    return muse::value(types, actionCode, PlaybackToolBarAbstractItem::ItemType::ACTION);
 }
 
 PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
@@ -128,12 +131,21 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
         PlaybackToolBarAbstractItem* item = findItem(PLAY_ACTION_CODE);
         item->setAction(playAction());
     }
+
+    if (containsAction(codes, RECORD_ACTION_CODE)) {
+        PlaybackToolBarAbstractItem* item = findItem(RECORD_ACTION_CODE);
+        item->setAction(recordAction());
+    }
 }
 
 void PlaybackToolBarModel::setupConnections()
 {
     controller()->isPlayingChanged().onNotify(this, [this]() {
         onActionsStateChanges({ PLAY_ACTION_CODE });
+    });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        onActionsStateChanges({ RECORD_ACTION_CODE });
     });
 }
 
@@ -161,6 +173,10 @@ void PlaybackToolBarModel::updateActions()
             item->setAction(playAction());
         }
 
+        if (citem.action == RECORD_ACTION_CODE) {
+            item->setAction(recordAction());
+        }
+
         m_items << item;
     }
 
@@ -182,6 +198,7 @@ PlaybackToolBarAbstractItem* PlaybackToolBarModel::makeItem(const muse::ui::UiAc
 
     switch (type) {
     case PlaybackToolBarAbstractItem::PLAYBACK_LEVEL: return new PlaybackToolBarLevelItem(action, type, this);
+    case PlaybackToolBarAbstractItem::RECORD_LEVEL: return new record::PlaybackToolBarRecordLevelItem(action, type, this);
     default:
         break;
     }
@@ -195,6 +212,16 @@ UiAction PlaybackToolBarModel::playAction() const
 
     bool isPlaying = controller()->isPlaying();
     action.iconCode =  isPlaying ? IconCode::Code::PAUSE : IconCode::Code::PLAY;
+
+    return action;
+}
+
+UiAction PlaybackToolBarModel::recordAction() const
+{
+    UiAction action = uiActionsRegister()->action(RECORD_ACTION_CODE);
+
+    bool isPlaying = recordController()->isRecording();
+    action.iconCode =  isPlaying ? IconCode::Code::PAUSE : IconCode::Code::RECORD_FILL; // todo
 
     return action;
 }
