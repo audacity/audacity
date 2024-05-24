@@ -31,7 +31,7 @@ constexpr double compressorThresholdDbDefault = -10;
 constexpr double compressorMakeupGainDbDefault = 0;
 constexpr double compressorKneeWidthDbDefault = 0;
 constexpr double compressorCompressionRatioDefault = 10;
-constexpr double compressorLookaheadMsDefault = 0;
+constexpr double compressorLookaheadMsDefault = 1;
 constexpr double compressorAttackMsDefault = 30;
 constexpr double compressorReleaseMsDefault = 150;
 constexpr double compressorMaxLookaheadMs = 1000.;
@@ -39,7 +39,7 @@ constexpr double compressorMaxLookaheadMs = 1000.;
 constexpr double limiterThresholdDbDefault = -5;
 constexpr double limiterMakeupTargetDbDefault = -1;
 constexpr double limiterKneeWidthDbDefault = 0;
-constexpr double limiterLookaheadMsDefault = 0;
+constexpr double limiterLookaheadMsDefault = 1;
 constexpr double limiterReleaseMsDefault = 20;
 constexpr double limiterMaxLookaheadMs = 50;
 
