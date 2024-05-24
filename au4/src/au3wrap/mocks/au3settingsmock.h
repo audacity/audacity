@@ -3,6 +3,8 @@
 
 #include "libraries/lib-preferences/BasicSettings.h"
 
+#include "types/val.h"
+
 namespace au::au3 {
 //! TODO
 //! * Maybe add memory store
@@ -21,19 +23,19 @@ public:
     bool Remove(const wxString& /*key*/) override { return true; }
     void Clear() override {}
 
-    bool Read(const wxString& /*key*/, bool* /*value*/) const override { return false; }
-    bool Read(const wxString& /*key*/, int* /*value*/) const override { return false; }
-    bool Read(const wxString& /*key*/, long* /*value*/) const override { return false; }
-    bool Read(const wxString& /*key*/, long long* /*value*/) const override { return false; }
-    bool Read(const wxString& /*key*/, double* /*value*/) const override { return false; }
-    bool Read(const wxString& /*key*/, wxString* /*value*/) const override { return false; }
+    bool Read(const wxString& key, bool* value) const override;
+    bool Read(const wxString& key, int* value) const override;
+    bool Read(const wxString& key, long* value) const override;
+    bool Read(const wxString& key, long long* value) const override;
+    bool Read(const wxString& key, double* value) const override;
+    bool Read(const wxString& key, wxString* value) const override;
 
-    bool Write(const wxString& /*key*/, bool /*value*/) override { return false; }
-    bool Write(const wxString& /*key*/, int /*value*/) override { return false; }
-    bool Write(const wxString& /*key*/, long /*value*/) override { return false; }
-    bool Write(const wxString& /*key*/, long long /*value*/) override { return false; }
-    bool Write(const wxString& /*key*/, double /*value*/) override { return false; }
-    bool Write(const wxString& /*key*/, const wxString& /*value*/) override { return false; }
+    bool Write(const wxString& key, bool value) override;
+    bool Write(const wxString& key, int value) override;
+    bool Write(const wxString& key, long value) override;
+    bool Write(const wxString& key, long long value) override;
+    bool Write(const wxString& key, double value) override;
+    bool Write(const wxString& key, const wxString& value) override;
 
     bool Flush() noexcept override { return true; }
 
@@ -41,6 +43,9 @@ protected:
 
     void DoBeginGroup(const wxString& /*prefix*/) override {}
     void DoEndGroup() noexcept override {}
+
+private:
+    mutable std::map<wxString, muse::Val> m_values;
 };
 }
 

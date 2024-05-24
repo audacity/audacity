@@ -13,9 +13,9 @@
 #include "../iau3audiooutput.h"
 
 class AudacityProject;
-class InOutMeter;
 
 namespace au::au3 {
+class InOutMeter;
 class Au3AudioOutput : public IAu3AudioOutput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;

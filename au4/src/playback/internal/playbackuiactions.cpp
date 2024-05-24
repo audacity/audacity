@@ -209,6 +209,7 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
             { "", true },
             { "playback-time", true },
             { "", true },
+            { "record-level", true },
             { "playback-level", true }
         };
     }

@@ -36,17 +36,17 @@ std::string PlaybackModule::moduleName() const
 
 void PlaybackModule::registerExports()
 {
-    m_playbackController = std::make_shared<PlaybackController>();
-    m_playbackUiActions = std::make_shared<PlaybackUiActions>(m_playbackController);
+    m_controller = std::make_shared<PlaybackController>();
+    m_uiActions = std::make_shared<PlaybackUiActions>(m_controller);
 
-    ioc()->registerExport<IPlaybackController>(moduleName(), m_playbackController);
+    ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
 }
 
 void PlaybackModule::resolveImports()
 {
     auto ar = ioc()->resolve<IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(m_playbackUiActions);
+        ar->reg(m_uiActions);
     }
 }
 
@@ -71,11 +71,16 @@ void PlaybackModule::onInit(const IApplication::RunMode& mode)
         return;
     }
 
-    m_playbackController->init();
+    m_controller->init();
 
     if (mode != IApplication::RunMode::GuiApp) {
         return;
     }
 
-    m_playbackUiActions->init();
+    m_uiActions->init();
+}
+
+void PlaybackModule::onDeinit()
+{
+    m_controller->deinit();
 }

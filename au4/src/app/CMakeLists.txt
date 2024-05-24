@@ -86,6 +86,7 @@ set(LINK_LIB
     project
     projectscene
     playback
+    record
 )
 
 ###########################################

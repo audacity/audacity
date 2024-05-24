@@ -20,7 +20,8 @@ public:
         UNDEFINED = -1,
         SECTION,
         ACTION,
-        PLAYBACK_LEVEL
+        PLAYBACK_LEVEL,
+        RECORD_LEVEL
     };
     Q_ENUM(ItemType)
 

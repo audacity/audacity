@@ -1,43 +1,33 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
- *
- * MuseScore
- * Music Composition & Notation
- *
- * Copyright (C) 2021 MuseScore BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
-#include "playbacktoolbarlevelitem.h"
+* Audacity: A Digital Audio Editor
+*/
+#include "playbacktoolbarrecordlevelitem.h"
 
 #include <QVariantMap>
 
-using namespace au::playback;
+using namespace au::record;
 using namespace au::au3;
 using namespace au::audio;
 
-PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)
+PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)
     : PlaybackToolBarAbstractItem(action, type, parent)
 {
-    playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_active = recordController()->isRecording();
+    });
+
+    record()->audioInput()->recordVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
         m_level = volume;
         emit levelChanged();
     });
 
-    playback()->audioOutput()->playbackSignalChanges()
+    record()->audioInput()->recordSignalChanges()
     .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
         signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+            if (!m_active) {
+                return;
+            }
+
             if (newValue.pressure < MIN_DISPLAYED_DBFS) {
                 setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
             } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
@@ -51,31 +41,31 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
     resetAudioChannelsVolumePressure();
 }
 
-int PlaybackToolBarLevelItem::level() const
+int PlaybackToolBarRecordLevelItem::level() const
 {
     return m_level;
 }
 
-void PlaybackToolBarLevelItem::setLevel(int newLevel)
+void PlaybackToolBarRecordLevelItem::setLevel(int newLevel)
 {
     if (m_level == newLevel) {
         return;
     }
 
-    playback()->audioOutput()->setPlaybackVolume(newLevel);
+    record()->audioInput()->setRecordVolume(newLevel);
 }
 
-float PlaybackToolBarLevelItem::leftChannelPressure() const
+float PlaybackToolBarRecordLevelItem::leftChannelPressure() const
 {
     return m_leftChannelPressure;
 }
 
-float PlaybackToolBarLevelItem::rightChannelPressure() const
+float PlaybackToolBarRecordLevelItem::rightChannelPressure() const
 {
     return m_rightChannelPressure;
 }
 
-void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
+void PlaybackToolBarRecordLevelItem::setLeftChannelPressure(float leftChannelPressure)
 {
     if (qFuzzyCompare(m_leftChannelPressure, leftChannelPressure)) {
         return;
@@ -85,7 +75,7 @@ void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
     emit leftChannelPressureChanged(m_leftChannelPressure);
 }
 
-void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressure)
+void PlaybackToolBarRecordLevelItem::setRightChannelPressure(float rightChannelPressure)
 {
     if (qFuzzyCompare(m_rightChannelPressure, rightChannelPressure)) {
         return;
@@ -95,7 +85,7 @@ void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressur
     emit rightChannelPressureChanged(m_rightChannelPressure);
 }
 
-void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
+void PlaybackToolBarRecordLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
 {
     if (chNum == 0) {
         setLeftChannelPressure(newValue);
@@ -104,18 +94,18 @@ void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioc
     }
 }
 
-void PlaybackToolBarLevelItem::resetAudioChannelsVolumePressure()
+void PlaybackToolBarRecordLevelItem::resetAudioChannelsVolumePressure()
 {
     setLeftChannelPressure(MIN_DISPLAYED_DBFS);
     setRightChannelPressure(MIN_DISPLAYED_DBFS);
 }
 
-float PlaybackToolBarLevelItem::leftRecentPeak() const
+float PlaybackToolBarRecordLevelItem::leftRecentPeak() const
 {
     return m_leftRecentPeak;
 }
 
-void PlaybackToolBarLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
+void PlaybackToolBarRecordLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
 {
     if (qFuzzyCompare(m_leftRecentPeak, newLeftRecentPeak)) {
         return;
@@ -125,12 +115,12 @@ void PlaybackToolBarLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
     emit leftRecentPeakChanged();
 }
 
-float PlaybackToolBarLevelItem::leftMaxPeak() const
+float PlaybackToolBarRecordLevelItem::leftMaxPeak() const
 {
     return m_leftMaxPeak;
 }
 
-void PlaybackToolBarLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
+void PlaybackToolBarRecordLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
 {
     if (qFuzzyCompare(m_leftMaxPeak, newLeftMaxPeak)) {
         return;
@@ -140,12 +130,12 @@ void PlaybackToolBarLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
     emit leftMaxPeakChanged();
 }
 
-float PlaybackToolBarLevelItem::rightRecentPeak() const
+float PlaybackToolBarRecordLevelItem::rightRecentPeak() const
 {
     return m_rightRecentPeak;
 }
 
-void PlaybackToolBarLevelItem::setRightRecentPeak(float newRightRecentPeak)
+void PlaybackToolBarRecordLevelItem::setRightRecentPeak(float newRightRecentPeak)
 {
     if (qFuzzyCompare(m_rightRecentPeak, newRightRecentPeak)) {
         return;
@@ -155,12 +145,12 @@ void PlaybackToolBarLevelItem::setRightRecentPeak(float newRightRecentPeak)
     emit rightRecentPeakChanged();
 }
 
-float PlaybackToolBarLevelItem::rightMaxPeak() const
+float PlaybackToolBarRecordLevelItem::rightMaxPeak() const
 {
     return m_rightMaxPeak;
 }
 
-void PlaybackToolBarLevelItem::setRightMaxPeak(float newRightMaxPeak)
+void PlaybackToolBarRecordLevelItem::setRightMaxPeak(float newRightMaxPeak)
 {
     if (qFuzzyCompare(m_rightMaxPeak, newRightMaxPeak)) {
         return;

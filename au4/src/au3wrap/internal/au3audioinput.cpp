@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "au3audiooutput.h"
+#include "au3audioinput.h"
 
 #include "global/async/async.h"
 
@@ -20,9 +20,9 @@ using namespace muse;
 using namespace muse::async;
 using namespace au::au3;
 
-Au3AudioOutput::Au3AudioOutput()
+Au3AudioInput::Au3AudioInput()
 {
-    m_outputMeter = std::make_shared<InOutMeter>();
+    m_inputMeter = std::make_shared<InOutMeter>();
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
@@ -34,15 +34,15 @@ Au3AudioOutput::Au3AudioOutput()
     });
 }
 
-void Au3AudioOutput::initMeter()
+void Au3AudioInput::initMeter()
 {
     AudacityProject& project = projectRef();
 
     auto& projectAudioIO = ProjectAudioIO::Get(project);
-    projectAudioIO.SetPlaybackMeter(m_outputMeter);
+    projectAudioIO.SetCaptureMeter(m_inputMeter);
 }
 
-muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
+muse::async::Promise<float> Au3AudioInput::recordVolume() const
 {
     return muse::async::Promise<float>([](auto resolve, auto /*reject*/) {
         float inputVolume;
@@ -52,11 +52,11 @@ muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
         auto gAudioIO = AudioIO::Get();
         gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
 
-        return resolve(au3VolumeToLocal(outputVolume));
+        return resolve(au3VolumeToLocal(inputVolume));
     });
 }
 
-void Au3AudioOutput::setPlaybackVolume(float volume)
+void Au3AudioInput::setRecordVolume(float volume)
 {
     muse::async::Async::call(this, [this, volume]() {
         float inputVolume;
@@ -66,23 +66,23 @@ void Au3AudioOutput::setPlaybackVolume(float volume)
         auto gAudioIO = AudioIO::Get();
         gAudioIO->GetMixer(&inputSource, &inputVolume, &outputVolume);
 
-        gAudioIO->SetMixer(inputSource, inputVolume, localVolumeToAu3(volume));
+        gAudioIO->SetMixer(inputSource, localVolumeToAu3(volume), outputVolume);
 
-        m_playbackVolumeChanged.send(volume);
+        m_recordVolumeChanged.send(volume);
     });
 }
 
-muse::async::Channel<float> Au3AudioOutput::playbackVolumeChanged() const
+muse::async::Channel<float> Au3AudioInput::recordVolumeChanged() const
 {
-    return m_playbackVolumeChanged;
+    return m_recordVolumeChanged;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioOutput::playbackSignalChanges() const
+muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioInput::recordSignalChanges() const
 {
-    return m_outputMeter->signalChanges();
+    return m_inputMeter->signalChanges();
 }
 
-AudacityProject& Au3AudioOutput::projectRef() const
+AudacityProject& Au3AudioInput::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;

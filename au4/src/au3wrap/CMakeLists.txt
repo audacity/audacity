@@ -31,6 +31,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iau3wavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3playback.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3record.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3audioinput.h
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
@@ -51,6 +53,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3playback.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiooutput.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3record.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3record.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioinput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioinput.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioinoutmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioinoutmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesmanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesmanager.h
     )
 
 # ==================================
@@ -101,6 +111,9 @@ set(AU3_DEF
     -DREALTIME_EFFECTS_API=
     -DMODULE_MANAGER_API=
     -DWX_INIT_API=
+    -DVIEWPORT_API=
+    -DSNAPPING_API=
+    -DNUMERIC_FORMATS_API=
 
     -DTIME_FREQUENCY_SELECTION_API=
     -DSCREEN_GEOMETRY_API=
@@ -153,6 +166,9 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-project-rate
     ${AU3_LIBRARIES}/lib-track-selection
     ${AU3_LIBRARIES}/lib-audio-devices
+    ${AU3_LIBRARIES}/lib-viewport
+    ${AU3_LIBRARIES}/lib-snapping
+    ${AU3_LIBRARIES}/lib-numeric-formats
 
     # compile lib-audio-io
     ${AU3_LIBRARIES}/lib-audio-io
@@ -333,6 +349,8 @@ if (AU3_ADD_AS_SRC)
 
     ${AU3_LIBRARIES}/lib-track-selection/SyncLock.cpp
     ${AU3_LIBRARIES}/lib-track-selection/SyncLock.h
+    ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.cpp
+    ${AU3_LIBRARIES}/lib-track-selection/TrackFocus.h
 
     ${AU3_LIBRARIES}/lib-project-rate/Decibels.cpp
     ${AU3_LIBRARIES}/lib-project-rate/Decibels.h
@@ -486,6 +504,16 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.cpp
     ${AU3_LIBRARIES}/lib-graphics/FrameStatistics.h
 
+    ${AU3_LIBRARIES}/lib-viewport/Viewport.cpp
+    ${AU3_LIBRARIES}/lib-viewport/Viewport.h
+
+    ${AU3_LIBRARIES}/lib-snapping/ProjectSnap.cpp
+    ${AU3_LIBRARIES}/lib-snapping/ProjectSnap.h
+    ${AU3_LIBRARIES}/lib-snapping/SnapUtils.cpp
+    ${AU3_LIBRARIES}/lib-snapping/SnapUtils.h
+
+    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.cpp
+    ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.h
 
     # Requires wxApp, so we won't use it
     # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp

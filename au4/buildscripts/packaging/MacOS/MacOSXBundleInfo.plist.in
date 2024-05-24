@@ -468,7 +468,9 @@
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>
+	<string>${MACOSX_BUNDLE_COPYRIGHT}</string>        
+        <key>NSMicrophoneUsageDescription</key>
+        <string>Audacity requires access to the microphone only if you intend to record from it.</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.music</string>
 	<key>ATSApplicationFontsPath</key>

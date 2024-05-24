@@ -7,6 +7,8 @@ import QtQuick.Layouts 1.15
 import Muse.UiComponents 1.0
 import Muse.Ui 1.0
 
+import "../components"
+
 Item {
     id: root
 
@@ -19,6 +21,9 @@ Item {
     property alias rightCurrentVolumePressure: rightVolumePressure.currentVolumePressure
     property alias rightRecentPeak: rightVolumePressure.recentPeak
     property alias rightMaxPeak: rightVolumePressure.maxPeak
+
+    property NavigationPanel navigationPanel: null
+    property int navigationOrder: 0
 
     signal volumeLevelChangeRequested(var level)
 
@@ -35,12 +40,12 @@ Item {
         Item {
             Layout.fillWidth: true
             Layout.preferredHeight: parent.height
+            Layout.margins: 4
 
             Column {
                 id: volumePressureContainer
 
                 anchors.fill: parent
-                anchors.margins: 4
 
                 spacing: 2
 
@@ -57,9 +62,14 @@ Item {
                 id: volumeSlider
 
                 anchors.left: parent.left
+                anchors.leftMargin: -handleWidth/2
                 anchors.right: parent.right
+                anchors.rightMargin: -handleWidth/2 + leftVolumePressure.overloadWidth
                 anchors.top: parent.top
-                anchors.topMargin: 3
+                anchors.topMargin: -1
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrder
 
                 onVolumeLevelMoved: function(level) {
                     root.volumeLevelChangeRequested(Math.round(level * 10) / 10)

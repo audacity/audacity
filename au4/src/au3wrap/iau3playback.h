@@ -33,7 +33,7 @@ public:
     virtual muse::async::Channel<audio::msecs_t> playbackPositionMsecs() const = 0;
     virtual muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const = 0;
 
-    virtual std::shared_ptr<IAu3AudioOutput> audioOutput() const = 0;
+    virtual IAu3AudioOutputPtr audioOutput() const = 0;
 };
 using IAu3PlaybackPtr = std::shared_ptr<IAu3Playback>;
 }

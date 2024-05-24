@@ -34,4 +34,8 @@ set(MODULE_SRC
 
     )
 
+set(LINK_LIB
+    record
+)
+
 setup_module()
