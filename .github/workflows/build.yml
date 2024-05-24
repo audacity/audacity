@@ -123,10 +123,10 @@ jobs:
           os: ubuntu-20.04
           force_gcc11: false
           postfix: '-20.04'
-        - name: Ubuntu 20.04 AppImage (x86_64, gcc 11)
-          os: ubuntu-20.04
-          force_gcc11: true
-          postfix: '-20.04-gcc11'
+#        - name: Ubuntu 20.04 AppImage (x86_64, gcc 11)
+#          os: ubuntu-20.04
+#          force_gcc11: true
+#          postfix: '-20.04-gcc11'
         - name: Ubuntu 22.04 AppImage (x86_64)
           os: ubuntu-22.04
           force_gcc11: false
