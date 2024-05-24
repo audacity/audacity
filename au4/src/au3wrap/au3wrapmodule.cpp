@@ -36,6 +36,7 @@
 #include "internal/au3wavepainter.h"
 #include "internal/au3playback.h"
 #include "internal/au3record.h"
+#include "internal/au3audiodevicesmanager.h"
 
 #include "log.h"
 
@@ -51,6 +52,8 @@ void Au3WrapModule::registerExports()
 {
     m_playback = std::make_shared<Au3Playback>();
     m_record = std::make_shared<Au3Record>();
+
+    m_audioDevicesManager = std::make_shared<Au3AudioDevicesManager>();
 
     ioc()->registerExport<IAu3Playback>(moduleName(), m_playback);
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
@@ -75,6 +78,8 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     m_playback->init();
     m_record->init();
+
+    m_audioDevicesManager->init();
 }
 
 void Au3WrapModule::onDeinit()
