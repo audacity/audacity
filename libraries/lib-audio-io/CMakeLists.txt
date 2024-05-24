@@ -20,6 +20,8 @@ set( SOURCES
    ProjectAudioIO.h
    RingBuffer.cpp
    RingBuffer.h
+   TimeQueue.cpp
+   TimeQueue.h
 )
 set( LIBRARIES
    lib-mixer-interface

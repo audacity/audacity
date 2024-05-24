@@ -2,361 +2,93 @@
  
  Audacity: A Digital Audio Editor
  
- @file PlaybackSchedule.h
+ @file TimeQueue.h
  
- Paul Licameli split from AudioIOBase.h
+ Paul Licameli split from PlaybackSchedule.h
  
  **********************************************************************/
+#ifndef __AUDACITY_TIME_QUEUE__
+#define __AUDACITY_TIME_QUEUE__
 
-#ifndef __AUDACITY_PLAYBACK_SCHEDULE__
-#define __AUDACITY_PLAYBACK_SCHEDULE__
+struct PlaybackSchedule;
+class PlaybackState;
+struct PlaybackSlice;
+
+#include <optional>
 
 #include "MemoryX.h"
-#include "MessageBuffer.h"
-#include "Mix.h"
-#include "Observer.h"
-#include <atomic>
-#include <chrono>
 #include <vector>
 
-class AudacityProject;
-struct AudioIOStartStreamOptions;
-class BoundedEnvelope;
-using PRCrossfadeData = std::vector< std::vector < float > >;
+//! A circular buffer
+/*
+ Holds track time values corresponding to every nth sample in the
+ playback buffers, for the large n == TimeQueueGrainSize.
 
-constexpr size_t TimeQueueGrainSize = 2000;
+ The "producer" is the Audio thread that fetches samples from tracks and
+ fills the playback RingBuffers.  The "consumer" is the high-latency
+ PortAudio thread that drains the RingBuffers.  The atomics in the
+ RingBuffer implement lock-free synchronization.
 
-struct RecordingSchedule {
-   double mPreRoll{};
-   double mLatencyCorrection{}; // negative value usually
-   double mDuration{};
-   PRCrossfadeData mCrossfadeData;
+ This other structure relies on the RingBuffer's synchronization, and adds
+ other information to the stream of samples:  which track times they
+ correspond to.
 
-   // These are initialized by the main thread, then updated
-   // only by the thread calling SequenceBufferExchange:
-   double mPosition{};
-   bool mLatencyCorrected{};
-
-   double TotalCorrection() const { return mLatencyCorrection - mPreRoll; }
-   double ToConsume() const;
-   double Consumed() const;
-   double ToDiscard() const;
-};
-
-class Mixer;
-struct PlaybackSchedule;
-
-//! Describes an amount of contiguous (but maybe time-warped) data to be extracted from tracks to play
-struct PlaybackSlice {
-   const size_t frames; //!< Total number of frames to be buffered
-   const size_t toProduce; //!< Not more than `frames`; the difference will be trailing silence
-
-   //! Constructor enforces some invariants
-   /*! @invariant `result.toProduce <= result.frames && result.frames <= available`
-    */
-   PlaybackSlice(
-      size_t available, size_t frames_, size_t toProduce_)
-      : frames{ std::min(available, frames_) }
-      , toProduce{ std::min(toProduce_, frames) }
-   {}
-};
-
-class AUDIO_IO_API PlaybackState
-{
-public:
-   virtual ~PlaybackState();
-
-   double RealDurationElapsed() const;
-
-   //! How much real time left?
-   double RealDurationRemaining() const;
-
-   //! Advance the real time position
-   void RealTimeAdvance(double increment);
-
-   //! Determine starting duration within the first pass -- sometimes not
-   //! zero
-   void RealDurationInit(double duration);
-
-   void RealTimeRestart();
-
-   bool ReversedTime() const { return mT1 < mT0; }
-
-   double mT0{};
-   double mT1{};
-   double mWarpedLength;
-
-   double mLastTime{};
-
-private:
-   //! Accumulated real time (not track position), starting at zero,
-   /// and wrapping back to zero each time around looping play.
-   double              mWarpedTime{};
-};
-
-//! Directs which parts of tracks to fetch for playback
-/*!
- A non-default policy object may be created each time playback begins, and if so it is destroyed when
- playback stops, not reused in the next playback.
-
- Methods of the object are passed a PlaybackSchedule as context.
+ The consumer thread uses that information, and also makes known to the main
+ thread, what the last consumed track time is.  The main thread can use that
+ for other purposes such as refreshing the display of the play head position.
  */
-class AUDIO_IO_API PlaybackPolicy {
+class AUDIO_IO_API TimeQueue {
 public:
-   using Duration = std::chrono::duration<double>;
 
-   //! @section Called by the main thread
+   //! @section called by main thread
 
-   virtual ~PlaybackPolicy() = 0;
-
-   //! Allow extension of PlaybackState; call only when starting playback
-   /*!
-    @post result: `result != nullptr`
-    */
-   virtual std::unique_ptr<PlaybackState> CreateState() const;
-
-   //! Called to update schedule and state for rate, before starting an audio
-   //! stream
-   /*!
-    @param state was made by `this->CreateState()`
-    */
-   virtual void Initialize(const PlaybackSchedule &schedule,
-      PlaybackState &state, double rate);
-
-   //! Called after stopping of an audio stream or an unsuccessful start
-   virtual void Finalize(const PlaybackSchedule &schedule);
-
-   //! Options to use when constructing mixers for each playback track
-   virtual Mixer::WarpOptions
-      MixerWarpOptions(const PlaybackSchedule &schedule);
-
-   //! Times are in seconds
-   struct BufferTimes {
-      Duration batchSize; //!< Try to put at least this much into the ring buffer in each pass
-      Duration latency; //!< Try not to let ring buffer contents fall below this
-      Duration ringBufferDelay; //!< Length of ring buffer
-   };
-   //! Provide hints for construction of playback RingBuffer objects
-   virtual BufferTimes SuggestedBufferTimes(const PlaybackSchedule &schedule);
-
-   //! @section Called by the PortAudio callback thread
-
-   //! Whether repositioning commands are allowed during playback
-   virtual bool AllowSeek(const PlaybackSchedule &schedule);
-
-   //! Called when the play head needs to jump a certain distance
-   /*!
-      @param state was made by `this->CreateState()`
-      @param offset signed amount requested to be added to schedule::GetSequenceTime()
-      @return the new value that will be set as the schedule's track time
-    */
-   virtual double OffsetSequenceTime(
-      const PlaybackSchedule &schedule, PlaybackState &state, double offset);
+   void Reset(double *pLastTime);
+   void Resize(size_t size);
 
    //! @section Called by the AudioIO::SequenceBufferExchange thread
 
-   //! How long to wait between calls to AudioIO::SequenceBufferExchange
-   virtual std::chrono::milliseconds
-      SleepInterval(const PlaybackSchedule &schedule);
-
-   //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
+   //! Enqueue track time value advanced by the slice according to `schedule`'s PlaybackPolicy
    /*!
-    @param state was made by `this->CreateState()`
+    @pre `this` was last `Reset` with a non-null argument
+    @param state was made by `schedule.GetPolicy().CreateState()`
     */
-   virtual PlaybackSlice GetPlaybackSlice(
-      const PlaybackSchedule &schedule, PlaybackState &state,
-      size_t available //!< upper bound for the length of the fetch
-   );
+   void Producer(PlaybackSchedule &schedule,
+      PlaybackState &state, PlaybackSlice slice);
 
-   //! Compute a new point in a track's timeline from an old point and a real duration
+   //! Return the last time saved by Producer
+   double GetLastTime() const;
+
+   void SetLastTime(double time);
+
+   //! @section called by PortAudio callback thread
+
+   //! Find the track time value `nSamples` after the last consumed sample
    /*!
-    Needed because playback might be at non-unit speed.
-
-    Called one or more times between GetPlaybackSlice and RepositionPlayback,
-    until the sum of the nSamples values equals the most recent playback slice
-    (including any trailing silence).
-    
-    @param state was made by `this->CreateState()`
-    @return updated track time, or infinity to enqueue a stop signal
+    @pre `this` was last `Reset` with a non-null argument
+    @return nullopt when playing but no time queue grain boundary was crossed
     */
-   virtual double
-      AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
-         double trackTime, size_t nSamples);
+   std::optional<double> Consumer(size_t nSamples, double rate);
 
-   using Mixers = std::vector<std::unique_ptr<Mixer>>;
+   //! @section called by any thread while producer and consumer are suspended
 
-   //! AudioIO::FillPlayBuffers calls this to update its cursors into tracks for changes of position or speed
-   /*!
-    @param state was made by `this->CreateState()`
-    @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
-    */
-   virtual bool RepositionPlayback(
-      const PlaybackSchedule &schedule, PlaybackState &state,
-      const Mixers &playbackMixers,
-      size_t available //!< how many more samples may be buffered
-   );
-
-   //! @section To be removed
-
-   virtual bool Looping( const PlaybackSchedule &schedule ) const;
-
-protected:
-   double mRate = 0;
-};
-
-struct AUDIO_IO_API PlaybackSchedule {
-   /// Playback starts at offset of mInitT0, which is measured in seconds.
-   double              mInitT0;
-   /// Playback ends at offset of mInitT1, which is measured in seconds.
-   double              mInitT1;
-
-   /// Positive, real length in seconds to be played (if looping, for each
-   /// pass) after warping via a time track
-   double              mInitWarpedLength;
-
-   // mWarpedTime and mWarpedLength are irrelevant when scrubbing,
-   // else they are used in updating mTime,
-   // and when not scrubbing or playing looped, mTime is also used
-   // in the test for termination of playback.
-
-   // with ComputeWarpedLength, it is now possible the calculate the warped length with 100% accuracy
-   // (ignoring accumulated rounding errors during playback) which fixes the 'missing sound at the end' bug
-   
-   const BoundedEnvelope *mEnvelope;
-
-   //! A circular buffer
-   /*
-    Holds track time values corresponding to every nth sample in the
-    playback buffers, for the large n == TimeQueueGrainSize.
-
-    The "producer" is the Audio thread that fetches samples from tracks and
-    fills the playback RingBuffers.  The "consumer" is the high-latency
-    PortAudio thread that drains the RingBuffers.  The atomics in the
-    RingBuffer implement lock-free synchronization.
-
-    This other structure relies on the RingBuffer's synchronization, and adds
-    other information to the stream of samples:  which track times they
-    correspond to.
-
-    The consumer thread uses that information, and also makes known to the main
-    thread, what the last consumed track time is.  The main thread can use that
-    for other purposes such as refreshing the display of the play head position.
-    */
-   class AUDIO_IO_API TimeQueue {
-   public:
-
-      //! @section called by main thread
-
-      void Reset(double *pLastTime);
-      void Resize(size_t size);
-
-      //! @section Called by the AudioIO::SequenceBufferExchange thread
-
-      //! Enqueue track time value advanced by the slice according to `schedule`'s PlaybackPolicy
-      /*!
-         @pre `this` was last `Reset` with a non-null argument
-         @param state was made by `schedule.GetPolicy().CreateState()`
-       */
-      void Producer(PlaybackSchedule &schedule,
-         PlaybackState &state, PlaybackSlice slice);
-
-      //! Return the last time saved by Producer
-      double GetLastTime() const;
-
-      void SetLastTime(double time);
-
-      //! @section called by PortAudio callback thread
-
-      //! Find the track time value `nSamples` after the last consumed sample
-      /*!
-       @pre `this` was last `Reset` with a non-null argument
-       @return nullopt when playing but no time queue grain boundary was crossed
-       */
-      std::optional<double> Consumer(size_t nSamples, double rate);
-
-      //! @section called by any thread while producer and consumer are suspended
-
-      //! Empty the queue and reassign the last produced time
-      /*! Assumes producer and consumer are suspended */
-      void Prime( double time );
-
-   private:
-      struct Record {
-         double timeValue;
-         // More fields to come
-      };
-      using Records = std::vector<Record>;
-      Records mData;
-      double *mpLastTime;
-      struct Cursor {
-         size_t mIndex {};
-         size_t mRemainder {};
-      };
-      //! Aligned to avoid false sharing
-      NonInterfering<Cursor> mHead, mTail;
-   } mTimeQueue;
-
-   PlaybackPolicy &GetPolicy();
-   const PlaybackPolicy &GetPolicy() const;
-
-   std::unique_ptr<PlaybackState> Init(
-      double t0, double t1,
-      const AudioIOStartStreamOptions &options,
-      const RecordingSchedule *pRecordingSchedule );
-
-   /** @brief Compute signed duration (in seconds at playback) of the specified region of the track.
-    *
-    * Takes a region of the time track (specified by the unwarped time points in the project), and
-    * calculates how long it will actually take to play this region back, taking the time track's
-    * warping effects into account.
-    * @param t0 unwarped time to start calculation from
-    * @param t1 unwarped time to stop calculation at
-    * @return the warped duration in seconds, negated if `t0 > t1`
-    */
-   double ComputeWarpedLength(double t0, double t1) const;
-
-   /** @brief Compute how much unwarped time must have elapsed if length seconds of warped time has
-    * elapsed, and add to t0
-    *
-    * @param t0 The unwarped time (seconds from project start) at which to start
-    * @param length How many seconds of real time went past; signed
-    * @return The end point (in seconds from project start) as unwarped time
-    */
-   double SolveWarpedLength(double t0, double length) const;
-
-   /** \brief Get current track time value, unadjusted
-    *
-    * Returns a time in seconds.
-    */
-   double GetSequenceTime() const
-   { return mTime.load(std::memory_order_relaxed); }
-
-   /** \brief Set current track time value, unadjusted
-    */
-   void SetSequenceTime( double time )
-   { mTime.store(time, std::memory_order_relaxed); }
-
-   void ResetMode() {
-      mPolicyValid.store(false, std::memory_order_release);
-   }
-
-   //! Convert time between arguments to real duration, according to
-   //! time track if one is given; result is always nonnegative
-   double RealDuration(double trackTime0, double trackTime1) const;
-
-   //! Convert time between arguments to real duration, according to
-   //! time track if one is given; may be negative
-   double
-   RealDurationSigned(double trackTime0, double trackTime1) const;
+   //! Empty the queue and reassign the last produced time
+   /*! Assumes producer and consumer are suspended */
+   void Prime( double time );
 
 private:
-   /// Current track time position during playback, in seconds.
-   /// Initialized by the main thread but updated by worker threads during
-   /// playback or recording, and periodically reread by the main thread for
-   /// purposes such as display update.
-   std::atomic<double> mTime;
-
-   std::unique_ptr<PlaybackPolicy> mpPlaybackPolicy;
-   std::atomic<bool> mPolicyValid{ false };
+   struct Record {
+      double timeValue;
+      // More fields to come
+   };
+   using Records = std::vector<Record>;
+   Records mData;
+   double *mpLastTime;
+   struct Cursor {
+      size_t mIndex {};
+      size_t mRemainder {};
+   };
+   //! Aligned to avoid false sharing
+   NonInterfering<Cursor> mHead, mTail;
 };
+
 #endif

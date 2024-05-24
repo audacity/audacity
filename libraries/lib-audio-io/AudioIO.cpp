@@ -937,7 +937,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mpState = mPlaybackSchedule.Init(
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
    auto &state = *mpState;
-   mPlaybackSchedule.mTimeQueue.Reset(&state.mLastTime);
+   mTimeQueue.Reset(&state.mLastTime);
 
    unsigned int playbackChannels = 0;
    size_t numCaptureChannels = 0;
@@ -1038,7 +1038,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    }
 
    // Now that we are done with AllocateBuffers() and SetSequenceTime():
-   mPlaybackSchedule.mTimeQueue.Prime(mPlaybackSchedule.GetSequenceTime());
+   mTimeQueue.Prime(mPlaybackSchedule.GetSequenceTime());
    // else recording only without overdub
 
    // We signal the audio thread to call SequenceBufferExchange, to prime the RingBuffers
@@ -1324,7 +1324,7 @@ bool AudioIO::AllocateBuffers(
             const auto timeQueueSize = 1 +
                (playbackBufferSize + TimeQueueGrainSize - 1)
                   / TimeQueueGrainSize;
-            mPlaybackSchedule.mTimeQueue.Resize( timeQueueSize );
+            mTimeQueue.Resize(timeQueueSize);
          }
 
          if( mNumCaptureChannels > 0 )
@@ -1396,7 +1396,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.clear();
    mCaptureBuffers.clear();
    mResample.clear();
-   mPlaybackSchedule.mTimeQueue.Reset(nullptr);
+   mTimeQueue.Reset(nullptr);
 
    if(!bOnlyBuffers)
    {
@@ -1560,7 +1560,7 @@ void AudioIO::StopStream()
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
-   mPlaybackSchedule.mTimeQueue.Reset(nullptr);
+   mTimeQueue.Reset(nullptr);
 
    if (mStreamToken > 0)
    {
@@ -2034,8 +2034,7 @@ bool AudioIO::ProcessPlaybackSlices(
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue
-         .Producer(mPlaybackSchedule, state, slice);
+      mTimeQueue.Producer(mPlaybackSchedule, state, slice);
 
       // mPlaybackMixers correspond one-to-one with mPlaybackSequences
       size_t iSequence = 0;
@@ -2732,7 +2731,7 @@ bool AudioIoCallback::UpdateTimePosition(size_t frames)
 
    // Update the position seen by drawing code
    const auto oldTime = mPlaybackSchedule.GetSequenceTime();
-   if (auto newTime = mPlaybackSchedule.mTimeQueue.Consumer(frames, mRate);
+   if (auto newTime = mTimeQueue.Consumer(frames, mRate);
       !newTime.has_value())
       return true;
    else {
@@ -3230,7 +3229,7 @@ int AudioIoCallback::CallbackDoSeek()
       wxUnusedVar(discarded);
    }
 
-   mPlaybackSchedule.mTimeQueue.Prime(time);
+   mTimeQueue.Prime(time);
 
    // Reload the ring buffers
    ProcessOnceAndWait();

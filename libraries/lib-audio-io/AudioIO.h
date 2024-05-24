@@ -9,7 +9,6 @@
   Use the PortAudio library to play and record sound
 
 **********************************************************************/
-
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
@@ -29,6 +28,7 @@
 #include "Observer.h"
 #include "SampleCount.h"
 #include "SampleFormat.h"
+#include "TimeQueue.h" // member variable
 
 class wxArrayString;
 class AudioIOBase;
@@ -402,6 +402,7 @@ public:
 protected:
    RecordingSchedule mRecordingSchedule{};
    PlaybackSchedule mPlaybackSchedule;
+   TimeQueue mTimeQueue;
    std::unique_ptr<PlaybackState> mpState;
 
    struct TransportState;
@@ -413,7 +414,6 @@ protected:
    bool mLastBelow{ false };
 
 private:
-
    /*!
     Privatize the inherited array but give access by Extensions().
     This class guarantees that this array is populated only with non-null
