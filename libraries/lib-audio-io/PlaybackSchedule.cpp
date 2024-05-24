@@ -342,29 +342,30 @@ void PlaybackSchedule::TimeQueue::SetLastTime(double time)
    mLastTime = time;
 }
 
-double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
+std::optional<double>
+PlaybackSchedule::TimeQueue::Consumer(size_t nSamples, double rate)
 {
    if ( mData.empty() ) {
       // Recording only.  No scrub or playback time warp.  Don't use the queue.
-      return ( mLastTime += nSamples / rate );
+      return { mLastTime += nSamples / rate };
    }
 
    // Don't check available space:  assume it is enough because of coordination
    // with RingBuffer.
    auto remainder = mHead.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
-   const auto size = mData.size();
-   if ( nSamples >= space ) {
-      remainder = 0,
-      mHead.mIndex = (mHead.mIndex + 1) % size,
-      nSamples -= space;
-      if ( nSamples >= TimeQueueGrainSize )
-         mHead.mIndex =
-            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % size,
-         nSamples %= TimeQueueGrainSize;
+   if (nSamples < space) {
+      mHead.mRemainder += nSamples;
+      return {};
    }
-   mHead.mRemainder = remainder + nSamples;
-   return mData[ mHead.mIndex ].timeValue;
+   const auto size = mData.size();
+   mHead.mIndex = (mHead.mIndex + 1) % size;
+   nSamples -= space;
+   if (nSamples >= TimeQueueGrainSize)
+      mHead.mIndex = (mHead.mIndex + (nSamples / TimeQueueGrainSize)) % size,
+      nSamples %= TimeQueueGrainSize;
+   mHead.mRemainder = nSamples;
+   return { mData[ mHead.mIndex ].timeValue };
 }
 
 void PlaybackSchedule::TimeQueue::Prime(double time)

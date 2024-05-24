@@ -226,7 +226,10 @@ struct AUDIO_IO_API PlaybackSchedule {
       //! @section called by PortAudio callback thread
 
       //! Find the track time value `nSamples` after the last consumed sample
-      double Consumer( size_t nSamples, double rate );
+      /*!
+       @return nullopt when playing but no time queue grain boundary was crossed
+       */
+      std::optional<double> Consumer(size_t nSamples, double rate);
 
       //! @section called by any thread while producer and consumer are suspended
 

@@ -200,14 +200,10 @@ public:
    //! from our intermediate playback buffers
    /*!
     @pre 'GetNumPlaybackChannels() > 0'
-    @return how many samples consumed from each RingBuffer, maybe less than
-    framesPerBuffer
     */
-   size_t FillOutputBuffers(
-      float *outputBuffer,
-      unsigned long framesPerBuffer,
-      float *outputMeterFloats
-   );
+   void FillOutputBuffers(
+      float *outputBuffer, size_t framesPerBuffer, size_t toGet,
+      float *outputMeterFloats);
    void ApplyMasterGain(bool paused, float *outputFloats, size_t len);
    //! @return whether recording is finished
    bool DrainInputBuffers(
@@ -216,7 +212,12 @@ public:
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
    );
-   void UpdateTimePosition(size_t frames);
+   //! Update (in realtime thread) the cursor position seen by drawing code
+   //! (later in the main thread)
+   /*!
+    @return false when a stall in the time queue is detected
+    */
+   bool UpdateTimePosition(size_t frames);
    void DoPlaythrough(
       constSamplePtr inputBuffer, 
       float *outputBuffer,

@@ -2623,11 +2623,9 @@ void ClampBuffer(float * pBuffer, unsigned long len){
 };
 
 
-size_t AudioIoCallback::FillOutputBuffers(
-   float *outputBuffer,
-   unsigned long framesPerBuffer,
-   float *outputMeterFloats
-)
+void AudioIoCallback::FillOutputBuffers(
+   float *outputBuffer, size_t framesPerBuffer, size_t toGet,
+   float *outputMeterFloats)
 {
    const auto numPlaybackSequences = mPlaybackSequences.size();
    const auto numPlaybackChannels = GetNumPlaybackChannels();
@@ -2641,10 +2639,6 @@ size_t AudioIoCallback::FillOutputBuffers(
    for (unsigned int c = 0; c < numPlaybackChannels; c++)
       tempBufs[c] = stackAllocate(float, framesPerBuffer);
    // ------ End of MEMORY ALLOCATION ---------------
-
-   // Choose a common size to take from all ring buffers
-   const auto toGet =
-      std::min<size_t>(framesPerBuffer, mMasterBuffers[0]->AvailForGet());
 
    // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
@@ -2697,7 +2691,6 @@ size_t AudioIoCallback::FillOutputBuffers(
    }
 
    mMasterBuffers[0]->Discard(toGet);
-   return toGet;
 }
 
 void AudioIoCallback::ApplyMasterGain(bool paused,
@@ -2723,15 +2716,21 @@ void AudioIoCallback::ApplyMasterGain(bool paused,
    }
 }
 
-void AudioIoCallback::UpdateTimePosition(size_t frames)
+bool AudioIoCallback::UpdateTimePosition(size_t frames)
 {
    // Quick returns if next to nothing to do.
    if (mStreamToken <= 0)
-      return;
+      return true;
 
    // Update the position seen by drawing code
-   mPlaybackSchedule.SetSequenceTime(
-      mPlaybackSchedule.mTimeQueue.Consumer(frames, mRate));
+   const auto oldTime = mPlaybackSchedule.GetSequenceTime();
+   if (auto newTime = mPlaybackSchedule.mTimeQueue.Consumer(frames, mRate);
+      !newTime.has_value())
+      return true;
+   else {
+      mPlaybackSchedule.SetSequenceTime(*newTime);
+      return oldTime != *newTime;
+   }
 }
 
 // return true, IFF we have fully handled the callback.
@@ -3054,16 +3053,10 @@ int AudioIoCallback::AudioCallback(
    const PaStreamCallbackTimeInfo *timeInfo,
    const PaStreamCallbackFlags statusFlags, void * WXUNUSED(userData) )
 {
-   // Check this atomic, which the main thread might change, only once during
-   // this callback
-   const bool paused = IsPaused();
-
    // Poll sequences for change of state.
    // (User might click mute and solo buttons.)
    mbHasSoloSequences = CountSoloingSequences() > 0 ;
    auto callbackReturn = paContinue;
-
-   OtherSynchronization(paused, framesPerBuffer, timeInfo);
 
    // ------ MEMORY ALLOCATIONS -----------------------------------------------
    // tempFloats will be a reusable scratch pad for (possibly format converted)
@@ -3132,10 +3125,20 @@ int AudioIoCallback::AudioCallback(
       // Nothing to do but move the cursor onwards
       UpdateTimePosition(framesPerBuffer);
    }
-   else if (const auto frames = FillOutputBuffers(
-      outputBuffer, framesPerBuffer, outputMeterFloats);
+   else if (const auto frames =
+      // Choose a common size to take from all ring buffers
+      std::min<size_t>(framesPerBuffer, mMasterBuffers[0]->AvailForGet());
       frames > 0)
    {
+      // Move the cursor, maybe by less than framesPerBuffer.
+      // Note that AvailForGet performed an atomic acquire, synchronizing
+      // the following use of the time queue.
+      // When there is no progress, assume that playback was paused.
+      const bool paused = !UpdateTimePosition(frames);
+
+      OtherSynchronization(paused, framesPerBuffer, timeInfo);
+      FillOutputBuffers(outputBuffer,
+         framesPerBuffer, frames, outputMeterFloats);
       ApplyMasterGain(paused, outputBuffer, frames);
       ClampBuffer(outputBuffer, framesPerBuffer * numPlaybackChannels);
       if (outputMeterFloats != outputBuffer)
@@ -3147,8 +3150,6 @@ int AudioIoCallback::AudioCallback(
             ext.SignalOtherCompletion();
          callbackReturn = paComplete;
       }
-      // Move the cursor, maybe by less than framesPerBuffer
-      UpdateTimePosition(frames);
       mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
    }
 
