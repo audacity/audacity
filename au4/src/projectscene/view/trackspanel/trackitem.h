@@ -18,6 +18,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool outputOnly READ outputOnly CONSTANT)
 
+    Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
@@ -38,8 +39,8 @@ public:
 
     void init(const processing::Track& track);
 
-    muse::ID id() const;
-
+    processing::TrackId trackId() const;
+    QVariant trackId_property() const;
     QString title() const;
 
     float leftChannelPressure() const;
@@ -106,11 +107,10 @@ protected:
     void addBlankSlots(size_t count);
     void removeBlankSlotsFromEnd(size_t count);
 
-    muse::ID m_trackId = -1;
-
     // muse::audio::AudioSignalChanges m_audioSignalChanges;
     processing::AudioOutputParams m_outParams;
 
+    processing::TrackId m_trackId = -1;
     QString m_title;
     bool m_outputOnly = false;
 
