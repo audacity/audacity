@@ -933,11 +933,11 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mPlaybackMixers.clear();
    mCaptureBuffers.clear();
    mResample.clear();
-   mPlaybackSchedule.mTimeQueue.Clear();
 
    mpState = mPlaybackSchedule.Init(
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
    auto &state = *mpState;
+   mPlaybackSchedule.mTimeQueue.Reset(&state.mLastTime);
 
    unsigned int playbackChannels = 0;
    size_t numCaptureChannels = 0;
@@ -1396,7 +1396,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackMixers.clear();
    mCaptureBuffers.clear();
    mResample.clear();
-   mPlaybackSchedule.mTimeQueue.Clear();
+   mPlaybackSchedule.mTimeQueue.Reset(nullptr);
 
    if(!bOnlyBuffers)
    {
@@ -1560,7 +1560,7 @@ void AudioIO::StopStream()
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
-   mPlaybackSchedule.mTimeQueue.Clear();
+   mPlaybackSchedule.mTimeQueue.Reset(nullptr);
 
    if (mStreamToken > 0)
    {

@@ -86,6 +86,8 @@ public:
    double mT1{};
    double mWarpedLength;
 
+   double mLastTime{};
+
 private:
    //! Accumulated real time (not track position), starting at zero,
    /// and wrapping back to zero each time around looping play.
@@ -189,7 +191,7 @@ public:
     @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
     */
    virtual bool RepositionPlayback(
-      PlaybackSchedule &schedule, PlaybackState &state,
+      const PlaybackSchedule &schedule, PlaybackState &state,
       const Mixers &playbackMixers,
       size_t available //!< how many more samples may be buffered
    );
@@ -245,13 +247,14 @@ struct AUDIO_IO_API PlaybackSchedule {
 
       //! @section called by main thread
 
-      void Clear();
+      void Reset(double *pLastTime);
       void Resize(size_t size);
 
       //! @section Called by the AudioIO::SequenceBufferExchange thread
 
       //! Enqueue track time value advanced by the slice according to `schedule`'s PlaybackPolicy
       /*!
+         @pre `this` was last `Reset` with a non-null argument
          @param state was made by `schedule.GetPolicy().CreateState()`
        */
       void Producer(PlaybackSchedule &schedule,
@@ -266,6 +269,7 @@ struct AUDIO_IO_API PlaybackSchedule {
 
       //! Find the track time value `nSamples` after the last consumed sample
       /*!
+       @pre `this` was last `Reset` with a non-null argument
        @return nullopt when playing but no time queue grain boundary was crossed
        */
       std::optional<double> Consumer(size_t nSamples, double rate);
@@ -283,7 +287,7 @@ struct AUDIO_IO_API PlaybackSchedule {
       };
       using Records = std::vector<Record>;
       Records mData;
-      double mLastTime {};
+      double *mpLastTime;
       struct Cursor {
          size_t mIndex {};
          size_t mRemainder {};

@@ -409,8 +409,8 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &schedule, PlaybackState &,
-   const Mixers &playbackMixers, size_t available)
+   const PlaybackSchedule &schedule,
+   PlaybackState &, const Mixers &playbackMixers, size_t available)
 {
    auto gAudioIO = AudioIO::Get();
 

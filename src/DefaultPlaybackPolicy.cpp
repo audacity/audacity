@@ -77,13 +77,13 @@ DefaultPlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
    return { 0.05s, 0.05s, 0.25s };
 }
 
-bool DefaultPlaybackPolicy::RevertToOldDefault(
-   const PlaybackSchedule &schedule, const PlaybackState &st) const
+bool DefaultPlaybackPolicy::RevertToOldDefault(const PlaybackState &st) const
 {
    auto &state = static_cast<const DPPState&>(st);
+   // state.mLastTime is updated when putting into the time queue
    return !state.mLoopEnabled ||
       // Even if loop is enabled, ignore it if right of looping region
-      schedule.mTimeQueue.GetLastTime() > mLoopEndTime;
+      state.mLastTime > mLoopEndTime;
 }
 
 double DefaultPlaybackPolicy::OffsetSequenceTime(
@@ -113,7 +113,7 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
 
 PlaybackSlice
 DefaultPlaybackPolicy::GetPlaybackSlice(
-   const PlaybackSchedule &schedule, PlaybackState &st, size_t available)
+   const PlaybackSchedule &, PlaybackState &st, size_t available)
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mLastPlaySpeed = state.mLastPlaySpeed;
@@ -130,7 +130,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
       toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
       auto realTime = realTimeRemaining;
       double extra = 0;
-      if (RevertToOldDefault(schedule, st)) {
+      if (RevertToOldDefault(st)) {
          // Produce some extra silence so that the time queue consumer can
          // satisfy its end condition
          const double extraRealTime =
@@ -160,7 +160,7 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mRemaining = state.mRemaining;
-   bool revert = RevertToOldDefault(schedule, st);
+   bool revert = RevertToOldDefault(st);
    if (!mVariableSpeed && revert)
       return PlaybackPolicy
          ::AdvancedTrackTime(schedule, state, trackTime, nSamples);
@@ -187,7 +187,8 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
    return trackTime;
 }
 
-bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
+bool DefaultPlaybackPolicy::RepositionPlayback(
+   const PlaybackSchedule &schedule,
    PlaybackState &st, const Mixers &playbackMixers, size_t available)
 {
    auto &state = static_cast<DPPState&>(st);
@@ -214,9 +215,9 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    // Looping may become enabled if the main thread said so, but require too
    // that the loop region is non-empty and the play head is not far to its
    // right
-   bool loopWasEnabled = !RevertToOldDefault(schedule, st);
+   bool loopWasEnabled = !RevertToOldDefault(st);
    mLoopEnabled = data.mLoopEnabled && !empty &&
-      schedule.mTimeQueue.GetLastTime() <= data.mT1 + allowance;
+      state.mLastTime <= data.mT1 + allowance;
 
    // Four cases:  looping transitions off, or transitions on, or stays on,
    // or stays off.
@@ -239,7 +240,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
       state.mWarpedLength = schedule.RealDuration(state.mT0, state.mT1);
 
       // This may read an infinity
-      auto newTime = schedule.mTimeQueue.GetLastTime();
+      auto newTime = state.mLastTime;
 #if 0
       // This would make play jump forward or backward into the adjusted
       // looping region if not already in it
@@ -250,7 +251,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
          newTime = state.mT0;
 
       // So that the play head will redraw in the right place:
-      schedule.mTimeQueue.SetLastTime(newTime);
+      state.mLastTime = newTime;
 
       state.RealDurationInit(schedule.RealDurationSigned(state.mT0, newTime));
       const auto realTimeRemaining =
@@ -263,7 +264,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    else {
       // ... else the region did not change, or looping is now off, in
       // which case we have nothing special to do
-      if (RevertToOldDefault(schedule, st))
+      if (RevertToOldDefault(st))
          return PlaybackPolicy::RepositionPlayback(schedule, state,
             playbackMixers, available);
    }
@@ -281,7 +282,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(PlaybackSchedule &schedule,
    else if (kicked)
    {
       // Play bounds need redefinition
-      const auto time = schedule.mTimeQueue.GetLastTime();
+      const auto time = state.mLastTime;
       for (auto &pMixer : playbackMixers) {
          // So that the mixer will fetch the next samples from the right place:
          pMixer->SetTimesAndSpeed(time, state.mT1, mLastPlaySpeed);

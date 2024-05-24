@@ -48,14 +48,14 @@ public:
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) override;
 
-   bool RepositionPlayback(PlaybackSchedule &schedule, PlaybackState &state,
-      const Mixers &playbackMixers, size_t available) override;
+   bool RepositionPlayback(const PlaybackSchedule &schedule,
+      PlaybackState &state, const Mixers &playbackMixers, size_t available)
+   override;
 
    bool Looping( const PlaybackSchedule & ) const override;
 
 private:
-   bool RevertToOldDefault(const PlaybackSchedule &schedule,
-      const PlaybackState &state) const;
+   bool RevertToOldDefault(const PlaybackState &state) const;
    void WriteMessage();
    double GetPlaySpeed();
 

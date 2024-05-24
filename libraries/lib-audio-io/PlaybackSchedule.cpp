@@ -166,7 +166,7 @@ double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
 }
 
 bool PlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &, PlaybackState &, const Mixers &, size_t)
+   const PlaybackSchedule &, PlaybackState &, const Mixers &, size_t)
 {
    return true;
 }
@@ -279,8 +279,9 @@ double RecordingSchedule::ToDiscard() const
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
 
-void PlaybackSchedule::TimeQueue::Clear()
+void PlaybackSchedule::TimeQueue::Reset(double *pLastTime)
 {
+   mpLastTime = pLastTime;
    mData = Records{};
    mHead = {};
    mTail = {};
@@ -294,6 +295,7 @@ void PlaybackSchedule::TimeQueue::Resize(size_t size)
 void PlaybackSchedule::TimeQueue::Producer(
    PlaybackSchedule &schedule, PlaybackState &state, PlaybackSlice slice)
 {
+   assert(mpLastTime);
    auto &policy = schedule.GetPolicy();
 
    if ( mData.empty() )
@@ -303,7 +305,7 @@ void PlaybackSchedule::TimeQueue::Producer(
    // Don't check available space:  assume it is enough because of coordination
    // with RingBuffer.
    auto index = mTail.mIndex;
-   auto time = mLastTime;
+   auto time = *mpLastTime;
    auto remainder = mTail.mRemainder;
    auto space = TimeQueueGrainSize - remainder;
    const auto size = mData.size();
@@ -335,27 +337,29 @@ void PlaybackSchedule::TimeQueue::Producer(
       space = TimeQueueGrainSize;
    }
 
-   mLastTime = time;
+   *mpLastTime = time;
    mTail.mRemainder = remainder + frames;
    mTail.mIndex = index;
 }
 
 double PlaybackSchedule::TimeQueue::GetLastTime() const
 {
-   return mLastTime;
+   return mpLastTime ? *mpLastTime : 0;
 }
 
 void PlaybackSchedule::TimeQueue::SetLastTime(double time)
 {
-   mLastTime = time;
+   if (mpLastTime)
+      *mpLastTime = time;
 }
 
 std::optional<double>
 PlaybackSchedule::TimeQueue::Consumer(size_t nSamples, double rate)
 {
+   assert(mpLastTime);
    if ( mData.empty() ) {
       // Recording only.  No scrub or playback time warp.  Don't use the queue.
-      return { mLastTime += nSamples / rate };
+      return { *mpLastTime += nSamples / rate };
    }
 
    // Don't check available space:  assume it is enough because of coordination
@@ -379,7 +383,7 @@ PlaybackSchedule::TimeQueue::Consumer(size_t nSamples, double rate)
 void PlaybackSchedule::TimeQueue::Prime(double time)
 {
    mHead = mTail = {};
-   mLastTime = time;
+   SetLastTime(time);
    if ( !mData.empty() )
       mData[0].timeValue = time;
 }
