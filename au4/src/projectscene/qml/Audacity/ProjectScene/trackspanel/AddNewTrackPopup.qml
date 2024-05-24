@@ -1,9 +1,11 @@
 import QtQuick
 import QtQuick.Layouts
 
-import Audacity.ProjectScene
-import Muse.UiComponents
 import Muse.Ui
+import Muse.UiComponents
+
+import Audacity.ProjectScene
+
 
 StyledPopupView {
     id: root

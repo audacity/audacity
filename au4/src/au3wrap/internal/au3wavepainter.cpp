@@ -403,15 +403,15 @@ ClipParameters::ClipParameters(const WaveGeometry& geomet, double zoom)
     t0 = drawLeft / zoom;
     t1 = drawWidth / zoom;
 
-    LOGDA() << " relClipLeft: " << geometry.relClipLeft
-            << " clipWidth: " << geometry.clipWidth
-            << " frameLeft: " << geometry.frameLeft
-            << " frameWidth: " << geometry.frameWidth
-            << " draw width: " << drawWidth
-            << " draw left: " << drawLeft
-            << " t0: " << t0
-            << " t1: " << t1
-    ;
+    // LOGDA() << " relClipLeft: " << geometry.relClipLeft
+    //         << " clipWidth: " << geometry.clipWidth
+    //         << " frameLeft: " << geometry.frameLeft
+    //         << " frameWidth: " << geometry.frameWidth
+    //         << " draw width: " << drawWidth
+    //         << " draw left: " << drawLeft
+    //         << " t0: " << t0
+    //         << " t1: " << t1
+    // ;
 }
 
 void DrawIndividualSamples(int channelIndex, QPainter& painter, const QRect& rect,

@@ -2,14 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 import QtQuick
-import QtQuick.Layouts 1.15
+import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
-
-import "internal"
 
 Item {
     id: root
