@@ -449,10 +449,10 @@ TrackItem* TracksListModel::buildTrackItem(const Track& track)
     return item;
 }
 
-TrackItem* TracksListModel::findTrackItem(const muse::ID& trackId)
+TrackItem* TracksListModel::findTrackItem(const processing::TrackId& trackId)
 {
     for (TrackItem* track: m_trackList) {
-        if (track->id() == trackId) {
+        if (track->trackId() == trackId) {
             return track;
         }
     }

@@ -11,8 +11,15 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
 
+    height: trackGeometry.trackHeight
+
     ClipsListModel {
         id: clipsModel
+    }
+
+    TrackGeometryModel {
+        id: trackGeometry
+        trackId: root.trackId
     }
 
     Component.onCompleted: {
@@ -50,6 +57,21 @@ Item {
         }
 
         onReset: clipsModel.resetSelection()
+    }
+
+    MouseArea {
+        id: dragArea
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 4
+
+        cursorShape: Qt.SizeVerCursor
+
+        onPositionChanged: function(mouse) {
+            trackGeometry.changeTrackHeight(mouse.y)
+        }
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

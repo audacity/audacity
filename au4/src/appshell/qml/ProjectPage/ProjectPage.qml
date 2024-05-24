@@ -24,8 +24,8 @@ import QtQuick.Controls
 
 import Muse.Ui
 import Muse.UiComponents
-
 import Muse.Dock
+
 import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback

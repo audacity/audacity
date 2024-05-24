@@ -27,15 +27,21 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectscenemodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/itracksgeometrycontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/wavestyle.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksgeometrycontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksgeometrycontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/trackgeometrymodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/trackgeometrymodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h
@@ -68,4 +74,3 @@ set(MODULE_DEF
 )
 
 setup_module()
-
