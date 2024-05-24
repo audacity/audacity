@@ -624,8 +624,7 @@ private:
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
    bool ProcessPlaybackSlices(
-      std::optional<RealtimeEffects::ProcessingScope> &pScope,
-      size_t available);
+      std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
 
    //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();

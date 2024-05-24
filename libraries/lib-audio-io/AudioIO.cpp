@@ -1974,14 +1974,15 @@ void AudioIO::FillPlayBuffers()
    };
 
    while (true) {
-      // Limit maximum buffer size (increases performance)
-      auto available = std::min( nAvailable,
-         std::max( nNeeded, mPlaybackSamplesToCopy ) );
+      auto demand = std::max(nNeeded, mPlaybackSamplesToCopy);
+      // TODO:  If demand is often more than available, we should somehow adapt
+      // buffer sizes in later playback, or make some suggestion to the user
+      demand = std::min(nAvailable, demand);
 
       // After each loop pass or after break
       Finally Do{ Flush };
 
-      if (!ProcessPlaybackSlices(pScope, available))
+      if (!ProcessPlaybackSlices(pScope, demand))
          // We are not making progress.  May fail to satisfy the minimum but
          // won't loop forever
          break;
@@ -1998,7 +1999,7 @@ void AudioIO::FillPlayBuffers()
 }
 
 bool AudioIO::ProcessPlaybackSlices(
-   std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t available)
+   std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
 
@@ -2012,9 +2013,13 @@ bool AudioIO::ProcessPlaybackSlices(
    bool progress = false;
    size_t allProduced = 0;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
+   const bool paused = IsPaused();
    do {
-      const auto slice =
-         policy.GetPlaybackSlice(mPlaybackSchedule, available);
+      const auto slice = paused
+         ? // satisfy entire demand with 0s; just one loop pass
+            PlaybackSlice{ demand, demand, 0 }
+         : // maybe multiple loop passes, for non-contiguous fetches from tracks
+            policy.GetPlaybackSlice(mPlaybackSchedule, demand);
       const auto &[frames, toProduce] = slice;
       progress = progress || toProduce > 0;
 
@@ -2055,12 +2060,11 @@ bool AudioIO::ProcessPlaybackSlices(
       }
 
       allProduced += frames;
-      available -= frames;
-      // wxASSERT(available >= 0); // don't assert on this thread
+      demand -= frames;
 
-      done = policy.RepositionPlayback(mPlaybackSchedule, mPlaybackMixers,
-         available);
-   } while (available && !done);
+      done = !paused &&
+         policy.RepositionPlayback(mPlaybackSchedule, mPlaybackMixers, demand);
+   } while (demand && !done);
 
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per sequence, after all the little slices have been written.
@@ -3115,11 +3119,6 @@ int AudioIoCallback::AudioCallback(
       outputBuffer,
       framesPerBuffer,
       outputMeterFloats);
-
-   // Test for no sequence audio to play (because we are paused and have faded
-   // out)
-   if (paused && (!mbMicroFades || mOldMasterGain == 0.0f))
-      return callbackReturn;
 
    // To add sequence output to output (to play sound on speaker)
    // possible exit, if we were seeking.
