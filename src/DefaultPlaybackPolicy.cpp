@@ -12,6 +12,7 @@
 #include "ProjectAudioIO.h"
 #include "SampleCount.h"
 #include "ViewInfo.h"
+#include <memory>
 
 namespace {
 struct DPPState : AssignablePlaybackState<DPPState> {
@@ -190,8 +191,8 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool DefaultPlaybackPolicy::RepositionPlayback(
-   const PlaybackSchedule &schedule,
-   PlaybackState &st, const Mixers &playbackMixers, size_t available) const
+   const PlaybackSchedule &schedule, PlaybackState &st,
+   Mixer *pMixer, size_t available) const
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mLastPlaySpeed = state.mLastPlaySpeed;
@@ -269,7 +270,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
       // which case we have nothing special to do
       if (state.RevertToOldDefault())
          return PlaybackPolicy::RepositionPlayback(schedule, state,
-            playbackMixers, available);
+            pMixer, available);
    }
 
    // msmeyer: If playing looped, check if we are at the end of the buffer
@@ -277,20 +278,16 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    if (mRemaining <= 0)
    {
       // Looping jumps left
-      for (auto &pMixer : playbackMixers)
-         pMixer->SetTimesAndSpeed(
-            state.mT0, state.mT1, mLastPlaySpeed, true);
+      if (pMixer)
+         pMixer->SetTimesAndSpeed(state.mT0, state.mT1, mLastPlaySpeed, true);
       state.RealTimeRestart();
    }
-   else if (kicked)
-   {
+   else if (pMixer && kicked) {
       // Play bounds need redefinition
       const auto time = state.mLastTime;
-      for (auto &pMixer : playbackMixers) {
-         // So that the mixer will fetch the next samples from the right place:
-         pMixer->SetTimesAndSpeed(time, state.mT1, mLastPlaySpeed);
-         pMixer->Reposition(time, true);
-      }
+      // So that the mixer will fetch the next samples from the right place:
+      pMixer->SetTimesAndSpeed(time, state.mT1, mLastPlaySpeed);
+      pMixer->Reposition(time, true);
    }
    return false;
 }

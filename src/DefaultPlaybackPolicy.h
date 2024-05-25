@@ -50,7 +50,7 @@ public:
          double trackTime, size_t nSamples) const override;
 
    bool RepositionPlayback(const PlaybackSchedule &schedule,
-      PlaybackState &state, const Mixers &playbackMixers, size_t available)
+      PlaybackState &state, Mixer *pMixer, size_t available)
    const override;
 
    bool Looping( const PlaybackSchedule & ) const override;

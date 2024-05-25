@@ -170,7 +170,7 @@ double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
 }
 
 bool PlaybackPolicy::RepositionPlayback(
-   const PlaybackSchedule &, PlaybackState &, const Mixers &, size_t) const
+   const PlaybackSchedule &, PlaybackState &, Mixer *, size_t) const
 {
    return true;
 }

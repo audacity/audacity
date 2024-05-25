@@ -435,7 +435,7 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
    const PlaybackSchedule &schedule, PlaybackState &st,
-   const Mixers &playbackMixers, size_t available) const
+   Mixer *pMixer, size_t available) const
 {
    auto &state = static_cast<SPPState&>(st);
    auto &[mScrubDuration, mStartSample, mEndSample,
@@ -474,15 +474,11 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
          else
             mScrubSpeed =
                double(diff) / mScrubDuration.as_double();
-         if (!mSilentScrub)
-         {
-            for (auto &pMixer : playbackMixers) {
-               if (mOptions.isKeyboardScrubbing)
-                  pMixer->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
-               else
-                  pMixer->SetTimesAndSpeed(
-                     startTime, endTime, fabs( mScrubSpeed ));
-            }
+         if (pMixer && !mSilentScrub) {
+            if (mOptions.isKeyboardScrubbing)
+               pMixer->SetSpeedForKeyboardScrubbing(mScrubSpeed, startTime);
+            else
+               pMixer->SetTimesAndSpeed(startTime, endTime, fabs(mScrubSpeed));
          }
       }
    }

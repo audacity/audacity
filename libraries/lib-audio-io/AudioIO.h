@@ -404,6 +404,7 @@ protected:
    PlaybackSchedule mPlaybackSchedule;
    TimeQueue mTimeQueue;
    std::unique_ptr<PlaybackState> mpState;
+   std::vector<std::unique_ptr<PlaybackState>> mStates;
 
    struct TransportState;
    //! Holds some state for duration of playback or recording

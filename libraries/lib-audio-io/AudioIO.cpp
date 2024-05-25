@@ -931,6 +931,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
+   mStates.clear();
    mCaptureBuffers.clear();
    mResample.clear();
 
@@ -1040,6 +1041,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // Now that we are done with AllocateBuffers() and SetSequenceTime():
    mTimeQueue.Prime(mPlaybackSchedule.GetSequenceTime());
    // else recording only without overdub
+
+   // Copy state, after time queue may have changed it
+   for (auto &pState : mStates)
+      pState->Assign(*mpState);
 
    // We signal the audio thread to call SequenceBufferExchange, to prime the RingBuffers
    // so that they will have data in them when the stream starts.  Having the
@@ -1250,6 +1255,7 @@ bool AudioIO::AllocateBuffers(
                   reinterpret_cast<float*>(buffer.ptr()));
             }
             mPlaybackMixers.clear();
+            mStates.clear();
 
             const auto &warpOptions =
                policy.MixerWarpOptions(mPlaybackSchedule);
@@ -1319,6 +1325,7 @@ bool AudioIO::AllocateBuffers(
                   nullptr, // no custom mix-down
                   Mixer::ApplyGain::Discard // don't apply gains
                ));
+               mStates.push_back(mPlaybackSchedule.GetPolicy().CreateState());
             }
 
             const auto timeQueueSize = 1 +
@@ -1408,6 +1415,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
+   mStates.clear();
 }
 
 bool AudioIO::IsAvailable(AudacityProject &project) const
@@ -1560,6 +1568,7 @@ void AudioIO::StopStream()
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackMixers.clear();
+   mStates.clear();
    mTimeQueue.Reset(nullptr);
 
    if (mStreamToken > 0)
@@ -2003,11 +2012,42 @@ void AudioIO::FillPlayBuffers()
    }
 }
 
+// Assertion expects time1, if defined, to be within a tolerance of time2;
+// if it is not defined, store the other value for the next test
+static inline void debugTimes(
+   std::optional<double> &oTime1, double time2, double rate)
+{
+#ifndef NDEBUG
+   if (!oTime1) {
+      oTime1.emplace(time2);
+      return;
+   }
+   auto &time1 = *oTime1;
+   assert(std::isfinite(time1)
+      ? std::isfinite(time2) && (fabs(time2 - time1)) < 1.0 / rate
+      : !std::isfinite(time2));
+#endif
+}
+
+// Determine how many samples to pull from tracks, and how much silence for
+// trailing padding
+static PlaybackSlice FindSlice(const PlaybackSchedule &playbackSchedule,
+   PlaybackState &state, size_t demand, const bool paused)
+{
+   if (!paused) {
+      auto &policy = playbackSchedule.GetPolicy();
+      return policy.GetPlaybackSlice(playbackSchedule, state, demand);
+   }
+   // satisfy entire demand with 0s
+   return PlaybackSlice{ demand, demand, 0 };
+}
+
 bool AudioIO::ProcessPlaybackSlices(
    std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
    auto &state = *mpState;
+   auto &lastTime = state.mLastTime;
 
    // msmeyer: When playing a very short selection in looped
    // mode, the selection must be copied to the buffer multiple
@@ -2021,11 +2061,9 @@ bool AudioIO::ProcessPlaybackSlices(
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const bool paused = IsPaused();
    do {
-      const auto slice = paused
-         ? // satisfy entire demand with 0s; just one loop pass
-            PlaybackSlice{ demand, demand, 0 }
-         : // maybe multiple loop passes, for non-contiguous fetches from tracks
-            policy.GetPlaybackSlice(mPlaybackSchedule, state, demand);
+      std::optional<double> debugPrevTime,
+         debugNextTime;
+      const auto slice = FindSlice(mPlaybackSchedule, state, demand, paused);
       const auto &[frames, toProduce] = slice;
       progress = progress || toProduce > 0;
 
@@ -2034,12 +2072,15 @@ bool AudioIO::ProcessPlaybackSlices(
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
+      debugTimes(debugPrevTime, lastTime, mRate);
       mTimeQueue.Producer(mPlaybackSchedule, state, slice);
+      debugTimes(debugNextTime, lastTime, mRate);
 
-      // Mixers correspond one-to-one with channel groups
+      // Mixers correspond one-to-one with channel groups and mStates
       // but ring buffers may be many-to-one with channel groups
       size_t iBuffer = 0;
       size_t iSequence = 0;
+      bool allDone = true;
       for (const auto vt : mPlaybackSequences) {
          Finally Do{ [&]{
             ++iSequence;
@@ -2051,17 +2092,35 @@ bool AudioIO::ProcessPlaybackSlices(
          const auto pGroup = vt->FindChannelGroup();
          if (!pGroup)
             continue;
+
+         // For now update all states identically
+         auto &trackState = *mStates[iSequence];
+         (void) FindSlice(mPlaybackSchedule, trackState, demand, paused);
+
          auto &mixer = *mPlaybackMixers[iSequence];
          const auto buffers = &mPlaybackBuffers[iBuffer];
          ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
+
+         // reproduce the side effect on state that TimeQueue::Producer does
+         auto &myLastTime = trackState.mLastTime;
+         debugTimes(debugPrevTime, myLastTime, mRate);
+         myLastTime = policy.AdvancedTrackTime(
+            mPlaybackSchedule, trackState, myLastTime, toProduce);
+         debugTimes(debugNextTime, myLastTime, mRate);
+         if (!paused)
+            allDone = policy.RepositionPlayback(mPlaybackSchedule,
+               trackState, &mixer, demand - frames) && allDone;
       }
 
       allProduced += frames;
       demand -= frames;
 
-      done = !paused &&
-         policy.RepositionPlayback(mPlaybackSchedule, state, mPlaybackMixers,
-            demand);
+      if (!paused) {
+         // Update the main state, maybe when playing MIDI only with no mixers
+         done = policy.RepositionPlayback(mPlaybackSchedule, state,
+            nullptr, demand);
+         assert(mPlaybackSequences.empty() || (done == allDone));
+      }
    } while (demand && !done);
 
    // Do any realtime effect processing, more efficiently in at most
@@ -3250,6 +3309,8 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    mTimeQueue.Prime(time);
+   for (auto &pState : mStates)
+      pState->Assign(*mpState);
 
    // Reload the ring buffers
    ProcessOnceAndWait();

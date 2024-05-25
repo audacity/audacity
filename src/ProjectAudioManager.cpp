@@ -135,7 +135,7 @@ public:
       PlaybackState &state, double trackTime, size_t nSamples) const override;
 
    bool RepositionPlayback(const PlaybackSchedule &schedule,
-      PlaybackState &state, const Mixers &playbackMixers, size_t available)
+      PlaybackState &state, Mixer *pMixer, size_t available)
    const override;
 
 private:
@@ -294,13 +294,13 @@ double CutPreviewPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback(const PlaybackSchedule &,
-   PlaybackState &st, const Mixers &playbackMixers, size_t) const
+   PlaybackState &st, Mixer *pMixer, size_t) const
 {
    auto &state = static_cast<CPPPState&>(st);
    if (auto &mDiscontinuity = state.mData.mDiscontinuity) {
       mDiscontinuity = false;
       auto newTime = GapEnd();
-      for (auto &pMixer : playbackMixers)
+      if (pMixer)
          pMixer->Reposition(newTime, true);
       // Tell SequenceBufferExchange that we aren't done yet
       return false;

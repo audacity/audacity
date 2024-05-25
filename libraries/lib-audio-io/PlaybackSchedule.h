@@ -191,17 +191,16 @@ public:
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) const;
 
-   using Mixers = std::vector<std::unique_ptr<Mixer>>;
-
    //! A worker thread calls this to update its cursors into tracks for changes
    //! of position or speed
    /*!
     @param state was made by `this->CreateState()`
+    @param pMixer if not null, then it can update its own state too
     @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
     */
    virtual bool RepositionPlayback(
       const PlaybackSchedule &schedule, PlaybackState &state,
-      const Mixers &playbackMixers,
+      Mixer *pMixer,
       size_t available //!< how many more samples may be buffered
    ) const;
 
