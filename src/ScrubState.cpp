@@ -309,12 +309,13 @@ void ScrubbingPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
    ScrubQueue::Instance.Init(schedule.mInitT0, rate, mOptions);
 }
 
-void ScrubbingPlaybackPolicy::Finalize(  PlaybackSchedule & )
+void ScrubbingPlaybackPolicy::Finalize(const PlaybackSchedule &)
 {
    ScrubQueue::Instance.Stop();
 }
 
-Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
+Mixer::WarpOptions
+ScrubbingPlaybackPolicy::MixerWarpOptions(const PlaybackSchedule &)
 {
    return Mixer::WarpOptions{
       ScrubbingOptions::MinAllowedScrubSpeed(),
@@ -322,7 +323,7 @@ Mixer::WarpOptions ScrubbingPlaybackPolicy::MixerWarpOptions(PlaybackSchedule &)
 }
 
 PlaybackPolicy::BufferTimes
-ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+ScrubbingPlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
 {
    using namespace std::chrono;
    return {
@@ -343,14 +344,14 @@ ScrubbingPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
    };
 }
 
-bool ScrubbingPlaybackPolicy::AllowSeek( PlaybackSchedule & )
+bool ScrubbingPlaybackPolicy::AllowSeek(const PlaybackSchedule &)
 {
    // While scrubbing, ignore seek requests
    return false;
 }
 
 std::chrono::milliseconds
-ScrubbingPlaybackPolicy::SleepInterval( PlaybackSchedule & )
+ScrubbingPlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 {
    return ScrubPollInterval;
 }

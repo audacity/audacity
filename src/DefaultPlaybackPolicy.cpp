@@ -41,8 +41,8 @@ void DefaultPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
       mSpeedSubscription = ProjectAudioIO::Get(mProject).Subscribe(callback);
 }
 
-Mixer::WarpOptions DefaultPlaybackPolicy::MixerWarpOptions(
-   PlaybackSchedule &schedule)
+Mixer::WarpOptions
+DefaultPlaybackPolicy::MixerWarpOptions(const PlaybackSchedule &schedule)
 {
    if (mVariableSpeed)
       // Enable variable rate mixing
@@ -52,7 +52,7 @@ Mixer::WarpOptions DefaultPlaybackPolicy::MixerWarpOptions(
 }
 
 PlaybackPolicy::BufferTimes
-DefaultPlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+DefaultPlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
 {
    // Shorter times than in the default policy so that responses to changes of
    // loop region or speed slider don't lag too much

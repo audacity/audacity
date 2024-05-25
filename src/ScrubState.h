@@ -52,16 +52,17 @@ public:
 
    void Initialize(const PlaybackSchedule &schedule,
       PlaybackState &state, double rate) override;
-   void Finalize( PlaybackSchedule &schedule ) override;
+   void Finalize(const PlaybackSchedule &schedule) override;
 
-   Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule) override;
+   Mixer::WarpOptions
+   MixerWarpOptions(const PlaybackSchedule &schedule) override;
 
-   BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule) override;
+   BufferTimes SuggestedBufferTimes(const PlaybackSchedule &schedule) override;
 
-   bool AllowSeek( PlaybackSchedule & ) override;
+   bool AllowSeek(const PlaybackSchedule &) override;
 
    std::chrono::milliseconds
-      SleepInterval( PlaybackSchedule & ) override;
+      SleepInterval(const PlaybackSchedule &) override;
 
    PlaybackSlice GetPlaybackSlice(const PlaybackSchedule &schedule,
       PlaybackState &state, size_t available) override;

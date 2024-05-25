@@ -61,15 +61,18 @@ void PlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
    state.mWarpedLength = schedule.mInitWarpedLength;
 }
 
-void PlaybackPolicy::Finalize( PlaybackSchedule & ){}
+void PlaybackPolicy::Finalize(const PlaybackSchedule &)
+{
+}
 
-Mixer::WarpOptions PlaybackPolicy::MixerWarpOptions(PlaybackSchedule &schedule)
+Mixer::WarpOptions
+PlaybackPolicy::MixerWarpOptions(const PlaybackSchedule &schedule)
 {
    return Mixer::WarpOptions{ schedule.mEnvelope };
 }
 
 PlaybackPolicy::BufferTimes
-PlaybackPolicy::SuggestedBufferTimes(PlaybackSchedule &)
+PlaybackPolicy::SuggestedBufferTimes(const PlaybackSchedule &)
 {
    using namespace std::chrono;
 #if 1
@@ -91,7 +94,7 @@ we can afford even smaller times.
 #endif
 }
 
-bool PlaybackPolicy::AllowSeek(PlaybackSchedule &)
+bool PlaybackPolicy::AllowSeek(const PlaybackSchedule &)
 {
    return true;
 }
@@ -106,7 +109,8 @@ double PlaybackPolicy::OffsetSequenceTime(
    return time;
 }
 
-std::chrono::milliseconds PlaybackPolicy::SleepInterval(PlaybackSchedule &)
+std::chrono::milliseconds
+PlaybackPolicy::SleepInterval(const PlaybackSchedule &)
 {
    using namespace std::chrono;
    return 10ms;

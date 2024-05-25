@@ -122,10 +122,11 @@ public:
       PlaybackState &state, double rate);
 
    //! Called after stopping of an audio stream or an unsuccessful start
-   virtual void Finalize( PlaybackSchedule &schedule );
+   virtual void Finalize(const PlaybackSchedule &schedule);
 
    //! Options to use when constructing mixers for each playback track
-   virtual Mixer::WarpOptions MixerWarpOptions(PlaybackSchedule &schedule);
+   virtual Mixer::WarpOptions
+      MixerWarpOptions(const PlaybackSchedule &schedule);
 
    //! Times are in seconds
    struct BufferTimes {
@@ -134,12 +135,12 @@ public:
       Duration ringBufferDelay; //!< Length of ring buffer
    };
    //! Provide hints for construction of playback RingBuffer objects
-   virtual BufferTimes SuggestedBufferTimes(PlaybackSchedule &schedule);
+   virtual BufferTimes SuggestedBufferTimes(const PlaybackSchedule &schedule);
 
    //! @section Called by the PortAudio callback thread
 
    //! Whether repositioning commands are allowed during playback
-   virtual bool AllowSeek( PlaybackSchedule &schedule );
+   virtual bool AllowSeek(const PlaybackSchedule &schedule);
 
    //! Called when the play head needs to jump a certain distance
    /*!
@@ -154,7 +155,7 @@ public:
 
    //! How long to wait between calls to AudioIO::SequenceBufferExchange
    virtual std::chrono::milliseconds
-      SleepInterval( PlaybackSchedule &schedule );
+      SleepInterval(const PlaybackSchedule &schedule);
 
    //! Choose length of one fetch of samples from tracks in a call to AudioIO::FillPlayBuffers
    /*!
