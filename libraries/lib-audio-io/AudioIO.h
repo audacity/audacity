@@ -627,6 +627,9 @@ private:
    void PollUser();
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
+   bool ConsumeFromMixers(bool paused, size_t demand,
+      std::optional<double> &debugPrevTime,
+      std::optional<double> &debugNextTime);
    void ConsumeFromMixer(size_t frames, size_t toProduce,
       Mixer &mixer, size_t nChannels,
       std::unique_ptr<RingBuffer> playbackBuffers[]);

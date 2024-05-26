@@ -2056,8 +2056,10 @@ static PlaybackSlice FindSlice(const PlaybackSchedule &playbackSchedule,
 }
 
 bool AudioIO::ProcessPlaybackSlices(
-   std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand)
+   std::optional<RealtimeEffects::ProcessingScope> &pScope,
+   const size_t orig_demand)
 {
+   auto demand = orig_demand;
    auto &policy = mPlaybackSchedule.GetPolicy();
    auto &state = *mpState;
    auto &lastTime = state.mLastTime;
@@ -2074,9 +2076,16 @@ bool AudioIO::ProcessPlaybackSlices(
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const bool paused = IsPaused();
    const auto &pMessage = mpMessage;
+   std::optional<double> debugPrevTime,
+      debugNextTime;
+
+   // First fill ring buffers
+   bool allDone =
+      ConsumeFromMixers(paused, orig_demand, debugPrevTime, debugNextTime);
+
+   debugTimes(debugPrevTime, lastTime, mRate);
+   // Then update the associated play head positions which are in another queue
    do {
-      std::optional<double> debugPrevTime,
-         debugNextTime;
       const auto slice = FindSlice(mPlaybackSchedule, state, demand, paused);
       const auto &[frames, toProduce] = slice;
       progress = progress || toProduce > 0;
@@ -2086,47 +2095,7 @@ bool AudioIO::ProcessPlaybackSlices(
       // consumer side in the PortAudio thread, which reads the time
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
-      debugTimes(debugPrevTime, lastTime, mRate);
       mTimeQueue.Producer(mPlaybackSchedule, state, slice);
-      debugTimes(debugNextTime, lastTime, mRate);
-
-      // Mixers correspond one-to-one with channel groups and mStates
-      // but ring buffers may be many-to-one with channel groups
-      size_t iBuffer = 0;
-      size_t iSequence = 0;
-      bool allDone = true;
-      for (const auto vt : mPlaybackSequences) {
-         Finally Do{ [&]{
-            ++iSequence;
-            iBuffer += numPlaybackChannels;
-         } };
-
-         if (!vt)
-            continue;
-         const auto pGroup = vt->FindChannelGroup();
-         if (!pGroup)
-            continue;
-
-         // For now update all states identically
-         auto &trackState = *mStates[iSequence];
-         (void) FindSlice(mPlaybackSchedule, trackState, demand, paused);
-
-         auto &mixer = *mPlaybackMixers[iSequence];
-         const auto buffers = &mPlaybackBuffers[iBuffer];
-         ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
-
-         // reproduce the side effect on state that TimeQueue::Producer does
-         auto &myLastTime = trackState.mLastTime;
-         debugTimes(debugPrevTime, myLastTime, mRate);
-         myLastTime = policy.AdvancedTrackTime(
-            mPlaybackSchedule, trackState, myLastTime, toProduce);
-         debugTimes(debugNextTime, myLastTime, mRate);
-         if (!paused)
-            allDone = policy.RepositionPlayback(mPlaybackSchedule, trackState,
-               (pMessage ? *pMessage : sDefaultMessage), &mixer,
-               demand - frames) && allDone;
-      }
-
       allProduced += frames;
       demand -= frames;
 
@@ -2134,11 +2103,13 @@ bool AudioIO::ProcessPlaybackSlices(
          // Update the main state, maybe when playing MIDI only with no mixers
          done = policy.RepositionPlayback(mPlaybackSchedule, state,
             (pMessage ? *pMessage : sDefaultMessage), nullptr, demand);
-         assert(mPlaybackSequences.empty() || (done == allDone));
       }
       // Check for messages from the UI thread updating schedule parameters
       PollUser();
    } while (demand && !done);
+   debugTimes(debugNextTime, lastTime, mRate);
+
+   assert(paused || mPlaybackSequences.empty() || (done == allDone));
 
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per sequence, after all the little slices have been written.
@@ -2153,6 +2124,57 @@ bool AudioIO::ProcessPlaybackSlices(
    pMaster->Put(nullptr, floatSample, 0, nn);
 
    return progress;
+}
+
+bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
+   std::optional<double> &debugPrevTime, std::optional<double> &debugNextTime)
+{
+   auto &policy = mPlaybackSchedule.GetPolicy();
+   size_t iBuffer = 0;
+   size_t iSequence = 0;
+   bool allDone = true;
+   const auto &pMessage = mpMessage;
+   for (const auto vt : mPlaybackSequences) {
+      Finally Do{ [&]{
+         ++iSequence;
+         iBuffer += GetNumPlaybackChannels();
+      } };
+      // Mixers correspond one-to-one with channel groups and mStates
+      // but ring buffers may be many-to-one with channel groups
+      if (!vt)
+         continue;
+      const auto pGroup = vt->FindChannelGroup();
+      if (!pGroup)
+         continue;
+      auto &trackState = *mStates[iSequence];
+      bool done = false;
+      auto demand = orig_demand;
+      auto &myLastTime = trackState.mLastTime;
+      debugTimes(debugPrevTime, myLastTime, mRate);
+      do {
+         const auto slice =
+            FindSlice(mPlaybackSchedule, trackState, demand, paused);
+         const auto &[frames, toProduce] = slice;
+         auto &mixer = *mPlaybackMixers[iSequence];
+         const auto buffers = &mPlaybackBuffers[iBuffer];
+         ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
+
+         // reproduce the side effect on state that TimeQueue::Producer does
+         myLastTime = policy.AdvancedTrackTime(
+            mPlaybackSchedule, trackState, myLastTime, toProduce);
+
+         if (!paused)
+            // Update the track state
+            done = policy.RepositionPlayback(mPlaybackSchedule, trackState,
+               (pMessage ? *pMessage : sDefaultMessage), &mixer,
+               demand - frames);
+
+         demand -= frames;
+      } while (demand && !done);
+      debugTimes(debugNextTime, myLastTime, mRate);
+      allDone = allDone && done;
+   }
+   return allDone;
 }
 
 void AudioIO::ConsumeFromMixer(size_t frames, size_t toProduce,
