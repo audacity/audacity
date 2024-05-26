@@ -221,7 +221,7 @@ void MenuRegistry::Visit(Visitor<Traits> &visitor, AudacityProject &project)
 //"ShowMeterTB,"
 "ShowMixerTB,"
 "ShowEditTB,ShowTranscriptionTB,ShowScrubbingTB,ShowDeviceTB,ShowSelectionTB,"
-"ShowSpectralSelectionTB") },
+"ShowSpectralSelectionTB,ShowSearchTB") },
          {wxT("/Tracks/Add/Add"), wxT(
 "NewMonoTrack,NewStereoTrack,NewLabelTrack,NewTimeTrack")},
          {wxT("/Optional/Extra/Part2/Scriptables1"), wxT(

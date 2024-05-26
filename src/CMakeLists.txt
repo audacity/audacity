@@ -674,6 +674,8 @@ set( SOURCES
       toolbars/EditToolBar.h
       toolbars/MeterToolBar.cpp
       toolbars/MeterToolBar.h
+      toolbars/SearchToolBar.cpp
+      toolbars/SearchToolBar.h
       toolbars/SelectionBar.cpp
       toolbars/SelectionBar.h
       toolbars/SnappingToolBar.cpp
