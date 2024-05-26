@@ -232,8 +232,6 @@ public:
       unsigned long framesPerBuffer
    );
 
-   size_t GetCommonlyWrittenForPlayback();
-
    /// How many frames of zeros were output due to pauses?
    long    mNumPauseFrames;
 
@@ -273,6 +271,7 @@ public:
       std::unique_ptr<Mixer> mpMixer{};
       std::unique_ptr<PlaybackState> mpState;
       std::array<float, MaxPlaybackChannels> mOldChannelGains{};
+      bool mHasLatency{ false };
 
       //! @pre `seq && seq->FindChannelGroup()`
       Track(const std::shared_ptr<const PlayableSequence> &seq)
@@ -287,6 +286,7 @@ public:
          mpState.reset();
          for (auto &gain : mOldChannelGains)
             gain = 0;
+         mHasLatency = false;
       }
    };
    std::vector<Track> mPlaybackTracks;
@@ -640,9 +640,10 @@ private:
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
    void PollUser(PlaybackState &state, size_t newFrames);
-   bool ProcessPlaybackSlices(
+   void ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
    bool ConsumeFromMixers(bool paused, size_t demand,
+      std::optional<RealtimeEffects::ProcessingScope> &pScope,
       std::optional<double> &debugPrevTime,
       std::optional<double> &debugNextTime);
    void ConsumeFromMixer(size_t frames, size_t toProduce,
@@ -650,20 +651,14 @@ private:
       std::unique_ptr<RingBuffer> playbackBuffers[]);
    void TransformPlayBuffers(
       std::optional<RealtimeEffects::ProcessingScope> &scope);
-   void ApplyEffectStack(
+   //! @return how many samples were discarded for latency
+   size_t ApplyEffectStack(
       std::optional<RealtimeEffects::ProcessingScope> &scope,
       const ChannelGroup *pGroup,
       std::unique_ptr<RingBuffer> playbackBuffers[]);
 
    //! Second part of SequenceBufferExchange
    void DrainRecordBuffers();
-
-   /** \brief Get the number of audio samples free in all of the playback
-   * buffers.
-   *
-   * Returns the smallest of the buffer free space values in the event that
-   * they are different. */
-   size_t GetCommonlyFreePlayback();
 
    /** \brief Get the number of audio samples ready in all of the recording
     * buffers.

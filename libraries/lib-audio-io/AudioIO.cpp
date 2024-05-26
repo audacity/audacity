@@ -1885,19 +1885,6 @@ size_t AudioIoCallback::MinValue(
          return std::min(value, (pBuffer.get()->*pmf)()); });
 }
 
-size_t AudioIO::GetCommonlyFreePlayback()
-{
-   auto commonlyAvail = MinValue(mPlaybackBuffers, &RingBuffer::AvailForPut);
-   // MB: subtract a few samples because the code in SequenceBufferExchange has rounding
-   // errors
-   return commonlyAvail - std::min(size_t(10), commonlyAvail);
-}
-
-size_t AudioIoCallback::GetCommonlyWrittenForPlayback()
-{
-   return MinValue(mPlaybackBuffers, &RingBuffer::WrittenForGet);
-}
-
 size_t AudioIO::GetCommonlyAvailCapture()
 {
    return MinValue(mCaptureBuffers, &RingBuffer::AvailForGet);
@@ -1932,14 +1919,13 @@ void AudioIO::FillPlayBuffers()
       pScope.emplace(
          *mpTransportState->mpRealtimeInitialization, mOwningProject);
 
-   // It is possible that some buffers will have more samples available than
-   // others.  This could happen if we hit this code during the PortAudio
-   // callback.  Also, if in a previous pass, unequal numbers of samples were
-   // discarded from ring buffers for differing latencies.
-
-   // To keep things simple, we write no more data than is vacant in
-   // ALL buffers, and advance the global time by that much.
-   auto nAvailable = GetCommonlyFreePlayback();
+   // PRL:  I no longer know the reason for this ancient comment, but I
+   // am preserving the precaution:
+   // MB: subtract a few samples because the code in SequenceBufferExchange has
+   // rounding errors
+   constexpr size_t margin = 10;
+   const auto nAvailable =
+      std::max(margin, mMasterBuffers[0]->AvailForPut()) - margin;
 
    // Don't fill the buffers at all unless we can do
    // at least mPlaybackSamplesToCopy.  This improves performance
@@ -1953,59 +1939,31 @@ void AudioIO::FillPlayBuffers()
    // perhaps again later in play to avoid underfilling the queue and
    // falling behind the real-time demand on the consumer side in the
    // callback.
-   auto GetNeeded = [&]() -> size_t {
-      // Note that reader might concurrently consume between loop passes below
-      // So this might not be nondecreasing
-      auto nReady = GetCommonlyWrittenForPlayback();
-      return mPlaybackQueueMinimum - std::min(mPlaybackQueueMinimum, nReady);
-   };
-   auto nNeeded = GetNeeded();
+   const auto nNeeded = mPlaybackQueueMinimum -
+      std::min(mPlaybackQueueMinimum, mMasterBuffers[0]->WrittenForGet());
+   // assert(nNeeded <= nAvailable);
+   auto demand = std::max(nNeeded, mPlaybackSamplesToCopy);
+   // TODO:  If demand is often more than available, we should somehow adapt
+   // buffer sizes in later playback, or make some suggestion to the user
+   demand = std::min(nAvailable, demand);
+   ProcessPlaybackSlices(pScope, demand);
 
-   // wxASSERT( nNeeded <= nAvailable );
+   /* The flushing of all the Puts to the RingBuffers is lifted out of the
+   loops in ProcessPlaybackSlices.
 
-   auto Flush = [&]{
-      /* The flushing of all the Puts to the RingBuffers is lifted out of the
-      do-loop in ProcessPlaybackSlices, and also after transformation of the
-      stream for realtime effects.
-
-      It's only here that a release is done on the atomic variable that
-      indicates the readiness of sample data to the consumer.  That atomic
-      also synchronizes the use of the TimeQueue.
-      */
-      for (const auto &pBuffer : mPlaybackBuffers)
+   It's only here that a release is done on the atomic variable that
+   indicates the readiness of sample data to the consumer.  That atomic
+   also synchronizes the use of the TimeQueue.
+   */
+   for (const auto &pBuffer : mPlaybackBuffers)
+      pBuffer->Flush();
+   // Flush the master AFTER other RingBuffers, and expect consumer to
+   // read it BEFORE, so that its atomic variables achieve the
+   // synchronization
+   // And flush the zero-th one last, as it will be read first!
+   for (auto &pBuffer : make_iterator_range(mMasterBuffers).reversal())
+      if (pBuffer)
          pBuffer->Flush();
-      // Flush the master AFTER other RingBuffers, and expect consumer to
-      // read it BEFORE, so that its atomic variables achieve the
-      // synchronization
-      // And flush the zero-th one last, as it will be read first!
-      for (auto &pBuffer : make_iterator_range(mMasterBuffers).reversal())
-         if (pBuffer)
-            pBuffer->Flush();
-   };
-
-   while (true) {
-      auto demand = std::max(nNeeded, mPlaybackSamplesToCopy);
-      // TODO:  If demand is often more than available, we should somehow adapt
-      // buffer sizes in later playback, or make some suggestion to the user
-      demand = std::min(nAvailable, demand);
-
-      // After each loop pass or after break
-      Finally Do{ Flush };
-
-      if (!ProcessPlaybackSlices(pScope, demand))
-         // We are not making progress.  May fail to satisfy the minimum but
-         // won't loop forever
-         break;
-
-      // Loop again to satisfy the minimum queue requirement in case there
-      // was discarding of processed data for effect latencies
-      nNeeded = GetNeeded();
-      if (nNeeded == 0)
-         break;
-
-      // Might increase because the reader consumed some
-      nAvailable = GetCommonlyFreePlayback();
-   }
 }
 
 // Assertion expects time1, if defined, to be within a tolerance of time2;
@@ -2031,6 +1989,9 @@ void AudioIO::PollUser(PlaybackState &state, size_t newFrames)
 {
    if (newFrames == 0)
       return;
+   // The track with greatest effect latency looks ahead first into the chain of
+   // parameter updates, and then other tracks use the same mapping from
+   // cumulative frame count to parameters.
    // Strictly greater cumulative frames, each time we check this state
    const auto frameCount = (state.mCumulativeFrames += newFrames);
    auto &pMessage = state.mpMessage;
@@ -2094,7 +2055,7 @@ static PlaybackSlice FindSlice(const PlaybackSchedule &playbackSchedule,
    return PlaybackSlice{ demand, demand, 0 };
 }
 
-bool AudioIO::ProcessPlaybackSlices(
+void AudioIO::ProcessPlaybackSlices(
    std::optional<RealtimeEffects::ProcessingScope> &pScope,
    const size_t orig_demand)
 {
@@ -2110,8 +2071,6 @@ bool AudioIO::ProcessPlaybackSlices(
    // PRL: or, when scrubbing, we may get work repeatedly from the
    // user interface.
    bool done = false;
-   bool progress = false;
-   size_t allProduced = 0;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const bool paused = IsPaused();
    const auto &pMessage = state.mpMessage;
@@ -2119,15 +2078,21 @@ bool AudioIO::ProcessPlaybackSlices(
       debugNextTime;
 
    // First fill ring buffers
-   bool allDone =
-      ConsumeFromMixers(paused, orig_demand, debugPrevTime, debugNextTime);
+   bool allDone = ConsumeFromMixers(paused, orig_demand, pScope,
+      debugPrevTime, debugNextTime);
 
    debugTimes(debugPrevTime, lastTime, mRate);
    // Then update the associated play head positions which are in another queue
+   int tries = 2;
    do {
-      const auto slice = FindSlice(mPlaybackSchedule, state, demand, paused);
+      const bool silence = paused || done || tries == 0;
+      const auto slice = FindSlice(mPlaybackSchedule, state, demand, silence);
       const auto &[frames, toProduce] = slice;
-      progress = progress || toProduce > 0;
+      // See comments in ConsumeFromMixers
+      if (frames == 0)
+         --tries;
+      else
+         tries = 2;
 
       // Update the time queue.  This must be done before flushing the
       // ring buffers of samples, for proper synchronization with the
@@ -2135,42 +2100,36 @@ bool AudioIO::ProcessPlaybackSlices(
       // queue after reading the sample queues.  The sample queues use
       // atomic variables, the time queue doesn't.
       mTimeQueue.Producer(mPlaybackSchedule, state, slice);
-      allProduced += frames;
       demand -= frames;
 
-      if (!paused) {
+      if (!silence) {
          // Update the main state, maybe when playing MIDI only with no mixers
          done = policy.RepositionPlayback(mPlaybackSchedule, state,
             (pMessage ? *pMessage : sDefaultMessage), nullptr, demand);
       }
       // Check for messages from the UI thread updating schedule parameters
       PollUser(state, frames);
-   } while (demand && !done);
+   } while (demand);
    debugTimes(debugNextTime, lastTime, mRate);
 
-   assert(paused || mPlaybackTracks.empty() || (done == allDone));
-
-   // Do any realtime effect processing, more efficiently in at most
-   // two buffers per sequence, after all the little slices have been written.
-   TransformPlayBuffers(pScope);
+   // If the time queue loop is done, all tracks must be done too, because their
+   // states are not less advanced
+   assert(paused || mPlaybackTracks.empty() || !done || allDone);
 
    // For now just generate sufficient silence
    auto &pMaster = mMasterBuffers[0];
-   auto nn = accumulate(mPlaybackBuffers.begin(), mPlaybackBuffers.end(),
-      allProduced, [&](size_t acc, auto &pBuffer){
-         return std::min(acc, pBuffer->Excess(*pMaster));
-      });
-   pMaster->Put(nullptr, floatSample, 0, nn);
 
-   return progress;
+   pMaster->Put(nullptr, floatSample, 0, orig_demand);
 }
 
 bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
+   std::optional<RealtimeEffects::ProcessingScope> &pScope,
    std::optional<double> &debugPrevTime, std::optional<double> &debugNextTime)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
    size_t iBuffer = 0;
    bool allDone = true;
+   int tries = 2;
    for (auto &track : mPlaybackTracks) {
       Finally Do{ [&]{ iBuffer += GetNumPlaybackChannels(); } };
       // Ring buffers may be many-to-one with channel groups
@@ -2182,7 +2141,9 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
       bool done = false;
       auto demand = orig_demand;
       auto &myLastTime = trackState.mLastTime;
-      debugTimes(debugPrevTime, myLastTime, mRate);
+      auto &hasLatency = track.mHasLatency;
+      if (!hasLatency)
+         debugTimes(debugPrevTime, myLastTime, mRate);
       do {
          const auto limitedDemand = [&]{
             if (pMessage) {
@@ -2195,24 +2156,49 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
             }
             return demand;
          }();
+         // When true, this loop pass will satisfy all of limitedDemand:
+         bool silence = paused || done || tries == 0;
          const auto slice =
-            FindSlice(mPlaybackSchedule, trackState, limitedDemand,
-               (paused || samplesDone));
+            FindSlice(mPlaybackSchedule, trackState, limitedDemand, silence);
          const auto &[frames, toProduce] = slice;
+
+         // Take two consecutive loop passes producing nothing as the sign of
+         // lack of progress
+         // (Scrubbing needs two tries to prime itself initially.  Otherwise
+         // the original motivation for the progress test was the edge case of
+         // a loop region selection so short, that it contained no discrete
+         // sample positions.)
+         if (frames == 0)
+            --tries;
+         else
+            tries = 2;
 
          auto &mixer = *track.mpMixer;
          const auto buffers = &mPlaybackBuffers[iBuffer];
          ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
 
-         // reproduce the side effect on state that TimeQueue::Producer does
+         auto discarded = ApplyEffectStack(pScope, pGroup, buffers);
+         hasLatency = hasLatency || discarded > 0;
+
+         // this should reproduce the side effect on state that
+         // TimeQueue::Producer does, if there is no latency
          myLastTime = policy.AdvancedTrackTime(
             mPlaybackSchedule, trackState, myLastTime, toProduce);
 
-         if (!(paused || samplesDone))
+         size_t fewerFrames = frames;
+         if (!silence) {
+            // When processing latency, decrease demand by less, so that the
+            // loop may repeat and the state may run ahead, fetching more from
+            // the track (looping as required), or feeding more silence into the
+            // effect processor for pause or end of play.
+            assert(discarded <= frames);
+            fewerFrames -= std::min(frames, discarded);
+
             // Update the track state
             samplesDone = policy.RepositionPlayback(mPlaybackSchedule,
                trackState, (pMessage ? *pMessage : sDefaultMessage),
-               &mixer, limitedDemand - frames);
+               &mixer, limitedDemand - fewerFrames);
+         }
 
          // May loop again, as if for a pause, if policy says samples are
          // done but demand is not exhausted
@@ -2221,9 +2207,10 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
          // Check for messages from the UI thread updating schedule parameters
          PollUser(trackState, frames);
 
-         demand -= frames;
-      } while (demand && !done);
-      debugTimes(debugNextTime, myLastTime, mRate);
+         demand -= fewerFrames;
+      } while (demand);
+      if (!hasLatency)
+         debugTimes(debugNextTime, myLastTime, mRate);
       allDone = allDone && done;
    }
    return allDone;
@@ -2240,7 +2227,7 @@ void AudioIO::ConsumeFromMixer(size_t frames, size_t toProduce,
       size_t produced = 0;
       if (toProduce)
          produced = mixer.Process(toProduce);
-      // assert(produced <= toProduce);
+      assert(produced <= toProduce);
       // Copy (non-interleaved) mixer outputs to one or more ring buffers
       for (size_t jj = 0; jj < GetNumPlaybackChannels(); ++jj) {
          // Replicate into two RingBuffers when playing a mono track into
@@ -2249,28 +2236,14 @@ void AudioIO::ConsumeFromMixer(size_t frames, size_t toProduce,
             mixer.GetBuffer(std::min(jj, nChannels - 1));
          const auto put [[maybe_unused]] = playbackBuffers[jj]->Put(
             warpedSamples, floatSample, produced, frames - produced);
-         // assert(put == frames);
+         assert(put == frames);
       }
    }
 }
 
 #define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
-void AudioIO::TransformPlayBuffers(
-   std::optional<RealtimeEffects::ProcessingScope> &pScope)
-{
-   // Transform written but un-flushed samples in the RingBuffers in-place.
-   const auto numPlaybackChannels = GetNumPlaybackChannels();
-   // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
-   size_t iBuffer = 0;
-   for (auto &track : mPlaybackTracks) {
-      Finally Do{ [&]{ iBuffer += numPlaybackChannels; } };
-      const auto pGroup = track.mpSequence->FindChannelGroup();
-      ApplyEffectStack(pScope, pGroup, &mPlaybackBuffers[iBuffer]);
-   }
-}
-
-void AudioIO::ApplyEffectStack(
+size_t AudioIO::ApplyEffectStack(
    std::optional<RealtimeEffects::ProcessingScope> &pScope,
    const ChannelGroup *pGroup,
    std::unique_ptr<RingBuffer> playbackBuffers[])
@@ -2307,8 +2280,9 @@ void AudioIO::ApplyEffectStack(
    for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
       auto &ringBuffer = *playbackBuffers[iChannel];
       auto discarded = ringBuffer.Unput(discardable);
-      // assert(discarded == discardable);
+      assert(discarded == discardable);
    }
+   return discardable;
 }
 
 void AudioIO::DrainRecordBuffers()
