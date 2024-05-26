@@ -71,11 +71,8 @@ public:
       AdvancedTrackTime( PlaybackSchedule &schedule,
          double trackTime, size_t nSamples ) override;
 
-   bool RepositionPlayback(
-      PlaybackSchedule &schedule, const Mixers &playbackMixers,
-      size_t frames,
-      size_t available
-   ) override;
+   bool RepositionPlayback(PlaybackSchedule &schedule,
+      const Mixers &playbackMixers, size_t available) override;
 
 private:
    sampleCount mScrubDuration{ 0 }, mStartSample{ 0 }, mEndSample{ 0 };

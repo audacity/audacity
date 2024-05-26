@@ -2038,8 +2038,8 @@ bool AudioIO::ProcessPlaybackSlices(
       available -= frames;
       // wxASSERT(available >= 0); // don't assert on this thread
 
-      done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
-         frames, available );
+      done = policy.RepositionPlayback(mPlaybackSchedule, mPlaybackMixers,
+         available);
    } while (available && !done);
 
    // Do any realtime effect processing, more efficiently in at most
@@ -2628,7 +2628,6 @@ bool AudioIoCallback::FillOutputBuffers(
 {
    const auto numPlaybackSequences = mPlaybackSequences.size();
    const auto numPlaybackChannels = mNumPlaybackChannels;
-   const auto numCaptureChannels = mNumCaptureChannels;
 
    mMaxFramesOutput = 0;
 
@@ -2805,7 +2804,6 @@ void AudioIoCallback::DrainInputBuffers(
    float * tempFloats
 )
 {
-   const auto numPlaybackChannels = mNumPlaybackChannels;
    const auto numCaptureChannels = mNumCaptureChannels;
 
    // Quick returns if next to nothing to do.

@@ -134,7 +134,7 @@ PlaybackPolicy::AdvancedTrackTime( PlaybackSchedule &schedule,
 }
 
 bool PlaybackPolicy::RepositionPlayback(
-   PlaybackSchedule &, const Mixers &, size_t, size_t)
+   PlaybackSchedule &, const Mixers &, size_t)
 {
    return true;
 }

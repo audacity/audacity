@@ -144,7 +144,6 @@ public:
     */
    virtual bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
-      size_t frames, //!< how many samples were just now buffered for play
       size_t available //!< how many more samples may be buffered
    );
 

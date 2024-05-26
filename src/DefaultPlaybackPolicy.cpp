@@ -174,7 +174,7 @@ std::pair<double, double> DefaultPlaybackPolicy::AdvancedTrackTime(
 
 bool DefaultPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers,
-   size_t frames, size_t available )
+   size_t available)
 {
    // This executes in the SequenceBufferExchange thread
    auto data = mMessageChannel.Read();
@@ -244,7 +244,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
       // which case we have nothing special to do
       if (RevertToOldDefault(schedule))
          return PlaybackPolicy::RepositionPlayback( schedule, playbackMixers,
-            frames, available);
+            available);
    }
 
    // msmeyer: If playing looped, check if we are at the end of the buffer

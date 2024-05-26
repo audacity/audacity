@@ -415,7 +415,7 @@ std::pair<double, double> ScrubbingPlaybackPolicy::AdvancedTrackTime(
 
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
    PlaybackSchedule &schedule, const Mixers &playbackMixers,
-   size_t frames, size_t available)
+   size_t available)
 {
    auto gAudioIO = AudioIO::Get();
 

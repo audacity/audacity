@@ -126,7 +126,7 @@ public:
 
    bool RepositionPlayback(
       PlaybackSchedule &schedule, const Mixers &playbackMixers,
-      size_t frames, size_t available) override;
+      size_t available) override;
 
 private:
    double GapStart() const
@@ -276,7 +276,7 @@ std::pair<double, double> CutPreviewPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback( PlaybackSchedule &,
-   const Mixers &playbackMixers, size_t, size_t )
+   const Mixers &playbackMixers, size_t)
 {
    if (mDiscontinuity) {
       mDiscontinuity = false;
