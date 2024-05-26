@@ -23,6 +23,21 @@ class DefaultPlaybackPolicy final
    , public NonInterferingBase
 {
 public:
+   // The main thread writes changes in response to user events, and
+   // the audio thread later reads, and changes the playback.
+   struct SlotData : PlaybackMessage {
+      SlotData() = default;
+      SlotData(double playSpeed, double t0, double t1, bool loopEnabled)
+         : mPlaySpeed{ playSpeed }, mT0{ t0 }, mT1{ t1 }
+         , mLoopEnabled{ loopEnabled }
+      {}
+
+      double mPlaySpeed{};
+      double mT0{};
+      double mT1{};
+      bool mLoopEnabled{};
+   };
+
    DefaultPlaybackPolicy( AudacityProject &project,
       double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
       bool loopEnabled, bool variableSpeed);
@@ -49,8 +64,12 @@ public:
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) const override;
 
+   std::shared_ptr<PlaybackMessage>
+      PollUser(const PlaybackSchedule &schedule) const override;
+
    bool RepositionPlayback(const PlaybackSchedule &schedule,
-      PlaybackState &state, Mixer *pMixer, size_t available)
+      PlaybackState &state, const PlaybackMessage &message,
+      Mixer *pMixer, size_t available)
    const override;
 
    bool Looping( const PlaybackSchedule & ) const override;
@@ -61,14 +80,6 @@ private:
 
    AudacityProject &mProject;
 
-   // The main thread writes changes in response to user events, and
-   // the audio thread later reads, and changes the playback.
-   struct SlotData {
-      double mPlaySpeed;
-      double mT0;
-      double mT1;
-      bool mLoopEnabled;
-   };
    SharedObjectMessageBuffer<SlotData> mMessageChannel;
 
    Observer::Subscription mRegionSubscription,

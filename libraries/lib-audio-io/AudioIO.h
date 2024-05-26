@@ -624,6 +624,7 @@ private:
 
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
+   void PollUser();
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
    void ConsumeFromMixer(size_t frames, size_t toProduce,
@@ -671,6 +672,8 @@ private:
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
+
+   std::shared_ptr<PlaybackMessage> mpMessage;
 
    bool mDelayingActions{ false };
 };

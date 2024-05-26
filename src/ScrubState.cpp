@@ -40,12 +40,25 @@ struct ScrubQueue : NonInterferingBase
    }
 
    struct Data;
+   struct Message : PlaybackMessage {
+      Message() = default;
+      Message(double end, ScrubbingOptions options)
+         : end{ end }, options{ options }
+      {}
+      Message(const Message&) = default;
+      double end;
+      ScrubbingOptions options;
+   };
 
-   void Get(Data &data,
+   // Just peek at the inter-thread message
+   std::shared_ptr<Message> Read() const { return mMessage.Read(); }
+
+   // Later transform the message to update state
+   void Get(const Message &message, Data &data,
       sampleCount &startSample, sampleCount &endSample,
       sampleCount inDuration, sampleCount &duration) const
    {
-      // Query the message buffer; all other state is externalized into data
+      // All state is externalized into message and data
 
       auto &mData = data;
       auto &mAccumulatedSeekDuration = data.mAccumulatedSeekDuration;
@@ -54,9 +67,6 @@ struct ScrubQueue : NonInterferingBase
       // Called by the thread that calls AudioIO::SequenceBufferExchange
       startSample = endSample = duration = -1LL;
       sampleCount s0Init;
-
-      auto pMessage = mMessage.Read();
-      const auto &message = *pMessage;
 
       if (mFirst) {
          s0Init = llrint( mRate *
@@ -289,12 +299,6 @@ private:
    bool mStarted{ false };
    std::atomic<bool> mStopped { false };
 
-   struct Message {
-      Message() = default;
-      Message(const Message&) = default;
-      double end;
-      ScrubbingOptions options;
-   };
    SharedObjectMessageBuffer<Message> mMessage;
 };
 
@@ -433,8 +437,16 @@ double ScrubbingPlaybackPolicy::AdvancedTrackTime(
       return result;
 }
 
+std::shared_ptr<PlaybackMessage>
+ScrubbingPlaybackPolicy::PollUser(const PlaybackSchedule &) const
+{
+   // This executes in the SequenceBufferExchange thread
+   return ScrubQueue::Instance.Read();
+}
+
 bool ScrubbingPlaybackPolicy::RepositionPlayback(
    const PlaybackSchedule &schedule, PlaybackState &st,
+   const PlaybackMessage &message,
    Mixer *pMixer, size_t available) const
 {
    auto &state = static_cast<SPPState&>(st);
@@ -449,7 +461,8 @@ bool ScrubbingPlaybackPolicy::RepositionPlayback(
    if (available > 0 && mScrubDuration <= 0) {
       // Find the scrub duration and scrub slice bounds
       const auto oldEndSample = mEndSample;
-      ScrubQueue::Instance.Get(state.mQueueState,
+      ScrubQueue::Instance.Get(
+         static_cast<const ScrubQueue::Message &>(message), state.mQueueState,
          mStartSample, mEndSample, available, mScrubDuration);
       mNewStartTime = mStartSample.as_long_long() / mRate;
       mDiscontinuity = (oldEndSample != mStartSample);

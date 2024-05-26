@@ -135,7 +135,8 @@ public:
       PlaybackState &state, double trackTime, size_t nSamples) const override;
 
    bool RepositionPlayback(const PlaybackSchedule &schedule,
-      PlaybackState &state, Mixer *pMixer, size_t available)
+      PlaybackState &state, const PlaybackMessage &message,
+      Mixer *pMixer, size_t available)
    const override;
 
 private:
@@ -294,7 +295,7 @@ double CutPreviewPlaybackPolicy::AdvancedTrackTime(
 }
 
 bool CutPreviewPlaybackPolicy::RepositionPlayback(const PlaybackSchedule &,
-   PlaybackState &st, Mixer *pMixer, size_t) const
+   PlaybackState &st, const PlaybackMessage &, Mixer *pMixer, size_t) const
 {
    auto &state = static_cast<CPPPState&>(st);
    if (auto &mDiscontinuity = state.mData.mDiscontinuity) {

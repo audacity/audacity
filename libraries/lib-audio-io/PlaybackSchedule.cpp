@@ -44,6 +44,7 @@ void PlaybackState::RealTimeRestart()
    mWarpedTime = 0;
 }
 
+PlaybackMessage::~PlaybackMessage() = default;
 PlaybackPolicy::~PlaybackPolicy() = default;
 
 void PlaybackState::Assign(const PlaybackState &other)
@@ -169,8 +170,15 @@ double PlaybackPolicy::AdvancedTrackTime(const PlaybackSchedule &schedule,
       return trackTime;
 }
 
+auto PlaybackPolicy::PollUser(const PlaybackSchedule &) const
+   -> std::shared_ptr<PlaybackMessage>
+{
+   return nullptr;
+}
+
 bool PlaybackPolicy::RepositionPlayback(
-   const PlaybackSchedule &, PlaybackState &, Mixer *, size_t) const
+   const PlaybackSchedule &, PlaybackState &, const PlaybackMessage &,
+   Mixer *, size_t) const
 {
    return true;
 }

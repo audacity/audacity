@@ -73,8 +73,12 @@ public:
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) const override;
 
+   std::shared_ptr<PlaybackMessage>
+      PollUser(const PlaybackSchedule &schedule) const override;
+
    bool RepositionPlayback(const PlaybackSchedule &schedule,
-      PlaybackState &state, Mixer *pMixer, size_t available)
+      PlaybackState &state, const PlaybackMessage &message,
+      Mixer *pMixer, size_t available)
    const override;
 
 private:

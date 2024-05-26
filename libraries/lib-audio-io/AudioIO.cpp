@@ -986,8 +986,10 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    // Call this only after reassignment of mRate that might happen in the
    // previous call.
-   mPlaybackSchedule.GetPolicy()
-      .Initialize(mPlaybackSchedule, state, mRate);
+   auto &policy = mPlaybackSchedule.GetPolicy();
+   policy.Initialize(mPlaybackSchedule, state, mRate);
+   // Initialize some state for scrubbing, or looping, etc.
+   mpMessage = policy.PollUser(mPlaybackSchedule);
 
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1416,6 +1418,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
    mStates.clear();
+   mpMessage.reset();
 }
 
 bool AudioIO::IsAvailable(AudacityProject &project) const
@@ -1689,6 +1692,7 @@ void AudioIO::StopStream()
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
+   mpMessage.reset();
 
    if (pListener) {
       // Tell UI to hide sample rate
@@ -2029,6 +2033,15 @@ static inline void debugTimes(
 #endif
 }
 
+static PlaybackMessage sDefaultMessage;
+
+void AudioIO::PollUser()
+{
+   const auto &policy = mPlaybackSchedule.GetPolicy();
+   auto &pMessage = mpMessage;
+   pMessage = policy.PollUser(mPlaybackSchedule);
+}
+
 // Determine how many samples to pull from tracks, and how much silence for
 // trailing padding
 static PlaybackSlice FindSlice(const PlaybackSchedule &playbackSchedule,
@@ -2060,6 +2073,7 @@ bool AudioIO::ProcessPlaybackSlices(
    size_t allProduced = 0;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const bool paused = IsPaused();
+   const auto &pMessage = mpMessage;
    do {
       std::optional<double> debugPrevTime,
          debugNextTime;
@@ -2108,8 +2122,9 @@ bool AudioIO::ProcessPlaybackSlices(
             mPlaybackSchedule, trackState, myLastTime, toProduce);
          debugTimes(debugNextTime, myLastTime, mRate);
          if (!paused)
-            allDone = policy.RepositionPlayback(mPlaybackSchedule,
-               trackState, &mixer, demand - frames) && allDone;
+            allDone = policy.RepositionPlayback(mPlaybackSchedule, trackState,
+               (pMessage ? *pMessage : sDefaultMessage), &mixer,
+               demand - frames) && allDone;
       }
 
       allProduced += frames;
@@ -2118,9 +2133,11 @@ bool AudioIO::ProcessPlaybackSlices(
       if (!paused) {
          // Update the main state, maybe when playing MIDI only with no mixers
          done = policy.RepositionPlayback(mPlaybackSchedule, state,
-            nullptr, demand);
+            (pMessage ? *pMessage : sDefaultMessage), nullptr, demand);
          assert(mPlaybackSequences.empty() || (done == allDone));
       }
+      // Check for messages from the UI thread updating schedule parameters
+      PollUser();
    } while (demand && !done);
 
    // Do any realtime effect processing, more efficiently in at most

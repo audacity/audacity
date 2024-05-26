@@ -190,18 +190,23 @@ double DefaultPlaybackPolicy::AdvancedTrackTime(
    return trackTime;
 }
 
+std::shared_ptr<PlaybackMessage>
+DefaultPlaybackPolicy::PollUser(const PlaybackSchedule &) const
+{
+   // This executes in the SequenceBufferExchange thread
+   return mMessageChannel.Read();
+}
+
 bool DefaultPlaybackPolicy::RepositionPlayback(
    const PlaybackSchedule &schedule, PlaybackState &st,
-   Mixer *pMixer, size_t available) const
+   const PlaybackMessage &message, Mixer *pMixer, size_t available) const
 {
    auto &state = static_cast<DPPState&>(st);
    auto &mLastPlaySpeed = state.mLastPlaySpeed;
    auto &mRemaining = state.mRemaining;
    auto &mLoopEnabled = state.mLoopEnabled;
 
-   // This executes in the SequenceBufferExchange thread
-   const auto pData = mMessageChannel.Read();
-   const auto &data = *pData;
+   auto &data = static_cast<const SlotData &>(message);
 
    bool speedChange = false;
    if (mVariableSpeed) {
@@ -269,7 +274,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
       // ... else the region did not change, or looping is now off, in
       // which case we have nothing special to do
       if (state.RevertToOldDefault())
-         return PlaybackPolicy::RepositionPlayback(schedule, state,
+         return PlaybackPolicy::RepositionPlayback(schedule, state, message,
             pMixer, available);
    }
 

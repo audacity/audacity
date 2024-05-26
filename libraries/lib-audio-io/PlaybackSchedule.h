@@ -53,6 +53,11 @@ struct PlaybackSlice {
    {}
 };
 
+//! Base class for inter-thread messages carrying changes of play schedule
+struct AUDIO_IO_API PlaybackMessage {
+   virtual ~PlaybackMessage();
+};
+
 class AUDIO_IO_API PlaybackState
 {
 public:
@@ -191,16 +196,24 @@ public:
       AdvancedTrackTime(const PlaybackSchedule &schedule, PlaybackState &state,
          double trackTime, size_t nSamples) const;
 
+   //! Worker thread receives latest scheduling parameters from UI
+   /*!
+    Default implementation returns null
+    */
+   virtual std::shared_ptr<PlaybackMessage>
+   PollUser(const PlaybackSchedule &schedule) const;
+
    //! A worker thread calls this to update its cursors into tracks for changes
    //! of position or speed
    /*!
+    @pre if PollUser produced any messages, then `message` is one of them
     @param state was made by `this->CreateState()`
     @param pMixer if not null, then it can update its own state too
     @return if true, AudioIO::FillPlayBuffers stops producing samples even if space remains
     */
    virtual bool RepositionPlayback(
       const PlaybackSchedule &schedule, PlaybackState &state,
-      Mixer *pMixer,
+      const PlaybackMessage &message, Mixer *pMixer,
       size_t available //!< how many more samples may be buffered
    ) const;
 
