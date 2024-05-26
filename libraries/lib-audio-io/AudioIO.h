@@ -268,16 +268,33 @@ public:
    // TODO more-than-two-channels
    static constexpr size_t MaxPlaybackChannels = 2;
    std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mMasterBuffers;
-   ConstPlayableSequences      mPlaybackSequences;
-   // Old gain is used in playback in linearly interpolating
-   // the gain.
-   std::vector<OldChannelGains> mOldChannelGains;
+   //! @invariant `mpSequence && mpSequence->FindChannelGroup()`
+   struct Track {
+      const std::shared_ptr<const PlayableSequence> mpSequence;
+      std::unique_ptr<Mixer> mpMixer{};
+      std::unique_ptr<PlaybackState> mpState;
+      std::array<float, MaxPlaybackChannels> mOldChannelGains{};
+
+      //! @pre `seq && seq->FindChannelGroup()`
+      Track(const std::shared_ptr<const PlayableSequence> &seq)
+         : mpSequence{ seq }
+      {
+         assert(seq && seq->FindChannelGroup());
+      }
+
+      void ResetData()
+      {
+         mpMixer.reset();
+         mpState.reset();
+         for (auto &gain : mOldChannelGains)
+            gain = 0;
+      }
+   };
+   std::vector<Track> mPlaybackTracks;
    float mOldMasterGain{};
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
-
-   std::vector<std::unique_ptr<Mixer>> mPlaybackMixers;
 
    std::atomic<float>  mMixerOutputVol{ 1.0 };
    static int          mNextStreamToken;
@@ -404,7 +421,6 @@ protected:
    PlaybackSchedule mPlaybackSchedule;
    TimeQueue mTimeQueue;
    std::unique_ptr<PlaybackState> mpState;
-   std::vector<std::unique_ptr<PlaybackState>> mStates;
 
    struct TransportState;
    //! Holds some state for duration of playback or recording

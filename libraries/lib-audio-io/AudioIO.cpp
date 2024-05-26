@@ -130,7 +130,7 @@ AudioIO *AudioIO::Get()
 
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
-      const ConstPlayableSequences &playbackSequences,
+      const std::vector<AudioIO::Track> &tracks,
       unsigned numPlaybackChannels, double sampleRate)
    {
       if (auto pOwningProject = wOwningProject.lock();
@@ -140,14 +140,9 @@ struct AudioIoCallback::TransportState {
          mpRealtimeInitialization.emplace(
             move(wOwningProject), sampleRate, numPlaybackChannels);
          // The following adds a new effect processor for each logical sequence.
-         for (size_t i = 0, cnt = playbackSequences.size(); i < cnt; ++i) {
+         for (auto &track : tracks) {
             // An array only of non-null pointers should be given to us
-            const auto vt = playbackSequences[i].get();
-            const auto pGroup = vt ? vt->FindChannelGroup() : nullptr;
-            if (!pGroup) {
-               assert(false);
-               continue;
-            }
+            const auto pGroup = track.mpSequence->FindChannelGroup();
             mpRealtimeInitialization
                ->AddGroup(*pGroup, numPlaybackChannels, sampleRate);
          }
@@ -909,13 +904,17 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mSeek    = 0;
    mLastRecordingOffset = 0;
    mCaptureSequences = sequences.captureSequences;
-   mPlaybackSequences = sequences.playbackSequences;
+   // Precondition of this function ensures precondition to construct
+   // AudioIoCallback::Track structures
+   mPlaybackTracks = {
+      sequences.playbackSequences.begin(), sequences.playbackSequences.end()
+   };
 
    bool commit = false;
    auto cleanupSequences = finally([&]{
       if (!commit) {
          // Don't keep unnecessary shared pointers to sequences
-         mPlaybackSequences.clear();
+         mPlaybackTracks.clear();
          mCaptureSequences.clear();
          for(auto &ext : Extensions())
             ext.AbortOtherStream();
@@ -930,8 +929,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
-   mPlaybackMixers.clear();
-   mStates.clear();
    mCaptureBuffers.clear();
    mResample.clear();
 
@@ -1019,7 +1016,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
-      mPlaybackSequences, numPlaybackChannels, mRate);
+      mPlaybackTracks, numPlaybackChannels, mRate);
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
@@ -1036,8 +1033,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
          .OffsetSequenceTime(mPlaybackSchedule, state, 0);
 
       // Reset mixer positions for all playback sequences
-      for (auto &mixer : mPlaybackMixers)
-         mixer->Reposition( time );
+      for (auto &track : mPlaybackTracks)
+         track.mpMixer->Reposition(time);
    }
 
    // Now that we are done with AllocateBuffers() and SetSequenceTime():
@@ -1045,8 +1042,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    // else recording only without overdub
 
    // Copy state, after time queue may have changed it
-   for (auto &pState : mStates)
-      pState->Assign(*mpState);
+   for (auto &track : mPlaybackTracks)
+      track.mpState->Assign(*mpState);
 
    // We signal the audio thread to call SequenceBufferExchange, to prime the RingBuffers
    // so that they will have data in them when the stream starts.  Having the
@@ -1247,7 +1244,7 @@ bool AudioIO::AllocateBuffers(
                buffer.reset();
             mPlaybackBuffers.resize(0);
             mPlaybackBuffers.resize(
-               mPlaybackSequences.size() * numPlaybackChannels);
+               mPlaybackTracks.size() * numPlaybackChannels);
             // Number of scratch buffers depends on device playback channels
             mScratchBuffers.resize(numPlaybackChannels + 1);
             mScratchPointers.clear();
@@ -1256,8 +1253,6 @@ bool AudioIO::AllocateBuffers(
                mScratchPointers.push_back(
                   reinterpret_cast<float*>(buffer.ptr()));
             }
-            mPlaybackMixers.clear();
-            mStates.clear();
 
             const auto &warpOptions =
                policy.MixerWarpOptions(mPlaybackSchedule);
@@ -1280,20 +1275,16 @@ bool AudioIO::AllocateBuffers(
 
             // Bug 1763 - We must fade in from zero to avoid a click on starting.
             mOldMasterGain = 0.0f;
-            mOldChannelGains.resize(mPlaybackSequences.size());
             size_t iBuffer = 0;
-            for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
-               const auto &pSequence = mPlaybackSequences[i];
-               // Bug 1763 - We must fade in from zero to avoid a click on starting.
-               mOldChannelGains[i][0] = 0.0;
-               mOldChannelGains[i][1] = 0.0;
+            for (auto &track : mPlaybackTracks) {
+               track.ResetData();
+               const auto &pSequence = track.mpSequence;
 
                for (size_t jj = 0; jj < numPlaybackChannels; ++jj)
                   mPlaybackBuffers[iBuffer++] = std::make_unique<RingBuffer>(
                      floatSample, playbackBufferSize);
 
-               // By the precondition of StartStream which is sole caller of
-               // this function:
+               // Invariant of struct Track
                assert(pSequence->FindChannelGroup());
                // use sequence time for the end time, not real time!
                double startTime, endTime;
@@ -1315,7 +1306,7 @@ bool AudioIO::AllocateBuffers(
 
                Mixer::Inputs mixSequences;
                mixSequences.push_back(Mixer::Input{ pSequence });
-               mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
+               track.mpMixer = std::make_unique<Mixer>(
                   move(mixSequences), std::nullopt,
                   // Don't throw for read errors, just play silence:
                   false,
@@ -1326,8 +1317,8 @@ bool AudioIO::AllocateBuffers(
                   false, // low quality dithering and resampling
                   nullptr, // no custom mix-down
                   Mixer::ApplyGain::Discard // don't apply gains
-               ));
-               mStates.push_back(mPlaybackSchedule.GetPolicy().CreateState());
+               );
+               track.mpState = mPlaybackSchedule.GetPolicy().CreateState();
             }
 
             const auto timeQueueSize = 1 +
@@ -1402,7 +1393,7 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
-   mPlaybackMixers.clear();
+   mPlaybackTracks.clear();
    mCaptureBuffers.clear();
    mResample.clear();
    mTimeQueue.Reset(nullptr);
@@ -1417,7 +1408,6 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
-   mStates.clear();
    mpMessage.reset();
 }
 
@@ -1570,8 +1560,7 @@ void AudioIO::StopStream()
    mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
-   mPlaybackMixers.clear();
-   mStates.clear();
+   mPlaybackTracks.clear();
    mTimeQueue.Reset(nullptr);
 
    if (mStreamToken > 0)
@@ -1687,7 +1676,7 @@ void AudioIO::StopStream()
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
 
-   mPlaybackSequences.clear();
+   mPlaybackTracks.clear();
    mCaptureSequences.clear();
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
@@ -2109,7 +2098,7 @@ bool AudioIO::ProcessPlaybackSlices(
    } while (demand && !done);
    debugTimes(debugNextTime, lastTime, mRate);
 
-   assert(paused || mPlaybackSequences.empty() || (done == allDone));
+   assert(paused || mPlaybackTracks.empty() || (done == allDone));
 
    // Do any realtime effect processing, more efficiently in at most
    // two buffers per sequence, after all the little slices have been written.
@@ -2131,22 +2120,14 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
    size_t iBuffer = 0;
-   size_t iSequence = 0;
    bool allDone = true;
    const auto &pMessage = mpMessage;
-   for (const auto vt : mPlaybackSequences) {
-      Finally Do{ [&]{
-         ++iSequence;
-         iBuffer += GetNumPlaybackChannels();
-      } };
-      // Mixers correspond one-to-one with channel groups and mStates
-      // but ring buffers may be many-to-one with channel groups
-      if (!vt)
-         continue;
+   for (auto &track : mPlaybackTracks) {
+      Finally Do{ [&]{ iBuffer += GetNumPlaybackChannels(); } };
+      // Ring buffers may be many-to-one with channel groups
+      const auto &vt = track.mpSequence;
       const auto pGroup = vt->FindChannelGroup();
-      if (!pGroup)
-         continue;
-      auto &trackState = *mStates[iSequence];
+      auto &trackState = *track.mpState;
       bool done = false;
       auto demand = orig_demand;
       auto &myLastTime = trackState.mLastTime;
@@ -2155,7 +2136,8 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
          const auto slice =
             FindSlice(mPlaybackSchedule, trackState, demand, paused);
          const auto &[frames, toProduce] = slice;
-         auto &mixer = *mPlaybackMixers[iSequence];
+
+         auto &mixer = *track.mpMixer;
          const auto buffers = &mPlaybackBuffers[iBuffer];
          ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
 
@@ -2211,13 +2193,9 @@ void AudioIO::TransformPlayBuffers(
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
-   for (const auto vt : mPlaybackSequences) {
+   for (auto &track : mPlaybackTracks) {
       Finally Do{ [&]{ iBuffer += numPlaybackChannels; } };
-      if (!vt)
-         continue;
-      const auto pGroup = vt->FindChannelGroup();
-      if (!pGroup)
-         continue;
+      const auto pGroup = track.mpSequence->FindChannelGroup();
       ApplyEffectStack(pScope, pGroup, &mPlaybackBuffers[iBuffer]);
    }
 }
@@ -2752,7 +2730,6 @@ void AudioIoCallback::FillOutputBuffers(
    float *outputBuffer, size_t framesPerBuffer, size_t toGet,
    float *outputMeterFloats)
 {
-   const auto numPlaybackSequences = mPlaybackSequences.size();
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    float *outputFloats = outputBuffer;
 
@@ -2767,8 +2744,8 @@ void AudioIoCallback::FillOutputBuffers(
 
    // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
    size_t iBuffer = 0;
-   for (unsigned tt = 0; tt < numPlaybackSequences; ++tt) {
-      auto vt = mPlaybackSequences[tt].get();
+   for (auto &track : mPlaybackTracks) {
+      auto vt = track.mpSequence.get();
 
       // Check for asynchronous user changes in mute, solo, pause status
       const bool drop = SequenceShouldBeSilent(*vt);
@@ -2808,7 +2785,7 @@ void AudioIoCallback::FillOutputBuffers(
       // the device. For example mono channels output to both left and right
       // output channels.
       if (len > 0) {
-         auto &gains = mOldChannelGains[tt];
+         auto &gains = track.mOldChannelGains;
          for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel)
             AddToOutputChannel(iChannel, outputMeterFloats, outputFloats,
                tempBufs[iChannel], drop, len, *vt, gains[iChannel]);
@@ -3109,12 +3086,10 @@ void AudioIoCallback::SendVuOutputMeterData(
 }
 
 unsigned AudioIoCallback::CountSoloingSequences(){
-   const auto numPlaybackSequences = mPlaybackSequences.size();
-
    // MOVE_TO: CountSoloingSequences() function
    unsigned numSolo = 0;
-   for (unsigned t = 0; t < numPlaybackSequences; t++ )
-      if (mPlaybackSequences[t]->GetSolo())
+   for (auto &track : mPlaybackTracks)
+      if (track.mpSequence->GetSolo())
          numSolo++;
    auto range = Extensions();
    numSolo += std::accumulate(range.begin(), range.end(), 0,
@@ -3334,8 +3309,8 @@ int AudioIoCallback::CallbackDoSeek()
 
 
    // Reset mixer positions and flush buffers for all sequences
-   for (auto &mixer : mPlaybackMixers)
-      mixer->Reposition( time, true );
+   for (auto &track : mPlaybackTracks)
+      track.mpMixer->Reposition( time, true );
    for (auto &pBuffer : mMasterBuffers)
       if (pBuffer)
          pBuffer->Discard(pBuffer->AvailForGet());
@@ -3348,8 +3323,8 @@ int AudioIoCallback::CallbackDoSeek()
    }
 
    mTimeQueue.Prime(time);
-   for (auto &pState : mStates)
-      pState->Assign(*mpState);
+   for (auto &track : mPlaybackTracks)
+      track.mpState->Assign(*mpState);
 
    // Reload the ring buffers
    ProcessOnceAndWait();
