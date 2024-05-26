@@ -113,7 +113,7 @@ void EffectsDrawFunction
 {   
    wxCoord textWidth, textHeight;
    
-   const auto str = _("Effects");
+   const auto str = _("Realtime Effects");
 
    const auto selected = pTrack ? pTrack->GetSelected() : true;
 
