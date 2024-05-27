@@ -25,14 +25,18 @@ void TimelineContext::init(double frameWidth)
     emit frameTimeChanged();
 }
 
-void TimelineContext::onWheel(double y)
+bool TimelineContext::onWheel(double y)
 {
     Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
     if (modifiers.testFlag(Qt::ControlModifier)) {
         changeZoom(y < 0 ? -1 : 1);
+        return true;
     } else if (modifiers.testFlag(Qt::ShiftModifier)) {
         shiftFrameTime(y < 0 ? -1 : 1);
+        return true;
     }
+
+    return false;
 }
 
 void TimelineContext::changeZoom(int direction)

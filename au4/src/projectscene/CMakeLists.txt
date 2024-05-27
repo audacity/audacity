@@ -43,8 +43,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/trackgeometrymodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/common/trackgeometrymodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackslistmodel.h

@@ -31,7 +31,7 @@
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
 
-#include "view/common/trackgeometrymodel.h"
+#include "view/common/tracksviewstatemodel.h"
 
 #include "view/toolbars/projecttoolbarmodel.h"
 #include "view/trackspanel/trackslistmodel.h"
@@ -85,7 +85,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterUncreatableType<ClipKey>("Audacity.ProjectScene", 1, 0, "ClipKey", "Not creatable from QML");
 
     // common
-    qmlRegisterType<TrackViewStateModel>("Audacity.ProjectScene", 1, 0, "TrackViewStateModel");
+    qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");

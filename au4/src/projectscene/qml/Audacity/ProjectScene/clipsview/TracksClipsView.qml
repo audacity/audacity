@@ -16,7 +16,18 @@ Rectangle {
         id: tracksModel
     }
 
+    //! NOTE Sync with TracksPanel
+    TracksViewStateModel {
+        id: tracksViewState
+        onTracksVericalYChanged: {
+            if (!view.moving) {
+                view.contentY = tracksViewState.tracksVericalY
+            }
+        }
+    }
+
     Component.onCompleted: {
+        tracksViewState.init()
         tracksModel.load()
     }
 
@@ -28,28 +39,44 @@ Rectangle {
         anchors.right: parent.right
 
         height: 76
+        z: 1
     }
 
     MouseArea {
         anchors.fill: parent
         onWheel: function(wheel) {
-            timeline.onWheel(wheel.angleDelta.y)
+            wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
         }
     }
 
-    Column {
+    StyledListView {
+        id: view
+
         anchors.top: timeline.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
 
-        Repeater {
-            model: tracksModel
-            delegate: TrackClipsItem {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                context: timeline.context
-                trackId: trackIdData
+        onContentYChanged: {
+            tracksViewState.changeTracksVericalY(view.contentY)
+        }
+
+        interactive: true
+
+        model: tracksModel
+
+        delegate: TrackClipsItem {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            context: timeline.context
+            trackId: trackIdData
+
+            onInteractionStarted: {
+                view.interactive = false
+            }
+
+            onInteractionEnded: {
+                view.interactive = true
             }
         }
     }
