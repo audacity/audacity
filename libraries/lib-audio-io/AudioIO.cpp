@@ -2870,6 +2870,9 @@ bool AudioIoCallback::DrainInputBuffers(
       // handle multiplying by the gain and then clipping.  Bummer.
 
       switch(mCaptureFormat) {
+         case undefinedSample:
+            assert(false);
+            [[ fallthrough ]];
          case floatSample: {
             auto inputFloats = (const float *)inputBuffer;
             for(unsigned i = 0; i < len; i++)
