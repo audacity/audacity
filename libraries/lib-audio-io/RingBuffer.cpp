@@ -79,7 +79,6 @@ size_t RingBuffer::WrittenForGet() const
 size_t RingBuffer::Put(constSamplePtr buffer, sampleFormat format,
                     size_t samplesToCopy, size_t padding)
 {
-   mLastPadding = padding;
    auto start = mStart.load( std::memory_order_acquire );
    auto end = mWritten;
    const auto free = Free( start, end );
@@ -155,9 +154,6 @@ size_t RingBuffer::Unput(size_t size)
    // Move mWritten backwards by result
    mWritten = (mWritten + (mBufferSize - result)) % mBufferSize;
 
-   // Adjust mLastPadding
-   mLastPadding = std::min(mLastPadding, Filled(end, mWritten));
-
    return result;
 }
 
@@ -190,7 +186,7 @@ std::pair<samplePtr, size_t> RingBuffer::GetUnflushed(unsigned iBlock)
 
    // Find total number of samples unflushed:
    auto end = mEnd.load(std::memory_order_relaxed);
-   const size_t size = Filled(end, mWritten) - mLastPadding;
+   const size_t size = Filled(end, mWritten);
 
    // How many in the first part:
    const size_t size0 = std::min(size, mBufferSize - end);
@@ -212,7 +208,6 @@ void RingBuffer::Flush()
    // Atomically update the end pointer with release, so the nonatomic writes
    // just done to the buffer don't get reordered after
    mEnd.store(mWritten, std::memory_order_release);
-   mLastPadding = 0;
 }
 
 /*!

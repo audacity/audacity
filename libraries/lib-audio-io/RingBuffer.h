@@ -63,7 +63,6 @@ class RingBuffer final : public NonInterferingBase {
    size_t Free(size_t start, size_t end) const;
 
    size_t mWritten{0};
-   size_t mLastPadding{0};
 
    // Align the two atomics to avoid false sharing
    NonInterfering< std::atomic<size_t> > mStart{ 0 }, mEnd{ 0 };
