@@ -92,10 +92,10 @@ constexpr auto followLineWidth =
    DynamicRangeProcessorPanel::transferFunctionLineWidth + 2;
 constexpr auto topMargin = (followLineWidth + 1) / 2;
 
-int GetDisplayPixel(float elapsedSincePacket, int panelWidth)
+double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
 {
    const auto secondsPerPixel =
-      1.f * DynamicRangeProcessorHistory::maxTimeSeconds / panelWidth;
+      1. * DynamicRangeProcessorHistory::maxTimeSeconds / panelWidth;
    // A display delay to avoid the display to tremble near time zero because the
    // data hasn't arrived yet.
    // This is a trade-off between visual comfort and timely update. It was set
@@ -103,8 +103,7 @@ int GetDisplayPixel(float elapsedSincePacket, int panelWidth)
    // will be found to lag on lower-latency playbacks. Best would probably be to
    // make it playback-delay dependent.
    constexpr auto displayDelay = 0.2f;
-   return panelWidth - 1 -
-          std::round((elapsedSincePacket - 0.2f) / secondsPerPixel);
+   return panelWidth - 1 - (elapsedSincePacket - 0.2f) / secondsPerPixel;
 }
 
 void DrawHistory(
@@ -133,10 +132,10 @@ void DrawHistory(
       {
          const auto elapsedSincePacket =
             elapsedTimeSinceFirstPacket - (it->time - firstPacketTime);
-         const int x =
+         const double x =
             GetDisplayPixel(elapsedSincePacket, panelSize.GetWidth());
-         const int yt = topMargin - it->target / dbPerPixel;
-         const int yf = topMargin - it->follower / dbPerPixel;
+         const auto yt = topMargin - it->target / dbPerPixel;
+         const auto yf = topMargin - it->follower / dbPerPixel;
          followPoints.emplace_back(x, yf);
          targetPoints.emplace_back(x, yt);
       }
