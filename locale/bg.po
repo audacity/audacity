@@ -922,7 +922,7 @@ msgstr "Предоставя LADSPA ефекти"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "Audacity no longer uses vst-bridge"
-sgstr "Audacity вече не използва vst-bridge"
+msgstr "Audacity вече не използва vst-bridge"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp libraries/lib-lv2/LoadLV2.cpp
 #: libraries/lib-vst/VSTEffectsModule.cpp src/effects/vamp/LoadVamp.cpp
