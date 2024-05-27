@@ -10,7 +10,6 @@ Rectangle {
 
     property alias context: timelineContext
 
-    height: 32
     color: ui.theme.backgroundPrimaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
@@ -46,7 +45,6 @@ Rectangle {
         id: ruler
         context: timelineContext
         anchors.fill: parent
-        anchors.leftMargin: 16
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

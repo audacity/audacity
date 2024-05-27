@@ -12,6 +12,7 @@ Item {
     property alias context: clipsModel.context
 
     height: trackViewState.trackHeight
+    clip: true
 
     ClipsListModel {
         id: clipsModel
