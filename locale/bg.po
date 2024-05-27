@@ -22,7 +22,7 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "Потокът е активен ... неуспешно събиране на информация"
+msgstr "Потокът е активен ... неуспешно събиране на информация.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -84,7 +84,7 @@ msgstr "Край на запис"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Low Playback Latency: %g\n"
-msgstr "Ниска латентност при възпроизвеждане"
+msgstr "Ниска латентност при възпроизвеждане: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
