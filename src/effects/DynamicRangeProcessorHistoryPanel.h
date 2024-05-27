@@ -50,6 +50,7 @@ private:
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
    bool AcceptsFocusFromKeyboard() const override;
 
+   CompressorInstance& mCompressorInstance;
    std::shared_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
    std::vector<DynamicRangeProcessorOutputPacket> mPacketBuffer;
    std::optional<DynamicRangeProcessorHistory> mHistory;

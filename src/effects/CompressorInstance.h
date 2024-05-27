@@ -35,6 +35,7 @@ public:
    explicit CompressorInstance(CompressorInstance&& other);
 
    const std::optional<double>& GetSampleRate() const;
+   float GetLatencyMs() const;
    void SetOutputQueue(std::weak_ptr<DynamicRangeProcessorOutputPacketQueue>);
 
 private:

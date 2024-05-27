@@ -46,6 +46,7 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
    wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
    std::function<void(float)> onDbRangeChanged)
     : wxPanelWrapper { parent, winid }
+    , mCompressorInstance { instance }
     , mOnDbRangeChanged { std::move(onDbRangeChanged) }
     , mInitializeProcessingSettingsSubscription { static_cast<
                                                      InitializeProcessingSettingsPublisher&>(
@@ -224,8 +225,10 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
    // because this can be triggered even when playback is paused.
    const auto now = std::chrono::steady_clock::now();
    if (!mSync)
-      mSync.emplace(ClockSynchronization {
-         mHistory->GetSegments().front().front().time, now });
+      mSync.emplace(
+         ClockSynchronization { mHistory->GetSegments().front().front().time +
+                                   mCompressorInstance.GetLatencyMs() / 1000,
+                                now });
    mPlaybackAboutToStart = false;
 
    mSync->now = now;
