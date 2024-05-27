@@ -28,6 +28,7 @@
 #include "ui/iuiactionsregister.h"
 
 #include "internal/projectsceneuiactions.h"
+#include "internal/projectsceneactionscontroller.h"
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
 
@@ -39,8 +40,9 @@
 #include "view/clipsview/trackslistclipsmodel.h"
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/waveview.h"
-#include "view/clipsview/timelinecontext.h"
-#include "view/clipsview/timelineruler.h"
+#include "view/timeline/timelinecontext.h"
+#include "view/timeline/timelineruler.h"
+#include "view/timeline/timelinecontextmenumodel.h"
 
 #include "view/playcursor/playcursorcontroller.h"
 
@@ -65,18 +67,20 @@ void ProjectSceneModule::registerResources()
 
 void ProjectSceneModule::registerExports()
 {
-    m_uiActions = std::make_shared<ProjectSceneUiActions>();
+    m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>();
+    m_uiActions = std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController);
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
+    ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
 }
 
 void ProjectSceneModule::resolveImports()
 {
-    auto ar = ioc()->resolve<IUiActionsRegister>(moduleName());
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(m_uiActions);
+        ar->reg(std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController));
     }
 }
 
@@ -100,6 +104,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
     qmlRegisterType<TimelineRuler>("Audacity.ProjectScene", 1, 0, "TimelineRuler");
+    qmlRegisterType<TimelineContextMenuModel>("Audacity.ProjectScene", 1, 0, "TimelineContextMenuModel");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
 
     // play cursor
@@ -113,4 +118,5 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     }
 
     m_configuration->init();
+    m_projectSceneActionsController->init();
 }

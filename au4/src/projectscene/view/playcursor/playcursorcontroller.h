@@ -8,7 +8,7 @@
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
 
-#include "../clipsview/timelinecontext.h"
+#include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
 class PlayCursorController : public QObject, public muse::async::Asyncable

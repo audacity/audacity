@@ -10,6 +10,7 @@
 
 namespace au::projectscene {
 class ProjectSceneUiActions;
+class ProjectSceneActionsController;
 class ProjectSceneConfiguration;
 class ProjectSceneModule : public muse::modularity::IModuleSetup
 {
@@ -24,6 +25,7 @@ public:
 
 private:
     std::shared_ptr<ProjectSceneUiActions> m_uiActions;
+    std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
     std::shared_ptr<ProjectSceneConfiguration> m_configuration;
 };
 }

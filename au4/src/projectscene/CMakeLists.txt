@@ -29,6 +29,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstate.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstatecreator.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
     ${CMAKE_CURRENT_LIST_DIR}/types/wavestyle.h
@@ -42,6 +43,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
@@ -56,16 +59,19 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelinecontext.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelinecontext.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelineruler.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timelineruler.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timeformat.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/timeformat.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timeformat.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timeformat.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontextmenumodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.h

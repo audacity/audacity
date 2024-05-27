@@ -7,7 +7,7 @@
 #include "../../iprojectsceneconfiguration.h"
 
 #include "types/projectscenetypes.h"
-#include "timelinecontext.h"
+#include "../timeline/timelinecontext.h"
 
 class WaveClipItem;
 namespace au::projectscene {

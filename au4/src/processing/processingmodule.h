@@ -7,7 +7,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::processing {
-class ProcessingController;
+class ProcessingActionsController;
 class ProcessingUiActions;
 class ProcessingModule : public muse::modularity::IModuleSetup
 {
@@ -20,7 +20,7 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<ProcessingController> m_processingController;
+    std::shared_ptr<ProcessingActionsController> m_processingController;
     std::shared_ptr<ProcessingUiActions> m_processingUiActions;
 };
 }

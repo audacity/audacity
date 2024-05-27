@@ -72,7 +72,47 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Silence audio selection"),
              IconCode::Code::SILENCE_AUDIO_SELECTION
              ),
+    UiAction("minutes-seconds-ruler",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Minutes && seconds"),
+             TranslatableString("action", "Minutes && seconds"),
+             Checkable::Yes
+             ),
+    UiAction("beats-measures-ruler",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Beats && measures"),
+             TranslatableString("action", "Beats && measures"),
+             Checkable::Yes
+             ),
+    UiAction("toggle-vertical-rulers",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Show vertical rulers"),
+             TranslatableString("action", "Show vertical rulers"),
+             Checkable::Yes
+             ),
+    UiAction("update-display-while-playing",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Update display while playing"),
+             TranslatableString("action", "Update display while playing"),
+             Checkable::Yes
+             ),
+    UiAction("pinned-play-head",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Pinned play head"),
+             TranslatableString("action", "Pinned play head"),
+             Checkable::Yes
+             ),
 };
+
+ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)
+    : m_controller(controller)
+{
+}
 
 const UiActionList& ProjectSceneUiActions::actionsList() const
 {
@@ -81,7 +121,10 @@ const UiActionList& ProjectSceneUiActions::actionsList() const
 
 bool ProjectSceneUiActions::actionEnabled(const muse::ui::UiAction& act) const
 {
-    UNUSED(act);
+    if (!m_controller->canReceiveAction(act.code)) {
+        return false;
+    }
+
     return true;
 }
 
@@ -93,8 +136,7 @@ muse::async::Channel<ActionCodeList> ProjectSceneUiActions::actionEnabledChanged
 
 bool ProjectSceneUiActions::actionChecked(const muse::ui::UiAction& act) const
 {
-    UNUSED(act);
-    return false;
+    return m_controller->actionChecked(act.code);
 }
 
 muse::async::Channel<ActionCodeList> ProjectSceneUiActions::actionCheckedChanged() const

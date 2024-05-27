@@ -1,8 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROCESSING_PROCESSINGCONTROLLER_H
-#define AU_PROCESSING_PROCESSINGCONTROLLER_H
+
+#pragma once
 
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
@@ -11,10 +11,10 @@
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
 
-#include "../iprocessingcontroller.h"
+#include "../iprojectsceneactionscontroller.h"
 
-namespace au::processing {
-class ProcessingController : public IProcessingController, public muse::actions::Actionable, public muse::async::Asyncable
+namespace au::projectscene {
+class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable, public muse::async::Asyncable
 {
     INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
     INJECT_STATIC(au::context::IGlobalContext, globalContext)
@@ -29,8 +29,13 @@ public:
 
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
+
+    void toggleTimelineRuler();
+    void toggleBeatsRuler();
+    void toggleVerticalRulers();
+    void updateDisplayWhilePlaying();
+    void pinnedPlayHead();
+
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }
-
-#endif // AU_PROCESSING_PROCESSINGCONTROLLER_H
