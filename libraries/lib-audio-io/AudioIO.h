@@ -182,15 +182,31 @@ public:
    // Helpers to determine if sequences have already been faded out.
    unsigned  CountSoloingSequences();
 
+   using OldChannelGains = std::array<float, 2>;
    bool SequenceShouldBeSilent(const PlayableSequence &ps);
+   //! Returns true when playback buffer data from both channels is discardable
+   bool SequenceHasBeenFadedOut(const OldChannelGains &gains);
+   bool AllSequencesAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
    );
 
+   /*!
+    @param[in,out] channelGain
+    */
+   void AddToOutputChannel( unsigned int chan, // index into gains
+      float * outputMeterFloats,
+      float * outputFloats,
+      const float * tempBuf,
+      bool drop,
+      unsigned long len,
+      const PlayableSequence &ps,
+      float &channelGain
+   );
    bool FillOutputBuffers(
-      float *outputFloats,
+      float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
    );
@@ -255,18 +271,12 @@ public:
    using RingBuffers = std::vector<std::unique_ptr<RingBuffer>>;
    RingBuffers mCaptureBuffers;
    RecordableSequences mCaptureSequences;
-   //!Buffers that hold outcome of transformations applied to each individual sample source.
-   //!Number of buffers equals to the sum of number all source channels.
-   std::vector<std::vector<float>> mProcessingBuffers;
-   //!These buffers are used to mix and process the result of processed source channels.
-   //!Number of buffers equals to number of output channels.
-   std::vector<std::vector<float>> mMasterBuffers;
    /*! Read by worker threads but unchanging during playback */
    RingBuffers mPlaybackBuffers;
    ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
-   float mOldPlaybackGain;
+   std::vector<OldChannelGains> mOldChannelGains;
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
@@ -608,7 +618,8 @@ private:
 
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
-
+   void TransformPlayBuffers(
+      std::optional<RealtimeEffects::ProcessingScope> &scope);
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope,
       size_t available);
