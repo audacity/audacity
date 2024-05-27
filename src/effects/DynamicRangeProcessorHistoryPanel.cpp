@@ -108,7 +108,7 @@ double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
 }
 
 void DrawHistory(
-   wxPaintDC& dc, wxGraphicsContext& gc, const wxSize& panelSize,
+   wxPaintDC& dc, const wxSize& panelSize,
    const std::vector<DynamicRangeProcessorHistory::Segment>& segments,
    const DynamicRangeProcessorHistoryPanel::ClockSynchronization& sync)
 {
@@ -122,8 +122,12 @@ void DrawHistory(
 
    for (const auto& segment : segments)
    {
-      if (segment.empty())
+      if (segment.size() < 2)
          continue;
+
+      std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) };
+      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+      gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
 
       std::vector<wxPoint2DDouble> followPoints;
       std::vector<wxPoint2DDouble> targetPoints;
@@ -141,27 +145,38 @@ void DrawHistory(
          targetPoints.emplace_back(x, yt);
       }
 
-      gc.SetPen(wxPen { theTheme.Colour(clrResponseLines), followLineWidth });
-      if (segment.size() == 1)
-      {
-         wxInt32 x, y;
-         followPoints[0].GetRounded(&x, &y);
-         dc.DrawPoint({ x, y });
-      }
-      else
-         gc.DrawLines(followPoints.size(), followPoints.data());
+      // Draw the follow line in black, solid line ...
+      gc->SetPen(wxPen { *wxBLACK_PEN });
+      gc->DrawLines(followPoints.size(), followPoints.data());
 
-      gc.SetPen(
-         wxPen { theTheme.Colour(clrGraphLines),
-                 DynamicRangeProcessorPanel::transferFunctionLineWidth });
-      if (segment.size() == 1)
+      wxGraphicsPath undershootPath = gc->CreatePath();
+      wxGraphicsPath overshootPath = gc->CreatePath();
+      const auto compareY = [](const auto a, const auto b) {
+         return a.m_y < b.m_y;
+      };
+      undershootPath.MoveToPoint(
+         std::min(followPoints.front(), targetPoints.front(), compareY));
+      overshootPath.MoveToPoint(
+         std::max(targetPoints.front(), followPoints.front(), compareY));
+      for (size_t i = 1; i < followPoints.size(); ++i)
       {
-         wxInt32 x, y;
-         followPoints[0].GetRounded(&x, &y);
-         dc.DrawPoint({ x, y });
+         undershootPath.AddLineToPoint(
+            std::min(followPoints[i], targetPoints[i], compareY));
+         overshootPath.AddLineToPoint(
+            std::max(targetPoints[i], followPoints[i], compareY));
       }
-      else
-         gc.DrawLines(targetPoints.size(), targetPoints.data());
+      for (size_t i = targetPoints.size(); i-- > 0;)
+      {
+         undershootPath.AddLineToPoint(followPoints[i]);
+         overshootPath.AddLineToPoint(followPoints[i]);
+      }
+      undershootPath.CloseSubpath();
+      overshootPath.CloseSubpath();
+
+      gc->SetBrush(wxBrush { wxColour { 255, 0, 0, 128 } });
+      gc->FillPath(overshootPath);
+      gc->SetBrush(wxBrush { wxColour { 0, 0, 255, 128 } });
+      gc->FillPath(undershootPath);
    }
 }
 } // namespace
@@ -194,10 +209,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    }
 
    const auto& segments = mHistory->GetSegments();
-   std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) };
-   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-   gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
-   DrawHistory(dc, *gc, GetSize(), segments, *mSync);
+   DrawHistory(dc, GetSize(), segments, *mSync);
 }
 
 void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
