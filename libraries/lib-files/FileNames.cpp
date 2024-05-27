@@ -172,7 +172,7 @@ bool FileNames::HardLinkFile( const FilePath& file1, const FilePath& file2 )
 #ifdef __WXMSW__
 
    // Fix forced ASCII conversions and wrong argument order - MJB - 29/01/2019
-   //return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );  
+   //return ::CreateHardLinkA( file1.c_str(), file2.c_str(), NULL );
    return ( 0 != ::CreateHardLink( file2, file1, NULL ) );
 
 #else
@@ -504,7 +504,7 @@ wxFileNameWrapper FileNames::DefaultToDocumentsFolder(const wxString &preference
 
    // MJB: Bug 1899 & Bug 2007.  Only create directory if the result is the default path
    bool bIsDefaultPath = result == defaultPath;
-   if( !bIsDefaultPath ) 
+   if( !bIsDefaultPath )
    {
       // IF the prefs directory doesn't exist - (Deleted by our user perhaps?)
       //    or exists as a file
@@ -626,7 +626,12 @@ void FileNames::AddUniquePathToPathList(const FilePath &pathArg,
                                           FilePaths &pathList)
 {
    wxFileNameWrapper pathNorm { pathArg };
-   pathNorm.Normalize();
+   // https://github.com/audacity/audacity/issues/6448 :
+   // Do not seek to expand environment variables here: it is not needed, and
+   // wxWidgets has an issue doing so - See
+   // https://github.com/wxWidgets/wxWidgets/issues/19214
+   const auto flags = wxPATH_NORM_ALL & ~wxPATH_NORM_ENV_VARS;
+   pathNorm.Normalize(flags);
    const wxString newpath{ pathNorm.GetFullPath() };
 
    for(const auto &path : pathList) {
