@@ -135,19 +135,6 @@ DynamicRangeProcessorEditor::DynamicRangeProcessorEditor(
     , mUIParent { parent }
     , mTopLevelParent(static_cast<wxDialog&>(*wxGetTopLevelParent(parent)))
 {
-   mTopLevelParent.Bind(wxEVT_SIZE, [this](wxSizeEvent& evt) {
-      evt.Skip();
-      // Once the parent dialog reaches its final size as indicated by
-      // a non-default minimum size, we set the maximum size to match.
-      wxWindow* const w = static_cast<wxWindow*>(evt.GetEventObject());
-      const wxSize sz = w->GetMinSize();
-      if (sz != wxDefaultSize)
-         w->SetMaxSize(sz);
-   });
-   // Disable resize arrows for top parent:
-   mTopLevelParent.SetWindowStyleFlag(
-      mTopLevelParent.GetWindowStyleFlag() & ~wxRESIZE_BORDER &
-      ~wxMAXIMIZE_BOX);
    if (isRealtime)
       MakeHistoryPanels(parent, instance, access, [parent](float newDbRange) {
          if (
