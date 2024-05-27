@@ -72,7 +72,7 @@ namespace {
 // i18n-hint kbps abbreviates "thousands of bits per second"
 inline TranslatableString n_kbps( int n ) { return XO("%d kbps").Format( n ); }
 
-      
+
 const TranslatableStrings BitRateMPEG1Names {
    n_kbps(32),
    n_kbps(48),
@@ -120,7 +120,7 @@ const std::initializer_list<ExportOption> MP2Options {
       ExportOption::TypeEnum,
       { 0, 1 },
       { XO("MPEG2"), XO("MPEG1") },
-      
+
    },
    {
       MP2OptionIDBitRateMPEG1, XO("Bit Rate"),
@@ -187,14 +187,14 @@ public:
       if(id == MP2OptionIDVersion)
       {
          OnVersionChanged();
-         
+
          if(mListener != nullptr)
          {
             mListener->OnExportOptionChangeBegin();
             mListener->OnExportOptionChange(mOptions[MP2OptionIDBitRateMPEG1]);
             mListener->OnExportOptionChange(mOptions[MP2OptionIDBitRateMPEG2]);
             mListener->OnExportOptionChangeEnd();
-            
+
             mListener->OnSampleRateListChange();
          }
       }
@@ -289,7 +289,7 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
+
    // Required
 
    std::unique_ptr<ExportOptionsEditor>
@@ -347,14 +347,13 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
       ExportPluginHelpers::GetParameterValue(parameters,
          MP2OptionIDVersion, 1));
 
-   const auto bitrate = version == TWOLAME_MPEG1 
+   const auto bitrate = version == TWOLAME_MPEG1
       ? ExportPluginHelpers::GetParameterValue(
          parameters,
          MP2OptionIDBitRateMPEG1, 192)
       : ExportPluginHelpers::GetParameterValue(
          parameters,
          MP2OptionIDBitRateMPEG2, 96);
-   const auto &tracks = TrackList::Get( project );
 
    wxLogNull logNo;             /* temporarily disable wxWidgets error messages */
 
@@ -380,7 +379,7 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
    if (!context.outFile->IsOpened()) {
       throw ExportException(_("Unable to open target file for writing"));
    }
-   
+
    bool endOfFile;
    context.id3len = AddTags(context.id3buffer, &endOfFile, metadata);
    if (context.id3len && !endOfFile) {
@@ -398,10 +397,9 @@ bool MP2ExportProcessor::Initialize(AudacityProject& project,
       : XO("Exporting the audio at %ld kbps")
            .Format( bitrate );
 
-   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         stereo ? 2 : 1, pcmBufferSize, true,
-         sampleRate, int16Sample, mixerSpec);
+   context.mixer = ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, t0, t1, stereo ? 2 : 1, pcmBufferSize, true,
+      sampleRate, int16Sample, mixerSpec);
 
    return true;
 }

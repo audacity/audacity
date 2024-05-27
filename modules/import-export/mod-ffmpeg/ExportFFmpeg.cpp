@@ -414,7 +414,7 @@ public:
       //Continue anyway, as we do not need ffmpeg functions to build and fill in the UI
 
       mParent = S.GetParent();
-      
+
       S.StartHorizontalLay(wxCENTER);
       {
          S.StartVerticalLay(wxCENTER, 0);
@@ -475,7 +475,7 @@ public:
    {
       return false;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       if(!mAVCodec)
@@ -491,7 +491,7 @@ public:
       }
       if(!mAVCodec)
          return {};
-      
+
       if(const auto rates = mAVCodec->GetSupportedSamplerates())
          return ToSampleRateList(rates);
       return {};
@@ -525,7 +525,7 @@ public:
 
    void Store(audacity::BasicSettings& settings) const override
    {
-      
+
    }
 
 private:
@@ -555,7 +555,7 @@ private:
    {
       if(!CheckFFmpeg(true))
          return;
-      
+
    #ifdef __WXMAC__
       // Bug 2077 Must be a parent window on OSX or we will appear behind.
       auto pWin = wxGetTopLevelParent( mParent );
@@ -608,10 +608,9 @@ public:
    /// Flushes audio encoder
    bool Finalize();
 
-   std::unique_ptr<Mixer> CreateMixer(const TrackList &tracks,
-         bool selectionOnly,
-         double startTime, double stopTime,
-         MixerOptions::Downmix *mixerSpec);
+   std::unique_ptr<Mixer> CreateMixer(
+      const AudacityProject& project, bool selectionOnly, double startTime,
+      double stopTime, MixerOptions::Downmix* mixerSpec);
 
 private:
 
@@ -700,7 +699,7 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int index) const override;
-   
+
    /// Callback, called from GetFilename
    bool CheckFileName(wxFileName &filename, int format = 0) const override;
 
@@ -726,12 +725,13 @@ FFmpegExporter::FFmpegExporter(std::shared_ptr<FFmpegFunctions> ffmpeg,
    }
 }
 
-std::unique_ptr<Mixer> FFmpegExporter::CreateMixer(const TrackList& tracks, bool selectionOnly, double startTime, double stopTime, MixerOptions::Downmix* mixerSpec)
+std::unique_ptr<Mixer> FFmpegExporter::CreateMixer(
+   const AudacityProject& project, bool selectionOnly, double startTime,
+   double stopTime, MixerOptions::Downmix* mixerSpec)
 {
-   return ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-      startTime, stopTime,
-      mChannels, mDefaultFrameSize, true,
-      mSampleRate, int16Sample, mixerSpec);
+   return ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, startTime, stopTime, mChannels, mDefaultFrameSize,
+      true, mSampleRate, int16Sample, mixerSpec);
 }
 
 
@@ -782,7 +782,7 @@ ExportFFmpeg::ExportFFmpeg()
 
       const int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
       formatInfo.canMetaData = canmeta && (canmeta == AV_CANMETA || canmeta <= avfver);
-      
+
       mFormatInfos.push_back(std::move(formatInfo));
    }
 }
@@ -1099,7 +1099,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
 
       // FIXME The list of supported options for the selected encoder should be
       // extracted instead of a few hardcoded
-      
+
       options.Set(
          "lpc_coeff_precision",
          ExportPluginHelpers::GetParameterValue(parameters, FELPCCoeffsID, 0));
@@ -1270,7 +1270,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
          mFFmpeg->av_strerror(rc, buf, sizeof(buf));
          errmsg = Verbatim(buf);
       }
-      
+
       /* i18n-hint: "codec" is short for a "coder-decoder" algorithm */
       throw ExportException(XO("Can't open audio codec \"%s\" (0x%x)\n\n%s")
          .Format(codec->GetName(), codecID.value, errmsg)
@@ -1450,7 +1450,7 @@ int FFmpegExporter::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, in
    }
 
    if (ret < 0 && ret != AUDACITY_AVERROR_EOF) {
-      
+
       char buf[64];
       mFFmpeg->av_strerror(ret, buf, sizeof(buf));
       wxLogDebug(buf);
@@ -1532,7 +1532,7 @@ bool FFmpegExporter::Finalize()
          throw ExportErrorException("FFmpeg:837");
       }
       else if (encodeResult == 0)
-         break;      
+         break;
    }
 
    // Write any file trailers.
@@ -1602,7 +1602,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
 {
    context.t0 = t0;
    context.t1 = t1;
-   
+
    if (!FFmpegFunctions::Load())
    {
       throw ExportException(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
@@ -1618,7 +1618,6 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
          .Translation());
    }
 
-   const auto &tracks = TrackList::Get( project );
    bool ret = true;
 
    if (adjustedFormatIndex >= FMT_LAST) {
@@ -1633,15 +1632,14 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
    context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels, adjustedFormatIndex);
 
    ret = context.exporter->Init(shortname.mb_str(), &project, static_cast<int>(sampleRate), metadata, parameters);
-   
+
    if (!ret) {
       // TODO: more precise message
       throw ExportErrorException("FFmpeg:1008");
    }
 
-   context.mixer = context.exporter->CreateMixer(tracks, selectionOnly,
-      t0, t1,
-      mixerSpec);
+   context.mixer =
+      context.exporter->CreateMixer(project, selectionOnly, t0, t1, mixerSpec);
 
    context.status = selectionOnly
          ? XO("Exporting selected audio as %s")

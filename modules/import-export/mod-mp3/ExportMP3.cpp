@@ -309,7 +309,7 @@ public:
       it->second = value;
 
       switch(id)
-      { 
+      {
       case MP3OptionIDMode:
          {
             const auto mode = *std::get_if<std::string>(&value);
@@ -322,7 +322,7 @@ public:
                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityCBR]);
                mListener->OnExportOptionChange(mOptions[MP3OptionIDQualityVBR]);
                mListener->OnExportOptionChangeEnd();
-               
+
                mListener->OnSampleRateListChange();
             }
          } break;
@@ -349,15 +349,15 @@ public:
       }
       return false;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       // Retrieve preferences
       int highrate = 48000;
       int lowrate = 8000;
-      
+
       const auto rmode = *std::get_if<std::string>(&mValues.find(MP3OptionIDMode)->second);
-      
+
       if (rmode == "ABR") {
          auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityABR)->second);
          if (bitrate > 160) {
@@ -383,7 +383,7 @@ public:
       for(auto rate : sampRates)
          if(rate >= lowrate && rate <= highrate)
             result.push_back(rate);
-      
+
       return result;
    }
 
@@ -404,7 +404,7 @@ public:
       config.Read(wxT("/FileFormats/MP3AbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityABR]));
       config.Read(wxT("/FileFormats/MP3CbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityCBR]));
       config.Read(wxT("/FileFormats/MP3VbrRate"), std::get_if<int>(&mValues[MP3OptionIDQualityVBR]));
-      
+
       OnModeChange(*std::get_if<std::string>(&mValues[MP3OptionIDMode]));
    }
 
@@ -422,7 +422,7 @@ public:
       it = mValues.find(MP3OptionIDQualityVBR);
       config.Write(wxT("/FileFormats/MP3VbrRate"), *std::get_if<int>(&it->second));
    }
-   
+
 private:
 
    void OnModeChange(const std::string& mode)
@@ -765,7 +765,7 @@ private:
    int mBitrate;
    int mQuality;
    //int mRoutine;
-   
+
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
    /* function pointers to the symbols we get from the library */
    lame_init_t* lame_init;
@@ -979,7 +979,7 @@ bool MP3Exporter::InitLibraryInternal()
 
 // The global ::lame_something symbols only exist if LAME is built in.
 // So we don't reference them unless they are.
-#ifdef MP3_EXPORT_BUILT_IN 
+#ifdef MP3_EXPORT_BUILT_IN
 
    lame_init = ::lame_init;
    get_lame_version = ::get_lame_version;
@@ -1247,7 +1247,7 @@ int MP3Exporter::InitializeStream(unsigned channels, int sampleRate)
       mode = MONO;
    else
       mode = JOINT_STEREO;
-   
+
    lame_set_mode(mGF, mode);
 
    int rc = lame_init_params(mGF);
@@ -1424,7 +1424,7 @@ wxString MP3Exporter::GetLibraryPath()
    {
         return path;
    }
-    
+
    return wxT("/Library/Application Support/audacity/libs");
 }
 
@@ -1639,7 +1639,7 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
+
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const override;
 
@@ -1748,7 +1748,7 @@ bool ExportMP3::ParseConfig(
    }
    else
       return false;
-   
+
    return true;
 }
 
@@ -1785,7 +1785,6 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    context.channels = channels;
 
    int rate = lrint(sampleRate);
-   const auto &tracks = TrackList::Get( project );
    auto& exporter = context.exporter;
 
 #ifdef DISABLE_DYNAMIC_LOADING_LAME
@@ -1813,7 +1812,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
    int lowrate = 8000;
    int bitrate = 0;
    int quality;
-   
+
    auto rmode = ExportPluginHelpers::GetParameterValue(
       parameters,
       MP3OptionIDMode,
@@ -1945,10 +1944,9 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
             .Format( bitrate );
    }
 
-   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         channels, context.inSamples, true,
-         rate, floatSample, mixerSpec);
+   context.mixer = ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, t0, t1, channels, context.inSamples, true, rate,
+      floatSample, mixerSpec);
 
    return true;
 }
@@ -1964,7 +1962,7 @@ ExportResult MP3ExportProcessor::Process(ExportProcessorDelegate& delegate)
    wxASSERT(buffer);
 
    auto exportResult = ExportResult::Success;
-   
+
    {
       while (exportResult == ExportResult::Success) {
          auto blockLen = context.mixer->Process();

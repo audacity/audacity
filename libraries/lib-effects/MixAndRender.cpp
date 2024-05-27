@@ -112,10 +112,10 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
       endTime = mixEndTime;
    }
 
-   Mixer mixer(move(waveArray),
+   Mixer mixer(
+      std::move(waveArray), std::nullopt,
       // Throw to abort mix-and-render if read fails:
-      true, warpOptions,
-      startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
+      true, warpOptions, startTime, endTime, mono ? 1 : 2, maxBlockLen, false,
       rate, format);
 
    using namespace BasicUI;
@@ -167,10 +167,11 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 
+template<typename Host>
 std::vector<MixerOptions::StageSpecification>
-GetEffectStages(const WaveTrack &track)
+GetEffectStagesImpl(const Host &host)
 {
-   auto &effects = RealtimeEffectList::Get(track);
+   auto &effects = RealtimeEffectList::Get(host);
    if (!effects.IsActive())
       return {};
    std::vector<MixerOptions::StageSpecification> result;
@@ -191,6 +192,18 @@ GetEffectStages(const WaveTrack &track)
    return result;
 }
 
+std::vector<MixerOptions::StageSpecification>
+GetEffectStages(const WaveTrack& track)
+{
+   return GetEffectStagesImpl(track);
+}
+
+std::vector<MixerOptions::StageSpecification>
+GetMasterEffectStages(const AudacityProject& project)
+{
+   return GetEffectStagesImpl(project);
+}
+
 /* The following registration objects need a home at a higher level to avoid
  dependency either way between WaveTrack or RealtimeEffectList, which need to
  be in different libraries that do not depend either on the other.
@@ -198,7 +211,7 @@ GetEffectStages(const WaveTrack &track)
  WaveTrack, like AudacityProject, has a registry for attachment of serializable
  data.  RealtimeEffectList exposes an interface for serialization.  This is
  where we connect them.
- 
+
  There is also registration for serialization of the project-wide master effect
  stack (whether or not UI makes it available).
  */

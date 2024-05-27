@@ -456,7 +456,7 @@ void AllocateChannelsToProcessors(
 /*! The iteration over channels in AddGroup and Process must be the same */
 std::shared_ptr<EffectInstance>
 RealtimeEffectState::AddGroup(
-   const ChannelGroup &group, unsigned chans, float sampleRate)
+   const ChannelGroup *group, unsigned chans, float sampleRate)
 {
    auto pInstance = EnsureInstance(sampleRate);
    if (!pInstance)
@@ -481,7 +481,7 @@ RealtimeEffectState::AddGroup(
    if (mCurrentProcessor > first) {
       // Remember the sampleRate of the group, so latency can be computed
       // later
-      mGroups[&group] = { first, sampleRate };
+      mGroups[group] = { first, sampleRate };
       return pInstance;
    }
    return {};
@@ -533,13 +533,13 @@ bool RealtimeEffectState::ProcessStart(bool running)
 //! Visit the effect processors that were added in AddGroup
 /*! The iteration over channels in AddGroup and Process must be the same */
 size_t RealtimeEffectState::Process(
-   const ChannelGroup &group, unsigned chans,
+   const ChannelGroup *group, unsigned chans,
    const float *const *inbuf, float *const *outbuf, float *const dummybuf,
    size_t numSamples)
 {
 
    const auto pInstance = mwInstance.lock();
-   const auto& pair = mGroups[&group];
+   const auto& pair = mGroups[group];
    const float** const clientIn =
       pInstance ? stackAllocate(const float*, pInstance->GetAudioInCount()) :
                   nullptr;

@@ -15,7 +15,7 @@
 
 #include <wx/log.h>
 #include <wx/stream.h>
- 
+
 #include <vorbis/vorbisenc.h>
 
 #include "wxFileNameWrapper.h"
@@ -78,7 +78,7 @@ namespace
          }
          return false;
       }
-      
+
       SampleRateList GetSampleRateList() const override
       {
          return {};
@@ -180,7 +180,7 @@ OGGExportProcessor::~OGGExportProcessor()
       vorbis_block_clear(&context.block);
       vorbis_dsp_clear(&context.dsp);
    }
-   
+
    vorbis_info_clear(&context.info);
 }
 
@@ -197,7 +197,6 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
    context.t1 = t1;
    context.numChannels = numChannels;
 
-   const auto &tracks = TrackList::Get( project );
    double    quality = ExportPluginHelpers::GetParameterValue(parameters, 0, 5) / 10.0;
 
    wxLogNull logNo;            // temporarily disable wxWidgets error messages
@@ -208,7 +207,7 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
    // Encoding setup
 
    vorbis_info_init(&context.info);
-   
+
    if (vorbis_encode_init_vbr(&context.info, numChannels, (int)(sampleRate + 0.5), quality)) {
       // TODO: more precise message
       throw ExportException(_("Unable to export - rate or quality problem"));
@@ -269,10 +268,9 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
       }
    }
 
-   context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-         t0, t1,
-         numChannels, SAMPLES_PER_RUN, false,
-         sampleRate, floatSample, mixerSpec);
+   context.mixer = ExportPluginHelpers::CreateMixer(
+      project, selectionOnly, t0, t1, numChannels, SAMPLES_PER_RUN, false,
+      sampleRate, floatSample, mixerSpec);
 
    context.status = selectionOnly
       ? XO("Exporting the selected audio as Ogg Vorbis")
@@ -361,7 +359,7 @@ ExportResult OGGExportProcessor::Process(ExportProcessorDelegate& delegate)
       // TODO: more precise message
       throw ExportErrorException("OGG:366");
    }
-   
+
    return exportResult;
 }
 
