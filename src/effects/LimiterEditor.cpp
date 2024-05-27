@@ -40,10 +40,10 @@ struct ParameterWrapper : public DynamicRangeProcessorParameter
 } // namespace
 
 LimiterEditor::LimiterEditor(
-   wxWindow* parent, CompressorInstance& instance,
-   DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-   EffectSettingsAccess& access, LimiterSettings settings)
-    : DynamicRangeProcessorEditor { parent, instance, outputs, services,
+   wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+   const EffectUIServices& services, EffectSettingsAccess& access,
+   LimiterSettings settings)
+    : DynamicRangeProcessorEditor { parent, instance, isRealtime, services,
                                     access }
     , mSettings { std::move(settings) }
 {

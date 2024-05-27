@@ -1,8 +1,17 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorEffectUtils.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "DynamicRangeProcessorEffectUtils.h"
 #include "CompressorEditor.h"
 #include "CompressorInstance.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "LimiterEditor.h"
 #include "ShuttleGui.h"
 
@@ -15,14 +24,9 @@ std::unique_ptr<EffectEditor> MakeEditor(
    SettingType settings)
 {
    auto& compressorInstance = *dynamic_cast<CompressorInstance*>(&instance);
-   // const-cast so that the editor can set and unset
-   // `DynamicRangeProcessorOutputs::mEditorCallback`.
-   // TODO is there a notification that `pOutputs` was called `Assign` upon
-   // somewhere ?
-   auto processorOutputs = dynamic_cast<DynamicRangeProcessorOutputs*>(
-      const_cast<EffectOutputs*>(pOutputs));
+   const auto isRealtime = pOutputs != nullptr;
    auto result = std::make_unique<EditorType>(
-      S.GetParent(), compressorInstance, processorOutputs, services, access,
+      S.GetParent(), compressorInstance, isRealtime, services, access,
       std::move(settings));
    result->PopulateOrExchange(S);
    return result;

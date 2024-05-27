@@ -10,7 +10,6 @@
 **********************************************************************/
 #include "CompressorInstance.h"
 #include "CompressorProcessor.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "MathApprox.h"
 #include <numeric>
 
@@ -24,6 +23,9 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
     : PerTrackEffect::Instance { other }
     , mCompressor { std::move(other.mCompressor) }
     , mSlaves { std::move(other.mSlaves) }
+    , mSampleCounter { std::move(other.mSampleCounter) }
+    , mSampleRate { std::move(other.mSampleRate) }
+    , mOutputQueue { std::move(other.mOutputQueue) }
 {
 }
 
@@ -32,11 +34,19 @@ const std::optional<double>& CompressorInstance::GetSampleRate() const
    return mSampleRate;
 }
 
+void CompressorInstance::SetOutputQueue(
+   std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> outputQueue)
+{
+   mOutputQueue = outputQueue;
+   for (auto& slave : mSlaves)
+      slave.mOutputQueue = outputQueue;
+}
+
 bool CompressorInstance::ProcessInitialize(
    EffectSettings& settings, double sampleRate, ChannelNames chanMap)
 {
    mSampleRate = sampleRate;
-   InstanceInit(settings, nullptr, *this, GetAudioInCount(), sampleRate);
+   InstanceInit(settings, *this, GetAudioInCount(), sampleRate);
    return true;
 }
 
@@ -104,9 +114,7 @@ bool CompressorInstance::RealtimeAddProcessor(
    float sampleRate)
 {
    mSlaves.emplace_back(mProcessor);
-   InstanceInit(
-      settings, dynamic_cast<DynamicRangeProcessorOutputs*>(pOutputs),
-      mSlaves.back(), numChannels, sampleRate);
+   InstanceInit(settings, mSlaves.back(), numChannels, sampleRate);
    return true;
 }
 
@@ -128,9 +136,8 @@ size_t CompressorInstance::RealtimeProcess(
    auto& compressor = *slave.mCompressor;
    const auto numProcessedSamples =
       InstanceProcess(settings, compressor, inbuf, outbuf, numSamples);
-   if (slave.mpOutputs)
+   if (const auto queue = slave.mOutputQueue.lock())
    {
-      auto& packets = slave.mpOutputs->packets;
       const auto& frameStats = compressor.GetLastFrameStats();
       const auto& compressorSettings = compressor.GetSettings();
       const float netGain = compressorSettings.outCompressionThreshDb -
@@ -138,11 +145,12 @@ size_t CompressorInstance::RealtimeProcess(
       const auto targetCompressionDb =
          compressor.EvaluateTransferFunction(frameStats.maxInputSampleDb) -
          frameStats.maxInputSampleDb - netGain;
-      auto& newPacket = packets.emplace_back();
+      DynamicRangeProcessorOutputPacket newPacket;
       newPacket.indexOfFirstSample = slave.mSampleCounter;
       newPacket.numSamples = numProcessedSamples;
       newPacket.targetCompressionDb = targetCompressionDb;
       newPacket.actualCompressionDb = frameStats.dbAttenuationOfMaxInputSample;
+      queue->Put(newPacket);
    }
    slave.mSampleCounter += numProcessedSamples;
    return numProcessedSamples;
@@ -160,10 +168,10 @@ void CompressorInstance::RealtimePassThrough(
 }
 
 void CompressorInstance::InstanceInit(
-   EffectSettings& settings, DynamicRangeProcessorOutputs* pOutputs,
-   CompressorInstance& instance, int numChannels, float sampleRate)
+   EffectSettings& settings, CompressorInstance& instance, int numChannels,
+   float sampleRate)
 {
-   instance.mpOutputs = pOutputs;
+   instance.mOutputQueue = mOutputQueue;
    instance.mCompressor->ApplySettingsIfNeeded(
       GetDynamicRangeProcessorSettings(settings));
    instance.mCompressor->Init(sampleRate, numChannels, GetBlockSize());

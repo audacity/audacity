@@ -12,8 +12,8 @@
 #include "Compressor.h"
 #include "CompressorEditor.h"
 #include "CompressorInstance.h"
+#include "DynamicRangeProcessorDummyOutputs.h"
 #include "DynamicRangeProcessorEffectUtils.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "LoadEffects.h"
 #include "ShuttleAutomation.h"
 
@@ -43,7 +43,7 @@ std::shared_ptr<EffectInstance> EffectCompressor::MakeInstance() const
 
 std::unique_ptr<EffectOutputs> EffectCompressor::MakeOutputs() const
 {
-   return std::make_unique<DynamicRangeProcessorOutputs>();
+   return std::make_unique<DynamicRangeProcessorDummyOutputs>();
 }
 
 bool EffectCompressor::CheckWhetherSkipEffect(

@@ -3,7 +3,6 @@
 #include "BasicUI.h"
 #include "CompressorProcessor.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
-#include "DynamicRangeProcessorOutputs.h"
 #include "DynamicRangeProcessorTransferFunctionPanel.h"
 #include "EffectInterface.h"
 #include "ShuttleGui.h"
@@ -12,6 +11,7 @@
 #include "widgets/RulerPanel.h"
 #include "widgets/valnum.h"
 #include <wx/checkbox.h>
+#include <wx/dialog.h>
 #include <wx/sizer.h>
 #include <wx/slider.h>
 #include <wx/textctrl.h>
@@ -65,15 +65,14 @@ auto MakeRulerPanel(
 }
 
 void MakeHistoryPanels(
-   wxWindow* parent, CompressorInstance& instance,
-   DynamicRangeProcessorOutputs& outputs, EffectSettingsAccess& access,
+   wxWindow* parent, CompressorInstance& instance, EffectSettingsAccess& access,
    std::function<void(float newDbRange)> onDbRangeChanged)
 {
    const auto settings = GetSettings(access);
    const auto dbRange =
       GetDbRange(CompressorProcessor::GetMaxCompressionDb(settings));
    safenew HistPanel(
-      parent, historyPanelId, outputs, instance, std::move(onDbRangeChanged));
+      parent, historyPanelId, instance, std::move(onDbRangeChanged));
    MakeRulerPanel(parent, wxVERTICAL, dbRange, historyRulerPanelId);
 }
 
@@ -130,12 +129,10 @@ auto TextToSliderValue(ExtendedCompressorParameter& setting)
 } // namespace
 
 DynamicRangeProcessorEditor::DynamicRangeProcessorEditor(
-   wxWindow* parent, CompressorInstance& instance,
-   DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-   EffectSettingsAccess& access)
+   wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+   const EffectUIServices& services, EffectSettingsAccess& access)
     : EffectEditor { services, access }
     , mUIParent { parent }
-    , mOutputs { outputs }
     , mTopLevelParent(static_cast<wxDialog&>(*wxGetTopLevelParent(parent)))
 {
    mTopLevelParent.Bind(wxEVT_SIZE, [this](wxSizeEvent& evt) {
@@ -151,17 +148,16 @@ DynamicRangeProcessorEditor::DynamicRangeProcessorEditor(
    mTopLevelParent.SetWindowStyleFlag(
       mTopLevelParent.GetWindowStyleFlag() & ~wxRESIZE_BORDER &
       ~wxMAXIMIZE_BOX);
-   if (outputs)
-      MakeHistoryPanels(
-         parent, instance, *outputs, access, [parent](float newDbRange) {
-            if (
-               const auto panel = dynamic_cast<RulerPanel*>(
-                  wxWindow::FindWindowById(historyRulerPanelId, parent)))
-            {
-               panel->ruler.SetRange(0., -newDbRange);
-               panel->Refresh();
-            }
-         });
+   if (isRealtime)
+      MakeHistoryPanels(parent, instance, access, [parent](float newDbRange) {
+         if (
+            const auto panel = dynamic_cast<RulerPanel*>(
+               wxWindow::FindWindowById(historyRulerPanelId, parent)))
+         {
+            panel->ruler.SetRange(0., -newDbRange);
+            panel->Refresh();
+         }
+      });
 }
 
 void DynamicRangeProcessorEditor::Initialize(
@@ -244,7 +240,8 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.EndMultiColumn();
    }
 
-   if (!mOutputs)
+   const auto histPanel = wxWindow::FindWindowById(historyPanelId, mUIParent);
+   if (!histPanel)
       // Not a real-time effect editor, no need for a graph or its reveal
       // checkbox.
       return;
@@ -273,7 +270,7 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.AddSpace(borderSize, 0);
       S.Prop(1)
          .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
-         .AddWindow(wxWindow::FindWindowById(historyPanelId, mUIParent));
+         .AddWindow(histPanel);
 
       S.Prop(1)
          .Position(wxEXPAND | wxALIGN_TOP)
@@ -352,13 +349,6 @@ bool DynamicRangeProcessorEditor::UpdateUI()
       tfPanel->Refresh();
 
    return true;
-}
-
-void DynamicRangeProcessorEditor::OnClose()
-{
-   if (mOutputs)
-      mOutputs->SetEditorCallback(nullptr);
-   EffectEditor::OnClose();
 }
 
 void DynamicRangeProcessorEditor::OnCheckbox(bool checked)

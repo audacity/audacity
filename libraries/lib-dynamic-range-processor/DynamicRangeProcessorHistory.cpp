@@ -1,3 +1,13 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorHistory.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "DynamicRangeProcessorHistory.h"
 #include "DynamicRangeProcessorTypes.h"
 #include <algorithm>
@@ -84,6 +94,13 @@ const std::vector<DynamicRangeProcessorHistory::Segment>&
 DynamicRangeProcessorHistory::GetSegments() const
 {
    return mSegments;
+}
+
+bool DynamicRangeProcessorHistory::IsEmpty() const
+{
+   return std::all_of(
+      mSegments.begin(), mSegments.end(),
+      [](const auto& segment) { return segment.empty(); });
 }
 
 float DynamicRangeProcessorHistory::GetPacketTime(

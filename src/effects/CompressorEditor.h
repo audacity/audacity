@@ -21,9 +21,9 @@ class CompressorEditor final : public DynamicRangeProcessorEditor
 {
 public:
    CompressorEditor(
-      wxWindow* parent, CompressorInstance& instance,
-      DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-      EffectSettingsAccess& access, CompressorSettings settings);
+      wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+      const EffectUIServices& services, EffectSettingsAccess& access,
+      CompressorSettings settings);
 
    static constexpr CompressorParameter thresholdDb {
       &CompressorSettings::thresholdDb,

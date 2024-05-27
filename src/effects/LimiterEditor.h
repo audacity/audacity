@@ -22,9 +22,9 @@ class LimiterEditor final : public DynamicRangeProcessorEditor
 {
 public:
    LimiterEditor(
-      wxWindow* parent, CompressorInstance& instance,
-      DynamicRangeProcessorOutputs* outputs, const EffectUIServices& services,
-      EffectSettingsAccess& access, LimiterSettings settings);
+      wxWindow* parent, CompressorInstance& instance, bool isRealtime,
+      const EffectUIServices& services, EffectSettingsAccess& access,
+      LimiterSettings settings);
 
 private:
    const LimiterSettings* GetLimiterSettings() const override

@@ -1,6 +1,16 @@
-// TODO header
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorTypes.h
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #pragma once
 
+#include "LockFreeQueue.h"
 #include <array>
 #include <limits>
 #include <memory>
@@ -13,6 +23,9 @@ struct DynamicRangeProcessorOutputPacket
    float targetCompressionDb = 0;
    float actualCompressionDb = 0;
 };
+
+using DynamicRangeProcessorOutputPacketQueue =
+   LockFreeQueue<DynamicRangeProcessorOutputPacket>;
 
 struct InitializeProcessingSettings
 {
