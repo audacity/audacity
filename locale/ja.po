@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-04-24 10:05+0900\n"
+"PO-Revision-Date: 2024-05-20 08:30+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 3.4.2\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -258,7 +258,7 @@ msgstr "プリセットを設定ファイルに記録できません"
 #: libraries/lib-lv2/LV2EffectBase.cpp src/effects/ChangeSpeed.cpp
 #: src/effects/EffectUI.cpp src/effects/nyquist/Nyquist.cpp
 msgid "n/a"
-msgstr "情報なし"
+msgstr "利用不可"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
@@ -387,9 +387,8 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "クラウドプロジェクトのブロックを展開できません"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Local project data was removed before the sync has completed"
-msgstr "スナップショット作成前にプロジェクトが閉じられました"
+msgstr "同期が完了する前にローカルプロジェクトのデータが削除されました"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -631,7 +630,7 @@ msgid ""
 "Resetting to default location."
 msgstr ""
 "一時ファイルディレクトリに FAT 形式のドライブが指定されています。\n"
-"デフォルト値にリセットします。"
+"デフォルトの場所にリセットします。"
 
 #: libraries/lib-files/TempDirectory.cpp
 #, c-format
@@ -1026,8 +1025,8 @@ msgid ""
 "There was a problem with your last action. If you think\n"
 "this is a bug, please tell us exactly where it occurred."
 msgstr ""
-"最後の操作に問題がありました。もしこれがバグであると\n"
-"思われる場合は、どこで起こったかを正確に報告してください。"
+"最後の操作で問題が起こりました。これがバグであると\n"
+"考えられる場合は、どこで起こったかを正確に報告してください。"
 
 #: libraries/lib-menus/CommandManager.cpp
 msgid "Disallowed"
@@ -1151,7 +1150,7 @@ msgstr "プラグインファイル %s を上書きしますか?"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in already exists"
-msgstr "プラグインが既に存在します"
+msgstr "プラグインがすでに存在します"
 
 #: libraries/lib-module-manager/PluginManager.cpp
 msgid "Plug-in file is in use. Failed to overwrite"
@@ -1311,18 +1310,18 @@ msgstr "小節"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr "拍"
+msgstr "ビート"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr "小節:拍"
+msgstr "小節:ビート"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat:tick"
-msgstr "小節:拍:ティック"
+msgstr "小節:ビート:ティック"
 
 #. i18n-hint: Format string for displaying time in seconds. Change the comma
 #. * in the middle to the 1000s separator for your locale, and the 'seconds'
@@ -1759,7 +1758,7 @@ msgid ""
 "Directories Preferences."
 msgstr ""
 "%s ドライブのストレージ空き容量が残りわずかです。\n"
-"環境設定から、もっと余裕のある一時ディレクトリを\n"
+"環境設定から、もっと余裕のある一時ディレクトリの場所を\n"
 "選択してください。"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -2150,7 +2149,7 @@ msgstr "デバッグ(&G)"
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Beats"
-msgstr "拍"
+msgstr "ビート"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
@@ -2379,7 +2378,7 @@ msgstr "ライブラリが正しく使用されていません"
 #. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
-msgstr "大容量ファイルのサポートが無効です"
+msgstr "大容量ファイルがサポートされていません"
 
 #. i18n-hint: database operation has failed due to the authorization error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2417,7 +2416,7 @@ msgstr "切り取り/コピー/貼り付けツールバー(&C)"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
-msgstr "決定不可能"
+msgstr "判定できません"
 
 #: libraries/lib-strings/Internat.cpp
 #, c-format
@@ -2448,7 +2447,7 @@ msgstr "Simplified"
 
 #: libraries/lib-strings/Languages.cpp
 msgid "System"
-msgstr "システムの言語"
+msgstr "システム言語"
 
 #. i18n-hint: describing the "classic" or traditional
 #. appearance of older versions of Audacity
@@ -2497,14 +2496,14 @@ msgid ""
 "Audacity could not open file:\n"
 "  %s\n"
 "for writing."
-msgstr "書き込むためのファイル %s を開けません。"
+msgstr "書き込み用ファイル %s を開くことができません。"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid ""
 "Audacity could not write images to file:\n"
 "  %s."
-msgstr "イメージをファイル %s に書き込めません。"
+msgstr "イメージをファイル %s に書き込むことができません。"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2538,7 +2537,7 @@ msgstr ""
 #: libraries/lib-theme/Theme.cpp
 #, c-format
 msgid "Couldn't read from file: %s"
-msgstr "ファイルを読み込めません: %s"
+msgstr "ファイルを読み込むことができません: %s"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2546,7 +2545,7 @@ msgid ""
 "None of the expected theme component files\n"
 " were found in:\n"
 "  %s."
-msgstr "テーマを構成するファイルが %s の中に見つかりません。"
+msgstr "テーマの構成ファイルが %s の中に見つかりません。"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2563,7 +2562,7 @@ msgid ""
 "Could not create directory:\n"
 "  %s"
 msgstr ""
-"ディレクトリを作成できません:\n"
+"ディレクトリを作成することができません:\n"
 "  %s"
 
 #: libraries/lib-theme/Theme.cpp
@@ -2574,8 +2573,8 @@ msgid ""
 "were already present. Overwrite?"
 msgstr ""
 "  %s\n"
-"で要求されたファイルのうち、\n"
-"既に存在するものがあります。上書きしますか?"
+"にある必要なファイルのうち、すでに存在するものが\n"
+"あります。上書きしますか?"
 
 #: libraries/lib-theme/Theme.cpp
 #, c-format
@@ -2583,14 +2582,14 @@ msgid ""
 "Audacity could not save file:\n"
 "  %s"
 msgstr ""
-"ファイルに保存できません:\n"
+"ファイルに保存することができません:\n"
 "  %s"
 
 #: libraries/lib-theme/Theme.cpp src/FreqWindow.cpp src/LabelDialog.cpp
 #: src/effects/Contrast.cpp src/menus/FileMenus.cpp
 #, c-format
 msgid "Couldn't write to file: %s"
-msgstr "ファイルに書き込めません: %s"
+msgstr "ファイルに書き込むことができません: %s"
 
 #. i18n-hint "Cee" means the C computer programming language
 #: libraries/lib-theme/Theme.cpp
@@ -2623,9 +2622,7 @@ msgstr "一般トラック"
 
 #: libraries/lib-transactions/TransactionScope.cpp
 msgid "Database error.  Sorry, but we don't have more details."
-msgstr ""
-"データベースエラー。\n"
-"申し訳ありませんが、これ以上の詳細は不明です。"
+msgstr "データベースエラー。残念ながら、これ以上の詳細は不明です。"
 
 #: libraries/lib-vst/VSTEffectBase.cpp
 #, c-format
@@ -2656,13 +2653,13 @@ msgstr "VST プリセット読み込みエラー"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to read presets file."
-msgstr "プリセットファイルを読み込めません。"
+msgstr "プリセットファイルを読み込むことができません。"
 
 #: libraries/lib-vst/VSTWrapper.cpp libraries/lib-xml/XMLFileReader.cpp
 #: src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "Could not open file: \"%s\""
-msgstr "ファイルを開けません:「%s」"
+msgstr "ファイル「%s」を開くことができません。"
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Saving VST Presets"
@@ -2671,7 +2668,7 @@ msgstr "VST プリセット保存エラー"
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "Error writing to file: \"%s\""
-msgstr "ファイル書き込みエラー:「%s」"
+msgstr "ファイル「%s」を書き込み中にエラーが発生しました。"
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/BasicEffectUIServices.cpp
 msgid "Error Saving Effect Presets"
@@ -2726,8 +2723,8 @@ msgid ""
 "Sequence has block file exceeding maximum %s samples per block.\n"
 "Truncating to this maximum length."
 msgstr ""
-"ブロックあたり %s サンプルを超えるブロックファイルがシーケンス内にあります。\n"
-"上限の長さに切りそろえます。"
+"シーケンスのブロックファイルが、ブロックあたりの最大サンプル数 %s を\n"
+"超えています。最大長に切り捨てます。"
 
 #: libraries/lib-wave-track/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
@@ -2771,15 +2768,15 @@ msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
-msgstr "選択範囲を貼り付けるのに十分な余裕がありません"
+msgstr "選択範囲を貼り付けるのに十分な空きスペースがありません"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr "トラックに破損したサンプルシーケンスがあります。"
+msgstr "トラックのサンプルシーケンスが破損しています。"
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
-msgstr "カットラインを延長するのに十分な空きがありません"
+msgstr "カットラインを延長するのに十分な空きスペースがありません"
 
 #: libraries/lib-wx-init/ErrorDialog.cpp src/menus/HelpMenus.cpp
 msgid "Show &Log..."
@@ -2796,12 +2793,12 @@ msgstr "ここ"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr "問題を解決するために、レポートを送信しますか?"
+msgstr "この問題を解決するために、レポートを送信しますか?"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 #, c-format
 msgid "All reports are anonymous. See %s for more info."
-msgstr "レポートはすべて匿名です。詳細については、%sをご覧ください。"
+msgstr "レポートはすべて匿名です。詳細は %s を参照してください。"
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
@@ -2910,7 +2907,7 @@ msgstr "Audacity プロジェクトファイルの保存"
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Support for Other Formats"
-msgstr "サポートされる形式"
+msgstr "サポートされるほかの形式"
 
 #. i18n-hint: Title for a topic.
 #: libraries/lib-wx-init/HelpText.cpp
@@ -2958,7 +2955,7 @@ msgstr "ログ保存先:"
 #: libraries/lib-wx-init/LogWindow.cpp
 #, c-format
 msgid "Couldn't save log to file: %s"
-msgstr "ログをファイルに保存できません: %s"
+msgstr "ファイルにログを保存できません: %s"
 
 #: libraries/lib-wx-init/MultiDialog.cpp
 msgid "Show Log for Details"
@@ -3040,7 +3037,7 @@ msgstr "次回からは表示しない"
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
 msgid "File '%s' already exists, do you really want to overwrite it?"
-msgstr "ファイル「%s」は既に存在します。上書きしてもよろしいですか?"
+msgstr "ファイル「%s」はすでに存在します。上書きしてもよろしいですか?"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 msgid "Please choose an existing file."
@@ -3184,7 +3181,7 @@ msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
-msgstr "アクティブなプロジェクトには既に時間トラックが存在します。インポートしようとしているプロジェクトにも時間トラックがあったため、バイパスしました。"
+msgstr "アクティブなプロジェクトにはすでに時間トラックが存在します。インポートしようとしているプロジェクトにも時間トラックがあったため、バイパスしました。"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid sequence 'maxsamples' attribute."
@@ -5884,7 +5881,7 @@ msgstr "続ける(&O)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
-msgstr "audio.com アカウントにリンク(&I)…"
+msgstr "audio.com アカウントにリンク(&I)..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
@@ -5954,7 +5951,7 @@ msgstr "クラウドプロジェクトと競合"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr "既に開かれているこのプロジェクトのアクティブバージョンを新規に開こうとしています。開いて残したいバージョンを選択してください。"
+msgstr "すでに開かれているこのプロジェクトのアクティブバージョンを新規に開こうとしています。開いて残したいバージョンを選択してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
@@ -6744,7 +6741,7 @@ msgstr "分と秒"
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
 msgid "Beats and Measures"
-msgstr "拍と小節"
+msgstr "ビートと小節"
 
 # ルーラーパネルのメニュー
 #: src/AdornedRulerPanel.cpp
@@ -6891,7 +6888,7 @@ msgstr ""
 
 #: src/AudacityApp.cpp
 msgid "Audacity is already running"
-msgstr "Audacity は既に起動しています"
+msgstr "Audacity はすでに起動しています"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -7084,7 +7081,7 @@ msgid ""
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
 "このファイルを %s bpm と判定しました。\n"
-"音楽ビューを有効にして、プロジェクトのテンポを %s に設定してもよろしいですか?"
+"音楽表示を有効にして、プロジェクトのテンポを %s に設定してもよろしいですか?"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7093,7 +7090,7 @@ msgid ""
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
 "1 つまたはそれ以上のファイルを %s bpm と判定しました。\n"
-"音楽ビューを有効にして、プロジェクトのテンポを %s に設定してもよろしいですか?"
+"音楽表示を有効にして、プロジェクトのテンポを %s に設定してもよろしいですか?"
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
@@ -7235,7 +7232,7 @@ msgstr "マクロをインポート"
 #: src/BatchCommands.cpp
 #, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
-msgstr "マクロ「%s」は既に存在します。上書きしますか?"
+msgstr "マクロ「%s」はすでに存在します。上書きしますか?"
 
 #: src/BatchCommands.cpp
 msgid "Export Macro"
@@ -8414,158 +8411,140 @@ msgstr "ミキサー(&M)"
 
 #: src/PendingStrings.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "無料のプラグインとサウンドを入手"
 
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>Audascity ユーザーのためのさまざまなオーディオプラグインを提供する [[%s|Muse Hub app]] をチェックしてください</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "チュートリアルを表示"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "audio.com に接続"
+msgstr "フォーラムにアクセス"
 
 #. i18n-hint: Title of the buttons that adds new effects plugin search path
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "新規ルールを追加(&A)"
+msgstr "新しい場所を追加"
 
 #. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "場所を選んでください"
+msgstr "%s プラグインの場所"
 
 #. i18n-hint: master channel display name
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master"
-msgstr "貼り付け"
+msgstr "マスター"
 
 #. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master effects"
-msgstr "リアルタイムエフェクト"
+msgstr "マスターエフェクト"
 
 #. i18n-hint: Hint for a master effects section of realtime effects panel
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Apply to all tracks"
-msgstr "新規トラックに分割"
+msgstr "すべてのトラックに適用"
 
 #: src/PendingStrings.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "「ダイナミックレンジ」（大音量と小音量間の差）を低減します。"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "圧縮"
+msgstr "圧縮曲線"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "何もしない"
+msgstr "平滑化"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Input gain (dB)"
-msgstr "出力ゲイン（dB）"
+msgstr "入力ゲイン（dB）"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Ceiling (dB)"
-msgstr "ゲイン（dB）"
+msgstr "上限（dB）"
 
 #: src/PendingStrings.cpp
 msgid "Input"
-msgstr ""
+msgstr "入力"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attenuation"
-msgstr "方向"
+msgstr "減衰"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "しきい値のレベル（dB）"
+msgstr "しきい値（dB）(&T)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "メイクアップゲイン"
+msgstr "メイクアップゲイン(&M)"
 
 #: src/PendingStrings.cpp
 msgid "&Make-up target (dB)"
-msgstr ""
+msgstr "メイクアップターゲット（dB）(&M)"
 
 #: src/PendingStrings.cpp
 msgid "Knee &width (dB)"
-msgstr ""
+msgstr "ニー幅（dB）(&W)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Rati&o:"
-msgstr "レシオ(&R):"
+msgstr "比率(&O):"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
-msgstr ""
+msgstr "ルックアヘッド（ミリ秒）(&L)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "アタック（ミリ秒）"
+msgstr "アタック（ミリ秒）(&K)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "リリースタイム"
+msgstr "リリース（ミリ秒）(&R)"
 
 #: src/PendingStrings.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "再生待ち"
 
 #: src/PendingStrings.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "歪みを最小限に抑えながらラウドネスを増強します。"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Limiter (beta)"
-msgstr "リミッター"
+msgstr "リミッター（ベータ）"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compressor (beta)"
-msgstr "コンプレッサー"
+msgstr "コンプレッサー（ベータ）"
 
 #: src/PendingStrings.cpp
 msgid "&Show graph (beta)"
-msgstr ""
+msgstr "グラフ表示（ベータ）(&S)"
 
 #. i18n-hint: import progress dialog title, progress dialog
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "%s をインポート中"
+msgstr "ファイルをインポート中"
 
 #. i18n-hint: import progress dialot text, where %s is the filename
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "%s をインポート中"
+msgstr "%s をインポート中..."
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8751,9 +8730,8 @@ msgid "&Rescan"
 msgstr "再スキャン(&R)"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "ほかのエフェクトを取得..."
+msgstr "ほかのエフェクトを取得(&G)..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9169,7 +9147,7 @@ msgstr "1 個以上のファイルを選択してください"
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "%s is already open in another window."
-msgstr "%s はほかのウィンドウで既に開かれています。"
+msgstr "%s はほかのウィンドウですでに開かれています。"
 
 #: src/ProjectFileManager.cpp
 msgid "Error Opening Project"
@@ -9629,7 +9607,7 @@ msgstr "Audacity %s の更新内容"
 
 #: src/SplashDialog.cpp
 msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr "<p>今回のリリースでは、拍と小節、タイムストレッチなどが追加されました。<br/>"
+msgstr "<p>今回のリリースでは、ビートと小節、タイムストレッチなどを追加しました。<br/>"
 
 #: src/SplashDialog.cpp
 #, c-format
@@ -12370,7 +12348,7 @@ msgid ""
 "\n"
 "Replace?"
 msgstr ""
-"プリセットが既に存在します。\n"
+"プリセットがすでに存在します。\n"
 "\n"
 "置き換えますか?"
 
@@ -12390,7 +12368,7 @@ msgstr "グラフィック EQ"
 # ja: 説明
 #: src/effects/Equalization.cpp
 msgid "Adjusts the volume levels of particular frequencies"
-msgstr "特定の周波数の音量を調節します"
+msgstr "特定の周波数の音量を調整します"
 
 # ja: ファクトリープリセット
 #: src/effects/Equalization.cpp
@@ -12502,7 +12480,7 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
-"EQ 曲線ファイルの読み込みにエラーが起きました:\n"
+"EQ 曲線ファイルの読み込みでエラーが起きました:\n"
 "%s\n"
 "エラーメッセージ:\n"
 "%s"
@@ -14461,7 +14439,7 @@ msgstr "次の %lld ファイルのエクスポート後、重大な問題が起
 #: src/export/ExportAudioDialog.cpp
 #, c-format
 msgid "A file named \"%s\" already exists. Replace?"
-msgstr "ファイル名「%s」は既に存在しています。置き換えますか?"
+msgstr "ファイル名「%s」はすでに存在しています。置き換えますか?"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "All selected audio is muted."
@@ -15001,7 +14979,7 @@ msgid ""
 "File already exists that is not a directory"
 msgstr ""
 "「%s」ディレクトリを作成できません。\n"
-"ディレクトリではなく、既にファイルが存在しています"
+"ディレクトリではなく、すでにファイルが存在しています"
 
 #. i18n-hint: filename containing exported text from label tracks
 #: src/menus/FileMenus.cpp
@@ -15038,11 +15016,11 @@ msgstr "最近使ったファイル(&F)"
 
 #: src/menus/FileMenus.cpp
 msgid "&Save Project"
-msgstr "保存(&S)"
+msgstr "プロジェクトを保存(&S)"
 
 #: src/menus/FileMenus.cpp
 msgid "Save Project &As..."
-msgstr "名前を付けて保存(&A)..."
+msgstr "プロジェクトに名前を付けて保存(&A)..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Backup Project..."
@@ -15094,9 +15072,8 @@ msgid "Export as FLAC"
 msgstr "FLAC としてエクスポート"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "オーディオをエクスポート..."
+msgstr "選択したオーディオをエクスポート(&R)..."
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -16543,7 +16520,7 @@ msgstr "チャンネル(&N):"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Project Sample Rate:"
-msgstr "プロジェクトのサンプリング周波数 (&P):"
+msgstr "プロジェクトのサンプリング周波数(&P):"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
@@ -16776,11 +16753,11 @@ msgstr "エフェクトオプション"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr "エフェクトメニューの構成 (&O):"
+msgstr "エフェクトメニューの構成(&O):"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Realtime effect o&rganization:"
-msgstr "リアルタイムエフェクトの構成 (&R):"
+msgstr "リアルタイムエフェクトの構成(&R):"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Skip effects scanning at startup"
@@ -16982,11 +16959,11 @@ msgstr "インポートとエクスポートの環境設定"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "S&witch view to Beats and Measures and align with musical grid"
-msgstr "ビューを拍と小節に変更し、音楽グリッドに整列(&W)"
+msgstr "ビートと小節表示に変更して、音楽グリッドに整列(&W)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
-msgstr "毎回確認する(&A)"
+msgstr "毎回確認(&A)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Do &nothing"
@@ -16994,7 +16971,7 @@ msgstr "何もしない(&N)"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
-msgstr "音楽をインポート"
+msgstr "音楽のインポート"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When Audacity detects music in file imported on empty project"
@@ -17169,7 +17146,7 @@ msgid ""
 "\n"
 "instead. Otherwise, click Cancel."
 msgstr ""
-"そのショートカット「%s」は、既に次の操作へ割り当てられています:\n"
+"そのショートカット「%s」は、すでに次の操作へ割り当てられています:\n"
 "\n"
 "\t%s\n"
 "\n"
@@ -17812,7 +17789,7 @@ msgstr "ソロボタン(&B):"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Pasted audio"
-msgstr "ラベル付きオーディオ(&B)"
+msgstr "貼り付けたオーディオ"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Paste audio from other Audacity project as"
@@ -17893,7 +17870,7 @@ msgstr "トラックの環境設定"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Auto-&fit track height"
-msgstr "トラックの高さを自動フィット(&F)"
+msgstr "トラックの高さを自動調整(&F)"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Use &half-wave display when collapsed"
@@ -17996,7 +17973,7 @@ msgstr "録音チャンネル(&C)"
 
 #: src/toolbars/AudioSetupToolBar.cpp
 msgid "&Audio Settings..."
-msgstr "オーディオ環境設定(&P)..."
+msgstr "オーディオ環境設定(&A)..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
 msgid "1 (Mono) Recording Channel"
@@ -18742,7 +18719,7 @@ msgstr "クリップの速度"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&speed %: "
-msgstr "速度 %: (&S)"
+msgstr "速度 %(&S):"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "General"
@@ -18874,7 +18851,7 @@ msgstr "同時表示(&M)"
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust left trim by %.02f seconds"
-msgstr "左トリミングを %.02f 秒単位で調節"
+msgstr "左トリミングを %.02f 秒単位で調整"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -18886,7 +18863,7 @@ msgstr "%.02f トリミング"
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 #, c-format
 msgid "Adjust right trim by %.02f seconds"
-msgstr "右トリミングを %.02f 秒単位で調節"
+msgstr "右トリミングを %.02f 秒単位で調整"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
 msgid "Click and drag to move clip boundary in time"
@@ -19722,9 +19699,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3f×"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -20102,7 +20079,7 @@ msgstr "S 字曲線フェードアウト"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Mid-fade Adjust (%)"
-msgstr "曲線調整（%）"
+msgstr "フェード曲線調整（%）"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Start/End as"
@@ -20856,7 +20833,7 @@ msgstr "未対応のファイル形式:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Files already installed ('Allow Overwriting' disabled):"
-msgstr "既にインストールされていたファイル~%（「上書きの許可」が無効です）:"
+msgstr "すでにインストールされていたファイル~%（「上書きの許可」が無効です）:"
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Cannot be written to plug-ins folder:"

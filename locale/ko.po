@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-04-17 16:20+0900\n"
+"PO-Revision-Date: 2024-05-20 13:14+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/klyok/teams/690/ko/)\n"
 "Language: ko\n"
@@ -393,9 +393,8 @@ msgid "Failed to decompress the Cloud project block"
 msgstr "클라우 프로젝트 블록 압축풀기 실패"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Local project data was removed before the sync has completed"
-msgstr "스냅샷이 만들어지기 전에 프로젝트가 닫혔습니다."
+msgstr "동기화가 완료되기 전에 로컬 프로젝트 데이터가 삭제되었습니다."
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -1969,7 +1968,7 @@ msgstr "[프로젝트 %02i] 오데시티 \"%s\""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "<untitled>"
-msgstr "<제목 없음>"
+msgstr "<무제>"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -5295,7 +5294,7 @@ msgstr "도구모음"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "&Go\tF5"
-msgstr "이동(&G)\tF5"
+msgstr "시작(&G)\tF5"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "&Stop\tF6"
@@ -5574,24 +5573,20 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "미리보기는 클라우드 프로젝트만 업데이트 됩니다"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Save &To Cloud..."
-msgstr "클라우드에 저장..."
+msgstr "클라우드에 저장...(&T)"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "&Update Cloud Audio Preview"
-msgstr "클라우드 오디오 프리뷰를 업데이트"
+msgstr "클라우드 오디오 프리뷰를 업데이트 (&U)"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Fro&m Cloud..."
-msgstr "클라우드로 부터 열기..."
+msgstr "클라우드로 부터 열기...(&M)"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "S&hare Audio..."
-msgstr "오디오 공유..."
+msgstr "오디오 공유...(&H)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -5961,7 +5956,7 @@ msgstr "1분 미만"
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d분 전"
+msgstr[0] "%d 분 전"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
@@ -6738,7 +6733,7 @@ msgstr "반복 지우기"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
-msgstr "반복 구간을 선택영역으로"
+msgstr "선택영역을 반복 구간으로"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
@@ -7745,8 +7740,8 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"'누락'으로 나타나는 파일은 옮겨지거나 삭제되어서 복사할 수 없습니다.\n"
-"프로젝트에 복사할 수 있게 본래 그 원래 위치로 복구하세요."
+"'누락'으로 표시된 파일은 옮겨졌거나 삭제되어 복사할 수 없습니다.\n"
+"프로젝트에 복사하려면, 원래 위치로 복구하세요."
 
 #: src/Dependencies.cpp
 msgid "Project Dependencies"
@@ -8353,158 +8348,140 @@ msgstr "믹서(&M)"
 
 #: src/PendingStrings.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "무료 플러그인과 사운드 가져오기"
 
 #: src/PendingStrings.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>우릐의 [[%s|Muse Hub app]]을 방문하면 오데시티 사용자를 위한 다양한 오디오 플러그인이 있습니다.</p>"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "튜토리얼 보기"
 
 #. i18n-hint: hyperlink
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "audio.com 방문하기"
+msgstr "포럼 방문하기"
 
 #. i18n-hint: Title of the buttons that adds new effects plugin search path
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "새 규칙 추가(&A)"
+msgstr "새 위치 추가"
 
 #. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
 #. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "위치를 선택하세요"
+msgstr "%s 플러그인 위치"
 
 #. i18n-hint: master channel display name
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master"
-msgstr "붙여넣기"
+msgstr "마스터"
 
 #. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Master effects"
-msgstr "실시간 효과"
+msgstr "마스터 효과"
 
 #. i18n-hint: Hint for a master effects section of realtime effects panel
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Apply to all tracks"
-msgstr "새 트랙에 분할하기"
+msgstr "모든 트랙에 적용하기"
 
 #: src/PendingStrings.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "\"dynamic range\"를 줄이거나, 소르기 큰 곳과 작은 곳을 분리하세요."
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "컴프레션"
+msgstr "컴프레션 커브"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "동작 없음"
+msgstr "스무딩"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Input gain (dB)"
-msgstr "출력 게인 (dB)"
+msgstr "입력 게인 (dB)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Ceiling (dB)"
-msgstr "게인 (dB)"
+msgstr "실링 (dB)"
 
 #: src/PendingStrings.cpp
 msgid "Input"
-msgstr ""
+msgstr "입력"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attenuation"
-msgstr "방향"
+msgstr "감쇄"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "임계값 (dB)"
+msgstr "임계값 (dB) (&T)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "메이크업 게인"
+msgstr "메이크업 게인 (dB) (&M)"
 
 #: src/PendingStrings.cpp
 msgid "&Make-up target (dB)"
-msgstr ""
+msgstr "메이크업 타겟 (dB) (&M)"
 
 #: src/PendingStrings.cpp
 msgid "Knee &width (dB)"
-msgstr ""
+msgstr "Knee 폭 (dB) (&W)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Rati&o:"
-msgstr "비율:"
+msgstr "비율(&O):"
 
 #: src/PendingStrings.cpp
 msgid "&Lookahead (ms)"
-msgstr ""
+msgstr "Lookahead (ms) (&L)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "어택 (ms)"
+msgstr "어택 (ms) (&K)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "릴리즈 시간"
+msgstr "릴리즈 (ms) (&R)"
 
 #: src/PendingStrings.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "재생 기다림"
 
 #: src/PendingStrings.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "디스토션을 최고화 하는 과정에서 음양을 증대"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Limiter (beta)"
-msgstr "리미터"
+msgstr "리미터 (beta)"
 
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Compressor (beta)"
-msgstr "컴프레서"
+msgstr "컴프레서 (beta)"
 
 #: src/PendingStrings.cpp
 msgid "&Show graph (beta)"
-msgstr ""
+msgstr "그래프 표시 (beta) (&S)"
 
 #. i18n-hint: import progress dialog title, progress dialog
 #: src/PendingStrings.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "%s 가져오는 중"
+msgstr "파일 가져오는 중"
 
 #. i18n-hint: import progress dialot text, where %s is the filename
 #: src/PendingStrings.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "%s 가져오는 중"
+msgstr "가져오는 중 %s..."
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8690,9 +8667,8 @@ msgid "&Rescan"
 msgstr "다시스캔(&R)"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "더 많은 효과..."
+msgstr "추가 효과 가져오기... (&G)"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -10939,7 +10915,7 @@ msgstr "스펙트럼 선택"
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
 msgctxt "spectrum prefs"
 msgid "Sche&me:"
-msgstr "스킴(&M)"
+msgstr "스킴(&M):"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -12370,7 +12346,7 @@ msgstr "%d dB"
 #. i18n-hint: name of the 'unnamed' custom curve
 #: src/effects/EqualizationCurves.cpp
 msgid "unnamed"
-msgstr "이름 없음"
+msgstr "무제"
 
 #. i18n-hint: EQ stands for 'Equalization'.
 #: src/effects/EqualizationCurves.cpp
@@ -12427,16 +12403,16 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
-"새 항목을 저장하려면 '이름 없음'의 이름을 바꾸세요.\n"
+"새 항목을 저장하려면 '무제'의 이름을 바꾸세요.\n"
 "'확인'은 모든 변경 사항 저장, '취소'는 저장하지 않습니다."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr "'이름 없음'은 항상 목록의 맨 아래에 있습니다"
+msgstr "''은 항상 목록의 맨 아래에 있습니다"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' is special"
-msgstr "'이름 없음'은 특별합니다"
+msgstr "''은 특별합니다"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
@@ -12471,11 +12447,11 @@ msgstr "곡선이 존재합니다"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot delete the 'unnamed' curve."
-msgstr "'이름 없음' 곡선은 지울 수 없습니다."
+msgstr "'' 곡선은 지울 수 없습니다."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Can't delete 'unnamed'"
-msgstr "'이름 없음'을 삭제할 수 없습니다"
+msgstr "''을 삭제할 수 없습니다"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
@@ -12489,7 +12465,7 @@ msgstr "%d 아이템을 삭제?"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr "'이름 없음' 곡선은 삭제할 수 없습니다. 특별한 경우입니다."
+msgstr "'' 곡선은 삭제할 수 없습니다. 특별한 경우입니다."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Choose an EQ curve file"
@@ -12501,11 +12477,11 @@ msgstr "다른 이름으로 EQ 곡선 내보내기..."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot export 'unnamed' curve, it is special."
-msgstr "'이름 없음' 곡선은 내보낼 수 없습니다,  특별한 경우입니다."
+msgstr "'' 곡선은 내보낼 수 없습니다,  특별한 경우입니다."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Cannot Export 'unnamed'"
-msgstr "'이름 없음'을 내보낼 수 없습니다"
+msgstr "''을 내보낼 수 없습니다"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
@@ -12539,7 +12515,7 @@ msgid ""
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "매크로에서 이 필터곡선을 사용하려면, 새로운 이름을 선택하세요.\n"
-"'곡선 저장/관리...'  버튼을 선택하고 '이름 없음' 곡선의 이름을 바꾼 후 그것을 사용하세요."
+"'곡선 저장/관리...'  버튼을 선택하고 '' 곡선의 이름을 바꾼 후 그것을 사용하세요."
 
 #: src/effects/EqualizationUI.cpp
 msgid "Filter Curve EQ needs a different name"
@@ -12627,7 +12603,7 @@ msgstr "격자선 보기(&R)"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr "'이름 없음'을 사용하는 요청한 곡선을 찾지 못했습니다"
+msgstr "''을 사용하는 요청한 곡선을 찾지 못했습니다"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Curve not found"
@@ -13616,7 +13592,7 @@ msgstr "정사각형, 에일리어스 없음"
 #: src/effects/ToneGen.cpp
 msgctxt "waveform"
 msgid "Triangle"
-msgstr "Triangle (삼각형)"
+msgstr "삼각형"
 
 #: src/effects/ToneGen.cpp
 msgid "Chirp"
@@ -14897,9 +14873,8 @@ msgid "&Export Audio..."
 msgstr "오디오 내보내기(&E)..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Other"
-msgstr "다른 사항 내보내기"
+msgstr "다른 사항 내보내기 (&R)"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -14939,9 +14914,8 @@ msgid "Export as FLAC"
 msgstr "FLAC으로 내보내기"
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Selected Audio..."
-msgstr "오디오 내보내기..."
+msgstr "선택된 오디오 내보내기...(&R)"
 
 #: src/menus/HelpMenus.cpp
 msgid "Do you have these problems?"
@@ -19509,7 +19483,7 @@ msgstr "오데시티 %s 를 사용할 수 있습니다!"
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
 msgid "Changelog"
-msgstr "변경 로그"
+msgstr "변경사하"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -19551,9 +19525,9 @@ msgstr "R"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -21437,7 +21411,7 @@ msgstr "특수 도구"
 #~ "Ctrl + A는 전체 오디오를 선택합니다."
 
 #~ msgid "Audacity Karaoke%s"
-#~ msgstr "오데시티 가라오케%s"
+#~ msgstr "오데시티 노래방%s"
 
 #~ msgid "&Karaoke"
 #~ msgstr "노래방(&K)"
