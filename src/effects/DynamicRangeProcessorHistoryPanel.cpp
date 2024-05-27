@@ -46,6 +46,7 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
    wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
    std::function<void(float)> onDbRangeChanged)
     : wxPanelWrapper { parent, winid }
+    , mCompressorInstance { instance }
     , mOnDbRangeChanged { std::move(onDbRangeChanged) }
     , mInitializeProcessingSettingsSubscription { static_cast<
                                                      InitializeProcessingSettingsPublisher&>(
@@ -103,7 +104,7 @@ int GetDisplayPixel(float elapsedSincePacket, int panelWidth)
    // make it playback-delay dependent.
    constexpr auto displayDelay = 0.2f;
    return panelWidth - 1 -
-          std::round((elapsedSincePacket - 0.2f) / secondsPerPixel);
+          (elapsedSincePacket - displayDelay) / secondsPerPixel;
 }
 
 void DrawHistory(
@@ -224,8 +225,14 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
    // because this can be triggered even when playback is paused.
    const auto now = std::chrono::steady_clock::now();
    if (!mSync)
-      mSync.emplace(ClockSynchronization {
-         mHistory->GetSegments().front().front().time, now });
+      // At the time of writing, the realtime playback doesn't account for
+      // varying latencies. When it does, the synchronization will have to be
+      // updated on latency change. See
+      // https://github.com/audacity/audacity/issues/3223#issuecomment-2137025150.
+      mSync.emplace(
+         ClockSynchronization { mHistory->GetSegments().front().front().time +
+                                   mCompressorInstance.GetLatencyMs() / 1000,
+                                now });
    mPlaybackAboutToStart = false;
 
    mSync->now = now;
