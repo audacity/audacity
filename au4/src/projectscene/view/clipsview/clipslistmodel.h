@@ -9,7 +9,7 @@
 #include "global/async/asyncable.h"
 #include "processing/processingtypes.h"
 
-#include "timelinecontext.h"
+#include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
 class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable

@@ -14,9 +14,45 @@ using namespace muse::ui;
 using namespace muse::actions;
 
 const UiActionList ProcessingUiActions::m_actions = {
+    UiAction("toggle-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Toggle loop region"),
+             TranslatableString("action", "Toggle loop region")
+             ),
+    UiAction("clear-loop-region",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Clear loop region"),
+             TranslatableString("action", "Clear loop region")
+             ),
+    UiAction("set-loop-region-to-selection",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region to selection"),
+             TranslatableString("action", "Set loop region to selection")
+             ),
+    UiAction("set-selection-to-loop",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set selection to loop"),
+             TranslatableString("action", "Set selection to loop")
+             ),
+    UiAction("set-loop-region-in",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region in"),
+             TranslatableString("action", "Set loop region in")
+             ),
+    UiAction("set-loop-region-out",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Set loop region out"),
+             TranslatableString("action", "Set loop region out")
+             ),
 };
 
-ProcessingUiActions::ProcessingUiActions(std::shared_ptr<ProcessingController> controller)
+ProcessingUiActions::ProcessingUiActions(std::shared_ptr<ProcessingActionsController> controller)
     : m_controller(controller)
 {
 }

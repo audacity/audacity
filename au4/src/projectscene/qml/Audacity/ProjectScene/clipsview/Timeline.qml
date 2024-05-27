@@ -38,6 +38,18 @@ Rectangle {
         timelineContext.resetSelection()
     }
 
+    TimelineContextMenuModel {
+        id: contextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     TimelineContext {
         id: timelineContext
     }
@@ -51,7 +63,15 @@ Rectangle {
 
     MouseArea {
         anchors.fill: parent
-        onClicked: e => root.clicked(e)
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: e => {
+                       if (e.button === Qt.LeftButton) {
+                           root.clicked(e)
+                       } else if (e.button === Qt.RightButton) {
+                           contextMenuModel.loadItems()
+                           contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+                       }
+                   }
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

@@ -319,36 +319,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Select next item"),
              TranslatableString("action", "Select next item")
              ),
-    UiAction("toggle-loop-region",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Toggle loop region"),
-             TranslatableString("action", "Toggle loop region")
-             ),
-    UiAction("clear-loop-region",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Clear loop region"),
-             TranslatableString("action", "Clear loop region")
-             ),
-    UiAction("set-loop-region-to-selection",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region to selection"),
-             TranslatableString("action", "Set loop region to selection")
-             ),
-    UiAction("set-loop-region-in",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region in"),
-             TranslatableString("action", "Set loop region in")
-             ),
-    UiAction("set-loop-region-out",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Set loop region out"),
-             TranslatableString("action", "Set loop region out")
-             ),
     UiAction("select-near-zero-crossings",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -456,13 +426,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Show clipping in waveform"),
              TranslatableString("action", "Show clipping in waveform"),
-             Checkable::Yes
-             ),
-    UiAction("toggle-vertical-rulers",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Show vertical rulers"),
-             TranslatableString("action", "Show vertical rulers"),
              Checkable::Yes
              ),
 
