@@ -161,7 +161,7 @@ void DoImport(const CommandContext &context, bool isRaw)
       viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
-   std::vector<FilePath> filesToImport;
+   wxArrayString filesToImport;
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
@@ -178,7 +178,7 @@ void DoImport(const CommandContext &context, bool isRaw)
          }
       }
       else
-         filesToImport.push_back(fileName);
+         filesToImport.Add(fileName);
    }
    if (!isRaw)
       ProjectFileManager::Get(project).Import(filesToImport);
@@ -432,7 +432,7 @@ void OnExportSelectedAudio(const CommandContext &context)
 {
    if(!ExportUtils::HasSelectedAudio(context.project))
       return;
-   
+
    ExportUtils::PerformInteractiveExport(context.project, "", true);
 }
 
