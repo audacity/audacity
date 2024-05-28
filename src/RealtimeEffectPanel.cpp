@@ -535,6 +535,8 @@ namespace
 
          SetSizer(vSizer.release());
 
+         SetInTabOrder(false);
+
 #if wxUSE_ACCESSIBILITY
          SetAccessible(safenew RealtimeEffectControlAx(this));
 #endif
@@ -1617,6 +1619,7 @@ void RealtimeEffectPanel::MakeMasterEffectPane()
          headerText->SetFont(wxFont(wxFontInfo().Bold()));
          headerText->SetTranslatableLabel(XO("Master Effects"));
          headerText->SetForegroundColorIndex(clrTrackPanelText);
+         header->SetName(headerText->GetLabel());
 
          auto desc = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
          desc->SetForegroundColorIndex(clrTrackPanelText);

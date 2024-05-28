@@ -25,7 +25,8 @@ class ListNavigationEnabled : public wxNavigationEnabled<WindowBase>
 {
    friend void ListNavigationEnabled_HandleCharHook(wxWindow* self, wxKeyEvent& evt);
    friend void ListNavigationEnabled_HandleKeyDown(wxWindow* self, wxKeyEvent& evt);
-   friend void ListNavigationEnabled_HandleNavigationKeyEvent(wxWindow* self, wxNavigationKeyEvent& evt);
+   friend void ListNavigationEnabled_HandleNavigationKeyEvent(wxWindow* self,
+      wxNavigationKeyEvent& evt, bool inTabOrder);
    friend void ListNavigationEnabled_HandleDestroy(wxWindow* self);
 
 public:
@@ -35,6 +36,8 @@ public:
       WindowBase::Bind(wxEVT_KEY_DOWN, &ListNavigationEnabled::OnKeyDown, this);
       WindowBase::Bind(wxEVT_CHAR_HOOK, &ListNavigationEnabled::OnCharHook, this);
    }
+
+   void SetInTabOrder(bool inTabOrder) { mInTabOrder = inTabOrder; }
 
 private:
    void SetFocus() override
@@ -55,7 +58,7 @@ private:
 
    void OnNavigationKeyEvent(wxNavigationKeyEvent& evt)
    {
-      ListNavigationEnabled_HandleNavigationKeyEvent(this, evt);
+      ListNavigationEnabled_HandleNavigationKeyEvent(this, evt, mInTabOrder);
    }
    
    bool Destroy() override
@@ -63,4 +66,6 @@ private:
       ListNavigationEnabled_HandleDestroy(this);
       return wxNavigationEnabled<WindowBase>::Destroy();
    }
+
+   bool mInTabOrder{ true };
 };
