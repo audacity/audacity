@@ -39,9 +39,10 @@ void ListNavigationEnabled_HandleKeyDown(wxWindow* self, wxKeyEvent& evt)
       evt.Skip();
 }
 
-void ListNavigationEnabled_HandleNavigationKeyEvent(wxWindow* self, wxNavigationKeyEvent& evt)
+void ListNavigationEnabled_HandleNavigationKeyEvent(wxWindow* self,
+   wxNavigationKeyEvent& evt, bool inTabOrder)
 {
-   if(evt.GetEventObject() == self->GetParent() && !evt.IsFromTab())
+   if(evt.GetEventObject() == self->GetParent() && (!evt.IsFromTab() || inTabOrder))
       self->SetFocusFromKbd();
    else if(evt.GetEventObject() == self && evt.GetCurrentFocus() == self && evt.IsFromTab())
    {
