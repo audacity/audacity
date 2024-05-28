@@ -16,7 +16,18 @@ Rectangle {
         id: tracksModel
     }
 
+    //! NOTE Sync with TracksPanel
+    TracksViewStateModel {
+        id: tracksViewState
+        onTracksVericalYChanged: {
+            if (!view.moving) {
+                view.contentY = tracksViewState.tracksVericalY
+            }
+        }
+    }
+
     Component.onCompleted: {
+        tracksViewState.init()
         tracksModel.load()
     }
 
@@ -26,40 +37,46 @@ Rectangle {
         anchors.top: parent.top
         anchors.left: parent.left
         anchors.right: parent.right
+
+        height: 76
+        z: 1
     }
 
     MouseArea {
         anchors.fill: parent
         onWheel: function(wheel) {
-            timeline.onWheel(wheel.angleDelta.y)
+            wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
         }
     }
 
-    Column {
+    StyledListView {
+        id: view
+
         anchors.top: timeline.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
 
-        Rectangle {
-            height: 44
-            width: parent.width
-
-            StyledTextLabel {
-                anchors.fill: parent
-                anchors.leftMargin: 16
-                font: ui.theme.bodyBoldFont
-                text: "zoom: " + timeline.context.zoom + ", offset: " + timeline.context.offset
-            }
+        onContentYChanged: {
+            tracksViewState.changeTracksVericalY(view.contentY)
         }
 
-        Repeater {
-            model: tracksModel
-            delegate: TrackClipsItem {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                context: timeline.context
-                trackId: trackIdData
+        interactive: true
+
+        model: tracksModel
+
+        delegate: TrackClipsItem {
+            anchors.left: parent.left
+            anchors.right: parent.right
+            context: timeline.context
+            trackId: trackIdData
+
+            onInteractionStarted: {
+                view.interactive = false
+            }
+
+            onInteractionEnded: {
+                view.interactive = true
             }
         }
     }

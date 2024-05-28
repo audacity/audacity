@@ -12,8 +12,12 @@ class IProjectViewState
 public:
     virtual ~IProjectViewState() = default;
 
-    virtual muse::ValCh<int> trackHeight(const processing::TrackId& trackId) const = 0;
+    // context of all tracks
+    virtual muse::ValCh<int> tracksVericalY() const = 0;
+    virtual void changeTracksVericalY(int deltaY) = 0;
 
+    // context of track
+    virtual muse::ValCh<int> trackHeight(const processing::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const processing::TrackId& trackId, int deltaY) = 0;
 };
 

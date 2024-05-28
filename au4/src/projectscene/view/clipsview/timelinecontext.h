@@ -43,7 +43,7 @@ public:
     Q_INVOKABLE void init(double frameWidth);
 
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
-    Q_INVOKABLE void onWheel(double y);
+    Q_INVOKABLE bool onWheel(double y);
 
     Q_INVOKABLE void onSelection(double x1, double x2);
     Q_INVOKABLE void resetSelection();

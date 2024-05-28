@@ -17,6 +17,9 @@ ListItemBlank {
 
     property var item: null
 
+    signal interactionStarted()
+    signal interactionEnded()
+
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "Track" + root.item.title + "Panel"
         enabled: root.enabled && root.visible
@@ -42,9 +45,13 @@ ListItemBlank {
 
     signal openEffectsRequested()
 
-    TrackViewStateModel {
+    TracksViewStateModel {
         id: trackViewState
         trackId: root.item ? root.item.trackId : -1
+    }
+
+    Component.onCompleted: {
+        trackViewState.init()
     }
 
     RowLayout {
@@ -197,8 +204,17 @@ ListItemBlank {
 
         cursorShape: Qt.SizeVerCursor
 
+        onPressed: {
+            root.interactionStarted()
+        }
+
         onPositionChanged: function(mouse) {
+            mouse.accepted = true
             trackViewState.changeTrackHeight(mouse.y)
+        }
+
+        onReleased: {
+            root.interactionEnded()
         }
     }
 

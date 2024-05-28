@@ -10,7 +10,6 @@ Rectangle {
 
     property alias context: timelineContext
 
-    height: 32
     color: ui.theme.backgroundPrimaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
@@ -26,7 +25,7 @@ Rectangle {
     //! ~~~ TimelineContext ~~~
     //! NOTE See comment in TimelineContext (.h)
     function onWheel(y) {
-        timelineContext.onWheel(y)
+        return timelineContext.onWheel(y)
     }
 
     function onSelection(x1, x2) {
@@ -46,7 +45,6 @@ Rectangle {
         id: ruler
         context: timelineContext
         anchors.fill: parent
-        anchors.leftMargin: 16
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

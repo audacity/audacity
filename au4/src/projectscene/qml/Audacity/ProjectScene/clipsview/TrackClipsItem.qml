@@ -11,18 +11,23 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
 
+    signal interactionStarted()
+    signal interactionEnded()
+
     height: trackViewState.trackHeight
+    clip: true
 
     ClipsListModel {
         id: clipsModel
     }
 
-    TrackViewStateModel {
+    TracksViewStateModel {
         id: trackViewState
         trackId: root.trackId
     }
 
     Component.onCompleted: {
+        trackViewState.init()
         clipsModel.load()
     }
 
@@ -69,8 +74,17 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
+        onPressed: {
+            root.interactionStarted()
+        }
+
         onPositionChanged: function(mouse) {
+            mouse.accepted = true
             trackViewState.changeTrackHeight(mouse.y)
+        }
+
+        onReleased: {
+            root.interactionEnded()
         }
     }
 

@@ -3,6 +3,7 @@
 */
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Controls
 
 import Muse.Ui
 import Muse.UiComponents
@@ -20,7 +21,18 @@ Item {
         id: tracksModel
     }
 
+    //! NOTE Sync with TracksClipsView
+    TracksViewStateModel {
+        id: tracksViewState
+        onTracksVericalYChanged: {
+            if (!view.moving) {
+                view.contentY = tracksViewState.tracksVericalY
+            }
+        }
+    }
+
     Component.onCompleted: {
+        tracksViewState.init()
         tracksModel.load()
     }
 
@@ -79,9 +91,14 @@ Item {
 
             spacing: 0
 
-            model: tracksModel
+            ScrollBar.vertical: null
+            onContentYChanged: {
+                tracksViewState.changeTracksVericalY(view.contentY)
+            }
 
-            interactive: height < contentHeight
+            interactive: true
+
+            model: tracksModel
 
             SeparatorLine {
                 anchors.top: parent.top
@@ -105,6 +122,14 @@ Item {
 
                 onClicked: {
                     tracksModel.selectRow(model.index)
+                }
+
+                onInteractionStarted: {
+                    view.interactive = false
+                }
+
+                onInteractionEnded: {
+                    view.interactive = true
                 }
 
                 onDuplicateRequested: {
