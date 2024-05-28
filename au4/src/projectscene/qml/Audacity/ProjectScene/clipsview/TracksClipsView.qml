@@ -8,8 +8,6 @@ Rectangle {
 
     id: root
 
-    clip: true
-
     color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
@@ -39,7 +37,6 @@ Rectangle {
         anchors.right: parent.right
 
         height: 76
-        z: 1
     }
 
     MouseArea {
@@ -79,5 +76,10 @@ Rectangle {
                 view.interactive = true
             }
         }
+    }
+
+    PlayCursor {
+        anchors.top: view.top
+        anchors.bottom: parent.bottom
     }
 }

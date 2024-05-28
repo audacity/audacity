@@ -73,7 +73,7 @@ void au::au3::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long 
 
 bool au::au3::InOutMeter::IsMeterDisabled() const
 {
-    NOT_IMPLEMENTED;
+    //NOT_IMPLEMENTED;
     return false;
 }
 

@@ -42,6 +42,8 @@
 #include "view/clipsview/timelinecontext.h"
 #include "view/clipsview/timelineruler.h"
 
+#include "view/playcursor/playcursormodel.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
@@ -99,6 +101,9 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
     qmlRegisterType<TimelineRuler>("Audacity.ProjectScene", 1, 0, "TimelineRuler");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
+
+    // play cursor
+    qmlRegisterType<PlayCursorModel>("Audacity.ProjectScene", 1, 0, "PlayCursorModel");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)

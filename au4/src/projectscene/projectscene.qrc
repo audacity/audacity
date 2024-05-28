@@ -13,5 +13,6 @@
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureMeter.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
     </qresource>
 </RCC>
