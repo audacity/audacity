@@ -1621,12 +1621,12 @@ void RealtimeEffectPanel::MakeMasterEffectPane()
 
          auto headerText = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString);
          headerText->SetFont(wxFont(wxFontInfo().Bold()));
-         headerText->SetTranslatableLabel(XO("Master effects"));
+         headerText->SetTranslatableLabel(XO("Master Effects"));
          headerText->SetForegroundColorIndex(clrTrackPanelText);
 
          auto desc = safenew ThemedWindowWrapper<wxStaticText>(header, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxST_ELLIPSIZE_END);
          desc->SetForegroundColorIndex(clrTrackPanelText);
-         desc->SetTranslatableLabel(XO("Apply to all tracks"));
+         desc->SetTranslatableLabel(XO("Applies to all tracks"));
 
          vSizer->Add(headerText);
          vSizer->Add(desc);
