@@ -366,6 +366,14 @@ auto EffectMenu()
             },
             AlwaysEnabledFlag)
 #endif
+#if defined(__WXMSW__)
+         , Command(
+            wxT("GetAIEffects"), XXO("Get AI effects..."),
+            [](const CommandContext&) {
+               OpenInDefaultBrowser("https://audacityteam.org/download/openvino");
+            },
+            AlwaysEnabledFlag)
+#endif
             ),
       Section(
          "RepeatLast",
