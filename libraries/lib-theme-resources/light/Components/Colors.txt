@@ -1,18 +1,18 @@
-.modernTheme {
+.lightTheme {
                          Blank: #585963;
-                    Unselected: #dee1ef;
+                    Unselected: #E5EAFF;
                       Selected: #e7f3ff;
-                        Sample: #677ce4;
-                       Sample2: #4A88E4;
-                       Sample3: #CA614A;
-                       Sample4: #7373E5;
+                        Sample: #4040CF;
+                       Sample2: #286CCA;
+                       Sample3: #95E084;
+                       Sample4: #383838;
                      SelSample: #677ce4;
                     DragSample: #14151a;
                     MuteSample: #888890;
-                           Rms: #a4b0ef;
-                          Rms2: #92B8EF;
+                           Rms: #8A8AF4;
+                          Rms2: #8AB6F4;
                           Rms3: #DFA092;
-                          Rms4: #ABABEF;
+                          Rms4: #969696;
                        MuteRms: #888890;
                AboutBackground: #f8f8f9;
                 TrackPanelText: #14151a;
@@ -46,10 +46,10 @@
                 RecordingBrush: #ef476f;
                  PlaybackBrush: #f8f8f9;
            RulerRecordingBrush: #c4c4c4;
-                      TimeFont: #14151a;
-                      TimeBack: #f0f1f5;
-                 TimeFontFocus: #14151a;
-                 TimeBackFocus: #f8f8f9;
+                      TimeFont: #f8f8f9;
+                      TimeBack: #323545;
+                 TimeFontFocus: #f8f8f9;
+                 TimeBackFocus: #677ce4;
           LabelTextNormalBrush: #c2cbf4;
             LabelTextEditBrush: #f8f8f9;
           LabelUnselectedBrush: #c0c0c0;
@@ -81,7 +81,7 @@
              SpectroBackground: #ffff14;
                     ScrubRuler: #e4e4e4;
                  RulerSelected: #B9DCFF; /* becomes #cedcea;*/
-                     TimeHours: #f0f1f5;
+                     TimeHours: #323545;
                      MidiZebra: #808080;
                      MidiLines: #3c3c98;
            TextNegativeNumbers: #0000ff;
