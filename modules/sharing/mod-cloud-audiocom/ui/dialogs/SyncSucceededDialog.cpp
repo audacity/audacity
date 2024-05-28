@@ -20,13 +20,7 @@ SyncSucceededDialog::SyncSucceededDialog(const AudacityProject* project)
    AddParagraph(
       XO("All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"));
 
-   AddButton(ViewOnlineIdentifier(), XO("View online"));
-   AddButton(DoneIdentifier(), XO("Done"), DefaultButton | EscButton);
-}
-
-DialogButtonIdentifier SyncSucceededDialog::DoneIdentifier()
-{
-   return { L"done" };
+   AddButton(ViewOnlineIdentifier(), XO("Done"), DefaultButton);
 }
 
 DialogButtonIdentifier SyncSucceededDialog::ViewOnlineIdentifier()
