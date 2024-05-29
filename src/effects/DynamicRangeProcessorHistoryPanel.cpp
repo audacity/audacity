@@ -146,7 +146,7 @@ void DrawHistory(
       }
 
       // Draw the follow line in black, solid line ...
-      gc->SetPen(wxPen { wxColour { 0, 0, 0 } });
+      gc->SetPen(wxPen { *wxBLACK_PEN });
       gc->DrawLines(followPoints.size(), followPoints.data());
 
       wxGraphicsPath undershootPath = gc->CreatePath();
