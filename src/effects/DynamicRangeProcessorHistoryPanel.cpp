@@ -316,10 +316,6 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
 
 void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
 {
-#ifndef __WXMAC__
-   if (mHistory)
-      mHistory->BeginNewSegment();
-#endif
    Refresh();
    mOnDbRangeChanged(GetDbRange(GetSize().GetHeight()));
 }
