@@ -29,8 +29,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3project.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3wavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/iau3playback.h
-    ${CMAKE_CURRENT_LIST_DIR}/iau3audiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3record.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audioinput.h
 
@@ -51,6 +49,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3playback.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3playback.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3player.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3player.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiooutput.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiooutput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3record.cpp

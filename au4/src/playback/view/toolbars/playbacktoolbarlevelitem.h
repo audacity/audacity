@@ -7,7 +7,7 @@
 #include <QString>
 
 #include "modularity/ioc.h"
-#include "au3wrap/iau3playback.h"
+#include "iplayback.h"
 
 #include "playbacktoolbarabstractitem.h"
 
@@ -26,7 +26,7 @@ class PlaybackToolBarLevelItem : public PlaybackToolBarAbstractItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
-    muse::Inject<au3::IAu3Playback> playback;
+    muse::Inject<IPlayback> playback;
 
 public:
     explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent = nullptr);
