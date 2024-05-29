@@ -155,7 +155,11 @@ size_t CompressorInstance::RealtimeProcess(
       newPacket.indexOfFirstSample = slave.mSampleCounter;
       newPacket.numSamples = numProcessedSamples;
       newPacket.targetCompressionDb = targetCompressionDb;
-      newPacket.actualCompressionDb = frameStats.dbAttenuationOfMaxInputSample;
+      newPacket.actualCompressionDb = frameStats.dbGainOfMaxInputSample;
+      newPacket.inputDb = frameStats.maxInputSampleDb;
+      newPacket.outputDb =
+         frameStats.maxInputSampleDb + frameStats.dbGainOfMaxInputSample +
+         CompressorProcessor::GetMakeupGainDb(compressorSettings);
       queue->Put(newPacket);
    }
    slave.mSampleCounter += numProcessedSamples;

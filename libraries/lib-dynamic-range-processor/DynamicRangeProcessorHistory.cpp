@@ -63,7 +63,8 @@ void DynamicRangeProcessorHistory::Push(
       firstPacketToInsertIt, packets.end(), std::back_inserter(lastSegment),
       [&](const auto& packet) -> Packet {
          const auto t = GetPacketTime(packet);
-         return { t, packet.targetCompressionDb, packet.actualCompressionDb };
+         return { t, packet.targetCompressionDb, packet.actualCompressionDb,
+                  packet.inputDb, packet.outputDb };
       });
 
    // Clean up older packets.
@@ -77,7 +78,7 @@ void DynamicRangeProcessorHistory::Push(
       [lastTime](const Packet& packet) {
          // Extend a little bit the time window, to avoid the extremities of a
          // display to tremble.
-         return lastTime - packet.time < maxTimeSeconds * 1.1f;
+         return lastTime - packet.time < maxTimeSeconds + 1.f;
       });
    firstSegment.erase(firstSegment.begin(), it);
 
