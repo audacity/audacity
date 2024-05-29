@@ -346,6 +346,7 @@ set( SOURCES
       effects/DynamicRangeProcessorEffectUtils.h
       effects/DynamicRangeProcessorHistoryPanel.cpp
       effects/DynamicRangeProcessorHistoryPanel.h
+      effects/DynamicRangeProcessorPanelCommon.cpp
       effects/DynamicRangeProcessorPanelCommon.h
       effects/DynamicRangeProcessorTransferFunctionPanel.cpp
       effects/DynamicRangeProcessorTransferFunctionPanel.h
