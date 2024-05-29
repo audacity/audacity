@@ -22,6 +22,8 @@ struct DynamicRangeProcessorOutputPacket
    int numSamples = 0;
    float targetCompressionDb = 0;
    float actualCompressionDb = 0;
+   float inputDb = 0;
+   float outputDb = 0;
 };
 
 using DynamicRangeProcessorOutputPacketQueue =
