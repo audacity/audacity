@@ -932,9 +932,12 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mCaptureBuffers.clear();
    mResample.clear();
 
+   mMaxCumulativeFrames = 0;
    mpState = mPlaybackSchedule.Init(
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
    auto &state = *mpState;
+   state.mCumulativeFrames = 0;
+
    mTimeQueue.Reset(&state.mLastTime);
 
    unsigned int playbackChannels = 0;
@@ -1318,7 +1321,8 @@ bool AudioIO::AllocateBuffers(
                   nullptr, // no custom mix-down
                   Mixer::ApplyGain::Discard // don't apply gains
                );
-               track.mpState = mPlaybackSchedule.GetPolicy().CreateState();
+               (track.mpState = mPlaybackSchedule.GetPolicy().CreateState())
+                  ->mCumulativeFrames = 0;
             }
 
             const auto timeQueueSize = 1 +
@@ -2024,11 +2028,19 @@ static inline void debugTimes(
 
 static PlaybackMessage sDefaultMessage;
 
-void AudioIO::PollUser()
+void AudioIO::PollUser(PlaybackState &state, size_t newFrames)
 {
-   const auto &policy = mPlaybackSchedule.GetPolicy();
+   auto &frameCount = state.mCumulativeFrames;
    auto &pMessage = mpMessage;
-   pMessage = policy.PollUser(mPlaybackSchedule);
+   frameCount += newFrames;
+   if (frameCount > mMaxCumulativeFrames) {
+      // Now looking further ahead than ever previously in this playback
+      mMaxCumulativeFrames = frameCount;
+      const auto &policy = mPlaybackSchedule.GetPolicy();
+      pMessage = policy.PollUser(mPlaybackSchedule);
+      if (pMessage)
+         pMessage->mCumulativeFrames = frameCount;
+   }
 }
 
 // Determine how many samples to pull from tracks, and how much silence for
@@ -2094,7 +2106,7 @@ bool AudioIO::ProcessPlaybackSlices(
             (pMessage ? *pMessage : sDefaultMessage), nullptr, demand);
       }
       // Check for messages from the UI thread updating schedule parameters
-      PollUser();
+      PollUser(state, frames);
    } while (demand && !done);
    debugTimes(debugNextTime, lastTime, mRate);
 

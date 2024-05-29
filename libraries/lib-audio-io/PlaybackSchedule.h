@@ -11,6 +11,7 @@
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
 #include "Mix.h"
+#include "SampleCount.h"
 #include <atomic>
 #include <chrono>
 
@@ -56,6 +57,9 @@ struct PlaybackSlice {
 //! Base class for inter-thread messages carrying changes of play schedule
 struct AUDIO_IO_API PlaybackMessage {
    virtual ~PlaybackMessage();
+
+   //! This is a memo assigned by the consumer
+   sampleCount mCumulativeFrames{};
 };
 
 class AUDIO_IO_API PlaybackState
@@ -84,6 +88,10 @@ public:
    double mWarpedLength;
 
    double mLastTime{};
+
+   // Total of frames produced for playback, regardless of timeline position,
+   // and including pauses
+   sampleCount mCumulativeFrames{};
 
    //! Rather than a Clone() method, this assumes pre-allocation
    /*!

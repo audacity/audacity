@@ -26,7 +26,6 @@
 
 #include "PluginProvider.h" // for PluginID
 #include "Observer.h"
-#include "SampleCount.h"
 #include "SampleFormat.h"
 #include "TimeQueue.h" // member variable
 
@@ -421,6 +420,7 @@ protected:
    PlaybackSchedule mPlaybackSchedule;
    TimeQueue mTimeQueue;
    std::unique_ptr<PlaybackState> mpState;
+   sampleCount mMaxCumulativeFrames;
 
    struct TransportState;
    //! Holds some state for duration of playback or recording
@@ -640,7 +640,7 @@ private:
 
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
-   void PollUser();
+   void PollUser(PlaybackState &state, size_t newFrames);
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
    bool ConsumeFromMixers(bool paused, size_t demand,
