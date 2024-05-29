@@ -103,7 +103,8 @@ double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
    // will be found to lag on lower-latency playbacks. Best would probably be to
    // make it playback-delay dependent.
    constexpr auto displayDelay = 0.2f;
-   return panelWidth - 1 - (elapsedSincePacket - 0.2f) / secondsPerPixel;
+   return panelWidth - 1 -
+          (elapsedSincePacket - displayDelay) / secondsPerPixel;
 }
 
 void DrawHistory(
