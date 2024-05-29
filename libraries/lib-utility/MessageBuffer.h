@@ -31,6 +31,7 @@ class MessageBuffer {
    std::atomic<unsigned char> mLastWrittenSlot{ 0 };
 
 public:
+   //! Reset to default constructed state
    void Initialize();
 
    //! Copy data out

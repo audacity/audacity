@@ -43,6 +43,8 @@ set( SOURCES
    Observer.cpp
    Observer.h
    PackedArray.h
+   SharedObjectMessageBuffer.h
+   SharedObjectPool.h
    spinlock.h
    Tuple.cpp
    Tuple.h
