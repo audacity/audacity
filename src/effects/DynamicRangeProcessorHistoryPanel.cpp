@@ -237,6 +237,10 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
    // because this can be triggered even when playback is paused.
    const auto now = std::chrono::steady_clock::now();
    if (!mSync)
+      // At the time of writing, the realtime playback doesn't account for
+      // varying latencies. When it does, the synchronization will have to be
+      // updated on latency change. See
+      // https://github.com/audacity/audacity/issues/3223#issuecomment-2137025150.
       mSync.emplace(
          ClockSynchronization { mHistory->GetSegments().front().front().time +
                                    mCompressorInstance.GetLatencyMs() / 1000,
