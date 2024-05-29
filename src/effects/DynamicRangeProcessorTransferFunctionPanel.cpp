@@ -28,9 +28,9 @@ DynamicRangeProcessorTransferFunctionPanel::
 
 namespace
 {
-template <typename V, typename Ctx>
 void DrawTransferFunction(
-   Ctx& ctx, const wxSize& panelSize, const CompressorSettings& settings)
+   wxGraphicsContext& ctx, const wxSize& panelSize,
+   const CompressorSettings& settings)
 {
    const auto X = panelSize.x;
    const auto Y = panelSize.y;
@@ -39,10 +39,7 @@ void DrawTransferFunction(
    const auto yPixelsPerDb =
       1.f * Y / DynamicRangeProcessorTransferFunctionPanel::rangeDb;
 
-   ctx.SetPen(wxPen(
-      theTheme.Colour(clrGraphLines),
-      DynamicRangeProcessorPanel::transferFunctionLineWidth));
-   std::vector<V> points;
+   std::vector<wxPoint2DDouble> points;
    points.reserve(X);
    for (int x = 0; x < X; ++x)
    {
@@ -52,7 +49,26 @@ void DrawTransferFunction(
          yPixelsPerDb);
       points.emplace_back(x, y);
    }
-   ctx.DrawLines(X, points.data());
+
+   wxGraphicsPath path = ctx.CreatePath();
+   path.MoveToPoint(X, 0);
+   path.AddLineToPoint(0, 0);
+   std::for_each(
+      points.begin(), points.end(),
+      [&path](const wxPoint2DDouble& point) { path.AddLineToPoint(point); });
+   path.CloseSubpath();
+   ctx.SetBrush(wxBrush(DynamicRangeProcessorPanel::attackColor));
+   ctx.FillPath(path);
+
+   path = ctx.CreatePath();
+   path.MoveToPoint(X, Y);
+   path.AddLineToPoint(0, Y);
+   std::for_each(
+      points.begin(), points.end(),
+      [&path](const wxPoint2DDouble& point) { path.AddLineToPoint(point); });
+   path.CloseSubpath();
+   ctx.SetBrush(wxBrush(DynamicRangeProcessorPanel::releaseColor));
+   ctx.FillPath(path);
 }
 } // namespace
 
@@ -61,19 +77,14 @@ void DynamicRangeProcessorTransferFunctionPanel::OnPaint(wxPaintEvent& evt)
    wxPaintDC dc(this);
    dc.Clear();
 
-   dc.SetBrush(*wxWHITE_BRUSH);
+   dc.SetBrush(DynamicRangeProcessorPanel::backgroundColor);
    dc.SetPen(wxPen(*wxBLACK));
    dc.DrawRectangle(GetSize());
 
-   // If a graphics context is available, use it for anti-aliasing.
-   if (std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) })
-   {
-      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-      DrawTransferFunction<wxPoint2DDouble>(
-         *gc, GetSize(), mCompressorSettings);
-   }
-   else
-      DrawTransferFunction<wxPoint>(dc, GetSize(), mCompressorSettings);
+   std::unique_ptr<wxGraphicsContext> gc {
+      DynamicRangeProcessorPanel::MakeGraphicsContext(dc)
+   };
+   DrawTransferFunction(*gc, GetSize(), mCompressorSettings);
 }
 
 void DynamicRangeProcessorTransferFunctionPanel::OnSize(wxSizeEvent& evt)
