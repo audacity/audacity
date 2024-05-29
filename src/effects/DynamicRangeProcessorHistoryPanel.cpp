@@ -88,10 +88,6 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
 
 namespace
 {
-constexpr auto followLineWidth =
-   DynamicRangeProcessorPanel::transferFunctionLineWidth + 2;
-constexpr auto topMargin = (followLineWidth + 1) / 2;
-
 double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
 {
    const auto secondsPerPixel =
@@ -107,86 +103,136 @@ double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
           (elapsedSincePacket - displayDelay) / secondsPerPixel;
 }
 
-void DrawHistory(
-   wxPaintDC& dc, const wxSize& panelSize,
-   const std::vector<DynamicRangeProcessorHistory::Segment>& segments,
-   const DynamicRangeProcessorHistoryPanel::ClockSynchronization& sync)
+/*!
+ * Wherever `A` and `B` cross, evaluates the exact x and y crossing position and
+ * adds a point to `A` and `B`.
+ * @pre `A.size() == B.size()`
+ * @post `A.size() == B.size()`
+ */
+void InsertCrossings(
+   std::vector<wxPoint2DDouble>& A, std::vector<wxPoint2DDouble>& B)
 {
-   const auto elapsedTimeSinceFirstPacket =
-      std::chrono::duration<float>(sync.now - sync.start).count();
-   const auto firstPacketTime = sync.firstPacketTime;
-
-   const auto size = panelSize - wxSize { 0, topMargin };
-   const auto rangeDb = GetDbRange(size.GetHeight());
-   const auto dbPerPixel = rangeDb / size.GetHeight();
-
-   for (const auto& segment : segments)
+   assert(A.size() == B.size());
+   if (A.size() != B.size())
+      return;
+   std::optional<bool> aWasBelow;
+   auto x0 = 0.;
+   auto y0_a = 0.;
+   auto y0_b = 0.;
+   auto it = A.begin();
+   auto jt = B.begin();
+   while (it != A.end())
    {
-      if (segment.size() < 2)
-         continue;
-
-      std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) };
-      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-      gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
-
-      std::vector<wxPoint2DDouble> followPoints;
-      std::vector<wxPoint2DDouble> targetPoints;
-      followPoints.reserve(segment.size());
-      targetPoints.reserve(segment.size());
-      for (auto it = segment.begin(); it != segment.end(); ++it)
+      const auto x2 = it->m_x;
+      const auto y2_a = it->m_y;
+      const auto y2_b = jt->m_y;
+      const auto aIsBelow = y2_a < y2_b;
+      if (aWasBelow.has_value() && *aWasBelow != aIsBelow)
       {
-         const auto elapsedSincePacket =
-            elapsedTimeSinceFirstPacket - (it->time - firstPacketTime);
-         const double x =
-            GetDisplayPixel(elapsedSincePacket, panelSize.GetWidth());
-         const auto yt = topMargin - it->target / dbPerPixel;
-         const auto yf = topMargin - it->follower / dbPerPixel;
-         followPoints.emplace_back(x, yf);
-         targetPoints.emplace_back(x, yt);
+         // clang-format off
+         // We have a crossing of y2_a and y2_b between x0 and x2.
+         //    y_a(x) = y0_a + (x - x0) / (x2 - x0) * (y2_a - y0_a)
+         // and likewise for y_b.
+         // Let y_a(x1) = y_b(x1) and solve for x1:
+         // x1 = x0 + (x2 - x0) * (y0_b - y0_a) / ((a_n - y0_a) - (b_n - y0_b))
+         // clang-format on
+         const auto x1 =
+            x0 + (x2 - x0) * (y0_a - y0_b) / (y2_b - y0_b + y0_a - y2_a);
+         const auto y = y0_a + (x1 - x0) / (x2 - x0) * (y2_a - y0_a);
+         it = A.emplace(it, x1, y)++;
+         jt = B.emplace(jt, x1, y)++;
       }
-
-      // Draw the follow line in black, solid line ...
-      gc->SetPen(wxPen { *wxBLACK_PEN });
-      gc->DrawLines(followPoints.size(), followPoints.data());
-
-      wxGraphicsPath undershootPath = gc->CreatePath();
-      wxGraphicsPath overshootPath = gc->CreatePath();
-      const auto compareY = [](const auto a, const auto b) {
-         return a.m_y < b.m_y;
-      };
-      undershootPath.MoveToPoint(
-         std::min(followPoints.front(), targetPoints.front(), compareY));
-      overshootPath.MoveToPoint(
-         std::max(targetPoints.front(), followPoints.front(), compareY));
-      for (size_t i = 1; i < followPoints.size(); ++i)
-      {
-         undershootPath.AddLineToPoint(
-            std::min(followPoints[i], targetPoints[i], compareY));
-         overshootPath.AddLineToPoint(
-            std::max(targetPoints[i], followPoints[i], compareY));
-      }
-      for (size_t i = targetPoints.size(); i-- > 0;)
-      {
-         undershootPath.AddLineToPoint(followPoints[i]);
-         overshootPath.AddLineToPoint(followPoints[i]);
-      }
-      undershootPath.CloseSubpath();
-      overshootPath.CloseSubpath();
-
-      gc->SetBrush(wxBrush { wxColour { 255, 0, 0, 128 } });
-      gc->FillPath(overshootPath);
-      gc->SetBrush(wxBrush { wxColour { 0, 0, 255, 128 } });
-      gc->FillPath(undershootPath);
+      x0 = x2;
+      y0_a = y2_a;
+      y0_b = y2_b;
+      aWasBelow = aIsBelow;
+      ++it;
+      ++jt;
    }
 }
+
+/*!
+ * Fills the area between the lines and the bottom of the panel with the given
+ * color.
+ */
+void FillUpTo(
+   std::vector<wxPoint2DDouble> lines, const wxColor& color, wxPaintDC& dc,
+   int panelHeight)
+{
+   const auto gc = DynamicRangeProcessorPanel::MakeGraphicsContext(dc);
+   gc->SetBrush(wxBrush { color });
+   auto area = gc->CreatePath();
+   area.MoveToPoint(lines.back().m_x, panelHeight);
+   area.AddLineToPoint(lines.front().m_x, panelHeight);
+   std::for_each(lines.begin(), lines.end(), [&area](const auto& p) {
+      area.AddLineToPoint(p);
+   });
+   area.CloseSubpath();
+   gc->FillPath(area);
+}
+
+/*!
+ * Fills the above `base` and below `line` with the given color.
+ * @pre `base.size() == line.size()`
+ */
+void FillExcess(
+   const std::vector<wxPoint2DDouble>& line, std::vector<wxPoint2DDouble> base,
+   const wxColor& color, wxPaintDC& dc)
+{
+   const auto gc = DynamicRangeProcessorPanel::MakeGraphicsContext(dc);
+   // transform `base` in-place to the lower of the two lines.
+   auto& lower = base;
+   std::transform(
+      line.begin(), line.end(), base.begin(), lower.begin(),
+      [](const auto& f, const auto& t) {
+         return wxPoint2DDouble { f.m_x, std::max(f.m_y, t.m_y) };
+      });
+   wxGraphicsPath area = gc->CreatePath();
+   area.MoveToPoint(lower.front());
+   std::for_each(lower.begin(), lower.end(), [&area](const auto& p) {
+      area.AddLineToPoint(p);
+   });
+   std::for_each(line.rbegin(), line.rend(), [&area](const auto& p) {
+      area.AddLineToPoint(p);
+   });
+   area.CloseSubpath();
+
+   gc->SetBrush(wxBrush { color });
+   gc->FillPath(area);
+}
 } // namespace
+
+void DynamicRangeProcessorHistoryPanel::ShowInput(bool show)
+{
+   mShowInput = show;
+   Refresh();
+}
+
+void DynamicRangeProcessorHistoryPanel::ShowOutput(bool show)
+{
+   mShowOutput = show;
+   Refresh();
+}
+
+void DynamicRangeProcessorHistoryPanel::ShowOvershoot(bool show)
+{
+   mShowOvershoot = show;
+   Refresh();
+}
+
+void DynamicRangeProcessorHistoryPanel::ShowTail(bool show)
+{
+   mShowTail = show;
+   Refresh();
+}
 
 void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
 {
    wxPaintDC dc(this);
-   dc.Clear();
 
-   dc.SetBrush(*wxWHITE_BRUSH);
+   using namespace DynamicRangeProcessorPanel;
+
+   dc.SetBrush(backgroundColor);
    dc.SetPen(*wxBLACK_PEN);
    dc.DrawRectangle(GetSize());
 
@@ -209,7 +255,63 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    }
 
    const auto& segments = mHistory->GetSegments();
-   DrawHistory(dc, GetSize(), segments, *mSync);
+   const auto elapsedTimeSinceFirstPacket =
+      std::chrono::duration<float>(mSync->now - mSync->start).count();
+   const auto width = GetSize().GetWidth();
+   const auto height = GetSize().GetHeight();
+   const auto rangeDb = GetDbRange(height);
+   const auto dbPerPixel = rangeDb / height;
+
+   for (const auto& segment : segments)
+   {
+      if (segment.size() < 2)
+         continue;
+
+      mTarget.clear();
+      mActual.clear();
+      mInput.clear();
+      mOutput.clear();
+
+      mTarget.reserve(segment.size());
+      mActual.reserve(segment.size());
+      mInput.reserve(segment.size());
+      mOutput.reserve(segment.size());
+      for (auto it = segment.begin(); it != segment.end(); ++it)
+      {
+         const auto elapsedSincePacket =
+            elapsedTimeSinceFirstPacket - (it->time - mSync->firstPacketTime);
+         const double x = GetDisplayPixel(elapsedSincePacket, width);
+         mTarget.emplace_back(x, -it->target / dbPerPixel);
+         mActual.emplace_back(x, -it->follower / dbPerPixel);
+         mInput.emplace_back(x, -it->input / dbPerPixel);
+         mOutput.emplace_back(x, -it->output / dbPerPixel);
+      }
+
+      if (mShowOutput)
+         // Paint output first with opaque color.
+         FillUpTo(mOutput, wxColor { 103, 124, 228 }, dc, height);
+
+      if (mShowInput)
+         // Input in grey with transparency.
+         FillUpTo(mInput, wxColor { 128, 128, 128, 64 }, dc, height);
+
+      if (mShowOvershoot || mShowTail)
+      {
+         // We have to paint the difference between these two lines, and in
+         // different colors depending on which is on top. To fill the correct
+         // polygons, we have to add points where the lines intersect.
+         InsertCrossings(mActual, mTarget);
+         if (mShowOvershoot)
+            FillExcess(mActual, mTarget, attackColor, dc);
+         if (mShowTail)
+            FillExcess(mTarget, mActual, releaseColor, dc);
+      }
+
+      // Actual compression line
+      const auto gc = MakeGraphicsContext(dc);
+      gc->SetPen(wxPen { *wxBLACK });
+      gc->DrawLines(mActual.size(), mActual.data());
+   }
 }
 
 void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
