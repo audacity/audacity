@@ -15,11 +15,11 @@
 
 namespace DynamicRangeProcessorPanel
 {
-wxGraphicsContext* MakeGraphicsContext(const wxPaintDC& dc)
+std::unique_ptr<wxGraphicsContext> MakeGraphicsContext(const wxPaintDC& dc)
 {
    auto gc = wxGraphicsContext::Create(dc);
    gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
    gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
-   return gc;
+   return std::unique_ptr<wxGraphicsContext>(gc);
 }
 } // namespace DynamicRangeProcessorPanel
