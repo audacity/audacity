@@ -424,7 +424,7 @@ wxString ModuleManager::GetPluginTypeString()
    return L"Module";
 }
 
-PluginID ModuleManager::GetID(PluginProvider *provider)
+PluginID ModuleManager::GetID(const PluginProvider *provider)
 {
    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
                            GetPluginTypeString(),

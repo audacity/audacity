@@ -9,6 +9,11 @@
 
 PluginProvider::~PluginProvider() = default;
 
+bool PluginProvider::SupportsCustomModulePaths() const
+{
+   return false;
+}
+
 std::unique_ptr<PluginProvider::Validator> PluginProvider::MakeValidator() const
 {
    return {};

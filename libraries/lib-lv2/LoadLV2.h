@@ -49,6 +49,7 @@ public:
 
    bool Initialize() override;
    void Terminate() override;
+   bool SupportsCustomModulePaths() const override;
    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
    const FileExtensions &GetFileExtensions() override;
@@ -71,7 +72,13 @@ public:
    std::unique_ptr<Validator> MakeValidator() const override;
 
 private:
+
    static const LilvPlugin *GetPlugin(const PluginPath & path);
+
+   //During initialization LV2 module will update LV2_PATH
+   //environment variable, we need to preserve the its contents
+   //on startup to avoid appended duplications
+   wxString mStartupPathVar;
 };
 
 #endif

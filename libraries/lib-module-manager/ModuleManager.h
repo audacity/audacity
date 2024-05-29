@@ -96,7 +96,7 @@ public:
    // So config compatibility will break if it is changed across Audacity versions
    static wxString GetPluginTypeString();
 
-   static PluginID GetID(PluginProvider *provider);
+   static PluginID GetID(const PluginProvider *provider);
 
 private:
    static void FindModules(FilePaths &files);

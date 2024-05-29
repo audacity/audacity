@@ -60,6 +60,7 @@ public:
    const FileExtensions& GetFileExtensions() override;
    FilePath InstallPath() override;
    void AutoRegisterPlugins(PluginManagerInterface& pluginManager) override;
+   bool SupportsCustomModulePaths() const override;
    PluginPaths FindModulePaths(PluginManagerInterface& pluginManager) override;
    unsigned DiscoverPluginsAtPath(const PluginPath& path, TranslatableString& errMsg,
       const RegistrationCallback& callback) override;

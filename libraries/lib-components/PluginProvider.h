@@ -134,6 +134,8 @@ public:
    //! Called so that a provider of a static set of plug-ins can register them.
    virtual void AutoRegisterPlugins(PluginManagerInterface & pluginManager) = 0;
 
+   virtual bool SupportsCustomModulePaths() const;
+
    //! Find available "paths", which may each be presented to the user, and
    //! then reexamined (possibly loading libraries) to find one or more plug-ins
    /*!

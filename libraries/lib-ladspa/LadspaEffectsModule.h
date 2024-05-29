@@ -40,6 +40,7 @@ public:
 
    bool Initialize() override;
    void Terminate() override;
+   bool SupportsCustomModulePaths() const override;
    EffectFamilySymbol GetOptionalFamilySymbol() override;
 
    const FileExtensions &GetFileExtensions() override;
@@ -59,7 +60,7 @@ public:
 
    // LadspaEffectModule implementation
 
-   FilePaths GetSearchPaths();
+   FilePaths GetSearchPaths(PluginManagerInterface& pluginManager);
 };
 
 #endif
