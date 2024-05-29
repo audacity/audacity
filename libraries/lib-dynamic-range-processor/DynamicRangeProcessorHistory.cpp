@@ -43,12 +43,9 @@ void DynamicRangeProcessorHistory::Push(
       return;
 
    // Some packets can go lost in the transmission from audio to main thread.
-   constexpr auto discontinuityThresholdSeconds = 0.5;
-   const auto isContinuous =
-      mExpectedNextPacketFirstSampleIndex.has_value() &&
-      firstPacketToInsertIt->indexOfFirstSample <=
-         *mExpectedNextPacketFirstSampleIndex +
-            static_cast<long long>(discontinuityThresholdSeconds * mSampleRate);
+   const auto isContinuous = mExpectedNextPacketFirstSampleIndex.has_value() &&
+                             firstPacketToInsertIt->indexOfFirstSample ==
+                                *mExpectedNextPacketFirstSampleIndex;
    if (mSegments.empty() || mBeginNewSegment || !isContinuous)
    {
       mSegments.emplace_back();
