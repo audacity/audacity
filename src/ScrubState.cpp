@@ -7,10 +7,10 @@
  Paul Licameli split from AudioIO.cpp
  
  **********************************************************************/
-
 #include "ScrubState.h"
 #include "AudioIO.h"
 #include "Mix.h"
+#include "SharedObjectMessageBuffer.h"
 
 namespace {
 struct ScrubQueue : NonInterferingBase
@@ -23,6 +23,7 @@ struct ScrubQueue : NonInterferingBase
               double rate,
               const ScrubbingOptions &options)
    {
+      mMessage.Initialize();
       mRate = rate;
       mStartTime = t0;
       const double t1 = options.bySpeed ? options.initSpeed : t0;
@@ -54,7 +55,8 @@ struct ScrubQueue : NonInterferingBase
       startSample = endSample = duration = -1LL;
       sampleCount s0Init;
 
-      Message message( mMessage.Read() );
+      auto pMessage = mMessage.Read();
+      const auto &message = *pMessage;
 
       if (mFirst) {
          s0Init = llrint( mRate *
@@ -293,7 +295,7 @@ private:
       double end;
       ScrubbingOptions options;
    };
-   MessageBuffer<Message> mMessage;
+   SharedObjectMessageBuffer<Message> mMessage;
 };
 
 ScrubQueue ScrubQueue::Instance;

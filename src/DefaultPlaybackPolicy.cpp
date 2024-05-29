@@ -52,6 +52,7 @@ void DefaultPlaybackPolicy::Initialize(const PlaybackSchedule &schedule,
    PlaybackState &st, double rate)
 {
    PlaybackPolicy::Initialize(schedule, st, rate);
+   mMessageChannel.Initialize();
    auto &state = static_cast<DPPState&>(st);
    state.mLoopEndTime = mInitLoopEndTime;
    state.mLoopEnabled = mInitLoopEnabled;
@@ -198,7 +199,8 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
    auto &mLoopEnabled = state.mLoopEnabled;
 
    // This executes in the SequenceBufferExchange thread
-   auto data = mMessageChannel.Read();
+   const auto pData = mMessageChannel.Read();
+   const auto &data = *pData;
 
    bool speedChange = false;
    if (mVariableSpeed) {

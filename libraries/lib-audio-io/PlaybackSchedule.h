@@ -10,7 +10,6 @@
 #ifndef __AUDACITY_PLAYBACK_SCHEDULE__
 #define __AUDACITY_PLAYBACK_SCHEDULE__
 
-#include "MessageBuffer.h"
 #include "Mix.h"
 #include <atomic>
 #include <chrono>

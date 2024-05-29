@@ -11,6 +11,7 @@
 #define __AUDACITY_DEFAULT_PLAYBACK_POLICY__
 
 #include "PlaybackSchedule.h"
+#include "SharedObjectMessageBuffer.h"
 
 //! The PlaybackPolicy used by Audacity for most playback.
 /*! It subscribes to messages from ViewInfo and PlayRegion for loop bounds
@@ -68,7 +69,7 @@ private:
       double mT1;
       bool mLoopEnabled;
    };
-   MessageBuffer<SlotData> mMessageChannel;
+   SharedObjectMessageBuffer<SlotData> mMessageChannel;
 
    Observer::Subscription mRegionSubscription,
       mSpeedSubscription;
