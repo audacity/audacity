@@ -260,34 +260,23 @@ public:
    using RingBuffers = std::vector<std::unique_ptr<RingBuffer>>;
    RingBuffers mCaptureBuffers;
    RecordableSequences mCaptureSequences;
-   /*! Read by worker threads but unchanging during playback */
-   RingBuffers mPlaybackBuffers;
    // TODO more-than-two-channels
    static constexpr size_t MaxPlaybackChannels = 2;
    std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mMasterBuffers;
    //! @invariant `mpSequence && mpSequence->FindChannelGroup()`
-   struct Track {
+   struct AUDIO_IO_API Track {
       const std::shared_ptr<const PlayableSequence> mpSequence;
       std::unique_ptr<Mixer> mpMixer{};
       std::unique_ptr<PlaybackState> mpState;
+      /*! Read by worker threads but unchanging during playback */
+      std::array<std::unique_ptr<RingBuffer>, MaxPlaybackChannels> mBuffers;
       std::array<float, MaxPlaybackChannels> mOldChannelGains{};
       bool mHasLatency{ false };
 
       //! @pre `seq && seq->FindChannelGroup()`
-      Track(const std::shared_ptr<const PlayableSequence> &seq)
-         : mpSequence{ seq }
-      {
-         assert(seq && seq->FindChannelGroup());
-      }
-
-      void ResetData()
-      {
-         mpMixer.reset();
-         mpState.reset();
-         for (auto &gain : mOldChannelGains)
-            gain = 0;
-         mHasLatency = false;
-      }
+      Track(const std::shared_ptr<const PlayableSequence> &seq);
+      ~Track();
+      void ResetData();
    };
    std::vector<Track> mPlaybackTracks;
    float mOldMasterGain{};

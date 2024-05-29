@@ -128,6 +128,26 @@ AudioIO *AudioIO::Get()
    return static_cast< AudioIO* >( AudioIOBase::Get() );
 }
 
+AudioIoCallback::Track::Track(
+   const std::shared_ptr<const PlayableSequence> &seq
+)  : mpSequence{ seq }
+{
+   assert(seq && seq->FindChannelGroup());
+}
+
+AudioIoCallback::Track::~Track() = default;
+
+void AudioIoCallback::Track::ResetData()
+{
+   mpMixer.reset();
+   mpState.reset();
+   for (auto &pBuffer : mBuffers)
+      pBuffer.reset();
+   for (auto &gain : mOldChannelGains)
+      gain = 0;
+   mHasLatency = false;
+}
+
 struct AudioIoCallback::TransportState {
    TransportState(std::weak_ptr<AudacityProject> wOwningProject,
       const std::vector<AudioIO::Track> &tracks,
@@ -926,7 +946,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
 
    for (auto &buffer : mMasterBuffers)
       buffer.reset();
-   mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mCaptureBuffers.clear();
@@ -1240,13 +1259,8 @@ bool AudioIO::AllocateBuffers(
             // Adjust mPlaybackRingBufferSecs correspondingly
             mPlaybackRingBufferSecs = PlaybackPolicy::Duration { playbackBufferSize / mRate };
 
-            // mPlaybackBuffers buffers correspond many-to-one with
-            // mPlaybackSequences
             for (auto &buffer : mMasterBuffers)
                buffer.reset();
-            mPlaybackBuffers.resize(0);
-            mPlaybackBuffers.resize(
-               mPlaybackTracks.size() * numPlaybackChannels);
             // Number of scratch buffers depends on device playback channels
             mScratchBuffers.resize(numPlaybackChannels + 1);
             mScratchPointers.clear();
@@ -1283,7 +1297,7 @@ bool AudioIO::AllocateBuffers(
                const auto &pSequence = track.mpSequence;
 
                for (size_t jj = 0; jj < numPlaybackChannels; ++jj)
-                  mPlaybackBuffers[iBuffer++] = std::make_unique<RingBuffer>(
+                  track.mBuffers[jj] = std::make_unique<RingBuffer>(
                      floatSample, playbackBufferSize);
 
                // Invariant of struct Track
@@ -1395,7 +1409,6 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    for (auto &buffer : mMasterBuffers)
       buffer.reset();
-   mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackTracks.clear();
@@ -1561,7 +1574,6 @@ void AudioIO::StopStream()
    //
    for (auto &buffer : mMasterBuffers)
       buffer.reset();
-   mPlaybackBuffers.clear();
    mScratchBuffers.clear();
    mScratchPointers.clear();
    mPlaybackTracks.clear();
@@ -1955,8 +1967,10 @@ void AudioIO::FillPlayBuffers()
    indicates the readiness of sample data to the consumer.  That atomic
    also synchronizes the use of the TimeQueue.
    */
-   for (const auto &pBuffer : mPlaybackBuffers)
-      pBuffer->Flush();
+   for (auto &track : mPlaybackTracks)
+      for (const auto &pBuffer : track.mBuffers)
+         if (pBuffer)
+            pBuffer->Flush();
    // Flush the master AFTER other RingBuffers, and expect consumer to
    // read it BEFORE, so that its atomic variables achieve the
    // synchronization
@@ -2127,12 +2141,9 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
    std::optional<double> &debugPrevTime, std::optional<double> &debugNextTime)
 {
    auto &policy = mPlaybackSchedule.GetPolicy();
-   size_t iBuffer = 0;
    bool allDone = true;
    int tries = 2;
    for (auto &track : mPlaybackTracks) {
-      Finally Do{ [&]{ iBuffer += GetNumPlaybackChannels(); } };
-      // Ring buffers may be many-to-one with channel groups
       const auto &vt = track.mpSequence;
       const auto pGroup = vt->FindChannelGroup();
       auto &trackState = *track.mpState;
@@ -2174,7 +2185,7 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
             tries = 2;
 
          auto &mixer = *track.mpMixer;
-         const auto buffers = &mPlaybackBuffers[iBuffer];
+         const auto buffers = &track.mBuffers[0];
          ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
 
          auto discarded = ApplyEffectStack(pScope, pGroup, buffers);
@@ -2786,8 +2797,6 @@ void AudioIoCallback::FillOutputBuffers(
       tempBufs[c] = stackAllocate(float, framesPerBuffer);
    // ------ End of MEMORY ALLOCATION ---------------
 
-   // mPlaybackBuffers buffers correspond many-to-one with mPlaybackSequences
-   size_t iBuffer = 0;
    for (auto &track : mPlaybackTracks) {
       auto vt = track.mpSequence.get();
 
@@ -2798,7 +2807,7 @@ void AudioIoCallback::FillOutputBuffers(
 
       assert(numPlaybackChannels > 0); // pre
       for (size_t c = 0; c < numPlaybackChannels; ++c) {
-         len = mPlaybackBuffers[iBuffer]
+         len = track.mBuffers[c]
             ->Get((samplePtr)tempBufs[c], floatSample, toGet);
          // This should be guaranteed by the producer thread, populating
          // the master buffer with the minumum of available lengths
@@ -2812,7 +2821,6 @@ void AudioIoCallback::FillOutputBuffers(
             // zeroes and not random garbage.
             memset((void*)&tempBufs[c][len], 0,
                (framesPerBuffer - len) * sizeof(float));
-         ++iBuffer;
       }
       assert(len == toGet);
 
@@ -3358,13 +3366,13 @@ int AudioIoCallback::CallbackDoSeek()
    for (auto &pBuffer : mMasterBuffers)
       if (pBuffer)
          pBuffer->Discard(pBuffer->AvailForGet());
-   for (auto &buffer : mPlaybackBuffers) {
-      const auto toDiscard = buffer->AvailForGet();
-      const auto discarded = buffer->Discard( toDiscard );
-      // wxASSERT( discarded == toDiscard );
-      // but we can't assert in this thread
-      wxUnusedVar(discarded);
-   }
+   for (auto &track : mPlaybackTracks)
+      for (const auto &pBuffer : track.mBuffers)
+         if (pBuffer) {
+            const auto toDiscard = pBuffer->AvailForGet();
+            const auto discarded = pBuffer->Discard(toDiscard);
+            assert(discarded == toDiscard);
+         }
 
    mTimeQueue.Prime(time);
    for (auto &track : mPlaybackTracks)
