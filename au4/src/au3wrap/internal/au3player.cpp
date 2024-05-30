@@ -179,6 +179,8 @@ void Au3Player::play()
             // XO("Error opening sound device.\nTry changing the audio host, playback device and the project sample rate."),
         }
     }
+
+    m_playbackStatus.set(audio::PlaybackStatus::Running);
 }
 
 void Au3Player::seek(const audio::secs_t newPosition)
@@ -191,6 +193,8 @@ void Au3Player::seek(const audio::secs_t newPosition)
 
 void Au3Player::stop()
 {
+    m_playbackStatus.set(audio::PlaybackStatus::Stopped);
+
     //! NOTE: copied from ProjectAudioManager::Stop
     bool stopStream = true;
 
@@ -235,6 +239,8 @@ void Au3Player::pause()
     auto gAudioIO = AudioIO::Get();
 
     gAudioIO->SetPaused(true);
+
+    m_playbackStatus.set(audio::PlaybackStatus::Paused);
 }
 
 void Au3Player::resume()
@@ -246,11 +252,18 @@ void Au3Player::resume()
     auto gAudioIO = AudioIO::Get();
 
     gAudioIO->SetPaused(false);
+
+    m_playbackStatus.set(audio::PlaybackStatus::Running);
+}
+
+au::audio::PlaybackStatus Au3Player::playbackStatus() const
+{
+    return m_playbackStatus.val;
 }
 
 muse::async::Channel<au::audio::PlaybackStatus> Au3Player::playbackStatusChanged() const
 {
-    return m_playbackStatusChanged;
+    return m_playbackStatus.ch;
 }
 
 muse::async::Promise<bool> Au3Player::setLoop(const audio::secs_t from, const audio::secs_t to)
@@ -270,14 +283,9 @@ void Au3Player::resetLoop()
     NOT_IMPLEMENTED;
 }
 
-muse::async::Promise<au::audio::secs_t> Au3Player::playbackPosition() const
+au::audio::secs_t Au3Player::playbackPosition() const
 {
-    NOT_IMPLEMENTED;
-
-    return muse::async::Promise<audio::secs_t>([](auto, auto reject) {
-        muse::Ret ret = make_ret(muse::Ret::Code::NotImplemented);
-        return reject(ret.code(), ret.text());
-    });
+    return 0.0;
 }
 
 muse::async::Channel<au::audio::secs_t> Au3Player::playbackPositionChanged() const
