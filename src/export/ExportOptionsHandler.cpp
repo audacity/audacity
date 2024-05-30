@@ -168,6 +168,7 @@ void ExportOptionsHandler::PopulateOptions(ShuttleGui& S)
                      {
                         mEditor->SetValue(id, evt.GetInt());
                      });
+                     control->SetMinSize({180, -1});
                   }
                   else
                   {
