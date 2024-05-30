@@ -23,8 +23,9 @@
 #define AU_CONTEXT_IGLOBALCONTEXT_H
 
 #include "modularity/imoduleinterface.h"
+#include "global/async/notification.h"
 #include "project/iaudacityproject.h"
-#include "async/notification.h"
+#include "playback/iplayer.h"
 
 namespace au::context {
 class IGlobalContext : MODULE_EXPORT_INTERFACE
@@ -40,6 +41,10 @@ public:
 
     virtual au::processing::ProcessingProjectPtr currentProcessingProject() const = 0;
     virtual muse::async::Notification currentProcessingProjectChanged() const = 0;
+
+    virtual void setPlayer(const au::playback::IPlayerPtr& player) = 0;
+    virtual au::playback::IPlayerPtr player() const = 0;
+    virtual muse::async::Notification playerChanged() const = 0;
 };
 }
 

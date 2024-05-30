@@ -19,12 +19,14 @@ public:
     virtual void stop() = 0;
     virtual void pause() = 0;
     virtual void resume() = 0;
+
+    virtual audio::PlaybackStatus playbackStatus() const = 0;
     virtual muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const = 0;
 
     virtual muse::async::Promise<bool> setLoop(const audio::secs_t from, const audio::secs_t to) = 0;
     virtual void resetLoop() = 0;
 
-    virtual muse::async::Promise<audio::secs_t> playbackPosition() const = 0;
+    virtual audio::secs_t playbackPosition() const = 0;
     virtual muse::async::Channel<audio::secs_t> playbackPositionChanged() const = 0;
 };
 

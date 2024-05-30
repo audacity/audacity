@@ -50,7 +50,12 @@ void PlaybackController::init()
         // }
     });
 
-    m_player = playback()->player();
+    playback::IPlayerPtr player = playback()->player();
+    globalContext()->setPlayer(player);
+
+    player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
+        m_isPlayingChanged.notify();
+    });
 }
 
 void PlaybackController::deinit()
@@ -60,7 +65,7 @@ void PlaybackController::deinit()
 
 IPlayerPtr PlaybackController::player() const
 {
-    return m_player;
+    return globalContext()->player();
 }
 
 bool PlaybackController::isPlayAllowed() const
@@ -75,12 +80,12 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
-    return m_currentPlaybackStatus == PlaybackStatus::Running;
+    return player()->playbackStatus() == PlaybackStatus::Running;
 }
 
 bool PlaybackController::isPaused() const
 {
-    return m_currentPlaybackStatus == PlaybackStatus::Paused;
+    return player()->playbackStatus() == PlaybackStatus::Paused;
 }
 
 bool PlaybackController::isLoaded() const
@@ -185,7 +190,6 @@ void PlaybackController::play()
     }
 
     player()->play();
-    setCurrentPlaybackStatus(PlaybackStatus::Running);
 }
 
 void PlaybackController::rewindToStart()
@@ -202,7 +206,6 @@ void PlaybackController::pause()
     }
 
     player()->pause();
-    setCurrentPlaybackStatus(PlaybackStatus::Paused);
 }
 
 void PlaybackController::stop()
@@ -212,7 +215,6 @@ void PlaybackController::stop()
     }
 
     player()->stop();
-    setCurrentPlaybackStatus(PlaybackStatus::Stopped);
 }
 
 void PlaybackController::resume()
@@ -222,17 +224,6 @@ void PlaybackController::resume()
     }
 
     player()->resume();
-    setCurrentPlaybackStatus(PlaybackStatus::Running);
-}
-
-void PlaybackController::setCurrentPlaybackStatus(PlaybackStatus status)
-{
-    if (m_currentPlaybackStatus == status) {
-        return;
-    }
-
-    m_currentPlaybackStatus = status;
-    m_isPlayingChanged.notify();
 }
 
 void PlaybackController::togglePlayRepeats()

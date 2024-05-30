@@ -80,8 +80,6 @@ private:
     void resume();
     void seek(const audio::secs_t secs);
 
-    void setCurrentPlaybackStatus(audio::PlaybackStatus status);
-
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
     void toggleLoopPlayback();
@@ -110,8 +108,6 @@ private:
 
     using TrackAddFinished = std::function<void ()>;
 
-    IPlayerPtr m_player;
-
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
     muse::async::Notification m_playbackPositionChanged;
@@ -121,7 +117,6 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    audio::PlaybackStatus m_currentPlaybackStatus = audio::PlaybackStatus::Stopped;
     audio::msecs_t m_currentPlaybackTimeMsecs = 0;
 
     muse::async::Channel<audio::TrackId> m_trackAdded;

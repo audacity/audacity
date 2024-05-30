@@ -54,3 +54,18 @@ muse::async::Notification GlobalContext::currentProcessingProjectChanged() const
     //! NOTE Same as main project
     return m_currentProjectChanged;
 }
+
+void GlobalContext::setPlayer(const au::playback::IPlayerPtr& player)
+{
+    m_player = player;
+}
+
+au::playback::IPlayerPtr GlobalContext::player() const
+{
+    return m_player;
+}
+
+muse::async::Notification GlobalContext::playerChanged() const
+{
+    return m_playerChanged;
+}
