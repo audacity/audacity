@@ -7,19 +7,27 @@ PlayCursorModel::PlayCursorModel(QObject* parent)
 {
 }
 
+au::playback::IPlayerPtr PlayCursorModel::player() const
+{
+    return globalContext()->player();
+}
+
 void PlayCursorModel::init()
 {
-    playbackController()->playbackPositionChanged().onNotify(this, [this]() {
-        emit positionXChanged();
+    player()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
+        updatePositionX(secs);
     });
+}
+
+void PlayCursorModel::updatePositionX(audio::secs_t secs)
+{
+    m_positionX = m_context->timeToPosition(secs);
+    emit positionXChanged();
 }
 
 double PlayCursorModel::positionX() const
 {
-    if (!m_context) {
-        return 0;
-    }
-    return m_context->timeToPosition(playbackController()->playbackPositionInSeconds());
+    return m_positionX;
 }
 
 TimelineContext* PlayCursorModel::timelineContext() const

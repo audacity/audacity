@@ -50,7 +50,7 @@ void PlaybackController::init()
         // }
     });
 
-    m_player = playback()->player();
+    globalContext()->setPlayer(playback()->player());
 }
 
 void PlaybackController::deinit()
@@ -60,7 +60,7 @@ void PlaybackController::deinit()
 
 IPlayerPtr PlaybackController::player() const
 {
-    return m_player;
+    return globalContext()->player();
 }
 
 bool PlaybackController::isPlayAllowed() const

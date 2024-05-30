@@ -5,7 +5,7 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "playback/iplaybackcontroller.h"
+#include "context/iglobalcontext.h"
 
 #include "../clipsview/timelinecontext.h"
 
@@ -18,7 +18,7 @@ class PlayCursorModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(double positionX READ positionX NOTIFY positionXChanged FINAL)
 
-    muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<context::IGlobalContext> globalContext;
 
 public:
     PlayCursorModel(QObject* parent = nullptr);
@@ -35,6 +35,11 @@ signals:
 
 private:
 
+    playback::IPlayerPtr player() const;
+
+    void updatePositionX(audio::secs_t secs);
+
     TimelineContext* m_context = nullptr;
+    double m_positionX = 0.0;
 };
 }

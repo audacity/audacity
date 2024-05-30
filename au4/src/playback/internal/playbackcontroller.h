@@ -110,8 +110,6 @@ private:
 
     using TrackAddFinished = std::function<void ()>;
 
-    IPlayerPtr m_player;
-
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
     muse::async::Notification m_playbackPositionChanged;
