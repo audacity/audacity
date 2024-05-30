@@ -78,7 +78,26 @@ public:
                                                  1000,
                                                  1 };
 
-   static constexpr LimiterParameter showGraph {
-      &LimiterSettings::showGraph, L"showGraph", showGraphDefault, 0, 1, 1
+   static constexpr LimiterParameter showInput {
+      &LimiterSettings::showInput, L"showInput", showInputDefault, 0, 1, 1
+   };
+   static constexpr LimiterParameter showOutput {
+      &LimiterSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
+   };
+   static constexpr LimiterParameter showOvershoot {
+      &LimiterSettings::showOvershoot,
+      L"showOvershoot",
+      showOvershootDefault,
+      0,
+      1,
+      1
+   };
+   static constexpr LimiterParameter showUndershoot {
+      &LimiterSettings::showUndershoot,
+      L"showUndershoot",
+      showUndershootDefault,
+      0,
+      1,
+      1
    };
 };

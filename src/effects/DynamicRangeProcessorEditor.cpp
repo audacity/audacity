@@ -64,18 +64,6 @@ auto MakeRulerPanel(
          .TickColour(theTheme.Colour(clrGraphLabels)));
 }
 
-void MakeHistoryPanels(
-   wxWindow* parent, CompressorInstance& instance, EffectSettingsAccess& access,
-   std::function<void(float newDbRange)> onDbRangeChanged)
-{
-   const auto settings = GetSettings(access);
-   const auto dbRange =
-      GetDbRange(CompressorProcessor::GetMaxCompressionDb(settings));
-   safenew HistPanel(
-      parent, historyPanelId, instance, std::move(onDbRangeChanged));
-   MakeRulerPanel(parent, wxVERTICAL, dbRange, historyRulerPanelId);
-}
-
 constexpr auto C = 5.;
 
 // Assumes x to be in [0, 1]
@@ -134,17 +122,9 @@ DynamicRangeProcessorEditor::DynamicRangeProcessorEditor(
     : EffectEditor { services, access }
     , mUIParent { parent }
     , mTopLevelParent(static_cast<wxDialog&>(*wxGetTopLevelParent(parent)))
+    , mCompressorInstance { instance }
+    , mIsRealtime { isRealtime }
 {
-   if (isRealtime)
-      MakeHistoryPanels(parent, instance, access, [parent](float newDbRange) {
-         if (
-            const auto panel = dynamic_cast<RulerPanel*>(
-               wxWindow::FindWindowById(historyRulerPanelId, parent)))
-         {
-            panel->ruler.SetRange(0., -newDbRange);
-            panel->Refresh();
-         }
-      });
 }
 
 void DynamicRangeProcessorEditor::Initialize(
@@ -227,22 +207,64 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.EndMultiColumn();
    }
 
-   const auto histPanel = wxWindow::FindWindowById(historyPanelId, mUIParent);
-   if (!histPanel)
-      // Not a real-time effect editor, no need for a graph or its reveal
-      // checkbox.
+   if (!mIsRealtime)
+      // Not a real-time effect editor, no need for a graph
       return;
 
-   const auto showGraph = compressorSettings ? compressorSettings->showGraph :
-                                               GetLimiterSettings()->showGraph;
+   const auto settings = GetSettings(mAccess);
+
+   const auto rulerPanel = MakeRulerPanel(
+      mUIParent, wxVERTICAL,
+      GetDbRange(CompressorProcessor::GetMaxCompressionDb(settings)),
+      historyRulerPanelId);
+
+   const auto histPanel = safenew HistPanel(
+      mUIParent, historyPanelId, mCompressorInstance, [this](float newDbRange) {
+         if (
+            const auto panel = dynamic_cast<RulerPanel*>(
+               wxWindow::FindWindowById(historyRulerPanelId, mUIParent)))
+         {
+            panel->ruler.SetRange(0., -newDbRange);
+            panel->Refresh();
+         }
+      });
+   histPanel->ShowInput(settings.showInput);
+   histPanel->ShowOutput(settings.showOutput);
+   histPanel->ShowOvershoot(settings.showOvershoot);
+   histPanel->ShowUndershoot(settings.showUndershoot);
+
+#define GET_REF(settingName)                                        \
+   GetCompressorSettings() ? GetCompressorSettings()->settingName : \
+                             GetLimiterSettings()->settingName
 
    S.StartHorizontalLay(wxALIGN_LEFT, 0);
    {
       S.AddSpace(borderSize, 0);
-      S.Id(checkboxId)
-         .AddCheckBox(XO("&Show graph (beta)"), showGraph)
+      S.AddCheckBox(XO("I&nput"), settings.showInput)
          ->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& evt) {
-            OnCheckbox(evt.IsChecked());
+            OnCheckbox(
+               evt.IsChecked(), GET_REF(showInput), &HistPanel::ShowInput);
+         });
+      S.AddCheckBox(XO("O&utput"), settings.showOutput)
+         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+            OnCheckbox(
+               evt.IsChecked(), GET_REF(showOutput), &HistPanel::ShowOutput);
+         });
+      /* i18n-hint: when smoothing leads the output level to be momentarily
+       * over the target */
+      S.AddCheckBox(XO("O&vershoot"), settings.showOvershoot)
+         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+            OnCheckbox(
+               evt.IsChecked(), GET_REF(showOvershoot),
+               &HistPanel::ShowOvershoot);
+         });
+      /* i18n-hint: when smoothing leads the output level to be momentarily
+       * under the target */
+      S.AddCheckBox(XO("Under&shoot"), settings.showUndershoot)
+         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+            OnCheckbox(
+               evt.IsChecked(), GET_REF(showUndershoot),
+               &HistPanel::ShowUndershoot);
          });
    }
    S.EndHorizontalLay();
@@ -262,15 +284,11 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.Prop(1)
          .Position(wxEXPAND | wxALIGN_TOP)
          .MinSize({ rulerWidth, HistPanel::minHeight })
-         .AddWindow(wxWindow::FindWindowById(historyRulerPanelId, mUIParent));
+         .AddWindow(rulerPanel);
    }
    S.EndMultiColumn();
 
    S.AddSpace(0, borderSize);
-
-   if (!showGraph)
-      // To hide the bottom-most part.
-      BasicUI::CallAfter([this] { OnCheckbox(false); });
 }
 
 void DynamicRangeProcessorEditor::AddTextboxAndSlider(
@@ -338,45 +356,15 @@ bool DynamicRangeProcessorEditor::UpdateUI()
    return true;
 }
 
-void DynamicRangeProcessorEditor::OnCheckbox(bool checked)
+void DynamicRangeProcessorEditor::OnCheckbox(
+   bool newVal, double& setting,
+   void (DynamicRangeProcessorHistoryPanel::*setter)(bool))
 {
-   auto& showGraph = GetCompressorSettings() ?
-                        GetCompressorSettings()->showGraph :
-                        GetLimiterSettings()->showGraph;
-   showGraph = checked;
-
-   if (mFullHeight == 0)
-      // First time, calculate the total height
-      mFullHeight = mTopLevelParent.GetSize().GetHeight();
-   constexpr auto graphPanelHeight = HistPanel::minHeight + borderSize;
-   const auto width = mTopLevelParent.GetSize().GetWidth();
-   const auto newHeight = mFullHeight - (showGraph ? 0 : graphPanelHeight);
-   if (!showGraph)
-   {
-      // Reduce min size first
-      mTopLevelParent.SetMinSize({ width, newHeight });
-      mTopLevelParent.SetMaxSize({ width, newHeight });
-   }
-   else
-   {
-      // Increase max size first
-      mTopLevelParent.SetMaxSize({ width, newHeight });
-      mTopLevelParent.SetMinSize({ width, newHeight });
-   }
-   mTopLevelParent.Fit();
-
+   setting = newVal;
+   if (
+      const auto panel = dynamic_cast<HistPanel*>(
+         wxWindow::FindWindowById(historyPanelId, mUIParent)))
+      (panel->*setter)(newVal);
    ValidateUI();
    Publish(EffectSettingChanged {});
 }
-
-// Committing some strings for translation we might want to use after the string
-// freeze.
-// TODO remove after release of 3.6
-namespace SpareStrings
-{
-static const auto inputGain = XO("Input gain (dB)");
-static const auto ceiling = XO("Ceiling (dB)");
-static const auto input = XO("Input");
-static const auto output = XO("Output");
-static const auto attenuation = XO("Attenuation");
-} // namespace SpareStrings

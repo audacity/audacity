@@ -31,7 +31,8 @@ const EffectParameterMethods& EffectCompressor::Parameters() const
       CompressorEditor::makeupGainDb, CompressorEditor::kneeWidthDb,
       CompressorEditor::compressionRatio, CompressorEditor::lookaheadMs,
       CompressorEditor::attackMs, CompressorEditor::releaseMs,
-      CompressorEditor::showGraph>
+      CompressorEditor::showInput, CompressorEditor::showOutput,
+      CompressorEditor::showOvershoot, CompressorEditor::showUndershoot>
       parameters;
    return parameters;
 }
