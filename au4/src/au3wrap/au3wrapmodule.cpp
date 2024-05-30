@@ -55,7 +55,7 @@ void Au3WrapModule::registerExports()
 
     m_audioDevicesManager = std::make_shared<Au3AudioDevicesManager>();
 
-    ioc()->registerExport<IAu3Playback>(moduleName(), m_playback);
+    ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
     ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
@@ -76,7 +76,6 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
         LOGE() << "failed init sql";
     }
 
-    m_playback->init();
     m_record->init();
 
     m_audioDevicesManager->init();

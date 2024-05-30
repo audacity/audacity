@@ -118,7 +118,7 @@ Canvas {
     }
 
     onCurrentVolumePressureChanged: {
-        console.log("============== onCurrentVolumePressureChanged " + currentVolumePressure)
+        //console.log("============== onCurrentVolumePressureChanged " + currentVolumePressure)
         requestPaint()
     }
 

@@ -23,8 +23,9 @@
 
 #include <QVariantMap>
 
+#include "iaudiooutput.h"
+
 using namespace au::playback;
-using namespace au::au3;
 using namespace au::audio;
 
 PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)

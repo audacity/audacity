@@ -5,18 +5,18 @@
 #ifndef AU_AU3WRAP_AU3AUDIOOUTPUT_H
 #define AU_AU3WRAP_AU3AUDIOOUTPUT_H
 
+#include "playback/iaudiooutput.h"
+
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "../iau3audiooutput.h"
-
 class AudacityProject;
 
 namespace au::au3 {
 class InOutMeter;
-class Au3AudioOutput : public IAu3AudioOutput, public muse::async::Asyncable
+class Au3AudioOutput : public playback::IAudioOutput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
