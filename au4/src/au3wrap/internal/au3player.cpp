@@ -24,7 +24,7 @@ Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))
 {
     m_positionUpdateTimer.onTimeout(this, [this]() {
-        m_playbackPosition.set(AudioIO::Get()->GetStreamTime());
+        updatePlaybackPosition();
     });
 
     m_playbackStatus.ch.onReceive(this, [this](audio::PlaybackStatus st) {
@@ -201,10 +201,17 @@ void Au3Player::play()
 
 void Au3Player::seek(const audio::secs_t newPosition)
 {
+    LOGD() << "newPosition: " << newPosition;
+
+    //! TODO At the moment not work
+    //! there probably should be a different implementation
+
     AudacityProject& project = projectRef();
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
     playRegion.SetStart(newPosition);
+
+    m_playbackPosition.set(newPosition);
 }
 
 void Au3Player::stop()
@@ -297,6 +304,11 @@ muse::async::Promise<bool> Au3Player::setLoop(const audio::secs_t from, const au
 void Au3Player::resetLoop()
 {
     NOT_IMPLEMENTED;
+}
+
+void Au3Player::updatePlaybackPosition()
+{
+    m_playbackPosition.set(AudioIO::Get()->GetStreamTime());
 }
 
 au::audio::secs_t Au3Player::playbackPosition() const

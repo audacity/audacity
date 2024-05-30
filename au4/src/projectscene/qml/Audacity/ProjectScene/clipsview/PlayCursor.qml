@@ -15,6 +15,10 @@ Rectangle {
 
     x: playCursorModel.positionX
 
+    function seekToX(x) {
+        playCursorModel.seekToX(x)
+    }
+
     Component.onCompleted: {
         playCursorModel.init()
     }

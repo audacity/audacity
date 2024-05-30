@@ -74,6 +74,7 @@ private:
 
     void togglePlay();
     void rewindToStart();
+    void onSeekAction(const muse::actions::ActionData& args);
     void play();
     void pause();
     void stop();
