@@ -1,0 +1,10 @@
+name: AU4 Issue
+description: Development tasks of Audacity 4. For internal use.
+labels: ["AU4"]
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description
+    validations:
+      required: true
