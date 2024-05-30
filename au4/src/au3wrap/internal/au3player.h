@@ -47,6 +47,8 @@ private:
     bool canStopAudioStream() const;
     TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo);
 
+    void updatePlaybackPosition();
+
     muse::ValCh<audio::PlaybackStatus> m_playbackStatus;
 
     muse::Timer m_positionUpdateTimer;

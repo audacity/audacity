@@ -4,11 +4,14 @@
 #pragma once
 
 #include "../iglobalcontext.h"
+#include "playbackstate.h"
 
 namespace au::context {
 class GlobalContext : public au::context::IGlobalContext
 {
 public:
+
+    GlobalContext();
 
     void setCurrentProject(const au::project::IAudacityProjectPtr& project) override;
     au::project::IAudacityProjectPtr currentProject() const override;
@@ -18,14 +21,12 @@ public:
     muse::async::Notification currentProcessingProjectChanged() const override;
 
     void setPlayer(const au::playback::IPlayerPtr& player) override;
-    au::playback::IPlayerPtr player() const override;
-    muse::async::Notification playerChanged() const override;
+    IPlaybackStatePtr playbackState() const override;
 
 private:
     au::project::IAudacityProjectPtr m_currentProject;
     muse::async::Notification m_currentProjectChanged;
 
-    au::playback::IPlayerPtr m_player;
-    muse::async::Notification m_playerChanged;
+    std::shared_ptr<PlaybackState> m_playbackState;
 };
 }

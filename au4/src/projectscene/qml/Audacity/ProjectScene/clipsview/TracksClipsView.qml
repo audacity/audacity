@@ -39,13 +39,6 @@ Rectangle {
         height: 76
     }
 
-    MouseArea {
-        anchors.fill: parent
-        onWheel: function(wheel) {
-            wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
-        }
-    }
-
     StyledListView {
         id: view
 
@@ -78,7 +71,21 @@ Rectangle {
         }
     }
 
+    MouseArea {
+        anchors.fill: parent
+
+        onWheel: function(wheel) {
+            wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
+        }
+
+        onClicked: function(mouse) {
+            console.log("mouse.x: " + mouse.x)
+            playCursor.seekToX(mouse.x)
+        }
+    }
+
     PlayCursor {
+        id: playCursor
         anchors.top: view.top
         anchors.bottom: parent.bottom
         context: timeline.context

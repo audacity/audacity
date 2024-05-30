@@ -1,22 +1,29 @@
 #include "playcursormodel.h"
 
 using namespace au::projectscene;
+using namespace muse::actions;
 
 PlayCursorModel::PlayCursorModel(QObject* parent)
     : QObject(parent)
 {
 }
 
-au::playback::IPlayerPtr PlayCursorModel::player() const
+au::context::IPlaybackStatePtr PlayCursorModel::playbackState() const
 {
-    return globalContext()->player();
+    return globalContext()->playbackState();
 }
 
 void PlayCursorModel::init()
 {
-    player()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
+    playbackState()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
         updatePositionX(secs);
     });
+}
+
+void PlayCursorModel::seekToX(double x)
+{
+    double secs = m_context->positionToTime(x);
+    dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
 }
 
 void PlayCursorModel::updatePositionX(audio::secs_t secs)

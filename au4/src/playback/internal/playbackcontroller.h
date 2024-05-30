@@ -74,6 +74,7 @@ private:
 
     void togglePlay();
     void rewindToStart();
+    void onSeekAction(const muse::actions::ActionData& args);
     void play();
     void pause();
     void stop();
@@ -107,6 +108,8 @@ private:
     void setCurrentPlaybackTime(audio::msecs_t msecs);
 
     using TrackAddFinished = std::function<void ()>;
+
+    playback::IPlayerPtr m_player;
 
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;

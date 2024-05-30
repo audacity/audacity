@@ -14,6 +14,7 @@ using namespace muse::actions;
 static const ActionCode PLAY_CODE("play");
 static const ActionCode STOP_CODE("stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
+static const ActionCode SEEK_CODE("playback_seek");
 static const ActionCode LOOP_CODE("loop");
 static const ActionCode LOOP_IN_CODE("loop-in");
 static const ActionCode LOOP_OUT_CODE("loop-out");
@@ -32,6 +33,7 @@ void PlaybackController::init()
     dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
     dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::pause);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
+    dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, LOOP_CODE, this, &PlaybackController::toggleLoopPlayback);
     // dispatcher()->reg(this, LOOP_IN_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopIn); });
     // dispatcher()->reg(this, LOOP_OUT_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopOut); });
@@ -50,10 +52,10 @@ void PlaybackController::init()
         // }
     });
 
-    playback::IPlayerPtr player = playback()->player();
-    globalContext()->setPlayer(player);
+    m_player = playback()->player();
+    globalContext()->setPlayer(m_player);
 
-    player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
+    m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
     });
 }
@@ -65,7 +67,7 @@ void PlaybackController::deinit()
 
 IPlayerPtr PlaybackController::player() const
 {
-    return globalContext()->player();
+    return m_player;
 }
 
 bool PlaybackController::isPlayAllowed() const
@@ -197,6 +199,21 @@ void PlaybackController::rewindToStart()
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
     seek(0.0);
+}
+
+void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() > 0) {
+        return;
+    }
+
+    if (isPlaying()) {
+        LOGD() << "Can't do seek while playing";
+        return;
+    }
+
+    double secs = args.arg<double>(0);
+    player()->seek(secs);
 }
 
 void PlaybackController::pause()
