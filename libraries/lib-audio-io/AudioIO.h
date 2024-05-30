@@ -420,7 +420,6 @@ protected:
    PlaybackSchedule mPlaybackSchedule;
    TimeQueue mTimeQueue;
    std::unique_ptr<PlaybackState> mpState;
-   sampleCount mMaxCumulativeFrames;
 
    struct TransportState;
    //! Holds some state for duration of playback or recording
@@ -691,8 +690,6 @@ private:
 
    std::mutex mPostRecordingActionMutex;
    PostRecordingAction mPostRecordingAction;
-
-   std::shared_ptr<PlaybackMessage> mpMessage;
 
    bool mDelayingActions{ false };
 };

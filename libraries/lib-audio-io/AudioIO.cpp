@@ -932,7 +932,6 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    mCaptureBuffers.clear();
    mResample.clear();
 
-   mMaxCumulativeFrames = 0;
    mpState = mPlaybackSchedule.Init(
       t0, t1, options, mCaptureSequences.empty() ? nullptr : &mRecordingSchedule );
    auto &state = *mpState;
@@ -989,7 +988,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    auto &policy = mPlaybackSchedule.GetPolicy();
    policy.Initialize(mPlaybackSchedule, state, mRate);
    // Initialize some state for scrubbing, or looping, etc.
-   mpMessage = policy.PollUser(mPlaybackSchedule);
+   state.mpMessage = policy.PollUser(mPlaybackSchedule);
 
    auto range = Extensions();
    successAudio = successAudio &&
@@ -1321,8 +1320,10 @@ bool AudioIO::AllocateBuffers(
                   nullptr, // no custom mix-down
                   Mixer::ApplyGain::Discard // don't apply gains
                );
-               (track.mpState = mPlaybackSchedule.GetPolicy().CreateState())
-                  ->mCumulativeFrames = 0;
+               auto &trackState = *(track.mpState =
+                  mPlaybackSchedule.GetPolicy().CreateState());
+               trackState.mCumulativeFrames = 0;
+               trackState.mpMessage = mpState->mpMessage;
             }
 
             const auto timeQueueSize = 1 +
@@ -1412,7 +1413,6 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
-   mpMessage.reset();
 }
 
 bool AudioIO::IsAvailable(AudacityProject &project) const
@@ -1685,7 +1685,6 @@ void AudioIO::StopStream()
 
    mPlaybackSchedule.GetPolicy().Finalize(mPlaybackSchedule);
    mpState.reset();
-   mpMessage.reset();
 
    if (pListener) {
       // Tell UI to hide sample rate
@@ -2030,17 +2029,56 @@ static PlaybackMessage sDefaultMessage;
 
 void AudioIO::PollUser(PlaybackState &state, size_t newFrames)
 {
-   auto &frameCount = state.mCumulativeFrames;
-   auto &pMessage = mpMessage;
-   frameCount += newFrames;
-   if (frameCount > mMaxCumulativeFrames) {
-      // Now looking further ahead than ever previously in this playback
-      mMaxCumulativeFrames = frameCount;
+   if (newFrames == 0)
+      return;
+   // Strictly greater cumulative frames, each time we check this state
+   const auto frameCount = (state.mCumulativeFrames += newFrames);
+   auto &pMessage = state.mpMessage;
+   auto pPrevMessage = pMessage;
+   while (pMessage && frameCount > pMessage->mCumulativeFrames) {
+      // This may abandon a message when the least advanced state updates,
+      // but deallocation will not happen on this thread, if a
+      // SharedObjectPool holds a reference
+      pPrevMessage = pMessage;
+      pMessage = pMessage->mpNext;
+      // This function guarantees that the frame counts will increase along the
+      // chain of messages; see below why also asserting pPrevMessage not null
+      assert(!pMessage || (pPrevMessage &&
+         pPrevMessage->mCumulativeFrames < pMessage->mCumulativeFrames));
+   }
+   if (pMessage)
+      // There was already lookahead into UI messages for this position, so stop
+      // where we are in the chain
+      assert(frameCount <= pMessage->mCumulativeFrames);
+   else {
       const auto &policy = mPlaybackSchedule.GetPolicy();
       pMessage = policy.PollUser(mPlaybackSchedule);
-      if (pMessage)
-         pMessage->mCumulativeFrames = frameCount;
+      if (!pMessage)
+         // From the post of PollUser.
+         // The policy never uses messages at all.
+         assert(!pPrevMessage);
+      else {
+         // Now looking further ahead than ever previously in this playback.
+         // Because we always poll once when starting play and copy to all
+         // track states:
+         assert(pPrevMessage);
+         // Cumulative frame count (before adding new frames) was already
+         // associated with the previous message
+         if (pPrevMessage == pMessage)
+            // No new message.  Raise the ceiling for the existing one
+            pPrevMessage->mCumulativeFrames = frameCount;
+         else {
+            // Lengthen the chain of messages
+            // Older messages point only to newer ones, no leaky pointer cycles
+            pPrevMessage->mpNext = pMessage;
+            // New message convers non-overlapping range of positions beginning
+            // "now"
+            pPrevMessage->mCumulativeFrames = frameCount - 1;
+            pMessage->mCumulativeFrames = frameCount;
+         }
+      }
    }
+   // Drop pPrevMessage, but again that will not deallocate
 }
 
 // Determine how many samples to pull from tracks, and how much silence for
@@ -2076,7 +2114,7 @@ bool AudioIO::ProcessPlaybackSlices(
    size_t allProduced = 0;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
    const bool paused = IsPaused();
-   const auto &pMessage = mpMessage;
+   const auto &pMessage = state.mpMessage;
    std::optional<double> debugPrevTime,
       debugNextTime;
 
@@ -2133,13 +2171,13 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
    auto &policy = mPlaybackSchedule.GetPolicy();
    size_t iBuffer = 0;
    bool allDone = true;
-   const auto &pMessage = mpMessage;
    for (auto &track : mPlaybackTracks) {
       Finally Do{ [&]{ iBuffer += GetNumPlaybackChannels(); } };
       // Ring buffers may be many-to-one with channel groups
       const auto &vt = track.mpSequence;
       const auto pGroup = vt->FindChannelGroup();
       auto &trackState = *track.mpState;
+      const auto &pMessage = trackState.mpMessage;
       bool done = false;
       auto demand = orig_demand;
       auto &myLastTime = trackState.mLastTime;
@@ -2162,6 +2200,9 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
             done = policy.RepositionPlayback(mPlaybackSchedule, trackState,
                (pMessage ? *pMessage : sDefaultMessage), &mixer,
                demand - frames);
+
+         // Check for messages from the UI thread updating schedule parameters
+         PollUser(trackState, frames);
 
          demand -= frames;
       } while (demand && !done);

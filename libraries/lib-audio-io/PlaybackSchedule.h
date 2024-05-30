@@ -60,6 +60,8 @@ struct AUDIO_IO_API PlaybackMessage {
 
    //! This is a memo assigned by the consumer
    sampleCount mCumulativeFrames{};
+   //! This is a memo assigned by the consumer
+   std::shared_ptr<PlaybackMessage> mpNext;
 };
 
 class AUDIO_IO_API PlaybackState
@@ -92,6 +94,9 @@ public:
    // Total of frames produced for playback, regardless of timeline position,
    // and including pauses
    sampleCount mCumulativeFrames{};
+
+   // A pointer to an associated message
+   std::shared_ptr<PlaybackMessage> mpMessage;
 
    //! Rather than a Clone() method, this assumes pre-allocation
    /*!
@@ -207,6 +212,7 @@ public:
    //! Worker thread receives latest scheduling parameters from UI
    /*!
     Default implementation returns null
+    @post result of repeated calls is always nullptr, or else is never nullptr
     */
    virtual std::shared_ptr<PlaybackMessage>
    PollUser(const PlaybackSchedule &schedule) const;
