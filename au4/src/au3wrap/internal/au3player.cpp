@@ -20,6 +20,22 @@
 
 using namespace au::au3;
 
+Au3Player::Au3Player()
+    : m_positionUpdateTimer(std::chrono::microseconds(1000))
+{
+    m_positionUpdateTimer.onTimeout(this, [this]() {
+        m_playbackPosition.set(AudioIO::Get()->GetStreamTime());
+    });
+
+    m_playbackStatus.ch.onReceive(this, [this](audio::PlaybackStatus st) {
+        if (st == audio::PlaybackStatus::Running) {
+            m_positionUpdateTimer.start();
+        } else {
+            m_positionUpdateTimer.stop();
+        }
+    });
+}
+
 void Au3Player::play()
 {
     //! NOTE: copied from ProjectAudioManager::PlayPlayRegion
@@ -285,12 +301,12 @@ void Au3Player::resetLoop()
 
 au::audio::secs_t Au3Player::playbackPosition() const
 {
-    return 0.0;
+    return m_playbackPosition.val;
 }
 
 muse::async::Channel<au::audio::secs_t> Au3Player::playbackPositionChanged() const
 {
-    return m_playbackPositionChanged;
+    return m_playbackPosition.ch;
 }
 
 AudacityProject& Au3Player::projectRef() const

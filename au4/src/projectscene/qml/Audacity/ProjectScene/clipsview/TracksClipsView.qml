@@ -81,5 +81,6 @@ Rectangle {
     PlayCursor {
         anchors.top: view.top
         anchors.bottom: parent.bottom
+        context: timeline.context
     }
 }
