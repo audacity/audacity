@@ -155,20 +155,23 @@ void InsertCrossings(
  * Fills the area between the lines and the bottom of the panel with the given
  * color.
  */
+template <typename Brush>
 void FillUpTo(
-   std::vector<wxPoint2DDouble> lines, const wxColor& color, wxPaintDC& dc,
-   int panelHeight)
+   std::vector<wxPoint2DDouble> lines, const Brush& brush,
+   wxGraphicsContext& gc, const wxSize& size)
 {
-   const auto gc = DynamicRangeProcessorPanel::MakeGraphicsContext(dc);
-   gc->SetBrush(wxBrush { color });
-   auto area = gc->CreatePath();
-   area.MoveToPoint(lines.back().m_x, panelHeight);
-   area.AddLineToPoint(lines.front().m_x, panelHeight);
+   const auto height = size.GetHeight();
+   const auto left = std::max<double>(0., lines.front().m_x);
+   const auto right = std::min<double>(size.GetWidth(), lines.back().m_x);
+   auto area = gc.CreatePath();
+   area.MoveToPoint(right, height);
+   area.AddLineToPoint(left, height);
    std::for_each(lines.begin(), lines.end(), [&area](const auto& p) {
       area.AddLineToPoint(p);
    });
    area.CloseSubpath();
-   gc->FillPath(area);
+   gc.SetBrush(brush);
+   gc.FillPath(area);
 }
 
 /*!
@@ -232,9 +235,19 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
 
    using namespace DynamicRangeProcessorPanel;
 
-   dc.SetBrush(backgroundColor);
-   dc.SetPen(*wxBLACK_PEN);
-   dc.DrawRectangle(GetSize());
+   const auto gc = MakeGraphicsContext(dc);
+
+   gc->SetBrush(gc->CreateLinearGradientBrush(
+      0, 0, 0, GetSize().GetHeight(), backgroundColor, *wxWHITE));
+   gc->SetPen(wxTransparentColor);
+   gc->DrawRectangle(0, 0, GetSize().GetWidth() - 1, GetSize().GetHeight() - 1);
+
+   Finally redrawBorder { [&] {
+      gc->SetBrush(*wxTRANSPARENT_BRUSH);
+      gc->SetPen(lineColor);
+      gc->DrawRectangle(
+         0, 0, GetSize().GetWidth() - 1, GetSize().GetHeight() - 1);
+   } };
 
    if (!mHistory || !mSync)
    {
@@ -288,12 +301,30 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
       }
 
       if (mShowOutput)
+      {
          // Paint output first with opaque color.
-         FillUpTo(mOutput, wxColor { 103, 124, 228 }, dc, height);
+         constexpr auto w = .4;
+         // Origin color. This is the waveform color, light blue.
+         const wxColor oCol { 103, 124, 228 };
+         // Circle color.
+         const wxColor cCol(
+            backgroundColor.Red() * w + oCol.Red() * (1 - w),
+            backgroundColor.Green() * w + oCol.Green() * (1 - w),
+            backgroundColor.Blue() * w + oCol.Blue() * (1 - w),
+            backgroundColor.Alpha() * w + oCol.Alpha() * (1 - w));
+         const auto xo = width * 0.9; // "o" for "origin"
+         const auto yo = height * 0.1;
+         const auto xf = width * 0.5; // "f" for "focus"
+         const auto yf = height * 0.2;
+         const auto radius = width;
+         const auto brush =
+            gc->CreateRadialGradientBrush(xo, yo, xf, yf, radius, oCol, cCol);
+         FillUpTo(mOutput, brush, *gc, GetSize());
+      }
 
       if (mShowInput)
          // Input in grey with transparency.
-         FillUpTo(mInput, wxColor { 128, 128, 128, 64 }, dc, height);
+         FillUpTo(mInput, wxColor { 128, 128, 128, 64 }, *gc, GetSize());
 
       if (mShowOvershoot || mShowTail)
       {
@@ -308,9 +339,9 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
       }
 
       // Actual compression line
-      const auto gc = MakeGraphicsContext(dc);
-      gc->SetPen(wxPen { *wxBLACK });
-      gc->DrawLines(mActual.size(), mActual.data());
+      const auto gc2 = MakeGraphicsContext(dc);
+      gc2->SetPen(lineColor);
+      gc2->DrawLines(mActual.size(), mActual.data());
    }
 }
 
