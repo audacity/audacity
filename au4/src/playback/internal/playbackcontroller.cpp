@@ -52,10 +52,10 @@ void PlaybackController::init()
         // }
     });
 
-    playback::IPlayerPtr player = playback()->player();
-    globalContext()->setPlayer(player);
+    m_player = playback()->player();
+    globalContext()->setPlayer(m_player);
 
-    player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
+    m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
     });
 }
@@ -67,7 +67,7 @@ void PlaybackController::deinit()
 
 IPlayerPtr PlaybackController::player() const
 {
-    return globalContext()->player();
+    return m_player;
 }
 
 bool PlaybackController::isPlayAllowed() const

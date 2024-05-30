@@ -8,14 +8,14 @@ PlayCursorModel::PlayCursorModel(QObject* parent)
 {
 }
 
-au::playback::IPlayerPtr PlayCursorModel::player() const
+au::context::IPlaybackStatePtr PlayCursorModel::playbackState() const
 {
-    return globalContext()->player();
+    return globalContext()->playbackState();
 }
 
 void PlayCursorModel::init()
 {
-    player()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
+    playbackState()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
         updatePositionX(secs);
     });
 }

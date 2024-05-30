@@ -38,7 +38,7 @@ signals:
 
 private:
 
-    playback::IPlayerPtr player() const;
+    context::IPlaybackStatePtr playbackState() const;
 
     void updatePositionX(audio::secs_t secs);
 

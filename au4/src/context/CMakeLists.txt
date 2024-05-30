@@ -25,6 +25,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/contextmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/contextmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iglobalcontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackstate.h
     ${CMAKE_CURRENT_LIST_DIR}/uicontext.h
     ${CMAKE_CURRENT_LIST_DIR}/shortcutcontext.h
     ${CMAKE_CURRENT_LIST_DIR}/iuicontextresolver.h
@@ -32,7 +33,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalcontext.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/uicontextresolver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/uicontextresolver.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackstate.h
     )
 
 setup_module()
-
