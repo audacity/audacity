@@ -223,9 +223,9 @@ void DynamicRangeProcessorHistoryPanel::ShowOvershoot(bool show)
    Refresh();
 }
 
-void DynamicRangeProcessorHistoryPanel::ShowTail(bool show)
+void DynamicRangeProcessorHistoryPanel::ShowUndershoot(bool show)
 {
-   mShowTail = show;
+   mShowUndershoot = show;
    Refresh();
 }
 
@@ -326,7 +326,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          // Input in grey with transparency.
          FillUpTo(mInput, wxColor { 128, 128, 128, 64 }, *gc, GetSize());
 
-      if (mShowOvershoot || mShowTail)
+      if (mShowOvershoot || mShowUndershoot)
       {
          // We have to paint the difference between these two lines, and in
          // different colors depending on which is on top. To fill the correct
@@ -334,7 +334,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          InsertCrossings(mActual, mTarget);
          if (mShowOvershoot)
             FillExcess(mActual, mTarget, attackColor, dc);
-         if (mShowTail)
+         if (mShowUndershoot)
             FillExcess(mTarget, mActual, releaseColor, dc);
       }
 

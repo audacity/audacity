@@ -43,7 +43,7 @@ public:
    void ShowInput(bool show);
    void ShowOutput(bool show);
    void ShowOvershoot(bool show);
-   void ShowTail(bool show);
+   void ShowUndershoot(bool show);
 
    DECLARE_EVENT_TABLE();
 
@@ -74,5 +74,5 @@ private:
    bool mShowInput = true;
    bool mShowOutput = true;
    bool mShowOvershoot = true;
-   bool mShowTail = true;
+   bool mShowUndershoot = true;
 };
