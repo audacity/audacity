@@ -2178,13 +2178,26 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
       const auto pGroup = vt->FindChannelGroup();
       auto &trackState = *track.mpState;
       const auto &pMessage = trackState.mpMessage;
+      bool samplesDone = false;
       bool done = false;
       auto demand = orig_demand;
       auto &myLastTime = trackState.mLastTime;
       debugTimes(debugPrevTime, myLastTime, mRate);
       do {
+         const auto limitedDemand = [&]{
+            if (pMessage) {
+               // If polling was already done beyond this point in the play for
+               // another track, don't run too far ahead before PollUser
+               if (const auto limit =
+                  pMessage->mCumulativeFrames - trackState.mCumulativeFrames
+                  ; limit > 0)
+                  return limitSampleBufferSize(demand, limit);
+            }
+            return demand;
+         }();
          const auto slice =
-            FindSlice(mPlaybackSchedule, trackState, demand, paused);
+            FindSlice(mPlaybackSchedule, trackState, limitedDemand,
+               (paused || samplesDone));
          const auto &[frames, toProduce] = slice;
 
          auto &mixer = *track.mpMixer;
@@ -2195,11 +2208,15 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
          myLastTime = policy.AdvancedTrackTime(
             mPlaybackSchedule, trackState, myLastTime, toProduce);
 
-         if (!paused)
+         if (!(paused || samplesDone))
             // Update the track state
-            done = policy.RepositionPlayback(mPlaybackSchedule, trackState,
-               (pMessage ? *pMessage : sDefaultMessage), &mixer,
-               demand - frames);
+            samplesDone = policy.RepositionPlayback(mPlaybackSchedule,
+               trackState, (pMessage ? *pMessage : sDefaultMessage),
+               &mixer, limitedDemand - frames);
+
+         // May loop again, as if for a pause, if policy says samples are
+         // done but demand is not exhausted
+         done = samplesDone && (demand == limitedDemand);
 
          // Check for messages from the UI thread updating schedule parameters
          PollUser(trackState, frames);
