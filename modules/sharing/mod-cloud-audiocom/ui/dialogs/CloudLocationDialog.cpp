@@ -66,7 +66,7 @@ const DialogDescription SaveDialogDescription = {
    XXO("&Save to Cloud"),
    &bin2c_SaveLocally_png,
    XO("On your computer"),
-   XO("Files are saved on your device."),
+   XO("Files are saved on your device.\nNote: To export MP3 and WAV files, use File > Export Audio instead."),
    XXO("Save to &computer"),
    XO("&Remember my choice and don't show again"),
    SaveLocationMode,
