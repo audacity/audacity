@@ -66,6 +66,7 @@ private:
    const Observer::Subscription mRealtimeResumeSubscription;
    wxTimer mTimer;
    std::optional<ClockSynchronization> mSync;
+   std::vector<double> mX;
    std::vector<wxPoint2DDouble> mTarget; // Compression
    std::vector<wxPoint2DDouble> mActual; // Compression
    std::vector<wxPoint2DDouble> mInput;
