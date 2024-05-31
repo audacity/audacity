@@ -36,11 +36,15 @@ signals:
     void timelineContextChanged();
     void positionXChanged();
 
+private slots:
+    void onFrameTimeChanged();
+
 private:
 
     context::IPlaybackStatePtr playbackState() const;
 
     void updatePositionX(audio::secs_t secs);
+    void insureVisible(audio::secs_t secs);
 
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;

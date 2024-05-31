@@ -45,8 +45,8 @@ Rectangle {
 
     TimelineRuler {
         id: ruler
-        context: timelineContext
         anchors.fill: parent
+        context: timelineContext
     }
 
     MouseArea {
