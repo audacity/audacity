@@ -26,7 +26,10 @@ namespace
 {
 constexpr auto defaultHeight = 100;
 constexpr auto timerId = 7000;
-constexpr auto timerPeriodMs = 1000 / 50;
+// Of course we aren't really targetting 200fps, but when specifying 50fps, we
+// rather get 30fps, with outliers at 20. Measurements (Windows) showed that,
+// when specifying 200, we get around 60fps on average, with outlier around 40.
+constexpr auto timerPeriodMs = 1000 / 200;
 
 float GetDbRange(int height)
 {
