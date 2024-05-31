@@ -70,9 +70,6 @@ void WarningsPrefs::PopulateOrExchange(ShuttleGui & S)
 
    S.StartStatic(XO("Show Warnings/Prompts for"));
    {
-      S.TieCheckBox(XXO("Saving &empty project"),
-                    {wxT("/GUI/EmptyCanBeDirty"),
-                     true});
    }
    S.EndStatic();
    S.EndScroller();
