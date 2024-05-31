@@ -277,28 +277,50 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
 
    for (const auto& segment : segments)
    {
-      if (segment.size() < 2)
-         continue;
-
+      mX.clear();
       mTarget.clear();
       mActual.clear();
       mInput.clear();
       mOutput.clear();
 
-      mTarget.reserve(segment.size());
-      mActual.reserve(segment.size());
-      mInput.reserve(segment.size());
-      mOutput.reserve(segment.size());
-      for (auto it = segment.begin(); it != segment.end(); ++it)
-      {
-         const auto elapsedSincePacket =
-            elapsedTimeSinceFirstPacket - (it->time - mSync->firstPacketTime);
-         const double x = GetDisplayPixel(elapsedSincePacket, width);
-         mTarget.emplace_back(x, -it->target / dbPerPixel);
-         mActual.emplace_back(x, -it->follower / dbPerPixel);
-         mInput.emplace_back(x, -it->input / dbPerPixel);
-         mOutput.emplace_back(x, -it->output / dbPerPixel);
-      }
+      mX.resize(segment.size());
+      auto lastInvisibleLeft = 0;
+      auto firstInvisibleRight = 0;
+      std::transform(
+         segment.begin(), segment.end(), mX.begin(), [&](const auto& packet) {
+            const auto x = GetDisplayPixel(
+               elapsedTimeSinceFirstPacket -
+                  (packet.time - mSync->firstPacketTime),
+               width);
+            if (x < 0)
+               ++lastInvisibleLeft;
+            if (x < width)
+               ++firstInvisibleRight;
+            return x;
+         });
+      lastInvisibleLeft = std::max<int>(--lastInvisibleLeft, 0);
+      firstInvisibleRight = std::min<int>(++firstInvisibleRight, mX.size());
+
+      mX.erase(mX.begin() + firstInvisibleRight, mX.end());
+      mX.erase(mX.begin(), mX.begin() + lastInvisibleLeft);
+
+      if (mX.size() < 2)
+         continue;
+
+      auto segmentIndex = lastInvisibleLeft;
+      mTarget.reserve(mX.size());
+      mActual.reserve(mX.size());
+      mInput.reserve(mX.size());
+      mOutput.reserve(mX.size());
+      std::for_each(mX.begin(), mX.end(), [&](auto x) {
+         const auto& packet = segment[segmentIndex++];
+         const auto elapsedSincePacket = elapsedTimeSinceFirstPacket -
+                                         (packet.time - mSync->firstPacketTime);
+         mTarget.emplace_back(x, -packet.target / dbPerPixel);
+         mActual.emplace_back(x, -packet.follower / dbPerPixel);
+         mInput.emplace_back(x, -packet.input / dbPerPixel);
+         mOutput.emplace_back(x, -packet.output / dbPerPixel);
+      });
 
       if (mShowOutput)
       {
