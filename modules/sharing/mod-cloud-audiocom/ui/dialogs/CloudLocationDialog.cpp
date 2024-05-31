@@ -61,8 +61,8 @@ const DialogDescription SaveDialogDescription = {
       user to select Cloud or local save. */
    XO("How would you like to save?"),
    &bin2c_SaveRemote_png,
-   XO("Save to the Cloud"),
-   XO("Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."),
+   XO("Save to the Cloud (free)"),
+   XO("Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."),
    XXO("&Save to Cloud"),
    &bin2c_SaveLocally_png,
    XO("On your computer"),
