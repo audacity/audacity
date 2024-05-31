@@ -348,25 +348,6 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
          return false;
       }
 
-      auto &tracks = TrackList::Get( proj );
-      if (tracks.empty())
-      {
-         if (UndoManager::Get( proj ).UnsavedChanges() &&
-               settings.EmptyCanBeDirty())
-         {
-            int result = AudacityMessageBox(
-               XO(
-   "Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
-               XO("Warning - Empty Project"),
-               wxYES_NO | wxICON_QUESTION,
-               &window);
-            if (result == wxNO)
-            {
-               return false;
-            }
-         }
-      }
-
       wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
 
       wxDiskspaceSize_t freeSpace;

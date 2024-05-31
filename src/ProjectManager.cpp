@@ -433,17 +433,14 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // project is now empty.
    if (!sbSkipPromptingForSave
       && event.CanVeto()
-      && (settings.EmptyCanBeDirty() || bHasTracks)) {
+      && bHasTracks) {
       if ( UndoManager::Get( project ).UnsavedChanges() ) {
          TitleRestorer Restorer( window, project );// RAII
          /* i18n-hint: The first %s numbers the project, the second %s is the project name.*/
          auto Title = XO("%sSave changes to %s?")
             .Format( Restorer.sProjNumber, Restorer.sProjName );
          auto Message = XO("Save project before closing?");
-         if( !bHasTracks )
-         {
-          Message += XO("\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nCancel, Edit > Undo until all tracks\nare open, then File > Save Project.");
-         }
+
          int result = AudacityMessageBox(
             Message,
             Title,
