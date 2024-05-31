@@ -19,6 +19,9 @@
 #include "widgets/LinearUpdater.h"
 #include "widgets/Ruler.h"
 #include <cassert>
+#include <chrono>
+#include <fstream>
+#include <queue>
 #include <wx/dcclient.h>
 #include <wx/graphics.h>
 
@@ -375,6 +378,32 @@ void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
 
 void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
 {
+
+   struct Manager
+   {
+      std::queue<double> elapsedTimes;
+      ~Manager()
+      {
+         std::ofstream file("C:/Users/saint/Downloads/elapsedTimes.txt");
+         while (!elapsedTimes.empty())
+         {
+            file << elapsedTimes.front() << '\n';
+            elapsedTimes.pop();
+         }
+      }
+   };
+
+   const auto now = std::chrono::steady_clock::now();
+   constexpr auto maxQueueSize = 100;
+   static Manager manager;
+   auto& elapsedTimes = manager.elapsedTimes;
+   static std::optional<std::chrono::steady_clock::time_point> lastTime;
+   if (elapsedTimes.size() == maxQueueSize)
+      elapsedTimes.pop();
+   if (lastTime.has_value())
+      elapsedTimes.push(std::chrono::duration<float>(now - *lastTime).count());
+   lastTime = now;
+
    mPacketBuffer.clear();
    DynamicRangeProcessorOutputPacket packet;
    while (mOutputQueue->Get(packet))
@@ -384,9 +413,6 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
    if (mHistory->IsEmpty())
       return;
 
-   // Do now get `std::chrono::steady_clock::now()` in the `OnPaint` event,
-   // because this can be triggered even when playback is paused.
-   const auto now = std::chrono::steady_clock::now();
    if (!mSync)
       // At the time of writing, the realtime playback doesn't account for
       // varying latencies. When it does, the synchronization will have to be
