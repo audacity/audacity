@@ -652,8 +652,6 @@ set( SOURCES
       prefs/TracksBehaviorsPrefs.h
       prefs/TracksPrefs.cpp
       prefs/TracksPrefs.h
-      prefs/WarningsPrefs.cpp
-      prefs/WarningsPrefs.h
       prefs/WaveformPrefs.cpp
       prefs/WaveformPrefs.h
       prefs/WaveformSettings.cpp
