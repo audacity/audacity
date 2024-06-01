@@ -620,7 +620,11 @@ private:
    void PollUser(PlaybackState &state, size_t newFrames);
    void ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand);
-   bool ConsumeFromMixers(bool paused, size_t demand,
+   //! @return how many samples were discarded for master stack's latency
+   size_t ProcessPlaybackSlicesPass(bool paused,
+      std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand,
+      size_t preprocessed);
+   bool ConsumeFromMixers(bool paused, size_t demand, size_t preprocessed,
       std::optional<RealtimeEffects::ProcessingScope> &pScope,
       std::optional<double> &debugPrevTime,
       std::optional<double> &debugNextTime);
@@ -633,7 +637,7 @@ private:
    size_t ApplyEffectStack(
       std::optional<RealtimeEffects::ProcessingScope> &scope,
       const ChannelGroup *pGroup,
-      std::unique_ptr<RingBuffer> playbackBuffers[]);
+      std::unique_ptr<RingBuffer> playbackBuffers[], size_t preprocessed);
    void ApplyChannelGains();
    void MixChannels(size_t demand);
 

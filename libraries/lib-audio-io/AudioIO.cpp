@@ -2070,8 +2070,27 @@ static PlaybackSlice FindSlice(const PlaybackSchedule &playbackSchedule,
 }
 
 void AudioIO::ProcessPlaybackSlices(
+   std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t demand)
+{
+   const bool paused = IsPaused();
+   size_t preprocessed = 0;
+   do {
+      const auto discarded =
+         ProcessPlaybackSlicesPass(paused, pScope, demand, preprocessed);
+      // Demand again, as much as was discarded at the last step
+      // Note <=, not < in the assertion.
+      // What, then, guarantees loop termination?
+      // This ultimately relies on each RealtimeEffectState strictly decreasing
+      // its outstanding latency, given a nonzero sized buffer to fill.
+      assert(discarded <= demand);
+      preprocessed += demand - std::min(discarded, demand);
+      demand = discarded;
+   } while(demand > 0);
+}
+
+size_t AudioIO::ProcessPlaybackSlicesPass(bool paused,
    std::optional<RealtimeEffects::ProcessingScope> &pScope,
-   const size_t orig_demand)
+   const size_t orig_demand, size_t preprocessed)
 {
    auto demand = orig_demand;
    auto &policy = mPlaybackSchedule.GetPolicy();
@@ -2086,13 +2105,12 @@ void AudioIO::ProcessPlaybackSlices(
    // user interface.
    bool done = false;
    const auto numPlaybackChannels = GetNumPlaybackChannels();
-   const bool paused = IsPaused();
    const auto &pMessage = state.mpMessage;
    std::optional<double> debugPrevTime,
       debugNextTime;
 
    // First fill ring buffers
-   bool allDone = ConsumeFromMixers(paused, orig_demand, pScope,
+   bool allDone = ConsumeFromMixers(paused, orig_demand, preprocessed, pScope,
       debugPrevTime, debugNextTime);
 
    debugTimes(debugPrevTime, lastTime, mRate);
@@ -2133,9 +2151,25 @@ void AudioIO::ProcessPlaybackSlices(
    // Apply per-track gain and pan and muting and micro-fades, all post-effects
    ApplyChannelGains();
    MixChannels(orig_demand);
+
+   // Apply master effectcs
+   const auto discardable =
+      ApplyEffectStack(pScope, nullptr, &mMasterBuffers[0], preprocessed);
+
+   // Discard equal amounts from the upstream, per-channel buffers
+   if (discardable > 0)
+      for (auto &track : mPlaybackTracks) {
+         for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
+            auto &ringBuffer = *track.mBuffers[iChannel];
+            auto discarded = ringBuffer.Unput(discardable);
+            assert(discarded == discardable);
+         }
+      }
+   return discardable;
 }
 
-bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
+bool AudioIO::ConsumeFromMixers(bool paused,
+   const size_t orig_demand, size_t preprocessed,
    std::optional<RealtimeEffects::ProcessingScope> &pScope,
    std::optional<double> &debugPrevTime, std::optional<double> &debugNextTime)
 {
@@ -2187,7 +2221,8 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
          const auto buffers = &track.mBuffers[0];
          ConsumeFromMixer(frames, toProduce, mixer, vt->NChannels(), buffers);
 
-         auto discarded = ApplyEffectStack(pScope, pGroup, buffers);
+         auto discarded =
+            ApplyEffectStack(pScope, pGroup, buffers, preprocessed);
          hasLatency = hasLatency || discarded > 0;
 
          // this should reproduce the side effect on state that
@@ -2201,6 +2236,7 @@ bool AudioIO::ConsumeFromMixers(bool paused, const size_t orig_demand,
             // loop may repeat and the state may run ahead, fetching more from
             // the track (looping as required), or feeding more silence into the
             // effect processor for pause or end of play.
+            // See comments in ProcessPlaybackSlices on termination guarantee
             assert(discarded <= frames);
             fewerFrames -= std::min(frames, discarded);
 
@@ -2256,7 +2292,7 @@ void AudioIO::ConsumeFromMixer(size_t frames, size_t toProduce,
 size_t AudioIO::ApplyEffectStack(
    std::optional<RealtimeEffects::ProcessingScope> &pScope,
    const ChannelGroup *pGroup,
-   std::unique_ptr<RingBuffer> playbackBuffers[])
+   std::unique_ptr<RingBuffer> playbackBuffers[], size_t preprocessed)
 {
    // Avoiding std::vector
    std::array<float *, MaxPlaybackChannels> pointers{};
@@ -2268,7 +2304,7 @@ size_t AudioIO::ApplyEffectStack(
       size_t len = 0;
       for (size_t iChannel = 0; iChannel < numPlaybackChannels; ++iChannel) {
          auto &ringBuffer = *playbackBuffers[iChannel];
-         const auto pair = ringBuffer.GetUnflushed(0, iBlock);
+         const auto pair = ringBuffer.GetUnflushed(preprocessed, iBlock);
          // Playback RingBuffers have float format: see AllocateBuffers
          pointers[iChannel] = reinterpret_cast<float*>(pair.first);
          // The lengths of corresponding unflushed blocks should be
