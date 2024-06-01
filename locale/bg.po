@@ -94,7 +94,7 @@ msgstr "Край на запис"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "High Playback Latency: %g\n"
-msgstr "Висока латентност при възпроизвеждане"
+msgstr "Висока латентност при възпроизвеждане: %g\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -110,7 +110,7 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No recording device found for '%s'.\n"
-msgstr "Не е намерено записващо устройство за"
+msgstr "Не е намерено записващо устройство за '%s' .\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
@@ -120,11 +120,11 @@ msgstr "Избор на входно устройство"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "No playback device found for '%s'.\n"
-msgstr "Не е намерено устройство за възпроизвеждане"
+msgstr "Не е намерено устройство за възпроизвеждане '%s' .\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Не може да провери взаимните честоти на дискретизация без двете устройства."
+msgstr "Не може да провери взаимните честоти на дискретизация без двете устройства.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -138,7 +138,7 @@ msgstr "Не е възможно да се отвори файл с жанров
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr "Налични смесители"
+msgstr "Налични смесители:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
