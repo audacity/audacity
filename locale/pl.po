@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-05-26 00:00+0000\n"
+"PO-Revision-Date: 2024-06-01 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -2001,7 +2001,7 @@ msgstr "Nie można przeanalizować informacji o projekcie."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "The project's database failed to reopen, possibly because of limited space on the storage device."
-msgstr "Nie udało się otworzyć ponownie bazy danych projektu, prawdopodobnie z powodu ograniczonej ilości miejsca na urządzeniu pamięci masowej."
+msgstr "Nie udało się otworzyć ponownie bazy danych projektu, prawdopodobnie z powodu ograniczonego miejsca na urządzeniu pamięci masowej."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Saving project"
@@ -2024,7 +2024,7 @@ msgid ""
 "%s"
 msgstr ""
 "Projekt nie został otwarty, prawdopodobnie z powodu\n"
-"ograniczonej przestrzeni na urządzeniu pamięci masowej.\n"
+"ograniczonego miejsca na urządzeniu pamięci masowej.\n"
 "\n"
 "%s"
 
@@ -2037,7 +2037,7 @@ msgid ""
 "%s"
 msgstr ""
 "Nie można usunąć informacji o autozapisywaniu, prawdopodobnie z powodu\n"
-"ograniczonej ilości miejsca na urządzeniu pamięci masowej.\n"
+"ograniczonego miejsca na urządzeniu pamięci masowej.\n"
 "\n"
 "%s"
 
@@ -8084,7 +8084,7 @@ msgstr "&Porzuć"
 
 #: src/HistoryWindow.cpp
 msgid "Clip&board space used"
-msgstr "Używana przestrzeń &schowka"
+msgstr "Używane miejsce w &schowku"
 
 #: src/HistoryWindow.cpp
 msgid "D&iscard"
