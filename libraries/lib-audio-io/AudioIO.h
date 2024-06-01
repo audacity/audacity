@@ -273,6 +273,8 @@ public:
    RecordableSequences mCaptureSequences;
    /*! Read by worker threads but unchanging during playback */
    RingBuffers mPlaybackBuffers;
+   // TODO more-than-two-channels
+   static constexpr size_t MaxPlaybackChannels = 2;
    ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
@@ -399,6 +401,9 @@ public:
    // detect more dropouts
    std::atomic<bool> mDetectUpstreamDropouts{ true };
 
+   size_t GetNumPlaybackChannels() const {
+      return std::min(mNumPlaybackChannels, MaxPlaybackChannels);
+   }
 protected:
    RecordingSchedule mRecordingSchedule{};
    PlaybackSchedule mPlaybackSchedule;
@@ -530,7 +535,6 @@ public:
    wxArrayString GetInputSourceNames();
 
    sampleFormat GetCaptureFormat() { return mCaptureFormat; }
-   size_t GetNumPlaybackChannels() const { return mNumPlaybackChannels; }
    size_t GetNumCaptureChannels() const { return mNumCaptureChannels; }
 
    // Meaning really capturing, not just pre-rolling

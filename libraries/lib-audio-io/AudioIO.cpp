@@ -558,7 +558,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       // regardless of source formats, we always mix to float
       playbackParameters.sampleFormat = paFloat32;
       playbackParameters.hostApiSpecificStreamInfo = NULL;
-      playbackParameters.channelCount = mNumPlaybackChannels;
+      playbackParameters.channelCount = GetNumPlaybackChannels();
 
       const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
       bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
@@ -1008,8 +1008,9 @@ int AudioIO::StartStream(const TransportSequences &sequences,
          return 0;
    }
 
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
    mpTransportState = std::make_unique<TransportState>(mOwningProject,
-      mPlaybackSequences, mNumPlaybackChannels, mRate);
+      mPlaybackSequences, numPlaybackChannels, mRate);
 
 #ifdef EXPERIMENTAL_AUTOMATED_INPUT_LEVEL_ADJUSTMENT
    AILASetStartTime();
@@ -1050,7 +1051,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
       std::this_thread::sleep_for(interval);
    }
 
-   if(mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
+   if (numPlaybackChannels > 0 || mNumCaptureChannels > 0) {
 
 #ifdef REALTIME_ALSA_THREAD
       // PRL: Do this in hope of less thread scheduling jitter in calls to
@@ -1113,7 +1114,7 @@ int AudioIO::StartStream(const TransportSequences &sequences,
    }
 
    auto pOwningProject = mOwningProject.lock();
-   if (mNumPlaybackChannels > 0)
+   if (numPlaybackChannels > 0)
       Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, true });
    if (mNumCaptureChannels > 0)
       Publish({ pOwningProject.get(), AudioIOEvent::CAPTURE, true });
@@ -1207,12 +1208,13 @@ bool AudioIO::AllocateBuffers(
       0.2 + 0.2 * std::min(size_t(16), mNumCaptureChannels);
 
    bool bDone;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
    do
    {
       bDone = true; // assume success
       try
       {
-         if( mNumPlaybackChannels > 0 ) {
+         if (numPlaybackChannels > 0) {
             // Allocate output buffers.
             // Allow at least 2x of the buffer latency.
             auto playbackBufferSize =
@@ -1238,14 +1240,12 @@ bool AudioIO::AllocateBuffers(
             mPlaybackBuffers.resize(
                std::max<size_t>(1, totalWidth));
             // Number of scratch buffers depends on device playback channels
-            if (mNumPlaybackChannels > 0) {
-               mScratchBuffers.resize(mNumPlaybackChannels * 2 + 1);
-               mScratchPointers.clear();
-               for (auto &buffer : mScratchBuffers) {
-                  buffer.Allocate(playbackBufferSize, floatSample);
-                  mScratchPointers.push_back(
-                     reinterpret_cast<float*>(buffer.ptr()));
-               }
+            mScratchBuffers.resize(numPlaybackChannels * 2 + 1);
+            mScratchPointers.clear();
+            for (auto &buffer : mScratchBuffers) {
+               buffer.Allocate(playbackBufferSize, floatSample);
+               mScratchPointers.push_back(
+                  reinterpret_cast<float*>(buffer.ptr()));
             }
             mPlaybackMixers.clear();
 
@@ -1654,7 +1654,7 @@ void AudioIO::StopStream()
 
    {
       auto pOwningProject = mOwningProject.lock();
-      if (mNumPlaybackChannels > 0)
+      if (GetNumPlaybackChannels() > 0)
          Publish({ pOwningProject.get(), AudioIOEvent::PLAYBACK, false });
       if (mNumCaptureChannels > 0)
          Publish({ pOwningProject.get(),
@@ -1903,13 +1903,13 @@ void AudioIO::SequenceBufferExchange()
 
 void AudioIO::FillPlayBuffers()
 {
+   if (GetNumPlaybackChannels() == 0)
+      return;
+
    std::optional<RealtimeEffects::ProcessingScope> pScope;
    if (mpTransportState && mpTransportState->mpRealtimeInitialization)
       pScope.emplace(
          *mpTransportState->mpRealtimeInitialization, mOwningProject);
-
-   if (mNumPlaybackChannels == 0)
-      return;
 
    // It is possible that some buffers will have more samples available than
    // others.  This could happen if we hit this code during the PortAudio
@@ -2056,7 +2056,8 @@ void AudioIO::TransformPlayBuffers(
    // Transform written but un-flushed samples in the RingBuffers in-place.
 
    // Avoiding std::vector
-   const auto pointers = stackAllocate(float*, mNumPlaybackChannels);
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
+   const auto pointers = stackAllocate(float*, numPlaybackChannels);
 
    const auto numPlaybackSequences = mPlaybackSequences.size();
    // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
@@ -2068,8 +2069,8 @@ void AudioIO::TransformPlayBuffers(
       if (!pGroup)
          continue;
       // vt is mono, or is the first of its group of channels
-      const auto nChannels = std::min<size_t>(
-         mNumPlaybackChannels, vt->NChannels());
+      const auto nChannels =
+         std::min<size_t>(numPlaybackChannels, vt->NChannels());
 
       // Loop over the blocks of unflushed data, at most two
       for (unsigned iBlock : {0, 1}) {
@@ -2093,16 +2094,16 @@ void AudioIO::TransformPlayBuffers(
          // Then supply some non-null fake input buffers, because the
          // various ProcessBlock overrides of effects may crash without it.
          // But it would be good to find the fixes to make this unnecessary.
-         float **scratch = &mScratchPointers[mNumPlaybackChannels + 1];
-         while (iChannel < mNumPlaybackChannels)
+         float **scratch = &mScratchPointers[numPlaybackChannels + 1];
+         while (iChannel < numPlaybackChannels)
             memset((pointers[iChannel++] = *scratch++), 0, len * sizeof(float));
 
          if (len && pScope) {
             auto discardable = pScope->Process(pGroup, &pointers[0],
                mScratchPointers.data(),
                // The single dummy output buffer:
-               mScratchPointers[mNumPlaybackChannels],
-               mNumPlaybackChannels, len);
+               mScratchPointers[numPlaybackChannels],
+               numPlaybackChannels, len);
             iChannel = 0;
             for (; iChannel < nChannels; ++iChannel) {
                auto &ringBuffer = *mPlaybackBuffers[iBuffer + iChannel];
@@ -2575,7 +2576,7 @@ void AudioIoCallback::AddToOutputChannel(unsigned int chan,
    const PlayableSequence &ps,
    float &channelGain)
 {
-   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
 
    float gain = ps.GetChannelGain(chan);
    if (drop || mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
@@ -2627,7 +2628,7 @@ bool AudioIoCallback::FillOutputBuffers(
 )
 {
    const auto numPlaybackSequences = mPlaybackSequences.size();
-   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
 
    mMaxFramesOutput = 0;
 
@@ -2962,7 +2963,7 @@ void AudioIoCallback::DoPlaythrough(
    )
 {
    const auto numCaptureChannels = mNumCaptureChannels;
-   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
 
    // Quick returns if next to nothing to do.
    if( !outputBuffer )
@@ -3010,7 +3011,7 @@ void AudioIoCallback::SendVuOutputMeterData(
    const float *outputMeterFloats,
    unsigned long framesPerBuffer)
 {
-   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
 
    auto pOutputMeter = mOutputMeter.lock();
    if (!pOutputMeter)
@@ -3127,7 +3128,7 @@ int AudioIoCallback::AudioCallback(
    // ------ MEMORY ALLOCATIONS -----------------------------------------------
    // tempFloats will be a reusable scratch pad for (possibly format converted)
    // audio data.  One temporary use is for the InputMeter data.
-   const auto numPlaybackChannels = mNumPlaybackChannels;
+   const auto numPlaybackChannels = GetNumPlaybackChannels();
    const auto numCaptureChannels = mNumCaptureChannels;
    const auto tempFloats = stackAllocate(float,
       framesPerBuffer * std::max(numCaptureChannels, numPlaybackChannels));
