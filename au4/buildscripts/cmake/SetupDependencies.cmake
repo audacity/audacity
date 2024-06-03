@@ -54,8 +54,10 @@ function(populate name remote_suffix)
 
     if (OS_IS_MAC)
         install(FILES ${instal_libraries} DESTINATION "audacity.app/Contents/Frameworks")
-    else()
+    elseif(OS_IS_WIN)
         install(FILES ${instal_libraries} TYPE BIN)
+    else()
+        install(FILES ${instal_libraries} TYPE LIB)
     endif()
 
 endfunction()
