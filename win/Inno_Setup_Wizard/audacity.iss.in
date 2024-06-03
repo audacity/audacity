@@ -58,8 +58,8 @@ VersionInfoCopyright={#GetFileCopyright(AppExe)}
 ; Audacity is already installed.
 DisableDirPage=no
 
-; Always warn if dir exists, because we'll overwrite previous Audacity.
-DirExistsWarning=yes
+; Don't warn if dir exists, because we'll upgrade previous Audacity.
+DirExistsWarning=no
 DisableProgramGroupPage=yes
 UninstallDisplayIcon="{app}\audacity.exe"
 
