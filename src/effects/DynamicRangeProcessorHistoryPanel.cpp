@@ -46,6 +46,7 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
    wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
    std::function<void(float)> onDbRangeChanged)
     : wxPanelWrapper { parent, winid }
+    , mCompressorInstance { instance }
     , mOnDbRangeChanged { std::move(onDbRangeChanged) }
     , mInitializeProcessingSettingsSubscription { static_cast<
                                                      InitializeProcessingSettingsPublisher&>(
@@ -91,10 +92,10 @@ constexpr auto followLineWidth =
    DynamicRangeProcessorPanel::transferFunctionLineWidth + 2;
 constexpr auto topMargin = (followLineWidth + 1) / 2;
 
-int GetDisplayPixel(float elapsedSincePacket, int panelWidth)
+double GetDisplayPixel(float elapsedSincePacket, int panelWidth)
 {
    const auto secondsPerPixel =
-      1.f * DynamicRangeProcessorHistory::maxTimeSeconds / panelWidth;
+      1. * DynamicRangeProcessorHistory::maxTimeSeconds / panelWidth;
    // A display delay to avoid the display to tremble near time zero because the
    // data hasn't arrived yet.
    // This is a trade-off between visual comfort and timely update. It was set
@@ -103,11 +104,11 @@ int GetDisplayPixel(float elapsedSincePacket, int panelWidth)
    // make it playback-delay dependent.
    constexpr auto displayDelay = 0.2f;
    return panelWidth - 1 -
-          std::round((elapsedSincePacket - 0.2f) / secondsPerPixel);
+          (elapsedSincePacket - displayDelay) / secondsPerPixel;
 }
 
 void DrawHistory(
-   wxPaintDC& dc, wxGraphicsContext& gc, const wxSize& panelSize,
+   wxPaintDC& dc, const wxSize& panelSize,
    const std::vector<DynamicRangeProcessorHistory::Segment>& segments,
    const DynamicRangeProcessorHistoryPanel::ClockSynchronization& sync)
 {
@@ -121,8 +122,12 @@ void DrawHistory(
 
    for (const auto& segment : segments)
    {
-      if (segment.empty())
+      if (segment.size() < 2)
          continue;
+
+      std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) };
+      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
+      gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
 
       std::vector<wxPoint2DDouble> followPoints;
       std::vector<wxPoint2DDouble> targetPoints;
@@ -132,35 +137,46 @@ void DrawHistory(
       {
          const auto elapsedSincePacket =
             elapsedTimeSinceFirstPacket - (it->time - firstPacketTime);
-         const int x =
+         const double x =
             GetDisplayPixel(elapsedSincePacket, panelSize.GetWidth());
-         const int yt = topMargin - it->target / dbPerPixel;
-         const int yf = topMargin - it->follower / dbPerPixel;
+         const auto yt = topMargin - it->target / dbPerPixel;
+         const auto yf = topMargin - it->follower / dbPerPixel;
          followPoints.emplace_back(x, yf);
          targetPoints.emplace_back(x, yt);
       }
 
-      gc.SetPen(wxPen { theTheme.Colour(clrResponseLines), followLineWidth });
-      if (segment.size() == 1)
-      {
-         wxInt32 x, y;
-         followPoints[0].GetRounded(&x, &y);
-         dc.DrawPoint({ x, y });
-      }
-      else
-         gc.DrawLines(followPoints.size(), followPoints.data());
+      // Draw the follow line in black, solid line ...
+      gc->SetPen(wxPen { *wxBLACK_PEN });
+      gc->DrawLines(followPoints.size(), followPoints.data());
 
-      gc.SetPen(
-         wxPen { theTheme.Colour(clrGraphLines),
-                 DynamicRangeProcessorPanel::transferFunctionLineWidth });
-      if (segment.size() == 1)
+      wxGraphicsPath undershootPath = gc->CreatePath();
+      wxGraphicsPath overshootPath = gc->CreatePath();
+      const auto compareY = [](const auto a, const auto b) {
+         return a.m_y < b.m_y;
+      };
+      undershootPath.MoveToPoint(
+         std::min(followPoints.front(), targetPoints.front(), compareY));
+      overshootPath.MoveToPoint(
+         std::max(targetPoints.front(), followPoints.front(), compareY));
+      for (size_t i = 1; i < followPoints.size(); ++i)
       {
-         wxInt32 x, y;
-         followPoints[0].GetRounded(&x, &y);
-         dc.DrawPoint({ x, y });
+         undershootPath.AddLineToPoint(
+            std::min(followPoints[i], targetPoints[i], compareY));
+         overshootPath.AddLineToPoint(
+            std::max(targetPoints[i], followPoints[i], compareY));
       }
-      else
-         gc.DrawLines(targetPoints.size(), targetPoints.data());
+      for (size_t i = targetPoints.size(); i-- > 0;)
+      {
+         undershootPath.AddLineToPoint(followPoints[i]);
+         overshootPath.AddLineToPoint(followPoints[i]);
+      }
+      undershootPath.CloseSubpath();
+      overshootPath.CloseSubpath();
+
+      gc->SetBrush(wxBrush { wxColour { 255, 0, 0, 128 } });
+      gc->FillPath(overshootPath);
+      gc->SetBrush(wxBrush { wxColour { 0, 0, 255, 128 } });
+      gc->FillPath(undershootPath);
    }
 }
 } // namespace
@@ -193,10 +209,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    }
 
    const auto& segments = mHistory->GetSegments();
-   std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) };
-   gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-   gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
-   DrawHistory(dc, *gc, GetSize(), segments, *mSync);
+   DrawHistory(dc, GetSize(), segments, *mSync);
 }
 
 void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
@@ -224,8 +237,14 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
    // because this can be triggered even when playback is paused.
    const auto now = std::chrono::steady_clock::now();
    if (!mSync)
-      mSync.emplace(ClockSynchronization {
-         mHistory->GetSegments().front().front().time, now });
+      // At the time of writing, the realtime playback doesn't account for
+      // varying latencies. When it does, the synchronization will have to be
+      // updated on latency change. See
+      // https://github.com/audacity/audacity/issues/3223#issuecomment-2137025150.
+      mSync.emplace(
+         ClockSynchronization { mHistory->GetSegments().front().front().time +
+                                   mCompressorInstance.GetLatencyMs() / 1000,
+                                now });
    mPlaybackAboutToStart = false;
 
    mSync->now = now;

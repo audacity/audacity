@@ -34,6 +34,12 @@ const std::optional<double>& CompressorInstance::GetSampleRate() const
    return mSampleRate;
 }
 
+float CompressorInstance::GetLatencyMs() const
+{
+   return mSlaves.empty() ? mCompressor->GetSettings().lookaheadMs :
+                        mSlaves.front().mCompressor->GetSettings().lookaheadMs;
+}
+
 void CompressorInstance::SetOutputQueue(
    std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> outputQueue)
 {
