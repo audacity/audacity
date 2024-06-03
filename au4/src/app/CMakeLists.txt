@@ -273,12 +273,6 @@ elseif(OS_IS_LIN)
 
     install(TARGETS ${EXECUTABLE_NAME} RUNTIME DESTINATION bin)
 
-    # message("~~~~~~~ install DIRECTORY: ${_LIB_OUTPUT} DESTINATION ${_LIB_INSTALL}")
-    # install( DIRECTORY "${_LIB_OUTPUT}"
-    #          DESTINATION "${_LIB_INSTALL}"
-    #          USE_SOURCE_PERMISSIONS
-    #          FILES_MATCHING PATTERN "*.so*" )
-
 elseif(OS_IS_FBSD)
 ###########################################
 # FreeBSD
@@ -290,7 +284,6 @@ elseif(OS_IS_FBSD)
 ###########################################
 elseif(OS_IS_MAC)
 
-    message("~~~~~~CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
     install(TARGETS audacity BUNDLE DESTINATION ${CMAKE_INSTALL_PREFIX})
 
     if(MU_COMPILE_INSTALL_QTQML_FILES)
