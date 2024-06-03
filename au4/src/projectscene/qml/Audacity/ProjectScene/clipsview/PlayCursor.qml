@@ -1,31 +1,13 @@
 import QtQuick
 
-import Audacity.ProjectScene
-
 Rectangle {
 
     id: root
-
-    property alias context: playCursorModel.context
 
     width: 3
     color: "#ffffff"
     border.width: 1
     border.color: "#000000"
-
-    x: playCursorModel.positionX
-
-    function seekToX(x) {
-        playCursorModel.seekToX(x)
-    }
-
-    Component.onCompleted: {
-        playCursorModel.init()
-    }
-
-    PlayCursorModel {
-        id: playCursorModel
-    }
 
     Canvas {
         id: marker

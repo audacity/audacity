@@ -11,7 +11,7 @@
 #include "../clipsview/timelinecontext.h"
 
 namespace au::projectscene {
-class PlayCursorModel : public QObject, public muse::async::Asyncable
+class PlayCursorController : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -23,7 +23,7 @@ class PlayCursorModel : public QObject, public muse::async::Asyncable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
-    PlayCursorModel(QObject* parent = nullptr);
+    PlayCursorController(QObject* parent = nullptr);
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
@@ -36,11 +36,15 @@ signals:
     void timelineContextChanged();
     void positionXChanged();
 
+private slots:
+    void onFrameTimeChanged();
+
 private:
 
     context::IPlaybackStatePtr playbackState() const;
 
     void updatePositionX(audio::secs_t secs);
+    void insureVisible(audio::secs_t secs);
 
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;

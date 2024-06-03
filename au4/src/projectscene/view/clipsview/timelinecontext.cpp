@@ -32,7 +32,7 @@ bool TimelineContext::onWheel(double y)
         changeZoom(y < 0 ? -1 : 1);
         return true;
     } else if (modifiers.testFlag(Qt::ShiftModifier)) {
-        shiftFrameTime(y < 0 ? -1 : 1);
+        shiftFrameTimeOnStep(y < 0 ? -1 : 1);
         return true;
     }
 
@@ -55,15 +55,25 @@ void TimelineContext::onResizeFrameWidth(double frameWidth)
     updateFrameTime();
 }
 
-void TimelineContext::shiftFrameTime(int direction)
+void TimelineContext::moveToFrameTime(double startTime)
 {
-    double step = 10.0;
-    double shift = step * direction;
+    setFrameStartTime(startTime);
+    updateFrameTime();
+}
 
+void TimelineContext::shiftFrameTime(double shift)
+{
     setFrameStartTime(m_frameStartTime + shift);
     setFrameEndTime(m_frameEndTime + shift);
 
     emit frameTimeChanged();
+}
+
+void TimelineContext::shiftFrameTimeOnStep(int direction)
+{
+    double step = 10.0;
+    double shift = step * direction;
+    shiftFrameTime(shift);
 }
 
 void TimelineContext::updateFrameTime()

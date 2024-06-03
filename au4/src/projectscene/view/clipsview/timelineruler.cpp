@@ -47,7 +47,7 @@ void TimelineRuler::paint(QPainter* painter)
 
 void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeInterval, double w, double h)
 {
-    double value = 0.0;
+    double value = m_context->frameStartTime();
     double x = 0.0; //! TODO AU4; get offset from m_context
 
     auto tickHeight = [&](TickType tickType) {
@@ -56,6 +56,7 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
         case TickType::MINOR: return h / MINOR_TICK_HEIGHT_RATIO;
         case TickType::MINORMINOR: return h / MINORMINOR_TICK_HEIGHT_RATIO;
         }
+        return 0.0;
     };
 
     while (x < w)

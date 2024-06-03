@@ -24,7 +24,13 @@ Rectangle {
         }
     }
 
+    PlayCursorController {
+        id: playCursorController
+        context: timeline.context
+    }
+
     Component.onCompleted: {
+        playCursorController.init()
         tracksViewState.init()
         tracksModel.load()
     }
@@ -53,7 +59,7 @@ Rectangle {
             height: 76
 
             onClicked: function (e) {
-                playCursor.seekToX(e.x)
+                playCursorController.seekToX(e.x)
             }
         }
 
@@ -104,7 +110,7 @@ Rectangle {
             id: playCursor
             anchors.top: view.top
             anchors.bottom: parent.bottom
-            context: timeline.context
+            x: playCursorController.positionX
         }
     }
 }

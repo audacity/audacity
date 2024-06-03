@@ -51,6 +51,9 @@ public:
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position) const;
 
+    void moveToFrameTime(double startTime);
+    void shiftFrameTime(double secs);
+
 signals:
 
     void frameStartTimeChanged();
@@ -65,7 +68,7 @@ signals:
 
 private:
 
-    void shiftFrameTime(int direction);
+    void shiftFrameTimeOnStep(int direction);
     void setFrameStartTime(double newFrameStartTime);
     void setFrameEndTime(double newFrameEndTime);
     void updateFrameTime();
