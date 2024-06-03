@@ -29,7 +29,7 @@ public:
       float output = 0.f;
    };
 
-   static constexpr auto maxTimeSeconds = 5.f;
+   static constexpr auto maxTimeSeconds = 2.5f;
 
    using Segment = std::vector<Packet>;
 
