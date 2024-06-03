@@ -30,6 +30,9 @@ constexpr auto timerId = 7000;
 // when specifying 200, we get around 60fps on average, with outlier around 40.
 constexpr auto timerPeriodMs = 1000 / 200;
 
+static const wxColor inputColor { 142, 217, 115, 144 };
+static const wxColor outputColor { 103, 124, 228 };
+
 float GetDbRange(int height)
 {
    const auto factor = std::max(
@@ -205,6 +208,77 @@ void FillExcess(
    gc->SetBrush(wxBrush { color });
    gc->FillPath(area);
 }
+
+void DrawLegend(size_t height, wxPaintDC& dc, wxGraphicsContext& gc)
+{
+   using namespace DynamicRangeProcessorPanel;
+
+   constexpr auto legendWidth = 10;
+   constexpr auto legendHeight = 10;
+   constexpr auto legendSpacing = 5;
+   constexpr auto legendX = 5;
+   const auto legendY = height - 5 - legendHeight;
+   const auto legendTextX = legendX + legendWidth + legendSpacing;
+   const auto legendTextHeight = dc.GetTextExtent("X").GetHeight();
+   const auto legendTextYOffset = (legendHeight - legendTextHeight) / 2;
+   const auto legendTextY = legendY + legendTextYOffset;
+
+   struct LegendInfo
+   {
+      const wxColor color;
+      const TranslatableString text;
+   };
+
+   std::vector<LegendInfo> legends = {
+      { inputColor, XO("Input") },
+      { outputColor, XO("Output") },
+      /* i18n-hint: when smoothing leads the output level to be momentarily
+       * over the target */
+      { attackColor, XO("Overshoot") },
+      /* i18n-hint: when smoothing leads the output level to be momentarily
+       * under the target */
+      { releaseColor, XO("Undershoot") }
+   };
+
+   int legendTextXOffset = 0;
+   gc.SetPen(lineColor);
+   dc.SetTextForeground(*wxBLACK);
+   dc.SetFont(
+      { 8, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL });
+   for (const auto& legend : legends)
+   {
+      // First fill with background color so that transparent foreground colors
+      // yield the same result as on the graph.
+      gc.SetBrush(backgroundColor);
+      gc.DrawRectangle(
+         legendX + legendTextXOffset, legendY, legendWidth, legendHeight);
+      gc.SetBrush(legend.color);
+      gc.DrawRectangle(
+         legendX + legendTextXOffset, legendY, legendWidth, legendHeight);
+
+      dc.DrawText(
+         legend.text.Translation(), legendTextX + legendTextXOffset,
+         legendTextY);
+      const auto legendTextWidth =
+         dc.GetTextExtent(legend.text.Translation()).GetWidth();
+      legendTextXOffset +=
+         legendWidth + legendSpacing + legendTextWidth + legendSpacing;
+   }
+
+   // Add a legend entry for the compression line:
+   gc.SetPen(lineColor);
+   const auto compressionLineX = legendX + legendTextXOffset + legendSpacing;
+   const auto compressionLineY = legendY + legendHeight / 2;
+   gc.StrokeLine(
+      compressionLineX, compressionLineY, compressionLineX + legendWidth,
+      compressionLineY);
+   const auto compressionText = XO("Compression");
+   const auto compressionTextWidth =
+      dc.GetTextExtent(compressionText.Translation()).GetWidth();
+   dc.DrawText(
+      compressionText.Translation(), compressionLineX + legendWidth + 5,
+      legendTextY);
+}
 } // namespace
 
 void DynamicRangeProcessorHistoryPanel::ShowInput(bool show)
@@ -238,17 +312,19 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    using namespace DynamicRangeProcessorPanel;
 
    const auto gc = MakeGraphicsContext(dc);
+   const auto width = GetSize().GetWidth();
+   const auto height = GetSize().GetHeight();
 
    gc->SetBrush(gc->CreateLinearGradientBrush(
-      0, 0, 0, GetSize().GetHeight(), backgroundColor, *wxWHITE));
+      0, 0, 0, height, backgroundColor, *wxWHITE));
    gc->SetPen(wxTransparentColor);
-   gc->DrawRectangle(0, 0, GetSize().GetWidth() - 1, GetSize().GetHeight() - 1);
+   gc->DrawRectangle(0, 0, width - 1, height - 1);
 
-   Finally redrawBorder { [&] {
+   Finally Do { [&] {
+      DrawLegend(height, dc, *gc);
       gc->SetBrush(*wxTRANSPARENT_BRUSH);
       gc->SetPen(lineColor);
-      gc->DrawRectangle(
-         0, 0, GetSize().GetWidth() - 1, GetSize().GetHeight() - 1);
+      gc->DrawRectangle(0, 0, width - 1, height - 1);
    } };
 
    if (!mHistory || !mSync)
@@ -256,15 +332,17 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
       if (!mPlaybackAboutToStart)
       {
          const auto text = XO("awaiting playback");
-         dc.SetFont(wxFont(
-            16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+         const wxDCFontChanger changer { dc,
+                                         { 16, wxFONTFAMILY_DEFAULT,
+                                           wxFONTSTYLE_NORMAL,
+                                           wxFONTWEIGHT_NORMAL } };
          const auto textWidth = dc.GetTextExtent(text.Translation()).GetWidth();
          const auto textHeight =
             dc.GetTextExtent(text.Translation()).GetHeight();
          dc.SetTextForeground(wxColor { 128, 128, 128 });
          dc.DrawText(
-            text.Translation(), (GetSize().GetWidth() - textWidth) / 2,
-            (GetSize().GetHeight() - textHeight) / 2);
+            text.Translation(), (width - textWidth) / 2,
+            (height - textHeight) / 2);
       }
       return;
    }
@@ -272,8 +350,6 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    const auto& segments = mHistory->GetSegments();
    const auto elapsedTimeSinceFirstPacket =
       std::chrono::duration<float>(mSync->now - mSync->start).count();
-   const auto width = GetSize().GetWidth();
-   const auto height = GetSize().GetHeight();
    const auto rangeDb = GetDbRange(height);
    const auto dbPerPixel = rangeDb / height;
 
@@ -328,27 +404,24 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
       {
          // Paint output first with opaque color.
          constexpr auto w = .4;
-         // Origin color. This is the waveform color, light blue.
-         const wxColor oCol { 103, 124, 228 };
          // Circle color.
          const wxColor cCol(
-            backgroundColor.Red() * w + oCol.Red() * (1 - w),
-            backgroundColor.Green() * w + oCol.Green() * (1 - w),
-            backgroundColor.Blue() * w + oCol.Blue() * (1 - w),
-            backgroundColor.Alpha() * w + oCol.Alpha() * (1 - w));
+            backgroundColor.Red() * w + outputColor.Red() * (1 - w),
+            backgroundColor.Green() * w + outputColor.Green() * (1 - w),
+            backgroundColor.Blue() * w + outputColor.Blue() * (1 - w),
+            backgroundColor.Alpha() * w + outputColor.Alpha() * (1 - w));
          const auto xo = width * 0.9; // "o" for "origin"
          const auto yo = height * 0.1;
          const auto xf = width * 0.5; // "f" for "focus"
          const auto yf = height * 0.2;
          const auto radius = width;
-         const auto brush =
-            gc->CreateRadialGradientBrush(xo, yo, xf, yf, radius, oCol, cCol);
+         const auto brush = gc->CreateRadialGradientBrush(
+            xo, yo, xf, yf, radius, outputColor, cCol);
          FillUpTo(mOutput, brush, *gc, GetSize());
       }
 
       if (mShowInput)
-         // Input in green with transparency.
-         FillUpTo(mInput, wxColor(142, 217, 115, 144), *gc, GetSize());
+         FillUpTo(mInput, inputColor, *gc, GetSize());
 
       if (mShowOvershoot || mShowUndershoot)
       {
