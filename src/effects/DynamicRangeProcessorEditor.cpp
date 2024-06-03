@@ -279,6 +279,7 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       S.AddSpace(borderSize, 0);
       S.Prop(1)
          .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
+         .MinSize({ HistPanel::minWidth, HistPanel::minHeight })
          .AddWindow(histPanel);
 
       S.Prop(1)

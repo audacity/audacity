@@ -25,8 +25,9 @@ class wxEraseEvent;
 class DynamicRangeProcessorHistoryPanel final : public wxPanelWrapper
 {
 public:
-   static constexpr auto minHeight = 120;
-   static constexpr auto minRangeDb = 10.f;
+   static constexpr auto minWidth = 600;
+   static constexpr auto minHeight = 270;
+   static constexpr auto minRangeDb = 20.f;
 
    DynamicRangeProcessorHistoryPanel(
       wxWindow* parent, wxWindowID winid, CompressorInstance& instance,

@@ -24,7 +24,6 @@
 
 namespace
 {
-constexpr auto defaultHeight = 100;
 constexpr auto timerId = 7000;
 // Of course we aren't really targetting 200fps, but when specifying 50fps, we
 // rather get 30fps, with outliers at 20. Measurements (Windows) showed that,
@@ -86,7 +85,7 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
 
    SetDoubleBuffered(true);
    mTimer.SetOwner(this, timerId);
-   SetSize({ -1, defaultHeight });
+   SetSize({ minWidth, minHeight });
 }
 
 namespace
