@@ -77,8 +77,8 @@ set(MODULE_SRC
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.cpp

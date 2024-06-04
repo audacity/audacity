@@ -155,28 +155,28 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Interface"), IconCode::Code::BRUSH,
                  "Preferences/AppearancePreferencesPage.qml"),
 
-        makeItem("canvas", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
+        makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
                  "Preferences/CanvasPreferencesPage.qml"),
 
-        makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE,
+        makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE,
                  "Preferences/PlaybackPreferencesPage.qml"),
 
-        makeItem("note-input", QT_TRANSLATE_NOOP("appshell/preferences", "Spectral display"), IconCode::Code::SPECTROGRAM,
+        makeItem("spectral-display", QT_TRANSLATE_NOOP("appshell/preferences", "Spectral display"), IconCode::Code::SPECTROGRAM,
                  "Preferences/NoteInputPreferencesPage.qml"),
 
-        makeItem("midi-device-mapping", QT_TRANSLATE_NOOP("appshell/preferences", "Editing"), IconCode::Code::EDIT,
+        makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences", "Editing"), IconCode::Code::EDIT,
                  "Preferences/MidiDeviceMappingPreferencesPage.qml"),
 
-        makeItem("score", QT_TRANSLATE_NOOP("appshell/preferences", "Effects"), IconCode::Code::WAVEFORM,
+        makeItem("effects", QT_TRANSLATE_NOOP("appshell/preferences", "Effects"), IconCode::Code::WAVEFORM,
                  "Preferences/ScorePreferencesPage.qml"),
 
-        makeItem("playback", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD,
+        makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD,
                  "Preferences/PlaybackPreferencesPage.qml"),
 
-        makeItem("import", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
+        makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
                  "Preferences/ImportPreferencesPage.qml"),
 
-        makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Plugin manager"), IconCode::Code::PLUGIN,
+        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences", "Plugin manager"), IconCode::Code::PLUGIN,
                  "Preferences/ShortcutsPreferencesPage.qml")
     };
 
