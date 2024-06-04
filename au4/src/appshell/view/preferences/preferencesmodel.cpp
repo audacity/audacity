@@ -28,7 +28,7 @@
 #include "ui/view/iconcodes.h"
 
 using namespace au::appshell;
-using namespace mu::ui;
+using namespace muse::ui;
 
 PreferencesModel::PreferencesModel(QObject* parent)
     : QAbstractItemModel(parent)
@@ -147,48 +147,37 @@ void PreferencesModel::load(const QString& currentPageId)
 
     m_rootItem = new PreferencePageItem();
 
+    //! TODO AU4
     QList<PreferencePageItem*> items {
         makeItem("general", QT_TRANSLATE_NOOP("appshell/preferences", "General"), IconCode::Code::SETTINGS_COG,
                  "Preferences/GeneralPreferencesPage.qml"),
 
-        makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Appearance"), IconCode::Code::EYE_OPEN,
+        makeItem("appearance", QT_TRANSLATE_NOOP("appshell/preferences", "Interface"), IconCode::Code::BRUSH,
                  "Preferences/AppearancePreferencesPage.qml"),
 
-        makeItem("canvas", QT_TRANSLATE_NOOP("appshell/preferences", "Canvas"), IconCode::Code::NEW_FILE,
+        makeItem("canvas", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
                  "Preferences/CanvasPreferencesPage.qml"),
 
-        makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Save & publish"), IconCode::Code::CLOUD_FILE,
-                 "Preferences/SaveAndPublishPreferencesPage.qml"),
-
-        makeItem("note-input", QT_TRANSLATE_NOOP("appshell/preferences", "Note input"), IconCode::Code::EDIT,
-                 "Preferences/NoteInputPreferencesPage.qml"),
-
-        makeItem("midi-device-mapping", QT_TRANSLATE_NOOP("appshell/preferences", "MIDI mappings"), IconCode::Code::MIDI_INPUT,
-                 "Preferences/MidiDeviceMappingPreferencesPage.qml"),
-
-        makeItem("score", QT_TRANSLATE_NOOP("appshell/preferences", "Score"), IconCode::Code::SCORE,
-                 "Preferences/ScorePreferencesPage.qml"),
-
-        makeItem("playback", QT_TRANSLATE_NOOP("appshell/preferences", "Playback"), IconCode::Code::AUDIO,
+        makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Playback/Recording"), IconCode::Code::MICROPHONE,
                  "Preferences/PlaybackPreferencesPage.qml"),
 
-        makeItem("import", QT_TRANSLATE_NOOP("appshell/preferences", "Import"), IconCode::Code::IMPORT,
+        makeItem("note-input", QT_TRANSLATE_NOOP("appshell/preferences", "Spectral display"), IconCode::Code::SPECTROGRAM,
+                 "Preferences/NoteInputPreferencesPage.qml"),
+
+        makeItem("midi-device-mapping", QT_TRANSLATE_NOOP("appshell/preferences", "Editing"), IconCode::Code::EDIT,
+                 "Preferences/MidiDeviceMappingPreferencesPage.qml"),
+
+        makeItem("score", QT_TRANSLATE_NOOP("appshell/preferences", "Effects"), IconCode::Code::WAVEFORM,
+                 "Preferences/ScorePreferencesPage.qml"),
+
+        makeItem("playback", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD,
+                 "Preferences/PlaybackPreferencesPage.qml"),
+
+        makeItem("import", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
                  "Preferences/ImportPreferencesPage.qml"),
 
-        makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
-                 "Preferences/ShortcutsPreferencesPage.qml"),
-
-        makeItem("update", QT_TRANSLATE_NOOP("appshell/preferences", "Update"), IconCode::Code::UPDATE,
-                 "Preferences/UpdatePreferencesPage.qml"),
-
-        makeItem("general-folders", QT_TRANSLATE_NOOP("appshell/preferences", "Folders"), IconCode::Code::OPEN_FILE,
-                 "Preferences/FoldersPreferencesPage.qml"),
-
-        makeItem("advanced", QT_TRANSLATE_NOOP("appshell/preferences", "Advanced"), IconCode::Code::CONFIGURE,
-                 "Preferences/AdvancedPreferencesPage.qml"),
-
-        makeItem("braille", QT_TRANSLATE_NOOP("appshell/preferences", "Braille"), IconCode::Code::BRAILLE,
-                 "Preferences/BraillePreferencesPage.qml")
+        makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Plugin manager"), IconCode::Code::PLUGIN,
+                 "Preferences/ShortcutsPreferencesPage.qml")
     };
 
     for (PreferencePageItem* item: items) {
@@ -277,7 +266,7 @@ void PreferencesModel::setCurrentPageId(QString currentPageId)
     emit currentPageIdChanged(m_currentPageId);
 }
 
-PreferencePageItem* PreferencesModel::makeItem(const QString& id, const QString& title, mu::ui::IconCode::Code icon,
+PreferencePageItem* PreferencesModel::makeItem(const QString& id, const QString& title, muse::ui::IconCode::Code icon,
                                                const QString& path,
                                                const QList<PreferencePageItem*>& children) const
 {
