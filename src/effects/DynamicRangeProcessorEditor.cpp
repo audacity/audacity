@@ -1,6 +1,7 @@
 #include "DynamicRangeProcessorEditor.h"
 #include "AllThemeResources.h"
 #include "BasicUI.h"
+#include "CompressionMeterPanel.h"
 #include "CompressorProcessor.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
 #include "DynamicRangeProcessorTransferFunctionPanel.h"
@@ -233,7 +234,47 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
 
 void DynamicRangeProcessorEditor::PopulateLimiterUpperHalf(ShuttleGui& S)
 {
-   AddSliders(S);
+   S.StartMultiColumn(3, wxEXPAND);
+   {
+      S.SetStretchyCol(0);
+      S.StartPanel();
+      {
+         AddSliders(S);
+      }
+      S.EndPanel();
+
+      S.AddSpace(borderSize, 0);
+
+      S.StartVerticalLay(0);
+      {
+         // Add vertical space above and below to align it with the slider
+         // static boxes.
+         S.AddSpace(0, 11);
+
+         S.SetSizerProportion(1);
+         S.StartMultiColumn(2, wxEXPAND);
+         {
+            S.SetStretchyCol(1);
+            S.SetStretchyRow(0);
+
+            constexpr auto height = 100;
+            S.Prop(1)
+               .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
+               .MinSize({ 30, height })
+               .AddWindow(safenew CompressionMeterPanel(mUIParent, wxID_ANY));
+
+            S.Prop(1)
+               .Position(wxEXPAND | wxALIGN_TOP)
+               .MinSize({ 30, height })
+               .AddWindow(MakeRulerPanel(mUIParent, wxVERTICAL, 60.0));
+         }
+         S.EndMultiColumn();
+
+         S.AddSpace(0, 5);
+      }
+      S.EndVerticalLay();
+   }
+   S.EndMultiColumn();
 }
 
 void DynamicRangeProcessorEditor::PopulateCompressorUpperHalf(
