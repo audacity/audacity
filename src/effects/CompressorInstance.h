@@ -37,6 +37,7 @@ public:
    const std::optional<double>& GetSampleRate() const;
    float GetLatencyMs() const;
    void SetOutputQueue(std::weak_ptr<DynamicRangeProcessorOutputPacketQueue>);
+   void SetCompressionValueQueue(std::weak_ptr<LockFreeQueue<float>> queue);
 
 private:
    bool ProcessInitialize(
@@ -87,4 +88,5 @@ private:
    long long mSampleCounter = 0;
    std::optional<double> mSampleRate;
    std::weak_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
+   std::weak_ptr<LockFreeQueue<float>> mCompressionValueQueue;
 };

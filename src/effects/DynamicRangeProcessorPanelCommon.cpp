@@ -22,4 +22,13 @@ std::unique_ptr<wxGraphicsContext> MakeGraphicsContext(const wxPaintDC& dc)
    gc->SetInterpolationQuality(wxINTERPOLATION_BEST);
    return std::unique_ptr<wxGraphicsContext>(gc);
 }
+
+wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight)
+{
+   return wxColor(
+      a.Red() * aWeight + b.Red() * (1 - aWeight),
+      a.Green() * aWeight + b.Green() * (1 - aWeight),
+      a.Blue() * aWeight + b.Blue() * (1 - aWeight),
+      a.Alpha() * aWeight + b.Alpha() * (1 - aWeight));
+}
 } // namespace DynamicRangeProcessorPanel

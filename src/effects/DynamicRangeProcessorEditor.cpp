@@ -4,6 +4,7 @@
 #include "CompressionMeterPanel.h"
 #include "CompressorProcessor.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
+#include "DynamicRangeProcessorPanelCommon.h"
 #include "DynamicRangeProcessorTransferFunctionPanel.h"
 #include "EffectInterface.h"
 #include "ShuttleGui.h"
@@ -261,12 +262,15 @@ void DynamicRangeProcessorEditor::PopulateLimiterUpperHalf(ShuttleGui& S)
             S.Prop(1)
                .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
                .MinSize({ 30, height })
-               .AddWindow(safenew CompressionMeterPanel(mUIParent, wxID_ANY));
+               .AddWindow(safenew CompressionMeterPanel(
+                  mUIParent, mCompressorInstance));
 
             S.Prop(1)
                .Position(wxEXPAND | wxALIGN_TOP)
                .MinSize({ 30, height })
-               .AddWindow(MakeRulerPanel(mUIParent, wxVERTICAL, 60.0));
+               .AddWindow(MakeRulerPanel(
+                  mUIParent, wxVERTICAL,
+                  DynamicRangeProcessorPanel::compressorMeterRangeDb));
          }
          S.EndMultiColumn();
 

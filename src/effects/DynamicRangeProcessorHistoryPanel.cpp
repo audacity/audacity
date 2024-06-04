@@ -405,11 +405,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          // Paint output first with opaque color.
          constexpr auto w = .4;
          // Circle color.
-         const wxColor cCol(
-            backgroundColor.Red() * w + outputColor.Red() * (1 - w),
-            backgroundColor.Green() * w + outputColor.Green() * (1 - w),
-            backgroundColor.Blue() * w + outputColor.Blue() * (1 - w),
-            backgroundColor.Alpha() * w + outputColor.Alpha() * (1 - w));
+         const wxColor cCol = GetColorMix(backgroundColor, outputColor, w);
          const auto xo = width * 0.9; // "o" for "origin"
          const auto yo = height * 0.1;
          const auto xf = width * 0.5; // "f" for "focus"

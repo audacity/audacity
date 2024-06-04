@@ -23,5 +23,9 @@ static const wxColour attackColor { 255, 0, 0, 100 };
 static const wxColour releaseColor { 190, 120, 255, 100 };
 static const wxColour lineColor { 96, 96, 96 };
 
+static constexpr auto compressorMeterRangeDb = 20.f;
+
 std::unique_ptr<wxGraphicsContext> MakeGraphicsContext(const wxPaintDC& dc);
+
+wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight);
 } // namespace DynamicRangeProcessorPanel
