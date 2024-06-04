@@ -60,8 +60,7 @@ class ToolsToolBar final : public ToolBar {
    void Create(wxWindow * parent) override;
    void RegenerateTooltips() override;
    wxImage *MakeToolImage(wxImage *tool, wxImage *mask, int style);
-   static AButton *MakeTool(
-      ToolsToolBar *pBar, teBmps eTool, int id, const TranslatableString &label);
+
    enum { numTools = 4 };
 
    Observer::Subscription mSubscription;

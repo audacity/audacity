@@ -166,7 +166,8 @@ void EditToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
-   Add(mToolSizer = safenew wxGridSizer(2, 5, 1, 1));
+   Add(mToolSizer = safenew wxGridSizer(2, 5, toolbarSpacing, toolbarSpacing),
+      0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
    /* Buttons */
    // Tooltips match menu entries.

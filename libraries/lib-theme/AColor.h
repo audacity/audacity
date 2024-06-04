@@ -54,7 +54,7 @@ class THEME_API AColor {
    // In horizontal direction only center pixels are stretched.
    // In vertical direction image stretched proportionally.
    static void DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap);
-   static void DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap);
+   static void DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap, int mid);
    /**
     * \brief Draw a button that fills a given rect
     */

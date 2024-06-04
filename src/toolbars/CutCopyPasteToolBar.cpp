@@ -133,7 +133,8 @@ void CutCopyPasteToolBar::Populate()
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
-   Add(mToolSizer = safenew wxGridSizer(2, 2, 1, 1));
+   Add(mToolSizer = safenew wxGridSizer(2, 2, toolbarSpacing, toolbarSpacing),
+      0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
    /* Buttons */
    // Tooltips match menu entries.

@@ -87,7 +87,6 @@ class AudioSetupToolBar final : public ToolBar {
    };
 
    AButton *mAudioSetup{};
-   wxBoxSizer *mSizer{};
 
    class Choices {
    public:

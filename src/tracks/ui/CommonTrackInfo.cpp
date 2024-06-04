@@ -27,6 +27,8 @@ Paul Licameli split from TrackInfo.cpp
 #include "CommonTrackInfo.h"
 
 #include <wx/dc.h>
+#include <wx/dcmemory.h>
+
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "SyncLock.h"
@@ -183,9 +185,22 @@ void CommonTrackInfo::DrawCloseButton(
    bool hit = target && target->FindTrack().get() == pTrack;
    bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
+
+   //auto& Bmp = theTheme.Bitmap( GetButtonImageIndex(up, bSel, bHighlight) );
+   wxMemoryDC memDC;
+   //memDC.SelectObject(Bmp);
+   if(selected)
+      memDC.SelectObject(theTheme.Bitmap(bmpCloseHover));
+   else if(down)
+      memDC.SelectObject(theTheme.Bitmap(bmpCloseDown));
+   else
+      memDC.SelectObject(theTheme.Bitmap(bmpCloseNormal));
+
+   dc->Blit(bev.GetLeft(), bev.GetRight(), bev.width, bev.height, &memDC, 0, 0);
+
    AColor::Bevel2(*dc, !down, bev, selected, hit );
 
-   wxPen pen( theTheme.Colour( clrTrackPanelText ));
+   /*wxPen pen( theTheme.Colour( clrTrackPanelText ));
    dc->SetPen( pen );
    bev.Inflate( -1, -1 );
    // Draw the "X"
@@ -200,7 +215,7 @@ void CommonTrackInfo::DrawCloseButton(
    AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
    AColor::Line(*dc, rs,     ts, ls,     bs);
    AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
-   //   bev.Inflate(-1, -1);
+   //   bev.Inflate(-1, -1);*/
 }
 
 void CommonTrackInfo::CloseTitleDrawFunction

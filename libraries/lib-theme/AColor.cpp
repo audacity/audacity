@@ -79,19 +79,23 @@ namespace
    //Simplified variation of nine patch scale drawing
    //https://en.wikipedia.org/wiki/9-slice_scaling
    //Bitmap and rect expected to have at least 3px in both directions
-   void DrawNinePatch(wxDC& dc, wxBitmap& bitmap, const wxRect& r)
+   void DrawNinePatch(wxDC& dc, wxBitmap& bitmap, const wxRect& r, int mid = 1)
    {
+      assert(bitmap.GetWidth() == mid + (bitmap.GetWidth() - mid) / 2 + (bitmap.GetWidth() - mid) / 2);
+      assert(bitmap.GetHeight() == mid + (bitmap.GetHeight() - mid) / 2 + (bitmap.GetHeight() - mid) / 2);
+      assert(r.width >= bitmap.GetWidth() - mid);
+      assert(r.height >= bitmap.GetHeight() - mid);
       wxMemoryDC memDC;
       memDC.SelectObject(bitmap);
 
       // image slices
 
-      const auto uw0 = bitmap.GetWidth() / 2;
-      const auto uw1 = 1;
+      const auto uw0 = (bitmap.GetWidth() - mid) / 2;
+      const auto uw1 = mid;
       const auto uw2 = bitmap.GetWidth() - uw0 - uw1;
 
-      const auto vh0 = bitmap.GetHeight() / 2;
-      const auto vh1 = 1;
+      const auto vh0 = (bitmap.GetHeight() - mid) / 2;
+      const auto vh1 = mid;
       const auto vh2 = bitmap.GetHeight() - vh1 - vh0;
 
       const auto u0 = 0;
@@ -106,11 +110,11 @@ namespace
 
       const auto xw0 = std::min(uw0, r.width / 2);
       const auto xw2 = std::min(uw2, r.width / 2);
-      const auto xw1 = r.width - xw0 - xw2;
+      const auto xw1 = std::max(r.width - xw0 - xw2, 0);
 
       const auto yh0 = std::min(vh0, r.height / 2);
       const auto yh2 = std::min(vh2, r.height / 2);
-      const auto yh1 = r.height - yh0 - yh2;
+      const auto yh1 = std::max(r.height - yh0 - yh2, 0);
 
       const auto x0 = r.x;
       const auto x1 = r.x + xw0;
@@ -120,17 +124,22 @@ namespace
       const auto y1 = r.y + yh0;
       const auto y2 = r.y + yh0 + yh1;
 
+      //Draw corners
       dc.StretchBlit(x0, y0, xw0, yh0, &memDC, u0, v0, uw0, vh0, wxCOPY, true);
-      dc.StretchBlit(x1, y0, xw1, yh0, &memDC, u1, v0, uw1, vh0, wxCOPY, true);
       dc.StretchBlit(x2, y0, xw2, yh0, &memDC, u2, v0, uw2, vh0, wxCOPY, true);
-
-      dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
-      dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
-      dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
-
       dc.StretchBlit(x0, y2, xw0, yh2, &memDC, u0, v2, uw0, vh2, wxCOPY, true);
-      dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
       dc.StretchBlit(x2, y2, xw2, yh2, &memDC, u2, v2, uw2, vh2, wxCOPY, true);
+
+      if(xw1 > 0 && yh1 > 0)//Draw middle
+      {
+         dc.StretchBlit(x1, y0, xw1, yh0, &memDC, u1, v0, uw1, vh0, wxCOPY, true);
+
+         dc.StretchBlit(x0, y1, xw0, yh1, &memDC, u0, v1, uw0, vh1, wxCOPY, true);
+         dc.StretchBlit(x1, y1, xw1, yh1, &memDC, u1, v1, uw1, vh1, wxCOPY, true);
+         dc.StretchBlit(x2, y1, xw2, yh1, &memDC, u2, v1, uw2, vh1, wxCOPY, true);
+
+         dc.StretchBlit(x1, y2, xw1, yh2, &memDC, u1, v2, uw1, vh2, wxCOPY, true);
+      }
    }
 
    int GetButtonImageIndex(bool up, bool selected, bool highlight)
@@ -277,7 +286,7 @@ void AColor::ButtonStretch(wxDC& dc, bool up, const wxRect& r, bool selected, bo
    DrawNinePatch(
       dc,
       theTheme.Bitmap(GetButtonImageIndex(up, selected, highlight)),
-      r
+      r, 2
    );
 }
 
@@ -312,9 +321,9 @@ void AColor::DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap)
    dc.StretchBlit(dx2, rect.y, w0, dh, &srcDC, bitmap.GetWidth() - w0, 0, w0, sh);
 }
 
-void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap)
+void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap, int mid = 1)
 {
-   DrawNinePatch(dc, bitmap, r);
+   DrawNinePatch(dc, bitmap, r, mid);
 }
 
 

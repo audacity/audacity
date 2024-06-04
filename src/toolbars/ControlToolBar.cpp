@@ -51,7 +51,6 @@
 #include "AColor.h"
 #include "AllThemeResources.h"
 #include "AudioIO.h"
-#include "ImageManipulation.h"
 #include "PlayableTrack.h"
 #include "Prefs.h"
 #include "Project.h"
@@ -85,7 +84,10 @@ BEGIN_EVENT_TABLE(ControlToolBar, ToolBar)
    EVT_IDLE(ControlToolBar::OnIdle)
 END_EVENT_TABLE()
 
-static const TranslatableString
+namespace
+{
+
+const TranslatableString
    /* i18n-hint: These are strings for the status bar, and indicate whether Audacity
    is playing or recording or stopped, and whether it is paused;
    progressive verb form */
@@ -99,6 +101,30 @@ static const TranslatableString
    progressive verb form */
    , sStateRecord = XO("Recording")
 ;
+
+AButton* MakeControlToolBarButton(wxWindow* parent,
+                                  wxWindowID id,
+                                  const TranslatableString& label,
+                                  const wxImage& iconUp,
+                                  const wxImage& iconDown,
+                                  const wxImage& iconDisabled)
+{
+   auto button = safenew AButton(parent, id);
+   button->SetButtonType(AButton::FrameButton);
+   button->SetImages(
+      theTheme.Image(bmpRecoloredUpSmall),
+      theTheme.Image(bmpRecoloredUpHiliteSmall),
+      theTheme.Image(bmpRecoloredDownSmall),
+      theTheme.Image(bmpRecoloredHiliteSmall),
+      theTheme.Image(bmpRecoloredUpSmall));
+   button->SetIcons(iconUp, iconDown, iconDisabled);
+   //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   button->SetLabel({});
+   button->SetMinSize(wxSize { 52, 52 });
+   return button;
+}
+
+}
 
 Identifier ControlToolBar::ID()
 {
@@ -148,65 +174,97 @@ void ControlToolBar::Create(wxWindow * parent)
    UpdatePrefs();
 }
 
-// static
-void ControlToolBar::MakeAlternateImages(AButton &button, int idx,
-                                         teBmps eEnabledUp,
-                                         teBmps eEnabledDown,
-                                         teBmps eDisabled)
-{
-   ToolBar::MakeAlternateImages(button, idx,
-      bmpRecoloredUpLarge, bmpRecoloredDownLarge, bmpRecoloredUpHiliteLarge, bmpRecoloredHiliteLarge,
-      eEnabledUp, eEnabledDown, eDisabled,
-      theTheme.ImageSize( bmpRecoloredUpLarge ));
-}
-
 void ControlToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsLarge();
 
-   mPause = MakeButton(this, bmpPause, bmpPause, bmpPauseDisabled,
-      ID_PAUSE_BUTTON,  true,  XO("Pause"));
+   mPause = MakeControlToolBarButton(
+      this,
+      ID_PAUSE_BUTTON,
+      XO("Pause"),
+      theTheme.Image(bmpPause),
+      wxNullImage,
+      theTheme.Image(bmpPauseDisabled));
+   mPause->SetButtonToggles(true);
 
-   mPlay = MakeButton(this, bmpPlay, bmpPlay, bmpPlayDisabled,
-      ID_PLAY_BUTTON, true, XO("Play"));
-   // 3.1.0 abandoned distinct images for Shift
-   MakeAlternateImages(*mPlay, 1, bmpPlay, bmpPlay, bmpPlayDisabled);
-   MakeAlternateImages(*mPlay, 2,
-      bmpCutPreview, bmpCutPreview, bmpCutPreviewDisabled);
-   MakeAlternateImages(*mPlay, 3,
-                       bmpScrub, bmpScrub, bmpScrubDisabled);
-   MakeAlternateImages(*mPlay, 4,
-                       bmpSeek, bmpSeek, bmpSeekDisabled);
+   mPlay = MakeControlToolBarButton(
+      this,
+      ID_PLAY_BUTTON,
+      XO("Play"),
+      theTheme.Image(bmpPlay),
+      wxNullImage,
+      theTheme.Image(bmpPlayDisabled));
+   mPlay->SetButtonToggles(true);
    mPlay->FollowModifierKeys();
+   // 3.1.0 abandoned distinct images for Shift
+   mPlay->SetAlternateIcons(2,
+      theTheme.Image(bmpCutPreview),
+      wxNullImage,
+      theTheme.Image(bmpCutPreviewDisabled));
+   mPlay->SetAlternateIcons(3,
+      theTheme.Image(bmpScrub),
+      wxNullImage,
+      theTheme.Image(bmpScrubDisabled));
+   mPlay->SetAlternateIcons(4,
+      theTheme.Image(bmpSeek),
+      wxNullImage,
+      theTheme.Image(bmpSeekDisabled));
 
-   mStop = MakeButton(this, bmpStop, bmpStop, bmpStopDisabled ,
-      ID_STOP_BUTTON, false, XO("Stop"));
 
-   mRewind = MakeButton(this, bmpRewind, bmpRewind, bmpRewindDisabled,
-      ID_REW_BUTTON, false, XO("Skip to Start"));
+   mStop = MakeControlToolBarButton(this,
+      ID_STOP_BUTTON,
+      XO("Stop"),
+      theTheme.Image(bmpStop),
+      wxNullImage,
+      theTheme.Image(bmpStopDisabled));
 
-   mFF = MakeButton(this, bmpFFwd, bmpFFwd, bmpFFwdDisabled,
-      ID_FF_BUTTON, false, XO("Skip to End"));
+   mRewind = MakeControlToolBarButton(this,
+      ID_REW_BUTTON,
+      XO("Skip to Start"),
+      theTheme.Image(bmpRewind),
+      wxNullImage,
+      theTheme.Image(bmpRewindDisabled));
 
-   mRecord = MakeButton(this, bmpRecord, bmpRecord, bmpRecordDisabled,
-      ID_RECORD_BUTTON, false, XO("Record"));
+   mFF = MakeControlToolBarButton(this,
+      ID_FF_BUTTON,
+      XO("Skip to End"),
+      theTheme.Image(bmpFFwd),
+      wxNullImage,
+      theTheme.Image(bmpFFwdDisabled));
+
+   mRecord = MakeControlToolBarButton(this,
+      ID_RECORD_BUTTON,
+      XO("Record"),
+      theTheme.Image(bmpRecord),
+      wxNullImage,
+      theTheme.Image(bmpRecordDisabled));
+   mRecord->FollowModifierKeys();
 
    bool bPreferNewTrack;
    gPrefs->Read("/GUI/PreferNewTrackRecord",&bPreferNewTrack, false);
    if( !bPreferNewTrack )
-      MakeAlternateImages(*mRecord, 1, bmpRecordBelow, bmpRecordBelow,
-         bmpRecordBelowDisabled);
+   {
+      mRecord->SetAlternateIcons(1,
+         theTheme.Image(bmpRecordBelow),
+         wxNullImage,
+         theTheme.Image(bmpRecordBelowDisabled));
+   }
    else
-      MakeAlternateImages(*mRecord, 1, bmpRecordBeside, bmpRecordBeside,
-         bmpRecordBesideDisabled);
+   {
+      mRecord->SetAlternateIcons(1,
+         theTheme.Image(bmpRecordBeside),
+         wxNullImage,
+         theTheme.Image(bmpRecordBesideDisabled));
+   }
 
-   mRecord->FollowModifierKeys();
-
-   mLoop = MakeButton(this, bmpLoop, bmpLoop, bmpLoopDisabled,
+   mLoop = MakeControlToolBarButton(this,
       ID_LOOP_BUTTON,
-      true, // this makes it a toggle, like the pause button
-      LoopToggleText.Stripped());
+      LoopToggleText.Stripped(),
+      theTheme.Image(bmpLoop),
+      wxNullImage,
+      theTheme.Image(bmpLoopDisabled));
+   mLoop->SetButtonToggles(true);// this makes it a toggle, like the pause button
 
 #if wxUSE_TOOLTIPS
    RegenerateTooltips();
@@ -329,8 +387,6 @@ void ControlToolBar::UpdatePrefs()
 
 void ControlToolBar::ArrangeButtons()
 {
-   int flags = wxALIGN_CENTER | wxRIGHT;
-
    // (Re)allocate the button sizer
    if( mSizer )
    {
@@ -338,10 +394,7 @@ void ControlToolBar::ArrangeButtons()
       std::unique_ptr < wxSizer > {mSizer}; // DELETE it
    }
 
-   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
-
-   // Start with a little extra space
-   mSizer->Add( 5, 55 );
+   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND | wxALL, 5);
 
    // Establish correct tab key sequence with mLoop last
    mPause->MoveBeforeInTabOrder( mLoop );
@@ -351,13 +404,13 @@ void ControlToolBar::ArrangeButtons()
    mFF->MoveBeforeInTabOrder( mLoop );
    mRecord->MoveBeforeInTabOrder( mLoop );
 
-   mSizer->Add( mPause,  0, flags, 2 );
-   mSizer->Add( mPlay,   0, flags, 2 );
-   mSizer->Add( mStop,   0, flags, 2 );
-   mSizer->Add( mRewind, 0, flags, 2 );
-   mSizer->Add( mFF,     0, flags, 10 );
-   mSizer->Add( mRecord, 0, flags, 10 );
-   mSizer->Add( mLoop, 0, flags, 5 );
+   mSizer->Add( mPause,  0, wxRIGHT, 4 );
+   mSizer->Add( mPlay,   0, wxRIGHT, 4 );
+   mSizer->Add( mStop,   0, wxRIGHT, 4 );
+   mSizer->Add( mRewind, 0, wxRIGHT, 4 );
+   mSizer->Add( mFF,     0, wxRIGHT, 8 );
+   mSizer->Add( mRecord, 0, wxRIGHT, 8 );
+   mSizer->Add( mLoop );
 
    // Layout the sizer
    mSizer->Layout();

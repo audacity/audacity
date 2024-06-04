@@ -242,6 +242,8 @@ void MeterToolBar::Populate()
       //JKC: Record on left, playback on right.  Left to right flow
       //(maybe we should do it differently for Arabic language :-)  )
       mRecordSetupButton = safenew AButton(this);
+      mRecordSetupButton->SetButtonType(AButton::FrameButton);
+      mRecordSetupButton->SetFrameMid(3);
       mRecordSetupButton->SetLabel({});
       mRecordSetupButton->SetName(_("Record Meter"));
       mRecordSetupButton->SetToolTip(XO("Record Meter"));
@@ -253,14 +255,15 @@ void MeterToolBar::Populate()
          theTheme.Image(bmpRecoloredUpSmall));
       mRecordSetupButton->SetIcon(theTheme.Image(bmpMic));
       mRecordSetupButton->SetButtonType(AButton::Type::FrameButton);
-      mRecordSetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+      mRecordSetupButton->SetMinSize({25, 25});
+      mRecordSetupButton->SetMaxSize({25, 25});
 
       mRecordMeter = safenew MeterPanel( &mProject,
                                 this,
                                 wxID_ANY,
                                 true,
                                 wxDefaultPosition,
-                                wxSize( 260, toolbarSingle) );
+                                wxSize( 260, 25) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.*/
       mRecordMeter->SetName( XO("Recording Level"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
@@ -293,6 +296,8 @@ void MeterToolBar::Populate()
 
    if( mWhichMeters & kWithPlayMeter ){
       mPlaySetupButton = safenew AButton(this);
+      mPlaySetupButton->SetButtonType(AButton::FrameButton);
+      mPlaySetupButton->SetFrameMid(3);
       mPlaySetupButton->SetLabel({});
       mPlaySetupButton->SetName(_("Playback Meter"));
       mPlaySetupButton->SetToolTip(XO("Playback Meter"));
@@ -304,7 +309,8 @@ void MeterToolBar::Populate()
          theTheme.Image(bmpRecoloredUpSmall));
       mPlaySetupButton->SetIcon(theTheme.Image(bmpSpeaker));
       mPlaySetupButton->SetButtonType(AButton::Type::FrameButton);
-      mPlaySetupButton->SetMinSize({toolbarSingle, toolbarSingle});
+      mPlaySetupButton->SetMinSize({25, 25});
+      mPlaySetupButton->SetMaxSize({25, 25});
 
 
       mPlayMeter = safenew MeterPanel( &mProject,
@@ -312,7 +318,7 @@ void MeterToolBar::Populate()
                               wxID_ANY,
                               false,
                               wxDefaultPosition,
-                              wxSize( 260, toolbarSingle ) );
+                              wxSize( 260, 25 ) );
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.*/
       mPlayMeter->SetName( XO("Playback Level"));
       /* i18n-hint: (noun) The meter that shows the loudness of the audio playing.
@@ -399,26 +405,26 @@ void MeterToolBar::RebuildLayout(bool force)
    if(mWhichMeters & kWithPlayMeter)
    {
       playBarSizer = std::make_unique<wxBoxSizer>(isHorizontal ? wxHORIZONTAL : wxVERTICAL);
-      playBarSizer->Add(mPlaySetupButton, 0, wxEXPAND);
+      playBarSizer->Add(mPlaySetupButton, 0, wxEXPAND | wxRIGHT, 2);
       playBarSizer->Add(mPlayMeter, 1, wxEXPAND);
    }
    if(mWhichMeters & kWithRecordMeter)
    {
       recordBarSizer = std::make_unique<wxBoxSizer>(isHorizontal ? wxHORIZONTAL : wxVERTICAL);
-      recordBarSizer->Add(mRecordSetupButton, 0, wxEXPAND);
+      recordBarSizer->Add(mRecordSetupButton, 0, wxEXPAND | wxRIGHT, 2);
       recordBarSizer->Add(mRecordMeter, 1, wxEXPAND);
    }
 
    if(playBarSizer && recordBarSizer)
    {
-      Add(mRootSizer = safenew wxBoxSizer(isHorizontal ? wxVERTICAL : wxHORIZONTAL), 1, wxEXPAND);
+      Add(mRootSizer = safenew wxBoxSizer(isHorizontal ? wxVERTICAL : wxHORIZONTAL), 1, wxEXPAND | wxALL, 2);
       mRootSizer->Add(playBarSizer.release());
       mRootSizer->Add(recordBarSizer.release());
    }
    else if(playBarSizer)
-      Add(mRootSizer = playBarSizer.release(), 1, wxEXPAND);
+      Add(mRootSizer = playBarSizer.release(), 1, wxEXPAND | wxALL, 2);
    else if(recordBarSizer)
-      Add(mRootSizer = recordBarSizer.release(), 1, wxEXPAND);
+      Add(mRootSizer = recordBarSizer.release(), 1, wxEXPAND | wxALL, 2);
 }
 
 

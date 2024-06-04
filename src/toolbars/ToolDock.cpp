@@ -932,8 +932,8 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
    // Draw the initial horizontal and vertical gaps
    wxSize sz = GetClientSize();
 
-   AColor::Line(dc, 0, 0, sz.GetWidth(), 0 );
-   AColor::Line(dc, 0, 0, 0, sz.GetHeight() );
+   //AColor::Line(dc, 0, 0, sz.GetWidth(), 0 );
+   //AColor::Line(dc, 0, 0, 0, sz.GetHeight() );
 
    // Draw the gap between each bar
    for (const auto &place : GetConfiguration())
@@ -955,13 +955,13 @@ void ToolDock::OnPaint( wxPaintEvent & WXUNUSED(event) )
       // For all bars but the last...
       // ...and for bars that aren't the last in a row, draw a
       // vertical gap line
-      if (!mConfiguration.IsRightmost(toolbar)) {
+      /*if (!mConfiguration.IsRightmost(toolbar)) {
          AColor::Line(dc,
             r.GetRight() + 1,
             r.GetTop(),
             r.GetRight() + 1,
             r.GetBottom() + 1 );
-      }
+      }*/
    }
 }
 
