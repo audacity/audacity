@@ -1382,15 +1382,18 @@ struct LabeledChannelGroup final : TrackPanelGroup {
          );
 
          // shadow
-         // Stroke lines along bottom and right, which are slightly short at
-         // bottom-left and top-right
-         const auto right = rect.GetRight();
-         const auto bottom = rect.GetBottom();
+         if constexpr (kShadowThickness > 0)
+         {
+            // Stroke lines along bottom and right, which are slightly short at
+            // bottom-left and top-right
+            const auto right = rect.GetRight();
+            const auto bottom = rect.GetBottom();
 
-         // bottom
-         AColor::Line(dc, rect.x + 2, bottom, right, bottom);
-         // right
-         AColor::Line(dc, right, rect.y + 2, right, bottom);
+            // bottom
+            AColor::Line(dc, rect.x + 2, bottom, right, bottom);
+            // right
+            AColor::Line(dc, right, rect.y + 2, right, bottom);
+         }
       }
       if (iPass == TrackArtist::PassFocus) {
          // Sometimes highlight is not drawn on backing bitmap. I thought

@@ -89,7 +89,7 @@ private:
 };
 
 enum : int {
-   kVerticalPadding = 7, /*!< Width of padding below each channel group */
+   kVerticalPadding = 6, /*!< Width of padding below each channel group */
 };
 
 enum : int {
