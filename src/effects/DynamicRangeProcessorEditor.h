@@ -100,6 +100,11 @@ public:
    void PopulateOrExchange(ShuttleGui& S);
 
 private:
+   void PopulateLimiterUpperHalf(ShuttleGui& S);
+   void PopulateCompressorUpperHalf(
+      ShuttleGui& S, const CompressorSettings& compressorSettings);
+   void AddSliders(ShuttleGui& S);
+
    virtual const CompressorSettings* GetCompressorSettings() const
    {
       return nullptr;
