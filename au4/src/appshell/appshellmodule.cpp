@@ -30,7 +30,7 @@
 #include "ui/iinteractiveuriregister.h"
 
 #include "internal/applicationuiactions.h"
-//#include "internal/applicationactioncontroller.h"
+#include "internal/applicationactioncontroller.h"
 #include "internal/appshellconfiguration.h"
 #include "internal/startupscenario.h"
 #include "internal/sessionsmanager.h"
@@ -42,7 +42,7 @@
 #include "view/aboutmodel.h"
 #include "view/firstlaunchsetup/firstlaunchsetupmodel.h"
 #include "view/firstlaunchsetup/themespagemodel.h"
-//#include "view/preferences/preferencesmodel.h"
+#include "view/preferences/preferencesmodel.h"
 //#include "view/preferences/generalpreferencesmodel.h"
 // #include "view/preferences/updatepreferencesmodel.h"
 // #include "view/preferences/appearancepreferencesmodel.h"
@@ -92,7 +92,7 @@ std::string AppShellModule::moduleName() const
 
 void AppShellModule::registerExports()
 {
-    //m_applicationActionController = std::make_shared<ApplicationActionController>();
+    m_applicationActionController = std::make_shared<ApplicationActionController>();
     m_applicationUiActions = std::make_shared<ApplicationUiActions>(m_applicationActionController);
     m_appShellConfiguration = std::make_shared<AppShellConfiguration>();
     m_sessionsManager = std::make_shared<SessionsManager>();
@@ -102,7 +102,7 @@ void AppShellModule::registerExports()
     #endif
 
     ioc()->registerExport<IAppShellConfiguration>(moduleName(), m_appShellConfiguration);
-    //ioc()->registerExport<IApplicationActionController>(moduleName(), m_applicationActionController);
+    ioc()->registerExport<IApplicationActionController>(moduleName(), m_applicationActionController);
     ioc()->registerExport<IStartupScenario>(moduleName(), new StartupScenario());
     ioc()->registerExport<ISessionsManager>(moduleName(), m_sessionsManager);
 
@@ -131,7 +131,7 @@ void AppShellModule::resolveImports()
         ir->registerUri(Uri("musescore://about/musicxml"), ContainerMeta(ContainerType::QmlDialog, "AboutMusicXMLDialog.qml"));
         ir->registerUri(Uri("musescore://firstLaunchSetup"),
                         ContainerMeta(ContainerType::QmlDialog, "FirstLaunchSetup/FirstLaunchSetupDialog.qml"));
-        ir->registerUri(Uri("musescore://preferences"), ContainerMeta(ContainerType::QmlDialog, "Preferences/PreferencesDialog.qml"));
+        ir->registerUri(Uri("audacity://preferences"), ContainerMeta(ContainerType::QmlDialog, "Preferences/PreferencesDialog.qml"));
     }
 }
 
@@ -143,7 +143,7 @@ void AppShellModule::registerResources()
 void AppShellModule::registerUiTypes()
 {
     qmlRegisterType<SettingListModel>("MuseScore.Preferences", 1, 0, "SettingListModel");
-    // qmlRegisterType<PreferencesModel>("MuseScore.Preferences", 1, 0, "PreferencesModel");
+    qmlRegisterType<PreferencesModel>("Audacity.Preferences", 1, 0, "PreferencesModel");
     // qmlRegisterType<GeneralPreferencesModel>("MuseScore.Preferences", 1, 0, "GeneralPreferencesModel");
     // qmlRegisterType<UpdatePreferencesModel>("MuseScore.Preferences", 1, 0, "UpdatePreferencesModel");
     // qmlRegisterType<AppearancePreferencesModel>("MuseScore.Preferences", 1, 0, "AppearancePreferencesModel");
@@ -186,7 +186,7 @@ void AppShellModule::onPreInit(const IApplication::RunMode& mode)
         return;
     }
 
-    //m_applicationActionController->preInit();
+    m_applicationActionController->preInit();
 }
 
 void AppShellModule::onInit(const IApplication::RunMode& mode)
@@ -196,7 +196,7 @@ void AppShellModule::onInit(const IApplication::RunMode& mode)
     }
 
     m_appShellConfiguration->init();
-    //m_applicationActionController->init();
+    m_applicationActionController->init();
     m_applicationUiActions->init();
     m_sessionsManager->init();
 
