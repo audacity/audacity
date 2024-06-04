@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-06-01 00:00+0000\n"
+"PO-Revision-Date: 2024-06-04 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <gootector@o2.pl>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -10452,7 +10452,7 @@ msgstr "Daje pomoc na polecenie."
 
 #: src/commands/HelpCommand.h
 msgid "For comments in a macro."
-msgstr "Komentarze w makrze."
+msgstr "Do komentarzy w makrze."
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Import2"
@@ -12799,11 +12799,11 @@ msgstr "Usuwa szumy tła, takie jak wentylatory, szumy taśmy lub buczenie"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block are too few for the window types."
-msgstr "Kroków na bloku jest za mało dla typów okien."
+msgstr "Kroków na blok jest za mało dla typów okien."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Steps per block cannot exceed the window size."
-msgstr "Kroki na bloku nie mogą przekraczać rozmiaru okna."
+msgstr "Kroki na blok nie mogą przekraczać rozmiaru okna."
 
 #: src/effects/NoiseReduction.cpp
 msgid "Median method is not implemented for more than four steps per window."
