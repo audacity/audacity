@@ -26,17 +26,14 @@
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
-#include "notation/inotationconfiguration.h"
 #include "async/asyncable.h"
 
 namespace au::appshell {
-class AppearancePreferencesModel : public QObject, public async::Asyncable
+class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    INJECT(ui::IUiConfiguration, uiConfiguration)
-    INJECT(notation::INotationConfiguration, notationConfiguration)
-    INJECT(engraving::IEngravingConfiguration, engravingConfiguration)
+    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
 
     Q_PROPERTY(bool isFollowSystemThemeAvailable READ isFollowSystemThemeAvailable CONSTANT)
     Q_PROPERTY(bool isFollowSystemTheme READ isFollowSystemTheme WRITE setFollowSystemTheme NOTIFY isFollowSystemThemeChanged)
@@ -51,18 +48,6 @@ class AppearancePreferencesModel : public QObject, public async::Asyncable
 
     Q_PROPERTY(int currentFontIndex READ currentFontIndex WRITE setCurrentFontIndex NOTIFY currentFontIndexChanged)
     Q_PROPERTY(int bodyTextSize READ bodyTextSize WRITE setBodyTextSize NOTIFY bodyTextSizeChanged)
-
-    Q_PROPERTY(bool backgroundUseColor READ backgroundUseColor WRITE setBackgroundUseColor NOTIFY backgroundUseColorChanged)
-    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
-    Q_PROPERTY(
-        QString backgroundWallpaperPath READ backgroundWallpaperPath WRITE setBackgroundWallpaperPath NOTIFY backgroundWallpaperPathChanged)
-
-    Q_PROPERTY(bool foregroundUseColor READ foregroundUseColor WRITE setForegroundUseColor NOTIFY foregroundUseColorChanged)
-    Q_PROPERTY(QColor foregroundColor READ foregroundColor WRITE setForegroundColor NOTIFY foregroundColorChanged)
-    Q_PROPERTY(
-        QString foregroundWallpaperPath READ foregroundWallpaperPath WRITE setForegroundWallpaperPath NOTIFY foregroundWallpaperPathChanged)
-
-    Q_PROPERTY(bool scoreInversionEnabled READ scoreInversionEnabled WRITE setScoreInversionEnabled NOTIFY invertScoreColorChanged)
 
 public:
     explicit AppearancePreferencesModel(QObject* parent = nullptr);
@@ -92,21 +77,9 @@ public:
     int currentFontIndex() const;
     int bodyTextSize() const;
 
-    bool backgroundUseColor() const;
-    QColor backgroundColor() const;
-    QString backgroundWallpaperPath() const;
-
-    bool foregroundUseColor() const;
-    QColor foregroundColor() const;
-    QString foregroundWallpaperPath() const;
-
-    bool scoreInversionEnabled() const;
-
     Q_INVOKABLE void resetAppearancePreferencesToDefault();
     Q_INVOKABLE void setNewColor(const QColor& newColor, ColorType colorType);
     Q_INVOKABLE QStringList allFonts() const;
-    Q_INVOKABLE QStringList wallpaperPathFilter() const;
-    Q_INVOKABLE QString wallpapersDir() const;
 
 public slots:
     void setFollowSystemTheme(bool enabled);
@@ -115,30 +88,16 @@ public slots:
     void setCurrentAccentColorIndex(int index);
     void setCurrentFontIndex(int index);
     void setBodyTextSize(int size);
-    void setBackgroundUseColor(bool value);
-    void setBackgroundColor(const QColor& color);
-    void setBackgroundWallpaperPath(const QString& path);
-    void setForegroundUseColor(bool value);
-    void setForegroundColor(const QColor& color);
-    void setForegroundWallpaperPath(const QString& path);
-    void setScoreInversionEnabled(bool value);
 
 signals:
     void isFollowSystemThemeChanged();
     void themesChanged();
     void currentFontIndexChanged();
     void bodyTextSizeChanged();
-    void backgroundUseColorChanged();
-    void backgroundColorChanged();
-    void backgroundWallpaperPathChanged();
-    void foregroundUseColorChanged();
-    void foregroundColorChanged();
-    void foregroundWallpaperPathChanged();
-    void invertScoreColorChanged();
 
 private:
-    ui::ThemeInfo currentTheme() const;
-    ui::ThemeList allThemes() const;
+    muse::ui::ThemeInfo currentTheme() const;
+    muse::ui::ThemeList allThemes() const;
 };
 }
 

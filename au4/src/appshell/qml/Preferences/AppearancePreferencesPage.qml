@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Preferences 1.0
+import Audacity.Preferences 1.0
 
 import "internal"
 
@@ -131,106 +131,6 @@ PreferencesPage {
                 if (activeFocus) {
                     root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
                 }
-            }
-        }
-
-        SeparatorLine {}
-
-        ColorAndWallpaperSection {
-            id: backgroundSettings
-
-            width: parent.width
-
-            title: qsTrc("appshell/preferences", "Background")
-            wallpaperDialogTitle: qsTrc("appshell/preferences", "Choose background wallpaper")
-            useColor: appearanceModel.backgroundUseColor
-            color: appearanceModel.backgroundColor
-            wallpaperPath: appearanceModel.backgroundWallpaperPath
-            wallpapersDir: appearanceModel.wallpapersDir()
-            wallpaperFilter: appearanceModel.wallpaperPathFilter()
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 5
-
-            onUseColorChangeRequested: function(newValue) {
-                appearanceModel.backgroundUseColor = newValue
-            }
-
-            onColorChangeRequested: function(newColor) {
-                appearanceModel.backgroundColor = newColor
-            }
-
-            onWallpaperPathChangeRequested: function(newWallpaperPath) {
-                appearanceModel.backgroundWallpaperPath = newWallpaperPath
-            }
-
-            onFocusChanged: {
-                if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-                }
-            }
-        }
-
-        SeparatorLine {}
-
-        ColorAndWallpaperSection {
-            id: paperSettings
-
-            width: parent.width
-
-            enabled: !appearanceModel.scoreInversionEnabled
-            opacityOverride: paperSettings.enabled ? 1.0 : 0.6
-
-            title: qsTrc("appshell/preferences", "Paper")
-            wallpaperDialogTitle: qsTrc("appshell/preferences", "Choose notepaper")
-            useColor: appearanceModel.foregroundUseColor
-            color: appearanceModel.foregroundColor
-            wallpaperPath: appearanceModel.foregroundWallpaperPath
-            wallpapersDir: appearanceModel.wallpapersDir()
-            wallpaperFilter: appearanceModel.wallpaperPathFilter()
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 6
-
-            onUseColorChangeRequested: function(newValue) {
-                appearanceModel.foregroundUseColor = newValue
-            }
-
-            onColorChangeRequested: function(newColor) {
-                appearanceModel.foregroundColor = newColor
-            }
-
-            onWallpaperPathChangeRequested: function(newWallpaperPath) {
-                appearanceModel.foregroundWallpaperPath = newWallpaperPath
-            }
-
-            onFocusChanged: {
-                if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-                }
-            }
-        }
-
-        SeparatorLine {}
-
-        ThemeAdditionalOptionsSection {
-            scoreInversionEnabled: appearanceModel.scoreInversionEnabled
-
-            navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 7
-
-            onResetThemeToDefaultRequested: {
-                appearanceModel.resetAppearancePreferencesToDefault()
-            }
-
-            onFocusChanged: {
-                if (activeFocus) {
-                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-                }
-            }
-
-            onScoreInversionEnableChangeRequested: function(enable) {
-                appearanceModel.scoreInversionEnabled = enable
             }
         }
     }

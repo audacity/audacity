@@ -45,7 +45,7 @@
 #include "view/preferences/preferencesmodel.h"
 //#include "view/preferences/generalpreferencesmodel.h"
 // #include "view/preferences/updatepreferencesmodel.h"
-// #include "view/preferences/appearancepreferencesmodel.h"
+#include "view/preferences/appearancepreferencesmodel.h"
 // #include "view/preferences/folderspreferencesmodel.h"
 // #include "view/preferences/noteinputpreferencesmodel.h"
 // #include "view/preferences/advancedpreferencesmodel.h"
@@ -142,11 +142,11 @@ void AppShellModule::registerResources()
 
 void AppShellModule::registerUiTypes()
 {
-    qmlRegisterType<SettingListModel>("MuseScore.Preferences", 1, 0, "SettingListModel");
+    qmlRegisterType<SettingListModel>("Audacity.Preferences", 1, 0, "SettingListModel");
     qmlRegisterType<PreferencesModel>("Audacity.Preferences", 1, 0, "PreferencesModel");
     // qmlRegisterType<GeneralPreferencesModel>("MuseScore.Preferences", 1, 0, "GeneralPreferencesModel");
     // qmlRegisterType<UpdatePreferencesModel>("MuseScore.Preferences", 1, 0, "UpdatePreferencesModel");
-    // qmlRegisterType<AppearancePreferencesModel>("MuseScore.Preferences", 1, 0, "AppearancePreferencesModel");
+    qmlRegisterType<AppearancePreferencesModel>("Audacity.Preferences", 1, 0, "AppearancePreferencesModel");
     // qmlRegisterType<FoldersPreferencesModel>("MuseScore.Preferences", 1, 0, "FoldersPreferencesModel");
     // qmlRegisterType<NoteInputPreferencesModel>("MuseScore.Preferences", 1, 0, "NoteInputPreferencesModel");
     // qmlRegisterType<AdvancedPreferencesModel>("MuseScore.Preferences", 1, 0, "AdvancedPreferencesModel");
