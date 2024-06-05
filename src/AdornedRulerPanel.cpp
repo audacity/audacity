@@ -1576,8 +1576,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    // What's left and right of the overlap?  Assume same tops and bottoms
    const auto top = rectP.GetTop(),
       bottom = rectP.GetBottom();
-   wxRect rectL{
-      wxPoint{ 0, top }, wxPoint{ this->GetSize().GetWidth() - 1, bottom } };
+   wxRect rectL = mInner;
    wxRect rectR = {};
    if (!rectO.IsEmpty()) {
       rectR = { wxPoint{ rectO.GetRight() + 1, top }, rectL.GetBottomRight() };
@@ -1652,8 +1651,8 @@ bool AdornedRulerPanel::UpdateRects()
 {
    auto inner = mOuter;
    wxRect scrubZone;
-   inner.x += LeftMargin;
-   inner.width -= (LeftMargin + RightMargin);
+   inner.x += LeftMargin + mLeftOffset;
+   inner.width -= (LeftMargin + RightMargin + mLeftOffset);
 
    auto top = &inner;
    auto bottom = &inner;
@@ -2435,7 +2434,7 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
    AColor::UseThemeColour( dc, TimelineBackgroundColor() );
-   dc->DrawRectangle( mInner );
+   dc->DrawRectangle( mOuter );
 
    if (ShowingScrubRuler()) {
       // Let's distinguish the scrubbing area by using a themable
@@ -2459,10 +2458,10 @@ void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 {
-   const double min = Pos2Time(0);
-   const double hiddenMin = Pos2Time(0, true);
-   const double max = Pos2Time(mInner.width);
-   const double hiddenMax = Pos2Time(mInner.width, true);
+   const double min = Pos2Time(mInner.x);
+   const double hiddenMin = Pos2Time(mInner.x, true);
+   const double max = Pos2Time(mInner.x + mInner.width);
+   const double hiddenMax = Pos2Time(mInner.x + mInner.width, true);
 
    mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
@@ -2506,8 +2505,8 @@ wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
       // Make the rectangle off-screen horizontally, but set the height
       ;
    else {
-      p0 = max(1, Time2Pos(t0));
-      p1 = min(mInner.width, Time2Pos(t1));
+      p0 = max(mInner.x, Time2Pos(t0));
+      p1 = min(mInner.x + mInner.width, Time2Pos(t1));
    }
 
    const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
