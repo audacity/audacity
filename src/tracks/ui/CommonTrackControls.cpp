@@ -358,9 +358,7 @@ void CommonTrackControls::Draw(
       // Given rectangle excludes left and right margins, and encompasses a
       // channel group of tracks, plus the resizer area below
       auto pTrack = FindTrack();
-      // First counteract DrawingArea() correction
-      wxRect rect{ rect_.x, rect_.y, rect_.width - 1, rect_.height };
-   
+      
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
       //if (SyncLock::IsSyncLockSelected(t)) {
@@ -372,21 +370,14 @@ void CommonTrackControls::Draw(
 
       if (pTrack)
          // Draw things within the track control panel
-         CommonTrackInfo::DrawItems( context, rect, *pTrack );
-
-      //mTrackInfo.DrawBordersWithin( dc, rect, *t );
+         CommonTrackInfo::DrawItems( context, rect_, *pTrack );
    }
 }
 
-wxRect CommonTrackControls::DrawingArea(
-   TrackPanelDrawingContext &,
-   const wxRect &rect, const wxRect &, unsigned iPass )
+wxRect CommonTrackControls::DrawingArea(TrackPanelDrawingContext&, const wxRect& rect,
+   const wxRect&, unsigned iPass)
 {
-   if ( iPass == TrackArtist::PassControls )
-      // Some bevels spill out right
-      return { rect.x, rect.y, rect.width + 1, rect.height };
-   else
-      return rect;
+   return rect;
 }
 
 const TCPLines &CommonTrackControls::GetTCPLines() const

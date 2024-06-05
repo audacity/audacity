@@ -171,7 +171,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect, sliderRect );
    auto nt = static_cast<const NoteTrack*>( pTrack );
    Selector( sliderRect, nt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -317,18 +317,20 @@ static const struct NoteTrackTCPLines
    } );
 } } noteTrackTCPLines;
 
-void NoteTrackControls::GetVelocityRect(const wxPoint &topleft, wxRect & dest)
+void NoteTrackControls::GetVelocityRect(const wxRect &rect_, wxRect & dest)
 {
-   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
-   dest.y = topleft.y + results.first;
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
+   CommonTrackInfo::GetSliderHorizontalBounds( rect, dest );
+   const auto results = CalcItemY( noteTrackTCPLines, TCPLine::kItemVelocity );
+   dest.y = rect.y + results.first;
    dest.height = results.second;
 }
 
-void NoteTrackControls::GetMidiControlsRect(const wxRect & rect, wxRect & dest)
+void NoteTrackControls::GetMidiControlsRect(const wxRect & rect_, wxRect & dest)
 {
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
    GetMidiControlsHorizontalBounds( rect, dest );
-   auto results = TrackInfo::CalcItemY(
+   const auto results = TrackInfo::CalcItemY(
       noteTrackTCPLines, TCPLine::kItemMidiControlsRect );
    dest.y = rect.y + results.first;
    dest.height = results.second;
@@ -377,9 +379,8 @@ void NoteTrackControls::ReCreateVelocitySlider(ThemeChangeMessage message)
 {
    if (message.appearance)
       return;
-   wxPoint point{ 0, 0 };
-   wxRect sliderRect;
-   GetVelocityRect(point, sliderRect);
+
+   const auto sliderRect = wxRect(0, 0, kTrackInfoSliderWidth, kTrackInfoSliderHeight);
 
    /* i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks */
    gVelocity = std::make_unique<LWSlider>(nullptr, XO("Velocity"),

@@ -106,7 +106,7 @@ std::pair< int, int > CalcBottomItemY
 
 unsigned CommonTrackInfo::MinimumTrackHeight()
 {
-   unsigned height = 0;
+   unsigned height = Margin * 2;
    if (!commonTrackTCPLines().empty())
       height += commonTrackTCPLines().front().height;
    if (!commonTrackTCPBottomLines.empty())
@@ -138,9 +138,10 @@ void CommonTrackInfo::DrawItems
 
 void CommonTrackInfo::DrawItems
 ( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack,
+  const wxRect &rect_, const Track *pTrack,
   const std::vector<TCPLine> &topLines, const std::vector<TCPLine> &bottomLines )
 {
+   const auto rect = wxRect(rect_).Deflate(Margin);
    auto dc = &context.dc;
    TrackInfo::SetTrackInfoFont(dc);
    dc->SetTextForeground(theTheme.Colour(clrTrackPanelText));
@@ -347,8 +348,9 @@ void CommonTrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &
    dest.width = kTrackInfoBtnSize;
 }
 
-void CommonTrackInfo::GetCloseBoxRect(const wxRect & rect, wxRect & dest)
+void CommonTrackInfo::GetCloseBoxRect(const wxRect & rect_, wxRect & dest)
 {
+   const auto rect = wxRect(rect_).Deflate(Margin);
    GetCloseBoxHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
@@ -364,17 +366,18 @@ void CommonTrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &
    dest.width = rect.x + rect.width - dest.x;
 }
 
-void CommonTrackInfo::GetTitleBarRect(const wxRect & rect, wxRect & dest)
+void CommonTrackInfo::GetTitleBarRect(const wxRect & rect_, wxRect & dest)
 {
+   const auto rect = wxRect(rect_).Deflate(Margin);
    GetTitleBarHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
 
-void CommonTrackInfo::GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest )
+void CommonTrackInfo::GetSliderHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
-   dest.x = topleft.x + 6;
+   dest.x = rect.x + (rect.width - kTrackInfoSliderWidth) / 2;
    dest.width = kTrackInfoSliderWidth;
 }
 
@@ -392,10 +395,12 @@ void CommonTrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &d
 // rect.width - (space + syncLockRect.width);
 }
 
-void CommonTrackInfo::GetMinimizeRect(const wxRect & rect, wxRect &dest)
+void CommonTrackInfo::GetMinimizeRect(const wxRect & rect_, wxRect &dest)
 {
+   const auto rect = wxRect(rect_).Deflate(Margin);
+
    GetMinimizeHorizontalBounds( rect, dest );
-   auto results = CalcBottomItemY
+   const auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
    dest.y = rect.y + results.first;
    dest.height = results.second;
@@ -407,8 +412,9 @@ void CommonTrackInfo::GetSyncLockHorizontalBounds( const wxRect &rect, wxRect &d
    dest.x = rect.x + rect.width - dest.width;
 }
 
-void CommonTrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
+void CommonTrackInfo::GetSyncLockIconRect(const wxRect & rect_, wxRect &dest)
 {
+   const auto rect = wxRect(rect_).Deflate(Margin);
    GetSyncLockHorizontalBounds( rect, dest );
    auto results = CalcBottomItemY
       ( commonTrackTCPBottomLines, TCPLine::kItemSyncLock, rect.height);
@@ -419,7 +425,7 @@ void CommonTrackInfo::GetSyncLockIconRect(const wxRect & rect, wxRect &dest)
 unsigned CommonTrackInfo::DefaultTrackHeight( const TCPLines &topLines )
 {
    int needed =
-      kVerticalPadding +
+      kVerticalPadding + Margin * 2 +
       totalTCPLines( topLines, true ) +
       totalTCPLines( commonTrackTCPBottomLines, false ) + 1;
    return (unsigned) std::max(needed, (int) ChannelView::DefaultHeight);

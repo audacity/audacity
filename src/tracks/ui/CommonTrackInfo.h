@@ -20,6 +20,8 @@ namespace CommonTrackInfo
    using TCPLine = TrackInfo::TCPLine;
    using TCPLines = TrackInfo::TCPLines;
 
+   constexpr static auto Margin = 4;
+
    AUDACITY_DLL_API
    unsigned MinimumTrackHeight();
 
@@ -64,7 +66,7 @@ namespace CommonTrackInfo
    void GetTitleBarRect(const wxRect & rect, wxRect &dest);
 
    AUDACITY_DLL_API
-   void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
+   void GetSliderHorizontalBounds( const wxRect &rect, wxRect &dest );
 
    AUDACITY_DLL_API
    void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );

@@ -96,7 +96,7 @@ UIHandlePtr VelocitySliderHandle::HitTest
       return {};
 
    wxRect sliderRect;
-   NoteTrackControls::GetVelocityRect(rect.GetTopLeft(), sliderRect);
+   NoteTrackControls::GetVelocityRect(rect, sliderRect);
    if (CommonTrackInfo::HideTopItem( rect, sliderRect, kTrackInfoSliderAllowance))
       return {};
    if (sliderRect.Contains(state.m_x, state.m_y)) {

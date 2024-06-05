@@ -201,22 +201,20 @@ void EffectsDrawFunction
 }
 
 void PlayableTrackControls::GetMuteSoloRect
-(const wxRect & rect, wxRect & dest, bool solo,
+(const wxRect & rect_, wxRect & dest, bool solo,
  const Track *pTrack)
 {
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
+
    auto &trackControl = static_cast<const CommonTrackControls&>(
       TrackControls::Get( *pTrack ) );
-   auto resultsM = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemMute );
-   auto resultsS = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemSolo );
-   dest.height = resultsS.second;
+   const auto [yMute, yHeight] = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemMute );
+   const auto [ySolo, sHeight] = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemSolo );
+   dest.height = sHeight;
 
-   int yMute = resultsM.first;
-   int ySolo = resultsS.first;
-
-   bool bSameRow = ( yMute == ySolo );
-   bool bNarrow = bSameRow;
-
-   if( bNarrow )
+   const auto bSameRow = ( yMute == ySolo );
+   
+   if( bSameRow )
    {
       if( solo )
          GetNarrowSoloHorizontalBounds( rect, dest );
@@ -229,21 +227,20 @@ void PlayableTrackControls::GetMuteSoloRect
    if( bSameRow || !solo )
       dest.y = rect.y + yMute;
    else
-      dest.y = rect.y + ySolo;
-
+      dest.y = rect.y + ySolo; 
 }
 
 void PlayableTrackControls::GetEffectsRect
-(const wxRect & rect, wxRect & dest, const Track *pTrack)
+(const wxRect & rect_, wxRect & dest, const Track *pTrack)
 {
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
+
    auto &trackControl = static_cast<const CommonTrackControls&>(
       TrackControls::Get( *pTrack ) );
    const auto resultsE = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemEffects );
    dest.x = rect.x;
    dest.y = rect.y + resultsE.first;
-   dest.width = rect.width;
    dest.height = resultsE.second;
-
 }
 
 const TCPLines& PlayableTrackControls::StaticNoteTCPLines()
