@@ -178,7 +178,7 @@ UIHandlePtr EffectsButtonHandle::HitTest
 {
    wxRect buttonRect;
    if ( pTrack )
-      PlayableTrackControls::GetEffectsRect(rect, buttonRect,
+      PlayableTrackControls::GetEffectsButtonRect(rect, buttonRect,
          pTrack.get());
 
    if ( CommonTrackInfo::HideTopItem( rect, buttonRect ) )

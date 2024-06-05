@@ -41,7 +41,7 @@ void GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
    dest.x = rect.x + rect.width - dest.width;
 }
 
-void GetEffectsRect( const wxRect & rect, wxRect &dest )
+void GetEffectsButtonBounds( const wxRect & rect, wxRect &dest )
 {
    dest = rect;
 }
@@ -185,7 +185,7 @@ void EffectsDrawFunction
 
    wxRect bev = rect;
 
-   GetEffectsRect( rect, bev );
+   GetEffectsButtonBounds( rect, bev );
    {
       auto target = dynamic_cast<EffectsButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
@@ -226,7 +226,7 @@ void PlayableTrackControls::GetMuteSoloRect
       dest.y = rect.y + ySolo; 
 }
 
-void PlayableTrackControls::GetEffectsRect
+void PlayableTrackControls::GetEffectsButtonRect
 (const wxRect & rect_, wxRect & dest, const Track *pTrack)
 {
    const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
@@ -234,7 +234,7 @@ void PlayableTrackControls::GetEffectsRect
    auto &trackControl = static_cast<const CommonTrackControls&>(
       TrackControls::Get( *pTrack ) );
    const auto resultsE = TrackInfo::CalcItemY( trackControl.GetTCPLines(), TCPLine::kItemEffects );
-   dest.x = rect.x;
+   GetEffectsButtonBounds(rect, dest);
    dest.y = rect.y + resultsE.first;
    dest.height = resultsE.second;
 }
