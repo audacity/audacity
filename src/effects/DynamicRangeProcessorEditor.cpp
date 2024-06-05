@@ -240,7 +240,10 @@ void DynamicRangeProcessorEditor::PopulateLimiterUpperHalf(ShuttleGui& S)
       S.StartMultiColumn(3, wxEXPAND);
       {
          S.SetStretchyCol(0);
-         AddSliderSpaceAndMeterColums(S);
+
+         AddSliderPanel(S);
+         S.AddSpace(borderSize, 0);
+         AddCompressionMeterPanel(S);
       }
       S.EndMultiColumn();
    }
@@ -256,7 +259,10 @@ void DynamicRangeProcessorEditor::PopulateCompressorUpperHalf(
       S.StartMultiColumn(4, wxEXPAND);
       {
          S.SetStretchyCol(0);
-         AddSliderSpaceAndMeterColums(S);
+
+         AddSliderPanel(S);
+         S.AddSpace(borderSize, 0);
+         AddCompressionMeterPanel(S);
          AddCompressionCurvePanel(S, compressorSettings);
       }
       S.EndMultiColumn();
@@ -333,12 +339,8 @@ void DynamicRangeProcessorEditor::AddSliderPanel(ShuttleGui& S)
    S.EndPanel();
 }
 
-void DynamicRangeProcessorEditor::AddSliderSpaceAndMeterColums(ShuttleGui& S)
+void DynamicRangeProcessorEditor::AddCompressionMeterPanel(ShuttleGui& S)
 {
-   AddSliderPanel(S);
-
-   S.AddSpace(borderSize, 0);
-
    S.StartVerticalLay(0);
    {
       // Add vertical space above and below to align it with the slider
