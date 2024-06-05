@@ -39,6 +39,10 @@ void TimelineRuler::paint(QPainter* painter)
     pen.setColor(uiconfiguration()->currentTheme().values.value(muse::ui::STROKE_COLOR).toString());
     painter->setPen(pen);
 
+    // vertical line (ruler border)
+    painter->drawLine(QLineF(0, 0, 0, h));
+
+    // horizontal line in the middle
     painter->drawLine(QLineF(0, h / 2, w, h / 2));
 
     drawLabels(painter, ticks, w, h);
@@ -48,7 +52,16 @@ void TimelineRuler::paint(QPainter* painter)
 void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeInterval, double w, double h)
 {
     double value = m_context->frameStartTime();
-    double x = 0.0; //! TODO AU4; get offset from m_context
+    double x = 0.0;
+
+    // find value and position of the first tick
+    double remainder = fmod(value, timeInterval.minorMinor);
+    if (remainder != 0) {
+        x = (timeInterval.minorMinor - remainder) * m_context->zoom();
+        value += (timeInterval.minorMinor - remainder);
+    }
+    // determine which tick in a row is this
+    int tickNumber = static_cast<int>(value / timeInterval.minorMinor);
 
     auto tickHeight = [&](TickType tickType) {
         switch (tickType) {
@@ -63,10 +76,9 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
     {
         // determine tick type
         TickType tickType;
-        const int count = ticks.count();
-        if (count % static_cast<int>(timeInterval.major / timeInterval.minorMinor) == 0) {
+        if (tickNumber % static_cast<int>(timeInterval.major / timeInterval.minorMinor) == 0) {
             tickType = TickType::MAJOR;
-        } else if (count % static_cast<int>(timeInterval.minor / timeInterval.minorMinor) == 0) {
+        } else if (tickNumber % static_cast<int>(timeInterval.minor / timeInterval.minorMinor) == 0) {
             tickType = TickType::MINOR;
         } else {
             tickType = TickType::MINORMINOR;
@@ -80,7 +92,6 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
                                     tickLabel,
                                     tickType,
                                     QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)) });
-            value = value + timeInterval.minor;
             labelsCount++;
         } else {
             // add tick without label
@@ -91,6 +102,8 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
         }
 
         x += m_context->zoom() * timeInterval.minorMinor;
+        value += timeInterval.minorMinor;
+        tickNumber++;
     }
 }
 

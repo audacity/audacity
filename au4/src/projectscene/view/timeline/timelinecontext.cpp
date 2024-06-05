@@ -63,6 +63,10 @@ void TimelineContext::moveToFrameTime(double startTime)
 
 void TimelineContext::shiftFrameTime(double shift)
 {
+    // do not shift to negative time values
+    if (m_frameStartTime + shift < 0) {
+        return;
+    }
     setFrameStartTime(m_frameStartTime + shift);
     setFrameEndTime(m_frameEndTime + shift);
 
