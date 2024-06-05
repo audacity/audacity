@@ -1190,22 +1190,6 @@ struct VRulersAndChannels final : TrackPanelGroup {
       }
    }
 
-   wxRect DrawingArea(
-      TrackPanelDrawingContext &context,
-      const wxRect &rect, const wxRect &panelRect, unsigned iPass ) override
-   {
-      auto result = rect;
-      if ( iPass == TrackArtist::PassBorders ) {
-         if ( true ) {
-            wxCoord textWidth, textHeight;
-            GetTrackNameExtent(context.dc, *mpChannel, &textWidth, &textHeight);
-            result =
-               GetTrackNameRect( mLeftOffset, rect, textWidth, textHeight );
-         }
-      }
-      return result;
-   }
-
    std::shared_ptr<Channel> mpChannel;
    ChannelView::Refinement mRefinement;
    wxCoord mLeftOffset;
