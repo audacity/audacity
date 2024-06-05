@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include "DynamicRangeProcessorPanelCommon.h"
 #include "DynamicRangeProcessorTypes.h"
 #include "LockFreeQueue.h"
 #include "Observer.h"
@@ -36,10 +37,14 @@ private:
    static constexpr auto displayDelayMs = 100;
    static constexpr auto ringBufferLength = displayDelayMs / timerPeriodMs;
 
+   static constexpr auto outputColBottomValue =
+      -DynamicRangeProcessorPanel::compressorMeterRangeDb;
+
    void Reset();
    void PaintRectangle(
-      wxPaintDC& dc, const wxRect& rect, double value, double& yMax,
-      const TranslatableString& label);
+      wxPaintDC& dc, const wxRect& rect, double dB, double maxDb, bool upwards);
+   void PaintLabel(
+      wxPaintDC& dc, const wxRect& rect, const TranslatableString& label);
 
    void OnPaint(wxPaintEvent& evt);
    void OnTimer(wxTimerEvent& evt);
@@ -54,8 +59,8 @@ private:
    wxTimer mTimer;
    MeterValues mSmoothedValues;
    bool mStopWhenZero = false;
-   double mCompressionYMax = 0;
-   double mOutputYMax = 0;
-   std::array<double, ringBufferLength> mCompressionRingBuffer;
-   size_t mCompressionRingBufferIndex = 0;
+   float mCompressionColMin = 0;
+   float mOutputColMax = outputColBottomValue;
+   std::array<MeterValues, ringBufferLength> mRingBuffer;
+   size_t mRingBufferIndex = 0;
 };

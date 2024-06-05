@@ -32,7 +32,7 @@ using DynamicRangeProcessorOutputPacketQueue =
 struct MeterValues
 {
    float compressionGainDb = 0;
-   float outputDb = 0;
+   float outputDb = std::numeric_limits<float>::lowest();
 };
 
 using DynamicRangeProcessorMeterValuesQueue = LockFreeQueue<MeterValues>;
