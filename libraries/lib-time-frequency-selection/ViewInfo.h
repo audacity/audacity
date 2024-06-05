@@ -93,8 +93,9 @@ enum : int {
 };
 
 enum : int {
+   kTrackInfoTitleHeight = 16,
+   kTrackInfoTitleExtra = 2,
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
-   kTrackEffectsBtnHeight = 28,
    kTrackInfoSliderHeight = 25,
    kTrackInfoSliderWidth = 139,
    kTrackInfoSliderAllowance = 5,

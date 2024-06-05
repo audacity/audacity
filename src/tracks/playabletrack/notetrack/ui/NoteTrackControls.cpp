@@ -145,7 +145,7 @@ using TCPLine = TrackInfo::TCPLine;
 #ifdef USE_MIDI
 enum : int {
    // PRL:  was it correct to include the margin?
-   kMidiCellWidth = ( ( kTrackInfoWidth + kLeftMargin ) / 4) - 2,
+   kMidiCellWidth = ( ( kTrackInfoWidth  - CommonTrackInfo::Margin * 2) / 4),
    kMidiCellHeight = kTrackInfoBtnSize
 };
 #endif
@@ -156,11 +156,8 @@ enum : int {
 namespace {
 void GetMidiControlsHorizontalBounds( const wxRect &rect, wxRect &dest )
 {
-   dest.x = rect.x + 1; // To center slightly
-   // PRL: TODO: kMidiCellWidth is defined in terms of the other constant
-   // kTrackInfoWidth but I am trying to avoid use of that constant.
-   // Can cell width be computed from dest.width instead?
-   dest.width = kMidiCellWidth * 4;
+   dest.x = rect.x;
+   dest.width = rect.width / 4 * 4;
 }
 
 void SliderDrawFunction

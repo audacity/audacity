@@ -25,29 +25,25 @@ using TCPLine = TrackInfo::TCPLine;
 
 namespace {
 
+   constexpr auto MuteSoloButtonHeight = 20;
+   constexpr auto MuteSoloButtonExtra = 2;
+   constexpr auto EffectsButtonHeight = 22;
+
 void GetNarrowMuteHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
-   constexpr int padding = 2;
-   dest.x = rect.x + padding;
-   dest.width = rect.width / 2 - 1.5 * padding;
+   dest.x = rect.x;
+   dest.width = (rect.width - CommonTrackInfo::Margin) / 2;
 }
 
 void GetNarrowSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
-   wxRect muteRect;
-   constexpr int padding = 2;
-   GetNarrowMuteHorizontalBounds( rect, muteRect );
-   dest.x = rect.x + muteRect.width + 2 * padding;
-   dest.width = rect.width - dest.x + 1.5 * padding;
+   dest.width = (rect.width - CommonTrackInfo::Margin) / 2;
+   dest.x = rect.x + rect.width - dest.width;
 }
 
-void GetEffectsBounds( const wxRect & rect, wxRect &dest )
+void GetEffectsRect( const wxRect & rect, wxRect &dest )
 {
-   constexpr int padding = 2;
-   dest.x = rect.x + padding;
-   dest.y = rect.y + padding;
-   dest.width = rect.width - padding * 2;
-   dest.height = rect.height - padding * 2;
+   dest = rect;
 }
 
 void GetWideMuteSoloHorizontalBounds( const wxRect & rect, wxRect &dest )
@@ -189,7 +185,7 @@ void EffectsDrawFunction
 
    wxRect bev = rect;
 
-   GetEffectsBounds( rect, bev );
+   GetEffectsRect( rect, bev );
    {
       auto target = dynamic_cast<EffectsButtonHandle*>( context.target.get() );
       bool hit = target && target->GetTrack().get() == pTrack;
@@ -250,7 +246,7 @@ const TCPLines& PlayableTrackControls::StaticNoteTCPLines()
    std::call_once( flag, []{
       playableTrackTCPLines = CommonTrackInfo::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+      { TCPLine::kItemMute | TCPLine::kItemSolo, MuteSoloButtonHeight, MuteSoloButtonExtra,
          MuteAndSoloDrawFunction },
       } );
    } );
@@ -264,11 +260,11 @@ const TCPLines& PlayableTrackControls::StaticWaveTCPLines()
    std::call_once( flag, []{
       playableTrackTCPLines = CommonTrackInfo::StaticTCPLines();
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-      { TCPLine::kItemMute | TCPLine::kItemSolo, kTrackInfoBtnSize + 1, 0,
+      { TCPLine::kItemMute | TCPLine::kItemSolo, MuteSoloButtonHeight, MuteSoloButtonExtra,
          MuteAndSoloDrawFunction },
       } );
       playableTrackTCPLines.insert( playableTrackTCPLines.end(), {
-      { TCPLine::kItemEffects, kTrackEffectsBtnHeight + 1, 0,
+      { TCPLine::kItemEffects, EffectsButtonHeight, 0,
          EffectsDrawFunction },
       } );
    } );

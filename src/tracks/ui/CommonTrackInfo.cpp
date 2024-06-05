@@ -47,7 +47,7 @@ using TCPLines = TrackInfo::TCPLines;
 static const TCPLines &commonTrackTCPLines()
 {
    static const TCPLines theLines{
-      { TCPLine::kItemBarButtons, kTrackInfoBtnSize, 0,
+      { TCPLine::kItemBarButtons, kTrackInfoTitleHeight, kTrackInfoTitleExtra,
         &CommonTrackInfo::CloseTitleDrawFunction },
    };
    return theLines;
