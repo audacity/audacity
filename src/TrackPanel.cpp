@@ -1176,7 +1176,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
       // This overpaints the track area, but sometimes too the stereo channel
       // separator, so draw at least later than that
 
-      if ( iPass == TrackArtist::PassControls ) {
+      if ( iPass == TrackArtist::PassBorders ) {
          if (mRefinement.size() > 1) {
             // Draw lines separating sub-views
             auto &dc = context.dc;
@@ -1184,6 +1184,7 @@ struct VRulersAndChannels final : TrackPanelGroup {
             auto iter = mRefinement.begin() + 1, end = mRefinement.end();
             for ( ; iter != end; ++iter ) {
                auto yy = iter->first;
+               AColor::Line(dc, rect.x, yy, mLeftOffset - 1, yy);
                AColor::Line( dc, mLeftOffset, yy, rect.GetRight(), yy );
             }
          }
@@ -1193,49 +1194,6 @@ struct VRulersAndChannels final : TrackPanelGroup {
    std::shared_ptr<Channel> mpChannel;
    ChannelView::Refinement mRefinement;
    wxCoord mLeftOffset;
-};
-
-//Simply fills area using specified brush and outlines borders
-class EmptyPanelRect final : public CommonTrackPanelCell
-{
-   //Required to keep selection behaviour similar to others
-   std::shared_ptr<Channel> mpChannel;
-   int mFillBrushName;
-public:
-   /*!
-    @pre `pChannel != nullptr`
-    */
-   explicit EmptyPanelRect(
-      const std::shared_ptr<Channel>& pChannel, int fillBrushName
-   )  : mpChannel{ pChannel }, mFillBrushName{ fillBrushName }
-   {
-   }
-
-   ~EmptyPanelRect() { }
-
-   void Draw(TrackPanelDrawingContext& context,
-      const wxRect& rect, unsigned iPass) override
-   {
-      if (iPass == TrackArtist::PassBackground)
-      {
-         context.dc.SetPen(*wxTRANSPARENT_PEN);
-         AColor::UseThemeColour(&context.dc, mFillBrushName);
-         context.dc.DrawRectangle(rect);
-         wxRect bevel(rect.x, rect.y, rect.width - 1, rect.height - 1);
-         AColor::BevelTrackInfo(context.dc, true, bevel, false);
-      }
-   }
-
-   std::shared_ptr<Track> DoFindTrack() override
-   {
-      return GetTrack(*mpChannel).shared_from_this();
-   }
-
-   std::vector<UIHandlePtr> HitTest(const TrackPanelMouseState& state,
-      const AudacityProject* pProject) override
-   {
-      return {};
-   }
 };
 
 //Simply place children one after another horizontally, without any specific logic
@@ -1275,11 +1233,7 @@ struct ChannelStack final : TrackPanelGroup {
       for (auto pChannel : channels) {
          auto &view = ChannelView::Get(*pChannel);
          if (auto affordance = view.GetAffordanceControls()) {
-            auto panelRect = std::make_shared<EmptyPanelRect>(pChannel,
-               mpTrack->GetSelected()
-                  ? clrTrackInfoSelected : clrTrackInfo);
             Refinement hgroup {
-               std::make_pair(rect.GetLeft() + 1, panelRect),
                std::make_pair(mLeftOffset, affordance)
             };
             refinement
@@ -1310,6 +1264,32 @@ struct ChannelStack final : TrackPanelGroup {
       const wxRect& rect, unsigned iPass) override
    {
       TrackPanelGroup::Draw(context, rect, iPass);
+      if (iPass == TrackArtist::PassTracks)
+      {
+         auto vRulerRect = rect;
+         vRulerRect.width = mLeftOffset - rect.x;
+
+         auto dc = &context.dc;
+
+         // Paint the background;
+         AColor::MediumTrackInfo(dc, mpTrack->GetSelected() );
+         dc->DrawRectangle( vRulerRect );
+
+         const auto channels = mpTrack->Channels();
+         auto& view = ChannelView::Get(**channels.begin());
+         if(auto affordance = view.GetAffordanceControls())
+         {
+            const auto yy = vRulerRect.y + kAffordancesAreaHeight - 1;
+            AColor::Dark( dc, false );
+            AColor::Line( *dc, vRulerRect.GetLeft(), yy, vRulerRect.GetRight(), yy );
+         }
+
+         // Stroke left and right borders
+         dc->SetPen(*wxBLACK_PEN);
+         
+         AColor::Line( *dc, vRulerRect.GetLeftTop(), vRulerRect.GetLeftBottom() );
+         AColor::Line( *dc, vRulerRect.GetRightTop(), vRulerRect.GetRightBottom() );
+      }
       if (iPass == TrackArtist::PassFocus && mpTrack->IsSelected()) {
          const auto channels = mpTrack->Channels();
          const auto pLast = *channels.rbegin();

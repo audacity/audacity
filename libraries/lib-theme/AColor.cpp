@@ -197,6 +197,11 @@ void AColor::Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2)
    Lines( dc, 2, points );
 }
 
+void AColor::Line(wxDC& dc, const wxPoint& from, const wxPoint& to)
+{
+   Line( dc, from.x, from.y, to.x, to.y);
+}
+
 // Draw lines, INCLUSIVE of all endpoints
 void AColor::Lines(wxDC &dc, size_t nPoints, const wxPoint points[])
 {

@@ -42,6 +42,7 @@ class THEME_API AColor {
    // Draw a line, INCLUSIVE of both endpoints
    // (unlike what wxDC::DrawLine() documentation specifies)
    static void Line(wxDC & dc, wxCoord x1, wxCoord y1, wxCoord x2, wxCoord y2);
+   static void Line(wxDC & dc, const wxPoint &from, const wxPoint &to);
 
    // Draw lines, INCLUSIVE of all endpoints
    static void Lines(wxDC &dc, size_t nPoints, const wxPoint points[]);
