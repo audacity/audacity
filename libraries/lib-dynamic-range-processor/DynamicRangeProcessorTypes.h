@@ -22,6 +22,8 @@ struct DynamicRangeProcessorOutputPacket
    int numSamples = 0;
    float targetCompressionDb = 0;
    float actualCompressionDb = 0;
+   float inputDb = 0;
+   float outputDb = 0;
 };
 
 using DynamicRangeProcessorOutputPacketQueue =
@@ -56,7 +58,10 @@ constexpr double limiterLookaheadMsDefault = 1;
 constexpr double limiterReleaseMsDefault = 20;
 constexpr double limiterMaxLookaheadMs = 50;
 
-constexpr double showGraphDefault = 0;
+constexpr double showInputDefault = 1;
+constexpr double showOutputDefault = 1;
+constexpr double showOvershootDefault = 0;
+constexpr double showUndershootDefault = 0;
 
 struct CompressorSettings
 {
@@ -67,7 +72,10 @@ struct CompressorSettings
    double lookaheadMs = compressorLookaheadMsDefault;
    double attackMs = compressorAttackMsDefault;
    double releaseMs = compressorReleaseMsDefault;
-   double showGraph = showGraphDefault;
+   double showInput = showInputDefault;
+   double showOutput = showOutputDefault;
+   double showOvershoot = showOvershootDefault;
+   double showUndershoot = showUndershootDefault;
 };
 
 struct LimiterSettings
@@ -77,7 +85,10 @@ struct LimiterSettings
    double kneeWidthDb = limiterKneeWidthDbDefault;
    double lookaheadMs = limiterLookaheadMsDefault;
    double releaseMs = limiterReleaseMsDefault;
-   double showGraph = showGraphDefault;
+   double showInput = showInputDefault;
+   double showOutput = showOutputDefault;
+   double showOvershoot = showOvershootDefault;
+   double showUndershoot = showUndershootDefault;
 };
 
 struct DynamicRangeProcessorSettings
@@ -91,7 +102,10 @@ struct DynamicRangeProcessorSettings
        , lookaheadMs { compressorSettings.lookaheadMs }
        , attackMs { compressorSettings.attackMs }
        , releaseMs { compressorSettings.releaseMs }
-       , showGraph { compressorSettings.showGraph }
+       , showInput { compressorSettings.showInput }
+       , showOutput { compressorSettings.showOutput }
+       , showOvershoot { compressorSettings.showOvershoot }
+       , showUndershoot { compressorSettings.showUndershoot }
    {
    }
 
@@ -103,7 +117,10 @@ struct DynamicRangeProcessorSettings
        , lookaheadMs { limiterSettings.lookaheadMs }
        , attackMs { 0. }
        , releaseMs { limiterSettings.releaseMs }
-       , showGraph { limiterSettings.showGraph }
+       , showInput { limiterSettings.showInput }
+       , showOutput { limiterSettings.showOutput }
+       , showOvershoot { limiterSettings.showOvershoot }
+       , showUndershoot { limiterSettings.showUndershoot }
    {
    }
 
@@ -114,7 +131,10 @@ struct DynamicRangeProcessorSettings
    double lookaheadMs;
    double attackMs;
    double releaseMs;
-   double showGraph;
+   double showInput;
+   double showOutput;
+   double showOvershoot;
+   double showUndershoot;
 };
 
 constexpr bool operator==(
@@ -126,7 +146,10 @@ constexpr bool operator==(
           lhs.kneeWidthDb == rhs.kneeWidthDb &&
           lhs.compressionRatio == rhs.compressionRatio &&
           lhs.lookaheadMs == rhs.lookaheadMs && lhs.attackMs == rhs.attackMs &&
-          lhs.releaseMs == rhs.releaseMs && lhs.showGraph == rhs.showGraph;
+          lhs.releaseMs == rhs.releaseMs && lhs.showInput == rhs.showInput &&
+          lhs.showOutput == rhs.showOutput &&
+          lhs.showOvershoot == rhs.showOvershoot &&
+          lhs.showUndershoot == rhs.showUndershoot;
 }
 
 constexpr bool operator!=(

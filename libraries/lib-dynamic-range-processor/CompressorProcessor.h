@@ -28,11 +28,12 @@ public:
    struct FrameStats
    {
       float maxInputSampleDb = -std::numeric_limits<float>::infinity();
-      float dbAttenuationOfMaxInputSample = 0;
+      float dbGainOfMaxInputSample = 0;
    };
 
    static float
    GetMaxCompressionDb(const DynamicRangeProcessorSettings& settings);
+   static float GetMakeupGainDb(const DynamicRangeProcessorSettings& settings);
    static float EvaluateTransferFunction(
       const DynamicRangeProcessorSettings& settings, float inputDb);
 

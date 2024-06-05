@@ -85,8 +85,27 @@ public:
       1
    };
 
-   static constexpr CompressorParameter showGraph {
-      &CompressorSettings::showGraph, L"showGraph", showGraphDefault, 0, 1, 1
+   static constexpr CompressorParameter showInput {
+      &CompressorSettings::showInput, L"showInput", showInputDefault, 0, 1, 1
+   };
+   static constexpr CompressorParameter showOutput {
+      &CompressorSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
+   };
+   static constexpr CompressorParameter showOvershoot {
+      &CompressorSettings::showOvershoot,
+      L"showOvershoot",
+      showOvershootDefault,
+      0,
+      1,
+      1
+   };
+   static constexpr CompressorParameter showUndershoot {
+      &CompressorSettings::showUndershoot,
+      L"showUndershoot",
+      showUndershootDefault,
+      0,
+      1,
+      1
    };
 
 private:

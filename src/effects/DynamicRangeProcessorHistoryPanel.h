@@ -15,6 +15,7 @@
 #include "wxPanelWrapper.h"
 #include <chrono>
 #include <optional>
+#include <wx/geometry.h>
 #include <wx/timer.h>
 
 class CompressorInstance;
@@ -24,8 +25,9 @@ class wxEraseEvent;
 class DynamicRangeProcessorHistoryPanel final : public wxPanelWrapper
 {
 public:
-   static constexpr auto minHeight = 120;
-   static constexpr auto minRangeDb = 10.f;
+   static constexpr auto minWidth = 600;
+   static constexpr auto minHeight = 270;
+   static constexpr auto minRangeDb = 20.f;
 
    DynamicRangeProcessorHistoryPanel(
       wxWindow* parent, wxWindowID winid, CompressorInstance& instance,
@@ -37,6 +39,12 @@ public:
       const std::chrono::steady_clock::time_point start;
       std::chrono::steady_clock::time_point now;
    };
+
+   // For now no-opt functions, but there are plans to add visibility toggles.
+   void ShowInput(bool show);
+   void ShowOutput(bool show);
+   void ShowOvershoot(bool show);
+   void ShowUndershoot(bool show);
 
    DECLARE_EVENT_TABLE();
 
@@ -59,5 +67,14 @@ private:
    const Observer::Subscription mRealtimeResumeSubscription;
    wxTimer mTimer;
    std::optional<ClockSynchronization> mSync;
+   std::vector<double> mX;
+   std::vector<wxPoint2DDouble> mTarget; // Compression
+   std::vector<wxPoint2DDouble> mActual; // Compression
+   std::vector<wxPoint2DDouble> mInput;
+   std::vector<wxPoint2DDouble> mOutput;
    bool mPlaybackAboutToStart = false;
+   bool mShowInput = true;
+   bool mShowOutput = true;
+   bool mShowOvershoot = true;
+   bool mShowUndershoot = true;
 };

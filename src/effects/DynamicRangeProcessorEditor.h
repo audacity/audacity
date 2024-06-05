@@ -128,7 +128,9 @@ private:
 
    bool ValidateUI() final override;
    bool UpdateUI() final override;
-   void OnCheckbox(bool checked);
+   void OnCheckbox(
+      bool newVal, double& setting,
+      void (DynamicRangeProcessorHistoryPanel::*)(bool));
 
    struct HistoryPanels
    {
@@ -139,5 +141,7 @@ private:
    wxWeakRef<wxWindow> mUIParent;
    std::vector<ExtendedCompressorParameter> mParameters;
    wxDialog& mTopLevelParent;
+   CompressorInstance& mCompressorInstance;
+   const bool mIsRealtime;
    int mFullHeight { 0 };
 };

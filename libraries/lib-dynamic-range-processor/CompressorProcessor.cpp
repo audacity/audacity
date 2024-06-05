@@ -16,13 +16,11 @@
 #include <algorithm>
 #include <cassert>
 
-namespace
-{
-float GetMakeupGainDb(const DynamicRangeProcessorSettings& settings)
+float CompressorProcessor::GetMakeupGainDb(
+   const DynamicRangeProcessorSettings& settings)
 {
    return settings.outCompressionThreshDb - settings.inCompressionThreshDb;
 }
-} // namespace
 
 float CompressorProcessor::GetMaxCompressionDb(
    const DynamicRangeProcessorSettings& settings)
@@ -121,7 +119,7 @@ void CompressorProcessor::Process(
       if (mLastFrameStats.maxInputSampleDb < blockMaxDb)
       {
          mLastFrameStats.maxInputSampleDb = blockMaxDb;
-         mLastFrameStats.dbAttenuationOfMaxInputSample =
+         mLastFrameStats.dbGainOfMaxInputSample =
             mEnvelope[delayedInputAbsMaxIndex];
       }
 

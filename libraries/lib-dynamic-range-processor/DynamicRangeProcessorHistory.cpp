@@ -43,12 +43,9 @@ void DynamicRangeProcessorHistory::Push(
       return;
 
    // Some packets can go lost in the transmission from audio to main thread.
-   constexpr auto discontinuityThresholdSeconds = 0.5;
-   const auto isContinuous =
-      mExpectedNextPacketFirstSampleIndex.has_value() &&
-      firstPacketToInsertIt->indexOfFirstSample <=
-         *mExpectedNextPacketFirstSampleIndex +
-            static_cast<long long>(discontinuityThresholdSeconds * mSampleRate);
+   const auto isContinuous = mExpectedNextPacketFirstSampleIndex.has_value() &&
+                             firstPacketToInsertIt->indexOfFirstSample ==
+                                *mExpectedNextPacketFirstSampleIndex;
    if (mSegments.empty() || mBeginNewSegment || !isContinuous)
    {
       mSegments.emplace_back();
@@ -63,7 +60,8 @@ void DynamicRangeProcessorHistory::Push(
       firstPacketToInsertIt, packets.end(), std::back_inserter(lastSegment),
       [&](const auto& packet) -> Packet {
          const auto t = GetPacketTime(packet);
-         return { t, packet.targetCompressionDb, packet.actualCompressionDb };
+         return { t, packet.targetCompressionDb, packet.actualCompressionDb,
+                  packet.inputDb, packet.outputDb };
       });
 
    // Clean up older packets.
@@ -77,7 +75,7 @@ void DynamicRangeProcessorHistory::Push(
       [lastTime](const Packet& packet) {
          // Extend a little bit the time window, to avoid the extremities of a
          // display to tremble.
-         return lastTime - packet.time < maxTimeSeconds * 1.1f;
+         return lastTime - packet.time < maxTimeSeconds + 1.f;
       });
    firstSegment.erase(firstSegment.begin(), it);
 

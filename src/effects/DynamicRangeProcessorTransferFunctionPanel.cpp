@@ -28,9 +28,42 @@ DynamicRangeProcessorTransferFunctionPanel::
 
 namespace
 {
-template <typename V, typename Ctx>
+constexpr auto WidthPxToDb(double x, int width, double xPixelsPerDb)
+{
+   return (x + 1 - width) / xPixelsPerDb;
+}
+
+constexpr auto WidthDbToPx(double db, int width, double xPixelsPerDb)
+{
+   return width - 1 + db * xPixelsPerDb;
+}
+
+constexpr auto HeightDbToPx(double db, double yPixelsPerDb)
+{
+   return -db * yPixelsPerDb;
+}
+
+auto GetBrush(
+   double kneeX, double kneeY, const wxColor& colorAtKnee, const wxSize& size,
+   const wxGraphicsContext& gc)
+{
+   using namespace DynamicRangeProcessorPanel;
+   constexpr auto w = .75;
+   const wxColor edgeColor(
+      backgroundColor.Red() * w + colorAtKnee.Red() * (1 - w),
+      backgroundColor.Green() * w + colorAtKnee.Green() * (1 - w),
+      backgroundColor.Blue() * w + colorAtKnee.Blue() * (1 - w),
+      backgroundColor.Alpha() * w + colorAtKnee.Alpha() * (1 - w));
+
+   const auto xf = size.GetWidth() / 2.; // "f" for "focus"
+   const auto yf = size.GetHeight() / 2.;
+   const auto radius = size.GetWidth();
+   return gc.CreateRadialGradientBrush(
+      kneeX, kneeY, xf, yf, radius, colorAtKnee, edgeColor);
+}
+
 void DrawTransferFunction(
-   Ctx& ctx, const wxSize& panelSize, const CompressorSettings& settings)
+   wxPaintDC& dc, const wxSize& panelSize, const CompressorSettings& settings)
 {
    const auto X = panelSize.x;
    const auto Y = panelSize.y;
@@ -39,41 +72,61 @@ void DrawTransferFunction(
    const auto yPixelsPerDb =
       1.f * Y / DynamicRangeProcessorTransferFunctionPanel::rangeDb;
 
-   ctx.SetPen(wxPen(
-      theTheme.Colour(clrGraphLines),
-      DynamicRangeProcessorPanel::transferFunctionLineWidth));
-   std::vector<V> points;
+   std::vector<wxPoint2DDouble> points;
    points.reserve(X);
    for (int x = 0; x < X; ++x)
    {
-      const auto db = 1.f * (x + 1 - X) / xPixelsPerDb;
-      const int y = std::round(
-         -CompressorProcessor::EvaluateTransferFunction(settings, db) *
+      const auto db = WidthPxToDb(x, X, xPixelsPerDb);
+      const auto y = HeightDbToPx(
+         CompressorProcessor::EvaluateTransferFunction(settings, db),
          yPixelsPerDb);
       points.emplace_back(x, y);
    }
-   ctx.DrawLines(X, points.data());
+
+   using namespace DynamicRangeProcessorPanel;
+
+   const auto gc = MakeGraphicsContext(dc);
+
+   const auto kneeX = WidthDbToPx(settings.thresholdDb, X, xPixelsPerDb);
+   const auto kneeY =
+      HeightDbToPx(settings.thresholdDb + settings.makeupGainDb, yPixelsPerDb);
+
+   // Fill the area above the curve
+   wxGraphicsPath path = gc->CreatePath();
+   path.MoveToPoint(X, 0);
+   path.AddLineToPoint(0, 0);
+   std::for_each(points.begin(), points.end(), [&path](const auto& point) {
+      path.AddLineToPoint(point);
+   });
+   path.CloseSubpath();
+   gc->SetBrush(GetBrush(kneeX, kneeY, attackColor, panelSize, *gc));
+   gc->FillPath(path);
+
+   // Fill the area below the curve
+   path = gc->CreatePath();
+   path.MoveToPoint(X, Y);
+   path.AddLineToPoint(0, Y);
+   std::for_each(points.begin(), points.end(), [&path](const auto& point) {
+      path.AddLineToPoint(point);
+   });
+   path.CloseSubpath();
+   gc->SetBrush(GetBrush(kneeX, kneeY, releaseColor, panelSize, *gc));
+   gc->FillPath(path);
+
+   // Draw the curve
+   const auto gc2 = MakeGraphicsContext(dc);
+   gc2->SetPen(lineColor);
+   gc2->DrawLines(points.size(), points.data());
 }
 } // namespace
 
 void DynamicRangeProcessorTransferFunctionPanel::OnPaint(wxPaintEvent& evt)
 {
    wxPaintDC dc(this);
-   dc.Clear();
-
-   dc.SetBrush(*wxWHITE_BRUSH);
-   dc.SetPen(wxPen(*wxBLACK));
+   DrawTransferFunction(dc, GetSize(), mCompressorSettings);
+   dc.SetPen(DynamicRangeProcessorPanel::lineColor);
+   dc.SetBrush(*wxTRANSPARENT_BRUSH);
    dc.DrawRectangle(GetSize());
-
-   // If a graphics context is available, use it for anti-aliasing.
-   if (std::unique_ptr<wxGraphicsContext> gc { wxGraphicsContext::Create(dc) })
-   {
-      gc->SetAntialiasMode(wxANTIALIAS_DEFAULT);
-      DrawTransferFunction<wxPoint2DDouble>(
-         *gc, GetSize(), mCompressorSettings);
-   }
-   else
-      DrawTransferFunction<wxPoint>(dc, GetSize(), mCompressorSettings);
 }
 
 void DynamicRangeProcessorTransferFunctionPanel::OnSize(wxSizeEvent& evt)

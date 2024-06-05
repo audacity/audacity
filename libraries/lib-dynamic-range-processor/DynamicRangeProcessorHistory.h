@@ -25,9 +25,11 @@ public:
       float time = 0.f;
       float target = 0.f;
       float follower = 0.f;
+      float input = 0.f;
+      float output = 0.f;
    };
 
-   static constexpr auto maxTimeSeconds = 5.f;
+   static constexpr auto maxTimeSeconds = 2.5f;
 
    using Segment = std::vector<Packet>;
 

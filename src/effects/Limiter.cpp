@@ -29,7 +29,9 @@ const EffectParameterMethods& EffectLimiter::Parameters() const
    static CapturedParameters<
       EffectLimiter, LimiterEditor::thresholdDb, LimiterEditor::makeupTargetDb,
       LimiterEditor::kneeWidthDb, LimiterEditor::lookaheadMs,
-      LimiterEditor::releaseMs, LimiterEditor::showGraph>
+      LimiterEditor::releaseMs, LimiterEditor::showInput,
+      LimiterEditor::showOutput, LimiterEditor::showOvershoot,
+      LimiterEditor::showUndershoot>
       parameters;
    return parameters;
 }
