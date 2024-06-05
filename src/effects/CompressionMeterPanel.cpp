@@ -131,7 +131,7 @@ void CompressionMeterPanel::PaintRectangle(
    const auto text = label.Translation();
    const auto t = dc.GetTextExtent(text);
    const auto x = left + (width + t.GetHeight()) / 2;
-   const auto y = (height - t.GetWidth()) / 2;
+   const auto y = height - t.GetWidth() - 5;
    dc.DrawRotatedText(text, x, y, 270);
 
    gc->SetPen(lineColor);
