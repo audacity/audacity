@@ -116,6 +116,10 @@ set( IMAGE_LIST
    SyncLockTracksDisabled.png
    SyncLockTracksDown.png
    SyncLockTracksUp.png
+   TCPChevron.png
+   TCPChevronDown.png
+   TCPClose.png
+   TCPEllipses.png
    TimeCursor.png
    TnAutomateSelection.png
    TnAutomateSelectionDisabled.png

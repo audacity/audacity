@@ -257,6 +257,12 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE(pitchDownIndicator, wxImage(12, 12), wxT("PitchDownIndicator"));
    DEFINE_IMAGE(speedIndicator, wxImage(12, 12), wxT("speedIndicator"));
 
+   SET_THEME_FLAGS( resFlagNewLine );
+   DEFINE_IMAGE(tcpClose, wxImage(16, 16), wxT("TCPClose"));
+   DEFINE_IMAGE(tcpChevron, wxImage(16, 16), wxT("TCPChevron"));
+   DEFINE_IMAGE(tcpChevronDown, wxImage(16, 16), wxT("TCPChevronDown"));
+   DEFINE_IMAGE(tcpEllipses, wxImage(16, 16), wxT("TCPEllipses"))
+
    //SET_THEME_FLAGS(  resFlagNewLine  );
 
 
