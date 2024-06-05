@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include "DynamicRangeProcessorTypes.h"
 #include "LockFreeQueue.h"
 #include "Observer.h"
 #include "wxPanelWrapper.h"
@@ -17,6 +18,7 @@
 #include <wx/timer.h>
 
 class CompressorInstance;
+class wxPaintDC;
 
 class CompressionMeterPanel final : public wxPanelWrapper
 {
@@ -35,6 +37,9 @@ private:
    static constexpr auto ringBufferLength = displayDelayMs / timerPeriodMs;
 
    void Reset();
+   void PaintRectangle(
+      wxPaintDC& dc, const wxRect& rect, double value, double& yMax,
+      const TranslatableString& label);
 
    void OnPaint(wxPaintEvent& evt);
    void OnTimer(wxTimerEvent& evt);
@@ -43,13 +48,14 @@ private:
    // So that wxPanel is not included in Tab traversal - see wxWidgets bug 15581
    bool AcceptsFocusFromKeyboard() const override;
 
-   CompressorInstance& mCompressorInstance;
-   const std::shared_ptr<LockFreeQueue<float>> mCompressionValueQueue;
+   const std::shared_ptr<DynamicRangeProcessorMeterValuesQueue>
+      mMeterValuesQueue;
    const Observer::Subscription mPlaybackStartStopSubscription;
    wxTimer mTimer;
-   double mSmoothedCompressionDb = 0;
+   MeterValues mSmoothedValues;
    bool mStopWhenZero = false;
    double mCompressionYMax = 0;
+   double mOutputYMax = 0;
    std::array<double, ringBufferLength> mCompressionRingBuffer;
    size_t mCompressionRingBufferIndex = 0;
 };

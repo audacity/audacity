@@ -29,6 +29,14 @@ struct DynamicRangeProcessorOutputPacket
 using DynamicRangeProcessorOutputPacketQueue =
    LockFreeQueue<DynamicRangeProcessorOutputPacket>;
 
+struct MeterValues
+{
+   float compressionGainDb = 0;
+   float outputDb = 0;
+};
+
+using DynamicRangeProcessorMeterValuesQueue = LockFreeQueue<MeterValues>;
+
 struct InitializeProcessingSettings
 {
    explicit InitializeProcessingSettings(double sampleRate)
