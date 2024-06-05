@@ -1,5 +1,7 @@
 #include "au3project.h"
 
+#include "global/defer.h"
+
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
@@ -60,14 +62,25 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     std::string sstr = filePath.toStdString();
     FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
     auto conn = projectFileIO.LoadProject(fileName, true);
+
+    muse::Defer([&conn]() {
+        conn->Commit();
+    });
+
     const bool bParseSuccess = conn.has_value();
     if (!bParseSuccess) {
         LOGE() << "failed load project: " << filePath;
+        return false;
     }
 
-    conn->Commit();
+    //! TODO Look like, need doing all from method  ProjectFileManager::FixTracks
+    //! and maybe what is done before this method (ProjectFileManager::ReadProjectFile)
+    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    for (auto pTrack : tracks) {
+        pTrack->LinkConsistencyFix();
+    }
 
-    return bParseSuccess;
+    return true;
 }
 
 bool Au3Project::save(const muse::io::path_t& filePath, const bool fromSaveAs)
