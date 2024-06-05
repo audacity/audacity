@@ -6,6 +6,7 @@
 
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
+#include "async/asyncable.h"
 
 #include "timeformat.h"
 #include "timelinecontext.h"
@@ -20,7 +21,7 @@ struct TickInfo {
 using Ticks = QVector<TickInfo>;
 
 class QPainter;
-class TimelineRuler : public QQuickPaintedItem
+class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
 {
     Q_OBJECT
 

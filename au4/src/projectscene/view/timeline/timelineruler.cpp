@@ -20,6 +20,7 @@ constexpr int LABEL_INTERVAL = 5;
 TimelineRuler::TimelineRuler(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
+    uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
 }
 
 void TimelineRuler::paint(QPainter* painter)
