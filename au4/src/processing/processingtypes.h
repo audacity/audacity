@@ -25,6 +25,10 @@ struct ClipKey
 {
     TrackId trackId = -1;
     size_t index = muse::nidx;
+
+    ClipKey() = default;
+    ClipKey(const TrackId t, const size_t i)
+        : trackId(t), index(i) {}
 };
 
 struct AudioOutputParams {

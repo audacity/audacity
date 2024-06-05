@@ -37,16 +37,25 @@ Item {
         delegate: ClipItem {
 
             height: parent.height
-            width: model.clipWidthData
-            x: model.clipLeftData
-
-            title: model.clipTitleData
+            width: model.clipWidth
+            x: model.clipLeft
 
             context: root.context
-            clipKey: model.clipKeyData
+            title: model.clipTitle
+            clipColor: model.clipColor
+            clipKey: model.clipKey
+            clipActive: clipsModel.activeClipIdx === model.index
 
             onPositionChanged: function(x) {
-                model.clipLeftData = x
+                model.clipLeft = x
+            }
+
+            onRequestAboutActive: {
+                clipsModel.selectClip(model.index)
+            }
+
+            onTitleEdited: function(newTitle) {
+                model.clipTitle = newTitle
             }
         }
     }
@@ -55,7 +64,7 @@ Item {
         id: clipsSelection
 
         anchors.fill: parent
-        anchors.topMargin: 20 // clip header height
+       // anchors.topMargin: 20 // clip header height
 
         onSelected: function(x1, x2) {
             clipsModel.onSelected(x1, x2)

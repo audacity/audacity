@@ -16,6 +16,8 @@ class WaveView : public QQuickPaintedItem
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
+    Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
+    Q_PROPERTY(bool clipActive READ clipActive WRITE setClipActive NOTIFY clipActiveChanged FINAL)
 
     //! NOTE In a static position, the slip start time corresponds,
     //! but it can change while dragging the clip, with the not changing start time
@@ -29,26 +31,36 @@ public:
     WaveView(QQuickItem* parent = nullptr);
     ~WaveView() override;
 
-    ClipKey clipKey() const;
-    void setClipKey(const ClipKey& newClipKey);
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
+    ClipKey clipKey() const;
+    void setClipKey(const ClipKey& newClipKey);
+    QColor clipColor() const;
+    void setClipColor(const QColor& newClipColor);
     double clipLeft() const;
     void setClipLeft(double newClipLeft);
 
     void paint(QPainter* painter) override;
 
+    bool clipActive() const;
+    void setClipActive(bool newClipActive);
+
 signals:
-    void clipKeyChanged();
     void timelineContextChanged();
+    void clipKeyChanged();
+    void clipColorChanged();
     void clipLeftChanged();
+
+    void clipActiveChanged();
 
 private:
 
     void onFrameTimeChanged();
 
-    ClipKey m_clipKey;
     TimelineContext* m_context = nullptr;
+    ClipKey m_clipKey;
+    QColor m_clipColor;
     double m_clipLeft = 0;
+    bool m_clipActive = false;
 };
 }
