@@ -103,7 +103,9 @@ private:
    void PopulateLimiterUpperHalf(ShuttleGui& S);
    void PopulateCompressorUpperHalf(
       ShuttleGui& S, const CompressorSettings& compressorSettings);
-   void AddSliders(ShuttleGui& S);
+   void AddCompressionCurvePanel(ShuttleGui& S, const CompressorSettings&);
+   void AddSliderSpaceAndMeterColums(ShuttleGui& S);
+   void AddSliderPanel(ShuttleGui& S);
 
    virtual const CompressorSettings* GetCompressorSettings() const
    {
