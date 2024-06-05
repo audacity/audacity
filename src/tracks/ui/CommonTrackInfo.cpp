@@ -34,6 +34,7 @@ Paul Licameli split from TrackInfo.cpp
 #include "SyncLock.h"
 #include "Theme.h"
 #include "Track.h"
+#include "TrackArt.h"
 #include "TrackControls.h"
 #include "TrackPanelDrawingContext.h"
 #include "UIHandle.h"
@@ -60,6 +61,8 @@ const TCPLines &CommonTrackInfo::StaticTCPLines()
 
 namespace {
 
+   constexpr auto Padding = 2;
+
 int totalTCPLines( const TCPLines &lines, bool omitLastExtra )
 {
    int total = 0;
@@ -81,8 +84,8 @@ namespace {
 const TrackInfo::TCPLine defaultCommonTrackTCPBottomLines[] = {
    // The '0' avoids impinging on bottom line of TCP
    // Use -1 if you do want to do so.
-   { TCPLine::kItemSyncLock | TCPLine::kItemMinimize, kTrackInfoBtnSize, 0,
-     &CommonTrackInfo::MinimizeSyncLockDrawFunction },
+   { TCPLine::kItemSyncLock, kTrackInfoBtnSize, 0,
+     &CommonTrackInfo::SyncLockDrawFunction },
 };
 TCPLines commonTrackTCPBottomLines{ RANGE(defaultCommonTrackTCPBottomLines) };
 
@@ -219,113 +222,87 @@ void CommonTrackInfo::DrawCloseButton(
    //   bev.Inflate(-1, -1);*/
 }
 
+namespace
+{
+   void DrawToolButtonBackground(TrackPanelDrawingContext &context, const wxRect& rect, bool captured)
+   {
+      const auto hovered = rect.Contains( context.lastState.GetPosition());
+      if(captured && hovered)
+         AColor::DrawFrame(context.dc, rect, theTheme.Bitmap(bmpHiliteButtonSmall), 11);
+      else if(hovered)
+         AColor::DrawFrame(context.dc, rect, theTheme.Bitmap(bmpHiliteUpButtonSmall), 11);
+   }
+}
+
 void CommonTrackInfo::CloseTitleDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto dc = &context.dc;
-   bool selected = pTrack ? pTrack->GetSelected() : true;
-   {
+   const auto dc = &context.dc;
+
+   const auto target = context.target.get();
+   const auto hit = target && target->FindTrack().get() == pTrack;
+   const auto captured = hit && target->IsDragging();
+
+   {  //close button
       wxRect bev = rect;
       GetCloseBoxHorizontalBounds( rect, bev );
-      auto target = context.target.get();
-      DrawCloseButton(context, bev,
-         (*pTrack->Channels().begin()).get(), target);
+
+      DrawToolButtonBackground(context, bev, captured);
+
+      dc->DrawBitmap(theTheme.Bitmap(tcpClose), bev.GetLeftTop());
    }
 
-   {
+   {  //track title
       wxRect bev = rect;
-      GetTitleBarHorizontalBounds( rect, bev );
-      auto target = context.target.get();
-      bool hit = target &&
-         target->FindTrack().get() == pTrack;
-      bool captured = hit && target->IsDragging();
-      bool down = captured && bev.Contains( context.lastState.GetPosition());
-      wxString titleStr =
-         pTrack ? pTrack->GetName() : _("Name");
+      GetTrackTitleHorizontalBounds( rect, bev );
+      const auto titleStr = TrackArt::TruncateText(*dc,
+         pTrack ? pTrack->GetName() : _("Name"), bev.width);
 
-      //bev.Inflate(-1, -1);
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
-
-      // Draw title text
       TrackInfo::SetTrackInfoFont(dc);
+      const auto metrics = dc->GetFontMetrics();
 
-      // Bug 1660 The 'k' of 'Audio Track' was being truncated.
-      // Constant of 32 found by counting pixels on a windows machine.
-      // I believe it's the size of the X close button + the size of the 
-      // drop down arrow.
-      int allowableWidth = rect.width - 32;
-
-      wxCoord textWidth, textHeight;
-      dc->GetTextExtent(titleStr, &textWidth, &textHeight);
-      while (textWidth > allowableWidth) {
-         titleStr = titleStr.Left(titleStr.length() - 1);
-         dc->GetTextExtent(titleStr, &textWidth, &textHeight);
-      }
-
-      // Pop-up triangle
-      wxColour c = theTheme.Colour( clrTrackPanelText );
-
-      // wxGTK leaves little scraps (antialiasing?) of the
-      // characters if they are repeatedly drawn.  This
-      // happens when holding down mouse button and moving
-      // in and out of the title bar.  So clear it first.
-   //   AColor::MediumTrackInfo(dc, t->GetSelected());
-   //   dc->DrawRectangle(bev);
-
-      dc->SetTextForeground( c );
+      dc->SetTextForeground( theTheme.Colour( clrTrackPanelText ) );
       dc->SetTextBackground( wxTRANSPARENT );
-      dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - textHeight) / 2);
-
-
-
-      dc->SetPen(c);
-      dc->SetBrush(c);
-
-      int s = 10; // Width of dropdown arrow...height is half of width
-      AColor::Arrow(*dc,
-                    bev.GetRight() - s - 3, // 3 to offset from right border
-                    bev.y + ((bev.height - (s / 2)) / 2),
-                    s);
+      dc->DrawText(titleStr, bev.x + 2, bev.y + (bev.height - (metrics.ascent + metrics.descent)) / 2);
 
    }
+
+   {  //minimize button
+      const auto minimized =
+         pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
+
+      wxRect bev = rect;
+      GetMinimizeHorizontalBounds(rect, bev);
+
+      DrawToolButtonBackground(context, bev, captured);
+
+      dc->DrawBitmap(
+         minimized
+            ? theTheme.Bitmap(tcpChevronDown)
+            : theTheme.Bitmap(tcpChevron),
+         bev.GetLeftTop());
+
+   }
+
+   {  //track menu button
+      wxRect bev = rect;
+      GetTrackMenuButtonBounds(rect, bev);
+
+      DrawToolButtonBackground(context, bev, captured);
+
+      dc->DrawBitmap(theTheme.Bitmap(tcpEllipses), bev.GetLeftTop());
+   }
+
 }
 
-void CommonTrackInfo::MinimizeSyncLockDrawFunction
+void CommonTrackInfo::SyncLockDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
    auto dc = &context.dc;
-   bool selected = pTrack ? pTrack->GetSelected() : true;
    bool syncLockSelected =
       pTrack ? SyncLock::IsSyncLockSelected(*pTrack) : true;
-   bool minimized =
-      pTrack ? ChannelView::Get(*pTrack->GetChannel(0)).GetMinimized() : false;
-   {
-      wxRect bev = rect;
-      GetMinimizeHorizontalBounds(rect, bev);
-      auto target = context.target.get();
-      bool hit = target && target->FindTrack().get() == pTrack;
-      bool captured = hit && target->IsDragging();
-      bool down = captured && bev.Contains( context.lastState.GetPosition());
-
-      // Clear background to get rid of previous arrow
-      //AColor::MediumTrackInfo(dc, t->GetSelected());
-      //dc->DrawRectangle(bev);
-
-      AColor::Bevel2(*dc, !down, bev, selected, hit);
-
-      wxColour c = theTheme.Colour(clrTrackPanelText);
-      dc->SetBrush(c);
-      dc->SetPen(c);
-
-      AColor::Arrow(*dc,
-                    bev.x - 5 + bev.width / 2,
-                    bev.y - 2 + bev.height / 2,
-                    10,
-                    minimized);
-   }
-
 
    // Draw the sync-lock indicator if this track is in a sync-lock selected group.
    if (syncLockSelected)
@@ -345,7 +322,7 @@ void CommonTrackInfo::MinimizeSyncLockDrawFunction
 void CommonTrackInfo::GetCloseBoxHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    dest.x = rect.x;
-   dest.width = kTrackInfoBtnSize;
+   dest.width = ToolButtonSize;
 }
 
 void CommonTrackInfo::GetCloseBoxRect(const wxRect & rect_, wxRect & dest)
@@ -357,19 +334,21 @@ void CommonTrackInfo::GetCloseBoxRect(const wxRect & rect_, wxRect & dest)
    dest.height = results.second;
 }
 
-void CommonTrackInfo::GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest )
+void CommonTrackInfo::GetTrackTitleHorizontalBounds( const wxRect & rect, wxRect &dest )
 {
    // to right of CloseBoxRect, plus a little more
    wxRect closeRect;
+   wxRect minRect;
    GetCloseBoxHorizontalBounds( rect, closeRect );
-   dest.x = rect.x + closeRect.width + 2;
-   dest.width = rect.x + rect.width - dest.x;
+   GetMinimizeHorizontalBounds( rect, minRect );
+   dest.x = rect.x + closeRect.width + Padding;
+   dest.width = minRect.x - closeRect.width - closeRect.x;
 }
 
-void CommonTrackInfo::GetTitleBarRect(const wxRect & rect_, wxRect & dest)
+void CommonTrackInfo::GetTrackTitleRect(const wxRect & rect_, wxRect & dest)
 {
    const auto rect = wxRect(rect_).Deflate(Margin);
-   GetTitleBarHorizontalBounds( rect, dest );
+   GetTrackTitleHorizontalBounds( rect, dest );
    auto results = CalcItemY( commonTrackTCPLines(), TCPLine::kItemBarButtons );
    dest.y = rect.y + results.first;
    dest.height = results.second;
@@ -381,18 +360,25 @@ void CommonTrackInfo::GetSliderHorizontalBounds( const wxRect &rect, wxRect &des
    dest.width = kTrackInfoSliderWidth;
 }
 
-void CommonTrackInfo::GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest )
+void CommonTrackInfo::GetTrackMenuButtonBounds(const wxRect& rect, wxRect& dest)
 {
-   const int space = 0;// was 3.
-   dest.x = rect.x + space;
+   dest.x = rect.x + rect.width - ToolButtonSize;
+   dest.width = ToolButtonSize;
+}
 
-   wxRect syncLockRect;
-   GetSyncLockHorizontalBounds( rect, syncLockRect );
+void CommonTrackInfo::GetTrackMenuButtonRect(const wxRect& rect_, wxRect& dest)
+{
+   const auto rect = wxRect(rect_).Deflate(Margin);
+   GetTrackMenuButtonBounds(rect, dest);
+   auto results = TrackInfo::CalcItemY(commonTrackTCPLines(), TCPLine::kItemBarButtons);
+   dest.y = rect.y + results.first;
+   dest.height = ToolButtonSize;
+}
 
-   // Width is rect.width less space on left for track select
-   // and on right for sync-lock icon.
-   dest.width = kTrackInfoBtnSize;
-// rect.width - (space + syncLockRect.width);
+void CommonTrackInfo::GetMinimizeHorizontalBounds(const wxRect &rect, wxRect &dest )
+{
+   GetTrackMenuButtonBounds(rect, dest);
+   dest.x -= ToolButtonSize + Padding;
 }
 
 void CommonTrackInfo::GetMinimizeRect(const wxRect & rect_, wxRect &dest)
@@ -400,8 +386,8 @@ void CommonTrackInfo::GetMinimizeRect(const wxRect & rect_, wxRect &dest)
    const auto rect = wxRect(rect_).Deflate(Margin);
 
    GetMinimizeHorizontalBounds( rect, dest );
-   const auto results = CalcBottomItemY
-      ( commonTrackTCPBottomLines, TCPLine::kItemMinimize, rect.height);
+   const auto results = CalcItemY
+      ( commonTrackTCPLines(), TCPLine::kItemBarButtons);
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }

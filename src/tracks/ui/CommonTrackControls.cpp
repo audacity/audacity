@@ -267,7 +267,7 @@ unsigned CommonTrackControls::DoContextMenu(
 {
    using namespace RefreshCode;
    wxRect buttonRect;
-   CommonTrackInfo::GetTitleBarRect(rect, buttonRect);
+   CommonTrackInfo::GetTrackMenuButtonRect(rect, buttonRect);
 
    auto track = FindTrack();
    if (!track)
