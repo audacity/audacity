@@ -18,6 +18,7 @@ public:
 
     // context of track
     virtual muse::ValCh<int> trackHeight(const processing::TrackId& trackId) const = 0;
+    virtual muse::ValCh<bool> isTrackCollapsed(const processing::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const processing::TrackId& trackId, int deltaY) = 0;
 };
 

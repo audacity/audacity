@@ -16,8 +16,9 @@ Item {
         anchors.bottom: parent.bottom
 
         visible: false
+        color: "#8EC9FF"
 
-        opacity: 0.4
+        opacity: 0.6
     }
 
     MouseArea {

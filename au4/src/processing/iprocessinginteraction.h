@@ -2,6 +2,8 @@
 
 #include "modularity/imoduleinterface.h"
 
+#include "global/types/retval.h"
+
 #include "processingtypes.h"
 
 namespace au::processing {
@@ -16,5 +18,8 @@ public:
     virtual ~IProcessingInteraction() = default;
 
     virtual bool changeClipStartTime(const ClipKey& clipKey, double sec) = 0;
+
+    virtual muse::ValCh<ClipKey> selectedClip() const = 0;
+    virtual void selectClip(const ClipKey& clipKey) = 0;
 };
 }

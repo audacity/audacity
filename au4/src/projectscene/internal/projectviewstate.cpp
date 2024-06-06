@@ -4,6 +4,7 @@ using namespace au::projectscene;
 
 constexpr int DEFAULT_HEIGHT = 144;
 constexpr int MIN_HEIGHT = 52;
+constexpr int COLLAPSE_HEIGHT = 72;
 
 muse::ValCh<int> ProjectViewState::tracksVericalY() const
 {
@@ -15,29 +16,47 @@ void ProjectViewState::changeTracksVericalY(int deltaY)
     m_tracksVericalY.set(deltaY);
 }
 
+ProjectViewState::TrackData& ProjectViewState::makeTrackData(const processing::TrackId& trackId) const
+{
+    TrackData d;
+    d.height.val = DEFAULT_HEIGHT;
+    d.collapsed.val = false;
+    return m_tracks.insert({ trackId, d }).first->second;
+}
+
 muse::ValCh<int> ProjectViewState::trackHeight(const processing::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
-        return it->second;
+        return it->second.height;
     }
 
-    muse::ValCh<int> val;
-    val.val = DEFAULT_HEIGHT;
-    m_tracks.insert({ trackId, val });
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.height;
+}
 
-    return val;
+muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const processing::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second.collapsed;
+    }
+
+    const ProjectViewState::TrackData& d = makeTrackData(trackId);
+    return d.collapsed;
 }
 
 void ProjectViewState::changeTrackHeight(const processing::TrackId& trackId, int deltaY)
 {
+    TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);
-    if (it == m_tracks.end()) {
-        muse::ValCh<int> val;
-        val.val = DEFAULT_HEIGHT + deltaY;
-        m_tracks.insert({ trackId, val });
+    if (it != m_tracks.end()) {
+        d = &it->second;
     } else {
-        int newVal = std::max(it->second.val + deltaY, MIN_HEIGHT);
-        it->second.set(newVal);
+        d = &makeTrackData(trackId);
     }
+
+    int newVal = std::max(d->height.val + deltaY, MIN_HEIGHT);
+    d->height.set(newVal);
+    d->collapsed.set(newVal < COLLAPSE_HEIGHT);
 }

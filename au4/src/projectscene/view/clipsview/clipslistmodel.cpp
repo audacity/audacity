@@ -28,6 +28,12 @@ void ClipsListModel::load()
         connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
     }
 
+    muse::ValCh<processing::ClipKey> selectedClip = processingInteraction()->selectedClip();
+    selectedClip.ch.onReceive(this, [this](const processing::ClipKey& k) {
+        onSelectedClip(k);
+    });
+    onSelectedClip(selectedClip.val);
+
     beginResetModel();
 
     m_clipList = prj->clipList(m_trackId);
@@ -51,10 +57,11 @@ QHash<int, QByteArray> ClipsListModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
-        { ClipKeyRole, "clipKeyData" },
-        { ClipTitleRole, "clipTitleData" },
-        { ClipWidthRole, "clipWidthData" },
-        { ClipLeftRole, "clipLeftData" }
+        { ClipKeyRole, "clipKey" },
+        { ClipTitleRole, "clipTitle" },
+        { ClipColorRole, "clipColor" },
+        { ClipWidthRole, "clipWidth" },
+        { ClipLeftRole, "clipLeft" }
     };
     return roles;
 }
@@ -74,6 +81,8 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     } break;
     case ClipTitleRole:
         return clip.title.toQString();
+    case ClipColorRole:
+        return clip.color.toQColor();
     case ClipWidthRole: {
         qint64 width = (clip.endTime - clip.startTime) * m_context->zoom();
         return width;
@@ -95,6 +104,9 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
     switch (role) {
     case ClipLeftRole: {
         return changeClipStartTime(index, value);
+    } break;
+    case ClipTitleRole: {
+        LOGDA() << value.toString();
     } break;
     default:
         break;
@@ -121,6 +133,20 @@ bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVarian
 
     bool ok = processingInteraction()->changeClipStartTime(clip.key, sec);
     return ok;
+}
+
+void ClipsListModel::selectClip(int index)
+{
+    processingInteraction()->selectClip(processing::ClipKey(m_trackId, index));
+}
+
+void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
+{
+    if (m_trackId != k.trackId) {
+        setSelectedClipIdx(-1);
+    } else {
+        setSelectedClipIdx(k.index);
+    }
 }
 
 void ClipsListModel::onSelected(double x1, double x2)
@@ -170,4 +196,18 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     }
     m_context = newContext;
     emit timelineContextChanged();
+}
+
+int ClipsListModel::selectedClipIdx() const
+{
+    return m_selectedClipIdx;
+}
+
+void ClipsListModel::setSelectedClipIdx(int newSelectedClipIdx)
+{
+    if (m_selectedClipIdx == newSelectedClipIdx) {
+        return;
+    }
+    m_selectedClipIdx = newSelectedClipIdx;
+    emit selectedClipIdxChanged();
 }

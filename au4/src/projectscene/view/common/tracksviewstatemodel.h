@@ -21,6 +21,7 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
     // context of track
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(int trackHeight READ trackHeight NOTIFY trackHeightChanged FINAL)
+    Q_PROPERTY(bool isTrackCollapsed READ isTrackCollapsed NOTIFY isTrackCollapsedChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
 
@@ -37,6 +38,7 @@ public:
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
     int trackHeight() const;
+    bool isTrackCollapsed() const;
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
@@ -47,6 +49,7 @@ signals:
     // context of track
     void trackIdChanged();
     void trackHeightChanged();
+    void isTrackCollapsedChanged();
 
 private:
 
@@ -58,5 +61,6 @@ private:
     // context of track
     processing::TrackId m_trackId = -1;
     muse::ValCh<int> m_trackHeight;
+    muse::ValCh<bool> m_isTrackCollapsed;
 };
 }

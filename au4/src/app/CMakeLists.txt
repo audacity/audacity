@@ -67,6 +67,7 @@ set(LINK_LIB
     muse::global
     wxwidgets::wxwidgets
 
+    muse::draw
     muse::actions
     muse::ui
     muse::uicomponents

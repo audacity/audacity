@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u0606_2
+  GIT_TAG        u0606_3
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -179,7 +179,7 @@ set(MUSE_MODULE_AUTOBOT OFF)
 set(MUSE_MODULE_CLOUD ON)
 set(MUSE_MODULE_CLOUD_MUSESCORECOM OFF CACHE BOOL "Enable MuseScore.com account" FORCE)
 set(MUSE_MODULE_DIAGNOSTICS OFF)
-set(MUSE_MODULE_DRAW OFF)
+set(MUSE_MODULE_DRAW ON)
 set(MUSE_MODULE_EXTENSIONS OFF)
 set(MUSE_MODULE_GLOBAL ON)
 set(MUSE_MODULE_LANGUAGES ON)

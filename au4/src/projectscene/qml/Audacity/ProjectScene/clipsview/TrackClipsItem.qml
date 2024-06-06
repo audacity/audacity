@@ -15,7 +15,6 @@ Item {
     signal interactionEnded()
 
     height: trackViewState.trackHeight
-    clip: true
 
     ClipsListModel {
         id: clipsModel
@@ -31,22 +30,37 @@ Item {
         clipsModel.load()
     }
 
-    Repeater {
-        model: clipsModel
+    Item {
+        anchors.fill: parent
+        anchors.bottomMargin: sep.height
 
-        delegate: ClipItem {
+        Repeater {
+            model: clipsModel
 
-            height: parent.height
-            width: model.clipWidthData
-            x: model.clipLeftData
+            delegate: ClipItem {
 
-            title: model.clipTitleData
+                height: parent.height
+                width: model.clipWidth
+                x: model.clipLeft
 
-            context: root.context
-            clipKey: model.clipKeyData
+                context: root.context
+                title: model.clipTitle
+                clipColor: model.clipColor
+                clipKey: model.clipKey
+                clipSelected: clipsModel.selectedClipIdx === model.index
+                collapsed: trackViewState.isTrackCollapsed
 
-            onPositionChanged: function(x) {
-                model.clipLeftData = x
+                onPositionChanged: function(x) {
+                    model.clipLeft = x
+                }
+
+                onRequestSelected: {
+                    clipsModel.selectClip(model.index)
+                }
+
+                onTitleEdited: function(newTitle) {
+                    model.clipTitle = newTitle
+                }
             }
         }
     }
@@ -88,5 +102,5 @@ Item {
         }
     }
 
-    SeparatorLine { anchors.bottom: parent.bottom }
+    SeparatorLine { id: sep; anchors.bottom: parent.bottom }
 }

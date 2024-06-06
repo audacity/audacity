@@ -29,6 +29,7 @@
 #include "log.h"
 
 // Framework
+#include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
 #include "framework/ui/uimodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
@@ -102,6 +103,7 @@ int main(int argc, char** argv)
 //app.addModule(new muse::diagnostics::DiagnosticsModule());
 
 // framework
+    app.addModule(new muse::draw::DrawModule());
     app.addModule(new muse::actions::ActionsModule());
     app.addModule(new muse::ui::UiModule());
     app.addModule(new muse::uicomponents::UiComponentsModule());
