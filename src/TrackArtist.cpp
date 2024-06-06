@@ -50,6 +50,19 @@ audio tracks.
 #include "Decibels.h"
 #include "prefs/TracksPrefs.h"
 
+namespace
+{
+   void ChangeLightness(wxPen& pen, int ialpha)
+   {
+      pen.SetColour(pen.GetColour().ChangeLightness(ialpha));
+   }
+
+   void ChangeLightness(wxBrush& brush, int ialpha)
+   {
+      brush.SetColour(brush.GetColour().ChangeLightness(ialpha));
+   }
+}
+
 TrackArtist::TrackArtist( TrackPanel *parent_ )
    : parent( parent_ )
 {
@@ -81,7 +94,8 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetBrushColour( dragsampleBrush, clrDragSample);
    theTheme.SetBrushColour( blankSelectedBrush, clrBlankSelected);
    theTheme.SetBrushColour( envelopeBackgroundBrush, clrEnvelopeBackground);
-   theTheme.SetBrushColour( clipAffordanceBackgroundBrush, clrClipAffordanceBackground);
+   theTheme.SetBrushColour( clipAffordanceBackgroundBrush, clrBlank);
+   theTheme.SetBrushColour( clipAffordanceBackgroundSelBrush, clrBlankSelected);
 
    theTheme.SetPenColour(   blankPen,        clrBlank);
    theTheme.SetPenColour(   unselectedPen,   clrUnselected);
@@ -96,13 +110,28 @@ void TrackArtist::SetColours( int iColorIndex)
    theTheme.SetPenColour(   selsamplePen,    clrSelSample);
    theTheme.SetPenColour(   muteRmsPen,      clrMuteRms);
 
-   theTheme.SetPenColour( beatSepearatorPen, clrBeatSeparatorPen );
-   theTheme.SetPenColour( barSepearatorPen, clrBarSeparatorPen );
-   theTheme.SetBrushColour( beatStrongBrush, clrBeatFillStrongBrush );
-   theTheme.SetBrushColour( beatWeakBrush, clrBeatFillWeakBrush );
-   theTheme.SetBrushColour( beatStrongSelBrush, clrBeatFillStrongSelBrush );
-   theTheme.SetBrushColour( beatWeakSelBrush, clrBeatFillWeakSelBrush );
-   
+   theTheme.SetPenColour( beatSepearatorPen[0], clrBeatSeparatorPen );
+   theTheme.SetPenColour( beatSepearatorPen[1], clrBeatSeparatorPen );
+   theTheme.SetPenColour( barSepearatorPen[0], clrBarSeparatorPen );
+   theTheme.SetPenColour( barSepearatorPen[1], clrBarSeparatorPen );
+   theTheme.SetBrushColour( beatStrongBrush[0], clrBeatFillStrongBrush );
+   theTheme.SetBrushColour( beatStrongBrush[1], clrBeatFillStrongBrush );
+   theTheme.SetBrushColour( beatWeakBrush[0], clrBeatFillWeakBrush );
+   theTheme.SetBrushColour( beatWeakBrush[1], clrBeatFillWeakBrush );
+   theTheme.SetBrushColour( beatStrongSelBrush[0], clrBeatFillStrongSelBrush );
+   theTheme.SetBrushColour( beatStrongSelBrush[1], clrBeatFillStrongSelBrush );
+   theTheme.SetBrushColour( beatWeakSelBrush[0], clrBeatFillWeakSelBrush );
+   theTheme.SetBrushColour( beatWeakSelBrush[1], clrBeatFillWeakSelBrush );
+
+   ChangeLightness(beatSepearatorPen[1], 90);
+   ChangeLightness(barSepearatorPen[1], 90);
+   ChangeLightness(beatStrongBrush[1], 90);
+   ChangeLightness(beatWeakBrush[1], 90);
+   ChangeLightness(beatStrongSelBrush[1], 90);
+   ChangeLightness(beatWeakSelBrush[1], 90);
+   ChangeLightness(clipAffordanceBackgroundBrush, 90 );
+   ChangeLightness(clipAffordanceBackgroundSelBrush, 90);
+
    switch( iColorIndex %4 )
    {
       default:

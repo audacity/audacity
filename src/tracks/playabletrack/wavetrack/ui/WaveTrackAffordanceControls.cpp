@@ -283,7 +283,9 @@ void WaveTrackAffordanceControls::Draw(TrackPanelDrawingContext& context, const 
       // as for the topmost channel
       TrackArt::DrawBackgroundWithSelection(context,
          rect, **track->Channels().begin(),
-         artist->blankSelectedBrush, artist->clipAffordanceBackgroundBrush);
+         artist->clipAffordanceBackgroundSelBrush,
+         artist->clipAffordanceBackgroundBrush,
+         true, true);
       
       mVisibleIntervals.clear();
       

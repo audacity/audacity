@@ -99,7 +99,6 @@
  ClipAffordanceUnselectedBrush: #cfd6f4; 
    ClipAffordanceSelectedBrush: #aeb6db;
           ClipAffordanceStroke: #ffffff;
-      ClipAffordanceBackground: #494952;
        LabelTrackTextSelection: #b7cae2;
                   ClipNameText: #14151a;
          ClipNameTextSelection: #b7cae2;

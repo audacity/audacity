@@ -100,7 +100,6 @@
    ClipAffordanceSelectedBrush: #dbdbdb;
           ClipAffordanceStroke: #ffffff;
        LabelTrackTextSelection: #b7cae2;
-      ClipAffordanceBackground: #000000;
                   ClipNameText: #000000;
          ClipNameTextSelection: #b7cae2;
              DropHintHighlight: #00ff00;
