@@ -58,8 +58,17 @@ Item {
                     clipsModel.selectClip(model.index)
                 }
 
-                onTitleEdited: function(newTitle) {
+                onTitleEditStarted: {
+                    clipsModel.selectClip(model.index)
+                }
+
+                onTitleEditAccepted: function(newTitle) {
                     model.clipTitle = newTitle
+                    clipsModel.resetSelectedClip()
+                }
+
+                onTitleEditCanceled: {
+                    clipsModel.resetSelectedClip()
                 }
             }
         }

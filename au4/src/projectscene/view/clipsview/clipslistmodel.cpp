@@ -106,7 +106,7 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
         return changeClipStartTime(index, value);
     } break;
     case ClipTitleRole: {
-        LOGDA() << value.toString();
+        return changeClipTitle(index, value);
     } break;
     default:
         break;
@@ -135,9 +135,26 @@ bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVarian
     return ok;
 }
 
+bool ClipsListModel::changeClipTitle(const QModelIndex& index, const QVariant& value)
+{
+    au::processing::Clip& clip = m_clipList[index.row()];
+    muse::String newTitle = value.toString();
+    if (clip.title == newTitle) {
+        return false;
+    }
+
+    bool ok = processingInteraction()->changeClipTitle(clip.key, newTitle);
+    return ok;
+}
+
 void ClipsListModel::selectClip(int index)
 {
     processingInteraction()->selectClip(processing::ClipKey(m_trackId, index));
+}
+
+void ClipsListModel::resetSelectedClip()
+{
+    processingInteraction()->selectClip(processing::ClipKey());
 }
 
 void ClipsListModel::onSelectedClip(const processing::ClipKey& k)

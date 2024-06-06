@@ -20,7 +20,10 @@ RoundedRectangle {
 
     signal positionChanged(x : double)
     signal requestSelected()
-    signal titleEdited(var newTitle)
+
+    signal titleEditStarted()
+    signal titleEditAccepted(var newTitle)
+    signal titleEditCanceled()
 
     radius: 4
     color: "#000000" // border color
@@ -81,7 +84,7 @@ RoundedRectangle {
                 onClicked: root.requestSelected()
 
                 onDoubleClicked: {
-                    titleEdit.visible = true
+                    titleEdit.edit(titleLabel.text)
                 }
             }
 
@@ -92,18 +95,48 @@ RoundedRectangle {
                 anchors.left: parent.left
                 anchors.right: menuBtn.left
                 anchors.leftMargin: 4
-                anchors.rightMargin: 2
+                anchors.rightMargin: 8
                 horizontalAlignment: Qt.AlignLeft
             }
 
             TextInputField {
                 id: titleEdit
+
+                property string newTitle: ""
+
                 anchors.fill: titleLabel
-                currentText: titleLabel.text
+                background.color: header.color
+                background.border.width: 0
+                background.radius: 0
+                inputField.color: titleLabel.color
+                textSidePadding: 0
                 visible: false
-                onTextEditingFinished: function (newTitle) {
+
+                onTextChanged: function(text) {
+                    titleEdit.newTitle = text
+                }
+
+                onAccepted: {
                     titleEdit.visible = false
-                    root.titleEdited(newTitle)
+                    root.titleEditAccepted(titleEdit.newTitle)
+                }
+
+                onEscapted: {
+                    titleEdit.visible = false
+                }
+
+                onFocusChanged: {
+                    if (!titleEdit.focus) {
+                        titleEdit.visible = false
+                    }
+                }
+
+                function edit(text) {
+                    root.titleEditStarted()
+                    titleEdit.currentText = text
+                    titleEdit.newTitle = text
+                    titleEdit.visible = true
+                    titleEdit.ensureActiveFocus()
                 }
             }
 
