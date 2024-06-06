@@ -18,6 +18,10 @@
 #include <wx/slider.h>
 #include <wx/textctrl.h>
 
+#if wxUSE_ACCESSIBILITY
+#include "WindowAccessible.h"
+#endif
+
 namespace
 {
 using TFPanel = DynamicRangeProcessorTransferFunctionPanel;
@@ -181,32 +185,51 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxALIGN_LEFT, 0);
    {
       S.AddSpace(borderSize, 0);
-      S.AddCheckBox(XO("I&nput"), settings.showInput)
-         ->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& evt) {
+      wxCheckBox* input = S.AddCheckBox(XO("I&nput"), settings.showInput);
+      input->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showInput), &HistPanel::ShowInput);
          });
-      S.AddCheckBox(XO("O&utput"), settings.showOutput)
-         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+      /* i18n-hint: show input on a graph */
+      input->SetName(_("Show input"));
+
+      wxCheckBox* output = S.AddCheckBox(XO("O&utput"), settings.showOutput);
+      output->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showOutput), &HistPanel::ShowOutput);
          });
+      /* i18n-hint: show output on a graph */
+      output->SetName(_("Show output"));
+
       /* i18n-hint: when smoothing leads the output level to be momentarily
        * over the target */
-      S.AddCheckBox(XO("O&vershoot"), settings.showOvershoot)
-         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+      wxCheckBox* overshoot = S.AddCheckBox(XO("O&vershoot"), settings.showOvershoot);
+      overshoot->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showOvershoot),
                &HistPanel::ShowOvershoot);
          });
+      /* i18n-hint: show overshoot on a graph */
+      overshoot->SetName(_("Show overshoot"));
+
       /* i18n-hint: when smoothing leads the output level to be momentarily
        * under the target */
-      S.AddCheckBox(XO("Under&shoot"), settings.showUndershoot)
-         ->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+      wxCheckBox* undershoot = S.AddCheckBox(XO("Under&shoot"), settings.showUndershoot);
+      undershoot->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showUndershoot),
                &HistPanel::ShowUndershoot);
          });
+      /* i18n-hint: show undershoot on a graph */
+      undershoot->SetName(_("Show undershoot"));
+
+#if wxUSE_ACCESSIBILITY
+      // so that name can be set on a standard control
+      safenew WindowAccessible(input);
+      safenew WindowAccessible(output);
+      safenew WindowAccessible(overshoot);
+      safenew WindowAccessible(undershoot);
+#endif
    }
    S.EndHorizontalLay();
 
