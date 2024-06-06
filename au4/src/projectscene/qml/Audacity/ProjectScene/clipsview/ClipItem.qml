@@ -2,10 +2,11 @@ import QtQuick
 
 import Muse.Ui
 import Muse.UiComponents
+import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
 
-Rectangle {
+RoundedRectangle {
 
     id: root
 
@@ -22,13 +23,11 @@ Rectangle {
     signal titleEdited(var newTitle)
 
     radius: 4
-    color: "#ffffff"
-    border.width: 1
-    border.color: ui.theme.strokeColor
-    clip: true
+    color: "#000000" // border color
 
     Drag.active: dragArea.drag.active
 
+    property int _borderWidth: 1
     property bool _hover: hoverArea.containsMouse || dragArea.containsMouse
 
     MouseArea {
@@ -47,96 +46,114 @@ Rectangle {
         }
     }
 
-    Rectangle {
-        id: header
-        anchors.left: parent.left
-        anchors.right: parent.right
-        height: 20
-        z: 2
+    Item {
+        id: inner
 
-        color: root.clipSelected ? ui.blendColors(root.clipColor, "#ffffff", 0.7) : root.clipColor
+        anchors.fill: parent
+        anchors.margins: root._borderWidth
 
-        visible: !root.collapsed
-
-        MouseArea {
-            id: dragArea
-            anchors.fill: parent
-
-            cursorShape: Qt.OpenHandCursor
-            drag.target: root
-            drag.axis: Drag.XAxis
-
-            hoverEnabled: root.collapsed
-            onExited: {
-                if (!root._hover && root.collapsed) {
-                    header.visible = false
-                }
-            }
-
-            onReleased: {
-                if (drag.active) {
-                    root.positionChanged(root.x)
-                }
-            }
-
-            onClicked: root.requestSelected()
-
-            onDoubleClicked: {
-                titleEdit.visible = true
+        layer.enabled: true
+        layer.effect: EffectOpacityMask {
+            maskSource: RoundedRectangle {
+                width: inner.width
+                height: inner.height
+                radius: root.radius
             }
         }
 
-        StyledTextLabel {
-            id: titleLabel
+        Rectangle {
+            id: header
             anchors.top: parent.top
-            anchors.bottom: parent.bottom
             anchors.left: parent.left
-            anchors.right: menuBtn.left
-            anchors.leftMargin: 4
-            anchors.rightMargin: 2
-            horizontalAlignment: Qt.AlignLeft
-            color: root.clipSelected ? "#000000" : "#ffffff"
-        }
-
-        TextInputField {
-            id: titleEdit
-            anchors.fill: titleLabel
-            currentText: titleLabel.text
-            visible: false
-            onTextEditingFinished: function (newTitle) {
-                titleEdit.visible = false
-                root.titleEdited(newTitle)
-            }
-        }
-
-        MenuButton {
-            id: menuBtn
-            width: 16
-            height: 16
             anchors.right: parent.right
-            anchors.rightMargin: 4
-            anchors.verticalCenter: parent.verticalCenter
 
-            menuModel: [
-                {"id": 1, "title": "Item 1"},
-                {"id": 2, "title": "Item 2"}
-            ]
+            height: 20
+            z: 2
 
-            onHandleMenuItem: function(itemId) {
-                console.log("onHandleMenuItem: " + itemId)
+            color: root.clipSelected ? ui.blendColors(root.clipColor, "#ffffff", 0.7) : root.clipColor
+
+            visible: !root.collapsed
+
+            MouseArea {
+                id: dragArea
+                anchors.fill: parent
+
+                cursorShape: Qt.OpenHandCursor
+                drag.target: root
+                drag.axis: Drag.XAxis
+
+                hoverEnabled: root.collapsed
+                onExited: {
+                    if (!root._hover && root.collapsed) {
+                        header.visible = false
+                    }
+                }
+
+                onReleased: {
+                    if (drag.active) {
+                        root.positionChanged(root.x)
+                    }
+                }
+
+                onClicked: root.requestSelected()
+
+                onDoubleClicked: {
+                    titleEdit.visible = true
+                }
+            }
+
+            StyledTextLabel {
+                id: titleLabel
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                anchors.left: parent.left
+                anchors.right: menuBtn.left
+                anchors.leftMargin: 4
+                anchors.rightMargin: 2
+                horizontalAlignment: Qt.AlignLeft
+                color: root.clipSelected ? "#000000" : "#ffffff"
+            }
+
+            TextInputField {
+                id: titleEdit
+                anchors.fill: titleLabel
+                currentText: titleLabel.text
+                visible: false
+                onTextEditingFinished: function (newTitle) {
+                    titleEdit.visible = false
+                    root.titleEdited(newTitle)
+                }
+            }
+
+            MenuButton {
+                id: menuBtn
+                width: 16
+                height: 16
+                anchors.right: parent.right
+                anchors.rightMargin: 4
+                anchors.verticalCenter: parent.verticalCenter
+
+                menuModel: [
+                    {"id": 1, "title": "Item 1"},
+                    {"id": 2, "title": "Item 2"}
+                ]
+
+                onHandleMenuItem: function(itemId) {
+                    console.log("onHandleMenuItem: " + itemId)
+                }
             }
         }
-    }
 
-    WaveView {
-        id: waveView
-        anchors.top: root.collapsed ? parent.top : header.bottom
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        WaveView {
+            id: waveView
+            anchors.top: root.collapsed ? parent.top : header.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
 
-        clipColor: root.clipColor
-        clipLeft: root.x
-        clipSelected: root.clipSelected
+            clipColor: root.clipColor
+            clipLeft: root.x
+            clipSelected: root.clipSelected
+        }
     }
 }

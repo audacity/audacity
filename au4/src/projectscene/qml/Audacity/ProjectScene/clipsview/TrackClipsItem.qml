@@ -15,7 +15,6 @@ Item {
     signal interactionEnded()
 
     height: trackViewState.trackHeight
-    clip: true
 
     ClipsListModel {
         id: clipsModel
@@ -31,32 +30,37 @@ Item {
         clipsModel.load()
     }
 
-    Repeater {
-        model: clipsModel
+    Item {
+        anchors.fill: parent
+        anchors.bottomMargin: sep.height
 
-        delegate: ClipItem {
+        Repeater {
+            model: clipsModel
 
-            height: parent.height
-            width: model.clipWidth
-            x: model.clipLeft
+            delegate: ClipItem {
 
-            context: root.context
-            title: model.clipTitle
-            clipColor: model.clipColor
-            clipKey: model.clipKey
-            clipSelected: clipsModel.selectedClipIdx === model.index
-            collapsed: trackViewState.isTrackCollapsed
+                height: parent.height
+                width: model.clipWidth
+                x: model.clipLeft
 
-            onPositionChanged: function(x) {
-                model.clipLeft = x
-            }
+                context: root.context
+                title: model.clipTitle
+                clipColor: model.clipColor
+                clipKey: model.clipKey
+                clipSelected: clipsModel.selectedClipIdx === model.index
+                collapsed: trackViewState.isTrackCollapsed
 
-            onRequestSelected: {
-                clipsModel.selectClip(model.index)
-            }
+                onPositionChanged: function(x) {
+                    model.clipLeft = x
+                }
 
-            onTitleEdited: function(newTitle) {
-                model.clipTitle = newTitle
+                onRequestSelected: {
+                    clipsModel.selectClip(model.index)
+                }
+
+                onTitleEdited: function(newTitle) {
+                    model.clipTitle = newTitle
+                }
             }
         }
     }
@@ -98,5 +102,5 @@ Item {
         }
     }
 
-    SeparatorLine { anchors.bottom: parent.bottom }
+    SeparatorLine { id: sep; anchors.bottom: parent.bottom }
 }
