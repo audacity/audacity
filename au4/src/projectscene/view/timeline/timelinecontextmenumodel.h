@@ -19,7 +19,7 @@ class TimelineContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::Inject<context::IGlobalContext> globalContext;
 
 public:
-    Q_INVOKABLE void loadItems();
+    Q_INVOKABLE void load() override;
 
 private:
 

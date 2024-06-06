@@ -68,7 +68,7 @@ Rectangle {
                        if (e.button === Qt.LeftButton) {
                            root.clicked(e)
                        } else if (e.button === Qt.RightButton) {
-                           contextMenuModel.loadItems()
+                           contextMenuModel.load()
                            contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
                        }
                    }

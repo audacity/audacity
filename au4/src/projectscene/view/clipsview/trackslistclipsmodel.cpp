@@ -5,6 +5,9 @@ using namespace au::projectscene;
 TracksListClipsModel::TracksListClipsModel(QObject* parent)
     : QAbstractListModel(parent)
 {
+    configuration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool isVerticalRulersVisible){
+        setIsVerticalRulersVisible(isVerticalRulersVisible);
+    });
 }
 
 void TracksListClipsModel::load()
@@ -13,6 +16,8 @@ void TracksListClipsModel::load()
     if (!prj) {
         return;
     }
+
+    setIsVerticalRulersVisible(configuration()->isVerticalRulersVisible());
 
     beginResetModel();
 
@@ -53,4 +58,19 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
         { TrackIdRole, "trackIdData" }
     };
     return roles;
+}
+
+bool TracksListClipsModel::isVerticalRulersVisible() const
+{
+    return m_isVerticalRulersVisible;
+}
+
+void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisible)
+{
+    if (m_isVerticalRulersVisible == isVerticalRulersVisible) {
+        return;
+    }
+
+    m_isVerticalRulersVisible = isVerticalRulersVisible;
+    emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
 }

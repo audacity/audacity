@@ -127,6 +127,13 @@ ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActions
 {
 }
 
+void ProjectSceneUiActions::init()
+{
+    m_controller->actionCheckedChanged().onReceive(this, [this](const ActionCode& code) {
+        m_actionCheckedChanged.send({ code });
+    });
+}
+
 const UiActionList& ProjectSceneUiActions::actionsList() const
 {
     return m_actions;
@@ -143,8 +150,7 @@ bool ProjectSceneUiActions::actionEnabled(const muse::ui::UiAction& act) const
 
 muse::async::Channel<ActionCodeList> ProjectSceneUiActions::actionEnabledChanged() const
 {
-    static async::Channel<ActionCodeList> ch;
-    return ch;
+    return m_actionEnabledChanged;
 }
 
 bool ProjectSceneUiActions::actionChecked(const muse::ui::UiAction& act) const
@@ -154,6 +160,5 @@ bool ProjectSceneUiActions::actionChecked(const muse::ui::UiAction& act) const
 
 muse::async::Channel<ActionCodeList> ProjectSceneUiActions::actionCheckedChanged() const
 {
-    static async::Channel<ActionCodeList> ch;
-    return ch;
+    return m_actionCheckedChanged;
 }

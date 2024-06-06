@@ -15,5 +15,12 @@ public:
     ProjectSceneConfiguration() = default;
 
     void init();
+
+    bool isVerticalRulersVisible() const override;
+    void setVerticalRulersVisible(bool visible) override;
+    muse::async::Channel<bool> isVerticalRulersVisibleChanged() const override;
+
+private:
+    muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
 };
 }

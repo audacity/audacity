@@ -123,5 +123,6 @@ void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
     }
 
     m_configuration->init();
+    m_uiActions->init();
     m_projectSceneActionsController->init();
 }
