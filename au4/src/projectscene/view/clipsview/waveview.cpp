@@ -12,6 +12,7 @@ using namespace au::projectscene;
 
 static const QColor BACKGRAUND_COLOR = QColor(255, 255, 255);
 static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
+static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
 
 WaveView::WaveView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
@@ -45,11 +46,11 @@ void WaveView::paint(QPainter* painter)
     if (m_clipSelected) {
         params.style.blankBrush = muse::draw::blendQColors(BACKGRAUND_COLOR, m_clipColor, 0.9);
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
-        params.style.rmsPen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.4);
+        params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     } else {
         params.style.blankBrush = muse::draw::blendQColors(BACKGRAUND_COLOR, m_clipColor, 0.8);
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
-        params.style.rmsPen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
+        params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     }
 
     wavePainter()->paint(*painter, m_clipKey.key, params);

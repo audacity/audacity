@@ -146,7 +146,7 @@ RoundedRectangle {
             when: !root.clipSelected && !headerDragArea.containsMouse
             PropertyChanges { target: header; color: root.clipColor }
             PropertyChanges { target: titleLabel; color: "#ffffff"}
-            //PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+            PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
         },
 
         State {
@@ -154,7 +154,7 @@ RoundedRectangle {
             when: root.clipSelected && !headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.3) }
             PropertyChanges { target: titleLabel; color: "#000000" }
-            //PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges { target: menuBtn; iconColor: "#000000"}
         },
 
         State {
@@ -162,7 +162,7 @@ RoundedRectangle {
             when: !root.clipSelected && headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.8)}
             PropertyChanges { target: titleLabel; color: "#ffffff"}
-            //PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+            PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
         },
 
         State {
@@ -170,7 +170,7 @@ RoundedRectangle {
             when: root.clipSelected && headerDragArea.containsMouse
             PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.2) }
             PropertyChanges { target: titleLabel; color: "#000000"}
-            //PropertyChanges { target: menuBtn; iconColor: "#000000"}
+            PropertyChanges { target: menuBtn; iconColor: "#000000"}
         }
     ]
 }

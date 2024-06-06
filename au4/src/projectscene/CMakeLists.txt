@@ -32,7 +32,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
-    ${CMAKE_CURRENT_LIST_DIR}/types/wavestyle.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneconfiguration.h

@@ -15,11 +15,5 @@ public:
     ProjectSceneConfiguration() = default;
 
     void init();
-
-    const WaveStyle& waveStyle() const override;
-
-private:
-
-    WaveStyle m_waveStyle;
 };
 }
