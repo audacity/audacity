@@ -11,8 +11,10 @@ using namespace muse;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
-void TimelineContextMenuModel::loadItems()
+void TimelineContextMenuModel::load()
 {
+    AbstractMenuModel::load();
+
     MenuItemList items = makeRulerItems();
     setItems(items);
 }

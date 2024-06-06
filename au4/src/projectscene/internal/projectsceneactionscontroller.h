@@ -12,6 +12,7 @@
 #include "iinteractive.h"
 
 #include "../iprojectsceneactionscontroller.h"
+#include "../iprojectsceneconfiguration.h"
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable, public muse::async::Asyncable
@@ -19,6 +20,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
     INJECT_STATIC(au::context::IGlobalContext, globalContext)
     INJECT_STATIC(muse::IInteractive, interactive)
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
     void init();

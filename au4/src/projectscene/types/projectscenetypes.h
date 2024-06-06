@@ -50,6 +50,18 @@ public:
 
     processing::ClipKey key;
 };
+
+class VerticalRulerTypes
+{
+    Q_GADGET
+public:
+    enum class Type {
+        LINEAR_AMP = 0,
+        LOGARITHMIC_DB,
+        LINEAR_DB
+    };
+    Q_ENUM(Type)
+};
 }
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

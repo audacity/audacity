@@ -9,11 +9,13 @@ using namespace au::projectscene;
 using namespace muse::async;
 using namespace muse::actions;
 
+static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
+
 void ProjectSceneActionsController::init()
 {
     dispatcher()->reg(this, "minutes-seconds-ruler", this, &ProjectSceneActionsController::toggleTimelineRuler);
     dispatcher()->reg(this, "beats-measures-ruler", this, &ProjectSceneActionsController::toggleBeatsRuler);
-    dispatcher()->reg(this, "toggle-vertical-rulers", this, &ProjectSceneActionsController::toggleVerticalRulers);
+    dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
     dispatcher()->reg(this, "update-display-while-playing", this, &ProjectSceneActionsController::updateDisplayWhilePlaying);
     dispatcher()->reg(this, "pinned-play-head", this, &ProjectSceneActionsController::pinnedPlayHead);
 }
@@ -35,7 +37,9 @@ void ProjectSceneActionsController::toggleBeatsRuler()
 
 void ProjectSceneActionsController::toggleVerticalRulers()
 {
-    NOT_IMPLEMENTED;
+    bool verticalRulersVisible = configuration()->isVerticalRulersVisible();
+    configuration()->setVerticalRulersVisible(!verticalRulersVisible);
+    notifyActionCheckedChanged(VERTICAL_RULERS_CODE);
 }
 
 void ProjectSceneActionsController::updateDisplayWhilePlaying()
@@ -50,8 +54,11 @@ void ProjectSceneActionsController::pinnedPlayHead()
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
 {
-    //! TODO AU4
-    return false;
+    QMap<std::string, bool> isChecked {
+        { VERTICAL_RULERS_CODE, configuration()->isVerticalRulersVisible() }
+    };
+
+    return isChecked[actionCode];
 }
 
 Channel<ActionCode> ProjectSceneActionsController::actionCheckedChanged() const

@@ -112,5 +112,15 @@ Rectangle {
             anchors.bottom: parent.bottom
             x: playCursorController.positionX
         }
+
+        VerticalRulersPanel {
+            id: verticalRulers
+
+            height: parent.height - timeline.height
+            anchors.right: view.right
+            anchors.bottom: view.bottom
+
+            visible: tracksModel.isVerticalRulersVisible
+        }
     }
 }
