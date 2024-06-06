@@ -25,32 +25,23 @@ RoundedRectangle {
     radius: 4
     color: "#000000" // border color
 
-    Drag.active: dragArea.drag.active
+    Drag.active: headerDragArea.drag.active
 
-    property int _borderWidth: 1
-    property bool _hover: hoverArea.containsMouse || dragArea.containsMouse
+    property int borderWidth: 1
+    property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
+
 
     MouseArea {
         id: hoverArea
         anchors.fill: parent
         hoverEnabled: root.collapsed
-
-        onEntered: {
-            header.visible = true
-        }
-
-        onExited: {
-            if (!root._hover && root.collapsed) {
-                header.visible = false
-            }
-        }
     }
 
     Item {
         id: inner
 
         anchors.fill: parent
-        anchors.margins: root._borderWidth
+        anchors.margins: root.borderWidth
 
         layer.enabled: true
         layer.effect: EffectOpacityMask {
@@ -70,24 +61,16 @@ RoundedRectangle {
             height: 20
             z: 2
 
-            color: root.clipSelected ? ui.blendColors(root.clipColor, "#ffffff", 0.7) : root.clipColor
-
-            visible: !root.collapsed
+            visible: !root.collapsed || root.hover
 
             MouseArea {
-                id: dragArea
+                id: headerDragArea
                 anchors.fill: parent
 
+                hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
                 drag.target: root
                 drag.axis: Drag.XAxis
-
-                hoverEnabled: root.collapsed
-                onExited: {
-                    if (!root._hover && root.collapsed) {
-                        header.visible = false
-                    }
-                }
 
                 onReleased: {
                     if (drag.active) {
@@ -111,7 +94,6 @@ RoundedRectangle {
                 anchors.leftMargin: 4
                 anchors.rightMargin: 2
                 horizontalAlignment: Qt.AlignLeft
-                color: root.clipSelected ? "#000000" : "#ffffff"
             }
 
             TextInputField {
@@ -146,7 +128,7 @@ RoundedRectangle {
 
         WaveView {
             id: waveView
-            anchors.top: root.collapsed ? parent.top : header.bottom
+            anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
@@ -156,4 +138,39 @@ RoundedRectangle {
             clipSelected: root.clipSelected
         }
     }
+
+    state: "NORMAL"
+    states: [
+        State {
+            name: "NORMAL"
+            when: !root.clipSelected && !headerDragArea.containsMouse
+            PropertyChanges { target: header; color: root.clipColor }
+            PropertyChanges { target: titleLabel; color: "#ffffff"}
+            //PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+        },
+
+        State {
+            name: "SELECTED"
+            when: root.clipSelected && !headerDragArea.containsMouse
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.3) }
+            PropertyChanges { target: titleLabel; color: "#000000" }
+            //PropertyChanges { target: menuBtn; iconColor: "#000000"}
+        },
+
+        State {
+            name: "NORMAL_HEADER_HOVERED"
+            when: !root.clipSelected && headerDragArea.containsMouse
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.8)}
+            PropertyChanges { target: titleLabel; color: "#ffffff"}
+            //PropertyChanges { target: menuBtn; iconColor: "#ffffff"}
+        },
+
+        State {
+            name: "SELECTED_HEADER_HOVERED"
+            when: root.clipSelected && headerDragArea.containsMouse
+            PropertyChanges { target: header; color: ui.blendColors("#ffffff", root.clipColor, 0.2) }
+            PropertyChanges { target: titleLabel; color: "#000000"}
+            //PropertyChanges { target: menuBtn; iconColor: "#000000"}
+        }
+    ]
 }
