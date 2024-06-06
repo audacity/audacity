@@ -428,3 +428,5 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_COLOUR( clrLoopEnabled,          wxColour( 93,  65,  93),   wxT("LoopEnabled") );
    DEFINE_COLOUR( clrLoopDisabled,         wxColour( 93,  65,  93),   wxT("LoopNotEnabled") );
    DEFINE_COLOUR( clrGrabber,              wxColour( 93,  65,  93),   wxT("Grabber") );
+  
+   DEFINE_COLOUR( clrTimelineRulerBackground, wxColour( 0xE9, 0xE9, 0xEB ), wxT("TimelineRulerBackground") );

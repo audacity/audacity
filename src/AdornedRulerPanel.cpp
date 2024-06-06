@@ -1385,7 +1385,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // DestroyChildren();
 
    ToolBar::MakeButtonBackgroundsSmall();
-   SetBackgroundColour(theTheme.Colour( clrMedium ));
+   SetBackgroundColour(GetBackgroundColour());
 
    for (auto & button : mButtons) {
       if (button)
@@ -1399,12 +1399,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // Add a grabber converted to a spacer.
    // This makes it visually clearer that the button is a button.
 
-   wxPoint position( 1, 0 );
-
-   Grabber * pGrabber = safenew Grabber(this, {});
-   pGrabber->SetAsSpacer( true );
-   //pGrabber->SetSize( 10, 27 ); // default is 10,27
-   pGrabber->SetPosition( position );
+   wxPoint position( 12, 0 );
 
    position.x = 12;
 
@@ -2396,7 +2391,7 @@ using ColorId = decltype(clrTrackInfo);
 
 inline ColorId TimelineBackgroundColor()
 {
-   return clrTrackInfo;
+   return clrTimelineRulerBackground;
 }
 
 inline ColorId TimelineTextColor()
