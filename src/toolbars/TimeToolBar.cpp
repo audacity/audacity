@@ -96,7 +96,7 @@ void TimeToolBar::Populate()
    mAudioTime->SetReadOnly(true);
 
    // Add it to the toolbar
-   Add(mAudioTime, 0, wxALIGN_CENTER, 0);
+   Add(mAudioTime, 0, wxALIGN_CENTER | wxALL, toolbarSpacing);
 
    // Calculate the width to height ratio
    wxSize digitSize = mAudioTime->GetDigitSize();
