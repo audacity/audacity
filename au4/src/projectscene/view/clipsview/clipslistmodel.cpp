@@ -143,9 +143,9 @@ void ClipsListModel::selectClip(int index)
 void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
 {
     if (m_trackId != k.trackId) {
-        setActiveClipIdx(-1);
+        setSelectedClipIdx(-1);
     } else {
-        setActiveClipIdx(k.index);
+        setSelectedClipIdx(k.index);
     }
 }
 
@@ -198,16 +198,16 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     emit timelineContextChanged();
 }
 
-int ClipsListModel::activeClipIdx() const
+int ClipsListModel::selectedClipIdx() const
 {
-    return m_activeClipIdx;
+    return m_selectedClipIdx;
 }
 
-void ClipsListModel::setActiveClipIdx(int newActiveClipIdx)
+void ClipsListModel::setSelectedClipIdx(int newSelectedClipIdx)
 {
-    if (m_activeClipIdx == newActiveClipIdx) {
+    if (m_selectedClipIdx == newSelectedClipIdx) {
         return;
     }
-    m_activeClipIdx = newActiveClipIdx;
-    emit activeClipIdxChanged();
+    m_selectedClipIdx = newSelectedClipIdx;
+    emit selectedClipIdxChanged();
 }

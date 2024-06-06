@@ -42,7 +42,7 @@ void WaveView::paint(QPainter* painter)
 
     params.zoom = m_context->zoom();
 
-    if (m_clipActive) {
+    if (m_clipSelected) {
         params.style.blankBrush = muse::draw::blendQColors(BACKGRAUND_COLOR, m_clipColor, 0.9);
         params.style.samplePen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.6);
         params.style.rmsPen = muse::draw::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.4);
@@ -119,18 +119,18 @@ void WaveView::setClipColor(const QColor& newClipColor)
     emit clipColorChanged();
 }
 
-bool WaveView::clipActive() const
+bool WaveView::clipSelected() const
 {
-    return m_clipActive;
+    return m_clipSelected;
 }
 
-void WaveView::setClipActive(bool newClipActive)
+void WaveView::setClipSelected(bool newClipSelected)
 {
-    if (m_clipActive == newClipActive) {
+    if (m_clipSelected == newClipSelected) {
         return;
     }
-    m_clipActive = newClipActive;
-    emit clipActiveChanged();
+    m_clipSelected = newClipSelected;
+    emit clipSelectedChanged();
 
     update();
 }

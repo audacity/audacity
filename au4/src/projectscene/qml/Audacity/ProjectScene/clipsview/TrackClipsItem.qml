@@ -44,13 +44,14 @@ Item {
             title: model.clipTitle
             clipColor: model.clipColor
             clipKey: model.clipKey
-            clipActive: clipsModel.activeClipIdx === model.index
+            clipSelected: clipsModel.selectedClipIdx === model.index
+            collapsed: trackViewState.isTrackCollapsed
 
             onPositionChanged: function(x) {
                 model.clipLeft = x
             }
 
-            onRequestAboutActive: {
+            onRequestSelected: {
                 clipsModel.selectClip(model.index)
             }
 
@@ -64,7 +65,7 @@ Item {
         id: clipsSelection
 
         anchors.fill: parent
-       // anchors.topMargin: 20 // clip header height
+        anchors.topMargin: 20 // clip header height
 
         onSelected: function(x1, x2) {
             clipsModel.onSelected(x1, x2)

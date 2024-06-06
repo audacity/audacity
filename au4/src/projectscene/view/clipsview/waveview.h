@@ -17,7 +17,7 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
     Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
-    Q_PROPERTY(bool clipActive READ clipActive WRITE setClipActive NOTIFY clipActiveChanged FINAL)
+    Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
 
     //! NOTE In a static position, the slip start time corresponds,
     //! but it can change while dragging the clip, with the not changing start time
@@ -37,21 +37,19 @@ public:
     void setClipKey(const ClipKey& newClipKey);
     QColor clipColor() const;
     void setClipColor(const QColor& newClipColor);
+    bool clipSelected() const;
+    void setClipSelected(bool newClipSelected);
     double clipLeft() const;
     void setClipLeft(double newClipLeft);
 
     void paint(QPainter* painter) override;
-
-    bool clipActive() const;
-    void setClipActive(bool newClipActive);
 
 signals:
     void timelineContextChanged();
     void clipKeyChanged();
     void clipColorChanged();
     void clipLeftChanged();
-
-    void clipActiveChanged();
+    void clipSelectedChanged();
 
 private:
 
@@ -61,6 +59,6 @@ private:
     ClipKey m_clipKey;
     QColor m_clipColor;
     double m_clipLeft = 0;
-    bool m_clipActive = false;
+    bool m_clipSelected = false;
 };
 }

@@ -18,13 +18,20 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
-    Q_PROPERTY(int activeClipIdx READ activeClipIdx NOTIFY activeClipIdxChanged FINAL)
+    Q_PROPERTY(int selectedClipIdx READ selectedClipIdx NOTIFY selectedClipIdxChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
 
 public:
     ClipsListModel(QObject* parent = nullptr);
+
+    TimelineContext* timelineContext() const;
+    void setTimelineContext(TimelineContext* newContext);
+    QVariant trackId() const;
+    void setTrackId(const QVariant& newTrackId);
+    int selectedClipIdx() const;
+    void setSelectedClipIdx(int newSelectedClipIdx);
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void selectClip(int index);
@@ -36,20 +43,10 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
-    QVariant trackId() const;
-    void setTrackId(const QVariant& newTrackId);
-
-    TimelineContext* timelineContext() const;
-    void setTimelineContext(TimelineContext* newContext);
-
-    int activeClipIdx() const;
-    void setActiveClipIdx(int newActiveClipIdx);
-
 signals:
     void trackIdChanged();
     void timelineContextChanged();
-
-    void activeClipIdxChanged();
+    void selectedClipIdxChanged();
 
 private slots:
     void onTimelineContextValuesChanged();
@@ -71,6 +68,6 @@ private:
     TimelineContext* m_context = nullptr;
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_clipList;
-    int m_activeClipIdx = -1;
+    int m_selectedClipIdx = -1;
 };
 }
