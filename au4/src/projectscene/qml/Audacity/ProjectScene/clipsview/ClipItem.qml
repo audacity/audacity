@@ -33,11 +33,30 @@ RoundedRectangle {
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
 
+    ClipContextMenuModel {
+        id: contextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    Component.onCompleted: {
+        Qt.callLater(contextMenuModel.loadItems)
+    }
 
     MouseArea {
         id: hoverArea
         anchors.fill: parent
+        acceptedButtons: Qt.RightButton
         hoverEnabled: root.collapsed
+        onClicked: function(e) {
+            contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+        }
     }
 
     Item {
@@ -148,13 +167,10 @@ RoundedRectangle {
                 anchors.rightMargin: 4
                 anchors.verticalCenter: parent.verticalCenter
 
-                menuModel: [
-                    {"id": 1, "title": "Item 1"},
-                    {"id": 2, "title": "Item 2"}
-                ]
+                menuModel: contextMenuModel
 
                 onHandleMenuItem: function(itemId) {
-                    console.log("onHandleMenuItem: " + itemId)
+                    contextMenuModel.handleMenuItem(itemId)
                 }
             }
         }
