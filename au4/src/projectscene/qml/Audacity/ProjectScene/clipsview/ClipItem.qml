@@ -33,8 +33,13 @@ RoundedRectangle {
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
 
+    function editTitle() {
+        titleEdit.edit(titleLabel.text)
+    }
+
     ClipContextMenuModel {
         id: contextMenuModel
+        clipKey: root.clipKey
     }
 
     ContextMenuLoader {
@@ -103,7 +108,7 @@ RoundedRectangle {
                 onClicked: root.requestSelected()
 
                 onDoubleClicked: {
-                    titleEdit.edit(titleLabel.text)
+                    root.editTitle()
                 }
             }
 

@@ -18,6 +18,10 @@ Item {
 
     ClipsListModel {
         id: clipsModel
+
+        onRequestClipTitleEdit: function(index){
+            repeator.itemAt(index).editTitle()
+        }
     }
 
     TracksViewStateModel {
@@ -35,6 +39,8 @@ Item {
         anchors.bottomMargin: sep.height
 
         Repeater {
+            id: repeator
+
             model: clipsModel
 
             delegate: ClipItem {

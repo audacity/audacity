@@ -18,6 +18,8 @@ void ClipsListModel::load()
         return;
     }
 
+    dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
+
     ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     if (!prj) {
         return;
@@ -133,6 +135,25 @@ bool ClipsListModel::changeClipStartTime(const QModelIndex& index, const QVarian
 
     bool ok = processingInteraction()->changeClipStartTime(clip.key, sec);
     return ok;
+}
+
+void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() > 0) {
+        return;
+    }
+
+    processing::ClipKey key = args.arg<processing::ClipKey>(0);
+
+    if (key.trackId != m_trackId) {
+        return;
+    }
+
+    IF_ASSERT_FAILED(key.index < m_clipList.size()) {
+        return;
+    }
+
+    emit requestClipTitleEdit(key.index);
 }
 
 bool ClipsListModel::changeClipTitle(const QModelIndex& index, const QVariant& value)
