@@ -31,3 +31,12 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, size_t ind
     std::shared_ptr<WaveClip> clip = *it;
     return clip;
 }
+
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index)
+{
+    WaveTrack* t = findWaveTrack(prj, au3trackId);
+    if (!t) {
+        return nullptr;
+    }
+    return findWaveClip(t, index);
+}

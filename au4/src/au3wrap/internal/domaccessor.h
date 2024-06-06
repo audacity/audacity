@@ -10,5 +10,6 @@ public:
 
     static WaveTrack* findWaveTrack(AudacityProject& prj, const TrackId& au3trackId);
     static std::shared_ptr<WaveClip> findWaveClip(WaveTrack* track, size_t index);
+    static std::shared_ptr<WaveClip> findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index);
 };
 }

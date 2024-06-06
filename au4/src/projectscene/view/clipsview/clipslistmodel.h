@@ -35,6 +35,8 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void selectClip(int index);
+    Q_INVOKABLE void resetSelectedClip();
+
     Q_INVOKABLE void onSelected(double x1, double x2);
     Q_INVOKABLE void resetSelection();
 
@@ -62,6 +64,8 @@ private:
     };
 
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
+    bool changeClipTitle(const QModelIndex& index, const QVariant& value);
+
     void onSelectedTime(double startTime, double endTime);
     void onSelectedClip(const processing::ClipKey& k);
 
