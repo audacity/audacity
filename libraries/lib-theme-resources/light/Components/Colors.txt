@@ -30,7 +30,7 @@
           MeterOutputClipBrush: #ef476f;
            MeterOutputLightPen: #99ff99;
             MeterOutputDarkPen: #3da43d;
-               MeterBackground: #f0f0f5;
+               MeterBackground: #f8f8f9;
                      AxisLines: #677ce4;
                     GraphLines: #677ce4;
                  ResponseLines: #00ff00;
