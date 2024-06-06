@@ -185,6 +185,12 @@ foreach( pair
          ../lib-theme/AllThemeResources.h
       COMMENT "Generating ${filename}.h..."
    )
+
+   add_custom_target(${theme} SOURCES ${THEME_FILES})
+   set_target_properties(${theme}
+      PROPERTIES
+         FOLDER "themes"
+   )
 endforeach()
 
 # Now define a more conventional library, using the output of the image compiler
