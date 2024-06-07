@@ -523,9 +523,6 @@ void DrawSeparators (
 {
    dc.SetPen (beatSepearatorPen);
 
-   const auto majorTick = beatsRulerFormat.GetSubdivision().major;
-   const auto minorTick = GetMinorTick();
-
    const auto [firstNote, lastNote] = GetBoundaries(
       rect, rect, noteWidth);
 
@@ -537,7 +534,7 @@ void DrawSeparators (
          continue;
 
       dc.SetPen(IsFirstInMajorTick(noteIndex) ? barSeparatorPen : beatSepearatorPen);
-      dc.DrawLine (position, rect.GetTop (), position, rect.GetBottom () + 1);
+      dc.DrawLine (position, rect.GetTop (), position, rect.GetBottom ());
    }
 }
 
@@ -678,7 +675,7 @@ void TrackArt::DrawBackgroundWithSelection(
    const auto& beatSepearatorPen = artist->beatSepearatorPen[useBeatsAlternateColor];
    const auto& barSepearatorPen = artist->barSepearatorPen[useBeatsAlternateColor];
 
-   auto drawBgRect = [dc, &gridlinePainter, artist, &rect](
+   auto drawBgRect = [dc, &gridlinePainter, &rect](
                         const wxBrush& regularBrush,
                         const wxBrush& beatStrongBrush,
                         const wxBrush& beatWeakBrush, const wxRect& subRect)
