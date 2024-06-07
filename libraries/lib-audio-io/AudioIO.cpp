@@ -2037,21 +2037,16 @@ bool AudioIO::ProcessPlaybackSlices(
             // Copy (non-interleaved) mixer outputs to one or more ring buffers
             const auto nChannels = mPlaybackSequences[iSequence]->NChannels();
 
-            const auto toConsume = std::min(
-               frames,
-               mProcessingBuffers[iBuffer].capacity() - mProcessingBuffers[iBuffer].size()
-            );
-            //assert(toConsume == frames); //Sufficient size should have been reserved in AllocateBuffers
-            produced = std::min(produced, toConsume);
-
             const auto appendPos = mProcessingBuffers[iBuffer].size();
             for (size_t j = 0; j < nChannels; ++j)
             {
                // mPlaybackBuffers correspond many-to-one with mPlaybackSequences
                auto& buffer = mProcessingBuffers[iBuffer + j];
-
-               //there could be leftovers from the previous pass, don't discard them
-               buffer.resize(buffer.size() + toConsume, 0);
+               //Sufficient size should have been reserved in AllocateBuffers
+               //But for some latency values (> aprox. 100ms) pre-allocated
+               //buffer could be not large enough.
+               //Preserve what was written to the buffer during previous pass, don't discard
+               buffer.resize(buffer.size() + frames, 0);
 
                const auto warpedSamples = mixer->GetBuffer(j);
                std::copy_n(
@@ -2060,7 +2055,7 @@ bool AudioIO::ProcessPlaybackSlices(
                   buffer.data() + appendPos);
                std::fill_n(
                   buffer.data() + appendPos + produced,
-                  toConsume - produced,
+                  frames - produced,
                   .0f);
             }
 
@@ -2117,8 +2112,9 @@ bool AudioIO::ProcessPlaybackSlices(
 
             for(unsigned i = seq->NChannels(); i < mNumPlaybackChannels; ++i)
             {
+               
                pointers[i] = *scratch++;
-               std::fill_n(pointers[i], mProcessingBuffers[bufferIndex].size(), .0f);
+               std::fill_n(pointers[i], len, .0f);
             }
 
             const auto discardable = pScope->Process(channelGroup, &pointers[0],
