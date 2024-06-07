@@ -14,7 +14,6 @@
 #include "internal/playbackuiactions.h"
 
 #include "view/toolbars/playbacktoolbarmodel.h"
-#include "view/toolbars/playbacktoolbarabstractitem.h"
 #include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
 
@@ -59,7 +58,6 @@ void PlaybackModule::registerUiTypes()
 {
     // toolbars
     qmlRegisterType<PlaybackToolBarModel>("Audacity.Playback", 1, 0, "PlaybackToolBarModel");
-    qmlRegisterUncreatableType<PlaybackToolBarAbstractItem>("Muse.Ui", 1, 0, "PlaybackToolBarItem", "Cannot create an PlaybackToolBarItem");
     qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.Playback", 1, 0, "PlaybackToolBarCustomiseModel");
     qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.Playback", 1, 0, "PlaybackToolBarCustomiseItem",
                                                              "Cannot create");
