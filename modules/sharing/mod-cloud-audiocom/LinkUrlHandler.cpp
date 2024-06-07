@@ -13,6 +13,7 @@
 
 #include "CloudProjectMixdownUtils.h"
 #include "CloudProjectOpenUtils.h"
+#include "ExportUtils.h"
 #include "OAuthService.h"
 
 namespace
@@ -22,7 +23,10 @@ auto subscription = URLSchemesRegistry::Get().Subscribe(
    {
       using namespace audacity::cloud::audiocom;
 
-      if (GetOAuthService().HandleLinkURI(message.url, {}))
+      if (GetOAuthService().HandleLinkURI(
+             message.url,
+             // TODO Is this correct?
+             AudiocomTrace::ignore, {}))
          return;
 
       if (sync::HandleProjectLink(message.url))

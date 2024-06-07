@@ -20,6 +20,7 @@
 
 #include "CloudLibrarySettings.h"
 #include "CloudModuleSettings.h"
+#include "ExportUtils.h"
 #include "ShuttleGui.h"
 #include "UserPanel.h"
 
@@ -81,7 +82,8 @@ public:
             S.SetBorder(8);
             S.AddWindow(
                safenew UserPanel { GetServiceConfig(), GetOAuthService(),
-                                   GetUserService(), true, S.GetParent() },
+                                   GetUserService(), true,
+                                   AudiocomTrace::PrefsPanel, S.GetParent() },
                wxEXPAND);
          }
          S.EndStatic();

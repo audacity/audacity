@@ -16,6 +16,7 @@
 #include "TranslatableString.h"
 
 class AudacityProject;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
@@ -53,6 +54,7 @@ struct AuthResult final
    std::string ErrorMessage;
 };
 
-AuthResult
-PerformBlockingAuth(AudacityProject* project, const TranslatableString& alternativeActionLabel = {});
+AuthResult PerformBlockingAuth(
+   AudacityProject* project, AudiocomTrace trace,
+   const TranslatableString& alternativeActionLabel = {});
 } // namespace audacity::cloud::audiocom

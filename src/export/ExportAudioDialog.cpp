@@ -53,8 +53,8 @@ namespace
 {
 const bool hookRegistered = [] {
    ExportUtils::RegisterExportHook(
-      [](AudacityProject& project, const FileExtension& format, bool selectedOnly)
-      {
+      [](AudacityProject& project, const FileExtension& format,
+         AudiocomTrace /*ignore*/, bool selectedOnly) {
          ExportAudioDialog dialog { &GetProjectFrame(project), project,
                                     project.GetProjectName(), format,
                                     selectedOnly

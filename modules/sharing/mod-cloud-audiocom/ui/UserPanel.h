@@ -10,11 +10,13 @@
 **********************************************************************/
 #pragma once
 
-#include "wxPanelWrapper.h"
+#include "NetworkUtils.h"
 #include "Observer.h"
+#include "wxPanelWrapper.h"
 
 class wxStaticText;
 class wxButton;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
@@ -34,10 +36,9 @@ class UserPanel final
 {
 public:
    UserPanel(
-      const ServiceConfig& serviceConfig,
-      OAuthService& authService, UserService& userService,
-      bool hasLinkButton, wxWindow* parent = nullptr,
-      const wxPoint& pos = wxDefaultPosition,
+      const ServiceConfig& serviceConfig, OAuthService& authService,
+      UserService& userService, bool hasLinkButton, AudiocomTrace,
+      wxWindow* parent = nullptr, const wxPoint& pos = wxDefaultPosition,
       const wxSize& size = wxDefaultSize);
 
    ~UserPanel() override;
@@ -53,6 +54,7 @@ private:
    const ServiceConfig& mServiceConfig;
    OAuthService& mAuthService;
    UserService& mUserService;
+   const AudiocomTrace mAudiocomTrace;
 
    UserImage* mUserImage {};
    wxStaticText* mUserName {};

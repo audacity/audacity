@@ -16,6 +16,7 @@
 #include "BasicUI.h"
 #include "CloudSyncService.h"
 #include "CodeConversions.h"
+#include "ExportUtils.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
 #include "ProjectManager.h"
@@ -37,7 +38,7 @@ namespace
 auto MakeProgress()
 {
    return BasicUI::MakeProgress(
-      XO("Open from audio.com"), XO("Synchronizing project"),
+      XO("Open trace audio.com"), XO("Synchronizing project"),
       BasicUI::ProgressShowCancel);
 }
 
@@ -156,13 +157,15 @@ AudacityProject* OpenProjectFromCloud(
 {
    ASSERT_MAIN_THREAD();
 
-   auto authResult = PerformBlockingAuth(potentialTarget);
+   auto authResult =
+      PerformBlockingAuth(potentialTarget, AudiocomTrace::OpenFromCloudMenu);
 
    if (authResult.Result != AuthResult::Status::Authorised)
    {
       LinkFailedDialog dialog { potentialTarget != nullptr ?
                                    &ProjectWindow::Get(*potentialTarget) :
-                                   nullptr };
+                                   nullptr,
+                                AudiocomTrace::OpenFromCloudMenu };
       dialog.ShowModal();
       return nullptr;
    }
@@ -261,18 +264,19 @@ AudacityProject* OpenProjectFromCloud(
 }
 
 bool SyncCloudProject(
-   AudacityProject& project, std::string_view path, bool force)
+   AudacityProject& project, std::string_view path, AudiocomTrace trace,
+   bool force)
 {
    ASSERT_MAIN_THREAD();
 
    if (!CloudSyncService::Get().IsCloudProject(std::string(path)))
       return true;
 
-   auto authResult = PerformBlockingAuth(&project);
+   auto authResult = PerformBlockingAuth(&project, trace);
 
    if (authResult.Result != AuthResult::Status::Authorised)
    {
-      LinkFailedDialog dialog { &ProjectWindow::Get(project) };
+      LinkFailedDialog dialog { &ProjectWindow::Get(project), trace };
       dialog.ShowModal();
       return false;
    }
@@ -293,7 +297,7 @@ bool SyncCloudProject(
       return false;
 
    if (conflictResolution == ConflictResolution::Remote)
-      return SyncCloudProject(project, path, true);
+      return SyncCloudProject(project, path, trace, true);
 
    if (HandleFailure(result))
       return false;

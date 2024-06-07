@@ -29,6 +29,7 @@
 #include "UrlDecode.h"
 
 #include "BasicUI.h"
+#include "ExportUtils.h"
 
 #include "StringUtils.h"
 
@@ -74,7 +75,8 @@ void WriteCommonFields(
 } // namespace
 
 void OAuthService::ValidateAuth(
-   std::function<void(std::string_view)> completedHandler, bool silent)
+   std::function<void(std::string_view)> completedHandler, AudiocomTrace trace,
+   bool silent)
 {
    if (HasAccessToken() || !HasRefreshToken())
    {
@@ -83,11 +85,13 @@ void OAuthService::ValidateAuth(
       return;
    }
 
-   AuthoriseRefreshToken(GetServiceConfig(), std::move(completedHandler), silent);
+   AuthoriseRefreshToken(
+      GetServiceConfig(), trace, std::move(completedHandler), silent);
 }
 
 bool OAuthService::HandleLinkURI(
-   std::string_view uri, std::function<void(std::string_view)> completedHandler)
+   std::string_view uri, AudiocomTrace trace,
+   std::function<void(std::string_view)> completedHandler)
 {
    if (!IsPrefixedInsensitive(uri, uriPrefix))
    {
@@ -97,7 +101,7 @@ bool OAuthService::HandleLinkURI(
    }
 
    // It was observed, that sometimes link is passed as audacity://link/
-   // This is valid from URI point of view, but we need to handle it separately
+   // This is valid trace URI point of view, but we need to handle it separately
    const auto argsStart = uri.find("?");
 
    if (argsStart == std::string_view::npos)
@@ -136,19 +140,19 @@ bool OAuthService::HandleLinkURI(
    if (!authorizationCode.empty())
    {
       AuthoriseCode(
-         GetServiceConfig(), authorizationCode, std::move(completedHandler));
+         GetServiceConfig(), authorizationCode, trace,
+         std::move(completedHandler));
    }
    else if (!token.empty())
    {
       AuthoriseRefreshToken(
-         GetServiceConfig(), token, std::move(completedHandler), false);
+         GetServiceConfig(), token, trace, std::move(completedHandler), false);
    }
    else if (!username.empty() && !password.empty())
    {
       AuthorisePassword(
-         GetServiceConfig(),
-         audacity::UrlDecode(std::string(username)),
-         audacity::UrlDecode(std::string(password)),
+         GetServiceConfig(), audacity::UrlDecode(std::string(username)),
+         audacity::UrlDecode(std::string(password)), trace,
          std::move(completedHandler));
    }
    else
@@ -162,7 +166,7 @@ bool OAuthService::HandleLinkURI(
    return true;
 }
 
-void OAuthService::UnlinkAccount()
+void OAuthService::UnlinkAccount(AudiocomTrace trace)
 {
    std::lock_guard<std::recursive_mutex> lock(mMutex);
 
@@ -172,12 +176,12 @@ void OAuthService::UnlinkAccount()
 
    // Unlink account is expected to be called only
    // on UI thread
-   Publish({ {}, {}, false });
+   Publish({ {}, {}, trace, false });
 }
 
 void OAuthService::AuthorisePassword(
    const ServiceConfig& config, std::string_view userName,
-   std::string_view password,
+   std::string_view password, AudiocomTrace trace,
    std::function<void(std::string_view)> completedHandler)
 {
    using namespace rapidjson;
@@ -200,12 +204,12 @@ void OAuthService::AuthorisePassword(
    document.Accept(writer);
 
    DoAuthorise(
-      config, { buffer.GetString(), buffer.GetSize() },
+      config, { buffer.GetString(), buffer.GetSize() }, trace,
       std::move(completedHandler), false);
 }
 
 void OAuthService::AuthoriseRefreshToken(
-   const ServiceConfig& config, std::string_view token,
+   const ServiceConfig& config, std::string_view token, AudiocomTrace trace,
    std::function<void(std::string_view)> completedHandler, bool silent)
 {
    using namespace rapidjson;
@@ -224,24 +228,24 @@ void OAuthService::AuthoriseRefreshToken(
    document.Accept(writer);
 
    DoAuthorise(
-      config, { buffer.GetString(), buffer.GetSize() },
+      config, { buffer.GetString(), buffer.GetSize() }, trace,
       std::move(completedHandler), silent);
 }
 
 void OAuthService::AuthoriseRefreshToken(
-   const ServiceConfig& config,
+   const ServiceConfig& config, AudiocomTrace trace,
    std::function<void(std::string_view)> completedHandler, bool silent)
 {
    std::lock_guard<std::recursive_mutex> lock(mMutex);
 
    AuthoriseRefreshToken(
-      config, audacity::ToUTF8(refreshToken.Read()),
+      config, audacity::ToUTF8(refreshToken.Read()), trace,
       std::move(completedHandler), silent);
 }
 
 void OAuthService::AuthoriseCode(
    const ServiceConfig& config, std::string_view authorizationCode,
-   std::function<void(std::string_view)> completedHandler)
+   AudiocomTrace trace, std::function<void(std::string_view)> completedHandler)
 {
    using namespace rapidjson;
 
@@ -265,7 +269,7 @@ void OAuthService::AuthoriseCode(
    document.Accept(writer);
 
    DoAuthorise(
-      config, { buffer.GetString(), buffer.GetSize() },
+      config, { buffer.GetString(), buffer.GetSize() }, trace,
       std::move(completedHandler), false);
 }
 
@@ -291,7 +295,7 @@ std::string OAuthService::GetAccessToken() const
 }
 
 void OAuthService::DoAuthorise(
-   const ServiceConfig& config, std::string_view payload,
+   const ServiceConfig& config, std::string_view payload, AudiocomTrace trace,
    std::function<void(std::string_view)> completedHandler, bool silent)
 {
    using namespace audacity::network_manager;
@@ -308,8 +312,8 @@ void OAuthService::DoAuthorise(
       request, payload.data(), payload.size());
 
    response->setRequestFinishedCallback(
-      [response, this, handler = std::move(completedHandler), silent](auto)
-      {
+      [response, this, handler = std::move(completedHandler), silent,
+       trace](auto) {
          const auto httpCode = response->getHTTPCode();
          const auto body = response->readAll<std::string>();
 
@@ -320,9 +324,9 @@ void OAuthService::DoAuthorise(
 
             // Token has expired?
             if (httpCode == 422)
-               BasicUI::CallAfter([this] { UnlinkAccount(); });
+               BasicUI::CallAfter([this, trace] { UnlinkAccount(trace); });
             else
-               SafePublish({ {}, body, false, silent });
+               SafePublish({ {}, body, trace, false, silent });
 
             return;
          }
@@ -335,7 +339,7 @@ void OAuthService::DoAuthorise(
             if (handler)
                handler({});
 
-            SafePublish({ {}, body, false, silent });
+            SafePublish({ {}, body, trace, false, silent });
             return;
          }
 
@@ -366,7 +370,7 @@ void OAuthService::DoAuthorise(
 
          // The callback only needs the access token, so invoke it immediately.
          // Networking is thread safe
-         SafePublish({ mAccessToken, {}, true, silent });
+         SafePublish({ mAccessToken, {}, trace, true, silent });
       });
 }
 
@@ -393,7 +397,7 @@ public:
 
    void OnSettingResetEnd() override
    {
-      GetOAuthService().UnlinkAccount();
+      GetOAuthService().UnlinkAccount(AudiocomTrace::ignore);
       refreshToken.Invalidate();
    }
 };

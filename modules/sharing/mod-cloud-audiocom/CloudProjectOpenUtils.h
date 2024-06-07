@@ -15,6 +15,8 @@
 
 class AudacityProject;
 
+enum class AudiocomTrace;
+
 namespace audacity::cloud::audiocom::sync
 {
 AudacityProject* GetPotentialTarget();
@@ -25,7 +27,8 @@ AudacityProject* OpenProjectFromCloud(
    std::string_view snapshotId, bool forceNew);
 
 bool SyncCloudProject(
-   AudacityProject& project, std::string_view path, bool force = false);
+   AudacityProject& project, std::string_view path, AudiocomTrace,
+   bool force = false);
 
 bool HandleProjectLink(std::string_view link);
 

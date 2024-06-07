@@ -131,7 +131,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
    {
    case CloudSyncError::Authorization:
       // How do we got here? Probable auth_token is invalid?
-      GetOAuthService().UnlinkAccount();
+      GetOAuthService().UnlinkAccount(message.audiocomTrace);
       SaveToCloud(mProject, UploadMode::Normal);
       break;
    case CloudSyncError::ProjectLimitReached:
@@ -145,7 +145,7 @@ void ProjectCloudUIExtension::OnCloudStatusChanged(
          const auto slug = audacity::ToUTF8(GetUserService().GetUserSlug());
 
          BasicUI::OpenInDefaultBrowser(
-            GetServiceConfig().GetProjectsPageUrl(slug));
+            GetServiceConfig().GetProjectsPageUrl(slug, message.audiocomTrace));
 
          WaitForActionDialog {
             &mProject,

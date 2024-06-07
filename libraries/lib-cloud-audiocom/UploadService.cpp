@@ -25,10 +25,11 @@
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 
-#include "NetworkManager.h"
-#include "Request.h"
 #include "IResponse.h"
 #include "MultipartData.h"
+#include "NetworkManager.h"
+#include "NetworkUtils.h"
+#include "Request.h"
 
 #include "CodeConversions.h"
 
@@ -178,11 +179,12 @@ struct AudiocomUploadOperation final :
       const ServiceConfig& serviceConfig, wxString fileName,
       wxString projectName, bool isPublic,
       UploadService::CompletedCallback completedCallback,
-      UploadService::ProgressCallback progressCallback)
+      UploadService::ProgressCallback progressCallback, AudiocomTrace trace)
        : mServiceConfig(serviceConfig)
        , mFileName(std::move(fileName))
        , mProjectName(std::move(projectName))
        , mIsPublic(isPublic)
+       , mAudiocomTrace(trace)
        , mCompletedCallback(std::move(completedCallback))
        , mProgressCallback(std::move(progressCallback))
    {
@@ -195,6 +197,7 @@ struct AudiocomUploadOperation final :
 
    const bool mIsPublic;
 
+   const AudiocomTrace mAudiocomTrace;
    UploadService::CompletedCallback mCompletedCallback;
    UploadService::ProgressCallback mProgressCallback;
 
@@ -265,10 +268,11 @@ struct AudiocomUploadOperation final :
 
       if (mCompletedCallback)
       {
-         const auto uploadURL =
-            mAuthToken.empty() ?
-               mServiceConfig.GetFinishUploadPage(mAudioID, mUploadToken) :
-               mServiceConfig.GetAudioURL(mUserName, mAudioSlug);
+         const auto uploadURL = mAuthToken.empty() ?
+                                   mServiceConfig.GetFinishUploadPage(
+                                      mAudioID, mUploadToken, mAudiocomTrace) :
+                                   mServiceConfig.GetAudioURL(
+                                      mUserName, mAudioSlug, mAudiocomTrace);
 
          mCompletedCallback(
             { UploadOperationCompleted::Result::Success,
@@ -571,7 +575,8 @@ UploadService::UploadService(const ServiceConfig& config, OAuthService& service)
 
 UploadOperationHandle UploadService::Upload(
    const wxString& fileName, const wxString& projectName, bool isPublic,
-   CompletedCallback completedCallback, ProgressCallback progressCallback)
+   CompletedCallback completedCallback, ProgressCallback progressCallback,
+   AudiocomTrace trace)
 {
    if (!wxFileExists(fileName))
    {
@@ -584,10 +589,13 @@ UploadOperationHandle UploadService::Upload(
 
    auto operation = std::make_shared<AudiocomUploadOperation>(
       mServiceConfig, fileName, projectName, isPublic,
-      std::move(completedCallback), std::move(progressCallback));
+      std::move(completedCallback), std::move(progressCallback), trace);
 
-   mOAuthService.ValidateAuth([operation, this](std::string_view authToken)
-                              { operation->InitiateUpload(authToken); }, false);
+   mOAuthService.ValidateAuth(
+      [operation, this](std::string_view authToken) {
+         operation->InitiateUpload(authToken);
+      },
+      trace, false);
 
    return UploadOperationHandle { operation };
 }
