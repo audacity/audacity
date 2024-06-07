@@ -289,8 +289,9 @@ public:
 
    void SwapChannels() override
    {
-      if(mChannelCaches.size() == 2)
-         std::swap(mChannelCaches[0], mChannelCaches[1]);
+      //Wave data cache captures channel index which becomes
+      //part of it's state, request cache rebuild...
+      mChanged.store(true);
    }
 
    void MarkChanged() noexcept override
