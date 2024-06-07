@@ -50,6 +50,76 @@ const UiActionList ProcessingUiActions::m_actions = {
              TranslatableString("action", "Set loop region out"),
              TranslatableString("action", "Set loop region out")
              ),
+    // clip
+    UiAction("clip-cut",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut"),
+             TranslatableString("action", "Cut clip")
+             ),
+    UiAction("clip-copy",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Copy"),
+             TranslatableString("action", "Copy clip")
+             ),
+    UiAction("clip-delete",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete"),
+             TranslatableString("action", "Delete clip")
+             ),
+    UiAction("clip-cut-close-gap",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut & close gap"),
+             TranslatableString("action", "Cut clip & close gap")
+             ),
+    UiAction("clip-delete-close-gap",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete & close gap"),
+             TranslatableString("action", "Delete clip & close gap")
+             ),
+    UiAction("clip-duplicate",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Duplicate clip"),
+             TranslatableString("action", "Duplicate clip")
+             ),
+    UiAction("clip-split",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Split clip"),
+             TranslatableString("action", "Split clip")
+             ),
+    UiAction("clip-export",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Export clip"),
+             TranslatableString("action", "Export clip")
+             ),
+    UiAction("clip-enable-stretching",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Enable clip stretching"),
+             TranslatableString("action", "Enable clip stretching")
+             ),
+    //! NOTE It is not clear yet what this is, if it is a dialog show,
+    //! then it might be better to move it to the projectscene module
+    UiAction("clip-pitch-speed",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Pitch and speed"),
+             TranslatableString("action", "Pitch and speed")
+             ),
+    UiAction("clip-render-pitch-speed",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Render pitch and speed"),
+             TranslatableString("action", "Render pitch and speed")
+             ),
+    //! ----------
 };
 
 ProcessingUiActions::ProcessingUiActions(std::shared_ptr<ProcessingActionsController> controller)

@@ -58,6 +58,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp

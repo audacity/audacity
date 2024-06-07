@@ -5,6 +5,8 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "processing/iprocessinginteraction.h"
+#include "actions/iactionsdispatcher.h"
+#include "actions/actionable.h"
 
 #include "global/async/asyncable.h"
 #include "processing/processingtypes.h"
@@ -12,7 +14,7 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable
+class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
     Q_OBJECT
 
@@ -22,6 +24,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
     ClipsListModel(QObject* parent = nullptr);
@@ -50,6 +53,8 @@ signals:
     void timelineContextChanged();
     void selectedClipIdxChanged();
 
+    void requestClipTitleEdit(int index);
+
 private slots:
     void onTimelineContextValuesChanged();
 
@@ -68,6 +73,8 @@ private:
 
     void onSelectedTime(double startTime, double endTime);
     void onSelectedClip(const processing::ClipKey& k);
+
+    void onClipRenameAction(const muse::actions::ActionData& args);
 
     TimelineContext* m_context = nullptr;
     processing::TrackId m_trackId = -1;
