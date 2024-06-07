@@ -29,17 +29,43 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
 
+        rowHeight: 48
+
         model: PlaybackToolBarModel {
             id: toolbarModel
         }
 
         sourceComponentCallback: function(type) {
             switch(type) {
+            case PlaybackToolBarModel.PLAYBACK_CONTROL: return controlComp
             case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
             case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
+            case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
             }
 
             return null
+        }
+
+        Component {
+            id: controlComp
+
+            StyledToolBarItem {
+                width: 32
+                height: width
+
+                iconColor: Boolean(itemData) ? itemData.iconColor : ui.theme.fontPrimaryColor
+                accentColor: Boolean(itemData) ? itemData.backgroundColor : ui.theme.buttonColor
+                accentButton: Boolean(itemData) ? itemData.selected : false
+            }
+        }
+
+        Component {
+            id: projectControlComp
+
+            StyledToolBarItem {
+                width: 28
+                height: width
+            }
         }
 
         Component {
@@ -70,7 +96,7 @@ Item {
             RecordLevel {
                 property var itemData: null
 
-                width: 32
+                width: 28
                 height: width
 
                 icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
@@ -99,7 +125,7 @@ Item {
         anchors.left: view.right
         anchors.verticalCenter: root.verticalCenter
 
-        width: 32
+        width: 28
         height: width
 
         icon: IconCode.SETTINGS_COG

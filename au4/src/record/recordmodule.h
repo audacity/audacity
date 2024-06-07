@@ -9,6 +9,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::record {
+class RecordConfiguration;
 class RecordController;
 class RecordUiActions;
 class RecordModule : public muse::modularity::IModuleSetup
@@ -23,6 +24,7 @@ public:
     void onDeinit() override;
 
 private:
+    std::shared_ptr<RecordConfiguration> m_configuration;
     std::shared_ptr<RecordController> m_controller;
     std::shared_ptr<RecordUiActions> m_uiActions;
 };

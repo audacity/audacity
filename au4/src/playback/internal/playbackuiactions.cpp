@@ -193,9 +193,10 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
     if (!config.isValid()) {
         config.items = {
             { "play", true },
+            { "stop", true },
+            { "record", true },
             { "rewind-start", true },
             { "rewind-end", true },
-            { "record", true },
             { "loop", true },
             { "", true },
             { "envelope", true },

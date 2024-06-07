@@ -10,6 +10,7 @@
 
 #include "ui/iuiactionsregister.h"
 
+#include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recorduiactions.h"
 
@@ -31,9 +32,11 @@ std::string RecordModule::moduleName() const
 
 void RecordModule::registerExports()
 {
+    m_configuration = std::make_shared<RecordConfiguration>();
     m_controller = std::make_shared<RecordController>();
     m_uiActions = std::make_shared<RecordUiActions>(m_controller);
 
+    ioc()->registerExport<IRecordConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecordController>(moduleName(), m_controller);
 }
 

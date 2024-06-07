@@ -9,6 +9,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::playback {
+class PlaybackConfiguration;
 class PlaybackController;
 class PlaybackUiActions;
 class PlaybackModule : public muse::modularity::IModuleSetup
@@ -24,6 +25,7 @@ public:
     void onDeinit() override;
 
 private:
+    std::shared_ptr<PlaybackConfiguration> m_configuration;
     std::shared_ptr<PlaybackController> m_controller;
     std::shared_ptr<PlaybackUiActions> m_uiActions;
 };

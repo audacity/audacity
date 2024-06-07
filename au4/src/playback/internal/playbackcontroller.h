@@ -1,17 +1,17 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef MU_PLAYBACK_PLAYBACKCONTROLLER_H
-#define MU_PLAYBACK_PLAYBACKCONTROLLER_H
+#pragma once
+
+#include "async/asyncable.h"
+#include "actions/actionable.h"
 
 #include "modularity/ioc.h"
-#include "async/asyncable.h"
 #include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
-
 #include "../iplayback.h"
+
 #include "../iplayer.h"
 #include "../iplaybackcontroller.h"
 
@@ -134,5 +134,3 @@ private:
     bool m_isRangeSelection = false;
 };
 }
-
-#endif // MU_PLAYBACK_PLAYBACKCONTROLLER_H
