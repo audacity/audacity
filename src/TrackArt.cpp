@@ -604,7 +604,7 @@ private:
 
    double GetPositionInRect(int64_t index, const wxRect& rect, double duration) const
    {
-      return zoomInfo.TimeToPosition(index * duration) + rect.x + 1;
+      return zoomInfo.TimeToPosition(index * duration) + rect.x;
    }
 
    std::pair<int64_t, int64_t> GetBoundaries(const wxRect& subRect, const wxRect& fullRect, double width) const
