@@ -19,242 +19,74 @@ Item {
     property int maximumWidth: 0
     property int maximumHeight: 0
 
-    width: gridView.width + /*spacing*/ 4 + customizeButton.width
+    property alias navigationPanel: view.navigationPanel
+
+    width: view.width + /*spacing*/ 4 + customizeButton.width
     height: 48 // todo
 
-    property NavigationPanel navigationPanel: NavigationPanel {
-        name: "PlaybackToolBar"
-        enabled: root.enabled && root.visible
-        accessible.name: qsTrc("playback", "Playback toolbar")
-    }
-
-    PlaybackToolBarModel {
-        id: toolbarModel
-    }
-
-    Component.onCompleted: {
-        toolbarModel.load()
-    }
-
-    Flow {
-        id: gridView
+    StyledToolBarView {
+        id: view
 
         anchors.verticalCenter: parent.verticalCenter
 
-        clip: true
+        model: PlaybackToolBarModel {
+            id: toolbarModel
+        }
 
-        spacing: 4
+        sourceComponentCallback: function(type) {
+            switch(type) {
+            case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
+            case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
+            }
 
-        Repeater {
-            model: toolbarModel
+            return null
+        }
 
-            Loader {
-                id: loader
+        Component {
+            id: playbackLevelComp
 
-                property var itemData: Boolean(model) ? model.item : null
-                property var itemOrder: Boolean(model) ? model.order : 0
-                property var itemIsMenuSecondary: Boolean(model) ? model.isMenuSecondary : false
+            PlaybackLevel {
+                property var itemData: null
 
-                property var itemSize: {
-                    if (!Boolean(loader.itemData)) {
-                        return null
-                    }
+                width: 240
+                height: 28
 
-                    switch(loader.itemData.type) {
-                    case PlaybackToolBarItem.SECTION: return Qt.size(1, 32)
-                    case PlaybackToolBarItem.ACTION: return Qt.size(32, 32)
-                    case PlaybackToolBarItem.PLAYBACK_LEVEL: return Qt.size(240, 28)
-                    case PlaybackToolBarItem.RECORD_LEVEL: return Qt.size(32, 32)
-                    }
+                volumeLevel: Boolean(itemData) ? itemData.level : 0
+                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
+                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
-                    return null
+                navigationPanel: root.navigationPanel
+                navigationOrder: 2
+
+                onVolumeLevelChangeRequested: function(level) {
+                    itemData.level = level
                 }
+            }
+        }
 
-                width: itemSize.width // todo
-                height: itemSize.height // todo
+        Component {
+            id: recordLevelComp
 
-                sourceComponent: {
-                    if (!Boolean(loader.itemData)) {
-                        return null
-                    }
+            RecordLevel {
+                property var itemData: null
 
-                    switch(loader.itemData.type) {
-                    case PlaybackToolBarItem.SECTION: return sectionComp
-                    case PlaybackToolBarItem.ACTION: return actionComp
-                    case PlaybackToolBarItem.PLAYBACK_LEVEL: return playbackLevelComp
-                    case PlaybackToolBarItem.RECORD_LEVEL: return recordLevelComp
-                    }
+                width: 32
+                height: width
 
-                    return null
-                }
+                icon: Boolean(itemData) ? itemData.icon : IconCode.NONE
 
-                Component {
-                    id: sectionComp
+                toolTipTitle: Boolean(itemData) ? itemData.title : ""
+                toolTipDescription: Boolean(itemData) ? itemData.description : ""
 
-                    SeparatorLine {
-                        orientation: Qt.Vertical
-                    }
-                }
+                volumeLevel: Boolean(itemData) ? itemData.level : 0
+                leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
+                rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
-                Component {
-                    id: actionComp
+                navigationPanel: root.navigationPanel
+                navigationOrder: 1
 
-                    FlatButton {
-                        id: btn
-
-                        property var item: loader.itemData
-                        property int order: loader.itemOrder
-                        property var isMenuSecondary: loader.itemIsMenuSecondary
-
-                        property var hasMenu: Boolean(item) && item.subitems.length !== 0
-
-                        width: 32
-                        height: width
-
-                        accentButton: item.checked || menuLoader.isMenuOpened
-
-                        icon: item.icon
-                        iconFont: ui.theme.toolbarIconsFont
-
-                        toolTipTitle: item.title
-                        toolTipDescription: item.description
-                        toolTipShortcut: item.shortcuts
-
-                        navigation.panel: root.navigationPanel
-                        navigation.name: item.id
-                        navigation.order: order
-                        isClickOnKeyNavTriggered: false
-                        navigation.onTriggered: {
-                            if (menuLoader.isMenuOpened || hasMenu) {
-                                toggleMenuOpened()
-                            } else {
-                                handleMenuItem()
-                            }
-                        }
-
-                        mouseArea.acceptedButtons: hasMenu && isMenuSecondary
-                                                   ? Qt.LeftButton | Qt.RightButton
-                                                   : Qt.LeftButton
-
-                        function toggleMenuOpened() {
-                            menuLoader.toggleOpened(item.subitems)
-                        }
-
-                        function handleMenuItem() {
-                            Qt.callLater(toolbarModel.handleMenuItem, item.id)
-                        }
-
-                        onClicked: function(mouse) {
-                            if (menuLoader.isMenuOpened // If already menu open, close it
-                                    || (hasMenu // Or if can open menu
-                                        && (!isMenuSecondary // And _should_ open menu
-                                            || mouse.button === Qt.RightButton))) {
-                                toggleMenuOpened()
-                                return
-                            }
-
-                            if (mouse.button === Qt.LeftButton) {
-                                handleMenuItem()
-                            }
-                        }
-
-                        Connections {
-                            target: btn.mouseArea
-
-                            enabled: btn.hasMenu && !menuLoader.isMenuOpened
-
-                            function onPressAndHold() {
-                                if (menuLoader.isMenuOpened || !btn.hasMenu) {
-                                    return
-                                }
-
-                                btn.toggleMenuOpened()
-                            }
-                        }
-
-                        Canvas {
-                            visible: isMenuSecondary
-
-                            property color fillColor: ui.theme.fontPrimaryColor
-                            onFillColorChanged: {
-                                requestPaint()
-                            }
-
-                            width: 4
-                            height: 4
-
-                            anchors.margins: 2
-                            anchors.right: parent.right
-                            anchors.bottom: parent.bottom
-
-                            onPaint: {
-                                const ctx = getContext("2d");
-                                ctx.fillStyle = fillColor;
-                                ctx.moveTo(width, 0);
-                                ctx.lineTo(width, height);
-                                ctx.lineTo(0, height);
-                                ctx.closePath();
-                                ctx.fill();
-                            }
-                        }
-
-                        StyledMenuLoader {
-                            id: menuLoader
-
-                            onHandleMenuItem: function(itemId) {
-                                toolbarModel.handleMenuItem(itemId)
-                            }
-                        }
-                    }
-                }
-
-                Component {
-                    id: playbackLevelComp
-
-                    PlaybackLevel {
-                        property var item: loader.itemData
-
-                        width: 240
-                        height: 28
-
-                        volumeLevel: item.level
-                        leftCurrentVolumePressure: item.leftChannelPressure
-                        rightCurrentVolumePressure: item.rightChannelPressure
-
-                        navigationPanel: root.navigationPanel
-                        navigationOrder: loader.itemOrder
-
-                        onVolumeLevelChangeRequested: function(level) {
-                            item.level = level
-                        }
-                    }
-                }
-
-                Component {
-                    id: recordLevelComp
-
-                    RecordLevel {
-                        property var item: loader.itemData
-
-                        width: 32
-                        height: width
-
-                        icon: item.icon
-
-                        toolTipTitle: item.title
-                        toolTipDescription: item.description
-
-                        volumeLevel: item.level
-                        leftCurrentVolumePressure: item.leftChannelPressure
-                        rightCurrentVolumePressure: item.rightChannelPressure
-
-                        navigationPanel: root.navigationPanel
-                        navigationOrder: loader.itemOrder
-
-                        onVolumeLevelChangeRequested: function(level) {
-                            item.level = level
-                        }
-                    }
+                onVolumeLevelChangeRequested: function(level) {
+                    itemData.level = level
                 }
             }
         }
@@ -264,7 +96,7 @@ Item {
         id: customizeButton
 
         anchors.margins: 4
-        anchors.left: gridView.right
+        anchors.left: view.right
         anchors.verticalCenter: root.verticalCenter
 
         width: 32

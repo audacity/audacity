@@ -1,18 +1,17 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PLAYBACK_PLAYBACKTOOLBARLEVELITEM_H
-#define AU_PLAYBACK_PLAYBACKTOOLBARLEVELITEM_H
+#pragma once
 
 #include <QString>
 
 #include "modularity/ioc.h"
 #include "iplayback.h"
 
-#include "playbacktoolbarabstractitem.h"
+#include "uicomponents/view/toolbaritem.h"
 
 namespace au::playback {
-class PlaybackToolBarLevelItem : public PlaybackToolBarAbstractItem
+class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
 
@@ -29,7 +28,7 @@ class PlaybackToolBarLevelItem : public PlaybackToolBarAbstractItem
     muse::Inject<IPlayback> playback;
 
 public:
-    explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent = nullptr);
+    explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent = nullptr);
 
     int level() const;
     void setLevel(int newLevel);
@@ -77,5 +76,3 @@ private:
     float m_rightMaxPeak = 0.0;
 };
 }
-
-#endif // AU_PLAYBACK_PLAYBACKTOOLBARLEVELITEM_H

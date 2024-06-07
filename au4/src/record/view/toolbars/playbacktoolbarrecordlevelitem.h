@@ -10,10 +10,10 @@
 #include "au3wrap/iau3record.h"
 #include "record/irecordcontroller.h"
 
-#include "playback/view/toolbars/playbacktoolbarabstractitem.h"
+#include "uicomponents/view/toolbaritem.h"
 
 namespace au::record {
-class PlaybackToolBarRecordLevelItem : public playback::PlaybackToolBarAbstractItem
+class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ class PlaybackToolBarRecordLevelItem : public playback::PlaybackToolBarAbstractI
     muse::Inject<record::IRecordController> recordController;
 
 public:
-    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent = nullptr);
+    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent = nullptr);
 
     int level() const;
     void setLevel(int newLevel);

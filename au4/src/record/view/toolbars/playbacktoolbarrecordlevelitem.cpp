@@ -9,8 +9,9 @@ using namespace au::record;
 using namespace au::au3;
 using namespace au::audio;
 
-PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)
-    : PlaybackToolBarAbstractItem(action, type, parent)
+PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,
+                                                               muse::uicomponents::ToolBarItemType::Type type, QObject* parent)
+    : muse::uicomponents::ToolBarItem(action, type, parent)
 {
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         m_active = recordController()->isRecording();

@@ -28,8 +28,9 @@
 using namespace au::playback;
 using namespace au::audio;
 
-PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)
-    : PlaybackToolBarAbstractItem(action, type, parent)
+PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+                                                   QObject* parent)
+    : muse::uicomponents::ToolBarItem(action, type, parent)
 {
     playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
         m_level = volume;

@@ -4,74 +4,52 @@
 #ifndef AU_PROJECTSCENE_PLAYBACKTOOLBARMODEL_H
 #define AU_PROJECTSCENE_PLAYBACKTOOLBARMODEL_H
 
-#include <QHash>
-#include <QAbstractListModel>
-
-#include "async/asyncable.h"
-
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/iuiconfiguration.h"
-#include "actions/iactionsdispatcher.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
 
+#include "uicomponents/view/abstracttoolbarmodel.h"
+
 namespace au::playback {
-class PlaybackToolBarAbstractItem;
-class PlaybackToolBarModel : public QAbstractListModel, public muse::async::Asyncable
+class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
-    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> context;
     muse::Inject<au::playback::IPlaybackController> controller;
     muse::Inject<au::record::IRecordController> recordController;
 
-    Q_PROPERTY(int length READ rowCount NOTIFY itemsChanged)
-
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void load();
-    Q_INVOKABLE void handleMenuItem(const QString& itemId);
-    Q_INVOKABLE QVariantMap get(int index);
+    enum ItemType
+    {
+        UNDEFINED,
+        PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
+        RECORD_LEVEL
+    };
+    Q_ENUM(ItemType)
 
-    QVariant data(const QModelIndex& index, int role) const override;
-    QHash<int, QByteArray> roleNames() const override;
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-
-signals:
-    void itemsChanged();
+    Q_INVOKABLE void load() override;
 
 private:
-    enum InputRoles {
-        ItemRole = Qt::UserRole + 1,
-        IsMenuSecondaryRole,
-        OrderRole,
-        SectionRole,
-    };
 
-    PlaybackToolBarAbstractItem* findItem(const muse::actions::ActionCode& actionCode);
-
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes);
+    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
 
     void setupConnections();
     void onProjectChanged();
 
     void updateActions();
 
-    bool isMenuSecondary(const muse::actions::ActionCode& actionCode) const;
-
-    PlaybackToolBarAbstractItem* makeItem(const muse::ui::UiAction& action);
+    muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
 
     muse::ui::UiAction playAction() const;
     muse::ui::UiAction recordAction() const;
-
-    QList<PlaybackToolBarAbstractItem*> m_items;
 };
 }
 
