@@ -242,11 +242,17 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame *fra
                      frame->header.blocksize, 1,
                      int16Sample);
          }
-         else {
+         else if(frame->header.bits_per_sample <= 24){
             channel.AppendBuffer((samplePtr)buffer[chn],
                      int24Sample,
                      frame->header.blocksize, 1,
                      int24Sample);
+         }
+         else {
+            channel.AppendBuffer((samplePtr)buffer[chn],
+                     floatSample,
+                     frame->header.blocksize, 1,
+                     floatSample);
          }
          ++chn;
       });
