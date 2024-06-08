@@ -212,7 +212,8 @@ void ChannelView::SetExpandedHeight(int h)
 
 void ChannelView::DoSetHeight(int h)
 {
-   mHeight = h;
+   //Minimum track height is 20
+   mHeight = std::max(h, 20);
 }
 
 std::shared_ptr<CommonTrackCell> ChannelView::GetAffordanceControls()
