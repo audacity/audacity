@@ -1,7 +1,5 @@
 #include "trackslistclipsmodel.h"
 
-#include "global/containers.h"
-
 using namespace au::projectscene;
 
 TracksListClipsModel::TracksListClipsModel(QObject* parent)
@@ -25,13 +23,12 @@ void TracksListClipsModel::load()
 
     m_trackList = prj->trackList();
 
-    //! TODO Subscribe
+    //! TODO Subscribe on tracks changed
 
     muse::ValCh<std::vector<processing::TrackId> > dataSelectedTracks = processingSelectionController()->dataSelectedOnTracks();
-    m_dataSelectedTracks = dataSelectedTracks.val;
+    m_dataSelectedTracks = { dataSelectedTracks.val.cbegin(), dataSelectedTracks.val.cend() };
     dataSelectedTracks.ch.onReceive(this, [this](const std::vector<processing::TrackId>& tracks) {
-        m_dataSelectedTracks = tracks;
-        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+        setDataSelectedTracks(tracks);
     });
 
     endResetModel();
@@ -53,7 +50,7 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     case TrackIdRole:
         return QVariant::fromValue(track.id);
     case IsDataSelectedRole: {
-        return muse::contains(m_dataSelectedTracks, track.id);
+        return m_dataSelectedTracks.contains(track.id);
     }
     default:
         break;
@@ -86,4 +83,25 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
 
     m_isVerticalRulersVisible = isVerticalRulersVisible;
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
+}
+
+QList<int> TracksListClipsModel::dataSelectedTracks() const
+{
+    return m_dataSelectedTracks;
+}
+
+void TracksListClipsModel::setDataSelectedTracks(const std::vector<processing::TrackId>& tracks)
+{
+    QList<int> l = { tracks.cbegin(), tracks.cend() };
+    setDataSelectedTracks(l);
+}
+
+void TracksListClipsModel::setDataSelectedTracks(const QList<int>& newDataSelectedTracks)
+{
+    if (m_dataSelectedTracks == newDataSelectedTracks) {
+        return;
+    }
+    m_dataSelectedTracks = newDataSelectedTracks;
+    emit dataSelectedTracksChanged();
+    emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
 }

@@ -6,9 +6,80 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::processing;
 
+constexpr double MIN_SELECTION_PX = 12.0;
+
 SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent)
 {
+}
+
+void SelectionViewController::onPressed(double x, double y)
+{
+    m_selectionStarted = true;
+    m_startPoint = QPointF(x, y);
+    emit selectionStarted();
+
+    processingSelectionController()->resetDataSelection();
+}
+
+void SelectionViewController::onPositionChanged(double x, double y)
+{
+    if (!m_selectionStarted) {
+        return;
+    }
+
+    // point
+    QPointF p(x, y);
+    emit selectionChanged(m_startPoint, p);
+
+    // tracks
+    QList<int> tracks = determinateTracks(m_startPoint.y(), y);
+    setSelectedTracks(tracks);
+
+    // time
+    double x1 = m_startPoint.x();
+    double x2 = x;
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+
+    m_context->setSelectionStartTime(m_context->positionToTime(x1));
+    m_context->setSelectionEndTime(m_context->positionToTime(x2));
+}
+
+void SelectionViewController::onReleased(double x, double y)
+{
+    if (!m_selectionStarted) {
+        return;
+    }
+
+    m_selectionStarted = false;
+
+    // point
+
+    QPointF p(x, y);
+
+    emit selectionEnded(m_startPoint, p);
+
+    double x1 = m_startPoint.x();
+    double x2 = x;
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+
+    if ((x2 - x1) < MIN_SELECTION_PX) {
+        return;
+    }
+
+    // tracks
+    QList<int> tracks = determinateTracks(m_startPoint.y(), y);
+    setSelectedTracks(tracks);
+    std::vector<TrackId> ids = { tracks.cbegin(), tracks.cend() };
+    processingSelectionController()->setDataSelectedOnTracks(ids);
+
+    // time
+    processingSelectionController()->setDataSelectedStartTime(m_context->positionToTime(x1));
+    processingSelectionController()->setDataSelectedEndTime(m_context->positionToTime(x2));
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const
@@ -23,29 +94,7 @@ std::vector<TrackId> SelectionViewController::trackIdList() const
     return prj ? prj->trackIdList() : std::vector<TrackId>();
 }
 
-void SelectionViewController::onSelectedCoords(double x1, double y1, double x2, double y2)
-{
-    LOGDA() << "x1: " << x1 << " y1: " << y1 << " x2: " << x2 << " y2: " << y2;
-
-    // tracks
-    std::vector<TrackId> tracks = determinateTracks(y1, y2);
-    processingSelectionController()->setDataSelectedOnTracks(tracks);
-
-    // time
-    if (x1 > x2) {
-        std::swap(x1, x2);
-    }
-
-    processingSelectionController()->setDataSelectedStartTime(m_context->positionToTime(x1));
-    processingSelectionController()->setDataSelectedEndTime(m_context->positionToTime(x2));
-}
-
-void SelectionViewController::resetSelection()
-{
-    processingSelectionController()->resetDataSelection();
-}
-
-std::vector<TrackId> SelectionViewController::determinateTracks(double y1, double y2) const
+QList<int> SelectionViewController::determinateTracks(double y1, double y2) const
 {
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -69,7 +118,7 @@ std::vector<TrackId> SelectionViewController::determinateTracks(double y1, doubl
         return { -1, -1 };
     }
 
-    std::vector<TrackId> ret;
+    QList<int> ret;
 
     int tracksVericalY = vs->tracksVericalY().val;
     int trackTop = -tracksVericalY;
@@ -84,7 +133,7 @@ std::vector<TrackId> SelectionViewController::determinateTracks(double y1, doubl
         }
 
         if (y2 > trackTop && y2 < trackBottom) {
-            if (ret.back() != trackId) {
+            if (!ret.empty() && ret.back() != trackId) {
                 ret.push_back(trackId);
             }
             break;
@@ -111,4 +160,18 @@ void SelectionViewController::setTimelineContext(TimelineContext* newContext)
     }
     m_context = newContext;
     emit timelineContextChanged();
+}
+
+QList<int> SelectionViewController::selectedTracks() const
+{
+    return m_selectedTracks;
+}
+
+void SelectionViewController::setSelectedTracks(const QList<int>& newSelectedTracks)
+{
+    if (m_selectedTracks == newSelectedTracks) {
+        return;
+    }
+    m_selectedTracks = newSelectedTracks;
+    emit selectedTracksChanged();
 }

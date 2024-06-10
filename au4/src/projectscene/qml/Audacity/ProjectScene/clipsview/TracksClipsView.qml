@@ -12,6 +12,8 @@ Rectangle {
 
     TracksListClipsModel {
         id: tracksModel
+
+        dataSelectedTracks: selectionController.selectedTracks
     }
 
     //! NOTE Sync with TracksPanel
@@ -32,6 +34,10 @@ Rectangle {
     SelectionViewController {
         id: selectionController
         context: timeline.context
+
+        onSelectionStarted: clipsSelection.onSelectionStarted()
+        onSelectionChanged: function(p1, p2) { clipsSelection.onSelectionChanged(p1, p2) }
+        onSelectionEnded: function(p1, p2) { clipsSelection.onSelectionEnded(p1, p2) }
     }
 
     Component.onCompleted: {
@@ -101,12 +107,12 @@ Rectangle {
                 }
             }
 
-            onPressed: e => clipsSelection.onPressed(e)
+            onPressed: e => selectionController.onPressed(e.x, e.y)
             onPositionChanged: function(e) {
                 mouseOnTracks = e.y < view.visibleContentHeight
-                clipsSelection.onPositionChanged(e)
+                selectionController.onPositionChanged(e.x, e.y)
             }
-            onReleased: e => clipsSelection.onReleased(e)
+            onReleased: e => selectionController.onReleased(e.x, e.y)
         }
 
         StyledListView {
@@ -138,20 +144,7 @@ Rectangle {
 
         ClipsSelection {
             id: clipsSelection
-
             anchors.fill: parent
-
-            onSelected: function(x1, y1, x2, y2) {
-                // console.log("onSelected: x1: " + x1 + " y1: " + y1 + " x2: " + x2 + " y2: " + y2)
-                //! NOTE The x coordinates must match the timeline.
-                //! The y coordinates must match the track view
-                //! If this is not the case, then appropriate adjustments must be made.
-                selectionController.onSelectedCoords(x1, y1, x2, y2)
-            }
-
-            onReset: {
-                selectionController.resetSelection()
-            }
         }
 
         PlayCursor {

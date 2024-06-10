@@ -29,17 +29,13 @@ void TimelineContext::init(double frameWidth)
     muse::ValCh<processing::secs_t> selectedStartTime = processingSelectionController()->dataSelectedStartTime();
     m_selecitonStartTime = selectedStartTime.val;
     selectedStartTime.ch.onReceive(this, [this](processing::secs_t time) {
-        m_selecitonStartTime = time;
-        emit selectionStartTimeChanged();
-        updateSelectionActive();
+        setSelectionStartTime(time);
     });
 
     muse::ValCh<processing::secs_t> selectedEndTime = processingSelectionController()->dataSelectedEndTime();
     m_selectionEndTime = selectedEndTime.val;
     selectedEndTime.ch.onReceive(this, [this](processing::secs_t time) {
-        m_selectionEndTime = time;
-        emit selectionEndTimeChanged();
-        updateSelectionActive();
+        setSelectionEndTime(time);
     });
 }
 
@@ -163,9 +159,27 @@ double TimelineContext::selectionStartTime() const
     return m_selecitonStartTime.raw();
 }
 
+void TimelineContext::setSelectionStartTime(double time)
+{
+    if (m_selecitonStartTime != time) {
+        m_selecitonStartTime = time;
+        emit selectionStartTimeChanged();
+        updateSelectionActive();
+    }
+}
+
 double TimelineContext::selectionEndTime() const
 {
     return m_selectionEndTime.raw();
+}
+
+void TimelineContext::setSelectionEndTime(double time)
+{
+    if (m_selectionEndTime != time) {
+        m_selectionEndTime = time;
+        emit selectionEndTimeChanged();
+        updateSelectionActive();
+    }
 }
 
 bool TimelineContext::selectionActive() const

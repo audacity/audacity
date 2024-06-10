@@ -18,6 +18,10 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 
     Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
 
+    //! NOTE Can be changed from Qml, directly during selection
+    //! Or via selection controller (if selection was not made from view)
+    Q_PROPERTY(QList<int> dataSelectedTracks READ dataSelectedTracks WRITE setDataSelectedTracks NOTIFY dataSelectedTracksChanged FINAL)
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
@@ -34,7 +38,11 @@ public:
 
     bool isVerticalRulersVisible() const;
 
+    QList<int> dataSelectedTracks() const;
+    void setDataSelectedTracks(const QList<int>& newDataSelectedTracks);
+
 signals:
+    void dataSelectedTracksChanged();
     void isVerticalRulersVisibleChanged(bool isVerticalRulersVisible);
 
 private:
@@ -46,8 +54,10 @@ private:
         IsDataSelectedRole
     };
 
+    void setDataSelectedTracks(const std::vector<processing::TrackId>& tracks);
+
     muse::async::NotifyList<au::processing::Track> m_trackList;
-    std::vector<processing::TrackId> m_dataSelectedTracks;
+    QList<int> m_dataSelectedTracks;
     bool m_isVerticalRulersVisible = false;
 };
 }

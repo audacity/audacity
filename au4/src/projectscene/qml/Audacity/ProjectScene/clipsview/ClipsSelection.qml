@@ -6,54 +6,32 @@ Item {
     property alias active: selRect.visible
     property real minSelection: 12 // px  4left + 4 + 4right
 
-    signal selected(x1 : real, y1 : real, x2 : real, y2 : real)
-    signal reset()
-
-    property real startX: -1
-    property real startY: -1
-
-    function onPressed(mouse) {
-        if (selRect.visible) {
-            root.reset()
-        }
-
-        root.startX = mouse.x
-        root.startY = mouse.y
+    function onSelectionStarted() {
         selRect.visible = false
         leftMa.enabled = false
         rightMa.enabled = false
     }
 
-    function onPositionChanged(mouse) {
-        if (root.startX < 0) {
-            return
-        }
-
-        var x = mouse.x
-        if (x > root.startX) {
-            selRect.x = root.startX
-            selRect.width = x - root.startX
+    function onSelectionChanged(p1, p2) {
+        if (p2.x > p1.x) {
+            selRect.x = p1.x
+            selRect.width = p2.x - p1.x
         } else {
-            selRect.x = x
-            selRect.width = root.startX - x
+            selRect.x = p2.x
+            selRect.width = p1.x - p2.x
         }
 
         selRect.visible = selRect.width > root.minSelection
     }
 
-    function onReleased(mouse) {
+    function onSelectionEnded(p1, p2) {
         if (selRect.visible) {
-            root.selected(root.startX, root.startY, mouse.x, mouse.y)
-
             leftMa.x = selRect.x
             leftMa.enabled = true
 
             rightMa.x = selRect.x + selRect.width - rightMa.width
             rightMa.enabled = true
         }
-
-        root.startX = -1
-        root.startY = -1
     }
 
     Rectangle {
