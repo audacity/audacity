@@ -42,6 +42,9 @@ public:
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
 
+    Q_INVOKABLE void setOverrideCursor(Qt::CursorShape cursor);
+    Q_INVOKABLE void resetOverrideCursor();
+
 signals:
     // context of all tracks
     void tracksVericalYChanged();

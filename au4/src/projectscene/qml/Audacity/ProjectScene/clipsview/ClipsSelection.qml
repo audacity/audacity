@@ -6,8 +6,55 @@ Item {
     property alias active: selRect.visible
     property real minSelection: 12 // px  4left + 4 + 4right
 
-    signal selected(x1 : real, x2 : real)
+    signal selected(x1 : real, y1 : real, x2 : real, y2 : real)
     signal reset()
+
+    property real startX: -1
+    property real startY: -1
+
+    function onPressed(mouse) {
+        if (selRect.visible) {
+            root.reset()
+        }
+
+        root.startX = mouse.x
+        root.startY = mouse.y
+        selRect.visible = false
+        leftMa.enabled = false
+        rightMa.enabled = false
+    }
+
+    function onPositionChanged(mouse) {
+        if (root.startX < 0) {
+            return
+        }
+
+        var x = mouse.x
+        if (x > root.startX) {
+            selRect.x = root.startX
+            selRect.width = x - root.startX
+        } else {
+            selRect.x = x
+            selRect.width = root.startX - x
+        }
+
+        selRect.visible = selRect.width > root.minSelection
+    }
+
+    function onReleased(mouse) {
+        if (selRect.visible) {
+            root.selected(root.startX, root.startY, mouse.x, mouse.y)
+
+            leftMa.x = selRect.x
+            leftMa.enabled = true
+
+            rightMa.x = selRect.x + selRect.width - rightMa.width
+            rightMa.enabled = true
+        }
+
+        root.startX = -1
+        root.startY = -1
+    }
 
     Rectangle {
         id: selRect
@@ -21,49 +68,49 @@ Item {
         opacity: 0.6
     }
 
-    MouseArea {
-        id: selMa
-        anchors.fill: parent
+    // MouseArea {
+    //     id: selMa
+    //     anchors.fill: parent
 
-        property real startX: 0
+    //     property real startX: 0
 
-        onPressed: function(mouse) {
+    //     onPressed: function(mouse) {
 
-            if (selRect.visible) {
-                root.reset()
-            }
+    //         if (selRect.visible) {
+    //             root.reset()
+    //         }
 
-            selMa.startX = mouse.x
-            selRect.visible = false
-            leftMa.enabled = false
-            rightMa.enabled = false
-        }
+    //         selMa.startX = mouse.x
+    //         selRect.visible = false
+    //         leftMa.enabled = false
+    //         rightMa.enabled = false
+    //     }
 
-        onPositionChanged: function(mouse) {
-            var x = mouse.x
-            if (x > selMa.startX) {
-                selRect.x = selMa.startX
-                selRect.width = x - selMa.startX
-            } else {
-                selRect.x = x
-                selRect.width = selMa.startX - x
-            }
+    //     onPositionChanged: function(mouse) {
+    //         var x = mouse.x
+    //         if (x > selMa.startX) {
+    //             selRect.x = selMa.startX
+    //             selRect.width = x - selMa.startX
+    //         } else {
+    //             selRect.x = x
+    //             selRect.width = selMa.startX - x
+    //         }
 
-            selRect.visible = selRect.width > root.minSelection
-        }
+    //         selRect.visible = selRect.width > root.minSelection
+    //     }
 
-        onReleased: {
-            if (selRect.visible) {
-                root.selected(selRect.x, selRect.x + selRect.width)
+    //     onReleased: {
+    //         if (selRect.visible) {
+    //             root.selected(selRect.x, selRect.x + selRect.width)
 
-                leftMa.x = selRect.x
-                leftMa.enabled = true
+    //             leftMa.x = selRect.x
+    //             leftMa.enabled = true
 
-                rightMa.x = selRect.x + selRect.width - rightMa.width
-                rightMa.enabled = true
-            }
-        }
-    }
+    //             rightMa.x = selRect.x + selRect.width - rightMa.width
+    //             rightMa.enabled = true
+    //         }
+    //     }
+    // }
 
     MouseArea {
         id: leftMa

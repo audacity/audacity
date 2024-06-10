@@ -80,19 +80,6 @@ Item {
         }
     }
 
-    ClipsSelection {
-        id: clipsSelection
-
-        anchors.fill: parent
-        anchors.topMargin: 20 // clip header height
-
-        onSelected: function(x1, x2) {
-            clipsModel.onSelected(x1, x2)
-        }
-
-        onReset: clipsModel.resetSelection()
-    }
-
     MouseArea {
         id: dragArea
 

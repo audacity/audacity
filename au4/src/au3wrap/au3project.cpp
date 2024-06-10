@@ -109,6 +109,19 @@ std::string Au3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
+std::vector<au::processing::TrackId> Au3Project::trackIdList() const
+{
+    std::vector<au::processing::TrackId> au4trackIds;
+
+    TrackList& tracks = TrackList::Get(m_data->projectRef());
+
+    for (const Track* t : tracks) {
+        au4trackIds.push_back(DomConverter::trackId(t->GetId()));
+    }
+
+    return au4trackIds;
+}
+
 muse::async::NotifyList<au::processing::Track> Au3Project::trackList() const
 {
     muse::async::NotifyList<au::processing::Track> au4tracks;
@@ -117,9 +130,8 @@ muse::async::NotifyList<au::processing::Track> Au3Project::trackList() const
     TrackList& tracks = TrackList::Get(m_data->projectRef());
 
     for (const Track* t : tracks) {
-        TrackId id = t->GetId();
         au::processing::Track au4t;
-        au4t.id = *(reinterpret_cast<long*>(&id));
+        au4t.id = DomConverter::trackId(t->GetId());
         au4t.title = wxToSting(t->GetName());
         au4t.type = trackType(t);
 

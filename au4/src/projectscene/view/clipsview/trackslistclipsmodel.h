@@ -2,11 +2,9 @@
 
 #include <QAbstractListModel>
 
-#include <vector>
-
-#include "iprojectsceneconfiguration.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "iprojectsceneconfiguration.h"
 #include "async/asyncable.h"
 
 #include "processing/dom/track.h"
@@ -16,10 +14,10 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
-
-    Q_PROPERTY(bool isVerticalRulersVisible READ isVerticalRulersVisible NOTIFY isVerticalRulersVisibleChanged)
 
 public:
 

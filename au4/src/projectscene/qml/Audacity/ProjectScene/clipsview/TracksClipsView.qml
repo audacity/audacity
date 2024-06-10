@@ -29,6 +29,15 @@ Rectangle {
         context: timeline.context
     }
 
+    SelectionController {
+        id: selectionController
+        context: timeline.context
+
+        onSelectedTracksChanged: {
+            console.log("onSelectedTracksChanged: " + selectedTracks)
+        }
+    }
+
     Component.onCompleted: {
         playCursorController.init()
         tracksViewState.init()
@@ -64,14 +73,44 @@ Rectangle {
         }
 
         MouseArea {
+            id: mainMouseArea
             anchors.top: timeline.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
 
+            property bool mouseOnTracks: false
+            hoverEnabled: true
+            onContainsMouseChanged: {
+                if (!containsMouse) {
+                    mouseOnTracks = false
+                }
+            }
+            onMouseOnTracksChanged: {
+                if (mouseOnTracks) {
+                    tracksViewState.setOverrideCursor(Qt.IBeamCursor)
+                } else {
+                    tracksViewState.resetOverrideCursor()
+                }
+            }
+
             onWheel: function(wheel) {
                 wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
+                if (!wheel.accepted) {
+                    if (wheel.angleDelta.y > 0) {
+                        view.flick(0, view.maximumFlickVelocity)
+                    } else {
+                        view.flick(0, -view.maximumFlickVelocity)
+                    }
+                }
             }
+
+            onPressed: e => clipsSelection.onPressed(e)
+            onPositionChanged: function(e) {
+                mouseOnTracks = e.y < view.visibleContentHeight
+                clipsSelection.onPositionChanged(e)
+            }
+            onReleased: e => clipsSelection.onReleased(e)
         }
 
         StyledListView {
@@ -82,11 +121,13 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
 
+            property real visibleContentHeight: view.contentHeight - view.contentY
+
             onContentYChanged: {
                 tracksViewState.changeTracksVericalY(view.contentY)
             }
 
-            interactive: true
+            interactive: false
 
             model: tracksModel
 
@@ -97,12 +138,30 @@ Rectangle {
                 trackId: trackIdData
 
                 onInteractionStarted: {
-                    view.interactive = false
+                    // view.interactive = false
                 }
 
                 onInteractionEnded: {
-                    view.interactive = true
+                    // view.interactive = true
                 }
+            }
+        }
+
+        ClipsSelection {
+            id: clipsSelection
+
+            anchors.fill: parent
+
+            onSelected: function(x1, y1, x2, y2) {
+                // console.log("onSelected: x1: " + x1 + " y1: " + y1 + " x2: " + x2 + " y2: " + y2)
+                //! NOTE The x coordinates must match the timeline.
+                //! The y coordinates must match the track view
+                //! If this is not the case, then appropriate adjustments must be made.
+                selectionController.onSelectedCoords(x1, y1, x2, y2)
+            }
+
+            onReset: {
+                selectionController.resetSelection()
             }
         }
 

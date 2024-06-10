@@ -25,6 +25,7 @@ public:
 
     std::string title() const;
 
+    std::vector<processing::TrackId> trackIdList() const;
     muse::async::NotifyList<processing::Track> trackList() const;
     muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const;
 
