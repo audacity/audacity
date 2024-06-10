@@ -303,6 +303,17 @@ void Au3Record::start()
     doRecord(project, transportTracks, t0, t1, altAppearance, options);
 }
 
+void Au3Record::pause()
+{
+    if (!canStopAudioStream()) {
+        return;
+    }
+
+    auto gAudioIO = AudioIO::Get();
+
+    gAudioIO->SetPaused(true);
+}
+
 void Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop

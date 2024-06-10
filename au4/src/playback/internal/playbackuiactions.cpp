@@ -13,36 +13,51 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
+static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode PAUSE_ACTION_CODE("pause");
+static const ActionCode STOP_ACTION_CODE("stop");
+
+static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
+static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
+static const ActionCode LOOP_ACTION_CODE("loop");
+
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction("play",
+    UiAction(PLAY_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
              ),
-    UiAction("stop",
+    UiAction(PAUSE_ACTION_CODE,
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Pause"),
+             TranslatableString("action", "Pause"),
+             IconCode::Code::PAUSE_FILL
+             ),
+    UiAction(STOP_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop playback"),
-             IconCode::Code::STOP
+             IconCode::Code::STOP_FILL
              ),
-    UiAction("rewind-start",
+    UiAction(REWIND_START_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Rewind to start"),
              TranslatableString("action", "Rewind to start"),
              IconCode::Code::REWIND_START_FILL
              ),
-    UiAction("rewind-end",
+    UiAction(REWIND_END_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Rewind to end"),
              TranslatableString("action", "Rewind to end"),
              IconCode::Code::REWIND_END_FILL
              ),
-    UiAction("loop",
+    UiAction(LOOP_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Loop playback"),
@@ -70,13 +85,6 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Playback time"),
              TranslatableString("action", "Set playback time"),
              IconCode::Code::AUDIO // todo
-             ),
-    UiAction("record",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
-             TranslatableString("action", "Record"),
-             TranslatableString("action", "Record"),
-             IconCode::Code::RECORD_FILL
              ),
 };
 
@@ -136,6 +144,17 @@ void PlaybackUiActions::init()
 
         m_actionEnabledChanged.send(codes);
     });
+
+    m_controller->isPlayingChanged().onNotify(this, [this]() {
+        ActionCodeList codes= {
+            PLAY_ACTION_CODE,
+            PAUSE_ACTION_CODE,
+            REWIND_START_ACTION_CODE,
+            REWIND_END_ACTION_CODE
+        };
+
+        m_actionEnabledChanged.send(codes);
+    });
 }
 
 const UiActionList& PlaybackUiActions::actionsList() const
@@ -151,10 +170,6 @@ const UiActionList& PlaybackUiActions::actionsList() const
 
 bool PlaybackUiActions::actionEnabled(const UiAction& act) const
 {
-    if (!m_controller->isPlayAllowed()) {
-        return false;
-    }
-
     if (!m_controller->canReceiveAction(act.code)) {
         return false;
     }

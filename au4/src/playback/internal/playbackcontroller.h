@@ -11,6 +11,7 @@
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
 #include "../iplayback.h"
+#include "record/irecordcontroller.h"
 
 #include "../iplayer.h"
 #include "../iplaybackcontroller.h"
@@ -22,6 +23,7 @@ class PlaybackController : public IPlaybackController, public muse::actions::Act
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IPlayback> playback;
+    muse::Inject<record::IRecordController> recordController;
 
 public:
     void init();
@@ -74,6 +76,7 @@ private:
 
     void togglePlay();
     void rewindToStart();
+    void rewindToEnd();
     void onSeekAction(const muse::actions::ActionData& args);
     void play();
     void pause();

@@ -21,6 +21,8 @@ class RecordUiActions : public muse::ui::IUiActionsModule, public muse::async::A
 public:
     RecordUiActions(std::shared_ptr<RecordController> controller);
 
+    void init();
+
     const muse::ui::UiActionList& actionsList() const override;
 
     bool actionEnabled(const muse::ui::UiAction& act) const override;

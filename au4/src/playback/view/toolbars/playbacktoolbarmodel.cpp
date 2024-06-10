@@ -18,9 +18,17 @@ using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
+static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
+static const QString STOP_ITEM_ID("stop-id");
+
 static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode PAUSE_ACTION_CODE("pause");
 static const ActionCode STOP_ACTION_CODE("stop");
+
 static const ActionCode RECORD_ACTION_CODE("record");
+static const ActionCode PAUSE_RECORD_ACTION_CODE("pause-record");
+static const ActionCode STOP_RECORD_ACTION_CODE("stop-record");
+
 static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
 static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
 static const ActionCode LOOP_ACTION_CODE("loop");
@@ -64,19 +72,26 @@ void PlaybackToolBarModel::load()
     });
 
     updateActions();
-    setupConnections();
 
     AbstractToolBarModel::load();
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    if (containsAction(codes, PLAY_ACTION_CODE) || containsAction(codes, RECORD_ACTION_CODE)) {
+    if (containsAction(codes, PLAY_ACTION_CODE) || containsAction(codes, PAUSE_ACTION_CODE)
+        || containsAction(codes, PAUSE_RECORD_ACTION_CODE)) {
         updatePlayState();
+    }
+
+    if (containsAction(codes, STOP_ACTION_CODE) || containsAction(codes, STOP_RECORD_ACTION_CODE)) {
+        updateStopState();
+    }
+
+    if (containsAction(codes, RECORD_ACTION_CODE)) {
         updateRecordState();
-        updateRewindState();
-        updateLoopState();
-    } else if (containsAction(codes, LOOP_ACTION_CODE)) {
+    }
+
+    if (containsAction(codes, LOOP_ACTION_CODE)) {
         updateLoopState();
     }
 
@@ -85,13 +100,17 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
 
 void PlaybackToolBarModel::updatePlayState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAY_ACTION_CODE));
-    UiAction action = uiActionsRegister()->action(PLAY_ACTION_CODE);
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(PLAY_PAUSE_ITEM_ID));
 
     bool isPlaying = controller()->isPlaying();
     bool isRecording = recordController()->isRecording();
 
-    action.iconCode = isPlaying || isRecording ? IconCode::Code::PAUSE_FILL : IconCode::Code::PLAY_FILL;
+    ActionCode code = isPlaying ? PAUSE_ACTION_CODE : PLAY_ACTION_CODE;
+    if (isRecording) {
+        code = PAUSE_RECORD_ACTION_CODE;
+    }
+
+    UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
 
     item->setSelected(isPlaying);
@@ -99,7 +118,7 @@ void PlaybackToolBarModel::updatePlayState()
     QColor iconColor = QColor(configuration()->playColor().toQColor());
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (isPlaying) {
-        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_PRIMARY_COLOR).toString());
+        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = QColor(configuration()->playColor().toQColor());
     } else if (isRecording) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
@@ -109,17 +128,29 @@ void PlaybackToolBarModel::updatePlayState()
     item->setBackgroundColor(backgroundColor);
 }
 
+void PlaybackToolBarModel::updateStopState()
+{
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(STOP_ITEM_ID));
+
+    bool isRecording = recordController()->isRecording();
+
+    ActionCode code = STOP_ACTION_CODE;
+    if (isRecording) {
+        code = STOP_RECORD_ACTION_CODE;
+    }
+
+    UiAction action = uiActionsRegister()->action(code);
+    item->setAction(action);
+
+    QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
+    item->setIconColor(iconColor);
+}
+
 void PlaybackToolBarModel::updateRecordState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_ACTION_CODE));
-    UiAction action = uiActionsRegister()->action(RECORD_ACTION_CODE);
-    UiActionState state = uiActionsRegister()->actionState(RECORD_ACTION_CODE);
 
-    bool isPlaying = controller()->isPlaying();
     bool isRecording = recordController()->isRecording();
-
-    state.enabled = !isPlaying;
-    item->setState(state);
 
     item->setSelected(isRecording);
 
@@ -137,14 +168,9 @@ void PlaybackToolBarModel::updateRecordState()
 void PlaybackToolBarModel::updateLoopState()
 {
     PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(LOOP_ACTION_CODE));
-    UiActionState state = uiActionsRegister()->actionState(LOOP_ACTION_CODE);
 
     bool isLooping = false; // todo: from controller
     item->setSelected(isLooping);
-
-    bool isRecording = recordController()->isRecording();
-    state.enabled = !isRecording;
-    item->setState(state);
 
     QColor iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
@@ -155,35 +181,6 @@ void PlaybackToolBarModel::updateLoopState()
 
     item->setIconColor(iconColor);
     item->setBackgroundColor(backgroundColor);
-}
-
-void PlaybackToolBarModel::updateRewindState()
-{
-    PlaybackToolBarControlItem* rewindStartItem = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(REWIND_START_ACTION_CODE));
-    UiActionState startState = uiActionsRegister()->actionState(RECORD_ACTION_CODE);
-
-    bool isPlaying = controller()->isPlaying();
-    bool isRecording = recordController()->isRecording();
-
-    startState.enabled = !isPlaying && !isRecording;
-    rewindStartItem->setState(startState);
-
-    PlaybackToolBarControlItem* rewindEndItem = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(REWIND_END_ACTION_CODE));
-    UiActionState endState = uiActionsRegister()->actionState(REWIND_END_ACTION_CODE);
-
-    endState.enabled = !isPlaying && !isRecording;
-    rewindEndItem->setState(startState);
-}
-
-void PlaybackToolBarModel::setupConnections()
-{
-    controller()->isPlayingChanged().onNotify(this, [this]() {
-        onActionsStateChanges({ PLAY_ACTION_CODE });
-    });
-
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        onActionsStateChanges({ RECORD_ACTION_CODE });
-    });
 }
 
 void PlaybackToolBarModel::onProjectChanged()
@@ -213,6 +210,14 @@ void PlaybackToolBarModel::updateActions()
         ToolBarItem* item = makeLocalItem(citem.action);
         if (!item) {
             continue;
+        }
+
+        if (citem.action == PLAY_ACTION_CODE) {
+            item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
+        }
+
+        if (citem.action == STOP_ACTION_CODE) {
+            item->setId(STOP_ITEM_ID); // for quick finding
         }
 
         item->setIsTransparent(false);

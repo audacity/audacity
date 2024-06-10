@@ -38,6 +38,14 @@ Au3Player::Au3Player()
 
 void Au3Player::play()
 {
+    if (m_playbackStatus.val == audio::PlaybackStatus::Paused) {
+        auto gAudioIO = AudioIO::Get();
+        gAudioIO->SetPaused(false);
+
+        m_playbackStatus.set(audio::PlaybackStatus::Running);
+        return;
+    }
+
     //! NOTE: copied from ProjectAudioManager::PlayPlayRegion
 
     AudacityProject& project = projectRef();
@@ -48,8 +56,6 @@ void Au3Player::play()
     auto& tracks = TrackList::Get(project);
 
     auto& playRegion = ViewInfo::Get(project).playRegion;
-    playRegion.SetStart(tracks.GetStartTime());
-    playRegion.SetEnd(tracks.GetEndTime());
 
     SelectedRegion selectedRegion(playRegion.GetStart(), playRegion.GetEnd());
 

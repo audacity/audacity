@@ -47,9 +47,9 @@ private:
 
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
     void updatePlayState();
+    void updateStopState();
     void updateRecordState();
     void updateLoopState();
-    void updateRewindState();
 
     void setupConnections();
     void onProjectChanged();

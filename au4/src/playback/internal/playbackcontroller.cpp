@@ -12,8 +12,10 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
+static const ActionCode PAUSE_CODE("pause");
 static const ActionCode STOP_CODE("stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
+static const ActionCode REWIND_END_CODE("rewind-end");
 static const ActionCode SEEK_CODE("playback_seek");
 static const ActionCode LOOP_CODE("loop");
 static const ActionCode LOOP_IN_CODE("loop-in");
@@ -30,9 +32,11 @@ inline float secondsFromMilliseconds(msecs_t milliseconds)
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
-    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::pause);
+    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::play);
+    dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
+    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
+    dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
     dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, LOOP_CODE, this, &PlaybackController::toggleLoopPlayback);
     // dispatcher()->reg(this, LOOP_IN_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopIn); });
@@ -58,6 +62,10 @@ void PlaybackController::init()
     m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
         m_isPlayingChanged.notify();
     });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_isPlayAllowedChanged.notify();
+    });
 }
 
 void PlaybackController::deinit()
@@ -72,7 +80,7 @@ IPlayerPtr PlaybackController::player() const
 
 bool PlaybackController::isPlayAllowed() const
 {
-    return isLoaded();
+    return !recordController()->isRecording();
 }
 
 Notification PlaybackController::isPlayAllowedChanged() const
@@ -199,6 +207,13 @@ void PlaybackController::rewindToStart()
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
     seek(0.0);
+}
+
+void PlaybackController::rewindToEnd()
+{
+    NOT_IMPLEMENTED;
+    //! NOTE: In Audacity 3 we can't rewind while playing
+    stop();
 }
 
 void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
@@ -352,7 +367,19 @@ muse::Progress PlaybackController::loadingProgress() const
     return m_loadingProgress;
 }
 
-bool PlaybackController::canReceiveAction(const ActionCode&) const
+bool PlaybackController::canReceiveAction(const ActionCode& code) const
 {
-    return globalContext()->currentProject() != nullptr;
+    if (globalContext()->currentProject() == nullptr) {
+        return false;
+    }
+
+    if (code == PLAY_CODE || code == LOOP_CODE) {
+        return !recordController()->isRecording();
+    }
+
+    if (code == REWIND_START_CODE || code == REWIND_END_CODE) {
+        return !isPlaying() && !recordController()->isRecording();
+    }
+
+    return true;
 }

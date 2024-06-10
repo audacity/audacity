@@ -10,11 +10,19 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode RECORD_CODE("record");
+static const ActionCode PAUSE_CODE("pause-record");
+static const ActionCode STOP_CODE("stop-record");
 static const ActionCode RECORD_LEVEL_CODE("record-level");
 
 void RecordController::init()
 {
     dispatcher()->reg(this, RECORD_CODE, this, &RecordController::toggleRecord);
+    dispatcher()->reg(this, PAUSE_CODE, this, &RecordController::pause);
+    dispatcher()->reg(this, STOP_CODE, this, &RecordController::stop);
+
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+        m_isRecordAllowedChanged.notify();
+    });
 }
 
 void RecordController::deinit()
@@ -22,9 +30,19 @@ void RecordController::deinit()
     stop();
 }
 
+bool RecordController::isRecordAllowed() const
+{
+    return !playbackController()->isPlaying();
+}
+
+Notification RecordController::isRecordAllowedChanged() const
+{
+    return m_isRecordAllowedChanged;
+}
+
 bool RecordController::isRecording() const
 {
-    return m_currentPlaybackStatus == RecordStatus::Running;
+    return m_currentRecordStatus == RecordStatus::Running || m_currentRecordStatus == RecordStatus::Paused;
 }
 
 Notification RecordController::isRecordingChanged() const
@@ -51,6 +69,16 @@ void RecordController::start()
     setCurrentRecordStatus(RecordStatus::Running);
 }
 
+void RecordController::pause()
+{
+    IF_ASSERT_FAILED(au3Record()) {
+        return;
+    }
+
+    au3Record()->pause();
+    setCurrentRecordStatus(RecordStatus::Paused);
+}
+
 void RecordController::stop()
 {
     IF_ASSERT_FAILED(au3Record()) {
@@ -63,15 +91,23 @@ void RecordController::stop()
 
 void RecordController::setCurrentRecordStatus(RecordStatus status)
 {
-    if (m_currentPlaybackStatus == status) {
+    if (m_currentRecordStatus == status) {
         return;
     }
 
-    m_currentPlaybackStatus = status;
+    m_currentRecordStatus = status;
     m_isRecordingChanged.notify();
 }
 
-bool RecordController::canReceiveAction(const ActionCode&) const
+bool RecordController::canReceiveAction(const ActionCode& code) const
 {
-    return globalContext()->currentProject() != nullptr;
+    if (globalContext()->currentProject() == nullptr) {
+        return false;
+    }
+
+    if (code == RECORD_CODE) {
+        return !playbackController()->isPlaying();
+    }
+
+    return true;
 }
