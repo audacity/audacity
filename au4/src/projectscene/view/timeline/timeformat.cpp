@@ -6,6 +6,8 @@
 
 #include "timeformat.h"
 
+using namespace au::projectscene;
+
 TimeIntervalInfo TimeFormat::timeIntervalInfo(double zoom)
 {
     TimeIntervalInfo timeInterval;

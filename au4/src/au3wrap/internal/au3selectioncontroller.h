@@ -8,15 +8,15 @@ class Au3SelectionController : public processing::IProcessingSelectionController
 public:
     Au3SelectionController() = default;
 
-    void resetSelection() override;
+    void resetDataSelection() override;
 
-    muse::ValCh<std::vector<processing::TrackId>> selectedTrackIds() const override;
-    void setSelectedTrackIds(const std::vector<processing::TrackId>& trackIds) override;
+    muse::ValCh<std::vector<processing::TrackId>> dataSelectedOnTracks() const override;
+    void setDataSelectedOnTracks(const std::vector<processing::TrackId>& trackIds) override;
 
-    muse::ValCh<processing::secs_t> selectedStartTime() const override;
-    void setSelectedStartTime(const processing::secs_t time) override;
-    muse::ValCh<processing::secs_t> selectedEndTime() const override;
-    void setSelectedEndTime(const processing::secs_t time) override;
+    muse::ValCh<processing::secs_t> dataSelectedStartTime() const override;
+    void setDataSelectedStartTime(const processing::secs_t time) override;
+    muse::ValCh<processing::secs_t> dataSelectedEndTime() const override;
+    void setDataSelectedEndTime(const processing::secs_t time) override;
 
 private:
 

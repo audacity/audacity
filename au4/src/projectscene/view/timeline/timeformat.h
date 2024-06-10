@@ -6,6 +6,7 @@
 
 #pragma once
 
+namespace au::projectscene {
 enum class TickType {
     MAJOR,
     MINOR,
@@ -27,6 +28,5 @@ public:
 
     static TimeIntervalInfo timeIntervalInfo(double zoom);
     static QString label(double d, const TimeIntervalInfo& timeIntervalInfo, TickType tickType);
-
-private:
 };
+}

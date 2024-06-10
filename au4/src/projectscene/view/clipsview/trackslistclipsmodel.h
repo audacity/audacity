@@ -2,10 +2,12 @@
 
 #include <QAbstractListModel>
 
+#include "global/async/asyncable.h"
+
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
-#include "async/asyncable.h"
+#include "processing/iprocessingselectioncontroller.h"
 
 #include "processing/dom/track.h"
 
@@ -18,6 +20,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
 
 public:
 
@@ -39,10 +42,12 @@ private:
 
     enum RoleNames {
         TypeRole = Qt::UserRole + 1,
-        TrackIdRole
+        TrackIdRole,
+        IsDataSelectedRole
     };
 
     muse::async::NotifyList<au::processing::Track> m_trackList;
+    std::vector<processing::TrackId> m_dataSelectedTracks;
     bool m_isVerticalRulersVisible = false;
 };
 }

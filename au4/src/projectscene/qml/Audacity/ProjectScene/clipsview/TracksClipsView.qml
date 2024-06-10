@@ -131,7 +131,8 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 context: timeline.context
-                trackId: trackIdData
+                trackId: model.trackId
+                isDataSelected: model.isDataSelected
             }
         }
 

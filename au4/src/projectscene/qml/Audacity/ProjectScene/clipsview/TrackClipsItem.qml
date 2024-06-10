@@ -11,6 +11,8 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
 
+    property bool isDataSelected: false
+
     signal interactionStarted()
     signal interactionEnded()
 
@@ -78,6 +80,18 @@ Item {
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: selRect
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        color: "#8EC9FF"
+        opacity: 0.4
+        visible: root.isDataSelected
+
+        x: root.context.timeToPosition(root.context.selectionStartTime)
+        width: root.context.timeToPosition(root.context.selectionEndTime) - x
     }
 
     MouseArea {

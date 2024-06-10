@@ -11,6 +11,9 @@
 #include "timeformat.h"
 #include "timelinecontext.h"
 
+class QPainter;
+
+namespace au::projectscene {
 struct TickInfo {
     int x = 0;
     QString tickLabel;
@@ -20,14 +23,13 @@ struct TickInfo {
 
 using Ticks = QVector<TickInfo>;
 
-class QPainter;
 class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
-
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+
+    muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
 
 signals:
     void offsetChanged();
@@ -54,3 +56,4 @@ private:
 
     TimelineContext* m_context = nullptr;
 };
+}

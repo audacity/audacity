@@ -65,7 +65,7 @@ Item {
         visible: false
         color: "#8EC9FF"
 
-        opacity: 0.6
+        opacity: 0.1
     }
 
     MouseArea {

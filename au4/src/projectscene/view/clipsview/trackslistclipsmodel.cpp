@@ -1,5 +1,7 @@
 #include "trackslistclipsmodel.h"
 
+#include "global/containers.h"
+
 using namespace au::projectscene;
 
 TracksListClipsModel::TracksListClipsModel(QObject* parent)
@@ -25,6 +27,13 @@ void TracksListClipsModel::load()
 
     //! TODO Subscribe
 
+    muse::ValCh<std::vector<processing::TrackId> > dataSelectedTracks = processingSelectionController()->dataSelectedOnTracks();
+    m_dataSelectedTracks = dataSelectedTracks.val;
+    dataSelectedTracks.ch.onReceive(this, [this](const std::vector<processing::TrackId>& tracks) {
+        m_dataSelectedTracks = tracks;
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { IsDataSelectedRole });
+    });
+
     endResetModel();
 }
 
@@ -43,6 +52,9 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case TrackIdRole:
         return QVariant::fromValue(track.id);
+    case IsDataSelectedRole: {
+        return muse::contains(m_dataSelectedTracks, track.id);
+    }
     default:
         break;
     }
@@ -54,8 +66,9 @@ QHash<int, QByteArray> TracksListClipsModel::roleNames() const
 {
     static QHash<int, QByteArray> roles
     {
-        //{ TypeRole, "typeData" },
-        { TrackIdRole, "trackIdData" }
+        //{ TypeRole, "trackType" },
+        { TrackIdRole, "trackId" },
+        { IsDataSelectedRole, "isDataSelected" }
     };
     return roles;
 }

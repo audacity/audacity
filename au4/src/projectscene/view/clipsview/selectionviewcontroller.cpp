@@ -29,20 +29,20 @@ void SelectionViewController::onSelectedCoords(double x1, double y1, double x2, 
 
     // tracks
     std::vector<TrackId> tracks = determinateTracks(y1, y2);
-    processingSelectionController()->setSelectedTrackIds(tracks);
+    processingSelectionController()->setDataSelectedOnTracks(tracks);
 
     // time
     if (x1 > x2) {
         std::swap(x1, x2);
     }
 
-    processingSelectionController()->setSelectedStartTime(m_context->positionToTime(x1));
-    processingSelectionController()->setSelectedEndTime(m_context->positionToTime(x2));
+    processingSelectionController()->setDataSelectedStartTime(m_context->positionToTime(x1));
+    processingSelectionController()->setDataSelectedEndTime(m_context->positionToTime(x2));
 }
 
 void SelectionViewController::resetSelection()
 {
-    processingSelectionController()->resetSelection();
+    processingSelectionController()->resetDataSelection();
 }
 
 std::vector<TrackId> SelectionViewController::determinateTracks(double y1, double y2) const
