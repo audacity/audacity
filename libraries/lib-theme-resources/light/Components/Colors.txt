@@ -1,17 +1,17 @@
 .lightTheme {
-                         Blank: #585963;
+                         Blank: #45485A;
                     Unselected: #E5EAFF;
-                      Selected: #e7f3ff;
-                        Sample: #4040CF;
+                      Selected: #aac3f2;
+                        Sample: #6464D3;
                        Sample2: #286CCA;
-                       Sample3: #95E084;
+                       Sample3: #5E8954;
                        Sample4: #383838;
                      SelSample: #677ce4;
                     DragSample: #14151a;
                     MuteSample: #888890;
-                           Rms: #8A8AF4;
+                           Rms: #9797FD;
                           Rms2: #8AB6F4;
-                          Rms3: #DFA092;
+                          Rms3: #95E084;
                           Rms4: #969696;
                        MuteRms: #888890;
                AboutBackground: #f8f8f9;
@@ -60,7 +60,7 @@
                    TrackFocus2: #677ce4;
                      SnapGuide: #ffff00;
                      TrackInfo: #f0f1f5;
-             TrackInfoSelected: #dceeff;
+             TrackInfoSelected: #dbe7ff;
                          Light: #f0f1f5;
                         Medium: #f8f8f9;
                           Dark: #dfdfe4;
@@ -72,15 +72,15 @@
                   ProgressDone: #677ce4;
                 ProgressNotYet: #dddee4;
                    SyncLockSel: #c0c0c0;
-                 BlankSelected: #9cb7d2;
-                   SliderLight: #f8f8f9;
-                    SliderMain: #dfe0e5;
-                    SliderDark: #dfe0e5;
-               TrackBackground: #454752;
+                 BlankSelected: #526283;
+                   SliderLight: #f0f1f5;
+                    SliderMain: #C3D2E0;
+                    SliderDark: #C3D2E0;
+               TrackBackground: #323545;
                    GraphLabels: #14151a;
              SpectroBackground: #ffff14;
                     ScrubRuler: #e4e4e4;
-                 RulerSelected: #B9DCFF; /* becomes #cedcea;*/
+                 RulerSelected: #75a0ff; 
                      TimeHours: #323545;
                      MidiZebra: #808080;
                      MidiLines: #3c3c98;
@@ -107,12 +107,12 @@
           EffectListItemBorder: #cccccc;
               BeatSeparatorPen: #62636c;
                BarSeparatorPen: #6b6d75;
-           BeatFillStrongBrush: #585963;
-             BeatFillWeakBrush: #5E606a;
+           BeatFillStrongBrush: #45485A;
+             BeatFillWeakBrush: #4B4F5F;
         BeatFillStrongSelBrush: #9cb7d2;
           BeatFillWeakSelBrush: #b4cfe9;
-                   LoopEnabled: #E0E1E5; 
-                LoopNotEnabled: #c2cbf4;
+                   LoopEnabled: #c4c6c8; 
+                LoopNotEnabled: #e9e9eb;
                        Grabber: #9295a6;
        TimelineRulerBackground: #e9e9eb;
 }
