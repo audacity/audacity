@@ -41,7 +41,7 @@
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/waveview.h"
 #include "view/clipsview/clipcontextmenumodel.h"
-#include "view/clipsview/selectioncontroller.h"
+#include "view/clipsview/selectionviewcontroller.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -107,7 +107,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
-    qmlRegisterType<SelectionController>("Audacity.ProjectScene", 1, 0, "SelectionController");
+    qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

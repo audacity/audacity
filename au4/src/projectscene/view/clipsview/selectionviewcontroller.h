@@ -4,21 +4,28 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "processing/iprocessingselectioncontroller.h"
 
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class SelectionController : public QObject
+class SelectionViewController : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
-    Q_PROPERTY(QList<int> selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
-
     muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
 
 public:
-    SelectionController(QObject* parent = nullptr);
+    SelectionViewController(QObject* parent = nullptr);
+
+    TimelineContext* timelineContext() const;
+    void setTimelineContext(TimelineContext* newContext);
+
+    QList<int> selectedTracks() const;
+    double selectedStartTime() const;
+    double selectedEndTime() const;
 
     //! NOTE The x coordinates must match the timeline.
     //! The y coordinates must match the track view
@@ -26,29 +33,16 @@ public:
     Q_INVOKABLE void onSelectedCoords(double x1, double y1, double x2, double y2);
     Q_INVOKABLE void resetSelection();
 
-    TimelineContext* timelineContext() const;
-    void setTimelineContext(TimelineContext* newContext);
-
-    QList<int> selectedTracks() const;
-
 signals:
-    void tracksSelection(int trackId1, int trackId2);
-
     void timelineContextChanged();
 
-    void selectedTracksChanged();
-
 private:
-
-    QList<int> determinateTracks(double y1, double y2) const;
-    //std::pair<double, double> determinateTime(double x1, double x2) const;
 
     IProjectViewStatePtr viewState() const;
     std::vector<processing::TrackId> trackIdList() const;
 
-    void setSelectedTracks(const QList<int>& tracks);
+    std::vector<processing::TrackId> determinateTracks(double y1, double y2) const;
 
     TimelineContext* m_context = nullptr;
-    QList<int> m_selectedTracks;
 };
 }

@@ -68,50 +68,6 @@ Item {
         opacity: 0.6
     }
 
-    // MouseArea {
-    //     id: selMa
-    //     anchors.fill: parent
-
-    //     property real startX: 0
-
-    //     onPressed: function(mouse) {
-
-    //         if (selRect.visible) {
-    //             root.reset()
-    //         }
-
-    //         selMa.startX = mouse.x
-    //         selRect.visible = false
-    //         leftMa.enabled = false
-    //         rightMa.enabled = false
-    //     }
-
-    //     onPositionChanged: function(mouse) {
-    //         var x = mouse.x
-    //         if (x > selMa.startX) {
-    //             selRect.x = selMa.startX
-    //             selRect.width = x - selMa.startX
-    //         } else {
-    //             selRect.x = x
-    //             selRect.width = selMa.startX - x
-    //         }
-
-    //         selRect.visible = selRect.width > root.minSelection
-    //     }
-
-    //     onReleased: {
-    //         if (selRect.visible) {
-    //             root.selected(selRect.x, selRect.x + selRect.width)
-
-    //             leftMa.x = selRect.x
-    //             leftMa.enabled = true
-
-    //             rightMa.x = selRect.x + selRect.width - rightMa.width
-    //             rightMa.enabled = true
-    //         }
-    //     }
-    // }
-
     MouseArea {
         id: leftMa
 

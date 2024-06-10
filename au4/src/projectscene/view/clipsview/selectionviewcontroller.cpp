@@ -1,4 +1,4 @@
-#include "selectioncontroller.h"
+#include "selectionviewcontroller.h"
 
 #include "log.h"
 
@@ -6,37 +6,46 @@ using namespace au::projectscene;
 using namespace au::project;
 using namespace au::processing;
 
-SelectionController::SelectionController(QObject* parent)
+SelectionViewController::SelectionViewController(QObject* parent)
     : QObject(parent)
 {
 }
 
-IProjectViewStatePtr SelectionController::viewState() const
+IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();
     return prj ? prj->viewState() : nullptr;
 }
 
-std::vector<TrackId> SelectionController::trackIdList() const
+std::vector<TrackId> SelectionViewController::trackIdList() const
 {
     ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     return prj ? prj->trackIdList() : std::vector<TrackId>();
 }
 
-void SelectionController::onSelectedCoords(double x1, double y1, double x2, double y2)
+void SelectionViewController::onSelectedCoords(double x1, double y1, double x2, double y2)
 {
     LOGDA() << "x1: " << x1 << " y1: " << y1 << " x2: " << x2 << " y2: " << y2;
 
-    QList<int> tracks = determinateTracks(y1, y2);
-    setSelectedTracks(tracks);
+    // tracks
+    std::vector<TrackId> tracks = determinateTracks(y1, y2);
+    processingSelectionController()->setSelectedTrackIds(tracks);
+
+    // time
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+
+    processingSelectionController()->setSelectedStartTime(m_context->positionToTime(x1));
+    processingSelectionController()->setSelectedEndTime(m_context->positionToTime(x2));
 }
 
-void SelectionController::resetSelection()
+void SelectionViewController::resetSelection()
 {
-    setSelectedTracks(QList<int>());
+    processingSelectionController()->resetSelection();
 }
 
-QList<int> SelectionController::determinateTracks(double y1, double y2) const
+std::vector<TrackId> SelectionViewController::determinateTracks(double y1, double y2) const
 {
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -60,7 +69,7 @@ QList<int> SelectionController::determinateTracks(double y1, double y2) const
         return { -1, -1 };
     }
 
-    QList<int> ret;
+    std::vector<TrackId> ret;
 
     int tracksVericalY = vs->tracksVericalY().val;
     int trackTop = -tracksVericalY;
@@ -71,18 +80,18 @@ QList<int> SelectionController::determinateTracks(double y1, double y2) const
         trackBottom = trackTop + vs->trackHeight(trackId).val;
 
         if (y1 > trackTop && y1 < trackBottom) {
-            ret.append(trackId);
+            ret.push_back(trackId);
         }
 
         if (y2 > trackTop && y2 < trackBottom) {
             if (ret.back() != trackId) {
-                ret.append(trackId);
+                ret.push_back(trackId);
             }
             break;
         }
 
         if (!ret.empty() && ret.back() != trackId) {
-            ret.append(trackId);
+            ret.push_back(trackId);
             continue;
         }
     }
@@ -90,30 +99,16 @@ QList<int> SelectionController::determinateTracks(double y1, double y2) const
     return ret;
 }
 
-TimelineContext* SelectionController::timelineContext() const
+TimelineContext* SelectionViewController::timelineContext() const
 {
     return m_context;
 }
 
-void SelectionController::setTimelineContext(TimelineContext* newContext)
+void SelectionViewController::setTimelineContext(TimelineContext* newContext)
 {
     if (m_context == newContext) {
         return;
     }
     m_context = newContext;
     emit timelineContextChanged();
-}
-
-QList<int> SelectionController::selectedTracks() const
-{
-    return m_selectedTracks;
-}
-
-void SelectionController::setSelectedTracks(const QList<int>& tracks)
-{
-    if (m_selectedTracks == tracks) {
-        return;
-    }
-    m_selectedTracks = tracks;
-    emit selectedTracksChanged();
 }

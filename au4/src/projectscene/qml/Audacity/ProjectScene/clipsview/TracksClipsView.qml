@@ -29,13 +29,9 @@ Rectangle {
         context: timeline.context
     }
 
-    SelectionController {
+    SelectionViewController {
         id: selectionController
         context: timeline.context
-
-        onSelectedTracksChanged: {
-            console.log("onSelectedTracksChanged: " + selectedTracks)
-        }
     }
 
     Component.onCompleted: {
@@ -136,14 +132,6 @@ Rectangle {
                 anchors.right: parent.right
                 context: timeline.context
                 trackId: trackIdData
-
-                onInteractionStarted: {
-                    // view.interactive = false
-                }
-
-                onInteractionEnded: {
-                    // view.interactive = true
-                }
             }
         }
 
