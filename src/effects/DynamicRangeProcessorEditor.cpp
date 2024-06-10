@@ -1,8 +1,10 @@
 #include "DynamicRangeProcessorEditor.h"
 #include "AllThemeResources.h"
 #include "BasicUI.h"
+#include "CompressionMeterPanel.h"
 #include "CompressorProcessor.h"
 #include "DynamicRangeProcessorHistoryPanel.h"
+#include "DynamicRangeProcessorPanelCommon.h"
 #include "DynamicRangeProcessorTransferFunctionPanel.h"
 #include "EffectInterface.h"
 #include "ShuttleGui.h"
@@ -141,71 +143,10 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(borderSize);
    S.AddSpace(0, borderSize);
 
-   const auto compressorSettings = GetCompressorSettings();
-   if (compressorSettings)
-   {
-      S.StartMultiColumn(2, wxEXPAND);
-      S.SetStretchyCol(0);
-      S.StartPanel();
-   }
-
-   using It = std::vector<ExtendedCompressorParameter>::iterator;
-   const auto addTextboxAndSliders = [&](
-                                        const TranslatableString& prompt,
-                                        const It& begin, const It& end) {
-      S.StartStatic(prompt);
-      S.StartMultiColumn(3, wxEXPAND);
-      {
-         S.SetStretchyCol(2);
-         std::for_each(begin, end, [&](ExtendedCompressorParameter& parameter) {
-            AddTextboxAndSlider(S, parameter);
-         });
-      }
-      S.EndMultiColumn();
-      S.EndStatic();
-   };
-
-   const auto firstSmoothingParameterIt =
-      std::find_if(mParameters.begin(), mParameters.end(), [](const auto& p) {
-         return p.category == ControllerCategory::TimeSmoothing;
-      });
-
-   addTextboxAndSliders(
-      XO("Compression curve"), mParameters.begin(), firstSmoothingParameterIt);
-   addTextboxAndSliders(
-      XO("Smoothing"), firstSmoothingParameterIt, mParameters.end());
-
-   if (compressorSettings)
-   {
-      S.EndPanel();
-      S.StartMultiColumn(3);
-      {
-         S.SetStretchyRow(1);
-
-         constexpr auto tfWidth = 200;
-
-         // Horizontal ruler row
-         S.AddSpace(borderSize, 0);
-         S.Prop(1)
-            .Position(wxALIGN_BOTTOM)
-            .MinSize({ tfWidth, rulerWidth })
-            .AddWindow(
-               MakeRulerPanel(mUIParent, wxHORIZONTAL, TFPanel::rangeDb));
-         S.AddSpace(rulerWidth, 0);
-
-         // Transfer function row
-         S.AddSpace(borderSize, 0);
-         S.Prop(1).Position(wxEXPAND).AddWindow(safenew TFPanel(
-            mUIParent, transferFunctionPanelId, *compressorSettings));
-         S.Prop(1).Position(wxEXPAND).AddWindow(
-            MakeRulerPanel(mUIParent, wxVERTICAL, TFPanel::rangeDb));
-      }
-      S.EndMultiColumn();
-      S.SetSizerProportion(0);
-
-      // Once more
-      S.EndMultiColumn();
-   }
+   if (const auto compressorSettings = GetCompressorSettings())
+      PopulateCompressorUpperHalf(S, *compressorSettings);
+   else
+      PopulateLimiterUpperHalf(S);
 
    if (!mIsRealtime)
       // Not a real-time effect editor, no need for a graph
@@ -290,6 +231,147 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    S.EndMultiColumn();
 
    S.AddSpace(0, borderSize);
+}
+
+void DynamicRangeProcessorEditor::PopulateLimiterUpperHalf(ShuttleGui& S)
+{
+   if (mIsRealtime)
+   {
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(0);
+
+         AddSliderPanel(S);
+         S.AddSpace(borderSize, 0);
+         AddCompressionMeterPanel(S);
+      }
+      S.EndMultiColumn();
+   }
+   else
+      AddSliderPanel(S);
+}
+
+void DynamicRangeProcessorEditor::PopulateCompressorUpperHalf(
+   ShuttleGui& S, const CompressorSettings& compressorSettings)
+{
+   if (mIsRealtime)
+   {
+      S.StartMultiColumn(4, wxEXPAND);
+      {
+         S.SetStretchyCol(0);
+
+         AddSliderPanel(S);
+         S.AddSpace(borderSize, 0);
+         AddCompressionMeterPanel(S);
+         AddCompressionCurvePanel(S, compressorSettings);
+      }
+      S.EndMultiColumn();
+   }
+   else
+   {
+      S.StartMultiColumn(2, wxEXPAND);
+      {
+         S.SetStretchyCol(0);
+         AddSliderPanel(S);
+         AddCompressionCurvePanel(S, compressorSettings);
+      }
+   }
+}
+
+void DynamicRangeProcessorEditor::AddCompressionCurvePanel(
+   ShuttleGui& S, const CompressorSettings& compressorSettings)
+{
+   S.StartMultiColumn(3);
+   {
+      S.SetStretchyRow(1);
+
+      constexpr auto tfWidth = 200;
+
+      // Horizontal ruler row
+      S.AddSpace(borderSize, 0);
+      S.Prop(1)
+         .Position(wxALIGN_BOTTOM)
+         .MinSize({ tfWidth, rulerWidth })
+         .AddWindow(MakeRulerPanel(mUIParent, wxHORIZONTAL, TFPanel::rangeDb));
+      S.AddSpace(rulerWidth, 0);
+
+      // Transfer function row
+      S.AddSpace(borderSize, 0);
+      S.Prop(1).Position(wxEXPAND).AddWindow(safenew TFPanel(
+         mUIParent, transferFunctionPanelId, compressorSettings));
+      S.Prop(1).Position(wxEXPAND).AddWindow(
+         MakeRulerPanel(mUIParent, wxVERTICAL, TFPanel::rangeDb));
+   }
+   S.EndMultiColumn();
+}
+
+void DynamicRangeProcessorEditor::AddSliderPanel(ShuttleGui& S)
+{
+   using It = std::vector<ExtendedCompressorParameter>::iterator;
+   const auto addTextboxAndSliders = [&](
+                                        const TranslatableString& prompt,
+                                        const It& begin, const It& end) {
+      S.StartStatic(prompt);
+      S.StartMultiColumn(3, wxEXPAND);
+      {
+         S.SetStretchyCol(2);
+         std::for_each(begin, end, [&](ExtendedCompressorParameter& parameter) {
+            AddTextboxAndSlider(S, parameter);
+         });
+      }
+      S.EndMultiColumn();
+      S.EndStatic();
+   };
+
+   const auto firstSmoothingParameterIt =
+      std::find_if(mParameters.begin(), mParameters.end(), [](const auto& p) {
+         return p.category == ControllerCategory::TimeSmoothing;
+      });
+
+   S.StartPanel();
+   {
+      addTextboxAndSliders(
+         XO("Compression curve"), mParameters.begin(),
+         firstSmoothingParameterIt);
+      addTextboxAndSliders(
+         XO("Smoothing"), firstSmoothingParameterIt, mParameters.end());
+   }
+   S.EndPanel();
+}
+
+void DynamicRangeProcessorEditor::AddCompressionMeterPanel(ShuttleGui& S)
+{
+   S.StartVerticalLay(0);
+   {
+      // Add vertical space above and below to align it with the slider
+      // static boxes.
+      S.AddSpace(0, 11);
+
+      S.SetSizerProportion(1);
+      S.StartMultiColumn(2, wxEXPAND);
+      {
+         S.SetStretchyCol(1);
+         S.SetStretchyRow(0);
+
+         constexpr auto height = 100;
+         S.Prop(1)
+            .Position(wxALIGN_LEFT | wxALIGN_TOP | wxEXPAND)
+            .MinSize({ 30, height })
+            .AddWindow(
+               safenew CompressionMeterPanel(mUIParent, mCompressorInstance));
+
+         S.Prop(1)
+            .Position(wxEXPAND | wxALIGN_TOP)
+            .MinSize({ 30, height })
+            .AddWindow(MakeRulerPanel(
+               mUIParent, wxVERTICAL,
+               DynamicRangeProcessorPanel::compressorMeterRangeDb));
+      }
+      S.EndMultiColumn();
+
+      S.AddSpace(0, 5);
+   }
+   S.EndVerticalLay();
 }
 
 void DynamicRangeProcessorEditor::AddTextboxAndSlider(

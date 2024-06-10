@@ -29,6 +29,14 @@ struct DynamicRangeProcessorOutputPacket
 using DynamicRangeProcessorOutputPacketQueue =
    LockFreeQueue<DynamicRangeProcessorOutputPacket>;
 
+struct MeterValues
+{
+   float compressionGainDb = 0;
+   float outputDb = std::numeric_limits<float>::lowest();
+};
+
+using DynamicRangeProcessorMeterValuesQueue = LockFreeQueue<MeterValues>;
+
 struct InitializeProcessingSettings
 {
    explicit InitializeProcessingSettings(double sampleRate)

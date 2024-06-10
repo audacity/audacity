@@ -26,6 +26,7 @@ CompressorInstance::CompressorInstance(CompressorInstance&& other)
     , mSampleCounter { std::move(other.mSampleCounter) }
     , mSampleRate { std::move(other.mSampleRate) }
     , mOutputQueue { std::move(other.mOutputQueue) }
+    , mCompressionValueQueue { std::move(other.mCompressionValueQueue) }
 {
 }
 
@@ -36,8 +37,9 @@ const std::optional<double>& CompressorInstance::GetSampleRate() const
 
 float CompressorInstance::GetLatencyMs() const
 {
-   return mSlaves.empty() ? mCompressor->GetSettings().lookaheadMs :
-                        mSlaves.front().mCompressor->GetSettings().lookaheadMs;
+   return mSlaves.empty() ?
+             mCompressor->GetSettings().lookaheadMs :
+             mSlaves.front().mCompressor->GetSettings().lookaheadMs;
 }
 
 void CompressorInstance::SetOutputQueue(
@@ -46,6 +48,14 @@ void CompressorInstance::SetOutputQueue(
    mOutputQueue = outputQueue;
    for (auto& slave : mSlaves)
       slave.mOutputQueue = outputQueue;
+}
+
+void CompressorInstance::SetMeterValuesQueue(
+   std::weak_ptr<DynamicRangeProcessorMeterValuesQueue> queue)
+{
+   mCompressionValueQueue = queue;
+   for (auto& slave : mSlaves)
+      slave.mCompressionValueQueue = queue;
 }
 
 bool CompressorInstance::ProcessInitialize(
@@ -132,6 +142,17 @@ bool CompressorInstance::RealtimeFinalize(EffectSettings&) noexcept
    return true;
 }
 
+namespace
+{
+float GetOutputDb(
+   const CompressorProcessor::FrameStats& stats,
+   const DynamicRangeProcessorSettings& settings)
+{
+   return stats.maxInputSampleDb + stats.dbGainOfMaxInputSample +
+          CompressorProcessor::GetMakeupGainDb(settings);
+}
+} // namespace
+
 size_t CompressorInstance::RealtimeProcess(
    size_t group, EffectSettings& settings, const float* const* inbuf,
    float* const* outbuf, size_t numSamples)
@@ -157,11 +178,16 @@ size_t CompressorInstance::RealtimeProcess(
       newPacket.targetCompressionDb = targetCompressionDb;
       newPacket.actualCompressionDb = frameStats.dbGainOfMaxInputSample;
       newPacket.inputDb = frameStats.maxInputSampleDb;
-      newPacket.outputDb =
-         frameStats.maxInputSampleDb + frameStats.dbGainOfMaxInputSample +
-         CompressorProcessor::GetMakeupGainDb(compressorSettings);
+      newPacket.outputDb = GetOutputDb(frameStats, compressorSettings);
       queue->Put(newPacket);
    }
+
+   if (const auto queue = slave.mCompressionValueQueue.lock())
+      queue->Put(MeterValues {
+         compressor.GetLastFrameStats().dbGainOfMaxInputSample,
+         GetOutputDb(
+            compressor.GetLastFrameStats(), compressor.GetSettings()) });
+
    slave.mSampleCounter += numProcessedSamples;
    return numProcessedSamples;
 }
@@ -182,6 +208,7 @@ void CompressorInstance::InstanceInit(
    float sampleRate)
 {
    instance.mOutputQueue = mOutputQueue;
+   instance.mCompressionValueQueue = mCompressionValueQueue;
    instance.mCompressor->ApplySettingsIfNeeded(
       GetDynamicRangeProcessorSettings(settings));
    instance.mCompressor->Init(sampleRate, numChannels, GetBlockSize());

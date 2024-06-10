@@ -333,6 +333,8 @@ set( SOURCES
       effects/ChangeTempo.h
       effects/ClickRemoval.cpp
       effects/ClickRemoval.h
+      effects/CompressionMeterPanel.cpp
+      effects/CompressionMeterPanel.h
       effects/Contrast.cpp
       effects/Contrast.h
       effects/Distortion.cpp
