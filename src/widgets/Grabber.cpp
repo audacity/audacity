@@ -140,7 +140,7 @@ void Grabber::DrawGrabber( wxDC & dc )
    }
 
    // 2-bar toolbars and larger get padding
-   int padding = r.GetHeight() > 32 ? 19 : 4;
+   int padding = r.GetHeight() > 32 ? 22 : 6;
 
    // Cache
    left = r.GetLeft();
