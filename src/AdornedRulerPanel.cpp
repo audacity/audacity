@@ -1528,7 +1528,7 @@ void AdornedRulerPanel::DoIdle()
 
 void AdornedRulerPanel::OnAudioStartStop(AudioIOEvent evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (evt.type == AudioIOEvent::MONITOR || evt.type == AudioIOEvent::PAUSE)
       return;
    if ( evt.type == AudioIOEvent::CAPTURE ) {
       if (evt.on)

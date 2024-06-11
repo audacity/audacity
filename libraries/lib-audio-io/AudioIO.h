@@ -62,6 +62,7 @@ struct AudioIOEvent {
       PLAYBACK,
       CAPTURE,
       MONITOR,
+      PAUSE,
    } type;
    bool on;
 };

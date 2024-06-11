@@ -241,7 +241,7 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
 
 void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
 {
-   if (ev.type != AudioIOEvent::MONITOR)
+   if (ev.type != AudioIOEvent::MONITOR && ev.type != AudioIOEvent::PAUSE)
       mAudioIOBusy = ev.on;
 }
 

@@ -1701,6 +1701,7 @@ void AudioIO::SetPaused(bool state)
    }
 
    mPaused.store(state, std::memory_order_relaxed);
+   Publish({ mOwningProject.lock().get(), AudioIOEvent::PAUSE, state });
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
