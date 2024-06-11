@@ -20,6 +20,9 @@ using namespace muse::actions;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
 
+static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode RECORD_ACTION_CODE("record");
+
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
     : SelectableItemListModel(parent)
 {
@@ -33,9 +36,11 @@ void PlaybackToolBarCustomiseModel::load()
 
     ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
 
-    for (const ToolConfig::Item& item : noteInputConfig.items) {
-        UiAction action = actionsRegister()->action(item.action);
-        items << makeItem(action, item.show);
+    for (const ToolConfig::Item& configItem : noteInputConfig.items) {
+        UiAction action = actionsRegister()->action(configItem.action);
+        Item* item = makeItem(action, configItem.show);
+
+        items << item;
     }
 
     setItems(items);
@@ -202,6 +207,7 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeItem(const UiAc
     item->setId(QString::fromStdString(action.code));
     item->setTitle(action.title.qTranslatedWithoutMnemonic());
     item->setIcon(action.iconCode);
+    item->setIconColor(iconColor(action));
     item->setChecked(checked);
 
     connect(item, &PlaybackToolBarCustomiseItem::checkedChanged, this, [this](bool) {
@@ -217,6 +223,18 @@ PlaybackToolBarCustomiseItem* PlaybackToolBarCustomiseModel::makeSeparatorItem()
     item->setTitle(QString("-------  %1  -------").arg(muse::qtrc("projectscene", "Separator line")));
     item->setChecked(true); //! NOTE Can't be unchecked
     return item;
+}
+
+QColor PlaybackToolBarCustomiseModel::iconColor(const muse::ui::UiAction& action) const
+{
+    QColor color = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
+    if (action.code == PLAY_ACTION_CODE) {
+        color = QColor(configuration()->playColor().toQColor());
+    } else if (action.code == RECORD_ACTION_CODE) {
+        color = QColor(recordConfiguration()->recordColor().toQColor());
+    }
+
+    return color;
 }
 
 void PlaybackToolBarCustomiseModel::saveActions()
