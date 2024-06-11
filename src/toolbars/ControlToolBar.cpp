@@ -112,15 +112,16 @@ AButton* MakeControlToolBarButton(wxWindow* parent,
    auto button = safenew AButton(parent, id);
    button->SetButtonType(AButton::FrameButton);
    button->SetImages(
-      theTheme.Image(bmpRecoloredUpSmall),
-      theTheme.Image(bmpRecoloredUpHiliteSmall),
-      theTheme.Image(bmpRecoloredDownSmall),
-      theTheme.Image(bmpRecoloredHiliteSmall),
-      theTheme.Image(bmpRecoloredUpSmall));
+      theTheme.Image(bmpRecoloredUpLarge),
+      theTheme.Image(bmpRecoloredUpHiliteLarge),
+      theTheme.Image(bmpRecoloredDownLarge),
+      theTheme.Image(bmpRecoloredHiliteLarge),
+      theTheme.Image(bmpRecoloredUpLarge));
    button->SetIcons(iconUp, iconDown, iconDisabled);
    //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
    button->SetLabel({});
    button->SetMinSize(wxSize { 52, 52 });
+   button->SetFrameMid(2);
    return button;
 }
 
