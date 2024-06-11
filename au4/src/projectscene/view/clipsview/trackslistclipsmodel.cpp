@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "trackslistclipsmodel.h"
 
 using namespace au::projectscene;

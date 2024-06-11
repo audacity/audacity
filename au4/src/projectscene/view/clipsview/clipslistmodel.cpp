@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "clipslistmodel.h"
 
 #include "types/projectscenetypes.h"

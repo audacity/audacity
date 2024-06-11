@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "au3selectioncontroller.h"
 
 using namespace au::au3;

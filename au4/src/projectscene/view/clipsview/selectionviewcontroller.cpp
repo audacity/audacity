@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "selectionviewcontroller.h"
 
 #include "log.h"
@@ -30,8 +33,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
     }
 
     // point
-    QPointF p(x, y);
-    emit selectionChanged(m_startPoint, p);
+    emit selectionChanged(m_startPoint, QPointF(x, y));
 
     // tracks
     QList<int> tracks = determinateTracks(m_startPoint.y(), y);
@@ -57,10 +59,7 @@ void SelectionViewController::onReleased(double x, double y)
     m_selectionStarted = false;
 
     // point
-
-    QPointF p(x, y);
-
-    emit selectionEnded(m_startPoint, p);
+    emit selectionEnded(m_startPoint, QPointF(x, y));
 
     double x1 = m_startPoint.x();
     double x2 = x;
