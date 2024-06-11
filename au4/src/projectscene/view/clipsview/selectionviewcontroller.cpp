@@ -19,6 +19,7 @@ void SelectionViewController::onPressed(double x, double y)
     m_startPoint = QPointF(x, y);
     emit selectionStarted();
 
+    setSelectionActive(false);
     processingSelectionController()->resetDataSelection();
 }
 
@@ -71,6 +72,8 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
+    setSelectionActive(true);
+
     // tracks
     QList<int> tracks = determinateTracks(m_startPoint.y(), y);
     setSelectedTracks(tracks);
@@ -80,6 +83,17 @@ void SelectionViewController::onReleased(double x, double y)
     // time
     processingSelectionController()->setDataSelectedStartTime(m_context->positionToTime(x1));
     processingSelectionController()->setDataSelectedEndTime(m_context->positionToTime(x2));
+}
+
+void SelectionViewController::onSelectionDraged(double x1, double x2)
+{
+    // time
+    if (x1 > x2) {
+        std::swap(x1, x2);
+    }
+
+    m_context->setSelectionStartTime(m_context->positionToTime(x1));
+    m_context->setSelectionEndTime(m_context->positionToTime(x2));
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const
@@ -174,4 +188,18 @@ void SelectionViewController::setSelectedTracks(const QList<int>& newSelectedTra
     }
     m_selectedTracks = newSelectedTracks;
     emit selectedTracksChanged();
+}
+
+bool SelectionViewController::selectionActive() const
+{
+    return m_selectionActive;
+}
+
+void SelectionViewController::setSelectionActive(bool newSelectionActive)
+{
+    if (m_selectionActive == newSelectionActive) {
+        return;
+    }
+    m_selectionActive = newSelectionActive;
+    emit selectionActiveChanged();
 }

@@ -82,14 +82,15 @@ Rectangle {
             anchors.right: parent.right
 
             property bool mouseOnTracks: false
+            property bool isNeedSelectionCursor: !selectionController.selectionActive && mainMouseArea.mouseOnTracks
             hoverEnabled: true
             onContainsMouseChanged: {
                 if (!containsMouse) {
                     mouseOnTracks = false
                 }
             }
-            onMouseOnTracksChanged: {
-                if (mouseOnTracks) {
+            onIsNeedSelectionCursorChanged: {
+                if (isNeedSelectionCursor) {
                     tracksViewState.setOverrideCursor(Qt.IBeamCursor)
                 } else {
                     tracksViewState.resetOverrideCursor()
@@ -145,6 +146,7 @@ Rectangle {
         ClipsSelection {
             id: clipsSelection
             anchors.fill: parent
+            onSelectionDraged: function(x1, x2) { selectionController.onSelectionDraged(x1, x2) }
         }
 
         PlayCursor {

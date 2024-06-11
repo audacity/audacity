@@ -6,10 +6,12 @@ Item {
     property alias active: selRect.visible
     property real minSelection: 12 // px  4left + 4 + 4right
 
+    signal selectionDraged(var x1, var x2)
+
     function onSelectionStarted() {
         selRect.visible = false
-        leftMa.enabled = false
-        rightMa.enabled = false
+        leftMa.visible = false
+        rightMa.visible = false
     }
 
     function onSelectionChanged(p1, p2) {
@@ -27,11 +29,15 @@ Item {
     function onSelectionEnded(p1, p2) {
         if (selRect.visible) {
             leftMa.x = selRect.x
-            leftMa.enabled = true
+            leftMa.visible = true
 
             rightMa.x = selRect.x + selRect.width - rightMa.width
-            rightMa.enabled = true
+            rightMa.visible = true
         }
+    }
+
+    function _onSelectionDraging() {
+        root.selectionDraged(selRect.x, selRect.x + selRect.width)
     }
 
     Rectangle {
@@ -42,8 +48,25 @@ Item {
 
         visible: false
         color: "#8EC9FF"
-
         opacity: 0.1
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: 2
+            color: "#8EC9FF"
+            opacity: 0.4
+        }
+
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 2
+            color: "#8EC9FF"
+            opacity: 0.4
+        }
     }
 
     MouseArea {
@@ -52,6 +75,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        visible: false
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -69,11 +93,12 @@ Item {
             if (newWidth > root.minSelection) {
                 selRect.x = leftMa.startX + mouse.x
                 selRect.width = newWidth
+                root._onSelectionDraging()
             }
         }
 
         onReleased: {
-            root.selected(selRect.x, selRect.x + selRect.width)
+            root._onSelectionDraging()
             leftMa.x = selRect.x
             leftMa.cursorShape = Qt.SizeHorCursor
         }
@@ -85,6 +110,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        visible: false
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -100,11 +126,12 @@ Item {
             var newWidth = rightMa.startW + mouse.x
             if (newWidth > root.minSelection) {
                 selRect.width = newWidth
+                root._onSelectionDraging()
             }
         }
 
         onReleased: {
-            root.selected(selRect.x, selRect.x + selRect.width)
+            root._onSelectionDraging()
             rightMa.x = selRect.x + selRect.width - rightMa.width
             rightMa.cursorShape = Qt.SizeHorCursor
         }

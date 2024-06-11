@@ -14,6 +14,7 @@ class SelectionViewController : public QObject
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
+    Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
     Q_PROPERTY(QList<int> selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
@@ -31,13 +32,18 @@ public:
     Q_INVOKABLE void onPressed(double x, double y);
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
+    Q_INVOKABLE void onSelectionDraged(double x, double x2);
 
     QList<int> selectedTracks() const;
     void setSelectedTracks(const QList<int>& newSelectedTracks);
 
+    bool selectionActive() const;
+    void setSelectionActive(bool newSelectionActive);
+
 signals:
     void timelineContextChanged();
     void selectedTracksChanged();
+    void selectionActiveChanged();
 
     void selectionStarted();
     void selectionChanged(QPointF p1, QPointF p2);
@@ -53,6 +59,7 @@ private:
     TimelineContext* m_context = nullptr;
 
     bool m_selectionStarted = false;
+    bool m_selectionActive = false;
     QPointF m_startPoint;
     QList<int> m_selectedTracks;
 };
