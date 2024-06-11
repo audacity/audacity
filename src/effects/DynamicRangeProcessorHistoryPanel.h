@@ -10,6 +10,7 @@
 **********************************************************************/
 #pragma once
 
+#include "DynamicRangeProcessorClock.h"
 #include "DynamicRangeProcessorHistory.h"
 #include "Observer.h"
 #include "wxPanelWrapper.h"
@@ -62,9 +63,11 @@ private:
    std::shared_ptr<DynamicRangeProcessorOutputPacketQueue> mOutputQueue;
    std::vector<DynamicRangeProcessorOutputPacket> mPacketBuffer;
    std::optional<DynamicRangeProcessorHistory> mHistory;
+   DynamicRangeProcessorClock mClock;
    const std::function<void(float)> mOnDbRangeChanged;
    const Observer::Subscription mInitializeProcessingSettingsSubscription;
    const Observer::Subscription mRealtimeResumeSubscription;
+   const Observer::Subscription mPlaybackEventSubscription;
    wxTimer mTimer;
    std::optional<ClockSynchronization> mSync;
    std::vector<double> mX;
