@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include <QObject>
@@ -41,6 +44,9 @@ public:
     bool isTrackCollapsed() const;
 
     Q_INVOKABLE void changeTrackHeight(int deltaY);
+
+    Q_INVOKABLE void setOverrideCursor(Qt::CursorShape cursor);
+    Q_INVOKABLE void resetOverrideCursor();
 
 signals:
     // context of all tracks

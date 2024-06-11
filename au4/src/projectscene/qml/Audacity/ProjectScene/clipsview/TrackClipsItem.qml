@@ -11,6 +11,8 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
 
+    property bool isDataSelected: false
+
     signal interactionStarted()
     signal interactionEnded()
 
@@ -80,17 +82,16 @@ Item {
         }
     }
 
-    ClipsSelection {
-        id: clipsSelection
+    Rectangle {
+        id: selRect
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        color: "#8EC9FF"
+        opacity: 0.4
+        visible: root.isDataSelected
 
-        anchors.fill: parent
-        anchors.topMargin: 20 // clip header height
-
-        onSelected: function(x1, x2) {
-            clipsModel.onSelected(x1, x2)
-        }
-
-        onReset: clipsModel.resetSelection()
+        x: root.context.timeToPosition(root.context.selectionStartTime)
+        width: root.context.timeToPosition(root.context.selectionEndTime) - x
     }
 
     MouseArea {

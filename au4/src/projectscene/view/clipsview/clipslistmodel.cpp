@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "clipslistmodel.h"
 
 #include "types/projectscenetypes.h"
@@ -185,26 +188,6 @@ void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
     } else {
         setSelectedClipIdx(k.index);
     }
-}
-
-void ClipsListModel::onSelected(double x1, double x2)
-{
-    onSelectedTime(m_context->positionToTime(x1), m_context->positionToTime(x2));
-}
-
-void ClipsListModel::onSelectedTime(double startTime, double endTime)
-{
-    if (startTime > endTime) {
-        std::swap(startTime, endTime);
-    }
-
-    LOGDA() << "m_trackId: " << m_trackId << ", startTime: " << startTime << ", endTime: " << endTime;
-    NOT_IMPLEMENTED;
-}
-
-void ClipsListModel::resetSelection()
-{
-    NOT_IMPLEMENTED;
 }
 
 QVariant ClipsListModel::trackId() const

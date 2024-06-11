@@ -21,6 +21,7 @@ public:
     void setAudacity3Project(std::shared_ptr<au::au3::Au3Project> au3);
     const std::shared_ptr<au::au3::Au3Project>& audacity3Project() const { return m_au3; }
 
+    std::vector<TrackId> trackIdList() const;
     muse::async::NotifyList<Track> trackList() const;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 

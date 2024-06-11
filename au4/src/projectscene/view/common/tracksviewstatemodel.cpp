@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "tracksviewstatemodel.h"
 
 using namespace au::projectscene;
@@ -92,4 +95,14 @@ int TracksViewStateModel::trackHeight() const
 bool TracksViewStateModel::isTrackCollapsed() const
 {
     return m_isTrackCollapsed.val;
+}
+
+void TracksViewStateModel::setOverrideCursor(Qt::CursorShape cursor)
+{
+    QGuiApplication::setOverrideCursor(QCursor(cursor));
+}
+
+void TracksViewStateModel::resetOverrideCursor()
+{
+    QGuiApplication::restoreOverrideCursor();
 }

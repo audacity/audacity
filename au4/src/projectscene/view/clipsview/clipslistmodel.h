@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include <QAbstractListModel>
@@ -40,9 +43,6 @@ public:
     Q_INVOKABLE void selectClip(int index);
     Q_INVOKABLE void resetSelectedClip();
 
-    Q_INVOKABLE void onSelected(double x1, double x2);
-    Q_INVOKABLE void resetSelection();
-
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -71,7 +71,6 @@ private:
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
     bool changeClipTitle(const QModelIndex& index, const QVariant& value);
 
-    void onSelectedTime(double startTime, double endTime);
     void onSelectedClip(const processing::ClipKey& k);
 
     void onClipRenameAction(const muse::actions::ActionData& args);

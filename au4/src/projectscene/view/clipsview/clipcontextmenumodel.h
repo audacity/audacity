@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include "uicomponents/view/abstractmenumodel.h"

@@ -12,6 +12,8 @@ Rectangle {
 
     TracksListClipsModel {
         id: tracksModel
+
+        dataSelectedTracks: selectionController.selectedTracks
     }
 
     //! NOTE Sync with TracksPanel
@@ -27,6 +29,15 @@ Rectangle {
     PlayCursorController {
         id: playCursorController
         context: timeline.context
+    }
+
+    SelectionViewController {
+        id: selectionController
+        context: timeline.context
+
+        onSelectionStarted: clipsSelection.onSelectionStarted()
+        onSelectionChanged: function(p1, p2) { clipsSelection.onSelectionChanged(p1, p2) }
+        onSelectionEnded: function(p1, p2) { clipsSelection.onSelectionEnded(p1, p2) }
     }
 
     Component.onCompleted: {
@@ -64,14 +75,45 @@ Rectangle {
         }
 
         MouseArea {
+            id: mainMouseArea
             anchors.top: timeline.bottom
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
 
+            property bool mouseOnTracks: false
+            property bool isNeedSelectionCursor: !selectionController.selectionActive && mainMouseArea.mouseOnTracks
+            hoverEnabled: true
+            onContainsMouseChanged: {
+                if (!containsMouse) {
+                    mouseOnTracks = false
+                }
+            }
+            onIsNeedSelectionCursorChanged: {
+                if (isNeedSelectionCursor) {
+                    tracksViewState.setOverrideCursor(Qt.IBeamCursor)
+                } else {
+                    tracksViewState.resetOverrideCursor()
+                }
+            }
+
             onWheel: function(wheel) {
                 wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
+                if (!wheel.accepted) {
+                    if (wheel.angleDelta.y > 0) {
+                        view.flick(0, view.maximumFlickVelocity)
+                    } else {
+                        view.flick(0, -view.maximumFlickVelocity)
+                    }
+                }
             }
+
+            onPressed: e => selectionController.onPressed(e.x, e.y)
+            onPositionChanged: function(e) {
+                mouseOnTracks = e.y < view.visibleContentHeight
+                selectionController.onPositionChanged(e.x, e.y)
+            }
+            onReleased: e => selectionController.onReleased(e.x, e.y)
         }
 
         StyledListView {
@@ -82,11 +124,13 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
 
+            property real visibleContentHeight: view.contentHeight - view.contentY
+
             onContentYChanged: {
                 tracksViewState.changeTracksVericalY(view.contentY)
             }
 
-            interactive: true
+            interactive: false
 
             model: tracksModel
 
@@ -94,16 +138,15 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 context: timeline.context
-                trackId: trackIdData
-
-                onInteractionStarted: {
-                    view.interactive = false
-                }
-
-                onInteractionEnded: {
-                    view.interactive = true
-                }
+                trackId: model.trackId
+                isDataSelected: model.isDataSelected
             }
+        }
+
+        ClipsSelection {
+            id: clipsSelection
+            anchors.fill: parent
+            onSelectionDraged: function(x1, x2) { selectionController.onSelectionDraged(x1, x2) }
         }
 
         PlayCursor {

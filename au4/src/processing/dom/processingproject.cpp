@@ -14,6 +14,11 @@ void ProcessingProject::setAudacity3Project(std::shared_ptr<au::au3::Au3Project>
     m_au3 = au3;
 }
 
+std::vector<TrackId> ProcessingProject::trackIdList() const
+{
+    return m_au3->trackIdList();
+}
+
 async::NotifyList<Track> ProcessingProject::trackList() const
 {
     return m_au3->trackList();

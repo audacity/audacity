@@ -61,6 +61,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audioinoutmeter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesmanager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesmanager.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3selectioncontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3selectioncontroller.h
     )
 
 # ==================================

@@ -6,8 +6,39 @@ Item {
     property alias active: selRect.visible
     property real minSelection: 12 // px  4left + 4 + 4right
 
-    signal selected(x1 : real, x2 : real)
-    signal reset()
+    signal selectionDraged(var x1, var x2)
+
+    function onSelectionStarted() {
+        selRect.visible = false
+        leftMa.visible = false
+        rightMa.visible = false
+    }
+
+    function onSelectionChanged(p1, p2) {
+        if (p2.x > p1.x) {
+            selRect.x = p1.x
+            selRect.width = p2.x - p1.x
+        } else {
+            selRect.x = p2.x
+            selRect.width = p1.x - p2.x
+        }
+
+        selRect.visible = selRect.width > root.minSelection
+    }
+
+    function onSelectionEnded(p1, p2) {
+        if (selRect.visible) {
+            leftMa.x = selRect.x
+            leftMa.visible = true
+
+            rightMa.x = selRect.x + selRect.width - rightMa.width
+            rightMa.visible = true
+        }
+    }
+
+    function _onSelectionDraging() {
+        root.selectionDraged(selRect.x, selRect.x + selRect.width)
+    }
 
     Rectangle {
         id: selRect
@@ -17,51 +48,24 @@ Item {
 
         visible: false
         color: "#8EC9FF"
+        opacity: 0.1
 
-        opacity: 0.6
-    }
-
-    MouseArea {
-        id: selMa
-        anchors.fill: parent
-
-        property real startX: 0
-
-        onPressed: function(mouse) {
-
-            if (selRect.visible) {
-                root.reset()
-            }
-
-            selMa.startX = mouse.x
-            selRect.visible = false
-            leftMa.enabled = false
-            rightMa.enabled = false
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            width: 2
+            color: "#8EC9FF"
+            opacity: 0.4
         }
 
-        onPositionChanged: function(mouse) {
-            var x = mouse.x
-            if (x > selMa.startX) {
-                selRect.x = selMa.startX
-                selRect.width = x - selMa.startX
-            } else {
-                selRect.x = x
-                selRect.width = selMa.startX - x
-            }
-
-            selRect.visible = selRect.width > root.minSelection
-        }
-
-        onReleased: {
-            if (selRect.visible) {
-                root.selected(selRect.x, selRect.x + selRect.width)
-
-                leftMa.x = selRect.x
-                leftMa.enabled = true
-
-                rightMa.x = selRect.x + selRect.width - rightMa.width
-                rightMa.enabled = true
-            }
+        Rectangle {
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            width: 2
+            color: "#8EC9FF"
+            opacity: 0.4
         }
     }
 
@@ -71,6 +75,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        visible: false
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -88,11 +93,12 @@ Item {
             if (newWidth > root.minSelection) {
                 selRect.x = leftMa.startX + mouse.x
                 selRect.width = newWidth
+                root._onSelectionDraging()
             }
         }
 
         onReleased: {
-            root.selected(selRect.x, selRect.x + selRect.width)
+            root._onSelectionDraging()
             leftMa.x = selRect.x
             leftMa.cursorShape = Qt.SizeHorCursor
         }
@@ -104,6 +110,7 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
+        visible: false
         width: 4
         cursorShape: Qt.SizeHorCursor
 
@@ -119,11 +126,12 @@ Item {
             var newWidth = rightMa.startW + mouse.x
             if (newWidth > root.minSelection) {
                 selRect.width = newWidth
+                root._onSelectionDraging()
             }
         }
 
         onReleased: {
-            root.selected(selRect.x, selRect.x + selRect.width)
+            root._onSelectionDraging()
             rightMa.x = selRect.x + selRect.width - rightMa.width
             rightMa.cursorShape = Qt.SizeHorCursor
         }

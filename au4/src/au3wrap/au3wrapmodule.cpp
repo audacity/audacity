@@ -37,6 +37,7 @@
 #include "internal/au3playback.h"
 #include "internal/au3record.h"
 #include "internal/au3audiodevicesmanager.h"
+#include "internal/au3selectioncontroller.h"
 
 #include "log.h"
 
@@ -59,6 +60,7 @@ void Au3WrapModule::registerExports()
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
     ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
+    ioc()->registerExport<processing::IProcessingSelectionController>(moduleName(), new Au3SelectionController());
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)

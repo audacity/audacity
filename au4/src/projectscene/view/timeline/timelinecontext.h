@@ -2,6 +2,11 @@
 
 #include <QObject>
 
+#include "global/async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "processing/iprocessingselectioncontroller.h"
+
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
 //! 2. This is a controller that interprets mouse and view resize events into context values
@@ -10,7 +15,8 @@
 //! or we notice that its "controller" methods are being called in unexpected places,
 //! then we should split it into two separate classes.
 
-class TimelineContext : public QObject
+namespace au::projectscene {
+class TimelineContext : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -20,9 +26,13 @@ class TimelineContext : public QObject
     Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged FINAL)
 
-    Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
-    Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    //! NOTE Can be changed from Qml, directly during selection
+    //! Or via selection controller (if selection was not made from view)
+    Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
+    Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
+
+    muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
 
 public:
 
@@ -44,9 +54,6 @@ public:
 
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
     Q_INVOKABLE bool onWheel(double y);
-
-    Q_INVOKABLE void onSelection(double x1, double x2);
-    Q_INVOKABLE void resetSelection();
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position) const;
@@ -77,7 +84,6 @@ private:
 
     void onSelectionTime(double t1, double t2);
     void updateSelectionActive();
-    void setSelectionActive(bool newSelectionActive);
 
     double m_frameWidth = 0.0;
     double m_frameStartTime = 0.0;
@@ -85,7 +91,8 @@ private:
 
     double m_zoom = 1.0; // see init
 
-    double m_selecitonStartTime = 0.0;
-    double m_selectionEndTime = 0.0;
+    processing::secs_t m_selecitonStartTime = -1.0;
+    processing::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
 };
+}

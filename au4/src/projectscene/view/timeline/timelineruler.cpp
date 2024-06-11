@@ -17,6 +17,8 @@ constexpr int LABEL_OFFSET = 3;
 constexpr int LABEL_INTERVAL = 5;
 }
 
+using namespace au::projectscene;
+
 TimelineRuler::TimelineRuler(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {

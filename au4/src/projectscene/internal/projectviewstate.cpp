@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "projectviewstate.h"
 
 using namespace au::projectscene;

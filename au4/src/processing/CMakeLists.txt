@@ -26,6 +26,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/processingtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iprocessinginteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iprocessingactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iprocessingselectioncontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dom/processingproject.h
@@ -42,5 +43,6 @@ set(MODULE_SRC
     )
 
 setup_module()
+
 
 
