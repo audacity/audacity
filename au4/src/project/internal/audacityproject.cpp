@@ -237,7 +237,7 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
         return make_ret(io::Err::FSWriteError);
     }
 
-    auto ret = m_au3Project->save(savePath, false);
+    auto ret = m_au3Project->save(savePath);
     if (ret) {
         return make_ret(Ret::Code::Ok);
     }

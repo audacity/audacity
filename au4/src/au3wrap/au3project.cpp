@@ -83,15 +83,11 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     return true;
 }
 
-bool Au3Project::save(const muse::io::path_t& filePath, const bool fromSaveAs)
+bool Au3Project::save(const muse::io::path_t& filePath)
 {
-    //! TODO AU4
-    // auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    // std::string sstr = filePath.toStdString();
-    // FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
-    // TrackList& tracks = TrackList::Get(m_data->projectRef());
-    // bool success = projectFileIO.SaveProject(fileName, nullptr /* m_lastSavedTracks*/);
-    return false;
+    auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
+    TrackList& tracks = TrackList::Get(m_data->projectRef());
+    return projectFileIO.SaveProject(wxFromString(filePath.toString()), &tracks);
 }
 
 void Au3Project::close()
