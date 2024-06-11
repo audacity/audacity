@@ -116,8 +116,8 @@
              BeatFillWeakBrush: #323639;
         BeatFillStrongSelBrush: #555A72;
           BeatFillWeakSelBrush: #616680;
-                   LoopEnabled: #E0E1E5; 
-                LoopNotEnabled: #c2cbf4;
+                   LoopEnabled: #4a4d59; 
+                LoopNotEnabled: #292e33;
                        Grabber: #9295a6;
        TimelineRulerBackground: #292e33;
 }
