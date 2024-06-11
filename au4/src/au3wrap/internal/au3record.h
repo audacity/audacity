@@ -26,6 +26,7 @@ public:
     void init();
 
     void start() override;
+    void pause() override;
     void stop() override;
 
     IAu3AudioInputPtr audioInput() const override;

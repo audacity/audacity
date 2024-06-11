@@ -10,6 +10,7 @@
 
 #include "ui/iuiactionsregister.h"
 
+#include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackuiactions.h"
 
@@ -35,9 +36,11 @@ std::string PlaybackModule::moduleName() const
 
 void PlaybackModule::registerExports()
 {
+    m_configuration = std::make_shared<PlaybackConfiguration>();
     m_controller = std::make_shared<PlaybackController>();
     m_uiActions = std::make_shared<PlaybackUiActions>(m_controller);
 
+    ioc()->registerExport<PlaybackConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
 }
 

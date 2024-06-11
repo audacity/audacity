@@ -16,6 +16,9 @@ class IRecordController : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IRecordController() = default;
 
+    virtual bool isRecordAllowed() const = 0;
+    virtual muse::async::Notification isRecordAllowedChanged() const = 0;
+
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
 };

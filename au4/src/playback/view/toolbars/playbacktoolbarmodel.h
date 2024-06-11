@@ -8,8 +8,10 @@
 #include "context/iglobalcontext.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/iuiconfiguration.h"
+#include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
+#include "record/irecordconfiguration.h"
 
 #include "uicomponents/view/abstracttoolbarmodel.h"
 
@@ -21,8 +23,10 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<au::context::IGlobalContext> context;
+    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::playback::IPlaybackController> controller;
     muse::Inject<au::record::IRecordController> recordController;
+    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
@@ -31,7 +35,9 @@ public:
     {
         UNDEFINED,
         PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
-        RECORD_LEVEL
+        RECORD_LEVEL,
+        PLAYBACK_CONTROL,
+        PROJECT_CONTROL
     };
     Q_ENUM(ItemType)
 
@@ -40,6 +46,10 @@ public:
 private:
 
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void updatePlayState();
+    void updateStopState();
+    void updateRecordState();
+    void updateLoopState();
 
     void setupConnections();
     void onProjectChanged();
@@ -47,9 +57,6 @@ private:
     void updateActions();
 
     muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
-
-    muse::ui::UiAction playAction() const;
-    muse::ui::UiAction recordAction() const;
 };
 }
 

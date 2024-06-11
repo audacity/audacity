@@ -19,6 +19,7 @@ public:
     virtual ~IAu3Record() = default;
 
     virtual void start() = 0;
+    virtual void pause() = 0;
     virtual void stop() = 0;
 
     virtual IAu3AudioInputPtr audioInput() const = 0;
