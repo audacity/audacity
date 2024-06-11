@@ -25,21 +25,13 @@ Item {
 
         spacing: 16
 
-        VisibilityBox {
-            id: visibilityButton
-
+        StyledIconLabel {
             Layout.alignment: Qt.AlignLeft
 
-            navigation.panel: root.navigationPanel
-            navigation.row: root.navigationRow
-            navigation.column: 1
-            accessibleText: titleLabel.text
+            width: 36
+            height: width
 
-            isVisible: root.item.checked
-
-            onVisibleToggled: {
-                root.item.checked = !root.item.checked
-            }
+            iconCode: Boolean(root.item) && Boolean(root.item.checked) ? IconCode.EYE_OPEN : IconCode.EYE_CLOSED
         }
 
         StyledIconLabel {
@@ -49,6 +41,7 @@ Item {
             height: width
 
             iconCode: Boolean(root.item) ? root.item.icon : IconCode.NONE
+            color: Boolean(root.item) ? root.item.iconColor : ui.theme.fontPrimaryColor
         }
 
         StyledTextLabel {

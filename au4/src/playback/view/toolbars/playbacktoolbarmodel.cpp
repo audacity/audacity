@@ -234,27 +234,36 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
 {
     PlaybackToolBarModel::ItemType type = itemType(actionCode);
 
+    if (type == PlaybackToolBarModel::PROJECT_CONTROL) {
+        ToolBarItem* item = AbstractToolBarModel::makeItem(actionCode);
+        item->setType(static_cast<ToolBarItemType::Type>(type));
+        return item;
+    }
+
+    ToolBarItem* result = nullptr;
     const UiAction& action = uiActionsRegister()->action(actionCode);
 
     switch (type) {
     case PlaybackToolBarModel::PLAYBACK_LEVEL:
-        return new PlaybackToolBarLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        result = new PlaybackToolBarLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        break;
     case PlaybackToolBarModel::RECORD_LEVEL:
-        return new record::PlaybackToolBarRecordLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
-    case au::playback::PlaybackToolBarModel::PLAYBACK_CONTROL: {
+        result = new record::PlaybackToolBarRecordLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        break;
+    case PlaybackToolBarModel::PLAYBACK_CONTROL: {
         PlaybackToolBarControlItem* item = new PlaybackToolBarControlItem(action, static_cast<ToolBarItemType::Type>(type), this);
         item->setIconColor(QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString()));
         item->setBackgroundColor(QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString()));
-        return item;
-    }
-    case au::playback::PlaybackToolBarModel::PROJECT_CONTROL: {
-        ToolBarItem* item = AbstractToolBarModel::makeItem(actionCode);
-        item->setType(static_cast<ToolBarItemType::Type>(type));
-        return item;
+        result = std::move(item);
+        break;
     }
     default:
         break;
     }
 
-    return nullptr;
+    if (result) {
+        result->setState(uiActionsRegister()->actionState(actionCode));
+    }
+
+    return result;
 }
