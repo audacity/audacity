@@ -12,8 +12,6 @@ Rectangle {
 
     TracksListClipsModel {
         id: tracksModel
-
-        dataSelectedTracks: selectionController.selectedTracks
     }
 
     //! NOTE Sync with TracksPanel

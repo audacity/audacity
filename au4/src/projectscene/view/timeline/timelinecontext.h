@@ -26,13 +26,11 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged FINAL)
 
-    //! NOTE Can be changed from Qml, directly during selection
-    //! Or via selection controller (if selection was not made from view)
-    Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
-    Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
+    Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
-    muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
+    muse::Inject<processing::IProcessingSelectionController> selectionController;
 
 public:
 
@@ -45,9 +43,7 @@ public:
     void setZoom(double zoom);
 
     double selectionStartTime() const;
-    void setSelectionStartTime(double time);
     double selectionEndTime() const;
-    void setSelectionEndTime(double time);
     bool selectionActive() const;
 
     Q_INVOKABLE void init(double frameWidth);
@@ -82,7 +78,8 @@ private:
 
     void changeZoom(int direction);
 
-    void onSelectionTime(double t1, double t2);
+    void setSelectionStartTime(double time);
+    void setSelectionEndTime(double time);
     void updateSelectionActive();
 
     double m_frameWidth = 0.0;

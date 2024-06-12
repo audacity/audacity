@@ -49,6 +49,8 @@
 
 #include "view/playcursor/playcursorcontroller.h"
 
+#include "view/statusbar/selectionstatusmodel.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
@@ -116,6 +118,9 @@ void ProjectSceneModule::registerUiTypes()
 
     // play cursor
     qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
+
+    // status bar
+    qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");
 }
 
 void ProjectSceneModule::onInit(const muse::IApplication::RunMode& mode)
