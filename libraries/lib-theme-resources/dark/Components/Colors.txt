@@ -53,7 +53,7 @@
                       TimeBack: #191f24;
                  TimeFontFocus: #f0f5fa;
                  TimeBackFocus: #484f57;
-          LabelTextNormalBrush: #c2cbf4;
+          LabelTextNormalBrush: #15181b;
             LabelTextEditBrush: #2f353b;
           LabelUnselectedBrush: #606060;
             LabelSelectedBrush: #8b8571;

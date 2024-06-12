@@ -1,6 +1,6 @@
 .lightTheme {
                          Blank: #45485A;
-                    Unselected: #E5EAFF;
+                    Unselected: #f0f3ff;
                       Selected: #aac3f2;
                         Sample: #6464D3;
                        Sample2: #286CCA;
@@ -59,7 +59,7 @@
                    TrackFocus1: #677ce4;
                    TrackFocus2: #677ce4;
                      SnapGuide: #ffff00;
-                     TrackInfo: #f0f1f5;
+                     TrackInfo: #f8f8f9;
              TrackInfoSelected: #dbe7ff;
                          Light: #f0f1f5;
                         Medium: #f8f8f9;
