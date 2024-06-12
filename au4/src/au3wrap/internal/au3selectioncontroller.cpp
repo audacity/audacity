@@ -14,6 +14,32 @@
 
 using namespace au::au3;
 
+// clip selection
+
+void Au3SelectionController::resetSelectedClip()
+{
+    MYLOG() << "resetSelectedClip";
+    m_selectedClip.set(au::processing::ClipKey(), true);
+}
+
+au::processing::ClipKey Au3SelectionController::selectedClip() const
+{
+    return m_selectedClip.val;
+}
+
+void Au3SelectionController::setSelectedClip(const au::processing::ClipKey& clipKey)
+{
+    MYLOG() << "track: " << clipKey.trackId << ", clip: " << clipKey.index;
+    m_selectedClip.set(clipKey, true);
+}
+
+muse::async::Channel<au::processing::ClipKey> Au3SelectionController::clipSelected() const
+{
+    return m_selectedClip.selected;
+}
+
+// data selection
+
 void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";

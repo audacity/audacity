@@ -11,6 +11,13 @@ class Au3SelectionController : public processing::ISelectionController
 public:
     Au3SelectionController() = default;
 
+    // clip selection
+    void resetSelectedClip() override;
+    processing::ClipKey selectedClip() const override;
+    void setSelectedClip(const processing::ClipKey& clipKey) override;
+    muse::async::Channel<processing::ClipKey> clipSelected() const override;
+
+    // data selection
     void resetDataSelection() override;
 
     std::vector<processing::TrackId> dataSelectedOnTracks() const override;
@@ -46,6 +53,10 @@ private:
         }
     };
 
+    // clip selection
+    Val<processing::ClipKey> m_selectedClip;
+
+    // data selection
     Val<std::vector<processing::TrackId>> m_selectedTrackIds;
     Val<processing::secs_t> m_selectedStartTime;
     Val<processing::secs_t> m_selectedEndTime;

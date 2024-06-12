@@ -15,15 +15,21 @@ class ISelectionController : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ISelectionController() = default;
 
-    // data selection
-    virtual void resetDataSelection() = 0;
-
     //! NOTE typical behavior
     //! * getter - getting the currently selected value (the selection itself may not be complete yet)
     //! * setter - setting the selected values ​​during selection,
     //! if the selection is completed, then it is necessary to pass: `complete = true`
     //! * valueChanged - notified when the selected value change (for example, the user moves the mouse cursor)
     //! * valueSelected - notified when value selection is complete
+
+    // clip selection
+    virtual void resetSelectedClip() = 0;
+    virtual ClipKey selectedClip() const = 0;
+    virtual void setSelectedClip(const ClipKey& clipKey) = 0;
+    virtual muse::async::Channel<ClipKey> clipSelected() const = 0;
+
+    // data selection
+    virtual void resetDataSelection() = 0;
 
     virtual std::vector<TrackId> dataSelectedOnTracks() const = 0;
     virtual void setDataSelectedOnTracks(const std::vector<TrackId>& trackIds, bool complete) = 0;

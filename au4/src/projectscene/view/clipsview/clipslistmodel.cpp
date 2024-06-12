@@ -33,11 +33,10 @@ void ClipsListModel::load()
         connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
     }
 
-    muse::ValCh<processing::ClipKey> selectedClip = processingInteraction()->selectedClip();
-    selectedClip.ch.onReceive(this, [this](const processing::ClipKey& k) {
+    onSelectedClip(selectionController()->selectedClip());
+    selectionController()->clipSelected().onReceive(this, [this](const processing::ClipKey& k) {
         onSelectedClip(k);
     });
-    onSelectedClip(selectedClip.val);
 
     beginResetModel();
 
@@ -173,12 +172,12 @@ bool ClipsListModel::changeClipTitle(const QModelIndex& index, const QVariant& v
 
 void ClipsListModel::selectClip(int index)
 {
-    processingInteraction()->selectClip(processing::ClipKey(m_trackId, index));
+    selectionController()->setSelectedClip(processing::ClipKey(m_trackId, index));
 }
 
 void ClipsListModel::resetSelectedClip()
 {
-    processingInteraction()->selectClip(processing::ClipKey());
+    selectionController()->resetSelectedClip();
 }
 
 void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
