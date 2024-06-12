@@ -189,4 +189,10 @@ DockPage {
     central: TracksClipsView {
         id: clipsView
     }
+
+    statusBar: DockStatusBar {
+        objectName: "projectStatusBar"
+
+        ProjectStatusBar {}
+    }
 }
