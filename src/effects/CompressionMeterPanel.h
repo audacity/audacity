@@ -24,7 +24,10 @@ class wxPaintDC;
 class CompressionMeterPanel final : public wxPanelWrapper
 {
 public:
-   CompressionMeterPanel(wxWindow* parent, CompressorInstance& instance);
+   CompressionMeterPanel(
+      wxWindow* parent, int id, CompressorInstance& instance, float dbRange);
+
+   void SetDbRange(float dbRange);
 
    static constexpr auto timerPeriodMs = 1000 / 30;
 
@@ -36,9 +39,6 @@ private:
    //! experience.
    static constexpr auto displayDelayMs = 100;
    static constexpr auto ringBufferLength = displayDelayMs / timerPeriodMs;
-
-   static constexpr auto outputColBottomValue =
-      -DynamicRangeProcessorPanel::compressorMeterRangeDb;
 
    void Reset();
    void PaintRectangle(
@@ -59,8 +59,9 @@ private:
    wxTimer mTimer;
    MeterValues mSmoothedValues;
    bool mStopWhenZero = false;
+   float mOutputColBottomValue;
    float mCompressionColMin = 0;
-   float mOutputColMax = outputColBottomValue;
+   float mOutputColMax = mOutputColBottomValue;
    std::array<MeterValues, ringBufferLength> mRingBuffer;
    size_t mRingBufferIndex = 0;
 };

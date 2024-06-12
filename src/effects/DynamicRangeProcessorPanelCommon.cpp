@@ -31,4 +31,10 @@ wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight)
       a.Blue() * aWeight + b.Blue() * (1 - aWeight),
       a.Alpha() * aWeight + b.Alpha() * (1 - aWeight));
 }
+
+float GetGraphDbRange(int height)
+{
+   const auto factor = std::max(1.f, 1.f * height / graphMinHeight);
+   return factor * graphMinRangeDb;
+}
 } // namespace DynamicRangeProcessorPanel

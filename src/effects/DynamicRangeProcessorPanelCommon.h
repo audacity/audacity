@@ -25,9 +25,12 @@ static const wxColour releaseColor { 190, 120, 255, 100 };
 static const wxColour lineColor { 72, 72, 72 };
 static const wxColour targetCompressionColor { lineColor };
 static constexpr auto targetCompressionLineWidth = 2;
-static constexpr auto compressorMeterRangeDb = 12.f;
+static constexpr auto graphMinHeight = 270;
+static constexpr auto graphMinRangeDb = 20.f;
 
 std::unique_ptr<wxGraphicsContext> MakeGraphicsContext(const wxPaintDC& dc);
 
 wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight);
+
+float GetGraphDbRange(int height);
 } // namespace DynamicRangeProcessorPanel

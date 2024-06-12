@@ -100,9 +100,6 @@ public:
    void PopulateOrExchange(ShuttleGui& S);
 
 private:
-   void PopulateLimiterUpperHalf(ShuttleGui& S);
-   void PopulateCompressorUpperHalf(
-      ShuttleGui& S, const CompressorSettings& compressorSettings);
    void AddCompressionCurvePanel(ShuttleGui& S, const CompressorSettings&);
    void AddCompressionMeterPanel(ShuttleGui& S);
    void AddSliderPanel(ShuttleGui& S);

@@ -27,8 +27,6 @@ class DynamicRangeProcessorHistoryPanel final : public wxPanelWrapper
 {
 public:
    static constexpr auto minWidth = 600;
-   static constexpr auto minHeight = 270;
-   static constexpr auto minRangeDb = 20.f;
 
    DynamicRangeProcessorHistoryPanel(
       wxWindow* parent, wxWindowID winid, CompressorInstance& instance,

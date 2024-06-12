@@ -120,7 +120,7 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
 
    SetDoubleBuffered(true);
    mTimer.SetOwner(this, timerId);
-   SetSize({ minWidth, minHeight });
+   SetSize({ minWidth, DynamicRangeProcessorPanel::graphMinHeight });
 }
 
 namespace
@@ -383,7 +383,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    const auto& segments = mHistory->GetSegments();
    const auto elapsedTimeSinceFirstPacket =
       std::chrono::duration<float>(mSync->now - mSync->start).count();
-   const auto rangeDb = GetDbRange(height);
+   const auto rangeDb = DynamicRangeProcessorPanel::GetGraphDbRange(height);
    const auto dbPerPixel = rangeDb / height;
 
    for (const auto& segment : segments)
@@ -508,7 +508,8 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
 void DynamicRangeProcessorHistoryPanel::OnSize(wxSizeEvent& evt)
 {
    Refresh(false);
-   mOnDbRangeChanged(GetDbRange(GetSize().GetHeight()));
+   mOnDbRangeChanged(
+      DynamicRangeProcessorPanel::GetGraphDbRange(GetSize().GetHeight()));
 }
 
 void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)

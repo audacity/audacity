@@ -43,19 +43,23 @@ EVT_TIMER(timerId, CompressionMeterPanel::OnTimer)
 END_EVENT_TABLE()
 
 CompressionMeterPanel::CompressionMeterPanel(
-   wxWindow* parent, CompressorInstance& instance)
-    : wxPanelWrapper { parent, wxID_ANY }
+   wxWindow* parent, int id, CompressorInstance& instance, float dbRange)
+    : wxPanelWrapper { parent, id }
     , mMeterValuesQueue { std::make_unique<
          DynamicRangeProcessorMeterValuesQueue>(audioFramesPerTick) }
-    , mPlaybackStartStopSubscription {
-       static_cast<InitializeProcessingSettingsPublisher&>(instance).Subscribe(
-          [&](const std::optional<InitializeProcessingSettings>& evt) {
-             if (evt)
-                Reset();
-             else
-                mStopWhenZero = true;
-          })
-    }
+    , mPlaybackStartStopSubscription { static_cast<
+                                          InitializeProcessingSettingsPublisher&>(
+                                          instance)
+                                          .Subscribe(
+                                             [&](const std::optional<
+                                                 InitializeProcessingSettings>&
+                                                    evt) {
+                                                if (evt)
+                                                   Reset();
+                                                else
+                                                   mStopWhenZero = true;
+                                             }) }
+    , mOutputColBottomValue { -dbRange }
 {
    if (instance.GetSampleRate().has_value())
       // Playback is ongoing, and so the `InitializeProcessingSettings` event
@@ -66,10 +70,16 @@ CompressionMeterPanel::CompressionMeterPanel(
    SetDoubleBuffered(true);
 }
 
+void CompressionMeterPanel::SetDbRange(float dbRange)
+{
+   mOutputColBottomValue = -dbRange;
+   Refresh(true);
+}
+
 void CompressionMeterPanel::Reset()
 {
    mCompressionColMin = 0;
-   mOutputColMax = outputColBottomValue;
+   mOutputColMax = mOutputColBottomValue;
    mRingBuffer.fill({});
    mStopWhenZero = false;
    mTimer.Start(timerPeriodMs);
@@ -108,10 +118,9 @@ void CompressionMeterPanel::PaintRectangle(
    const double width = rect.GetWidth();
    const double height = rect.GetHeight();
 
-   const double dbFrac =
-      std::clamp<double>(-dB / compressorMeterRangeDb, 0., 1.);
+   const double dbFrac = std::clamp<double>(dB / mOutputColBottomValue, 0., 1.);
    const double dbY = height * dbFrac;
-   const double maxDbY = -maxDb / compressorMeterRangeDb * height;
+   const double maxDbY = maxDb / mOutputColBottomValue * height;
    const double maxDbFrac = maxDbY / height;
 
    const auto levelTop = upwards ? top : dbY;
@@ -180,7 +189,7 @@ void CompressionMeterPanel::OnTimer(wxTimerEvent& evt)
    }
    else
       mSmoothedValues.compressionGainDb =
-         std::min(0.f, mSmoothedValues.compressionGainDb + decayPerTickDb);
+         mSmoothedValues.compressionGainDb + decayPerTickDb;
 
    if (lastValues.outputDb > mSmoothedValues.outputDb)
    {
@@ -188,14 +197,18 @@ void CompressionMeterPanel::OnTimer(wxTimerEvent& evt)
       mOutputColMax = std::max<double>(mOutputColMax, lastValues.outputDb);
    }
    else
-      mSmoothedValues.outputDb = std::min(
-         compressorMeterRangeDb, mSmoothedValues.outputDb - decayPerTickDb);
+      mSmoothedValues.outputDb = mSmoothedValues.outputDb - decayPerTickDb;
 
    Refresh(false);
 
    if (
       mSmoothedValues.compressionGainDb >= 0 &&
-      mSmoothedValues.outputDb <= outputColBottomValue && mStopWhenZero)
+      mSmoothedValues.outputDb <=
+         mOutputColBottomValue -
+            30 // It can be that the user augments the height after playback
+               // stopped, so we must should continue decaying for a while even
+               // after having reached the current bottom.
+      && mStopWhenZero)
    {
       // Decay is complete. Until playback starts again, no need for
       // timer-triggered updates.
