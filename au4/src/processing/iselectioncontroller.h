@@ -8,12 +8,12 @@
 
 namespace au::processing {
 //! NOTE Currently implemented in the au3wrap module
-class IProcessingSelectionController : MODULE_EXPORT_INTERFACE
+class ISelectionController : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IProcessingSelectionController)
+    INTERFACE_ID(processing::ISelectionController)
 
 public:
-    virtual ~IProcessingSelectionController() = default;
+    virtual ~ISelectionController() = default;
 
     // data selection
     virtual void resetDataSelection() = 0;

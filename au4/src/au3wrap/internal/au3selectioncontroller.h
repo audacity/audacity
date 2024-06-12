@@ -3,10 +3,10 @@
 */
 #pragma once
 
-#include "processing/iprocessingselectioncontroller.h"
+#include "processing/iselectioncontroller.h"
 
 namespace au::au3 {
-class Au3SelectionController : public processing::IProcessingSelectionController
+class Au3SelectionController : public processing::ISelectionController
 {
 public:
     Au3SelectionController() = default;

@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "processing/iprocessingselectioncontroller.h"
+#include "processing/iselectioncontroller.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -20,7 +20,7 @@ class SelectionViewController : public QObject
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<processing::IProcessingSelectionController> selectionController;
+    muse::Inject<processing::ISelectionController> selectionController;
 
 public:
     SelectionViewController(QObject* parent = nullptr);

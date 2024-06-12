@@ -10,7 +10,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
-#include "processing/iprocessingselectioncontroller.h"
+#include "processing/iselectioncontroller.h"
 
 #include "processing/dom/track.h"
 
@@ -23,7 +23,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
-    muse::Inject<processing::IProcessingSelectionController> selectionController;
+    muse::Inject<processing::ISelectionController> selectionController;
 
 public:
 

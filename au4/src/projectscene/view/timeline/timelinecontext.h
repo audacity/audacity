@@ -5,7 +5,7 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "processing/iprocessingselectioncontroller.h"
+#include "processing/iselectioncontroller.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
@@ -30,7 +30,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
-    muse::Inject<processing::IProcessingSelectionController> selectionController;
+    muse::Inject<processing::ISelectionController> selectionController;
 
 public:
 
