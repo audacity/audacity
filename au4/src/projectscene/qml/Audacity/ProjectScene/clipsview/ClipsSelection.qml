@@ -6,7 +6,7 @@ Item {
     property alias active: selRect.visible
     property real minSelection: 12 // px  4left + 4 + 4right
 
-    signal selectionDraged(var x1, var x2)
+    signal selectionDraged(var x1, var x2, var completed)
 
     function onSelectionStarted() {
         selRect.visible = false
@@ -36,8 +36,8 @@ Item {
         }
     }
 
-    function _onSelectionDraging() {
-        root.selectionDraged(selRect.x, selRect.x + selRect.width)
+    function _onSelectionDraging(completed) {
+        root.selectionDraged(selRect.x, selRect.x + selRect.width, completed)
     }
 
     Rectangle {
@@ -93,12 +93,12 @@ Item {
             if (newWidth > root.minSelection) {
                 selRect.x = leftMa.startX + mouse.x
                 selRect.width = newWidth
-                root._onSelectionDraging()
+                root._onSelectionDraging(false)
             }
         }
 
         onReleased: {
-            root._onSelectionDraging()
+            root._onSelectionDraging(true)
             leftMa.x = selRect.x
             leftMa.cursorShape = Qt.SizeHorCursor
         }
@@ -126,12 +126,12 @@ Item {
             var newWidth = rightMa.startW + mouse.x
             if (newWidth > root.minSelection) {
                 selRect.width = newWidth
-                root._onSelectionDraging()
+                root._onSelectionDraging(false)
             }
         }
 
         onReleased: {
-            root._onSelectionDraging()
+            root._onSelectionDraging(true)
             rightMa.x = selRect.x + selRect.width - rightMa.width
             rightMa.cursorShape = Qt.SizeHorCursor
         }

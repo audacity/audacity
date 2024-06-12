@@ -82,15 +82,15 @@ void SelectionViewController::onReleased(double x, double y)
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), true);
 }
 
-void SelectionViewController::onSelectionDraged(double x1, double x2)
+void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
 {
     // time
     if (x1 > x2) {
         std::swap(x1, x2);
     }
 
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), false);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), false);
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), completed);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), completed);
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const

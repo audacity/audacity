@@ -34,7 +34,7 @@ public:
     Q_INVOKABLE void onPressed(double x, double y);
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
-    Q_INVOKABLE void onSelectionDraged(double x, double x2);
+    Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
 
     bool selectionActive() const;
     void setSelectionActive(bool newSelectionActive);

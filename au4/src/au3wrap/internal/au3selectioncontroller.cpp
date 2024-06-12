@@ -3,10 +3,20 @@
 */
 #include "au3selectioncontroller.h"
 
+#include "log.h"
+
+//#define DEBUG_SELECTION
+#ifdef DEBUG_SELECTION
+#define MYLOG LOGD
+#else
+#define MYLOG LOGN
+#endif
+
 using namespace au::au3;
 
 void Au3SelectionController::resetDataSelection()
 {
+    MYLOG() << "resetDataSelection";
     m_selectedTrackIds.set(std::vector<au::processing::TrackId>(), true);
     m_selectedStartTime.set(-1.0, true);
     m_selectedEndTime.set(-1.0, true);
@@ -21,6 +31,7 @@ void Au3SelectionController::setDataSelectedOnTracks(
     const std::vector<au::processing::TrackId>& trackIds,
     bool complete)
 {
+    MYLOG() << "trackIds: " << trackIds << ", complete: " << complete;
     m_selectedTrackIds.set(trackIds, complete);
 }
 
@@ -43,6 +54,7 @@ au::processing::secs_t Au3SelectionController::dataSelectedStartTime() const
 
 void Au3SelectionController::setDataSelectedStartTime(au::processing::secs_t time, bool complete)
 {
+    MYLOG() << "start time: " << time << ", complete: " << complete;
     m_selectedStartTime.set(time, complete);
 }
 
@@ -63,6 +75,7 @@ au::processing::secs_t Au3SelectionController::dataSelectedEndTime() const
 
 void Au3SelectionController::setDataSelectedEndTime(au::processing::secs_t time, bool complete)
 {
+    MYLOG() << "end time: " << time << ", complete: " << complete;
     m_selectedEndTime.set(time, complete);
 }
 
