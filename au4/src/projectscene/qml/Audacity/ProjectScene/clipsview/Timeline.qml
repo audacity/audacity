@@ -56,7 +56,7 @@ Rectangle {
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     TimelineRuler {
-        id: ruler
+        id: timelineRuler
         anchors.fill: parent
         context: timelineContext
     }

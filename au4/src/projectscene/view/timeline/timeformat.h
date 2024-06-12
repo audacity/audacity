@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "timelinecontext.h"
+
 namespace au::projectscene {
 enum class TickType {
     MAJOR,
@@ -13,7 +15,7 @@ enum class TickType {
     MINORMINOR
 };
 
-struct TimeIntervalInfo {
+struct IntervalInfo {
     double major = 0.0;         // distance between major ticks [s]
     double minor = 0.0;         // distance between minor ticks [s]
     double minorMinor = 0.0;    // distance between minorMinor ticks [s]
@@ -26,7 +28,7 @@ public:
     explicit TimeFormat() {}
     ~TimeFormat();
 
-    static TimeIntervalInfo timeIntervalInfo(double zoom);
-    static QString label(double d, const TimeIntervalInfo& timeIntervalInfo, TickType tickType);
+    static IntervalInfo intervalInfo(TimelineContext* context);
+    static QString label(double d, const IntervalInfo& intervalInfo, TickType tickType);
 };
 }

@@ -8,9 +8,10 @@
 
 using namespace au::projectscene;
 
-TimeIntervalInfo TimeFormat::timeIntervalInfo(double zoom)
+IntervalInfo TimeFormat::intervalInfo(TimelineContext* context)
 {
-    TimeIntervalInfo timeInterval;
+    IntervalInfo timeInterval;
+    double zoom = context->zoom();
     // NOTE: 24 is minimal px size between minorMinor ticks
     // 0.000005 is distance [s] between minorMinor ticks
     // same goes for other time intervals
@@ -169,10 +170,10 @@ TimeIntervalInfo TimeFormat::timeIntervalInfo(double zoom)
     return timeInterval;
 }
 
-QString TimeFormat::label(double d, const TimeIntervalInfo& timeInterval, TickType tickType)
+QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType tickType)
 {
     // Replace -0 with 0
-    if (d < 0.0 && (d + timeInterval.minor > 0.0)) {
+    if (d < 0.0 && (d + intervalInfo.minor > 0.0)) {
         d = 0.0;
     }
 
@@ -181,17 +182,17 @@ QString TimeFormat::label(double d, const TimeIntervalInfo& timeInterval, TickTy
             return QString();
         }
 
-        if (timeInterval.minor >= 3600.0) {
+        if (intervalInfo.minor >= 3600.0) {
             int hrs = (int)(d / 3600.0 + 0.5);
             return QString("%1:00:00").arg(hrs);
-        } else if (timeInterval.minor >= 60.0) {
+        } else if (intervalInfo.minor >= 60.0) {
             int minutes = (int)(d / 60.0 + 0.5);
             if (minutes >= 60) {
                 return QTime(minutes / 60, minutes % 60).toString("HH:mm:ss");
             } else {
                 return QTime(0, minutes).toString("mm:ss");
             }
-        } else if (timeInterval.minor > 0.5) {
+        } else if (intervalInfo.minor > 0.5) {
             int secs = (int)(d + 0.5);
             if (secs >= 3600) {
                 return QTime(secs / 3600, (secs / 60) % 60, secs % 60).toString("HH:mm:ss");
@@ -201,10 +202,10 @@ QString TimeFormat::label(double d, const TimeIntervalInfo& timeInterval, TickTy
                 return QTime(0, 0, secs).toString("m:ss");
             }
         } else {
-            if (timeInterval.minor >= 1.0) {
+            if (intervalInfo.minor >= 1.0) {
                 return QString("%1").arg(static_cast<int>(floor(d + 0.5)));
             } else {
-                return QString::number(d, 'f', timeInterval.digits);
+                return QString::number(d, 'f', intervalInfo.digits);
             }
         }
     }

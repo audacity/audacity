@@ -9,6 +9,7 @@
 #include "async/asyncable.h"
 
 #include "timeformat.h"
+#include "beatsmeasuresformat.h"
 #include "timelinecontext.h"
 
 class QPainter;
@@ -48,7 +49,7 @@ signals:
     void timelineContextChanged();
 
 private:
-    void prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeInterval, double w, double h);
+    Ticks prepareTickData(const IntervalInfo& timeInterval, double w, double h);
     void drawLabels(QPainter* painter, const Ticks& ticks, double w, double h);
     void drawTicks(QPainter* painter, const Ticks& ticks);
 
