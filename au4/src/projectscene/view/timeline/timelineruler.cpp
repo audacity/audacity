@@ -13,7 +13,7 @@ constexpr double TICK_ALPHA_MAJOR = 1.0;
 constexpr double TICK_ALPHA_MINOR = 0.5;
 constexpr double LABEL_ALPHA_MAJOR = 1.0;
 constexpr double LABEL_ALPHA_MINOR = 0.75;
-constexpr int LABEL_OFFSET = 3;
+constexpr int LABEL_OFFSET = 2;
 constexpr int LABEL_INTERVAL = 5;
 }
 
@@ -30,11 +30,10 @@ void TimelineRuler::paint(QPainter* painter)
     const qreal w = width();
     const qreal h = height();
 
-    Ticks ticks;
-
     // determine current time interval and prepare ticks
-    TimeIntervalInfo timeInterval = TimeFormat::timeIntervalInfo(m_context->zoom());
-    prepareTickData(ticks, timeInterval, w, h);
+    // IntervalInfo interval = TimeFormat::intervalInfo(m_context);
+    IntervalInfo interval = BeatsMeasuresFormat::intervalInfo(m_context);
+    Ticks ticks = prepareTickData(interval, w, h);
 
     // begin painting
     QPen pen = painter->pen();
@@ -52,8 +51,9 @@ void TimelineRuler::paint(QPainter* painter)
     drawTicks(painter, ticks);
 }
 
-void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeInterval, double w, double h)
+Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w, double h)
 {
+    Ticks ticks;
     double value = m_context->frameStartTime();
     double x = 0.0;
 
@@ -87,8 +87,10 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
             tickType = TickType::MINORMINOR;
         }
 
-        QString tickLabel = TimeFormat::label(value, timeInterval, tickType);
+        // QString tickLabel = TimeFormat::label(value, timeInterval, tickType);
+        QString tickLabel = BeatsMeasuresFormat::label(value, timeInterval, tickType, m_context);
         int labelsCount = 0;
+        //! AU4 TODO: when having very small distance between ticks, ticks look not even
         if (tickType == TickType::MAJOR || tickType == TickType::MINOR) {
             // add tick with label
             ticks.append(TickInfo { static_cast<int>(std::round(x) + (labelsCount % LABEL_INTERVAL == 0 ? LABEL_OFFSET : 0)),
@@ -108,6 +110,8 @@ void TimelineRuler::prepareTickData(Ticks& ticks, const TimeIntervalInfo& timeIn
         value += timeInterval.minorMinor;
         tickNumber++;
     }
+
+    return ticks;
 }
 
 void TimelineRuler::drawLabels(QPainter* painter, const Ticks& ticks, double w, double h)
