@@ -30,8 +30,8 @@ const EffectParameterMethods& EffectLimiter::Parameters() const
       EffectLimiter, LimiterEditor::thresholdDb, LimiterEditor::makeupTargetDb,
       LimiterEditor::kneeWidthDb, LimiterEditor::lookaheadMs,
       LimiterEditor::releaseMs, LimiterEditor::showInput,
-      LimiterEditor::showOutput, LimiterEditor::showOvershoot,
-      LimiterEditor::showUndershoot>
+      LimiterEditor::showOutput, LimiterEditor::showActual,
+      LimiterEditor::showTarget>
       parameters;
    return parameters;
 }

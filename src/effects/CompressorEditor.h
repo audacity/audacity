@@ -91,21 +91,11 @@ public:
    static constexpr CompressorParameter showOutput {
       &CompressorSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
    };
-   static constexpr CompressorParameter showOvershoot {
-      &CompressorSettings::showOvershoot,
-      L"showOvershoot",
-      showOvershootDefault,
-      0,
-      1,
-      1
+   static constexpr CompressorParameter showActual {
+      &CompressorSettings::showActual, L"showActual", showActualDefault, 0, 1, 1
    };
-   static constexpr CompressorParameter showUndershoot {
-      &CompressorSettings::showUndershoot,
-      L"showUndershoot",
-      showUndershootDefault,
-      0,
-      1,
-      1
+   static constexpr CompressorParameter showTarget {
+      &CompressorSettings::showTarget, L"showTarget", showTargetDefault, 0, 1, 1
    };
 
 private:

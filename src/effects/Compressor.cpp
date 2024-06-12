@@ -32,7 +32,7 @@ const EffectParameterMethods& EffectCompressor::Parameters() const
       CompressorEditor::compressionRatio, CompressorEditor::lookaheadMs,
       CompressorEditor::attackMs, CompressorEditor::releaseMs,
       CompressorEditor::showInput, CompressorEditor::showOutput,
-      CompressorEditor::showOvershoot, CompressorEditor::showUndershoot>
+      CompressorEditor::showActual, CompressorEditor::showTarget>
       parameters;
    return parameters;
 }
