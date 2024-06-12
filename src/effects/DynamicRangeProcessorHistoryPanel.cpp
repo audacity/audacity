@@ -158,10 +158,13 @@ void InsertCrossings(
          // x1 = x0 + (x2 - x0) * (y0_b - y0_a) / ((a_n - y0_a) - (b_n - y0_b))
          // clang-format on
          const auto x1 =
-            x0 + (x2 - x0) * (y0_a - y0_b) / (y2_b - y0_b + y0_a - y2_a);
+            x0 + (x2 - x0) * (y0_a - y0_b) / (y2_b - y2_a + y0_a - y0_b);
          const auto y = y0_a + (x1 - x0) / (x2 - x0) * (y2_a - y0_a);
-         it = A.emplace(it, x1, y)++;
-         jt = B.emplace(jt, x1, y)++;
+         if (std::isfinite(x1) && std::isfinite(y))
+         {
+            it = A.emplace(it, x1, y)++;
+            jt = B.emplace(jt, x1, y)++;
+         };
       }
       x0 = x2;
       y0_a = y2_a;
