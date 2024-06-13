@@ -261,10 +261,7 @@ public:
       : mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
-      {
-         mSuspended = RealtimeEffectManager::Get(*pProject).GetSuspended();
          RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended);
-      }
    }
    ProcessingScope( ProcessingScope &&other ) = default;
    ProcessingScope& operator=( ProcessingScope &&other ) = default;
