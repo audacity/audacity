@@ -83,11 +83,11 @@ enum : int {
    IndicatorMediumWidth = 13,
    IndicatorOffset = 1,
 
-   TopMargin = 1,
-   BottomMargin = 2, // for bottom bevel and bottom line
-   LeftMargin = 1,
+   TopMargin = 0,
+   BottomMargin = 1, // for bottom bevel and bottom line
+   LeftMargin = 0,
 
-   RightMargin = 1,
+   RightMargin = 0,
 };
 
 enum {
@@ -1385,7 +1385,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // DestroyChildren();
 
    ToolBar::MakeButtonBackgroundsSmall();
-   SetBackgroundColour(theTheme.Colour( clrMedium ));
+   SetBackgroundColour(GetBackgroundColour());
 
    for (auto & button : mButtons) {
       if (button)
@@ -1399,12 +1399,7 @@ void AdornedRulerPanel::ReCreateButtons()
    // Add a grabber converted to a spacer.
    // This makes it visually clearer that the button is a button.
 
-   wxPoint position( 1, 0 );
-
-   Grabber * pGrabber = safenew Grabber(this, {});
-   pGrabber->SetAsSpacer( true );
-   //pGrabber->SetSize( 10, 27 ); // default is 10,27
-   pGrabber->SetPosition( position );
+   wxPoint position( 12, 0 );
 
    position.x = 12;
 
@@ -1576,8 +1571,7 @@ void AdornedRulerPanel::OnPaint(wxPaintEvent & WXUNUSED(evt))
    // What's left and right of the overlap?  Assume same tops and bottoms
    const auto top = rectP.GetTop(),
       bottom = rectP.GetBottom();
-   wxRect rectL{
-      wxPoint{ 0, top }, wxPoint{ this->GetSize().GetWidth() - 1, bottom } };
+   wxRect rectL = mInner;
    wxRect rectR = {};
    if (!rectO.IsEmpty()) {
       rectR = { wxPoint{ rectO.GetRight() + 1, top }, rectL.GetBottomRight() };
@@ -1652,8 +1646,8 @@ bool AdornedRulerPanel::UpdateRects()
 {
    auto inner = mOuter;
    wxRect scrubZone;
-   inner.x += LeftMargin;
-   inner.width -= (LeftMargin + RightMargin);
+   inner.x += LeftMargin + mLeftOffset;
+   inner.width -= (LeftMargin + RightMargin + mLeftOffset);
 
    auto top = &inner;
    auto bottom = &inner;
@@ -2397,7 +2391,7 @@ using ColorId = decltype(clrTrackInfo);
 
 inline ColorId TimelineBackgroundColor()
 {
-   return clrTrackInfo;
+   return clrTimelineRulerBackground;
 }
 
 inline ColorId TimelineTextColor()
@@ -2410,9 +2404,14 @@ inline ColorId TimelineLimitsColor()
    return TimelineTextColor();
 }
 
+inline ColorId TimelineSelectionColor()
+{
+   return clrRulerSelected;
+}
+
 inline ColorId TimelineLoopRegionColor(bool isActive)
 {
-   return isActive ? clrRulerBackground : clrClipAffordanceInactiveBrush;
+   return isActive ? clrLoopEnabled : clrLoopDisabled;
 }
 
 static inline wxColour AlphaBlend(ColorId fg, ColorId bg, double alpha)
@@ -2430,7 +2429,7 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 {
    // Draw AdornedRulerPanel border
    AColor::UseThemeColour( dc, TimelineBackgroundColor() );
-   dc->DrawRectangle( mInner );
+   dc->DrawRectangle( mOuter );
 
    if (ShowingScrubRuler()) {
       // Let's distinguish the scrubbing area by using a themable
@@ -2444,11 +2443,6 @@ void AdornedRulerPanel::DoDrawBackground(wxDC * dc)
 
 void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 {
-   wxRect r = mOuter;
-   r.width -= RightMargin;
-   r.height -= BottomMargin;
-   AColor::BevelTrackInfo( *dc, true, r );
-
    // Black stroke at bottom
    dc->SetPen( *wxBLACK_PEN );
    AColor::Line( *dc, mOuter.x,
@@ -2459,10 +2453,10 @@ void AdornedRulerPanel::DoDrawEdge(wxDC *dc)
 
 void AdornedRulerPanel::DoDrawMarks(wxDC * dc, bool /*text */ )
 {
-   const double min = Pos2Time(0);
-   const double hiddenMin = Pos2Time(0, true);
-   const double max = Pos2Time(mInner.width);
-   const double hiddenMax = Pos2Time(mInner.width, true);
+   const double min = Pos2Time(mInner.x);
+   const double hiddenMin = Pos2Time(mInner.x, true);
+   const double max = Pos2Time(mInner.x + mInner.width);
+   const double hiddenMax = Pos2Time(mInner.x + mInner.width, true);
 
    mRuler.SetTickColour( theTheme.Colour( TimelineTextColor() ) );
    mRuler.SetRange( min, max, hiddenMin, hiddenMax );
@@ -2506,8 +2500,8 @@ wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
       // Make the rectangle off-screen horizontally, but set the height
       ;
    else {
-      p0 = max(1, Time2Pos(t0));
-      p1 = min(mInner.width, Time2Pos(t1));
+      p0 = max(mInner.x, Time2Pos(t0));
+      p1 = min(mInner.x + mInner.width, Time2Pos(t1));
    }
 
    const int left = p0, top = mInner.y, right = p1, bottom = mInner.GetBottom();
@@ -2571,12 +2565,12 @@ void AdornedRulerPanel::DoDrawPlayRegionLimits(wxDC * dc, const wxRect &rect)
    }
 }
 
-constexpr double SelectionOpacity = 0.2;
+constexpr double SelectionOpacity = 0.4;
 
 void AdornedRulerPanel::DoDrawOverlap(wxDC * dc, const wxRect &rect)
 {
    dc->SetBrush( wxBrush{ AlphaBlend(
-      TimelineLimitsColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
+      TimelineSelectionColor(), TimelineLoopRegionColor(mLastPlayRegionActive),
       SelectionOpacity) } );
    dc->SetPen( *wxTRANSPARENT_PEN );
    dc->DrawRectangle( rect );
@@ -2586,7 +2580,7 @@ void AdornedRulerPanel::DoDrawSelection(
    wxDC * dc, const wxRect &rectS, const wxRect &rectL, const wxRect &rectR)
 {
    dc->SetBrush( wxBrush{ AlphaBlend(
-      TimelineLimitsColor(), TimelineBackgroundColor(), SelectionOpacity) } );
+      TimelineSelectionColor(), TimelineBackgroundColor(), SelectionOpacity) } );
    dc->SetPen( *wxTRANSPARENT_PEN );
    dc->DrawRectangle( rectS.Intersect(rectL) );
    dc->DrawRectangle( rectS.Intersect(rectR) );

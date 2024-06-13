@@ -111,7 +111,7 @@ void MacroCommandDialog::PopulateOrExchange(ShuttleGui &S)
       S.Prop(10).StartStatic(XO("Choose command"), true);
       {
          mChoices = S.Id(CommandsListID)
-            .Style(wxSUNKEN_BORDER | wxLC_LIST | wxLC_SINGLE_SEL)
+            .Style( wxLC_LIST | wxLC_SINGLE_SEL)
             .AddListControl();
       }
       S.EndStatic();

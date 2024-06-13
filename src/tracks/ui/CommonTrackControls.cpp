@@ -267,7 +267,7 @@ unsigned CommonTrackControls::DoContextMenu(
 {
    using namespace RefreshCode;
    wxRect buttonRect;
-   CommonTrackInfo::GetTitleBarRect(rect, buttonRect);
+   CommonTrackInfo::GetTrackMenuButtonRect(rect, buttonRect);
 
    auto track = FindTrack();
    if (!track)
@@ -358,9 +358,7 @@ void CommonTrackControls::Draw(
       // Given rectangle excludes left and right margins, and encompasses a
       // channel group of tracks, plus the resizer area below
       auto pTrack = FindTrack();
-      // First counteract DrawingArea() correction
-      wxRect rect{ rect_.x, rect_.y, rect_.width - 1, rect_.height };
-   
+      
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
       //if (SyncLock::IsSyncLockSelected(t)) {
@@ -372,50 +370,14 @@ void CommonTrackControls::Draw(
 
       if (pTrack)
          // Draw things within the track control panel
-         CommonTrackInfo::DrawItems( context, rect, *pTrack );
-
-      //mTrackInfo.DrawBordersWithin( dc, rect, *t );
+         CommonTrackInfo::DrawItems( context, rect_, *pTrack );
    }
-
-   // Some old cut-and-paste legacy from TrackPanel.cpp here:
-#undef USE_BEVELS
-#ifdef USE_BEVELS
-   // This branch is not now used
-   // PRL:  todo:  banish magic numbers.
-   // PRL: vrul was the x coordinate of left edge of the vertical ruler.
-   // PRL: bHasMuteSolo was true iff the track was WaveTrack.
-   if( bHasMuteSolo )
-   {
-      int ylast = rect.height-20;
-      int ybutton = wxMin(32,ylast-17);
-      int ybuttonEnd = 67;
-
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, ybutton);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   
-      if( ybuttonEnd < ylast ){
-         fill=wxRect( rect.x+1, rect.y+ybuttonEnd, fill.width, ylast - ybuttonEnd);
-         AColor::BevelTrackInfo( *dc, true, fill );
-      }
-   }
-   else
-   {
-      fill=wxRect( rect.x+1, rect.y+17, vrul-6, rect.height-37);
-      AColor::BevelTrackInfo( *dc, true, fill );
-   }
-#endif
-
 }
 
-wxRect CommonTrackControls::DrawingArea(
-   TrackPanelDrawingContext &,
-   const wxRect &rect, const wxRect &, unsigned iPass )
+wxRect CommonTrackControls::DrawingArea(TrackPanelDrawingContext&, const wxRect& rect,
+   const wxRect&, unsigned iPass)
 {
-   if ( iPass == TrackArtist::PassControls )
-      // Some bevels spill out right
-      return { rect.x, rect.y, rect.width + 1, rect.height };
-   else
-      return rect;
+   return rect;
 }
 
 const TCPLines &CommonTrackControls::GetTCPLines() const

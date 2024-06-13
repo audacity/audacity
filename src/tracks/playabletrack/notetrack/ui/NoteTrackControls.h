@@ -51,7 +51,7 @@ public:
 
    static unsigned DefaultNoteTrackHeight();
    static void GetMidiControlsRect(const wxRect & rect, wxRect & dest);
-   static void GetVelocityRect(const wxPoint &topleft, wxRect & dest);
+   static void GetVelocityRect(const wxRect &rect, wxRect & dest);
    
    static LWSlider * VelocitySlider
       (const wxRect &sliderRect, const NoteTrack *t, bool captured,

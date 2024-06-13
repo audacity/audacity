@@ -320,8 +320,8 @@ void TagsEditorDialog::PopulateOrExchange(ShuttleGui & S)
          mGrid = safenew Grid(FormatterContext::EmptyContext(), S.GetParent(),
                           wxID_ANY,
                           wxDefaultPosition,
-                          wxDefaultSize,
-                          wxSUNKEN_BORDER);
+                          wxDefaultSize
+                          );
 
          mGrid->RegisterDataType(wxT("Combo"),
             (mStringRenderer = safenew wxGridCellStringRenderer),

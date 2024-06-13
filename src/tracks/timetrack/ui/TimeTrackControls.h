@@ -22,7 +22,7 @@ public:
    explicit
    TimeTrackControls( std::shared_ptr<Track> pTrack )
       : CommonTrackControls( pTrack ) {}
-   ~TimeTrackControls();
+   ~TimeTrackControls() override;
 
    std::vector<UIHandlePtr> HitTest
       (const TrackPanelMouseState &state,

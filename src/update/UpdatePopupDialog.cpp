@@ -137,7 +137,7 @@ HtmlWindow* UpdatePopupDialog::AddHtmlContent (wxWindow* parent)
     HtmlWindow* html = safenew LinkingHtmlWindow (parent, -1,
         wxDefaultPosition,
         wxSize (500, -1),
-        wxHW_SCROLLBAR_AUTO | wxSUNKEN_BORDER);
+        wxHW_SCROLLBAR_AUTO );
 
     html->SetBorders (20);
     html->SetPage (o.GetString());

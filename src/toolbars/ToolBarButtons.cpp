@@ -63,7 +63,25 @@ void ToolBarButtons::OnButton(wxCommandEvent & event)
 
 AButton* ToolBarButtons::CreateButton(teBmps eEnabledUp, teBmps eEnabledDown, teBmps eDisabled, int thisButtonId, const TranslatableString& label, bool toggle)
 {
-   AButton *&r = mButtons[thisButtonId];
+   auto& button = mButtons[thisButtonId];// ;
+   button = safenew AButton(mParent, thisButtonId + mFirstButtonId);
+   button->SetButtonType(AButton::FrameButton);
+   button->SetButtonToggles(toggle);
+   button->SetImages(
+      theTheme.Image(bmpRecoloredUpSmall),
+      theTheme.Image(bmpRecoloredUpHiliteSmall),
+      theTheme.Image(bmpRecoloredDownSmall),
+      theTheme.Image(bmpRecoloredHiliteSmall),
+      theTheme.Image(bmpRecoloredUpSmall));
+   button->SetIcons(theTheme.Image(eEnabledUp), theTheme.Image(eEnabledDown), theTheme.Image(eDisabled));
+   button->SetFrameMid(3);
+   //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   button->SetLabel({});
+   button->SetMinSize(wxSize { 25, 25 });
+   button->SetMaxSize(wxSize { 25, 25 });
+   return button;
+
+   /*AButton *&r = mButtons[thisButtonId];
 
    r = ToolBar::MakeButton(mParent,
       bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
@@ -75,7 +93,7 @@ AButton* ToolBarButtons::CreateButton(teBmps eEnabledUp, teBmps eEnabledDown, te
 
    r->SetLabel(label);
 
-   return r;
+   return r;*/
 }
 
 void ToolBarButtons::SetEnabled(int id, bool state)

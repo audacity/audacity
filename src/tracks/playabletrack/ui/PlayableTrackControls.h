@@ -28,7 +28,7 @@ public:
       const wxRect & rect, wxRect & dest, bool solo,
       const Track *pTrack);
 
-   static void GetEffectsRect(
+   static void GetEffectsButtonRect(
       const wxRect & rect, wxRect & dest, const Track *pTrack);
 
    using CommonTrackControls::CommonTrackControls;

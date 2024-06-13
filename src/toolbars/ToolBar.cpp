@@ -927,7 +927,7 @@ AButton * ToolBar::MakeButton(ToolBar *parent,
       wxWindowID( id ),
       wxDefaultPosition, processdownevents,
       theTheme.ImageSize( bmpRecoloredUpLarge ));
-   r->SetLabel( label );
+   r->SetLabel(XO(""));
    enum {
       deflation =
 #ifdef __WXMAC__

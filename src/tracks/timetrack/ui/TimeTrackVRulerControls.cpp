@@ -89,10 +89,6 @@ void TimeTrackVRulerControls::Draw(
       --rect.height;
 
       auto dc = &context.dc;
-      wxRect bev = rect;
-      bev.Inflate(-1, 0);
-      bev.width += 1;
-      AColor::BevelTrackInfo(*dc, true, bev);
 
       // Right align the ruler
       wxRect rr = rect;

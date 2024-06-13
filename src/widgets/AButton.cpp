@@ -155,6 +155,20 @@ void AButton::SetButtonType(Type type)
    }
 }
 
+void AButton::SetFrameMid(int mid)
+{
+   if(mid == mFrameMid)
+      return;
+   mFrameMid = mid;
+
+   if(mType == FrameButton)
+   {
+      InvalidateBestSize();
+      Refresh(false);
+      PostSizeEventToParent();
+   }
+}
+
 
 void AButton::Init(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, bool toggle)
 {
@@ -225,7 +239,46 @@ void AButton::SetAlternateImages(unsigned idx,
 
 void AButton::SetIcon(const wxImage& icon)
 {
-   mIcon = icon;
+   SetAlternateIcon(0, icon);
+}
+
+void AButton::SetIcon(AButtonState state, const wxImage& icon)
+{
+   SetAlternateIcon(0, state, icon);
+}
+
+void AButton::SetIcons(const wxImage& up, const wxImage& down, const wxImage& disabled)
+{
+   SetAlternateIcons(0, up, down, disabled);
+}
+
+void AButton::SetAlternateIcon(unsigned idx, const wxImage& icon)
+{
+   if(1 + idx > mIcons.size())
+      mIcons.resize(1 + idx);
+   mIcons[idx][AButtonUp] = icon;
+   mIcons[idx][AButtonOver] = mIcons[idx][AButtonDown] =
+      mIcons[idx][AButtonDis] = mIcons[idx][AButtonOverDown] = wxNullImage;
+   Refresh(false);
+}
+
+void AButton::SetAlternateIcon(unsigned idx, AButtonState state, const wxImage& icon)
+{
+   if(1 + idx > mIcons.size())
+      mIcons.resize(1 + idx);
+   mIcons[idx][state] = icon;
+   Refresh(false);
+}
+
+void AButton::SetAlternateIcons(unsigned idx, const wxImage& up, const wxImage& down, const wxImage& disabled)
+{
+   if(1 + idx > mIcons.size())
+      mIcons.resize(1 + idx);
+   mIcons[idx][AButtonUp] = up;
+   mIcons[idx][AButtonOver] = up;
+   mIcons[idx][AButtonDown] = down;
+   mIcons[idx][AButtonOverDown] = down;
+   mIcons[idx][AButtonDis] = disabled;
    Refresh(false);
 }
 
@@ -299,28 +352,40 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
    dc.Clear();
 
    const auto buttonRect = GetClientRect();
-   if(HasAlternateImages(mAlternateIdx))
+   const auto imageIdx = HasAlternateImages(mAlternateIdx) ? mAlternateIdx : 0;
+   
+   if(imageIdx == mAlternateIdx || HasAlternateImages(imageIdx))
    {
-      AButtonState buttonState = GetState();
+      const auto buttonState = GetState();
       if(mType == ImageButton)
-         dc.DrawBitmap(mImages[mAlternateIdx][buttonState], buttonRect.GetTopLeft());
+         dc.DrawBitmap(mImages[imageIdx][buttonState], buttonRect.GetTopLeft());
       else if(mType == FrameButton)
       {
-         wxBitmap bitmap = mImages[mAlternateIdx][buttonState];
-         AColor::DrawFrame(dc, buttonRect, bitmap);
+         wxBitmap bitmap = mImages[imageIdx][buttonState];
+         AColor::DrawFrame(dc, buttonRect, bitmap, mFrameMid);
 
          const auto border = bitmap.GetSize() / 4;
 
+         wxImage* icon{};
+         if(mIcons.size() > mAlternateIdx)
+            icon = &mIcons[mAlternateIdx][buttonState];
+         if((icon == nullptr || !icon->IsOk()) && !mIcons.empty())
+         {
+            icon = &mIcons[0][buttonState];
+            if(!icon->IsOk())
+               icon = &mIcons[0][AButtonUp];
+         }
          if(!GetLabel().IsEmpty())
          {
             dc.SetFont(GetFont());
             auto textRect = buttonRect;
-            if(mIcon.IsOk())
+            if(icon != nullptr && icon->IsOk())
             {
                auto fontMetrics = dc.GetFontMetrics();
-               auto sumHeight = fontMetrics.height + mIcon.GetHeight() + border.y;
-               dc.DrawBitmap(mIcon,
-                  buttonRect.x + (buttonRect.width - mIcon.GetWidth()) / 2,
+               auto sumHeight = fontMetrics.height + icon->GetHeight() + border.y;
+
+               dc.DrawBitmap(*icon,
+                  buttonRect.x + (buttonRect.width - icon->GetWidth()) / 2,
                   buttonRect.y + (buttonRect.height - sumHeight) / 2);
                textRect = wxRect(
                      buttonRect.x,
@@ -331,16 +396,16 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
             dc.SetPen(GetForegroundColour());
             dc.DrawLabel(GetLabel(), textRect, wxALIGN_CENTER);
          }
-         else if(mIcon.IsOk())
+         else if(icon != nullptr && icon->IsOk())
          {
-            dc.DrawBitmap(mIcon,
-               buttonRect.x + (buttonRect.width - mIcon.GetWidth()) / 2,
-                  buttonRect.y + (buttonRect.height - mIcon.GetHeight()) / 2);
+            dc.DrawBitmap(*icon,
+               buttonRect.x + (buttonRect.width - icon->GetWidth()) / 2,
+                  buttonRect.y + (buttonRect.height - icon->GetHeight()) / 2);
          }
       }
       else
       {
-         wxBitmap bitmap = mImages[mAlternateIdx][buttonState];
+         wxBitmap bitmap = mImages[imageIdx][buttonState];
          AColor::DrawHStretch(dc, GetClientRect(), bitmap);
          if(!GetLabel().IsEmpty())
          {
@@ -615,26 +680,29 @@ void AButton::SetControl(bool control)
 
 wxSize AButton::DoGetBestClientSize() const
 {
-   if(HasAlternateImages(mAlternateIdx))
+   const auto imageIdx = HasAlternateImages(mAlternateIdx) ? mAlternateIdx : 0;
+   if(imageIdx == mAlternateIdx || HasAlternateImages(imageIdx))
    {
-      const auto& image = mImages[mAlternateIdx][AButtonUp];
+      const auto& image = mImages[imageIdx][AButtonUp];
       switch(mType)
       {
       case FrameButton:
          {
+            //Only AButtonUp is used to estimate size
+            auto icon = !mIcons.empty() ? &mIcons[0][AButtonUp] : nullptr;
             if(!GetLabel().IsEmpty())
             {
-               const auto border = image.GetSize() / 4;
+               const auto border = (image.GetSize() - wxSize { mFrameMid, mFrameMid }) / 4;
                
                wxMemoryDC dc;
                dc.SetFont(GetFont());
                auto bestSize = dc.GetTextExtent(GetLabel());
-               if(mIcon.IsOk())
+               if(icon != nullptr && icon->IsOk())
                {
-                  bestSize.x = std::max(bestSize.x, mIcon.GetWidth());
+                  bestSize.x = std::max(bestSize.x, icon->GetWidth());
                   bestSize.y = bestSize.y > 0
-                     ? bestSize.y + border.y + mIcon.GetHeight()
-                     : mIcon.GetHeight();
+                     ? bestSize.y + border.y + icon->GetHeight()
+                     : icon->GetHeight();
                }
                if(bestSize.x > 0)
                   bestSize.x += border.x * 2;
@@ -642,8 +710,8 @@ wxSize AButton::DoGetBestClientSize() const
                   bestSize.y += border.y * 2;
                return bestSize;
             }
-            if(mIcon.Ok())
-               return mIcon.GetSize();
+            if(icon->Ok())
+               return icon->GetSize();
             return image.GetSize();
          }
       case TextButton:

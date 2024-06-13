@@ -97,32 +97,6 @@ wxRect ChannelVRulerControls::ZoomingArea(
    };
 }
 
-void ChannelVRulerControls::Draw(
-   TrackPanelDrawingContext &context,
-   const wxRect &rect_, unsigned iPass)
-{
-   // Common initial part of drawing for all subtypes
-   if ( iPass == TrackArtist::PassMargins ) {
-      auto rect = rect_;
-      --rect.width;
-      
-      auto dc = &context.dc;
-      
-      
-      // Paint the background
-      auto pTrack = FindTrack();
-      AColor::MediumTrackInfo(dc, pTrack && pTrack->GetSelected() );
-      dc->DrawRectangle( rect );
-      
-      // Stroke the left border
-      dc->SetPen(*wxBLACK_PEN);
-      {
-         const auto left = rect.GetLeft();
-         AColor::Line( *dc, left, rect.GetTop(), left, rect.GetBottom() );
-      }
-   }
-}
-
 wxRect ChannelVRulerControls::DrawingArea(
    TrackPanelDrawingContext &,
    const wxRect &rect, const wxRect &, unsigned iPass)

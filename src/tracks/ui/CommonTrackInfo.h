@@ -15,12 +15,13 @@ Paul Licameli split from TrackInfo.h
 class Channel;
 class wxPoint;
 
-static const int TitleSoloBorderOverlap = 1;
-
 namespace CommonTrackInfo
 {
    using TCPLine = TrackInfo::TCPLine;
    using TCPLines = TrackInfo::TCPLines;
+
+   constexpr static auto Margin = 4;
+   constexpr static auto ToolButtonSize = 16;
 
    AUDACITY_DLL_API
    unsigned MinimumTrackHeight();
@@ -50,7 +51,7 @@ namespace CommonTrackInfo
         const wxRect &rect, const Track *pTrack );
 
    AUDACITY_DLL_API
-   void MinimizeSyncLockDrawFunction
+   void SyncLockDrawFunction
       ( TrackPanelDrawingContext &context,
         const wxRect &rect, const Track *pTrack );
 
@@ -61,12 +62,17 @@ namespace CommonTrackInfo
    void GetCloseBoxRect(const wxRect & rect, wxRect &dest);
 
    AUDACITY_DLL_API
-   void GetTitleBarHorizontalBounds( const wxRect & rect, wxRect &dest );
+   void GetTrackTitleHorizontalBounds( const wxRect & rect, wxRect &dest );
    AUDACITY_DLL_API
-   void GetTitleBarRect(const wxRect & rect, wxRect &dest);
+   void GetTrackTitleRect(const wxRect & rect, wxRect &dest);
 
    AUDACITY_DLL_API
-   void GetSliderHorizontalBounds( const wxPoint &topleft, wxRect &dest );
+   void GetSliderHorizontalBounds( const wxRect &rect, wxRect &dest );
+
+   AUDACITY_DLL_API
+   void GetTrackMenuButtonBounds(const wxRect &rect, wxRect &dest);
+   AUDACITY_DLL_API
+   void GetTrackMenuButtonRect(const wxRect &rect, wxRect &dest);
 
    AUDACITY_DLL_API
    void GetMinimizeHorizontalBounds( const wxRect &rect, wxRect &dest );

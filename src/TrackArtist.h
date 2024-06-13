@@ -78,6 +78,9 @@ public:
    wxBrush dragsampleBrush;// for samples which are draggable.
    wxBrush muteSampleBrush;
    wxBrush blankSelectedBrush;
+   wxBrush envelopeBackgroundBrush;
+   wxBrush clipAffordanceBackgroundBrush;
+   wxBrush clipAffordanceBackgroundSelBrush;
    wxPen blankPen;
    wxPen unselectedPen;
    wxPen selectedPen;
@@ -92,12 +95,12 @@ public:
    wxPen muteClippedPen;
    wxPen blankSelectedPen;
 
-   wxPen beatSepearatorPen;
-   wxPen barSepearatorPen;
-   wxBrush beatStrongBrush;
-   wxBrush beatWeakBrush;
-   wxBrush beatStrongSelBrush;
-   wxBrush beatWeakSelBrush;
+   wxPen beatSepearatorPen[2];
+   wxPen barSepearatorPen[2];
+   wxBrush beatStrongBrush[2];
+   wxBrush beatWeakBrush[2];
+   wxBrush beatStrongSelBrush[2];
+   wxBrush beatWeakSelBrush[2];
 
 #ifdef EXPERIMENTAL_FFT_Y_GRID
    bool fftYGridOld;

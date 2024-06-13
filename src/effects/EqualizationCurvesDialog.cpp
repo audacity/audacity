@@ -76,7 +76,7 @@ void EqualizationCurvesDialog::PopulateOrExchange(ShuttleGui & S)
       S.StartStatic(XO("&Curves"), 1);
       {
          mList = S.Id(CurvesListID)
-            .Style(wxSUNKEN_BORDER | wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
+            .Style( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES )
             .AddListControlReportMode({
                { XO("Curve Name"), wxLIST_FORMAT_RIGHT }
             });

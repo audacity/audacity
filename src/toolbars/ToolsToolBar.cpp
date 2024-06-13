@@ -69,6 +69,34 @@ BEGIN_EVENT_TABLE(ToolsToolBar, ToolBar)
                      ToolsToolBar::OnTool)
 END_EVENT_TABLE()
 
+namespace
+{
+
+AButton* MakeToolsToolBarButton(wxWindow* parent,
+                                wxWindowID id,
+                                const TranslatableString& label,
+                                const wxImage& toolIcon)
+{
+   auto button = safenew AButton(parent, FirstToolID + id);
+   button->SetButtonType(AButton::FrameButton);
+   button->SetButtonToggles(true);
+   button->SetImages(
+      theTheme.Image(bmpRecoloredUpSmall),
+      theTheme.Image(bmpRecoloredUpHiliteSmall),
+      theTheme.Image(bmpRecoloredDownSmall),
+      theTheme.Image(bmpRecoloredHiliteSmall),
+      theTheme.Image(bmpRecoloredUpSmall));
+   button->SetIcon(toolIcon);
+   button->SetFrameMid(3);
+   //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   button->SetLabel({});
+   button->SetMinSize(wxSize { 25, 25 });
+   button->SetMaxSize(wxSize { 25, 25 });
+   return button;
+}
+
+}
+
 Identifier ToolsToolBar::ID()
 {
    return wxT("Tools");
@@ -172,38 +200,32 @@ void ToolsToolBar::UpdatePrefs()
    ToolBar::UpdatePrefs();
 }
 
-AButton * ToolsToolBar::MakeTool(
-   ToolsToolBar *pBar, teBmps eTool,
-   int id, const TranslatableString &label)
-{
-   AButton *button = ToolBar::MakeButton(pBar,
-      bmpRecoloredUpSmall, 
-      bmpRecoloredDownSmall, 
-      bmpRecoloredUpHiliteSmall, 
-      bmpRecoloredDownSmall, // Not bmpRecoloredHiliteSmall as down is inactive.
-      eTool, eTool, eTool,
-      wxWindowID(id + FirstToolID),
-      wxDefaultPosition, true,
-      theTheme.ImageSize( bmpRecoloredUpSmall ));
-   button->SetLabel( label );
-   pBar->mToolSizer->Add( button );
-   return button;
-}
-
-
 void ToolsToolBar::Populate()
 {
    SetBackgroundColour( theTheme.Colour( clrMedium  ) );
    MakeButtonBackgroundsSmall();
 
-   Add(mToolSizer = safenew wxGridSizer(2, 2, 1, 1));
+   Add(mToolSizer = safenew wxGridSizer(2, 2, toolbarSpacing, toolbarSpacing),
+      0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
    /* Tools */
    using namespace ToolCodes;
-   mTool[ selectTool   ] = MakeTool( this, bmpIBeam, selectTool, XO("Selection Tool") );
-   mTool[ envelopeTool ] = MakeTool( this, bmpEnvelope, envelopeTool, XO("Envelope Tool") );
-   mTool[ drawTool     ] = MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
-   mTool[ multiTool    ] = MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
+   mTool[ selectTool   ] =
+      MakeToolsToolBarButton(this, selectTool, XO("Selection Tool"), theTheme.Image(bmpIBeam));
+      //MakeTool( this, bmpIBeam, selectTool, XO("Selection Tool") );
+   mTool[ envelopeTool ] =
+      MakeToolsToolBarButton(this, envelopeTool, XO("Envelope Tool"), theTheme.Image(bmpEnvelope));
+      //MakeTool( this, bmpEnvelope, envelopeTool, XO("Envelope Tool") );
+   mTool[ drawTool     ] =
+      MakeToolsToolBarButton(this, drawTool, XO("Draw Tool"), theTheme.Image(bmpDraw));
+      //MakeTool( this, bmpDraw, drawTool, XO("Draw Tool") );
+   mTool[ multiTool    ] =
+      MakeToolsToolBarButton(this, multiTool, XO("Multi-Tool"), theTheme.Image(bmpMulti));
+      //MakeTool( this, bmpMulti, multiTool, XO("Multi-Tool") );
+   mToolSizer->Add(mTool[selectTool]);
+   mToolSizer->Add(mTool[envelopeTool]);
+   mToolSizer->Add(mTool[drawTool]);
+   mToolSizer->Add(mTool[multiTool]);
 
    DoToolChanged();
 

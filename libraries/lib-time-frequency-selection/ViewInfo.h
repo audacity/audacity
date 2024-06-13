@@ -89,12 +89,13 @@ private:
 };
 
 enum : int {
-   kVerticalPadding = 7, /*!< Width of padding below each channel group */
+   kVerticalPadding = 6, /*!< Width of padding below each channel group */
 };
 
 enum : int {
+   kTrackInfoTitleHeight = 16,
+   kTrackInfoTitleExtra = 2,
    kTrackInfoBtnSize = 18, // widely used dimension, usually height
-   kTrackEffectsBtnHeight = 28,
    kTrackInfoSliderHeight = 25,
    kTrackInfoSliderWidth = 139,
    kTrackInfoSliderAllowance = 5,

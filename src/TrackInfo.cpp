@@ -37,7 +37,11 @@ struct Settings : PrefsListener {
 
    void UpdatePrefs() override
    {
+#if defined __WXMAC__
+      int fontSize = 12;
+#else
       int fontSize = 10;
+#endif
       gFont.Create(fontSize, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
 
       mInitialized = true;

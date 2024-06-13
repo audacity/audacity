@@ -284,6 +284,12 @@ public:
       }
    }
 
+   void SwapChannels() override
+   {
+      if(mChannelCaches.size() == 2)
+         std::swap(mChannelCaches[0], mChannelCaches[1]);
+   }
+
    void MarkChanged() noexcept override
    {
       //Triggered when any part of the waveform has changed
@@ -403,9 +409,10 @@ void DrawWaveformBackground(TrackPanelDrawingContext &context,
    const auto &blankBrush = artist->blankBrush;
    const auto &selectedBrush = artist->selectedBrush;
    const auto &unselectedBrush = artist->unselectedBrush;
+   const auto &envelopeBackgroundBrush = artist->envelopeBackgroundBrush;
 
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(blankBrush);
+   dc.SetBrush(envelopeBackgroundBrush);
    dc.DrawRectangle(rect);
 
    // Bug 2389 - always draw at least one pixel of selection.

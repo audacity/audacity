@@ -286,6 +286,7 @@ class AUDACITY_DLL_API MeterPanel final
    wxBrush   mClipBrush;
    wxBrush   mBkgndBrush;
    wxBrush   mDisabledBkgndBrush;
+   wxBrush   mMeterBkgndBrush;
    Ruler     mRuler;
    wxString  mLeftText;
    wxString  mRightText;
