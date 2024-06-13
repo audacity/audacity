@@ -1688,7 +1688,7 @@ void AudioIO::StopStream()
    mPlaybackSchedule.ResetMode();
 }
 
-void AudioIO::SetPaused(bool state)
+void AudioIO::SetPaused(bool state, bool publish)
 {
    if (state != IsPaused())
    {
@@ -1701,7 +1701,9 @@ void AudioIO::SetPaused(bool state)
    }
 
    mPaused.store(state, std::memory_order_relaxed);
-   Publish({ mOwningProject.lock().get(), AudioIOEvent::PAUSE, state });
+
+   if (publish)
+      Publish({ mOwningProject.lock().get(), AudioIOEvent::PAUSE, state });
 }
 
 double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
@@ -2113,7 +2115,7 @@ bool AudioIO::ProcessPlaybackSlices(
 
             for(unsigned i = seq->NChannels(); i < mNumPlaybackChannels; ++i)
             {
-               
+
                pointers[i] = *scratch++;
                std::fill_n(pointers[i], len, .0f);
             }

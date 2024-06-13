@@ -1040,7 +1040,8 @@ void ProjectAudioManager::OnPause()
       scrubber.Pause(paused);
    else
    {
-      gAudioIO->SetPaused(paused);
+      constexpr auto publish = true;
+      gAudioIO->SetPaused(paused, publish);
    }
 }
 
