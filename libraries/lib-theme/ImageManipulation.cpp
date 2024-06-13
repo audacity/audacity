@@ -304,17 +304,9 @@ std::unique_ptr<wxImage> CreateAquaBackground(int width, int height, int offset)
 }
 
 std::unique_ptr<wxImage> CreateSysBackground
-#ifdef USE_AQUA_THEME
-   (int width, int height, int offset, wxColour colour)
-#else
    (int width, int height, int WXUNUSED(offset), wxColour colour)
-#endif
 {
-   #ifdef USE_AQUA_THEME
-   return CreateAquaBackground(width, height, offset);
-   #else
    return CreateBackground(width, height, colour);
-   #endif
 }
 
 /// Pastes one image into another including the alpha channel.

@@ -300,8 +300,6 @@ function( audacity_append_common_compiler_options var use_pch )
          # Yes, -U to /U too as needed for Windows:
          $<IF:$<CONFIG:Debug>,-D_DEBUG=1,-U_DEBUG>
 
-         $<$<PLATFORM_ID:Darwin>:-DUSE_AQUA_THEME>
-
          # Enable SIMD support when available
          ${MMX_FLAG}
          ${SSE_FLAG}
