@@ -494,7 +494,7 @@ public:
    { return mOwningProject.lock(); }
 
    /** \brief Pause and un-pause playback and recording */
-   void SetPaused(bool state);
+   void SetPaused(bool state, bool publish = false);
 
    /* Mixer services are always available.  If no stream is running, these
     * methods use whatever device is specified by the preferences.  If a
