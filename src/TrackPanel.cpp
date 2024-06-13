@@ -824,7 +824,7 @@ void TrackPanel::Refresh(bool eraseBackground /* = TRUE */,
 
 void TrackPanel::OnAudioIO(AudioIOEvent evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (evt.type == AudioIOEvent::MONITOR || evt.type == AudioIOEvent::PAUSE)
       return;
    // Some hit tests want to change their cursor to and from the ban symbol
    CallAfter( [this]{ CellularPanel::HandleCursorForPresentMouseState(); } );

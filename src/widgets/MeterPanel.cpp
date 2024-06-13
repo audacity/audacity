@@ -1816,6 +1816,9 @@ void MeterPanel::StopMonitoring(){
 
 void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
 {
+   if (evt.type == AudioIOEvent::PAUSE)
+      return;
+
    if (!mIsInput != (evt.type == AudioIOEvent::PLAYBACK))
       return;
 

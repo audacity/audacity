@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  RealtimeEffectManager.h
- 
+
  Paul Licameli split from EffectManager.h
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_REALTIME_EFFECT_MANAGER__
@@ -145,14 +145,6 @@ private:
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
-   struct REALTIME_EFFECTS_API AllListsLock {
-      RealtimeEffectManager *mpManager{};
-      AllListsLock(RealtimeEffectManager *pManager = nullptr);
-      AllListsLock(AllListsLock &&other);
-      AllListsLock& operator= (AllListsLock &&other);
-      void Reset();
-      ~AllListsLock() { Reset(); }
-   };
 
    void ProcessStart(bool suspended);
 
@@ -263,21 +255,16 @@ private:
 //! Brackets one block of processing in one thread
 class ProcessingScope {
 public:
-   ProcessingScope()
-   {
-      if (auto pProject = mwProject.lock()) {
-         auto &manager = RealtimeEffectManager::Get(*pProject);
-         mLocks = { &manager };
-         mSuspended = manager.GetSuspended();
-      }
-   }
    //! Require a prior InializationScope to ensure correct nesting
    explicit ProcessingScope(InitializationScope &,
       std::weak_ptr<AudacityProject> wProject)
       : mwProject{ move(wProject) }
    {
       if (auto pProject = mwProject.lock())
+      {
+         mSuspended = RealtimeEffectManager::Get(*pProject).GetSuspended();
          RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended);
+      }
    }
    ProcessingScope( ProcessingScope &&other ) = default;
    ProcessingScope& operator=( ProcessingScope &&other ) = default;
@@ -306,7 +293,6 @@ public:
    }
 
 private:
-   RealtimeEffectManager::AllListsLock mLocks;
    std::weak_ptr<AudacityProject> mwProject;
    bool mSuspended{};
 };

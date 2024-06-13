@@ -184,48 +184,6 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
    });
 }
 
-RealtimeEffectManager::
-AllListsLock::AllListsLock(RealtimeEffectManager *pManager)
-   : mpManager{ pManager }
-{
-   if (mpManager) {
-      // Paralleling VisitAll
-      RealtimeEffectList::Get(mpManager->mProject).GetLock().lock();
-      // And all group lists
-      for (auto group : mpManager->mGroups)
-         RealtimeEffectList::Get(*group).GetLock().lock();
-   }
-}
-
-RealtimeEffectManager::AllListsLock::AllListsLock(AllListsLock &&other)
-   : mpManager{ other.mpManager }
-{
-   other.mpManager = nullptr;
-}
-
-RealtimeEffectManager::AllListsLock&
-RealtimeEffectManager::AllListsLock::operator =(AllListsLock &&other)
-{
-   if (this != &other) {
-      Reset();
-      mpManager = other.mpManager;
-      other.mpManager = nullptr;
-   }
-   return *this;
-}
-
-void RealtimeEffectManager::AllListsLock::Reset()
-{
-   if (mpManager) {
-      // Paralleling VisitAll
-      RealtimeEffectList::Get(mpManager->mProject).GetLock().unlock();
-      // And all group lists
-      for (auto group : mpManager->mGroups)
-         RealtimeEffectList::Get(*group).GetLock().unlock();
-      mpManager = nullptr;
-   }
-}
-
 std::shared_ptr<RealtimeEffectState>
 RealtimeEffectManager::MakeNewState(
    RealtimeEffects::InitializationScope *pScope,
@@ -258,7 +216,7 @@ RealtimeEffectManager::MakeNewState(
          }
       }
 
-      
+
    }
    return pNewState;
 }

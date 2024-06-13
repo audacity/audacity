@@ -195,6 +195,7 @@ PitchAndSpeedDialog::PitchAndSpeedDialog(AudacityProject& project)
                   child->Enable(!event.on);
                break;
             case AudioIOEvent::MONITOR:
+            case AudioIOEvent::PAUSE:
                break;
             default:
                // Unknown event type

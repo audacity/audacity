@@ -62,6 +62,7 @@ struct AudioIOEvent {
       PLAYBACK,
       CAPTURE,
       MONITOR,
+      PAUSE,
    } type;
    bool on;
 };
@@ -169,7 +170,7 @@ public:
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
-   
+
    // Part of the callback
    int CallbackDoSeek();
 
@@ -195,7 +196,7 @@ public:
       float *outputMeterFloats
    );
    void DrainInputBuffers(
-      constSamplePtr inputBuffer, 
+      constSamplePtr inputBuffer,
       unsigned long framesPerBuffer,
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
@@ -204,7 +205,7 @@ public:
       unsigned long framesPerBuffer
    );
    void DoPlaythrough(
-      constSamplePtr inputBuffer, 
+      constSamplePtr inputBuffer,
       float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
@@ -308,7 +309,7 @@ public:
    std::atomic<bool>   mAudioThreadShouldCallSequenceBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopRunning;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopActive;
-      
+
    std::atomic<Acknowledge>  mAudioThreadAcknowledge;
 
    // Async start/stop + wait of AudioThread processing.
@@ -480,7 +481,7 @@ public:
    void SeekStream(double seconds) { mSeek = seconds; }
 
    using PostRecordingAction = std::function<void()>;
-   
+
    //! Enqueue action for main thread idle time, not before the end of any recording in progress
    /*! This may be called from non-main threads */
    void CallAfterRecording(PostRecordingAction action);

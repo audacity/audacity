@@ -11,6 +11,7 @@
 #include "DynamicRangeProcessorHistoryPanel.h"
 #include "AColor.h"
 #include "AllThemeResources.h"
+#include "AudioIO.h"
 #include "CompressorInstance.h"
 #include "DynamicRangeProcessorHistory.h"
 #include "DynamicRangeProcessorPanelCommon.h"
@@ -73,12 +74,29 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
                                                               // is resumed.
                                                               mTimer.Stop();
                                                         }) }
-    , mRealtimeResumeSubscription {
-       static_cast<RealtimeResumePublisher&>(instance).Subscribe([this](auto) {
-          if (mHistory)
-             mHistory->BeginNewSegment();
-       })
-    }
+    , mRealtimeResumeSubscription { static_cast<RealtimeResumePublisher&>(
+                                       instance)
+                                       .Subscribe([this](auto) {
+                                          if (mHistory)
+                                             mHistory->BeginNewSegment();
+                                       }) }
+    , mPlaybackEventSubscription { AudioIO::Get()->Subscribe(
+         [this](const AudioIOEvent& evt) {
+            if (evt.type != AudioIOEvent::PAUSE)
+               return;
+            if (evt.on)
+            {
+               mTimer.Stop();
+               mClock.Pause();
+            }
+            else
+            {
+               if (mHistory)
+                  mHistory->BeginNewSegment();
+               mClock.Resume();
+               mTimer.Start(timerPeriodMs);
+            }
+         }) }
 {
    if (const auto& sampleRate = instance.GetSampleRate();
        sampleRate.has_value())
@@ -457,7 +475,7 @@ void DynamicRangeProcessorHistoryPanel::OnTimer(wxTimerEvent& evt)
 
    // Do now get `std::chrono::steady_clock::now()` in the `OnPaint` event,
    // because this can be triggered even when playback is paused.
-   const auto now = std::chrono::steady_clock::now();
+   const auto now = mClock.GetNow();
    if (!mSync)
       // At the time of writing, the realtime playback doesn't account for
       // varying latencies. When it does, the synchronization will have to be
