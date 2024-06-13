@@ -23,7 +23,7 @@ void SelectionViewController::onPressed(double x, double y)
     emit selectionStarted();
 
     setSelectionActive(false);
-    processingSelectionController()->resetDataSelection();
+    selectionController()->resetDataSelection();
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
@@ -36,8 +36,8 @@ void SelectionViewController::onPositionChanged(double x, double y)
     emit selectionChanged(m_startPoint, QPointF(x, y));
 
     // tracks
-    QList<int> tracks = determinateTracks(m_startPoint.y(), y);
-    setSelectedTracks(tracks);
+    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    selectionController()->setDataSelectedOnTracks(tracks, false);
 
     // time
     double x1 = m_startPoint.x();
@@ -46,8 +46,8 @@ void SelectionViewController::onPositionChanged(double x, double y)
         std::swap(x1, x2);
     }
 
-    m_context->setSelectionStartTime(m_context->positionToTime(x1));
-    m_context->setSelectionEndTime(m_context->positionToTime(x2));
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), false);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), false);
 }
 
 void SelectionViewController::onReleased(double x, double y)
@@ -74,25 +74,23 @@ void SelectionViewController::onReleased(double x, double y)
     setSelectionActive(true);
 
     // tracks
-    QList<int> tracks = determinateTracks(m_startPoint.y(), y);
-    setSelectedTracks(tracks);
-    std::vector<TrackId> ids = { tracks.cbegin(), tracks.cend() };
-    processingSelectionController()->setDataSelectedOnTracks(ids);
+    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    selectionController()->setDataSelectedOnTracks(tracks, true);
 
     // time
-    processingSelectionController()->setDataSelectedStartTime(m_context->positionToTime(x1));
-    processingSelectionController()->setDataSelectedEndTime(m_context->positionToTime(x2));
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), true);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), true);
 }
 
-void SelectionViewController::onSelectionDraged(double x1, double x2)
+void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
 {
     // time
     if (x1 > x2) {
         std::swap(x1, x2);
     }
 
-    m_context->setSelectionStartTime(m_context->positionToTime(x1));
-    m_context->setSelectionEndTime(m_context->positionToTime(x2));
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), completed);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), completed);
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const
@@ -107,7 +105,7 @@ std::vector<TrackId> SelectionViewController::trackIdList() const
     return prj ? prj->trackIdList() : std::vector<TrackId>();
 }
 
-QList<int> SelectionViewController::determinateTracks(double y1, double y2) const
+std::vector<TrackId> SelectionViewController::determinateTracks(double y1, double y2) const
 {
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -131,7 +129,7 @@ QList<int> SelectionViewController::determinateTracks(double y1, double y2) cons
         return { -1, -1 };
     }
 
-    QList<int> ret;
+    std::vector<TrackId> ret;
 
     int tracksVericalY = vs->tracksVericalY().val;
     int trackTop = -tracksVericalY;
@@ -173,20 +171,6 @@ void SelectionViewController::setTimelineContext(TimelineContext* newContext)
     }
     m_context = newContext;
     emit timelineContextChanged();
-}
-
-QList<int> SelectionViewController::selectedTracks() const
-{
-    return m_selectedTracks;
-}
-
-void SelectionViewController::setSelectedTracks(const QList<int>& newSelectedTracks)
-{
-    if (m_selectedTracks == newSelectedTracks) {
-        return;
-    }
-    m_selectedTracks = newSelectedTracks;
-    emit selectedTracksChanged();
 }
 
 bool SelectionViewController::selectionActive() const

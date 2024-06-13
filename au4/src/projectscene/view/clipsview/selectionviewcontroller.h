@@ -7,7 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "processing/iprocessingselectioncontroller.h"
+#include "processing/iselectioncontroller.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -18,10 +18,9 @@ class SelectionViewController : public QObject
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
-    Q_PROPERTY(QList<int> selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<processing::IProcessingSelectionController> processingSelectionController;
+    muse::Inject<processing::ISelectionController> selectionController;
 
 public:
     SelectionViewController(QObject* parent = nullptr);
@@ -35,17 +34,13 @@ public:
     Q_INVOKABLE void onPressed(double x, double y);
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
-    Q_INVOKABLE void onSelectionDraged(double x, double x2);
-
-    QList<int> selectedTracks() const;
-    void setSelectedTracks(const QList<int>& newSelectedTracks);
+    Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
 
     bool selectionActive() const;
     void setSelectionActive(bool newSelectionActive);
 
 signals:
     void timelineContextChanged();
-    void selectedTracksChanged();
     void selectionActiveChanged();
 
     void selectionStarted();
@@ -57,13 +52,12 @@ private:
     IProjectViewStatePtr viewState() const;
     std::vector<processing::TrackId> trackIdList() const;
 
-    QList<int> determinateTracks(double y1, double y2) const;
+    std::vector<processing::TrackId> determinateTracks(double y1, double y2) const;
 
     TimelineContext* m_context = nullptr;
 
     bool m_selectionStarted = false;
     bool m_selectionActive = false;
     QPointF m_startPoint;
-    QList<int> m_selectedTracks;
 };
 }

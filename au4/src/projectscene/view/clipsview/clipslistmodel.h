@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "processing/iprocessinginteraction.h"
+#include "processing/iselectioncontroller.h"
 #include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
 
@@ -27,6 +28,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
+    muse::Inject<processing::ISelectionController> selectionController;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:

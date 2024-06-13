@@ -3,3 +3,4 @@ ProjectToolBar 1.0 toolbars/ProjectToolBar.qml
 TracksPanel 1.0 trackspanel/TracksPanel.qml
 TracksClipsView 1.0 clipsview/TracksClipsView.qml
 TracksPositionController 1.0 common/TracksPositionController.qml
+SelectionStatus 1.0 statusbar/SelectionStatus.qml

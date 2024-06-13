@@ -60,7 +60,7 @@ void Au3WrapModule::registerExports()
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
     ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
-    ioc()->registerExport<processing::IProcessingSelectionController>(moduleName(), new Au3SelectionController());
+    ioc()->registerExport<processing::ISelectionController>(moduleName(), new Au3SelectionController());
 }
 
 void Au3WrapModule::onInit(const muse::IApplication::RunMode&)

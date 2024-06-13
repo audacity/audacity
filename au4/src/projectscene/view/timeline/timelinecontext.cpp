@@ -26,15 +26,13 @@ void TimelineContext::init(double frameWidth)
     emit frameEndTimeChanged();
     emit frameTimeChanged();
 
-    muse::ValCh<processing::secs_t> selectedStartTime = processingSelectionController()->dataSelectedStartTime();
-    m_selecitonStartTime = selectedStartTime.val;
-    selectedStartTime.ch.onReceive(this, [this](processing::secs_t time) {
+    m_selecitonStartTime = selectionController()->dataSelectedStartTime();
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](processing::secs_t time) {
         setSelectionStartTime(time);
     });
 
-    muse::ValCh<processing::secs_t> selectedEndTime = processingSelectionController()->dataSelectedEndTime();
-    m_selectionEndTime = selectedEndTime.val;
-    selectedEndTime.ch.onReceive(this, [this](processing::secs_t time) {
+    m_selectionEndTime = selectionController()->dataSelectedEndTime();
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](processing::secs_t time) {
         setSelectionEndTime(time);
     });
 }

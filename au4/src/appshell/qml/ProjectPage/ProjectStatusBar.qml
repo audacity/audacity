@@ -21,11 +21,14 @@
  */
 import QtQuick
 
-import Muse.UiComponents
-import Muse.Ui
+import Audacity.ProjectScene
 
 Item {
     id: root
 
-
+    SelectionStatus {
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+    }
 }

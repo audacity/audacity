@@ -60,13 +60,3 @@ bool ProcessingInteraction::changeClipTitle(const processing::ClipKey& clipKey, 
 
     return true;
 }
-
-muse::ValCh<au::processing::ClipKey> ProcessingInteraction::selectedClip() const
-{
-    return m_selectedClip;
-}
-
-void ProcessingInteraction::selectClip(const processing::ClipKey& clipKey)
-{
-    m_selectedClip.set(clipKey);
-}

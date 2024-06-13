@@ -12,8 +12,6 @@ Rectangle {
 
     TracksListClipsModel {
         id: tracksModel
-
-        dataSelectedTracks: selectionController.selectedTracks
     }
 
     //! NOTE Sync with TracksPanel
@@ -146,7 +144,7 @@ Rectangle {
         ClipsSelection {
             id: clipsSelection
             anchors.fill: parent
-            onSelectionDraged: function(x1, x2) { selectionController.onSelectionDraged(x1, x2) }
+            onSelectionDraged: function(x1, x2, completed) { selectionController.onSelectionDraged(x1, x2, completed) }
         }
 
         PlayCursor {
