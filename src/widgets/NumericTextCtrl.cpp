@@ -457,7 +457,7 @@ bool NumericTextCtrl::Layout()
 
    mBackgroundBitmap = std::make_unique<wxBitmap>(mWidth + mButtonWidth, mHeight,24);
    memDC.SelectObject(*mBackgroundBitmap);
-   
+
    theTheme.SetBrushColour( Brush, clrTimeHours );
    memDC.SetBrush(Brush);
    memDC.SetPen(*wxTRANSPARENT_PEN);
@@ -474,7 +474,7 @@ bool NumericTextCtrl::Layout()
 
    theTheme.SetBrushColour( Brush, clrTimeBack );
    memDC.SetBrush(Brush);
-   //memDC.SetBrush(*wxLIGHT_GREY_BRUSH);
+
    for(i = 0; i < digits.size(); i++)
       memDC.DrawRectangle(GetBox(i));
    memDC.SetBrush( wxNullBrush );
@@ -487,9 +487,6 @@ bool NumericTextCtrl::Layout()
       theTheme.SetBrushColour( Brush, clrTimeFont );
       memDC.SetPen(Pen);
       memDC.SetBrush(Brush);
-      // AColor::Line(memDC, 
-      //              mWidth + 2, 4, 
-      //              mWidth + 2, mHeight - 4 );
       AColor::Arrow(memDC,
                     mWidth + 5,
                     (mHeight / 2) - 2,

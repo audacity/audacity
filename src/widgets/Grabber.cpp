@@ -153,16 +153,12 @@ void Grabber::DrawGrabber( wxDC & dc )
       AColor::Light(&dc, false);
    }
    else {
-      //dc.SetBrush(wxBrush(theTheme.Colour(clrGrabber), wxBRUSHSTYLE_SOLID));
       dc.SetPen(wxPen(theTheme.Colour(clrGrabber), 1, wxPENSTYLE_SOLID));
    }
 
    for (y = top + padding; y < bottom - padding; y += 5) {
       dc.DrawRectangle(left, y, 2, 2);
       dc.DrawRectangle(right, y, 2, 2);
-      //AColor::Line(dc, left, y, left, y + 1);
-      //AColor::Line(dc, right, y, right, y+1);
-
    }
 }
 

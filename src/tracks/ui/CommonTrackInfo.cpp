@@ -190,9 +190,8 @@ void CommonTrackInfo::DrawCloseButton(
    bool captured = hit && target->IsDragging();
    bool down = captured && bev.Contains( context.lastState.GetPosition());
 
-   //auto& Bmp = theTheme.Bitmap( GetButtonImageIndex(up, bSel, bHighlight) );
    wxMemoryDC memDC;
-   //memDC.SelectObject(Bmp);
+
    if(selected)
       memDC.SelectObject(theTheme.Bitmap(bmpCloseHover));
    else if(down)
@@ -203,23 +202,6 @@ void CommonTrackInfo::DrawCloseButton(
    dc->Blit(bev.GetLeft(), bev.GetRight(), bev.width, bev.height, &memDC, 0, 0);
 
    AColor::Bevel2(*dc, !down, bev, selected, hit );
-
-   /*wxPen pen( theTheme.Colour( clrTrackPanelText ));
-   dc->SetPen( pen );
-   bev.Inflate( -1, -1 );
-   // Draw the "X"
-   const int s = 6;
-
-   int ls = bev.x + ((bev.width - s) / 2);
-   int ts = bev.y + ((bev.height - s) / 2);
-   int rs = ls + s;
-   int bs = ts + s;
-
-   AColor::Line(*dc, ls,     ts, rs,     bs);
-   AColor::Line(*dc, ls + 1, ts, rs + 1, bs);
-   AColor::Line(*dc, rs,     ts, ls,     bs);
-   AColor::Line(*dc, rs + 1, ts, ls + 1, bs);
-   //   bev.Inflate(-1, -1);*/
 }
 
 namespace
