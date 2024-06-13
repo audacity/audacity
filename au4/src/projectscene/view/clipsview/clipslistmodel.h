@@ -41,7 +41,8 @@ public:
     int selectedClipIdx() const;
     void setSelectedClipIdx(int newSelectedClipIdx);
 
-    Q_INVOKABLE void load();
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void reload();
     Q_INVOKABLE void selectClip(int index);
     Q_INVOKABLE void resetSelectedClip();
 
@@ -67,7 +68,9 @@ private:
         ClipTitleRole,
         ClipColorRole,
         ClipWidthRole,
-        ClipLeftRole
+        ClipLeftRole,
+        ClipMoveMaximumXRole,
+        ClipMoveMinimumXRole
     };
 
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
