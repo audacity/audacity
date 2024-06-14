@@ -49,7 +49,7 @@ static const DockName NOTE_INPUT_BAR_NAME("noteInputBar");
 static const DockName PLAYBACK_TOOLBAR_NAME("playbackToolBar");
 
 // Other:
-static const DockName NOTATION_STATUSBAR_NAME("notationStatusBar");
+static const DockName PROJECT_STATUSBAR_NAME("projectStatusBar");
 
 enum class StartupModeType
 {

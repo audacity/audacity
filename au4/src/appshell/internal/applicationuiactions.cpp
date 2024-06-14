@@ -332,7 +332,7 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
         { "toggle-mixer", MIXER_PANEL_NAME },
         { "toggle-piano-keyboard", PIANO_KEYBOARD_PANEL_NAME },
 
-        { "toggle-statusbar", NOTATION_STATUSBAR_NAME },
+        { "toggle-statusbar", PROJECT_STATUSBAR_NAME },
     };
 
     return actionsMap;

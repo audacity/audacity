@@ -20,15 +20,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick
+import QtQuick.Layouts
 
 import Audacity.ProjectScene
 
 Item {
     id: root
 
-    SelectionStatus {
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
+    RowLayout {
+        id: statusBarRow
+
+        anchors.left: parent.left
+        anchors.leftMargin: 12
         anchors.right: parent.right
+        anchors.rightMargin: 6
+
+        height: parent.height
+
+        SelectionStatus {
+            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+            Layout.preferredWidth: width
+        }
     }
 }

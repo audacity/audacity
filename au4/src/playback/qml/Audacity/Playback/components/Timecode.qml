@@ -88,6 +88,7 @@ RowLayout {
         iconColor: ui.theme.fontSecondaryColor
 
         menuModel: timecodeModel.availableFormats
+        menuAnchorItem: ui.rootItem
 
         visible: root.showMenu
 
