@@ -36,6 +36,8 @@ elseif(CC_IS_MSVC)
     set(CMAKE_C_FLAGS_RELWITHDEBINFO    "/MD /Zi /O2 /Ob1")
     set(CMAKE_EXE_LINKER_FLAGS          "/DYNAMICBASE:NO")
 
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
     add_definitions(-DWIN32)
     add_definitions(-D_WIN32)
     add_definitions(-D_WINDOWS)

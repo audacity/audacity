@@ -39,7 +39,7 @@ void UiContextResolver::init()
         notifyAboutContextChanged();
     });
 
-#ifdef MU_BUILD_PLAYBACK_MODULE
+#ifdef AU_BUILD_PLAYBACK_MODULE
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();
     });
