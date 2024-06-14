@@ -33,7 +33,7 @@ Item {
 
     Component.onCompleted: {
         trackViewState.init()
-        clipsModel.load()
+        clipsModel.init()
     }
 
     Item {
@@ -57,6 +57,9 @@ Item {
                 clipKey: model.clipKey
                 clipSelected: clipsModel.selectedClipIdx === model.index
                 collapsed: trackViewState.isTrackCollapsed
+
+                dragMaximumX: model.clipMoveMaximumX + borderWidth
+                dragMinimumX: model.clipMoveMinimumX - borderWidth
 
                 onPositionChanged: function(x) {
                     model.clipLeft = x

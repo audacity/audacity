@@ -16,6 +16,9 @@ RoundedRectangle {
     property color clipColor: "#677CE4"
     property bool clipSelected: false
 
+    property real dragMaximumX: 100000
+    property real dragMinimumX: -100000
+
     property bool collapsed: false
 
     signal positionChanged(x : double)
@@ -27,8 +30,6 @@ RoundedRectangle {
 
     radius: 4
     color: "#000000" // border color
-
-    Drag.active: headerDragArea.drag.active
 
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
@@ -98,6 +99,8 @@ RoundedRectangle {
                 cursorShape: Qt.OpenHandCursor
                 drag.target: root
                 drag.axis: Drag.XAxis
+                drag.maximumX: root.dragMaximumX
+                drag.minimumX: root.dragMinimumX
 
                 onReleased: {
                     if (drag.active) {
