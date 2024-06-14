@@ -110,7 +110,7 @@ QString ProjectPageModel::drumsetPanelName() const
 
 QString ProjectPageModel::statusBarName() const
 {
-    return NOTATION_STATUSBAR_NAME;
+    return PROJECT_STATUSBAR_NAME;
 }
 
 void ProjectPageModel::onNotationChanged()

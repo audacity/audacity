@@ -313,8 +313,10 @@ void TimecodeModel::setSampleRate(double sampleRate)
         return;
     }
 
-    m_formater->setSampleRate(sampleRate);
-
     m_sampleRate = sampleRate;
+
+    m_formater->setSampleRate(sampleRate);
+    updateValueString();
+
     emit sampleRateChanged();
 }

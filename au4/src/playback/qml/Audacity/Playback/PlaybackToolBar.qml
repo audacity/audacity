@@ -10,7 +10,7 @@ import Audacity.Playback 1.0
 import Audacity.Record 1.0
 
 import "internal"
-import "internal/timecode"
+import "components"
 
 Item {
     id: root
@@ -98,13 +98,24 @@ Item {
             Timecode {
                 property var itemData: null
 
-                height: 28
-
                 value: Boolean(itemData) ? itemData.currentValue : 0
                 sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
+                currentFormat: Boolean(itemData) ? itemData.currentFormat : 0
 
                 onValueChangeRequested: function(newValue) {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
                     itemData.currentValue = newValue
+                }
+
+                onCurrentFormatChanged: {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.currentFormat = currentFormat
                 }
             }
         }

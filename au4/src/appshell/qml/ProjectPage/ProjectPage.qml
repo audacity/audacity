@@ -191,7 +191,11 @@ DockPage {
     }
 
     statusBar: DockStatusBar {
-        objectName: "projectStatusBar"
+        objectName: pageModel.statusBarName()
+
+        height: 40
+        minimumHeight: height
+        maximumHeight: height
 
         ProjectStatusBar {}
     }

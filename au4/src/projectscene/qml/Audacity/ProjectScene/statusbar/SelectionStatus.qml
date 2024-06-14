@@ -3,10 +3,10 @@ import QtQuick
 import Muse.UiComponents
 
 import Audacity.ProjectScene
+import Audacity.Playback
 
-Item {
-
-    width: 180
+Row {
+    spacing: 6
 
     SelectionStatusModel {
         id: selectionModel
@@ -17,31 +17,28 @@ Item {
     }
 
     StyledTextLabel {
-        id: label
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: parent.left
-        width: implicitWidth
+        anchors.verticalCenter: parent.verticalCenter
+
         text: qsTrc("projectscene", "Selection")
     }
 
-    StyledTextLabel {
-        id: startTimeMock
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: label.right
-        anchors.leftMargin: 8
-        width: 50
-        text: selectionModel.startTime
-    }
+    TimecodeStartEnd {
+        startValue: selectionModel.startTime
+        endValue: selectionModel.endTime
 
-    StyledTextLabel {
-        id: endTimeMock
-        anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        anchors.left: startTimeMock.right
-        anchors.leftMargin: 4
-        width: 50
-        text: selectionModel.endTime
+        sampleRate: selectionModel.sampleRate
+        currentFormat: selectionModel.currentFormat
+
+        onStartValueChangeRequested: function(newValue) {
+            selectionModel.startTime = newValue
+        }
+
+        onEndValueChangeRequested: function(newValue) {
+            selectionModel.endTime = newValue
+        }
+
+        onFormatChangeRequested: function(newFormat) {
+            selectionModel.currentFormat = newFormat
+        }
     }
 }

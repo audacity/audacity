@@ -8,7 +8,8 @@
         <file>qml/Audacity/Playback/internal/PlaybackLevel.qml</file>
         <file>qml/Audacity/Playback/components/VolumePressureMeter.qml</file>
         <file>qml/Audacity/Playback/components/VolumeSlider.qml</file>
-        <file>qml/Audacity/Playback/internal/timecode/Timecode.qml</file>
-        <file>qml/Audacity/Playback/internal/timecode/TimecodeField.qml</file>
+        <file>qml/Audacity/Playback/components/Timecode.qml</file>
+        <file>qml/Audacity/Playback/components/TimecodeField.qml</file>
+        <file>qml/Audacity/Playback/components/TimecodeStartEnd.qml</file>
     </qresource>
 </RCC>
