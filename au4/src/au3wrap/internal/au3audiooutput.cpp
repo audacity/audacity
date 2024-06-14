@@ -8,6 +8,7 @@
 
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
+#include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3audioinoutmeter.h"
 #include "au3types.h"
@@ -31,15 +32,24 @@ Au3AudioOutput::Au3AudioOutput()
         }
 
         initMeter();
+        notifyAboutSampleRateChanged();
     });
 }
 
 void Au3AudioOutput::initMeter()
 {
-    AudacityProject& project = projectRef();
+    AudacityProject* project = projectRef();
+    if (!project) {
+        return;
+    }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(project);
+    auto& projectAudioIO = ProjectAudioIO::Get(*project);
     projectAudioIO.SetPlaybackMeter(m_outputMeter);
+}
+
+void Au3AudioOutput::notifyAboutSampleRateChanged()
+{
+    m_sampleRateChanged.send(sampleRate());
 }
 
 muse::async::Promise<float> Au3AudioOutput::playbackVolume() const
@@ -77,13 +87,31 @@ muse::async::Channel<float> Au3AudioOutput::playbackVolumeChanged() const
     return m_playbackVolumeChanged;
 }
 
+au::audio::sample_rate_t Au3AudioOutput::sampleRate() const
+{
+    AudacityProject* project = projectRef();
+    if (!project) {
+        return 1.0;
+    }
+
+    return ProjectRate::Get(*project).GetRate();
+}
+
+muse::async::Channel<au::audio::sample_rate_t> Au3AudioOutput::sampleRateChanged() const
+{
+    return m_sampleRateChanged;
+}
+
 muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > Au3AudioOutput::playbackSignalChanges() const
 {
     return m_outputMeter->signalChanges();
 }
 
-AudacityProject& Au3AudioOutput::projectRef() const
+AudacityProject* Au3AudioOutput::projectRef() const
 {
-    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
-    return *project;
+    if (!globalContext()->currentProject()) {
+        return nullptr;
+    }
+
+    return reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
 }

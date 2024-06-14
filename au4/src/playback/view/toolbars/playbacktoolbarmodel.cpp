@@ -7,6 +7,7 @@
 
 #include "view/toolbars/playbacktoolbarlevelitem.h"
 #include "view/toolbars/playbacktoolbarcontrolitem.h"
+#include "view/toolbars/playbacktoolbartimeitem.h"
 #include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 
 #include "containers.h"
@@ -34,12 +35,14 @@ static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
 static const ActionCode LOOP_ACTION_CODE("loop");
 
 static const ActionCode PLAYBACK_LEVEL("playback-level");
+static const ActionCode PLAYBACK_TIME("playback-time");
 static const ActionCode RECORD_LEVEL("record-level");
 
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
     std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
         { PLAYBACK_LEVEL, PlaybackToolBarModel::PLAYBACK_LEVEL },
+        { PLAYBACK_TIME, PlaybackToolBarModel::PLAYBACK_TIME },
         { RECORD_LEVEL, PlaybackToolBarModel::RECORD_LEVEL },
         { PLAY_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { STOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
@@ -246,6 +249,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
     switch (type) {
     case PlaybackToolBarModel::PLAYBACK_LEVEL:
         result = new PlaybackToolBarLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        break;
+    case PlaybackToolBarModel::PLAYBACK_TIME:
+        result = new PlaybackToolBarTimeItem(action, static_cast<ToolBarItemType::Type>(type), this);
         break;
     case PlaybackToolBarModel::RECORD_LEVEL:
         result = new record::PlaybackToolBarRecordLevelItem(action, static_cast<ToolBarItemType::Type>(type), this);
