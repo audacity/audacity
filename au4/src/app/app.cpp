@@ -40,7 +40,7 @@
 
 #include "log.h"
 
-#define MU_BUILD_APPSHELL_MODULE
+#define AU_BUILD_APPSHELL_MODULE
 
 using namespace muse;
 using namespace au::app;
@@ -181,7 +181,7 @@ int App::run(int argc, char** argv)
         m->onPreInit(runMode);
     }
 
-#ifdef MU_BUILD_APPSHELL_MODULE
+#ifdef AU_BUILD_APPSHELL_MODULE
     au::appshell::SplashScreen* splashScreen = nullptr;
     if (runMode == IApplication::RunMode::GuiApp) {
         //splashScreen = new SplashScreen(SplashScreen::Default);
@@ -272,7 +272,7 @@ int App::run(int argc, char** argv)
         // }
     } break;
     case IApplication::RunMode::GuiApp: {
-#ifdef MU_BUILD_APPSHELL_MODULE
+#ifdef AU_BUILD_APPSHELL_MODULE
         // ====================================================
         // Setup Qml Engine
         // ====================================================
@@ -364,7 +364,7 @@ int App::run(int argc, char** argv)
     }
 #endif
 
-#ifdef MU_BUILD_APPSHELL_MODULE
+#ifdef AU_BUILD_APPSHELL_MODULE
     // Engine quit
     modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
 #endif
