@@ -36,6 +36,7 @@ public:
         UNDEFINED,
         PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
         RECORD_LEVEL,
+        PLAYBACK_TIME,
         PLAYBACK_CONTROL,
         PROJECT_CONTROL
     };

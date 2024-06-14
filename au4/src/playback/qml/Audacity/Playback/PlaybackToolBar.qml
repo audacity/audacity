@@ -10,6 +10,7 @@ import Audacity.Playback 1.0
 import Audacity.Record 1.0
 
 import "internal"
+import "internal/timecode"
 
 Item {
     id: root
@@ -39,6 +40,7 @@ Item {
             switch(type) {
             case PlaybackToolBarModel.PLAYBACK_CONTROL: return controlComp
             case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
+            case PlaybackToolBarModel.PLAYBACK_TIME: return playbackTimeComp
             case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
             case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
             }
@@ -86,6 +88,23 @@ Item {
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
+                }
+            }
+        }
+
+        Component {
+            id: playbackTimeComp
+
+            Timecode {
+                property var itemData: null
+
+                height: 28
+
+                value: Boolean(itemData) ? itemData.currentValue : 0
+                sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
+
+                onValueChangeRequested: function(newValue) {
+                    itemData.currentValue = newValue
                 }
             }
         }

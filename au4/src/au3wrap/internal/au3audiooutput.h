@@ -27,14 +27,20 @@ public:
     void setPlaybackVolume(float volume) override;
     muse::async::Channel<float> playbackVolumeChanged() const override;
 
+    audio::sample_rate_t sampleRate() const override;
+    muse::async::Channel<audio::sample_rate_t> sampleRateChanged() const override;
+
     muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> playbackSignalChanges() const override;
 
 private:
-    AudacityProject& projectRef() const;
+    AudacityProject* projectRef() const;
 
     void initMeter();
 
+    void notifyAboutSampleRateChanged();
+
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
+    mutable muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
     std::shared_ptr<InOutMeter> m_outputMeter;
 };

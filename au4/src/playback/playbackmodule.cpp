@@ -18,6 +18,8 @@
 #include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
 
+#include "view/toolbars/timecode/timecodemodel.h"
+
 using namespace au::playback;
 using namespace muse;
 using namespace muse::modularity;
@@ -64,6 +66,8 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.Playback", 1, 0, "PlaybackToolBarCustomiseModel");
     qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.Playback", 1, 0, "PlaybackToolBarCustomiseItem",
                                                              "Cannot create");
+
+    qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
