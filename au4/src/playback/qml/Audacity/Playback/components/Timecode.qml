@@ -15,8 +15,14 @@ RowLayout {
 
     property alias value: timecodeModel.value
     property alias sampleRate: timecodeModel.sampleRate
+    property alias currentFormat: timecodeModel.currentFormat
+
+    property bool showMenu: true
+    property int backgroundLeftRadius: 3
 
     signal valueChangeRequested(var newValue)
+
+    height: 28
 
     TimecodeModel {
         id: timecodeModel
@@ -34,8 +40,8 @@ RowLayout {
         Layout.preferredWidth: childrenRect.width
         Layout.fillHeight: true
 
-        topLeftRadius: 3
-        bottomLeftRadius: 3
+        topLeftRadius: root.backgroundLeftRadius
+        bottomLeftRadius: root.backgroundLeftRadius
 
         color: ui.theme.backgroundQuarternaryColor
 
@@ -82,6 +88,8 @@ RowLayout {
         iconColor: ui.theme.fontSecondaryColor
 
         menuModel: timecodeModel.availableFormats
+
+        visible: root.showMenu
 
         backgroundItem: RoundedRectangle {
             id: background

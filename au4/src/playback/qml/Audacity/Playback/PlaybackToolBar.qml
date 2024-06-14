@@ -10,7 +10,7 @@ import Audacity.Playback 1.0
 import Audacity.Record 1.0
 
 import "internal"
-import "internal/timecode"
+import "components"
 
 Item {
     id: root
