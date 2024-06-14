@@ -37,7 +37,7 @@ RowLayout {
         topLeftRadius: 3
         bottomLeftRadius: 3
 
-        color: ui.theme.backgroundTertiaryColor
+        color: ui.theme.backgroundQuarternaryColor
 
         Item {
             property int margin: 6
@@ -79,14 +79,39 @@ RowLayout {
         Layout.fillHeight: true
 
         icon: IconCode.SMALL_ARROW_DOWN
+        iconColor: ui.theme.fontSecondaryColor
 
         menuModel: timecodeModel.availableFormats
 
         backgroundItem: RoundedRectangle {
+            id: background
+
             topRightRadius: 3
             bottomRightRadius: 3
 
-            color: ui.theme.backgroundTertiaryColor
+            color: ui.theme.backgroundQuarternaryColor
+
+            states: [
+                State {
+                    name: "PRESSED"
+                    when: menuBtn.mouseArea.pressed
+
+                    PropertyChanges {
+                        target: background
+                        opacity: ui.theme.buttonOpacityHit
+                    }
+                },
+
+                State {
+                    name: "HOVERED"
+                    when: menuBtn.mouseArea.containsMouse && !menuBtn.mouseArea.pressed
+
+                    PropertyChanges {
+                        target: background
+                        opacity: ui.theme.buttonOpacityHover
+                    }
+                }
+            ]
         }
 
         onHandleMenuItem: function(itemId) {

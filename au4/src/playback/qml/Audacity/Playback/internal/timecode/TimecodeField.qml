@@ -29,6 +29,7 @@ ListItemBlank {
 
         text: root.value
         opacity: root.isEditable ? 1 : 0.75
-        font: root.isEditable ? ui.theme.tabBoldFont : ui.theme.tabFont
+        font: ui.theme.tabBoldFont
+        color: ui.theme.fontSecondaryColor
     }
 }
