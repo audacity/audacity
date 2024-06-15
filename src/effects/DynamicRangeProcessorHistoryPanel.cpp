@@ -91,8 +91,6 @@ DynamicRangeProcessorHistoryPanel::DynamicRangeProcessorHistoryPanel(
             }
             else
             {
-               if (mHistory)
-                  mHistory->BeginNewSegment();
                mClock.Resume();
                mTimer.Start(timerPeriodMs);
             }
