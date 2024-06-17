@@ -12,12 +12,14 @@
 
 #include "wxPanelWrapper.h"
 
+enum class AudiocomTrace;
+
 namespace audacity::cloud::audiocom
 {
 class LinkFailedDialog final : public wxDialogWrapper
 {
 public:
-   explicit LinkFailedDialog(wxWindow* parent);
+   LinkFailedDialog(wxWindow* parent, AudiocomTrace trace);
    ~LinkFailedDialog() override;
 
 

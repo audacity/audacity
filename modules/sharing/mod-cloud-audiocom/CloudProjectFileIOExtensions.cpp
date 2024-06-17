@@ -15,6 +15,7 @@
 #include "CloudLibrarySettings.h"
 #include "CloudProjectOpenUtils.h"
 
+#include "ExportUtils.h"
 #include "OAuthService.h"
 #include "ServiceConfig.h"
 #include "UserService.h"
@@ -48,8 +49,10 @@ class IOExtension final : public ProjectFileIOExtension
    OnOpenAction
    OnOpen(AudacityProject& project, const std::string& path) override
    {
-      return SyncCloudProject(project, path) ? OnOpenAction::Continue :
-                                               OnOpenAction::Cancel;
+      return SyncCloudProject(
+                project, path, AudiocomTrace::OpenFromCloudMenu) ?
+                OnOpenAction::Continue :
+                OnOpenAction::Cancel;
    }
 
    void OnLoad(AudacityProject& project) override
@@ -59,13 +62,15 @@ class IOExtension final : public ProjectFileIOExtension
 
       if (projectCloudExtenstion.IsCloudProject())
          ResumeProjectUpload(
-            projectCloudExtenstion,
-            [&project] { PerformBlockingAuth(&project); });
+            projectCloudExtenstion, [&project](AudiocomTrace trace) {
+               PerformBlockingAuth(&project, trace);
+            });
    }
 
    OnSaveAction PerformCloudSave(
       AudacityProject& project, std::string name, std::string filePath,
-      const ProjectSaveCallback& projectSaveCallback, bool fileRenamed)
+      const ProjectSaveCallback& projectSaveCallback, bool fileRenamed,
+      AudiocomTrace trace)
    {
       auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
@@ -73,7 +78,7 @@ class IOExtension final : public ProjectFileIOExtension
 
       auto future = LocalProjectSnapshot::Create(
          GetServiceConfig(), GetOAuthService(), projectCloudExtension, name,
-         mUploadMode);
+         mUploadMode, trace);
 
       mUploadMode = UploadMode::Normal;
 
@@ -95,7 +100,7 @@ class IOExtension final : public ProjectFileIOExtension
             result.Operation->Abort();
          else
             projectCloudExtension.OnSyncCompleted(
-               nullptr, CloudSyncError { CloudSyncError::Aborted });
+               nullptr, CloudSyncError { CloudSyncError::Aborted }, trace);
          // Something has failed horrible during the save
          return OnSaveAction::Cancelled;
       }
@@ -110,13 +115,14 @@ class IOExtension final : public ProjectFileIOExtension
    }
 
    OnSaveAction SaveCloudProject(
-      AudacityProject& project, const ProjectSaveCallback& projectSaveCallback)
+      AudacityProject& project, const ProjectSaveCallback& projectSaveCallback,
+      AudiocomTrace trace)
    {
-      auto authResult = PerformBlockingAuth(&project);
+      auto authResult = PerformBlockingAuth(&project, trace);
 
       if (authResult.Result == AuthResult::Status::Failure)
       {
-         LinkFailedDialog dialog { &ProjectWindow::Get(project) };
+         LinkFailedDialog dialog { &ProjectWindow::Get(project), trace };
          dialog.ShowModal();
          // Pretend we have canceled the save
          return OnSaveAction::Cancelled;
@@ -134,7 +140,7 @@ class IOExtension final : public ProjectFileIOExtension
       return PerformCloudSave(
          project, audacity::ToUTF8(project.GetProjectName()),
          audacity::ToUTF8(ProjectFileIO::Get(project).GetFileName()),
-         projectSaveCallback, false);
+         projectSaveCallback, false, trace);
    }
 
    OnSaveAction OnSave(
@@ -147,13 +153,17 @@ class IOExtension final : public ProjectFileIOExtension
       const bool isTemporary    = projectFileIO.IsTemporary();
       const bool isCloudProject = projectCloudExtension.IsCloudProject();
 
-      const bool pendingCloudSave = mForceCloudSave;
-      mForceCloudSave             = false;
+      const bool forceSaveToCloud =
+         mAudiocomTrace == AudiocomTrace::SaveToCloudMenu;
+
+      Finally finally { [&] {
+         mAudiocomTrace = AudiocomTrace::SaveProjectSaveToCloudMenu;
+      } };
 
       auto parent = &ProjectWindow::Get(project);
 
       // Check location first
-      if (isTemporary && !pendingCloudSave)
+      if (isTemporary && !forceSaveToCloud)
       {
          CloudLocationDialog cloudLocationDialog { parent,
                                                    LocationDialogType::Save };
@@ -167,15 +177,19 @@ class IOExtension final : public ProjectFileIOExtension
       }
 
       // For regular projects - do nothing
-      if (!isTemporary && !pendingCloudSave && !isCloudProject)
+      if (!isTemporary && !forceSaveToCloud && !isCloudProject)
          return OnSaveAction::Continue;
 
+      const auto trace = forceSaveToCloud ?
+                           AudiocomTrace::SaveToCloudMenu :
+                           AudiocomTrace::SaveProjectSaveToCloudMenu;
+
       if (!isTemporary)
-         return SaveCloudProject(project, projectSaveCallback);
+         return SaveCloudProject(project, projectSaveCallback, trace);
 
       auto result = CloudProjectPropertiesDialog::Show(
          GetServiceConfig(), GetOAuthService(), GetUserService(),
-         project.GetProjectName(), parent, false);
+         project.GetProjectName(), parent, false, trace);
 
       if (result.first == CloudProjectPropertiesDialog::Action::Cancel)
          // Suppress the Save function completely
@@ -192,7 +206,7 @@ class IOExtension final : public ProjectFileIOExtension
 
       return PerformCloudSave(
          project, result.second, audacity::ToUTF8(filePath),
-         projectSaveCallback, true);
+         projectSaveCallback, true, mAudiocomTrace);
    }
 
    OnCloseAction OnClose(AudacityProject& project) override
@@ -227,8 +241,7 @@ class IOExtension final : public ProjectFileIOExtension
          return;
 
       ShowDialogOn(
-         [weakProject = project.weak_from_this()]
-         {
+         [weakProject = project.weak_from_this()] {
             auto project = weakProject.lock();
 
             if (!project)
@@ -237,8 +250,7 @@ class IOExtension final : public ProjectFileIOExtension
             return ProjectCloudExtension::Get(*project)
                       .GetCurrentSyncStatus() == ProjectSyncStatus::Synced;
          },
-         [weakProject = project.weak_from_this()]
-         {
+         [weakProject = project.weak_from_this(), trace = mAudiocomTrace] {
             auto project = weakProject.lock();
 
             if (
@@ -253,7 +265,8 @@ class IOExtension final : public ProjectFileIOExtension
 
             if (result == SyncSucceededDialog::ViewOnlineIdentifier())
                BasicUI::OpenInDefaultBrowser(audacity::ToWXString(
-                  ProjectCloudExtension::Get(*project).GetCloudProjectPage()));
+                  ProjectCloudExtension::Get(*project).GetCloudProjectPage(
+                     trace)));
          });
    }
 
@@ -266,7 +279,7 @@ class IOExtension final : public ProjectFileIOExtension
 public:
    void ForceCloudSave()
    {
-      mForceCloudSave = true;
+      mAudiocomTrace = AudiocomTrace::SaveToCloudMenu;
    }
 
    void SetUploadModeForNextSave(UploadMode mode)
@@ -285,7 +298,7 @@ private:
    // Upload mode for the next save
    UploadMode mUploadMode { UploadMode::Normal };
    // Forces the next save to be a cloud save
-   bool mForceCloudSave {};
+   AudiocomTrace mAudiocomTrace { AudiocomTrace::SaveProjectSaveToCloudMenu };
 };
 
 IOExtension& GetExtension()

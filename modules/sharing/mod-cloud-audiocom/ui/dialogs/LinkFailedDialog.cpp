@@ -23,7 +23,7 @@
 namespace audacity::cloud::audiocom
 {
 
-LinkFailedDialog::LinkFailedDialog(wxWindow* parent)
+LinkFailedDialog::LinkFailedDialog(wxWindow* parent, AudiocomTrace trace)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 442, -1 },
          wxDEFAULT_DIALOG_STYLE)
@@ -52,14 +52,11 @@ LinkFailedDialog::LinkFailedDialog(wxWindow* parent)
 
             auto btn = s.AddButton(XO("&Try again"));
 
-            btn->Bind(
-               wxEVT_BUTTON,
-               [this](auto)
-               {
-                  OpenInDefaultBrowser({ audacity::ToWXString(
-                     GetServiceConfig().GetOAuthLoginPage()) });
-                  EndModal(wxID_RETRY);
-               });
+            btn->Bind(wxEVT_BUTTON, [this, trace](auto) {
+               OpenInDefaultBrowser({ audacity::ToWXString(
+                  GetServiceConfig().GetOAuthLoginPage(trace)) });
+               EndModal(wxID_RETRY);
+            });
 
             btn->SetDefault();
          }

@@ -76,7 +76,8 @@ AuthorizationHandler& GetAuthorizationHandler()
 }
 
 AuthResult PerformBlockingAuth(
-   AudacityProject* project, const TranslatableString& alternativeActionLabel)
+   AudacityProject* project, AudiocomTrace trace,
+   const TranslatableString& alternativeActionLabel)
 {
    using namespace sync;
    auto& oauthService = GetOAuthService();
@@ -95,7 +96,7 @@ AuthResult PerformBlockingAuth(
       std::promise<std::optional<AuthResult>> promise;
 
       oauthService.ValidateAuth(
-         [&promise](auto...) { promise.set_value({}); }, true);
+         [&promise](auto...) { promise.set_value({}); }, trace, true);
 
       if (auto waitResult = WaitForAuth(promise.get_future(), project))
          return *waitResult;
@@ -123,7 +124,7 @@ AuthResult PerformBlockingAuth(
       });
 
    OpenInDefaultBrowser(
-      { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage()) });
+      { audacity::ToWXString(GetServiceConfig().GetOAuthLoginPage(trace)) });
 
    auto waitResult = WaitForAuth(promise.get_future(), project);
 
@@ -160,7 +161,7 @@ void AuthorizationHandler::OnAuthStateChanged(
 
    if (!message.errorMessage.empty())
    {
-      LinkFailedDialog dialog { nullptr };
+      LinkFailedDialog dialog { nullptr, message.trace };
       dialog.ShowModal();
    }
    else if (message.authorised)

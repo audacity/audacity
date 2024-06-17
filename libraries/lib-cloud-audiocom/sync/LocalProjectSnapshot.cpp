@@ -24,6 +24,7 @@
 #include "MixdownUploader.h"
 #include "ProjectCloudExtension.h"
 
+#include "ExportUtils.h"
 #include "MemoryX.h"
 #include "Project.h"
 #include "SampleBlock.h"
@@ -188,11 +189,13 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
 
 LocalProjectSnapshot::LocalProjectSnapshot(
    Tag, const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension, std::string name, UploadMode mode)
+   ProjectCloudExtension& extension, std::string name, UploadMode mode,
+   AudiocomTrace trace)
     : mProjectCloudExtension { extension }
     , mWeakProject { extension.GetProject() }
     , mServiceConfig { config }
     , mOAuthService { oauthService }
+    , mAudiocomTrace { trace }
     , mProjectName { std::move(name) }
     , mUploadMode { mode }
     , mCancellationContext { concurrency::CancellationContext::Create() }
@@ -205,7 +208,8 @@ LocalProjectSnapshot::~LocalProjectSnapshot()
 
 LocalProjectSnapshot::Future LocalProjectSnapshot::Create(
    const ServiceConfig& config, const OAuthService& oauthService,
-   ProjectCloudExtension& extension, std::string name, UploadMode mode)
+   ProjectCloudExtension& extension, std::string name, UploadMode mode,
+   AudiocomTrace trace)
 {
    auto project = extension.GetProject().lock();
 
@@ -213,7 +217,7 @@ LocalProjectSnapshot::Future LocalProjectSnapshot::Create(
       return {};
 
    auto snapshot = std::make_shared<LocalProjectSnapshot>(
-      Tag {}, config, oauthService, extension, std::move(name), mode);
+      Tag {}, config, oauthService, extension, std::move(name), mode, trace);
 
    snapshot->mProjectCloudExtension.OnUploadOperationCreated(snapshot);
 
@@ -287,7 +291,8 @@ void LocalProjectSnapshot::Abort()
 void LocalProjectSnapshot::UploadFailed(CloudSyncError error)
 {
    if (!mCompleted.exchange(true, std::memory_order_release))
-      mProjectCloudExtension.OnSyncCompleted(this, std::make_optional(error));
+      mProjectCloudExtension.OnSyncCompleted(
+         this, std::make_optional(error), mAudiocomTrace);
 }
 
 void LocalProjectSnapshot::DataUploadFailed(const ResponseResult& uploadResult)
@@ -584,7 +589,7 @@ void LocalProjectSnapshot::MarkSnapshotSynced()
          }
 
          mCompleted.store(true, std::memory_order_release);
-         mProjectCloudExtension.OnSyncCompleted(this, {});
+         mProjectCloudExtension.OnSyncCompleted(this, {}, mAudiocomTrace);
       });
 
    mCancellationContext->OnCancelled(response);

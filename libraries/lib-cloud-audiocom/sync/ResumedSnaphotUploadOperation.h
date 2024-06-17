@@ -13,12 +13,14 @@
 
 #include <functional>
 
+enum class AudiocomTrace;
+
 namespace audacity::cloud::audiocom::sync
 {
 class ProjectCloudExtension;
 
 void CLOUD_AUDIOCOM_API ResumeProjectUpload(
    ProjectCloudExtension& projectCloudExtension,
-   std::function<void()> onBeforeUploadStarts);
+   std::function<void(AudiocomTrace)> onBeforeUploadStarts);
 
 } // namespace audacity::cloud::audiocom::sync

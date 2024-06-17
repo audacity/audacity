@@ -5,7 +5,7 @@
   ExportUtils.cpp
 
   Dominic Mazzoni
- 
+
   Vitaly Sverchinsky split from ExportPlugin.h
 
 **********************************************************************/
@@ -76,12 +76,15 @@ void ExportUtils::RegisterExportHook(ExportHook hook, Priority priority)
 }
 
 void ExportUtils::PerformInteractiveExport(
-   AudacityProject& project, const FileExtension& format, bool selectedOnly)
+   AudacityProject& project, const FileExtension& format, AudiocomTrace trace,
+   bool selectedOnly)
 {
    auto& hooks = ExportHooks();
    for (auto& hook : hooks)
    {
-      if(hook.hook(project, format, selectedOnly) != ExportHookResult::Continue)
+      if (
+         hook.hook(project, format, trace, selectedOnly) !=
+         ExportHookResult::Continue)
          return;
    }
 }

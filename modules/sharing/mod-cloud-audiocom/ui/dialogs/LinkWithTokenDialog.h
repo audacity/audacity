@@ -14,13 +14,14 @@
 
 class wxButton;
 class wxTextCtrl;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
 class LinkWithTokenDialog final : public wxDialogWrapper
 {
 public:
-   explicit LinkWithTokenDialog(wxWindow* parent = nullptr);
+   explicit LinkWithTokenDialog(AudiocomTrace, wxWindow* parent = nullptr);
    ~LinkWithTokenDialog() override;
 
 private:
@@ -29,5 +30,6 @@ private:
 
    wxButton* mContinueButton { nullptr };
    wxTextCtrl* mToken { nullptr };
+   const AudiocomTrace mAudiocomTrace;
 };
 } // namespace audacity::cloud::audiocom

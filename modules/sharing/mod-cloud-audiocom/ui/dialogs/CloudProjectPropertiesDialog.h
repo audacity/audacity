@@ -21,6 +21,7 @@ class wxTextCtrl;
 class wxChoice;
 class wxButton;
 class wxStaticText;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
@@ -37,7 +38,8 @@ class CloudProjectPropertiesDialog final : public wxDialogWrapper
 {
    CloudProjectPropertiesDialog(
       const ServiceConfig& serviceConfig, OAuthService& authService,
-      UserService& userService, const wxString& projectName, wxWindow* parent);
+      UserService& userService, const wxString& projectName, wxWindow* parent,
+      AudiocomTrace);
    ~CloudProjectPropertiesDialog() override;
 
 public:
@@ -50,7 +52,8 @@ public:
 
    static std::pair<Action, std::string> Show(
       const ServiceConfig& serviceConfig, OAuthService& authService,
-      UserService& userService, const wxString& projectName, wxWindow* parent, bool allowLocalSave);
+      UserService& userService, const wxString& projectName, wxWindow* parent,
+      bool allowLocalSave, AudiocomTrace);
 
 private:
    bool OnSubmit();

@@ -23,6 +23,7 @@
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
+#include "ExportUtils.h"
 #include "Internat.h"
 #include "wxWidgetsWindowPlacement.h"
 
@@ -144,7 +145,8 @@ public:
    {
       using namespace std::chrono_literals;
 
-      auto authResult = PerformBlockingAuth(mOwner.mProject);
+      auto authResult = PerformBlockingAuth(
+         mOwner.mProject, AudiocomTrace::OpenFromCloudMenu);
 
       switch (authResult.Result)
       {
@@ -274,7 +276,8 @@ public:
 
       auto& item = mResponse.Items[selectedRow[0]];
 
-      return GetServiceConfig().GetProjectPageUrl(item.Username, item.Id);
+      return GetServiceConfig().GetProjectPageUrl(
+         item.Username, item.Id, AudiocomTrace::OpenFromCloudMenu);
    }
 
 private:

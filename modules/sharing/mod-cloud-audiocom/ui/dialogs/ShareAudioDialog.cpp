@@ -165,13 +165,15 @@ private:
    ExportResult mResult;
 };
 
-ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
+ShareAudioDialog::ShareAudioDialog(
+   AudacityProject& project, AudiocomTrace trace, wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Share Audio"), wxDefaultPosition, { 480, 250 },
          wxDEFAULT_DIALOG_STYLE)
     , mProject(project)
     , mInitialStatePanel(*this)
     , mServices(std::make_unique<Services>())
+    , mAudiocomTrace(trace)
 {
    GetAuthorizationHandler().PushSuppressDialogs();
 
@@ -192,8 +194,7 @@ ShareAudioDialog::ShareAudioDialog(AudacityProject& project, wxWindow* parent)
    SetMinSize({ size.x, std::min(250, size.y) });
    SetMaxSize({ size.x, -1 });
 
-   mContinueAction = [this]()
-   {
+   mContinueAction = [this]() {
       if (mInitialStatePanel.root->IsShown())
          StartUploadProcess();
    };
@@ -417,11 +418,8 @@ void ShareAudioDialog::StartUploadProcess()
    ResetProgress();
 
    mServices->uploadPromise = mServices->uploadService.Upload(
-      mFilePath,
-      mInitialStatePanel.GetTrackTitle(),
-      false,
-      [this](const auto& result)
-      {
+      mFilePath, mInitialStatePanel.GetTrackTitle(), false,
+      [this](const auto& result) {
          CallAfter(
             [this, result]()
             {
@@ -452,14 +450,14 @@ void ShareAudioDialog::StartUploadProcess()
                }
             });
       },
-      [this](auto current, auto total)
-      {
+      [this](auto current, auto total) {
          CallAfter(
             [this, current, total]()
             {
                UpdateProgress(current, total);
             });
-      });
+      },
+      mAudiocomTrace);
 }
 
 void ShareAudioDialog::HandleUploadSucceeded(
@@ -598,8 +596,9 @@ void ShareAudioDialog::InitialStatePanel::PopulateInitialStatePanel(
    {
       s.SetBorder(16);
 
-      userPanel = safenew UserPanel { GetServiceConfig(), GetOAuthService(),
-                                      GetUserService(), true, s.GetParent() };
+      userPanel = safenew UserPanel { GetServiceConfig(),    GetOAuthService(),
+                                      GetUserService(),      true,
+                                      parent.mAudiocomTrace, s.GetParent() };
 
       mUserDataChangedSubscription = userPanel->Subscribe(
          [this](auto message) { UpdateUserData(message.IsAuthorized); });
@@ -735,11 +734,10 @@ void ShareAudioDialog::ProgressPanel::PopulateProgressPanel(ShuttleGui& s)
 
 namespace
 {
-auto hooked = []
-{
+auto hooked = [] {
    ExportUtils::RegisterExportHook(
-      [](AudacityProject& project, const FileExtension&, bool selectedOnly)
-      {
+      [](AudacityProject& project, const FileExtension&, AudiocomTrace trace,
+         bool selectedOnly) {
          if(selectedOnly)
             return ExportUtils::ExportHookResult::Continue;
 
@@ -757,7 +755,7 @@ auto hooked = []
          if (result == sync::LocationDialogResult::Local)
             return ExportUtils::ExportHookResult::Continue;
 
-         ShareAudioDialog shareDialog { project, window };
+         ShareAudioDialog shareDialog { project, trace, window };
          shareDialog.ShowModal();
 
          return ExportUtils::ExportHookResult::Handled;

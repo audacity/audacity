@@ -25,6 +25,7 @@
 #include "ProjectUploadOperation.h"
 #include "ServiceConfig.h"
 
+#include "ExportUtils.h"
 #include "SampleBlock.h"
 #include "WaveTrack.h"
 
@@ -171,13 +172,15 @@ private:
    void CompleteSync()
    {
       if (!mCompleted.exchange(true))
-         mProjectCloudExtension.OnSyncCompleted(this, {});
+         mProjectCloudExtension.OnSyncCompleted(
+            this, {}, AudiocomTrace::ProjectOpenedAndUploadResumed);
    }
 
    void FailSync(CloudSyncError error)
    {
       if (!mCompleted.exchange(true))
-         mProjectCloudExtension.OnSyncCompleted(this, error);
+         mProjectCloudExtension.OnSyncCompleted(
+            this, error, AudiocomTrace::ProjectOpenedAndUploadResumed);
    }
 
    void FailSync(ResponseResult result)
@@ -442,7 +445,7 @@ private:
 
 void ResumeProjectUpload(
    ProjectCloudExtension& projectCloudExtension,
-   std::function<void()> onBeforeUploadStarts)
+   std::function<void(AudiocomTrace)> onBeforeUploadStarts)
 {
    auto& cloudProjectsDatabase = CloudProjectsDatabase::Get();
 
@@ -450,7 +453,7 @@ void ResumeProjectUpload(
       projectCloudExtension.GetCloudProjectId());
 
    if (!pendingSnapshots.empty() && onBeforeUploadStarts)
-      onBeforeUploadStarts();
+      onBeforeUploadStarts(AudiocomTrace::ProjectOpenedAndUploadResumed);
 
    for (const auto& snapshot : pendingSnapshots)
       ResumedSnaphotUploadOperation::Perform(

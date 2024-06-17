@@ -13,6 +13,7 @@
 #include "CloudProjectFileIOExtensions.h"
 #include "CloudProjectMixdownUtils.h"
 #include "CommandContext.h"
+#include "ExportUtils.h"
 #include "MenuRegistry.h"
 
 #include "sync/MixdownUploader.h"
@@ -55,7 +56,8 @@ void OnUpdateMixdown(const CommandContext& context)
          auto& projectCloudExtension = ProjectCloudExtension::Get(project);
 
          BasicUI::OpenInDefaultBrowser(
-            projectCloudExtension.GetCloudProjectPage());
+            projectCloudExtension.GetCloudProjectPage(
+               AudiocomTrace::UpdateCloudAudioPreviewMenu));
       });
 }
 
@@ -63,6 +65,7 @@ void OnShareAudio(const CommandContext& context)
 {
    ShareAudioDialog dialog {
       context.project,
+      AudiocomTrace::ShareAudioMenu,
       ProjectWindow::Find(&context.project),
    };
 
