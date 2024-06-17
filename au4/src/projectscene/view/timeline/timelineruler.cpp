@@ -23,6 +23,12 @@ TimelineRuler::TimelineRuler(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
     uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
+    setFormatter(std::make_unique<BeatsMeasuresFormat>());
+}
+
+void TimelineRuler::setFormatter(std::unique_ptr<IRulerFormat> formatter)
+{
+    m_formatter = std::move(formatter);
 }
 
 void TimelineRuler::paint(QPainter* painter)
@@ -31,8 +37,7 @@ void TimelineRuler::paint(QPainter* painter)
     const qreal h = height();
 
     // determine current time interval and prepare ticks
-    // IntervalInfo interval = TimeFormat::intervalInfo(m_context);
-    IntervalInfo interval = BeatsMeasuresFormat::intervalInfo(m_context);
+    IntervalInfo interval = m_formatter->intervalInfo(m_context);
     Ticks ticks = prepareTickData(interval, w, h);
 
     // begin painting
@@ -87,8 +92,7 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
             tickType = TickType::MINORMINOR;
         }
 
-        // QString tickLabel = TimeFormat::label(value, timeInterval, tickType);
-        QString tickLabel = BeatsMeasuresFormat::label(value, timeInterval, tickType, m_context);
+        QString tickLabel = m_formatter->label(value, timeInterval, tickType, m_context);
         int labelsCount = 0;
         //! AU4 TODO: when having very small distance between ticks, ticks look not even
         if (tickType == TickType::MAJOR || tickType == TickType::MINOR) {

@@ -40,6 +40,8 @@ public:
     explicit TimelineRuler(QQuickItem* parent = nullptr);
     ~TimelineRuler() = default;
 
+    void setFormatter(std::unique_ptr<IRulerFormat> formatter);
+
     void paint(QPainter* painter) override;
 
     TimelineContext* timelineContext() const;
@@ -56,5 +58,6 @@ private:
     void onFrameTimeChanged();
 
     TimelineContext* m_context = nullptr;
+    std::unique_ptr<IRulerFormat> m_formatter;
 };
 }

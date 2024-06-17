@@ -170,8 +170,9 @@ IntervalInfo TimeFormat::intervalInfo(TimelineContext* context)
     return timeInterval;
 }
 
-QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType tickType)
+QString TimeFormat::label(double d, const IntervalInfo& intervalInfo, TickType tickType, TimelineContext* context)
 {
+    Q_UNUSED(context);
     // Replace -0 with 0
     if (d < 0.0 && (d + intervalInfo.minor > 0.0)) {
         d = 0.0;
