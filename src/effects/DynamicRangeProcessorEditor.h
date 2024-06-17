@@ -101,8 +101,10 @@ public:
 
 private:
    void AddCompressionCurvePanel(ShuttleGui& S, const CompressorSettings&);
-   void AddCompressionMeterPanel(ShuttleGui& S);
    void AddSliderPanel(ShuttleGui& S);
+   void AddCheckboxPanel(
+      ShuttleGui& S, const DynamicRangeProcessorSettings& settings);
+   void AddClipIndicator(ShuttleGui& S);
 
    virtual const CompressorSettings* GetCompressorSettings() const
    {

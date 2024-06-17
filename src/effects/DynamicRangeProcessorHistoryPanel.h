@@ -15,6 +15,7 @@
 #include "Observer.h"
 #include "wxPanelWrapper.h"
 #include <chrono>
+#include <functional>
 #include <optional>
 #include <wx/geometry.h>
 #include <wx/timer.h>
