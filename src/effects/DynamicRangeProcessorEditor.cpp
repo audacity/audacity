@@ -107,17 +107,18 @@ auto SliderToTextValue(double value, const ExtendedCompressorParameter& setting)
    const auto scaled = value / setting.param->TextToSlider();
    return setting.attributes.exponentialSlider ?
              MapExponentially(
-                setting.param->Min(), setting.param->Max(), scaled) :
+                setting.param->SliderMin(), setting.param->SliderMax(),
+                scaled) :
              scaled;
 }
 
 auto TextToSliderValue(ExtendedCompressorParameter& setting)
 {
-   const auto unscaled =
-      setting.attributes.exponentialSlider ?
-         MapLogarithmically(
-            setting.param->Min(), setting.param->Max(), setting.value) :
-         setting.value;
+   const auto unscaled = setting.attributes.exponentialSlider ?
+                            MapLogarithmically(
+                               setting.param->SliderMin(),
+                               setting.param->SliderMax(), setting.value) :
+                            setting.value;
    return unscaled * setting.param->TextToSlider();
 }
 } // namespace
@@ -412,12 +413,13 @@ void DynamicRangeProcessorEditor::AddTextboxAndSlider(
       Publish(EffectSettingChanged {});
    });
 
-   setting.slider = S.Name(setting.attributes.caption)
-                       .Style(wxSL_HORIZONTAL)
-                       .MinSize({ 100, -1 })
-                       .AddSlider(
-                          {}, TextToSliderValue(setting), setting.param->Max(),
-                          setting.param->Min());
+   setting.slider =
+      S.Name(setting.attributes.caption)
+         .Style(wxSL_HORIZONTAL)
+         .MinSize({ 100, -1 })
+         .AddSlider(
+            {}, TextToSliderValue(setting), setting.param->SliderMax(),
+            setting.param->SliderMin());
 
    setting.slider->Bind(wxEVT_SLIDER, [&](wxCommandEvent& evt) {
       setting.value = SliderToTextValue(evt.GetInt(), setting);

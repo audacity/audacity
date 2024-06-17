@@ -22,10 +22,20 @@ struct ParameterWrapper : public DynamicRangeProcessorParameter
 
    double Min() const override
    {
-      return mParameter.min;
+      return mParameter.min / mParameter.scale;
    }
 
    double Max() const override
+   {
+      return mParameter.max / mParameter.scale;
+   }
+
+   double SliderMin() const override
+   {
+      return mParameter.min;
+   }
+
+   double SliderMax() const override
    {
       return mParameter.max;
    }
