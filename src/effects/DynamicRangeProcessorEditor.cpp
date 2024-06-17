@@ -175,8 +175,8 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       });
    histPanel->ShowInput(settings.showInput);
    histPanel->ShowOutput(settings.showOutput);
-   histPanel->ShowOvershoot(settings.showOvershoot);
-   histPanel->ShowUndershoot(settings.showUndershoot);
+   histPanel->ShowActual(settings.showActual);
+   histPanel->ShowTarget(settings.showTarget);
 
 #define GET_REF(settingName)                                        \
    GetCompressorSettings() ? GetCompressorSettings()->settingName : \
@@ -185,7 +185,7 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    S.StartHorizontalLay(wxALIGN_LEFT, 0);
    {
       S.AddSpace(borderSize, 0);
-      wxCheckBox* input = S.AddCheckBox(XO("I&nput"), settings.showInput);
+      const auto input = S.AddCheckBox(XO("I&nput"), settings.showInput);
       input->Bind(wxEVT_CHECKBOX, [this](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showInput), &HistPanel::ShowInput);
@@ -193,7 +193,7 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       /* i18n-hint: show input on a graph */
       input->SetName(_("Show input"));
 
-      wxCheckBox* output = S.AddCheckBox(XO("O&utput"), settings.showOutput);
+      const auto output = S.AddCheckBox(XO("O&utput"), settings.showOutput);
       output->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
             OnCheckbox(
                evt.IsChecked(), GET_REF(showOutput), &HistPanel::ShowOutput);
@@ -201,34 +201,32 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
       /* i18n-hint: show output on a graph */
       output->SetName(_("Show output"));
 
-      /* i18n-hint: when smoothing leads the output level to be momentarily
-       * over the target */
-      wxCheckBox* overshoot = S.AddCheckBox(XO("O&vershoot"), settings.showOvershoot);
-      overshoot->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+      /* i18n-hint: The effective compression, including smoothing. */
+      const auto actual =
+         S.AddCheckBox(XO("A&ctual compression"), settings.showActual);
+      actual->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
             OnCheckbox(
-               evt.IsChecked(), GET_REF(showOvershoot),
-               &HistPanel::ShowOvershoot);
+               evt.IsChecked(), GET_REF(showActual), &HistPanel::ShowActual);
          });
-      /* i18n-hint: show overshoot on a graph */
-      overshoot->SetName(_("Show overshoot"));
+      /* i18n-hint: show actual compression on a graph */
+      actual->SetName(_("Show actual compression"));
 
-      /* i18n-hint: when smoothing leads the output level to be momentarily
-       * under the target */
-      wxCheckBox* undershoot = S.AddCheckBox(XO("Under&shoot"), settings.showUndershoot);
-      undershoot->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
-            OnCheckbox(
-               evt.IsChecked(), GET_REF(showUndershoot),
-               &HistPanel::ShowUndershoot);
-         });
-      /* i18n-hint: show undershoot on a graph */
-      undershoot->SetName(_("Show undershoot"));
+      /* i18n-hint: The target compression, before smoothing. */
+      const auto target =
+         S.AddCheckBox(XO("Tar&get compression"), settings.showTarget);
+      target->Bind(wxEVT_CHECKBOX, [&](wxCommandEvent& evt) {
+         OnCheckbox(
+            evt.IsChecked(), GET_REF(showTarget), &HistPanel::ShowTarget);
+      });
+      /* i18n-hint: show target compression on a graph */
+      target->SetName(_("Show target compression"));
 
 #if wxUSE_ACCESSIBILITY
       // so that name can be set on a standard control
       safenew WindowAccessible(input);
       safenew WindowAccessible(output);
-      safenew WindowAccessible(overshoot);
-      safenew WindowAccessible(undershoot);
+      safenew WindowAccessible(actual);
+      safenew WindowAccessible(target);
 #endif
    }
    S.EndHorizontalLay();

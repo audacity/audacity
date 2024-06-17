@@ -49,11 +49,7 @@ auto GetBrush(
 {
    using namespace DynamicRangeProcessorPanel;
    constexpr auto w = .75;
-   const wxColor edgeColor(
-      backgroundColor.Red() * w + colorAtKnee.Red() * (1 - w),
-      backgroundColor.Green() * w + colorAtKnee.Green() * (1 - w),
-      backgroundColor.Blue() * w + colorAtKnee.Blue() * (1 - w),
-      backgroundColor.Alpha() * w + colorAtKnee.Alpha() * (1 - w));
+   const wxColor edgeColor = GetColorMix(backgroundColor, colorAtKnee, w);
 
    const auto xf = size.GetWidth() / 2.; // "f" for "focus"
    const auto yf = size.GetHeight() / 2.;
@@ -115,7 +111,7 @@ void DrawTransferFunction(
 
    // Draw the curve
    const auto gc2 = MakeGraphicsContext(dc);
-   gc2->SetPen(lineColor);
+   gc2->SetPen(wxPen { targetCompressionColor, targetCompressionLineWidth });
    gc2->DrawLines(points.size(), points.data());
 }
 } // namespace

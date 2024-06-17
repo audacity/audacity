@@ -84,20 +84,10 @@ public:
    static constexpr LimiterParameter showOutput {
       &LimiterSettings::showOutput, L"showOutput", showOutputDefault, 0, 1, 1
    };
-   static constexpr LimiterParameter showOvershoot {
-      &LimiterSettings::showOvershoot,
-      L"showOvershoot",
-      showOvershootDefault,
-      0,
-      1,
-      1
+   static constexpr LimiterParameter showActual {
+      &LimiterSettings::showActual, L"showActual", showActualDefault, 0, 1, 1
    };
-   static constexpr LimiterParameter showUndershoot {
-      &LimiterSettings::showUndershoot,
-      L"showUndershoot",
-      showUndershootDefault,
-      0,
-      1,
-      1
+   static constexpr LimiterParameter showTarget {
+      &LimiterSettings::showTarget, L"showTarget", showTargetDefault, 0, 1, 1
    };
 };

@@ -44,8 +44,8 @@ public:
    // For now no-opt functions, but there are plans to add visibility toggles.
    void ShowInput(bool show);
    void ShowOutput(bool show);
-   void ShowOvershoot(bool show);
-   void ShowUndershoot(bool show);
+   void ShowActual(bool show);
+   void ShowTarget(bool show);
 
    DECLARE_EVENT_TABLE();
 
@@ -78,6 +78,6 @@ private:
    bool mPlaybackAboutToStart = false;
    bool mShowInput = true;
    bool mShowOutput = true;
-   bool mShowOvershoot = true;
-   bool mShowUndershoot = true;
+   bool mShowActual = true;
+   bool mShowTarget = true;
 };
