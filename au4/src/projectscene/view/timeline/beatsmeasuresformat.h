@@ -4,16 +4,15 @@
 
 **********************************************************************/
 
-#include "timeformat.h"
+#pragma once
+
+#include "view/timeline/irulerformat.h"
 
 namespace au::projectscene {
-class BeatsMeasuresFormat
+class BeatsMeasuresFormat : public IRulerFormat
 {
 public:
-    explicit BeatsMeasuresFormat() {}
-    ~BeatsMeasuresFormat();
-
-    static IntervalInfo intervalInfo(TimelineContext* context);
-    static QString label(double d, const IntervalInfo& timeIntervalInfo, TickType tickType, TimelineContext* context);
+    IntervalInfo intervalInfo(TimelineContext* context) override;
+    QString label(double d, const IntervalInfo& timeIntervalInfo, TickType tickType, TimelineContext* context) override;
 };
 }

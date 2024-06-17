@@ -54,6 +54,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelineruler.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/irulerformat.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timeformat.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timeformat.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/beatsmeasuresformat.cpp
