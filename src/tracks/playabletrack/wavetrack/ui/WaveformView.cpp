@@ -49,6 +49,8 @@ Paul Licameli split from WaveChannelView.cpp
 #include "waveform/WaveDataCache.h"
 #include "waveform/WavePaintParameters.h"
 
+#include <atomic>
+
 
 static WaveChannelSubView::Type sType{
    WaveChannelViewConstants::Waveform,
@@ -216,7 +218,8 @@ public:
 
    WaveformPainter& EnsureClip (const WaveClip& clip)
    {
-      if (&clip != mWaveClip)
+      const auto changed = mChanged.exchange(false);
+      if (&clip != mWaveClip || changed)
          mChannelCaches.clear();
 
       const auto nChannels = clip.NChannels();
@@ -294,7 +297,7 @@ public:
    {
       //Triggered when any part of the waveform has changed
       //TODO: invalidate parts of the cache that intersect changes
-      mChannelCaches.clear();
+      mChanged.store(true);
    }
 
    void Invalidate() override
@@ -321,6 +324,7 @@ private:
    };
 
    std::vector<ChannelCaches> mChannelCaches;
+   std::atomic<bool> mChanged = false;
 };
 
 void DrawWaveform(
