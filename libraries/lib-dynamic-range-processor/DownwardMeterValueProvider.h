@@ -22,7 +22,7 @@ class DYNAMIC_RANGE_PROCESSOR_API DownwardMeterValueProvider :
 public:
    DownwardMeterValueProvider(float upperValue = 0.f);
    ~DownwardMeterValueProvider() = default;
-   void Update(float value) override;
+   void Update(float value, bool alsoFiveSecondMax) override;
    float GetGlobalMax() const override;
    float GetFiveSecMax() const override;
    float GetCurrentMax() const override;

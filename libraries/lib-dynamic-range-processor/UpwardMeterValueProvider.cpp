@@ -15,9 +15,9 @@ UpwardMeterValueProvider::UpwardMeterValueProvider()
 {
 }
 
-void UpwardMeterValueProvider::Update(float value)
+void UpwardMeterValueProvider::Update(float value, bool alsoFiveSecondMax)
 {
-   mDownwardProvider.Update(-value);
+   mDownwardProvider.Update(-value, alsoFiveSecondMax);
 }
 
 float UpwardMeterValueProvider::GetGlobalMax() const

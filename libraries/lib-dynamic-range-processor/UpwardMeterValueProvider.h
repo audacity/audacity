@@ -18,7 +18,7 @@ class DYNAMIC_RANGE_PROCESSOR_API UpwardMeterValueProvider final :
 public:
    UpwardMeterValueProvider();
 
-   void Update(float value) override;
+   void Update(float value, bool alsoFiveSecondMax) override;
    float GetGlobalMax() const override;
    float GetFiveSecMax() const override;
    float GetCurrentMax() const override;

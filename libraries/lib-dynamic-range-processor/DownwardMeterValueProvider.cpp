@@ -29,7 +29,7 @@ DownwardMeterValueProvider::DownwardMeterValueProvider(float upperValue)
    mRingBuffer.fill(upperValue);
 }
 
-void DownwardMeterValueProvider::Update(float newValue)
+void DownwardMeterValueProvider::Update(float newValue, bool alsoFiveSecondMax)
 {
    ++mTimerCount;
 
@@ -59,11 +59,14 @@ void DownwardMeterValueProvider::Update(float newValue)
             mLastFiveSeconds.begin(), mLastFiveSeconds.end(),
             [](const auto& a, const auto& b) { return a.second < b.second; })
             ->second;
-      if (rawMin < mFiveSecMinState)
-         mFiveSecMinState = rawMin;
-      else
-         mFiveSecMinState =
-            mFiveSecMinState * (1 - decayPerTickDb) + rawMin * decayPerTickDb;
+      if (alsoFiveSecondMax)
+      {
+         if (rawMin < mFiveSecMinState)
+            mFiveSecMinState = rawMin;
+         else
+            mFiveSecMinState = mFiveSecMinState * (1 - decayPerTickDb) +
+                               rawMin * decayPerTickDb;
+      }
    }
 }
 

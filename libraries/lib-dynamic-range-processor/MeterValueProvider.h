@@ -24,7 +24,7 @@ public:
    static std::unique_ptr<MeterValueProvider> Create(Direction direction);
 
    virtual ~MeterValueProvider() = default;
-   virtual void Update(float value) = 0;
+   virtual void Update(float value, bool alsoFiveSecondMax) = 0;
    virtual float GetGlobalMax() const = 0;
    virtual float GetFiveSecMax() const = 0;
    virtual float GetCurrentMax() const = 0;
