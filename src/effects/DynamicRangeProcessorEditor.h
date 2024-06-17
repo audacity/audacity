@@ -62,6 +62,8 @@ public:
    virtual ~DynamicRangeProcessorParameter() = default;
    virtual double Min() const = 0;
    virtual double Max() const = 0;
+   virtual double SliderMin() const = 0;
+   virtual double SliderMax() const = 0;
    virtual double TextToSlider() const = 0;
 };
 
