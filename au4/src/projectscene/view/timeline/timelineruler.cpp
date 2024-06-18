@@ -22,13 +22,22 @@ using namespace au::projectscene;
 TimelineRuler::TimelineRuler(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
+    setFormatter(configuration()->timelineRulerMode());
+
     uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
-    setFormatter(std::make_unique<BeatsMeasuresFormat>());
+    configuration()->timelineRulerModeChanged().onReceive(this, [this](const TimelineRulerMode mode){
+        setFormatter(mode);
+        update();
+    });
 }
 
-void TimelineRuler::setFormatter(std::unique_ptr<IRulerFormat> formatter)
+void TimelineRuler::setFormatter(const TimelineRulerMode mode)
 {
-    m_formatter = std::move(formatter);
+    if (mode == TimelineRulerMode::MINUTES_AND_SECONDS) {
+        m_formatter = std::make_unique<TimeFormat>();
+    } else {
+        m_formatter = std::make_unique<BeatsMeasuresFormat>();
+    }
 }
 
 void TimelineRuler::paint(QPainter* painter)

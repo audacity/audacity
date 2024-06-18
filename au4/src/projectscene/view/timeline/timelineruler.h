@@ -31,6 +31,7 @@ class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
     muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 signals:
     void offsetChanged();
@@ -40,7 +41,7 @@ public:
     explicit TimelineRuler(QQuickItem* parent = nullptr);
     ~TimelineRuler() = default;
 
-    void setFormatter(std::unique_ptr<IRulerFormat> formatter);
+    void setFormatter(const TimelineRulerMode mode);
 
     void paint(QPainter* painter) override;
 
@@ -49,6 +50,7 @@ public:
 
 signals:
     void timelineContextChanged();
+    void formatterChanged();
 
 private:
     Ticks prepareTickData(const IntervalInfo& timeInterval, double w, double h);

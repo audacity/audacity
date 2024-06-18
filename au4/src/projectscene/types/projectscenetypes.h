@@ -46,4 +46,9 @@ public:
 };
 }
 
+enum class TimelineRulerMode {
+    MINUTES_AND_SECONDS = 0,
+    BEATS_AND_MEASURES
+};
+
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

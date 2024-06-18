@@ -32,8 +32,8 @@ public:
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
-    void toggleTimelineRuler();
-    void toggleBeatsRuler();
+    void toggleMinutesSecondsRuler();
+    void toggleBeatsMeasuresRuler();
     void toggleVerticalRulers();
     void updateDisplayWhilePlaying();
     void pinnedPlayHead();
