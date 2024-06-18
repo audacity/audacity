@@ -192,10 +192,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpHiliteButtonLarge, wxImage( 48, 48 ), wxT("HiliteButtonLarge"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
-   DEFINE_IMAGE( bmpMacUpButton, wxImage( 36, 36 ), wxT("MacUpButton"));
-   DEFINE_IMAGE( bmpMacDownButton, wxImage( 36, 36 ), wxT("MacDownButton"));
-   DEFINE_IMAGE( bmpMacHiliteUpButton, wxImage( 36, 36 ), wxT("MacHiliteUpButton"));
-   DEFINE_IMAGE( bmpMacHiliteButton, wxImage( 36, 36 ), wxT("MacHiliteButton"));
 
    SET_THEME_FLAGS(  resFlagNone  );
    DEFINE_IMAGE( bmpUpButtonSmall, wxImage( 27, 27 ), wxT("UpButtonSmall"));
@@ -204,10 +200,6 @@ from there.  Audacity will look for a file called "Pause.png".
    DEFINE_IMAGE( bmpHiliteButtonSmall, wxImage( 27, 27 ), wxT("HiliteButtonSmall"));
 
    SET_THEME_FLAGS(  resFlagNewLine  );
-   DEFINE_IMAGE( bmpMacUpButtonSmall, wxImage( 27, 27 ), wxT("MacUpButtonSmall"));
-   DEFINE_IMAGE( bmpMacDownButtonSmall, wxImage( 27, 27 ), wxT("MacDownButtonSmall"));
-   DEFINE_IMAGE( bmpMacHiliteUpButtonSmall, wxImage( 27, 27 ), wxT("MacHiliteUpButtonSmall"));
-   DEFINE_IMAGE( bmpMacHiliteButtonSmall, wxImage( 27, 27 ), wxT("MacHiliteButtonSmall"));
 
    SET_THEME_FLAGS(  resFlagInternal  );
    DEFINE_IMAGE( bmpRecoloredUpLarge, wxImage( 48, 48 ), wxT("RecoloredUpLarge"));

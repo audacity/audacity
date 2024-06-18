@@ -61,14 +61,6 @@ set( IMAGE_LIST
    LabelGlyph9.png
    Loop.png
    LoopDisabled.png
-   MacDownButton.png
-   MacDownButtonSmall.png
-   MacHiliteButton.png
-   MacHiliteButtonSmall.png
-   MacHiliteUpButton.png
-   MacHiliteUpButtonSmall.png
-   MacUpButton.png
-   MacUpButtonSmall.png
    Mic.png
    Multi.png
    Options.png

@@ -284,37 +284,10 @@ std::unique_ptr<wxImage> CreateBackground(int width, int height, wxColour colour
    return i;
 }
 
-// Creates an image with the Mac OS X Aqua stripes, to be used
-// as a background
-std::unique_ptr<wxImage> CreateAquaBackground(int width, int height, int offset)
-{
-   auto image = std::make_unique<wxImage>(width, height);
-   unsigned char *ip = image->GetData();
-   unsigned char val[4] = {231, 239, 255, 239};
-   unsigned char v;
-   int x, y;
-
-   for(y=0; y<height; y++) {
-      v = val[(y+offset)%4];
-      for(x=0; x<width*3; x++)
-         *ip++ = v;
-   }
-
-   return image;
-}
-
 std::unique_ptr<wxImage> CreateSysBackground
-#ifdef USE_AQUA_THEME
-   (int width, int height, int offset, wxColour colour)
-#else
    (int width, int height, int WXUNUSED(offset), wxColour colour)
-#endif
 {
-   #ifdef USE_AQUA_THEME
-   return CreateAquaBackground(width, height, offset);
-   #else
    return CreateBackground(width, height, colour);
-   #endif
 }
 
 /// Pastes one image into another including the alpha channel.
