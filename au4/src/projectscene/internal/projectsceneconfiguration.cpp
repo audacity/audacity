@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "projectsceneconfiguration.h"
+#include "types/projectscenetypes.h"
 
 #include "settings.h"
 
@@ -9,8 +10,8 @@ using namespace au::projectscene;
 
 static const std::string moduleName("projectscene");
 
-static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalrulersEnabled");
-
+static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
+static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/timelineRulerMode");
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 
 void ProjectSceneConfiguration::init()
@@ -21,6 +22,11 @@ void ProjectSceneConfiguration::init()
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
+
+    muse::settings()->setDefaultValue(TIMELINE_RULER_MODE, muse::Val(TimelineRulerMode::MINUTES_AND_SECONDS));
+    muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val& val) {
+        m_timelineRulerModeChanged.send(val.toEnum<TimelineRulerMode>());
+    });
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -51,4 +57,19 @@ int ProjectSceneConfiguration::mouseZoomPrecision() const
 void ProjectSceneConfiguration::setMouseZoomPrecision(int precision)
 {
     muse::settings()->setSharedValue(MOUSE_ZOOM_PRECISION, muse::Val(precision));
+}
+
+TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
+{
+    return muse::settings()->value(TIMELINE_RULER_MODE).toEnum<TimelineRulerMode>();
+}
+
+void ProjectSceneConfiguration::setTimelineRulerMode(const TimelineRulerMode mode)
+{
+    muse::settings()->setSharedValue(TIMELINE_RULER_MODE, muse::Val(mode));
+}
+
+muse::async::Channel<TimelineRulerMode> ProjectSceneConfiguration::timelineRulerModeChanged() const
+{
+    return m_timelineRulerModeChanged;
 }
