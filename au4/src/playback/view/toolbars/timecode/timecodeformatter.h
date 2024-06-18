@@ -20,6 +20,7 @@ class TimecodeFormatter
 {
 public:
     TimecodeFormatter(const QString& formatStr);
+    virtual ~TimecodeFormatter() = default;
 
     struct ConversionResult
     {

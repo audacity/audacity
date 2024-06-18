@@ -57,3 +57,7 @@ set(LINK_LIB
 )
 
 setup_module()
+
+if (AU_BUILD_PLAYBACK_TESTS)
+    add_subdirectory(tests)
+endif()

@@ -27,7 +27,7 @@ private:
     void updateFields(size_t barsDigits);
 
     std::array<double, 3> m_fieldLengths;
-    int m_fieldValueOffset = 0;
+    int m_fieldValueOffset = 1;
     int m_fracPart = 0;
 };
 }

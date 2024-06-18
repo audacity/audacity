@@ -106,6 +106,8 @@ signals:
     void visualItemChanged();
 
 private:
+    friend class TimecodeModelTests;
+
     enum Roles {
         rSymbol = Qt::UserRole + 1,
         rIsEditable

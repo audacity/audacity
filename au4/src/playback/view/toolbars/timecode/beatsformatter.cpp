@@ -89,8 +89,7 @@ BeatsFormatter::ConversionResult BeatsFormatter::valueToString(double value, boo
 
     // Calculate the epsilon only once, so the total loss of precision is addressed.
     // This is a "multiplicative" epsilon, so there is no need to calculate 1 + eps every time.
-    const auto eps
-        =1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
+    const auto eps = 1.0 + std::max(1.0, value) * std::numeric_limits<double>::epsilon();
 
     for (size_t fieldIndex = 0; fieldIndex < m_fields.size(); ++fieldIndex) {
         const auto fieldLength = m_fieldLengths[fieldIndex];
