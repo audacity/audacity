@@ -24,6 +24,15 @@ void SelectionStatusModel::init()
     playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
         emit sampleRateChanged();
     });
+
+    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+        auto project = globalContext()->currentProcessingProject();
+        if (!project) {
+            return;
+        }
+
+        emit timeSignatureChanged();
+    });
 }
 
 double SelectionStatusModel::startTime() const
@@ -72,4 +81,34 @@ void SelectionStatusModel::setCurrentFormat(int format)
 double SelectionStatusModel::sampleRate() const
 {
     return playback()->audioOutput()->sampleRate();
+}
+
+double SelectionStatusModel::tempo() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0.0;
+    }
+
+    return project->timeSignature().tempo;
+}
+
+int SelectionStatusModel::upperTimeSignature() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0;
+    }
+
+    return project->timeSignature().upper;
+}
+
+int SelectionStatusModel::lowerTimeSignature() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0.0;
+    }
+
+    return project->timeSignature().lower;
 }

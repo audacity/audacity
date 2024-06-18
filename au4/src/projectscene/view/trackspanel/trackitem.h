@@ -9,6 +9,7 @@
 #include "async/asyncable.h"
 
 #include "processing/processingtypes.h"
+#include "playback/audiotypes.h"
 #include "processing/dom/track.h"
 
 namespace au::projectscene {
@@ -52,7 +53,7 @@ public:
     bool muted() const;
     bool forceMute() const;
 
-    void loadOutputParams(const processing::AudioOutputParams& newParams);
+    void loadOutputParams(const audio::AudioOutputParams& newParams);
 
     // void loadSoloMuteState(const project::IProjectSoloMuteState::SoloMuteState& newState);
 
@@ -60,7 +61,7 @@ public:
 
     bool outputOnly() const;
 
-    const processing::AudioOutputParams& outputParams() const;
+    const audio::AudioOutputParams& outputParams() const;
 
     bool isSelected() const;
     void setIsSelected(bool selected);
@@ -88,7 +89,7 @@ signals:
     void mutedChanged();
     void forceMuteChanged();
 
-    void outputParamsChanged(const processing::AudioOutputParams& params);
+    void outputParamsChanged(const audio::AudioOutputParams& params);
 
     // void soloMuteStateChanged(const project::IProjectSoloMuteState::SoloMuteState& state);
 
@@ -108,7 +109,7 @@ protected:
     void removeBlankSlotsFromEnd(size_t count);
 
     // muse::audio::AudioSignalChanges m_audioSignalChanges;
-    processing::AudioOutputParams m_outParams;
+    audio::AudioOutputParams m_outParams;
 
     processing::TrackId m_trackId = -1;
     QString m_title;

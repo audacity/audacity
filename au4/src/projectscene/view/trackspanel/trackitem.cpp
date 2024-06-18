@@ -6,19 +6,13 @@
 
 #include <QString>
 
-#include "defer.h"
-#include "translation.h"
 #include "log.h"
 
 using namespace au::projectscene;
 using namespace au::processing;
-
-static constexpr volume_dbfs_t MAX_DISPLAYED_DBFS = 0.f; // 100%
-static constexpr volume_dbfs_t MIN_DISPLAYED_DBFS = -60.f; // 0%
+using namespace au::audio;
 
 static constexpr float BALANCE_SCALING_FACTOR = 100.f;
-
-static constexpr int OUTPUT_RESOURCE_COUNT_LIMIT = 4;
 
 static const std::string TRACK_ID_KEY("trackId");
 static const std::string RESOURCE_ID_KEY("resourceId");
@@ -97,7 +91,7 @@ bool TrackItem::forceMute() const
     return m_outParams.forceMute;
 }
 
-void TrackItem::loadOutputParams(const AudioOutputParams& newParams)
+void TrackItem::loadOutputParams(const audio::AudioOutputParams& newParams)
 {
     if (!muse::RealIsEqual(m_outParams.volume, newParams.volume)) {
         m_outParams.volume = newParams.volume;

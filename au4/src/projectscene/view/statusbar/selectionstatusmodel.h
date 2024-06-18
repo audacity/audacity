@@ -8,6 +8,7 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "processing/iselectioncontroller.h"
 #include "playback/iplayback.h"
 
@@ -20,8 +21,13 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double endTime READ endTime WRITE setEndTime NOTIFY endTimeChanged FINAL)
 
     Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
-    Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged FINAL)
 
+    Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged FINAL)
+    Q_PROPERTY(double tempo READ tempo NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
+
+    muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::ISelectionController> selectionController;
     muse::Inject<playback::IPlayback> playback;
 
@@ -38,6 +44,9 @@ public:
     void setCurrentFormat(int format);
 
     double sampleRate() const;
+    double tempo() const;
+    int upperTimeSignature() const;
+    int lowerTimeSignature() const;
 
 signals:
     void startTimeChanged();
@@ -45,6 +54,8 @@ signals:
 
     void currentFormatChanged();
     void sampleRateChanged();
+
+    void timeSignatureChanged();
 
 private:
 

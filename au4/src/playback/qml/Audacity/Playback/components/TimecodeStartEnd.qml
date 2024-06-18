@@ -17,6 +17,10 @@ RowLayout {
     property alias endValue: endTimecode.value
 
     property real sampleRate: 0.0
+    property real tempo: 0.0
+    property int upperTimeSignature: 0
+    property int lowerTimeSignature: 0
+
     property int currentFormat: 0
 
     signal startValueChangeRequested(var newValue)
@@ -29,6 +33,10 @@ RowLayout {
         id: startTimecode
 
         sampleRate: root.sampleRate
+        tempo: root.tempo
+        upperTimeSignature: root.upperTimeSignature
+        lowerTimeSignature: root.lowerTimeSignature
+
         currentFormat: root.currentFormat
 
         showMenu: false
@@ -42,6 +50,10 @@ RowLayout {
         id: endTimecode
 
         sampleRate: root.sampleRate
+        tempo: root.tempo
+        upperTimeSignature: root.upperTimeSignature
+        lowerTimeSignature: root.lowerTimeSignature
+
         currentFormat: root.currentFormat
 
         backgroundLeftRadius: 0

@@ -516,6 +516,8 @@ if (AU3_ADD_AS_SRC)
 
     ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.cpp
     ${AU3_LIBRARIES}/lib-numeric-formats/ProjectTimeSignature.h
+    ${AU3_LIBRARIES}/lib-numeric-formats/Beats.cpp
+    ${AU3_LIBRARIES}/lib-numeric-formats/Beats.h
 
     # Requires wxApp, so we won't use it
     # ${AU3_LIBRARIES}/lib-wx-init/SettingsWX.cpp

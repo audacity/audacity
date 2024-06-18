@@ -53,6 +53,11 @@ public:
         return NumericField(range > 1 ? std::max(minDigits, calculateDigits(range)) : 5, zeropad);
     }
 
+    static NumericField withDigits(size_t digits, bool zeropad = true)
+    {
+        return NumericField(digits, zeropad);
+    }
+
     NumericField(const NumericField&) = default;
     NumericField& operator=(const NumericField&) = default;
 

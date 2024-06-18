@@ -1,10 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROСESSING_PROСESSINGTYPES_H
-#define AU_PROСESSING_PROСESSINGTYPES_H
+#pragma once
 
-#include "global/realfn.h"
 #include "global/containers.h"
 #include "global/types/number.h"
 
@@ -34,22 +32,11 @@ struct ClipKey
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
 
-struct AudioOutputParams {
-    volume_db_t volume = 0.f;
-    balance_t balance = 0.f;
-    bool solo = false;
-    bool muted = false;
-    bool forceMute = false;
+struct TimeSignature
+{
+    double tempo = 0;
 
-    bool operator ==(const AudioOutputParams& other) const
-    {
-        return muse::RealIsEqual(volume, other.volume)
-               && muse::RealIsEqual(balance, other.balance)
-               && solo == other.solo
-               && muted == other.muted
-               && forceMute == other.forceMute;
-    }
+    int upper = 0;
+    int lower = 0;
 };
 }
-
-#endif // AU_PROСESSING_PROСESSINGTYPES_H

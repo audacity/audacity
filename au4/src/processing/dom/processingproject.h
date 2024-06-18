@@ -1,11 +1,12 @@
-#ifndef AU_PROСESSING_PROCESSINGPROJECT_H
-#define AU_PROСESSING_PROCESSINGPROJECT_H
+#pragma once
 
 #include <memory>
 
 #include "async/notifylist.h"
+#include "async/channel.h"
 
 #include "track.h"
+#include "../processingtypes.h"
 
 namespace au::au3 {
 class IAu3Project;
@@ -27,6 +28,9 @@ public:
 
     void onClipChanged(const Clip& clip);
 
+    processing::TimeSignature timeSignature() const;
+    muse::async::Channel<processing::TimeSignature> timeSignatureChanged() const;
+
     //! NOTE Just for debug
     void dump();
 
@@ -39,5 +43,3 @@ private:
 
 using ProcessingProjectPtr = std::shared_ptr<ProcessingProject>;
 }
-
-#endif // AU_PROСESSING_PROCESSINGPROJECT_H
