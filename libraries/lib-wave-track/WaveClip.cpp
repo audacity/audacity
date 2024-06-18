@@ -360,8 +360,31 @@ double WaveClip::GetStretchRatio() const
          *mRawAudioTempo / *mProjectTempo :
          1.0;
    double stretchRatio = mClipStretchRatio * dstSrcRatio;
+
+   auto projectTempo = mProjectTempo;
+   auto rawAudioTempo = mRawAudioTempo;
+
    double lowestStretchRatio = 100 / (double)99999;
-   return std::max(stretchRatio, lowestStretchRatio);
+
+   if (stretchRatio < lowestStretchRatio) {
+      stretchRatio = lowestStretchRatio;
+
+      if (projectTempo.has_value()) {
+         rawAudioTempo = projectTempo.value() * (lowestStretchRatio / mClipStretchRatio);
+      }
+      else if (rawAudioTempo.has_value()) {
+         projectTempo = rawAudioTempo.value() / (lowestStretchRatio / mClipStretchRatio);
+      }
+   }
+
+   if (mProjectTempo.has_value()) {
+      const_cast<std::optional<double>&>(mRawAudioTempo) = rawAudioTempo;
+   }
+   if (mRawAudioTempo.has_value()) {
+      const_cast<std::optional<double>&>(mProjectTempo) = projectTempo;
+   }
+
+   return stretchRatio;
 }
 
 int WaveClip::GetCentShift() const
