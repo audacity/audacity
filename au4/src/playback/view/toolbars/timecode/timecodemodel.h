@@ -6,7 +6,7 @@
 #include <QAbstractListModel>
 #include <QQuickItem>
 
-#include "numericformatter.h"
+#include "timecodeformatter.h"
 
 namespace au::playback {
 class TimecodeModel : public QAbstractListModel
@@ -14,7 +14,11 @@ class TimecodeModel : public QAbstractListModel
     Q_OBJECT
 
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
+
     Q_PROPERTY(double sampleRate READ sampleRate WRITE setSampleRate NOTIFY sampleRateChanged FINAL)
+    Q_PROPERTY(double tempo READ tempo WRITE setTempo NOTIFY tempoChanged FINAL)
+    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature WRITE setUpperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
+    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature WRITE setLowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
 
     Q_PROPERTY(QVariantList availableFormats READ availableFormats NOTIFY availableFormatsChanged)
     Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
@@ -77,9 +81,22 @@ public:
     double sampleRate() const;
     void setSampleRate(double sampleRate);
 
+    double tempo() const;
+    void setTempo(double tempo);
+
+    int upperTimeSignature() const;
+    void setUpperTimeSignature(int timeSignature);
+
+    int lowerTimeSignature() const;
+    void setLowerTimeSignature(int timeSignature);
+
 signals:
     void valueChanged();
+
     void sampleRateChanged();
+    void tempoChanged();
+    void upperTimeSignatureChanged();
+    void lowerTimeSignatureChanged();
 
     void availableFormatsChanged();
     void currentFormatChanged();
@@ -100,16 +117,22 @@ private:
     void moveCurrentEditedField(int moveKey);
     void adjustCurrentEditedField(int adjustKey);
 
+    void reloadFormatter();
+    void initFormatter();
+
     void updateValueString();
 
     double m_value = -1.0;
     QString m_valueString;
 
     double m_sampleRate = 1.0;
+    double m_tempo = 0;
+    int m_upperTimeSignature = 0;
+    int m_lowerTimeSignature = 0;
 
     int m_currentEditedFieldIndex = -1;
 
-    std::shared_ptr<NumericConverterFormatter> m_formater;
+    std::shared_ptr<TimecodeFormatter> m_formatter;
 
     QList<ViewFormat> m_availableViewFormats;
     int m_currentFormat = int(ViewFormatType::HHMMSS);

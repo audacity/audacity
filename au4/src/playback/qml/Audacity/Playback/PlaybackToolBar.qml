@@ -99,7 +99,12 @@ Item {
                 property var itemData: null
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
+
                 sampleRate: Boolean(itemData) ? itemData.sampleRate : 0
+                tempo: Boolean(itemData) ? itemData.tempo : 0
+                upperTimeSignature: Boolean(itemData) ? itemData.upperTimeSignature : 0
+                lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : 0
+
                 currentFormat: Boolean(itemData) ? itemData.currentFormat : 0
 
                 onValueChangeRequested: function(newValue) {

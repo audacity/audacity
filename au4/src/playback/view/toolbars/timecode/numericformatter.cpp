@@ -132,23 +132,12 @@ in the selection bar of Audacity.
   - The special character 'N' after '|' is only used for NTSC drop-frame.
 
 *******************************************************************/
-bool NumericConverterFormatter::isTimeRelatedFormat() const
-{
-    return m_type == NumericType::Time
-           || m_type == NumericType::Duration;
-}
-
-void NumericConverterFormatter::setSampleRate(double sampleRate)
-{
-    m_sampleRate = sampleRate;
-}
-
-NumericConverterFormatter::NumericConverterFormatter(NumericType type, const QString& formatStr)
-    : m_type(type), m_format(formatStr)
+NumericFormatter::NumericFormatter(const QString& formatStr)
+    : TimecodeFormatter(formatStr)
 {
 }
 
-void NumericConverterFormatter::parseFormatString()
+void NumericFormatter::init()
 {
     m_prefix.clear();
     m_fields.clear();
@@ -309,15 +298,11 @@ void NumericConverterFormatter::parseFormatString()
     }
 }
 
-NumericConverterFormatter::ConversionResult NumericConverterFormatter::valueToString(double value, bool nearest) const
+NumericFormatter::ConversionResult NumericFormatter::valueToString(double value, bool nearest) const
 {
     ConversionResult result;
-    double rawValue = value;
-
-    if (isTimeRelatedFormat()) {
-        rawValue = floor(rawValue * m_sampleRate + (nearest ? 0.5f : 0.0f))
-                   / m_sampleRate; // put on a sample
-    }
+    double rawValue = floor(value * m_sampleRate + (nearest ? 0.5f : 0.0f))
+                      / m_sampleRate; // put on a sample
     double theValue = rawValue * m_scalingFactor
                       // PRL:  what WAS this .000001 for?  Nobody could explain.
                       // + .000001
@@ -426,7 +411,7 @@ NumericConverterFormatter::ConversionResult NumericConverterFormatter::valueToSt
     return result;
 }
 
-std::optional<double> NumericConverterFormatter::stringToValue(const QString& value) const
+std::optional<double> NumericFormatter::stringToValue(const QString& value) const
 {
     unsigned int i;
     double t = 0.0;
@@ -492,7 +477,7 @@ std::optional<double> NumericConverterFormatter::stringToValue(const QString& va
     return t;
 }
 
-double NumericConverterFormatter::singleStep(double value, int digitIndex, bool upwards)
+double NumericFormatter::singleStep(double value, int digitIndex, bool upwards)
 {
     const auto dir = upwards ? 1 : -1;
     for (size_t i = 0; i < m_fields.size(); i++) {

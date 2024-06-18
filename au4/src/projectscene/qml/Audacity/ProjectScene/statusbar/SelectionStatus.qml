@@ -27,6 +27,10 @@ Row {
         endValue: selectionModel.endTime
 
         sampleRate: selectionModel.sampleRate
+        tempo: selectionModel.tempo
+        upperTimeSignature: selectionModel.upperTimeSignature
+        lowerTimeSignature: selectionModel.lowerTimeSignature
+
         currentFormat: selectionModel.currentFormat
 
         onStartValueChangeRequested: function(newValue) {

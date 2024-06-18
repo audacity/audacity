@@ -43,6 +43,15 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
     playback()->audioOutput()->sampleRateChanged().onReceive(this, [this](audio::sample_rate_t) {
         emit sampleRateChanged();
     });
+
+    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+        auto project = globalContext()->currentProcessingProject();
+        if (!project) {
+            return;
+        }
+
+        emit timeSignatureChanged();
+    });
 }
 
 int PlaybackToolBarTimeItem::currentFormat() const
@@ -82,4 +91,34 @@ au::context::IPlaybackStatePtr PlaybackToolBarTimeItem::playbackState() const
 double PlaybackToolBarTimeItem::sampleRate() const
 {
     return playback()->audioOutput()->sampleRate();
+}
+
+double PlaybackToolBarTimeItem::tempo() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0.0;
+    }
+
+    return project->timeSignature().tempo;
+}
+
+int PlaybackToolBarTimeItem::upperTimeSignature() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0;
+    }
+
+    return project->timeSignature().upper;
+}
+
+int PlaybackToolBarTimeItem::lowerTimeSignature() const
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return 0.0;
+    }
+
+    return project->timeSignature().lower;
 }

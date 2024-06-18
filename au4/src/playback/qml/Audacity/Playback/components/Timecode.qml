@@ -14,7 +14,12 @@ RowLayout {
     id: root
 
     property alias value: timecodeModel.value
+
     property alias sampleRate: timecodeModel.sampleRate
+    property alias tempo: timecodeModel.tempo
+    property alias upperTimeSignature: timecodeModel.upperTimeSignature
+    property alias lowerTimeSignature: timecodeModel.lowerTimeSignature
+
     property alias currentFormat: timecodeModel.currentFormat
 
     property bool showMenu: true

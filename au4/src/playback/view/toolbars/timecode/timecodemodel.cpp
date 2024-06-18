@@ -8,6 +8,9 @@
 #include "uicomponents/view/menuitem.h"
 #include "ui/uiaction.h"
 
+#include "numericformatter.h"
+#include "beatsformatter.h"
+
 #include "translation.h"
 #include "log.h"
 
@@ -23,6 +26,7 @@ static bool isFieldEditable(const QChar& fieldSymbol)
 TimecodeModel::TimecodeModel(QObject* parent)
     : QAbstractListModel(parent)
 {
+    // translate all
     m_availableViewFormats = {
         { ViewFormatType::Seconds, muse::qtrc("playback", "Seconds"), "01000,01000s" },
         { ViewFormatType::SecondsMilliseconds, muse::qtrc("playback", "Seconds + milliseconds"), "01000,01000>01000 s" },
@@ -49,12 +53,11 @@ TimecodeModel::TimecodeModel(QObject* parent)
         { ViewFormatType::HHMMSSCDDAFrames, muse::qtrc("playback", "hh:mm:ss + CDDA frames (25 fps)"), "0100 h 060 m 060 s+>75 frames" },
         { ViewFormatType::CDDAFrames, muse::qtrc("playback", "CDDA frames (75 fps)"), "01000,01000 frames|75" },
 
-        { ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "01000,01000s" },                                                                //! doesn't work
-        { ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "01000,01000s" },                                                       //! doesn't work
+        { ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat" },
+        { ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick" },
     };
 
-    m_formater = std::make_shared<NumericConverterFormatter>(NumericType::Time, m_availableViewFormats[currentFormat()].formatStr);
-    m_formater->parseFormatString();
+    reloadFormatter();
 
     setValue(0.0);
 }
@@ -150,10 +153,7 @@ void TimecodeModel::setCurrentFormat(int format)
 
     m_currentFormat = format;
 
-    m_formater = std::make_shared<NumericConverterFormatter>(NumericType::Time, m_availableViewFormats[format].formatStr);
-    m_formater->setSampleRate(sampleRate());
-    m_formater->parseFormatString();
-
+    reloadFormatter();
     updateValueString();
 
     emit currentFormatChanged();
@@ -209,7 +209,7 @@ bool TimecodeModel::eventFilter(QObject* watched, QEvent* event)
             QString newValueStr = m_valueString;
             newValueStr.replace(m_currentEditedFieldIndex, 1, QChar('0' + (key - Qt::Key_0)));
 
-            setValue(m_formater->stringToValue(newValueStr).value());
+            setValue(m_formatter->stringToValue(newValueStr).value());
             return true;
         } else if (key == Qt::Key_Left || key == Qt::Key_Right) {
             moveCurrentEditedField(key);
@@ -279,12 +279,35 @@ void TimecodeModel::adjustCurrentEditedField(int adjustKey)
         }
     }
 
-    setValue(m_formater->singleStep(m_value, digitIndex, adjustKey == Qt::Key_Up));
+    setValue(m_formatter->singleStep(m_value, digitIndex, adjustKey == Qt::Key_Up));
+}
+
+void TimecodeModel::reloadFormatter()
+{
+    ViewFormatType format = static_cast<ViewFormatType>(m_currentFormat);
+    if (format == ViewFormatType::BarBeat || format == ViewFormatType::BarBeatTick) {
+        int fracPart = format == ViewFormatType::BarBeat ? 0 : 16;
+        m_formatter = std::make_shared<BeatsFormatter>(m_availableViewFormats[m_currentFormat].formatStr, fracPart);
+    } else {
+        m_formatter = std::make_shared<NumericFormatter>(m_availableViewFormats[m_currentFormat].formatStr);
+    }
+
+    initFormatter();
+}
+
+void TimecodeModel::initFormatter()
+{
+    m_formatter->setSampleRate(sampleRate());
+    m_formatter->setTempo(m_tempo);
+    m_formatter->setUpperTimeSignature(m_upperTimeSignature);
+    m_formatter->setLowerTimeSignature(m_lowerTimeSignature);
+
+    m_formatter->init();
 }
 
 void TimecodeModel::updateValueString()
 {
-    QString newValueString = m_formater->valueToString(m_value, false).valueString;
+    QString newValueString = m_formatter->valueToString(m_value, false).valueString;
 
     if (newValueString.size() != m_valueString.size()) {
         beginResetModel();
@@ -315,8 +338,65 @@ void TimecodeModel::setSampleRate(double sampleRate)
 
     m_sampleRate = sampleRate;
 
-    m_formater->setSampleRate(sampleRate);
+    initFormatter();
     updateValueString();
 
     emit sampleRateChanged();
+}
+
+double TimecodeModel::tempo() const
+{
+    return m_tempo;
+}
+
+void TimecodeModel::setTempo(double tempo)
+{
+    if (qFuzzyCompare(m_tempo, tempo)) {
+        return;
+    }
+
+    m_tempo = tempo;
+
+    initFormatter();
+    updateValueString();
+
+    emit tempoChanged();
+}
+
+int TimecodeModel::upperTimeSignature() const
+{
+    return m_upperTimeSignature;
+}
+
+void TimecodeModel::setUpperTimeSignature(int timeSignature)
+{
+    if (m_upperTimeSignature == timeSignature) {
+        return;
+    }
+
+    m_upperTimeSignature = timeSignature;
+
+    initFormatter();
+    updateValueString();
+
+    emit upperTimeSignatureChanged();
+}
+
+int TimecodeModel::lowerTimeSignature() const
+{
+    return m_lowerTimeSignature;
+}
+
+void TimecodeModel::setLowerTimeSignature(int timeSignature)
+{
+    if (m_lowerTimeSignature == timeSignature) {
+        return;
+    }
+
+    m_lowerTimeSignature = timeSignature;
+
+    initFormatter();
+    updateValueString();
+
+    emit lowerTimeSignatureChanged();
 }
