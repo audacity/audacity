@@ -1,6 +1,6 @@
 #include "audacityproject.h"
 
-#include "au3wrap/au3project.h"
+#include "au3wrap/iau3project.h"
 #include "iprojectautosaver.h"
 #include "projecterrors.h"
 #include "global/io/ioretcodes.h"
@@ -62,7 +62,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     UNUSED(forceMode);
     UNUSED(format);
 
-    m_au3Project = au3::Au3Project::create();
+    m_au3Project = au3ProjectCreator()->create();
     bool isLoaded = m_au3Project->load(path);
     if (!isLoaded) {
         LOGE() << "Failed load:" << path;

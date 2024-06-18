@@ -6,7 +6,7 @@
 
 #include "domaccessor.h"
 #include "domconverter.h"
-#include "../wxtypes_convert.h"
+#include "wxtypes_convert.h"
 
 #include "log.h"
 

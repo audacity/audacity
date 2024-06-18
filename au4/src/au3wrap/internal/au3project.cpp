@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "au3project.h"
 
 #include "global/defer.h"
@@ -14,12 +17,17 @@
 #include "libraries/lib-project-file-io/SqliteSampleBlock.cpp"
 
 #include "wxtypes_convert.h"
-#include "internal/domconverter.h"
-#include "internal/domaccessor.h"
+#include "domconverter.h"
+#include "domaccessor.h"
 
 #include "log.h"
 
 using namespace au::au3;
+
+std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
+{
+    return Au3Project::create();
+}
 
 static au::processing::TrackType trackType(const Track* track)
 {
