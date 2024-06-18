@@ -38,6 +38,16 @@ void ProcessingProject::onClipChanged(const Clip& clip)
     notifer.itemChanged(clip);
 }
 
+TimeSignature ProcessingProject::timeSignature() const
+{
+    return m_au3->timeSignature();
+}
+
+muse::async::Channel<TimeSignature> ProcessingProject::timeSignatureChanged() const
+{
+    return m_au3->timeSignatureChanged();
+}
+
 void ProcessingProject::dump()
 {
     async::NotifyList<Track> tracks = trackList();

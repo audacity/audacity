@@ -9,6 +9,7 @@
 #include "modularity/imoduleinterface.h"
 #include "global/io/path.h"
 #include "async/notifylist.h"
+#include "async/channel.h"
 
 #include "processing/dom/track.h"
 
@@ -28,6 +29,9 @@ public:
     virtual std::vector<processing::TrackId> trackIdList() const = 0;
     virtual muse::async::NotifyList<processing::Track> trackList() const = 0;
     virtual muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const = 0;
+
+    virtual processing::TimeSignature timeSignature() const = 0;
+    virtual muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const = 0;
 
     // internal
     virtual uintptr_t au3ProjectPtr() const = 0;

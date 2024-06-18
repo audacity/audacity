@@ -9,6 +9,7 @@
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 #include "libraries/lib-wave-track/WaveTrack.h"
 #include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -161,6 +162,27 @@ muse::async::NotifyList<au::processing::Clip> Au3Project::clipList(const au::pro
     }
 
     return clips;
+}
+
+au::processing::TimeSignature Au3Project::timeSignature() const
+{
+    if (!m_data->project) {
+        return processing::TimeSignature();
+    }
+
+    processing::TimeSignature result;
+
+    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(m_data->projectRef());
+    result.tempo = timeSig.GetTempo();
+    result.lower = timeSig.GetLowerTimeSignature();
+    result.upper = timeSig.GetUpperTimeSignature();
+
+    return result;
+}
+
+muse::async::Channel<au::processing::TimeSignature> Au3Project::timeSignatureChanged() const
+{
+    return m_timeSignatureChanged;
 }
 
 uintptr_t Au3Project::au3ProjectPtr() const
