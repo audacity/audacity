@@ -2,8 +2,8 @@
 #define AU_PROJECT_AUDACITYPROJECT_H
 
 #include "../iaudacityproject.h"
-#include "au3wrap/au3project.h"
 #include "modularity/ioc.h"
+#include "au3wrap/iau3project.h"
 #include "io/ifilesystem.h"
 #include "projectscene/iprojectviewstatecreator.h"
 
@@ -36,6 +36,7 @@ namespace au::project {
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
 class Audacity4Project : public IAudacityProject
 {
+    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
 
@@ -89,7 +90,7 @@ private:
     bool m_isImported = false;
     bool m_needAutoSave = false;
 
-    std::shared_ptr<au::au3::Au3Project> m_au3Project;
+    std::shared_ptr<au::au3::IAu3Project> m_au3Project;
 
     processing::ProcessingProjectPtr m_processingProject;
 

@@ -1,6 +1,6 @@
 #include "wxlogwrap.h"
 
-#include "../wxtypes_convert.h"
+#include "wxtypes_convert.h"
 
 #define LOG_TAG "AU3"
 

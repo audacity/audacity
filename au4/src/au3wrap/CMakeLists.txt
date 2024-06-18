@@ -24,10 +24,7 @@ declare_module(au3wrap)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/wxtypes_convert.h
-    ${CMAKE_CURRENT_LIST_DIR}/au3project.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/au3project.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3wavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3record.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audioinput.h
@@ -35,12 +32,15 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/domconverter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.cpp

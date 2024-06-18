@@ -1,24 +1,6 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
- *
- * MuseScore
- * Music Composition & Notation
- *
- * Copyright (C) 2021 MuseScore BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Audacity: A Digital Audio Editor
+*/
 #include "au3wrapmodule.h"
 
 #include <wx/log.h>
@@ -32,6 +14,7 @@
 #include "modularity/ioc.h"
 
 #include "internal/wxlogwrap.h"
+#include "internal/au3project.h"
 #include "internal/processinginteraction.h"
 #include "internal/au3wavepainter.h"
 #include "internal/au3playback.h"
@@ -56,6 +39,7 @@ void Au3WrapModule::registerExports()
 
     m_audioDevicesManager = std::make_shared<Au3AudioDevicesManager>();
 
+    ioc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
     ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
     ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());

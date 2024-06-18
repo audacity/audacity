@@ -42,6 +42,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/processingactionscontroller.h
     )
 
+set(MODULE_LINK
+    muse::draw
+)
+
 setup_module()
 
 

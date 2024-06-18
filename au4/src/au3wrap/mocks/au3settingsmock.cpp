@@ -1,6 +1,6 @@
 #include "au3settingsmock.h"
 
-#include "wxtypes_convert.h"
+#include "../internal/wxtypes_convert.h"
 
 using namespace au::au3;
 

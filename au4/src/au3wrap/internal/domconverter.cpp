@@ -2,7 +2,7 @@
 
 #include "libraries/lib-track/Track.h"
 
-#include "../wxtypes_convert.h"
+#include "wxtypes_convert.h"
 
 using namespace au::au3;
 
