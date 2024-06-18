@@ -361,31 +361,43 @@ double WaveClip::GetStretchRatio() const
          1.0;
    double stretchRatio = mClipStretchRatio * dstSrcRatio;
 
-   auto projectTempo = mProjectTempo;
-   auto rawAudioTempo = mRawAudioTempo;
+   double lowestStretchRatio = 100 / (double)99999;
+
+   if (stretchRatio < lowestStretchRatio) {
+      stretchRatio = lowestStretchRatio;
+   }
+
+   return stretchRatio;
+}
+
+double WaveClip::GetStretchRatio()
+{
+   const auto dstSrcRatio =
+      mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
+      *mRawAudioTempo / *mProjectTempo :
+      1.0;
+   double stretchRatio = mClipStretchRatio * dstSrcRatio;
 
    double lowestStretchRatio = 100 / (double)99999;
 
    if (stretchRatio < lowestStretchRatio) {
       stretchRatio = lowestStretchRatio;
-
-      if (projectTempo.has_value()) {
-         rawAudioTempo = projectTempo.value() * (lowestStretchRatio / mClipStretchRatio);
-      }
-      else if (rawAudioTempo.has_value()) {
-         projectTempo = rawAudioTempo.value() / (lowestStretchRatio / mClipStretchRatio);
-      }
-   }
-
-   if (mProjectTempo.has_value()) {
-      const_cast<std::optional<double>&>(mRawAudioTempo) = rawAudioTempo;
-   }
-   if (mRawAudioTempo.has_value()) {
-      const_cast<std::optional<double>&>(mProjectTempo) = projectTempo;
+      UpdateTemposForLowestRatio(stretchRatio);
    }
 
    return stretchRatio;
 }
+
+void WaveClip::UpdateTemposForLowestRatio(double stretchRatio)
+{
+   if (mProjectTempo.has_value()) {
+      mRawAudioTempo = *mProjectTempo * (stretchRatio / mClipStretchRatio);
+   }
+   else if (mRawAudioTempo.has_value()) {
+      mProjectTempo = *mRawAudioTempo / (stretchRatio / mClipStretchRatio);
+   }
+}
+
 
 int WaveClip::GetCentShift() const
 {

@@ -204,6 +204,8 @@ public:
    void StretchBy(double ratio);
 
    double GetStretchRatio() const override;
+   double GetStretchRatio();
+   void UpdateTemposForLowestRatio(double stretchRatio);
 
    //! Checks for stretch-ratio equality, accounting for rounding errors.
    //! @{
