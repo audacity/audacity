@@ -50,6 +50,8 @@ struct Unbypassed
 {
 };
 
+static constexpr auto compressorMeterUpdatePeriodMs = 1000 / 30;
+
 constexpr double compressorThresholdDbDefault = -10;
 constexpr double compressorMakeupGainDbDefault = 0;
 constexpr double compressorKneeWidthDbDefault = 5;
@@ -66,7 +68,7 @@ constexpr double limiterLookaheadMsDefault = 1;
 constexpr double limiterReleaseMsDefault = 20;
 constexpr double limiterMaxLookaheadMs = 50;
 
-constexpr double showInputDefault = 1;
+constexpr double showInputDefault = 0;
 constexpr double showOutputDefault = 1;
 constexpr double showActualDefault = 1;
 constexpr double showTargetDefault = 0;

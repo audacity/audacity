@@ -13,9 +13,10 @@
 #include "DynamicRangeProcessorPanelCommon.h"
 #include "DynamicRangeProcessorTypes.h"
 #include "LockFreeQueue.h"
+#include "MeterValueProvider.h"
 #include "Observer.h"
 #include "wxPanelWrapper.h"
-#include <array>
+#include <functional>
 #include <wx/timer.h>
 
 class CompressorInstance;
@@ -24,25 +25,22 @@ class wxPaintDC;
 class CompressionMeterPanel final : public wxPanelWrapper
 {
 public:
-   CompressionMeterPanel(wxWindow* parent, CompressorInstance& instance);
+   CompressionMeterPanel(
+      wxWindow* parent, int id, CompressorInstance& instance, float dbRange,
+      std::function<void()> onClipped);
 
-   static constexpr auto timerPeriodMs = 1000 / 30;
+   void SetDbRange(float dbRange);
+   void Reset();
+   void ResetClipped();
 
+protected:
    DECLARE_EVENT_TABLE();
 
 private:
-   //! The display tends to be earlier than the audio playback. We delay the
-   //! former by (approximately) this amount, for a tighter audiovisual
-   //! experience.
-   static constexpr auto displayDelayMs = 100;
-   static constexpr auto ringBufferLength = displayDelayMs / timerPeriodMs;
-
-   static constexpr auto outputColBottomValue =
-      -DynamicRangeProcessorPanel::compressorMeterRangeDb;
-
-   void Reset();
    void PaintRectangle(
-      wxPaintDC& dc, const wxRect& rect, double dB, double maxDb, bool upwards);
+      wxPaintDC& dc, const wxColor& color, const wxRect& rect,
+      const MeterValueProvider& provider);
+
    void PaintLabel(
       wxPaintDC& dc, const wxRect& rect, const TranslatableString& label);
 
@@ -56,11 +54,13 @@ private:
    const std::shared_ptr<DynamicRangeProcessorMeterValuesQueue>
       mMeterValuesQueue;
    const Observer::Subscription mPlaybackStartStopSubscription;
+   const Observer::Subscription mPlaybackPausedSubscription;
+   const std::function<void()> mOnClipped;
+   std::unique_ptr<MeterValueProvider> mCompressionMeter;
+   std::unique_ptr<MeterValueProvider> mOutputMeter;
+   float mDbBottomEdgeValue;
+
    wxTimer mTimer;
-   MeterValues mSmoothedValues;
    bool mStopWhenZero = false;
-   float mCompressionColMin = 0;
-   float mOutputColMax = outputColBottomValue;
-   std::array<MeterValues, ringBufferLength> mRingBuffer;
-   size_t mRingBufferIndex = 0;
+   bool mClipped = false;
 };

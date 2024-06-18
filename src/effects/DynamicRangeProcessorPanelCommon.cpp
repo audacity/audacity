@@ -10,7 +10,6 @@
 **********************************************************************/
 #include "DynamicRangeProcessorPanelCommon.h"
 #include <wx/dcclient.h>
-#include <wx/graphics.h>
 #include <wx/pen.h>
 
 namespace DynamicRangeProcessorPanel
@@ -30,5 +29,18 @@ wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight)
       a.Green() * aWeight + b.Green() * (1 - aWeight),
       a.Blue() * aWeight + b.Blue() * (1 - aWeight),
       a.Alpha() * aWeight + b.Alpha() * (1 - aWeight));
+}
+
+float GetGraphDbRange(int height)
+{
+   const auto factor = std::max(1.f, 1.f * height / graphMinHeight);
+   return factor * graphMinRangeDb;
+}
+
+wxGraphicsBrush GetGraphBackgroundBrush(wxGraphicsContext& gc, int height)
+{
+   return gc.CreateLinearGradientBrush(
+      0, 0, 0, height, backgroundColor,
+      GetColorMix(backgroundColor, *wxWHITE, 0.75));
 }
 } // namespace DynamicRangeProcessorPanel
