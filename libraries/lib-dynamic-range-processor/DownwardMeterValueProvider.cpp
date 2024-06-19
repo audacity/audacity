@@ -40,9 +40,12 @@ void DownwardMeterValueProvider::Update(float newValue, bool alsoFiveSecondMax)
    if (value < mCurrentMin)
    {
       mCurrentMin = value;
-      mLastFiveSeconds.emplace_back(mTimerCount, value);
-      mGlobalMin = std::min<double>(mGlobalMin, value);
+      mGlobalMin = std::min(mGlobalMin, value);
    }
+   else
+      mCurrentMin = std::min(mCurrentMin + decayPerTickDb, mUpperValue);
+
+   mLastFiveSeconds.emplace_back(mTimerCount, value);
    while (!mLastFiveSeconds.empty() &&
           mLastFiveSeconds.front().first <
              mTimerCount - maxDelayMs / compressorMeterUpdatePeriodMs)
