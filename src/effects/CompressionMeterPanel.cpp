@@ -106,7 +106,7 @@ void CompressionMeterPanel::OnPaint(wxPaintEvent& evt)
 
    wxPaintDC dc(this);
 
-   const auto rect = GetClientRect();
+   const auto rect = DynamicRangeProcessorPanel::GetPanelRect(*this);
    const auto gc = MakeGraphicsContext(dc);
    const auto left = rect.GetLeft();
    const auto top = rect.GetTop();
@@ -128,7 +128,7 @@ void CompressionMeterPanel::OnPaint(wxPaintEvent& evt)
 
    gc->SetPen(lineColor);
    gc->SetBrush(wxNullBrush);
-   gc->DrawRectangle(0, 0, width - 1, height - 1);
+   gc->DrawRectangle(left, top, width, height);
 }
 
 void CompressionMeterPanel::PaintMeter(

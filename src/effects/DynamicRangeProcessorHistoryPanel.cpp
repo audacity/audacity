@@ -187,11 +187,11 @@ void InsertCrossings(
  */
 void FillUpTo(
    std::vector<wxPoint2DDouble> lines, const wxColor& color,
-   wxGraphicsContext& gc, const wxSize& size)
+   wxGraphicsContext& gc, const wxRect& rect)
 {
-   const auto height = size.GetHeight();
-   const auto left = std::max<double>(0., lines.front().m_x);
-   const auto right = std::min<double>(size.GetWidth(), lines.back().m_x);
+   const auto height = rect.GetHeight();
+   const auto left = std::max<double>(rect.GetX(), lines.front().m_x);
+   const auto right = std::min<double>(rect.GetWidth(), lines.back().m_x);
    auto area = gc.CreatePath();
    area.MoveToPoint(right, height);
    area.AddLineToPoint(left, height);
@@ -333,12 +333,15 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    using namespace DynamicRangeProcessorPanel;
 
    const auto gc = MakeGraphicsContext(dc);
-   const auto width = GetSize().GetWidth();
-   const auto height = GetSize().GetHeight();
+   const auto rect = DynamicRangeProcessorPanel::GetPanelRect(*this);
+   const auto x = rect.GetX();
+   const auto y = rect.GetY();
+   const auto width = rect.GetWidth();
+   const auto height = rect.GetHeight();
 
    gc->SetBrush(GetGraphBackgroundBrush(*gc, height));
    gc->SetPen(wxTransparentColor);
-   gc->DrawRectangle(0, 0, width - 1, height - 1);
+   gc->DrawRectangle(x, y, width, height);
 
    Finally Do { [&] {
       // The legend is causing problems color-wise, and in the end it may not be
@@ -350,7 +353,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          DrawLegend(height, dc, *gc);
       gc->SetBrush(*wxTRANSPARENT_BRUSH);
       gc->SetPen(lineColor);
-      gc->DrawRectangle(0, 0, width - 1, height - 1);
+      gc->DrawRectangle(x, y, width, height);
    } };
 
    if (!mHistory || !mSync)
@@ -427,11 +430,11 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
       });
 
       if (mShowInput)
-         FillUpTo(mInput, inputColor, *gc, GetSize());
+         FillUpTo(mInput, inputColor, *gc, rect);
 
       if (mShowOutput)
       {
-         FillUpTo(mOutput, outputColor, *gc, GetSize());
+         FillUpTo(mOutput, outputColor, *gc, rect);
          const auto outputGc = MakeGraphicsContext(dc);
          outputGc->SetPen({ wxColor { outputColor.GetRGB() }, 2 });
          outputGc->DrawLines(mOutput.size(), mOutput.data());

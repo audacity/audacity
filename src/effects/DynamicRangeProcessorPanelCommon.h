@@ -16,6 +16,7 @@
 
 class wxGraphicsContext;
 class wxPaintDC;
+class wxPanelWrapper;
 
 namespace DynamicRangeProcessorPanel
 {
@@ -40,4 +41,6 @@ wxColor GetColorMix(const wxColor& a, const wxColor& b, double aWeight);
 float GetGraphDbRange(int height);
 
 wxGraphicsBrush GetGraphBackgroundBrush(wxGraphicsContext& gc, int height);
+
+wxRect GetPanelRect(const wxPanelWrapper& panel);
 } // namespace DynamicRangeProcessorPanel
