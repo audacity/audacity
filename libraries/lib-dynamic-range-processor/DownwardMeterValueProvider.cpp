@@ -18,6 +18,7 @@ constexpr auto decayPerSecondDb = 10.f;
 constexpr auto decayPerTickDb =
    decayPerSecondDb * compressorMeterUpdatePeriodMs / 1000.f;
 constexpr auto maxDelayMs = 5000;
+constexpr auto maxTickCount = maxDelayMs / compressorMeterUpdatePeriodMs;
 } // namespace
 
 DownwardMeterValueProvider::DownwardMeterValueProvider(float upperValue)
@@ -47,29 +48,21 @@ void DownwardMeterValueProvider::Update(float newValue, bool alsoFiveSecondMax)
 
    mLastFiveSeconds.emplace_back(mTimerCount, value);
    while (!mLastFiveSeconds.empty() &&
-          mLastFiveSeconds.front().first <
-             mTimerCount - maxDelayMs / compressorMeterUpdatePeriodMs)
+          mLastFiveSeconds.front().first < mTimerCount - maxTickCount)
       mLastFiveSeconds.erase(mLastFiveSeconds.begin());
 
-   constexpr auto decayPerSecondDb = 10.f;
-   if (value > mCurrentMin)
-      mCurrentMin = std::min(mCurrentMin + decayPerTickDb, mUpperValue);
-
-   if (!mLastFiveSeconds.empty())
+   if (!mLastFiveSeconds.empty() && alsoFiveSecondMax)
    {
       const auto rawMin =
          std::min_element(
             mLastFiveSeconds.begin(), mLastFiveSeconds.end(),
             [](const auto& a, const auto& b) { return a.second < b.second; })
             ->second;
-      if (alsoFiveSecondMax)
-      {
-         if (rawMin < mFiveSecMinState)
-            mFiveSecMinState = rawMin;
-         else
-            mFiveSecMinState = mFiveSecMinState * (1 - decayPerTickDb) +
-                               rawMin * decayPerTickDb;
-      }
+      if (rawMin <= mFiveSecMinState)
+         mFiveSecMinState = rawMin;
+      else
+         mFiveSecMinState =
+            std::min(mFiveSecMinState + decayPerTickDb, mUpperValue);
    }
 }
 
