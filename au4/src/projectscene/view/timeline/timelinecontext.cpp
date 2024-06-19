@@ -1,12 +1,14 @@
 #include "timelinecontext.h"
 
 #include <QApplication>
+#include <QWheelEvent>
 
 #include "global/types/number.h"
 
 #include "log.h"
 
 static constexpr double ZOOM_MIN = 0.1;
+static constexpr int PIXELSSTEPSFACTOR = 5;
 
 using namespace au::projectscene;
 
@@ -17,7 +19,7 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    m_zoom = 2.0; //{ 44100.0 / 512.0 };
+    m_zoom = configuration()->projectZoom();
     emit zoomChanged();
 
     m_BPM = 120;
@@ -26,6 +28,7 @@ void TimelineContext::init(double frameWidth)
     m_frameStartTime = 0.0;
     emit frameStartTimeChanged();
     m_frameEndTime = positionToTime(frameWidth);
+
     emit frameEndTimeChanged();
     emit frameTimeChanged();
 
@@ -40,18 +43,56 @@ void TimelineContext::init(double frameWidth)
     });
 }
 
-bool TimelineContext::onWheel(double y)
+void TimelineContext::onWheel(const QPoint& pixelDelta, const QPoint& angleDelta)
 {
-    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
-    if (modifiers.testFlag(Qt::ControlModifier)) {
-        changeZoom(y < 0 ? -1 : 1);
-        return true;
-    } else if (modifiers.testFlag(Qt::ShiftModifier)) {
-        shiftFrameTimeOnStep(y < 0 ? -1 : 1);
-        return true;
+    QPoint pixelsScrolled = pixelDelta;
+    QPoint stepsScrolled = angleDelta;
+
+    int dx = 0;
+    int dy = 0;
+    qreal stepsX = 0.0;
+    qreal stepsY = 0.0;
+
+// pixelDelta is unreliable on X11
+#ifdef Q_OS_LINUX
+    if (std::getenv("WAYLAND_DISPLAY") == NULL) {
+        // Ignore pixelsScrolled unless Wayland is used
+        pixelsScrolled.setX(0);
+        pixelsScrolled.setY(0);
+    }
+#endif
+
+    if (!pixelsScrolled.isNull()) {
+        dx = pixelsScrolled.x();
+        dy = pixelsScrolled.y();
+        stepsX = dx / static_cast<qreal>(PIXELSSTEPSFACTOR);
+        stepsY = dy / static_cast<qreal>(PIXELSSTEPSFACTOR);
+    } else if (!stepsScrolled.isNull()) {
+        dx = (stepsScrolled.x() * qMax(2.0, m_frameWidth / 10.0)) / QWheelEvent::DefaultDeltasPerStep;
+        dy = (stepsScrolled.y() * qMax(2.0, m_frameHeight / 10.0)) / QWheelEvent::DefaultDeltasPerStep;
+        stepsX = static_cast<qreal>(stepsScrolled.x()) / static_cast<qreal>(QWheelEvent::DefaultDeltasPerStep);
+        stepsY = static_cast<qreal>(stepsScrolled.y()) / static_cast<qreal>(QWheelEvent::DefaultDeltasPerStep);
     }
 
-    return false;
+    Qt::KeyboardModifiers modifiers = QApplication::keyboardModifiers();
+
+    if (modifiers.testFlag(Qt::ControlModifier)) {
+        double zoomSpeed = qPow(2.0, 1.0 / configuration()->mouseZoomPrecision());
+        qreal absSteps = sqrt(stepsX * stepsX + stepsY * stepsY) * (stepsY > -stepsX ? 1 : -1);
+        double scale = zoom() * qPow(zoomSpeed, absSteps);
+
+        setZoom(scale);
+    } else {
+        qreal correction = 1.0 / zoom();
+
+        if (modifiers.testFlag(Qt::ShiftModifier)) {
+            int abs = sqrt(dx * dx + dy * dy) * (dy > -dx ? -1 : 1);
+            shiftFrameTime(abs * correction);
+        } else {
+            shiftFrameTime(-dx * correction);
+            emit shiftViewByY(dy* correction);
+        }
+    }
 }
 
 void TimelineContext::changeZoom(int direction)
@@ -68,6 +109,11 @@ void TimelineContext::onResizeFrameWidth(double frameWidth)
 {
     m_frameWidth = frameWidth;
     updateFrameTime();
+}
+
+void TimelineContext::onResizeFrameHeight(double frameHeight)
+{
+    m_frameHeight = frameHeight;
 }
 
 void TimelineContext::moveToFrameTime(double startTime)
@@ -177,6 +223,7 @@ void TimelineContext::setFrameStartTime(double newFrameStartTime)
         return;
     }
     m_frameStartTime = newFrameStartTime;
+
     emit frameStartTimeChanged();
 }
 
@@ -191,6 +238,7 @@ void TimelineContext::setFrameEndTime(double newFrameEndTime)
         return;
     }
     m_frameEndTime = newFrameEndTime;
+
     emit frameEndTimeChanged();
 }
 

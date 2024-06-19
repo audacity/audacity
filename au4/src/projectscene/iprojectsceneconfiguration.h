@@ -14,5 +14,10 @@ public:
     virtual bool isVerticalRulersVisible() const = 0;
     virtual void setVerticalRulersVisible(bool visible) = 0;
     virtual muse::async::Channel<bool> isVerticalRulersVisibleChanged() const = 0;
+
+    virtual double projectZoom() const = 0;
+
+    virtual int mouseZoomPrecision() const = 0;
+    virtual void setMouseZoomPrecision(int precision) = 0;
 };
 }
