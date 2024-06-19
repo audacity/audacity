@@ -26,6 +26,8 @@ public:
     virtual bool isPlaying() const = 0;
     virtual muse::async::Notification isPlayingChanged() const = 0;
 
+    virtual bool isPaused() const = 0;
+
     virtual void reset() = 0;
 
     virtual muse::async::Notification playbackPositionChanged() const = 0;

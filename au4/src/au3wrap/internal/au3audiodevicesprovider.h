@@ -2,19 +2,33 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AU3AUDIODEVICESMANAGER_H
-#define AU_AU3WRAP_AU3AUDIODEVICESMANAGER_H
+#ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
+#define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
 #include <wx/arrstr.h>
+#include "global/types/string.h"
 
 #include "libraries/lib-utility/IteratorX.h"
 #include "libraries/lib-strings/wxArrayStringEx.h"
+#include "playback/iaudiodevicesprovider.h"
 
 namespace au::au3 {
-class Au3AudioDevicesManager
+class Au3AudioDevicesProvider : public playback::IAudioDevicesProvider
 {
 public:
     void init();
+
+    std::vector<std::string> audioOutputDevices() const override;
+    std::string currentAudioOutputDevice() const override;
+    void setAudioOutputDevice(const std::string& deviceName) override;
+    muse::async::Notification audioOutputDeviceChanged() const override;
+
+    void handleDeviceChange() override;
+
+    std::vector<std::string> audioApiList() const override;
+    std::string currentAudioApi() const override;
+    void setAudioApi(const std::string& audioApi) override;
+    muse::async::Notification audioApiChanged() const override;
 
 private:
     void initHosts();
@@ -88,7 +102,10 @@ private:
     Choices mOutput;
     Choices mInputChannels;
     Choices mHost;
+
+    muse::async::Notification m_audioOutputDeviceChanged;
+    muse::async::Notification m_audioApiChanged;
 };
 }
 
-#endif // AU_AU3WRAP_AU3AUDIODEVICESMANAGER_H
+#endif // AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H

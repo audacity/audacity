@@ -14,6 +14,7 @@
 #include "internal/playbackcontroller.h"
 #include "internal/playbackuiactions.h"
 
+#include "view/common/playbackstatemodel.h"
 #include "view/toolbars/playbacktoolbarmodel.h"
 #include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
@@ -68,6 +69,7 @@ void PlaybackModule::registerUiTypes()
                                                              "Cannot create");
 
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
+    qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
