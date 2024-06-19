@@ -6,6 +6,7 @@
 
 #include "modularity/ioc.h"
 #include "processing/iselectioncontroller.h"
+#include "iprojectsceneconfiguration.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
@@ -32,6 +33,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
     muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
 
@@ -59,7 +61,9 @@ public:
     Q_INVOKABLE void init(double frameWidth);
 
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
-    Q_INVOKABLE bool onWheel(double y);
+    Q_INVOKABLE void onResizeFrameHeight(double frameHeight);
+
+    Q_INVOKABLE void onWheel(const QPoint& pixelDelta, const QPoint& angleDelta);
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position) const;
@@ -82,6 +86,8 @@ signals:
     void selectionEndTimeChanged();
     void selectionActiveChanged();
 
+    void shiftViewByY(double dy);
+
 private:
 
     void shiftFrameTimeOnStep(int direction);
@@ -96,6 +102,8 @@ private:
     void updateSelectionActive();
 
     double m_frameWidth = 0.0;
+    double m_frameHeight = 0.0;
+
     double m_frameStartTime = 0.0;
     double m_frameEndTime = 0.0;
 

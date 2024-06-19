@@ -23,6 +23,11 @@ public:
     void setVerticalRulersVisible(bool visible) override;
     muse::async::Channel<bool> isVerticalRulersVisibleChanged() const override;
 
+    double projectZoom() const override;
+
+    int mouseZoomPrecision() const override;
+    void setMouseZoomPrecision(int precision) override;
+
 private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
 };

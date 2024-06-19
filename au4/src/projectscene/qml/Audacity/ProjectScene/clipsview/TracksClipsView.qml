@@ -95,15 +95,8 @@ Rectangle {
                 }
             }
 
-            onWheel: function(wheel) {
-                wheel.accepted = timeline.onWheel(wheel.angleDelta.y)
-                if (!wheel.accepted) {
-                    if (wheel.angleDelta.y > 0) {
-                        view.flick(0, view.maximumFlickVelocity)
-                    } else {
-                        view.flick(0, -view.maximumFlickVelocity)
-                    }
-                }
+            onWheel: function(wheelEvent) {
+                timeline.onWheel(wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
 
             onPressed: e => selectionController.onPressed(e.x, e.y)
@@ -126,6 +119,22 @@ Rectangle {
 
             onContentYChanged: {
                 tracksViewState.changeTracksVericalY(view.contentY)
+            }
+
+            onHeightChanged: {
+                timeline.context.onResizeFrameHeight(view.height)
+            }
+
+            Connections {
+                target: timeline.context
+
+                onShiftViewByY: function(shift) {
+                    if (shift > 0) {
+                        view.flick(0, view.maximumFlickVelocity)
+                    } else if (shift < 0) {
+                        view.flick(0, -view.maximumFlickVelocity)
+                    }
+                }
             }
 
             interactive: false
