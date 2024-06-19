@@ -195,7 +195,7 @@ void CompressionMeterPanel::OnTimer(wxTimerEvent& evt)
    const auto updateFiveSecondMax = !mStopWhenZero;
    mCompressionMeter->Update(lowestCompressionGain, updateFiveSecondMax);
    mOutputMeter->Update(highestOutputGain, updateFiveSecondMax);
-   const auto clipped = mOutputMeter->GetCurrentMax() >= 0;
+   const auto clipped = mOutputMeter->GetCurrentMax() > 0;
    if (clipped && !mClipped)
    {
       mOnClipped();
