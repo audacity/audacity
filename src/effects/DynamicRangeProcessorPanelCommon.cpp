@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "DynamicRangeProcessorPanelCommon.h"
+#include "wxPanelWrapper.h"
 #include <wx/dcclient.h>
 #include <wx/pen.h>
 
@@ -39,8 +40,29 @@ float GetGraphDbRange(int height)
 
 wxGraphicsBrush GetGraphBackgroundBrush(wxGraphicsContext& gc, int height)
 {
-   return gc.CreateLinearGradientBrush(
-      0, 0, 0, height, backgroundColor,
-      GetColorMix(backgroundColor, *wxWHITE, 0.75));
+   // It looks like we're not going to use a gradient for the background after
+   // all, but keep the way we had it available for a while, in case we change
+   // our mind. (Whoever still sees this code in this state in the future please
+   // feel free to clean up.)
+   constexpr auto useGradient = false;
+   return useGradient ? gc.CreateLinearGradientBrush(
+                           0, 0, 0, height, backgroundColor,
+                           GetColorMix(backgroundColor, *wxWHITE, 0.75)) :
+                        gc.CreateBrush(backgroundColor);
 }
+
+wxRect GetPanelRect(const wxPanelWrapper& panel)
+{
+#ifndef __WXMAC__
+   return panel.GetClientRect();
+#else
+   auto rect = panel.GetClientRect();
+   rect.SetX(rect.GetX() + 1);
+   rect.SetY(rect.GetY() + 1);
+   rect.SetWidth(rect.GetWidth() - 1);
+   rect.SetHeight(rect.GetHeight() - 1);
+   return rect;
+#endif
+}
+
 } // namespace DynamicRangeProcessorPanel

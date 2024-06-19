@@ -47,11 +47,11 @@ void ClipIndicatorPanel::OnPaint(wxPaintEvent& evt)
    const auto color = mClipping ? *wxRED : *wxLIGHT_GREY;
    dc.SetBrush(color);
    dc.SetPen(lineColor);
-   const auto rect = GetClientRect();
+   auto rect = GetPanelRect(*this);
    dc.DrawRoundedRectangle(rect, 2);
 
    // This is supposed to be a LED. Add a little shine.
    dc.SetBrush(GetColorMix(*wxWHITE, color, 0.5));
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.DrawRoundedRectangle(GetClientRect().Deflate(2), 2);
+   dc.DrawRoundedRectangle(rect.Deflate(2), 2);
 }

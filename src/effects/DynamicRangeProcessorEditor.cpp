@@ -153,7 +153,8 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    S.SetBorder(borderSize);
    S.AddSpace(0, borderSize);
 
-   if (const auto compressorSettings = GetCompressorSettings())
+   const auto compressorSettings = GetCompressorSettings();
+   if (compressorSettings)
    {
       S.StartMultiColumn(2, wxEXPAND);
       {
@@ -201,12 +202,15 @@ void DynamicRangeProcessorEditor::PopulateOrExchange(ShuttleGui& S)
    histPanel->ShowActual(settings.showActual);
    histPanel->ShowTarget(settings.showTarget);
 
-   S.StartMultiColumn(3, wxEXPAND);
+   S.StartMultiColumn(compressorSettings ? 3 : 1, wxEXPAND);
    {
       S.SetStretchyCol(0);
       AddCheckboxPanel(S, settings);
-      AddClipIndicator(S);
-      S.AddSpace(rulerWidth, 0);
+      if (compressorSettings)
+      {
+         AddClipIndicator(S);
+         S.AddSpace(rulerWidth, 0);
+      }
    }
    S.EndMultiColumn();
 

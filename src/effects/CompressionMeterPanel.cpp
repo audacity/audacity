@@ -106,7 +106,7 @@ void CompressionMeterPanel::OnPaint(wxPaintEvent& evt)
 
    wxPaintDC dc(this);
 
-   const auto rect = GetClientRect();
+   const auto rect = DynamicRangeProcessorPanel::GetPanelRect(*this);
    const auto gc = MakeGraphicsContext(dc);
    const auto left = rect.GetLeft();
    const auto top = rect.GetTop();
@@ -120,18 +120,18 @@ void CompressionMeterPanel::OnPaint(wxPaintEvent& evt)
    auto leftRect = rect;
    leftRect.SetWidth(rect.GetWidth() / 2 - 2);
    leftRect.Offset(1, 0);
-   PaintRectangle(dc, actualCompressionColor, leftRect, *mCompressionMeter);
+   PaintMeter(dc, actualCompressionColor, leftRect, *mCompressionMeter);
 
    auto rightRect = leftRect;
    rightRect.Offset(leftRect.GetWidth(), 0);
-   PaintRectangle(dc, outputColor, rightRect, *mOutputMeter);
+   PaintMeter(dc, outputColor, rightRect, *mOutputMeter);
 
    gc->SetPen(lineColor);
    gc->SetBrush(wxNullBrush);
-   gc->DrawRectangle(0, 0, width - 1, height - 1);
+   gc->DrawRectangle(left, top, width, height);
 }
 
-void CompressionMeterPanel::PaintRectangle(
+void CompressionMeterPanel::PaintMeter(
    wxPaintDC& dc, const wxColor& color, const wxRect& rect,
    const MeterValueProvider& provider)
 {
@@ -160,59 +160,22 @@ void CompressionMeterPanel::PaintRectangle(
 
    const auto levelTop = downwards ? top : dbY;
    const auto levelHeight = downwards ? dbY : height - dbY;
+   const auto maxLevelTop = downwards ? levelHeight - top : maxDbY;
+   const auto maxLevelHeight = std::abs(maxDbY - dbY);
 
-   gc->SetBrush(color);
-   gc->DrawRectangle(left + 3, levelTop, width - 4, levelHeight);
-   gc->SetBrush(wxColor { color.GetRGB() });
-   gc->DrawRectangle(left + 3, dbY - 2, width - 4, lineWidth);
-   gc->DrawRectangle(left + 3, fiveSecMaxDbY - 2, width - 4, lineWidth);
-
-   gc->SetBrush(*wxTRANSPARENT_BRUSH);
-   gc->SetPen(lineColor);
-
-   auto path = gc->CreatePath();
-   const auto pathLeft = left + 2;
-   const auto pathRight = pathLeft + width - 3;
-   if (downwards)
-   {
-      wxPoint2DDouble point { pathLeft, top };
-      path.MoveToPoint(point);
-      point.m_y = maxDbY + lineWidth / 2;
-      path.AddLineToPoint(point);
-      point.m_x = pathRight;
-      path.AddLineToPoint(point);
-      point.m_y = levelTop;
-      path.AddLineToPoint(point);
-   }
-   else
-   {
-      wxPoint2DDouble point { pathLeft, top + height };
-      path.MoveToPoint(point);
-      point.m_y = maxDbY - 2.5;
-      path.AddLineToPoint(point);
-      point.m_x = pathRight;
-      path.AddLineToPoint(point);
-      point.m_y = top + height;
-      path.AddLineToPoint(point);
-   }
-
-   gc->StrokePath(path);
-}
-
-void CompressionMeterPanel::PaintLabel(
-   wxPaintDC& dc, const wxRect& rect, const TranslatableString& label)
-{
-   const auto left = rect.GetLeft();
-   const auto width = rect.GetWidth();
-   const auto height = rect.GetHeight();
-   dc.SetFont(
-      { 10, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL });
-   dc.SetTextForeground({ 128, 128, 128 });
-   const auto text = label.Translation();
-   const auto t = dc.GetTextExtent(text);
-   const auto x = left + (width + t.GetHeight()) / 2;
-   const auto y = height - t.GetWidth() - 5;
-   dc.DrawRotatedText(text, x, y, 270);
+   const auto rectLeft = left + 3;
+   const auto rectWidth = width - 4;
+   const auto opaqueColor = wxColor { color.GetRGB() };
+   gc->SetBrush(GetColorMix(opaqueColor, wxTransparentColor, 0.8));
+   gc->DrawRectangle(rectLeft, levelTop, rectWidth, levelHeight);
+   gc->SetBrush(GetColorMix(opaqueColor, wxTransparentColor, 0.6));
+   gc->DrawRectangle(rectLeft, maxLevelTop, rectWidth, maxLevelHeight);
+   gc->SetBrush(opaqueColor);
+   gc->DrawRectangle(rectLeft, dbY - 2, rectWidth, lineWidth);
+   gc->DrawRectangle(rectLeft, maxDbY - 2, rectWidth, lineWidth);
+   gc->SetPen({ opaqueColor, static_cast<int>(lineWidth / 2) });
+   gc->StrokeLine(
+      left + rectWidth / 2, fiveSecMaxDbY, left + rectWidth, fiveSecMaxDbY);
 }
 
 void CompressionMeterPanel::OnTimer(wxTimerEvent& evt)
@@ -232,7 +195,7 @@ void CompressionMeterPanel::OnTimer(wxTimerEvent& evt)
    const auto updateFiveSecondMax = !mStopWhenZero;
    mCompressionMeter->Update(lowestCompressionGain, updateFiveSecondMax);
    mOutputMeter->Update(highestOutputGain, updateFiveSecondMax);
-   const auto clipped = mOutputMeter->GetCurrentMax() >= 0;
+   const auto clipped = mOutputMeter->GetCurrentMax() > 0;
    if (clipped && !mClipped)
    {
       mOnClipped();

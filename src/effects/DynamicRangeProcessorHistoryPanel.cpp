@@ -34,10 +34,6 @@ constexpr auto timerId = 7000;
 // when specifying 200, we get around 60fps on average, with outlier around 40.
 constexpr auto timerPeriodMs = 1000 / 200;
 
-static const wxColor opaqueActualCompressionColor {
-   DynamicRangeProcessorPanel::actualCompressionColor.GetRGB()
-};
-
 bool MayUsePenGradients()
 {
    // MacOS doesn't cope well with pen gradients. (Freezes in debug and is
@@ -191,11 +187,11 @@ void InsertCrossings(
  */
 void FillUpTo(
    std::vector<wxPoint2DDouble> lines, const wxColor& color,
-   wxGraphicsContext& gc, const wxSize& size)
+   wxGraphicsContext& gc, const wxRect& rect)
 {
-   const auto height = size.GetHeight();
-   const auto left = std::max<double>(0., lines.front().m_x);
-   const auto right = std::min<double>(size.GetWidth(), lines.back().m_x);
+   const auto height = rect.GetHeight();
+   const auto left = std::max<double>(rect.GetX(), lines.front().m_x);
+   const auto right = std::min<double>(rect.GetWidth(), lines.back().m_x);
    auto area = gc.CreatePath();
    area.MoveToPoint(right, height);
    area.AddLineToPoint(left, height);
@@ -272,23 +268,23 @@ void DrawLegend(size_t height, wxPaintDC& dc, wxGraphicsContext& gc)
       wxPoint2DDouble(actualX + lineWidth, lineY)
    };
 
-   gc.SetPen({ opaqueActualCompressionColor, GetActualCompressionLineWidth() });
+   gc.SetPen({ actualCompressionColor, GetActualCompressionLineWidth() });
    gc.DrawLines(2, actualLine.data());
 
    if (MayUsePenGradients())
    {
       wxGraphicsPenInfo penInfo;
-      wxGraphicsGradientStops stops { opaqueActualCompressionColor,
-                                      opaqueActualCompressionColor };
+      wxGraphicsGradientStops stops { actualCompressionColor,
+                                      actualCompressionColor };
       stops.Add(attackColor.GetRGB(), 1 / 4.);
-      stops.Add(opaqueActualCompressionColor, 2 / 4.);
+      stops.Add(actualCompressionColor, 2 / 4.);
       stops.Add(releaseColor.GetRGB(), 3 / 4.);
       penInfo.LinearGradient(actualX, 0, actualX + lineWidth, 0, stops)
          .Width(targetCompressionLineWidth);
       gc.SetPen(gc.CreatePen(penInfo));
    }
    else
-      gc.SetPen(opaqueActualCompressionColor);
+      gc.SetPen(actualCompressionColor);
 
    gc.DrawLines(2, actualLine.data());
    const auto actualText = XO("Actual Compression");
@@ -337,18 +333,27 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    using namespace DynamicRangeProcessorPanel;
 
    const auto gc = MakeGraphicsContext(dc);
-   const auto width = GetSize().GetWidth();
-   const auto height = GetSize().GetHeight();
+   const auto rect = DynamicRangeProcessorPanel::GetPanelRect(*this);
+   const auto x = rect.GetX();
+   const auto y = rect.GetY();
+   const auto width = rect.GetWidth();
+   const auto height = rect.GetHeight();
 
    gc->SetBrush(GetGraphBackgroundBrush(*gc, height));
    gc->SetPen(wxTransparentColor);
-   gc->DrawRectangle(0, 0, width - 1, height - 1);
+   gc->DrawRectangle(x, y, width, height);
 
    Finally Do { [&] {
-      DrawLegend(height, dc, *gc);
+      // The legend is causing problems color-wise, and in the end it may not be
+      // so useful since the different elements of the graph can be toggled.
+      // Keep it up our sleeve for now, though. (Anyone still sees this in the
+      // not-so-near future, feel free to clean up.)
+      constexpr auto drawLegend = false;
+      if (drawLegend)
+         DrawLegend(height, dc, *gc);
       gc->SetBrush(*wxTRANSPARENT_BRUSH);
       gc->SetPen(lineColor);
-      gc->DrawRectangle(0, 0, width - 1, height - 1);
+      gc->DrawRectangle(x, y, width, height);
    } };
 
    if (!mHistory || !mSync)
@@ -424,25 +429,15 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          mOutput.emplace_back(x, -packet.output / dbPerPixel);
       });
 
-      // Fill areas for both input and output first, then draw the lines.
-      if (mShowOutput)
-         FillUpTo(mOutput, outputColor, *gc, GetSize());
-
       if (mShowInput)
-         FillUpTo(mInput, inputColor, *gc, GetSize());
+         FillUpTo(mInput, inputColor, *gc, rect);
 
       if (mShowOutput)
       {
+         FillUpTo(mOutput, outputColor, *gc, rect);
          const auto outputGc = MakeGraphicsContext(dc);
          outputGc->SetPen({ wxColor { outputColor.GetRGB() }, 2 });
          outputGc->DrawLines(mOutput.size(), mOutput.data());
-      }
-
-      if (mShowInput)
-      {
-         const auto inputGc = MakeGraphicsContext(dc);
-         inputGc->SetPen({ wxColor { inputColor.GetRGB() }, 2 });
-         inputGc->DrawLines(mInput.size(), mInput.data());
       }
 
       if (mShowActual)
@@ -451,8 +446,8 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
          // with colors indicating overshoot and undershoot.
          const auto actualGc = MakeGraphicsContext(dc);
 
-         actualGc->SetPen(wxPen { opaqueActualCompressionColor,
-                                  GetActualCompressionLineWidth() });
+         actualGc->SetPen(
+            wxPen { actualCompressionColor, GetActualCompressionLineWidth() });
          actualGc->DrawLines(mActual.size(), mActual.data());
          if (MayUsePenGradients())
          {
@@ -471,7 +466,7 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
                const auto w = std::min(1.0, std::abs(diff) * dbPerPixel / 6);
                const auto color = GetColorMix(
                                      actualIsBelow ? releaseColor : attackColor,
-                                     opaqueActualCompressionColor, w)
+                                     actualCompressionColor, w)
                                      .GetRGB();
                stops.Add(color, (mActual[i].m_x - xLeft) / span);
             }
