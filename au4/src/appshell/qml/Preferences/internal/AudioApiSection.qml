@@ -22,24 +22,31 @@
 import QtQuick 2.15
 
 import Muse.UiComponents 1.0
+import Audacity.Playback 1.0
 
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Audio")
+    title: qsTrc("appshell/preferences", "Audio settings")
 
     property int currentAudioApiIndex: -1
     property var audioApiList: null
 
     signal currentAudioApiIndexChangeRequested(int newIndex)
 
-    /*
-     * TODO: https://github.com/musescore/MuseScore/issues/9807
+    PlaybackStateModel {
+        id: playbackState
+    }
+
+    // /*
+    //  * TODO: https://github.com/musescore/MuseScore/issues/9807
     ComboBoxWithTitle {
         id: apiComboBox
 
         title: qsTrc("appshell/preferences", "Audio API:")
         columnWidth: root.columnWidth
+
+        enabled: !(playbackState.isPaused() || playbackState.isPlaying())
 
         currentIndex: root.currentAudioApiIndex
         model: root.audioApiList
@@ -52,10 +59,12 @@ BaseSection {
             root.currentAudioApiIndexChangeRequested(newIndex)
         }
     }
-    */
+    // */
 
     CommonAudioApiConfiguration {
         columnWidth: root.columnWidth
+
+        enabled: !(playbackState.isPaused() || playbackState.isPlaying())
 
         navigation: root.navigation
         navigationOrderStart: 2

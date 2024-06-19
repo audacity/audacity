@@ -2,10 +2,12 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "au3audiodevicesmanager.h"
+#include "au3audiodevicesprovider.h"
 
+#include "internal/wxtypes_convert.h"
 #include "libraries/lib-audio-devices/DeviceManager.h"
 #include "libraries/lib-audio-devices/AudioIOBase.h"
+#include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-utility/IteratorX.h"
 
 #include "log.h"
@@ -13,14 +15,97 @@
 using namespace muse;
 using namespace au::au3;
 
-void Au3AudioDevicesManager::init()
+void Au3AudioDevicesProvider::init()
 {
     initHosts();
     initHostDevices();
     initInputChannels();
 }
 
-void Au3AudioDevicesManager::initHosts()
+std::vector<std::string> Au3AudioDevicesProvider::audioOutputDevices() const
+{
+    std::vector<std::string> outputDevices;
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    auto host = AudioIOHost.Read();
+
+    for (const auto& device : outMaps) {
+        if (device.hostString == host) {
+            outputDevices.push_back(wxToStdSting(MakeDeviceSourceString(&device)));
+        }
+    }
+
+    return outputDevices;
+}
+
+std::string Au3AudioDevicesProvider::currentAudioOutputDevice() const
+{
+    return wxToStdSting(AudioIOPlaybackDevice.Read());
+}
+
+void Au3AudioDevicesProvider::setAudioOutputDevice(const std::string& deviceName)
+{
+    AudioIOPlaybackDevice.Write(deviceName);
+    Au3AudioDevicesProvider::handleDeviceChange();
+
+    m_audioOutputDeviceChanged.notify();
+}
+
+async::Notification Au3AudioDevicesProvider::audioOutputDeviceChanged() const
+{
+    return m_audioOutputDeviceChanged;
+}
+
+void Au3AudioDevicesProvider::handleDeviceChange()
+{
+    AudioIO::Get()->HandleDeviceChange();
+}
+
+std::vector<std::string> Au3AudioDevicesProvider::audioApiList() const
+{
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    std::vector<std::string> hosts;
+
+    for (const auto& device : outMaps) {
+        std::string host = wxToStdSting(device.hostString);
+        if (std::find(hosts.begin(), hosts.end(), host) == hosts.end()) {
+            hosts.push_back(host);
+        }
+    }
+    return hosts;
+}
+
+std::string Au3AudioDevicesProvider::currentAudioApi() const
+{
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    auto host = AudioIOHost.Read();
+
+    for (const auto& device : outMaps) {
+        if (device.hostString == host) {
+            return wxToStdSting(device.hostString);
+        }
+    }
+    return std::string();
+}
+
+void Au3AudioDevicesProvider::setAudioApi(const std::string& audioApi)
+{
+    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+
+    for (const auto& device : outMaps) {
+        if (device.hostString == wxString(audioApi)) {
+            AudioIOHost.Write(device.hostString);
+        }
+    }
+
+    m_audioApiChanged.notify();
+}
+
+async::Notification Au3AudioDevicesProvider::audioApiChanged() const
+{
+    return m_audioApiChanged;
+}
+
+void Au3AudioDevicesProvider::initHosts()
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
     const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
@@ -44,7 +129,7 @@ void Au3AudioDevicesManager::initHosts()
     mHost.Set(std::move(hosts));
 }
 
-void Au3AudioDevicesManager::initHostDevices()
+void Au3AudioDevicesProvider::initHostDevices()
 {
     const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
     const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
@@ -129,7 +214,7 @@ void Au3AudioDevicesManager::initHostDevices()
     // The setting of the Device is left up to menu handlers
 }
 
-void Au3AudioDevicesManager::initInputChannels()
+void Au3AudioDevicesProvider::initInputChannels()
 {
     //!NOTE: Copied from AudioSetupToolBar::FillInputChannels
 

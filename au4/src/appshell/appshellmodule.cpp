@@ -53,8 +53,8 @@
 // #include "view/preferences/saveandpublishpreferencesmodel.h"
 // #include "view/preferences/scorepreferencesmodel.h"
 // #include "view/preferences/importpreferencesmodel.h"
-// #include "view/preferences/playbackpreferencesmodel.h"
-// #include "view/preferences/commonaudioapiconfigurationmodel.h"
+#include "view/preferences/playbackpreferencesmodel.h"
+#include "view/preferences/commonaudioapiconfigurationmodel.h"
 // #include "view/preferences/braillepreferencesmodel.h"
 #include "view/framelesswindow/framelesswindowmodel.h"
 #include "view/publish/publishtoolbarmodel.h"
@@ -154,8 +154,8 @@ void AppShellModule::registerUiTypes()
     // qmlRegisterType<SaveAndPublishPreferencesModel>("MuseScore.Preferences", 1, 0, "SaveAndPublishPreferencesModel");
     // qmlRegisterType<ScorePreferencesModel>("MuseScore.Preferences", 1, 0, "ScorePreferencesModel");
     // qmlRegisterType<ImportPreferencesModel>("MuseScore.Preferences", 1, 0, "ImportPreferencesModel");
-    // qmlRegisterType<PlaybackPreferencesModel>("MuseScore.Preferences", 1, 0, "PlaybackPreferencesModel");
-    // qmlRegisterType<CommonAudioApiConfigurationModel>("MuseScore.Preferences", 1, 0, "CommonAudioApiConfigurationModel");
+    qmlRegisterType<PlaybackPreferencesModel>("Audacity.Preferences", 1, 0, "PlaybackPreferencesModel");
+    qmlRegisterType<CommonAudioApiConfigurationModel>("Audacity.Preferences", 1, 0, "CommonAudioApiConfigurationModel");
     // qmlRegisterType<BraillePreferencesModel>("MuseScore.Preferences", 1, 0, "BraillePreferencesModel");
 
 #if defined(Q_OS_MACOS)
