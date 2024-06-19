@@ -345,7 +345,13 @@ void DynamicRangeProcessorHistoryPanel::OnPaint(wxPaintEvent& evt)
    gc->DrawRectangle(0, 0, width - 1, height - 1);
 
    Finally Do { [&] {
-      DrawLegend(height, dc, *gc);
+      // The legend is causing problems color-wise, and in the end it may not be
+      // so useful since the different elements of the graph can be toggled.
+      // Keep it up our sleeve for now, though. (Anyone still sees this in the
+      // not-so-near future, feel free to clean up.)
+      constexpr auto drawLegend = false;
+      if (drawLegend)
+         DrawLegend(height, dc, *gc);
       gc->SetBrush(*wxTRANSPARENT_BRUSH);
       gc->SetPen(lineColor);
       gc->DrawRectangle(0, 0, width - 1, height - 1);

@@ -39,8 +39,14 @@ float GetGraphDbRange(int height)
 
 wxGraphicsBrush GetGraphBackgroundBrush(wxGraphicsContext& gc, int height)
 {
-   return gc.CreateLinearGradientBrush(
-      0, 0, 0, height, backgroundColor,
-      GetColorMix(backgroundColor, *wxWHITE, 0.75));
+   // It looks like we're not going to use a gradient for the background after
+   // all, but keep the way we had it available for a while, in case we change
+   // our mind. (Whoever still sees this code in this state in the future please
+   // feel free to clean up.)
+   constexpr auto useGradient = false;
+   return useGradient ? gc.CreateLinearGradientBrush(
+                           0, 0, 0, height, backgroundColor,
+                           GetColorMix(backgroundColor, *wxWHITE, 0.75)) :
+                        gc.CreateBrush(backgroundColor);
 }
 } // namespace DynamicRangeProcessorPanel
