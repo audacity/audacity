@@ -431,12 +431,34 @@ void DynamicRangeProcessorEditor::AddTextboxAndSlider(
             setting.param->SliderMin());
 
    setting.slider->Bind(wxEVT_SLIDER, [&](wxCommandEvent& evt) {
-      setting.value = SliderToTextValue(evt.GetInt(), setting);
+      setting.value = SliderToTextValue(setting.slider->GetValue(), setting);
       setting.text->GetValidator()->TransferToWindow();
       EnableApply(mUIParent, mUIParent->Validate());
       ValidateUI();
       UpdateUI();
       Publish(EffectSettingChanged {});
+   });
+
+   // For exponential slider, for right/down arrow keys, because
+   // the setting value has precision of 1, ensure that
+   // the change in slider position results a change in value of
+   // at least 0.1, otherwise the slider position and setting value
+   // may not change.
+   setting.slider->Bind(wxEVT_SCROLL_LINEDOWN, [&](wxScrollEvent& evt) {
+      if (setting.attributes.exponentialSlider
+         && setting.value == SliderToTextValue(evt.GetInt(), setting)) {
+         setting.value += 0.1;
+         setting.slider->SetValue(std::round(TextToSliderValue(setting)));
+      }
+   });
+
+   // And similarly for left/up arrow keys.
+   setting.slider->Bind(wxEVT_SCROLL_LINEUP, [&](wxScrollEvent& evt) {
+      if (setting.attributes.exponentialSlider
+         && setting.value == SliderToTextValue(evt.GetInt(), setting)) {
+         setting.value -= 0.1;
+         setting.slider->SetValue(std::round(TextToSliderValue(setting)));
+      }
    });
 }
 
@@ -461,7 +483,7 @@ bool DynamicRangeProcessorEditor::UpdateUI()
       *GetLimiterSettings() = *mAccess.Get().cast<LimiterSettings>();
 
    for (auto& setting : mParameters)
-      setting.slider->SetValue(TextToSliderValue(setting));
+      setting.slider->SetValue(std::round(TextToSliderValue(setting)));
 
    if (
       auto tfPanel =
