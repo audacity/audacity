@@ -19,18 +19,16 @@ class wxPaintDC;
 
 namespace DynamicRangeProcessorPanel
 {
-static const wxColour backgroundColor { 200, 210, 255 };
+static const wxColour backgroundColor { 43, 43, 75 };
 static const wxColour attackColor { 255, 0, 0, 100 };
 static const wxColour releaseColor { 190, 120, 255, 100 };
 static const wxColour lineColor { 72, 72, 72 };
-static const wxColour targetCompressionColor { lineColor };
-static const wxColour inputColor { 71, 154, 42, 128 };
-static const wxColour outputColor { 103, 124, 228, 128 };
-static const wxColour actualCompressionColor { 255, 225, 147, 128 };
+static const wxColour targetCompressionColor { 255, 255, 255 };
+static const wxColour inputColor { 86, 86, 149 };
+static const wxColour outputColor { 182, 182, 244, 70 };
+static const wxColour actualCompressionColor { 252, 220, 151 };
 
 static constexpr auto targetCompressionLineWidth = 2;
-static constexpr auto actualCompressionLineWidth =
-   targetCompressionLineWidth + 4;
 static constexpr auto outputLineWidth = 2;
 static constexpr auto graphMinHeight = 270;
 static constexpr auto graphMinRangeDb = 20.f;

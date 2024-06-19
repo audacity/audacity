@@ -37,12 +37,9 @@ protected:
    DECLARE_EVENT_TABLE();
 
 private:
-   void PaintRectangle(
+   void PaintMeter(
       wxPaintDC& dc, const wxColor& color, const wxRect& rect,
       const MeterValueProvider& provider);
-
-   void PaintLabel(
-      wxPaintDC& dc, const wxRect& rect, const TranslatableString& label);
 
    void OnPaint(wxPaintEvent& evt);
    void OnTimer(wxTimerEvent& evt);
