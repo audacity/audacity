@@ -88,7 +88,6 @@ void OnNewStereoTrack(const CommandContext &context)
       tracks.Add(track);
    }
 
-   // auto &newTrack = **tracks.rbegin();
    track->SetSelected(true);
    track->SetName(tracks.MakeUniqueTrackName(WaveTrack::GetDefaultAudioTrackNamePreference()));
 
