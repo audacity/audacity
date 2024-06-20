@@ -314,7 +314,7 @@ void Au3Player::resetLoop()
 
 void Au3Player::updatePlaybackPosition()
 {
-    m_playbackPosition.set(AudioIO::Get()->GetStreamTime());
+    m_playbackPosition.set(std::max(0.0, AudioIO::Get()->GetStreamTime()));
 }
 
 au::audio::secs_t Au3Player::playbackPosition() const
