@@ -128,7 +128,7 @@ Rectangle {
             Connections {
                 target: timeline.context
 
-                onShiftViewByY: function(shift) {
+                function onShiftViewByY(shift) {
                     if (shift > 0) {
                         view.flick(0, view.maximumFlickVelocity)
                     } else if (shift < 0) {

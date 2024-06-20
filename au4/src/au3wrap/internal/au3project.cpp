@@ -180,6 +180,20 @@ au::processing::TimeSignature Au3Project::timeSignature() const
     return result;
 }
 
+void Au3Project::setTimeSignature(const processing::TimeSignature& timeSignature)
+{
+    if (!m_data->project) {
+        return;
+    }
+
+    ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(m_data->projectRef());
+    timeSig.SetTempo(timeSignature.tempo);
+    timeSig.SetUpperTimeSignature(timeSignature.upper);
+    timeSig.SetLowerTimeSignature(timeSignature.lower);
+
+    m_timeSignatureChanged.send(timeSignature);
+}
+
 muse::async::Channel<au::processing::TimeSignature> Au3Project::timeSignatureChanged() const
 {
     return m_timeSignatureChanged;

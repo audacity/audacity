@@ -35,6 +35,7 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodeformatter.cpp
@@ -44,6 +45,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/beatsformatter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/beatsformatter.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/types.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.h

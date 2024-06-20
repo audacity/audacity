@@ -32,15 +32,14 @@ Item {
 
         rowHeight: 48
 
-        model: PlaybackToolBarModel {
-            id: toolbarModel
-        }
+        model: PlaybackToolBarModel {}
 
         sourceComponentCallback: function(type) {
             switch(type) {
             case PlaybackToolBarModel.PLAYBACK_CONTROL: return controlComp
             case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
             case PlaybackToolBarModel.PLAYBACK_TIME: return playbackTimeComp
+            case PlaybackToolBarModel.PLAYBACK_TIME_SIGNATURE: return playbackTimeSignatureComp
             case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
             case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
             }
@@ -121,6 +120,33 @@ Item {
                     }
 
                     itemData.currentFormat = currentFormat
+                }
+            }
+        }
+
+        Component {
+            id: playbackTimeSignatureComp
+
+            TimeSignature {
+                property var itemData: null
+
+                upper: Boolean(itemData) ? itemData.upper : 0
+                lower: Boolean(itemData) ? itemData.lower : 0
+
+                onUpperChangeRequested: function(newValue) {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.upper = newValue
+                }
+
+                onLowerChangeRequested: function(newValue) {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.lower = newValue
                 }
             }
         }

@@ -142,7 +142,7 @@ ListItemBlank {
                 StyledSlider {
                     Layout.fillWidth: true
 
-                    value: root.volume
+                    value: root.item.volumeLevel
                 }
 
                 KnobControl {

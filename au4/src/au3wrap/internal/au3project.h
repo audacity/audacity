@@ -28,6 +28,7 @@ public:
     muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const override;
 
     processing::TimeSignature timeSignature() const override;
+    void setTimeSignature(const processing::TimeSignature& timeSignature) override;
     muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const override;
 
     // internal
