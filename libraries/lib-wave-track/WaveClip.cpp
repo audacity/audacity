@@ -1649,7 +1649,10 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
       std::optional<std::pair<size_t, size_t>> results{};
       for (auto &pSequence : mSequences) {
          auto &pNewSequence = *ppNewSequence++;
-         if (!pSequence->Get((samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
+         if (
+            inLen > 0 &&
+            !pSequence->Get(
+               (samplePtr)inBuffer.get(), floatSample, pos, inLen, true))
          {
             error = true;
             break;
