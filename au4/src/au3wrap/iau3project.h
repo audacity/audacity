@@ -31,6 +31,7 @@ public:
     virtual muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const = 0;
 
     virtual processing::TimeSignature timeSignature() const = 0;
+    virtual void setTimeSignature(const processing::TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const = 0;
 
     // internal

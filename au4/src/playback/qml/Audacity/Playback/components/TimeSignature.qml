@@ -1,0 +1,147 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+import Muse.Ui
+import Muse.UiComponents
+
+RowLayout {
+    id: root
+
+    property alias upper: upperLabel.text
+    property alias lower: lowerLabel.text
+
+    signal upperChangeRequested(var newValue)
+    signal lowerChangeRequested(var newValue)
+
+    height: 28
+
+    spacing: 1
+
+    RoundedRectangle {
+        Layout.preferredWidth: childrenRect.width
+        Layout.fillHeight: true
+
+        topLeftRadius: 3
+        bottomLeftRadius: 3
+
+        color: ui.theme.backgroundQuarternaryColor
+
+        Item {
+            property int margin: 10
+
+            width: row.width + margin * 2
+            height: row.height
+
+            Row {
+                id: row
+
+                anchors.left: parent.left
+                anchors.leftMargin: parent.margin
+                anchors.verticalCenter: parent.verticalCenter
+
+                height: root.height
+
+                spacing: 6
+
+                StyledTextLabel {
+                    id: lowerLabel
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    font: ui.theme.tabBoldFont
+                    color: ui.theme.fontSecondaryColor
+                }
+
+                StyledTextLabel {
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    text: "/"
+                    opacity: 0.75
+                    font: ui.theme.tabBoldFont
+                    color: ui.theme.fontSecondaryColor
+                }
+
+                StyledTextLabel {
+                    id: upperLabel
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    font: ui.theme.tabBoldFont
+                    color: ui.theme.fontSecondaryColor
+                }
+            }
+        }
+    }
+
+    FlatButton {
+        id: popupBtn
+
+        Layout.preferredWidth: 16
+        Layout.fillHeight: true
+
+        icon: IconCode.SMALL_ARROW_DOWN
+        iconColor: ui.theme.fontSecondaryColor
+
+        backgroundItem: RoundedRectangle {
+            id: background
+
+            topRightRadius: 3
+            bottomRightRadius: 3
+
+            color: ui.theme.backgroundQuarternaryColor
+
+            states: [
+                State {
+                    name: "PRESSED"
+                    when: popupBtn.mouseArea.pressed
+
+                    PropertyChanges {
+                        target: background
+                        opacity: ui.theme.buttonOpacityHit
+                    }
+                },
+
+                State {
+                    name: "HOVERED"
+                    when: popupBtn.mouseArea.containsMouse && !popupBtn.mouseArea.pressed
+
+                    PropertyChanges {
+                        target: background
+                        opacity: ui.theme.buttonOpacityHover
+                    }
+                }
+            ]
+        }
+
+        function togglePopupOpened() {
+            if (popup.isOpened) {
+                popup.close()
+            } else {
+                popup.open()
+            }
+        }
+
+        onClicked: function(mouse) {
+            togglePopupOpened()
+        }
+
+        TimeSignaturePopup {
+            id: popup
+
+            upper: root.upper
+            lower: root.lower
+
+            onUpperChangeRequested: function(newValue){
+                root.upperChangeRequested(newValue)
+            }
+
+            onLowerChangeRequested: function(newValue){
+                root.lowerChangeRequested(newValue)
+            }
+        }
+    }
+}

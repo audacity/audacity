@@ -43,6 +43,11 @@ TimeSignature ProcessingProject::timeSignature() const
     return m_au3->timeSignature();
 }
 
+void ProcessingProject::setTimeSignature(const TimeSignature& timeSignature)
+{
+    m_au3->setTimeSignature(timeSignature);
+}
+
 muse::async::Channel<TimeSignature> ProcessingProject::timeSignatureChanged() const
 {
     return m_au3->timeSignatureChanged();

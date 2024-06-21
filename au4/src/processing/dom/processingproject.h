@@ -29,6 +29,7 @@ public:
     void onClipChanged(const Clip& clip);
 
     processing::TimeSignature timeSignature() const;
+    void setTimeSignature(const processing::TimeSignature& timeSignature);
     muse::async::Channel<processing::TimeSignature> timeSignatureChanged() const;
 
     //! NOTE Just for debug
