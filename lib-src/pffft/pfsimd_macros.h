@@ -60,7 +60,7 @@
 /*
    Altivec support macros 
 */
-#if !defined(PFFFT_SIMD_DISABLE) && (defined(__ppc__) || defined(__ppc64__))
+#if !defined(PFFFT_SIMD_DISABLE) && ((defined(__ppc__) || defined(__ppc64__)) && defined(__ALTIVEC__))
 #include <altivec.h>
 typedef vector float v4sf;
 #  define SIMD_SZ 4
