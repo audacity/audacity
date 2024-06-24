@@ -445,10 +445,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    wxColour clrText = theTheme.Colour( clrTrackPanelText );
    wxColour clrBoxFill = theTheme.Colour( clrMedium );
 
-   // We can have numbers over the bars, in which case we have to draw them each time.
-   const auto forceRepaintRuler = mStyle == HorizontalStereoCompact ||
-      mStyle == VerticalStereoCompact;
-
    if (mLayoutValid == false || (mStyle == MixerTrackCluster ))
    {
       // Create a NEW one using current size and select into the DC
@@ -602,12 +598,12 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
          for(unsigned n = 0; n < mNumBars; ++n)
             dc.DrawRectangle(wxRect(mBar[n].rClip).Inflate(1));
       }
-      if(!forceRepaintRuler)// Draw the ruler
-      {
-         mRuler.SetTickColour( clrText );
-         dc.SetTextForeground( clrText );
-         mRuler.Draw(dc);
-      }
+
+      mRuler.SetTickColour( clrText );
+      dc.SetTextForeground( clrText );
+
+      mRuler.Draw(dc); // Draw the ruler
+
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
    }
@@ -622,8 +618,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    destDC.SetTextForeground( clrText );
-
-   if(forceRepaintRuler)
+   
+   // We can have numbers over the bars, in which case we have to draw them each time.
+   if(mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
       mRuler.SetTickColour( clrText );
       // If the text colour is too similar to the meter colour, then we need a background
