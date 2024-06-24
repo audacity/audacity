@@ -67,7 +67,7 @@ void ProjectSceneModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController));
+        ar->reg(m_uiActions);
     }
 }
 
