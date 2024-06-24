@@ -171,28 +171,24 @@ jobs:
           generator: Visual Studio 16 2019
           postfix: '-msvc2019'
           windows_sdk: '10.0.18362.0'
-          skip_tests: false
         - name: Windows MSVC 2019 (x86_64)
           os: windows-2019
           arch: x64
           generator: Visual Studio 16 2019
           postfix: '-msvc2019'
           windows_sdk: '10.0.18362.0'
-          skip_tests: false
         - name: Windows MSVC 2022 (x86)
           os: windows-2022
           arch: x32
           generator: Visual Studio 17 2022
           postfix: '-msvc2022'
           windows_sdk: '10.0.22000.0'
-          skip_tests: true
         - name: Windows MSVC 2022 (x86_64)
           os: windows-2022
           arch: x64
           generator: Visual Studio 17 2022
           postfix: '-msvc2022'
           windows_sdk: '10.0.22000.0'
-          skip_tests: true
     steps:
     - name: Checkout Audacity
       uses: actions/checkout@v2
@@ -216,7 +212,6 @@ jobs:
     - name: Build
       uses: audacity/audacity-actions/build@v2
     - name: Test
-      if: ${{ !matrix.config.skip_tests }}
       shell: pwsh
       run: |
         pushd .build.${{ matrix.config.arch }}
