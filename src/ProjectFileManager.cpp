@@ -192,22 +192,25 @@ auto ProjectFileManager::ReadProjectFile(
       // Do this before FixTracks might delete zero-length clips!
       mLastSavedTracks = TrackList::Create( nullptr );
       WaveTrack *leader{};
-      for (auto pTrack : tracks.Any<WaveTrack>()) {
+      for (auto pTrack : tracks.Any<WaveTrack>())
+      {
          // A rare place where TrackList::Channels remains necessary, to visit
          // the right channels of stereo tracks not yet "zipped", otherwise
          // later, CloseLock() will be missed for some sample blocks and
          // corrupt the project
-         for (const auto pChannel : TrackList::Channels(pTrack)) {
+         for (const auto pChannel : TrackList::Channels(pTrack))
+         {
             auto left = leader;
             auto newTrack =
-               pChannel->Duplicate(Track::DuplicateOptions{}.Backup());
-            leader = left
-               ? nullptr // now visiting the right channel
-               : (pChannel->GetLinkType() == Track::LinkType::None)
-                  ? nullptr // now visiting a mono channel
-                  : static_cast<WaveTrack*>(newTrack.get())
-                    // now visiting a left channel
-            ;
+               pChannel->Duplicate(Track::DuplicateOptions {}.Backup());
+            leader = left ? nullptr // now visiting the right channel
+                     :
+                     (pChannel->GetLinkType() == Track::LinkType::None) ?
+                            nullptr // now visiting a mono channel
+                            :
+                            static_cast<WaveTrack*>(newTrack.get())
+               // now visiting a left channel
+               ;
             mLastSavedTracks->Add(newTrack);
             if (left)
                // Zip clips allowing misalignment -- this may be a legacy
