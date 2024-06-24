@@ -75,25 +75,10 @@ AButton* ToolBarButtons::CreateButton(teBmps eEnabledUp, teBmps eEnabledDown, te
       theTheme.Image(bmpRecoloredUpSmall));
    button->SetIcons(theTheme.Image(eEnabledUp), theTheme.Image(eEnabledDown), theTheme.Image(eDisabled));
    button->SetFrameMid(3);
-   //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-   button->SetLabel({});
+   button->SetLabel(label);
    button->SetMinSize(wxSize { 25, 25 });
    button->SetMaxSize(wxSize { 25, 25 });
    return button;
-
-   /*AButton *&r = mButtons[thisButtonId];
-
-   r = ToolBar::MakeButton(mParent,
-      bmpRecoloredUpSmall, bmpRecoloredDownSmall, bmpRecoloredUpHiliteSmall, bmpRecoloredHiliteSmall,
-      eEnabledUp, eEnabledDown, eDisabled,
-      wxWindowID(thisButtonId + mFirstButtonId),
-      wxDefaultPosition,
-      toggle,
-      theTheme.ImageSize( bmpRecoloredUpSmall ));
-
-   r->SetLabel(label);
-
-   return r;*/
 }
 
 void ToolBarButtons::SetEnabled(int id, bool state)

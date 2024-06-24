@@ -359,7 +359,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
       const auto buttonState = GetState();
       if(mType == ImageButton)
          dc.DrawBitmap(mImages[imageIdx][buttonState], buttonRect.GetTopLeft());
-      else if(mType == FrameButton)
+      else if(mType == FrameButton || mType == FrameTextButton)
       {
          wxBitmap bitmap = mImages[imageIdx][buttonState];
          AColor::DrawFrame(dc, buttonRect, bitmap, mFrameMid);
@@ -375,7 +375,7 @@ void AButton::OnPaint(wxPaintEvent & WXUNUSED(event))
             if(!icon->IsOk())
                icon = &mIcons[0][AButtonUp];
          }
-         if(!GetLabel().IsEmpty())
+         if(mType == FrameTextButton && !GetLabel().IsEmpty())
          {
             dc.SetFont(GetFont());
             auto textRect = buttonRect;
@@ -687,6 +687,13 @@ wxSize AButton::DoGetBestClientSize() const
       switch(mType)
       {
       case FrameButton:
+         {
+            const auto icon = !mIcons.empty() ? &mIcons[0][AButtonUp] : nullptr;
+            if(icon->IsOk())
+               return icon->GetSize();
+            return image.GetSize();
+         }
+      case FrameTextButton:
          {
             //Only AButtonUp is used to estimate size
             auto icon = !mIcons.empty() ? &mIcons[0][AButtonUp] : nullptr;
