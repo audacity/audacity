@@ -88,8 +88,7 @@ AButton* MakeToolsToolBarButton(wxWindow* parent,
       theTheme.Image(bmpRecoloredUpSmall));
    button->SetIcon(toolIcon);
    button->SetFrameMid(3);
-   //button->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
-   button->SetLabel({});
+   button->SetLabel(label);
    button->SetMinSize(wxSize { 25, 25 });
    button->SetMaxSize(wxSize { 25, 25 });
    return button;
