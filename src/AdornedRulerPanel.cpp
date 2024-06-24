@@ -2495,7 +2495,8 @@ wxRect AdornedRulerPanel::SelectedRegionRectangle() const
 
 wxRect AdornedRulerPanel::RegionRectangle(double t0, double t1) const
 {
-   int p0 = -1, p1 = -1;
+   int p0 = -PLAY_REGION_TRIANGLE_SIZE;
+   int p1 = -PLAY_REGION_TRIANGLE_SIZE;
    if (t0 == t1)
       // Make the rectangle off-screen horizontally, but set the height
       ;
