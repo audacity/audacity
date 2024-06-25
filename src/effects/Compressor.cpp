@@ -14,6 +14,7 @@
 #include "CompressorInstance.h"
 #include "DynamicRangeProcessorDummyOutputs.h"
 #include "DynamicRangeProcessorEffectUtils.h"
+#include "DynamicRangeProcessorUtils.h"
 #include "LoadEffects.h"
 #include "ShuttleAutomation.h"
 
@@ -90,7 +91,26 @@ auto EffectCompressor::RealtimeSupport() const -> RealtimeSince
    return RealtimeSince::Always;
 }
 
-// Effect implementation
+RegistryPaths EffectCompressor::GetFactoryPresets() const
+{
+   const auto presets = DynamicRangeProcessorUtils::GetCompressorPresets();
+   RegistryPaths paths(presets.size());
+   std::transform(
+      presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
+         return RegistryPath { preset.name.Translation() };
+      });
+   return paths;
+}
+
+OptionalMessage
+EffectCompressor::LoadFactoryPreset(int id, EffectSettings& settings) const
+{
+   const auto presets = DynamicRangeProcessorUtils::GetCompressorPresets();
+   if (id < 0 || id >= presets.size())
+      return {};
+   EffectCompressor::GetSettings(settings) = presets[id].preset;
+   return { nullptr };
+}
 
 std::unique_ptr<EffectEditor> EffectCompressor::MakeEditor(
    ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,

@@ -12,6 +12,8 @@ set( SOURCES
    DynamicRangeProcessorHistory.cpp
    DynamicRangeProcessorHistory.h
    DynamicRangeProcessorTypes.h
+   DynamicRangeProcessorUtils.cpp
+   DynamicRangeProcessorUtils.h
    MeterValueProvider.cpp
    MeterValueProvider.h
    UpwardMeterValueProvider.cpp
@@ -23,6 +25,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-utility
+   lib-strings
 )
 audacity_library( lib-dynamic-range-processor "${SOURCES}" "${LIBRARIES}"
    "" ""

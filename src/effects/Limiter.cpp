@@ -13,6 +13,7 @@
 #include "CompressorInstance.h" // A limiter is just a compressor with hard-coded parameters.
 #include "DynamicRangeProcessorDummyOutputs.h"
 #include "DynamicRangeProcessorEffectUtils.h"
+#include "DynamicRangeProcessorUtils.h"
 #include "LimiterEditor.h"
 #include "LoadEffects.h"
 #include "ShuttleAutomation.h"
@@ -77,6 +78,27 @@ EffectType EffectLimiter::GetType() const
 auto EffectLimiter::RealtimeSupport() const -> RealtimeSince
 {
    return RealtimeSince::Always;
+}
+
+RegistryPaths EffectLimiter::GetFactoryPresets() const
+{
+   const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
+   RegistryPaths paths(presets.size());
+   std::transform(
+      presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
+         return RegistryPath { preset.name.Translation() };
+      });
+   return paths;
+}
+
+OptionalMessage
+EffectLimiter::LoadFactoryPreset(int id, EffectSettings& settings) const
+{
+   const auto presets = DynamicRangeProcessorUtils::GetLimiterPresets();
+   if (id < 0 || id >= presets.size())
+      return {};
+   EffectLimiter::GetSettings(settings) = presets[id].preset;
+   return { nullptr };
 }
 
 std::unique_ptr<EffectEditor> EffectLimiter::MakeEditor(
