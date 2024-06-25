@@ -1,4 +1,13 @@
-// TODO header
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  DynamicRangeProcessorHistoryTests.cpp
+
+  Matthieu Hodgkinson
+
+**********************************************************************/
 #include "DynamicRangeProcessorHistory.h"
 #include "DynamicRangeProcessorTypes.h"
 #include <catch2/catch.hpp>

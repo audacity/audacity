@@ -4,6 +4,7 @@ add_unit_test(
    SOURCES
       CompressorProcessorTests.cpp
       DynamicRangeProcessorHistoryTests.cpp
+      DynamicRangeProcessorUtilsTests.cpp
    LIBRARIES
       lib-dynamic-range-processor
 )

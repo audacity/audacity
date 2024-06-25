@@ -33,6 +33,9 @@ public:
 
    EffectType GetType() const override;
    RealtimeSince RealtimeSupport() const override;
+   RegistryPaths GetFactoryPresets() const override;
+   OptionalMessage
+   LoadFactoryPreset(int id, EffectSettings& settings) const override;
 
    // Effect implementation
 
