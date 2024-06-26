@@ -69,6 +69,12 @@ const UiActionList ProcessingUiActions::m_actions = {
              TranslatableString("action", "Delete"),
              TranslatableString("action", "Delete clip")
              ),
+    UiAction("clip-delete-selected",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete"),
+             TranslatableString("action", "Delete clip")
+             ),
     UiAction("clip-cut-close-gap",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

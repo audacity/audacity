@@ -20,5 +20,7 @@ public:
 
     virtual bool changeClipStartTime(const ClipKey& clipKey, double sec) = 0;
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
+    virtual bool removeClip(const ClipKey& clipKey) = 0;
+    virtual bool removeClipData(const ClipKey& clipKey, double begin, double end) = 0;
 };
 }
