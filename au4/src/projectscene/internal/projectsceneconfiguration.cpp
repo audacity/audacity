@@ -38,7 +38,7 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleCha
     return m_isVerticalRulersVisibleChanged;
 }
 
-double ProjectSceneConfiguration::projectZoom() const
+double ProjectSceneConfiguration::zoom() const
 {
     return uiConfiguration()->physicalDpi();
 }

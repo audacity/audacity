@@ -173,13 +173,14 @@ void TimelineRuler::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &TimelineRuler::onFrameTimeChanged);
+        auto updateView = [this] () { update(); };
+
+        connect(m_context, &TimelineContext::frameTimeChanged, this, updateView);
+
+        connect(m_context, &TimelineContext::BPMChanged, this, updateView);
+        connect(m_context, &TimelineContext::timeSigUpperChanged, this, updateView);
+        connect(m_context, &TimelineContext::timeSigLowerChanged, this, updateView);
     }
 
     emit timelineContextChanged();
-}
-
-void TimelineRuler::onFrameTimeChanged()
-{
-    update();
 }
