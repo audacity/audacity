@@ -61,6 +61,16 @@ void ClipsListModel::reload()
         }
     });
 
+    m_allClipList.onItemRemoved(this, [this](const Clip& clip) {
+        for (auto it = m_allClipList.begin(); it != m_allClipList.end(); ++it) {
+            if (it->key == clip.key) {
+                m_allClipList.erase(it);
+                update();
+                break;
+            }
+        }
+    });
+
     update();
 }
 

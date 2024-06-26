@@ -113,12 +113,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Paste"),
              TranslatableString("action", "Paste")
              ),
-    UiAction("delete",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Delete"),
-             TranslatableString("action", "Delete")
-             ),
     UiAction("cut-and-close-gap",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
