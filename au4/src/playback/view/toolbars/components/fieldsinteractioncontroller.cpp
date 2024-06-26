@@ -72,12 +72,7 @@ void FieldsInteractionController::setVisualItem(QQuickItem* newVisualItem)
 
 int FieldsInteractionController::rowCount() const
 {
-    return m_rowCount;
-}
-
-void FieldsInteractionController::setRowCount(int count)
-{
-    m_rowCount = count;
+    return m_valueString.size();
 }
 
 bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)

@@ -77,45 +77,11 @@ RowLayout {
         }
     }
 
-    FlatButton {
+    ArrowButton {
         id: popupBtn
 
         Layout.preferredWidth: 16
         Layout.fillHeight: true
-
-        icon: IconCode.SMALL_ARROW_DOWN
-        iconColor: ui.theme.fontSecondaryColor
-
-        backgroundItem: RoundedRectangle {
-            id: background
-
-            topRightRadius: 3
-            bottomRightRadius: 3
-
-            color: ui.theme.backgroundQuarternaryColor
-
-            states: [
-                State {
-                    name: "PRESSED"
-                    when: popupBtn.mouseArea.pressed
-
-                    PropertyChanges {
-                        target: background
-                        opacity: ui.theme.buttonOpacityHit
-                    }
-                },
-
-                State {
-                    name: "HOVERED"
-                    when: popupBtn.mouseArea.containsMouse && !popupBtn.mouseArea.pressed
-
-                    PropertyChanges {
-                        target: background
-                        opacity: ui.theme.buttonOpacityHover
-                    }
-                }
-            ]
-        }
 
         function togglePopupOpened() {
             if (popup.isOpened) {

@@ -215,10 +215,6 @@ void TimecodeModel::initFieldInteractionController()
 
     connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
             this, &TimecodeModel::setValue);
-
-    connect(this, &TimecodeModel::dataChanged, this, [this]() {
-        m_fieldsInteractionController->setRowCount(rowCount());
-    });
 }
 
 void TimecodeModel::updateValueString()

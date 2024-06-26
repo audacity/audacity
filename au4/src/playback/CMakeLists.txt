@@ -55,6 +55,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomiseitem.cpp

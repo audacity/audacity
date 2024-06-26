@@ -13,24 +13,14 @@ import Audacity.Playback 1.0
 RowLayout {
     id: root
 
-    property alias value: timecodeModel.value
-
-    property alias sampleRate: timecodeModel.sampleRate
-    property alias tempo: timecodeModel.tempo
-    property alias upperTimeSignature: timecodeModel.upperTimeSignature
-    property alias lowerTimeSignature: timecodeModel.lowerTimeSignature
-
-    property alias currentFormat: timecodeModel.currentFormat
-
-    property bool showMenu: true
-    property int backgroundLeftRadius: 3
+    property alias value: bpmModel.value
 
     signal valueChangeRequested(var newValue)
 
     height: 28
 
-    TimecodeModel {
-        id: timecodeModel
+    BPMModel {
+        id: bpmModel
 
         visualItem: root
 
@@ -43,10 +33,10 @@ RowLayout {
 
     RoundedRectangle {
         Layout.preferredWidth: childrenRect.width
-        Layout.fillHeight: true
+        Layout.preferredHeight: root.height
 
-        topLeftRadius: root.backgroundLeftRadius
-        bottomLeftRadius: root.backgroundLeftRadius
+        topLeftRadius: 3
+        bottomLeftRadius: 3
 
         color: ui.theme.backgroundQuarternaryColor
 
@@ -66,16 +56,16 @@ RowLayout {
                 spacing: 0
 
                 Repeater {
-                    model: timecodeModel
+                    model: bpmModel
 
                     delegate: TimecodeField {
                         value: symbol
 
-                        isSelected: model.index === timecodeModel.currentEditedFieldIndex
+                        isSelected: model.index === bpmModel.currentEditedFieldIndex
                         isEditable: editable
 
                         onClicked: {
-                            timecodeModel.currentEditedFieldIndex = model.index
+                            bpmModel.currentEditedFieldIndex = model.index
                         }
                     }
                 }
@@ -83,18 +73,35 @@ RowLayout {
         }
     }
 
-    ArrowMenuButton {
-        id: menuBtn
-
+    ColumnLayout {
         Layout.preferredWidth: 16
-        Layout.fillHeight: true
+        Layout.preferredHeight: root.height
 
-        menuModel: timecodeModel.availableFormats
+        spacing: 1
 
-        visible: root.showMenu
+        ArrowButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
 
-        onHandleMenuItem: function(itemId) {
-            timecodeModel.currentFormat = parseInt(itemId)
+            isDown: false
+            bottomRightRadius: 0
+
+            onClicked: function(mouse) {
+                bpmModel.upValue()
+            }
+        }
+
+        ArrowButton {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignBottom
+
+            isDown: true
+            topRightRadius: 0
+
+            onClicked: function(mouse) {
+                bpmModel.downValue()
+            }
         }
     }
 }

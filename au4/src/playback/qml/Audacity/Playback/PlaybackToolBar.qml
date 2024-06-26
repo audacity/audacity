@@ -39,6 +39,7 @@ Item {
             case PlaybackToolBarModel.PLAYBACK_CONTROL: return controlComp
             case PlaybackToolBarModel.PLAYBACK_LEVEL: return playbackLevelComp
             case PlaybackToolBarModel.PLAYBACK_TIME: return playbackTimeComp
+            case PlaybackToolBarModel.PLAYBACK_BPM: return playbackBPMComp
             case PlaybackToolBarModel.PLAYBACK_TIME_SIGNATURE: return playbackTimeSignatureComp
             case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
             case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
@@ -120,6 +121,24 @@ Item {
                     }
 
                     itemData.currentFormat = currentFormat
+                }
+            }
+        }
+
+        Component {
+            id: playbackBPMComp
+
+            BPM {
+                property var itemData: null
+
+                value: Boolean(itemData) ? itemData.currentValue : 0
+
+                onValueChangeRequested: function(newValue) {
+                    if (!Boolean(itemData)) {
+                        return
+                    }
+
+                    itemData.currentValue = newValue
                 }
             }
         }

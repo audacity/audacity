@@ -20,6 +20,7 @@
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
 
 #include "view/toolbars/components/timecodemodel.h"
+#include "view/toolbars/components/bpmmodel.h"
 
 using namespace au::playback;
 using namespace muse;
@@ -70,6 +71,7 @@ void PlaybackModule::registerUiTypes()
 
     qmlRegisterType<TimecodeModel>("Audacity.Playback", 1, 0, "TimecodeModel");
     qmlRegisterType<PlaybackStateModel>("Audacity.Playback", 1, 0, "PlaybackStateModel");
+    qmlRegisterType<BPMModel>("Audacity.Playback", 1, 0, "BPMModel");
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)

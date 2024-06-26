@@ -27,7 +27,6 @@ public:
     void setVisualItem(QQuickItem* newVisualItem);
 
     int rowCount() const;
-    void setRowCount(int count);
 
 signals:
     void currentEditedFieldIndexChanged();
@@ -45,7 +44,6 @@ private:
     QString m_valueString;
 
     int m_currentEditedFieldIndex = -1;
-    int m_rowCount = 0;
 
     QQuickItem* m_visualItem = nullptr;
 

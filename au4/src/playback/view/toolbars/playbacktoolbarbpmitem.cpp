@@ -1,0 +1,66 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "playbacktoolbarbpmitem.h"
+
+using namespace au::playback;
+
+PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
+                                               muse::uicomponents::ToolBarItemType::Type type,
+                                               QObject* parent)
+    : muse::uicomponents::ToolBarItem(action, type, parent)
+{
+    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+        onProjectChanged();
+    });
+
+    onProjectChanged();
+}
+
+double PlaybackToolBarBPMItem::currentValue() const
+{
+    return m_currentValue;
+}
+
+void PlaybackToolBarBPMItem::setCurrentValue(double value)
+{
+    if (qFuzzyCompare(m_currentValue, value)) {
+        return;
+    }
+
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return;
+    }
+
+    processing::TimeSignature timeSignature = project->timeSignature();
+    timeSignature.tempo = value;
+    project->setTimeSignature(timeSignature);
+}
+
+void PlaybackToolBarBPMItem::onProjectChanged()
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return;
+    }
+
+    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature&) {
+        updateValues();
+    });
+
+    updateValues();
+}
+
+void PlaybackToolBarBPMItem::updateValues()
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return;
+    }
+
+    processing::TimeSignature timeSignature = project->timeSignature();
+
+    m_currentValue = timeSignature.tempo;
+    emit currentValueChanged();
+}
