@@ -19,7 +19,7 @@
 #include "view/toolbars/playbacktoolbarcustomisemodel.h"
 #include "view/toolbars/playbacktoolbarcustomiseitem.h"
 
-#include "view/toolbars/timecode/timecodemodel.h"
+#include "view/toolbars/components/timecodemodel.h"
 
 using namespace au::playback;
 using namespace muse;
