@@ -177,7 +177,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("cut"),
         makeMenuItem("copy"),
         makeMenuItem("paste"),
-        makeMenuItem("delete"),
+        makeMenuItem("clip-delete-selected"),
         makeSeparator(),
         makeMenuItem("cut-and-close-gap"),
         makeMenuItem("duplicate"),

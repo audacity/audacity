@@ -24,9 +24,11 @@ public:
 
     std::vector<TrackId> trackIdList() const;
     muse::async::NotifyList<Track> trackList() const;
+    Clip clip(const ClipKey& key) const;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 
     void onClipChanged(const Clip& clip);
+    void onClipRemoved(const Clip& clip);
 
     processing::TimeSignature timeSignature() const;
     void setTimeSignature(const processing::TimeSignature& timeSignature);
