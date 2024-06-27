@@ -123,12 +123,6 @@ DockPage {
             ProjectToolBar {
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
-
-                onActiveFocusRequested: {
-                    if (navigationPanel.active) {
-                        projectToolBar.forceActiveFocus()
-                    }
-                }
             }
         }
     ]
