@@ -51,16 +51,13 @@ RoundedRectangle {
         }
     }
 
-    Component.onCompleted: {
-        Qt.callLater(contextMenuModel.loadItems)
-    }
-
     MouseArea {
         id: hoverArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
         hoverEnabled: root.collapsed
         onClicked: function(e) {
+            contextMenuModel.loadItems()
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
         }
     }
@@ -71,14 +68,15 @@ RoundedRectangle {
         anchors.fill: parent
         anchors.margins: root.borderWidth
 
-        layer.enabled: true
-        layer.effect: EffectOpacityMask {
-            maskSource: RoundedRectangle {
-                width: inner.width
-                height: inner.height
-                radius: root.radius
-            }
-        }
+        //! NOTE On Linux it often results in a black square
+        // layer.enabled: true
+        // layer.effect: EffectOpacityMask {
+        //     maskSource: RoundedRectangle {
+        //         width: inner.width
+        //         height: inner.height
+        //         radius: root.radius
+        //     }
+        // }
 
         Rectangle {
             id: header
