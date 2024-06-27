@@ -6,7 +6,7 @@ import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
 
-RoundedRectangle {
+Rectangle {
 
     id: root
 

@@ -4,7 +4,7 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-Item {
+Rectangle {
 
     id: root
 
@@ -17,6 +17,7 @@ Item {
     signal interactionEnded()
 
     height: trackViewState.trackHeight
+    color: ui.theme.backgroundPrimaryColor
 
     ClipsListModel {
         id: clipsModel
@@ -41,9 +42,10 @@ Item {
         clipsModel.resetSelectedClip()
     }
 
-    Item {
+    Rectangle {
         anchors.fill: parent
         anchors.bottomMargin: sep.height
+        color: ui.theme.backgroundPrimaryColor
 
         Repeater {
             id: repeator
