@@ -5,6 +5,7 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "processing/iselectioncontroller.h"
 #include "iprojectsceneconfiguration.h"
 
@@ -32,6 +33,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
+    muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::ISelectionController> selectionController;
     muse::Inject<IProjectSceneConfiguration> configuration;
 
@@ -89,6 +91,7 @@ signals:
     void shiftViewByY(double dy);
 
 private:
+    void onProjectChanged();
 
     void shiftFrameTimeOnStep(int direction);
     void setFrameStartTime(double newFrameStartTime);
@@ -100,6 +103,8 @@ private:
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
     void updateSelectionActive();
+
+    void updateTimeSignature();
 
     double m_frameWidth = 0.0;
     double m_frameHeight = 0.0;

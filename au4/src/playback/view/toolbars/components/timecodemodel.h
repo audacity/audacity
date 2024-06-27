@@ -7,6 +7,7 @@
 #include <QQuickItem>
 
 #include "timecodeformatter.h"
+#include "fieldsinteractioncontroller.h"
 
 namespace au::playback {
 class TimecodeModel : public QAbstractListModel
@@ -26,7 +27,7 @@ class TimecodeModel : public QAbstractListModel
     Q_PROPERTY(int currentEditedFieldIndex READ currentEditedFieldIndex
                WRITE setCurrentEditedFieldIndex NOTIFY currentEditedFieldIndexChanged FINAL)
 
-    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem NOTIFY visualItemChanged)
+    Q_PROPERTY(QQuickItem * visualItem READ visualItem WRITE setVisualItem CONSTANT)
 
 public:
     explicit TimecodeModel(QObject* parent = nullptr);
@@ -74,7 +75,7 @@ public:
     void setCurrentEditedFieldIndex(int index);
 
     QQuickItem* visualItem() const;
-    void setVisualItem(QQuickItem* newVisualItem);
+    void setVisualItem(QQuickItem* item);
 
     QVariantList availableFormats();
 
@@ -103,8 +104,6 @@ signals:
 
     void currentEditedFieldIndexChanged();
 
-    void visualItemChanged();
-
 private:
     friend class TimecodeModelTests;
 
@@ -113,14 +112,10 @@ private:
         rIsEditable
     };
 
-    bool eventFilter(QObject* watched, QEvent* event) override;
-    bool isMouseWithinBoundaries(const QPoint& mousePos) const;
-
-    void moveCurrentEditedField(int moveKey);
-    void adjustCurrentEditedField(int adjustKey);
-
     void reloadFormatter();
     void initFormatter();
+
+    void initFieldInteractionController();
 
     void updateValueString();
 
@@ -132,13 +127,10 @@ private:
     int m_upperTimeSignature = 0;
     int m_lowerTimeSignature = 0;
 
-    int m_currentEditedFieldIndex = -1;
-
     std::shared_ptr<TimecodeFormatter> m_formatter;
+    std::shared_ptr<FieldsInteractionController> m_fieldsInteractionController;
 
     QList<ViewFormat> m_availableViewFormats;
     int m_currentFormat = int(ViewFormatType::HHMMSS);
-
-    QQuickItem* m_visualItem = nullptr;
 };
 }

@@ -57,8 +57,6 @@ private:
     void drawLabels(QPainter* painter, const Ticks& ticks, double w, double h);
     void drawTicks(QPainter* painter, const Ticks& ticks);
 
-    void onFrameTimeChanged();
-
     TimelineContext* m_context = nullptr;
     std::unique_ptr<IRulerFormat> m_formatter;
 };

@@ -28,11 +28,6 @@ void ClipsListModel::init()
 
     dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
 
-    if (m_context) {
-        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
-    }
-
     onSelectedClip(selectionController()->selectedClip());
     selectionController()->clipSelected().onReceive(this, [this](const processing::ClipKey& k) {
         onSelectedClip(k);
@@ -275,7 +270,18 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     if (m_context == newContext) {
         return;
     }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
     m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+    }
+
     emit timelineContextChanged();
 }
 

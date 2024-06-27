@@ -29,6 +29,11 @@ double TimecodeFormatter::singleStep(double value, int, bool)
     return value;
 }
 
+double TimecodeFormatter::singleStep(const QString& valueStr, int digitIndex, bool upwards)
+{
+    return singleStep(stringToValue(valueStr).value(), digitIndex, upwards);
+}
+
 void TimecodeFormatter::setSampleRate(double sampleRate)
 {
     m_sampleRate = sampleRate;

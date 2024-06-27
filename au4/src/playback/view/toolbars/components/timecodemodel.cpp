@@ -3,8 +3,6 @@
 */
 #include "timecodemodel.h"
 
-#include <QKeyEvent>
-
 #include "uicomponents/view/menuitem.h"
 #include "ui/uiaction.h"
 
@@ -56,6 +54,8 @@ TimecodeModel::TimecodeModel(QObject* parent)
         { ViewFormatType::BarBeat, muse::qtrc("playback", "bar:beat"), "bar:beat" },
         { ViewFormatType::BarBeatTick, muse::qtrc("playback", "bar:beat:tick"), "bar:beat:tick" },
     };
+
+    initFieldInteractionController();
 
     reloadFormatter();
 
@@ -163,123 +163,22 @@ void TimecodeModel::setCurrentFormat(int format)
 
 int TimecodeModel::currentEditedFieldIndex() const
 {
-    return m_currentEditedFieldIndex;
+    return m_fieldsInteractionController->currentEditedFieldIndex();
 }
 
 void TimecodeModel::setCurrentEditedFieldIndex(int index)
 {
-    if (m_currentEditedFieldIndex == index) {
-        return;
-    }
-
-    if (index >= 0) {
-        qApp->installEventFilter(this);
-    } else {
-        qApp->removeEventFilter(this);
-    }
-
-    m_currentEditedFieldIndex = index;
-    emit currentEditedFieldIndexChanged();
+    m_fieldsInteractionController->setCurrentEditedFieldIndex(index);
 }
 
 QQuickItem* TimecodeModel::visualItem() const
 {
-    return m_visualItem;
+    return m_fieldsInteractionController->visualItem();
 }
 
-void TimecodeModel::setVisualItem(QQuickItem* newVisualItem)
+void TimecodeModel::setVisualItem(QQuickItem* item)
 {
-    if (m_visualItem == newVisualItem) {
-        return;
-    }
-
-    m_visualItem = newVisualItem;
-    emit visualItemChanged();
-}
-
-bool TimecodeModel::eventFilter(QObject* watched, QEvent* event)
-{
-    if (event->type() == QEvent::KeyPress) {
-        QKeyEvent* keyEvent = dynamic_cast<QKeyEvent*>(event);
-        int key = keyEvent->key();
-        if (key == Qt::Key_Escape) {
-            setCurrentEditedFieldIndex(-1);
-            return true;
-        } else if (key >= Qt::Key_0 && key <= Qt::Key_9) {
-            QString newValueStr = m_valueString;
-            newValueStr.replace(m_currentEditedFieldIndex, 1, QChar('0' + (key - Qt::Key_0)));
-
-            setValue(m_formatter->stringToValue(newValueStr).value());
-            return true;
-        } else if (key == Qt::Key_Left || key == Qt::Key_Right) {
-            moveCurrentEditedField(key);
-            return true;
-        } else if (key == Qt::Key_Up || key == Qt::Key_Down) {
-            adjustCurrentEditedField(key);
-            return true;
-        }
-    }
-
-    if (event->type() == QEvent::MouseButtonPress) {
-        if (!isMouseWithinBoundaries(QCursor::pos())) {
-            setCurrentEditedFieldIndex(-1);
-        }
-    }
-
-    return QObject::eventFilter(watched, event);
-}
-
-bool TimecodeModel::isMouseWithinBoundaries(const QPoint& mousePos) const
-{
-    if (!m_visualItem) {
-        return false;
-    }
-
-    QRectF viewRect = m_visualItem->boundingRect();
-    viewRect.moveTopLeft(m_visualItem->mapToGlobal(QPoint(0, 0)));
-
-    return viewRect.contains(mousePos);
-}
-
-void TimecodeModel::moveCurrentEditedField(int moveKey)
-{
-    int newIndex = m_currentEditedFieldIndex;
-    while (true) {
-        if (moveKey == Qt::Key_Left) {
-            newIndex--;
-        } else {
-            newIndex++;
-        }
-
-        if (newIndex < 0) {
-            newIndex = rowCount() - 1;
-        } else if (newIndex >= rowCount()) {
-            newIndex = 0;
-        }
-
-        if (isFieldEditable(m_valueString[newIndex])) {
-            break;
-        }
-    }
-
-    setCurrentEditedFieldIndex(newIndex);
-}
-
-void TimecodeModel::adjustCurrentEditedField(int adjustKey)
-{
-    int digitIndex = 0;
-
-    for (int i = 0; i < m_valueString.size(); ++i) {
-        if (i == m_currentEditedFieldIndex) {
-            break;
-        }
-
-        if (isFieldEditable(m_valueString[i])) {
-            digitIndex++;
-        }
-    }
-
-    setValue(m_formatter->singleStep(m_value, digitIndex, adjustKey == Qt::Key_Up));
+    m_fieldsInteractionController->setVisualItem(item);
 }
 
 void TimecodeModel::reloadFormatter()
@@ -293,6 +192,8 @@ void TimecodeModel::reloadFormatter()
     }
 
     initFormatter();
+
+    m_fieldsInteractionController->setFormatter(m_formatter);
 }
 
 void TimecodeModel::initFormatter()
@@ -303,6 +204,17 @@ void TimecodeModel::initFormatter()
     m_formatter->setLowerTimeSignature(m_lowerTimeSignature);
 
     m_formatter->init();
+}
+
+void TimecodeModel::initFieldInteractionController()
+{
+    m_fieldsInteractionController = std::make_shared<FieldsInteractionController>(this);
+
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::currentEditedFieldIndexChanged,
+            this, &TimecodeModel::currentEditedFieldIndexChanged);
+
+    connect(m_fieldsInteractionController.get(), &FieldsInteractionController::valueChanged,
+            this, &TimecodeModel::setValue);
 }
 
 void TimecodeModel::updateValueString()
@@ -323,6 +235,8 @@ void TimecodeModel::updateValueString()
             }
         }
     }
+
+    m_fieldsInteractionController->setValueString(m_valueString);
 }
 
 double TimecodeModel::sampleRate() const

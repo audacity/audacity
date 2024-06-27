@@ -19,11 +19,8 @@ TimelineContext::TimelineContext(QObject* parent)
 
 void TimelineContext::init(double frameWidth)
 {
-    m_zoom = configuration()->projectZoom();
+    m_zoom = configuration()->zoom();
     emit zoomChanged();
-
-    m_BPM = 120;
-    emit BPMChanged();
 
     m_frameStartTime = 0.0;
     emit frameStartTimeChanged();
@@ -41,6 +38,12 @@ void TimelineContext::init(double frameWidth)
     selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](processing::secs_t time) {
         setSelectionEndTime(time);
     });
+
+    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+        onProjectChanged();
+    });
+
+    onProjectChanged();
 }
 
 void TimelineContext::onWheel(const QPoint& pixelDelta, const QPoint& angleDelta)
@@ -132,6 +135,20 @@ void TimelineContext::shiftFrameTime(double shift)
     setFrameEndTime(m_frameEndTime + shift);
 
     emit frameTimeChanged();
+}
+
+void TimelineContext::onProjectChanged()
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return;
+    }
+
+    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature&) {
+        updateTimeSignature();
+    });
+
+    updateTimeSignature();
 }
 
 void TimelineContext::shiftFrameTimeOnStep(int direction)
@@ -286,4 +303,25 @@ void TimelineContext::updateSelectionActive()
     }
     m_selectionActive = isActive;
     emit selectionActiveChanged();
+}
+
+void TimelineContext::updateTimeSignature()
+{
+    auto project = globalContext()->currentProcessingProject();
+    if (!project) {
+        return;
+    }
+
+    processing::TimeSignature timeSignature = project->timeSignature();
+
+    m_timeSigUpper = timeSignature.upper;
+    emit timeSigUpperChanged();
+
+    m_timeSigLower = timeSignature.lower;
+    emit timeSigLowerChanged();
+
+    m_BPM = timeSignature.tempo;
+    emit BPMChanged();
+
+    updateFrameTime();
 }

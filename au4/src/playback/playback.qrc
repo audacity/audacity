@@ -13,5 +13,8 @@
         <file>qml/Audacity/Playback/components/TimecodeStartEnd.qml</file>
         <file>qml/Audacity/Playback/components/TimeSignature.qml</file>
         <file>qml/Audacity/Playback/components/TimeSignaturePopup.qml</file>
+        <file>qml/Audacity/Playback/components/BPM.qml</file>
+        <file>qml/Audacity/Playback/components/ArrowButton.qml</file>
+        <file>qml/Audacity/Playback/components/ArrowMenuButton.qml</file>
     </qresource>
 </RCC>

@@ -258,7 +258,7 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
             { "metronome", false },
             { "", true },
             { "playback-time", true },
-            { "playback-bpm", false },
+            { "playback-bpm", true },
             { "playback-time-signature", true },
             { "", true },
             { "snapping", false },

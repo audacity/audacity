@@ -40,18 +40,26 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodeformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/timecodeformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/numericformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/numericformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/beatsformatter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/beatsformatter.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/timecode/types.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodeformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/timecodeformatter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/numericformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/numericformatter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/beatsformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/beatsformatter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/fieldsinteractioncontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/fieldsinteractioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/types.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.h

@@ -3,7 +3,7 @@
  */
 #include <gtest/gtest.h>
 
-#include "../view/toolbars/timecode/timecodemodel.h"
+#include "../view/toolbars/components/timecodemodel.h"
 
 namespace au::playback {
 class TimecodeModelTests : public ::testing::Test

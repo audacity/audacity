@@ -34,6 +34,7 @@ public:
     virtual std::optional<double> stringToValue(const QString& value) const;
 
     virtual double singleStep(double value, int digitIndex, bool upwards);
+    virtual double singleStep(const QString& valueStr, int digitIndex, bool upwards);
 
     void setSampleRate(double sampleRate);
 
