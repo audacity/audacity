@@ -1,5 +1,6 @@
 import QtQuick
 
+import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
@@ -51,13 +52,28 @@ Rectangle {
         height: timeline.height
         width: content.anchors.leftMargin
         color: timeline.color
+
+        SeparatorLine {
+            id: topBorder
+            width: parent.width
+            anchors.bottom: parent.bottom
+            color: ui.theme.strokeColor
+        }
+    }
+
+    Rectangle {
+        id: canvasIndent
+        anchors.top: timelineIndent.bottom
+        anchors.bottom: parent.bottom
+        height: timeline.height
+        width: content.anchors.leftMargin
+        color: ui.theme.backgroundTertiaryColor
     }
 
     Rectangle {
         id: content
         anchors.fill: parent
-        anchors.leftMargin: 8
-        color: ui.theme.backgroundPrimaryColor
+        anchors.leftMargin: 12
 
         Timeline {
             id: timeline
@@ -66,12 +82,21 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 76
+            height: 77
             z: 2
 
             onClicked: function (e) {
                 playCursorController.seekToX(e.x)
             }
+        }
+
+        GridLines {
+            timelineRuler: timeline.ruler
+
+            anchors.top: timeline.bottom
+            anchors.bottom: parent.bottom
+            anchors.left: timeline.left
+            anchors.right: parent.right
         }
 
         MouseArea {

@@ -20,6 +20,7 @@ struct TickInfo {
     QString tickLabel;
     TickType tickType = TickType::MINORMINOR;
     QLineF line;
+    double timeValue;
 };
 
 using Ticks = QVector<TickInfo>;
@@ -41,6 +42,8 @@ public:
     explicit TimelineRuler(QQuickItem* parent = nullptr);
     ~TimelineRuler() = default;
 
+    IntervalInfo intervalInfo();
+
     void setFormatter(const TimelineRulerMode mode);
 
     void paint(QPainter* painter) override;
@@ -50,6 +53,7 @@ public:
 
 signals:
     void timelineContextChanged();
+    void ticksChanged(Ticks ticks);
     void formatterChanged();
 
 private:

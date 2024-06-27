@@ -9,6 +9,7 @@ Rectangle {
     id: root
 
     property alias context: timelineContext
+    property alias ruler: timelineRuler
 
     signal clicked(var mouse)
 
