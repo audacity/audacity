@@ -46,6 +46,8 @@ public:
     Q_INVOKABLE void selectClip(int index);
     Q_INVOKABLE void resetSelectedClip();
 
+    Q_INVOKABLE bool changeClipTitle(int index, const QString& newTitle);
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -76,7 +78,6 @@ private:
     void update();
 
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
-    bool changeClipTitle(const QModelIndex& index, const QVariant& value);
 
     void onSelectedClip(const processing::ClipKey& k);
 

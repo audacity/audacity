@@ -36,6 +36,11 @@ Item {
         clipsModel.init()
     }
 
+    function changeClipTitle(index, newTitle) {
+        clipsModel.changeClipTitle(index, newTitle)
+        clipsModel.resetSelectedClip()
+    }
+
     Item {
         anchors.fill: parent
         anchors.bottomMargin: sep.height
@@ -74,8 +79,7 @@ Item {
                 }
 
                 onTitleEditAccepted: function(newTitle) {
-                    model.clipTitle = newTitle
-                    clipsModel.resetSelectedClip()
+                    root.changeClipTitle(model.index, newTitle)
                 }
 
                 onTitleEditCanceled: {
