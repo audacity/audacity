@@ -44,6 +44,8 @@ private:
         Running
     };
 
+    void onProjectChanged();
+
     void toggleRecord();
     void start();
     void pause();

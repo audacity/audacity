@@ -45,6 +45,8 @@ public:
 
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     void close() override;
+    muse::async::Notification aboutCloseBegin() const override;
+    muse::async::Notification aboutCloseEnd() const override;
 
     QString displayName() const override;
     muse::async::Notification displayNameChanged() const override;
@@ -81,6 +83,9 @@ private:
 
     void markAsSaved(const muse::io::path_t& path);
     void setNeedSave(bool needSave);
+
+    muse::async::Notification m_aboutCloseBegin;
+    muse::async::Notification m_aboutCloseEnd;
 
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;

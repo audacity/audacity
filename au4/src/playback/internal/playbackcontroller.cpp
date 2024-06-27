@@ -44,7 +44,7 @@ void PlaybackController::init()
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
 
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this]() {
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -70,7 +70,6 @@ void PlaybackController::init()
 
 void PlaybackController::deinit()
 {
-    stop();
 }
 
 IPlayerPtr PlaybackController::player() const
@@ -170,6 +169,12 @@ muse::async::Channel<TrackId> PlaybackController::trackRemoved() const
 
 void PlaybackController::onProjectChanged()
 {
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        prj->aboutCloseBegin().onNotify(this, [this]() {
+            stop();
+        });
+    }
 }
 
 void PlaybackController::togglePlay()

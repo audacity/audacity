@@ -84,7 +84,21 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
 
 void Audacity4Project::close()
 {
+    m_aboutCloseBegin.notify();
+
     m_au3Project->close();
+
+    m_aboutCloseEnd.notify();
+}
+
+muse::async::Notification Audacity4Project::aboutCloseBegin() const
+{
+    return m_aboutCloseBegin;
+}
+
+muse::async::Notification Audacity4Project::aboutCloseEnd() const
+{
+    return m_aboutCloseEnd;
 }
 
 QString Audacity4Project::displayName() const
