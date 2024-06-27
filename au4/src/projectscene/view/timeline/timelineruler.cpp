@@ -31,6 +31,11 @@ TimelineRuler::TimelineRuler(QQuickItem* parent)
     });
 }
 
+IntervalInfo TimelineRuler::intervalInfo()
+{
+    return m_formatter->intervalInfo(m_context);
+}
+
 void TimelineRuler::setFormatter(const TimelineRulerMode mode)
 {
     if (mode == TimelineRulerMode::MINUTES_AND_SECONDS) {
@@ -51,18 +56,21 @@ void TimelineRuler::paint(QPainter* painter)
 
     // begin painting
     QPen pen = painter->pen();
-    pen.setWidth(1);
+    pen.setWidth(2);
     pen.setColor(uiconfiguration()->currentTheme().values.value(muse::ui::STROKE_COLOR).toString());
     painter->setPen(pen);
 
     // vertical line (ruler border)
     painter->drawLine(QLineF(0, 0, 0, h));
 
+    pen.setWidth(1);
+    painter->setPen(pen);
     // horizontal line in the middle
     painter->drawLine(QLineF(0, h / 2, w, h / 2));
 
     drawLabels(painter, ticks, w, h);
     drawTicks(painter, ticks);
+    emit ticksChanged(ticks);
 }
 
 Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w, double h)
@@ -109,14 +117,16 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
             ticks.append(TickInfo { static_cast<int>(std::round(x) + (labelsCount % LABEL_INTERVAL == 0 ? LABEL_OFFSET : 0)),
                                     tickLabel,
                                     tickType,
-                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)) });
+                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)),
+                                    value });
             labelsCount++;
         } else {
             // add tick without label
             ticks.append(TickInfo { -1,
                                     QString(),
                                     tickType,
-                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)) });
+                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)),
+                                    value });
         }
 
         x += m_context->zoom() * timeInterval.minorMinor;

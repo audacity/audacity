@@ -29,6 +29,8 @@
 #include "view/timeline/timelineruler.h"
 #include "view/timeline/timelinecontextmenumodel.h"
 
+#include "view/timeline/gridlines.h"
+
 #include "view/playcursor/playcursorcontroller.h"
 
 #include "view/statusbar/selectionstatusmodel.h"
@@ -97,6 +99,9 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
     qmlRegisterType<TimelineRuler>("Audacity.ProjectScene", 1, 0, "TimelineRuler");
     qmlRegisterType<TimelineContextMenuModel>("Audacity.ProjectScene", 1, 0, "TimelineContextMenuModel");
+
+    // gridlines
+    qmlRegisterType<GridLines>("Audacity.ProjectScene", 1, 0, "GridLines");
 
     // play cursor
     qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
