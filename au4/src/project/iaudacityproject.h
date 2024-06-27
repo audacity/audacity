@@ -18,7 +18,10 @@ public:
     virtual ~IAudacityProject() = default;
 
     virtual muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
+
     virtual void close() = 0;
+    virtual muse::async::Notification aboutCloseBegin() const = 0;
+    virtual muse::async::Notification aboutCloseEnd() const = 0;
 
     virtual bool isNewlyCreated() const = 0;
     virtual bool isImported() const = 0;

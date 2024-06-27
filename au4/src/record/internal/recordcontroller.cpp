@@ -23,11 +23,14 @@ void RecordController::init()
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
     });
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        onProjectChanged();
+    });
 }
 
 void RecordController::deinit()
 {
-    stop();
 }
 
 bool RecordController::isRecordAllowed() const
@@ -110,4 +113,14 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     }
 
     return true;
+}
+
+void RecordController::onProjectChanged()
+{
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        prj->aboutCloseBegin().onNotify(this, [this]() {
+            stop();
+        });
+    }
 }
