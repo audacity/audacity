@@ -73,6 +73,8 @@ private:
         ClipMoveMinimumXRole
     };
 
+    void update();
+
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
     bool changeClipTitle(const QModelIndex& index, const QVariant& value);
 
@@ -82,7 +84,8 @@ private:
 
     TimelineContext* m_context = nullptr;
     processing::TrackId m_trackId = -1;
-    muse::async::NotifyList<au::processing::Clip> m_clipList;
+    muse::async::NotifyList<au::processing::Clip> m_allClipList;
+    std::vector<au::processing::Clip> m_clipList;
     int m_selectedClipIdx = -1;
 };
 }
