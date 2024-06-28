@@ -167,9 +167,6 @@ bool ClipsListModel::setData(const QModelIndex& index, const QVariant& value, in
     case ClipLeftRole: {
         return changeClipStartTime(index, value);
     } break;
-    case ClipTitleRole: {
-        return changeClipTitle(index, value);
-    } break;
     default:
         break;
     }
@@ -210,10 +207,9 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
     emit requestClipTitleEdit(key.index);
 }
 
-bool ClipsListModel::changeClipTitle(const QModelIndex& index, const QVariant& value)
+bool ClipsListModel::changeClipTitle(int index, const QString& newTitle)
 {
-    au::processing::Clip& clip = m_clipList[index.row()];
-    muse::String newTitle = value.toString();
+    const au::processing::Clip& clip = m_clipList.at(index);
     if (clip.title == newTitle) {
         return false;
     }

@@ -53,10 +53,11 @@ Rectangle {
         color: timeline.color
     }
 
-    Item {
+    Rectangle {
         id: content
         anchors.fill: parent
         anchors.leftMargin: 8
+        color: ui.theme.backgroundPrimaryColor
 
         Timeline {
             id: timeline
@@ -66,6 +67,7 @@ Rectangle {
             anchors.right: parent.right
 
             height: 76
+            z: 2
 
             onClicked: function (e) {
                 playCursorController.seekToX(e.x)
@@ -114,6 +116,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             anchors.left: parent.left
             anchors.right: parent.right
+            clip: false
 
             property real visibleContentHeight: view.contentHeight - view.contentY
 
@@ -142,8 +145,7 @@ Rectangle {
             model: tracksModel
 
             delegate: TrackClipsItem {
-                anchors.left: parent.left
-                anchors.right: parent.right
+                width: view.width
                 context: timeline.context
                 trackId: model.trackId
                 isDataSelected: model.isDataSelected

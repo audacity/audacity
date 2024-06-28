@@ -4,6 +4,7 @@
 #include "waveview.h"
 
 #include <QPainter>
+#include <QElapsedTimer>
 
 #include "draw/types/color.h"
 
@@ -20,7 +21,6 @@ static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
 WaveView::WaveView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
-    setAcceptHoverEvents(true);
 }
 
 WaveView::~WaveView()
@@ -37,6 +37,9 @@ void WaveView::setClipKey(const ClipKey& newClipKey)
 
 void WaveView::paint(QPainter* painter)
 {
+    // QElapsedTimer timer;
+    // timer.start();
+
     au3::IAu3WavePainter::Params params;
     params.geometry.clipHeight = height();
     params.geometry.clipWidth = width();
@@ -56,7 +59,11 @@ void WaveView::paint(QPainter* painter)
         params.style.rmsPen = muse::draw::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.1);
     }
 
+    painter->fillRect(0, 0, width(), height(), params.style.blankBrush);
+
     wavePainter()->paint(*painter, m_clipKey.key, params);
+
+    //LOGDA() << timer.elapsed() << " ms";
 }
 
 ClipKey WaveView::clipKey() const

@@ -5,6 +5,7 @@
 
 #include "global/containers.h"
 #include "global/types/number.h"
+#include "global/logstream.h"
 
 namespace au::processing {
 using msecs_t = int64_t;
@@ -39,4 +40,10 @@ struct TimeSignature
     int upper = 0;
     int lower = 0;
 };
+}
+
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::processing::ClipKey& k)
+{
+    s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
+    return s;
 }

@@ -4,7 +4,7 @@ import Muse.UiComponents
 
 import Audacity.ProjectScene
 
-Item {
+Rectangle {
 
     id: root
 
@@ -17,6 +17,7 @@ Item {
     signal interactionEnded()
 
     height: trackViewState.trackHeight
+    color: ui.theme.backgroundPrimaryColor
 
     ClipsListModel {
         id: clipsModel
@@ -36,9 +37,15 @@ Item {
         clipsModel.init()
     }
 
-    Item {
+    function changeClipTitle(index, newTitle) {
+        clipsModel.changeClipTitle(index, newTitle)
+        clipsModel.resetSelectedClip()
+    }
+
+    Rectangle {
         anchors.fill: parent
         anchors.bottomMargin: sep.height
+        color: ui.theme.backgroundPrimaryColor
 
         Repeater {
             id: repeator
@@ -74,8 +81,7 @@ Item {
                 }
 
                 onTitleEditAccepted: function(newTitle) {
-                    model.clipTitle = newTitle
-                    clipsModel.resetSelectedClip()
+                    root.changeClipTitle(model.index, newTitle)
                 }
 
                 onTitleEditCanceled: {

@@ -6,7 +6,7 @@ import Muse.GraphicalEffects
 
 import Audacity.ProjectScene
 
-RoundedRectangle {
+Rectangle {
 
     id: root
 
@@ -35,7 +35,11 @@ RoundedRectangle {
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
 
     function editTitle() {
-        titleEdit.edit(titleLabel.text)
+        editLoader.edit(titleLabel.text)
+    }
+
+    function acceptEditTitle(newTitle) {
+        Qt.callLater(root.titleEditAccepted, newTitle)
     }
 
     ClipContextMenuModel {
@@ -62,7 +66,7 @@ RoundedRectangle {
         }
     }
 
-    Item {
+    Rectangle {
         id: inner
 
         anchors.fill: parent
@@ -124,44 +128,57 @@ RoundedRectangle {
                 horizontalAlignment: Qt.AlignLeft
             }
 
-            TextInputField {
-                id: titleEdit
-
-                property string newTitle: ""
+            Loader {
+                id: editLoader
 
                 anchors.fill: titleLabel
-                background.color: header.color
-                background.border.width: 0
-                background.radius: 0
-                inputField.color: titleLabel.color
-                textSidePadding: 0
-                visible: false
 
-                onTextChanged: function(text) {
-                    titleEdit.newTitle = text
-                }
-
-                onAccepted: {
-                    titleEdit.visible = false
-                    root.titleEditAccepted(titleEdit.newTitle)
-                }
-
-                onEscapted: {
-                    titleEdit.visible = false
-                }
-
-                onFocusChanged: {
-                    if (!titleEdit.focus) {
-                        titleEdit.visible = false
-                    }
-                }
+                property bool isEditState: false
+                sourceComponent: editLoader.isEditState ? titleEditComp : null
 
                 function edit(text) {
                     root.titleEditStarted()
-                    titleEdit.currentText = text
-                    titleEdit.newTitle = text
-                    titleEdit.visible = true
-                    titleEdit.ensureActiveFocus()
+                    editLoader.isEditState = true
+                    editLoader.item.currentText = text
+                    editLoader.item.newTitle = text
+                    editLoader.item.visible = true
+                    editLoader.item.ensureActiveFocus()
+                }
+            }
+
+            Component {
+                id: titleEditComp
+                TextInputField {
+                    id: titleEdit
+
+                    property string newTitle: ""
+
+                    anchors.fill: parent
+                    background.color: header.color
+                    background.border.width: 0
+                    background.radius: 0
+                    inputField.color: titleLabel.color
+                    textSidePadding: 0
+                    visible: false
+
+                    onTextChanged: function(text) {
+                        titleEdit.newTitle = text
+                    }
+
+                    onAccepted: {
+                        root.acceptEditTitle(titleEdit.newTitle)
+                        editLoader.isEditState = false
+                    }
+
+                    onEscapted: {
+                        editLoader.isEditState = false
+                    }
+
+                    onFocusChanged: {
+                        if (!titleEdit.focus) {
+                            titleEdit.visible = false
+                        }
+                    }
                 }
             }
 

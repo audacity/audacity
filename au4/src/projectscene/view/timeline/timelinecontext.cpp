@@ -127,6 +127,10 @@ void TimelineContext::moveToFrameTime(double startTime)
 
 void TimelineContext::shiftFrameTime(double shift)
 {
+    if (muse::is_zero(shift)) {
+        return;
+    }
+
     // do not shift to negative time values
     if (m_frameStartTime + shift < 0) {
         return;
