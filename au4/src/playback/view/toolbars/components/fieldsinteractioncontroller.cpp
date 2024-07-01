@@ -88,6 +88,9 @@ bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
             newValueStr.replace(m_currentEditedFieldIndex, 1, QChar('0' + (key - Qt::Key_0)));
 
             emit valueChanged(m_formatter->stringToValue(newValueStr).value());
+
+            moveCurrentEditedField(Qt::Key_Right);
+
             return true;
         } else if (key == Qt::Key_Left || key == Qt::Key_Right) {
             moveCurrentEditedField(key);
