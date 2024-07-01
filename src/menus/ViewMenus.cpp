@@ -20,6 +20,8 @@
 
 #include <numeric>
 
+#include "toolbars/ToolManager.h"
+
 // private helper classes and functions
 namespace {
 
@@ -276,6 +278,19 @@ void OnShowClipping(const CommandContext &context)
    trackPanel.Refresh(false);
 }
 
+void OnShowRMS(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &trackPanel = TrackPanel::Get( project );
+
+   ShowRMSPref().Toggle();
+   gPrefs->Flush();
+
+   ToolManager::ModifyAllProjectToolbarMenus();
+
+   trackPanel.Refresh(false);
+}
+
 } // namespace
 
 // Menu definitions
@@ -330,7 +345,10 @@ auto ViewMenu()
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             OnShowClipping, AlwaysEnabledFlag,
-            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) )
+            Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) ),
+         Command( wxT("ShowRMS"), XXO("Show &RMS in Waveform"),
+            OnShowRMS, AlwaysEnabledFlag,
+            Options{}.CheckTest( ShowRMSPref() ) )
       )
    ) };
    return menu;
