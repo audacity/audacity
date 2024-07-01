@@ -104,6 +104,7 @@ bool operator==(
           lhs.Height == rhs.Height && lhs.Min == rhs.Min &&
           lhs.Max == rhs.Max && lhs.DBRange == rhs.DBRange &&
           lhs.DBScale == rhs.DBScale && lhs.ShowClipping == rhs.ShowClipping &&
+          lhs.ShowRMS == rhs.ShowRMS &&
           lhs.BlankColor == rhs.BlankColor &&
           lhs.BackgroundColors == rhs.BackgroundColors &&
           lhs.SampleColors == rhs.SampleColors &&
