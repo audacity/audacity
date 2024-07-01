@@ -126,6 +126,9 @@ void AboutDialog::CreateCreditsList()
    const auto graphicsFormat =
    /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
       XO("%s, graphics");
+   const auto presetsFormat =
+   /* i18n-hint: For "About Audacity..." credits, substituting a person's proper name */
+      XO("%s, effects presets");
 
    // The Audacity Team: developers and support
    AddCredit(wxT("Antons \u010cinakovs"), testerFormat, roleTeamMember);
@@ -199,6 +202,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Daniel Horgan"), developerFormat, roleContributor);
    AddCredit(wxT("David Hostetler"), developerFormat, roleContributor);
    AddCredit(wxT("Edward Hui"), developerFormat, roleContributor);
+   AddCredit(wxT("Vladislav Isaev"), presetsFormat, roleContributor);
    AddCredit(wxT("Steve Jolly"), developerFormat, roleContributor);
    AddCredit(wxT("Steven Jones"), developerFormat, roleContributor);
    AddCredit(wxT("Henric Jungheim"), developerFormat, roleContributor);
