@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-05-17 23:19+0300\n"
-"PO-Revision-Date: 2024-05-20 08:30+0900\n"
+"PO-Revision-Date: 2024-06-13 17:38+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -561,7 +561,7 @@ msgid ""
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
 "ファイルへの書き込みに失敗しました。\n"
-"おそらく %s が書き込み可能でないか、ストレージに空きがありません。"
+"%s が書き込み可能でないか、ストレージに空きがありません。"
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
@@ -3000,7 +3000,7 @@ msgstr "キャンセル"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Are you sure you wish to cancel?"
-msgstr "本当にキャンセルしてもよろしいですか?"
+msgstr "キャンセルしてもよろしいですか?"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Confirm Cancel"
@@ -3008,7 +3008,7 @@ msgstr "キャンセルを確認"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Are you sure you wish to stop?"
-msgstr "本当に停止してもよろしいですか?"
+msgstr "停止してもよろしいですか?"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Confirm Stop"
@@ -3016,7 +3016,7 @@ msgstr "停止を確認"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Are you sure you wish to close?"
-msgstr "本当に閉じてもよろしいですか?"
+msgstr "閉じてもよろしいですか?"
 
 #: libraries/lib-wx-init/ProgressDialog.cpp
 msgid "Confirm Close"
@@ -3584,7 +3584,7 @@ msgstr ""
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
 msgid "Attempted to export %d channels, but maximum number of channels for selected output format is %d"
-msgstr "%d 本のチャンネルをエクスポートしようとしましたが、選択された出力形式ではチャンネルは最大 %d 本です"
+msgstr "%d チャンネルをエクスポートしようとしましたが、選択された出力形式では最大 %d チャンネルです"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -5365,7 +5365,7 @@ msgstr "Leland Lucius"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "(C) 2009 by Leland Lucius"
-msgstr "(C）2009 by Leland Lucius"
+msgstr "(C) 2009 by Leland Lucius"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "External Audacity module which provides a simple IDE for writing effects."
@@ -6028,7 +6028,7 @@ msgstr "あなたとリンクを共有する人だけがこのオーディオを
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
-msgstr "本当にキャンセルしてもよろしいですか?"
+msgstr "キャンセルしてもよろしいですか?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
@@ -6193,7 +6193,7 @@ msgstr "Allegro（.gro）ファイルの時間基準:"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Please select only one Note Track at a time."
-msgstr "一度に 1 本のノートトラックだけ選択してください。"
+msgstr "一度に 1 ノートトラックだけを選択してください。"
 
 #: modules/track-ui/mod-midi-import-export/ExportMIDI.cpp
 msgid "Please select a Note Track."
@@ -6389,7 +6389,7 @@ msgstr "%s について"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "日本語訳:<br>Akira Nishimura（akira@rsch.tuis.ac.jp）<br>Atsushi Yoshida（ayoshida.pub@gmail.com）<br>Phroneris（phroneris@gmail.com）<br>SakiPapa（tsugisaki.pub@gmail.com）"
+msgstr "日本語訳:<br>Akira Nishimura (akira@rsch.tuis.ac.jp)<br>Atsushi Yoshida<br>Phroneris<br>SakiPapa (tsugisaki.pub@gmail.com)<br>Shinki Nishikori"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -6473,7 +6473,7 @@ msgstr "ビルド情報"
 #: src/AboutDialog.cpp src/PluginDataViewCtrl.cpp
 #: src/PluginRegistrationDialog.cpp src/prefs/ModulePrefs.cpp
 msgid "Enabled"
-msgstr "有効です"
+msgstr "有効"
 
 #. i18n-hint: Information about when audacity was compiled follows
 #: src/AboutDialog.cpp
@@ -7185,7 +7185,7 @@ msgid ""
 msgstr ""
 "選択したプロジェクトを破棄してもよろしいですか?\n"
 "\n"
-"［はい］を選ぶと、すべてのプロジェクトが今すぐ削除され元に戻せません。"
+"［はい］を選ぶと、すべてのプロジェクトがすぐに削除され、元に戻せません。"
 
 #: src/BatchCommandDialog.cpp
 msgid "Select Command"
@@ -7254,7 +7254,7 @@ msgstr "メニューコマンド（パラメーター無し）"
 #: src/BatchCommands.cpp src/CommonCommandFlags.cpp
 #, c-format
 msgid "\"%s\" requires one or more tracks to be selected."
-msgstr "「%s」を使うにはトラックを 1 本以上選択する必要があります。"
+msgstr "「%s」を使うには 1 トラック以上選択する必要があります。"
 
 #: src/BatchCommands.cpp
 #, c-format
@@ -7479,7 +7479,7 @@ msgstr "名前は「%c」や「%c」を含んではいけません"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Are you sure you want to delete %s?"
-msgstr "本当に %s を削除してもよろしいですか?"
+msgstr "%s を削除してもよろしいですか?"
 
 #: src/BatchProcessDialog.cpp
 #, c-format
@@ -8800,7 +8800,7 @@ msgstr "プロジェクトチェックで、タグシーケンスに問題が見
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no changes"
-msgstr "何も変更せずにプロジェクトをただちに閉じる"
+msgstr "何も変更せずにプロジェクトをすぐに閉じる"
 
 #: src/ProjectFSCK.cpp
 msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
@@ -8840,8 +8840,8 @@ msgid ""
 msgstr ""
 "フォルダー「%s」のプロジェクトをチェックしたところ、\n"
 "外部オーディオファイル（「エイリアスファイル」）の欠落が\n"
-"%lld 個見つかりました。これらのファイルを自動的に復旧\n"
-"することはできません。\n"
+"%lld 個見つかりました。これらのファイルを自動的に\n"
+"復旧することはできません。\n"
 "\n"
 "次の 1 番目か 2 番目の方法で、欠落ファイルを見つけ出し\n"
 "元の場所に保存することができます。\n"
@@ -8859,7 +8859,7 @@ msgstr "欠落したオーディオを無音として扱う（このセッショ
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)."
-msgstr "欠落したオーディオを無音に置き換える（即座に、元に戻せない）"
+msgstr "欠落したオーディオを無音に置き換える（今すぐ、元に戻せません）"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Aliased File(s)"
@@ -8888,7 +8888,7 @@ msgstr "表示データの欠落を無音で埋める（このセッションの
 
 #: src/ProjectFSCK.cpp
 msgid "Close project immediately with no further changes"
-msgstr "これ以上の変更をせずにプロジェクトをすぐ閉じる"
+msgstr "これ以上変更せずにプロジェクトをすぐに閉じる"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Alias Summary File(s)"
@@ -8924,7 +8924,7 @@ msgstr ""
 
 #: src/ProjectFSCK.cpp
 msgid "Replace missing audio with silence (permanent immediately)"
-msgstr "欠落したオーディオを無音に置き換える（即座に、元に戻せない）"
+msgstr "欠落したオーディオを無音に置き換える（今すぐ、元に戻せません）"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Missing Audio Data Block File(s)"
@@ -8949,7 +8949,7 @@ msgstr "削除しないで続行（このセッションでは余計なファイ
 
 #: src/ProjectFSCK.cpp
 msgid "Delete orphan files (permanent immediately)"
-msgstr "孤立ファイルを削除（即座に、元に戻せない）"
+msgstr "孤立ファイルを削除（今すぐ、元に戻せません）"
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Orphan Block File(s)"
@@ -10347,7 +10347,7 @@ msgstr "オーディオ比較..."
 
 #: src/commands/CompareAudioCommand.h
 msgid "Compares a range on two tracks."
-msgstr "2 本のトラックのレンジを比較します。"
+msgstr "2 トラック間のレンジを比較します。"
 
 # ja: デモはデモなのであえて翻訳しない。
 #: src/commands/Demo.cpp
@@ -11578,7 +11578,7 @@ msgstr "リリースタイム %.1f 秒"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
-msgstr "一度に 1 本のトラックのみ測定できます。"
+msgstr "一度に 1 トラックのみ測定できます。"
 
 #: src/effects/Contrast.cpp
 msgid "Please select an audio track."
@@ -12332,7 +12332,7 @@ msgstr "エフェクトについて"
 #: src/effects/EffectUI.cpp
 #, c-format
 msgid "Are you sure you want to delete \"%s\"?"
-msgstr "本当に「%s」を削除してもよろしいですか?"
+msgstr "「%s」を削除してもよろしいですか?"
 
 #: src/effects/EffectUI.cpp
 msgid "Preset name:"
@@ -12805,7 +12805,7 @@ msgstr "ラウドネスノーマライズ"
 
 #: src/effects/Loudness.cpp
 msgid "Sets the loudness of one or more tracks"
-msgstr "1 本以上のトラックに対してラウドネスを設定"
+msgstr "1 トラック以上に対してラウドネスを設定"
 
 #: src/effects/Loudness.cpp
 msgid "Normalizing Loudness...\n"
@@ -13109,7 +13109,7 @@ msgstr "ノーマライズ"
 
 #: src/effects/Normalize.cpp
 msgid "Sets the peak amplitude of one or more tracks"
-msgstr "1 本以上のトラックに対して最大振幅値を設定"
+msgstr "1 トラック以上に対して最大振幅値を設定"
 
 #: src/effects/Normalize.cpp
 msgid "Removing DC offset and Normalizing...\n"
@@ -13200,7 +13200,7 @@ msgid ""
 msgstr ""
 "オーディオ選択範囲が短すぎてプレビューできません。\n"
 "\n"
-"オーディオ選択時間を少なくとも %.1f 秒以上に増やすか、\n"
+"オーディオ選択時間を %.1f 秒以上に増やすか、\n"
 "「時間分解能」を %.1f 秒未満にしてください。"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.
@@ -13228,7 +13228,7 @@ msgid ""
 msgstr ""
 "選択範囲に対して「時間分解能」が長すぎます。\n"
 "\n"
-"オーディオ選択時間を %.1f 以上に増やすか、\n"
+"オーディオ選択時間を %.1f 秒以上に増やすか、\n"
 "「時間分解能」を %.1f 秒未満にしてください。"
 
 #: src/effects/Phaser.cpp resources/EffectsMenuDefaults.xml
@@ -13308,7 +13308,7 @@ msgstr "修復"
 
 #: src/effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
-msgstr "1 本以上のトラックに対してピーク振幅を設定"
+msgstr "1 トラック以上に対してピーク振幅を設定"
 
 #: src/effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
@@ -14192,7 +14192,7 @@ msgstr "Nyquist が返すオーディオチャンネルが多すぎます。\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Nyquist は 1 本のオーディオチャンネルを配列として返しました。\n"
+msgstr "Nyquist は 1 オーディオチャンネルを配列として返しました。\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned an empty array.\n"
@@ -15783,12 +15783,12 @@ msgstr "レンダリング"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new stereo track"
-msgstr "%d 本のトラックを単一の新規ステレオトラックにミックスしてレンダリングしました"
+msgstr "%d トラックを新規の 1 ステレオトラックにミックスしてレンダリングしました"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Mixed and rendered %d tracks into one new mono track"
-msgstr "%d 本のトラックを単一の新規モノラルトラックにミックスしてレンダリングしました"
+msgstr "%d トラックを新規の 1 モノラルトラックにミックスしてレンダリングしました"
 
 #. i18n-hint: One or more audio tracks have been panned
 #: src/menus/TrackMenus.cpp
@@ -15938,7 +15938,7 @@ msgstr "入力された値は不適切です"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Resampling track %d"
-msgstr "%d 本目のトラックを再サンプリング中"
+msgstr "%d トラック目をを再サンプリング中"
 
 #: src/menus/TrackMenus.cpp
 msgid "Resampled audio track(s)"
@@ -15950,7 +15950,7 @@ msgstr "トラックを再サンプリング"
 
 #: src/menus/TrackMenus.cpp
 msgid "Please select at least one audio track and one MIDI track."
-msgstr "オーディオトラックと MIDI トラックを 1 本以上選択してください。"
+msgstr "オーディオトラックと MIDI トラックを 1 つ以上選択してください。"
 
 #: src/menus/TrackMenus.cpp
 #, c-format
@@ -16204,12 +16204,12 @@ msgstr "モノラルトラックを選択してください。"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select in a stereo track or two mono tracks."
-msgstr "1 本のステレオトラックか、2 本のモノラルトラックを選択してください。"
+msgstr "1 ステレオトラックか、2 モノラルトラックを選択してください。"
 
 #: src/menus/TransportMenus.cpp
 #, c-format
 msgid "Please select at least %d channels."
-msgstr "少なくとも %d チャンネルは選択してください。"
+msgstr "%d チャンネル以上選択してください。"
 
 #: src/menus/TransportMenus.cpp
 msgid "Please select a time within a clip."
@@ -17499,11 +17499,11 @@ msgstr "ピッチ（EAC）"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
-msgstr "最高周波数は 100Hz 以上である必要があります"
+msgstr "最高周波数は 100 Hz 以上である必要があります"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be at least 0 Hz"
-msgstr "最低周波数は少なくとも 0Hz である必要があります"
+msgstr "最低周波数は 0 Hz 以上である必要があります"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "Minimum frequency must be less than maximum frequency"
@@ -17511,7 +17511,7 @@ msgstr "最小周波数は最大周波数より小さいことが必要です"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The range must be at least 1 dB"
-msgstr "レンジは最低 1dB 必要です"
+msgstr "レンジは 1 dB 以上必要です"
 
 #: src/prefs/SpectrogramSettings.cpp
 msgid "The frequency gain cannot be negative"
@@ -19269,7 +19269,7 @@ msgstr "対数補間(&I)"
 msgid "This version of Audacity only allows one time track for each project window."
 msgstr ""
 "このバージョンの Audacity では、時間トラックは\n"
-"プロジェクトウィンドウごとに 1 本しか許容されません。"
+"プロジェクトウィンドウごとに 1 つしか許容されません。"
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20224,7 +20224,7 @@ msgstr "エラー。~%選択が正しくありません。~%開始点/終了点�
 #: plug-ins/crossfadeclips.ny
 #, lisp-format
 msgid "Error.~%Crossfade Clips may only be applied to one track."
-msgstr "エラー。~%クロスフェードクリップは 1 本のトラックにだけ適用できます。"
+msgstr "エラー。~%クロスフェードクリップは 1 トラックにだけ適用できます。"
 
 #: plug-ins/crossfadetracks.ny resources/EffectsMenuDefaults.xml
 msgid "Crossfade Tracks"
@@ -20269,7 +20269,7 @@ msgstr "イン/アウトで交互"
 #: plug-ins/crossfadetracks.ny
 #, lisp-format
 msgid "Error.~%Select 2 (or more) tracks to crossfade."
-msgstr "エラー。~%クロスフェードするトラックを 2 本以上選んでください。"
+msgstr "エラー。~%クロスフェードするトラックを 2 つ以上選んでください。"
 
 #: plug-ins/delay.ny resources/EffectsMenuDefaults.xml
 msgid "Delay"
@@ -20486,7 +20486,7 @@ msgstr "48 dB"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny plug-ins/notch.ny
 msgid "Frequency must be at least 0.1 Hz."
-msgstr "周波数は少なくとも 0.1 Hz である必要があります。"
+msgstr "周波数は 0.1 Hz 以上である必要があります。"
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
 #, lisp-format
