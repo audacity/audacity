@@ -40,6 +40,7 @@ private:
 
     void moveCurrentEditedField(int moveKey);
     void adjustCurrentEditedField(int adjustKey);
+    void scrollCurrentEditedField(int pixelsYScrolled, int stepsYScrolled);
 
     QString m_valueString;
 
@@ -48,5 +49,7 @@ private:
     QQuickItem* m_visualItem = nullptr;
 
     std::shared_ptr<TimecodeFormatter> m_formatter;
+
+    int m_scrolled = 0;
 };
 }
