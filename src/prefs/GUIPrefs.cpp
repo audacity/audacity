@@ -228,6 +228,12 @@ int ShowClippingPrefsID()
    return value;
 }
 
+BoolSetting& ShowRMSPref()
+{
+   static BoolSetting pref { "/GUI/ShowRMS", true };
+   return pref;
+}
+
 namespace{
 PrefsPanel::Registration sAttachment{ "GUI",
    [](wxWindow *parent, wxWindowID winid, AudacityProject *)

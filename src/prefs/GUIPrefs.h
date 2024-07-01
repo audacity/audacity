@@ -18,6 +18,7 @@
 #include "PrefsPanel.h"
 
 class ChoiceSetting;
+class BoolSetting;
 class ShuttleGui;
 
 #define GUI_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("GUI") }
@@ -53,5 +54,7 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
 
 AUDACITY_DLL_API
 int ShowClippingPrefsID();
+
+AUDACITY_DLL_API BoolSetting& ShowRMSPref();
 
 #endif

@@ -51,6 +51,8 @@ Paul Licameli split from WaveChannelView.cpp
 
 #include <atomic>
 
+#include "prefs/GUIPrefs.h"
+
 
 static WaveChannelSubView::Type sType{
    WaveChannelViewConstants::Waveform,
@@ -352,6 +354,7 @@ void DrawWaveform(
          rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
       .SetDBParameters(dBRange, dB)
       .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
+      .SetShowRMS(ShowRMSPref().Read())
       .SetSampleColors(
          ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen),
          ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen))
