@@ -96,12 +96,14 @@ bool FieldsInteractionController::eventFilter(QObject* watched, QEvent* event)
             adjustCurrentEditedField(key);
             return true;
         }
-    }
-
-    if (event->type() == QEvent::MouseButtonPress) {
+    } else if (event->type() == QEvent::MouseButtonPress) {
         if (!isMouseWithinBoundaries(QCursor::pos())) {
             setCurrentEditedFieldIndex(-1);
         }
+    } else if (event->type() == QEvent::Wheel && isMouseWithinBoundaries(QCursor::pos())) {
+        QWheelEvent* wheelEvent = dynamic_cast<QWheelEvent*>(event);
+        scrollCurrentEditedField(wheelEvent->pixelDelta().y(), wheelEvent->angleDelta().y());
+        return true;
     }
 
     return QObject::eventFilter(watched, event);
@@ -158,4 +160,29 @@ void FieldsInteractionController::adjustCurrentEditedField(int adjustKey)
     }
 
     emit valueChanged(m_formatter->singleStep(m_valueString, digitIndex, adjustKey == Qt::Key_Up));
+}
+
+void FieldsInteractionController::scrollCurrentEditedField(int pixelsYScrolled, int stepsYScrolled)
+{
+    int oneScroll = -1;
+
+    if (pixelsYScrolled != 0) {
+        m_scrolled += pixelsYScrolled;
+        oneScroll = QWheelEvent::DefaultDeltasPerStep / 2;
+    } else if (stepsYScrolled != 0) {
+        m_scrolled += stepsYScrolled;
+        oneScroll = QWheelEvent::DefaultDeltasPerStep;
+    }
+
+    if (oneScroll == -1) {
+        return;
+    }
+
+    if (m_scrolled >= oneScroll) {
+        adjustCurrentEditedField(Qt::Key_Up);
+        m_scrolled = 0;
+    } else if (m_scrolled <= -oneScroll) {
+        adjustCurrentEditedField(Qt::Key_Down);
+        m_scrolled = 0;
+    }
 }
