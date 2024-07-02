@@ -27,6 +27,7 @@ public:
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 
     void onClipChanged(const Clip& clip);
+    void onClipRemoved(const Clip& clip);
 
     processing::TimeSignature timeSignature() const;
     void setTimeSignature(const processing::TimeSignature& timeSignature);
@@ -40,6 +41,7 @@ private:
     std::shared_ptr<au::au3::IAu3Project> m_au3;
 
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
+    mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsRemoved;
 };
 
 using ProcessingProjectPtr = std::shared_ptr<ProcessingProject>;

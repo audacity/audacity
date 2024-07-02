@@ -16,6 +16,8 @@ public:
 
     bool changeClipStartTime(const processing::ClipKey& clipKey, double sec) override;
     bool changeClipTitle(const processing::ClipKey& clipKey, const muse::String& newTitle) override;
+    bool removeClip(const processing::ClipKey& clipKey) override;
+    bool removeClipData(const processing::ClipKey& clipKey, double begin, double end) override;
 
 private:
     AudacityProject& projectRef() const;

@@ -60,3 +60,43 @@ bool ProcessingInteraction::changeClipTitle(const processing::ClipKey& clipKey, 
 
     return true;
 }
+
+bool ProcessingInteraction::removeClip(const processing::ClipKey& clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->Clear(clip->Start(), clip->End());
+
+    processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
+
+    return true;
+}
+
+bool ProcessingInteraction::removeClipData(const processing::ClipKey& clipKey, double begin, double end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    clip->Clear(begin, end);
+
+    processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
+
+    return true;
+}
