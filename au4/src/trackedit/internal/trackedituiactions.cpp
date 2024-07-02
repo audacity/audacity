@@ -69,6 +69,27 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Delete"),
              TranslatableString("action", "Delete clip")
              ),
+    UiAction("clip-cut-selected",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut"),
+             TranslatableString("action", "Cut clip"),
+             IconCode::Code::CUT
+             ),
+    UiAction("clip-copy-selected",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Copy"),
+             TranslatableString("action", "Copy clip"),
+             IconCode::Code::COPY
+             ),
+    UiAction("paste",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Paste"),
+             TranslatableString("action", "Paste"),
+             IconCode::Code::PASTE
+             ),
     UiAction("clip-delete-selected",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
