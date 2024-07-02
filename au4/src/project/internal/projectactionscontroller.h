@@ -4,6 +4,8 @@
 #include "iprojectfilescontroller.h"
 
 #include "actions/actionable.h"
+#include "async/asyncable.h"
+
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "actions/iactionsdispatcher.h"
@@ -18,7 +20,7 @@
 #include "../iaudacityproject.h"
 
 namespace au::project {
-class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable
+class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
@@ -74,7 +76,9 @@ private:
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
     bool m_isProjectSaving = false;
+    bool m_isProjectClosing = false;
     bool m_isProjectProcessing = false;
+
     ProjectBeingDownloaded m_projectBeingDownloaded;
     muse::async::Notification m_projectBeingDownloadedChanged;
 };
