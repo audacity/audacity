@@ -227,9 +227,10 @@ void xlisp_main()
     in_a_context = TRUE;
 
     /* target for restore */
-    if (_setjmp(top_level))
+    if (_setjmp(top_level)) {
         xlbegin(&cntxt,CF_TOPLEVEL|CF_CLEANUP|CF_BRKLEVEL,s_true);
-
+    }
+    
     /* protect some pointers */
     xlsave1(expr);
 

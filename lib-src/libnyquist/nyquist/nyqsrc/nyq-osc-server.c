@@ -26,8 +26,11 @@
 #include <unistd.h>
 #include <stdio.h>
 #endif
+
 #include "xlisp.h"
 #include "sound.h" /* to get nosc_enabled */
+/* CHAR defined in xlisp.h as node type interferes with CHAR defined by Microsoft */
+#undef CHAR
 #include "lo/lo.h"
 #include "nyq-osc-server.h"
 #include "sndsliders.h"

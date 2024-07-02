@@ -344,6 +344,8 @@ void prod_nr_fetch(snd_susp_type a_susp, snd_list_type snd_list)
         s1_ptr_reg = susp->s1_ptr;
         out_ptr_reg = out_ptr;
         if (n) do { /* the inner sample computation loop */
+
+
             *out_ptr_reg++ = (sample_type) *s1_ptr_reg++ * (sample_type) s2_val;
             s2_val += s2_DeLtA;
         } while (--n); /* inner loop */

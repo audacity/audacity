@@ -1,5 +1,5 @@
-README file for Nyquist Version 3.16
-13 Oct 2020
+README file for Nyquist Version 3.19
+7 Aug 2022
 Roger B. Dannenberg
 
 LICENSE: see license.txt
@@ -27,6 +27,22 @@ and other versions of Unix. For details, see one of these files:
 IMPLEMENTATION STATUS
 =====================
 
+Version 3.19 provides:
+    Enough Unicode support to allow European diacritics in code --
+        strings allow UTF-8, but note that the character type is 8
+        bits only, and strings are byte sequences. Multi-byte Unicode
+        in strings often works, but index numbers and length will be off.
+    Undo/Redo in context and file menus  
+    Font size in "hints" window is adjusted according to preferences
+    Minor bug fixes  
+Version 3.18 provides:
+    Minor bug fixes
+    Updated Portaudio library, updated for MacOS 12
+    Compiles on MacOS 12/Xcode 13
+Version 3.17 provides:
+    Minor bug fixes
+    Some changes in NyquistIDE as workaround for changes in Swing -
+        editor seems to be less badly behaved now.
 Version 3.16 provides:
     Long sounds: sample counts are consistently 64-bit.
     Details in documentation on avoiding accumulating computed samples in memory
