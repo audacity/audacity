@@ -230,7 +230,7 @@ bool ClipsListModel::changeClipTitle(int index, const QString& newTitle)
 
 void ClipsListModel::selectClip(int index)
 {
-    selectionController()->setSelectedClip(processing::ClipKey(m_trackId, index));
+    selectionController()->setSelectedClip(m_clipList.at(index).key);
 }
 
 void ClipsListModel::resetSelectedClip()
