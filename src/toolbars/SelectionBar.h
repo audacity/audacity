@@ -66,6 +66,7 @@ class AUDACITY_DLL_API SelectionBar final : public ToolBar {
    void SetTimes(double start, double end);
 
    void SetSelectionFormat(const NumericFormatID & format);
+   void SelectionToClipboard();
    void RegenerateTooltips() override;
 
  private:

@@ -21,6 +21,7 @@
 #include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"
+#include "../toolbars/SelectionBar.h"
 #include "../tracks/ui/SelectHandle.h"
 #include "../tracks/labeltrack/ui/LabelTrackView.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveChannelView.h"
@@ -594,6 +595,13 @@ void OnSelectionRestore(const CommandContext &context)
    ProjectHistory::Get( project ).ModifyState(false);
 }
 
+void OnCopySelTimestamp(const CommandContext &context)
+{
+   auto &project = context.project;
+   auto &selectionBar = SelectionBar::Get( project );
+   selectionBar.SelectionToClipboard();
+}
+
 // Handler state:
 bool mCursorPositionHasBeenStored{ false };
 double mCursorPositionStored{ 0.0 };
@@ -1025,9 +1033,13 @@ auto SelectMenu()
 
          Command( wxT("StoreCursorPosition"), XXO("Store Cursor Pos&ition"),
             FN(OnCursorPositionStore),
-            WaveTracksExistFlag() )
+            WaveTracksExistFlag() ),
          // Save cursor position is used in some selections.
          // Maybe there should be a restore for it?
+
+         Command( wxT("CopySelTimestamp"), XXO("Copy &Selection Timestamp"),
+            FN(OnCopySelTimestamp), AlwaysEnabledFlag,
+            Options{}.LongName( XO("Copy Selection Timestamp to Clipboard") ) )
       ),
 
       Section( "",
