@@ -95,24 +95,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Redo"),
              TranslatableString("action", "Redo")
              ),
-    UiAction("cut",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Cut"),
-             TranslatableString("action", "Cut")
-             ),
-    UiAction("copy",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Copy"),
-             TranslatableString("action", "Copy")
-             ),
-    UiAction("paste",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Paste"),
-             TranslatableString("action", "Paste")
-             ),
     UiAction("cut-and-close-gap",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

@@ -17,6 +17,8 @@
 using namespace au::trackedit;
 using namespace au::au3;
 
+Clipboard Au3Interaction::s_clipboard;
+
 AudacityProject& Au3Interaction::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -156,6 +158,128 @@ bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const mu
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
 
     return true;
+}
+
+void Au3Interaction::clearClipboard()
+{
+    s_clipboard.data.clear();
+}
+
+bool Au3Interaction::pasteIntoClipboard(double begin, TrackId trackId)
+{
+    WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(dstWaveTrack) {
+        return false;
+    }
+
+    if (s_clipboard.data.empty()) {
+        return false;
+    }
+
+    // check if every clip fits into track first
+    for (const auto& data : s_clipboard.data) {
+        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(data.track->GetId()));
+        IF_ASSERT_FAILED(dstWaveTrack) {
+            return false;
+        }
+
+        double insertDuration = 0;
+
+        // intentional comparison, see clipId default value
+        if (data.clipKey.clipId == -1) {
+            // handle multiple clips
+            std::shared_ptr<WaveClip> leftClip = origWaveTrack->GetLeftmostClip();
+            std::shared_ptr<WaveClip> rightClip = origWaveTrack->GetRightmostClip();
+            insertDuration = rightClip->End() - leftClip->Start();
+        } else {
+            //handle single clip
+            std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(origWaveTrack, data.clipKey.clipId);
+            IF_ASSERT_FAILED(clip) {
+                return false;
+            }
+
+            insertDuration = clip->End() - clip->Start();
+        }
+
+        // throws incosistency exception if project tempo is not set, see:
+        // au4/src/au3wrap/internal/au3project.cpp: 92
+        // Paste func throws exception if there's not enough space to paste in (exception handler calls BasicUI logic)
+        if (!dstWaveTrack->IsEmpty(begin, begin + insertDuration)) {
+            LOGDA() << "not enough space to paste clip into";
+            //! TODO AU4: show dialog
+            return false;
+        }
+    }
+
+    // paste and update model
+    for (const auto& data : s_clipboard.data) {
+        auto prj = globalContext()->currentTrackeditProject();
+
+        // use an unordered_set to store the IDs of the clips before the paste
+        std::unordered_set<int> clipIdsBefore;
+        for (const auto& clip : prj->clipList(trackId)) {
+            clipIdsBefore.insert(clip.key.clipId);
+        }
+
+        dstWaveTrack->Paste(begin, *data.track);
+
+        // Check which clips were added and trigger the onClipAdded event
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (clipIdsBefore.find(clip.key.clipId) == clipIdsBefore.end()) {
+                prj->onClipAdded(clip);
+            }
+        }
+    }
+
+    return true;
+}
+
+bool Au3Interaction::copyClipIntoClipboard(const ClipKey& clipKey)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    auto track = waveTrack->Copy(clip->Start(), clip->End());
+    s_clipboard.data.push_back(TrackData { track, clipKey });
+
+    return true;
+}
+
+bool Au3Interaction::copyClipDataIntoClipboard(const ClipKey& clipKey, double begin, double end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    auto track = waveTrack->Copy(begin, end);
+    s_clipboard.data.push_back(TrackData { track, clipKey });
+
+    return true;
+}
+
+bool Au3Interaction::copyTrackDataIntoClipboard(const TrackId trackId, double begin, double end)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    auto track = waveTrack->Copy(begin, end);
+    trackedit::ClipKey dummyClipKey = trackedit::ClipKey();
+    s_clipboard.data.push_back(TrackData { track, dummyClipKey });
 }
 
 bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)

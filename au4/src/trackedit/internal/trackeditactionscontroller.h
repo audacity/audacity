@@ -33,10 +33,18 @@ public:
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
+    // called from clip context menu
     void clipCut();
     void clipCopy();
     void clipDelete();
+
+    // called from app menu
+    void clipCutSelected();
+    void clipCopySelected();
     void clipDeleteSelected();
+
+    void paste();
+
     void toggleLoopRegion();
     void clearLoopRegion();
     void setLoopRegionToSelection();

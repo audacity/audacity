@@ -7,6 +7,10 @@
 
 #include "libraries/lib-project/Project.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
+#include "libraries/lib-wave-track/WaveTrack.h"
+#include "libraries/lib-wave-track/WaveClip.h"
+#include "libraries/lib-numeric-formats/ProjectTimeSignature.h"
+#include "TempoChange.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -66,6 +70,8 @@ bool Au3Project::load(const muse::io::path_t& filePath)
     TrackList& tracks = TrackList::Get(m_data->projectRef());
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
+        //! TODO AU4: adjust to actual project tempo
+        DoProjectTempoChange(*pTrack, 120);
     }
 
     return true;

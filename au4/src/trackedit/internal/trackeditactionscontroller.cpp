@@ -12,14 +12,20 @@ using namespace muse::actions;
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode CLIP_COPY_CODE("clip-copy");
 static const ActionCode CLIP_DELETE_CODE("clip-delete");
+static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
+static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
+static const ActionCode PASTE("paste");
 
 void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &TrackeditActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &TrackeditActionsController::clipCopy);
     dispatcher()->reg(this, CLIP_DELETE_CODE, this, &TrackeditActionsController::clipDelete);
+    dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, this, &TrackeditActionsController::clipCutSelected);
+    dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &TrackeditActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &TrackeditActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, PASTE, this, &TrackeditActionsController::paste);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -47,6 +53,40 @@ void TrackeditActionsController::clipCopy()
 void TrackeditActionsController::clipDelete()
 {
     NOT_IMPLEMENTED;
+}
+
+void TrackeditActionsController::clipCutSelected()
+{
+    NOT_IMPLEMENTED;
+}
+
+void TrackeditActionsController::clipCopySelected()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+    auto tracks = project->trackeditProject()->trackList();
+    auto selectedClipKey = selectionController()->selectedClip();
+
+    trackeditInteraction()->clearClipboard();
+    // handles single clip selected
+    // intentional comparison, see clipId default value
+    if (selectedClipKey.clipId != -1) {
+        trackeditInteraction()->copyClipIntoClipboard(selectedClipKey);
+        return;
+    }
+
+    // handles multiple clips selected
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        trackeditInteraction()->copyTrackDataIntoClipboard(track.id, selectedStartTime, selectedEndTime);
+        //! TODO AU4: handle multiple tracks copying (need to extend playcursor behaviour first)
+        break;
+    }
 }
 
 // called from app menu / del shortcut
@@ -90,6 +130,18 @@ void TrackeditActionsController::clipDeleteSelected()
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
     trackeditProject->pushHistoryState(ss.str(), "Delete");
+}
+
+void TrackeditActionsController::paste()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->trackeditProject()->trackList();
+    double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+
+    if (!tracks.empty() && selectedStartTime >= 0) {
+        //! TODO AU4: paste into correct track (need to get info about selected track)
+        trackeditInteraction()->pasteIntoClipboard(selectedStartTime, tracks[0].id);
+    }
 }
 
 void TrackeditActionsController::toggleLoopRegion()
