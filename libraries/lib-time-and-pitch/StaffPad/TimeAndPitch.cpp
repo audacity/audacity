@@ -201,18 +201,6 @@ void _unwrapPhaseVec(float* v, int n)
   audio::simd::perform_parallel_simd_aligned(v, n, [](auto& a) { a = a - rint(a * 0.15915494309f) * 6.283185307f; });
 }
 
-/// rotate even-sized array by half its size to align fft phase at the center
-void _fft_shift(float* v, int n)
-{
-  assert((n & 1) == 0);
-  int n2 = n >> 1;
-  audio::simd::perform_parallel_simd_aligned(v, v + n2, n2, [](auto& a, auto& b) {
-    auto tmp = a;
-    a = b;
-    b = tmp;
-  });
-}
-
 void _lr_to_ms(float* ch1, float* ch2, int n)
 {
   audio::simd::perform_parallel_simd_aligned(ch1, ch2, n, [](auto& a, auto& b) {
@@ -231,6 +219,12 @@ void _ms_to_lr(float* ch1, float* ch2, int n)
   });
 }
 
+template <class T>
+inline void multiply(T* dst, const T* src, int32_t n)
+{
+  audio::simd::perform_parallel_simd_aligned(dst, src, n,
+    [](auto& d, auto& s) { d = d * s; });
+}
 } // namespace
 
 // ----------------------------------------------------------------------------
@@ -376,10 +370,7 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _lr_to_ms(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-    {
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
-      _fft_shift(d->fft_timeseries.getPtr(ch), fftSize);
-    }
+      multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), fftSize);
 
     // determine norm/phase
     d->fft.forwardReal(d->fft_timeseries, d->spectrum);
@@ -417,15 +408,12 @@ void TimeAndPitch::_process_hop(int hop_a, int hop_s)
       _ms_to_lr(d->fft_timeseries.getPtr(0), d->fft_timeseries.getPtr(1), fftSize);
 
     for (int ch = 0; ch < _numChannels; ++ch)
-    {
-      _fft_shift(d->fft_timeseries.getPtr(ch), fftSize);
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
-    }
+      multiply(d->fft_timeseries.getPtr(ch), d->cosWindow.getPtr(0), fftSize);
   }
   else
   { // stretch factor == 1.0 => just apply window
     for (int ch = 0; ch < _numChannels; ++ch)
-      vo::multiply(d->fft_timeseries.getPtr(ch), d->sqWindow.getPtr(0), d->fft_timeseries.getPtr(ch), fftSize);
+      multiply(d->fft_timeseries.getPtr(ch), d->sqWindow.getPtr(0), fftSize);
   }
 
   {
