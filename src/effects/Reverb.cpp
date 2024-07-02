@@ -47,15 +47,45 @@ FactoryPresets[] =
 {
    //                         Room  Pre            Hf       Tone Tone  Wet   Dry   Stereo Wet
    // Name                    Size, Delay, Reverb, Damping, Low, High, Gain, Gain, Width, Only
+// general purpose
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Acoustic"),          { 50,   10,    75,     100,     21,  100,  -14,  0,    80,    false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Ambience"),          { 100,  55,    100,    50,      53,  38,   0,    -10,  100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Artificial"),        { 81,   99,    23,     62,      16,  19,   -4,   0,    100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Clean"),             { 50,   10,    75,     100,     55,  100,  -18,  0,    75,    false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Modern"),            { 50,   10,    75,     100,     55,  100,  -15,  0,    75,    false } },
+// vocals
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Vocal I" ),          { 70,   20,    40,     99,      100, 50,   -12,  0,    70,    false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Vocal II"),          { 50,   0,     50,     99,      50,  100,  -1,   -1,   70,    false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Dance Vocal"),       { 90,   2,     60,     77,      30,  51,   -10,  0,    100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Modern Vocal"),      { 66,   27,    77,     8,       0,   51,   -10,  0,    68,    false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Voice Tail"),        { 66,   27,    100,    8,       0,   51,   -6,   0,    68,    false } },
+// room sizes
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Bathroom"),          { 16,   8,     80,     0,       0,   100,  -6,   0,    100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Small Room Bright"), { 30,   10,    50,     50,      50,  100,  -1,   -1,   100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Small Room Dark"),   { 30,   10,    50,     50,      100, 0,    -1,   -1,   100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Medium Room"),       { 75,   10,    40,     50,      100, 70,   -1,   -1,   70,    false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Large Room"),        { 85,   10,    40,     50,      100, 80,    0,   -6,   90,    false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Church Hall"),       { 90,   32,    60,     50,      100, 50,    0,   -12,  100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
    { XO("Cathedral"),         { 90,   16,    90,     50,      100, 0,     0,   -20,  100,   false } },
+   /*i18n-hint: This is the name of an effect preset */
+   { XO("Big Cave"),          { 100,  55,    100,    50,      53,  38,   5,    -3,   100,   false } },
 };
 
 struct Reverb_priv_t
