@@ -117,8 +117,8 @@ public:
       if (mEnabled)
       {
          mEnabled = false;
-         BasicUI::CallAfter([This]{
-            This->mHandler->Publish(DeviceChangeMessage::Change);
+         BasicUI::CallAfter([this]{
+            mHandler->Publish(DeviceChangeMessage::Change);
          });
       }
 
@@ -202,7 +202,7 @@ public:
 
    static void *Listener(void *parm)
    {
-      DeviceChangeListener *This = (DeviceChangeListener *) parm;
+      auto This = static_cast<DeviceChangeListener *>(clientData);
 
       // Instantiate the udev object
       struct udev *udev = udev_new();
@@ -328,7 +328,7 @@ public:
                             const AudioObjectPropertyAddress inAddresses[],
                             void *clientData)
    {
-      DeviceChangeListener *This = (DeviceChangeListener *) clientData;
+      auto This = static_cast<DeviceChangeListener *>(clientData);
 
       for (int i = 0; i < numberAddresses; i++)
       {

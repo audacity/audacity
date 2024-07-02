@@ -14,7 +14,10 @@
 #include "Observer.h"
 
 enum class DeviceChangeMessage : char { Rescan, Change };
-using DeviceChangeMessagePublisher = Observer::Publisher<DeviceChangeMessage>;
+struct DeviceChangeMessagePublisher : Observer::Publisher<DeviceChangeMessage>
+{
+   using Publisher::Publish;
+};
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 
