@@ -1,7 +1,7 @@
 .darkTheme {
                          Blank: #2e3236;
                     Unselected: #343b4e;
-                      Selected: #a5aeda;
+                      Selected: #525d7d;
                         Sample: #7373E5;
                        Sample2: #A00A0A;
                        Sample3: #236E23;
@@ -104,18 +104,19 @@
  ClipAffordanceUnselectedBrush: #404966;
    ClipAffordanceSelectedBrush: #505b80;
           ClipAffordanceStroke: #ffffff;
+          ClipAffordanceButton: #636b85;
        LabelTrackTextSelection: #b7cae2;
                   ClipNameText: #f0f5fa;
          ClipNameTextSelection: #a4b0ef;
              DropHintHighlight: #fedfb2;
       EffectListItemBackground: #404040;
           EffectListItemBorder: #6B6B6B;
-              BeatSeparatorPen: #4b4b4b;
-               BarSeparatorPen: #3a3e42;
-           BeatFillStrongBrush: #2e3236;
-             BeatFillWeakBrush: #323639;
-        BeatFillStrongSelBrush: #555A72;
-          BeatFillWeakSelBrush: #616680;
+              BeatSeparatorPen: #373b40;
+               BarSeparatorPen: #3a3f42;
+           BeatFillStrongBrush: #23272b;
+             BeatFillWeakBrush: #272b2f;
+        BeatFillStrongSelBrush: #3c445a;
+          BeatFillWeakSelBrush: #40485d;
                    LoopEnabled: #4a4d59; 
                 LoopNotEnabled: #292e33;
                        Grabber: #9295a6;
