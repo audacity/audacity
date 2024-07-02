@@ -254,7 +254,12 @@ void TracksListModel::clear()
 void TracksListModel::deleteItems()
 {
     m_selectionModel->clear();
-    qDeleteAll(m_trackList);
+
+    for (TrackItem* trackItem : m_trackList) {
+        trackItem->deleteLater();
+    }
+
+    m_trackList.clear();
 }
 
 void TracksListModel::setIsMovingUpAvailable(bool isMovingUpAvailable)
