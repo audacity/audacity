@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-05-17 23:19+0300\n"
+"POT-Creation-Date: 2024-07-02 21:05+0300\n"
 "PO-Revision-Date: 2014-11-21 21:02-0000\n"
 "Last-Translator: Aram Vardanyan\n"
 "Language-Team: Armenian <aramvardanyan@gmx.com>\n"
@@ -409,6 +409,187 @@ msgstr ""
 msgid "Failed to deserialize the response"
 msgstr "Անհնար է ստանալ հոսքի նկարագրությունը"
 
+#. i18n-hint: This is the name of an effect preset.
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern"
+msgstr "Չափագրում"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Glue Compressor"
+msgstr "Խտացնող"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Gentle"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beat Booster"
+msgstr "Բաս (դԲ)՝"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Deep Dive Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beefy Master"
+msgstr "Տեղադրել"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Make It Right Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Brick Wall Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Lead Vocals"
+msgstr "Հեռացնել հատուկ"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Fat Vocals"
+msgstr "&Մեկուսացում"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Power Vocals"
+msgstr "Հեռացնել հատուկ"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Vocal Control"
+msgstr "Հեռացնել ձայնագրություն"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Vocal Touch-Up"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Voice Memos Balancer"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Podcast/Radio"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Piano"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Acoustic Guitar"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Bass Guitar"
+msgstr "Բաս"
+
+#. i18n-hint: This is the name of an effect preset. Strings is violins, etc
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Strings"
+msgstr "Կ&արգավորումներ..."
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Kick Drums"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Drums Control"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Climax Impulser SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Engine Breathing SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Impact SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Body SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Tail SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Smack Explosion SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Master Limiter"
+msgstr "Սահմանափակիչ"
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "SFX Limiter"
+msgstr "Սահմանափակիչ"
+
+#. i18n-hint: This is the name of an effect preset. VO means Voiceover.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "VO Limiter"
+msgstr "Սահմանափակիչ"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch 2"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Play it Loud"
+msgstr "Աուդիոյի նվագարկում"
+
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -698,6 +879,20 @@ msgstr ""
 "MIDI ֆայլ է, ոչ աուդիո ֆայլ: \n"
 "Աուդասիթին չի կարող բացել այս տեսակի ֆայլը նվագարկման համար, բայց դուք կարող եք\n"
 "փոփոխել այն սեղմելով՝ Ֆայլ > Ներմուծել > MIDI:"
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Ներմուծվում են՝ %s"
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Ներմուծվում են՝ %s"
+
+#: libraries/lib-import-export/Import.cpp
+msgid "Operation was canceled by user"
+msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2990,7 +3185,7 @@ msgstr "Ցուցադրել պատմության ֆայլերի մանրամաս�
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Լավ"
@@ -3017,7 +3212,7 @@ msgstr "Դադարեցնել"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "Չեղարկել"
 
@@ -3077,6 +3272,12 @@ msgstr ""
 msgid "File type:"
 msgstr "&Զտման տեսակը՝"
 
+#: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "Ստեղծված նոր պրոեկտ"
+
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
 #, fuzzy
 msgid "Panel"
@@ -3085,11 +3286,6 @@ msgstr "Ձայնագրության պանել"
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Dialog"
 msgstr ""
-
-#: libraries/lib-wx-wrappers/wxPanelWrapper.h
-#, fuzzy
-msgid "Select a directory"
-msgstr "Ստեղծված նոր պրոեկտ"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 #, fuzzy
@@ -3286,12 +3482,14 @@ msgstr "Հրահանգ՝"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/EffectsPrefs.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Ընտրել..."
 
+#. i18n-hint: show output on a graph
 #: modules/import-export/mod-cl/ExportCL.cpp
+#: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show output"
 msgstr "ցուցադրել ելքը"
 
@@ -5443,7 +5641,7 @@ msgstr ""
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
 #, fuzzy
 msgid "Output"
 msgstr "Էֆեկտի կարգավորումներ"
@@ -5723,9 +5921,9 @@ msgid "Generating audio preview..."
 msgstr "Ստեղծված աղմուկ"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
+#, fuzzy
+msgid "Open trace audio.com"
+msgstr "Պատճենել նշված աուդիոն"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #, fuzzy
@@ -5888,6 +6086,10 @@ msgid "&Unlink Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #, fuzzy
 msgid "Don't show this again"
 msgstr "Չցուցադրել այս զգուշացումը կրկին"
@@ -5900,11 +6102,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #, fuzzy
-msgid "Save to the Cloud"
+msgid "Save to the Cloud (free)"
 msgstr "Պահպանել պատմության գրքույկը ... տեղում՝"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -5917,7 +6119,9 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
+msgid ""
+"Files are saved on your device.\n"
+"Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -6354,11 +6558,6 @@ msgid "All saved changes will now update to the cloud. You can manage this file 
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Ժամատարածքի փոխող"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
 msgstr ""
 
@@ -6583,6 +6782,12 @@ msgstr "Պատիչ"
 #, fuzzy, c-format
 msgid "%s, graphics"
 msgstr "Գրաֆիկ տատանում"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, effects presets"
+msgstr "Ջնջել վերագրումը"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8173,10 +8378,9 @@ msgid "Log frequency"
 msgstr "Մուտքային հաճախականություն"
 
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
-#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
+#: src/effects/Loudness.cpp src/effects/Normalize.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8637,162 +8841,6 @@ msgstr "Տեղափոխվել է պան սլայդ"
 #, fuzzy
 msgid "&Mixer"
 msgstr "Միախառնող"
-
-#: src/PendingStrings.cpp
-msgid "Get free plugins & sounds"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-msgid "View tutorials"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Visit our forum"
-msgstr "Պատճենել նշված աուդիոն"
-
-#. i18n-hint: Title of the buttons that adds new effects plugin search path
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Add new location"
-msgstr "Ավելացնել նոր կանոն"
-
-#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "%s plugin locations"
-msgstr "Պլագին կարգավորումներ"
-
-#. i18n-hint: master channel display name
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master"
-msgstr "Տեղադրել"
-
-#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master effects"
-msgstr "Դիտում"
-
-#. i18n-hint: Hint for a master effects section of realtime effects panel
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Apply to all tracks"
-msgstr "Անջատել որպես նոր ձայնաֆայլի"
-
-#: src/PendingStrings.cpp
-msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compression curve"
-msgstr "Խտացում՝"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Smoothing"
-msgstr "Առանձնացնել ժամանակի տեսակետից"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input gain (dB)"
-msgstr "Խոնա&վացում (դԲ)՝"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Ceiling (dB)"
-msgstr "Հզորացում (դԲ)՝"
-
-#: src/PendingStrings.cpp
-msgid "Input"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attenuation"
-msgstr "Ժամաչափը"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Threshold (dB)"
-msgstr "Շեմը %d դԲ"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Make-up gain (dB)"
-msgstr "Խոնա&վացում (դԲ)՝"
-
-#: src/PendingStrings.cpp
-msgid "&Make-up target (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-msgid "Knee &width (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Rati&o:"
-msgstr "Հարաբերակցում՝"
-
-#: src/PendingStrings.cpp
-msgid "&Lookahead (ms)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attac&k (ms)"
-msgstr "Հարձակման/հետ քաշման ժամ"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Release (ms)"
-msgstr "Ազատ ժամանակ"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "awaiting playback"
-msgstr "Փոփոխվող նվագարկում"
-
-#: src/PendingStrings.cpp
-msgid "Augments loudness while minimizing distortion."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Limiter (beta)"
-msgstr "Սահմանափակիչ"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compressor (beta)"
-msgstr "Խտացնող"
-
-#: src/PendingStrings.cpp
-msgid "&Show graph (beta)"
-msgstr ""
-
-#. i18n-hint: import progress dialog title, progress dialog
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Importing files"
-msgstr "Ներմուծվում են՝ %s"
-
-#. i18n-hint: import progress dialot text, where %s is the filename
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "Importing %s..."
-msgstr "Ներմուծվում են՝ %s"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -9271,30 +9319,6 @@ msgid "Projects cannot be saved to FAT drives."
 msgstr ""
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"Your project is now empty.\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Click 'No', Edit > Undo until all tracks\n"
-"are open, then File > Save Project.\n"
-"\n"
-"Save anyway?"
-msgstr ""
-"Ձեր պրոեկտը հիմա դատարկ է:\n"
-"Եթե պահպանվի, պրոեկտում չի լինի ոչմի ձայնագրություն:\n"
-"\n"
-"Այլ նախկին բաց ձայնագրություն պահպանելու համար՝\n"
-"Սեղմեք 'Ոչ', Փոխել > Դեպի հետ մինչ բոլոր ձայնագրությունները\n"
-"Բացում, մինչ ֆայլ > Պահպանել պրոեկտը:\n"
-"\n"
-"Պահպանե՞լ ամեն դեպքում:"
-
-#: src/ProjectFileManager.cpp
-msgid "Warning - Empty Project"
-msgstr "Ուշադրություն - Դատարկ պրոեկտ"
-
-#: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Insufficient Disk Space"
 msgstr "Սկավառակի հիշողությունը"
@@ -9327,14 +9351,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "Պահպանել պրոեկտը \"%s\" որպես..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-msgstr ""
-"'Պահպանել պրոեկտը' Աուդասիթի պրոեկտի համար չի լինի աուդի ֆայլ:\n"
-"Աուդիո ֆայլի համար, որը պետք է բացվի այլ ծրագրերի միջոցով, ընտրեք 'Վերցնել':\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -9564,22 +9580,6 @@ msgid "Save project before closing?"
 msgstr "Պահպանե՞լ փոփոխությունները փակելուց առաջ:"
 
 #: src/ProjectManager.cpp
-msgid ""
-"\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Cancel, Edit > Undo until all tracks\n"
-"are open, then File > Save Project."
-msgstr ""
-"\n"
-"Եթե պահպանվի, պրոեկտում չի լինի ձայնագրություն:\n"
-"\n"
-"Պահպանել որևէ երևացող բացված ձայնագրություն՝\n"
-"Դադարեցնել, փոխել > Դեպի հետ մինչ բոլոր ձայնագրությունները\n"
-"Բացում, մինչ ֆայլ > Պահպանել պրոեկտը:"
-
-#: src/ProjectManager.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Սկավառակի հիշողության մնացորդ ձայնագրման համար %d րոպե:"
@@ -9618,6 +9618,26 @@ msgstr "Հորիզոնական ստերեո"
 msgid "Vertical Scrollbar"
 msgstr "Ուղղահայաց ստերեո"
 
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Էֆեկտներ"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Կարգավորումներ..."
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Analyze"
+msgstr "Ստուգել"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "Ֆայլերը բացակայում են"
+
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
@@ -9632,11 +9652,6 @@ msgstr ""
 #, fuzzy
 msgid "Replace effect"
 msgstr "Ջնջե՞լ վերագրումը '%s':"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
-msgid "%s (missing)"
-msgstr "Ֆայլերը բացակայում են"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9674,15 +9689,16 @@ msgstr "Ջնջե՞լ վերագրումը '%s':"
 msgid "Unknown"
 msgstr ""
 
+#. i18n-hint: master channel display name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Տեղադրել"
+
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Add effect"
 msgstr "Էֆեկտներ"
-
-#. i18n-hint: Hyperlink to the effects stack panel tutorial video
-#: src/RealtimeEffectPanel.cpp
-msgid "Watch video"
-msgstr ""
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9706,25 +9722,6 @@ msgstr "Տեղափոխված '%s' %s"
 #, fuzzy
 msgid "Change effect order"
 msgstr "Փոխված արագություն"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "No Effect"
-msgstr "Էֆեկտներ"
-
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get more effects..."
-msgstr "Կարգավորումներ..."
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Analyze"
-msgstr "Ստուգել"
-
-#: src/RealtimeEffectPanel.cpp
-msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -9757,16 +9754,34 @@ msgstr "Հավասարեցված %s"
 msgid "Realtime effects"
 msgstr "Դիտում"
 
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Realtime Effects"
-msgstr "Միացնել էֆեկտներ"
-
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Realtime effects for %s"
 msgstr "Կիրառված էֆեկտ %s"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "Միացնել էֆեկտներ"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master Effects"
+msgstr "Դիտում"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Applies to all tracks"
+msgstr "Անջատել որպես նոր ձայնաֆայլի"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -9827,83 +9842,6 @@ msgstr "Տեղավորել նշվածը"
 #, fuzzy
 msgid "Applied effect to selection"
 msgstr "Ավարտել նշված վերջից"
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, fuzzy
-msgid "Check Online"
-msgstr "Ստուգում %s"
-
-#: src/SplashDialog.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-msgstr ""
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/SplashDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "How to get help"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "These are our support methods:"
-msgstr "Սրանք մեր օգնության մեթոդներն են՝"
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid " [[help:Main_Page|Manual]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, fuzzy
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " <a href=\"http://forum.audacityteam.org/\">Ֆորում</a> (տուր քո հարցը միանգամից ինտերնետում)"
-
-#: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
-msgstr "Բարի գալուստ Աուդասիթի:"
-
-#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Չցուցադրել սա մուտքի ժամանակ"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10575,6 +10513,42 @@ msgstr "Վայրի փոխումներ                  -- արժեք: %1.4f  sd:
 msgid "Calibration Complete"
 msgstr "Չափաբերման արդյունք\n"
 
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Welcome to Audacity!"
+msgstr "Բարի գալուստ Աուդասիթի:"
+
+#: src/WhatsNewDialog.cpp
+msgid "View tutorials"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Պատճենել նշված աուդիոն"
+
+#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Չցուցադրել սա մուտքի ժամանակ"
+
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -11052,7 +11026,7 @@ msgstr "Նշել"
 msgid "Add"
 msgstr "Ավելացնել"
 
-#: src/commands/SelectCommand.cpp
+#: src/commands/SelectCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Հեռացնել"
@@ -11485,8 +11459,7 @@ msgstr "Ներքին մթացում ներգևի երկարությամբ՝"
 msgid "Inner &fade up length:"
 msgstr "Ներքին մթացում վերևի երկարությամբ՝"
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "Մուտք՝"
@@ -11857,7 +11830,7 @@ msgstr "Նշվածը պետք է մեծ լինի քան %d նշումները:"
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Շեմ (Ցածրում ավելի զգայուն)՝"
 
-#: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
+#: src/effects/ClickRemoval.cpp
 msgid "Threshold"
 msgstr "Շեմ"
 
@@ -11875,129 +11848,8 @@ msgid "Compressor"
 msgstr "Խտացնող"
 
 #: src/effects/Compressor.cpp
-msgid "Compresses the dynamic range of audio"
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#. i18n-hint: usually leave this as is as dB doesn't get translated
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%3d dB"
-msgstr "%3d դԲ"
-
-#: src/effects/Compressor.cpp src/effects/ScoreAlignDialog.cpp
-#, fuzzy, c-format
-msgid "%.2f secs"
-msgstr "%.1f վարկյ."
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f secs"
-msgstr "%.1f վարկյ."
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.0f:1"
-msgstr "%.0f:1"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f:1"
-msgstr "%.1f:1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.0f to 1"
-msgstr "Հարաբերակցում %.0f ից 1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.1f to 1"
-msgstr "Հարաբերակցում %.1f ից 1"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Noise Floor:"
-msgstr "Աղմուկի ծածկ՝"
-
-#: src/effects/Compressor.cpp src/effects/Distortion.cpp
-msgid "Noise Floor"
-msgstr "Աղմուկի ծածկ"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Ratio:"
-msgstr "Հարաբերակցում՝"
-
-#: src/effects/Compressor.cpp
-msgid "Ratio"
-msgstr "Հարաբերակցում"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Attack Time:"
-msgstr "Գրոհի ժամ՝"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-msgid "Attack Time"
-msgstr "Գրոհի ժամ"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "R&elease Time:"
-msgstr "Ազատ ժամանակ՝"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-msgid "Release Time"
-msgstr "Ազատ ժամանակ"
-
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Ձևափոխման ավելացում 0 դԲ -ի խտացումից հետո"
-
-#. i18n-hint: "Compress" here means reduce variations of sound volume,
-#. NOT related to file-size compression; Peaks means extremes in volume
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "C&ompress based on Peaks"
-msgstr "Խտացում պիկի բազայի վրա"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Threshold %d dB"
-msgstr "Շեմը %d դԲ"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Noise Floor %d dB"
-msgstr "Աղմուկի ծածկ %d դԲ"
-
-#: src/effects/Compressor.cpp
-#, fuzzy, c-format
-msgid "Attack Time %.2f secs"
-msgstr "Գրոհի ժամ %.1f վարկյ."
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Release Time %.1f secs"
-msgstr "Մնաց ժամանակ %.1f վարկյ."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -12403,6 +12255,10 @@ msgid "Upper Threshold"
 msgstr "Շեմ"
 
 #: src/effects/Distortion.cpp
+msgid "Noise Floor"
+msgstr "Աղմուկի ծածկ"
+
+#: src/effects/Distortion.cpp
 #, fuzzy
 msgid "Parameter 1"
 msgstr "Կարգավորել"
@@ -12601,6 +12457,109 @@ msgstr "Լռության ժամաչափ՝"
 #, fuzzy, c-format
 msgid "%0.f ms"
 msgstr "%.0f:1"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+msgid "I&nput"
+msgstr ""
+
+#. i18n-hint: show input on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show input"
+msgstr "ցուցադրել ելքը"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "O&utput"
+msgstr "Էֆեկտի կարգավորումներ"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "A&ctual compression"
+msgstr "Խտացում՝"
+
+#. i18n-hint: show actual compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show actual compression"
+msgstr "Խտացում՝"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Tar&get compression"
+msgstr "Խտացում՝"
+
+#. i18n-hint: show target compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show target compression"
+msgstr "Խտացում՝"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Խտացում՝"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Առանձնացնել ժամանակի տեսակետից"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Շեմը %d դԲ"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Խոնա&վացում (դԲ)՝"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Rati&o:"
+msgstr "Հարաբերակցում՝"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Հարձակման/հետ քաշման ժամ"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Ազատ ժամանակ"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+msgid "Input"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Actual Compression"
+msgstr "Խտացում՝"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Target Compression"
+msgstr "Խտացում՝"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "Փոփոխվող նվագարկում"
 
 #: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -13236,6 +13195,16 @@ msgstr "Շրջել"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
+#: src/effects/Limiter.cpp plug-ins/limiter.ny
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Limiter"
+msgstr "Սահմանափակիչ"
+
+#: src/effects/Limiter.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
 #: src/effects/Loudness.cpp
 #, fuzzy
 msgid "perceived loudness"
@@ -13851,41 +13820,94 @@ msgstr "Նոր ընտրվածի երկարություն՝"
 msgid "Warning: No repeats."
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Լռելյայն"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "Մաքրել"
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
 msgstr "Վոկալ I"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal II"
 msgstr "Վոկալ II"
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "&Մեկուսացում"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "Հեռացնել հատուկ"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
 msgstr "Խոնավ տարածք"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Bright"
 msgstr "Փոքր տարածք լուսավոր"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Dark"
 msgstr "Փոքր տարածք մութ"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Medium Room"
 msgstr "Միջին տարածք"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Large Room"
 msgstr "Մեծ տարածք"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Church Hall"
 msgstr "Դահլիճ"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Cathedral"
 msgstr "Տաճար"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Big Cave"
+msgstr ""
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -14123,6 +14145,11 @@ msgstr "&Նախնական"
 #, fuzzy
 msgid "Restore Defaults"
 msgstr "Դնել լռ&ելյայն"
+
+#: src/effects/ScoreAlignDialog.cpp
+#, fuzzy, c-format
+msgid "%.2f secs"
+msgstr "%.1f վարկյ."
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -16041,6 +16068,11 @@ msgid "Add Realtime Effects"
 msgstr "Միացնել էֆեկտներ"
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get AI effects..."
+msgstr "Կարգավորումներ..."
+
+#: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
 msgstr "Կրկնել վերջին էֆեկտը"
 
@@ -16847,7 +16879,7 @@ msgstr "Սոլո/Սոլոի հանում կենտրոնացված ձայն. ֆա
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
-msgid "&Close Focused Track"
+msgid "Delete Fo&cused Track"
 msgstr "Փակել կենտրոնացված ձայն. ֆայլը"
 
 #: src/menus/TrackMenus.cpp
@@ -17181,6 +17213,11 @@ msgstr "Կտրման գծերի միացում"
 msgid "&Show Clipping in Waveform"
 msgstr "Ցուցադրել անջատվածությունը"
 
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Show &RMS in Waveform"
+msgstr "Ցուցադրել անջատվածությունը"
+
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
@@ -17480,6 +17517,11 @@ msgstr "Վերցնել վերագրումները"
 msgid "'Macro Output' directory cannot be set."
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "Ավելացնել նոր կանոն"
+
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
@@ -17537,16 +17579,24 @@ msgid "Realtime effect o&rganization:"
 msgstr "Կիրառված էֆեկտ %s"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Skip effects scanning at startup"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "Նշման բացատրում"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
 msgstr "Օգտագործել SSE/SSE2/.../AVX"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Պլագին կարգավորումներ"
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
 #, fuzzy
@@ -18764,28 +18814,6 @@ msgstr "Վերագրում՝"
 #, fuzzy
 msgid "Preset 2:"
 msgstr "Վերագրում՝"
-
-#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
-msgid "Warnings"
-msgstr "Զգուշացումներ"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Preferences for Warnings"
-msgstr "Կարգավորումներ՝"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Show Warnings/Prompts for"
-msgstr "Ցուցադրել զգուշացումները/Հուշման"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Saving &projects versus exporting audio"
-msgstr "Չցուցադրել այս զգուշացումը կրկին"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Saving &empty project"
-msgstr "Դատարկ պրոեկտի պահպանում"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -20106,16 +20134,6 @@ msgstr "Անջատել իրարից ստերեոն մոնոի '%s'"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split to Mono"
 msgstr "Անջատել իրարից մոնոի"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Stereo, %dHz"
-msgstr "Ստերեո,"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Mono, %dHz"
-msgstr "Մոնո,"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new audio track"
@@ -21688,11 +21706,6 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Limiter"
-msgstr "Սահմանափակիչ"
-
 #: plug-ins/limiter.ny
 #, fuzzy
 msgid "Soft Limit"
@@ -22640,6 +22653,182 @@ msgid "Spectral Tools"
 msgstr "Սպեկտր"
 
 #, fuzzy
+#~ msgid "Master effects"
+#~ msgstr "Դիտում"
+
+#, fuzzy
+#~ msgid "Apply to all tracks"
+#~ msgstr "Անջատել որպես նոր ձայնաֆայլի"
+
+#, fuzzy
+#~ msgid "Input gain (dB)"
+#~ msgstr "Խոնա&վացում (դԲ)՝"
+
+#, fuzzy
+#~ msgid "Ceiling (dB)"
+#~ msgstr "Հզորացում (դԲ)՝"
+
+#, fuzzy
+#~ msgid "Attenuation"
+#~ msgstr "Ժամաչափը"
+
+#, fuzzy
+#~ msgid "Limiter (beta)"
+#~ msgstr "Սահմանափակիչ"
+
+#, fuzzy
+#~ msgid "Compressor (beta)"
+#~ msgstr "Խտացնող"
+
+#, fuzzy
+#~ msgid "View online"
+#~ msgstr "Ժամատարածքի փոխող"
+
+#~ msgid ""
+#~ "Your project is now empty.\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Click 'No', Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project.\n"
+#~ "\n"
+#~ "Save anyway?"
+#~ msgstr ""
+#~ "Ձեր պրոեկտը հիմա դատարկ է:\n"
+#~ "Եթե պահպանվի, պրոեկտում չի լինի ոչմի ձայնագրություն:\n"
+#~ "\n"
+#~ "Այլ նախկին բաց ձայնագրություն պահպանելու համար՝\n"
+#~ "Սեղմեք 'Ոչ', Փոխել > Դեպի հետ մինչ բոլոր ձայնագրությունները\n"
+#~ "Բացում, մինչ ֆայլ > Պահպանել պրոեկտը:\n"
+#~ "\n"
+#~ "Պահպանե՞լ ամեն դեպքում:"
+
+#~ msgid "Warning - Empty Project"
+#~ msgstr "Ուշադրություն - Դատարկ պրոեկտ"
+
+#~ msgid ""
+#~ "'Save Project' is for an Audacity project, not an audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ msgstr ""
+#~ "'Պահպանել պրոեկտը' Աուդասիթի պրոեկտի համար չի լինի աուդի ֆայլ:\n"
+#~ "Աուդիո ֆայլի համար, որը պետք է բացվի այլ ծրագրերի միջոցով, ընտրեք 'Վերցնել':\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Cancel, Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project."
+#~ msgstr ""
+#~ "\n"
+#~ "Եթե պահպանվի, պրոեկտում չի լինի ձայնագրություն:\n"
+#~ "\n"
+#~ "Պահպանել որևէ երևացող բացված ձայնագրություն՝\n"
+#~ "Դադարեցնել, փոխել > Դեպի հետ մինչ բոլոր ձայնագրությունները\n"
+#~ "Բացում, մինչ ֆայլ > Պահպանել պրոեկտը:"
+
+#, fuzzy
+#~ msgid "Check Online"
+#~ msgstr "Ստուգում %s"
+
+#~ msgid "These are our support methods:"
+#~ msgstr "Սրանք մեր օգնության մեթոդներն են՝"
+
+#, fuzzy
+#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+#~ msgstr " <a href=\"http://forum.audacityteam.org/\">Ֆորում</a> (տուր քո հարցը միանգամից ինտերնետում)"
+
+#~ msgid "%3d dB"
+#~ msgstr "%3d դԲ"
+
+#~ msgid "%.1f secs"
+#~ msgstr "%.1f վարկյ."
+
+#~ msgid "%.0f:1"
+#~ msgstr "%.0f:1"
+
+#~ msgid "%.1f:1"
+#~ msgstr "%.1f:1"
+
+#~ msgid "Ratio %.0f to 1"
+#~ msgstr "Հարաբերակցում %.0f ից 1"
+
+#~ msgid "Ratio %.1f to 1"
+#~ msgstr "Հարաբերակցում %.1f ից 1"
+
+#, fuzzy
+#~ msgid "&Noise Floor:"
+#~ msgstr "Աղմուկի ծածկ՝"
+
+#, fuzzy
+#~ msgid "&Ratio:"
+#~ msgstr "Հարաբերակցում՝"
+
+#~ msgid "Ratio"
+#~ msgstr "Հարաբերակցում"
+
+#, fuzzy
+#~ msgid "&Attack Time:"
+#~ msgstr "Գրոհի ժամ՝"
+
+#~ msgid "Attack Time"
+#~ msgstr "Գրոհի ժամ"
+
+#, fuzzy
+#~ msgid "R&elease Time:"
+#~ msgstr "Ազատ ժամանակ՝"
+
+#~ msgid "Release Time"
+#~ msgstr "Ազատ ժամանակ"
+
+#, fuzzy
+#~ msgid "Ma&ke-up gain for 0 dB after compressing"
+#~ msgstr "Ձևափոխման ավելացում 0 դԲ -ի խտացումից հետո"
+
+#, fuzzy
+#~ msgid "C&ompress based on Peaks"
+#~ msgstr "Խտացում պիկի բազայի վրա"
+
+#~ msgid "Threshold %d dB"
+#~ msgstr "Շեմը %d դԲ"
+
+#~ msgid "Noise Floor %d dB"
+#~ msgstr "Աղմուկի ծածկ %d դԲ"
+
+#, fuzzy
+#~ msgid "Attack Time %.2f secs"
+#~ msgstr "Գրոհի ժամ %.1f վարկյ."
+
+#~ msgid "Release Time %.1f secs"
+#~ msgstr "Մնաց ժամանակ %.1f վարկյ."
+
+#~ msgid "Warnings"
+#~ msgstr "Զգուշացումներ"
+
+#, fuzzy
+#~ msgid "Preferences for Warnings"
+#~ msgstr "Կարգավորումներ՝"
+
+#~ msgid "Show Warnings/Prompts for"
+#~ msgstr "Ցուցադրել զգուշացումները/Հուշման"
+
+#, fuzzy
+#~ msgid "Saving &projects versus exporting audio"
+#~ msgstr "Չցուցադրել այս զգուշացումը կրկին"
+
+#~ msgid "Saving &empty project"
+#~ msgstr "Դատարկ պրոեկտի պահպանում"
+
+#, fuzzy
+#~ msgid "Stereo, %dHz"
+#~ msgstr "Ստերեո,"
+
+#, fuzzy
+#~ msgid "Mono, %dHz"
+#~ msgstr "Մոնո,"
+
+#, fuzzy
 #~ msgid "&Ok"
 #~ msgstr "Լավ"
 
@@ -23285,14 +23474,6 @@ msgstr "Սպեկտր"
 #, fuzzy
 #~ msgid "Remove Vocals: to mono"
 #~ msgstr "Հեռացնել հատուկ"
-
-#, fuzzy
-#~ msgid "Remove Vocals"
-#~ msgstr "Հեռացնել հատուկ"
-
-#, fuzzy
-#~ msgid "Isolate Vocals"
-#~ msgstr "&Մեկուսացում"
 
 #, fuzzy
 #~ msgid "Isolate Vocals and Invert"

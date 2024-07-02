@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-05-17 23:19+0300\n"
+"POT-Creation-Date: 2024-07-02 21:05+0300\n"
 "PO-Revision-Date: 2014-09-16 07:40-0000\n"
 "Last-Translator: Arun Kumar\n"
 "Language-Team: தமிழா!-ThamiZha!(www.thamizha.org)\n"
@@ -417,6 +417,186 @@ msgstr ""
 msgid "Failed to deserialize the response"
 msgstr "%s இனை நீக்க முடியாதுள்ளது"
 
+#. i18n-hint: This is the name of an effect preset.
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern"
+msgstr "நிதானமானது"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Glue Compressor"
+msgstr "அழுத்தி"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Gentle"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beat Booster"
+msgstr "திரும்ப செய்"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Deep Dive Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beefy Master"
+msgstr "ஒட்டு"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Make It Right Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Brick Wall Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Lead Vocals"
+msgstr "சிறப்பு நீக்கம்"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Fat Vocals"
+msgstr "த&amp;னிமையாக்கல்"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Power Vocals"
+msgstr "சிறப்பு நீக்கம்"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Vocal Control"
+msgstr "ஒலித்துண்டு நீக்கி"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Vocal Touch-Up"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Voice Memos Balancer"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Podcast/Radio"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Piano"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Acoustic Guitar"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Bass Guitar"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. Strings is violins, etc
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Strings"
+msgstr "தெரிவுகள்..."
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Kick Drums"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Drums Control"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Climax Impulser SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Engine Breathing SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Impact SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Body SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Tail SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Smack Explosion SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Master Limiter"
+msgstr "மட்டுபடுத்தி"
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "SFX Limiter"
+msgstr "மட்டுபடுத்தி"
+
+#. i18n-hint: This is the name of an effect preset. VO means Voiceover.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "VO Limiter"
+msgstr "மட்டுபடுத்தி"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch 2"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Play it Loud"
+msgstr "ஒலி ஒலித்தல்"
+
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -701,6 +881,20 @@ msgid ""
 "\"%s\" \n"
 "is a not an audio file. \n"
 "Audacity cannot open this type of file."
+msgstr ""
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "இறக்குமதி %s"
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "இறக்குமதி %s"
+
+#: libraries/lib-import-export/Import.cpp
+msgid "Operation was canceled by user"
 msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
@@ -2930,7 +3124,7 @@ msgstr "தகவல்களுக்கு குறிப்பு புத�
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "சரி"
@@ -2957,7 +3151,7 @@ msgstr "நிறுத்து"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "ரத்து"
 
@@ -3017,6 +3211,12 @@ msgstr ""
 msgid "File type:"
 msgstr "வடிகட்டும் வகை"
 
+#: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "புதிய திட்டம் உருவாக்கப்பட்டுள்ளது"
+
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
 #, fuzzy
 msgid "Panel"
@@ -3025,11 +3225,6 @@ msgstr "தட குழு"
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Dialog"
 msgstr ""
-
-#: libraries/lib-wx-wrappers/wxPanelWrapper.h
-#, fuzzy
-msgid "Select a directory"
-msgstr "புதிய திட்டம் உருவாக்கப்பட்டுள்ளது"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Directory Dialog"
@@ -3225,12 +3420,14 @@ msgstr "கட்டளை:"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/EffectsPrefs.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "உலாவு..."
 
+#. i18n-hint: show output on a graph
 #: modules/import-export/mod-cl/ExportCL.cpp
+#: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show output"
 msgstr "வெளியீட்டை காட்டு"
 
@@ -5291,7 +5488,7 @@ msgstr ""
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
 #, fuzzy
 msgid "Output"
 msgstr "வெளியீட்டு அலகு"
@@ -5567,9 +5764,9 @@ msgid "Generating audio preview..."
 msgstr "இரைச்சலை உருவாக்குகிறது"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
+#, fuzzy
+msgid "Open trace audio.com"
+msgstr "பெயரிடப்பட்ட பாடலை பிரதி செய்"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #, fuzzy
@@ -5731,6 +5928,10 @@ msgid "&Unlink Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #, fuzzy
 msgid "Don't show this again"
 msgstr "இந்த எச்சரிக்கையை மீண்டும் காட்டாதீர்"
@@ -5743,11 +5944,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #, fuzzy
-msgid "Save to the Cloud"
+msgid "Save to the Cloud (free)"
 msgstr "பதிவுகளைச் சேமிக்க:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -5760,7 +5961,9 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
+msgid ""
+"Files are saved on your device.\n"
+"Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -6196,11 +6399,6 @@ msgid "All saved changes will now update to the cloud. You can manage this file 
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Timeline Changer"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
 msgstr ""
 
@@ -6425,6 +6623,12 @@ msgstr "மட்டம்"
 #, c-format
 msgid "%s, graphics"
 msgstr ""
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, effects presets"
+msgstr "முன்னமைக்கப்பட்டவையை நீக்கு"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8012,10 +8216,9 @@ msgid "Log frequency"
 msgstr "பதிவு நிகழ்வெண்"
 
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
-#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
+#: src/effects/Loudness.cpp src/effects/Normalize.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8474,163 +8677,6 @@ msgstr "நகர்த்தும் நகர்த்தி நகர்த�
 #, fuzzy
 msgid "&Mixer"
 msgstr "கலப்பான்"
-
-#: src/PendingStrings.cpp
-msgid "Get free plugins & sounds"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-msgid "View tutorials"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Visit our forum"
-msgstr "பெயரிடப்பட்ட பாடலை பிரதி செய்"
-
-#. i18n-hint: Title of the buttons that adds new effects plugin search path
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Add new location"
-msgstr "புதிய விதி&amp;யை சேர்க்க"
-
-#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "%s plugin locations"
-msgstr "பொதுவான தெரிவுகள்"
-
-#. i18n-hint: master channel display name
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master"
-msgstr "ஒட்டு"
-
-#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master effects"
-msgstr "முற்&amp;பார்வை"
-
-#. i18n-hint: Hint for a master effects section of realtime effects panel
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Apply to all tracks"
-msgstr "புதிய தடத்திற்கு பிள"
-
-#: src/PendingStrings.cpp
-msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compression curve"
-msgstr "அழுத்தி"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Smoothing"
-msgstr "சீரான நேரம்"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input gain (dB)"
-msgstr "ஈர பெறு (db) :"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Ceiling (dB)"
-msgstr "உயர்வு (dB):"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input"
-msgstr "உள்ளீட்டு அலகு"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attenuation"
-msgstr "கால அளவு"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Threshold (dB)"
-msgstr "அமைதிக்கான தொடக்கநிலை"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Make-up gain (dB)"
-msgstr "ஈர பெறு (db) :"
-
-#: src/PendingStrings.cpp
-msgid "&Make-up target (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-msgid "Knee &width (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Rati&o:"
-msgstr "விகிதம்:"
-
-#: src/PendingStrings.cpp
-msgid "&Lookahead (ms)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attac&k (ms)"
-msgstr "சிதைவு நேரம்"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Release (ms)"
-msgstr "உருவாக்க வெளியீடு"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "awaiting playback"
-msgstr "பின்னணி"
-
-#: src/PendingStrings.cpp
-msgid "Augments loudness while minimizing distortion."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Limiter (beta)"
-msgstr "மட்டுபடுத்தி"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compressor (beta)"
-msgstr "அழுத்தி"
-
-#: src/PendingStrings.cpp
-msgid "&Show graph (beta)"
-msgstr ""
-
-#. i18n-hint: import progress dialog title, progress dialog
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Importing files"
-msgstr "இறக்குமதி %s"
-
-#. i18n-hint: import progress dialot text, where %s is the filename
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "Importing %s..."
-msgstr "இறக்குமதி %s"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -9102,31 +9148,6 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
-msgid ""
-"Your project is now empty.\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Click 'No', Edit > Undo until all tracks\n"
-"are open, then File > Save Project.\n"
-"\n"
-"Save anyway?"
-msgstr ""
-"திட்டம் காலியகவுள்ளது.\n"
-"சேமிக்கப்பட்டால் ஒரு தடமும் இருக்காது\n"
-"\n"
-"முன்னர் திறக்கப்பட்ட தடத்தை சேமிக்க:\n"
-"'No' இனை அழுத்தவும், தொகு &gt; எல்லா தடமும் திறக்கும் வரை\n"
-"மீள செய்,கோப்பு &gt; திட்டத்தை சேமி.\n"
-"\n"
-"சேமிக்க வேண்டுமா?"
-
-#: src/ProjectFileManager.cpp
-msgid "Warning - Empty Project"
-msgstr "எச்சரிக்கை - காலி கோப்பகம்"
-
-#: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Insufficient Disk Space"
 msgstr "வன்தட்டு இடம்"
 
@@ -9156,12 +9177,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "செயற்திட்டத்தை \"%s\" ஆக சேமி..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-msgstr ""
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -9384,23 +9399,6 @@ msgid "Save project before closing?"
 msgstr "மூடுவதற்கு முன் மாற்றங்களை சேமிக்க விரும்புகிறீர்களா?"
 
 #: src/ProjectManager.cpp
-#, fuzzy
-msgid ""
-"\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Cancel, Edit > Undo until all tracks\n"
-"are open, then File > Save Project."
-msgstr ""
-"\n"
-"சேமிக்கப்பட்டால்,இந்த திட்டத்தில் ஒரு தடமும் காணப்படாது \n"
-"\n"
-"முன்னர் திறக்கப்பட்ட தடங்களை சேமிக்க:\n"
-"ரத்து, தொகு &gt; அனைத்து தடமும்\n"
-"திறக்கும் வரை மீள செய்,கோப்பு &gt; திட்டத்தை சேமி."
-
-#: src/ProjectManager.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "%d நிமிடங்கள் வன்தட்டில் பதிவிற்கு எஞ்சியுள்ளது."
@@ -9439,6 +9437,26 @@ msgstr "கிடையான ஸ்டீரியோ"
 msgid "Vertical Scrollbar"
 msgstr "செங்குத்து ஸ்டீரியோ"
 
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "விளைவுகள்"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "விருப்பங்கள்..."
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Analyze"
+msgstr "பகுப்பாய்"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "கோப்புகளை காணவில்லை"
+
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
@@ -9453,11 +9471,6 @@ msgstr ""
 #, fuzzy
 msgid "Replace effect"
 msgstr "'%s' முன்னமைக்கப்பட்டவையை நீக்குவதா ?"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
-msgid "%s (missing)"
-msgstr "கோப்புகளை காணவில்லை"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9495,15 +9508,16 @@ msgstr "'%s' முன்னமைக்கப்பட்டவையை நீ
 msgid "Unknown"
 msgstr ""
 
+#. i18n-hint: master channel display name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master"
+msgstr "ஒட்டு"
+
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Add effect"
 msgstr "விளைவுகள்"
-
-#. i18n-hint: Hyperlink to the effects stack panel tutorial video
-#: src/RealtimeEffectPanel.cpp
-msgid "Watch video"
-msgstr ""
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9527,25 +9541,6 @@ msgstr "அசைக்கப்பட்டது '%s' %s"
 #, fuzzy
 msgid "Change effect order"
 msgstr "வேக மாற்றம்"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "No Effect"
-msgstr "விளைவுகள்"
-
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get more effects..."
-msgstr "விருப்பங்கள்..."
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Analyze"
-msgstr "பகுப்பாய்"
-
-#: src/RealtimeEffectPanel.cpp
-msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -9578,16 +9573,34 @@ msgstr "நகர்த்தப்பட்ட %s"
 msgid "Realtime effects"
 msgstr "முற்&amp;பார்வை"
 
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Realtime Effects"
-msgstr "விளைவுகளை அனுமதி"
-
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Realtime effects for %s"
 msgstr "விளைவுகளை அனுமதி"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "விளைவுகளை அனுமதி"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master Effects"
+msgstr "முற்&amp;பார்வை"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Applies to all tracks"
+msgstr "புதிய தடத்திற்கு பிள"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -9648,82 +9661,6 @@ msgstr "தேர்வு"
 #, fuzzy
 msgid "Applied effect to selection"
 msgstr "தெரிவின் இறுதியில் முடிக்க"
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, fuzzy
-msgid "Check Online"
-msgstr "பரிசோதிக்கிறது %s"
-
-#: src/SplashDialog.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-msgstr ""
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/SplashDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "How to get help"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "These are our support methods:"
-msgstr "இவை எமது உதவி முறைகள்:"
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid " [[help:Main_Page|Manual]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
-msgstr "Audacity இற்கு வரவேற்கிறோம்"
-
-#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "இதனை ஆரம்பத்தில் மறுபடி காட்ட வேண்டாம்"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10395,6 +10332,42 @@ msgstr "திசை மாற்றம்  -- mean: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr ""
 
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Welcome to Audacity!"
+msgstr "Audacity இற்கு வரவேற்கிறோம்"
+
+#: src/WhatsNewDialog.cpp
+msgid "View tutorials"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "பெயரிடப்பட்ட பாடலை பிரதி செய்"
+
+#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "இதனை ஆரம்பத்தில் மறுபடி காட்ட வேண்டாம்"
+
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -10870,7 +10843,7 @@ msgstr "சரி செய்ய"
 msgid "Add"
 msgstr "&இணைக்க"
 
-#: src/commands/SelectCommand.cpp
+#: src/commands/SelectCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "நீக்கு"
@@ -11300,8 +11273,7 @@ msgstr ""
 msgid "Inner &fade up length:"
 msgstr ""
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "அமைதிக்கான தொடக்கநிலை"
@@ -11669,7 +11641,7 @@ msgstr ""
 msgid "&Threshold (lower is more sensitive):"
 msgstr ""
 
-#: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
+#: src/effects/ClickRemoval.cpp
 msgid "Threshold"
 msgstr ""
 
@@ -11686,129 +11658,8 @@ msgid "Compressor"
 msgstr "அழுத்தி"
 
 #: src/effects/Compressor.cpp
-msgid "Compresses the dynamic range of audio"
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#. i18n-hint: usually leave this as is as dB doesn't get translated
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%3d dB"
-msgstr "%3d dB"
-
-#: src/effects/Compressor.cpp src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f செக்கன்கள்"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f secs"
-msgstr "%.1f நொடிகள்"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.0f:1"
-msgstr "%.0f:1"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f:1"
-msgstr "%.1f:1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.0f to 1"
-msgstr "விகிதம்  %.0f இல் இருந்து 1 இற்கு"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.1f to 1"
-msgstr "விகிதம்  %.1f இல் இருந்து 1 இற்கு"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Noise Floor:"
-msgstr "இரைச்சல் தளம்:"
-
-#: src/effects/Compressor.cpp src/effects/Distortion.cpp
-msgid "Noise Floor"
-msgstr "இரைச்சல் தளம்"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Ratio:"
-msgstr "விகிதம்:"
-
-#: src/effects/Compressor.cpp
-msgid "Ratio"
-msgstr "விகிதம்"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Attack Time:"
-msgstr "பாதிப்பு நேரம்:"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-msgid "Attack Time"
-msgstr "பாதிப்பு நேரம்"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "R&elease Time:"
-msgstr "கடந்துவிட்ட நேரம்"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "Release Time"
-msgstr "உருவாக்க வெளியீடு"
-
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
-#: src/effects/Compressor.cpp
-msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr ""
-
-#. i18n-hint: "Compress" here means reduce variations of sound volume,
-#. NOT related to file-size compression; Peaks means extremes in volume
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "C&ompress based on Peaks"
-msgstr "உச்சத்தை பயன்படுத்தி சுருக்கு"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Threshold %d dB"
-msgstr ""
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Noise Floor %d dB"
-msgstr "இரைச்சல் தளம் %d dB"
-
-#: src/effects/Compressor.cpp
-#, fuzzy, c-format
-msgid "Attack Time %.2f secs"
-msgstr "பாதிப்பு நேரம் %.1f நொடிகள்"
-
-#: src/effects/Compressor.cpp
-#, fuzzy, c-format
-msgid "Release Time %.1f secs"
-msgstr "சிதைவு நேரம் %.1f நொடிகள்"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -12216,6 +12067,10 @@ msgid "Upper Threshold"
 msgstr "அமைதிக்கான தொடக்கநிலை"
 
 #: src/effects/Distortion.cpp
+msgid "Noise Floor"
+msgstr "இரைச்சல் தளம்"
+
+#: src/effects/Distortion.cpp
 #, fuzzy
 msgid "Parameter 1"
 msgstr "அளவுருக்கள்"
@@ -12413,6 +12268,111 @@ msgstr "சத்தமற்ற காலஅளவு"
 #, fuzzy, c-format
 msgid "%0.f ms"
 msgstr "%.0f:1"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "I&nput"
+msgstr "உள்ளீட்டு அலகு"
+
+#. i18n-hint: show input on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show input"
+msgstr "வெளியீட்டை காட்டு"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "O&utput"
+msgstr "வெளியீட்டு அலகு"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "A&ctual compression"
+msgstr "அழுத்தி"
+
+#. i18n-hint: show actual compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show actual compression"
+msgstr "அழுத்தி"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Tar&get compression"
+msgstr "அழுத்தி"
+
+#. i18n-hint: show target compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show target compression"
+msgstr "அழுத்தி"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "அழுத்தி"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "சீரான நேரம்"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "அமைதிக்கான தொடக்கநிலை"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "ஈர பெறு (db) :"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Rati&o:"
+msgstr "விகிதம்:"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "சிதைவு நேரம்"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "உருவாக்க வெளியீடு"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Input"
+msgstr "உள்ளீட்டு அலகு"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Actual Compression"
+msgstr "அழுத்தி"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Target Compression"
+msgstr "அழுத்தி"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "பின்னணி"
 
 #: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -13039,6 +12999,16 @@ msgstr "நேர்மாறாக்கி"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
+#: src/effects/Limiter.cpp plug-ins/limiter.ny
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Limiter"
+msgstr "மட்டுபடுத்தி"
+
+#: src/effects/Limiter.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
 #: src/effects/Loudness.cpp
 #, fuzzy
 msgid "perceived loudness"
@@ -13656,41 +13626,94 @@ msgstr "புதிய தெரிவு நீளம் :"
 msgid "Warning: No repeats."
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "மௌனம்"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "&amp;தெளிவாக்கு"
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
 msgstr "குரல் வழி இசை I"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal II"
 msgstr "குரல் வழி இசை II"
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "த&amp;னிமையாக்கல்"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "சிறப்பு நீக்கம்"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
 msgstr "குளியலறை"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Bright"
 msgstr "சிறிய பிரகாசமான அறை"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Dark"
 msgstr "சிறிய கருமை அறை"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Medium Room"
 msgstr "அளவான அறை"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Large Room"
 msgstr "பெரிய அறை"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Church Hall"
 msgstr "கிறிஸ்துவர்களின் பிரதான கோயில் மண்டபம்"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Cathedral"
 msgstr "கிறிஸ்துவர்களின் பிரதான கோயில்"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Big Cave"
+msgstr ""
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -13937,6 +13960,11 @@ msgstr "இயல்பான பெறுமதிகளை பாவிக்�
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "இயல்பான பெறுமதிகளை அளிக்க"
+
+#: src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f செக்கன்கள்"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -15851,6 +15879,11 @@ msgid "Add Realtime Effects"
 msgstr "விளைவுகளை அனுமதி"
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get AI effects..."
+msgstr "விருப்பங்கள்..."
+
+#: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
 msgstr "பிந்திய மெருகூட்டலை திரும்பச்செய்"
 
@@ -16646,7 +16679,7 @@ msgstr "ஒலித்துண்டை மேலே நகர்த்து"
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
-msgid "&Close Focused Track"
+msgid "Delete Fo&cused Track"
 msgstr "ஒலித்துண்டை மேலே நகர்த்து"
 
 #: src/menus/TrackMenus.cpp
@@ -16981,6 +17014,11 @@ msgstr "விளைவுகளை அனுமதி"
 msgid "&Show Clipping in Waveform"
 msgstr "வெட்டப்பட &துண்டை காட்டு"
 
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Show &RMS in Waveform"
+msgstr "வெட்டப்பட &துண்டை காட்டு"
+
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
@@ -17278,6 +17316,11 @@ msgstr "முன்னமைக்கப்பட்டவையை ஏற்�
 msgid "'Macro Output' directory cannot be set."
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "புதிய விதி&amp;யை சேர்க்க"
+
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
@@ -17335,16 +17378,24 @@ msgid "Realtime effect o&rganization:"
 msgstr "விளைவுகளை அனுமதி"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Skip effects scanning at startup"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
 #, fuzzy
 msgid "Instruction Set"
 msgstr "வாத்தியக்கருவி"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
+msgstr ""
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "பொதுவான தெரிவுகள்"
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -18571,29 +18622,6 @@ msgstr "முன்னமைக்கப்பட்டவை:"
 #, fuzzy
 msgid "Preset 2:"
 msgstr "முன்னமைக்கப்பட்டவை:"
-
-#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
-msgid "Warnings"
-msgstr "எச்சரிக்கைகள்"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Preferences for Warnings"
-msgstr "விருப்பங்கள்: "
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Show Warnings/Prompts for"
-msgstr "எச்சரிக்கைகளை காட்டு "
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Saving &projects versus exporting audio"
-msgstr "இந்த எச்சரிக்கையை மீண்டும் காட்டாதீர்"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Saving &empty project"
-msgstr "வெற்று திட்டம் சேமிக்கப்படுகிறது"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -19927,16 +19955,6 @@ msgstr "பிரியோசையை மொனோ '%s' ஆக பிரி"
 #, fuzzy
 msgid "Split to Mono"
 msgstr "பிரியோசையை மோனோவாக பிரி"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Stereo, %dHz"
-msgstr "பிரியோசை"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Mono, %dHz"
-msgstr "மொனோ, "
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new audio track"
@@ -21506,11 +21524,6 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Limiter"
-msgstr "மட்டுபடுத்தி"
-
 #: plug-ins/limiter.ny
 #, fuzzy
 msgid "Soft Limit"
@@ -22454,6 +22467,169 @@ msgid "Spectral Tools"
 msgstr "வர்ணப்பட்டை"
 
 #, fuzzy
+#~ msgid "Master effects"
+#~ msgstr "முற்&amp;பார்வை"
+
+#, fuzzy
+#~ msgid "Apply to all tracks"
+#~ msgstr "புதிய தடத்திற்கு பிள"
+
+#, fuzzy
+#~ msgid "Input gain (dB)"
+#~ msgstr "ஈர பெறு (db) :"
+
+#, fuzzy
+#~ msgid "Ceiling (dB)"
+#~ msgstr "உயர்வு (dB):"
+
+#, fuzzy
+#~ msgid "Attenuation"
+#~ msgstr "கால அளவு"
+
+#, fuzzy
+#~ msgid "Limiter (beta)"
+#~ msgstr "மட்டுபடுத்தி"
+
+#, fuzzy
+#~ msgid "Compressor (beta)"
+#~ msgstr "அழுத்தி"
+
+#, fuzzy
+#~ msgid "View online"
+#~ msgstr "Timeline Changer"
+
+#, fuzzy
+#~ msgid ""
+#~ "Your project is now empty.\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Click 'No', Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project.\n"
+#~ "\n"
+#~ "Save anyway?"
+#~ msgstr ""
+#~ "திட்டம் காலியகவுள்ளது.\n"
+#~ "சேமிக்கப்பட்டால் ஒரு தடமும் இருக்காது\n"
+#~ "\n"
+#~ "முன்னர் திறக்கப்பட்ட தடத்தை சேமிக்க:\n"
+#~ "'No' இனை அழுத்தவும், தொகு &gt; எல்லா தடமும் திறக்கும் வரை\n"
+#~ "மீள செய்,கோப்பு &gt; திட்டத்தை சேமி.\n"
+#~ "\n"
+#~ "சேமிக்க வேண்டுமா?"
+
+#~ msgid "Warning - Empty Project"
+#~ msgstr "எச்சரிக்கை - காலி கோப்பகம்"
+
+#, fuzzy
+#~ msgid ""
+#~ "\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Cancel, Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project."
+#~ msgstr ""
+#~ "\n"
+#~ "சேமிக்கப்பட்டால்,இந்த திட்டத்தில் ஒரு தடமும் காணப்படாது \n"
+#~ "\n"
+#~ "முன்னர் திறக்கப்பட்ட தடங்களை சேமிக்க:\n"
+#~ "ரத்து, தொகு &gt; அனைத்து தடமும்\n"
+#~ "திறக்கும் வரை மீள செய்,கோப்பு &gt; திட்டத்தை சேமி."
+
+#, fuzzy
+#~ msgid "Check Online"
+#~ msgstr "பரிசோதிக்கிறது %s"
+
+#~ msgid "These are our support methods:"
+#~ msgstr "இவை எமது உதவி முறைகள்:"
+
+#~ msgid "%3d dB"
+#~ msgstr "%3d dB"
+
+#~ msgid "%.1f secs"
+#~ msgstr "%.1f நொடிகள்"
+
+#~ msgid "%.0f:1"
+#~ msgstr "%.0f:1"
+
+#~ msgid "%.1f:1"
+#~ msgstr "%.1f:1"
+
+#~ msgid "Ratio %.0f to 1"
+#~ msgstr "விகிதம்  %.0f இல் இருந்து 1 இற்கு"
+
+#~ msgid "Ratio %.1f to 1"
+#~ msgstr "விகிதம்  %.1f இல் இருந்து 1 இற்கு"
+
+#, fuzzy
+#~ msgid "&Noise Floor:"
+#~ msgstr "இரைச்சல் தளம்:"
+
+#, fuzzy
+#~ msgid "&Ratio:"
+#~ msgstr "விகிதம்:"
+
+#~ msgid "Ratio"
+#~ msgstr "விகிதம்"
+
+#, fuzzy
+#~ msgid "&Attack Time:"
+#~ msgstr "பாதிப்பு நேரம்:"
+
+#~ msgid "Attack Time"
+#~ msgstr "பாதிப்பு நேரம்"
+
+#, fuzzy
+#~ msgid "R&elease Time:"
+#~ msgstr "கடந்துவிட்ட நேரம்"
+
+#, fuzzy
+#~ msgid "Release Time"
+#~ msgstr "உருவாக்க வெளியீடு"
+
+#, fuzzy
+#~ msgid "C&ompress based on Peaks"
+#~ msgstr "உச்சத்தை பயன்படுத்தி சுருக்கு"
+
+#~ msgid "Noise Floor %d dB"
+#~ msgstr "இரைச்சல் தளம் %d dB"
+
+#, fuzzy
+#~ msgid "Attack Time %.2f secs"
+#~ msgstr "பாதிப்பு நேரம் %.1f நொடிகள்"
+
+#, fuzzy
+#~ msgid "Release Time %.1f secs"
+#~ msgstr "சிதைவு நேரம் %.1f நொடிகள்"
+
+#~ msgid "Warnings"
+#~ msgstr "எச்சரிக்கைகள்"
+
+#, fuzzy
+#~ msgid "Preferences for Warnings"
+#~ msgstr "விருப்பங்கள்: "
+
+#~ msgid "Show Warnings/Prompts for"
+#~ msgstr "எச்சரிக்கைகளை காட்டு "
+
+#, fuzzy
+#~ msgid "Saving &projects versus exporting audio"
+#~ msgstr "இந்த எச்சரிக்கையை மீண்டும் காட்டாதீர்"
+
+#, fuzzy
+#~ msgid "Saving &empty project"
+#~ msgstr "வெற்று திட்டம் சேமிக்கப்படுகிறது"
+
+#, fuzzy
+#~ msgid "Stereo, %dHz"
+#~ msgstr "பிரியோசை"
+
+#, fuzzy
+#~ msgid "Mono, %dHz"
+#~ msgstr "மொனோ, "
+
+#, fuzzy
 #~ msgid "&Ok"
 #~ msgstr "&சரி"
 
@@ -23059,14 +23235,6 @@ msgstr "வர்ணப்பட்டை"
 #, fuzzy
 #~ msgid "Remove Vocals: to mono"
 #~ msgstr "சிறப்பு நீக்கம்"
-
-#, fuzzy
-#~ msgid "Remove Vocals"
-#~ msgstr "சிறப்பு நீக்கம்"
-
-#, fuzzy
-#~ msgid "Isolate Vocals"
-#~ msgstr "த&amp;னிமையாக்கல்"
 
 #, fuzzy
 #~ msgid "Isolate Vocals and Invert"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-05-17 23:19+0300\n"
+"POT-Creation-Date: 2024-07-02 21:05+0300\n"
 "PO-Revision-Date: 2024-04-13 00:00+0000\n"
 "Last-Translator: Kaya Zeren <kayazeren@gmail.com>, 2024\n"
 "Language-Team: Turkish (https://app.transifex.com/klyok/teams/690/tr/)\n"
@@ -399,6 +399,185 @@ msgstr "Proje yedekleme noktası oluşturulamadan önce kapatılmış"
 msgid "Failed to deserialize the response"
 msgstr "Yanıtın serileştirilmesi kaldırılamadı"
 
+#. i18n-hint: This is the name of an effect preset.
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern"
+msgstr "Kip:"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Glue Compressor"
+msgstr "Sıkıştırıcı"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Gentle"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beat Booster"
+msgstr "Bas güçlendirme"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Deep Dive Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beefy Master"
+msgstr "Yapıştır"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Make It Right Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Brick Wall Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Lead Vocals"
+msgstr "Yerel"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Fat Vocals"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Power Vocals"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Vocal Control"
+msgstr "Ton denetimleri"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Vocal Touch-Up"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Voice Memos Balancer"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Podcast/Radio"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Piano"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Acoustic Guitar"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Bass Guitar"
+msgstr "Bas kesme"
+
+#. i18n-hint: This is the name of an effect preset. Strings is violins, etc
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Strings"
+msgstr "&Ayarlar"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Kick Drums"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Drums Control"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Climax Impulser SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Engine Breathing SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Impact SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Body SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Tail SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Smack Explosion SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Master Limiter"
+msgstr "Sınırlayıcı"
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "SFX Limiter"
+msgstr "Sınırlayıcı"
+
+#. i18n-hint: This is the name of an effect preset. VO means Voiceover.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "VO Limiter"
+msgstr "Sınırlayıcı"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch 2"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Play it Loud"
+msgstr "Ses oynatılıyor"
+
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -685,6 +864,20 @@ msgstr ""
 "\"%s\" \n"
 "bir ses dosyası değil. \n"
 "Audacity bu dosya türünü açamıyor."
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "%s içe aktarılıyor"
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "%s içe aktarılıyor"
+
+#: libraries/lib-import-export/Import.cpp
+msgid "Operation was canceled by user"
+msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2957,7 +3150,7 @@ msgstr "Ayrıntılar için günlüğü görüntüle"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "Tamam"
@@ -2984,7 +3177,7 @@ msgstr "Durdur"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "İptal"
 
@@ -3037,6 +3230,11 @@ msgstr "Lütfen var olan bir dosya seçin."
 msgid "File type:"
 msgstr "Dosya türü:"
 
+#: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+msgid "Select a directory"
+msgstr "Bir klasör seçin"
+
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
 msgid "Panel"
 msgstr "Pano"
@@ -3044,10 +3242,6 @@ msgstr "Pano"
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Dialog"
 msgstr "Pencere"
-
-#: libraries/lib-wx-wrappers/wxPanelWrapper.h
-msgid "Select a directory"
-msgstr "Bir klasör seçin"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Directory Dialog"
@@ -3256,12 +3450,14 @@ msgstr "Komut:"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/EffectsPrefs.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Göz at..."
 
+#. i18n-hint: show output on a graph
 #: modules/import-export/mod-cl/ExportCL.cpp
+#: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show output"
 msgstr "Çıkışı görüntüle"
 
@@ -5312,7 +5508,7 @@ msgstr "Betik"
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Output"
 msgstr "Çıkış"
 
@@ -5562,8 +5758,8 @@ msgid "Generating audio preview..."
 msgstr "Ses ön izlemesi oluşturuluyor..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
+#, fuzzy
+msgid "Open trace audio.com"
 msgstr "Audio.com üzerinden aç"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
@@ -5709,6 +5905,10 @@ msgid "&Unlink Account"
 msgstr "Hesap bağlantısını &kes"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr "Audio.com üzerinden aç"
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
 msgstr "Bu bir daha görüntülenmesin"
 
@@ -5719,11 +5919,13 @@ msgid "How would you like to save?"
 msgstr "Nasıl kaydetmek istersiniz?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Save to the Cloud"
+#, fuzzy
+msgid "Save to the Cloud (free)"
 msgstr "Buluta kaydet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+#, fuzzy
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr "Projeniz audio.com üzerinde size özel olarak yedeklenir. Çalışmalarınıza herhangi bir aygıt üzerinden erişebilir ve projeniz üzerinde başkalarıyla iş birliği yapabilirsiniz."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -5735,8 +5937,10 @@ msgid "On your computer"
 msgstr "Bilgisayarınızda"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
-msgstr "Dosyalar aygıtınıza kaydedildi."
+msgid ""
+"Files are saved on your device.\n"
+"Note: To export MP3 and WAV files, use File > Export Audio instead."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -6139,10 +6343,6 @@ msgid "All saved changes will now update to the cloud. You can manage this file 
 msgstr "Kaydedilmiş tüm değişiklikler artık bulutta güncellenecek. Bu dosyayı audio.com üzerine yüklediğiniz projeler sayfasından yönetebilirsiniz."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-msgid "View online"
-msgstr "Çevrim içi görüntüle"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
 msgstr "Tamam"
 
@@ -6357,6 +6557,12 @@ msgstr "%s site geliştiricisi"
 #, c-format
 msgid "%s, graphics"
 msgstr "%s, görseller"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, effects presets"
+msgstr "Hazır ayarı seçin"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -7914,10 +8120,9 @@ msgid "Log frequency"
 msgstr "Günlükleme sıklığı"
 
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
-#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
+#: src/effects/Loudness.cpp src/effects/Normalize.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8351,161 +8556,6 @@ msgstr "Pan düğmesi oynatıldı"
 #: src/MixerBoard.cpp
 msgid "&Mixer"
 msgstr "&Karıştırıcı"
-
-#: src/PendingStrings.cpp
-msgid "Get free plugins & sounds"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-msgid "View tutorials"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Visit our forum"
-msgstr "Audio.com sitesine git"
-
-#. i18n-hint: Title of the buttons that adds new effects plugin search path
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Add new location"
-msgstr "Yeni kur&al ekle"
-
-#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "%s plugin locations"
-msgstr "Bir konum seçin"
-
-#. i18n-hint: master channel display name
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master"
-msgstr "Yapıştır"
-
-#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master effects"
-msgstr "Gerçek zamanlı etkiler"
-
-#. i18n-hint: Hint for a master effects section of realtime effects panel
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Apply to all tracks"
-msgstr "Yeni ize ayır"
-
-#: src/PendingStrings.cpp
-msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compression curve"
-msgstr "Sıkıştırma"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Smoothing"
-msgstr "Hiç bir şey yapılmasın"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input gain (dB)"
-msgstr "Çıkış kazancı (dB)"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Ceiling (dB)"
-msgstr "Kazanç (dB)"
-
-#: src/PendingStrings.cpp
-msgid "Input"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attenuation"
-msgstr "Doğrultu"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Threshold (dB)"
-msgstr "Eşik düzeyi (dB)"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Make-up gain (dB)"
-msgstr "Düzeltme kazancı"
-
-#: src/PendingStrings.cpp
-msgid "&Make-up target (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-msgid "Knee &width (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Rati&o:"
-msgstr "&Oran:"
-
-#: src/PendingStrings.cpp
-msgid "&Lookahead (ms)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attac&k (ms)"
-msgstr "Kalkma (ms)"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Release (ms)"
-msgstr "Bırakma süresi"
-
-#: src/PendingStrings.cpp
-msgid "awaiting playback"
-msgstr ""
-
-#: src/PendingStrings.cpp
-msgid "Augments loudness while minimizing distortion."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Limiter (beta)"
-msgstr "Sınırlayıcı"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compressor (beta)"
-msgstr "Sıkıştırıcı"
-
-#: src/PendingStrings.cpp
-msgid "&Show graph (beta)"
-msgstr ""
-
-#. i18n-hint: import progress dialog title, progress dialog
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Importing files"
-msgstr "%s içe aktarılıyor"
-
-#. i18n-hint: import progress dialot text, where %s is the filename
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "Importing %s..."
-msgstr "%s içe aktarılıyor"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8981,30 +9031,6 @@ msgid "Projects cannot be saved to FAT drives."
 msgstr "Projeler FAT olarak biçimlendirilmiş sürücülere kaydedilemez."
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"Your project is now empty.\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Click 'No', Edit > Undo until all tracks\n"
-"are open, then File > Save Project.\n"
-"\n"
-"Save anyway?"
-msgstr ""
-"Projeniz şimdi boş.\n"
-"Kaydedilmişse projede hiç iz bulunmayacak.\n"
-"\n"
-"Önceden açılmış izleri kaydetmek için:\n"
-"'Hayır' tıklayın, Düzenle > Geri Al ile tüm\n"
-"izler açılana kadar gidin ve Dosya > Projeyi Kaydet.\n"
-"\n"
-"Gene de kaydedilsin mi?"
-
-#: src/ProjectFileManager.cpp
-msgid "Warning - Empty Project"
-msgstr "Dikkat - Proje boş"
-
-#: src/ProjectFileManager.cpp
 msgid "Insufficient Disk Space"
 msgstr "Disk alanı yetersiz"
 
@@ -9039,14 +9065,6 @@ msgstr ""
 #, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "%sProjeyi farklı \"%s\" kaydet..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-msgstr ""
-"'Projeyi kaydet' komutu, ses dosyaları için değil Audacity projeleri için kullanılır.\n"
-"Diğer uygulamalarda açılabilmesini istediğiniz ses dosyaları için 'Dışa aktar' komutunu kullanın.\n"
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -9279,22 +9297,6 @@ msgid "Save project before closing?"
 msgstr "Proje kapatılmadan önce kaydedilsin mi?"
 
 #: src/ProjectManager.cpp
-msgid ""
-"\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Cancel, Edit > Undo until all tracks\n"
-"are open, then File > Save Project."
-msgstr ""
-"\n"
-"Kaydederseniz projede hiç iz bulunmayacak.\n"
-"\n"
-"Daha önce açılmış dosyaları kaydetmek için:\n"
-"İptal, Düzenle > Geri al ile tüm izleri\n"
-"açın ve Dosya > Projeyi kaydet seçin."
-
-#: src/ProjectManager.cpp
 #, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Kalan disk alanıyla yapılabilecek kayıt: %s"
@@ -9331,6 +9333,23 @@ msgstr "Yatay kaydırma çubuğu"
 msgid "Vertical Scrollbar"
 msgstr "Dikey kaydırma çubuğu"
 
+#: src/RealtimeEffectPanel.cpp
+msgid "No Effect"
+msgstr "Etki yok"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+msgid "Get more effects..."
+msgstr "Başka etkiler alın..."
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Analyze"
+msgstr "İncele"
+
+#: src/RealtimeEffectPanel.cpp
+#, c-format
+msgid "%s (missing)"
+msgstr "%s (eksik)"
+
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
 #, c-format
@@ -9344,11 +9363,6 @@ msgstr "Güç"
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
 msgstr "Etkiyi değiştir"
-
-#: src/RealtimeEffectPanel.cpp
-#, c-format
-msgid "%s (missing)"
-msgstr "%s (eksik)"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9386,14 +9400,15 @@ msgstr "%s değiştir"
 msgid "Unknown"
 msgstr "Bilinmiyor"
 
+#. i18n-hint: master channel display name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Yapıştır"
+
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
 msgstr "Etki ekle"
-
-#. i18n-hint: Hyperlink to the effects stack panel tutorial video
-#: src/RealtimeEffectPanel.cpp
-msgid "Watch video"
-msgstr "Görüntüyü izle"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9416,22 +9431,6 @@ msgstr "%s, %s içinde aşağı taşındı"
 #: src/RealtimeEffectPanel.cpp
 msgid "Change effect order"
 msgstr "Etki sıralamasını değiştir"
-
-#: src/RealtimeEffectPanel.cpp
-msgid "No Effect"
-msgstr "Etki yok"
-
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
-msgid "Get more effects..."
-msgstr "Başka etkiler alın..."
-
-#: src/RealtimeEffectPanel.cpp
-msgid "Analyze"
-msgstr "İncele"
-
-#: src/RealtimeEffectPanel.cpp
-msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr "Gerçek zamanlı etkiler yapıyı bozmaz ve istenildiği an değiştirilebilir."
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -9464,15 +9463,33 @@ msgstr "%s ekle"
 msgid "Realtime effects"
 msgstr "Gerçek zamanlı etkiler"
 
-#: src/RealtimeEffectPanel.cpp
-msgid "Realtime Effects"
-msgstr "Gerçek zamanlı etkiler"
-
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Realtime effects for %s"
 msgstr "%s için gerçek zamanlı etkiler"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime Effects"
+msgstr "Gerçek zamanlı etkiler"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr "Görüntüyü izle"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr "Gerçek zamanlı etkiler yapıyı bozmaz ve istenildiği an değiştirilebilir."
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master Effects"
+msgstr "Gerçek zamanlı etkiler"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Applies to all tracks"
+msgstr "Yeni ize ayır"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -9529,81 +9546,6 @@ msgstr "Spektra&l seçim panosu"
 #: src/SpectralDataManager.cpp
 msgid "Applied effect to selection"
 msgstr "Etki seçime uygulandı"
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr "<br><br>Kullandığınız Audacity uygulaması <b>Alpha deneme sürümüdür</b>."
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr "<br><br>Kullandığınız Audacity uygulaması Beta deneme sürümüdür</b>."
-
-#: src/SplashDialog.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr "Resmi Audacity sürümünü edinin"
-
-#: src/SplashDialog.cpp
-msgid "Check Online"
-msgstr "Çevrim içi denetle"
-
-#: src/SplashDialog.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-msgstr "Tam belgeleri ve desteği olan kararlı son sürümü kullanmanızı önemle öneririz.<br/><br/>"
-
-#: src/SplashDialog.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-msgstr "[[https://www.audacityteam.org/community/|Topluluğumuza]] katılarak Audacity sürümlerinin hazırlanmasına katkıda bulunabilirsiniz.<hr/><br/><br/>"
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/SplashDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr "Audacity %s yenilikleri"
-
-#: src/SplashDialog.cpp
-msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr "<p>Bu sürümde vuruşlar ve ölçüler ile zaman esnetme ve diğer özellikleri ekledik.<br/>"
-
-#: src/SplashDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Ayrıntılı bilgi almak için [[%s|yayın videosunu]] izleyin ya da [[https://support.audacityteam.org/additional-resources/changelog|changelog]] dosyasını okuyun!</p>"
-
-#: src/SplashDialog.cpp
-msgid "How to get help"
-msgstr "Yardım almak için"
-
-#: src/SplashDialog.cpp
-msgid "These are our support methods:"
-msgstr "Şu şekilde destek alabilirsiniz:"
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid "[[help:Quick_Help|Quick Help]]"
-msgstr "[[help:Quick_Help|Yardım]]"
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid " [[help:Main_Page|Manual]]"
-msgstr " [[help:Main_Page|Rehber]]"
-
-#: src/SplashDialog.cpp
-msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr "[[https://support.audacityteam.org/|Eğitim ve bilgiler]]"
-
-#: src/SplashDialog.cpp
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " [[https://forum.audacityteam.org/|Forum]] - sorularınızı doğrudan çevrim içi olarak sorun."
-
-#: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
-msgstr "Audacity uygulamasına hoş geldiniz!"
-
-#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Bu pencere açılışta bir daha görüntülenmesin"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10259,6 +10201,42 @@ msgstr "Yön değişimleri  -- ortalama: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Ayarlama tamamlandı"
 
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr "Audacity %s yenilikleri"
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr "Ayrıntılı bilgi almak için [[%s|yayın videosunu]] izleyin ya da [[https://support.audacityteam.org/additional-resources/changelog|changelog]] dosyasını okuyun!</p>"
+
+#: src/WhatsNewDialog.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Welcome to Audacity!"
+msgstr "Audacity uygulamasına hoş geldiniz!"
+
+#: src/WhatsNewDialog.cpp
+msgid "View tutorials"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Audio.com sitesine git"
+
+#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Bu pencere açılışta bir daha görüntülenmesin"
+
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -10674,7 +10652,7 @@ msgstr "Ayarla"
 msgid "Add"
 msgstr "Ekle"
 
-#: src/commands/SelectCommand.cpp
+#: src/commands/SelectCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Kaldır"
@@ -11051,8 +11029,7 @@ msgstr "İç &azalarak çıkma uzunluğu:"
 msgid "Inner &fade up length:"
 msgstr "İç artarak girme &uzunluğu:"
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Eşik:"
 
@@ -11384,7 +11361,7 @@ msgstr "Seçimde en az %d örnek bulunmalı."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Eşik (daha alçak daha duyarlıdır):"
 
-#: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
+#: src/effects/ClickRemoval.cpp
 msgid "Threshold"
 msgstr "Eşik"
 
@@ -11401,123 +11378,8 @@ msgid "Compressor"
 msgstr "Sıkıştırıcı"
 
 #: src/effects/Compressor.cpp
-msgid "Compresses the dynamic range of audio"
-msgstr "Sesin devingen aralığını sıkıştırır"
-
-#. i18n-hint: usually leave this as is as dB doesn't get translated
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%3d dB"
-msgstr "%3d dB"
-
-#: src/effects/Compressor.cpp src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f saniye"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f secs"
-msgstr "%.1f saniye"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.0f:1"
-msgstr "%.0f:1"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f:1"
-msgstr "%.1f:1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.0f to 1"
-msgstr "Oran %.0f -> 1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.1f to 1"
-msgstr "Oran %.1f -> 1"
-
-#: src/effects/Compressor.cpp
-msgid "&Noise Floor:"
-msgstr "&Gürültü tabanı:"
-
-#: src/effects/Compressor.cpp src/effects/Distortion.cpp
-msgid "Noise Floor"
-msgstr "Gürültü tabanı"
-
-#: src/effects/Compressor.cpp
-msgid "&Ratio:"
-msgstr "&Oran:"
-
-#: src/effects/Compressor.cpp
-msgid "Ratio"
-msgstr "Oran"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-msgid "&Attack Time:"
-msgstr "&Kalkma süresi:"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-msgid "Attack Time"
-msgstr "Kalkma süresi"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-msgid "R&elease Time:"
-msgstr "&Bırakma süresi:"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-msgid "Release Time"
-msgstr "Bırakma süresi"
-
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
-#: src/effects/Compressor.cpp
-msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "&Sıkıştırdıktan sonra 0 dB düzeltme kazancı"
-
-#. i18n-hint: "Compress" here means reduce variations of sound volume,
-#. NOT related to file-size compression; Peaks means extremes in volume
-#: src/effects/Compressor.cpp
-msgid "C&ompress based on Peaks"
-msgstr "&Tepelere göre sıkıştır"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Threshold %d dB"
-msgstr "Eşik: %d dB"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Noise Floor %d dB"
-msgstr "Gürültü tabanı %d dB"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Attack Time %.2f secs"
-msgstr "Kalkma süresi %.2f saniye"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Release Time %.1f secs"
-msgstr "Bırakma süresi %.1f saniye"
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
+msgstr ""
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -11909,6 +11771,10 @@ msgid "Upper Threshold"
 msgstr "Üst eşik"
 
 #: src/effects/Distortion.cpp
+msgid "Noise Floor"
+msgstr "Gürültü tabanı"
+
+#: src/effects/Distortion.cpp
 msgid "Parameter 1"
 msgstr "1. parametre"
 
@@ -12086,6 +11952,108 @@ msgstr "Sessizlik süresi:"
 #, c-format
 msgid "%0.f ms"
 msgstr "%0.f ms"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+msgid "I&nput"
+msgstr ""
+
+#. i18n-hint: show input on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show input"
+msgstr "Çıkışı görüntüle"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "O&utput"
+msgstr "Çıkış"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "A&ctual compression"
+msgstr "Sıkıştırma"
+
+#. i18n-hint: show actual compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show actual compression"
+msgstr "Ses düzeyi ve sıkıştırma"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Tar&get compression"
+msgstr "Sıkıştırma"
+
+#. i18n-hint: show target compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show target compression"
+msgstr "Ses düzeyi ve sıkıştırma"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Sıkıştırma"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Hiç bir şey yapılmasın"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Eşik düzeyi (dB)"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Düzeltme kazancı"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Rati&o:"
+msgstr "&Oran:"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Kalkma (ms)"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Bırakma süresi"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+msgid "Input"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Actual Compression"
+msgstr "Sıkıştırma"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Target Compression"
+msgstr "Sıkıştırma"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+msgid "awaiting playback"
+msgstr ""
 
 #: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -12701,6 +12669,15 @@ msgstr "Evir"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Ses örneklerinin uçlarını yukarıdan aşağıya ters çevirir"
 
+#: src/effects/Limiter.cpp plug-ins/limiter.ny
+#: resources/EffectsMenuDefaults.xml
+msgid "Limiter"
+msgstr "Sınırlayıcı"
+
+#: src/effects/Limiter.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
 #: src/effects/Loudness.cpp
 msgid "perceived loudness"
 msgstr "algılanan ses yüksekliği"
@@ -13277,41 +13254,92 @@ msgstr "Yeni seçim uzunluğu: %s"
 msgid "Warning: No repeats."
 msgstr "Uyarı: Yineleme yok."
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Sessizlik"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "Temizle"
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal I"
 msgstr "Vokal I"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Vocal II"
 msgstr "Vokal II"
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Dance Vocal"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Modern Vocal"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
 msgstr "Banyo"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Bright"
 msgstr "Küçük oda aydınlık"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Dark"
 msgstr "Küçük oda karanlık"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Medium Room"
 msgstr "Orta boy oda"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Large Room"
 msgstr "Büyük oda"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Church Hall"
 msgstr "Geniş hol"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Cathedral"
 msgstr "Büyük salon"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Big Cave"
+msgstr ""
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -13533,6 +13561,11 @@ msgstr "Varsayılanları kullan"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Varsayılanları geri yükle"
+
+#: src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f saniye"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -15319,6 +15352,11 @@ msgid "Add Realtime Effects"
 msgstr "Gerçek zamanlı etkiler ekle"
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get AI effects..."
+msgstr "Başka etkiler alın..."
+
+#: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
 msgstr "Son etkiyi yinele"
 
@@ -16017,7 +16055,8 @@ msgid "&Solo/Unsolo Focused Track"
 msgstr "Odaklanılmış izi &solo/birlikte oynat"
 
 #: src/menus/TrackMenus.cpp
-msgid "&Close Focused Track"
+#, fuzzy
+msgid "Delete Fo&cused Track"
 msgstr "Odaklanılmış izi &kapat"
 
 #: src/menus/TrackMenus.cpp
@@ -16304,6 +16343,11 @@ msgstr "Ek &menüleri aç"
 msgid "&Show Clipping in Waveform"
 msgstr "&Kırpılma görüntülensin (aç/kapat)"
 
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Show &RMS in Waveform"
+msgstr "&Kırpılma görüntülensin (aç/kapat)"
+
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
 msgstr "Uygulama ayarları"
@@ -16577,6 +16621,11 @@ msgstr "'Dışa aktarma' klasörü ayarlanamadı."
 msgid "'Macro Output' directory cannot be set."
 msgstr "'Makro çıktısı' klasörü ayarlanamadı."
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "Yeni kur&al ekle"
+
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
@@ -16628,16 +16677,24 @@ msgid "Realtime effect o&rganization:"
 msgstr "&Gerçek zamanlı etki düzeni:"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Skip effects scanning at startup"
-msgstr "&Başlangıçta etkiler taranmasın"
-
-#: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
 msgstr "Komut kümesi"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
 msgstr "SSE/SSE2/.../AVX k&ullan"
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Bir konum seçin"
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
+msgstr "&Başlangıçta etkiler taranmasın"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Open Plugin &Manager"
@@ -17785,26 +17842,6 @@ msgstr "1. hazır ayar:"
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 2:"
 msgstr "2. hazır ayar:"
-
-#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
-msgid "Warnings"
-msgstr "Uyarılar"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Preferences for Warnings"
-msgstr "Uyarı ayarları"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Show Warnings/Prompts for"
-msgstr "Aşağıdakiler için uyarı ve iletiler görüntülensin"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Saving &projects versus exporting audio"
-msgstr "&Projeleri kaydetmeye kıyasla sesi dışa aktarmak"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Saving &empty project"
-msgstr "Boş projeler kayd&edilirken"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -18999,16 +19036,6 @@ msgstr "'%s' çift kanallıdan tek kanallıya ayır"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Split to Mono"
 msgstr "Tek kanallıya ayır"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, c-format
-msgid "Stereo, %dHz"
-msgstr "Çift kanallı, %dHz"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, c-format
-msgid "Mono, %dHz"
-msgstr "Tek kanallı, %dHz"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new audio track"
@@ -20458,10 +20485,6 @@ msgstr ""
 "                 en az iki ses gereklidir.~%~\n"
 "                 Yalnızca bir ses seçilmiş."
 
-#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
-msgid "Limiter"
-msgstr "Sınırlayıcı"
-
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
 msgstr "Yumuşak sınır"
@@ -21340,6 +21363,204 @@ msgstr "Vokal kaldırıcı"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Spektral araçlar"
+
+#, fuzzy
+#~ msgid "Master effects"
+#~ msgstr "Gerçek zamanlı etkiler"
+
+#, fuzzy
+#~ msgid "Apply to all tracks"
+#~ msgstr "Yeni ize ayır"
+
+#, fuzzy
+#~ msgid "Input gain (dB)"
+#~ msgstr "Çıkış kazancı (dB)"
+
+#, fuzzy
+#~ msgid "Ceiling (dB)"
+#~ msgstr "Kazanç (dB)"
+
+#, fuzzy
+#~ msgid "Attenuation"
+#~ msgstr "Doğrultu"
+
+#, fuzzy
+#~ msgid "Limiter (beta)"
+#~ msgstr "Sınırlayıcı"
+
+#, fuzzy
+#~ msgid "Compressor (beta)"
+#~ msgstr "Sıkıştırıcı"
+
+#~ msgid "Files are saved on your device."
+#~ msgstr "Dosyalar aygıtınıza kaydedildi."
+
+#~ msgid "View online"
+#~ msgstr "Çevrim içi görüntüle"
+
+#~ msgid ""
+#~ "Your project is now empty.\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Click 'No', Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project.\n"
+#~ "\n"
+#~ "Save anyway?"
+#~ msgstr ""
+#~ "Projeniz şimdi boş.\n"
+#~ "Kaydedilmişse projede hiç iz bulunmayacak.\n"
+#~ "\n"
+#~ "Önceden açılmış izleri kaydetmek için:\n"
+#~ "'Hayır' tıklayın, Düzenle > Geri Al ile tüm\n"
+#~ "izler açılana kadar gidin ve Dosya > Projeyi Kaydet.\n"
+#~ "\n"
+#~ "Gene de kaydedilsin mi?"
+
+#~ msgid "Warning - Empty Project"
+#~ msgstr "Dikkat - Proje boş"
+
+#~ msgid ""
+#~ "'Save Project' is for an Audacity project, not an audio file.\n"
+#~ "For an audio file that will open in other apps, use 'Export'.\n"
+#~ msgstr ""
+#~ "'Projeyi kaydet' komutu, ses dosyaları için değil Audacity projeleri için kullanılır.\n"
+#~ "Diğer uygulamalarda açılabilmesini istediğiniz ses dosyaları için 'Dışa aktar' komutunu kullanın.\n"
+
+#~ msgid ""
+#~ "\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Cancel, Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project."
+#~ msgstr ""
+#~ "\n"
+#~ "Kaydederseniz projede hiç iz bulunmayacak.\n"
+#~ "\n"
+#~ "Daha önce açılmış dosyaları kaydetmek için:\n"
+#~ "İptal, Düzenle > Geri al ile tüm izleri\n"
+#~ "açın ve Dosya > Projeyi kaydet seçin."
+
+#~ msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
+#~ msgstr "<br><br>Kullandığınız Audacity uygulaması <b>Alpha deneme sürümüdür</b>."
+
+#~ msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
+#~ msgstr "<br><br>Kullandığınız Audacity uygulaması Beta deneme sürümüdür</b>."
+
+#~ msgid "Get the Official Released Version of Audacity"
+#~ msgstr "Resmi Audacity sürümünü edinin"
+
+#~ msgid "Check Online"
+#~ msgstr "Çevrim içi denetle"
+
+#~ msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
+#~ msgstr "Tam belgeleri ve desteği olan kararlı son sürümü kullanmanızı önemle öneririz.<br/><br/>"
+
+#~ msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
+#~ msgstr "[[https://www.audacityteam.org/community/|Topluluğumuza]] katılarak Audacity sürümlerinin hazırlanmasına katkıda bulunabilirsiniz.<hr/><br/><br/>"
+
+#~ msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
+#~ msgstr "<p>Bu sürümde vuruşlar ve ölçüler ile zaman esnetme ve diğer özellikleri ekledik.<br/>"
+
+#~ msgid "How to get help"
+#~ msgstr "Yardım almak için"
+
+#~ msgid "These are our support methods:"
+#~ msgstr "Şu şekilde destek alabilirsiniz:"
+
+#~ msgid "[[help:Quick_Help|Quick Help]]"
+#~ msgstr "[[help:Quick_Help|Yardım]]"
+
+#~ msgid " [[help:Main_Page|Manual]]"
+#~ msgstr " [[help:Main_Page|Rehber]]"
+
+#~ msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+#~ msgstr "[[https://support.audacityteam.org/|Eğitim ve bilgiler]]"
+
+#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+#~ msgstr " [[https://forum.audacityteam.org/|Forum]] - sorularınızı doğrudan çevrim içi olarak sorun."
+
+#~ msgid "Compresses the dynamic range of audio"
+#~ msgstr "Sesin devingen aralığını sıkıştırır"
+
+#~ msgid "%3d dB"
+#~ msgstr "%3d dB"
+
+#~ msgid "%.1f secs"
+#~ msgstr "%.1f saniye"
+
+#~ msgid "%.0f:1"
+#~ msgstr "%.0f:1"
+
+#~ msgid "%.1f:1"
+#~ msgstr "%.1f:1"
+
+#~ msgid "Ratio %.0f to 1"
+#~ msgstr "Oran %.0f -> 1"
+
+#~ msgid "Ratio %.1f to 1"
+#~ msgstr "Oran %.1f -> 1"
+
+#~ msgid "&Noise Floor:"
+#~ msgstr "&Gürültü tabanı:"
+
+#~ msgid "&Ratio:"
+#~ msgstr "&Oran:"
+
+#~ msgid "Ratio"
+#~ msgstr "Oran"
+
+#~ msgid "&Attack Time:"
+#~ msgstr "&Kalkma süresi:"
+
+#~ msgid "Attack Time"
+#~ msgstr "Kalkma süresi"
+
+#~ msgid "R&elease Time:"
+#~ msgstr "&Bırakma süresi:"
+
+#~ msgid "Release Time"
+#~ msgstr "Bırakma süresi"
+
+#~ msgid "Ma&ke-up gain for 0 dB after compressing"
+#~ msgstr "&Sıkıştırdıktan sonra 0 dB düzeltme kazancı"
+
+#~ msgid "C&ompress based on Peaks"
+#~ msgstr "&Tepelere göre sıkıştır"
+
+#~ msgid "Threshold %d dB"
+#~ msgstr "Eşik: %d dB"
+
+#~ msgid "Noise Floor %d dB"
+#~ msgstr "Gürültü tabanı %d dB"
+
+#~ msgid "Attack Time %.2f secs"
+#~ msgstr "Kalkma süresi %.2f saniye"
+
+#~ msgid "Release Time %.1f secs"
+#~ msgstr "Bırakma süresi %.1f saniye"
+
+#~ msgid "Warnings"
+#~ msgstr "Uyarılar"
+
+#~ msgid "Preferences for Warnings"
+#~ msgstr "Uyarı ayarları"
+
+#~ msgid "Show Warnings/Prompts for"
+#~ msgstr "Aşağıdakiler için uyarı ve iletiler görüntülensin"
+
+#~ msgid "Saving &projects versus exporting audio"
+#~ msgstr "&Projeleri kaydetmeye kıyasla sesi dışa aktarmak"
+
+#~ msgid "Saving &empty project"
+#~ msgstr "Boş projeler kayd&edilirken"
+
+#~ msgid "Stereo, %dHz"
+#~ msgstr "Çift kanallı, %dHz"
+
+#~ msgid "Mono, %dHz"
+#~ msgstr "Tek kanallı, %dHz"
 
 #~ msgid "&Ok"
 #~ msgstr "&Tamam"

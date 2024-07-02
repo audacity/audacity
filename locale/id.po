@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-05-17 23:19+0300\n"
+"POT-Creation-Date: 2024-07-02 21:05+0300\n"
 "PO-Revision-Date: 2012-01-16 15:00-0000\n"
 "Last-Translator: Gale <gale@audacityteam.org>\n"
 "Language-Team: \n"
@@ -415,6 +415,187 @@ msgstr ""
 msgid "Failed to deserialize the response"
 msgstr "Tidak bisa menerima deskripsi aliran"
 
+#. i18n-hint: This is the name of an effect preset.
+#. i18n-hint: This is the name of an effect preset
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern"
+msgstr "Mode"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Glue Compressor"
+msgstr "Kompresor"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Gentle"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beat Booster"
+msgstr "Bass Boost"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Deep Dive Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beefy Master"
+msgstr "Tempel"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Make It Right Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Brick Wall Master"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Lead Vocals"
+msgstr "Rekaman Audio"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Fat Vocals"
+msgstr "Rekaman Audio"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Power Vocals"
+msgstr "Rekaman Audio"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Vocal Control"
+msgstr "Pembuangan Trek"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Vocal Touch-Up"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Voice Memos Balancer"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Podcast/Radio"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Piano"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Acoustic Guitar"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Bass Guitar"
+msgstr "Bass Boost"
+
+#. i18n-hint: This is the name of an effect preset. Strings is violins, etc
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Strings"
+msgstr "&Opsi..."
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Kick Drums"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Drums Control"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Climax Impulser SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Engine Breathing SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Impact SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Body SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Great Tail SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Smack Explosion SFX"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Master Limiter"
+msgstr "Pembatas"
+
+#. i18n-hint: This is the name of an effect preset. SFX means sound effects.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "SFX Limiter"
+msgstr "Pembatas"
+
+#. i18n-hint: This is the name of an effect preset. VO means Voiceover.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "VO Limiter"
+msgstr "Pembatas"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+msgid "Modern Punch 2"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Play it Loud"
+msgstr "Memeainkan Audio"
+
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -704,6 +885,20 @@ msgstr ""
 "adalah file MIDI, buka file audio. \n"
 "Audacity tidak bisa membuka tipe file ini untuk dimainkan, tapi Anda bisa \n"
 "mengeditnya dengan mengklik Berkas > Impor > MIDI."
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy
+msgid "Importing files"
+msgstr "Mengimpor %s"
+
+#: libraries/lib-import-export/Import.cpp
+#, fuzzy, c-format
+msgid "Importing %s..."
+msgstr "Mengimpor %s"
+
+#: libraries/lib-import-export/Import.cpp
+msgid "Operation was canceled by user"
+msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2998,7 +3193,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#: src/AboutDialog.cpp src/Dependencies.cpp src/SplashDialog.cpp
+#: src/AboutDialog.cpp src/Dependencies.cpp src/WhatsNewDialog.cpp
 #: src/effects/nyquist/Nyquist.cpp
 msgid "OK"
 msgstr "OK"
@@ -3025,7 +3220,7 @@ msgstr "Berhenti"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#: src/AudioPasteDialog.cpp src/PendingStrings.cpp
+#: src/AudioPasteDialog.cpp
 msgid "Cancel"
 msgstr "Batal"
 
@@ -3086,6 +3281,12 @@ msgstr " Mohon pilih aksinya"
 msgid "File type:"
 msgstr "Penyaring"
 
+#: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
+#: libraries/lib-wx-wrappers/wxPanelWrapper.h
+#, fuzzy
+msgid "Select a directory"
+msgstr "Membuat proyek baru"
+
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h src/commands/DragCommand.cpp
 #, fuzzy
 msgid "Panel"
@@ -3094,11 +3295,6 @@ msgstr "Panel Trek"
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 msgid "Dialog"
 msgstr ""
-
-#: libraries/lib-wx-wrappers/wxPanelWrapper.h
-#, fuzzy
-msgid "Select a directory"
-msgstr "Membuat proyek baru"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
 #, fuzzy
@@ -3294,12 +3490,14 @@ msgstr "Perintah:"
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
-#: modules/import-export/mod-mp3/ExportMP3.cpp
+#: modules/import-export/mod-mp3/ExportMP3.cpp src/prefs/EffectsPrefs.cpp
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Browse..."
 msgstr "Jelajah..."
 
+#. i18n-hint: show output on a graph
 #: modules/import-export/mod-cl/ExportCL.cpp
+#: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show output"
 msgstr "Tunjukkan output"
 
@@ -5453,7 +5651,7 @@ msgstr ""
 
 #. i18n-hint noun
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp src/Benchmark.cpp
-#: src/effects/BassTreble.cpp
+#: src/effects/BassTreble.cpp src/effects/DynamicRangeProcessorHistoryPanel.cpp
 #, fuzzy
 msgid "Output"
 msgstr "Meter Output"
@@ -5736,9 +5934,9 @@ msgid "Generating audio preview..."
 msgstr "Membuat Bising"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-msgid "Open from audio.com"
-msgstr ""
+#, fuzzy
+msgid "Open trace audio.com"
+msgstr "Salin Label"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #, fuzzy
@@ -5900,6 +6098,10 @@ msgid "&Unlink Account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
+msgid "Open from audio.com"
+msgstr ""
+
+#: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #, fuzzy
 msgid "Don't show this again"
 msgstr "Jangan perlihatkan peringatan lagi"
@@ -5912,11 +6114,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 #, fuzzy
-msgid "Save to the Cloud"
+msgid "Save to the Cloud (free)"
 msgstr "Simpan Gambar ke:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -5929,7 +6131,9 @@ msgid "On your computer"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid "Files are saved on your device."
+msgid ""
+"Files are saved on your device.\n"
+"Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
@@ -6363,11 +6567,6 @@ msgid "All saved changes will now update to the cloud. You can manage this file 
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
-msgid "View online"
-msgstr "Pengubah Nama"
-
-#: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
 msgstr ""
 
@@ -6594,6 +6793,12 @@ msgstr "Amplop"
 #, fuzzy, c-format
 msgid "%s, graphics"
 msgstr "Grafik EQ"
+
+#. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
+#: src/AboutDialog.cpp
+#, fuzzy, c-format
+msgid "%s, effects presets"
+msgstr "Hapus Aturan Lanjut"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8191,10 +8396,9 @@ msgid "Log frequency"
 msgstr "Frekuensi logaritma"
 
 #. i18n-hint: short form of 'decibels'.
-#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/EqualizationUI.cpp src/effects/Loudness.cpp
-#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
-#: src/effects/TruncSilence.cpp
+#: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
+#: src/effects/Loudness.cpp src/effects/Normalize.cpp
+#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8658,163 +8862,6 @@ msgstr "Pindahkan slider pan"
 msgid "&Mixer"
 msgstr "Mixer"
 
-#: src/PendingStrings.cpp
-msgid "Get free plugins & sounds"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, c-format
-msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-msgid "View tutorials"
-msgstr ""
-
-#. i18n-hint: hyperlink
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Visit our forum"
-msgstr "Salin Label"
-
-#. i18n-hint: Title of the buttons that adds new effects plugin search path
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Add new location"
-msgstr "Tambahkan label pada yang dipilih"
-
-#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-#. First argument is replaced with plugin type (e.g. "LV2 plugin locations")
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "%s plugin locations"
-msgstr "Aturan Plugin"
-
-#. i18n-hint: master channel display name
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master"
-msgstr "Tempel"
-
-#. i18n-hint: Title of a section of realtime effects panel where effects that are applied to all tracks could be added
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Master effects"
-msgstr "Pre&view"
-
-#. i18n-hint: Hint for a master effects section of realtime effects panel
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Apply to all tracks"
-msgstr "Sekaliguskan ke trek baru"
-
-#: src/PendingStrings.cpp
-msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compression curve"
-msgstr "Kompresi:"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Smoothing"
-msgstr "Urutkan dari waktu"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input gain (dB)"
-msgstr "Pen&guatan (dB):"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Ceiling (dB)"
-msgstr "Pen&guatan (dB):"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Input"
-msgstr "Meter Input"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attenuation"
-msgstr "Durasi"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Threshold (dB)"
-msgstr "Ambang Batas %d dB"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Make-up gain (dB)"
-msgstr "Pen&guatan (dB):"
-
-#: src/PendingStrings.cpp
-msgid "&Make-up target (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-msgid "Knee &width (dB)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Rati&o:"
-msgstr "Ratio:"
-
-#: src/PendingStrings.cpp
-msgid "&Lookahead (ms)"
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Attac&k (ms)"
-msgstr "Waktu baru/usang"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "&Release (ms)"
-msgstr "Versi Rilis"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "awaiting playback"
-msgstr "Memainkan"
-
-#: src/PendingStrings.cpp
-msgid "Augments loudness while minimizing distortion."
-msgstr ""
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Limiter (beta)"
-msgstr "Pembatas"
-
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Compressor (beta)"
-msgstr "Kompresor"
-
-#: src/PendingStrings.cpp
-msgid "&Show graph (beta)"
-msgstr ""
-
-#. i18n-hint: import progress dialog title, progress dialog
-#: src/PendingStrings.cpp
-#, fuzzy
-msgid "Importing files"
-msgstr "Mengimpor %s"
-
-#. i18n-hint: import progress dialot text, where %s is the filename
-#: src/PendingStrings.cpp
-#, fuzzy, c-format
-msgid "Importing %s..."
-msgstr "Mengimpor %s"
-
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
 #, fuzzy
@@ -9276,31 +9323,6 @@ msgid "Projects cannot be saved to FAT drives."
 msgstr ""
 
 #: src/ProjectFileManager.cpp
-msgid ""
-"Your project is now empty.\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Click 'No', Edit > Undo until all tracks\n"
-"are open, then File > Save Project.\n"
-"\n"
-"Save anyway?"
-msgstr ""
-"Proyek Anda sekarang kosong.\n"
-"Jika disimpan, proyek tidak akan punya trek.\n"
-"\n"
-"Untuk menyimpan trek yang terbuka sebelumnya:\n"
-"Klik 'Tidak', Edit > Batalkan sampai semua trek\n"
-"terbuka, kemudian File > Simpan Proyek.\n"
-"\n"
-"Simpan saja?"
-
-#: src/ProjectFileManager.cpp
-#, fuzzy
-msgid "Warning - Empty Project"
-msgstr "Peringatan proyek kosong"
-
-#: src/ProjectFileManager.cpp
 #, fuzzy
 msgid "Insufficient Disk Space"
 msgstr "Ruang disk"
@@ -9333,12 +9355,6 @@ msgstr ""
 #, fuzzy, c-format
 msgid "%sSave Project \"%s\" As..."
 msgstr "Simpan Proyek Sebagai..."
-
-#: src/ProjectFileManager.cpp
-msgid ""
-"'Save Project' is for an Audacity project, not an audio file.\n"
-"For an audio file that will open in other apps, use 'Export'.\n"
-msgstr ""
 
 #. i18n-hint: In each case, %s is the name
 #. of the file being overwritten.
@@ -9573,22 +9589,6 @@ msgid "Save project before closing?"
 msgstr "Simpan perubahan sebelum ditutup?"
 
 #: src/ProjectManager.cpp
-msgid ""
-"\n"
-"If saved, the project will have no tracks.\n"
-"\n"
-"To save any previously open tracks:\n"
-"Cancel, Edit > Undo until all tracks\n"
-"are open, then File > Save Project."
-msgstr ""
-"\n"
-"Jika disimpan, proyek tidak akan punya trek.\n"
-"\n"
-"Untuk menyimpan trek yang dibuka sebelumnya:\n"
-"Batal, Edit > Batalkan sampai semua trek\n"
-"terbuka, kemudian Berkas > Simpan Proyek."
-
-#: src/ProjectManager.cpp
 #, fuzzy, c-format
 msgid "Disk space remaining for recording: %s"
 msgstr "Ruang disk tinggal %d menit waktu rekaman."
@@ -9627,6 +9627,26 @@ msgstr "Stereo Horizontal"
 msgid "Vertical Scrollbar"
 msgstr "Stereo Vertikal"
 
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "No Effect"
+msgstr "Efek"
+
+#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get more effects..."
+msgstr "Preferensi..."
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Analyze"
+msgstr "&Analisa"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy, c-format
+msgid "%s (missing)"
+msgstr "Lima Mnt"
+
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
@@ -9641,11 +9661,6 @@ msgstr ""
 #, fuzzy
 msgid "Replace effect"
 msgstr "Hapus aturan lanjut '%s'?"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
-msgid "%s (missing)"
-msgstr "Lima Mnt"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9683,15 +9698,16 @@ msgstr "Hapus aturan lanjut '%s'?"
 msgid "Unknown"
 msgstr ""
 
+#. i18n-hint: master channel display name
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master"
+msgstr "Tempel"
+
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Add effect"
 msgstr "Efek"
-
-#. i18n-hint: Hyperlink to the effects stack panel tutorial video
-#: src/RealtimeEffectPanel.cpp
-msgid "Watch video"
-msgstr ""
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9715,25 +9731,6 @@ msgstr "Dipindahkan '%s' %s"
 #, fuzzy
 msgid "Change effect order"
 msgstr "Mengubah Kecepatan"
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "No Effect"
-msgstr "Efek"
-
-#: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
-#, fuzzy
-msgid "Get more effects..."
-msgstr "Preferensi..."
-
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Analyze"
-msgstr "&Analisa"
-
-#: src/RealtimeEffectPanel.cpp
-msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -9766,16 +9763,34 @@ msgstr "Diratakan"
 msgid "Realtime effects"
 msgstr "Pre&view"
 
-#: src/RealtimeEffectPanel.cpp
-#, fuzzy
-msgid "Realtime Effects"
-msgstr "Bolehkan efek"
-
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Realtime effects for %s"
 msgstr "Efek teraplikasi: %s"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Realtime Effects"
+msgstr "Bolehkan efek"
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Watch video"
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+msgid "Realtime effects are non-destructive and can be changed at any time."
+msgstr ""
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Master Effects"
+msgstr "Pre&view"
+
+#: src/RealtimeEffectPanel.cpp
+#, fuzzy
+msgid "Applies to all tracks"
+msgstr "Sekaliguskan ke trek baru"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -9836,83 +9851,6 @@ msgstr "Pilihan"
 #, fuzzy
 msgid "Applied effect to selection"
 msgstr "Diratakan akhir dengan akhir pilihan"
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is an <b>Alpha test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<br><br>The version of Audacity you are using is a <b>Beta test version</b>."
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "Get the Official Released Version of Audacity"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, fuzzy
-msgid "Check Online"
-msgstr "Mengecek %s"
-
-#: src/SplashDialog.cpp
-msgid "We strongly recommend that you use our latest stable released version, which has full documentation and support.<br/><br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-msgstr ""
-
-#. i18n-hint: %s is replaced with Audacity version
-#: src/SplashDialog.cpp
-#, c-format
-msgid "What's new in Audacity %s"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, c-format
-msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "How to get help"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "These are our support methods:"
-msgstr "Ini adalah metode dukungan kami:"
-
-#. i18n-hint: Preserve '[[help:Quick_Help|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid "[[help:Quick_Help|Quick Help]]"
-msgstr ""
-
-#. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
-#. link.
-#: src/SplashDialog.cpp
-msgid " [[help:Main_Page|Manual]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr ""
-
-#: src/SplashDialog.cpp
-#, fuzzy
-msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (tanyakan secara langsung di internet)"
-
-#: src/SplashDialog.cpp
-msgid "Welcome to Audacity!"
-msgstr "Selamat datang di Audacity!"
-
-#: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
-msgid "Don't show this again at start up"
-msgstr "Jangan tampilkan lagi waktu start up"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10591,6 +10529,42 @@ msgstr "Pengubahan Arah        -- mean: %1.4f  sd: (%1.4f)\n"
 msgid "Calibration Complete"
 msgstr "Hasil Kalibrasi\n"
 
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "What's new in Audacity %s"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Get free plugins & sounds"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, c-format
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Welcome to Audacity!"
+msgstr "Selamat datang di Audacity!"
+
+#: src/WhatsNewDialog.cpp
+msgid "View tutorials"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+#, fuzzy
+msgid "Visit our forum"
+msgstr "Salin Label"
+
+#: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
+msgid "Don't show this again at start up"
+msgstr "Jangan tampilkan lagi waktu start up"
+
 #. i18n-hint: An item name followed by a value, with appropriate separating punctuation
 #: src/commands/AudacityCommand.cpp src/effects/EffectUIServices.cpp
 #: src/effects/EqualizationCurves.cpp src/effects/vamp/VampEffect.cpp
@@ -11067,7 +11041,7 @@ msgstr "Atur"
 msgid "Add"
 msgstr "&Tambah"
 
-#: src/commands/SelectCommand.cpp
+#: src/commands/SelectCommand.cpp src/prefs/EffectsPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/CutlineHandle.cpp
 msgid "Remove"
 msgstr "Buang"
@@ -11499,8 +11473,7 @@ msgstr "Panjang fade down dalam: "
 msgid "Inner &fade up length:"
 msgstr "Panjang fade up dalam: "
 
-#: src/effects/AutoDuck.cpp src/effects/Compressor.cpp
-#: src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "Ambang Batas:"
@@ -11879,7 +11852,7 @@ msgstr ""
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Pilih ambang batas (lebih rendah, lebih sensitif):"
 
-#: src/effects/ClickRemoval.cpp src/effects/Compressor.cpp
+#: src/effects/ClickRemoval.cpp
 msgid "Threshold"
 msgstr "Ambang Batas"
 
@@ -11898,130 +11871,8 @@ msgid "Compressor"
 msgstr "Kompresor"
 
 #: src/effects/Compressor.cpp
-msgid "Compresses the dynamic range of audio"
+msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
 msgstr ""
-
-#. i18n-hint: usually leave this as is as dB doesn't get translated
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%3d dB"
-msgstr "%3d dB"
-
-#: src/effects/Compressor.cpp src/effects/ScoreAlignDialog.cpp
-#, fuzzy, c-format
-msgid "%.2f secs"
-msgstr "%.1f detik"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f secs"
-msgstr "%.1f detik"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.0f:1"
-msgstr "%.0f:1"
-
-#. i18n-hint: Unless your language has a different convention for ratios,
-#. * like 8:1, leave as is.
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "%.1f:1"
-msgstr "%.1f:1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.0f to 1"
-msgstr "Rasio: %.0f banding 1"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Ratio %.1f to 1"
-msgstr "Rasio %.1f banding 1"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Noise Floor:"
-msgstr "Dasar Bisaing:"
-
-#: src/effects/Compressor.cpp src/effects/Distortion.cpp
-msgid "Noise Floor"
-msgstr "Dasar Bising"
-
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Ratio:"
-msgstr "Ratio:"
-
-#: src/effects/Compressor.cpp
-msgid "Ratio"
-msgstr "Rasio"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "&Attack Time:"
-msgstr "Attack Time:"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' where the
-#. * sound dies away.  So this means 'onset duration'.
-#: src/effects/Compressor.cpp
-msgid "Attack Time"
-msgstr "Waktu Serang"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "R&elease Time:"
-msgstr "Waktu Berjalan:"
-
-#. i18n-hint: Particularly in percussion, sounds can be regarded as having
-#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-#. * sound dies away.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "Release Time"
-msgstr "Versi Rilis"
-
-#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "Naikkan ke 0dB setelah mengompres"
-
-#. i18n-hint: "Compress" here means reduce variations of sound volume,
-#. NOT related to file-size compression; Peaks means extremes in volume
-#: src/effects/Compressor.cpp
-#, fuzzy
-msgid "C&ompress based on Peaks"
-msgstr "Pengompresan didasari oleh banyaknya Pik"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Threshold %d dB"
-msgstr "Ambang Batas %d dB"
-
-#: src/effects/Compressor.cpp
-#, c-format
-msgid "Noise Floor %d dB"
-msgstr "Dasar Bisaing %d dB"
-
-#: src/effects/Compressor.cpp
-#, fuzzy, c-format
-msgid "Attack Time %.2f secs"
-msgstr "Waktu Serang %.1f dtk"
-
-#: src/effects/Compressor.cpp
-#, fuzzy, c-format
-msgid "Release Time %.1f secs"
-msgstr "Waktu Kekurangan %.1f dtk"
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -12432,6 +12283,10 @@ msgid "Upper Threshold"
 msgstr "Ambang Batas"
 
 #: src/effects/Distortion.cpp
+msgid "Noise Floor"
+msgstr "Dasar Bising"
+
+#: src/effects/Distortion.cpp
 #, fuzzy
 msgid "Parameter 1"
 msgstr "Parameter"
@@ -12626,6 +12481,111 @@ msgstr "Durasi diam:"
 #, fuzzy, c-format
 msgid "%0.f ms"
 msgstr "%.0f:1"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "I&nput"
+msgstr "Meter Input"
+
+#. i18n-hint: show input on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show input"
+msgstr "Tunjukkan output"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "O&utput"
+msgstr "Meter Output"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "A&ctual compression"
+msgstr "Kompresi:"
+
+#. i18n-hint: show actual compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show actual compression"
+msgstr "Kompresi:"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Tar&get compression"
+msgstr "Kompresi:"
+
+#. i18n-hint: show target compression on a graph
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Show target compression"
+msgstr "Kompresi:"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Compression curve"
+msgstr "Kompresi:"
+
+#: src/effects/DynamicRangeProcessorEditor.cpp
+#, fuzzy
+msgid "Smoothing"
+msgstr "Urutkan dari waktu"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Threshold (dB)"
+msgstr "Ambang Batas %d dB"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Make-up gain (dB)"
+msgstr "Pen&guatan (dB):"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Make-up target (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "Knee &width (dB)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Rati&o:"
+msgstr "Ratio:"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+msgid "&Lookahead (ms)"
+msgstr ""
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "Attac&k (ms)"
+msgstr "Waktu baru/usang"
+
+#: src/effects/DynamicRangeProcessorEditor.h
+#, fuzzy
+msgid "&Release (ms)"
+msgstr "Versi Rilis"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Input"
+msgstr "Meter Input"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Actual Compression"
+msgstr "Kompresi:"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "Target Compression"
+msgstr "Kompresi:"
+
+#: src/effects/DynamicRangeProcessorHistoryPanel.cpp
+#, fuzzy
+msgid "awaiting playback"
+msgstr "Memainkan"
 
 #: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -13280,6 +13240,16 @@ msgstr "Tukar"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
+#: src/effects/Limiter.cpp plug-ins/limiter.ny
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Limiter"
+msgstr "Pembatas"
+
+#: src/effects/Limiter.cpp
+msgid "Augments loudness while minimizing distortion."
+msgstr ""
+
 #: src/effects/Loudness.cpp
 #, fuzzy
 msgid "perceived loudness"
@@ -13894,43 +13864,96 @@ msgstr "Panjang yang baru:"
 msgid "Warning: No repeats."
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Acoustic"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Ambience"
+msgstr "Diam"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Artificial"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Clean"
+msgstr "&Hapus"
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 #, fuzzy
 msgid "Vocal I"
 msgstr "Lokal"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 #, fuzzy
 msgid "Vocal II"
 msgstr "Lokal"
 
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Dance Vocal"
+msgstr "Rekaman Audio"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+#, fuzzy
+msgid "Modern Vocal"
+msgstr "Rekaman Audio"
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Voice Tail"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Bathroom"
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Bright"
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Small Room Dark"
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 #, fuzzy
 msgid "Medium Room"
 msgstr "Sedang"
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Large Room"
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Church Hall"
 msgstr ""
 
+#. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Cathedral"
+msgstr ""
+
+#. i18n-hint: This is the name of an effect preset
+#: src/effects/Reverb.cpp
+msgid "Big Cave"
 msgstr ""
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
@@ -14178,6 +14201,11 @@ msgstr "Se&mula"
 #, fuzzy
 msgid "Restore Defaults"
 msgstr "Atur Nor&mal"
+
+#: src/effects/ScoreAlignDialog.cpp
+#, fuzzy, c-format
+msgid "%.2f secs"
+msgstr "%.1f detik"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, fuzzy, c-format
@@ -16122,6 +16150,11 @@ msgid "Add Realtime Effects"
 msgstr "Bolehkan efek"
 
 #: src/menus/PluginMenus.cpp
+#, fuzzy
+msgid "Get AI effects..."
+msgstr "Preferensi..."
+
+#: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
 msgstr "Ulangi Efek Terakhir"
 
@@ -16942,7 +16975,7 @@ msgstr "Solo/Jangan solo trek yang terfokus"
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
-msgid "&Close Focused Track"
+msgid "Delete Fo&cused Track"
 msgstr "Tutup trek yang terfokus"
 
 #: src/menus/TrackMenus.cpp
@@ -17280,6 +17313,11 @@ msgstr "Bolehkan memotong ba&tas"
 msgid "&Show Clipping in Waveform"
 msgstr "&Lihat Clipping"
 
+#: src/menus/ViewMenus.cpp
+#, fuzzy
+msgid "Show &RMS in Waveform"
+msgstr "&Lihat Clipping"
+
 #: src/prefs/ApplicationPrefs.cpp
 #, fuzzy
 msgid "Preferences for Application"
@@ -17580,6 +17618,11 @@ msgstr "Ekspor Aturan Lanjut"
 msgid "'Macro Output' directory cannot be set."
 msgstr ""
 
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy
+msgid "Add new location"
+msgstr "Tambahkan label pada yang dipilih"
+
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
@@ -17637,16 +17680,24 @@ msgid "Realtime effect o&rganization:"
 msgstr "Efek teraplikasi: %s"
 
 #: src/prefs/EffectsPrefs.cpp
-msgid "&Skip effects scanning at startup"
-msgstr ""
-
-#: src/prefs/EffectsPrefs.cpp
 #, fuzzy
 msgid "Instruction Set"
 msgstr "Instrumen"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Use SSE/SSE2/.../AVX"
+msgstr ""
+
+#. i18n-hint: Title of the panel containing user-defined paths where plugins could be found
+#. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
+#.
+#: src/prefs/EffectsPrefs.cpp
+#, fuzzy, c-format
+msgid "%s plugin locations"
+msgstr "Aturan Plugin"
+
+#: src/prefs/EffectsPrefs.cpp
+msgid "&Skip effects scanning at startup"
 msgstr ""
 
 #: src/prefs/EffectsPrefs.cpp
@@ -18877,28 +18928,6 @@ msgstr "Aturan Lanjut:"
 #, fuzzy
 msgid "Preset 2:"
 msgstr "Aturan Lanjut:"
-
-#: src/prefs/WarningsPrefs.cpp src/prefs/WarningsPrefs.h
-msgid "Warnings"
-msgstr "Peringatan"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Preferences for Warnings"
-msgstr "Preferensi..."
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Show Warnings/Prompts for"
-msgstr "Tunjukkan Peringatan/Tanda untuk"
-
-#: src/prefs/WarningsPrefs.cpp
-#, fuzzy
-msgid "Saving &projects versus exporting audio"
-msgstr "Jangan perlihatkan peringatan lagi"
-
-#: src/prefs/WarningsPrefs.cpp
-msgid "Saving &empty project"
-msgstr "M&enyimpan proyek kosong"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -20253,16 +20282,6 @@ msgstr "Pisah Stereo ke Mono '%s'"
 #, fuzzy
 msgid "Split to Mono"
 msgstr "Pisah Stereo ke Mono"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Stereo, %dHz"
-msgstr "Stereo,"
-
-#: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy, c-format
-msgid "Mono, %dHz"
-msgstr "Mono,"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackMenuItems.cpp
 msgid "Created new audio track"
@@ -21841,11 +21860,6 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
-msgid "Limiter"
-msgstr "Pembatas"
-
 #: plug-ins/limiter.ny
 #, fuzzy
 msgid "Soft Limit"
@@ -22793,6 +22807,178 @@ msgid "Spectral Tools"
 msgstr "Spektrum"
 
 #, fuzzy
+#~ msgid "Master effects"
+#~ msgstr "Pre&view"
+
+#, fuzzy
+#~ msgid "Apply to all tracks"
+#~ msgstr "Sekaliguskan ke trek baru"
+
+#, fuzzy
+#~ msgid "Input gain (dB)"
+#~ msgstr "Pen&guatan (dB):"
+
+#, fuzzy
+#~ msgid "Ceiling (dB)"
+#~ msgstr "Pen&guatan (dB):"
+
+#, fuzzy
+#~ msgid "Attenuation"
+#~ msgstr "Durasi"
+
+#, fuzzy
+#~ msgid "Limiter (beta)"
+#~ msgstr "Pembatas"
+
+#, fuzzy
+#~ msgid "Compressor (beta)"
+#~ msgstr "Kompresor"
+
+#, fuzzy
+#~ msgid "View online"
+#~ msgstr "Pengubah Nama"
+
+#~ msgid ""
+#~ "Your project is now empty.\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Click 'No', Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project.\n"
+#~ "\n"
+#~ "Save anyway?"
+#~ msgstr ""
+#~ "Proyek Anda sekarang kosong.\n"
+#~ "Jika disimpan, proyek tidak akan punya trek.\n"
+#~ "\n"
+#~ "Untuk menyimpan trek yang terbuka sebelumnya:\n"
+#~ "Klik 'Tidak', Edit > Batalkan sampai semua trek\n"
+#~ "terbuka, kemudian File > Simpan Proyek.\n"
+#~ "\n"
+#~ "Simpan saja?"
+
+#, fuzzy
+#~ msgid "Warning - Empty Project"
+#~ msgstr "Peringatan proyek kosong"
+
+#~ msgid ""
+#~ "\n"
+#~ "If saved, the project will have no tracks.\n"
+#~ "\n"
+#~ "To save any previously open tracks:\n"
+#~ "Cancel, Edit > Undo until all tracks\n"
+#~ "are open, then File > Save Project."
+#~ msgstr ""
+#~ "\n"
+#~ "Jika disimpan, proyek tidak akan punya trek.\n"
+#~ "\n"
+#~ "Untuk menyimpan trek yang dibuka sebelumnya:\n"
+#~ "Batal, Edit > Batalkan sampai semua trek\n"
+#~ "terbuka, kemudian Berkas > Simpan Proyek."
+
+#, fuzzy
+#~ msgid "Check Online"
+#~ msgstr "Mengecek %s"
+
+#~ msgid "These are our support methods:"
+#~ msgstr "Ini adalah metode dukungan kami:"
+
+#, fuzzy
+#~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
+#~ msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (tanyakan secara langsung di internet)"
+
+#~ msgid "%3d dB"
+#~ msgstr "%3d dB"
+
+#~ msgid "%.1f secs"
+#~ msgstr "%.1f detik"
+
+#~ msgid "%.0f:1"
+#~ msgstr "%.0f:1"
+
+#~ msgid "%.1f:1"
+#~ msgstr "%.1f:1"
+
+#~ msgid "Ratio %.0f to 1"
+#~ msgstr "Rasio: %.0f banding 1"
+
+#~ msgid "Ratio %.1f to 1"
+#~ msgstr "Rasio %.1f banding 1"
+
+#, fuzzy
+#~ msgid "&Noise Floor:"
+#~ msgstr "Dasar Bisaing:"
+
+#, fuzzy
+#~ msgid "&Ratio:"
+#~ msgstr "Ratio:"
+
+#~ msgid "Ratio"
+#~ msgstr "Rasio"
+
+#, fuzzy
+#~ msgid "&Attack Time:"
+#~ msgstr "Attack Time:"
+
+#~ msgid "Attack Time"
+#~ msgstr "Waktu Serang"
+
+#, fuzzy
+#~ msgid "R&elease Time:"
+#~ msgstr "Waktu Berjalan:"
+
+#, fuzzy
+#~ msgid "Release Time"
+#~ msgstr "Versi Rilis"
+
+#, fuzzy
+#~ msgid "Ma&ke-up gain for 0 dB after compressing"
+#~ msgstr "Naikkan ke 0dB setelah mengompres"
+
+#, fuzzy
+#~ msgid "C&ompress based on Peaks"
+#~ msgstr "Pengompresan didasari oleh banyaknya Pik"
+
+#~ msgid "Threshold %d dB"
+#~ msgstr "Ambang Batas %d dB"
+
+#~ msgid "Noise Floor %d dB"
+#~ msgstr "Dasar Bisaing %d dB"
+
+#, fuzzy
+#~ msgid "Attack Time %.2f secs"
+#~ msgstr "Waktu Serang %.1f dtk"
+
+#, fuzzy
+#~ msgid "Release Time %.1f secs"
+#~ msgstr "Waktu Kekurangan %.1f dtk"
+
+#~ msgid "Warnings"
+#~ msgstr "Peringatan"
+
+#, fuzzy
+#~ msgid "Preferences for Warnings"
+#~ msgstr "Preferensi..."
+
+#~ msgid "Show Warnings/Prompts for"
+#~ msgstr "Tunjukkan Peringatan/Tanda untuk"
+
+#, fuzzy
+#~ msgid "Saving &projects versus exporting audio"
+#~ msgstr "Jangan perlihatkan peringatan lagi"
+
+#~ msgid "Saving &empty project"
+#~ msgstr "M&enyimpan proyek kosong"
+
+#, fuzzy
+#~ msgid "Stereo, %dHz"
+#~ msgstr "Stereo,"
+
+#, fuzzy
+#~ msgid "Mono, %dHz"
+#~ msgstr "Mono,"
+
+#, fuzzy
 #~ msgid "&Ok"
 #~ msgstr "&OK"
 
@@ -23406,14 +23592,6 @@ msgstr "Spektrum"
 
 #, fuzzy
 #~ msgid "Remove Vocals: to mono"
-#~ msgstr "Rekaman Audio"
-
-#, fuzzy
-#~ msgid "Remove Vocals"
-#~ msgstr "Rekaman Audio"
-
-#, fuzzy
-#~ msgid "Isolate Vocals"
 #~ msgstr "Rekaman Audio"
 
 #, fuzzy
