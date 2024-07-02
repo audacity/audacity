@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include <memory>
@@ -27,8 +30,8 @@ public:
     Clip clip(const ClipKey& key) const;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 
-    void onClipChanged(const Clip& clip);
     void onClipAdded(const Clip& clip);
+    void onClipChanged(const Clip& clip);
     void onClipRemoved(const Clip& clip);
 
     processing::TimeSignature timeSignature() const;

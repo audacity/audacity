@@ -5,6 +5,7 @@
 
 #include <QtQml>
 
+#include "internal/playcursorcontroller.h"
 #include "types/projectscenetypes.h"
 
 #include "ui/iuiactionsregister.h"
@@ -31,7 +32,7 @@
 
 #include "view/timeline/gridlines.h"
 
-#include "view/playcursor/playcursorcontroller.h"
+#include "view/playcursor/playcursorviewcontroller.h"
 
 #include "view/statusbar/selectionstatusmodel.h"
 
@@ -67,6 +68,7 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
+    ioc()->registerExport<IPlayCursorController>(moduleName(), new PlayCursorController());
 }
 
 void ProjectSceneModule::resolveImports()
@@ -113,7 +115,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<GridLines>("Audacity.ProjectScene", 1, 0, "GridLines");
 
     // play cursor
-    qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
+    qmlRegisterType<PlayCursorViewController>("Audacity.ProjectScene", 1, 0, "PlayCursorViewController");
 
     // status bar
     qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");

@@ -1,6 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+
 #include "processingactionscontroller.h"
 #include "project/internal/audacityproject.h"
 
@@ -12,14 +13,20 @@ using namespace muse::actions;
 static const ActionCode CLIP_CUT_CODE("clip-cut");
 static const ActionCode CLIP_COPY_CODE("clip-copy");
 static const ActionCode CLIP_DELETE_CODE("clip-delete");
+static const ActionCode CLIP_CUT_SELECTED_CODE("clip-cut-selected");
+static const ActionCode CLIP_COPY_SELECTED_CODE("clip-copy-selected");
 static const ActionCode CLIP_DELETE_SELECTED_CODE("clip-delete-selected");
+static const ActionCode PASTE("paste");
 
 void ProcessingActionsController::init()
 {
     dispatcher()->reg(this, CLIP_CUT_CODE, this, &ProcessingActionsController::clipCut);
     dispatcher()->reg(this, CLIP_COPY_CODE, this, &ProcessingActionsController::clipCopy);
     dispatcher()->reg(this, CLIP_DELETE_CODE, this, &ProcessingActionsController::clipDelete);
+    dispatcher()->reg(this, CLIP_CUT_SELECTED_CODE, this, &ProcessingActionsController::clipCutSelected);
+    dispatcher()->reg(this, CLIP_COPY_SELECTED_CODE, this, &ProcessingActionsController::clipCopySelected);
     dispatcher()->reg(this, CLIP_DELETE_SELECTED_CODE, this, &ProcessingActionsController::clipDeleteSelected);
+    dispatcher()->reg(this, PASTE, this, &ProcessingActionsController::paste);
     dispatcher()->reg(this, "toggle-loop-region", this, &ProcessingActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &ProcessingActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &ProcessingActionsController::setLoopRegionToSelection);
@@ -49,13 +56,46 @@ void ProcessingActionsController::clipDelete()
     NOT_IMPLEMENTED;
 }
 
+void ProcessingActionsController::clipCutSelected()
+{
+    NOT_IMPLEMENTED;
+}
+
+void ProcessingActionsController::clipCopySelected()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto selectedTracks = selectionController()->dataSelectedOnTracks();
+    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+    auto tracks = project->processingProject()->trackList();
+    auto selectedClipKey = selectionController()->selectedClip();
+
+    processingInteraction()->clearClipboard();
+    // handles single clip selected
+    if (selectedClipKey.index != nidx) {
+        processingInteraction()->copyClip(selectedClipKey);
+        return;
+    }
+
+    // handles multiple clips selected
+    for (const auto& track : tracks) {
+        if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
+            continue;
+        }
+
+        processingInteraction()->copyTrackData(track.id, selectedStartTime, selectedEndTime);
+        //! TODO AU4: handle multiple tracks copying (need to extend playcursor behaviour first)
+        break;
+    }
+}
+
 // called from app menu / del shortcut
 void ProcessingActionsController::clipDeleteSelected()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto selectedTracks = selectionController()->dataSelectedOnTracks();
-    auto selectedStartTime = selectionController()->dataSelectedStartTime();
-    auto selectedEndTime = selectionController()->dataSelectedEndTime();
+    secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+    secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
     auto tracks = project->processingProject()->trackList();
     auto selectedClipKey = selectionController()->selectedClip();
 
@@ -63,14 +103,14 @@ void ProcessingActionsController::clipDeleteSelected()
     secs_t start = selectedStartTime;
 
     //! TODO AU4: improve for deleting multiple selected clips
-    // remove single clip when selected via header click
+    // removes single clip when selected via header click
     if (selectedClipKey.index != nidx) {
         duration = processingInteraction()->clipDuration(selectedClipKey);
         start = processingInteraction()->clipStartTime(selectedClipKey);
         processingInteraction()->removeClip(selectedClipKey);
     }
 
-    // remove multiple clips in selected region
+    // removes multiple clips in selected region
     for (const auto& track : tracks) {
         if (std::find(selectedTracks.begin(), selectedTracks.end(), track.id) == selectedTracks.end()) {
             continue;
@@ -90,6 +130,18 @@ void ProcessingActionsController::clipDeleteSelected()
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
     processingProject->pushHistoryState(ss.str(), "Delete");
+}
+
+void ProcessingActionsController::paste()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    auto tracks = project->processingProject()->trackList();
+    double selectedStartTime = playCursorController()->timePosition();
+
+    if (!tracks.empty() && selectedStartTime >= 0) {
+        //! TODO AU4: paste into correct track (need to extend playcursor behaviour first)
+        processingInteraction()->paste(selectedStartTime, tracks[0].id);
+    }
 }
 
 void ProcessingActionsController::toggleLoopRegion()

@@ -24,6 +24,7 @@ void SelectionViewController::onPressed(double x, double y)
 
     setSelectionActive(false);
     selectionController()->resetDataSelection();
+    selectionController()->resetSelectedClip();
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)

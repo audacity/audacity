@@ -25,7 +25,7 @@ Rectangle {
         }
     }
 
-    PlayCursorController {
+    PlayCursorViewController {
         id: playCursorController
         context: timeline.context
     }
