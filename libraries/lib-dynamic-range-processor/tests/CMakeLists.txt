@@ -1,0 +1,10 @@
+add_unit_test(
+   NAME
+      lib-dynamic-range-processor
+   SOURCES
+      CompressorProcessorTests.cpp
+      DynamicRangeProcessorHistoryTests.cpp
+      DynamicRangeProcessorUtilsTests.cpp
+   LIBRARIES
+      lib-dynamic-range-processor
+)

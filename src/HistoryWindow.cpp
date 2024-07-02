@@ -238,7 +238,7 @@ void HistoryDialog::Populate(ShuttleGui & S)
 
 void HistoryDialog::OnAudioIO(AudioIOEvent evt)
 {
-   if (evt.type == AudioIOEvent::MONITOR)
+   if (evt.type == AudioIOEvent::MONITOR || evt.type == AudioIOEvent::PAUSE)
       return;
    mAudioIOBusy = evt.on;
 

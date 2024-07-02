@@ -65,16 +65,12 @@ StyledListView {
 
         property var item: model.item
 
-        height: 38
+        height: loader.isSeparator ? 1 : 38
 
         isSelected: model.isSelected
 
         onClicked: {
-            root.selectRowRequested(index)
-        }
-
-        onRemoveSelectionRequested: {
-            root.removeSelectionRequested()
+            itemDelegate.item.checked = !itemDelegate.item.checked
         }
 
         navigation.name: item.title
@@ -90,10 +86,13 @@ StyledListView {
         }
 
         Loader {
+            id: loader
+
             property var delegateType: Boolean(itemDelegate.item) ? itemDelegate.item.type : PlaybackToolBarCustomiseItem.UNDEFINED
+            property bool isSeparator: delegateType === PlaybackToolBarCustomiseItem.SEPARATOR
 
             anchors.fill: parent
-            sourceComponent: delegateType === PlaybackToolBarCustomiseItem.ACTION ? actionComponent : separatorLineComponent
+            sourceComponent: isSeparator ? separatorLineComponent : actionComponent
 
             Component {
                 id: actionComponent
@@ -109,10 +108,7 @@ StyledListView {
             Component {
                 id: separatorLineComponent
 
-                StyledTextLabel {
-                    anchors.centerIn: parent
-                    text: Boolean(itemDelegate.item) ? itemDelegate.item.title : ""
-                }
+                SeparatorLine {}
             }
         }
     }

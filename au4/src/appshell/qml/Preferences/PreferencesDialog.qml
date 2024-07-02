@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -24,7 +24,7 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Preferences 1.0
+import Audacity.Preferences 1.0
 
 import "internal"
 
@@ -151,11 +151,12 @@ StyledDialogView {
             onRevertFactorySettingsRequested: {
                 var pages = preferencesModel.availablePages()
 
-                for (var i in pages) {
-                    var page = pages[i]
-                    var obj = root.prv.pagesObjects[page.id]
-                    obj.reset()
-                }
+                //! TODO AU4: enable when other settings will be available
+                // for (var i in pages) {
+                //     var page = pages[i]
+                //     var obj = root.prv.pagesObjects[page.id]
+                //     obj.reset()
+                // }
 
                 preferencesModel.resetFactorySettings()
             }
@@ -169,13 +170,14 @@ StyledDialogView {
                 preferencesModel.apply()
 
                 var ok = true
-                var pages = preferencesModel.availablePages()
+                //! TODO AU4: enable when other settings will be available
+                // var pages = preferencesModel.availablePages()
 
-                for (var i in pages) {
-                    var page = pages[i]
-                    var obj = root.prv.pagesObjects[page.id]
-                    ok &= obj.apply()
-                }
+                // for (var i in pages) {
+                //     var page = pages[i]
+                //     var obj = root.prv.pagesObjects[page.id]
+                //     ok &= obj.apply()
+                // }
 
                 if (ok) {
                     root.hide()

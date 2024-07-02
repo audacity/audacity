@@ -9,6 +9,7 @@
 #include "global/async/notification.h"
 #include "processing/dom/processingproject.h"
 #include "types/projecttypes.h"
+#include "projectscene/iprojectviewstate.h"
 
 namespace au::project {
 class IAudacityProject
@@ -17,7 +18,10 @@ public:
     virtual ~IAudacityProject() = default;
 
     virtual muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") = 0;
+
     virtual void close() = 0;
+    virtual muse::async::Notification aboutCloseBegin() const = 0;
+    virtual muse::async::Notification aboutCloseEnd() const = 0;
 
     virtual bool isNewlyCreated() const = 0;
     virtual bool isImported() const = 0;
@@ -36,6 +40,8 @@ public:
     virtual muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
 
     virtual const au::processing::ProcessingProjectPtr processingProject() const = 0;
+
+    virtual projectscene::IProjectViewStatePtr viewState() const = 0;
 
     virtual uintptr_t au3ProjectPtr() const = 0;
 };

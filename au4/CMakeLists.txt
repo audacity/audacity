@@ -24,7 +24,7 @@ include(FetchContent)
 FetchContent_Declare(
   muse_framework
   GIT_REPOSITORY https://github.com/musescore/framework_tmp.git
-  GIT_TAG        u0513
+  GIT_TAG        u0621
 )
 
 FetchContent_GetProperties(muse_framework)
@@ -171,7 +171,7 @@ set(AU4_BUILD_MODE "dev" CACHE STRING "Build mode")
 
 set(AU4_REVISION "" CACHE STRING "Build revision")
 
-set(MUSE_ENABLE_UNIT_TESTS OFF)
+set(MUSE_ENABLE_UNIT_TESTS ON)
 set(MUSE_MODULE_ACCESSIBILITY OFF)
 set(MUSE_MODULE_ACTIONS ON)
 set(MUSE_MODULE_AUDIO OFF)
@@ -179,9 +179,11 @@ set(MUSE_MODULE_AUTOBOT OFF)
 set(MUSE_MODULE_CLOUD ON)
 set(MUSE_MODULE_CLOUD_MUSESCORECOM OFF CACHE BOOL "Enable MuseScore.com account" FORCE)
 set(MUSE_MODULE_DIAGNOSTICS OFF)
-set(MUSE_MODULE_DRAW OFF)
+set(MUSE_MODULE_DRAW ON)
+set(MUSE_MODULE_DRAW_TESTS OFF)
 set(MUSE_MODULE_EXTENSIONS OFF)
 set(MUSE_MODULE_GLOBAL ON)
+set(MUSE_MODULE_GLOBAL_TESTS OFF)
 set(MUSE_MODULE_LANGUAGES ON)
 set(MUSE_MODULE_LEARN ON)
 set(MUSE_MODULE_MIDI OFF)
@@ -191,15 +193,18 @@ set(MUSE_MODULE_MUSESAMPLER OFF)
 set(MUSE_MODULE_NETWORK ON)
 set(MUSE_MODULE_SHORTCUTS OFF)
 set(MUSE_MODULE_UI ON)
+set(MUSE_MODULE_UI_TESTS OFF)
 set(MUSE_MODULE_UPDATE OFF)
 set(MUSE_MODULE_VST OFF)
 set(MUSE_MODULE_WORKSPACE OFF)
 
 # Modules (alphabetical order please)
-option(MU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
-option(MU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
-option(MU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
-option(MU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
+option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
+option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
+option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ON)
+option(AU_BUILD_RECORD_MODULE "Build record module" ON)
+option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
+option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 
 # === Setup ===
 
@@ -243,6 +248,10 @@ include(FindQt6)
 ###########################################
 # Add source tree
 ###########################################
+if (MUSE_ENABLE_UNIT_TESTS)
+    enable_testing()
+    message(STATUS "Enabled testing")
+endif()
 
 add_subdirectory(${muse_framework_SOURCE_DIR}/framework ${muse_framework_BINARY_DIR})
 add_subdirectory(src)

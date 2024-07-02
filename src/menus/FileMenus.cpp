@@ -27,8 +27,8 @@
 #include "../widgets/MissingPluginsErrorDialog.h"
 #include "wxPanelWrapper.h"
 
-#include "ExportUtils.h"
 #include "ExportProgressUI.h"
+#include "ExportUtils.h"
 
 #include <wx/app.h>
 #include <wx/menu.h>
@@ -41,7 +41,8 @@
 // private helper classes and functions
 namespace {
 
-void DoExport(AudacityProject &project, const FileExtension &format)
+void DoExport(
+   AudacityProject& project, const FileExtension& format, AudiocomTrace trace)
 {
    auto &tracks = TrackList::Get( project );
 
@@ -62,7 +63,7 @@ void DoExport(AudacityProject &project, const FileExtension &format)
          return;
       }
 
-      ExportUtils::PerformInteractiveExport(project, format, false);
+      ExportUtils::PerformInteractiveExport(project, format, trace, false);
    }
    else {
       // We either use a configured output path,
@@ -161,7 +162,7 @@ void DoImport(const CommandContext &context, bool isRaw)
       viewport.HandleResize(); // Adjust scrollers for NEW track sizes.
    } );
 
-   std::vector<FilePath> filesToImport;
+   wxArrayString filesToImport;
    for (size_t ff = 0; ff < selectedFiles.size(); ff++) {
       wxString fileName = selectedFiles[ff];
 
@@ -178,7 +179,7 @@ void DoImport(const CommandContext &context, bool isRaw)
          }
       }
       else
-         filesToImport.push_back(fileName);
+         filesToImport.Add(fileName);
    }
    if (!isRaw)
       ProjectFileManager::Get(project).Import(filesToImport);
@@ -274,25 +275,33 @@ void OnSaveCopy(const CommandContext &context )
 void OnExportMp3(const CommandContext &context)
 {
    auto &project = context.project;
-   DoExport(project, "MP3");
+   DoExport(
+      project, "MP3",
+      AudiocomTrace::ShareAudioExportExtraMenu);
 }
 
 void OnExportWav(const CommandContext &context)
 {
    auto &project = context.project;
-   DoExport(project, "WAV");
+   DoExport(
+      project, "WAV",
+      AudiocomTrace::ShareAudioExportExtraMenu);
 }
 
 void OnExportOgg(const CommandContext &context)
 {
    auto &project = context.project;
-   DoExport(project, "OGG");
+   DoExport(
+      project, "OGG",
+      AudiocomTrace::ShareAudioExportExtraMenu);
 }
 
 void OnExportAudio(const CommandContext &context)
 {
    auto &project = context.project;
-   DoExport(project, "");
+   DoExport(
+      project, "",
+      AudiocomTrace::ShareAudioExportMenu);
 }
 
 void OnExportLabels(const CommandContext &context)
@@ -425,15 +434,20 @@ void OnExit(const CommandContext &WXUNUSED(context) )
 
 void OnExportFLAC(const CommandContext &context)
 {
-   DoExport(context.project, "FLAC");
+   DoExport(
+      context.project, "FLAC",
+      AudiocomTrace::ShareAudioExportExtraMenu);
 }
 
 void OnExportSelectedAudio(const CommandContext &context)
 {
    if(!ExportUtils::HasSelectedAudio(context.project))
       return;
-   
-   ExportUtils::PerformInteractiveExport(context.project, "", true);
+
+   ExportUtils::PerformInteractiveExport(
+      context.project, "",
+      AudiocomTrace::ignore, // Local save, no need.
+      true);
 }
 
 // Menu definitions

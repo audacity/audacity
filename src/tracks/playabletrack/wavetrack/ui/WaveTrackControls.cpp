@@ -956,7 +956,7 @@ void SliderDrawFunction
   bool captured, bool highlight )
 {
    wxRect sliderRect = rect;
-   CommonTrackInfo::GetSliderHorizontalBounds( rect.GetTopLeft(), sliderRect );
+   CommonTrackInfo::GetSliderHorizontalBounds( rect, sliderRect );
    auto wt = static_cast<const WaveTrack*>( pTrack );
    Selector( sliderRect, wt, captured, pParent )->OnPaint(*dc, highlight);
 }
@@ -997,46 +997,6 @@ void GainSliderDrawFunction
       pParent, captured, hit);
 }
 
-void StatusDrawFunction
-   ( const TranslatableString &string, wxDC *dc, const wxRect &rect )
-{
-   static const int offset = 3;
-   dc->DrawText(string.Translation(), rect.x + offset, rect.y);
-}
-
-void Status1DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-
-   /// Returns the string to be displayed in the track label
-   /// indicating whether the track is mono, left, right, or
-   /// stereo and what sample rate it's using.
-   auto rate = wt ? wt->GetRate() : 44100.0;
-   TranslatableString s;
-   if (!pTrack || pTrack->NChannels() > 1)
-      // TODO: more-than-two-channels-message
-      // more appropriate strings
-      s = XO("Stereo, %dHz");
-   else
-      s = XO("Mono, %dHz");
-   s.Format( (int) (rate + 0.5) );
-
-   StatusDrawFunction( s, dc, rect );
-}
-
-void Status2DrawFunction
-( TrackPanelDrawingContext &context,
-  const wxRect &rect, const Track *pTrack )
-{
-   auto dc = &context.dc;
-   auto wt = static_cast<const WaveTrack*>(pTrack);
-   auto format = wt ? wt->GetSampleFormat() : floatSample;
-   auto s = GetSampleFormatStr(format);
-   StatusDrawFunction( s, dc, rect );
-}
 
 }
 
@@ -1053,27 +1013,25 @@ static const struct WaveTrackTCPLines
       { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         PanSliderDrawFunction },
 
-      { TCPLine::kItemStatusInfo1, 12, 0,
-        Status1DrawFunction },
-      { TCPLine::kItemStatusInfo2, 12, 0,
-        Status2DrawFunction },
-
    } );
 } } waveTrackTCPLines;
 
-void WaveTrackControls::GetGainRect(const wxPoint &topleft, wxRect & dest)
+void WaveTrackControls::GetGainRect(const wxRect &rect_, wxRect & dest)
 {
-   CommonTrackInfo::GetSliderHorizontalBounds( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
-   dest.y = topleft.y + results.first;
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
+   CommonTrackInfo::GetSliderHorizontalBounds( rect, dest );
+   const auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
+   dest.y = rect.y + results.first;
    dest.height = results.second;
 }
 
-void WaveTrackControls::GetPanRect(const wxPoint &topleft, wxRect & dest)
+void WaveTrackControls::GetPanRect(const wxRect &rect_, wxRect & dest)
 {
-   GetGainRect( topleft, dest );
-   auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemPan );
-   dest.y = topleft.y + results.first;
+   const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
+   CommonTrackInfo::GetSliderHorizontalBounds( rect, dest );
+   const auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemPan );
+   dest.y = rect.y + results.first;
+   dest.height = results.second;
 }
 
 unsigned WaveTrackControls::DefaultWaveTrackHeight()
@@ -1099,9 +1057,9 @@ LWSlider *WaveTrackControls::GainSlider(
    CellularPanel &panel, const WaveTrack &wt )
 {
    auto &controls = TrackControls::Get( wt );
-   auto rect = panel.FindRect( controls );
+   const auto rect = panel.FindRect( controls ).Deflate(CommonTrackInfo::Margin);
    wxRect sliderRect;
-   GetGainRect( rect.GetTopLeft(), sliderRect );
+   GetGainRect( rect, sliderRect );
    return GainSlider( sliderRect, &wt, false, &panel );
 }
 
@@ -1129,9 +1087,8 @@ void WaveTrackControls::ReCreateGainSlider(ThemeChangeMessage message)
 {
    if (message.appearance)
       return;
-   const wxPoint point{ 0, 0 };
-   wxRect sliderRect;
-   GetGainRect(point, sliderRect);
+
+   const auto sliderRect = wxRect(0, 0, kTrackInfoSliderWidth, kTrackInfoSliderHeight);
 
    float defPos = 1.0;
    /* i18n-hint: Title of the Gain slider, used to adjust the volume */
@@ -1154,7 +1111,7 @@ LWSlider *WaveTrackControls::PanSlider(
    auto &controls = TrackControls::Get( wt );
    auto rect = panel.FindRect( controls );
    wxRect sliderRect;
-   GetPanRect( rect.GetTopLeft(), sliderRect );
+   GetPanRect( rect, sliderRect );
    return PanSlider( sliderRect, &wt, false,  &panel );
 }
 
@@ -1182,9 +1139,8 @@ void WaveTrackControls::ReCreatePanSlider(ThemeChangeMessage message)
 {
    if (message.appearance)
       return;
-   const wxPoint point{ 0, 0 };
-   wxRect sliderRect;
-   GetPanRect(point, sliderRect);
+
+   const auto sliderRect = wxRect(0, 0, kTrackInfoSliderWidth, kTrackInfoSliderHeight);
 
    float defPos = 0.0;
    /* i18n-hint: Title of the Pan slider, used to move the sound left or right */

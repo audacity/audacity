@@ -46,7 +46,7 @@ void Stk :: setRawwavePath( std::string path )
     rawwavepath_ += "/";
 }
 
-void Stk :: swap16(unsigned char *ptr)
+void Stk :: byteSwap16(unsigned char *ptr)
 {
   unsigned char val;
 
@@ -56,7 +56,7 @@ void Stk :: swap16(unsigned char *ptr)
   *(ptr+1) = val;
 }
 
-void Stk :: swap32(unsigned char *ptr)
+void Stk :: byteSwap32(unsigned char *ptr)
 {
   unsigned char val;
 
@@ -72,7 +72,7 @@ void Stk :: swap32(unsigned char *ptr)
   *(ptr+1) = val;
 }
 
-void Stk :: swap64(unsigned char *ptr)
+void Stk :: byteSwap64(unsigned char *ptr)
 {
   unsigned char val;
 

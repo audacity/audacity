@@ -201,7 +201,7 @@ public:
 
       wxArrayStringEx cmds( mHistory.begin(), mHistory.end() );
       auto cmd = cmds[0];
-      
+
       S.StartVerticalLay();
       {
          S.StartHorizontalLay(wxEXPAND);
@@ -257,8 +257,8 @@ public:
             true);
          return false;
       }
-         
-      // Normalize the path (makes absolute and resolves variables)   
+
+      // Normalize the path (makes absolute and resolves variables)
       wxFileName cmd(argv[0]);
       cmd.Normalize(wxPATH_NORM_ALL & ~wxPATH_NORM_ABSOLUTE);
 
@@ -274,7 +274,7 @@ public:
 
          return true;
       }
-    
+
       // Search for the command in the PATH list
       wxPathList pathlist;
       pathlist.AddEnvList(wxT("PATH"));
@@ -308,7 +308,7 @@ public:
       }
       return false;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       return {};
@@ -455,7 +455,7 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int) const override;
-   
+
    // Required
 
    std::unique_ptr<ExportOptionsEditor>
@@ -508,7 +508,7 @@ bool CLExportProcessor::Initialize(AudacityProject& project,
    context.cmd = wxString::FromUTF8(ExportPluginHelpers::GetParameterValue<std::string>(parameters, CLOptionIDCommand));
    context.showOutput = ExportPluginHelpers::GetParameterValue(parameters, CLOptionIDShowOutput, false);
 
-   // Bug 2178 - users who don't know what they are doing will 
+   // Bug 2178 - users who don't know what they are doing will
    // now get a file extension of .wav appended to their ffmpeg filename
    // and therefore ffmpeg will be able to choose a file type.
    if( context.cmd == wxT("ffmpeg -i - \"%f\"") && !fName.HasExt())
@@ -628,18 +628,9 @@ bool CLExportProcessor::Initialize(AudacityProject& project,
    os->Write(&data, sizeof(data));
 
    // Mix 'em up
-   const auto &tracks = TrackList::Get( project );
    context.mixer = ExportPluginHelpers::CreateMixer(
-                            tracks,
-                            selectionOnly,
-                            t0,
-                            t1,
-                            channels,
-                            maxBlockLen,
-                            true,
-                            rate,
-                            floatSample,
-                            mixerSpec);
+      project, selectionOnly, t0, t1, channels, maxBlockLen, true, rate,
+      floatSample, mixerSpec);
 
    context.status = selectionOnly
          ? XO("Exporting the selected audio using command-line encoder")

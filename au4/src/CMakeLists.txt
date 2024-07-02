@@ -25,7 +25,7 @@ add_subdirectory(app)
 #add_subdirectory(framework)
 
 # Modules
-if (MU_BUILD_APPSHELL_MODULE)
+if (AU_BUILD_APPSHELL_MODULE)
     add_subdirectory(appshell)
 endif()
 
@@ -34,15 +34,18 @@ add_subdirectory(au3wrap)
 add_subdirectory(context)
 add_subdirectory(project)
 
-if (MU_BUILD_PROJECTSCENE_MODULE)
+if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)
 endif()
 
 add_subdirectory(processing)
 
-if (MU_BUILD_PLAYBACK_MODULE)
+if (AU_BUILD_PLAYBACK_MODULE)
     add_subdirectory(playback)
 endif()
 
+if (AU_BUILD_RECORD_MODULE)
+    add_subdirectory(record)
+endif()
 
 # ...

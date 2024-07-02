@@ -6,7 +6,7 @@
 
    Leland Lucius
 
-   Copyright (c) 2014, Audacity Team 
+   Copyright (c) 2014, Audacity Team
    All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,7 @@
    LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
    ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
-   
+
 **********************************************************************/
 
 #ifndef __AUDACITY_EFFECTINTERFACE_H__
@@ -234,7 +234,7 @@ private:
 
 /*************************************************************************************//**
 
-\class EffectDefinitionInterface 
+\class EffectDefinitionInterface
 
 \brief EffectDefinitionInterface is a ComponentInterface that adds some basic
 read-only information about effect properties, and getting and setting of
@@ -536,6 +536,14 @@ public:
     */
    virtual size_t RealtimeProcess(size_t group, EffectSettings &settings,
       const float *const *inBuf, float *const *outBuf, size_t numSamples);
+
+   /*!
+    \brief Called instead of `RealtimeProcess` when the effect is bypassed.
+    Default implementation does nothing.
+    */
+   virtual void RealtimePassThrough(
+      size_t group, EffectSettings& settings, const float* const* inBuf,
+      size_t numSamples);
 
    //! settings can be updated to let a dialog change appearance at idle
    /*!

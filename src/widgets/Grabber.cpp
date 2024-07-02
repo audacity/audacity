@@ -130,25 +130,17 @@ void Grabber::DrawGrabber( wxDC & dc )
    if( mAsSpacer )
       r.width -= 1;
 
-#ifndef __WXMAC__
-
-   // Add a box
-   r.width -= 1;
-   r.height -= 1;
-   AColor::Bevel(dc, !mPressed, r);
-   r.width += 1;
-   r.height += 1;
-
-#endif
-
    // No bumps in a spacer grabber.
    if( mAsSpacer )
       return;
    // Calculate the bump rectangle
-   r.Deflate(3, 3);
+   r.Deflate(2, 2);
    if ((r.GetHeight() % 4) < 2) {
       r.Offset(0, 1);
    }
+
+   // 2-bar toolbars and larger get padding
+   int padding = r.GetHeight() > 32 ? 22 : 6;
 
    // Cache
    left = r.GetLeft();
@@ -156,28 +148,17 @@ void Grabber::DrawGrabber( wxDC & dc )
    top = r.GetTop();
    bottom = r.GetBottom();
 
-   // Draw the raised bumps
-   if (mPressed) {
-      AColor::Dark(&dc, false);
-   }
-   else {
-      AColor::Light(&dc, false);
-   }
-
-   for (y = top; y < bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
-   }
-
-   // Draw the pushed bumps
+   // Draw the bumps
    if (mPressed) {
       AColor::Light(&dc, false);
    }
    else {
-      AColor::Dark(&dc, false);
+      dc.SetPen(wxPen(theTheme.Colour(clrGrabber), 1, wxPENSTYLE_SOLID));
    }
 
-   for (y = top + 1; y <= bottom; y += 4) {
-      AColor::Line(dc, left, y, right, y);
+   for (y = top + padding; y < bottom - padding; y += 5) {
+      dc.DrawRectangle(left, y, 2, 2);
+      dc.DrawRectangle(right, y, 2, 2);
    }
 }
 

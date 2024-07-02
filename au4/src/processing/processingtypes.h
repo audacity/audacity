@@ -1,16 +1,15 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROСESSING_PROСESSINGTYPES_H
-#define AU_PROСESSING_PROСESSINGTYPES_H
+#pragma once
 
-#include "global/realfn.h"
 #include "global/containers.h"
-#include "global/types/id.h"
+#include "global/types/number.h"
+#include "global/logstream.h"
 
 namespace au::processing {
 using msecs_t = int64_t;
-using secs_t = int64_t;
+using secs_t = muse::number_t<double>;
 using samples_t = uint64_t;
 using sample_rate_t = uint64_t;
 using audioch_t = uint8_t;
@@ -25,24 +24,26 @@ struct ClipKey
 {
     TrackId trackId = -1;
     size_t index = muse::nidx;
+
+    ClipKey() = default;
+    ClipKey(const TrackId t, const size_t i)
+        : trackId(t), index(i) {}
+
+    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && index == k.index; }
+    inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
 
-struct AudioOutputParams {
-    volume_db_t volume = 0.f;
-    balance_t balance = 0.f;
-    bool solo = false;
-    bool muted = false;
-    bool forceMute = false;
+struct TimeSignature
+{
+    double tempo = 0;
 
-    bool operator ==(const AudioOutputParams& other) const
-    {
-        return muse::RealIsEqual(volume, other.volume)
-               && muse::RealIsEqual(balance, other.balance)
-               && solo == other.solo
-               && muted == other.muted
-               && forceMute == other.forceMute;
-    }
+    int upper = 0;
+    int lower = 0;
 };
 }
 
-#endif // AU_PROСESSING_PROСESSINGTYPES_H
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::processing::ClipKey& k)
+{
+    s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
+    return s;
+}

@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -64,7 +64,7 @@ public:
 public slots:
     void setTitle(QString title);
     void setId(QString id);
-    void setIcon(ui::IconCode::Code icon);
+    void setIcon(muse::ui::IconCode::Code icon);
     void setPath(QString path);
     void setExpanded(bool expanded);
 
@@ -81,7 +81,7 @@ private:
 
     QString m_title;
     QString m_id;
-    ui::IconCode::Code m_icon = ui::IconCode::Code::NONE;
+    muse::ui::IconCode::Code m_icon = muse::ui::IconCode::Code::NONE;
     QString m_path;
     bool m_expanded = false;
 };

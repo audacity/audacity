@@ -523,9 +523,6 @@ void DrawSeparators (
 {
    dc.SetPen (beatSepearatorPen);
 
-   const auto majorTick = beatsRulerFormat.GetSubdivision().major;
-   const auto minorTick = GetMinorTick();
-
    const auto [firstNote, lastNote] = GetBoundaries(
       rect, rect, noteWidth);
 
@@ -537,7 +534,7 @@ void DrawSeparators (
          continue;
 
       dc.SetPen(IsFirstInMajorTick(noteIndex) ? barSeparatorPen : beatSepearatorPen);
-      dc.DrawLine (position, rect.GetTop (), position, rect.GetBottom () + 1);
+      dc.DrawLine (position, rect.GetTop (), position, rect.GetBottom ());
    }
 }
 
@@ -607,7 +604,7 @@ private:
 
    double GetPositionInRect(int64_t index, const wxRect& rect, double duration) const
    {
-      return zoomInfo.TimeToPosition(index * duration) + rect.x + 1;
+      return zoomInfo.TimeToPosition(index * duration) + rect.x;
    }
 
    std::pair<int64_t, int64_t> GetBoundaries(const wxRect& subRect, const wxRect& fullRect, double width) const
@@ -651,7 +648,7 @@ private:
 void TrackArt::DrawBackgroundWithSelection(
    TrackPanelDrawingContext &context, const wxRect &rect,
    const Channel &channel, const wxBrush &selBrush, const wxBrush &unselBrush,
-   bool useSelection)
+   bool useSelection, bool useBeatsAlternateColor)
 {
    const auto dc = &context.dc;
    const auto artist = TrackArtist::Get( context );
@@ -671,7 +668,14 @@ void TrackArt::DrawBackgroundWithSelection(
 
    dc->SetPen(*wxTRANSPARENT_PEN);
 
-   auto drawBgRect = [dc, &gridlinePainter, artist, &rect](
+   const auto& beatStrongBrush = artist->beatStrongBrush[useBeatsAlternateColor];
+   const auto& beatStrongSelBrush = artist->beatStrongSelBrush[useBeatsAlternateColor];
+   const auto& beatWeakBrush = artist->beatWeakBrush[useBeatsAlternateColor];
+   const auto& beatWeakSelBrush = artist->beatWeakSelBrush[useBeatsAlternateColor];
+   const auto& beatSepearatorPen = artist->beatSepearatorPen[useBeatsAlternateColor];
+   const auto& barSepearatorPen = artist->barSepearatorPen[useBeatsAlternateColor];
+
+   auto drawBgRect = [dc, &gridlinePainter, &rect](
                         const wxBrush& regularBrush,
                         const wxBrush& beatStrongBrush,
                         const wxBrush& beatWeakBrush, const wxRect& subRect)
@@ -701,7 +705,7 @@ void TrackArt::DrawBackgroundWithSelection(
       }
 
       if (before.width > 0) {
-         drawBgRect(unselBrush, artist->beatStrongBrush, artist->beatWeakBrush, before);
+         drawBgRect(unselBrush, beatStrongBrush, beatWeakBrush, before);
 
          within.x = 1 + before.GetRight();
       }
@@ -718,12 +722,12 @@ void TrackArt::DrawBackgroundWithSelection(
 
       if (within.width > 0) {
          if (track.GetSelected()) {
-            drawBgRect(selBrush, artist->beatStrongSelBrush, artist->beatWeakSelBrush, within);
+            drawBgRect(selBrush, beatStrongSelBrush, beatWeakSelBrush, within);
          }
          else {
             // Per condition above, track must be sync-lock selected
             drawBgRect(
-               unselBrush, artist->beatStrongBrush, artist->beatWeakBrush, within);
+               unselBrush, beatStrongBrush, beatWeakBrush, within);
             DrawSyncLockTiles( context, within );
          }
 
@@ -737,16 +741,16 @@ void TrackArt::DrawBackgroundWithSelection(
       after.width = 1 + rect.GetRight() - after.x;
       if (after.width > 0)
          drawBgRect(
-            unselBrush, artist->beatStrongBrush, artist->beatWeakBrush, after);
+            unselBrush, beatStrongBrush, beatWeakBrush, after);
    }
    else
    {
       drawBgRect(
-         unselBrush, artist->beatStrongBrush, artist->beatWeakBrush, rect);
+         unselBrush, beatStrongBrush, beatWeakBrush, rect);
    }
 
    if (gridlinePainter.enabled)
-      gridlinePainter.DrawSeparators(*dc, rect, artist->beatSepearatorPen, artist->barSepearatorPen);
+      gridlinePainter.DrawSeparators(*dc, rect, beatSepearatorPen, barSepearatorPen);
 }
 
 void TrackArt::DrawCursor(TrackPanelDrawingContext& context,

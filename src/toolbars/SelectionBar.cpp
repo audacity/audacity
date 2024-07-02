@@ -180,16 +180,16 @@ void SelectionBar::Create(wxWindow * parent)
 AButton* SelectionBar::MakeSetupButton()
 {
    wxImage up = theTheme.Image(bmpRecoloredUpSmall);
-   up.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
+   up.Rescale(23, 23, wxIMAGE_QUALITY_HIGH);
    wxImage down = theTheme.Image(bmpRecoloredDownSmall);
-   down.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
+   down.Rescale(23, 23, wxIMAGE_QUALITY_HIGH);
    wxImage hiliteUp = theTheme.Image(bmpRecoloredUpHiliteSmall);
-   hiliteUp.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
+   hiliteUp.Rescale(23, 23, wxIMAGE_QUALITY_HIGH);
    wxImage hiliteDown = theTheme.Image(bmpRecoloredHiliteSmall);
-   hiliteDown.Rescale(20, 20, wxIMAGE_QUALITY_HIGH);
+   hiliteDown.Rescale(23, 23, wxIMAGE_QUALITY_HIGH);
 
    auto btn = safenew AButton(
-      this, wxID_ANY, wxDefaultPosition, wxSize { 20, 20 }, up, hiliteUp, down,
+      this, wxID_ANY, wxDefaultPosition, wxSize { 23, 23 }, up, hiliteUp, down,
       hiliteDown, up, false);
 
    btn->SetButtonType(AButton::FrameButton);

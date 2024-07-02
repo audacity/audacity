@@ -23,44 +23,34 @@
 
 #include <QVariantMap>
 
+#include "iaudiooutput.h"
+
 using namespace au::playback;
-using namespace au::au3;
+using namespace au::audio;
 
-static int au3VolumeToLocal(float volume)
-{
-    //! convert from range 0-1 to -60-0
-    float old_max = 1;
-    float old_min = 0;
-    int old_range = old_max - old_min;
-
-    int new_max = 0;
-    int new_min = -60;
-    int new_range = new_max - new_min;
-
-    return (((volume - old_min) * new_range) / old_range) + new_min;
-}
-
-static float localVolumeToAu3(int volume)
-{
-    //! convert from range -60-0 to 0-1
-    float old_max = 0;
-    float old_min = -60;
-    int old_range = old_max - old_min;
-
-    int new_max = 1;
-    int new_min = 0;
-    int new_range = new_max - new_min;
-
-    return (((volume - old_min) * new_range) / old_range) + new_min;
-}
-
-PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, const ItemType& type, QObject* parent)
-    : PlaybackToolBarAbstractItem(action, type, parent)
+PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+                                                   QObject* parent)
+    : muse::uicomponents::ToolBarItem(action, type, parent)
 {
     playback()->audioOutput()->playbackVolumeChanged().onReceive(this, [this](audio::volume_dbfs_t volume){
-        m_level = au3VolumeToLocal(volume);
+        m_level = volume;
         emit levelChanged();
     });
+
+    playback()->audioOutput()->playbackSignalChanges()
+    .onResolve(this, [this](muse::async::Channel<audio::audioch_t, audio::AudioSignalVal> signalVal) {
+        signalVal.onReceive(this, [this](const audioch_t audioChNum, const audio::AudioSignalVal& newValue) {
+            if (newValue.pressure < MIN_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum, MIN_DISPLAYED_DBFS);
+            } else if (newValue.pressure > MAX_DISPLAYED_DBFS) {
+                setAudioChannelVolumePressure(audioChNum, MAX_DISPLAYED_DBFS);
+            } else {
+                setAudioChannelVolumePressure(audioChNum, newValue.pressure);
+            }
+        });
+    });
+
+    resetAudioChannelsVolumePressure();
 }
 
 int PlaybackToolBarLevelItem::level() const
@@ -74,5 +64,110 @@ void PlaybackToolBarLevelItem::setLevel(int newLevel)
         return;
     }
 
-    playback()->audioOutput()->setPlaybackVolume(localVolumeToAu3(newLevel));
+    playback()->audioOutput()->setPlaybackVolume(newLevel);
+}
+
+float PlaybackToolBarLevelItem::leftChannelPressure() const
+{
+    return m_leftChannelPressure;
+}
+
+float PlaybackToolBarLevelItem::rightChannelPressure() const
+{
+    return m_rightChannelPressure;
+}
+
+void PlaybackToolBarLevelItem::setLeftChannelPressure(float leftChannelPressure)
+{
+    if (qFuzzyCompare(m_leftChannelPressure, leftChannelPressure)) {
+        return;
+    }
+
+    m_leftChannelPressure = leftChannelPressure;
+    emit leftChannelPressureChanged(m_leftChannelPressure);
+}
+
+void PlaybackToolBarLevelItem::setRightChannelPressure(float rightChannelPressure)
+{
+    if (qFuzzyCompare(m_rightChannelPressure, rightChannelPressure)) {
+        return;
+    }
+
+    m_rightChannelPressure = rightChannelPressure;
+    emit rightChannelPressureChanged(m_rightChannelPressure);
+}
+
+void PlaybackToolBarLevelItem::setAudioChannelVolumePressure(const audio::audioch_t chNum, const float newValue)
+{
+    if (chNum == 0) {
+        setLeftChannelPressure(newValue);
+    } else {
+        setRightChannelPressure(newValue);
+    }
+}
+
+void PlaybackToolBarLevelItem::resetAudioChannelsVolumePressure()
+{
+    setLeftChannelPressure(MIN_DISPLAYED_DBFS);
+    setRightChannelPressure(MIN_DISPLAYED_DBFS);
+}
+
+float PlaybackToolBarLevelItem::leftRecentPeak() const
+{
+    return m_leftRecentPeak;
+}
+
+void PlaybackToolBarLevelItem::setLeftRecentPeak(float newLeftRecentPeak)
+{
+    if (qFuzzyCompare(m_leftRecentPeak, newLeftRecentPeak)) {
+        return;
+    }
+
+    m_leftRecentPeak = newLeftRecentPeak;
+    emit leftRecentPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::leftMaxPeak() const
+{
+    return m_leftMaxPeak;
+}
+
+void PlaybackToolBarLevelItem::setLeftMaxPeak(float newLeftMaxPeak)
+{
+    if (qFuzzyCompare(m_leftMaxPeak, newLeftMaxPeak)) {
+        return;
+    }
+
+    m_leftMaxPeak = newLeftMaxPeak;
+    emit leftMaxPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::rightRecentPeak() const
+{
+    return m_rightRecentPeak;
+}
+
+void PlaybackToolBarLevelItem::setRightRecentPeak(float newRightRecentPeak)
+{
+    if (qFuzzyCompare(m_rightRecentPeak, newRightRecentPeak)) {
+        return;
+    }
+
+    m_rightRecentPeak = newRightRecentPeak;
+    emit rightRecentPeakChanged();
+}
+
+float PlaybackToolBarLevelItem::rightMaxPeak() const
+{
+    return m_rightMaxPeak;
+}
+
+void PlaybackToolBarLevelItem::setRightMaxPeak(float newRightMaxPeak)
+{
+    if (qFuzzyCompare(m_rightMaxPeak, newRightMaxPeak)) {
+        return;
+    }
+
+    m_rightMaxPeak = newRightMaxPeak;
+    emit rightMaxPeakChanged();
 }

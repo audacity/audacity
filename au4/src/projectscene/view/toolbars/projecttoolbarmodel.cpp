@@ -3,32 +3,32 @@
 */
 #include "projecttoolbarmodel.h"
 
+#include "uicomponents/view/toolbaritem.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
+using namespace muse::actions;
 
 void ProjectToolBarModel::load()
 {
-    MenuItemList items = {
-        makeItem("toggle-mixer"),
-        makeItem("audio-setup"),
+    AbstractToolBarModel::load();
+
+    muse::actions::ActionCodeList itemsCodes = {
+        "toggle-mixer",
+        "audio-setup",
     };
+
+    ToolBarItemList items;
+    for (const ActionCode& code : itemsCodes) {
+        ToolBarItem* item = makeItem(code);
+        item->setShowTitle(true);
+
+        items << item;
+    }
 
     setItems(items);
 
     context()->currentProjectChanged().onNotify(this, [this]() {
         load();
     });
-
-    AbstractMenuModel::load();
-}
-
-MenuItem* ProjectToolBarModel::makeItem(const muse::actions::ActionCode& actionCode)
-{
-    MenuItem* item = new MenuItem(actionsRegister()->action(actionCode), this);
-
-    muse::ui::UiActionState state;
-    state.enabled = context()->currentProject() != nullptr;
-    item->setState(state);
-
-    return item;
 }

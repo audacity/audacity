@@ -77,8 +77,6 @@ public:
    void SetOvertones(bool isSelected) { mbOvertones = isSelected; }
    bool IsOvertones() const { return mbOvertones; }
 
-   bool EmptyCanBeDirty() const { return mEmptyCanBeDirty; }
-
    bool GetShowSplashScreen() const { return mShowSplashScreen; }
 
 private:
@@ -92,7 +90,6 @@ private:
    bool mbSmartSelection { false };
    bool mbOvertones { false };
    
-   bool mEmptyCanBeDirty;
    bool mShowSplashScreen;
 };
 

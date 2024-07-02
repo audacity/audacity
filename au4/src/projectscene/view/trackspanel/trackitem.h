@@ -9,6 +9,7 @@
 #include "async/asyncable.h"
 
 #include "processing/processingtypes.h"
+#include "playback/audiotypes.h"
 #include "processing/dom/track.h"
 
 namespace au::projectscene {
@@ -18,6 +19,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool outputOnly READ outputOnly CONSTANT)
 
+    Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
@@ -38,8 +40,8 @@ public:
 
     void init(const processing::Track& track);
 
-    muse::ID id() const;
-
+    processing::TrackId trackId() const;
+    QVariant trackId_property() const;
     QString title() const;
 
     float leftChannelPressure() const;
@@ -51,7 +53,7 @@ public:
     bool muted() const;
     bool forceMute() const;
 
-    void loadOutputParams(const processing::AudioOutputParams& newParams);
+    void loadOutputParams(const audio::AudioOutputParams& newParams);
 
     // void loadSoloMuteState(const project::IProjectSoloMuteState::SoloMuteState& newState);
 
@@ -59,7 +61,7 @@ public:
 
     bool outputOnly() const;
 
-    const processing::AudioOutputParams& outputParams() const;
+    const audio::AudioOutputParams& outputParams() const;
 
     bool isSelected() const;
     void setIsSelected(bool selected);
@@ -87,7 +89,7 @@ signals:
     void mutedChanged();
     void forceMuteChanged();
 
-    void outputParamsChanged(const processing::AudioOutputParams& params);
+    void outputParamsChanged(const audio::AudioOutputParams& params);
 
     // void soloMuteStateChanged(const project::IProjectSoloMuteState::SoloMuteState& state);
 
@@ -106,11 +108,10 @@ protected:
     void addBlankSlots(size_t count);
     void removeBlankSlotsFromEnd(size_t count);
 
-    muse::ID m_trackId = -1;
-
     // muse::audio::AudioSignalChanges m_audioSignalChanges;
-    processing::AudioOutputParams m_outParams;
+    audio::AudioOutputParams m_outParams;
 
+    processing::TrackId m_trackId = -1;
     QString m_title;
     bool m_outputOnly = false;
 

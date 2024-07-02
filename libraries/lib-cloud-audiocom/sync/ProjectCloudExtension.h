@@ -30,6 +30,8 @@
 class AudacityProject;
 class ProjectSerializer;
 
+enum class AudiocomTrace;
+
 namespace audacity::cloud::audiocom::sync
 {
 class ProjectUploadOperation;
@@ -45,6 +47,7 @@ enum class ProjectSyncStatus
 
 struct CLOUD_AUDIOCOM_API CloudStatusChangedMessage final
 {
+   AudiocomTrace audiocomTrace;
    ProjectSyncStatus Status { ProjectSyncStatus::Local };
    double Progress {};
    std::optional<CloudSyncError> Error {};
@@ -89,7 +92,7 @@ public:
    //! This method is called from any thread
    void OnSyncCompleted(
       const ProjectUploadOperation* uploadOperation,
-      std::optional<CloudSyncError> error);
+      std::optional<CloudSyncError> error, AudiocomTrace trace);
 
    void AbortLastUploadOperation();
 
@@ -110,7 +113,7 @@ public:
       std::function<void(const CloudStatusChangedMessage&)> callback,
       bool onUIThread);
 
-   std::string GetCloudProjectPage() const;
+   std::string GetCloudProjectPage(AudiocomTrace) const;
 
    bool IsBlockLocked(int64_t blockID) const;
 

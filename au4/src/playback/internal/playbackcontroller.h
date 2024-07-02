@@ -1,30 +1,33 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef MU_PLAYBACK_PLAYBACKCONTROLLER_H
-#define MU_PLAYBACK_PLAYBACKCONTROLLER_H
+#pragma once
+
+#include "async/asyncable.h"
+#include "actions/actionable.h"
 
 #include "modularity/ioc.h"
-#include "async/asyncable.h"
 #include "actions/iactionsdispatcher.h"
-#include "actions/actionable.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
+#include "../iplayback.h"
+#include "record/irecordcontroller.h"
 
-#include "au3wrap/iau3playback.h"
-
+#include "../iplayer.h"
 #include "../iplaybackcontroller.h"
 
 namespace au::playback {
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
 {
-    INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT_STATIC(au::context::IGlobalContext, globalContext)
-    INJECT_STATIC(muse::IInteractive, interactive)
-    INJECT_STATIC(au3::IAu3Playback, au3Playback)
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<IPlayback> playback;
+    muse::Inject<record::IRecordController> recordController;
 
 public:
     void init();
+    void deinit();
 
     bool isPlayAllowed() const override;
     muse::async::Notification isPlayAllowedChanged() const override;
@@ -32,7 +35,8 @@ public:
     bool isPlaying() const override;
     muse::async::Notification isPlayingChanged() const override;
 
-    void seek(const audio::msecs_t msecs) override;
+    bool isPaused() const override;
+
     void reset() override;
 
     muse::async::Notification playbackPositionChanged() const override;
@@ -57,7 +61,9 @@ public:
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
 private:
-    bool isPaused() const;
+
+    IPlayerPtr player() const;
+
     bool isLoaded() const;
 
     bool isLoopEnabled() const;
@@ -70,16 +76,14 @@ private:
     void seekRangeSelection();
 
     void togglePlay();
-    void rewindToStart(const muse::actions::ActionData& args);
+    void rewindToStart();
+    void rewindToEnd();
+    void onSeekAction(const muse::actions::ActionData& args);
     void play();
     void pause();
     void stop();
     void resume();
-
-    audio::msecs_t playbackStartMsecs() const;
-    audio::msecs_t playbackEndMsecs() const;
-
-    void setCurrentPlaybackStatus(audio::PlaybackStatus status);
+    void seek(const audio::secs_t secs);
 
     void togglePlayRepeats();
     void toggleAutomaticallyPan();
@@ -109,7 +113,7 @@ private:
 
     using TrackAddFinished = std::function<void ()>;
 
-    audio::msecs_t tickToMsecs(int tick) const;
+    playback::IPlayerPtr m_player;
 
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
@@ -120,7 +124,6 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::async::Notification m_currentSequenceIdChanged;
-    audio::PlaybackStatus m_currentPlaybackStatus = audio::PlaybackStatus::Stopped;
     audio::msecs_t m_currentPlaybackTimeMsecs = 0;
 
     muse::async::Channel<audio::TrackId> m_trackAdded;
@@ -135,5 +138,3 @@ private:
     bool m_isRangeSelection = false;
 };
 }
-
-#endif // MU_PLAYBACK_PLAYBACKCONTROLLER_H

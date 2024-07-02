@@ -51,7 +51,8 @@ FormantShifter::FormantShifter(
 
 void FormantShifter::Reset(size_t fftSize)
 {
-   mFft = std::make_unique<staffpad::audio::FourierTransform>(fftSize);
+   mFft = std::make_unique<staffpad::audio::FourierTransform>(
+      static_cast<int32_t>(fftSize));
    const auto numBins = fftSize / 2 + 1;
    mEnvelope.setSize(1, numBins);
    mCepstrum.setSize(1, fftSize);

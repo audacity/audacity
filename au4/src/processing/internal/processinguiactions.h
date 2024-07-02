@@ -5,7 +5,7 @@
 #define AU_PROCESSING_PROCESSINGUIACTIONS_H
 
 #include "ui/iuiactionsmodule.h"
-#include "processingcontroller.h"
+#include "processingactionscontroller.h"
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
@@ -16,7 +16,7 @@ class ProcessingUiActions : public muse::ui::IUiActionsModule, public muse::asyn
     INJECT(mu::context::IUiContextResolver, uicontextResolver)
 
 public:
-    ProcessingUiActions(std::shared_ptr<ProcessingController> controller);
+    ProcessingUiActions(std::shared_ptr<ProcessingActionsController> controller);
 
     void init();
 
@@ -31,7 +31,7 @@ public:
 private:
     static const muse::ui::UiActionList m_actions;
 
-    std::shared_ptr<ProcessingController> m_controller;
+    std::shared_ptr<ProcessingActionsController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };

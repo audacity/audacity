@@ -3,7 +3,7 @@
   Audacity: A Digital Audio Editor
 
   ExportPluginHelpers.cpp
- 
+
   Dominic Mazzoni
 
   Vitaly Sverchinsky split from ExportPlugin.h
@@ -20,29 +20,26 @@
 #include "StretchingSequence.h"
 
 //Create a mixer by computing the time warp factor
-std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(const TrackList &tracks,
-         bool selectionOnly,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         MixerOptions::Downmix *mixerSpec)
+std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(
+   const AudacityProject& project, bool selectionOnly, double startTime,
+   double stopTime, unsigned numOutChannels, size_t outBufferSize,
+   bool outInterleaved, double outRate, sampleFormat outFormat,
+   MixerOptions::Downmix* mixerSpec)
 {
    Mixer::Inputs inputs;
-
+   const auto& tracks = TrackList::Get(project);
    for (auto pTrack: ExportUtils::FindExportWaveTracks(tracks, selectionOnly))
       inputs.emplace_back(
          StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
          GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
-   return std::make_unique<Mixer>(move(inputs),
-                  // Throw, to stop exporting, if read fails:
-                  true,
-                  Mixer::WarpOptions{ tracks.GetOwner() },
-                  startTime, stopTime,
-                  numOutChannels, outBufferSize, outInterleaved,
-                  outRate, outFormat,
-                  true, mixerSpec,
-                  mixerSpec ? Mixer::ApplyGain::MapChannels : Mixer::ApplyGain::Mixdown);
+   return std::make_unique<Mixer>(
+      move(inputs), GetMasterEffectStages(project),
+      // Throw, to stop exporting, if read fails:
+      true, Mixer::WarpOptions { tracks.GetOwner() }, startTime, stopTime,
+      numOutChannels, outBufferSize, outInterleaved, outRate, outFormat, true,
+      mixerSpec,
+      mixerSpec ? Mixer::ApplyGain::MapChannels : Mixer::ApplyGain::Mixdown);
 }
 
 namespace

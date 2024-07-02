@@ -70,3 +70,18 @@ void PlaybackToolBarCustomiseItem::setChecked(bool checked)
     m_checked = checked;
     emit checkedChanged(m_checked);
 }
+
+QColor PlaybackToolBarCustomiseItem::iconColor() const
+{
+    return m_iconColor;
+}
+
+void PlaybackToolBarCustomiseItem::setIconColor(const QColor& color)
+{
+    if (m_iconColor == color) {
+        return;
+    }
+
+    m_iconColor = color;
+    emit iconColorChanged();
+}

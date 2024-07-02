@@ -29,7 +29,7 @@
 #include "../iglobalcontext.h"
 #include "ui/inavigationcontroller.h"
 
-#ifdef MU_BUILD_PLAYBACK_MODULE
+#ifdef AU_BUILD_PLAYBACK_MODULE
 #include "playback/iplaybackcontroller.h"
 #endif
 
@@ -40,7 +40,7 @@ class UiContextResolver : public muse::ui::IUiContextResolver, public muse::asyn
     INJECT(IGlobalContext, globalContext)
     INJECT(muse::ui::INavigationController, navigationController)
 
-#ifdef MU_BUILD_PLAYBACK_MODULE
+#ifdef AU_BUILD_PLAYBACK_MODULE
     INJECT(playback::IPlaybackController, playbackController)
 #endif
 public:

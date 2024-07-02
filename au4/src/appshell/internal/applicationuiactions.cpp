@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -332,7 +332,7 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
         { "toggle-mixer", MIXER_PANEL_NAME },
         { "toggle-piano-keyboard", PIANO_KEYBOARD_PANEL_NAME },
 
-        { "toggle-statusbar", NOTATION_STATUSBAR_NAME },
+        { "toggle-statusbar", PROJECT_STATUSBAR_NAME },
     };
 
     return actionsMap;

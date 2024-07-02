@@ -40,41 +40,9 @@ StyledPopupView {
             Layout.fillWidth: true
             Layout.topMargin: 8
 
-            text: qsTrc("projectscene", "Customize toolbar")
+            text: qsTrc("playback", "Customize toolbar")
             horizontalAlignment: Text.AlignLeft
             font: ui.theme.largeBodyBoldFont
-        }
-
-        CustomiseControlPanel {
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-            Layout.topMargin: 20
-
-            isAddSeparatorAvailable: customiseModel.isAddSeparatorAvailable
-            isRemovingAvailable: customiseModel.isRemovingAvailable
-            isMovingUpAvailable: customiseModel.isMovingUpAvailable
-            isMovingDownAvailable: customiseModel.isMovingDownAvailable
-
-            navigationPanel.section: root.navigationSection
-            navigationPanel.order: 1
-
-            onAddSeparatorLineRequested: {
-                customiseModel.addSeparatorLine()
-            }
-
-            onRemoveSelectionRequested: {
-                customiseModel.removeSelection()
-            }
-
-            onMoveSelectionUpRequested: {
-                customiseModel.moveSelectionUp()
-                Qt.callLater(view.positionViewAtSelectedItems)
-            }
-
-            onMoveSelectionDownRequested: {
-                customiseModel.moveSelectionDown()
-                Qt.callLater(view.positionViewAtSelectedItems)
-            }
         }
 
         CustomiseView {
@@ -88,18 +56,6 @@ StyledPopupView {
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 2
             navigationPanel.accessible.name: titleLabel.text
-
-            onSelectRowRequested: function(index) {
-                customiseModel.selectRow(index)
-            }
-
-            onClearSelectionRequested: {
-                customiseModel.clearSelection()
-            }
-
-            onRemoveSelectionRequested: {
-                customiseModel.removeSelection()
-            }
         }
     }
 }

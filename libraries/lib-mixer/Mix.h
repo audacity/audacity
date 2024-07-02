@@ -13,19 +13,21 @@
 #define __AUDACITY_MIX__
 
 #include "AudioGraphBuffers.h"
+#include "AudioGraphSource.h"
 #include "MixerOptions.h"
 #include "SampleFormat.h"
+#include <optional>
 
 class sampleCount;
 class BoundedEnvelope;
 class EffectStage;
-namespace AudioGraph{ class Source; }
 class MixerSource;
 class TrackList;
 class WideSampleSequence;
 
-class MIXER_API Mixer {
- public:
+class MIXER_API Mixer : public AudioGraph::Source
+{
+public:
    using WarpOptions = MixerOptions::Warp;
    using MixerSpec = MixerOptions::Downmix;
    using ResampleParameters = MixerOptions::ResampleParameters;
@@ -61,15 +63,14 @@ class MIXER_API Mixer {
        partners
     @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
-   Mixer(Inputs inputs, bool mayThrow,
-         const WarpOptions &warpOptions,
-         double startTime, double stopTime,
-         unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
-         double outRate, sampleFormat outFormat,
-         bool highQuality = true,
-         //! Null or else must have a lifetime enclosing this object's
-         MixerSpec *mixerSpec = nullptr,
-         ApplyGain applyGain = ApplyGain::MapChannels);
+   Mixer(
+      Inputs inputs, std::optional<Stages> masterEffects, bool mayThrow,
+      const WarpOptions& warpOptions, double startTime, double stopTime,
+      unsigned numOutChannels, size_t outBufferSize, bool outInterleaved,
+      double outRate, sampleFormat outFormat, bool highQuality = true,
+      //! Null or else must have a lifetime enclosing this object's
+      MixerSpec* mixerSpec = nullptr,
+      ApplyGain applyGain = ApplyGain::MapChannels);
 
    Mixer(const Mixer&) = delete;
    Mixer &operator=(const Mixer&) = delete;
@@ -122,11 +123,23 @@ class MIXER_API Mixer {
 
    void Clear();
 
- private:
+   // AudioGraph::Source
+private:
+   bool AcceptsBuffers(const Buffers& buffers) const override;
+   bool AcceptsBlockSize(size_t blockSize) const override;
+   std::optional<size_t> Acquire(Buffers& data, size_t bound) override;
+   sampleCount Remaining() const override;
+   bool Release() override;
+
+private:
+   std::unique_ptr<EffectStage>& RegisterEffectStage(
+      AudioGraph::Source& upstream,
+      const MixerOptions::StageSpecification& stage, double outRate);
 
    // Input
    const unsigned   mNumChannels;
    Inputs           mInputs;
+   const std::optional<Stages> mMasterEffects;
 
    // Transformations
    const size_t     mBufferSize;
@@ -157,7 +170,7 @@ class MIXER_API Mixer {
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
    // determine where in mTemp it is accumulated
-   std::vector<std::vector<float>> mTemp;
+   AudioGraph::Buffers mTemp;
 
    // Final result applies dithering and interleaving
    const std::vector<SampleBuffer> mBuffer;
@@ -166,6 +179,7 @@ class MIXER_API Mixer {
    std::vector<EffectSettings> mSettings;
    std::vector<AudioGraph::Buffers> mStageBuffers;
    std::vector<std::unique_ptr<EffectStage>> mStages;
+   std::vector<AudioGraph::Source*> mMasterStages;
 
    struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
    std::vector<Source> mDecoratedSources;

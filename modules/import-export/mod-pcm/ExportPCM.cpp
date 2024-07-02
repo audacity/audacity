@@ -96,7 +96,7 @@ void GetEncodings(int type, std::vector<ExportValue>& values, TranslatableString
    info.samplerate = 44100;
    info.channels = 1;
    info.sections = 1;
-   
+
    for (int i = 0, num = sf_num_encodings(); i < num; ++i)
    {
       int sub = sf_encoding_index_to_subtype(i);
@@ -165,7 +165,7 @@ public:
       }
       return false;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       return {};
@@ -187,7 +187,7 @@ class ExportOptionsSFEditor final : public ExportOptionsEditor
    Listener* const mListener;
    int mType;
    std::unordered_map<int, int> mEncodings;
-   
+
    std::vector<ExportOption> mOptions;
 
    bool IsValidType(const ExportValue& typeValue) const
@@ -201,7 +201,7 @@ class ExportOptionsSFEditor final : public ExportOptionsEditor
       }
       return false;
    }
-   
+
 
 public:
 
@@ -293,7 +293,7 @@ public:
          const auto newType = *std::get_if<int>(&value);
          if(newType == mType)
             return true;
-         
+
          if(mListener)
             mListener->OnExportOptionChangeBegin();
 
@@ -331,7 +331,7 @@ public:
       }
       return false;
    }
-   
+
    SampleRateList GetSampleRateList() const override
    {
       return {};
@@ -440,11 +440,11 @@ public:
 
    int GetFormatCount() const override;
    FormatInfo GetFormatInfo(int index) const override;
-   
+
    std::vector<std::string> GetMimeTypes(int formatIndex) const override;
 
    bool ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const override;
-   
+
    std::unique_ptr<ExportOptionsEditor>
    CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;
 
@@ -545,8 +545,6 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
    context.t1 = t1;
    context.fName = fName;
 
-   const auto &tracks = TrackList::Get( project );
-
    // Set a default in case the settings aren't found
    int& sf_format = context.sf_format;
 
@@ -578,7 +576,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
 
    int& fileFormat = context.fileFormat;
    fileFormat = sf_format & SF_FORMAT_TYPEMASK;
-   
+
    {
       wxFile &f = context.f;
       SNDFILE* &sf = context.sf;
@@ -613,7 +611,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
 
       // If we can't export exactly the format they requested,
       // try the default format for that header type...
-      // 
+      //
       // LLL: I don't think this is valid since libsndfile checks
       // for all allowed subtypes explicitly and doesn't provide
       // for an unspecified subtype.
@@ -646,7 +644,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
          AddStrings(sf, metadata, sf_format);
       }
       context.metadata = std::make_unique<Tags>(*metadata);
-      
+
       if (sf_subtype_more_than_16_bits(info.format))
          context.format = floatSample;
       else
@@ -673,17 +671,16 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
          }
       }
 
-      
+
       context.status = (selectionOnly
          ? XO("Exporting the selected audio as %s")
          : XO("Exporting the audio as %s")).Format( formatStr );
 
-      
+
       wxASSERT(info.channels >= 0);
-      context.mixer = ExportPluginHelpers::CreateMixer(tracks, selectionOnly,
-                               t0, t1,
-                               info.channels, maxBlockLen, true,
-                               sampleRate, context.format, mixerSpec);
+      context.mixer = ExportPluginHelpers::CreateMixer(
+         project, selectionOnly, t0, t1, info.channels, maxBlockLen, true,
+         sampleRate, context.format, mixerSpec);
    }
 
    return true;
@@ -694,7 +691,7 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
    delegate.SetStatusString(context.status);
 
    auto exportResult = ExportResult::Success;
-   
+
    {
       std::vector<char> dither;
       if ((context.info.format & SF_FORMAT_SUBMASK) == SF_FORMAT_PCM_24) {
@@ -760,7 +757,7 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                delegate, *context.mixer, context.t0, context.t1);
       }
    }
-   
+
    // Install the WAV metata in a "LIST" chunk at the end of the file
    if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
       if (context.fileFormat == SF_FORMAT_WAV ||

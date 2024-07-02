@@ -28,13 +28,14 @@ namespace audacity::cloud::audiocom::sync
 {
 CloudProjectPropertiesDialog::CloudProjectPropertiesDialog(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, const wxString& projectName, wxWindow* parent)
+   UserService& userService, const wxString& projectName, wxWindow* parent,
+   AudiocomTrace trace)
     : wxDialogWrapper { parent, wxID_ANY, XO("Save to audio.com") }
 {
    GetAuthorizationHandler().PushSuppressDialogs();
 
    mUserPanel =
-      new UserPanel(serviceConfig, authService, userService, true, this);
+      new UserPanel(serviceConfig, authService, userService, true, trace, this);
 
    mUserStateChangedSubscription =
       mUserPanel->Subscribe([this](auto) { OnUpdateCloudSaveState(); });
@@ -87,10 +88,11 @@ std::pair<CloudProjectPropertiesDialog::Action, std::string>
 CloudProjectPropertiesDialog::Show(
    const ServiceConfig& serviceConfig, OAuthService& authService,
    UserService& userService, const wxString& projectName, wxWindow* parent,
-   bool allowLocalSave)
+   bool allowLocalSave, AudiocomTrace trace)
 {
    CloudProjectPropertiesDialog dialog { serviceConfig, authService,
-                                         userService, projectName, parent };
+                                         userService,   projectName,
+                                         parent,        trace };
 
    dialog.mSaveLocally->Show(allowLocalSave);
 

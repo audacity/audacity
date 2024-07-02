@@ -254,7 +254,12 @@ void TracksListModel::clear()
 void TracksListModel::deleteItems()
 {
     m_selectionModel->clear();
-    qDeleteAll(m_trackList);
+
+    for (TrackItem* trackItem : m_trackList) {
+        trackItem->deleteLater();
+    }
+
+    m_trackList.clear();
 }
 
 void TracksListModel::setIsMovingUpAvailable(bool isMovingUpAvailable)
@@ -449,10 +454,10 @@ TrackItem* TracksListModel::buildTrackItem(const Track& track)
     return item;
 }
 
-TrackItem* TracksListModel::findTrackItem(const muse::ID& trackId)
+TrackItem* TracksListModel::findTrackItem(const processing::TrackId& trackId)
 {
     for (TrackItem* track: m_trackList) {
-        if (track->id() == trackId) {
+        if (track->trackId() == trackId) {
             return track;
         }
     }

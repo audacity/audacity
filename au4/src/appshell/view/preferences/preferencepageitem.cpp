@@ -1,11 +1,11 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
+ * Audacity-CLA-applies
  *
- * MuseScore
- * Music Composition & Notation
+ * Audacity
+ * A Digital Audio Editor
  *
- * Copyright (C) 2021 MuseScore BVBA and others
+ * Copyright (C) 2024 Audacity BVBA and others
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 3 as
@@ -44,7 +44,7 @@ QString PreferencePageItem::id() const
 
 QString PreferencePageItem::title() const
 {
-    return qtrc("appshell/preferences", m_title.toUtf8());
+    return muse::qtrc("appshell/preferences", m_title.toUtf8());
 }
 
 int PreferencePageItem::icon() const
@@ -136,7 +136,7 @@ void PreferencePageItem::setTitle(QString title)
     emit titleChanged(m_title);
 }
 
-void PreferencePageItem::setIcon(ui::IconCode::Code icon)
+void PreferencePageItem::setIcon(muse::ui::IconCode::Code icon)
 {
     if (m_icon == icon) {
         return;

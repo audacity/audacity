@@ -29,6 +29,7 @@
 #include "log.h"
 
 // Framework
+#include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
 #include "framework/ui/uimodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
@@ -51,6 +52,7 @@
 #include "projectscene/projectscenemodule.h"
 #include "playback/playbackmodule.h"
 #include "processing/processingmodule.h"
+#include "record/recordmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
 
@@ -101,6 +103,7 @@ int main(int argc, char** argv)
 //app.addModule(new muse::diagnostics::DiagnosticsModule());
 
 // framework
+    app.addModule(new muse::draw::DrawModule());
     app.addModule(new muse::actions::ActionsModule());
     app.addModule(new muse::ui::UiModule());
     app.addModule(new muse::uicomponents::UiComponentsModule());
@@ -122,6 +125,7 @@ int main(int argc, char** argv)
     app.addModule(new au::au3::Au3WrapModule());
     app.addModule(new au::playback::PlaybackModule());
     app.addModule(new au::processing::ProcessingModule());
+    app.addModule(new au::record::RecordModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
     // On MSVC under Windows, we need to manually retrieve the command-line arguments and convert them from UTF-16 to UTF-8.

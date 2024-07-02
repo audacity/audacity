@@ -13,36 +13,51 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
+static const ActionCode PLAY_ACTION_CODE("play");
+static const ActionCode PAUSE_ACTION_CODE("pause");
+static const ActionCode STOP_ACTION_CODE("stop");
+
+static const ActionCode REWIND_START_ACTION_CODE("rewind-start");
+static const ActionCode REWIND_END_ACTION_CODE("rewind-end");
+static const ActionCode LOOP_ACTION_CODE("loop");
+
 const UiActionList PlaybackUiActions::m_mainActions = {
-    UiAction("play",
+    UiAction(PLAY_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Play"),
              TranslatableString("action", "Play"),
              IconCode::Code::PLAY_FILL
              ),
-    UiAction("stop",
+    UiAction(PAUSE_ACTION_CODE,
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Pause"),
+             TranslatableString("action", "Pause"),
+             IconCode::Code::PAUSE_FILL
+             ),
+    UiAction(STOP_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop playback"),
-             IconCode::Code::STOP
+             IconCode::Code::STOP_FILL
              ),
-    UiAction("rewind-start",
+    UiAction(REWIND_START_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Rewind to start"),
              TranslatableString("action", "Rewind to start"),
              IconCode::Code::REWIND_START_FILL
              ),
-    UiAction("rewind-end",
+    UiAction(REWIND_END_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Rewind to end"),
              TranslatableString("action", "Rewind to end"),
              IconCode::Code::REWIND_END_FILL
              ),
-    UiAction("loop",
+    UiAction(LOOP_ACTION_CODE,
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Loop playback"),
@@ -57,26 +72,41 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              TranslatableString("action", "Open audio setup dialog"),
              IconCode::Code::CONFIGURE
              ),
+    UiAction("metronome",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Metronome"),
+             TranslatableString("action", "Toggle metronome playback"),
+             IconCode::Code::METRONOME,
+             Checkable::Yes
+             ),
+    UiAction("playback-time",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Timecode"),
+             TranslatableString("action", "Set playback time"),
+             IconCode::Code::SETTINGS_COG
+             ),
+    UiAction("playback-bpm",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "BPM"),
+             TranslatableString("action", "Set playback BPM"),
+             IconCode::Code::SETTINGS_COG
+             ),
+    UiAction("playback-time-signature",
+             au::context::UiCtxNotationOpened,
+             au::context::CTX_NOTATION_FOCUSED,
+             TranslatableString("action", "Time signature"),
+             TranslatableString("action", "Set playback time signature"),
+             IconCode::Code::TIME_SIGNATURE
+             ),
     UiAction("playback-level",
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Playback level"),
              TranslatableString("action", "Set playback level"),
-             IconCode::Code::AUDIO // todo
-             ),
-    UiAction("playback-time",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
-             TranslatableString("action", "Playback time"),
-             TranslatableString("action", "Set playback time"),
-             IconCode::Code::AUDIO // todo
-             ),
-    UiAction("record",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
-             TranslatableString("action", "Record"),
-             TranslatableString("action", "Record"),
-             IconCode::Code::RECORD_FILL
+             IconCode::Code::AUDIO
              ),
 };
 
@@ -136,6 +166,17 @@ void PlaybackUiActions::init()
 
         m_actionEnabledChanged.send(codes);
     });
+
+    m_controller->isPlayingChanged().onNotify(this, [this]() {
+        ActionCodeList codes= {
+            PLAY_ACTION_CODE,
+            PAUSE_ACTION_CODE,
+            REWIND_START_ACTION_CODE,
+            REWIND_END_ACTION_CODE
+        };
+
+        m_actionEnabledChanged.send(codes);
+    });
 }
 
 const UiActionList& PlaybackUiActions::actionsList() const
@@ -151,10 +192,6 @@ const UiActionList& PlaybackUiActions::actionsList() const
 
 bool PlaybackUiActions::actionEnabled(const UiAction& act) const
 {
-    if (!m_controller->isPlayAllowed()) {
-        return false;
-    }
-
     if (!m_controller->canReceiveAction(act.code)) {
         return false;
     }
@@ -193,22 +230,40 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
     if (!config.isValid()) {
         config.items = {
             { "play", true },
+            { "stop", true },
+            { "record", true },
             { "rewind-start", true },
             { "rewind-end", true },
-            { "record", true },
             { "loop", true },
             { "", true },
-            { "envelope", true },
+            { "automation", true },
+            { "", true },
             { "zoomin", true },
             { "zoomout", true },
             { "fit-selection", true },
             { "fit-project", true },
             { "zoom", true },
+            { "", true },
+            { "spectral-editing", false },
+            { "spectral-box-select", false },
+            { "spectral-brush", false },
+            { "", true },
+            { "cut", true },
+            { "copy", true },
+            { "paste", true },
+            { "", true },
             { "trim-audio-outside-selection", true },
             { "silence-audio-selection", true },
             { "", true },
-            { "playback-time", true },
+            { "metronome", false },
             { "", true },
+            { "playback-time", true },
+            { "playback-bpm", true },
+            { "playback-time-signature", true },
+            { "", true },
+            { "snapping", false },
+            { "", true },
+            { "record-level", true },
             { "playback-level", true }
         };
     }

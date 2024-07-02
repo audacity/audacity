@@ -20,12 +20,13 @@
 #endif
 
 #include "AColor.h"
-#include "AudioIOBase.h"
 #include "AllThemeResources.h"
+#include "AudioIOBase.h"
+#include "ExportUtils.h"
+#include "PlayableTrack.h"
 #include "Prefs.h"
 #include "ProjectWindow.h"
 #include "Theme.h"
-#include "PlayableTrack.h"
 
 #include "dialogs/ShareAudioDialog.h"
 #include "toolbars/ToolManager.h"
@@ -112,13 +113,7 @@ void ShareAudioToolbar::Populate()
 
 void ShareAudioToolbar::Repaint(wxDC* dc)
 {
-#ifndef USE_AQUA_THEME
-   const auto s = mSizer->GetSize();
-   const auto p = mSizer->GetPosition();
-
-   wxRect bevelRect(p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1);
-   AColor::Bevel(*dc, true, bevelRect);
-#endif
+   // this was used to add a bevel and can be removed
 }
 
 void ShareAudioToolbar::EnableDisableButtons()
@@ -144,11 +139,6 @@ void ShareAudioToolbar::EnableDisableButtons()
 
 void ShareAudioToolbar::ReCreateButtons()
 {
-   // ToolBar::ReCreateButtons() will get rid of its sizer and
-   // since we've attached our sizer to it, ours will get deleted too
-   // so clean ours up first.
-   DestroySizer();
-
    ToolBar::ReCreateButtons();
 
    EnableDisableButtons();
@@ -158,10 +148,12 @@ void ShareAudioToolbar::ReCreateButtons()
 
 void ShareAudioToolbar::MakeShareAudioButton()
 {
+   const auto height = (toolbarSingle - toolbarMargin) * 2;
+
    mShareAudioButton = safenew AButton(this, ID_SHARE_AUDIO_BUTTON);
    //i18n-hint: Share audio button text, keep as short as possible
    mShareAudioButton->SetLabel(XO("Share Audio"));
-   mShareAudioButton->SetButtonType(AButton::FrameButton);
+   mShareAudioButton->SetButtonType(AButton::FrameTextButton);
    mShareAudioButton->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -171,45 +163,27 @@ void ShareAudioToolbar::MakeShareAudioButton()
    mShareAudioButton->SetIcon(theTheme.Image(bmpShareAudio));
    mShareAudioButton->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
 
-   mShareAudioButton->Bind(
-      wxEVT_BUTTON,
-      [this](auto)
-      {
-         audiocom::ShareAudioDialog dlg(mProject, &ProjectWindow::Get(mProject));
-         dlg.ShowModal();
+   mShareAudioButton->Bind(wxEVT_BUTTON, [this](auto) {
+      audiocom::ShareAudioDialog dlg(
+         mProject, AudiocomTrace::ShareAudioButton,
+         &ProjectWindow::Get(mProject));
+      dlg.ShowModal();
 
          mShareAudioButton->PopUp();
       });
+   mShareAudioButton->SetMinSize(wxSize{-1, height});
+   mShareAudioButton->SetMaxSize(wxSize{-1, height});
 }
 
 void ShareAudioToolbar::ArrangeButtons()
 {
-   // (Re)allocate the button sizer
-   DestroySizer();
+   Add(mShareAudioButton, 0, wxALIGN_CENTRE | wxALL, toolbarSpacing);
 
-   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
-   mSizer->Add(mShareAudioButton, 1, wxEXPAND);
-
-   // Layout the sizer
-   mSizer->Layout();
+   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), -1 });
+   SetMaxSize({ -1, -1 });
 
    // Layout the toolbar
    Layout();
-
-   const auto height = 2 * toolbarSingle;
-   SetMinSize({ std::max(76, GetSizer()->GetMinSize().GetWidth()), height });
-   SetMaxSize({ -1, height });
-}
-
-void ShareAudioToolbar::DestroySizer()
-{
-   if (mSizer == nullptr)
-      return;
-
-   Detach(mSizer);
-
-   std::unique_ptr<wxSizer> { mSizer }; // DELETE it
-   mSizer = nullptr;
 }
 
 static RegisteredToolbarFactory factory {

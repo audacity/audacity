@@ -13,6 +13,7 @@
 #include <memory>
 #include <wx/scrolwin.h>
 #include <wx/weakref.h>
+#include <wx/splitter.h>
 
 #include "ThemedWrappers.h"
 #include "Observer.h"
@@ -31,12 +32,16 @@ class AudacityProject;
  * an individual track, provides controls for accessing effect settings,
  * stack manipulation (reorder, add, remove)
  */
-class RealtimeEffectPanel : public wxPanel
+class RealtimeEffectPanel : public wxSplitterWindow
 {
-   AButton* mToggleEffects{nullptr};
+   AButton* mToggleTrackEffects{nullptr};
+   AButton* mToggleMasterEffects{nullptr};
    wxStaticText* mTrackTitle {nullptr};
-   RealtimeEffectListWindow* mEffectList{nullptr};
-   wxWindow* mHeader{nullptr};
+   wxWindow* mTrackEffectsPanel{nullptr};
+   wxWindow* mProjectEffectsPanel{nullptr};
+   RealtimeEffectListWindow* mTrackEffectList{nullptr};
+   RealtimeEffectListWindow* mMasterEffectList{nullptr};
+   wxWindow* mTrackEffectsHeader{nullptr};
    AudacityProject& mProject;
 
    std::weak_ptr<SampleTrack> mCurrentTrack;
@@ -81,5 +86,9 @@ public:
    void SetFocus() override;
    
 private:
+
+   void MakeTrackEffectPane();
+   void MakeMasterEffectPane();
+
    void OnCharHook(wxKeyEvent& evt);
 };

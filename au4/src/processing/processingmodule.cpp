@@ -24,7 +24,7 @@
 #include "modularity/ioc.h"
 
 #include "internal/processinguiactions.h"
-#include "internal/processingcontroller.h"
+#include "internal/processingactionscontroller.h"
 
 #include "ui/iuiactionsregister.h"
 
@@ -44,10 +44,10 @@ std::string ProcessingModule::moduleName() const
 
 void ProcessingModule::registerExports()
 {
-    m_processingController = std::make_shared<ProcessingController>();
+    m_processingController = std::make_shared<ProcessingActionsController>();
     m_processingUiActions = std::make_shared<ProcessingUiActions>(m_processingController);
 
-    ioc()->registerExport<IProcessingController>(moduleName(), m_processingController);
+    ioc()->registerExport<IProcessingActionsController>(moduleName(), m_processingController);
 }
 
 void ProcessingModule::resolveImports()

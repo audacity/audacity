@@ -38,10 +38,7 @@ private:
    void MakeShareAudioButton();
    void ArrangeButtons();
 
-   void DestroySizer();
-
    AButton* mShareAudioButton {};
-   wxBoxSizer* mSizer {};
 
    enum
    {

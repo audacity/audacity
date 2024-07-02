@@ -433,7 +433,7 @@ msgstr "Применение %s..."
 #. name into another alphabet.
 #: libraries/lib-effects/EffectBase.h
 msgid "Nyquist"
-msgstr "Найквист"
+msgstr "Nyquist"
 
 #: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
@@ -1168,7 +1168,7 @@ msgstr "Включить новые плагины"
 
 #: libraries/lib-module-manager/PluginManager.h
 msgid "Nyquist Prompt"
-msgstr "Подсказка Найквиста"
+msgstr "Интерпретатор Nyquist"
 
 #: libraries/lib-network-manager/MultipartData.cpp
 #, c-format
@@ -2780,7 +2780,7 @@ msgstr "Все сообщения анонимны. Смотрите %s для �
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
 #: src/prefs/ApplicationPrefs.cpp src/update/UpdateNoticeDialog.cpp
 msgid "our Privacy Policy"
-msgstr "нашими Правилами конфиденциальности"
+msgstr "наши Правила Конфиденциальности"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Problem details"
@@ -3303,11 +3303,11 @@ msgstr "&OK"
 #: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "Waiting for audio.com"
-msgstr "Ожидаем на audio.com"
+msgstr "Ожидаем audio.com"
 
 #: modules/mod-cloud-audiocom/AuthorizationHandler.cpp
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
-msgstr "Прежде, чем продолжать, нужно действие на audio.com. Это действие можно отменить."
+msgstr "Прежде, чем продолжить, необходимо действие на audio.com. Его можно отменить."
 
 #: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -3318,12 +3318,12 @@ msgstr "Сохранить на audio.com"
 
 #: modules/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 msgid "Generating audio preview..."
-msgstr "Создание данных прослушивания..."
+msgstr "Создание аудио-превью..."
 
 #: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 #: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Open from audio.com"
-msgstr "Открыть в audio.com"
+msgstr "Открыть с audio.com"
 
 #: modules/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -3331,23 +3331,23 @@ msgstr "Синхронизация проекта"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
-msgstr "Данные прослушивания можно обновить только для облачных проектов"
+msgstr "Аудио-превью можно обновить только для облачных проектов"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Save To Cloud..."
-msgstr "Сохранить в облаке..."
+msgid "Save &To Cloud..."
+msgstr "&Сохранить в облаке..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Update Cloud Audio Preview"
-msgstr "Обновить данные прослушивания в облаке"
+msgid "&Update Cloud Audio Preview"
+msgstr "О&бновить аудио-превью в облаке"
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Open From Cloud..."
-msgstr "Открыть в облаке..."
+msgid "Open &From Cloud..."
+msgstr "&Открыть из облака..."
 
 #: modules/mod-cloud-audiocom/menus/AudioComMenus.cpp
-msgid "Share Audio..."
-msgstr "Поделиться аудио…"
+msgid "Sha&re Audio..."
+msgstr "&Поделиться аудио…"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
@@ -3401,7 +3401,7 @@ msgstr "дней"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "&Remove temporary files after:"
-msgstr "&Извлечь временные файлы после:"
+msgstr "&Удалить временные файлы после:"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Preferences for Cloud"
@@ -3441,7 +3441,7 @@ msgstr "Ожидание освобождения места"
 
 #: modules/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
-msgstr "После полученияя места сохранения на audio.com, нажмите кнопку 'Повторить'."
+msgstr "После освобождения пространства для хранения на audio.com, нажмите 'Повторить'."
 
 #. i18n-hint: Share audio button text, keep as short as possible
 #: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
@@ -3465,7 +3465,7 @@ msgstr "&Привязать аккаунт"
 
 #: modules/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Unlink Account"
-msgstr "&Сбросить аккаунт"
+msgstr "&Отвязать аккаунт"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -3517,7 +3517,7 @@ msgstr "Поделиться на audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr "Выгружает незапакованный файл аудио и создаёт подходящюю ссылку для распространения. С помощью этой ссылки другие пользователи смогут получить файл в формате .wav или .mp3."
+msgstr "Загружает несжатый аудиофайл и генерирует ссылку для распространения. С помощью этой ссылки другие пользователи смогут скачать файл в формате .wav или .mp3."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
@@ -3533,11 +3533,11 @@ msgstr "Экспорт на &компьютер"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Don't show again"
-msgstr "С&нова не показывать"
+msgstr "Б&ольше не показывать"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
-msgstr "Для хранения данных в облаке требуется бесплатная учётная запись на audio.com, которая привязана к Audacity. Длч продолжения нажмите 'Привязать аккаунт'."
+msgstr "Для хранения данных в облаке требуется бесплатная учётная запись на audio.com, привязанная к Audacity. Для продолжения нажмите выше кнопку 'Привязать аккаунт'."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
@@ -3704,11 +3704,11 @@ msgstr "Конфликт облачных проектов"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
-msgstr "\"Вы пытаетесь открыть новую активную версию этого проекта, имея открытой \"другую версию этого проекта. Выберите версию, которую надо открыть. "
+msgstr "\"Вы пытаетесь открыть новую активную версию этого проекта, имея открытой \"другую версию этого проекта. Пожалуйста, выберите версию, которую вы хотите оставить открытой."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr "Сохранить текущую открытую версию"
+msgstr "Оставить версию, открытую сейчас"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
@@ -3720,7 +3720,7 @@ msgstr "Открыть из облака"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "less than 1 minute"
-msgstr "менее чем за минуту"
+msgstr "менее чем 1 минуту"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
@@ -3778,7 +3778,7 @@ msgstr "Открыть"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "View in audio.com"
-msgstr "Прослушать на audio.com"
+msgstr "Просмотреть на audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
@@ -3799,7 +3799,7 @@ msgstr "Вы действительно хотите отменить дейст
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Cancel upload to Audio.com"
-msgstr "Отменить выгрузку на Audio.com"
+msgstr "Отменить загрузку на Audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Uploading audio..."
@@ -3807,19 +3807,19 @@ msgstr "Выгрузка аудио…"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "\"Не удалось загрузить этот файл. Повторите попытку и убедитесь перед выгрузкой данных в привязки вашего аккаунта audio.com."
+msgstr "\"Не удалось загрузить этот файл. Повторите попытку и убедитесь перед загрузкой, что ваш аккаунт audio.com привязан."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
-msgstr "Ошибка при выгрузке"
+msgstr "Ошибка при загрузке"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to prepare this file for uploading."
-msgstr "Программе не удалось приготовить этот файл к выгрузке."
+msgstr "Программе не удалось приготовить этот файл к загрузке."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Finalizing upload..."
-msgstr "Завершение выгрузки…"
+msgstr "Завершение загрузки…"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/TagsEditor.cpp
@@ -3838,7 +3838,7 @@ msgstr "audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Press \"Continue\" to upload to audio.com"
-msgstr "Нажмите 'Продолжить', чтобы выгрузить данные на audio.com"
+msgstr "Нажмите 'Продолжить', чтобы загрузить на audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
@@ -3850,7 +3850,7 @@ msgstr "Вам не разрешён доступ к этому проекту."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You tried to access a project that has expired."
-msgstr "Вы пытались получить доступ к проекту, срок действия которого исчерпан."
+msgstr "Вы пытались получить доступ к проекту, срок хранения которого истёк."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity had trouble connecting to the server."
@@ -3858,7 +3858,7 @@ msgstr "Audacity не удалось установить соединение �
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
-msgstr "Проект слишком велик для выгрузки. Сохраните его на вашем компьютере."
+msgstr "Проект слишком велик для загрузки. Сохраните его на вашем компьютере."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
@@ -3916,7 +3916,7 @@ msgstr "Успешно!"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
-msgstr "Все сохранённые изменения будут обновлены в облаке. Можно управлять этим файлом со страницы ваших выгруженных проектов на audio.com"
+msgstr "Все сохранённые изменения будут обновлены в облаке. Можно управлять этим файлом со страницы ваших загруженных проектов на audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "View online"
@@ -3932,7 +3932,7 @@ msgstr "Незавершенный проект в облаке"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
-msgstr "Самая свежая версия этого проекта не была полностью выгружена на audio.com. Вместо этого можно скачать самую свежую полную версию."
+msgstr "Самая свежая версия этого проекта не была полностью загружена на audio.com. Вместо этого можно скачать самую свежую полную версию."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Load latest"
@@ -3940,11 +3940,11 @@ msgstr "Скачать самую свежую"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
-msgstr "На audio.com не выгружена полностью ни одна версия этого проекта. Это загрузить нельзя."
+msgstr "На audio.com не загружена полностью ни одна версия этого проекта. Это загрузить нельзя."
 
 #: modules/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
 msgid "You have canceled this upload to audio.com"
-msgstr "Вы отменили эту выгрузку данных на audio.com"
+msgstr "Вы отменили данную загрузку на audio.com"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
 msgid "Retry"
@@ -3952,7 +3952,7 @@ msgstr "Повторить"
 
 #: modules/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
-msgstr "Чтобы продолжать, нужно действие на audio.com. Как только выполните это, нажмите кнопку 'Повторить'"
+msgstr "Прежде, чем продолжить, необходимо действие на audio.com. Как только вы закончите, нажмите кнопку 'Повторить'"
 
 #. i18n-hint kbps abbreviates "thousands of bits per second"
 #. i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second
@@ -5370,7 +5370,7 @@ msgstr "2-ая експериментальная команда…"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Nyquist Workbench..."
-msgstr "&Редактор скриптов Найквиста..."
+msgstr "&Редактор скриптов Nyquist..."
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "&Undo\tCtrl+Z"
@@ -5484,11 +5484,11 @@ msgstr "Вывод"
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Load Nyquist script"
-msgstr "Загрузить скрипт Найквиста"
+msgstr "Загрузить скрипт Nyquist"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*"
-msgstr "Скрипты Найквиста (*.ny)|*.ny|Скрипты Lisp (*.lsp)|*.lsp|Все файлы|*"
+msgstr "Скрипты Nyquist (*.ny)|*.ny|Скрипты Lisp (*.lsp)|*.lsp|Все файлы|*"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Script was not saved."
@@ -5496,7 +5496,7 @@ msgstr "Скрипт не сохранён."
 
 #: modules/mod-nyq-bench/NyqBench.cpp src/effects/nyquist/Nyquist.cpp
 msgid "Save Nyquist script"
-msgstr "Сохранить скрипт Найквиста"
+msgstr "Сохранить скрипт Nyquist"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Find dialog"
@@ -5524,7 +5524,7 @@ msgstr "Внешний модуль Audacity, предоставляющий с�
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
-msgstr "Редактор эффектов Найквиста"
+msgstr "Редактор эффектов Nyquist"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
@@ -5540,7 +5540,7 @@ msgstr "Без названия"
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
-msgstr "Редактор эффектов Найквиста - "
+msgstr "Редактор эффектов Nyquist - "
 
 #: modules/mod-nyq-bench/NyqBench.cpp
 msgid "New"
@@ -6287,7 +6287,7 @@ msgstr "%s, тестировщик"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, Nyquist plug-ins"
-msgstr "%s, плагины Найквиста"
+msgstr "%s, плагины Nyquist"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -6573,7 +6573,7 @@ msgstr "ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ"
 
 #: src/AboutDialog.cpp
 msgid "App update checking and error reporting require network access. These features are optional."
-msgstr "Проверка обновлений приложения и отчёты об ошибках требуют доступа к сети. Эти функции необязательны."
+msgstr "Проверка обновлений приложения и создание отчётов об ошибках требуют доступа к Сети. Эти функции необязательны."
 
 #. i18n-hint: %s will be replaced with "our Privacy Policy"
 #: src/AboutDialog.cpp src/prefs/ApplicationPrefs.cpp
@@ -7004,8 +7004,8 @@ msgid ""
 "Audacity detected this file to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
-"Audacity обнаружила, что этот файл %s уд/м.\n"
-"Включить просмотр музыки и задать темп проекта в %s?"
+"Audacity определила, что этот файл имеет темп %s уд/мин.\n"
+"Включить музыкальный вид и установить темп проекта на %s?"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7013,8 +7013,8 @@ msgid ""
 "Audacity detected one or more files to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
-"Audacity обнаружила, что один или несколько файлов имеют %s уд/м.\n"
-"Включить просмотр музыки и установить темп проекта в %s?"
+"Audacity определила, что один или несколько файлов имеют темп %s уд/мин.\n"
+"Включить музыкальный вид и установить темп проекта на %s?"
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
@@ -7932,7 +7932,7 @@ msgid ""
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
 "Аудиозапись не удалось проанализировать. Это может быть связано с растянутым или сдвинутым по высоте клипом..\n"
-"Попробуйте сбросить все растянутые клипы или микшировать и рендерить треки перед анализом"
+"Попробуйте вернуть все растянутые клипы в исходное состояние или смикшировать и срендерить треки перед анализом"
 
 #: src/FreqWindow.cpp
 #, c-format
@@ -9350,7 +9350,7 @@ msgstr "Мы настоятельно рекомендуем использов�
 
 #: src/SplashDialog.cpp
 msgid "You can help us get Audacity ready for release by joining our [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
-msgstr "Можно помочь подготовить выпуск Audacity, присоединившись к нашему [[https://www.audacityteam.org/community/|community]].<hr/><br/><br/>"
+msgstr "Можно помочь подготовить релиз Audacity, присоединившись к нашему [[https://www.audacityteam.org/community/|сообществу]].<hr/><br/><br/>"
 
 #. i18n-hint: %s is replaced with Audacity version
 #: src/SplashDialog.cpp
@@ -9360,16 +9360,16 @@ msgstr "Новое в Audacity %s"
 
 #: src/SplashDialog.cpp
 msgid "<p>In this release we added Beats & Measures, Time Stretching and more.<br/>"
-msgstr "<p>В этом выпуске мы добавили доли и такты, растяжку по времени и многое другое.<br/>"
+msgstr "<p>В этом релизе мы добавили доли и такты, растягивание во времени и многое другое.<br/>"
 
 #: src/SplashDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr "Ознайомтесь із [[%s|видео релиза]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog|changelog]], чтоб узнать больше!</p>"
+msgstr "Ознакомьтесь с [[%s|видео релиза]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog|список изменений]], чтоб узнать больше!</p>"
 
 #: src/SplashDialog.cpp
 msgid "How to get help"
-msgstr "Как получить справку"
+msgstr "Как обратиться за помощью"
 
 #: src/SplashDialog.cpp
 msgid "These are our support methods:"
@@ -9379,21 +9379,21 @@ msgstr "Есть несколько способов получить техпо
 #. link.
 #: src/SplashDialog.cpp
 msgid "[[help:Quick_Help|Quick Help]]"
-msgstr "[[help:Quick_Help|Краткая справка]]"
+msgstr "[[help:Quick_Help|Быстрая помощь]]"
 
 #. i18n-hint: Preserve '[[help:Main_Page|' as it's the name of a
 #. link.
 #: src/SplashDialog.cpp
 msgid " [[help:Main_Page|Manual]]"
-msgstr " [[help:Main_Page|Учебник]]"
+msgstr " [[help:Main_Page|Руководство]]"
 
 #: src/SplashDialog.cpp
 msgid "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
-msgstr "[[https://support.audacityteam.org/|Tutorials & How-tos]]"
+msgstr "[[https://support.audacityteam.org/|Обучающие видео и практические рекомендации]]"
 
 #: src/SplashDialog.cpp
 msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
-msgstr " [[http://forum.audacityteam.org/|Форум]] - задавайте вопросы онлайн."
+msgstr " [[http://forum.audacityteam.org/|Форум]] - задайте ваш вопрос онлайн."
 
 #: src/SplashDialog.cpp
 msgid "Welcome to Audacity!"
@@ -9401,7 +9401,7 @@ msgstr "Добро пожаловать в Audacity!"
 
 #: src/SplashDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
-msgstr "Больше при запуске это не показывать"
+msgstr "Больше не показывать это при запуске"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10280,7 +10280,7 @@ msgstr "Экспорт2"
 
 #: src/commands/ImportExportCommands.cpp
 msgid "Number of Channels:"
-msgstr "Количество каналов:"
+msgstr "Число каналов:"
 
 #: src/commands/ImportExportCommands.cpp src/effects/EffectUI.cpp
 msgid "Import..."
@@ -13811,32 +13811,32 @@ msgstr "Эффекты LV2 могут иметь графический инте
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
-msgstr "Эффекты Найквиста"
+msgstr "Эффекты Nyquist"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Audacity"
-msgstr "Обеспечивает поддержку для Audacity эффектов Найквиста"
+msgstr "Обеспечивает поддержку для Audacity эффектов Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "Применяется эффект Найквиста..."
+msgstr "Применяется эффект Nyquist..."
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Worker"
-msgstr "Панель Найквиста"
+msgstr "Панель Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Ill-formed Nyquist plug-in header"
-msgstr "Дефектный заголовок плагина Найквиста"
+msgstr "Дефектный заголовок плагина Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
-"Включить просмотр спектрограммы трека\n"
-"перед применением эффектов.'Спектра'"
+"Включите вид спектрограммы трека\n"
+"перед применением 'спектральных' эффектов."
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid ""
@@ -13859,7 +13859,7 @@ msgstr "Необходимо выделить область для обрабо
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist Error"
-msgstr "Ошибка в коде Найквиста"
+msgstr "Ошибка в коде Nyquist"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Debug Output: "
@@ -13872,12 +13872,12 @@ msgstr "Обработка завершена."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "Эффекты ';type tool' не могут возвращать аудио из Найквиста.\n"
+msgstr "Эффекты ';type tool' не могут возвращать аудио из Nyquist.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "Эффекты ';type tool' не могут возвращать метки из Найквиста.\n"
+msgstr "Эффекты ';type tool' не могут возвращать метки из Nyquist.\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -13891,42 +13891,42 @@ msgstr "плагин"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned a list."
-msgstr "Найквист вернул список."
+msgstr "Nyquist вернул список."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "Nyquist returned the value: %f"
-msgstr "Найквист вернул значение: %f"
+msgstr "Nyquist вернул значение: %f"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "Nyquist returned the value: %d"
-msgstr "Найквист вернул значение: %d"
+msgstr "Nyquist вернул значение: %d"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned too many audio channels.\n"
-msgstr "Найквист вернул слишком много аудиоканалов.\n"
+msgstr "Nyquist вернул слишком много аудиоканалов.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned one audio channel as an array.\n"
-msgstr "Найквист вернул один аудиоканал в виде массива.\n"
+msgstr "Nyquist вернул один аудиоканал в виде массива.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned an empty array.\n"
-msgstr "Найквист вернул пустой массив.\n"
+msgstr "Nyquist вернул пустой массив.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist returned nil audio.\n"
-msgstr "Найквист не вернул аудиоданные.\n"
+msgstr "Nyquist не вернул аудиоданные.\n"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]"
-msgstr "[Внимание: Найквист вернул недопустимую строку UTF-8, преобразованную здесь как Latin-1]"
+msgstr "[Внимание: Nyquist вернул недопустимую строку UTF-8, преобразованную здесь как Latin-1]"
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
 msgid "This version of Audacity does not support Nyquist plug-in version %ld"
-msgstr "Эта версия Audacity не поддерживает плагин Найквиста версии %ld"
+msgstr "Эта версия Audacity не поддерживает плагин Nyquist версии %ld"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Could not open file"
@@ -13974,7 +13974,7 @@ msgstr ""
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Enter Nyquist Command: "
-msgstr "Введите команду Найквиста: "
+msgstr "Введите команду Nyquist: "
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "&Load"
@@ -13983,7 +13983,7 @@ msgstr "З&агрузить"
 #. i18n-hint: Nyquist is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Nyquist scripts"
-msgstr "Скрипты Найквиста"
+msgstr "Скрипты Nyquist"
 
 #. i18n-hint: Lisp is the name of a programming language
 #: src/effects/nyquist/Nyquist.cpp
@@ -14590,7 +14590,7 @@ msgstr "Присоединено %.2f сек. начиная с t=%.2f"
 
 #: src/menus/EditMenus.cpp
 msgid "Join"
-msgstr "Присоединить"
+msgstr "Объединить"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -14665,11 +14665,11 @@ msgstr "Переместить на &новый трек и разделить"
 #. i18n-hint: (verb)
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "&Join"
-msgstr "Пр&исоединить"
+msgstr "Об&ъединить"
 
 #: src/menus/EditMenus.cpp src/menus/LabelMenus.cpp
 msgid "Detac&h at Silences"
-msgstr "Разъ&еденить по тишине"
+msgstr "Разъ&единить по тишине"
 
 #: src/menus/EditMenus.cpp
 msgid "Pre&ferences"
@@ -14746,7 +14746,7 @@ msgstr "Сохранить проект &как..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Backup Project..."
-msgstr "&Backup проекта..."
+msgstr "&Резервная копия проекта..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Export Audio..."
@@ -14754,11 +14754,11 @@ msgstr "Экспорт &аудио..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export Other"
-msgstr "Ещё экспорт..."
+msgstr "Экспорт - другое..."
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
-msgstr "&Меток..."
+msgstr "Экспорт &меток..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Audio..."
@@ -14835,11 +14835,11 @@ msgstr "Информация об аудио-устройствах"
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help..."
-msgstr "&Краткая справка..."
+msgstr "&Быстрая помощь..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual..."
-msgstr "&Справка..."
+msgstr "&Руководство..."
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -16160,11 +16160,11 @@ msgstr "Обновить  Audacity"
 #: src/prefs/ApplicationPrefs.cpp
 msgctxt "application preferences"
 msgid "&Check for updates"
-msgstr "П&роверить обновления"
+msgstr "П&роверять наличие обновлений"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr "Для проверки обновлений приложений требуется доступ к сети. В целях защиты вашей конфиденциальности Audacity не хранит личную информацию."
+msgstr "Для проверки обновлений приложения требуется доступ к Сети. В целях защиты вашей конфиденциальности Audacity не хранит личную информацию."
 
 #: src/prefs/BatchPrefs.cpp src/prefs/BatchPrefs.h
 msgid "Batch"
@@ -19324,12 +19324,12 @@ msgstr "Данные обновления повреждены."
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Error downloading update"
-msgstr "Ошибка получения обновления"
+msgstr "Ошибка скачивания обновления"
 
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr "Не удаётся открыть ссылку для загрузки Audacity."
+msgstr "Не удаётся открыть ссылку для скачивания Audacity."
 
 #: src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19338,7 +19338,7 @@ msgstr "Обновления Audacity"
 #: src/update/UpdateManager.cpp
 #, c-format
 msgid "Downloading %s"
-msgstr "Загрузкаg %s"
+msgstr "Загрузка %s"
 
 #. i18n-hint: Title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -19353,7 +19353,7 @@ msgstr "Чтобы быть в курсе событий, вы будете по
 #. i18n-hint: The second paragraph of app update notice dialog
 #: src/update/UpdateNoticeDialog.cpp
 msgid "In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access."
-msgstr "В целях защиты вашей конфиденциальности компания Audacity не собирает личную информацию. Однако для проверки обновлений приложения требуется доступ к сети."
+msgstr "В целях защиты вашей конфиденциальности компания Audacity не собирает личную информацию. Однако для проверки обновлений приложения требуется доступ к Сети."
 
 #. i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
@@ -20492,7 +20492,7 @@ msgstr ""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 msgid "Nyquist Plugin Installer"
-msgstr "Установщик плагинов Найквиста"
+msgstr "Установщик плагинов Nyquist"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -20638,7 +20638,7 @@ msgstr "+/- 1"
 
 #: plug-ins/rhythmtrack.ny
 msgid "Set 'Number of bars' to zero to enable the 'Rhythm track duration'."
-msgstr "Чтобы включить 'Длительность ритм-трека', установите 'Количество тактов' "
+msgstr "Чтобы включить 'Длительность ритм-трека', установите 'Количество тактов' равным нулю."
 
 #: plug-ins/rhythmtrack.ny
 msgid "Number of bars"
@@ -20731,7 +20731,7 @@ msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
 msgid "Decay (seconds)"
-msgstr "Задержка (секунд)"
+msgstr "Спад (секунд)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"

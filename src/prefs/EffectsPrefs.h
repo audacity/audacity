@@ -18,7 +18,9 @@
 #include "PrefsPanel.h"
 
 class ChoiceSetting;
+class PluginProvider;
 class ShuttleGui;
+class EffectsLocationPanel;
 
 #define EFFECTS_PREFS_PLUGIN_SYMBOL ComponentInterfaceSymbol{ XO("Effects") }
 
@@ -36,6 +38,8 @@ class EffectsPrefs final : public PrefsPanel
 
  private:
    void Populate();
+
+   std::vector<std::pair<PluginProvider*, EffectsLocationPanel*>> mLocations;
 };
 
 AUDACITY_DLL_API extern BoolSetting   SkipEffectsScanAtStartup;

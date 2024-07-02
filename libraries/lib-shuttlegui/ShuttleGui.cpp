@@ -836,7 +836,7 @@ wxListCtrl * ShuttleGuiBase::AddListControlReportMode(
    SetProportions( 1 );
    mpWind = pListCtrl = safenew wxListCtrl(GetParent(), miId,
       wxDefaultPosition, wxSize(230,120),//wxDefaultSize,
-      GetStyle( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES | wxSUNKEN_BORDER ));
+      GetStyle( wxLC_REPORT | wxLC_HRULES | wxLC_VRULES ));
 //   pListCtrl->SetMinSize( wxSize( 120,150 ));
    UpdateSizers();
 
@@ -967,8 +967,7 @@ wxScrolledWindow * ShuttleGuiBase::StartScroller(int iStyle)
       return wxDynamicCast(wxWindow::FindWindowById( miId, mpDlg), wxScrolledWindow);
 
    wxScrolledWindow * pScroller;
-   mpWind = pScroller = safenew wxScrolledWindow(GetParent(), miId, wxDefaultPosition, wxDefaultSize,
-      GetStyle( wxSUNKEN_BORDER ) );
+   mpWind = pScroller = safenew wxScrolledWindow(GetParent(), miId, wxDefaultPosition, wxDefaultSize);
    pScroller->SetScrollRate( 20,20 );
 
    // This fools NVDA into not saying "Panel" when the dialog gets focus

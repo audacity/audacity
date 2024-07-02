@@ -9,8 +9,10 @@ Rectangle {
     id: root
 
     property alias context: timelineContext
+    property alias ruler: timelineRuler
 
-    height: 76
+    signal clicked(var mouse)
+
     color: ui.theme.backgroundPrimaryColor
 
     //! NOTE This element must be the same width as the track wave visible area.
@@ -25,8 +27,8 @@ Rectangle {
 
     //! ~~~ TimelineContext ~~~
     //! NOTE See comment in TimelineContext (.h)
-    function onWheel(y) {
-        timelineContext.onWheel(y)
+    function onWheel(pixelDelta, angleDelta) {
+        return timelineContext.onWheel(pixelDelta, angleDelta)
     }
 
     function onSelection(x1, x2) {
@@ -37,18 +39,40 @@ Rectangle {
         timelineContext.resetSelection()
     }
 
+    TimelineContextMenuModel {
+        id: contextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function(itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     TimelineContext {
         id: timelineContext
     }
     // ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    StyledTextLabel {
+    TimelineRuler {
+        id: timelineRuler
         anchors.fill: parent
-        anchors.leftMargin: 16
-        text: "zoom: " + timelineContext.zoom
-              + ", frame start time: " + timelineContext.frameStartTime
-              + ", end time: " + timelineContext.frameEndTime
-              + ", root.width: " + root.width
+        context: timelineContext
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        onClicked: e => {
+                       if (e.button === Qt.LeftButton) {
+                           root.clicked(e)
+                       } else if (e.button === Qt.RightButton) {
+                           contextMenuModel.load()
+                           contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+                       }
+                   }
     }
 
     SeparatorLine { anchors.bottom: parent.bottom }

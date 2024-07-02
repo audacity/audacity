@@ -17,6 +17,7 @@ class PlaybackToolBarCustomiseItem : public muse::uicomponents::SelectableItemLi
     Q_PROPERTY(ItemType type READ type CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
     Q_PROPERTY(int icon READ icon NOTIFY iconChanged)
+    Q_PROPERTY(QColor iconColor READ iconColor WRITE setIconColor NOTIFY iconColorChanged)
     Q_PROPERTY(bool checked READ checked WRITE setChecked NOTIFY checkedChanged)
 
 public:
@@ -37,6 +38,9 @@ public:
     Q_INVOKABLE QString id() const;
     void setId(const QString& id);
 
+    QColor iconColor() const;
+    void setIconColor(const QColor& color);
+
 public slots:
     void setTitle(QString title);
     void setIcon(muse::ui::IconCode::Code icon);
@@ -47,12 +51,15 @@ signals:
     void iconChanged();
     void checkedChanged(bool checked);
 
+    void iconColorChanged();
+
 private:
 
     QString m_id;
     ItemType m_type = ItemType::UNDEFINED;
     QString m_title;
     muse::ui::IconCode::Code m_icon = muse::ui::IconCode::Code::NONE;
+    QColor m_iconColor;
     bool m_checked = false;
 };
 }

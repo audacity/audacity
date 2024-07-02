@@ -19,6 +19,7 @@
 
 #include "BasicUI.h"
 #include "CodeConversions.h"
+#include "ExportUtils.h"
 
 #include "OAuthService.h"
 
@@ -28,10 +29,11 @@
 
 namespace audacity::cloud::audiocom
 {
-LinkWithTokenDialog::LinkWithTokenDialog(wxWindow* parent)
+LinkWithTokenDialog::LinkWithTokenDialog(AudiocomTrace trace, wxWindow* parent)
     : wxDialogWrapper(
          parent, wxID_ANY, XO("Link account"), wxDefaultPosition, { 480, -1 },
          wxDEFAULT_DIALOG_STYLE)
+    , mAudiocomTrace(trace)
 {
    GetAuthorizationHandler().PushSuppressDialogs();
 
@@ -92,12 +94,10 @@ void LinkWithTokenDialog::OnContinue()
    wxWeakRef<LinkWithTokenDialog> weakDialog(this);
 
    GetOAuthService().HandleLinkURI(
-      audacity::ToUTF8(mToken->GetValue()),
-      [weakDialog](auto accessToken)
-      {
+      audacity::ToUTF8(mToken->GetValue()), mAudiocomTrace,
+      [weakDialog, trace = mAudiocomTrace](auto accessToken) {
          BasicUI::CallAfter(
-            [weakDialog, token = std::string(accessToken)]()
-            {
+            [weakDialog, token = std::string(accessToken), trace]() {
                if (!token.empty())
                {
                   if (weakDialog)
@@ -112,7 +112,7 @@ void LinkWithTokenDialog::OnContinue()
                   return;
                }
 
-               LinkFailedDialog errorDialog(weakDialog);
+               LinkFailedDialog errorDialog(weakDialog, trace);
 
                if (wxID_RETRY != errorDialog.ShowModal())
                {
@@ -138,7 +138,9 @@ namespace {
 // Define our extra menu item
 void OnLinkAccount(const CommandContext&)
 {
-   audacity::cloud::audiocom::LinkWithTokenDialog dialog;
+   audacity::cloud::audiocom::LinkWithTokenDialog dialog {
+      AudiocomTrace::LinkAudiocomAccountHelpMenu
+   };
    dialog.ShowModal();
 }
 

@@ -156,9 +156,8 @@ public:
    {
       // Experiment shows that this function can be reached while there is no
       // catch block above in wxWidgets.  So stop all exceptions here.
-      return GuardedCall<bool>([&] {
-         return ProjectFileManager::Get(*mProject).ImportAndArrange(filenames);
-      });
+      return GuardedCall<bool>(
+         [&] { return ProjectFileManager::Get(*mProject).Import(filenames); });
    }
 
 private:

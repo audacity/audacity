@@ -34,9 +34,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.h
-    # TODO AU4
-    #${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.cpp
-    #${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
@@ -64,10 +63,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.h
 
     # TODO AU4
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.cpp
@@ -78,8 +77,8 @@ set(MODULE_SRC
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.cpp
@@ -88,10 +87,10 @@ set(MODULE_SRC
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
     # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
 
@@ -113,7 +112,6 @@ set(MODULE_SRC
     #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
     #${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
     )
-
 
 set(MODULE_LINK
     muse::uicomponents

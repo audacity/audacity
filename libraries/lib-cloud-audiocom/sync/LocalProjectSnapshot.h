@@ -25,6 +25,7 @@
 #include "concurrency/CancellationContext.h"
 
 class AudacityProject;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
@@ -64,12 +65,14 @@ public:
 
    LocalProjectSnapshot(
       Tag, const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension, std::string name, UploadMode mode);
+      ProjectCloudExtension& extension, std::string name, UploadMode mode,
+      AudiocomTrace trace);
    ~LocalProjectSnapshot() override;
 
    static Future Create(
       const ServiceConfig& config, const OAuthService& oauthService,
-      ProjectCloudExtension& extension, std::string name, UploadMode mode);
+      ProjectCloudExtension& extension, std::string name, UploadMode mode,
+      AudiocomTrace trace);
 
    bool IsCompleted() const override;
 
@@ -103,6 +106,7 @@ private:
 
    const ServiceConfig& mServiceConfig;
    const OAuthService& mOAuthService;
+   const AudiocomTrace mAudiocomTrace;
 
    std::string mProjectName;
 

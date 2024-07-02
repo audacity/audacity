@@ -1,12 +1,20 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/Audacity/Playback/PlaybackToolBar.qml</file>
-        <file>qml/Audacity/Playback/internal/CustomiseControlPanel.qml</file>
         <file>qml/Audacity/Playback/internal/CustomiseView.qml</file>
         <file>qml/Audacity/Playback/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/Playback/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/Playback/qmldir</file>
         <file>qml/Audacity/Playback/internal/PlaybackLevel.qml</file>
-        <file>qml/Audacity/Playback/internal/VolumeSlider.qml</file>
+        <file>qml/Audacity/Playback/components/VolumePressureMeter.qml</file>
+        <file>qml/Audacity/Playback/components/VolumeSlider.qml</file>
+        <file>qml/Audacity/Playback/components/Timecode.qml</file>
+        <file>qml/Audacity/Playback/components/TimecodeField.qml</file>
+        <file>qml/Audacity/Playback/components/TimecodeStartEnd.qml</file>
+        <file>qml/Audacity/Playback/components/TimeSignature.qml</file>
+        <file>qml/Audacity/Playback/components/TimeSignaturePopup.qml</file>
+        <file>qml/Audacity/Playback/components/BPM.qml</file>
+        <file>qml/Audacity/Playback/components/ArrowButton.qml</file>
+        <file>qml/Audacity/Playback/components/ArrowMenuButton.qml</file>
     </qresource>
 </RCC>

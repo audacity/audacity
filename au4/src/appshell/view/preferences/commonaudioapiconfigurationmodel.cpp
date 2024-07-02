@@ -28,7 +28,7 @@
 #include "log.h"
 
 using namespace au::appshell;
-using namespace mu::audio;
+using namespace muse::audio;
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
     : QObject(parent)
@@ -37,36 +37,20 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
-    audioDriver()->availableOutputDevicesChanged().onNotify(this, [this]() {
-        emit deviceListChanged();
-    });
-
-    audioDriver()->outputDeviceChanged().onNotify(this, [this]() {
-        emit currentDeviceIdChanged();
-        emit bufferSizeChanged();
-    });
-
-    audioDriver()->outputDeviceBufferSizeChanged().onNotify(this, [this]() {
-        emit bufferSizeChanged();
-    });
+    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentDeviceIdChanged(); });
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){ emit deviceListChanged(); });
 }
 
 QString CommonAudioApiConfigurationModel::currentDeviceId() const
 {
-    return QString::fromStdString(audioDriver()->outputDevice());
+    return QString::fromStdString(audioDevicesProvider()->currentAudioOutputDevice());
 }
 
 QVariantList CommonAudioApiConfigurationModel::deviceList() const
 {
     QVariantList result;
-
-    AudioDeviceList devices = audioDriver()->availableOutputDevices();
-    for (const AudioDevice& device : devices) {
-        QVariantMap obj;
-        obj["value"] = QString::fromStdString(device.id);
-        obj["text"] = QString::fromStdString(device.name);
-
-        result << obj;
+    for (const auto& device : audioDevicesProvider()->audioOutputDevices()) {
+        result << QString::fromStdString(device);
     }
 
     return result;
@@ -74,29 +58,33 @@ QVariantList CommonAudioApiConfigurationModel::deviceList() const
 
 void CommonAudioApiConfigurationModel::deviceSelected(const QString& deviceId)
 {
-    audioConfiguration()->setAudioOutputDeviceId(deviceId.toStdString());
+    if (deviceId == currentDeviceId()) {
+        return;
+    }
+    audioDevicesProvider()->setAudioOutputDevice(deviceId.toStdString());
 }
 
 unsigned int CommonAudioApiConfigurationModel::bufferSize() const
 {
-    return audioDriver()->outputDeviceBufferSize();
+//     // return audioDriver()->outputDeviceBufferSize();
+    return 1024;
 }
 
 QList<unsigned int> CommonAudioApiConfigurationModel::bufferSizeList() const
 {
     QList<unsigned int> result;
-    std::vector<unsigned int> bufferSizes = audioDriver()->availableOutputDeviceBufferSizes();
+//     std::vector<unsigned int> bufferSizes = audioDriver()->availableOutputDeviceBufferSizes();
 
-    for (unsigned int bufferSize : bufferSizes) {
-        result << bufferSize;
-    }
+//     for (unsigned int bufferSize : bufferSizes) {
+//         result << bufferSize;
+//     }
 
-    std::sort(result.begin(), result.end());
+//     std::sort(result.begin(), result.end());
 
     return result;
 }
 
 void CommonAudioApiConfigurationModel::bufferSizeSelected(const QString& bufferSizeStr)
 {
-    audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
+// audioConfiguration()->setDriverBufferSize(bufferSizeStr.toInt());
 }

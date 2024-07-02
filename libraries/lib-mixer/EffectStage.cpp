@@ -14,37 +14,36 @@
 #include "EffectStage.h"
 #include "AudacityException.h"
 #include "AudioGraphBuffers.h"
-#include "WideSampleSequence.h"
 #include <cassert>
 
 namespace {
 std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
-   const EffectStage::Factory &factory,
-   EffectSettings &settings, double sampleRate,
-   const WideSampleSequence &sequence,
-   std::optional<sampleCount> genLength, int channel)
+   const EffectStage::Factory& factory, EffectSettings& settings,
+   double sampleRate, std::optional<sampleCount> genLength, int channel,
+   int nInputChannels)
 {
    std::vector<std::shared_ptr<EffectInstance>> instances;
-   // Make as many instances as needed for the channels of the track, which
+   // Make as many instances as needed for the channels of the source, which
    // depends on how the instances report how many channels they accept
-   const auto nChannels = (channel < 0) ? sequence.NChannels() : 1;
-   for (size_t ii = 0; ii < nChannels;) {
+   const auto nChannels = (channel < 0) ? nInputChannels : 1;
+   for (size_t ii = 0; ii < nChannels;)
+   {
       auto pInstance = factory();
       if (!pInstance)
          // A constructor that can't satisfy its post should throw instead
          throw std::exception{};
       auto count = pInstance->GetAudioInCount();
       ChannelName map[3]{ ChannelNameEOL, ChannelNameEOL, ChannelNameEOL };
-      MakeChannelMap(sequence, channel, map);
+      MakeChannelMap(nInputChannels, channel, map);
       // Give the plugin a chance to initialize
       if (!pInstance->ProcessInitialize(settings, sampleRate, map))
          throw std::exception{};
       instances.resize(ii);
-   
+
       // Beware generators with zero in count
       if (genLength)
          count = nChannels;
-   
+
       instances.push_back(move(pInstance));
 
       // Advance ii
@@ -57,17 +56,18 @@ std::vector<std::shared_ptr<EffectInstance>> MakeInstances(
 }
 }
 
-EffectStage::EffectStage(CreateToken, int channel,
-   Source &upstream, Buffers &inBuffers,
-   const Factory &factory, EffectSettings &settings,
-   double sampleRate, std::optional<sampleCount> genLength,
-   const WideSampleSequence &sequence
-)  : mUpstream{ upstream }, mInBuffers{ inBuffers }
-   , mInstances{ MakeInstances(factory, settings, sampleRate, sequence,
-      genLength, channel) }
-   , mSettings{ settings }, mSampleRate{ sampleRate }
-   , mIsProcessor{ !genLength.has_value() }
-   , mDelayRemaining{ genLength ? *genLength : sampleCount::max() }
+EffectStage::EffectStage(
+   CreateToken, int channel, int nInputChannels, Source& upstream,
+   Buffers& inBuffers, const Factory& factory, EffectSettings& settings,
+   double sampleRate, std::optional<sampleCount> genLength)
+    : mUpstream { upstream }
+    , mInBuffers { inBuffers }
+    , mInstances { MakeInstances(
+         factory, settings, sampleRate, genLength, channel, nInputChannels) }
+    , mSettings { settings }
+    , mSampleRate { sampleRate }
+    , mIsProcessor { !genLength.has_value() }
+    , mDelayRemaining { genLength ? *genLength : sampleCount::max() }
 {
    assert(upstream.AcceptsBlockSize(inBuffers.BlockSize()));
    assert(this->AcceptsBlockSize(inBuffers.BlockSize()));
@@ -76,17 +76,15 @@ EffectStage::EffectStage(CreateToken, int channel,
    mInBuffers.Rewind();
 }
 
-auto EffectStage::Create(int channel,
-   Source &upstream, Buffers &inBuffers,
-   const Factory &factory, EffectSettings &settings,
-   double sampleRate, std::optional<sampleCount> genLength,
-   const WideSampleSequence &sequence
-) -> std::unique_ptr<EffectStage>
+auto EffectStage::Create(
+   int channel, int nInputChannels, Source& upstream, Buffers& inBuffers,
+   const Factory& factory, EffectSettings& settings, double sampleRate,
+   std::optional<sampleCount> genLength) -> std::unique_ptr<EffectStage>
 {
    try {
-      return std::make_unique<EffectStage>(CreateToken{}, channel,
-         upstream, inBuffers, factory, settings, sampleRate, genLength,
-         sequence);
+      return std::make_unique<EffectStage>(
+         CreateToken {}, channel, nInputChannels, upstream, inBuffers, factory,
+         settings, sampleRate, genLength);
    }
    catch (const std::exception &) {
       return nullptr;
@@ -369,10 +367,8 @@ bool EffectStage::Release()
    return true;
 }
 
-unsigned MakeChannelMap(
-   const WideSampleSequence &sequence, int channel, ChannelName map[3])
+unsigned MakeChannelMap(int nChannels, int channel, ChannelName map[3])
 {
-   const auto nChannels = sequence.NChannels();
    assert(channel < static_cast<int>(nChannels)); // precondition
 
    size_t index = 0;

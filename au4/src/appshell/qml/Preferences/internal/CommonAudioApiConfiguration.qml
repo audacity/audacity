@@ -23,7 +23,7 @@ import QtQuick 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
-import MuseScore.Preferences 1.0
+import Audacity.Preferences 1.0
 
 Item {
     id: root
@@ -50,7 +50,7 @@ Item {
         spacing: 12
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Audio device:")
+            title: qsTrc("appshell/preferences", "Playback device:")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentDeviceId)
@@ -65,22 +65,22 @@ Item {
             }
         }
 
-        ComboBoxWithTitle {
-            id: bufferSize
+        // ComboBoxWithTitle {
+        //     id: bufferSize
 
-            title: qsTrc("appshell", "Buffer size:")
-            columnWidth: root.columnWidth
+        //     title: qsTrc("appshell", "Buffer size:")
+        //     columnWidth: root.columnWidth
 
-            currentIndex: indexOfValue(apiModel.bufferSize)
-            model: apiModel.bufferSizeList
+        //     currentIndex: indexOfValue(apiModel.bufferSize)
+        //     model: apiModel.bufferSizeList
 
-            navigation.name: "BufferSizeBox"
-            navigation.panel: root.navigation
-            navigation.row: root.navigationOrderStart + 1
+        //     navigation.name: "BufferSizeBox"
+        //     navigation.panel: root.navigation
+        //     navigation.row: root.navigationOrderStart + 1
 
-            onValueEdited: function(newIndex, newValue) {
-                apiModel.bufferSizeSelected(newValue)
-            }
-        }
+        //     onValueEdited: function(newIndex, newValue) {
+        //         apiModel.bufferSizeSelected(newValue)
+        //     }
+        // }
     }
 }

@@ -12,6 +12,8 @@
 #include "modularity/ioc.h"
 #include "ui/iuiconfiguration.h"
 #include "ui/iuiactionsregister.h"
+#include "playback/iplaybackconfiguration.h"
+#include "record/irecordconfiguration.h"
 
 class QItemSelectionModel;
 
@@ -28,6 +30,8 @@ class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemL
 
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
+    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
+    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
     Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
     Q_PROPERTY(bool isAddSeparatorAvailable READ isAddSeparatorAvailable NOTIFY isAddSeparatorAvailableChanged)
@@ -64,6 +68,8 @@ private:
 
     PlaybackToolBarCustomiseItem* makeItem(const muse::ui::UiAction& action, bool checked);
     PlaybackToolBarCustomiseItem* makeSeparatorItem();
+
+    QColor iconColor(const muse::ui::UiAction& action) const;
 
     void saveActions();
 

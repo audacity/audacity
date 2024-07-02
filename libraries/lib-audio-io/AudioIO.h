@@ -62,6 +62,7 @@ struct AudioIOEvent {
       PLAYBACK,
       CAPTURE,
       MONITOR,
+      PAUSE,
    } type;
    bool on;
 };
@@ -169,7 +170,7 @@ public:
    std::shared_ptr< AudioIOListener > GetListener() const
       { return mListener.lock(); }
    void SetListener( const std::shared_ptr< AudioIOListener > &listener);
-   
+
    // Part of the callback
    int CallbackDoSeek();
 
@@ -182,36 +183,20 @@ public:
    // Helpers to determine if sequences have already been faded out.
    unsigned  CountSoloingSequences();
 
-   using OldChannelGains = std::array<float, 2>;
    bool SequenceShouldBeSilent(const PlayableSequence &ps);
-   //! Returns true when playback buffer data from both channels is discardable
-   bool SequenceHasBeenFadedOut(const OldChannelGains &gains);
-   bool AllSequencesAlreadySilent();
 
    void CheckSoundActivatedRecordingLevel(
       float *inputSamples,
       unsigned long framesPerBuffer
    );
 
-   /*!
-    @param[in,out] channelGain
-    */
-   void AddToOutputChannel( unsigned int chan, // index into gains
-      float * outputMeterFloats,
-      float * outputFloats,
-      const float * tempBuf,
-      bool drop,
-      unsigned long len,
-      const PlayableSequence &ps,
-      float &channelGain
-   );
    bool FillOutputBuffers(
-      float *outputBuffer,
+      float *outputFloats,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
    );
    void DrainInputBuffers(
-      constSamplePtr inputBuffer, 
+      constSamplePtr inputBuffer,
       unsigned long framesPerBuffer,
       const PaStreamCallbackFlags statusFlags,
       float * tempFloats
@@ -220,7 +205,7 @@ public:
       unsigned long framesPerBuffer
    );
    void DoPlaythrough(
-      constSamplePtr inputBuffer, 
+      constSamplePtr inputBuffer,
       float *outputBuffer,
       unsigned long framesPerBuffer,
       float *outputMeterFloats
@@ -271,12 +256,18 @@ public:
    using RingBuffers = std::vector<std::unique_ptr<RingBuffer>>;
    RingBuffers mCaptureBuffers;
    RecordableSequences mCaptureSequences;
+   //!Buffers that hold outcome of transformations applied to each individual sample source.
+   //!Number of buffers equals to the sum of number all source channels.
+   std::vector<std::vector<float>> mProcessingBuffers;
+   //!These buffers are used to mix and process the result of processed source channels.
+   //!Number of buffers equals to number of output channels.
+   std::vector<std::vector<float>> mMasterBuffers;
    /*! Read by worker threads but unchanging during playback */
    RingBuffers mPlaybackBuffers;
    ConstPlayableSequences      mPlaybackSequences;
    // Old gain is used in playback in linearly interpolating
    // the gain.
-   std::vector<OldChannelGains> mOldChannelGains;
+   float mOldPlaybackGain;
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
@@ -318,7 +309,7 @@ public:
    std::atomic<bool>   mAudioThreadShouldCallSequenceBufferExchangeOnce;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopRunning;
    std::atomic<bool>   mAudioThreadSequenceBufferExchangeLoopActive;
-      
+
    std::atomic<Acknowledge>  mAudioThreadAcknowledge;
 
    // Async start/stop + wait of AudioThread processing.
@@ -490,7 +481,7 @@ public:
    void SeekStream(double seconds) { mSeek = seconds; }
 
    using PostRecordingAction = std::function<void()>;
-   
+
    //! Enqueue action for main thread idle time, not before the end of any recording in progress
    /*! This may be called from non-main threads */
    void CallAfterRecording(PostRecordingAction action);
@@ -503,7 +494,7 @@ public:
    { return mOwningProject.lock(); }
 
    /** \brief Pause and un-pause playback and recording */
-   void SetPaused(bool state);
+   void SetPaused(bool state, bool publish = false);
 
    /* Mixer services are always available.  If no stream is running, these
     * methods use whatever device is specified by the preferences.  If a
@@ -618,8 +609,7 @@ private:
 
    //! First part of SequenceBufferExchange
    void FillPlayBuffers();
-   void TransformPlayBuffers(
-      std::optional<RealtimeEffects::ProcessingScope> &scope);
+
    bool ProcessPlaybackSlices(
       std::optional<RealtimeEffects::ProcessingScope> &pScope,
       size_t available);

@@ -40,10 +40,6 @@ class ToolDock;
 
 class ToolBarResizer;
 
-#ifdef __WXMAC__
-#define USE_AQUA_THEME 1
-#endif
-
 ////////////////////////////////////////////////////////////
 /// class ToolBar
 ////////////////////////////////////////////////////////////
@@ -53,10 +49,13 @@ class ToolBarResizer;
 //
 DECLARE_EXPORTED_EVENT_TYPE(AUDACITY_DLL_API, EVT_TOOLBAR_UPDATED, -1);
 
-//
-// Height of a single line toolbar
-//
-#define toolbarSingle 27
+/// Height of a single line toolbar
+constexpr static auto toolbarSingle { 31 };
+/// Preferred inner toolbar margin 
+constexpr static auto toolbarMargin { 5 };
+/// Preferred spacing between inner toolbar elements
+constexpr static auto toolbarSpacing { 2 };
+//constexpr static auto toolbarGap {  }
 
 //
 // Size of border around toolbars

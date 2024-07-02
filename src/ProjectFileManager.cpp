@@ -192,31 +192,38 @@ auto ProjectFileManager::ReadProjectFile(
       // Do this before FixTracks might delete zero-length clips!
       mLastSavedTracks = TrackList::Create( nullptr );
       WaveTrack *leader{};
-      for (auto pTrack : tracks.Any<WaveTrack>()) {
-         // A rare place where TrackList::Channels remains necessary, to visit
-         // the right channels of stereo tracks not yet "zipped", otherwise
-         // later, CloseLock() will be missed for some sample blocks and
-         // corrupt the project
-         for (const auto pChannel : TrackList::Channels(pTrack)) {
-            auto left = leader;
-            auto newTrack =
-               pChannel->Duplicate(Track::DuplicateOptions{}.Backup());
-            leader = left
-               ? nullptr // now visiting the right channel
-               : (pChannel->GetLinkType() == Track::LinkType::None)
-                  ? nullptr // now visiting a mono channel
-                  : static_cast<WaveTrack*>(newTrack.get())
-                    // now visiting a left channel
-            ;
-            mLastSavedTracks->Add(newTrack);
-            if (left)
-               // Zip clips allowing misalignment -- this may be a legacy
-               // project.  This duplicate track will NOT be used for normal
-               // editing, but only later to visit all the sample blocks that
-               // existed at last save time.
-               left->ZipClips(false);
-         }
-      }
+      tracks.Any().Visit(
+         [&](WaveTrack& track) {
+            // A rare place where TrackList::Channels remains necessary, to
+            // visit the right channels of stereo tracks not yet "zipped",
+            // otherwise later, CloseLock() will be missed for some sample
+            // blocks and corrupt the project
+            for (const auto pChannel : TrackList::Channels(&track))
+            {
+               auto left = leader;
+               auto newTrack =
+                  pChannel->Duplicate(Track::DuplicateOptions {}.Backup());
+               leader = left ? nullptr // now visiting the right channel
+                        :
+                        (pChannel->GetLinkType() == Track::LinkType::None) ?
+                               nullptr // now visiting a mono channel
+                               :
+                               static_cast<WaveTrack*>(newTrack.get())
+                  // now visiting a left channel
+                  ;
+               mLastSavedTracks->Add(newTrack);
+               if (left)
+                  // Zip clips allowing misalignment -- this may be a legacy
+                  // project.  This duplicate track will NOT be used for normal
+                  // editing, but only later to visit all the sample blocks that
+                  // existed at last save time.
+                  left->ZipClips(false);
+            }
+         },
+         [this](Track& track) {
+            mLastSavedTracks->Add(
+               track.Duplicate(Track::DuplicateOptions {}.Backup()));
+         });
 
       FixTracks(
          tracks,
@@ -346,25 +353,6 @@ bool ProjectFileManager::DoSave(const FilePath & fileName, const bool fromSaveAs
       if (TempDirectory::FATFilesystemDenied(fileName, XO("Projects cannot be saved to FAT drives.")))
       {
          return false;
-      }
-
-      auto &tracks = TrackList::Get( proj );
-      if (tracks.empty())
-      {
-         if (UndoManager::Get( proj ).UnsavedChanges() &&
-               settings.EmptyCanBeDirty())
-         {
-            int result = AudacityMessageBox(
-               XO(
-   "Your project is now empty.\nIf saved, the project will have no tracks.\n\nTo save any previously open tracks:\nClick 'No', Edit > Undo until all tracks\nare open, then File > Save Project.\n\nSave anyway?"),
-               XO("Warning - Empty Project"),
-               wxYES_NO | wxICON_QUESTION,
-               &window);
-            if (result == wxNO)
-            {
-               return false;
-            }
-         }
       }
 
       wxULongLong fileSize = wxFileName::GetSize(projectFileIO.GetFileName());
@@ -504,13 +492,6 @@ bool ProjectFileManager::SaveAs(bool allowOverwrite /* = false */)
 
    TranslatableString title = XO("%sSave Project \"%s\" As...")
       .Format( Restorer.sProjNumber, Restorer.sProjName );
-   TranslatableString message = XO("\
-'Save Project' is for an Audacity project, not an audio file.\n\
-For an audio file that will open in other apps, use 'Export'.\n");
-
-   if (ShowWarningDialog(&window, wxT("FirstProjectSave"), message, true) != wxID_OK) {
-      return false;
-   }
 
    bool bPrompt = (project.mBatchMode == 0) || (projectFileIO.GetFileName().empty());
    FilePath fName;
@@ -1362,16 +1343,18 @@ private:
 
 bool ProjectFileManager::Import(const FilePath& fileName, bool addToHistory)
 {
-   return Import(std::vector<FilePath> { fileName }, addToHistory);
+   wxArrayString fileNames;
+   fileNames.Add(fileName);
+   return Import(std::move(fileNames), addToHistory);
 }
 
-bool ProjectFileManager::ImportAndArrange(wxArrayString fileNames)
+bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
 {
    fileNames.Sort(FileNames::CompareNoCase);
-   if (!ProjectFileManager::Get(mProject).Import(
-          std::vector<wxString> { fileNames.begin(), fileNames.end() }))
+   if (!ProjectFileManager::Get(mProject).ImportAndRunTempoDetection(
+          std::vector<wxString> { fileNames.begin(), fileNames.end() },
+          addToHistory))
       return false;
-   auto& viewPort = Viewport::Get(mProject);
    // Last track in the project is the one that was just added. Use it for
    // focus, selection, etc.
    Track* lastTrack = nullptr;
@@ -1380,12 +1363,19 @@ bool ProjectFileManager::ImportAndArrange(wxArrayString fileNames)
    if(range.empty())
       return false;
    lastTrack = *(range.rbegin());
-   TrackFocus::Get(mProject).Set(lastTrack, true);
-   viewPort.ZoomFitHorizontally();
-   viewPort.ShowTrack(*lastTrack);
-   viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
-   ViewInfo::Get(mProject).selectedRegion.setTimes(
-      lastTrack->GetStartTime(), lastTrack->GetEndTime());
+   BasicUI::CallAfter([wTrack = lastTrack->weak_from_this(), wProject = mProject.weak_from_this()] {
+      const auto project = wProject.lock();
+      const auto track = wTrack.lock();
+      if (!project || !track)
+         return;
+      auto& viewPort = Viewport::Get(*project);
+      TrackFocus::Get(*project).Set(track.get(), true);
+      viewPort.ZoomFitHorizontally();
+      viewPort.ShowTrack(*track);
+      viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
+      ViewInfo::Get(*project).selectedRegion.setTimes(
+         track->GetStartTime(), track->GetEndTime());
+   });
    return true;
 }
 
@@ -1427,7 +1417,7 @@ std::vector<std::shared_ptr<MIR::AnalyzedAudioClip>> RunTempoDetection(
 }
 } // namespace
 
-bool ProjectFileManager::Import(
+bool ProjectFileManager::ImportAndRunTempoDetection(
    const std::vector<FilePath>& fileNames, bool addToHistory)
 {
    const auto projectWasEmpty =
@@ -1436,7 +1426,7 @@ bool ProjectFileManager::Import(
    const auto success = std::all_of(
       fileNames.begin(), fileNames.end(), [&](const FilePath& fileName) {
          std::shared_ptr<ClipMirAudioReader> resultingReader;
-         const auto success = Import(fileName, addToHistory, resultingReader);
+         const auto success = DoImport(fileName, addToHistory, resultingReader);
          if (success && resultingReader)
             resultingReaders.push_back(std::move(resultingReader));
          return success;
@@ -1458,7 +1448,7 @@ bool ProjectFileManager::Import(
 }
 
 // If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
-bool ProjectFileManager::Import(
+bool ProjectFileManager::DoImport(
    const FilePath& fileName, bool addToHistory,
    std::shared_ptr<ClipMirAudioReader>& resultingReader)
 {
@@ -1547,7 +1537,10 @@ bool ProjectFileManager::Import(
 
       if (newTracks.size() == 1)
       {
-         if (const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get()))
+         const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get());
+         // Also check that the track has a clip, as protection against empty
+         // file import.
+         if (waveTrack && !waveTrack->GetClipInterfaces().empty())
             resultingReader.reset(new ClipMirAudioReader {
                std::move(acidTags), fileName.ToStdString(),
                *waveTrack });

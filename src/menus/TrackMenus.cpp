@@ -1298,7 +1298,7 @@ auto ExtraTrackMenu()
       Command( wxT("TrackSolo"), XXO("&Solo/Unsolo Focused Track"),
          OnTrackSolo,
          TracksExistFlag() | TrackPanelHasFocus(), wxT("Shift+S") ),
-      Command( wxT("TrackClose"), XXO("&Close Focused Track"),
+      Command( wxT("TrackClose"), XXO("Delete Fo&cused Track"),
          OnTrackClose,
          AudioIONotBusyFlag() | TrackPanelHasFocus() | TracksExistFlag(),
          wxT("Shift+C") ),

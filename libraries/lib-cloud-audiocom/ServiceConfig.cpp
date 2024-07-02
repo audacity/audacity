@@ -9,6 +9,7 @@
 
 **********************************************************************/
 #include "ServiceConfig.h"
+#include "ExportUtils.h"
 #include "Languages.h"
 
 #include <cassert>
@@ -24,6 +25,9 @@ namespace audacity::cloud::audiocom
 {
 namespace
 {
+#define MTM_CAMPAIGN \
+   "mtm_campaign=Audacity&mtm_source=Audacity-{version_number}&mtm_content={button_name}"
+
 StringSetting audioComApiEndpoint { L"/CloudServices/AudioCom/ApiEndpoint",
                                     L"https://api.audio.com" };
 
@@ -42,12 +46,12 @@ StringSetting audioComOAuthRedirectURL {
 
 StringSetting audioComOAuthLoginPage {
    L"/CloudServices/AudioCom/OAuthLoginPage",
-   L"https://audio.com/audacity/link?clientId={auth_client_id}"
+   L"https://audio.com/audacity/link?clientId={auth_client_id}&" MTM_CAMPAIGN
 };
 
 StringSetting audioComFinishUploadPage {
    L"/CloudServices/AudioCom/FinishUploadPage",
-   L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}"
+   L"https://audio.com/audacity/upload?audioId={audio_id}&token={auth_token}&clientId={auth_client_id}&" MTM_CAMPAIGN
 };
 
 StringSetting audioComFrontendUrl { L"/CloudServices/AudioCom/FrontendURL",
@@ -80,6 +84,39 @@ std::string Substitute(
    return std::move(pattern);
 }
 
+std::string GetButtonName(AudiocomTrace trace)
+{
+   switch (trace)
+   {
+   case AudiocomTrace::ignore:
+      return "ignore";
+   case AudiocomTrace::ShareAudioButton:
+      return "Share_Audio_Button";
+   case AudiocomTrace::ShareAudioMenu:
+      return "Share_Audio_Menu";
+   case AudiocomTrace::ShareAudioExportMenu:
+      return "Share_Audio_Export_Menu";
+   case AudiocomTrace::ShareAudioExportExtraMenu:
+      return "Share_Audio_Export_Extra_Menu";
+   case AudiocomTrace::SaveToCloudMenu:
+      return "Save_to_Cloud_Menu";
+   case AudiocomTrace::SaveProjectSaveToCloudMenu:
+      return "Save_Project_Save_to_Cloud_Menu";
+   case AudiocomTrace::PrefsPanel:
+      return "Prefs_Panel";
+   case AudiocomTrace::ProjectOpenedAndUploadResumed:
+      return "Project_Opened_And_Upload_Resumed";
+   case AudiocomTrace::UpdateCloudAudioPreviewMenu:
+      return "Update_Cloud_Audio_Preview_Menu";
+   case AudiocomTrace::LinkAudiocomAccountHelpMenu:
+      return "Link_Audiocom_Account_Help_Menu";
+   case AudiocomTrace::OpenFromCloudMenu:
+      return "Open_From_Cloud_Menu";
+   }
+
+   assert(false);
+   return {};
+}
 } // namespace
 
 ServiceConfig::ServiceConfig()
@@ -99,10 +136,13 @@ std::string ServiceConfig::GetAPIEndpoint() const
    return mApiEndpoint;
 }
 
-std::string ServiceConfig::GetOAuthLoginPage() const
+std::string ServiceConfig::GetOAuthLoginPage(AudiocomTrace trace) const
 {
    return Substitute(
-      mOAuthLoginPage, { { "auth_client_id", GetOAuthClientID() } });
+      mOAuthLoginPage,
+      { { "auth_client_id", GetOAuthClientID() },
+        { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+        { "button_name", GetButtonName(trace) } });
 }
 
 std::string ServiceConfig::GetOAuthClientID() const
@@ -126,22 +166,28 @@ std::string ServiceConfig::GetAPIUrl(std::string_view apiURI) const
 }
 
 std::string ServiceConfig::GetFinishUploadPage(
-   std::string_view audioID, std::string_view token) const
+   std::string_view audioID, std::string_view token, AudiocomTrace trace) const
 {
    return Substitute(
-      mFinishUploadPage, { { "audio_id", audioID },
-                           { "auth_token", token },
-                           { "auth_client_id", mOAuthClientID } });
+      mFinishUploadPage,
+      { { "audio_id", audioID },
+        { "auth_token", token },
+        { "auth_client_id", mOAuthClientID },
+        { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+        { "button_name", GetButtonName(trace) } });
 }
 
 std::string ServiceConfig::GetAudioURL(
-   std::string_view userSlug, std::string_view audioSlug) const
+   std::string_view userSlug, std::string_view audioSlug,
+   AudiocomTrace trace) const
 {
    return Substitute(
-      "{frontend_url}/{user_slug}/audio/{audio_slug}/edit",
+      "{frontend_url}/{user_slug}/audio/{audio_slug}/edit?" MTM_CAMPAIGN,
       { { "frontend_url", mFrontendURL },
         { "user_slug", userSlug },
-        { "audio_slug", audioSlug } });
+        { "audio_slug", audioSlug },
+        { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+        { "button_name", GetButtonName(trace) } });
 }
 
 std::chrono::milliseconds ServiceConfig::GetProgressCallbackTimeout() const
@@ -297,24 +343,30 @@ std::string ServiceConfig::GetNetworkStatsUrl(std::string_view projectId) const
 }
 
 std::string ServiceConfig::GetProjectPageUrl(
-   std::string_view userId, std::string_view projectId) const
+   std::string_view userId, std::string_view projectId,
+   AudiocomTrace trace) const
 {
    return Substitute(
-      "{frontend_url}/{user_slug}/projects/{project_id}",
+      "{frontend_url}/{user_slug}/projects/{project_id}?" MTM_CAMPAIGN,
       {
          { "frontend_url", mFrontendURL },
          { "user_slug", userId },
          { "project_id", projectId },
+         { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+         { "button_name", GetButtonName(trace) },
       });
 }
 
-std::string ServiceConfig::GetProjectsPageUrl(std::string_view userId) const
+std::string ServiceConfig::GetProjectsPageUrl(
+   std::string_view userId, AudiocomTrace trace) const
 {
    return Substitute(
-      "{frontend_url}/{user_slug}/projects",
+      "{frontend_url}/{user_slug}/projects?" MTM_CAMPAIGN,
       {
          { "frontend_url", mFrontendURL },
          { "user_slug", userId },
+         { "version_number", audacity::ToUTF8(AUDACITY_VERSION_STRING) },
+         { "button_name", GetButtonName(trace) },
       });
 }
 

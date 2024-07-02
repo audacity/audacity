@@ -1,56 +1,21 @@
-/*
-* Audacity: A Digital Audio Editor
-*/
-#ifndef AU_AU3WRAP_AU3PLAYBACK_H
-#define AU_AU3WRAP_AU3PLAYBACK_H
+#pragma once
 
-#include "async/asyncable.h"
-
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "context/iglobalcontext.h"
-
-#include "iau3playback.h"
-#include "iau3audiooutput.h"
-
-class AudacityProject;
-class TrackList;
-struct TransportSequences;
+#include "playback/iplayback.h"
 
 namespace au::au3 {
-class Au3Playback : public IAu3Playback, public muse::async::Asyncable
+class Au3Player;
+class Au3AudioOutput;
+class Au3Playback : public playback::IPlayback
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-
 public:
-    void init();
+    Au3Playback() = default;
 
-    void play() override;
-    void seek(const audio::msecs_t newPositionMsecs) override;
-    void stop() override;
-    void pause() override;
-    void resume() override;
+    std::shared_ptr<playback::IPlayer> player(audio::TrackSequenceId id = -1) const override;
 
-    void setDuration(const audio::msecs_t durationMsec) override;
-    muse::async::Promise<bool> setLoop(const audio::msecs_t fromMsec, const audio::msecs_t toMsec) override;
-    void resetLoop() override;
-
-    muse::async::Channel<audio::msecs_t> playbackPositionMsecs() const override;
-    muse::async::Channel<audio::PlaybackStatus> playbackStatusChanged() const override;
-
-    IAu3AudioOutputPtr audioOutput() const override;
+    std::shared_ptr<playback::IAudioOutput> audioOutput() const override;
 
 private:
-    AudacityProject& projectRef() const;
-
-    bool canStopAudioStream() const;
-    TransportSequences makeTransportTracks(TrackList& trackList, bool selectedOnly, bool nonWaveToo);
-
-    mutable muse::async::Channel<audio::msecs_t> m_playbackPositionMsecsChanged;
-    mutable muse::async::Channel<audio::PlaybackStatus> m_playbackStatusChanged;
-
-    IAu3AudioOutputPtr m_audioOutputPtr;
+    mutable std::shared_ptr<Au3Player> m_player;
+    mutable std::shared_ptr<Au3AudioOutput> m_audioOutput;
 };
 }
-
-#endif // AU_AU3WRAP_AU3PLAYBACK_H

@@ -28,6 +28,7 @@
 #include "ProjectSerializer.h"
 
 #include "BasicUI.h"
+#include "ExportUtils.h"
 
 #include "MemoryX.h"
 
@@ -281,7 +282,7 @@ void ProjectCloudExtension::OnBlockUploaded(
 
 void ProjectCloudExtension::OnSyncCompleted(
    const ProjectUploadOperation* uploadOperation,
-   std::optional<CloudSyncError> error)
+   std::optional<CloudSyncError> error, AudiocomTrace trace)
 {
    auto lock = std::lock_guard { mUploadQueueMutex };
 
@@ -337,14 +338,18 @@ void ProjectCloudExtension::OnSyncCompleted(
    MarkProjectSynced(!error.has_value());
 
    Publish(
-      { error.has_value() ? ProjectSyncStatus::Failed :
+      { trace,
+        error.has_value() ? ProjectSyncStatus::Failed :
                             ProjectSyncStatus::Synced,
         {},
         error },
       false);
 
    if (!IsCloudProject())
-      Publish({ ProjectSyncStatus::Local }, false);
+      Publish(
+         { AudiocomTrace::ignore, // All right
+           ProjectSyncStatus::Local },
+         false);
 }
 
 void ProjectCloudExtension::CancelSync()
@@ -437,7 +442,10 @@ void ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
       }
    }
    else
-      Publish({ ProjectSyncStatus::Failed }, false);
+      Publish(
+         { AudiocomTrace::ignore, // TODO Is this correct ?
+           ProjectSyncStatus::Failed },
+         false);
 }
 
 std::weak_ptr<AudacityProject> ProjectCloudExtension::GetProject() const
@@ -489,6 +497,8 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
 
    Publish(
       {
+         AudiocomTrace::ignore, // OK here because we're not publishing an
+                                 // error
          projectData->SyncStatus ==
                DBProjectData::SyncStatusType::SyncStatusSynced ?
             ProjectSyncStatus::Synced :
@@ -515,7 +525,8 @@ void ProjectCloudExtension::UnsafeUpdateProgress()
    assert(totalElements > 0);
 
    Publish(
-      { ProjectSyncStatus::Syncing,
+      { AudiocomTrace::ignore, // All right
+        ProjectSyncStatus::Syncing,
         double(handledElements) / double(totalElements) },
       true);
 }
@@ -608,10 +619,11 @@ void ProjectCloudExtension::OnProjectPathChanged()
    UpdateIdFromDatabase();
 
    if (mProjectId.empty() && wasCloudProject)
-      Publish({ ProjectSyncStatus::Local }, false);
+      Publish({ AudiocomTrace::ignore, ProjectSyncStatus::Local }, false);
 }
 
-std::string ProjectCloudExtension::GetCloudProjectPage() const
+std::string
+ProjectCloudExtension::GetCloudProjectPage(AudiocomTrace trace) const
 {
    const auto projectId =
       ProjectCloudExtension::Get(mProject).GetCloudProjectId();
@@ -619,7 +631,7 @@ std::string ProjectCloudExtension::GetCloudProjectPage() const
    const auto userSlug =
       CloudProjectsDatabase::Get().GetProjectUserSlug(projectId);
 
-   return GetServiceConfig().GetProjectPageUrl(userSlug, projectId);
+   return GetServiceConfig().GetProjectPageUrl(userSlug, projectId, trace);
 }
 
 bool ProjectCloudExtension::IsBlockLocked(int64_t blockID) const

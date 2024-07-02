@@ -101,7 +101,6 @@ It handles initialization and termination by subclassing wxApp.
 #include "Viewport.h"
 #include "PlatformCompatibility.h"
 #include "AutoRecoveryDialog.h"
-#include "SplashDialog.h"
 #include "FFT.h"
 #include "AudacityMessageBox.h"
 #include "prefs/DirectoriesPrefs.h"
@@ -117,6 +116,10 @@ It handles initialization and termination by subclassing wxApp.
 
 #if defined(HAVE_UPDATES_CHECK)
 #  include "update/UpdateManager.h"
+#endif
+
+#ifdef HAS_WHATS_NEW
+#  include "WhatsNewDialog.h"
 #endif
 
 #ifdef HAS_NETWORKING
@@ -417,6 +420,14 @@ void PopulatePreferences()
    {
       if (gPrefs->Exists("/GUI/ShowSplashScreen"))
          gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+   }
+
+   if (std::pair { vMajor, vMinor } < std::pair { 3, 6 })
+   {
+      if (gPrefs->Exists("/GUI/ShowSplashScreen"))
+         gPrefs->DeleteEntry("/GUI/ShowSplashScreen");
+      if (gPrefs->Exists(wxT("/GUI/ToolBars")))
+         gPrefs->DeleteGroup(wxT("/GUI/ToolBars"));
    }
 
    // write out the version numbers to the prefs file for future checking
@@ -1610,7 +1621,9 @@ bool AudacityApp::InitPart2()
       // Mainly this is to tell users of ALPHAS who don't know that they have an ALPHA.
       // Disabled for now, after discussion.
       // project->MayCheckForUpdates();
-      SplashDialog::DoHelpWelcome(*project);
+#ifdef HAS_WHATS_NEW
+      WhatsNewDialog::Show(*project);
+#endif
    }
 
 #if defined(HAVE_UPDATES_CHECK)

@@ -32,6 +32,12 @@ AudacityFileConfig::AudacityFileConfig(
 : wxFileConfig{ appName, vendorName, localFilename, globalFilename, style, conv }
 , mLocalFilename(localFilename)
 {
+  // https://github.com/audacity/audacity/issues/6448 :
+  // We do not write environment variable names in the config files, and
+  // wxWidgets' implementation of environment variable expansion thinks a dollar
+  // sign at the beginning of a directory name is an environment variable - see
+  // https://github.com/wxWidgets/wxWidgets/issues/19214
+  SetExpandEnvVars(false);
 }
 
 void AudacityFileConfig::Init()

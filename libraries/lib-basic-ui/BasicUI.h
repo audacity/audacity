@@ -144,6 +144,13 @@ enum ProgressDialogOptions : unsigned {
    ProgressConfirmStopOrCancel = (1 << 3),
 };
 
+enum GenericProgressDialogStyle : int {
+   ProgressCanAbort            = (1 << 0),
+   ProgressAppModal            = (1 << 1),
+   ProgressShowElapsedTime     = (1 << 2),
+   ProgressSmooth              = (1 << 3),
+};
+
 enum class ProgressResult : unsigned
 {
    Cancelled = 0, //<! User says that whatever is happening is undesirable and shouldn't have happened at all
@@ -210,7 +217,8 @@ public:
    virtual std::unique_ptr<GenericProgressDialog>
    DoMakeGenericProgress(const WindowPlacement &placement,
       const TranslatableString &title,
-      const TranslatableString &message) = 0;
+      const TranslatableString &message,
+      int style) = 0;
    virtual int DoMultiDialog(const TranslatableString &message,
       const TranslatableString &title,
       const TranslatableStrings &buttons,
@@ -311,10 +319,10 @@ inline std::unique_ptr<ProgressDialog> MakeProgress(
  */
 inline std::unique_ptr<GenericProgressDialog> MakeGenericProgress(
    const WindowPlacement &placement,
-   const TranslatableString &title, const TranslatableString &message)
+   const TranslatableString &title, const TranslatableString &message, int style = (ProgressAppModal | ProgressShowElapsedTime | ProgressSmooth))
 {
    if (auto p = Get())
-      return p->DoMakeGenericProgress(placement, title, message);
+      return p->DoMakeGenericProgress(placement, title, message, style);
    else
       return nullptr;
 }

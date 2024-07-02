@@ -216,7 +216,7 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
             .AddSlider( {}, 5, 10, 1);
 
       S.AddWindow(safenew wxStaticLine{ S.GetParent() });
-      
+
       S.Id(ID_CHECKBOX_OVERTONES)
          .AddCheckBox(
             XXO("Auto-select overtones (beta)"),
@@ -241,7 +241,7 @@ void SpectralDataDialog::Populate(ShuttleGui & S)
 
 void SpectralDataDialog::OnAudioIO(AudioIOEvent ev)
 {
-   if (ev.type != AudioIOEvent::MONITOR)
+   if (ev.type != AudioIOEvent::MONITOR && ev.type != AudioIOEvent::PAUSE)
       mAudioIOBusy = ev.on;
 }
 

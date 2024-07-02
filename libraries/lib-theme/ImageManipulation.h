@@ -58,12 +58,7 @@ std::unique_ptr<wxImage> OverlayImage(teBmps eBack, teBmps eForeground,
 THEME_API
 std::unique_ptr<wxImage> CreateBackground(int width, int height, wxColour colour);
 
-// Creates an image with the Mac OS X Aqua stripes, to be used
-// as a background
-THEME_API
-std::unique_ptr<wxImage> CreateAquaBackground(int width, int height, int offset);
-
-// Uses color on all OS except Mac, uses Aqua
+// Uses color on all OS
 THEME_API
 std::unique_ptr<wxImage> CreateSysBackground(int width, int height, int offset,
                              wxColour colour);

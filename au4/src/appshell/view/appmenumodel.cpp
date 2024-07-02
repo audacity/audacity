@@ -401,7 +401,10 @@ MenuItem* AppMenuModel::makeExtraMenu()
         makeMenu(TranslatableString("appshell/menu/scriptables1", "Scriptables1"), makeVolumeAndCompressionItems(), "menu-scriptables1"),
         makeMenu(TranslatableString("appshell/menu/scriptables2", "Scriptables2"), makeVolumeAndCompressionItems(), "menu-scriptables2"),
         makeMenu(TranslatableString("appshell/menu/images", "Images"), makeVolumeAndCompressionItems(), "menu-images"),
+
+#ifndef Q_OS_MAC
         makeMenu(TranslatableString("appshell/menu/settings", "Settings"), makeVolumeAndCompressionItems(), "menu-settings"),
+#endif
         makeMenuItem("karaoke"),
         makeMenuItem("benchmark"),
         makeMenuItem("regular-interval-labels"),

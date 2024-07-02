@@ -11,46 +11,123 @@ Item {
     property alias trackId: clipsModel.trackId
     property alias context: clipsModel.context
 
+    property bool isDataSelected: false
+
+    signal interactionStarted()
+    signal interactionEnded()
+
+    height: trackViewState.trackHeight
+
     ClipsListModel {
         id: clipsModel
+
+        onRequestClipTitleEdit: function(index){
+            repeator.itemAt(index).editTitle()
+        }
+    }
+
+    TracksViewStateModel {
+        id: trackViewState
+        trackId: root.trackId
     }
 
     Component.onCompleted: {
-        clipsModel.load()
+        trackViewState.init()
+        clipsModel.init()
     }
 
-    Repeater {
-        model: clipsModel
+    function changeClipTitle(index, newTitle) {
+        clipsModel.changeClipTitle(index, newTitle)
+        clipsModel.resetSelectedClip()
+    }
 
-        delegate: ClipItem {
+    Item {
+        anchors.fill: parent
+        anchors.bottomMargin: sep.height
 
-            height: parent.height
-            width: model.clipWidthData
-            x: model.clipLeftData
+        Repeater {
+            id: repeator
 
-            title: model.clipTitleData
+            model: clipsModel
 
-            context: root.context
-            clipKey: model.clipKeyData
+            delegate: ClipItem {
 
-            onPositionChanged: function(x) {
-                model.clipLeftData = x
+                height: parent.height
+                width: model.clipWidth
+                x: model.clipLeft
+
+                context: root.context
+                title: model.clipTitle
+                clipColor: model.clipColor
+                clipKey: model.clipKey
+                clipSelected: clipsModel.selectedClipIdx === model.index
+                collapsed: trackViewState.isTrackCollapsed
+
+                dragMaximumX: model.clipMoveMaximumX + borderWidth
+                dragMinimumX: model.clipMoveMinimumX - borderWidth
+
+                onPositionChanged: function(x) {
+                    model.clipLeft = x
+                }
+
+                onRequestSelected: {
+                    clipsModel.selectClip(model.index)
+                }
+
+                onTitleEditStarted: {
+                    clipsModel.selectClip(model.index)
+                }
+
+                onTitleEditAccepted: function(newTitle) {
+                    root.changeClipTitle(model.index, newTitle)
+                }
+
+                onTitleEditCanceled: {
+                    clipsModel.resetSelectedClip()
+                }
             }
         }
     }
 
-    ClipsSelection {
-        id: clipsSelection
+    Rectangle {
+        id: selRect
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        color: "#8EC9FF"
+        opacity: 0.4
+        visible: root.isDataSelected
 
-        anchors.fill: parent
-        anchors.topMargin: 20 // clip header height
-
-        onSelected: function(x1, x2) {
-            clipsModel.onSelected(x1, x2)
-        }
-
-        onReset: clipsModel.resetSelection()
+        x: root.context.timeToPosition(root.context.selectionStartTime)
+        width: root.context.timeToPosition(root.context.selectionEndTime) - x
     }
 
-    SeparatorLine { anchors.bottom: parent.bottom }
+    MouseArea {
+        id: dragArea
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 4
+
+        cursorShape: Qt.SizeVerCursor
+
+        onPressed: {
+            root.interactionStarted()
+        }
+
+        onPositionChanged: function(mouse) {
+            mouse.accepted = true
+            trackViewState.changeTrackHeight(mouse.y)
+        }
+
+        onReleased: {
+            root.interactionEnded()
+        }
+    }
+
+    SeparatorLine {
+        id: sep
+        color: "#FFFFFF"
+        opacity: 0.1
+        anchors.bottom: parent.bottom }
 }

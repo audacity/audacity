@@ -545,8 +545,7 @@ void OnPaste(const CommandContext &context)
       wxTheClipboard->Close();
       if (hadData)
       {
-         ProjectFileManager::Get(context.project)
-            .ImportAndArrange(data.GetFilenames());
+         ProjectFileManager::Get(context.project).Import(data.GetFilenames());
          return;
       }
    }

@@ -2,9 +2,10 @@
 #define AU_PROJECT_AUDACITYPROJECT_H
 
 #include "../iaudacityproject.h"
-#include "au3wrap/au3project.h"
 #include "modularity/ioc.h"
+#include "au3wrap/iau3project.h"
 #include "io/ifilesystem.h"
+#include "projectscene/iprojectviewstatecreator.h"
 
 namespace au::au3 {
 class Au3Project;
@@ -35,13 +36,17 @@ namespace au::project {
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
 class Audacity4Project : public IAudacityProject
 {
+    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
 
 public:
     Audacity4Project();
 
     muse::Ret load(const muse::io::path_t& path, bool forceMode = false, const std::string& format = "") override;
     void close() override;
+    muse::async::Notification aboutCloseBegin() const override;
+    muse::async::Notification aboutCloseEnd() const override;
 
     QString displayName() const override;
     muse::async::Notification displayNameChanged() const override;
@@ -62,6 +67,8 @@ public:
 
     const au::processing::ProcessingProjectPtr processingProject() const override;
 
+    projectscene::IProjectViewStatePtr viewState() const override;
+
     uintptr_t au3ProjectPtr() const override;
 
 private:
@@ -77,6 +84,9 @@ private:
     void markAsSaved(const muse::io::path_t& path);
     void setNeedSave(bool needSave);
 
+    muse::async::Notification m_aboutCloseBegin;
+    muse::async::Notification m_aboutCloseEnd;
+
     muse::io::path_t m_path;
     muse::async::Notification m_pathChanged;
     muse::async::Notification m_displayNameChanged;
@@ -85,9 +95,11 @@ private:
     bool m_isImported = false;
     bool m_needAutoSave = false;
 
-    std::shared_ptr<au::au3::Au3Project> m_au3Project;
+    std::shared_ptr<au::au3::IAu3Project> m_au3Project;
 
-    au::processing::ProcessingProjectPtr m_processingProject;
+    processing::ProcessingProjectPtr m_processingProject;
+
+    projectscene::IProjectViewStatePtr m_viewState;
 };
 }
 

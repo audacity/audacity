@@ -24,8 +24,8 @@ import QtQuick.Controls
 
 import Muse.Ui
 import Muse.UiComponents
-
 import Muse.Dock
+
 import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
@@ -123,12 +123,6 @@ DockPage {
             ProjectToolBar {
                 navigationPanel.section: root.topToolKeyNavSec
                 navigationPanel.order: 2
-
-                onActiveFocusRequested: {
-                    if (navigationPanel.active) {
-                        projectToolBar.forceActiveFocus()
-                    }
-                }
             }
         }
     ]
@@ -140,11 +134,11 @@ DockPage {
             objectName: pageModel.playbackToolBarName()
             title: qsTrc("appshell", "Play Tool Bar")
 
+            thickness: 48 // todo
+
             dropDestinations: [
                 root.toolBarTopDropDestination,
-                root.toolBarBottomDropDestination,
-                root.toolBarLeftDropDestination,
-                root.toolBarRightDropDestination
+                root.toolBarBottomDropDestination
             ]
 
             PlaybackToolBar {
@@ -188,5 +182,15 @@ DockPage {
 
     central: TracksClipsView {
         id: clipsView
+    }
+
+    statusBar: DockStatusBar {
+        objectName: pageModel.statusBarName()
+
+        height: 40
+        minimumHeight: height
+        maximumHeight: height
+
+        ProjectStatusBar {}
     }
 }

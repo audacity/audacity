@@ -327,11 +327,13 @@ void Viewport::UpdateScrollbarsForTracks()
       (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    bool newvstate = panelHeight < totalHeight;
 
+   /* Leo: This has been broken forever (2.0.0/Win11) 
+      and causes the bars to not show on Lin since 3.2. #2937  */
    // Hide scrollbar thumbs and buttons if not scrollable
-   if (mpCallbacks) {
-      mpCallbacks->ShowHorizontalScrollbar(newhstate);
-      mpCallbacks->ShowVerticalScrollbar(newvstate);
-   }
+   // if (mpCallbacks) {
+   //    mpCallbacks->ShowHorizontalScrollbar(newhstate);
+   //    mpCallbacks->ShowVerticalScrollbar(newvstate);
+   // }
 
    // When not scrollable in either axis, align viewport to top or left and
    // repaint it later
@@ -380,8 +382,10 @@ void Viewport::UpdateScrollbarsForTracks()
          totalHeight / scrollStep,
          panelHeight / scrollStep, true);
 
-   rescroll = (rescroll &&
-       (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total);
+   //Leo: this needs to be rescroll = rescroll && (... 
+   //if scrollbar hiding is to be reimplemented.
+   //Or maybe not. It's all broken anyway.  #2937
+   rescroll = (viewInfo.GetScreenEndTime() - viewInfo.hpos) < total;
    Publish({ (refresh || rescroll),
       (oldhstate != newhstate || oldvstate != newvstate), false });
 }

@@ -27,11 +27,12 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "audio/iaudioconfiguration.h"
-#include "audio/iaudiodriver.h"
+// #include "audio/iaudioconfiguration.h"
+// #include "audio/iaudiodriver.h"
+#include "playback/iaudiodevicesprovider.h"
 
 namespace au::appshell {
-class CommonAudioApiConfigurationModel : public QObject, public async::Asyncable
+class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -41,8 +42,9 @@ class CommonAudioApiConfigurationModel : public QObject, public async::Asyncable
     Q_PROPERTY(unsigned int bufferSize READ bufferSize NOTIFY bufferSizeChanged)
     Q_PROPERTY(QList<unsigned int> bufferSizeList READ bufferSizeList NOTIFY bufferSizeListChanged)
 
-    INJECT(audio::IAudioConfiguration, audioConfiguration)
-    INJECT(audio::IAudioDriver, audioDriver)
+    // INJECT(muse::audio::IAudioConfiguration, audioConfiguration)
+    // INJECT(muse::audio::IAudioDriver, audioDriver)
+    muse::Inject<playback::IAudioDevicesProvider> audioDevicesProvider;
 
 public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);

@@ -125,6 +125,9 @@ public:
                                     FilePaths & files,
                                     bool directories = false) = 0;
 
+   virtual PluginPaths ReadCustomPaths(const PluginProvider& provider) = 0;
+   virtual void StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths) = 0;
+
    // Many functions corresponding to those in ConfigClientInterface, but
    // with an extra ID argument
    virtual bool GetConfigSubgroups(ConfigurationType type, const PluginID & ID,

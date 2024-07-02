@@ -115,6 +115,11 @@ void LadspaEffectsModule::Terminate()
    return;
 }
 
+bool LadspaEffectsModule::SupportsCustomModulePaths() const
+{
+   return true;
+}
+
 EffectFamilySymbol LadspaEffectsModule::GetOptionalFamilySymbol()
 {
 #if USE_LADSPA
@@ -157,7 +162,7 @@ void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 {
    // Autoregister effects that we "think" are ones that have been shipped with
    // Audacity.  A little simplistic, but it should suffice for now.
-   auto pathList = GetSearchPaths();
+   auto pathList = GetSearchPaths(pm);
    FilePaths files;
    TranslatableString ignoredErrMsg;
 
@@ -179,7 +184,7 @@ void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
 
 PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface & pm)
 {
-   auto pathList = GetSearchPaths();
+   auto pathList = GetSearchPaths(pm);
    FilePaths files;
 
 #if defined(__WXMAC__)
@@ -306,7 +311,7 @@ bool LadspaEffectsModule::CheckPluginExist(const PluginPath& path) const
    return wxFileName::FileExists(realPath);
 }
 
-FilePaths LadspaEffectsModule::GetSearchPaths()
+FilePaths LadspaEffectsModule::GetSearchPaths(PluginManagerInterface& pluginManager)
 {
    FilePaths pathList;
    wxString pathVar;
@@ -345,6 +350,11 @@ FilePaths LadspaEffectsModule::GetSearchPaths()
    pathList.push_back(wxT(LIBDIR) wxT("/ladspa"));
 
 #endif
+
+   {
+      auto customPaths = pluginManager.ReadCustomPaths(*this);
+      std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(pathList));
+   }
 
    return pathList;
 }

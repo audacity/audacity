@@ -130,7 +130,7 @@ void HighlitClipButtonHandle::Enter(bool forward, AudacityProject* pProject)
 void HighlitClipButtonHandle::Highlight(const wxRect& rect, wxDC& dc)
 {
    constexpr auto penWidth = 0;
-   const auto col = theTheme.Colour(clrClipAffordanceStroke);
+   const auto col = theTheme.Colour(clrClipAffordanceButton);
    wxDCBrushChanger brush { dc, col };
    wxDCPenChanger pen { dc, { wxPenInfo { col, penWidth } } };
    constexpr auto radius = 3;

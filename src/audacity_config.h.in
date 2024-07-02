@@ -111,9 +111,6 @@
 /* We're using cygwin */
 #cmakedefine __CYGWIN__ 1
 
-/* Use the Aqua theme on Mac */
-#cmakedefine USE_AQUA_THEME 1
-
 /* Define if libopus support should be enabled */
 #cmakedefine USE_LIBOPUS 1
 

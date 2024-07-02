@@ -1,11 +1,11 @@
 /**********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  RealtimeEffectManager.h
- 
+
  Paul Licameli split from EffectManager.h
- 
+
  **********************************************************************/
 
 #ifndef __AUDACITY_REALTIME_EFFECT_MANAGER__
@@ -50,6 +50,10 @@ class REALTIME_EFFECTS_API RealtimeEffectManager final :
    public Observer::Publisher<RealtimeEffectManagerMessage>
 {
 public:
+   //!Special value used to identify special effects stack applied
+   //!to every playable track
+   static constexpr ChannelGroup* MasterGroup = nullptr;
+
    using Latency = std::chrono::microseconds;
 
    RealtimeEffectManager(AudacityProject &project);
@@ -132,7 +136,7 @@ private:
 
    //! Main thread begins to define a set of groups for playback
    void Initialize(RealtimeEffects::InitializationScope &scope,
-      double sampleRate);
+      unsigned numPlaybackChannels, double sampleRate);
    //! Main thread adds one group (passing the first of one or more
    //! channels), still before playback
    void AddGroup(RealtimeEffects::InitializationScope &scope,
@@ -141,19 +145,12 @@ private:
    void Finalize() noexcept;
 
    friend RealtimeEffects::ProcessingScope;
-   struct REALTIME_EFFECTS_API AllListsLock {
-      RealtimeEffectManager *mpManager{};
-      AllListsLock(RealtimeEffectManager *pManager = nullptr);
-      AllListsLock(AllListsLock &&other);
-      AllListsLock& operator= (AllListsLock &&other);
-      void Reset();
-      ~AllListsLock() { Reset(); }
-   };
 
    void ProcessStart(bool suspended);
+
    /*! @copydoc ProcessScope::Process */
    size_t Process(bool suspended,
-      const ChannelGroup &group,
+      const ChannelGroup *group,
       float *const *buffers, float *const *scratch, float *dummy,
       unsigned nBuffers, size_t numSamples);
    void ProcessEnd(bool suspended) noexcept;
@@ -166,26 +163,21 @@ private:
    // using StateVisitor =
       // std::function<void(RealtimeEffectState &state, bool listIsActive)> ;
 
-   //! Visit the per-project states first, then states for group
+   //! Visit states for group or for the master when group is null
    template<typename StateVisitor>
-   void VisitGroup(ChannelGroup &group, const StateVisitor &func)
+   void VisitGroup(ChannelGroup *group, const StateVisitor &func)
    {
-      // Call the function for each effect on the master list
-      RealtimeEffectList::Get(mProject).Visit(func);
-
-      // Call the function for each effect on the group list
-      RealtimeEffectList::Get(group).Visit(func);
+      if(group == nullptr)
+         RealtimeEffectList::Get(mProject).Visit(func);
+      else
+         // Call the function for each effect on the group list
+         RealtimeEffectList::Get(*group).Visit(func);
    }
 
    template<typename StateVisitor>
-   void VisitGroup(
-      const ChannelGroup &group, const StateVisitor &func)
+   void VisitGroup(const ChannelGroup *group, const StateVisitor &func)
    {
-      // Call the function for each effect on the master list
-      RealtimeEffectList::Get(mProject).Visit(func);
-
-      // Call the function for each effect on the group list
-      RealtimeEffectList::Get(group).Visit(func);
+      VisitGroup(const_cast<ChannelGroup*>(group), func);
    }
 
    //! Visit the per-project states first, then all groups from AddGroup
@@ -202,7 +194,7 @@ private:
    }
 
    AudacityProject &mProject;
-   Latency mLatency{ 0 };
+   //Latency mLatency{ 0 };
 
    std::atomic<bool> mSuspended{ true };
 
@@ -227,8 +219,14 @@ public:
       , mwProject{ move(wProject) }
       , mNumPlaybackChannels{ numPlaybackChannels }
    {
-      if (auto pProject = mwProject.lock())
-         RealtimeEffectManager::Get(*pProject).Initialize(*this, sampleRate);
+      if (const auto pProject = mwProject.lock())
+      {
+         RealtimeEffectManager::Get(*pProject).Initialize(
+            *this,
+            numPlaybackChannels,
+            sampleRate
+         );
+      }
    }
    InitializationScope( InitializationScope &&other ) = default;
    InitializationScope& operator=( InitializationScope &&other ) = default;
@@ -257,14 +255,6 @@ private:
 //! Brackets one block of processing in one thread
 class ProcessingScope {
 public:
-   ProcessingScope()
-   {
-      if (auto pProject = mwProject.lock()) {
-         auto &manager = RealtimeEffectManager::Get(*pProject);
-         mLocks = { &manager };
-         mSuspended = manager.GetSuspended();
-      }
-   }
    //! Require a prior InializationScope to ensure correct nesting
    explicit ProcessingScope(InitializationScope &,
       std::weak_ptr<AudacityProject> wProject)
@@ -282,7 +272,7 @@ public:
    }
 
    //! @return how many samples to discard for latency
-   size_t Process(const ChannelGroup &group,
+   size_t Process(const ChannelGroup *group,
       float *const *buffers,
       float *const *scratch,
       float *dummy,
@@ -290,16 +280,16 @@ public:
       size_t numSamples //!< length of each buffer
    )
    {
-      if (auto pProject = mwProject.lock())
+      if (const auto pProject = mwProject.lock())
+      {
          return RealtimeEffectManager::Get(*pProject)
             .Process(mSuspended, group, buffers, scratch, dummy,
                nBuffers, numSamples);
-      else
-         return 0; // consider them trivially processed
+      }
+      return 0; // consider them trivially processed
    }
 
 private:
-   RealtimeEffectManager::AllListsLock mLocks;
    std::weak_ptr<AudacityProject> mwProject;
    bool mSuspended{};
 };

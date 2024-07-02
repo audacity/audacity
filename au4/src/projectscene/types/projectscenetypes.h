@@ -1,24 +1,6 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * Audacity-CLA-applies
- *
- * Audacity
- * A Digital Audio Editor
- *
- * Copyright (C) 2024 Audacity Limited
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Audacity: A Digital Audio Editor
+*/
 #ifndef AU_PROJECTSCENE_TRACKTYPES_H
 #define AU_PROJECTSCENE_TRACKTYPES_H
 
@@ -50,6 +32,23 @@ public:
 
     processing::ClipKey key;
 };
+
+class VerticalRulerTypes
+{
+    Q_GADGET
+public:
+    enum class Type {
+        LINEAR_AMP = 0,
+        LOGARITHMIC_DB,
+        LINEAR_DB
+    };
+    Q_ENUM(Type)
+};
 }
+
+enum class TimelineRulerMode {
+    MINUTES_AND_SECONDS = 0,
+    BEATS_AND_MEASURES
+};
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

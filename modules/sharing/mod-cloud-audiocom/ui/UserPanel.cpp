@@ -28,6 +28,7 @@
 #include "UserService.h"
 
 #include "CodeConversions.h"
+#include "ExportUtils.h"
 
 #include "AllThemeResources.h"
 #include "Theme.h"
@@ -49,12 +50,13 @@ const auto anonymousText = XO("Account not linked");
 
 UserPanel::UserPanel(
    const ServiceConfig& serviceConfig, OAuthService& authService,
-   UserService& userService, bool hasLinkButton, wxWindow* parent,
-   const wxPoint& pos, const wxSize& size)
+   UserService& userService, bool hasLinkButton, AudiocomTrace trace,
+   wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : wxPanelWrapper { parent, wxID_ANY, pos, size }
     , mServiceConfig { serviceConfig }
     , mAuthService { authService }
     , mUserService { userService }
+    , mAudiocomTrace { trace }
     , mUserDataChangedSubscription { userService.Subscribe(
          [this](const auto&) { UpdateUserData(); }) }
 {
@@ -124,7 +126,7 @@ void UserPanel::UpdateUserData()
    }
 
    if (!oauthService.HasAccessToken())
-      oauthService.ValidateAuth({}, true);
+      oauthService.ValidateAuth({}, mAudiocomTrace, true);
 
    auto& userService = GetUserService();
 
@@ -158,17 +160,17 @@ void UserPanel::OnLinkButtonPressed()
    auto& oauthService = GetOAuthService();
 
    if (oauthService.HasAccessToken())
-      oauthService.UnlinkAccount();
+      oauthService.UnlinkAccount(mAudiocomTrace);
    else
    {
-      OpenInDefaultBrowser(
-         { audacity::ToWXString(mServiceConfig.GetOAuthLoginPage()) });
+      OpenInDefaultBrowser({ audacity::ToWXString(
+         mServiceConfig.GetOAuthLoginPage(mAudiocomTrace)) });
 
 #ifdef HAS_CUSTOM_URL_HANDLING
       if (!URLSchemesRegistry::Get().IsURLHandlingSupported())
 #endif
       {
-         LinkWithTokenDialog dlg(this);
+         LinkWithTokenDialog dlg(mAudiocomTrace, this);
          dlg.ShowModal();
       }
    }

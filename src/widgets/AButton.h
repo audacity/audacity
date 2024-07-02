@@ -111,7 +111,18 @@ public:
    {
       TextButton,
       ImageButton,
-      FrameButton
+      FrameButton,
+      FrameTextButton,
+   };
+
+   enum AButtonState {
+      AButtonUp,
+      AButtonOver,
+      AButtonDown,
+      AButtonOverDown,
+      AButtonDis,
+
+      AButtonStateCount
    };
 
    AButton(wxWindow* parent = nullptr,
@@ -136,6 +147,7 @@ public:
    virtual ~ AButton();
 
    void SetButtonType(Type type);
+   void SetFrameMid(int mid);
 
    // hide the inherited function that takes naked wxString:
    void SetToolTip(const TranslatableString &toolTip);
@@ -165,6 +177,12 @@ public:
                                    const wxImage& dis);
 
    void SetIcon(const wxImage& icon);
+   void SetIcon(AButtonState state, const wxImage& icon);
+   void SetIcons(const wxImage& up, const wxImage& down, const wxImage& disabled);
+
+   void SetAlternateIcon(unsigned idx, const wxImage& icon);
+   void SetAlternateIcon(unsigned idx, AButtonState state, const wxImage& icon);
+   void SetAlternateIcons(unsigned idx, const wxImage& up, const wxImage& down, const wxImage& disabled);
 
    // Choose state of the button
    void SetAlternateIdx(unsigned idx);
@@ -223,16 +241,6 @@ public:
 
    wxSize DoGetBestClientSize() const override;
 
-   enum AButtonState {
-      AButtonUp,
-      AButtonOver,
-      AButtonDown,
-      AButtonOverDown,
-      AButtonDis,
-
-      AButtonStateCount
-   };
-
    AButtonState GetState();
 
    void UseDisabledAsDownHiliteImage(bool flag);
@@ -269,7 +277,7 @@ public:
    bool mUseDisabledAsDownHiliteImage{false};
    bool mIsDoubleClicked{false};
 
-   wxImage mIcon;
+   std::vector<std::array<wxImage, AButtonStateCount>> mIcons;
    std::vector<std::array<wxImage, AButtonStateCount>> mImages;
 
    wxRect mFocusRect;
@@ -278,6 +286,7 @@ public:
    std::unique_ptr<Listener> mListener;
 
    Type mType{ImageButton};
+   int mFrameMid{1};
 
 public:
 

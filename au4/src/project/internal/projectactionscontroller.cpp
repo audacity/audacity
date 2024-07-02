@@ -1,5 +1,6 @@
 #include "projectactionscontroller.h"
 
+#include "async/async.h"
 #include "global/defer.h"
 #include "global/translation.h"
 
@@ -12,6 +13,7 @@ using namespace muse;
 using namespace au::project;
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
+static const muse::Uri HOME_PAGE_URI("musescore://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const QString AUDACITY_URL_SCHEME("AUDACITY");
@@ -25,8 +27,10 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importProject);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
-    dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
-    dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
+    //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
+    //! to install our own implementation of the UI (BasicUI API)
+    // dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
+    // dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -147,9 +151,55 @@ bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) con
 
 bool ProjectActionsController::closeOpenedProject(bool quitApp)
 {
-    //! TODO AU4
-    NOT_IMPLEMENTED;
-    return false;
+    if (m_isProjectClosing) {
+        return false;
+    }
+
+    m_isProjectClosing = true;
+    DEFER {
+        m_isProjectClosing = false;
+    };
+
+    IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return true;
+    }
+
+    bool result = true;
+
+    // if (project->needSave().val) {
+    //     IInteractive::Button btn = askAboutSavingScore(project);
+
+    //     if (btn == IInteractive::Button::Cancel) {
+    //         result = false;
+    //     } else if (btn == IInteractive::Button::Save) {
+    //         result = saveProject();
+    //     } else if (btn == IInteractive::Button::DontSave) {
+    //         result = true;
+    //     }
+    // }
+
+    if (result) {
+        interactive()->closeAllDialogs();
+
+        project->close();
+
+        globalContext()->setCurrentProject(nullptr);
+
+        if (quitApp) {
+            //! NOTE: we need to call `quit` in the next event loop due to controlling the lifecycle of this method
+            muse::async::Async::call(this, [this](){
+                dispatcher()->dispatch("quit", actions::ActionData::make_arg1<bool>(false));
+            });
+        } else {
+            Ret ret = openPageIfNeed(HOME_PAGE_URI);
+            if (!ret) {
+                LOGE() << ret.toString();
+            }
+        }
+    }
+
+    return result;
 }
 
 bool ProjectActionsController::saveProject(const muse::io::path_t& path)

@@ -140,21 +140,16 @@ void AudioSetupToolBar::Populate()
 
 void AudioSetupToolBar::Repaint(wxDC* dc)
 {
-#ifndef USE_AQUA_THEME
-   wxSize s = mSizer->GetSize();
-   wxPoint p = mSizer->GetPosition();
-
-   wxRect bevelRect(p.x, p.y, s.GetWidth() - 1, s.GetHeight() - 1);
-   AColor::Bevel(*dc, true, bevelRect);
-#endif
+   // this was used to draw a bevel and can be removed
 }
 
 void AudioSetupToolBar::MakeAudioSetupButton()
 {
+   const auto size = wxSize{-1, (toolbarSingle - toolbarMargin ) * 2 };
    mAudioSetup = safenew AButton(this, ID_AUDIO_SETUP_BUTTON);
    //i18n-hint: Audio setup button text, keep as short as possible
    mAudioSetup->SetLabel(XO("Audio Setup"));
-   mAudioSetup->SetButtonType(AButton::FrameButton);
+   mAudioSetup->SetButtonType(AButton::FrameTextButton);
    mAudioSetup->SetImages(
       theTheme.Image(bmpRecoloredUpSmall),
       theTheme.Image(bmpRecoloredUpHiliteSmall),
@@ -163,46 +158,23 @@ void AudioSetupToolBar::MakeAudioSetupButton()
       theTheme.Image(bmpRecoloredUpSmall));
    mAudioSetup->SetIcon(theTheme.Image(bmpSetup));
    mAudioSetup->SetForegroundColour(theTheme.Colour(clrTrackPanelText));
+   mAudioSetup->SetMinSize(size);
+   mAudioSetup->SetMaxSize(size);
 }
 
 void AudioSetupToolBar::ArrangeButtons()
 {
-   int flags = wxALIGN_CENTER | wxRIGHT;
-
-   // (Re)allocate the button sizer
-   if (mSizer)
-   {
-      Detach(mSizer);
-      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
-   }
-
-   Add((mSizer = safenew wxBoxSizer(wxHORIZONTAL)), 1, wxEXPAND);
-   mSizer->Add(mAudioSetup, 1, wxEXPAND);
-
-   // Layout the sizer
-   mSizer->Layout();
-
+   Add(mAudioSetup, 0, wxALIGN_CENTER | wxALL, toolbarSpacing);
    // Layout the toolbar
    Layout();
-
    SetMinSize(GetSizer()->GetMinSize());
 }
 
 void AudioSetupToolBar::ReCreateButtons()
 {
-   bool isAudioSetupDown = false;
-
-   // ToolBar::ReCreateButtons() will get rid of its sizer and
-   // since we've attached our sizer to it, ours will get deleted too
-   // so clean ours up first.
-   if (mSizer)
-   {
-      isAudioSetupDown = mAudioSetup->IsDown();
-      Detach(mSizer);
-
-      std::unique_ptr < wxSizer > {mSizer}; // DELETE it
-      mSizer = nullptr;
-   }
+   const auto isAudioSetupDown = mAudioSetup != nullptr
+      ? mAudioSetup->IsDown()
+      : false;
 
    ToolBar::ReCreateButtons();
 

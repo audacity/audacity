@@ -184,69 +184,6 @@ wxString MeterUpdateMsg::toStringIfClipped()
 }
 
 //
-// The MeterPanel passes itself messages via this queue so that it can
-// communicate between the audio thread and the GUI thread.
-// This class uses lock-free synchronization with atomics.
-//
-
-MeterUpdateQueue::MeterUpdateQueue(size_t maxLen):
-   mBufferSize(maxLen)
-{
-   Clear();
-}
-
-// destructor
-MeterUpdateQueue::~MeterUpdateQueue()
-{
-}
-
-void MeterUpdateQueue::Clear()
-{
-   mStart.store(0);
-   mEnd.store(0);
-}
-
-// Add a message to the end of the queue.  Return false if the
-// queue was full.
-bool MeterUpdateQueue::Put(MeterUpdateMsg &msg)
-{
-   auto start = mStart.load(std::memory_order_acquire);
-   auto end = mEnd.load(std::memory_order_relaxed);
-   // mStart can be greater than mEnd because it is all mod mBufferSize
-   assert( (end + mBufferSize - start) >= 0 );
-   int len = (end + mBufferSize - start) % mBufferSize;
-
-   // Never completely fill the queue, because then the
-   // state is ambiguous (mStart==mEnd)
-   if (len + 1 >= (int)(mBufferSize))
-      return false;
-
-   //wxLogDebug(wxT("Put: %s"), msg.toString());
-
-   mBuffer[end] = msg;
-   mEnd.store((end + 1) % mBufferSize, std::memory_order_release);
-
-   return true;
-}
-
-// Get the next message from the start of the queue.
-// Return false if the queue was empty.
-bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
-{
-   auto start = mStart.load(std::memory_order_relaxed);
-   auto end = mEnd.load(std::memory_order_acquire);
-   int len = (end + mBufferSize - start) % mBufferSize;
-
-   if (len == 0)
-      return false;
-
-   msg = mBuffer[start];
-   mStart.store((start + 1) % mBufferSize, std::memory_order_release);
-
-   return true;
-}
-
-//
 // MeterPanel class
 //
 
@@ -254,7 +191,7 @@ bool MeterUpdateQueue::Get(MeterUpdateMsg &msg)
 #include "../../images/MicMenu.xpm"
 
 // How many pixels between items?
-const static int gap = 2;
+const static int gap = 0;
 
 const static wxChar *PrefStyles[] =
 {
@@ -358,7 +295,7 @@ MeterPanel::MeterPanel(AudacityProject *project,
    UpdateSliderControl();
    UpdatePrefs();
 
-   wxColour backgroundColour = theTheme.Colour( clrMedium);
+   wxColour backgroundColour = theTheme.Colour(clrMedium);
    mBkgndBrush = wxBrush(backgroundColour, wxBRUSHSTYLE_SOLID);
    SetBackgroundColour( backgroundColour );
 
@@ -519,18 +456,10 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // Go calculate all of the layout metrics
       HandleLayout(dc);
 
-      // Start with a clean background
-      // LLL:  Should research USE_AQUA_THEME usefulness...
-//#ifndef USE_AQUA_THEME
-      //if( !mMeterDisabled )
-      //{
-      //   mBkgndBrush.SetColour( GetParent()->GetBackgroundColour() );
-      //}
       mBkgndBrush.SetColour( GetBackgroundColour() );
       dc.SetPen(*wxTRANSPARENT_PEN);
       dc.SetBrush(mBkgndBrush);
       dc.DrawRectangle(0, 0, mWidth, mHeight);
-//#endif
 
       // MixerTrackCluster style has no icon or L/R labels
       if (mStyle != MixerTrackCluster)
@@ -566,15 +495,6 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
       // Draw the meter bars at maximum levels
       for (unsigned int i = 0; i < mNumBars; i++)
       {
-         // Give it a recessed look
-         AColor::Bevel(dc, false, mBar[i].b);
-
-         // Draw the clip indicator bevel
-         if (mClip)
-         {
-            AColor::Bevel(dc, false, mBar[i].rClip);
-         }
-
          // Cache bar rect
          wxRect r = mBar[i].r;
 
@@ -654,10 +574,35 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
 #endif
          }
       }
+
+      {//Strokes
+         dc.SetPen(AColor::darkPen[0]);
+         dc.SetBrush(*wxTRANSPARENT_BRUSH);
+
+         //Stroke around group
+         dc.DrawRectangle(wxRect(
+            mBar[0].r.GetTopLeft(),
+            mBar[mNumBars - 1].r.GetBottomRight()
+         ).Inflate(1));
+
+         //strokes between meters
+         for(unsigned n = 0; n < mNumBars - 1; ++n)
+            dc.DrawLine(mBar[n].b.GetBottomLeft(), mBar[n].b.GetBottomRight());
+         if constexpr (gap > 0)
+         {
+            for(unsigned n = 1; n < mNumBars; ++n)
+               dc.DrawLine(mBar[n].b.GetTopLeft(), mBar[n].b.GetTopRight());
+         }
+
+         //stroke around clip indicators
+         for(unsigned n = 0; n < mNumBars; ++n)
+            dc.DrawRectangle(wxRect(mBar[n].rClip).Inflate(1));
+      }
+
       mRuler.SetTickColour( clrText );
       dc.SetTextForeground( clrText );
-      // Draw the ruler
-      mRuler.Draw(dc);
+
+      mRuler.Draw(dc); // Draw the ruler
 
       // Bitmap created...unselect
       dc.SelectObject(wxNullBitmap);
@@ -673,9 +618,9 @@ void MeterPanel::OnPaint(wxPaintEvent & WXUNUSED(event))
    }
 
    destDC.SetTextForeground( clrText );
-
+   
    // We can have numbers over the bars, in which case we have to draw them each time.
-   if (mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
+   if(mStyle == HorizontalStereoCompact || mStyle == VerticalStereoCompact)
    {
       mRuler.SetTickColour( clrText );
       // If the text colour is too similar to the meter colour, then we need a background
@@ -1239,45 +1184,48 @@ void MeterPanel::SetActiveStyle(Style newStyle)
 
 void MeterPanel::SetBarAndClip(int iBar, bool vert)
 {
+   constexpr static auto StrokeWidth = 1;
+   //either width or height, depending on meter orientation
+   constexpr static auto ClipIndicatorSize = 3;
+   constexpr static auto ClipIndicatorPadding = 1;
    // Save the orientation
    mBar[iBar].vert = vert;
 
+   if (mClip)
+   {
+      // Create the clip rectangle and adjust
+      // meter's boundaries
+      if (vert)
+      {
+         mBar[iBar].rClip = wxRect(
+            mBar[iBar].b.x + StrokeWidth,
+            mBar[iBar].b.y + StrokeWidth,
+            mBar[iBar].b.width - StrokeWidth * 2,
+            ClipIndicatorSize
+         );
+
+         // Make room for the clipping indicator
+         constexpr auto yOffset =
+            gap + ClipIndicatorPadding + StrokeWidth * 2 + ClipIndicatorSize;
+         mBar[iBar].b.y += yOffset;
+         mBar[iBar].b.height -= yOffset;
+      }
+      else
+      {
+         mBar[iBar].rClip = wxRect(
+            mBar[iBar].b.GetRight() - StrokeWidth - ClipIndicatorSize + 1,
+            mBar[iBar].b.GetTop() + StrokeWidth,
+            ClipIndicatorSize,
+            mBar[iBar].b.height - StrokeWidth * 2
+         );
+         // Make room for the clipping indicator
+         mBar[iBar].b.width -=
+            gap + ClipIndicatorPadding + StrokeWidth * 2 + ClipIndicatorSize;
+      }
+   }
    // Create the bar rectangle and educe to fit inside the bevel
    mBar[iBar].r = mBar[iBar].b;
-   mBar[iBar].r.x += 1;
-   mBar[iBar].r.width -= 1;
-   mBar[iBar].r.y += 1;
-   mBar[iBar].r.height -= 1;
-
-   if (vert)
-   {
-      if (mClip)
-      {
-         // Create the clip rectangle
-         mBar[iBar].rClip = mBar[iBar].b;
-         mBar[iBar].rClip.height = 3;
-
-         // Make room for the clipping indicator
-         mBar[iBar].b.y += 3 + gap;
-         mBar[iBar].b.height -= 3 + gap;
-         mBar[iBar].r.y += 3 + gap;
-         mBar[iBar].r.height -= 3 + gap;
-      }
-   }
-   else
-   {
-      if (mClip)
-      {
-         // Make room for the clipping indicator
-         mBar[iBar].b.width -= 4;
-         mBar[iBar].r.width -= 4;
-
-         // Create the indicator rectangle
-         mBar[iBar].rClip = mBar[iBar].b;
-         mBar[iBar].rClip.x = mBar[iBar].b.GetRight() + 1 + gap; // +1 for bevel
-         mBar[iBar].rClip.width = 3;
-      }
-   }
+   mBar[iBar].r.Deflate(StrokeWidth);
 }
 
 void MeterPanel::HandleLayout(wxDC &dc)
@@ -1596,7 +1544,8 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
 
    // Setup for erasing the background
    dc.SetPen(*wxTRANSPARENT_PEN);
-   dc.SetBrush(mMeterDisabled ? mDisabledBkgndBrush : mBkgndBrush);
+   mMeterBkgndBrush.SetColour( theTheme.Colour(clrMeterBackground) ); 
+   dc.SetBrush(mMeterBkgndBrush);
 
    if (mGradient)
    {
@@ -1836,11 +1785,7 @@ void MeterPanel::DrawMeterBar(wxDC &dc, MeterBar *bar)
          dc.SetBrush(mBkgndBrush);
       }
       dc.SetPen(*wxTRANSPARENT_PEN);
-      wxRect r(bar->rClip.GetX() + 1,
-               bar->rClip.GetY() + 1,
-               bar->rClip.GetWidth() - 1,
-               bar->rClip.GetHeight() - 1);
-      dc.DrawRectangle(r);
+      dc.DrawRectangle(bar->rClip);
    }
 }
 
@@ -1879,6 +1824,9 @@ void MeterPanel::StopMonitoring(){
 
 void MeterPanel::OnAudioIOStatus(AudioIOEvent evt)
 {
+   if (evt.type == AudioIOEvent::PAUSE)
+      return;
+
    if (!mIsInput != (evt.type == AudioIOEvent::PLAYBACK))
       return;
 

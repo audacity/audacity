@@ -28,6 +28,7 @@ class wxPanel;
 class wxStaticText;
 class wxTextCtrl;
 class wxRadioButton;
+enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom
 {
@@ -40,7 +41,8 @@ class ShareAudioDialog final :
     public wxDialogWrapper
 {
 public:
-   ShareAudioDialog(AudacityProject& project, wxWindow* parent = nullptr);
+   ShareAudioDialog(
+      AudacityProject& project, AudiocomTrace, wxWindow* parent = nullptr);
    ~ShareAudioDialog() override;
 
 private:
@@ -106,6 +108,7 @@ private:
 
    struct Services;
    std::unique_ptr<Services> mServices;
+   const AudiocomTrace mAudiocomTrace;
 
    class ExportProgressUpdater;
    std::unique_ptr<ExportProgressUpdater> mExportProgressUpdater;

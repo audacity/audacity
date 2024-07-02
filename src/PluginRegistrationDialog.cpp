@@ -180,7 +180,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
          {
             const auto pluginsList = safenew PluginDataViewCtrl(
                S.GetParent(), ID_List, wxDefaultPosition, wxDefaultSize,
-               wxSUNKEN_BORDER | wxDV_MULTIPLE | wxDV_HORIZ_RULES | wxDV_VERT_RULES,
+                wxDV_MULTIPLE | wxDV_HORIZ_RULES | wxDV_VERT_RULES,
                wxDefaultValidator,
                _("Plugin")
             );

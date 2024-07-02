@@ -149,8 +149,13 @@ void VST3EffectsModule::AutoRegisterPlugins(PluginManagerInterface &)
 {
 }
 
+bool VST3EffectsModule::SupportsCustomModulePaths() const
+{
+   return true;
+}
+
 PluginPaths
-VST3EffectsModule::FindModulePaths(PluginManagerInterface &)
+VST3EffectsModule::FindModulePaths(PluginManagerInterface &pluginManager)
 {
    //Note: The host recursively scans these folders at startup in this order (User/Global/Application).
    //https://developer.steinberg.help/display/VST/Plug-in+Locations
@@ -182,6 +187,10 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface &)
       path.AppendDir("VST3");
 #endif
       pathList.push_back(path.GetPath());
+   }
+   {
+      auto customPaths = pluginManager.ReadCustomPaths(*this);
+      std::copy(customPaths.begin(), customPaths.end(), std::back_inserter(pathList));
    }
 
    PluginPaths result;

@@ -61,14 +61,6 @@ set( IMAGE_LIST
    LabelGlyph9.png
    Loop.png
    LoopDisabled.png
-   MacDownButton.png
-   MacDownButtonSmall.png
-   MacHiliteButton.png
-   MacHiliteButtonSmall.png
-   MacHiliteUpButton.png
-   MacHiliteUpButtonSmall.png
-   MacUpButton.png
-   MacUpButtonSmall.png
    Mic.png
    Multi.png
    Options.png
@@ -116,6 +108,10 @@ set( IMAGE_LIST
    SyncLockTracksDisabled.png
    SyncLockTracksDown.png
    SyncLockTracksUp.png
+   TCPChevron.png
+   TCPChevronDown.png
+   TCPClose.png
+   TCPEllipses.png
    TimeCursor.png
    TnAutomateSelection.png
    TnAutomateSelectionDisabled.png
@@ -181,18 +177,24 @@ foreach( pair
          ../lib-theme/AllThemeResources.h
       COMMENT "Generating ${filename}.h..."
    )
+
+   add_custom_target(${theme} SOURCES ${THEME_FILES})
+   set_target_properties(${theme}
+      PROPERTIES
+         FOLDER "themes"
+   )
 endforeach()
 
 # Now define a more conventional library, using the output of the image compiler
 set( SOURCES
-   ClassicThemeAsCeeCode.cpp
-   ClassicThemeAsCeeCode.h
    DarkThemeAsCeeCode.cpp
    DarkThemeAsCeeCode.h
    HighContrastThemeAsCeeCode.cpp
    HighContrastThemeAsCeeCode.h
    LightThemeAsCeeCode.cpp
    LightThemeAsCeeCode.h
+   ClassicThemeAsCeeCode.cpp
+   ClassicThemeAsCeeCode.h
    LoadThemeResources.h
    LoadThemeResources.cpp
 )

@@ -45,8 +45,8 @@ public:
    const TCPLines& GetTCPLines() const override;
 
    static unsigned DefaultWaveTrackHeight();
-   static void GetGainRect(const wxPoint & topLeft, wxRect &dest);
-   static void GetPanRect(const wxPoint & topLeft, wxRect &dest);
+   static void GetGainRect(const wxRect &rect, wxRect &dest);
+   static void GetPanRect(const wxRect &rect, wxRect &dest);
 
    static LWSlider *GainSlider( CellularPanel &panel, const WaveTrack &wt );
    static LWSlider * GainSlider

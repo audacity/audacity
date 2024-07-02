@@ -18,6 +18,8 @@
 
 #include <wx/string.h>
 
+enum class AudiocomTrace;
+
 namespace audacity::cloud::audiocom
 {
 class ServiceConfig;
@@ -141,7 +143,8 @@ public:
    */
    UploadOperationHandle Upload(
       const wxString& fileName, const wxString& projectName, bool isPublic,
-      CompletedCallback completedCallback, ProgressCallback progressCallback);
+      CompletedCallback completedCallback, ProgressCallback progressCallback,
+      AudiocomTrace);
 
 private:
    const ServiceConfig& mServiceConfig;

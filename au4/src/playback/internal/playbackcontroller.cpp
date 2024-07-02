@@ -12,8 +12,11 @@ using namespace muse::async;
 using namespace muse::actions;
 
 static const ActionCode PLAY_CODE("play");
+static const ActionCode PAUSE_CODE("pause");
 static const ActionCode STOP_CODE("stop");
 static const ActionCode REWIND_START_CODE("rewind-start");
+static const ActionCode REWIND_END_CODE("rewind-end");
+static const ActionCode SEEK_CODE("playback_seek");
 static const ActionCode LOOP_CODE("loop");
 static const ActionCode LOOP_IN_CODE("loop-in");
 static const ActionCode LOOP_OUT_CODE("loop-out");
@@ -29,16 +32,19 @@ inline float secondsFromMilliseconds(msecs_t milliseconds)
 
 void PlaybackController::init()
 {
-    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::togglePlay);
-    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::pause);
+    dispatcher()->reg(this, PLAY_CODE, this, &PlaybackController::play);
+    dispatcher()->reg(this, PAUSE_CODE, this, &PlaybackController::pause);
+    dispatcher()->reg(this, STOP_CODE, this, &PlaybackController::stop);
     dispatcher()->reg(this, REWIND_START_CODE, this, &PlaybackController::rewindToStart);
+    dispatcher()->reg(this, REWIND_END_CODE, this, &PlaybackController::rewindToEnd);
+    dispatcher()->reg(this, SEEK_CODE, this, &PlaybackController::onSeekAction);
     dispatcher()->reg(this, LOOP_CODE, this, &PlaybackController::toggleLoopPlayback);
     // dispatcher()->reg(this, LOOP_IN_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopIn); });
     // dispatcher()->reg(this, LOOP_OUT_CODE, [this]() { addLoopBoundary(LoopBoundaryType::LoopOut); });
     dispatcher()->reg(this, REPEAT_CODE, this, &PlaybackController::togglePlayRepeats);
     dispatcher()->reg(this, PAN_CODE, this, &PlaybackController::toggleAutomaticallyPan);
 
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this]() {
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 
@@ -49,11 +55,31 @@ void PlaybackController::init()
         //     stop();
         // }
     });
+
+    m_player = playback()->player();
+    globalContext()->setPlayer(m_player);
+
+    m_player->playbackStatusChanged().onReceive(this, [this](PlaybackStatus) {
+        m_isPlayingChanged.notify();
+    });
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_isPlayAllowedChanged.notify();
+    });
+}
+
+void PlaybackController::deinit()
+{
+}
+
+IPlayerPtr PlaybackController::player() const
+{
+    return m_player;
 }
 
 bool PlaybackController::isPlayAllowed() const
 {
-    return isLoaded();
+    return !recordController()->isRecording();
 }
 
 Notification PlaybackController::isPlayAllowedChanged() const
@@ -63,12 +89,12 @@ Notification PlaybackController::isPlayAllowedChanged() const
 
 bool PlaybackController::isPlaying() const
 {
-    return m_currentPlaybackStatus == PlaybackStatus::Running;
+    return player()->playbackStatus() == PlaybackStatus::Running;
 }
 
 bool PlaybackController::isPaused() const
 {
-    return m_currentPlaybackStatus == PlaybackStatus::Paused;
+    return player()->playbackStatus() == PlaybackStatus::Paused;
 }
 
 bool PlaybackController::isLoaded() const
@@ -93,17 +119,13 @@ Notification PlaybackController::isPlayingChanged() const
     return m_isPlayingChanged;
 }
 
-void PlaybackController::seek(const audio::msecs_t msecs)
+void PlaybackController::seek(const audio::secs_t secs)
 {
-    IF_ASSERT_FAILED(au3Playback()) {
+    IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    if (m_currentPlaybackTimeMsecs == msecs) {
-        return;
-    }
-
-    au3Playback()->seek(msecs);
+    player()->seek(secs);
 }
 
 void PlaybackController::reset()
@@ -147,6 +169,12 @@ muse::async::Channel<TrackId> PlaybackController::trackRemoved() const
 
 void PlaybackController::onProjectChanged()
 {
+    au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        prj->aboutCloseBegin().onNotify(this, [this]() {
+            stop();
+        });
+    }
 }
 
 void PlaybackController::togglePlay()
@@ -159,13 +187,6 @@ void PlaybackController::togglePlay()
     if (isPlaying()) {
         pause();
     } else if (isPaused()) {
-        msecs_t endMsecs = playbackEndMsecs();
-
-        if (m_currentPlaybackTimeMsecs == endMsecs) {
-            msecs_t startMsecs = playbackStartMsecs();
-            seek(startMsecs);
-        }
-
         resume();
     } else {
         play();
@@ -174,86 +195,72 @@ void PlaybackController::togglePlay()
 
 void PlaybackController::play()
 {
-    IF_ASSERT_FAILED(au3Playback()) {
+    IF_ASSERT_FAILED(player()) {
         return;
     }
 
     if (isLoopEnabled()) {
-        msecs_t startMsecs = playbackStartMsecs();
-        seek(startMsecs);
+        // msecs_t startMsecs = playbackStartMsecs();
+        // seek(startMsecs);
     }
 
-    au3Playback()->play();
-    setCurrentPlaybackStatus(PlaybackStatus::Running);
+    player()->play();
 }
 
-void PlaybackController::rewindToStart(const ActionData& args)
+void PlaybackController::rewindToStart()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
     stop();
+    seek(0.0);
+}
 
-    msecs_t startMsecs = playbackStartMsecs();
-    msecs_t endMsecs = playbackEndMsecs();
-    msecs_t newPosition = !args.empty() ? args.arg<msecs_t>(0) : 0;
-    newPosition = std::clamp(newPosition, startMsecs, endMsecs);
+void PlaybackController::rewindToEnd()
+{
+    NOT_IMPLEMENTED;
+    //! NOTE: In Audacity 3 we can't rewind while playing
+    stop();
+}
 
-    seek(newPosition);
+void PlaybackController::onSeekAction(const muse::actions::ActionData& args)
+{
+    IF_ASSERT_FAILED(args.count() > 0) {
+        return;
+    }
+
+    if (isPlaying()) {
+        LOGD() << "Can't do seek while playing";
+        return;
+    }
+
+    double secs = args.arg<double>(0);
+    player()->seek(secs);
 }
 
 void PlaybackController::pause()
 {
-    IF_ASSERT_FAILED(au3Playback()) {
+    IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    au3Playback()->pause();
-    setCurrentPlaybackStatus(PlaybackStatus::Paused);
+    player()->pause();
 }
 
 void PlaybackController::stop()
 {
-    IF_ASSERT_FAILED(au3Playback()) {
+    IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    au3Playback()->stop();
-    setCurrentPlaybackStatus(PlaybackStatus::Stopped);
+    player()->stop();
 }
 
 void PlaybackController::resume()
 {
-    IF_ASSERT_FAILED(au3Playback()) {
+    IF_ASSERT_FAILED(player()) {
         return;
     }
 
-    au3Playback()->resume();
-    setCurrentPlaybackStatus(PlaybackStatus::Running);
-}
-
-msecs_t PlaybackController::playbackStartMsecs() const
-{
-    // const LoopBoundaries& loop = playback()->loopBoundaries();
-    // if (loop.enabled) {
-    //     return tickToMsecs(loop.loopInTick);
-    // }
-
-    return 0;
-}
-
-msecs_t PlaybackController::playbackEndMsecs() const
-{
-    NOT_IMPLEMENTED;
-    return 0; // total time
-}
-
-void PlaybackController::setCurrentPlaybackStatus(PlaybackStatus status)
-{
-    if (m_currentPlaybackStatus == status) {
-        return;
-    }
-
-    m_currentPlaybackStatus = status;
-    m_isPlayingChanged.notify();
+    player()->resume();
 }
 
 void PlaybackController::togglePlayRepeats()
@@ -365,14 +372,19 @@ muse::Progress PlaybackController::loadingProgress() const
     return m_loadingProgress;
 }
 
-bool PlaybackController::canReceiveAction(const ActionCode&) const
+bool PlaybackController::canReceiveAction(const ActionCode& code) const
 {
-    return globalContext()->currentProject() != nullptr;
-}
+    if (globalContext()->currentProject() == nullptr) {
+        return false;
+    }
 
-msecs_t PlaybackController::tickToMsecs(int tick) const
-{
-    NOT_IMPLEMENTED;
-    UNUSED(tick);
-    return 0;
+    if (code == PLAY_CODE || code == LOOP_CODE) {
+        return !recordController()->isRecording();
+    }
+
+    if (code == REWIND_START_CODE || code == REWIND_END_CODE) {
+        return !isPlaying() && !recordController()->isRecording();
+    }
+
+    return true;
 }
