@@ -134,7 +134,7 @@ DockPage {
             objectName: pageModel.playbackToolBarName()
             title: qsTrc("appshell", "Play Tool Bar")
 
-            thickness: 48 // todo
+            check: false
 
             dropDestinations: [
                 root.toolBarTopDropDestination,
@@ -144,8 +144,12 @@ DockPage {
             PlaybackToolBar {
                 floating: playbackToolBar.floating
 
-                maximumWidth: playbackToolBar.width
+                maximumWidth: playbackToolBar.width - 30
                 maximumHeight: playbackToolBar.height
+
+                onHeightChanged: {
+                    playbackToolBar.thickness = height
+                }
 
                 navigationPanel.section: root.playbackToolBarKeyNavSec
                 navigationPanel.order: 1

@@ -5,3 +5,6 @@ VolumePressureMeter 1.0 components/VolumePressureMeter.qml
 
 Timecode 1.0 components/Timecode.qml
 TimecodeStartEnd 1.0 components/TimecodeStartEnd.qml
+
+
+PStyledToolBarView 1.0 PStyledToolBarView.qml

@@ -22,13 +22,18 @@ Item {
 
     property alias navigationPanel: view.navigationPanel
 
-    width: view.width + /*spacing*/ 4 + customizeButton.width
-    height: 48 // todo
+    implicitWidth: maximumWidth
+    implicitHeight: view.height
 
-    StyledToolBarView {
+    PStyledToolBarView {
         id: view
 
         anchors.verticalCenter: parent.verticalCenter
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.rightMargin: 4 + customizeButton.width + 8
+
+        widthDependsOnContent: false
 
         rowHeight: 48
 
@@ -201,9 +206,10 @@ Item {
     FlatButton {
         id: customizeButton
 
-        anchors.margins: 4
-        anchors.left: view.right
-        anchors.verticalCenter: root.verticalCenter
+        anchors.right: parent.right
+        anchors.rightMargin: 12
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 12
 
         width: 28
         height: width
