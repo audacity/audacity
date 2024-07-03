@@ -9332,7 +9332,7 @@ msgstr "Эфекты"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Параметры..."
 
 #: src/RealtimeEffectPanel.cpp

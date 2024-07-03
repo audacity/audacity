@@ -9282,7 +9282,7 @@ msgstr "Efe&ktai"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "&Nuostatos..."
 
 #: src/RealtimeEffectPanel.cpp

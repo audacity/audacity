@@ -8849,7 +8849,7 @@ msgstr "সকল ফাইল (*)|*"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "প্লেব্যাক"
 
 #: src/RealtimeEffectPanel.cpp

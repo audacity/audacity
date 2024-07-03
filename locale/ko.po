@@ -9192,7 +9192,7 @@ msgid "No Effect"
 msgstr "효과 없음"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "더 많은 효과..."
 
 #: src/RealtimeEffectPanel.cpp

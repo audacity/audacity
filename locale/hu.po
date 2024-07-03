@@ -9312,7 +9312,7 @@ msgid "No Effect"
 msgstr "Nincs hatás"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "További hatások beszerzése…"
 
 #: src/RealtimeEffectPanel.cpp

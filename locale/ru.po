@@ -9028,7 +9028,7 @@ msgid "No Effect"
 msgstr "Эффекта нет"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Больше эффектов..."
 
 #: src/RealtimeEffectPanel.cpp

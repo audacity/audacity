@@ -9197,7 +9197,7 @@ msgstr "प्रभाव"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "प्राधान्य मिळवा ..."
 
 #: src/RealtimeEffectPanel.cpp

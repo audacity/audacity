@@ -9029,7 +9029,7 @@ msgstr "&Effeithio"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Hoffterau Audacity"
 
 #: src/RealtimeEffectPanel.cpp

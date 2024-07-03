@@ -360,7 +360,7 @@ auto EffectMenu()
             OnAddRealtimeEffects, HasTrackFocusFlag(), wxT("E"))
 #if defined(__WXMSW__) || defined(__WXMAC__)
          , Command(
-            wxT("GetMoreEffects"), XXO("Get more effects..."),
+            wxT("GetMoreEffects"), XXO("Get more Effects..."),
             [](const CommandContext&) {
                OpenInDefaultBrowser("https://www.musehub.com");
             },

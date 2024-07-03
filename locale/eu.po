@@ -9327,7 +9327,7 @@ msgstr "Eragina"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Lortu Hobespena..."
 
 #: src/RealtimeEffectPanel.cpp

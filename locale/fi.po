@@ -9175,7 +9175,7 @@ msgid "No Effect"
 msgstr "Ei tehostetta"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Hanki lisää tehosteita..."
 
 #: src/RealtimeEffectPanel.cpp

@@ -9327,7 +9327,7 @@ msgid "No Effect"
 msgstr "कोई प्रभाव नहीं"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "अधिक प्रभाव पायें..."
 
 #: src/RealtimeEffectPanel.cpp

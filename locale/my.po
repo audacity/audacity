@@ -9420,7 +9420,7 @@ msgstr "သက်ရောက်မှု"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "ဦးစားပေးချက်များ..."
 
 #: src/RealtimeEffectPanel.cpp

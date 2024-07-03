@@ -9311,7 +9311,7 @@ msgstr "விளைவுகள்"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "விருப்பங்கள்..."
 
 #: src/RealtimeEffectPanel.cpp
