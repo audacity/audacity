@@ -39,6 +39,12 @@ class MATH_API Resample final
    Resample(const bool useBestMethod, const double dMinFactor, const double dMaxFactor);
    ~Resample();
 
+   Resample( Resample&&) noexcept = default;
+   Resample& operator=(Resample&&) noexcept = default;
+
+   Resample(const Resample&) = delete;
+   Resample& operator=(const Resample&) = delete;
+
    static EnumSetting< int > FastMethodSetting;
    static EnumSetting< int > BestMethodSetting;
 

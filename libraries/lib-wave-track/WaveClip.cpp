@@ -1622,7 +1622,11 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
    // This function does its own RAII without a Transaction
 
    double factor = (double)rate / (double)mRate;
-   ::Resample resample(true, factor, factor); // constant rate resampling
+   //Resample is always configured to have single channel.
+   //Create Resample instance per each channel in the clip
+   std::vector<::Resample> resample;
+   for (unsigned n = 0; n < mSequences.size(); ++n)
+      resample.emplace_back(true, factor, factor);// constant rate resampling
 
    const size_t bufsize = 65536;
    Floats inBuffer{ bufsize };
@@ -1647,6 +1651,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
 
       auto ppNewSequence = newSequences.begin();
       std::optional<std::pair<size_t, size_t>> results{};
+      size_t nSequence = 0;
       for (auto &pSequence : mSequences) {
          auto &pNewSequence = *ppNewSequence++;
          if (
@@ -1659,7 +1664,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
          }
 
          // Expect the same results for all channels, or else fail
-         auto newResults = resample.Process(factor, inBuffer.get(), inLen,
+         auto newResults = resample[nSequence].Process(factor, inBuffer.get(), inLen,
             isLast, outBuffer.get(), bufsize);
          if (!results)
             results.emplace(newResults);
@@ -1678,6 +1683,7 @@ void WaveClip::Resample(int rate, BasicUI::ProgressDialog *progress)
             outGenerated, 1,
             widestSampleFormat /* computed samples need dither */
          );
+         ++nSequence;
       }
       if (results)
          pos += results->first;
