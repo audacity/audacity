@@ -346,7 +346,7 @@ auto ViewMenu()
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
             OnShowClipping, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowClipping"), false ) ),
-         Command( wxT("ShowRMS"), XXO("Show &RMS in Waveform"),
+         Command( wxT("ShowRMS"), XXO("Sho&w RMS in Waveform"),
             OnShowRMS, AlwaysEnabledFlag,
             Options{}.CheckTest( ShowRMSPref() ) )
       )
