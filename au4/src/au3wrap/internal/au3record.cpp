@@ -4,7 +4,7 @@
 
 #include "au3record.h"
 
-#include <QTimer>
+#include "timer.h"
 
 #include "global/async/async.h"
 
@@ -39,15 +39,13 @@ constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 namespace au::au3 {
-class RecordingListener : public AudioIOListener
+class RecordingListener : public AudioIOListener, public async::Asyncable
 {
 public:
     RecordingListener()
+        : m_timer(std::chrono::milliseconds(100))
     {
-        m_timer.setSingleShot(true);
-        m_timer.setInterval(100);
-
-        QObject::connect(&m_timer, &QTimer::timeout, [this]() {
+        m_timer.onTimeout(this, [this]() {
             m_updateRequested.notify();
             m_timer.start();
         });
@@ -76,7 +74,7 @@ private:
 
     async::Channel<processing::ClipKey> m_recordingClipChanged;
 
-    QTimer m_timer;
+    muse::Timer m_timer;
 };
 
 std::shared_ptr<RecordingListener> s_recordingListener;

@@ -47,6 +47,10 @@ Rectangle {
         clipKey: root.clipKey
     }
 
+    Component.onCompleted: {
+        contextMenuModel.load()
+    }
+
     ContextMenuLoader {
         id: contextMenuLoader
 
@@ -61,7 +65,6 @@ Rectangle {
         acceptedButtons: Qt.RightButton
         hoverEnabled: root.collapsed
         onClicked: function(e) {
-            contextMenuModel.loadItems()
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
         }
     }
