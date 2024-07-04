@@ -3,6 +3,8 @@
 */
 #include "au3selectioncontroller.h"
 
+#include "libraries/lib-track/Track.h"
+
 #include "log.h"
 
 //#define DEBUG_SELECTION
@@ -15,6 +17,40 @@
 using namespace au::au3;
 
 // clip selection
+
+void Au3SelectionController::resetSelectedTrack()
+{
+    MYLOG() << "resetSelectedTrack";
+
+    auto& tracks = TrackList::Get(projectRef());
+    for (Track* au3Track : tracks) {
+        au3Track->SetSelected(false);
+    }
+
+    m_selectedTrack.set(au::processing::TrackId(), true);
+}
+
+au::processing::TrackId Au3SelectionController::selectedTrack() const
+{
+    return m_selectedTrack.val;
+}
+
+void Au3SelectionController::setSelectedTrack(processing::TrackId trackId)
+{
+    MYLOG() << "track: " << trackId;
+
+    auto& tracks = TrackList::Get(projectRef());
+    for (Track* au3Track : tracks) {
+        au3Track->SetSelected(au3Track->GetId() == TrackId(trackId));
+    }
+
+    m_selectedTrack.set(trackId, true);
+}
+
+muse::async::Channel<au::processing::TrackId> Au3SelectionController::trackSelected() const
+{
+    return m_selectedTrack.selected;
+}
 
 void Au3SelectionController::resetSelectedClip()
 {
@@ -113,4 +149,10 @@ muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelecte
 muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelectedEndTimeSelected() const
 {
     return m_selectedEndTime.selected;
+}
+
+AudacityProject& Au3SelectionController::projectRef() const
+{
+    AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
+    return *project;
 }

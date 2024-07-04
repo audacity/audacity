@@ -77,6 +77,8 @@ private:
 
     void update();
 
+    void positionViewAtClip(const processing::Clip& clip);
+
     bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
 
     void onSelectedClip(const processing::ClipKey& k);

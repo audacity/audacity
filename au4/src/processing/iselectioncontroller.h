@@ -22,6 +22,12 @@ public:
     //! * valueChanged - notified when the selected value change (for example, the user moves the mouse cursor)
     //! * valueSelected - notified when value selection is complete
 
+    // track selection
+    virtual void resetSelectedTrack() = 0;
+    virtual TrackId selectedTrack() const = 0;
+    virtual void setSelectedTrack(TrackId trackId) = 0;
+    virtual muse::async::Channel<TrackId> trackSelected() const = 0;
+
     // clip selection
     virtual void resetSelectedClip() = 0;
     virtual ClipKey selectedClip() const = 0;

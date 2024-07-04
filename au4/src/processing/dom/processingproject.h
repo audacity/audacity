@@ -28,6 +28,7 @@ public:
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const;
 
     void onClipChanged(const Clip& clip);
+    void onClipAdded(const Clip& clip);
     void onClipRemoved(const Clip& clip);
 
     processing::TimeSignature timeSignature() const;

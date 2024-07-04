@@ -8,6 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "types/projectscenetypes.h"
+#include "processing/iselectioncontroller.h"
 
 #include "trackitem.h"
 
@@ -29,6 +30,8 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     Q_PROPERTY(bool isRemovingAvailable READ isRemovingAvailable NOTIFY isRemovingAvailableChanged)
     Q_PROPERTY(bool isAddingAvailable READ isAddingAvailable NOTIFY isAddingAvailableChanged)
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
+
+    muse::Inject<processing::ISelectionController> selectionController;
 
 public:
     TracksListModel(QObject* parent = nullptr);
@@ -86,6 +89,7 @@ private:
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 
     void onProjectChanged();
+    void onSelectedTrack(processing::TrackId trackId);
 
     TrackItem* buildTrackItem(const processing::Track& track);
     TrackItem* findTrackItem(const processing::TrackId& trackId);
