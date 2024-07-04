@@ -328,10 +328,6 @@ void AColor::DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap)
 
 void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap, int mid = 1)
 {
-   //sets a background to prevent black dots around rounded corners
-   dc.SetBrush(theTheme.Colour(clrLight));
-   dc.DrawRectangle(r);
-
    DrawNinePatch(dc, bitmap, r, mid);
 }
 
