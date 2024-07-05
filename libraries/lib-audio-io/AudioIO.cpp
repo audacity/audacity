@@ -2840,9 +2840,8 @@ bool AudioIoCallback::FillOutputBuffers(
             outputFloats[numPlaybackChannels * i + n] +=
                (oldGain + deltaGain * i) * tempBufs[n][i];
          }
-
-         CallbackCheckCompletion(mCallbackReturn, len);
       }
+      CallbackCheckCompletion(mCallbackReturn, len);
    }
 
    mOldPlaybackGain = gain;
