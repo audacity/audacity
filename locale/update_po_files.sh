@@ -1,6 +1,9 @@
 #!/bin/sh
-# Run this script with locale as the current directory
 set -o errexit
+
+# Enter the script directory
+CDPATH= cd -- "$(dirname -- "$0")"
+
 echo ";; Recreating audacity.pot using .h, .cpp and .mm files"
 for path in ../modules/* ../libraries/lib-* ../include ../src ../crashreports ; do
    find $path -name \*.h -o -name \*.cpp -o -name \*.mm
