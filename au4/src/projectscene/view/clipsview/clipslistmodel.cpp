@@ -61,6 +61,16 @@ void ClipsListModel::reload()
         }
     });
 
+    m_allClipList.onItemRemoved(this, [this](const Clip& clip) {
+        for (auto it = m_allClipList.begin(); it != m_allClipList.end(); ++it) {
+            if (it->key == clip.key) {
+                m_allClipList.erase(it);
+                update();
+                break;
+            }
+        }
+    });
+
     update();
 }
 
@@ -220,7 +230,7 @@ bool ClipsListModel::changeClipTitle(int index, const QString& newTitle)
 
 void ClipsListModel::selectClip(int index)
 {
-    selectionController()->setSelectedClip(processing::ClipKey(m_trackId, index));
+    selectionController()->setSelectedClip(m_clipList.at(index).key);
 }
 
 void ClipsListModel::resetSelectedClip()

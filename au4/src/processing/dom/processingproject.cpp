@@ -24,18 +24,29 @@ async::NotifyList<Track> ProcessingProject::trackList() const
     return m_au3->trackList();
 }
 
+Clip ProcessingProject::clip(const ClipKey& key) const
+{
+    return m_au3->clipList(key.trackId)[key.index];
+}
+
 async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) const
 {
     async::NotifyList<Clip> clips = m_au3->clipList(trackId);
-    async::ChangedNotifier<Clip>& notifer = m_clipsChanged[trackId];
-    clips.setNotify(notifer.notify());
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[trackId];
+    clips.setNotify(notifier.notify());
     return clips;
 }
 
 void ProcessingProject::onClipChanged(const Clip& clip)
 {
-    async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
-    notifer.itemChanged(clip);
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
+    notifier.itemChanged(clip);
+}
+
+void ProcessingProject::onClipRemoved(const Clip& clip)
+{
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
+    notifier.itemRemoved(clip);
 }
 
 TimeSignature ProcessingProject::timeSignature() const
