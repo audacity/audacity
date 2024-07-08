@@ -44,14 +44,14 @@ StyledPopupView {
                 implicitWidth: 80
                 anchors.verticalCenter: parent.verticalCenter
 
-                currentValue: root.lower
+                currentValue: root.upper
                 step: 1
                 decimals: 0
                 maxValue: 128
                 minValue: 1
 
                 onValueEdited: function(newValue) {
-                    root.lowerChangeRequested(newValue)
+                    root.upperChangeRequested(newValue)
                 }
             }
 
@@ -68,7 +68,7 @@ StyledPopupView {
                 width: control.width
                 anchors.verticalCenter: parent.verticalCenter
 
-                currentIndex: timeComboBox.indexOfValue(root.upper)
+                currentIndex: timeComboBox.indexOfValue(root.lower)
 
                 model: [
                     { "text": "2", "value": 2 },
@@ -80,7 +80,7 @@ StyledPopupView {
                 ]
 
                 onActivated: function(index, value) {
-                    root.upperChangeRequested(value)
+                    root.lowerChangeRequested(value)
                 }
             }
         }
