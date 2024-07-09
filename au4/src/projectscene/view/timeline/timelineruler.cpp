@@ -112,21 +112,20 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
 
         QString tickLabel = m_formatter->label(value, timeInterval, tickType, m_context);
         int labelsCount = 0;
-        //! AU4 TODO: when having very small distance between ticks, ticks look not even
         if (tickType == TickType::MAJOR || tickType == TickType::MINOR) {
             // add tick with label
-            ticks.append(TickInfo { static_cast<int>(std::round(x) + (labelsCount % LABEL_INTERVAL == 0 ? LABEL_OFFSET : 0)),
+            ticks.append(TickInfo { x + (labelsCount % LABEL_INTERVAL == 0 ? LABEL_OFFSET : 0),
                                     tickLabel,
                                     tickType,
-                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)),
+                                    QLineF(x, h - 2, x, h - 1 - tickHeight(tickType)),
                                     value });
             labelsCount++;
         } else {
             // add tick without label
-            ticks.append(TickInfo { -1,
+            ticks.append(TickInfo { -1.0,
                                     QString(),
                                     tickType,
-                                    QLineF(std::round(x), h - 2, std::round(x), h - 1 - tickHeight(tickType)),
+                                    QLineF(x, h - 2, x, h - 1 - tickHeight(tickType)),
                                     value });
         }
 
@@ -148,7 +147,7 @@ void TimelineRuler::drawLabels(QPainter* painter, const Ticks& ticks, double w, 
     painter->setPen(pen);
 
     for (qsizetype i = 0; i < ticks.count(); i++) {
-        if (ticks[i].x == -1) {
+        if (ticks[i].x == -1.0) {
             continue;
         }
         labelColor.setAlphaF(ticks[i].tickType == TickType::MAJOR ? LABEL_ALPHA_MAJOR : LABEL_ALPHA_MINOR);
