@@ -80,7 +80,7 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     double x = 0.0;
 
     // find value and position of the first tick
-    double remainder = fmod(value, timeInterval.minorMinor);
+    double remainder = std::remainder(value, timeInterval.minorMinor);
     if (remainder != 0) {
         x = (timeInterval.minorMinor - remainder) * m_context->zoom();
         value += (timeInterval.minorMinor - remainder);
@@ -101,9 +101,10 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     {
         // determine tick type
         TickType tickType;
-        if (tickNumber % static_cast<int>(timeInterval.major / timeInterval.minorMinor) == 0) {
+        double eps = 1.0e-5f;
+        if (std::abs(std::remainder(tickNumber, (timeInterval.major / timeInterval.minorMinor))) < eps) {
             tickType = TickType::MAJOR;
-        } else if (tickNumber % static_cast<int>(timeInterval.minor / timeInterval.minorMinor) == 0) {
+        } else if (std::abs(std::remainder(tickNumber, timeInterval.minor / timeInterval.minorMinor)) < eps) {
             tickType = TickType::MINOR;
         } else {
             tickType = TickType::MINORMINOR;
