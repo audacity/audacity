@@ -188,6 +188,7 @@ Rectangle {
             anchors.top: view.top
             anchors.bottom: parent.bottom
             x: playCursorController.positionX
+            z: 2
         }
 
         VerticalRulersPanel {
