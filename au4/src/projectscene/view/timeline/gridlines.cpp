@@ -25,7 +25,7 @@ void GridLines::paint(QPainter* painter)
     beatStrokeColor.setAlpha(static_cast<int>(0.1 * 256));
     pen.setColor(beatStrokeColor);
     painter->setPen(pen);
-    painter->drawLine(QLineF(std::round(0), 0, std::round(0), h));
+    painter->drawLine(QLineF(0, 0, 0, h));
 
     // draw gridlines
     drawGridLines(painter);
@@ -75,7 +75,7 @@ void GridLines::drawGridLines(QPainter* painter)
     pen.setWidth(1);
 
     for (const auto& tick : m_ticks) {
-        int x = tick.line.p1().x();
+        double x = tick.line.p1().x();
 
         if (tick.tickType == TickType::MAJOR) {
             pen.setColor(majorBeatStrokeColor);
@@ -83,7 +83,7 @@ void GridLines::drawGridLines(QPainter* painter)
             pen.setColor(beatStrokeColor);
         }
         painter->setPen(pen);
-        painter->drawLine(QLineF(std::round(x), 0, std::round(x), h));
+        painter->drawLine(QLineF(x, 0, x, h));
     }
 }
 

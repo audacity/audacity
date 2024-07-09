@@ -16,7 +16,7 @@ class QPainter;
 
 namespace au::projectscene {
 struct TickInfo {
-    int x = 0;
+    double x = 0.0;
     QString tickLabel;
     TickType tickType = TickType::MINORMINOR;
     QLineF line;
