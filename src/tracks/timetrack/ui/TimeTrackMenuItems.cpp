@@ -29,13 +29,6 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
 
-//    if (*tracks.Any<TimeTrack>().begin()) {
-//       AudacityMessageBox(
-//          XO(
-// "This version of Audacity only allows one time track for each project window.") );
-//       return;
-//    }
-
    auto t = tracks.AddToHead(std::make_shared<TimeTrack>());
 
    SelectUtilities::SelectNone( project );
