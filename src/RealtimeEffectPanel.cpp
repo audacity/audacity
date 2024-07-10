@@ -129,7 +129,7 @@ namespace
 
 #if defined(__WXMSW__) || defined(__WXMAC__)
          menu.AppendSeparator();
-         menu.Append(wxID_MORE, _("Get more effects..."));
+         menu.Append(wxID_MORE, _("Get more Effects..."));
 #endif
          menu.Bind(wxEVT_MENU, [&](wxCommandEvent evt) { commandId = evt.GetId(); });
 

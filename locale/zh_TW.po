@@ -9379,7 +9379,7 @@ msgid "No Effect"
 msgstr "無效果器"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "尋找更多效果器... "
 
 #: src/RealtimeEffectPanel.cpp

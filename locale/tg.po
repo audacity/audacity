@@ -9176,7 +9176,7 @@ msgstr "Нати&ҷа"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Қисматҳо..."
 
 #: src/RealtimeEffectPanel.cpp

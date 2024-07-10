@@ -9231,7 +9231,7 @@ msgid "No Effect"
 msgstr "ეფექტის გარეშე"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "მიიღეთ მეტი ეფექტი..."
 
 #: src/RealtimeEffectPanel.cpp

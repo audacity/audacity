@@ -9325,7 +9325,7 @@ msgid "No Effect"
 msgstr "Žádný efekt"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Získat další efekty..."
 
 #: src/RealtimeEffectPanel.cpp

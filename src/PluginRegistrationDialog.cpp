@@ -204,7 +204,7 @@ void PluginRegistrationDialog::PopulateOrExchange(ShuttleGui &S)
             S.AddSpace(Margin, 1);
             S.Id(ID_Rescan).AddButton(XXO("&Rescan"));
 #if defined(__WXMSW__) || defined(__WXMAC__)
-            S.Id(ID_GetMoreEffects).AddButton(XXO("&Get more effects..."));
+            S.Id(ID_GetMoreEffects).AddButton(XXO("&Get more Effects..."));
 #endif
             S.AddSpace(1, 1, 1);
 

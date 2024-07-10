@@ -9082,7 +9082,7 @@ msgstr "Efe&ct"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Preferințe..."
 
 #: src/RealtimeEffectPanel.cpp

@@ -9420,7 +9420,7 @@ msgstr "Efektua"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Lortu hobespena..."
 
 #: src/RealtimeEffectPanel.cpp

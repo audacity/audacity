@@ -9110,7 +9110,7 @@ msgid "No Effect"
 msgstr "אין אפקט"
 
 #: src/RealtimeEffectPanel.cpp
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "הבא עוד אפקטים..."
 
 #: src/RealtimeEffectPanel.cpp

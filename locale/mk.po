@@ -9022,7 +9022,7 @@ msgstr "&Ефект"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Аudacity поставки"
 
 #: src/RealtimeEffectPanel.cpp

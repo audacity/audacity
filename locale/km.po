@@ -9190,7 +9190,7 @@ msgstr "បែបផែន"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "​ចំណូលចិត្ត..."
 
 #: src/RealtimeEffectPanel.cpp

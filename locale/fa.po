@@ -9154,7 +9154,7 @@ msgstr "ج&لوه"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "ترجیحات..."
 
 #: src/RealtimeEffectPanel.cpp

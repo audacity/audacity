@@ -9017,7 +9017,7 @@ msgstr "Maisiúchán"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Faigh Sainrogha..."
 
 #: src/RealtimeEffectPanel.cpp

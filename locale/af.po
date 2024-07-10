@@ -9122,7 +9122,7 @@ msgstr "&Effek"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
-msgid "Get more effects..."
+msgid "Get more Effects..."
 msgstr "Voorkeure..."
 
 #: src/RealtimeEffectPanel.cpp
