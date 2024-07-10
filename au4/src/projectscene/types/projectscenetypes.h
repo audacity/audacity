@@ -44,6 +44,31 @@ public:
     };
     Q_ENUM(Type)
 };
+
+enum class SnapType {
+    Bar,
+
+    Half,
+    Quarter,
+    Eighth,
+    Sixteenth,
+    ThirtySecond,
+    SixtyFourth,
+    HundredTwentyEighth,
+
+    Seconds,
+    Deciseconds,
+    Centiseconds,
+    Milliseconds,
+    Samples,
+
+    FilmFrames,
+    NTSCFrames,
+    NTSCFramesDrop,
+    PALFrames,
+
+    CDDAFrames
+};
 }
 
 enum class TimelineRulerMode {

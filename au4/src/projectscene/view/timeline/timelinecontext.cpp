@@ -177,7 +177,16 @@ double TimelineContext::timeToPosition(double time) const
 
 double TimelineContext::positionToTime(double position) const
 {
-    return m_frameStartTime + position / m_zoom;
+    double result = m_frameStartTime + position / m_zoom;
+
+    if (withSnap) {
+        auto viewState = this->viewState();
+        if (viewState && viewState->isSnapEnabled().val) {
+            result = m_snapTimeFormatter->snapTime(result, viewState->snapType().val, viewState->isSnapTripletsEnabled().val);
+        }
+    }
+
+    return result;
 }
 
 double TimelineContext::zoom() const

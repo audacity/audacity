@@ -11,6 +11,7 @@
 #include "view/toolbars/playbacktoolbarbpmitem.h"
 #include "view/toolbars/playbacktoolbartimesignatureitem.h"
 #include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
+#include "projectscene/view/toolbars/snaptoolbaritem.h"
 
 #include "containers.h"
 
@@ -42,6 +43,8 @@ static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
 static const ActionCode RECORD_LEVEL("record-level");
 
+static const ActionCode SNAP_ACTION_CODE("snap");
+
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
     std::map<ActionCode, PlaybackToolBarModel::ItemType> types = {
@@ -56,6 +59,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { REWIND_START_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { REWIND_END_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
     };
 
     return muse::value(types, actionCode, PlaybackToolBarModel::PROJECT_CONTROL);
@@ -275,6 +279,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
         result = std::move(item);
         break;
     }
+    case PlaybackToolBarModel::SNAP:
+        result = new projectscene::SnapToolBarItem(action, static_cast<ToolBarItemType::Type>(type), this);
+        break;
     default:
         break;
     }

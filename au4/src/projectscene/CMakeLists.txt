@@ -39,6 +39,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/projecttoolbarmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/snaptoolbaritem.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/clipcontextmenumodel.cpp

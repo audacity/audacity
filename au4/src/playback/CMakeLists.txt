@@ -68,7 +68,8 @@ set(MODULE_SRC
 
     )
 
-set(LINK_LIB
+set(MODULE_LINK
+    projectscene
     record
 )
 
