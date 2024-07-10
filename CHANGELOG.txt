@@ -1,5 +1,44 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.6.0
+
+Audacity 3.6 adds a master channel, and a new compressor and limiter. 
+
+ Major changes
+
+   * Master effects
+     A new master channel can now be used to apply effects to all tracks at once.
+   * New compressor and limiter
+     A new compressor and limiter has been added, replacing the previous versions. Both are realtime-capable.
+     A gain reduction history has been added to these effects when they're used as a realtime effect.
+     Factory Presets suitable for a wide range of use cases for these effects have been provided by Vladislav Isaev and Marek Iwaszkiewicz, available via the Presets & Settings button.
+   * New themes
+     Audacity now features new and improved dark and light themes. You can switch between themes via Preferences -> Interface. The theme previously used still is around as the Classic theme, and themes even older than that can be optionally installed as custom themes.
+   * Increased performance
+     Audacity is now quite a bit snappier than before, especially when working on larger projects and/or larger screens.
+
+ Other changes
+
+   * Added FFmpeg 7 support.
+   * You now can paste audio files into Audacity using Ctrl+V.
+   * Alternative waveform colors are now themeable by custom themes. 
+   * Made the track header wider and simplified it a bit.
+   * Removed the track name overlay preference and the "blend themes" preference.
+   * Scripting: Added GetInfo: Type=Selection. (Thanks, Jonatã Bolzan Loss!)
+   * Added an Extra > Export > Export Selected Audio menu item. 
+   * Import Raw: Added support for offsets larger than 2 GB.
+   * Redesigned the "what's new" dialog. 
+   * Added an option to the View menu to show/hide RMS in waveforms.
+
+ Bugfixes
+
+   * #6340 When recording to a new track, the track is now scrolled back into view again.
+   * #3825 The macro manager no longer shows parameterless actions as editable. (Thanks, Davi Nonnenmacher!)
+   * #6138 Pressing Esc in some preference dialogs no longer saves them.
+   * #4504 Fixed stray orange lines in the high contrast theme.
+   * #5626 Fixed the quality slider for Ogg export on Linux. (Thanks, Devpriya Nalin!)
+   * Various compiler warning fixes and OpenBSD build fixes. (Thanks, Brad Smith!)
+
 Changes in version 3.5.1
 
  This is a hotfix release. It fixes the following bugs:
