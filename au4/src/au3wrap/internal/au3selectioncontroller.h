@@ -3,13 +3,25 @@
 */
 #pragma once
 
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
+
 #include "processing/iselectioncontroller.h"
 
+class AudacityProject;
 namespace au::au3 {
 class Au3SelectionController : public processing::ISelectionController
 {
+    muse::Inject<au::context::IGlobalContext> globalContext;
+
 public:
     Au3SelectionController() = default;
+
+    // track selection
+    void resetSelectedTrack() override;
+    processing::TrackId selectedTrack() const override;
+    void setSelectedTrack(processing::TrackId trackId) override;
+    muse::async::Channel<processing::TrackId> trackSelected() const override;
 
     // clip selection
     void resetSelectedClip() override;
@@ -36,6 +48,7 @@ public:
     muse::async::Channel<processing::secs_t> dataSelectedEndTimeSelected() const override;
 
 private:
+    AudacityProject& projectRef() const;
 
     template<typename T>
     struct Val {
@@ -52,6 +65,9 @@ private:
             }
         }
     };
+
+    // track selection
+    Val<processing::TrackId> m_selectedTrack;
 
     // clip selection
     Val<processing::ClipKey> m_selectedClip;

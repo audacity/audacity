@@ -3,9 +3,6 @@
 */
 #pragma once
 
-#include <QString>
-#include <QTimer>
-
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 

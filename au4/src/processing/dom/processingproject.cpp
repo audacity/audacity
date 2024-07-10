@@ -49,6 +49,12 @@ void ProcessingProject::onClipRemoved(const Clip& clip)
     notifier.itemRemoved(clip);
 }
 
+void ProcessingProject::onClipAdded(const Clip& clip)
+{
+    async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
+    notifer.itemAdded(clip);
+}
+
 TimeSignature ProcessingProject::timeSignature() const
 {
     return m_au3->timeSignature();

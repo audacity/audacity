@@ -432,6 +432,8 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenuItem("updates"),
         makeMenuItem("about-audacity"),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
+        makeSeparator(),
+        makeMenuItem("revert-factory")
     };
 
     //! TODO AU4

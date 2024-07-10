@@ -19,6 +19,8 @@
 #include "waveform/WaveBitmapCache.h"
 #include "waveform/WaveDataCache.h"
 
+#include "libraries/lib-track/PendingTracks.h"
+
 #include "domaccessor.h"
 
 constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
@@ -664,17 +666,21 @@ void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey
     // }
     // LOGD() << "trackId: " << clipKey.trackId << ", clip: " << clipKey.index;
 
-    WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(track) {
+    //! Pending tracks are same as project tracks, but with new tracks when recording, so we need draw them
+    Track* track = &PendingTracks::Get(projectRef())
+                   .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
+
+    WaveTrack* waveTrack = dynamic_cast<WaveTrack*>(track);
+    IF_ASSERT_FAILED(waveTrack) {
         return;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(track, clipKey.index);
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
     IF_ASSERT_FAILED(clip) {
         return;
     }
 
-    doPaint(painter, track, clip.get(), params);
+    doPaint(painter, waveTrack, clip.get(), params);
 }
 
 void Au3WavePainter::doPaint(QPainter& painter, const WaveTrack* _track, const WaveClip* clip, const Params& params)

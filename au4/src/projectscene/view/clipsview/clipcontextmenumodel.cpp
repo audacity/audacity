@@ -7,8 +7,10 @@ using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
-void ClipContextMenuModel::loadItems()
+void ClipContextMenuModel::load()
 {
+    AbstractMenuModel::load();
+
     auto makeItemWithArg = [this](const ActionCode& actionCode) {
         MenuItem* item = makeMenuItem(actionCode);
         item->setArgs(ActionData::make_arg1<processing::ClipKey>(m_clipKey.key));
