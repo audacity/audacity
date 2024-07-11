@@ -52,7 +52,7 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    bool ShowClipping { false };
 
    //! True, if we paint RMS values on top of min and max
-   bool ShowRMS { true };
+   bool ShowRMS { false };
 
    //! Color outside the waveform area
    graphics::Color BlankColor;

@@ -230,7 +230,7 @@ int ShowClippingPrefsID()
 
 BoolSetting& ShowRMSPref()
 {
-   static BoolSetting pref { "/GUI/ShowRMS", true };
+   static BoolSetting pref { "/GUI/ShowRMS", false };
    return pref;
 }
 
