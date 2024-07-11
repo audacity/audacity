@@ -2,6 +2,7 @@
 #define AU_PROJECT_AUDACITYPROJECT_H
 
 #include "../iaudacityproject.h"
+#include "context/iglobalcontext.h"
 #include "modularity/ioc.h"
 #include "au3wrap/iau3project.h"
 #include "io/ifilesystem.h"
@@ -39,6 +40,7 @@ class Audacity4Project : public IAudacityProject
     muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
+    muse::Inject<context::IGlobalContext> globalContext;
 
 public:
     Audacity4Project();

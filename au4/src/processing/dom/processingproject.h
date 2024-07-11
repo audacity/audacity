@@ -35,6 +35,8 @@ public:
     void setTimeSignature(const processing::TimeSignature& timeSignature);
     muse::async::Channel<processing::TimeSignature> timeSignatureChanged() const;
 
+    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription);
+
     //! NOTE Just for debug
     void dump();
 

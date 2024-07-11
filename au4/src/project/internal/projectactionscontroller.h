@@ -59,6 +59,9 @@ private:
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
     muse::io::path_t selectOpeningFile();
+
+    muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
+
     muse::Ret canSaveProject() const;
     bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);
     bool saveProjectAt(const SaveLocation& saveLocation, SaveMode saveMode = SaveMode::Save, bool force = false);

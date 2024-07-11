@@ -7,6 +7,8 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 
+#include "UndoManager.h"
+
 #include "log.h"
 
 using namespace muse;
@@ -160,6 +162,7 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
         m_isProjectClosing = false;
     };
 
+    AudacityProject* internalAu3Project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
         return true;
@@ -167,17 +170,17 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
     bool result = true;
 
-    // if (project->needSave().val) {
-    //     IInteractive::Button btn = askAboutSavingScore(project);
+    if (UndoManager::Get(*internalAu3Project).UnsavedChanges()) {
+        IInteractive::Button btn = askAboutSavingProject(project);
 
-    //     if (btn == IInteractive::Button::Cancel) {
-    //         result = false;
-    //     } else if (btn == IInteractive::Button::Save) {
-    //         result = saveProject();
-    //     } else if (btn == IInteractive::Button::DontSave) {
-    //         result = true;
-    //     }
-    // }
+        if (btn == IInteractive::Button::Cancel) {
+            result = false;
+        } else if (btn == IInteractive::Button::Save) {
+            result = saveProject();
+        } else if (btn == IInteractive::Button::DontSave) {
+            result = true;
+        }
+    }
 
     if (result) {
         interactive()->closeAllDialogs();
@@ -204,8 +207,12 @@ bool ProjectActionsController::closeOpenedProject(bool quitApp)
 
 bool ProjectActionsController::saveProject(const muse::io::path_t& path)
 {
-    //! TODO AU4
-    return false;
+    //! TODO AU4: this should ask for local/cloud save
+    //! use saveProject(SaveMode saveMode, SaveLocationType saveLocationType, bool force)
+    //! when implemented
+    //!
+    //! for now it saves at current file
+    return saveProjectLocally(path);
 }
 
 bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
@@ -276,6 +283,22 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
     }
 
     return filePath;
+}
+
+IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
+{
+    std::string title = muse::qtrc("project", "Do you want to save changes to the score “%1” before closing?")
+                        .arg(project->displayName()).toStdString();
+
+    std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
+
+    IInteractive::Result result = interactive()->warning(title, body, {
+        IInteractive::Button::DontSave,
+        IInteractive::Button::Cancel,
+        IInteractive::Button::Save
+    }, IInteractive::Button::Save);
+
+    return result.standardButton();
 }
 
 Ret ProjectActionsController::canSaveProject() const

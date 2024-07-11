@@ -59,9 +59,14 @@ void ProcessingActionsController::clipDeleteSelected()
     auto tracks = project->processingProject()->trackList();
     auto selectedClipKey = selectionController()->selectedClip();
 
+    secs_t duration = selectedEndTime - selectedStartTime;
+    secs_t start = selectedStartTime;
+
     //! TODO AU4: improve for deleting multiple selected clips
     // remove single clip when selected via header click
     if (selectedClipKey.index != nidx) {
+        duration = processingInteraction()->clipDuration(selectedClipKey);
+        start = processingInteraction()->clipStartTime(selectedClipKey);
         processingInteraction()->removeClip(selectedClipKey);
     }
 
@@ -81,7 +86,10 @@ void ProcessingActionsController::clipDeleteSelected()
         }
     }
 
-    //! TODO AU4: add history of user actions
+    auto processingProject = project->processingProject();
+    std::stringstream ss;
+    ss << "Delete " << duration << " seconds at " << start;
+    processingProject->pushHistoryState(ss.str(), "Delete");
 }
 
 void ProcessingActionsController::toggleLoopRegion()
