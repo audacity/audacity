@@ -18,9 +18,11 @@ class IProcessingInteraction : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IProcessingInteraction() = default;
 
+    virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
     virtual bool changeClipStartTime(const ClipKey& clipKey, double sec) = 0;
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClipData(const ClipKey& clipKey, double begin, double end) = 0;
+    virtual secs_t clipDuration(const ClipKey& clipKey) const = 0;
 };
 }

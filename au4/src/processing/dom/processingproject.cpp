@@ -64,6 +64,11 @@ muse::async::Channel<TimeSignature> ProcessingProject::timeSignatureChanged() co
     return m_au3->timeSignatureChanged();
 }
 
+void ProcessingProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
+{
+    m_au3->pushHistoryState(longDescription, shortDescription);
+}
+
 void ProcessingProject::dump()
 {
     async::NotifyList<Track> tracks = trackList();

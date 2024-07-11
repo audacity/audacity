@@ -18,6 +18,21 @@ AudacityProject& ProcessingInteraction::projectRef() const
     return *project;
 }
 
+au::audio::secs_t ProcessingInteraction::clipStartTime(const processing::ClipKey& clipKey) const
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return -1.0;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+    IF_ASSERT_FAILED(clip) {
+        return -1.0;
+    }
+
+    return clip->Start();
+}
+
 bool ProcessingInteraction::changeClipStartTime(const processing::ClipKey& clipKey, double sec)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
@@ -106,4 +121,19 @@ bool ProcessingInteraction::removeClipData(const processing::ClipKey& clipKey, d
     }
 
     return true;
+}
+
+au::audio::secs_t ProcessingInteraction::clipDuration(const processing::ClipKey& clipKey) const
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return -1.0;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+    IF_ASSERT_FAILED(clip) {
+        return -1.0;
+    }
+
+    return clip->End() - clip->Start();
 }

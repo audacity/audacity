@@ -96,11 +96,17 @@ bool Au3Project::save(const muse::io::path_t& filePath)
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     TrackList& tracks = TrackList::Get(m_data->projectRef());
-    return projectFileIO.SaveProject(wxFromString(filePath.toString()), &tracks);
+    auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), &tracks);
+    if (result) {
+        UndoManager::Get(m_data->projectRef()).StateSaved();
+    }
+    return result;
 }
 
 void Au3Project::close()
 {
+    UndoManager::Get(m_data->projectRef()).ClearStates();
+
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
     projectFileIO.CloseProject();
 }
@@ -197,6 +203,12 @@ void Au3Project::setTimeSignature(const processing::TimeSignature& timeSignature
 muse::async::Channel<au::processing::TimeSignature> Au3Project::timeSignatureChanged() const
 {
     return m_timeSignatureChanged;
+}
+
+void Au3Project::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
+{
+    auto project = reinterpret_cast<AudacityProject*>(au3ProjectPtr());
+    ProjectHistory::Get(*project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
 }
 
 uintptr_t Au3Project::au3ProjectPtr() const

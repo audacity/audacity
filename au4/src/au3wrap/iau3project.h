@@ -34,6 +34,8 @@ public:
     virtual void setTimeSignature(const processing::TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const = 0;
 
+    virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
+
     // internal
     virtual uintptr_t au3ProjectPtr() const = 0;
 };

@@ -6,6 +6,7 @@
 #include <memory>
 
 #include "../iau3project.h"
+#include "ProjectHistory.h"
 
 namespace au::au3 {
 struct Au3ProjectData;
@@ -30,6 +31,8 @@ public:
     processing::TimeSignature timeSignature() const override;
     void setTimeSignature(const processing::TimeSignature& timeSignature) override;
     muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const override;
+
+    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
 
     // internal
     uintptr_t au3ProjectPtr() const override;
