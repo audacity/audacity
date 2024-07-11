@@ -10,6 +10,7 @@
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
 #include "mocks/au3settingsmock.h"
+#include "mocks/qtBasicUI.h"
 
 #include "modularity/ioc.h"
 
@@ -66,6 +67,9 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     m_record->init();
 
     m_audioDevicesProvider->init();
+
+    static QtBasicUI uiServices;
+    (void)BasicUI::Install(&uiServices);
 }
 
 void Au3WrapModule::onDeinit()
