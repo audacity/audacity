@@ -39,7 +39,7 @@ namespace
 #  define SHOW_MUSEHUB
 #endif
 
-const char* WhatsNewURL = "https://audacityteam.org/3.5.0-video";
+const char* WhatsNewURL = "https://audacityteam.org/3.6.0-video";
 const char* MuseHubURL = "https://www.musehub.com";
 
 #if defined(SHOW_MUSEHUB)
