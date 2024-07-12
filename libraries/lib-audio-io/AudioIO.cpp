@@ -1328,7 +1328,7 @@ bool AudioIO::AllocateBuffers(
             const auto timeQueueSize = 1 +
                (playbackBufferSize + TimeQueueGrainSize - 1)
                   / TimeQueueGrainSize;
-            mPlaybackSchedule.mTimeQueue.Resize( timeQueueSize );
+            mPlaybackSchedule.mTimeQueue.Init( timeQueueSize );
          }
 
          if( mNumCaptureChannels > 0 )
