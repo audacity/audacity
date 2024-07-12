@@ -46,8 +46,8 @@ void SelectionViewController::onPositionChanged(double x, double y)
         std::swap(x1, x2);
     }
 
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), false);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), false);
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), false);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
 }
 
 void SelectionViewController::onReleased(double x, double y)
@@ -78,8 +78,8 @@ void SelectionViewController::onReleased(double x, double y)
     selectionController()->setDataSelectedOnTracks(tracks, true);
 
     // time
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), true);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), true);
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), true);
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
@@ -89,8 +89,8 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
         std::swap(x1, x2);
     }
 
-    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1), completed);
-    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2), completed);
+    selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), completed);
+    selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), completed);
 }
 
 IProjectViewStatePtr SelectionViewController::viewState() const

@@ -5,6 +5,8 @@
 
 #include "global/types/number.h"
 
+#include "snaptimeformatter.h"
+
 #include "log.h"
 
 static constexpr double ZOOM_MIN = 0.1;
@@ -15,6 +17,7 @@ using namespace au::projectscene;
 TimelineContext::TimelineContext(QObject* parent)
     : QObject(parent)
 {
+    m_snapTimeFormatter = std::make_shared<SnapTimeFormatter>();
 }
 
 void TimelineContext::init(double frameWidth)
@@ -141,6 +144,12 @@ void TimelineContext::shiftFrameTime(double shift)
     emit frameTimeChanged();
 }
 
+IProjectViewStatePtr TimelineContext::viewState() const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    return prj ? prj->viewState() : nullptr;
+}
+
 void TimelineContext::onProjectChanged()
 {
     auto project = globalContext()->currentProcessingProject();
@@ -175,7 +184,7 @@ double TimelineContext::timeToPosition(double time) const
     return p;
 }
 
-double TimelineContext::positionToTime(double position) const
+double TimelineContext::positionToTime(double position, bool withSnap) const
 {
     double result = m_frameStartTime + position / m_zoom;
 

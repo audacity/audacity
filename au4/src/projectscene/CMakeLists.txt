@@ -66,6 +66,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/gridlines.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/gridlines.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.h
