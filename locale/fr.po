@@ -13,7 +13,7 @@
 # BobSynfig, 2014
 # Louis Boucherie, 2015
 # Tubuntu <tubuntu@testimonium.be>, 2013-2015
-# Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017-2023
+# Olivier Humbert (trebmuh/olinuxx) <trebmuh@tuxfamily.org>, 2017-2024
 # Leaumonte, 2023
 msgid ""
 msgstr ""
@@ -9671,7 +9671,7 @@ msgstr "Regarder la vidéo"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr "Les effets temps réel ne sont pas destructifs et peuvent être modifier à tout moment."
+msgstr "Les effets temps réel ne sont pas destructifs et peuvent être modifiés à tout moment."
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
