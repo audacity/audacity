@@ -265,16 +265,23 @@ double RecordingSchedule::ToDiscard() const
    return std::max(0.0, -( mPosition + TotalCorrection() ) );
 }
 
+PlaybackSchedule::TimeQueue::TimeQueue() = default;
+
 void PlaybackSchedule::TimeQueue::Clear()
 {
-   mData = Records{};
-   mHead = {};
-   mTail = {};
+   mNodePool.clear();
+   mProducerNode = nullptr;
+   mConsumerNode = nullptr;
 }
 
-void PlaybackSchedule::TimeQueue::Resize(size_t size)
+void PlaybackSchedule::TimeQueue::Init(size_t size)
 {
-   mData.resize(size);
+   auto node = std::make_unique<Node>();
+   mProducerNode = mConsumerNode = node.get();
+   mProducerNode->active.test_and_set();
+   mProducerNode->records.resize(size);
+   mNodePool.clear();
+   mNodePool.emplace_back( std::move(node) );
 }
 
 void PlaybackSchedule::TimeQueue::Producer(
@@ -282,54 +289,105 @@ void PlaybackSchedule::TimeQueue::Producer(
 {
    auto &policy = schedule.GetPolicy();
 
-   if ( mData.empty() )
+   auto node = mProducerNode;
+
+   if ( node == nullptr )
       // Recording only.  Don't fill the queue.
       return;
 
-   // Don't check available space:  assume it is enough because of coordination
-   // with RingBuffer.
-   auto index = mTail.mIndex;
-   auto time = mLastTime;
-   auto remainder = mTail.mRemainder;
-   auto space = TimeQueueGrainSize - remainder;
-   const auto size = mData.size();
 
-   // Produce advancing times
+   auto written = node->written;
+   auto tail = node->tail.load(std::memory_order_acquire);
+   auto head = node->head.load(std::memory_order_relaxed);
+   auto time = mLastTime;
+
    auto frames = slice.toProduce;
-   while ( frames >= space ) {
-      auto times = policy.AdvancedTrackTime( schedule, time, space );
+
+   auto advanceTail = [&](double time)
+   {
+      auto newTail = (tail + 1) % static_cast<int>(node->records.size());
+      if((newTail > head && static_cast<size_t>(newTail - head) == node->records.size() - 1) ||
+         (newTail < head && static_cast<size_t>(head - newTail) == node->records.size() - 1))
+      {
+         try
+         {
+            Node* next = nullptr;
+            for(auto& p : mNodePool)
+            {
+               if(p.get() == node || p->active.test_and_set())
+                  continue;
+
+               next = p.get();
+               //next->offset = 0; set on consumer thread
+               next->next.store(nullptr);
+               next->head.store(0);
+               next->tail.store(0);
+               break;
+            }
+            if(next == nullptr)
+            {
+               mNodePool.emplace_back(std::make_unique<Node>());
+               next = mNodePool.back().get();
+            }
+            //previous node had too low capacity to fit all slices,
+            //try enlarge capacity to avoid more reallocaitons
+            next->records.resize(node->records.size() * 2);
+            next->records[0].timeValue = time;
+
+            node->next.store(next);//make it visible to the consumer
+            mProducerNode = node = next;
+            head = 0;
+            newTail = 0;
+         }
+         catch(...)
+         {
+            //overwrite last grain...
+            newTail = tail;
+         }
+      }
+      else
+         node->records[newTail].timeValue = time;
+      tail = newTail;
+      node->written = 0;
+   };
+
+   //inv: space > 0
+   auto space = TimeQueueGrainSize - written;
+   while ( frames >= space )
+   {
+      const auto times = policy.AdvancedTrackTime( schedule, time, space);
       time = times.second;
       if (!std::isfinite(time))
          time = times.first;
-      index = (index + 1) % size;
-      mData[ index ].timeValue = time;
+      advanceTail(time);
+      written = 0;
       frames -= space;
-      remainder = 0;
       space = TimeQueueGrainSize;
    }
    // Last odd lot
-   if ( frames > 0 ) {
-      auto times = policy.AdvancedTrackTime( schedule, time, frames );
+   if ( frames > 0 )
+   {
+      const auto times = policy.AdvancedTrackTime( schedule, time, frames );
       time = times.second;
       if (!std::isfinite(time))
          time = times.first;
-      remainder += frames;
+      written += frames;
       space -= frames;
    }
-
    // Produce constant times if there is also some silence in the slice
    frames = slice.frames - slice.toProduce;
-   while ( frames > 0 && frames >= space ) {
-      index = (index + 1) % size;
-      mData[ index ].timeValue = time;
+   while (frames > 0 && frames >= space )
+   {
+      advanceTail(time);
+      
       frames -= space;
-      remainder = 0;
+      written = 0;
       space = TimeQueueGrainSize;
    }
 
    mLastTime = time;
-   mTail.mRemainder = remainder + frames;
-   mTail.mIndex = index;
+   node->written = written + frames;
+   node->tail.store(tail, std::memory_order_release);
 }
 
 double PlaybackSchedule::TimeQueue::GetLastTime() const
@@ -344,33 +402,68 @@ void PlaybackSchedule::TimeQueue::SetLastTime(double time)
 
 double PlaybackSchedule::TimeQueue::Consumer( size_t nSamples, double rate )
 {
-   if ( mData.empty() ) {
+   auto node = mConsumerNode;
+
+   if ( node == nullptr ) {
       // Recording only.  No scrub or playback time warp.  Don't use the queue.
       return ( mLastTime += nSamples / rate );
    }
 
-   // Don't check available space:  assume it is enough because of coordination
-   // with RingBuffer.
-   auto remainder = mHead.mRemainder;
-   auto space = TimeQueueGrainSize - remainder;
-   const auto size = mData.size();
-   if ( nSamples >= space ) {
-      remainder = 0,
-      mHead.mIndex = (mHead.mIndex + 1) % size,
-      nSamples -= space;
-      if ( nSamples >= TimeQueueGrainSize )
-         mHead.mIndex =
-            (mHead.mIndex + ( nSamples / TimeQueueGrainSize ) ) % size,
-         nSamples %= TimeQueueGrainSize;
+   auto head = node->head.load(std::memory_order_acquire);
+   auto tail = node->tail.load(std::memory_order_relaxed);
+
+   auto offset = node->offset;
+   auto available = TimeQueueGrainSize - offset;
+
+   if(nSamples >= available)
+   {
+      do
+      {
+         offset = 0;
+         nSamples -= available;
+         if ( head == tail )
+         {
+            //Check if circular buffer was reallocated
+            if(const auto next = node->next.load())
+            {
+               node->offset = 0;
+               node->active.clear();
+
+               mConsumerNode = node = next;
+               head = 0;
+               tail = node->tail.load(std::memory_order_relaxed);
+               available = TimeQueueGrainSize;
+            }
+            else
+            {
+               //consumer is ahead of producer...
+               return node->records[head].timeValue;
+            }
+         }
+         else
+         {
+            head = (head + 1) % static_cast<int>(node->records.size());
+            available = TimeQueueGrainSize;
+         }
+      } while (nSamples >= available);
+      node->head.store(head, std::memory_order_release);
    }
-   mHead.mRemainder = remainder + nSamples;
-   return mData[ mHead.mIndex ].timeValue;
+   node->offset = offset + nSamples;
+   return node->records[head].timeValue;
 }
 
 void PlaybackSchedule::TimeQueue::Prime(double time)
 {
-   mHead = mTail = {};
+   //TODO: check that consumer and producer indeed suspended when called from AudioIoCallback
    mLastTime = time;
-   if ( !mData.empty() )
-      mData[0].timeValue = time;
+   if(mProducerNode != nullptr)
+   {
+      mConsumerNode = mProducerNode;
+      mConsumerNode->next.store(nullptr);
+      mConsumerNode->head.store(0);
+      mConsumerNode->tail.store(0);
+      mConsumerNode->written = 0;
+      mConsumerNode->offset = 0;
+      mConsumerNode->records[0].timeValue = time;
+   }
 }
