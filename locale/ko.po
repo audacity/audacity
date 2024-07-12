@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-05-20 13:14+0900\n"
+"PO-Revision-Date: 2024-07-03 19:24+0900\n"
 "Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/klyok/teams/690/ko/)\n"
 "Language: ko\n"
@@ -24,6 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.4.2\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -51,7 +52,7 @@ msgstr "장치를 찾을 수 없음\n"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr "장치 정보 열람 불가: %d\n"
+msgstr "장치 정보를 사용할 수 없습니다: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -128,7 +129,7 @@ msgstr "'%s'를 위한 재생 장치를 찾을 수 없습니다.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "두 장치 없이 상호 샘플링 속도를 확인할 수 없습니다.\n"
+msgstr "두 장치 없이는 상호 샘플링 속도를 확인할 수 없습니다.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -150,7 +151,7 @@ msgstr "%d - %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available recording sources:\n"
-msgstr "사용가능한 녹음 소스:\n"
+msgstr "사용 가능한 녹음 소스:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
@@ -252,11 +253,11 @@ msgstr "자동 녹음 레벨 조정을 멈췄습니다. %.2f 값이 알맞은 �
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr "\"%s\"로 부터 사전설정 인코딩에 실패하였습니다."
+msgstr "\"%s\"로 부터 프리셋 인코딩에 실패하였습니다."
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 msgid "Unable to store preset in config file"
-msgstr "사전 설정값을 설정 파일에 저장할 수 없음"
+msgstr "프리셋을 설정 파일에 저장할 수 없음"
 
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
@@ -279,7 +280,7 @@ msgstr "XML 프리셋을 \"%s\"에 저장할 수 없습니다"
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr "\"%s\"로 부터 사전설정 파일을 읽을 수 없습니다."
+msgstr "\"%s\"로 부터 프리셋 파일을 읽을 수 없습니다."
 
 #. i18n-hint: the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectBase.h
@@ -289,7 +290,7 @@ msgstr "오디오 유니트"
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Audio Unit Effects"
-msgstr "오디오 유니트 효과"
+msgstr "오디오 유니트 이펙트"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
@@ -302,7 +303,7 @@ msgstr "오데시티 팀"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr "오디오 유니트 효과를 오데시티에 제공합니다"
+msgstr "오디오 유니트 이펙트를 오데시티에 제공합니다"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Could not find component"
@@ -315,30 +316,30 @@ msgstr "컴포넌트를 초기화할 수 없습니다"
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr "사전설정 \"%s\" 을 디코드 하는데 실패함"
+msgstr "프리셋 \"%s\" 을 디코드 하는데 실패함"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to convert \"%s\" preset to internal format"
-msgstr "사전설정 \"%s\"을 내부 포맷으로 변환하는데 실패함"
+msgstr "프리셋 \"%s\"을 내부 포맷으로 변환하는데 실패함"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr "사전설정  \"%s\"의 특성 리스트를 생성하는데 실패함"
+msgstr "프리셋  \"%s\"의 특성 리스트를 생성하는데 실패함"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr "\"%s\" 사전설정에 클래스 설정 실패"
+msgstr "\"%s\" 프리셋에 클래스 설정 실패"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to set preset name"
-msgstr "사전설정 이름 설정 실패"
+msgstr "프리셋 이름 설정 실패"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to retrieve preset content"
-msgstr "사전설정 내용을 가져오는데 실패했습니다"
+msgstr "프리셋 내용을 가져오는데 실패했습니다"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to convert property list to XML data"
@@ -404,182 +405,168 @@ msgstr "응답 직렬화 해제 실패"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern"
-msgstr "모드:"
+msgstr "Modern"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Glue Compressor"
-msgstr "컴프레서"
+msgstr "Glue Compressor"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
-msgstr ""
+msgstr "Gentle"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beat Booster"
-msgstr "베이스 증폭"
+msgstr "Beat Booster"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Deep Dive Master"
-msgstr ""
+msgstr "Deep Dive Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beefy Master"
-msgstr "마스터"
+msgstr "Beefy Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Make It Right Master"
-msgstr ""
+msgstr "Make It Right Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr ""
+msgstr "Brick Wall Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Lead Vocals"
-msgstr "보컬 제거"
+msgstr "Lead Vocals"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Fat Vocals"
-msgstr "보컬 분리"
+msgstr "Fat Vocals"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Power Vocals"
-msgstr "보컬 제거"
+msgstr "Power Vocals"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Vocal Control"
-msgstr "톤 제어"
+msgstr "Vocal Control"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Touch-Up"
-msgstr ""
+msgstr "Vocal Touch-Up"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Voice Memos Balancer"
-msgstr ""
+msgstr "Voice Memos Balancer"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Podcast/Radio"
-msgstr ""
+msgstr "Podcast/Radio"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Piano"
-msgstr ""
+msgstr "Piano"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr ""
+msgstr "Acoustic Guitar"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Bass Guitar"
-msgstr "저음 자르기"
+msgstr "Bass Guitar"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Strings"
-msgstr "설정(&S)"
+msgstr "Strings"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Kick Drums"
-msgstr ""
+msgstr "Kick Drums"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr ""
+msgstr "Drums Control"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Climax Impulser SFX"
-msgstr ""
+msgstr "Climax Impulser SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr ""
+msgstr "Engine Breathing SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr ""
+msgstr "Great Impact SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr ""
+msgstr "Great Body SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr ""
+msgstr "Great Tail SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Smack Explosion SFX"
-msgstr ""
+msgstr "Smack Explosion SFX"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Master Limiter"
-msgstr "리미터"
+msgstr "Master Limiter"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "SFX Limiter"
-msgstr "리미터"
+msgstr "SFX Limiter"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "VO Limiter"
-msgstr "리미터"
+msgstr "VO Limiter"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch"
-msgstr ""
+msgstr "Modern Punch"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch 2"
-msgstr ""
+msgstr "Modern Punch 2"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Play it Loud"
-msgstr "오디오 재생"
+msgstr "Play it Loud"
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
@@ -591,7 +578,7 @@ msgstr "오데시티"
 
 #: libraries/lib-effects/Effect.cpp
 msgid "Built-in"
-msgstr "내장"
+msgstr "빌트인"
 
 #: libraries/lib-effects/Effect.cpp src/commands/AudacityCommand.cpp
 #, c-format
@@ -600,7 +587,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"%s: 아래의 설정을 불러오지 못했습니다. 기본 설정을 사용합니다.\n"
+"%s: 다음 설정을 불러오지 못했습니다. 기본 설정을 사용합니다.\n"
 "\n"
 "%s"
 
@@ -619,15 +606,15 @@ msgstr "나이키스트"
 
 #: libraries/lib-effects/LoadEffects.cpp src/PluginRegistrationDialog.cpp
 msgid "Builtin Effects"
-msgstr "내장 효과"
+msgstr "빌트인 이펙트"
 
 #: libraries/lib-effects/LoadEffects.cpp
 msgid "Provides builtin effects to Audacity"
-msgstr "내장 효과를 오데시티에 제공합니다"
+msgstr "빌트인 이펙트를 오데시티에 제공합니다"
 
 #: libraries/lib-effects/LoadEffects.cpp
 msgid "Unknown built-in effect name"
-msgstr "알 수 없는 내장 효과 이름"
+msgstr "알 수 없는 빌트인 이펙트 이름"
 
 #: libraries/lib-effects/MixAndRender.cpp src/menus/TrackMenus.cpp
 msgid "Mix and Render"
@@ -879,7 +866,7 @@ msgstr "가져오는 중 %s..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
-msgstr ""
+msgstr "Operation was canceled by user"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1093,11 +1080,11 @@ msgstr "LADSPA"
 #.
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "LADSPA Effects"
-msgstr "LADSPA 효과"
+msgstr "LADSPA 이펙트"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "Provides LADSPA Effects"
-msgstr "LADSPA 효과를 제공합니다"
+msgstr "LADSPA 이펙트를 제공합니다"
 
 #: libraries/lib-ladspa/LadspaEffectsModule.cpp
 msgid "Audacity no longer uses vst-bridge"
@@ -1117,15 +1104,15 @@ msgstr "LV2"
 #: libraries/lib-lv2/LV2Ports.cpp src/effects/VST/VSTEditor.cpp
 #: src/effects/ladspa/LadspaEditor.cpp
 msgid "Effect Settings"
-msgstr "효과 설정"
+msgstr "이펙트 설정"
 
 #: libraries/lib-lv2/LoadLV2.cpp
 msgid "LV2 Effects"
-msgstr "LV2 효과"
+msgstr "LV2 이펙트"
 
 #: libraries/lib-lv2/LoadLV2.cpp
 msgid "Provides LV2 Effects support to Audacity"
-msgstr "LV2 효과 지원을 오데시티에 제공합니다"
+msgstr "LV2 이펙트 지원을 오데시티에 제공합니다"
 
 #: libraries/lib-math/Dither.cpp src/effects/EffectManager.cpp
 #: src/effects/EffectUI.cpp plug-ins/equalabel.ny
@@ -2315,7 +2302,7 @@ msgstr "미리보기(&P)"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "Dry Previe&w"
-msgstr "드라이 효과 미리듣기(&W)"
+msgstr "드라이 미리듣기(&W)"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp
 msgid "&Settings"
@@ -2726,7 +2713,7 @@ msgid ""
 " were found in:\n"
 "  %s."
 msgstr ""
-"다음에서 기대하던 테마 구성요소 파일을\n"
+"다음에서 기대하던 테마 구성 파일을\n"
 "찾지 못했습니다:\n"
 "  %s."
 
@@ -2819,23 +2806,23 @@ msgstr "VST"
 
 #: libraries/lib-vst/VSTEffectsModule.cpp
 msgid "VST Effects"
-msgstr "VST 효과"
+msgstr "VST 이펙트"
 
 #: libraries/lib-vst/VSTEffectsModule.cpp
 msgid "Adds the ability to use VST effects in Audacity."
-msgstr "오데시티에서 VST 효과를 사용할 수 있게 합니다."
+msgstr "오데시티에서 VST 이펙트를 사용할 수 있게 합니다."
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to allocate memory when loading presets file."
-msgstr "사전설정 파일을 불러올 때 메모리를 할당할 수 없습니다."
+msgstr "프리셋 파일을 불러올 때 메모리를 할당할 수 없습니다."
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Loading VST Presets"
-msgstr "VST 사전설정 불러오는 중 오류"
+msgstr "VST 프리셋 불러오는 중 오류"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 msgid "Unable to read presets file."
-msgstr "사전설정 파일을 읽을 수 없습니다."
+msgstr "프리셋 파일을 읽을 수 없습니다."
 
 #: libraries/lib-vst/VSTWrapper.cpp libraries/lib-xml/XMLFileReader.cpp
 #: src/effects/BasicEffectUIServices.cpp
@@ -2845,7 +2832,7 @@ msgstr "파일을 열 수 없습니다: \"%s\""
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 msgid "Error Saving VST Presets"
-msgstr "VST 사전설정 저장 중 오류"
+msgstr "VST 프리셋 저장 중 오류"
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/BasicEffectUIServices.cpp
 #, c-format
@@ -2854,7 +2841,7 @@ msgstr "파일에 쓰기 오류: \"%s\""
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/BasicEffectUIServices.cpp
 msgid "Error Saving Effect Presets"
-msgstr "효과 사전설정 저장 중 오류"
+msgstr "이펙트 프리셋 저장 중 오류"
 
 #: libraries/lib-vst/VSTWrapper.cpp
 #, c-format
@@ -2879,11 +2866,11 @@ msgstr "하위 카테고리: %s"
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
 msgid "VST3 Effects"
-msgstr "VST3 효과"
+msgstr "VST3 이펙트"
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
 msgid "Adds the ability to use VST3 effects in Audacity."
-msgstr "오데시티에서 VST3 효과를 사용할 수 있도록 추가"
+msgstr "오데시티에서 VST3 이펙트를 사용할 수 있도록 추가"
 
 #: libraries/lib-vst3/VST3EffectsModule.cpp
 #, c-format
@@ -2893,11 +2880,11 @@ msgstr "VST3 모듈 오류: %s"
 #: libraries/lib-vst3/VST3Wrapper.cpp
 #, c-format
 msgid "Unable to apply VST3 preset file %s"
-msgstr "VST3 사전설정 파일 %s를 적용할 수 없음"
+msgstr "VST3 프리셋 파일 %s를 적용할 수 없음"
 
 #: libraries/lib-vst3/VST3Wrapper.cpp
 msgid "Failed to save VST3 preset to file"
-msgstr "VST3 사전설정 파일 저장을 실패함"
+msgstr "VST3 프리셋 파일 저장을 실패함"
 
 #: libraries/lib-wave-track/Sequence.cpp
 #, c-format
@@ -3883,29 +3870,29 @@ msgstr "사용자 FFmpeg 옵션 설정"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Preset:"
-msgstr "사전설정:"
+msgstr "프리셋:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Load Preset"
-msgstr "사전설정 불러오기"
+msgstr "프리셋 불러오기"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EffectUI.cpp
 msgid "Save Preset"
-msgstr "사전설정 저장"
+msgstr "프리셋 저장"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EffectUI.cpp
 msgid "Delete Preset"
-msgstr "사전설정 삭제"
+msgstr "프리셋 삭제"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Import Presets"
-msgstr "사전설정 가져오기"
+msgstr "프리셋 가져오기"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Export Presets"
-msgstr "사전설정 내보내기"
+msgstr "프리셋 내보내기"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/commands/GetInfoCommand.cpp src/commands/HelpCommand.cpp
@@ -4062,7 +4049,7 @@ msgid ""
 "min - 0 (fast encoding, large output file)\n"
 "max - 10 (slow encoding, small output file)"
 msgstr ""
-"압축 수준\n"
+"컴프레션 레벨\n"
 "FLAC에서 필요합니다\n"
 "-1 - 자동\n"
 "최소값 - 0 (빠른 인코딩, 큰 출력 파일)\n"
@@ -4070,7 +4057,7 @@ msgstr ""
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Compression:"
-msgstr "압축:"
+msgstr "컴프레션:"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid ""
@@ -4257,7 +4244,7 @@ msgstr "삭제 확인"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "You can't save a preset without a name"
-msgstr "사전설정을 이름없이 저장할 수 없음"
+msgstr "프리셋을 이름없이 저장할 수 없음"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file with presets to import"
@@ -4265,7 +4252,7 @@ msgstr "가져올 프리셋이 있는 xml 파일 선택"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "No presets to export"
-msgstr "내보낼 사전설정이 없음"
+msgstr "내보낼 프리셋이 없음"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Select xml file to export presets into"
@@ -4420,7 +4407,7 @@ msgstr "성공"
 
 #: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Error Saving FFmpeg Presets"
-msgstr "FFmpeg 사전설정 저장 중 오류"
+msgstr "FFmpeg 프리셋 저장 중 오류"
 
 #: modules/import-export/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
@@ -4691,7 +4678,7 @@ msgstr "비트레이트 모드"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
-msgstr "사전설정"
+msgstr "프리셋"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Variable"
@@ -5549,11 +5536,11 @@ msgstr "(C) 2009 리랜드 루시우스"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "External Audacity module which provides a simple IDE for writing effects."
-msgstr "효과를 작성하기 위한 간단한 IDE를 제공하는 외부 오데시티 모듈."
+msgstr "이펙트를 작성하기 위한 간단한 IDE를 제공하는 외부 오데시티 모듈."
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench"
-msgstr "나이키스트 효과 작업 도구"
+msgstr "나이키스트 이펙트 작업 도구"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "No matches found"
@@ -5569,7 +5556,7 @@ msgstr "무제"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Nyquist Effect Workbench - "
-msgstr "나이키스트 효과 작업 도구 - "
+msgstr "나이키스트 이펙트 작업 도구 - "
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "New"
@@ -5757,9 +5744,8 @@ msgid "Generating audio preview..."
 msgstr "오디오 미리 듣기 만드는 중..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Open trace audio.com"
-msgstr "audio.com에서 열기"
+msgstr "audio.com에서 트레이스 열기"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
 msgid "Synchronizing project"
@@ -5918,14 +5904,12 @@ msgid "How would you like to save?"
 msgstr "어떤 방식으로 저장 하겠습니까?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to the Cloud (free)"
-msgstr "클라우드에 저장"
+msgstr "클라우드에 저장 (무료)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
-msgstr "프로젝트는 audio.com에 비공개로 백업 됩니다. 당신은 어떤 장치에서든 본인의 작업에 접근할 수 있고, 다른 사람과 공동 작업을 할 수 있습니다."
+msgstr "프로젝트는 audio.com에 비공개로 백업 됩니다. 당신은 어떤 장치에서든 본인의 작업에 접근할 수 있고, 다른 사람과 공동 작업을 할 수 있습니다.클라우드 저장은 무료로 제공되고 프로젝트 개수에 제한이 있습니다."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
@@ -5940,6 +5924,8 @@ msgid ""
 "Files are saved on your device.\n"
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
+"당신의 장치에 파일이 저장되었습니다.\n"
+"주의: MP3 나 WAV 파일로 내보내기 하려면, 파일 > 오디오 내보내기 메뉴를 사용하세요."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -6557,9 +6543,9 @@ msgstr "%s, 그래픽"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, effects presets"
-msgstr "사전설정 선택"
+msgstr "%s, 이펙트 프리셋"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -7374,7 +7360,7 @@ msgstr "매개 변수 편집(&E)"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Use Preset"
-msgstr "사전설정 사용(&U)"
+msgstr "프리셋 사용(&U)"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Parameters"
@@ -7411,7 +7397,7 @@ msgstr "매크로 내보내기"
 
 #: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
-msgstr "효과"
+msgstr "이펙트"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (With Parameters)"
@@ -8668,7 +8654,7 @@ msgid ""
 "Effect or Command at %s failed to register:\n"
 "%s"
 msgstr ""
-"%s의 효과 또는 명령 등록에 실패했습니다:\n"
+"%s의 이펙트 또는 명령 등록에 실패했습니다:\n"
 "%s"
 
 #: src/PluginDataViewCtrl.cpp
@@ -8737,7 +8723,7 @@ msgstr "다시 스캔(&R)"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Get more effects..."
-msgstr "다른 효과 가져오기...(&G)"
+msgstr "다른 이펙트 가져오기...(&G)"
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -8991,7 +8977,7 @@ msgstr ""
 "1%s\n"
 "이 기능은 오데시티 버전 3.3.3 이후에서는 지원하지 않습니다. \n"
 "이 스테레오 트랙은 2개의 모노트랙으로 분리됩니다. \n"
-"결과적으로 일부 실시간 효과가 없어질 수 있습니다.\n"
+"결과적으로 일부 실시간 이펙트가 없어질 수 있습니다.\n"
 "저장하기 전에 의도한대로 작동했는지 확인 바랍니다."
 
 #: src/ProjectFileManager.cpp
@@ -9326,11 +9312,11 @@ msgstr "수직 스크롤바"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "No Effect"
-msgstr "효과 없음"
+msgstr "이펙트 없음"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
-msgstr "더 많은 효과..."
+msgstr "더 많은 이펙트..."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
@@ -9345,7 +9331,7 @@ msgstr "%s (없음)"
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Effect %d"
-msgstr "효과 %d"
+msgstr "이펙트 %d"
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
@@ -9353,7 +9339,7 @@ msgstr "파워"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
-msgstr "효과 대체"
+msgstr "이펙트 대체"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9398,7 +9384,7 @@ msgstr "마스터"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
-msgstr "효과 추가"
+msgstr "이펙트 추가"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9420,7 +9406,7 @@ msgstr "%s 아래로 %s 에서"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Change effect order"
-msgstr "효과 순서 변경"
+msgstr "이펙트 순서 변경"
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
@@ -9451,17 +9437,17 @@ msgstr "%s 추가"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects"
-msgstr "실시간 효과"
+msgstr "실시간 이펙트"
 
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Realtime effects for %s"
-msgstr "%s를 위한 실시간 효과"
+msgstr "%s를 위한 실시간 이펙트"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime Effects"
-msgstr "실시간 효과"
+msgstr "실시간 이펙트"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
@@ -9469,12 +9455,11 @@ msgstr "비디오 보기"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr "실시간 효과는 destructive 한 작업이 아니므로 언제든지 변경할 수 있습니다. "
+msgstr "실시간 이펙트는 destructive 한 작업이 아니므로 언제든지 변경할 수 있습니다. "
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master Effects"
-msgstr "마스터 효과"
+msgstr "Master Effects"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -9535,7 +9520,7 @@ msgstr "스펙트럼 선택 패널"
 
 #: src/SpectralDataManager.cpp
 msgid "Applied effect to selection"
-msgstr "선택 영역에 효과 적용"
+msgstr "선택 영역에 이펙트 적용"
 
 #: src/TagsEditor.cpp
 msgid "Artist Name"
@@ -10470,15 +10455,15 @@ msgstr "파일을 내보냅니다."
 
 #: src/commands/LoadCommands.cpp
 msgid "Builtin Commands"
-msgstr "내장 명령"
+msgstr "빌트인 명령"
 
 #: src/commands/LoadCommands.cpp
 msgid "Provides builtin commands to Audacity"
-msgstr "오데시티에 내장 명령을 제공합니다"
+msgstr "오데시티에 빌트인 명령을 제공합니다"
 
 #: src/commands/LoadCommands.cpp
 msgid "Unknown built-in command name"
-msgstr "알 수 없는 내장 명령 이름"
+msgstr "알 수 없는 빌트인 명령 이름"
 
 #: src/commands/MessageCommand.cpp src/commands/SetLabelCommand.cpp
 msgid "Text:"
@@ -11028,27 +11013,27 @@ msgstr "미리보기를 사용할 수 없습니다"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Presets"
-msgstr "사전설정"
+msgstr "프리셋"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Export Effect Parameters"
-msgstr "효과 매개 변수 내보내기"
+msgstr "이펙트 매개 변수 내보내기"
 
 #: src/effects/BasicEffectUIServices.cpp
 msgid "Import Effect Parameters"
-msgstr "효과 매개 변수 가져오기"
+msgstr "이펙트 매개 변수 가져오기"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "%s: is not a valid presets file.\n"
-msgstr "%s: 는 유효한 사전설정 팡리이 아닙니다.\n"
+msgstr "%s: 는 유효한 프리셋 파일이 아닙니다.\n"
 
 #. i18n-hint %s will be replaced by a file name
 #: src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "%s: is for a different Effect, Generator or Analyzer.\n"
-msgstr "%s: 는 다른 효과에 사용됩니다, 생성기 또는 분석기.\n"
+msgstr "%s: 는 다른 이펙트에 사용됩니다, 생성기 또는 분석기.\n"
 
 #: src/effects/BassTreble.cpp resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
@@ -11056,7 +11041,7 @@ msgstr "저음 및 고음"
 
 #: src/effects/BassTreble.cpp
 msgid "Simple tone control effect"
-msgstr "간단한 톤 제어 효과"
+msgstr "간단한 톤 제어 이펙트"
 
 #: src/effects/BassTreble.cpp
 msgid "Tone controls"
@@ -11779,7 +11764,7 @@ msgstr "디스토션 (왜곡)"
 
 #: src/effects/Distortion.cpp
 msgid "Waveshaping distortion effect"
-msgstr "파형 디스토션 효과"
+msgstr "파형 디스토션 이펙트"
 
 #: src/effects/Distortion.cpp
 msgid "Distortion type:"
@@ -11891,7 +11876,7 @@ msgid ""
 "Check ALL settings for this effect."
 msgstr ""
 "DTMF 시퀀스가 비어있음.\n"
-"이 효과에 대한 모든 설정을 점검할것."
+"이 이펙트에 대한 모든 설정을 점검할것."
 
 #: src/effects/DtmfGen.cpp
 msgid "DTMF &sequence:"
@@ -11941,42 +11926,35 @@ msgid "%0.f ms"
 msgstr "%0.f ms"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "I&nput"
-msgstr "입력"
+msgstr "입력 (&N)"
 
 #. i18n-hint: show input on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show input"
-msgstr "출력 표시"
+msgstr "입력 표시"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "O&utput"
-msgstr "출력"
+msgstr "출력(&U)"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "A&ctual compression"
-msgstr "컴프레션"
+msgstr "실제 컴프레션 (&C)"
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show actual compression"
-msgstr "음량과 압축"
+msgstr "실제 컴프레션 보기"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Tar&get compression"
-msgstr "컴프레션"
+msgstr "타겟 컴프레션 (&G)"
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show target compression"
-msgstr "음량과 압축"
+msgstr "타겟 컴프레션 보기"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Compression curve"
@@ -12023,14 +12001,12 @@ msgid "Input"
 msgstr "입력"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Actual Compression"
-msgstr "컴프레션"
+msgstr "실제 컴프레션"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Target Compression"
-msgstr "컴프레션"
+msgstr "타겟 컴프레션"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -12060,7 +12036,7 @@ msgstr "감쇠 인수:"
 #: src/effects/EffectManager.cpp
 #, c-format
 msgid "Applied effect: %s"
-msgstr "적용된 효과: %s"
+msgstr "적용된 이펙트: %s"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -12069,19 +12045,19 @@ msgstr "적용된 명령: %s"
 
 #: src/effects/EffectManager.cpp
 msgid "Select Preset"
-msgstr "사전설정 선택"
+msgstr "프리셋 선택"
 
 #: src/effects/EffectManager.cpp
 msgid "&Preset:"
-msgstr "사전설정(&P):"
+msgstr "프리셋(&P):"
 
 #: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
 msgid "User Presets"
-msgstr "사용자 사전설정"
+msgstr "사용자 프리셋"
 
 #: src/effects/EffectManager.cpp src/effects/EffectUI.cpp
 msgid "Factory Presets"
-msgstr "공장도 사전설정"
+msgstr "공장도 프리셋"
 
 #: src/effects/EffectManager.cpp
 msgid "Current Settings"
@@ -12100,7 +12076,7 @@ msgid ""
 "\n"
 "More information may be available in 'Help > Diagnostics > Show Log'"
 msgstr ""
-"다음 효과를 초기화하는데 실패함: \n"
+"다음 이펙트를 초기화하는데 실패함: \n"
 "\n"
 "%s\n"
 "\n"
@@ -12108,7 +12084,7 @@ msgstr ""
 
 #: src/effects/EffectManager.cpp
 msgid "Effect failed to initialize"
-msgstr "효과 초기화에 실패했습니다"
+msgstr "이펙트 초기화에 실패했습니다"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -12147,11 +12123,11 @@ msgstr "프리셋과 옵션 관리"
 
 #: src/effects/EffectUI.cpp
 msgid "Presets && settings"
-msgstr "사전설정 && 설정"
+msgstr "프리셋 && 설정"
 
 #: src/effects/EffectUI.cpp
 msgid "Preview effect"
-msgstr "효과 미리보기"
+msgstr "이펙트 미리보기"
 
 #: src/effects/EffectUI.cpp
 msgid "&Apply"
@@ -12159,7 +12135,7 @@ msgstr "적용(&A)"
 
 #: src/effects/EffectUI.cpp
 msgid "Save Preset..."
-msgstr "사전설정 저장..."
+msgstr "프리셋 저장..."
 
 #: src/effects/EffectUI.cpp
 msgid "Defaults"
@@ -12205,7 +12181,7 @@ msgstr "\"%s\"을 정말로 삭제할까요?"
 
 #: src/effects/EffectUI.cpp
 msgid "Preset name:"
-msgstr "사전설정 이름:"
+msgstr "프리셋 이름:"
 
 #: src/effects/EffectUI.cpp
 msgid "You must specify a name"
@@ -12277,11 +12253,11 @@ msgstr "이퀄라이제이션을 적용하려면, 모든 선택한 트랙은 같
 
 #: src/effects/Equalization.cpp
 msgid "Track sample rate is too low for this effect."
-msgstr "이 효과에 대해 트랙 샘플링 주파수가 너무 낮습니다."
+msgstr "이 이펙트에 대해 트랙 샘플링 주파수가 너무 낮습니다."
 
 #: src/effects/Equalization.cpp
 msgid "Effect Unavailable"
-msgstr "효과 사용 불가"
+msgstr "이펙트 사용 불가"
 
 #: src/effects/Equalization48x.cpp
 #, c-format
@@ -12590,11 +12566,11 @@ msgstr "곡선을 찾지 못했습니다"
 
 #: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade In"
-msgstr "페이드 인 (등장 효과)"
+msgstr "페이드 인"
 
 #: src/effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
-msgstr "페이드 아웃 (퇴장 효과)"
+msgstr "페이드 아웃"
 
 #: src/effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
@@ -13036,7 +13012,7 @@ msgstr "폴스트레치 (20x 이상 늘이기)"
 
 #: src/effects/Paulstretch.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "극한의 시간-늘이기나 \"stasis (정체)\" 효과에만 폴스트레치를 사용하세요"
+msgstr "극한의 시간-늘이기나 \"stasis (정체)\" 이펙트에만 폴스트레치를 사용하세요"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -13172,7 +13148,7 @@ msgstr "한 개 이상 트랙의 피크 진폭을 설정합니다"
 
 #: src/effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr "보정 효과는 늘이거나 줄인 클립에는 적용할 수 없습니다."
+msgstr "보정 이펙트는 늘이거나 줄인 클립에는 적용할 수 없습니다."
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -13180,7 +13156,7 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"보정 효과는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).\n"
+"보정 이펙트는 손상된 오디오의 매우 짧은 부분에 사용하기 위한 것입니다 (최대 128 샘플).\n"
 "\n"
 "수리할 아주 작은 구간을 확대하고 선택하세요."
 
@@ -13235,24 +13211,22 @@ msgstr "경고: 반복이 없습니다."
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "Acoustic"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Ambience"
-msgstr "무음"
+msgstr "Ambience"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Artificial"
-msgstr ""
+msgstr "Artificial"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Clean"
-msgstr "지우기"
+msgstr "Clean"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13266,20 +13240,18 @@ msgstr "보컬 II"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Dance Vocal"
-msgstr "보컬 분리"
+msgstr "Dance Vocal"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern Vocal"
-msgstr "보컬 제거"
+msgstr "Modern Vocal"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Voice Tail"
-msgstr ""
+msgstr "Voice Tail"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13319,7 +13291,7 @@ msgstr "성당"
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Big Cave"
-msgstr ""
+msgstr "Big Cave"
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -13327,7 +13299,7 @@ msgstr "리버브 (잔향)"
 
 #: src/effects/Reverb.cpp
 msgid "Adds ambience or a \"hall effect\""
-msgstr "앰비언스나 \"홀 효과\" 추가합니다"
+msgstr "앰비언스나 \"홀 이펙트\" 추가합니다"
 
 #: src/effects/Reverb.cpp
 msgid "&Room Size (%):"
@@ -13718,7 +13690,7 @@ msgstr "%"
 
 #: src/effects/TruncSilence.cpp
 msgid "C&ompress to:"
-msgstr "다음으로 압축(&O) :"
+msgstr "다음으로 컴프레션(&O) :"
 
 #: src/effects/TruncSilence.cpp
 msgid "Trunc&ate tracks independently"
@@ -13738,7 +13710,7 @@ msgstr "표준 VST 프로그램 파일"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Audacity VST preset file"
-msgstr "오데시티 VST 사전설정 파일"
+msgstr "오데시티 VST 프리셋 파일"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unrecognized file extension."
@@ -13746,20 +13718,20 @@ msgstr "미인식 파일 확장자."
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Load VST Preset:"
-msgstr "VST 사전설정 불러오기:"
+msgstr "VST 프리셋 불러오기:"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "VST preset files"
-msgstr "VST 사전설정 파일"
+msgstr "VST 프리셋 파일"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Unable to load presets file."
-msgstr "사전설정 파일을 불러올 수 없습니다."
+msgstr "프리셋 파일을 불러올 수 없습니다."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "VST Effect Options"
-msgstr "VST 효과 옵션"
+msgstr "VST 이펙트 옵션"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13771,7 +13743,7 @@ msgstr "버퍼 크기"
 #: src/effects/VST3/VST3OptionsDialog.cpp
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time."
-msgstr "버퍼 크기는 각각의 반복에서 효과에 보내질 샘플의 수를 결정합니다. 값을 작게 설정할 경우 처리 속도가 늦고, 어떤 효과의 경우 최소 8192 이하를 요구합니다. 하지만, 대부분의 효과는 큰 버퍼 크기를 허용하며, 이 경우 처리 속도가 빨라집니다."
+msgstr "버퍼 크기는 각각의 반복에서 이펙트에 보내질 샘플의 수를 결정합니다. 값을 작게 설정할 경우 처리 속도가 늦고, 어떤 이펙트의 경우 최소 8192 이하를 요구합니다. 하지만, 대부분의 이펙트는 큰 버퍼 크기를 허용하며, 이 경우 처리 속도가 빨라집니다."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13788,7 +13760,7 @@ msgstr "지연 보상"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 msgid "As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects."
-msgstr "처리의 일부 과정으로서, 어떤 VST 효과는 오데시티에 지연된 반환을 하게 됩니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 VST 효과에서 작동하는 것은 아닙니다."
+msgstr "처리의 일부 과정으로서, 어떤 VST 이펙트는 오데시티에 지연된 반환을 하게 됩니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 VST 이펙트에서 작동하는 것은 아닙니다."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13806,7 +13778,7 @@ msgstr "그래픽 모드"
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 msgid "Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "대부분의 VST 효과들은 그래픽 인터페이스로 파라메터 값을  설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 효과를 다시 열면 설정이 작동합니다."
+msgstr "대부분의 VST 이펙트들은 그래픽 인터페이스로 파라메터 값을  설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 이펙트를 다시 열면 설정이 작동합니다."
 
 #: src/effects/VST/VSTEffectOptionsDialog.cpp
 #: src/effects/VST3/VST3OptionsDialog.cpp
@@ -13816,23 +13788,23 @@ msgstr "그래픽 인터페이스 활성화(&G)"
 
 #: src/effects/VST3/VST3Effect.cpp
 msgid "Save VST3 Preset As:"
-msgstr "VST3 사전 설정을 다음에 저장:"
+msgstr "VST3 프리셋을 다음에 저장:"
 
 #: src/effects/VST3/VST3Effect.cpp
 msgid "VST3 preset file"
-msgstr "VST3 사전설정 파일"
+msgstr "VST3 프리셋 파일"
 
 #: src/effects/VST3/VST3Effect.cpp
 msgid "Load VST3 preset:"
-msgstr "VST3 사전설정 로딩:"
+msgstr "VST3 프리셋 로딩:"
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects."
-msgstr "처리과정의 일부로서, 일부 VST3 효과는 오데시티에서 돌아오는 지연이 있어야 합니다. 이 지연을 보상하지 않으면, 잠시 동안 묵음이 오디오에 추가되는 것을 알 수 있습니다. 이 옵션을 활성화하면 보상을 제공하게 됩니다. 하지만 모든 VST3 효과에서 지원하는 것은 아닙니다. "
+msgstr "처리과정의 일부로서, 일부 VST3 이펙트는 오데시티에서 돌아오는 지연이 있어야 합니다. 이 지연을 보상하지 않으면, 잠시 동안 묵음이 오디오에 추가되는 것을 알 수 있습니다. 이 옵션을 활성화하면 보상을 제공하게 됩니다. 하지만 모든 VST3 이펙트에서 지원하는 것은 아닙니다. "
 
 #: src/effects/VST3/VST3OptionsDialog.cpp
 msgid "Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "대부분의 VST 효과는 그래픽 인터페이스를 통해 패러매터 값을 설정할 수 있습니다. 기본 텍스트만 보여주는 인터페이스를 사용할 수 있습니다. 이것을 활성화 하려면 이펙트를 다시 열기 바랍니다. "
+msgstr "대부분의 VST 이펙트는 그래픽 인터페이스를 통해 패러매터 값을 설정할 수 있습니다. 기본 텍스트만 보여주는 인터페이스를 사용할 수 있습니다. 이것을 활성화 하려면 이펙트를 다시 열기 바랍니다. "
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
@@ -13865,11 +13837,11 @@ msgstr "와 주파수 오프셋, 퍼센트 단위"
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Export Audio Unit Preset As %s:"
-msgstr "내보내기 - 오디오 유니트 사전설정 %s:"
+msgstr "내보내기 - 오디오 유니트 프리셋 %s:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Standard Audio Unit preset file"
-msgstr "표준 오디오 유니트 사전설정 파일"
+msgstr "표준 오디오 유니트 프리셋 파일"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -13878,18 +13850,18 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"사전설정 \"%s\" 을 내보낼 수 없음\n"
+"프리셋 \"%s\" 을 내보낼 수 없음\n"
 "\n"
 "%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Export Audio Unit Presets"
-msgstr "오디오 유니트 사전설정 내보내기"
+msgstr "오디오 유니트 프리셋 내보내기"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
 msgid "Import Audio Unit Preset As %s:"
-msgstr "오디오 유니트 사전 설정을  %s 로 가져오기:"
+msgstr "오디오 유니트 프리셋을  %s 로 가져오기:"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -13898,21 +13870,21 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"\"%s\" 사전설정 값을 가져올 수 없음\n"
+"\"%s\" 프리셋 값을 가져올 수 없음\n"
 "\n"
 "%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 msgid "Import Audio Unit Presets"
-msgstr "오디오 유니트 사전설정 가져오기"
+msgstr "오디오 유니트 프리셋 가져오기"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Audio Unit Effect Options"
-msgstr "오디오 유니트 효과 옵션"
+msgstr "오디오 유니트 이펙트 옵션"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects."
-msgstr "처리의 일부 과정으로서, 어떤 오디오 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음들이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 오디오 효과에서 작동하는 것은 아닙니다. "
+msgstr "처리의 일부 과정으로서, 어떤 오디오 이펙트는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음들이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 오디오 이펙트에서 작동하는 것은 아닙니다. "
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "User Interface"
@@ -13920,7 +13892,7 @@ msgstr "사용자 인터페이스"
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select \"Full\" to use the graphical interface if supplied by the Audio Unit. Select \"Generic\" to use the system supplied generic interface. Select \"Basic\" for a basic text-only interface. Reopen the effect for this to take effect."
-msgstr "\"전체\"를 선택하면 오디오 유니트가 지원하는 그래피 인터페이스를 사용할 수 있습니다\"일반\"을 선택하면 시스템이 지원하는 \"일반\"인터페이스를 사용하며,\"기본\"을 선택하면 텍스트로만 된 인터페이스를 사용합니다.적용하려면 효과를 다시 열기 바랍니다."
+msgstr "\"전체\"를 선택하면 오디오 유니트가 지원하는 그래피 인터페이스를 사용할 수 있습니다\"일반\"을 선택하면 시스템이 지원하는 \"일반\"인터페이스를 사용하며,\"기본\"을 선택하면 텍스트로만 된 인터페이스를 사용합니다.적용하려면 이펙트를 다시 열기 바랍니다."
 
 #: src/effects/audiounits/AudioUnitEffectOptionsDialog.cpp
 msgid "Select &interface"
@@ -13950,23 +13922,23 @@ msgstr "%s:"
 
 #: src/effects/ladspa/LadspaEditor.cpp
 msgid "Effect Output"
-msgstr "효과 출력"
+msgstr "이펙트 출력"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 msgid "LADSPA Effect Options"
-msgstr "LADSPA 효과 옵션"
+msgstr "LADSPA 이펙트 옵션"
 
 #: src/effects/ladspa/LadspaEffectOptionsDialog.cpp
 msgid "As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects."
-msgstr "처리의 일부 과정으로서, 일부 LADSPA 효과는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 LADSPA 효과에서 작동하는 것은 아닙니다. "
+msgstr "처리의 일부 과정으로서, 일부 LADSPA 이펙트는 오데시티에 지연된 반환을 해야만 합니다. 이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다. 이 옵션을 활성화하면 보상이 되나, 모든 LADSPA 이펙트에서 작동하는 것은 아닙니다. "
 
 #: src/effects/lv2/LV2Effect.cpp
 msgid "Couldn't instantiate effect"
-msgstr "효과를 인스턴스화할 수 없습니다"
+msgstr "이펙트를 인스턴스화할 수 없습니다"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "LV2 Effect Settings"
-msgstr "LV2 효과 설정"
+msgstr "LV2 이펙트 설정"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 #, c-format
@@ -13975,23 +13947,23 @@ msgstr "버퍼 크기 (8 ~ %d) 샘플(&B):"
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects."
-msgstr "처리의 일부 과정으로서, 일부 LV2 효과는 오데시티에 지연된 반환을 해야만 합니다.이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다.이 옵션을 활성화하면 보상이 되나, 모든 LV2 효과에서 작동하는 것은 아닙니다."
+msgstr "처리의 일부 과정으로서, 일부 LV2 이펙트는 오데시티에 지연된 반환을 해야만 합니다.이 지연에 대한 보상을 하지 않으면, 오디오에 짧은 묵음이 들어가게 됩니다.이 옵션을 활성화하면 보상이 되나, 모든 LV2 이펙트에서 작동하는 것은 아닙니다."
 
 #: src/effects/lv2/LV2PreferencesDialog.cpp
 msgid "LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect."
-msgstr "LV2 효과들은 그래픽 인터페이스로 파라메터 값을 설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 설정을 적용하려면 효과를 다시 열기 바랍니다."
+msgstr "LV2 이펙트들은 그래픽 인터페이스로 파라메터 값을 설정할 수 있습니다. 기본적인 텍스트 인터페이스도로 사용할 수 있습니다. 설정을 적용하려면 이펙트를 다시 열기 바랍니다."
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Nyquist Effects"
-msgstr "나이키스트 효과"
+msgstr "나이키스트 이펙트"
 
 #: src/effects/nyquist/LoadNyquist.cpp
 msgid "Provides Nyquist Effects support to Audacity"
-msgstr "나이키스트 효과 지원을 오데시티에 제공합니다"
+msgstr "나이키스트 이펙트 지원을 오데시티에 제공합니다"
 
 #: src/effects/nyquist/Nyquist.cpp
 msgid "Applying Nyquist Effect..."
-msgstr "나이키스트 효과 적용 중..."
+msgstr "나이키스트 이펙트 적용 중..."
 
 #. i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"
 #: src/effects/nyquist/Nyquist.cpp
@@ -14007,7 +13979,7 @@ msgid ""
 "Enable track spectrogram view before\n"
 "applying 'Spectral' effects."
 msgstr ""
-"'스펙트럼' 효과를 적용하기 위해서는\n"
+"'스펙트럼' 이펙트를 적용하기 위해서는\n"
 "스펙트로그램 보기를 먼저 활성화하세요. "
 
 #: src/effects/nyquist/Nyquist.cpp
@@ -14016,9 +13988,9 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
-"'스펙트럼 효과'를 사용하려면, 트랙 스펙트로그램\n"
+"'스펙트럼 이펙트'를 사용하려면, 트랙 스펙트로그램\n"
 "설정의 '스펙트럼 선택'을 활성화하고\n"
-"동작할 효과의 주파수 범위를 선택하세요."
+"동작할 이펙트의 주파수 범위를 선택하세요."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, c-format
@@ -14044,12 +14016,12 @@ msgstr "처리가 끝났습니다."
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return audio from Nyquist.\n"
-msgstr "';타입 툴' 효과가 나이키스트로 부터 오디오를 반환할 수 없습니다.\n"
+msgstr "';타입 툴' 이펙트가 나이키스트로 부터 오디오를 반환할 수 없습니다.\n"
 
 #. i18n-hint: Don't translate ';type tool'.
 #: src/effects/nyquist/Nyquist.cpp
 msgid "';type tool' effects cannot return labels from Nyquist.\n"
-msgstr "';type tool' 효과는 나이퀴스트로 부터 레이블을 반환하지 않음\n"
+msgstr "';type tool' 이펙트는 나이퀴스트로 부터 레이블을 반환하지 않음\n"
 
 #. i18n-hint: "%s" is replaced by name of plug-in.
 #: src/effects/nyquist/Nyquist.cpp
@@ -14201,11 +14173,11 @@ msgstr "다른 이름으로 저장"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Vamp Effects"
-msgstr "뱀프 효과"
+msgstr "뱀프 이펙트"
 
 #: src/effects/vamp/LoadVamp.cpp
 msgid "Provides Vamp Effects support to Audacity"
-msgstr "뱀프 효과를 오데시티에 제공합니다"
+msgstr "뱀프 이펙트를 오데시티에 제공합니다"
 
 #: src/effects/vamp/VampEffect.cpp
 msgid "Sorry, failed to load Vamp Plug-in."
@@ -15321,20 +15293,19 @@ msgstr "최근 생성작업 반복"
 
 #: src/menus/PluginMenus.cpp
 msgid "Effe&ct"
-msgstr "효과(&C)"
+msgstr "이펙트(&C)"
 
 #: src/menus/PluginMenus.cpp
 msgid "Add Realtime Effects"
-msgstr "실시간 효과 추가"
+msgstr "실시간 이펙트 추가"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get AI effects..."
-msgstr "더 많은 효과..."
+msgstr "AI 이펙트 가져오기..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
-msgstr "마지막 효과 반복"
+msgstr "마지막 이펙트 반복"
 
 #: src/menus/PluginMenus.cpp
 msgid "&Analyze"
@@ -16031,9 +16002,8 @@ msgid "&Solo/Unsolo Focused Track"
 msgstr "포커스된 트랙: 독주/해제(&S)"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Delete Fo&cused Track"
-msgstr "포커스된 트랙: 닫기(&C)"
+msgstr "포커스된 트랙 삭제(&C)"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
@@ -16320,9 +16290,8 @@ msgid "&Show Clipping in Waveform"
 msgstr "웨이브폼에서 클리핑 보기(&S)"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Show &RMS in Waveform"
-msgstr "웨이브폼에서 클리핑 보기(&S)"
+msgstr "웨이브폼에서 RMS 보기(&R)"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16357,7 +16326,7 @@ msgstr "동작"
 
 #: src/prefs/BatchPrefs.cpp
 msgid "&Don't apply effects in batch mode"
-msgstr "일괄처리 모드에서 효과 적용하지 않기(&D)"
+msgstr "일괄처리 모드에서 이펙트 적용하지 않기(&D)"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Audio Settings"
@@ -16605,7 +16574,7 @@ msgstr "새 위치 추가"
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
 #: src/tracks/playabletrack/ui/PlayableTrackControls.cpp
 msgid "Effects"
-msgstr "효과"
+msgstr "이펙트"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Preferences for Effects"
@@ -16641,7 +16610,7 @@ msgstr "유형과 제작자에 따라 그룹"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
-msgstr "효과 옵션"
+msgstr "이펙트 옵션"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
@@ -17811,11 +17780,11 @@ msgstr "줌 토글하기"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 1:"
-msgstr "사전설정 1:"
+msgstr "프리셋 1:"
 
 #: src/prefs/TracksPrefs.cpp
 msgid "Preset 2:"
-msgstr "사전설정 2:"
+msgstr "프리셋 2:"
 
 #. i18n-hint: A waveform is a visual representation of vibration
 #: src/prefs/WaveformPrefs.cpp
@@ -19971,7 +19940,7 @@ msgstr "끝 (또는 시작)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "Handy Presets (override controls)"
-msgstr "손에 익은 사전설정 (제어 무시)"
+msgstr "손에 익은 프리셋 (제어 무시)"
 
 #: plug-ins/adjustable-fade.ny
 msgid "None Selected"
@@ -21293,7 +21262,7 @@ msgstr "오류.~%변조 캐리어가 없습니다."
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml
 msgid "Volume and Compression"
-msgstr "음량과 압축"
+msgstr "음량과 컴프레션"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
@@ -21338,7 +21307,7 @@ msgid "Spectral Tools"
 msgstr "특수 도구"
 
 #~ msgid "Master effects"
-#~ msgstr "마스터 효과"
+#~ msgstr "마스터 이펙트"
 
 #~ msgid "Apply to all tracks"
 #~ msgstr "모든 트랙에 적용하기"
@@ -21451,7 +21420,7 @@ msgstr "특수 도구"
 #~ msgstr " [[https://forum.audacityteam.org/|Forum]] - 질문을 온라인으로 직접 물어보세요."
 
 #~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "오디오의 다이내믹 레인지 압축"
+#~ msgstr "오디오의 다이내믹 레인지 컴프레션"
 
 #~ msgid "%3d dB"
 #~ msgstr "%3d dB"
