@@ -273,7 +273,7 @@ private:
    bool                  mCancelled = false;     //!< True if importing was canceled by user
    bool                  mStopped = false;       //!< True if importing was stopped by user
    const FilePath        mName;
-   std::vector<WaveTrack::Holder> mStreams;
+   std::vector<TrackListHolder> mStreams;
 };
 
 
@@ -466,12 +466,9 @@ void FFmpegImportFileHandle::Import(
    {
       const StreamContext& sc = mStreamContexts[s];
 
-      auto stream = ImportUtils::NewWaveTrack(
-         *trackFactory,
-         sc.InitialChannels,
-         sc.SampleFormat,
-         sc.CodecContext->GetSampleRate()
-      );
+      const auto format = ImportUtils::ChooseFormat(sc.SampleFormat);
+      auto tracks = trackFactory->CreateMany(sc.InitialChannels, format, sc.CodecContext->GetSampleRate());
+
 
       // Handles the start_time by creating silence. This may or may not be correct.
       // There is a possibility that we should ignore first N milliseconds of audio instead. I do not know.
@@ -490,12 +487,15 @@ void FFmpegImportFileHandle::Import(
             wxT("Stream %d start_time = %lld, that would be %f milliseconds."),
             s, (long long)streamStartTime, double(streamStartTime) / 1000);
       }
-
-      if (stream_delay > 0) {
-         stream->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
+      if (stream_delay > 0)
+      {
+         for (auto track : *tracks)
+         {
+            track->InsertSilence(0, double(stream_delay) / AUDACITY_AV_TIME_BASE);
+         }
       }
 
-      mStreams.push_back(stream);
+      mStreams.push_back(tracks);
    }
 
    // This is the heart of the importing process
@@ -536,8 +536,12 @@ void FFmpegImportFileHandle::Import(
       return;
    }
 
-   // Copy audio from mChannels to newly created tracks (destroying mChannels elements in process)
-   ImportUtils::FinalizeImport(outTracks, mStreams);
+   // Copy audio from mStreams to newly created tracks (destroying mStreams elements in process)
+   for (auto& stream : mStreams)
+   {
+      ImportUtils::FinalizeImport(outTracks, std::move(*stream));
+   }
+   mStreams.clear();
 
    // Save metadata
    WriteMetadata(tags);
