@@ -30,6 +30,8 @@ public:
     bool actionChecked(const muse::ui::UiAction& act) const override;
     muse::async::Channel<muse::actions::ActionCodeList> actionCheckedChanged() const override;
 
+    static const muse::ui::ToolConfig& defaultPlaybackToolBarConfig();
+
 private:
     std::shared_ptr<ProjectSceneActionsController> m_controller;
     static const muse::ui::UiActionList m_actions;

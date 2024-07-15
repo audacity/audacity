@@ -5,14 +5,14 @@
 
 #include <QList>
 
-#include "internal/playbackuiactions.h"
+#include "internal/projectsceneuiactions.h"
 
 #include "playbacktoolbarcustomiseitem.h"
 
 #include "translation.h"
 #include "log.h"
 
-using namespace au::playback;
+using namespace au::projectscene;
 using namespace muse;
 using namespace muse::ui;
 using namespace muse::uicomponents;
@@ -34,7 +34,8 @@ void PlaybackToolBarCustomiseModel::load()
 
     QList<Item*> items;
 
-    ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
+    ToolConfig noteInputConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
+                                                               projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const ToolConfig::Item& configItem : noteInputConfig.items) {
         UiAction action = actionsRegister()->action(configItem.action);

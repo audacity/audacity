@@ -6,7 +6,7 @@
 #include <QString>
 
 #include "modularity/ioc.h"
-#include "iplayback.h"
+#include "playback/iplayback.h"
 
 #include "uicomponents/view/toolbaritem.h"
 

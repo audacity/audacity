@@ -30,8 +30,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarlevelitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarlevelitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcontrolitem.cpp
@@ -61,15 +59,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/components/bpmmodel.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomisemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomiseitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcustomiseitem.h
-
     )
 
 set(MODULE_LINK
-    projectscene
     record
 )
 

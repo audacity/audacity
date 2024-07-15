@@ -1,8 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROJECTSCENE_PLAYBACKTOOLBARCUSOMISEMODEL_H
-#define AU_PROJECTSCENE_PLAYBACKTOOLBARCUSOMISEMODEL_H
+#pragma once
 
 #include <QHash>
 
@@ -22,7 +21,7 @@ class QItemSelectionModel;
 #pragma warning(disable: 4505)
 #endif
 
-namespace au::playback {
+namespace au::projectscene {
 class PlaybackToolBarCustomiseItem;
 class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::async::Asyncable
 {
@@ -76,5 +75,3 @@ private:
     bool m_isAddSeparatorAvailable = false;
 };
 }
-
-#endif // AU_PROJECTSCENE_PLAYBACKTOOLBARCUSOMISEMODEL_H

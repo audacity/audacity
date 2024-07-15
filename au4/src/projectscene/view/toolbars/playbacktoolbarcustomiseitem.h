@@ -1,15 +1,14 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROJECTSCENE_PLAYBACKTOOLBARCUSTOMISEITEM_H
-#define AU_PROJECTSCENE_PLAYBACKTOOLBARCUSTOMISEITEM_H
+#pragma once
 
 #include <QString>
 
 #include "ui/view/iconcodes.h"
 #include "uicomponents/view/selectableitemlistmodel.h"
 
-namespace au::playback {
+namespace au::projectscene {
 class PlaybackToolBarCustomiseItem : public muse::uicomponents::SelectableItemListModel::Item
 {
     Q_OBJECT
@@ -63,5 +62,3 @@ private:
     bool m_checked = false;
 };
 }
-
-#endif // AU_PROJECTSCENE_PLAYBACKTOOLBARCUSTOMISEITEM_H

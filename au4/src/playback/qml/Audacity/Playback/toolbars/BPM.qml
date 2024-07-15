@@ -10,6 +10,8 @@ import Muse.UiComponents 1.0
 
 import Audacity.Playback 1.0
 
+import "../components"
+
 RowLayout {
     id: root
 
