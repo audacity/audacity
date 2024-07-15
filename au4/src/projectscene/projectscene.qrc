@@ -18,5 +18,9 @@
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/Snap.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/SnapChooseItem.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/internal/CustomiseView.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
     </qresource>
 </RCC>

@@ -8,7 +8,7 @@ import QtQuick.Layouts 1.15
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 
-import Audacity.Playback 1.0
+import Audacity.ProjectScene 1.0
 
 StyledPopupView {
     id: root
@@ -40,7 +40,7 @@ StyledPopupView {
             Layout.fillWidth: true
             Layout.topMargin: 8
 
-            text: qsTrc("playback", "Customize toolbar")
+            text: qsTrc("projectscene", "Customize toolbar")
             horizontalAlignment: Text.AlignLeft
             font: ui.theme.largeBodyBoldFont
         }

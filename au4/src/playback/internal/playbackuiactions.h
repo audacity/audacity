@@ -31,8 +31,6 @@ public:
     static const muse::ui::UiActionList& settingsActions();
     static const muse::ui::UiActionList& loopBoundaryActions();
 
-    static const muse::ui::ToolConfig& defaultPlaybackToolConfig();
-
 private:
     static const muse::ui::UiActionList m_mainActions;
     static const muse::ui::UiActionList m_settingsActions;

@@ -1,8 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROJECTSCENE_PLAYBACKTOOLBARMODEL_H
-#define AU_PROJECTSCENE_PLAYBACKTOOLBARMODEL_H
+#pragma once
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -15,18 +14,18 @@
 
 #include "uicomponents/view/abstracttoolbarmodel.h"
 
-namespace au::playback {
+namespace au::projectscene {
 class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
-    muse::Inject<au::context::IGlobalContext> context;
-    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
-    muse::Inject<au::playback::IPlaybackController> controller;
-    muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
+    muse::Inject<context::IGlobalContext> context;
+    muse::Inject<playback::IPlaybackConfiguration> configuration;
+    muse::Inject<playback::IPlaybackController> controller;
+    muse::Inject<record::IRecordController> recordController;
+    muse::Inject<record::IRecordConfiguration> recordConfiguration;
 
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);
@@ -63,5 +62,3 @@ private:
     muse::uicomponents::ToolBarItem* makeLocalItem(const muse::actions::ActionCode& actionCode);
 };
 }
-
-#endif // AU_PROJECTSCENE_PLAYBACKTOOLBARMODEL_H

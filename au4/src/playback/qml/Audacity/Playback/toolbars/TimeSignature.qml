@@ -8,6 +8,9 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
+import "../components"
+import "internal"
+
 RowLayout {
     id: root
 

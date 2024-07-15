@@ -35,6 +35,10 @@
 
 #include "view/statusbar/selectionstatusmodel.h"
 
+#include "view/toolbars/playbacktoolbarmodel.h"
+#include "view/toolbars/playbacktoolbarcustomisemodel.h"
+#include "view/toolbars/playbacktoolbarcustomiseitem.h"
+
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
@@ -84,6 +88,11 @@ void ProjectSceneModule::registerUiTypes()
 
     // toolbars
     qmlRegisterType<ProjectToolBarModel>("Audacity.ProjectScene", 1, 0, "ProjectToolBarModel");
+
+    qmlRegisterType<PlaybackToolBarModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarModel");
+    qmlRegisterType<PlaybackToolBarCustomiseModel>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseModel");
+    qmlRegisterUncreatableType<PlaybackToolBarCustomiseItem>("Audacity.ProjectScene", 1, 0, "PlaybackToolBarCustomiseItem",
+                                                             "Cannot create");
 
     // tracks panel
     qmlRegisterType<TracksListModel>("Audacity.ProjectScene", 1, 0, "TracksListModel");

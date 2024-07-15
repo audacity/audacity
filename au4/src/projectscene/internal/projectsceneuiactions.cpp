@@ -211,3 +211,49 @@ muse::async::Channel<ActionCodeList> ProjectSceneUiActions::actionCheckedChanged
 {
     return m_actionCheckedChanged;
 }
+
+const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
+{
+    static ToolConfig config;
+    if (!config.isValid()) {
+        config.items = {
+            { "play", true },
+            { "stop", true },
+            { "record", true },
+            { "rewind-start", true },
+            { "rewind-end", true },
+            { "loop", true },
+            { "", true },
+            { "automation", true },
+            { "", true },
+            { "zoomin", true },
+            { "zoomout", true },
+            { "fit-selection", true },
+            { "fit-project", true },
+            { "zoom", true },
+            { "", true },
+            { "spectral-editing", false },
+            { "spectral-box-select", false },
+            { "spectral-brush", false },
+            { "", true },
+            { "cut", true },
+            { "copy", true },
+            { "paste", true },
+            { "", true },
+            { "trim-audio-outside-selection", true },
+            { "silence-audio-selection", true },
+            { "", true },
+            { "metronome", false },
+            { "", true },
+            { "playback-time", true },
+            { "playback-bpm", true },
+            { "playback-time-signature", true },
+            { "", true },
+            { "snap", true },
+            { "", true },
+            { "record-level", true },
+            { "playback-level", true }
+        };
+    }
+    return config;
+}

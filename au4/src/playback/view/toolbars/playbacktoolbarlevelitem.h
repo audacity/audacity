@@ -6,7 +6,7 @@
 #include <QString>
 
 #include "modularity/ioc.h"
-#include "iplayback.h"
+#include "playback/iplayback.h"
 
 #include "uicomponents/view/toolbaritem.h"
 
@@ -28,7 +28,8 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
     muse::Inject<IPlayback> playback;
 
 public:
-    explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent = nullptr);
+    explicit PlaybackToolBarLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+                                      QObject* parent = nullptr);
 
     int level() const;
     void setLevel(int newLevel);

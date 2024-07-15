@@ -3,13 +3,13 @@
 */
 #include "playbacktoolbarmodel.h"
 
-#include "internal/playbackuiactions.h"
+#include "internal/projectsceneuiactions.h"
 
-#include "view/toolbars/playbacktoolbarlevelitem.h"
-#include "view/toolbars/playbacktoolbarcontrolitem.h"
-#include "view/toolbars/playbacktoolbartimeitem.h"
-#include "view/toolbars/playbacktoolbarbpmitem.h"
-#include "view/toolbars/playbacktoolbartimesignatureitem.h"
+#include "playback/view/toolbars/playbacktoolbarlevelitem.h"
+#include "playback/view/toolbars/playbacktoolbarcontrolitem.h"
+#include "playback/view/toolbars/playbacktoolbartimeitem.h"
+#include "playback/view/toolbars/playbacktoolbarbpmitem.h"
+#include "playback/view/toolbars/playbacktoolbartimesignatureitem.h"
 #include "record/view/toolbars/playbacktoolbarrecordlevelitem.h"
 #include "projectscene/view/toolbars/snaptoolbaritem.h"
 
@@ -18,6 +18,7 @@
 using namespace muse::uicomponents;
 using namespace muse::ui;
 using namespace muse::actions;
+using namespace au::projectscene;
 using namespace au::playback;
 
 static const QString TOOLBAR_NAME("playbackToolBar");
@@ -208,7 +209,7 @@ void PlaybackToolBarModel::updateActions()
     beginResetModel();
 
     muse::ui::ToolConfig playbackConfig
-        = uiConfiguration()->toolConfig(TOOLBAR_NAME, PlaybackUiActions::defaultPlaybackToolConfig());
+        = uiConfiguration()->toolConfig(TOOLBAR_NAME, ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {

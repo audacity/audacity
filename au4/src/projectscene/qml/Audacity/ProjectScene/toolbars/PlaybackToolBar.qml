@@ -11,7 +11,6 @@ import Audacity.Record 1.0
 import Audacity.ProjectScene 1.0
 
 import "internal"
-import "components"
 
 Item {
     id: root
@@ -235,12 +234,12 @@ Item {
 
         icon: IconCode.SETTINGS_COG
         iconFont: ui.theme.toolbarIconsFont
-        toolTipTitle: qsTrc("playback", "Customize toolbar")
-        toolTipDescription: qsTrc("playback", "Show/hide toolbar buttons")
+        toolTipTitle: qsTrc("projectscene", "Customize toolbar")
+        toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
 
         navigation.panel: root.navigationPanel
         navigation.order: 100
-        navigation.accessible.name: qsTrc("playback", "Customize toolbar")
+        navigation.accessible.name: qsTrc("projectscene", "Customize toolbar")
 
         onClicked: {
             customizePopup.toggleOpened()
