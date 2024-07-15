@@ -28,13 +28,13 @@ msgstr "Потокът е активен ... неуспешно събиране
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Default recording device number: %d\n"
-msgstr "Избор на входно устройство"
+msgstr "Избор на входно устройство: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
 msgid "Default playback device number: %d\n"
-msgstr "Номер на основното устройство за възпроизвеждане по подразбиране"
+msgstr "Номер на основното устройство за възпроизвеждане по подразбиране: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -46,40 +46,40 @@ msgstr "Не са намерени устройства"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device info unavailable for: %d\n"
-msgstr "Не е достъпна информация за устройството."
+msgstr "Не е достъпна информация за устройството: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device ID: %d\n"
-msgstr "Устройство"
+msgstr "ID на устройството: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Device name: %s\n"
-msgstr "Устройства"
+msgstr "Име на устройството: %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Host name: %s\n"
-msgstr "Име"
+msgstr "Име на хост: %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "Recording channels: %d\n"
-msgstr "Край на запис"
+msgstr "Канали за запис: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "Playback channels: %d\n"
-msgstr "Възпроизвеждане"
+msgstr "Канали за възпроизвеждане: %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "Low Recording Latency: %g\n"
-msgstr "Край на запис"
+msgstr "Ниска латентност на запис: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -89,7 +89,7 @@ msgstr "Ниска латентност при възпроизвеждане: %
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "High Recording Latency: %g\n"
-msgstr "Край на запис"
+msgstr "Висока латентност на запис: %g\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -100,12 +100,12 @@ msgstr "Висока латентност при възпроизвеждане:
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Supported Rates:\n"
-msgstr "Честоти на дискретизация"
+msgstr "Честоти на дискретизация:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "Selected recording device: %d - %s\n"
-msgstr "Избор на входно устройство"
+msgstr "Избрано записващо устройство: %d - %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -115,7 +115,7 @@ msgstr "Не е намерено записващо устройство за '%
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy, c-format
 msgid "Selected playback device: %d - %s\n"
-msgstr "Избор на входно устройство"
+msgstr "Избрано устройство за възпроизвеждане: %d - %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -134,7 +134,7 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Unable to open Portmixer\n"
-msgstr "Не е възможно да се отвори файл с жанрове."
+msgstr "Не може да се отвори Portmixer\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
@@ -148,22 +148,22 @@ msgstr ""
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Available recording sources:\n"
-msgstr "Запис"
+msgstr "Налични източници на запис:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Available playback volumes:\n"
-msgstr "Възпроизвеждане"
+msgstr "Налични обеми за възпроизвеждане:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Recording volume is emulated\n"
-msgstr "Край на запис"
+msgstr "Обемът на записа се емулира\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, fuzzy
 msgid "Recording volume is native\n"
-msgstr "Край на запис"
+msgstr "Обемът на записа е естествен\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Could not find any audio devices.\n"
@@ -181,7 +181,7 @@ msgstr ""
 #: modules/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, fuzzy, c-format
 msgid "Error: %s"
-msgstr "Грешка: "
+msgstr "Грешка: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -197,7 +197,9 @@ msgstr "Дневник на Audacity"
 msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
-msgstr "Грешка при отваряне на звуковото устройство."
+msgstr ""
+„Грешка при отваряне на записващото устройство.\n“
+„Код на грешка: %s“
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
@@ -1233,7 +1235,7 @@ msgstr "Отворено: %d\n"
 #: libraries/lib-note-track/NoteTrack.cpp
 #, fuzzy, c-format
 msgid "Selected MIDI recording device: %d - %s\n"
-msgstr "Избор на входно устройство"
+msgstr "Избрано MIDI записващо устройство: %d - %s\n"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 #, c-format
@@ -1862,7 +1864,7 @@ msgstr "Не е възможно да се инициализира MP3 пото
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy, c-format
 msgid "Total orphan blocks deleted %d"
-msgstr "Осиротял блоков файл: „%s“"
+msgstr "Общо осиротели блокове изтрити %d"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Failed to rollback transaction during import"
@@ -1871,7 +1873,7 @@ msgstr ""
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
 msgid "Unable to attach destination database"
-msgstr "Не е възможно да се преименува „%s“ на „%s“."
+msgstr "Не може да се прикачи целева база данни"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Unable to switch to fast journaling mode"
@@ -1883,7 +1885,9 @@ msgid ""
 "Unable to prepare project file command:\n"
 "\n"
 "%s"
-msgstr "Не е възможно да се отвори/създаде пробен файл."
+msgstr "Не е възможно да се отвори/създаде пробен файл:\n"
+"\n"
+"%s"
 
 #. i18n-hint: This title appears on a dialog that indicates the progress
 #. in doing something.
@@ -2618,7 +2622,7 @@ msgstr ""
 #: libraries/lib-vst/VSTEffectBase.cpp
 #, fuzzy, c-format
 msgid "Audio In: %d, Audio Out: %d"
-msgstr "Ефекти Audio Unit"
+msgstr "Аудио вход: %d, аудио изход: %d"
 
 #. i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
 #. developed by Steinberg GmbH
