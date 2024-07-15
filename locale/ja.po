@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2024-07-05 01:18+0900\n"
+"PO-Revision-Date: 2024-07-14 11:30+0900\n"
 "Last-Translator: SakiPapa <tadahisa.sugisaki@gmail.com>\n"
 "Language-Team: Akira Nishimura, Atsushi YOSHIDA, Phroneris, SakiPapa\n"
 "Language: ja\n"
@@ -6767,7 +6767,7 @@ msgstr "グラフィック: %s"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
-msgstr "%s、エフェクトプリセット"
+msgstr "エフェクトプリセット: %s"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -12370,7 +12370,7 @@ msgstr "無音継続時間:"
 #: src/effects/DtmfGen.cpp
 #, c-format
 msgid "%0.f ms"
-msgstr "%0.f ms"
+msgstr "%0.f ミリ秒"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "I&nput"
@@ -17006,7 +17006,6 @@ msgstr ""
 "新規トラックの録音やトラックのミックスダウン、再生時に使用するサンプリング周"
 "波数です。"
 
-# ja: ショートカットを&Rから&Eに変更（3.3.0）
 #: src/prefs/DevicePrefs.cpp
 msgid "D&efault Sample Rate:"
 msgstr "サンプリング周波数（デフォルト）(&E):"
