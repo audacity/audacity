@@ -16,5 +16,7 @@
         <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/VerticalRulersPanel.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/Snap.qml</file>
+        <file>qml/Audacity/ProjectScene/toolbars/SnapChooseItem.qml</file>
     </qresource>
 </RCC>

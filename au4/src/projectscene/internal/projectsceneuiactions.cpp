@@ -114,7 +114,7 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Silence"),
              IconCode::Code::SILENCE_AUDIO_SELECTION
              ),
-    UiAction("snapping",
+    UiAction("snap",
              au::context::UiCtxNotationOpened,
              au::context::CTX_NOTATION_FOCUSED,
              TranslatableString("action", "Snapping"),

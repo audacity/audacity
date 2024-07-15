@@ -20,6 +20,15 @@ public:
     muse::ValCh<bool> isTrackCollapsed(const processing::TrackId& trackId) const override;
     void changeTrackHeight(const processing::TrackId& trackId, int deltaY) override;
 
+    muse::ValCh<bool> isSnapEnabled() const override;
+    void setIsSnapEnabled(bool enabled) override;
+
+    muse::ValCh<SnapType> snapType() const override;
+    void setSnapType(SnapType type) override;
+
+    muse::ValCh<bool> isSnapTripletsEnabled() const override;
+    void setIsSnapTripletsEnabled(bool enabled) override;
+
 private:
 
     struct TrackData {
@@ -31,5 +40,9 @@ private:
 
     muse::ValCh<int> m_tracksVericalY;
     mutable std::map<processing::TrackId, TrackData> m_tracks;
+
+    muse::ValCh<bool> m_isSnapEnabled;
+    muse::ValCh<SnapType> m_snapType;
+    muse::ValCh<bool> m_isSnapTripletsEnabled;
 };
 }

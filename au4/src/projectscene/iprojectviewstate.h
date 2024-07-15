@@ -4,6 +4,7 @@
 
 #include "global/types/retval.h"
 
+#include "types/projectscenetypes.h"
 #include "processing/processingtypes.h"
 
 namespace au::projectscene {
@@ -20,6 +21,16 @@ public:
     virtual muse::ValCh<int> trackHeight(const processing::TrackId& trackId) const = 0;
     virtual muse::ValCh<bool> isTrackCollapsed(const processing::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const processing::TrackId& trackId, int deltaY) = 0;
+
+    // snap
+    virtual muse::ValCh<bool> isSnapEnabled() const = 0;
+    virtual void setIsSnapEnabled(bool enabled) = 0;
+
+    virtual muse::ValCh<SnapType> snapType() const = 0;
+    virtual void setSnapType(SnapType type) = 0;
+
+    virtual muse::ValCh<bool> isSnapTripletsEnabled() const = 0;
+    virtual void setIsSnapTripletsEnabled(bool enabled) = 0;
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;

@@ -261,7 +261,7 @@ const muse::ui::ToolConfig& PlaybackUiActions::defaultPlaybackToolConfig()
             { "playback-bpm", true },
             { "playback-time-signature", true },
             { "", true },
-            { "snapping", false },
+            { "snap", true },
             { "", true },
             { "record-level", true },
             { "playback-level", true }

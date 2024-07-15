@@ -18,6 +18,7 @@
 //! then we should split it into two separate classes.
 
 namespace au::projectscene {
+class SnapTimeFormatter;
 class TimelineContext : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
@@ -68,7 +69,7 @@ public:
     Q_INVOKABLE void onWheel(const QPoint& pixelDelta, const QPoint& angleDelta);
 
     Q_INVOKABLE double timeToPosition(double time) const;
-    Q_INVOKABLE double positionToTime(double position) const;
+    Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
@@ -91,6 +92,7 @@ signals:
     void shiftViewByY(double dy);
 
 private:
+    IProjectViewStatePtr viewState() const;
     void onProjectChanged();
 
     void shiftFrameTimeOnStep(int direction);
@@ -121,5 +123,7 @@ private:
     processing::secs_t m_selecitonStartTime = -1.0;
     processing::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
+
+    std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
 };
 }

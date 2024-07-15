@@ -66,7 +66,7 @@ void PlaybackToolBarTimeSignatureItem::onProjectChanged()
         return;
     }
 
-    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature& timeSignature) {
+    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature&) {
         updateValues();
     });
 

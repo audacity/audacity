@@ -8,6 +8,7 @@ import Muse.UiComponents 1.0
 
 import Audacity.Playback 1.0
 import Audacity.Record 1.0
+import Audacity.ProjectScene 1.0
 
 import "internal"
 import "components"
@@ -43,6 +44,7 @@ Item {
             case PlaybackToolBarModel.PLAYBACK_TIME_SIGNATURE: return playbackTimeSignatureComp
             case PlaybackToolBarModel.RECORD_LEVEL: return recordLevelComp
             case PlaybackToolBarModel.PROJECT_CONTROL: return projectControlComp
+            case PlaybackToolBarModel.SNAP: return snapComp
             }
 
             return null
@@ -193,6 +195,29 @@ Item {
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
+                }
+            }
+        }
+
+        Component {
+            id: snapComp
+
+            Snap {
+                property var itemData: null
+
+                width: 207
+                height: 28
+
+                isSnapEnabled: Boolean(itemData) ? itemData.isSnapEnabled : false
+                currentSnapMode: Boolean(itemData) ? itemData.currentValue : ""
+                contextMenuModel: Boolean(itemData) ? itemData.availableSnapTypes : null
+
+                onSnapEnableChangeRequested: function(enabled) {
+                    itemData.isSnapEnabled = enabled
+                }
+
+                onHandleMenuItem: function(itemId) {
+                    itemData.handleMenuItem(itemId)
                 }
             }
         }
