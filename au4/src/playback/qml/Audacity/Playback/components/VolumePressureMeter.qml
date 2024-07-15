@@ -114,13 +114,12 @@ Canvas {
         ctx.fillRect(xPos + root.maxPeak * root.width, yPos, 1, prv.indicatorHeight)
 
         if (root.showRuler) {
-            yPos = root.height
+            yPos = root.height - 4
             drawRuler(ctx, xPos, yPos)
         }
     }
 
     onCurrentVolumePressureChanged: {
-        //console.log("============== onCurrentVolumePressureChanged " + currentVolumePressure)
         requestPaint()
     }
 
