@@ -16,5 +16,7 @@
         <file>qml/Audacity/Playback/components/BPM.qml</file>
         <file>qml/Audacity/Playback/components/ArrowButton.qml</file>
         <file>qml/Audacity/Playback/components/ArrowMenuButton.qml</file>
+        <file>qml/Audacity/Playback/PStyledToolBarView.qml</file>
+        <file>qml/Audacity/Playback/PStyledToolBarItem.qml</file>
     </qresource>
 </RCC>

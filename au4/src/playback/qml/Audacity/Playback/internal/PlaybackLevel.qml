@@ -31,21 +31,21 @@ Item {
         anchors.fill: parent
 
         StyledIconLabel {
-            Layout.preferredWidth: parent.height
-            Layout.preferredHeight: Layout.preferredWidth
+            Layout.preferredWidth: root.height
+            Layout.preferredHeight: root.height
 
             iconCode: IconCode.AUDIO
         }
 
         Item {
             Layout.fillWidth: true
-            Layout.preferredHeight: parent.height
-            Layout.margins: 4
+            Layout.preferredHeight: root.height
 
             Column {
                 id: volumePressureContainer
 
                 anchors.fill: parent
+                anchors.topMargin: 4
 
                 spacing: 2
 
@@ -66,7 +66,7 @@ Item {
                 anchors.right: parent.right
                 anchors.rightMargin: -handleWidth/2 + leftVolumePressure.overloadWidth
                 anchors.top: parent.top
-                anchors.topMargin: -1
+                anchors.topMargin: 3
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrder

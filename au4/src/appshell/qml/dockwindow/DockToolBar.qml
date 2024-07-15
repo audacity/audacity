@@ -34,6 +34,7 @@ DockToolBarView {
     property int contentTopPadding: 0
     property int contentBottomPadding: 0
 
+    property bool check: true
     property int thickness: 36
 
     readonly property bool isVertical: root.orientation === Qt.Vertical
@@ -111,7 +112,7 @@ DockToolBarView {
             PropertyChanges {
                 target: root
 
-                contentWidth: prv.gripButtonWidth + contentLoader.implicitWidth
+                contentWidth: root.check ? prv.gripButtonWidth + contentLoader.implicitWidth : 0
                 contentHeight: Math.max(prv.gripButtonHeight, contentLoader.implicitHeight + root.contentBottomPadding + root.contentTopPadding)
 
                 maximumWidth: root.floating ? root.contentWidth : prv.maximumLength
