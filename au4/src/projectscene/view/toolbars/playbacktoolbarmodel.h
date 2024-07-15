@@ -47,15 +47,17 @@ public:
     Q_INVOKABLE void load() override;
 
 private:
+    void reload();
 
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+
+    void updateStates();
     void updatePlayState();
     void updateStopState();
     void updateRecordState();
     void updateLoopState();
 
     void setupConnections();
-    void onProjectChanged();
 
     void updateActions();
 

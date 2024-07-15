@@ -74,20 +74,26 @@ PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
 void PlaybackToolBarModel::load()
 {
     uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
-        load();
+        reload();
     });
 
     uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
-        load();
+        reload();
     });
 
     context()->currentProjectChanged().onNotify(this, [this]() {
-        onProjectChanged();
+        reload();
     });
 
     updateActions();
 
     AbstractToolBarModel::load();
+}
+
+void PlaybackToolBarModel::reload()
+{
+    load();
+    updateStates();
 }
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -110,6 +116,14 @@ void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCode
     }
 
     AbstractToolBarModel::onActionsStateChanges(codes);
+}
+
+void PlaybackToolBarModel::updateStates()
+{
+    updatePlayState();
+    updateStopState();
+    updateRecordState();
+    updateLoopState();
 }
 
 void PlaybackToolBarModel::updatePlayState()
@@ -195,11 +209,6 @@ void PlaybackToolBarModel::updateLoopState()
 
     item->setIconColor(iconColor);
     item->setBackgroundColor(backgroundColor);
-}
-
-void PlaybackToolBarModel::onProjectChanged()
-{
-    updateActions();
 }
 
 void PlaybackToolBarModel::updateActions()
