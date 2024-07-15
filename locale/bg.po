@@ -198,8 +198,8 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-„Грешка при отваряне на записващото устройство.\n“
-„Код на грешка: %s“
+„Грешка при отваряне на записващото устройство.\n"
+„Код на грешка: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp libraries/lib-files/FileNames.cpp
 #: libraries/lib-vst3/VST3Wrapper.cpp
@@ -257,7 +257,7 @@ msgstr "Авторегулирането на входното ниво спря
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, fuzzy, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, fuzzy
@@ -275,12 +275,12 @@ msgstr "–"
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, fuzzy, c-format
 msgid "Couldn't open \"%s\""
-msgstr "Не бе възможно да се отвори файл: „%s“"
+msgstr "Не бе възможно да се отвори файл: „%s""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, fuzzy, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, fuzzy, c-format
@@ -324,7 +324,7 @@ msgstr "Не бе възможно да се отвори кодиращата �
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, fuzzy, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, fuzzy, c-format
@@ -334,7 +334,7 @@ msgstr "Не е възможно да се извлече описание на 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, fuzzy, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
@@ -697,7 +697,7 @@ msgid ""
 "is a not an audio file. \n"
 "Audacity cannot open this type of file."
 msgstr ""
-"„%s“ е MIDI файл, а не аудиофайл. \n"
+"„%s" е MIDI файл, а не аудиофайл. \n"
 "Audacity не може да отвори такъв файл за възпроизвеждане,\n"
 "но можете да го редактирате с Файл > Импортиране > MIDI."
 
@@ -715,7 +715,7 @@ msgid ""
 "Extract (rip) the CD tracks to an audio format that \n"
 "Audacity can import, such as WAV or AIFF."
 msgstr ""
-"„%s“ е песен от компактдиск. \n"
+"„%s" е песен от компактдиск. \n"
 "Audacity не може да отваря пряко данни от аудиокомпактдиск. \n"
 "Извлечете звука във формат, който Audacity може да импортира,\n"
 "например WAV или AIFF."
@@ -728,7 +728,7 @@ msgid ""
 "Audacity cannot open this file because it only contains links to other files. \n"
 "You may be able to open it in a text editor and download the actual audio files."
 msgstr ""
-"„%s“ е файл със списък за възпроизвеждане. \n"
+"„%s" е файл със списък за възпроизвеждане. \n"
 "Audacity не може да го отвори, тъй като той съдържа само връзки към други файлове. \n"
 "Може би е възможно да го отворите с текстов редактор и да изтеглите самите аудиофайлове."
 
@@ -740,7 +740,7 @@ msgid ""
 "Audacity cannot open this type of file due to patent restrictions. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е файл във формата Windows Media Audio. \n"
+"„%s" е файл във формата Windows Media Audio. \n"
 "Audacity не може да отваря такива файлове заради патентни ограничения. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -752,7 +752,7 @@ msgid ""
 "Without the optional FFmpeg library, Audacity cannot open this type of file.\n"
 "Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е файл във формата Advanced Audio Coding. \n"
+"„%s" е файл във формата Advanced Audio Coding. \n"
 "Audacity не може да отваря такива файлове. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -766,7 +766,7 @@ msgid ""
 "Try recording the file into Audacity, or burn it to audio CD then \n"
 "extract the CD track to a supported audio format such as WAV or AIFF."
 msgstr ""
-"„%s“ е шифрован аудиофайл. \n"
+"„%s" е шифрован аудиофайл. \n"
 "Тези файлове обикновено са от музикалните магазини в Уеб. \n"
 "Audacity не може да отвори такъв файл заради шифроването. \n"
 "Опитайте да запишете файла в Audacity или го запишете на\n"
@@ -780,7 +780,7 @@ msgid ""
 "Audacity cannot open this proprietary format. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е мултимедиен файл на RealPlayer. \n"
+"„%s" е мултимедиен файл на RealPlayer. \n"
 "Audacity не може да отваря този затворен фирмен формат. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -793,7 +793,7 @@ msgid ""
 "Try converting it to an audio file such as WAV or AIFF and \n"
 "then import it, or record it into Audacity."
 msgstr ""
-"„%s“ е файл, базиран на ноти, а не аудиофайл. \n"
+"„%s" е файл, базиран на ноти, а не аудиофайл. \n"
 "Audacity не може да отваря такива файлове. \n"
 "Опитайте да го преобразувате в аудиофайл като WAV или AIFF\n"
 "и да го импортирате или го да запишете в Audacity."
@@ -808,9 +808,9 @@ msgid ""
 "and try importing it again. Otherwise you need to convert it to a supported audio \n"
 "format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е аудиофайл във формата Musepack. \n"
+"„%s" е аудиофайл във формата Musepack. \n"
 "Audacity не може да отваря такива файлове. \n"
-"Ако мислите, че може би е mp3 файл, преименувайте го с разширение „mp3“\n"
+"Ако мислите, че може би е mp3 файл, преименувайте го с разширение „mp3"\n"
 "и опитайте да импортирате отново. Иначе трябва да го преобразувате\n"
 "в поддържан звуков формат като WAV или AIFF."
 
@@ -822,7 +822,7 @@ msgid ""
 "Audacity cannot open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е аудиофайл във формата Wavpack. \n"
+"„%s" е аудиофайл във формата Wavpack. \n"
 "Audacity не може да отваря такива файлове. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -834,7 +834,7 @@ msgid ""
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е аудиофайл във формата Dolby Digital. \n"
+"„%s" е аудиофайл във формата Dolby Digital. \n"
 "В момента Audacity не може да отваря такива файлове. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -846,7 +846,7 @@ msgid ""
 "Audacity cannot currently open this type of file. \n"
 "You need to convert it to a supported audio format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е аудиофайл във формата Ogg Speex. \n"
+"„%s" е аудиофайл във формата Ogg Speex. \n"
 "В момента Audacity не може да отваря такива файлове. \n"
 "Трябва да го преобразувате в поддържан звуков формат като WAV или AIFF."
 
@@ -858,7 +858,7 @@ msgid ""
 "Audacity cannot currently open this type of file. \n"
 "You need to extract the audio to a supported format, such as WAV or AIFF."
 msgstr ""
-"„%s“ е видеофайл. \n"
+"„%s" е видеофайл. \n"
 "В момента Audacity не може да отваря такива файлове. \n"
 "Трябва да извлечете звука в поддържан формат като WAV или AIFF."
 
@@ -875,8 +875,8 @@ msgid ""
 "\n"
 "%sFor uncompressed files, also try File > Import > Raw Data."
 msgstr ""
-"Audacity не разпозна типа на файла „%s“.\n"
-"Ако е некомпресиран, опитайте с „Импортиране на некомпресирани данни“."
+"Audacity не разпозна типа на файла „%s".\n"
+"Ако е некомпресиран, опитайте с „Импортиране на некомпресирани данни"."
 
 #: libraries/lib-import-export/Import.cpp src/menus/ClipMenus.cpp
 #, c-format
@@ -892,7 +892,7 @@ msgid ""
 "%s,\n"
 "but none of them understood this file format."
 msgstr ""
-"Audacity разпозна типа на файла „%s“.\n"
+"Audacity разпозна типа на файла „%s".\n"
 "Следните импортиращи филтри би трябвало да поддържат тези файлове:\n"
 "%s.\n"
 "Никой от тях обаче не успя да разчете формата на файла."
@@ -1001,7 +1001,7 @@ msgstr "16-битов PCM"
 msgid "24-bit PCM"
 msgstr "24-битов PCM"
 
-# „Плаваща запетая“ е твърде дълго за мястото в панела на писта. :-(
+# „Плаваща запетая" е твърде дълго за мястото в панела на писта. :-(
 #. i18n-hint: Audio data bit depth (precision): 32-bit floating point
 #: libraries/lib-math/SampleFormat.cpp
 #: libraries/lib-project-rate/QualitySettings.cpp
@@ -1022,7 +1022,7 @@ msgstr "Команда"
 #: src/effects/EffectUI.cpp src/menus/PluginMenus.cpp
 #, c-format
 msgid "Repeat %s"
-msgstr "Повтаряне на „%s“"
+msgstr "Повтаряне на „%s""
 
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
@@ -1046,7 +1046,7 @@ msgstr "Не е разрешено"
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
 msgid "&Undo %s"
-msgstr "&Отмяна на „%s“"
+msgstr "&Отмяна на „%s""
 
 #: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
 msgid "&Undo"
@@ -1055,7 +1055,7 @@ msgstr "&Отмяна"
 #: libraries/lib-menus/CommandManager.cpp
 #, c-format
 msgid "&Redo %s"
-msgstr "Връщ&ане на „%s“"
+msgstr "Връщ&ане на „%s""
 
 #: libraries/lib-menus/CommandManager.cpp src/menus/EditMenus.cpp
 msgid "&Redo"
@@ -1156,7 +1156,7 @@ msgstr "Файлът с добавката се използва. Неуспеш
 msgid ""
 "Failed to register:\n"
 "%s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #. i18n-hint A plug-in is an optional added program for a sound
 #. effect, or generator, or analyzer
@@ -1180,7 +1180,7 @@ msgstr "Команда на Nyquist"
 #: libraries/lib-network-manager/MultipartData.cpp
 #, fuzzy, c-format
 msgid "Failed to open the file for upload: %s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
@@ -1681,7 +1681,7 @@ msgstr ""
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, fuzzy, c-format
 msgid "Failed to set page size for database %s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, fuzzy, c-format
@@ -1726,7 +1726,7 @@ msgid ""
 "Failed to create savepoint:\n"
 "\n"
 "%s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, fuzzy, c-format
@@ -1734,7 +1734,7 @@ msgid ""
 "Failed to release savepoint:\n"
 "\n"
 "%s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy, c-format
@@ -1744,7 +1744,7 @@ msgid ""
 "Directories Preferences."
 msgstr ""
 "В този том остава много малко дисково пространство.\n"
-"Моля, изберете друга временна директория в „Предпочитания“."
+"Моля, изберете друга временна директория в „Предпочитания"."
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -1757,7 +1757,7 @@ msgid ""
 "Failed to open database file:\n"
 "\n"
 "%s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, fuzzy
@@ -1775,7 +1775,7 @@ msgid ""
 "Failed to execute a project file command:\n"
 "\n"
 "%s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #. i18n-hint: An error message.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -2324,7 +2324,7 @@ msgstr "Вмъкването е неуспешно, защото диска е �
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 #, fuzzy
 msgid "Unable to open the database file"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2381,7 +2381,7 @@ msgstr "Вторият параметър на sqlite3_bind е извън обх
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 #, fuzzy
 msgid "File opened that is not a database file "
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2657,7 +2657,7 @@ msgstr "Не е възможно да се отвори/създаде проб�
 #: src/effects/BasicEffectUIServices.cpp
 #, c-format
 msgid "Could not open file: \"%s\""
-msgstr "Не бе възможно да се отвори файл: „%s“"
+msgstr "Не бе възможно да се отвори файл: „%s""
 
 #: libraries/lib-vst/VSTWrapper.cpp src/effects/VST/VSTEffect.cpp
 #, fuzzy
@@ -2940,7 +2940,7 @@ msgstr "Освен това може да прочетете помощта за
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].<br><br>To always view the Manual online, change \"Location of Manual\" in Interface Preferences to \"From Internet\"."
-msgstr "Ръководството не изглежда инсталирано. Моля, [[*URL*|вижте ръководството онлайн]] или [[https://manual.audacityteam.org/man/unzipping_the_manual.html|изтеглете ръководството]].<br><br>За винаги да виждате ръководството онлайн, променете „Местоположение на ръководството“ в настройките на интерфейса на „От Интернет“."
+msgstr "Ръководството не изглежда инсталирано. Моля, [[*URL*|вижте ръководството онлайн]] или [[https://manual.audacityteam.org/man/unzipping_the_manual.html|изтеглете ръководството]].<br><br>За винаги да виждате ръководството онлайн, променете „Местоположение на ръководството" в настройките на интерфейса на „От Интернет"."
 
 #: libraries/lib-wx-init/LogWindow.cpp
 msgid "Audacity Log"
@@ -3099,7 +3099,7 @@ msgstr "Грешка: %s на ред %lu"
 #: libraries/lib-xml/XMLFileReader.cpp
 #, c-format
 msgid "Could not load file: \"%s\""
-msgstr "Не бе възможно да се зареди файл: „%s“"
+msgstr "Не бе възможно да се зареди файл: „%s""
 
 #: libraries/lib-xml/XMLFileReader.cpp
 #, fuzzy
@@ -3178,7 +3178,7 @@ msgstr ""
 #: modules/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Couldn't find the project data folder: \"%s\""
-msgstr "Не бе намерена папката с данни за проекта: „%s“"
+msgstr "Не бе намерена папката с данни за проекта: „%s""
 
 #: modules/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -3249,7 +3249,7 @@ msgstr ""
 #: modules/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
 msgid "Failed to open %s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: modules/mod-aup/ImportAUP.cpp
 #, fuzzy, c-format
@@ -3406,7 +3406,7 @@ msgstr "Експортиране на MIDI"
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "Показване на диалоговия прозорец „Как бихте искали да експортирате?“"
+msgstr "Показване на диалоговия прозорец „Как бихте искали да експортирате?""
 
 #: modules/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #, fuzzy
@@ -3508,7 +3508,7 @@ msgstr "Копиране на надписи"
 #: modules/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #, fuzzy
 msgid "&Share Audio Toolbar"
-msgstr "Лента „С&елекция“"
+msgstr "Лента „С&елекция""
 
 #: modules/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "Account not linked"
@@ -4762,7 +4762,7 @@ msgstr "Не можете да изтриете готова настройка 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Delete preset '%s'?"
-msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+msgstr "Да бъде ли изтрита готовата настройка „%s"?"
 
 #: modules/mod-ffmpeg/ExportFFmpegOptions.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
@@ -4815,7 +4815,7 @@ msgid ""
 "\n"
 "You may want to go back to Preferences > Libraries and re-configure it."
 msgstr ""
-"FFmpeg е конфигурирана в „Предпочитания“ и е била зареждана успешно,\n"
+"FFmpeg е конфигурирана в „Предпочитания" и е била зареждана успешно,\n"
 "но този път Audacity не успя да я зареди при стартиране.\n"
 "\n"
 "Може би е добре да я реконфигурирате в Предпочитания > Библиотеки."
@@ -4835,17 +4835,17 @@ msgstr "Посочете FFmpeg"
 #: modules/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Audacity needs the file '%s' to import and export audio via FFmpeg."
-msgstr "Audacity се нуждае от файла „%s“, за да импортира и експортира файлове чрез FFmpeg."
+msgstr "Audacity се нуждае от файла „%s", за да импортира и експортира файлове чрез FFmpeg."
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Location of '%s':"
-msgstr "Местоположение на „%s“:"
+msgstr "Местоположение на „%s":"
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "To find '%s', click here -->"
-msgstr "За да намерите „%s“, щракнете тук -->"
+msgstr "За да намерите „%s", щракнете тук -->"
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 msgid "To get a free copy of FFmpeg, click here -->"
@@ -4874,7 +4874,7 @@ msgstr ""
 #: modules/mod-ffmpeg/FFmpeg.cpp
 #, c-format
 msgid "Where is '%s'?"
-msgstr "Къде е „%s“?"
+msgstr "Къде е „%s"?"
 
 #: modules/mod-ffmpeg/FFmpeg.cpp
 msgid "FFmpeg not found"
@@ -4943,7 +4943,7 @@ msgstr "Грешка при запазване на проект"
 #: modules/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Overwrite preset '%s'?"
-msgstr "Презаписване на настройката „%s“?"
+msgstr "Презаписване на настройката „%s"?"
 
 #: modules/mod-ffmpeg/FFmpegPresets.cpp
 msgid "Confirm Overwrite"
@@ -4961,12 +4961,12 @@ msgstr "Моля, изберете кодек, преди да запазват�
 #: modules/mod-ffmpeg/FFmpegPresets.cpp
 #, c-format
 msgid "Preset '%s' does not exist."
-msgstr "Не съществува готова настройка „%s“."
+msgstr "Не съществува готова настройка „%s"."
 
 #: modules/mod-ffmpeg/FFmpegPresets.cpp
 #, fuzzy, c-format
 msgid "Replace preset '%s'?"
-msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+msgstr "Да бъде ли изтрита готовата настройка „%s"?"
 
 #: modules/mod-ffmpeg/ImportFFmpeg.cpp
 msgid "FFmpeg-compatible files"
@@ -5138,7 +5138,7 @@ msgstr "Експортиране на MIDI…"
 #: modules/mod-midi-import-export/ImportMIDI.cpp
 #, c-format
 msgid "Imported MIDI from '%s'"
-msgstr "Импортирани бяха данни във формат MIDI от „%s“"
+msgstr "Импортирани бяха данни във формат MIDI от „%s""
 
 #: modules/mod-midi-import-export/ImportMIDI.cpp
 msgid "Import MIDI"
@@ -5291,7 +5291,7 @@ msgstr "Изключително"
 msgid "Extreme"
 msgstr "Много високо"
 
-# Един и същ низ се ползва за „качество“ (ср.р.),  „скорост“ (ж.р.) и „бутон „Соло“ (м.р.). :-(
+# Един и същ низ се ползва за „качество" (ср.р.),  „скорост" (ж.р.) и „бутон „Соло" (м.р.). :-(
 #: modules/mod-mp3/ExportMP3.cpp src/prefs/KeyConfigPrefs.cpp
 #: plug-ins/sample-data-export.ny
 msgid "Standard"
@@ -5961,7 +5961,7 @@ msgstr "Невалидна честота на дискретизация"
 #: modules/mod-opus/ExportOpus.cpp modules/mod-opus/ImportOpus.cpp
 #, fuzzy
 msgid "not implemented"
-msgstr "Командата „%s“ още не е реализирана"
+msgstr "Командата „%s" още не е реализирана"
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
@@ -6048,7 +6048,7 @@ msgstr "Не е възможно да се определи"
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Unable to set bandwidth"
-msgstr "Не е възможно да се премахне „%s“."
+msgstr "Не е възможно да се премахне „%s"."
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
@@ -6068,12 +6068,12 @@ msgstr "Не е възможно да се получи буфер за запъ
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to calculate correct preskip"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: modules/mod-opus/ExportOpus.cpp
 #, fuzzy
 msgid "Failed to encode input buffer"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: modules/mod-opus/ImportOpus.cpp
 #, fuzzy
@@ -6121,7 +6121,7 @@ msgstr "Невалидна честота на дискретизация"
 #: modules/mod-opus/ImportOpus.cpp
 #, fuzzy, c-format
 msgid "Failed to decode Opus file: %s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: modules/mod-pcm/ExportPCM.cpp modules/mod-pcm/ImportPCM.cpp
 msgid "AIFF (Apple/SGI)"
@@ -6179,7 +6179,7 @@ msgid ""
 "Libsndfile says \"%s\""
 msgstr ""
 "Грешка при записване във файла %s (пълен диск?).\n"
-"Съобщението от Libsndfile е „%s“"
+"Съобщението от Libsndfile е „%s""
 
 #: modules/mod-pcm/ImportPCM.cpp
 msgid "WAV, AIFF, and other uncompressed types"
@@ -6301,13 +6301,13 @@ msgstr ""
 msgid "Unsigned 8 bit PCM"
 msgstr ""
 
-# „Плаваща запетая“ е твърде дълго за мястото в панела на писта. :-(
+# „Плаваща запетая" е твърде дълго за мястото в панела на писта. :-(
 #: modules/mod-pcm/ImportPCM.cpp modules/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "32 bit float"
 msgstr "32-битов с ПЗ"
 
-# „Плаваща запетая“ е твърде дълго за мястото в панела на писта. :-(
+# „Плаваща запетая" е твърде дълго за мястото в панела на писта. :-(
 #: modules/mod-pcm/ImportPCM.cpp
 #, fuzzy
 msgid "64 bit float"
@@ -6963,7 +6963,7 @@ msgstr ""
 #: src/AudacityApp.cpp
 #, c-format
 msgid "Failed to remove %s"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: src/AudacityApp.cpp
 msgid "Failed!"
@@ -7399,7 +7399,7 @@ msgstr "Импортиране на некомпресирани данни"
 #, fuzzy, c-format
 msgid "Macro %s already exists. Would you like to replace it?"
 msgstr ""
-"„%s“ не същестува.\n"
+"„%s" не същестува.\n"
 "\n"
 "Желаете ли да бъде създаден?"
 
@@ -7462,7 +7462,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Прилагане на „%s“ със следните параметри:\n"
+"Прилагане на „%s" със следните параметри:\n"
 "\n"
 "%s"
 
@@ -7534,7 +7534,7 @@ msgstr "Не е избрана верига"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Applying '%s' to current project"
-msgstr "„%s“ се прилага върху текущия проект"
+msgstr "„%s" се прилага върху текущия проект"
 
 #: src/BatchProcessDialog.cpp
 msgid "Please save and close the current project first."
@@ -7636,7 +7636,7 @@ msgstr "- КРАЙ -"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "%s changed"
-msgstr "„%s“ бе променен"
+msgstr "„%s" бе променен"
 
 #: src/BatchProcessDialog.cpp
 msgid "Do you want to save the changes?"
@@ -7660,7 +7660,7 @@ msgstr "Името не трябва да е празно"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "Names may not contain '%c' and '%c'"
-msgstr "Имената не могат да съдържат „%c“ и „%c“"
+msgstr "Имената не могат да съдържат „%c" и „%c""
 
 #. i18n-hint: %s will be replaced by the name of a file.
 #: src/BatchProcessDialog.cpp
@@ -7671,7 +7671,7 @@ msgstr "Наистина ли желаете да изтриете %s?"
 #: src/BatchProcessDialog.cpp
 #, fuzzy, c-format
 msgid "&Repeat %s"
-msgstr "Повтаряне на „%s“"
+msgstr "Повтаряне на „%s""
 
 #: src/BatchProcessDialog.cpp
 #, fuzzy
@@ -7784,7 +7784,7 @@ msgstr ""
 #: src/Benchmark.cpp
 #, fuzzy, c-format
 msgid "Performing %d edits...\n"
-msgstr "Прилага се ефект „Повтаряне“"
+msgstr "Прилага се ефект „Повтаряне""
 
 #: src/Benchmark.cpp
 #, c-format
@@ -7971,7 +7971,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Файловете, показани като „липсващи“, са преместени или изтрити и не могат да бъдат копирани.\n"
+"Файловете, показани като „липсващи", са преместени или изтрити и не могат да бъдат копирани.\n"
 "Възстановявете ги на първоначалното им място, за да могат да се копират в проекта."
 
 #: src/Dependencies.cpp
@@ -8275,7 +8275,7 @@ msgstr "%s бе запазен"
 #: src/HelpUtilities.cpp
 #, fuzzy, c-format
 msgid "Unable to save %s"
-msgstr "Не е възможно да се премахне „%s“."
+msgstr "Не е възможно да се премахне „%s"."
 
 #: src/HistoryWindow.cpp
 #, fuzzy
@@ -8425,7 +8425,7 @@ msgstr "Изберете текстов файл с надписи…"
 #: src/LabelDialog.cpp src/ProjectFileManager.cpp src/menus/FileMenus.cpp
 #, fuzzy, c-format
 msgid "Could not open file: %s"
-msgstr "Не бе възможно да се отвори файл: „%s“"
+msgstr "Не бе възможно да се отвори файл: „%s""
 
 #: src/LabelDialog.cpp
 msgid "No labels to export."
@@ -8466,7 +8466,7 @@ msgstr "MP3 файлове"
 msgid "Labels"
 msgstr "Надписи"
 
-# Един и същ низ се ползва за „качество“ (ср.р.),  „скорост“ (ж.р.) и „бутон „Соло“ (м.р.). :-(
+# Един и същ низ се ползва за „качество" (ср.р.),  „скорост" (ж.р.) и „бутон „Соло" (м.р.). :-(
 #: src/LabelTrack.cpp
 #, fuzzy
 msgid "S&tandard"
@@ -8518,7 +8518,7 @@ msgid ""
 "The old file has been saved as '%s'"
 msgstr ""
 "Файлът с проект от версия 1.0 е преобразуван в новия формат.\n"
-"Старият файл е запазен като „%s“"
+"Старият файл е запазен като „%s""
 
 #: src/Legacy.cpp
 msgid "Opening Audacity Project"
@@ -8866,7 +8866,7 @@ msgstr "Незабавно затваряне на проекта без про�
 
 #: src/ProjectFSCK.cpp
 msgid "Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you \"Close project immediately\" on further error alerts."
-msgstr "Продължаване със списък на поправките и проверка за по-нататъшни грешки. Проектът ще бъде запазен в текущото му състояние, освен ако изберете „Незабавно затваряне на проекта“ при следващо съобщение за грешка."
+msgstr "Продължаване със списък на поправките и проверка за по-нататъшни грешки. Проектът ще бъде запазен в текущото му състояние, освен ако изберете „Незабавно затваряне на проекта" при следващо съобщение за грешка."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning - Problems Reading Sequence Tags"
@@ -8895,9 +8895,9 @@ msgid ""
 "project in its current state, unless you \"Close \n"
 "project immediately\" on further error alerts."
 msgstr ""
-"Проверката на проект в папката „%s“ \n"
+"Проверката на проект в папката „%s" \n"
 "откри %lld липсващи външни аудиофайла \n"
-"(„файлове с псевдоними“). Audacity не е в състояние \n"
+"(„файлове с псевдоними"). Audacity не е в състояние \n"
 "да възстанови тези файлове автоматично. \n"
 "\n"
 "Ако изберете първата или втората възможност по-долу, \n"
@@ -8909,7 +8909,7 @@ msgstr ""
 "\n"
 "Ако изберете третата възможност, проектът ще бъде запазен \n"
 "в текущото си състояние, освен ако изберете „Незабавно \n"
-"затваряне на проекта“ при следващо съобщение за грешка."
+"затваряне на проекта" при следващо съобщение за грешка."
 
 #: src/ProjectFSCK.cpp
 msgid "Treat missing audio as silence (this session only)"
@@ -8931,7 +8931,7 @@ msgid ""
 "Audacity can fully regenerate these files \n"
 "from the current audio in the project."
 msgstr ""
-"Проверката на проекта в папката „%s“ \n"
+"Проверката на проекта в папката „%s" \n"
 "откри %lld липсващи блокови файла с псевдоними (.auf). \n"
 "Audacity може да ги възстанови от \n"
 "текущите звукови данни в проекта."
@@ -8968,7 +8968,7 @@ msgid ""
 "Note that for the second option, the waveform \n"
 "may not show silence."
 msgstr ""
-"Проверката на проекта в папката „%s“ \n"
+"Проверката на проекта в папката „%s" \n"
 "откри %lld липсващи блокови файла (.au) със звукови данни, \n"
 "вероятно резултат от дефект, системен срив или случайно \n"
 "изтриване. Audacity не е в състояние да възстанови тези \n"
@@ -8997,7 +8997,7 @@ msgid ""
 "unused by this project, but might belong to other projects. \n"
 "They are doing no harm and are small."
 msgstr ""
-"Проверката на проекта в папката „%s“ \n"
+"Проверката на проекта в папката „%s" \n"
 "откри %d осиротели блокови файла. Тези файлове не се \n"
 "използват в проекта, но може да принадлежат към други проекти. \n"
 "Те са безвредни и с малък размер."
@@ -9027,7 +9027,7 @@ msgid ""
 msgstr ""
 "Проверката на проекта откри несъответствия във файловете при автоматично възстановяване.\n"
 "\n"
-"За подробности изберете „Показване на дневника…“ в менюто „Помощ“."
+"За подробности изберете „Показване на дневника…" в менюто „Помощ"."
 
 #: src/ProjectFSCK.cpp
 msgid "Warning: Problems in Automatic Recovery"
@@ -9088,7 +9088,7 @@ msgstr ""
 "Сега проектът е празен.\n"
 "Ако бъде запазен, няма да съдържа писти.\n"
 "\n"
-"За да запазите отворени преди това писти: изберете „Не“,\n"
+"За да запазите отворени преди това писти: изберете „Не",\n"
 "Редактиране > Отмяна, докато всички всички писти бъдат\n"
 "отворени, после, Файл > Запазване на проект.\n"
 "\n"
@@ -9130,7 +9130,7 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, fuzzy, c-format
 msgid "%sSave Project \"%s\" As..."
-msgstr "Запазване на проекта „%s“ като…"
+msgstr "Запазване на проекта „%s" като…"
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -9169,7 +9169,7 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, fuzzy, c-format
 msgid "%sSave Copy of Project \"%s\" As..."
-msgstr "Запазване на компресирания проект „%s“ като…"
+msgstr "Запазване на компресирания проект „%s" като…"
 
 #: src/ProjectFileManager.cpp
 #, fuzzy
@@ -9280,7 +9280,7 @@ msgstr ""
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "Imported '%s'"
-msgstr "Импортиран бе „%s“"
+msgstr "Импортиран бе „%s""
 
 #: src/ProjectFileManager.cpp
 msgid "Import"
@@ -9433,7 +9433,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
 msgid "Replace effect"
-msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+msgstr "Да бъде ли изтрита готовата настройка „%s"?"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
@@ -9447,7 +9447,7 @@ msgstr "Липсващи файлове"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Removed %s from %s"
-msgstr "Импортирани бяха надписи от „%s“"
+msgstr "Импортирани бяха надписи от „%s""
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9462,14 +9462,14 @@ msgstr "Премахване"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Replaced %s with %s"
-msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+msgstr "Да бъде ли изтрита готовата настройка „%s"?"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Replace %s"
-msgstr "Да бъде ли изтрита готовата настройка „%s“?"
+msgstr "Да бъде ли изтрита готовата настройка „%s"?"
 
 #: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
 #: src/toolbars/SnappingToolBar.cpp
@@ -9493,7 +9493,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Moved %s up in %s"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -9502,7 +9502,7 @@ msgstr "Пистата „%s“ бе преместена %s"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Moved %s down in %s"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy
@@ -9546,7 +9546,7 @@ msgstr "Грешка в LOF файл"
 #: src/RealtimeEffectPanel.cpp
 #, fuzzy, c-format
 msgid "Added %s to %s"
-msgstr "Пистата „%s“ бе преобразувана в %s"
+msgstr "Пистата „%s" бе преобразувана в %s"
 
 #. i18n-hint: undo history record
 #: src/RealtimeEffectPanel.cpp
@@ -10284,7 +10284,7 @@ msgstr "Премахване на писта"
 #: src/TrackUtilities.cpp
 #, fuzzy, c-format
 msgid "Removed track '%s'."
-msgstr "Премахната бе пистата „%s“."
+msgstr "Премахната бе пистата „%s"."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
@@ -10294,7 +10294,7 @@ msgstr "Премахване на писта"
 #: src/TrackUtilities.cpp
 #, fuzzy, c-format
 msgid "Moved '%s' to Top"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #: src/TrackUtilities.cpp
 #, fuzzy
@@ -10316,12 +10316,12 @@ msgstr "Местене на пистата на&долу"
 #: src/TrackUtilities.cpp
 #, fuzzy, c-format
 msgid "Moved '%s' Up"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #: src/TrackUtilities.cpp
 #, fuzzy, c-format
 msgid "Moved '%s' Down"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #. i18n-hint: Past tense of 'to move', as in 'moved audio track up'.
 #: src/TrackUtilities.cpp
@@ -12619,7 +12619,7 @@ msgid ""
 "Preset already exists.\n"
 "\n"
 "Replace?"
-msgstr "Файл с име „%s“ вече съществува. Да бъде ли презаписан?"
+msgstr "Файл с име „%s" вече съществува. Да бъде ли презаписан?"
 
 #: src/effects/Equalization.cpp
 msgid "Equalization"
@@ -12783,21 +12783,21 @@ msgid ""
 "Rename 'unnamed' to save a new entry.\n"
 "'OK' saves all changes, 'Cancel' doesn't."
 msgstr ""
-"Преименувайте „без име“, за да запазите нов запис.\n"
-"„OK“ запазва всички промени, „Отказ“ не го прави."
+"Преименувайте „без име", за да запазите нов запис.\n"
+"„OK" запазва всички промени, „Отказ" не го прави."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' always stays at the bottom of the list"
-msgstr "„Без име“ винаги стои в края на списъка"
+msgstr "„Без име" винаги стои в края на списъка"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "'unnamed' is special"
-msgstr "„Без име“ е специална"
+msgstr "„Без име" е специална"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy, c-format
 msgid "Rename '%s' to..."
-msgstr "„%s“ бе преименувана на „%s“"
+msgstr "„%s" бе преименувана на „%s""
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Rename..."
@@ -12827,11 +12827,11 @@ msgstr "Кривата съществува"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot delete the 'unnamed' curve."
-msgstr "Не можете да изтриете кривата „без име“."
+msgstr "Не можете да изтриете кривата „без име"."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Can't delete 'unnamed'"
-msgstr "Не може да се изтрие „без име“"
+msgstr "Не може да се изтрие „без име""
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy, c-format
@@ -12845,7 +12845,7 @@ msgstr "Звукът бе повторен %d пъти"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "You cannot delete the 'unnamed' curve, it is special."
-msgstr "Не можете да изтриете кривата „без име“, тя е специална."
+msgstr "Не можете да изтриете кривата „без име", тя е специална."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Choose an EQ curve file"
@@ -12858,12 +12858,12 @@ msgstr "Експортиране на еквалайзерни криви кат
 #: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy
 msgid "You cannot export 'unnamed' curve, it is special."
-msgstr "Не можете да изтриете кривата „без име“, тя е специална."
+msgstr "Не можете да изтриете кривата „без име", тя е специална."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, fuzzy
 msgid "Cannot Export 'unnamed'"
-msgstr "Не можете да експортирате кривата „без име“."
+msgstr "Не можете да експортирате кривата „без име"."
 
 #: src/effects/EqualizationCurvesDialog.cpp
 #, c-format
@@ -12898,7 +12898,7 @@ msgid ""
 "Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one."
 msgstr ""
 "За да използвате тази еквалайзерна крива във верига за пакетна обработка, изберете ново име за нея.\n"
-"Изберете бутона „Запазване/управление на криви…“ и преименувайте кривата „без име“, после използвайте тази крива."
+"Изберете бутона „Запазване/управление на криви…" и преименувайте кривата „без име", после използвайте тази крива."
 
 #: src/effects/EqualizationUI.cpp
 #, fuzzy
@@ -12992,7 +12992,7 @@ msgstr "&Мрежа по оста Y"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr "Не е открита указаната крива, използва се „без име“"
+msgstr "Не е открита указаната крива, използва се „без име""
 
 #: src/effects/EqualizationUI.cpp
 msgid "Curve not found"
@@ -13285,7 +13285,7 @@ msgid ""
 "then click Get Noise Profile:"
 msgstr ""
 "Изберете няколко секунди само с шум, за да знае Audacity какво\n"
-"да филтрира, след което натиснете „Профилиране на шум“:"
+"да филтрира, след което натиснете „Профилиране на шум":"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "&Get Noise Profile"
@@ -13302,7 +13302,7 @@ msgid ""
 "filtered out, and then click 'OK' to reduce noise.\n"
 msgstr ""
 "Изберете целия звук, който да бъде филтриран, посочете колко шум\n"
-"искате да бъде отстранен и натиснете „OK“ за премахване на шума.\n"
+"искате да бъде отстранен и натиснете „OK" за премахване на шума.\n"
 
 #: src/effects/NoiseReduction.cpp src/effects/NoiseRemoval.cpp
 msgid "Noise:"
@@ -13414,7 +13414,7 @@ msgid ""
 "filtered out, and then click 'OK' to remove noise.\n"
 msgstr ""
 "Изберете целия звук, който да бъде филтриран, посочете колко шум\n"
-"искате да бъде отстранен и натиснете „OK“ за премахване на шума.\n"
+"искате да бъде отстранен и натиснете „OK" за премахване на шума.\n"
 
 #: src/effects/NoiseRemoval.cpp
 msgid "Noise re&duction (dB):"
@@ -13658,7 +13658,7 @@ msgid ""
 "\n"
 "Zoom in and select a tiny fraction of a second to repair."
 msgstr ""
-"Ефектът „Поправяне“ е предназначен за много кратки откъси повреден звук (до 128 отчета).\n"
+"Ефектът „Поправяне" е предназначен за много кратки откъси повреден звук (до 128 отчета).\n"
 "\n"
 "Увеличете образа и изберете малка част от секундата за поправяне."
 
@@ -14304,7 +14304,7 @@ msgstr ""
 
 #: src/effects/Wahwah.cpp resources/EffectsMenuDefaults.xml
 msgid "Wahwah"
-msgstr "Ефект „Уа-уа“"
+msgstr "Ефект „Уа-уа""
 
 #: src/effects/Wahwah.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
@@ -14670,7 +14670,7 @@ msgstr ""
 msgid ""
 "Value range:\n"
 "%s to %s"
-msgstr "Не е възможно да се преименува „%s“ на „%s“."
+msgstr "Не е възможно да се преименува „%s" на „%s"."
 
 #: src/effects/nyquist/Nyquist.cpp
 #, fuzzy
@@ -14797,7 +14797,7 @@ msgstr "Експортиране"
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
 msgid "Unable to create destination folder"
-msgstr "Не е възможно да се преименува „%s“ на „%s“."
+msgstr "Не е възможно да се преименува „%s" на „%s"."
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
@@ -14827,7 +14827,7 @@ msgstr "Възникнаха сериозни грешки след експор
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy, c-format
 msgid "A file named \"%s\" already exists. Replace?"
-msgstr "Файл с име „%s“ вече съществува. Да бъде ли презаписан?"
+msgstr "Файл с име „%s" вече съществува. Да бъде ли презаписан?"
 
 #: src/export/ExportAudioDialog.cpp
 #, fuzzy
@@ -15420,7 +15420,7 @@ msgstr "Няма писти с надписи за експортиране."
 #: src/menus/FileMenus.cpp
 #, c-format
 msgid "Imported labels from '%s'"
-msgstr "Импортирани бяха надписи от „%s“"
+msgstr "Импортирани бяха надписи от „%s""
 
 #: src/menus/FileMenus.cpp
 msgid "Import Labels"
@@ -16309,7 +16309,7 @@ msgstr "Смесване"
 #: src/menus/TrackMenus.cpp
 #, c-format
 msgid "Rendered all audio in track '%s'"
-msgstr "Целият звук бе обобщен в пистата „%s“"
+msgstr "Целият звук бе обобщен в пистата „%s""
 
 #. i18n-hint: Convert the audio into a more usable form, so apply
 #. * panning and amplification and write to some external file.
@@ -16739,7 +16739,7 @@ msgstr "Спиране/пускане звука на фокусираната �
 #: src/menus/TrackMenus.cpp
 #, fuzzy
 msgid "&Solo/Unsolo Focused Track"
-msgstr "Превключване на режим „соло“ за фокусираната писта"
+msgstr "Превключване на режим „соло" за фокусираната писта"
 
 #: src/menus/TrackMenus.cpp
 #, fuzzy
@@ -17472,7 +17472,7 @@ msgstr "Предпочитания: "
 #: src/prefs/ExtImportPrefs.cpp
 #, fuzzy
 msgid "A&ttempt to use filter in OpenFile dialog first"
-msgstr "Първо да се опитва използване на филтър в диалога „Отваряне“"
+msgstr "Първо да се опитва използване на филтър в диалога „Отваряне""
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Rules to choose import filters"
@@ -17605,7 +17605,7 @@ msgstr "&Обхват на индикатора и вълната в дБ:"
 #: src/prefs/GUIPrefs.cpp
 #, fuzzy
 msgid "Show 'How to Get &Help' at launch"
-msgstr "Показване на „&Как да получите помощ“ при стартиране"
+msgstr "Показване на „&Как да получите помощ" при стартиране"
 
 #: src/prefs/GUIPrefs.cpp
 #, fuzzy
@@ -18442,12 +18442,12 @@ msgid ""
 msgstr ""
 "Темите са експериментална възможност.\n"
 "\n"
-"За да ги изпробвате, изберете „Запазване на кеширана тема“, после намерете и\n"
+"За да ги изпробвате, изберете „Запазване на кеширана тема", после намерете и\n"
 "редактирайте изображенията и цветовете в ImageCacheVxx.png, например с Gimp.\n"
 "\n"
-"Със „Зареждане на кеширана тема“ заредете редактирания резултат в Audacity.\n"
+"Със „Зареждане на кеширана тема" заредете редактирания резултат в Audacity.\n"
 "\n"
-"(В момента се влияят само лентата „Вход/изход“ и цветовете на вълните, макар че\n"
+"(В момента се влияят само лентата „Вход/изход" и цветовете на вълните, макар че\n"
 "във файла с изображението са включени и други икони.)"
 
 #: src/prefs/ThemePrefs.cpp
@@ -18522,7 +18522,7 @@ msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
-msgstr "„Преместване на фокуса“ преминава &циклично между пистите"
+msgstr "„Преместване на фокуса" преминава &циклично между пистите"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Type to create a label"
@@ -18534,7 +18534,7 @@ msgstr ""
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "Solo &Button:"
-msgstr "&Бутон „Соло“:"
+msgstr "&Бутон „Соло":"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 #, fuzzy
@@ -18774,7 +18774,7 @@ msgstr "Избор на входни канали"
 #: src/toolbars/AudioSetupToolBar.cpp
 #, fuzzy
 msgid "&Audio Setup Toolbar"
-msgstr "Лента „&Редактиране“"
+msgstr "Лента „&Редактиране""
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -18845,7 +18845,7 @@ msgstr ""
 #. with the big buttons on it (play record etc)
 #: src/toolbars/ControlToolBar.cpp
 msgid "&Transport Toolbar"
-msgstr "Лента „&Вход/изход“"
+msgstr "Лента „&Вход/изход""
 
 #. i18n-hint: (noun) It's the device used for playback.
 #: src/toolbars/DeviceToolBar.cpp
@@ -18895,7 +18895,7 @@ msgstr "Не е достъпна информация за устройство�
 #. that manages devices
 #: src/toolbars/DeviceToolBar.cpp
 msgid "&Device Toolbar"
-msgstr "Лента „У&стройство“"
+msgstr "Лента „У&стройство""
 
 #: src/toolbars/DeviceToolBar.cpp
 #, fuzzy
@@ -18967,7 +18967,7 @@ msgstr "Редактиране"
 #. i18n-hint: Clicking this menu item shows the toolbar for editing
 #: src/toolbars/EditToolBar.cpp
 msgid "&Edit Toolbar"
-msgstr "Лента „&Редактиране“"
+msgstr "Лента „&Редактиране""
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
@@ -19050,7 +19050,7 @@ msgstr "Индикатор за възпроизвеждане"
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
 msgid "Mi&xer"
-msgstr "Лента „С&месител“"
+msgstr "Лента „С&месител""
 
 #: src/toolbars/MeterToolBar.cpp
 #, fuzzy
@@ -19097,7 +19097,7 @@ msgstr "Център"
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "Лента „С&елекция“"
+msgstr "Лента „С&елекция""
 
 #: src/toolbars/SelectionBar.cpp
 #, fuzzy
@@ -19123,7 +19123,7 @@ msgstr "Подрязване на файла до селекцията"
 #. for selecting a time range of audio
 #: src/toolbars/SelectionBar.cpp
 msgid "&Selection Toolbar"
-msgstr "Лента „С&елекция“"
+msgstr "Лента „С&елекция""
 
 #: src/toolbars/SnappingToolBar.cpp
 #, fuzzy
@@ -19145,7 +19145,7 @@ msgstr ""
 #: src/toolbars/SnappingToolBar.cpp
 #, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "Лента „С&елекция“"
+msgstr "Лента „С&елекция""
 
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
@@ -19181,7 +19181,7 @@ msgstr ""
 #: src/toolbars/SpectralSelectionBar.cpp
 #, fuzzy
 msgid "Spe&ctral Selection Toolbar"
-msgstr "Лента „С&елекция“"
+msgstr "Лента „С&елекция""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 #, fuzzy
@@ -19236,7 +19236,7 @@ msgstr "Позиция в звука:"
 #: src/toolbars/TimeToolBar.cpp
 #, fuzzy
 msgid "&Time Toolbar"
-msgstr "Лента „У&стройство“"
+msgstr "Лента „У&стройство""
 
 #. i18n-hint: %s will be replaced by the name of the kind of toolbar.
 #: src/toolbars/ToolBar.cpp
@@ -19279,7 +19279,7 @@ msgstr "Универсален"
 #. that has some tools in it
 #: src/toolbars/ToolsToolBar.cpp
 msgid "T&ools Toolbar"
-msgstr "Лента „И&нструменти“"
+msgstr "Лента „И&нструменти""
 
 #: src/toolbars/ToolsToolBar.cpp
 #, fuzzy
@@ -19896,7 +19896,7 @@ msgstr "Обработва се: "
 #: src/tracks/playabletrack/wavetrack/ui/WaveformView.cpp
 #, c-format
 msgid "Changed '%s' to %s"
-msgstr "Пистата „%s“ бе преобразувана в %s"
+msgstr "Пистата „%s" бе преобразувана в %s"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Format Change"
@@ -19964,7 +19964,7 @@ msgstr "&Друго…"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Changed '%s' to %s Hz"
-msgstr "Пистата „%s“ бе предискретизирана на %s Хц"
+msgstr "Пистата „%s" бе предискретизирана на %s Хц"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Rate Change"
@@ -19991,7 +19991,7 @@ msgstr "Ра&зделяне на стереописта"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy
 msgid "Split Stereo to Mo&no"
-msgstr "Стереопистата „%s“ бе разделена в моно"
+msgstr "Стереопистата „%s" бе разделена в моно"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid ""
@@ -20015,7 +20015,7 @@ msgstr "Индикатор за запис"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Made '%s' a stereo track"
-msgstr "Пистата „%s“ бе преобразувана в стерео"
+msgstr "Пистата „%s" бе преобразувана в стерео"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "Make Stereo"
@@ -20036,13 +20036,13 @@ msgstr "%d канала"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split stereo track '%s'"
-msgstr "Разделяне на стереопистата „%s“"
+msgstr "Разделяне на стереопистата „%s""
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, c-format
 msgid "Split Stereo to Mono '%s'"
-msgstr "Стереопистата „%s“ бе разделена в моно"
+msgstr "Стереопистата „%s" бе разделена в моно"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #, fuzzy
@@ -20139,7 +20139,7 @@ msgstr "Горна граница на скоростта"
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
 msgid "Set range to '%ld' - '%ld'"
-msgstr "Зададен бе диапазон „%ld“ – „%ld“"
+msgstr "Зададен бе диапазон „%ld" – „%ld""
 
 #. i18n-hint: (verb)
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
@@ -20282,7 +20282,7 @@ msgstr "Име на писта"
 #: src/tracks/ui/CommonTrackControls.cpp
 #, c-format
 msgid "Renamed '%s' to '%s'"
-msgstr "„%s“ бе преименувана на „%s“"
+msgstr "„%s" бе преименувана на „%s""
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Name Change"
@@ -20501,12 +20501,12 @@ msgstr "Моля, изберете действие"
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, fuzzy, c-format
 msgid "Moved '%s' up"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 #, fuzzy, c-format
 msgid "Moved '%s' down"
-msgstr "Пистата „%s“ бе преместена %s"
+msgstr "Пистата „%s" бе преместена %s"
 
 #: src/tracks/ui/TrackSelectHandle.cpp
 msgid "Move Track"
@@ -20889,7 +20889,7 @@ msgstr ""
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
 msgid "Value not in range: %s to %s"
-msgstr "Не е възможно да се преименува „%s“ на „%s“."
+msgstr "Не е възможно да се преименува „%s" на „%s"."
 
 #: src/widgets/valnum.cpp
 #, fuzzy, c-format
@@ -21878,7 +21878,7 @@ msgstr ""
 #: plug-ins/nyquist-plug-in-installer.ny
 #, fuzzy, lisp-format
 msgid "Warning.~%Failed to copy some files:~%"
-msgstr "Не е възможно да се премахне „%s“"
+msgstr "Не е възможно да се премахне „%s""
 
 #: plug-ins/nyquist-plug-in-installer.ny
 #, lisp-format
@@ -22555,7 +22555,7 @@ msgstr "Компресия:"
 #: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Fading"
-msgstr "Прилага се ефект „Засилване“"
+msgstr "Прилага се ефект „Засилване""
 
 #: resources/EffectsMenuDefaults.xml
 #, fuzzy
@@ -22609,7 +22609,7 @@ msgstr "Спектър"
 #~ "Audacity cannot open this type of file for playing, but you can\n"
 #~ "edit it by clicking File > Import > MIDI."
 #~ msgstr ""
-#~ "„%s“ е MIDI файл, а не аудиофайл. \n"
+#~ "„%s" е MIDI файл, а не аудиофайл. \n"
 #~ "Audacity не може да отвори такъв файл за възпроизвеждане,\n"
 #~ "но можете да го редактирате с Файл > Импортиране > MIDI."
 
@@ -22825,7 +22825,7 @@ msgstr "Спектър"
 #~ msgid "Window"
 #~ msgstr "прозорец"
 
-# Тук „прозорец“ е в смисъл на математическа функция.
+# Тук „прозорец" е в смисъл на математическа функция.
 #, fuzzy
 #~ msgid "Full Window"
 #~ msgstr "Прозорец за бързо преобразувание на Фурие"
@@ -23288,9 +23288,9 @@ msgstr "Спектър"
 #~ "\n"
 #~ "Are you sure you want to export the file under this name?"
 #~ msgstr ""
-#~ "Готвите се да запазите %s файл с името „%s“.\n"
+#~ "Готвите се да запазите %s файл с името „%s".\n"
 #~ "\n"
-#~ "Обикновено тези файлове завършват с „.%s“, а някои програми не отварят файлове с нестандартни разширения.\n"
+#~ "Обикновено тези файлове завършват с „.%s", а някои програми не отварят файлове с нестандартни разширения.\n"
 #~ "\n"
 #~ "Наистина ли желаете да използвате това име?"
 
@@ -23370,7 +23370,7 @@ msgstr "Спектър"
 
 #, c-format
 #~ msgid "\"%s\" successfully created."
-#~ msgstr "„%s“ бе създаден успешно."
+#~ msgstr "„%s" бе създаден успешно."
 
 #, c-format
 #~ msgid ""
@@ -23378,7 +23378,7 @@ msgstr "Спектър"
 #~ "\n"
 #~ "Would you like to create it?"
 #~ msgstr ""
-#~ "„%s“ не същестува.\n"
+#~ "„%s" не същестува.\n"
 #~ "\n"
 #~ "Желаете ли да бъде създаден?"
 
@@ -23391,7 +23391,7 @@ msgstr "Спектър"
 #~ "\n"
 #~ "Suggested replacement:"
 #~ msgstr ""
-#~ "Надписът или пистата „%s“ не е валидно име на файл. Не можете да използвате: %s\n"
+#~ "Надписът или пистата „%s" не е валидно име на файл. Не можете да използвате: %s\n"
 #~ "Използвайте…"
 
 #, fuzzy, c-format
@@ -23400,14 +23400,14 @@ msgstr "Спектър"
 #~ "\n"
 #~ "Suggested replacement:"
 #~ msgstr ""
-#~ "Надписът или пистата „%s“ не е валидно име на файл. Не можете да използвате: %s\n"
+#~ "Надписът или пистата „%s" не е валидно име на файл. Не можете да използвате: %s\n"
 #~ "Използвайте…"
 
 #, fuzzy
 #~ msgid "Error Exporting"
 #~ msgstr "Грешка при импортиране"
 
-# „Плаваща запетая“ е твърде дълго за мястото в панела на писта. :-(
+# „Плаваща запетая" е твърде дълго за мястото в панела на писта. :-(
 #, fuzzy
 #~ msgid "32 bit float "
 #~ msgstr "32-битов с ПЗ"
@@ -23433,7 +23433,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Unable to set stream state to paused."
-#~ msgstr "Не е възможно да се преименува „%s“ на „%s“."
+#~ msgstr "Не е възможно да се преименува „%s" на „%s"."
 
 #, fuzzy, c-format
 #~ msgid "Index[%02d], Type[%s], Channels[%d], Rate[%d]"
@@ -23460,10 +23460,10 @@ msgstr "Спектър"
 #~ msgstr "Не може да се зададе качество за рендиране на QuickTime"
 
 #~ msgid "Unable to set QuickTime discrete channels property"
-#~ msgstr "Не може да се зададе свойство „дискретни канали“ на QuickTime"
+#~ msgstr "Не може да се зададе свойство „дискретни канали" на QuickTime"
 
 #~ msgid "Unable to get QuickTime sample size property"
-#~ msgstr "Не може да се зададе свойство „размер на отчета“ на QuickTime"
+#~ msgstr "Не може да се зададе свойство „размер на отчета" на QuickTime"
 
 #~ msgid "Unable to retrieve stream description"
 #~ msgstr "Не е възможно да се извлече описание на поток"
@@ -23624,7 +23624,7 @@ msgstr "Спектър"
 #~ msgstr " [[http://wiki.audacityteam.org/index.php|Уики]] (най-новите съвети, трикове и уроци в Интернет)"
 
 #~ msgid "SelectionBar"
-#~ msgstr "Лента „Селекция“"
+#~ msgstr "Лента „Селекция""
 
 #, fuzzy
 #~ msgid "Timer"
@@ -23635,7 +23635,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Selectionbar"
-#~ msgstr "Лента „Селекция“"
+#~ msgstr "Лента „Селекция""
 
 #, fuzzy
 #~ msgid "D&efault"
@@ -23867,7 +23867,7 @@ msgstr "Спектър"
 #~ msgstr "Не може да се управлява силата на входа. Използвайте системния смесител."
 
 #~ msgid "Mi&xer Toolbar"
-#~ msgstr "Лента „С&месител“"
+#~ msgstr "Лента „С&месител""
 
 #~ msgid "Zoom Tool"
 #~ msgstr "Увеличение"
@@ -23921,7 +23921,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Performing High-Pass Filter..."
-#~ msgstr "Прилага се ефект „Еквалайзер“"
+#~ msgstr "Прилага се ефект „Еквалайзер""
 
 #, fuzzy
 #~ msgid "Limiting..."
@@ -23929,7 +23929,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Performing Low-Pass Filter..."
-#~ msgstr "Прилага се ефект „Еквалайзер“"
+#~ msgstr "Прилага се ефект „Еквалайзер""
 
 #, fuzzy
 #~ msgid "Applying Notch Filter..."
@@ -24088,7 +24088,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Failed to copy tags"
-#~ msgstr "Не е възможно да се премахне „%s“"
+#~ msgstr "Не е възможно да се премахне „%s""
 
 #, fuzzy
 #~ msgid "Select any uncompressed audio file"
@@ -24260,11 +24260,11 @@ msgstr "Спектър"
 #~ "directory \"%s\" before saving project with this name."
 #~ msgstr ""
 #~ "Не бе възможно да се запази проектът. Пътят не е намерен. Опитайте \n"
-#~ "да създадете директорията „%s“, преди да запазите проекта с това име."
+#~ "да създадете директорията „%s", преди да запазите проекта с това име."
 
 #, fuzzy
 #~ msgid "%sSave Compressed Copy of Project \"%s\" As..."
-#~ msgstr "Запазване на компресирания проект „%s“ като…"
+#~ msgstr "Запазване на компресирания проект „%s" като…"
 
 #~ msgid "Audacity was unable to convert an Audacity 1.0 project to the new project format."
 #~ msgstr "Audacity не успя да преобразува файл с проект от Audacity 1.0 в новия формат."
@@ -24405,7 +24405,7 @@ msgstr "Спектър"
 #~ msgid "Audacity Team Members"
 #~ msgstr "Екип от разработчици на Audacity %s"
 
-# Конкатенира се с „© 1999-2010 Audacity Team“
+# Конкатенира се с „© 1999-2010 Audacity Team"
 #, fuzzy
 #~ msgid "<p><br>&nbsp; &nbsp; <b>Audacity<sup>&reg;</sup></b> software is copyright &copy; 1999-2018 Audacity Team.<br>"
 #~ msgstr "<b>Audacity&reg;</b> "
@@ -24421,19 +24421,19 @@ msgstr "Спектър"
 #~ "Моля, преценете дали да не запазите и презаредите проекта за пълна проверка."
 
 #~ msgid "Unable to remove '%s'."
-#~ msgstr "Не е възможно да се премахне „%s“."
+#~ msgstr "Не е възможно да се премахне „%s"."
 
 #~ msgid "Unable to rename '%s' to '%s'."
-#~ msgstr "Не е възможно да се преименува „%s“ на „%s“."
+#~ msgstr "Не е възможно да се преименува „%s" на „%s"."
 
 #~ msgid "Missing aliased audio file: '%s'"
-#~ msgstr "Липсва звуков файл с псевдоним: „%s“"
+#~ msgstr "Липсва звуков файл с псевдоним: „%s""
 
 #~ msgid "Missing alias (.auf) block file: '%s'"
-#~ msgstr "Липсва блоков файл с псевдоним (.auf): „%s“"
+#~ msgstr "Липсва блоков файл с псевдоним (.auf): „%s""
 
 #~ msgid "Missing data block file: '%s'"
-#~ msgstr "Липсва блоков файл с данни: „%s“"
+#~ msgstr "Липсва блоков файл с данни: „%s""
 
 #~ msgid "KB"
 #~ msgstr "КБ"
@@ -24482,7 +24482,7 @@ msgstr "Спектър"
 #~ "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\n"
 #~ "Control not created."
 #~ msgstr ""
-#~ "Лоша спецификация на Nyquist от тип „control“: %s в приставката „%s“.\n"
+#~ "Лоша спецификация на Nyquist от тип „control": %s в приставката „%s".\n"
 #~ "Елементът за управление не бе създаден."
 
 #, fuzzy
@@ -24621,7 +24621,7 @@ msgstr "Спектър"
 #~ "This is a debug version of Audacity, with an extra button, 'Output Sourcery'. This will save a\n"
 #~ "C version of the image cache that can be compiled in as a default."
 #~ msgstr ""
-#~ "Компилирали сте Audacity с допълнителен бутон – „Output Sourcery“.  Той запазва версия на кеша\n"
+#~ "Компилирали сте Audacity с допълнителен бутон – „Output Sourcery".  Той запазва версия на кеша\n"
 #~ "с изображения на C, която може да бъде включена в компилирането като подразбирана."
 
 #~ msgid "Waveform (dB)"
@@ -24648,7 +24648,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "To use Draw, choose 'Waveform' or 'Waveform (dB)' in the Track Dropdown Menu."
-#~ msgstr "За да рисувате, изберете „Вълна“ в падащото меню на пистата."
+#~ msgstr "За да рисувате, изберете „Вълна" в падащото меню на пистата."
 
 #, fuzzy
 #~ msgid "Removing center-panned audio..."
@@ -24749,7 +24749,7 @@ msgstr "Спектър"
 #~ "Audacity has brought it back to start at zero.\n"
 #~ "You may have to use the Time Shift Tool (<---> or F5) to drag the track to the right place."
 #~ msgstr ""
-#~ "Настройката „Корекция на закъснението“ причини скриване на записания звук преди нулата.\n"
+#~ "Настройката „Корекция на закъснението" причини скриване на записания звук преди нулата.\n"
 #~ "Audacity го премести обратно, за да започва от нулата.\n"
 #~ "С инструмента за преместване (<–> или F5) можете да плъзнете пистата на правилното място."
 
@@ -24796,7 +24796,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Tra&nscription Toolbar"
-#~ msgstr "Лента „Транс&крипция“"
+#~ msgstr "Лента „Транс&крипция""
 
 #, fuzzy
 #~ msgid "&Tools"
@@ -24810,10 +24810,10 @@ msgstr "Спектър"
 #~ msgstr "Транскрипция"
 
 #~ msgid "'?"
-#~ msgstr "“?"
+#~ msgstr ""?"
 
 #~ msgid "' ?"
-#~ msgstr "“?"
+#~ msgstr ""?"
 
 #~ msgid "Delete "
 #~ msgstr "Изтриване на "
@@ -24935,7 +24935,7 @@ msgstr "Спектър"
 #~ msgstr "Напред"
 
 #~ msgid "' to..."
-#~ msgstr "“ на…"
+#~ msgstr "" на…"
 
 #, fuzzy
 #~ msgid "Audio In: "
@@ -25207,7 +25207,7 @@ msgstr "Спектър"
 #~ "\n"
 #~ "'%s'"
 #~ msgstr ""
-#~ "Клавишната комбинация „%s“ вече е приписана на:\n"
+#~ "Клавишната комбинация „%s" вече е приписана на:\n"
 #~ "\n"
 #~ "'%s'"
 
@@ -25230,7 +25230,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "Co&mbined Meter Toolbar"
-#~ msgstr "Лента „&Индикация“"
+#~ msgstr "Лента „&Индикация""
 
 #~ msgid "S&kip to Start"
 #~ msgstr "Превъртане до &началото"
@@ -25261,7 +25261,7 @@ msgstr "Спектър"
 #~ msgstr "Щракнете и плъзнете, за да местите лявата граница на селекцията."
 
 #~ msgid "To use Draw, choose 'Waveform' in the Track Drop-down Menu."
-#~ msgstr "За да рисувате, изберете „Вълна“ в падащото меню на пистата."
+#~ msgstr "За да рисувате, изберете „Вълна" в падащото меню на пистата."
 
 #, fuzzy
 #~ msgid "%.2f dB Average RMS"
@@ -25319,7 +25319,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "(uncheck when recording computer playback)"
-#~ msgstr "(изчистете отметката при запис в режим „стереосмесване“)"
+#~ msgstr "(изчистете отметката при запис в режим „стереосмесване")"
 
 #~ msgid "Audio to &buffer:"
 #~ msgstr "Звук към &буфер:"
@@ -25350,7 +25350,7 @@ msgstr "Спектър"
 #~ "If 'Load Theme Cache At Startup' is checked, then the Theme Cache will be loaded\n"
 #~ "when the program starts up."
 #~ msgstr ""
-#~ "Ако е отметнато „Зареждане на кеширана тема при стартиране“, кешът за тема\n"
+#~ "Ако е отметнато „Зареждане на кеширана тема при стартиране", кешът за тема\n"
 #~ "ще бъде зареждан при стартиране на програмата."
 
 #~ msgid "Load Theme Cache At Startup"
@@ -25394,7 +25394,7 @@ msgstr "Спектър"
 #~ msgstr "Запазване на обла&ст"
 
 #~ msgid "Couldn't write to file \"%s\": %s"
-#~ msgstr "Не бе възможно да се записва във файла „%s“: %s"
+#~ msgstr "Не бе възможно да се записва във файла „%s": %s"
 
 #~ msgid "Error Writing Autosave File"
 #~ msgstr "Грешка при записване в автоматично запазен файл"
@@ -25476,7 +25476,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "No wave tracks exist."
-#~ msgstr "Премахната бе пистата „%s“."
+#~ msgstr "Премахната бе пистата „%s"."
 
 #~ msgid ""
 #~ "Start time after end time!\n"
@@ -25505,7 +25505,7 @@ msgstr "Спектър"
 #~ "Save the curves at %s"
 #~ msgstr ""
 #~ "EQCurves.xml и EQDefaultCurves.xml не са открити във вашата система.\n"
-#~ "Моля, натиснете „Помощ“, за да посетите страницата за изтегляне.\n"
+#~ "Моля, натиснете „Помощ", за да посетите страницата за изтегляне.\n"
 #~ "\n"
 #~ "Запишете кривите в %s"
 
@@ -25692,7 +25692,7 @@ msgstr "Спектър"
 
 #, fuzzy
 #~ msgid "If you need more control over the export format please use the \"%s\" format."
-#~ msgstr "Ако желаете повече контрол върху експортирания формат, използвайте „Други некомпресирани файлове“."
+#~ msgstr "Ако желаете повече контрол върху експортирания формат, използвайте „Други некомпресирани файлове"."
 
 #~ msgid "Ctrl-Left-Drag"
 #~ msgstr "Ctrl+плъзгане"
@@ -25721,7 +25721,7 @@ msgstr "Спектър"
 #~ msgstr "Освен това задайте името на звуков файл или проект на Audacity, който да бъде отворен."
 
 #~ msgid "Stereo to Mono Effect not found"
-#~ msgstr "Не е намерен ефектът „От стерео към моно“"
+#~ msgstr "Не е намерен ефектът „От стерео към моно""
 
 #~ msgid "Cursor: %d Hz (%s) = %d dB    Peak: %d Hz (%s) = %.1f dB"
 #~ msgstr "Курсор: %d Хц (%s) = %d дБ    Пик: %d Хц (%s) = %.1f дБ"
@@ -25822,7 +25822,7 @@ msgstr "Спектър"
 #~ msgstr "Ехо…"
 
 #~ msgid "Performing Echo"
-#~ msgstr "Прилага се ефект „Ехо“"
+#~ msgstr "Прилага се ефект „Ехо""
 
 #, fuzzy
 #~ msgid "Applying "
@@ -25883,10 +25883,10 @@ msgstr "Спектър"
 #~ msgstr "Еквалайзер…"
 
 #~ msgid "Performing Equalization"
-#~ msgstr "Прилага се ефект „Еквалайзер“"
+#~ msgstr "Прилага се ефект „Еквалайзер""
 
 #~ msgid "Fading Out"
-#~ msgstr "Прилага се ефект „Затихване“"
+#~ msgstr "Прилага се ефект „Затихване""
 
 #~ msgid "Detect clipping"
 #~ msgstr "Откриване на отрязани отчети"
@@ -25941,7 +25941,7 @@ msgstr "Спектър"
 #~ msgstr "Фейзър…"
 
 #~ msgid "Applying Phaser"
-#~ msgstr "Прилага се ефект „Фейзър“"
+#~ msgstr "Прилага се ефект „Фейзър""
 
 #~ msgid "Repairing damaged audio"
 #~ msgstr "Поправя се повреден звук"
@@ -26015,10 +26015,10 @@ msgstr "Спектър"
 #~ msgstr "Приложен бе ефект: %s, честота = %.1f Хц, начална фаза = %.0f°, дълбочина = %.0f%%, резонанс = %.1f, честотно отместване = %.0f%%"
 
 #~ msgid "Wahwah..."
-#~ msgstr "Ефект „Уа-уа“…"
+#~ msgstr "Ефект „Уа-уа"…"
 
 #~ msgid "Applying Wahwah"
-#~ msgstr "Прилага се ефект „Уа-уа“"
+#~ msgstr "Прилага се ефект „Уа-уа""
 
 #~ msgid "Performing Effect: %s"
 #~ msgstr "Прилага се ефект: %s"
@@ -26224,7 +26224,7 @@ msgstr "Спектър"
 #~ "                      but this time Audacity failed to load it at startup.\n"
 #~ "                      You may want to go back to Preferences > Libraries and re-configure it."
 #~ msgstr ""
-#~ "GSreamer е конфигурирана в „Предпочитания“ и е била зареждана успешно,\n"
+#~ "GSreamer е конфигурирана в „Предпочитания" и е била зареждана успешно,\n"
 #~ "но този път Audacity не успя да я зареди при стартиране.\n"
 #~ "Може би е добре да я реконфигурирате в Предпочитания > Библиотеки."
 
@@ -26336,7 +26336,7 @@ msgstr "Спектър"
 #~ "\n"
 #~ "Полученият файл може да се отвори само с Audacity.\n"
 #~ "\n"
-#~ "За да запишете аудиофайл за други програми, изберете команда от „Файл > Експортиране“.\n"
+#~ "За да запишете аудиофайл за други програми, изберете команда от „Файл > Експортиране".\n"
 
 #~ msgid "Libresample by Dominic Mazzoni and Julius Smith"
 #~ msgstr "Libresample от Dominic Mazzoni и Julius Smith"
@@ -26481,7 +26481,7 @@ msgstr "Спектър"
 #~ "button in the Export dialog."
 #~ msgstr ""
 #~ "Бележка: настройките за качество при експортиране са достъпни\n"
-#~ "чрез бутона „Настройки“ в диалоговия прозорец за експортиране."
+#~ "чрез бутона „Настройки" в диалоговия прозорец за експортиране."
 
 #~ msgid "Play (Shift for Loop Play)"
 #~ msgstr "Възпроизвеждане (Shift за зацикляне)"
@@ -26505,7 +26505,7 @@ msgstr "Спектър"
 #~ msgstr "Не може да се управлява силата на изхода. Използвайте системния смесител."
 
 #~ msgid "This is a Beta version of the program. It may contain bugs and unfinished features. We depend on your feedback: please send bug reports and feature requests to our <a href=\"mailto:feedback@audacityteam.org\">Feedback</a> address. For help, use the Help menu in the program, view the tips and tricks on our <a href=\"http://wiki.audacityteam.org/\">Wiki</a> or visit our <a href=\"http://forum.audacityteam.org/\">Forum</a>."
-#~ msgstr "Това е бета-версия на програмата. Тя може да съдържа дефекти и недовършени функции. Разчитаме на вашите отзиви: моля, съобщавайте ни за дефекти и предлагайте нова функционалност на нашия адрес за <a href=\"mailto:feedback@audacityteam.org\">обратна връзка</a>. За помощ относно работата с Audacity вижте менюто „Помощ“ в програмата, прегледайте съветите в нашето <a href=\"http://wiki.audacityteam.org/\">уики</a> или посетете <a href=\"http://forum.audacityteam.org/\">форума ни</a>."
+#~ msgstr "Това е бета-версия на програмата. Тя може да съдържа дефекти и недовършени функции. Разчитаме на вашите отзиви: моля, съобщавайте ни за дефекти и предлагайте нова функционалност на нашия адрес за <a href=\"mailto:feedback@audacityteam.org\">обратна връзка</a>. За помощ относно работата с Audacity вижте менюто „Помощ" в програмата, прегледайте съветите в нашето <a href=\"http://wiki.audacityteam.org/\">уики</a> или посетете <a href=\"http://forum.audacityteam.org/\">форума ни</a>."
 
 #~ msgid "None-Skip"
 #~ msgstr "Няма – пропускане"
@@ -26521,7 +26521,7 @@ msgstr "Спектър"
 #~ "(99999 or greater is off)"
 #~ msgstr ""
 #~ "Макс. времетраене на пика (милисекунди): \n"
-#~ "(99999 или повече означава „изключено“)"
+#~ "(99999 или повече означава „изключено")"
 
 #~ msgid "Theshold for silence: "
 #~ msgstr "Праг за тишина: "
