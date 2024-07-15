@@ -20,6 +20,9 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTrc("projectscene", "Selection")
+
+        enabled: selectionModel.isEnabled
+        opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
     }
 
     TimecodeStartEnd {
@@ -32,6 +35,8 @@ Row {
         lowerTimeSignature: selectionModel.lowerTimeSignature
 
         currentFormat: selectionModel.currentFormat
+
+        enabled: selectionModel.isEnabled
 
         onStartValueChangeRequested: function(newValue) {
             selectionModel.startTime = newValue

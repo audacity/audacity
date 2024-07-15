@@ -27,6 +27,8 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
 
+    Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY isEnabledChanged)
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::ISelectionController> selectionController;
     muse::Inject<playback::IPlayback> playback;
@@ -48,6 +50,8 @@ public:
     int upperTimeSignature() const;
     int lowerTimeSignature() const;
 
+    bool isEnabled() const;
+
 signals:
     void startTimeChanged();
     void endTimeChanged();
@@ -56,6 +60,8 @@ signals:
     void sampleRateChanged();
 
     void timeSignatureChanged();
+
+    void isEnabledChanged();
 
 private:
 

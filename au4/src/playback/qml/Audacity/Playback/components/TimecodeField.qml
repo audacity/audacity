@@ -21,6 +21,8 @@ ListItemBlank {
 
     mouseArea.enabled: isEditable
 
+    opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
+
     StyledTextLabel {
         id: symbolField
 

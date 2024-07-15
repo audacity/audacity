@@ -84,8 +84,7 @@ Item {
                 leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
                 rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
-                navigationPanel: root.navigationPanel
-                navigationOrder: 2
+                enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
@@ -107,6 +106,8 @@ Item {
                 lowerTimeSignature: Boolean(itemData) ? itemData.lowerTimeSignature : 0
 
                 currentFormat: Boolean(itemData) ? itemData.currentFormat : 0
+
+                enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onValueChangeRequested: function(newValue) {
                     if (!Boolean(itemData)) {
@@ -134,6 +135,8 @@ Item {
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
+                enabled: Boolean(itemData) ? itemData.enabled : false
+
                 onValueChangeRequested: function(newValue) {
                     if (!Boolean(itemData)) {
                         return
@@ -152,6 +155,8 @@ Item {
 
                 upper: Boolean(itemData) ? itemData.upper : 0
                 lower: Boolean(itemData) ? itemData.lower : 0
+
+                enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onUpperChangeRequested: function(newValue) {
                     if (!Boolean(itemData)) {
@@ -189,8 +194,7 @@ Item {
                 leftCurrentVolumePressure: Boolean(itemData) ? itemData.leftChannelPressure : 0
                 rightCurrentVolumePressure: Boolean(itemData) ? itemData.rightChannelPressure : 0
 
-                navigationPanel: root.navigationPanel
-                navigationOrder: 1
+                enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onVolumeLevelChangeRequested: function(level) {
                     itemData.level = level
@@ -210,6 +214,8 @@ Item {
                 isSnapEnabled: Boolean(itemData) ? itemData.isSnapEnabled : false
                 currentSnapMode: Boolean(itemData) ? itemData.currentValue : ""
                 contextMenuModel: Boolean(itemData) ? itemData.availableSnapTypes : null
+
+                enabled: Boolean(itemData) ? itemData.enabled : false
 
                 onSnapEnableChangeRequested: function(enabled) {
                     itemData.isSnapEnabled = enabled
@@ -236,6 +242,8 @@ Item {
         iconFont: ui.theme.toolbarIconsFont
         toolTipTitle: qsTrc("projectscene", "Customize toolbar")
         toolTipDescription: qsTrc("projectscene", "Show/hide toolbar buttons")
+
+        enabled: view.model.isEnabled
 
         navigation.panel: root.navigationPanel
         navigation.order: 100
