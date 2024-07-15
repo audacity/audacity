@@ -19,8 +19,11 @@ public:
     Clip clip(const ClipKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
 
+    void reload() override;
+
     void onTrackAdded(const Track& track) override;
     void onTrackChanged(const Track& track) override;
+    void onTrackRemoved(const Track &track) override;
 
     void onClipChanged(const Clip& clip) override;
     void onClipAdded(const Clip& clip) override;
@@ -31,8 +34,6 @@ public:
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
     secs_t totalTime() const override;
-
-    void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
 
 private:
 

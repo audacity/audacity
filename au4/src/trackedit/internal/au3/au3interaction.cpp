@@ -19,6 +19,7 @@
 #include "trackedit/dom/track.h"
 
 #include "log.h"
+#include "translation.h"
 
 using namespace au::trackedit;
 using namespace au::au3;
@@ -99,28 +100,7 @@ bool Au3Interaction::canPasteClips(const std::vector<TrackId>& dstTracksIds, sec
             return false;
         }
 
-        WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(s_clipboard.data[i].track->GetId()));
-        IF_ASSERT_FAILED(origWaveTrack) {
-            return false;
-        }
-
-        secs_t insertDuration = 0;
-
-        // intentional comparison, see clipId default value
-        if (s_clipboard.data[i].clipKey.clipId == -1) {
-            // handle multiple clips
-            std::shared_ptr<WaveClip> leftClip = origWaveTrack->GetLeftmostClip();
-            std::shared_ptr<WaveClip> rightClip = origWaveTrack->GetRightmostClip();
-            insertDuration = rightClip->End() - leftClip->Start();
-        } else {
-            //handle single clip
-            std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(origWaveTrack, s_clipboard.data[i].clipKey.clipId);
-            IF_ASSERT_FAILED(clip) {
-                return false;
-            }
-
-            insertDuration = clip->End() - clip->Start();
-        }
+        secs_t insertDuration = s_clipboard.data[i].track.get()->GetEndTime() - s_clipboard.data[i].track.get()->GetStartTime();
 
         // throws incosistency exception if project tempo is not set, see:
         // au4/src/au3wrap/internal/au3project.cpp: 92
@@ -475,7 +455,7 @@ bool Au3Interaction::splitAt(TrackId trackId, secs_t pivot)
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onTrackChanged(DomConverter::track(waveTrack));
 
-    prj->pushHistoryState("Split", "Split");
+    projectHistory()->pushHistoryState("Split", "Split");
 
     return true;
 }
@@ -616,11 +596,72 @@ au::audio::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey
 
 void Au3Interaction::pushProjectHistoryJoinState(secs_t start, secs_t duration)
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-
     std::stringstream ss;
     ss << "Joined " << duration << " seconds at " << start;
 
-    trackeditProject->pushHistoryState(ss.str(), "Join");
+    projectHistory()->pushHistoryState(ss.str(), "Join");
+}
+
+void Au3Interaction::undo()
+{
+    if (!projectHistory()->undoAvailable()) {
+        interactive()->error(muse::trc("undo", "Undo"), std::string("Undo not available"));
+        return;
+    }
+
+    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    // Find the index of the currently selected track in the old list
+    auto trackIdList = trackeditProject->trackIdList();
+    int selectedIndex = std::distance(trackIdList.begin(),
+                                      std::find(trackIdList.begin(),
+                                                trackIdList.end(),
+                                                selectionController()->selectedTrack()));
+
+    projectHistory()->undo();
+
+    // Undo removes all tracks from current state and
+    // inserts tracks from the previous state so we need
+    // to reload whole model
+    trackeditProject->reload();
+
+    // Update selected track id
+    auto newTrackIdList = trackeditProject->trackIdList();
+    if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
+        selectionController()->setSelectedTrack(newTrackIdList[selectedIndex]);
+    } else {
+        selectionController()->resetSelectedTrack();
+    }
+}
+
+void Au3Interaction::redo()
+{   
+    if (!projectHistory()->redoAvailable()) {
+        interactive()->error(muse::trc("redo", "Redo"), std::string("Redo not available"));
+        return;
+    }
+
+    auto trackeditProject = globalContext()->currentProject()->trackeditProject();
+
+    // Find the index of the currently selected track in the old list
+    auto trackIdList = trackeditProject->trackIdList();
+    int selectedIndex = std::distance(trackIdList.begin(),
+                                      std::find(trackIdList.begin(),
+                                                trackIdList.end(),
+                                                selectionController()->selectedTrack()));
+
+    projectHistory()->redo();
+
+    // Redo removes all tracks from current state and
+    // inserts tracks from the previous state so we need
+    // to reload whole model
+    trackeditProject->reload();
+
+    // Update selected track id
+    auto newTrackIdList = trackeditProject->trackIdList();
+    if (selectedIndex >= 0 && selectedIndex < newTrackIdList.size()) {
+        selectionController()->setSelectedTrack(newTrackIdList[selectedIndex]);
+    } else {
+        selectionController()->resetSelectedTrack();
+    }
 }

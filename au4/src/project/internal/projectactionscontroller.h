@@ -18,6 +18,7 @@
 #include "iopensaveprojectscenario.h"
 
 #include "../iaudacityproject.h"
+#include "trackedit/iprojecthistory.h"
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable
@@ -30,6 +31,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IRecentFilesController> recentFilesController;
     muse::Inject<IProjectAutoSaver> projectAutoSaver;
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     ProjectActionsController() = default;

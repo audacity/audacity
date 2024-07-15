@@ -1,5 +1,7 @@
 #include "trackslistmodel.h"
 
+#include "global/async/async.h"
+
 #include "uicomponents/view/itemmultiselectionmodel.h"
 
 #include "log.h"
@@ -75,11 +77,28 @@ void TracksListModel::load()
         updateRemovingAvailability();
     };
 
+    tracks.onChanged(this, [this]() {
+        muse::async::Async::call(this, [this]() {
+            load();
+        });
+    });
+
     tracks.onItemAdded(this, [this, updateTrackItem](const Track& track) {
         beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
         m_trackList.push_back(buildTrackItem(track));
         updateTrackItem(track);
         endInsertRows();
+    });
+
+    tracks.onItemRemoved(this, [this](const Track& track) {
+        for (int i = 0; i < m_trackList.size(); ++i) {
+            if (m_trackList.at(i)->trackId() == track.id) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_trackList.erase(m_trackList.begin() + i);
+                endRemoveRows();
+                break;
+            }
+        }
     });
 
     tracks.onItemChanged(this, [updateTrackItem](const Track& track) {

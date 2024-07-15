@@ -83,18 +83,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // edit menu
-    UiAction("undo",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Undo"),
-             TranslatableString("action", "Undo")
-             ),
-    UiAction("redo",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Redo"),
-             TranslatableString("action", "Redo")
-             ),
     UiAction("cut-and-close-gap",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

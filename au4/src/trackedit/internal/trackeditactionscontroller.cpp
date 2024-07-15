@@ -31,6 +31,9 @@ static const ActionCode NEW_LABEL_TRACK("new-label-track");
 static const ActionCode TRIM_AUDIO_OUTSIDE_SELECTION("trim-audio-outside-selection");
 static const ActionCode SILENCE_AUDIO_SELECTION("silence-audio-selection");
 
+static const ActionCode UNDO("undo");
+static const ActionCode REDO("redo");
+
 void TrackeditActionsController::init()
 {
     dispatcher()->reg(this, COPY_CODE, this, &TrackeditActionsController::doGlobalCopy);
@@ -48,6 +51,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_SPLIT, this, &TrackeditActionsController::trackSplit);
     dispatcher()->reg(this, TRACK_SPLIT_AT, this, &TrackeditActionsController::trackSplitAt);
     dispatcher()->reg(this, MERGE_SELECTED_ON_TRACK, this, &TrackeditActionsController::mergeSelectedOnTrack);
+    dispatcher()->reg(this, UNDO, this, &TrackeditActionsController::undo);
+    dispatcher()->reg(this, REDO, this, &TrackeditActionsController::redo);
     dispatcher()->reg(this, "toggle-loop-region", this, &TrackeditActionsController::toggleLoopRegion);
     dispatcher()->reg(this, "clear-loop-region", this, &TrackeditActionsController::clearLoopRegion);
     dispatcher()->reg(this, "set-loop-region-to-selection", this, &TrackeditActionsController::setLoopRegionToSelection);
@@ -117,6 +122,16 @@ void TrackeditActionsController::doGlobalJoin()
 
     dispatcher()->dispatch(MERGE_SELECTED_ON_TRACK,
                            ActionData::make_arg3<std::vector<TrackId>, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+}
+
+void TrackeditActionsController::undo()
+{
+    trackeditInteraction()->undo();
+}
+
+void TrackeditActionsController::redo()
+{
+    trackeditInteraction()->redo();
 }
 
 void TrackeditActionsController::clipCut()
@@ -356,49 +371,36 @@ void TrackeditActionsController::silenceAudioSelection()
 
 void TrackeditActionsController::pushProjectHistoryTrackAddedState()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-    trackeditProject->pushHistoryState("Created new audio track", "New track");
+    projectHistory()->pushHistoryState("Created new audio track", "New track");
 }
 
 void TrackeditActionsController::pushProjectHistoryTrackTrimState(secs_t start, secs_t end)
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-
     std::stringstream ss;
     ss << "Trim selected audio tracks from " << start << " seconds to " << end << " seconds";
 
-    trackeditProject->pushHistoryState(ss.str(), "Trim Audio");
+    projectHistory()->pushHistoryState(ss.str(), "Trim Audio");
 }
 
 void TrackeditActionsController::pushProjectHistoryTrackSilenceState(secs_t start, secs_t end)
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-
     std::stringstream ss;
     ss << "Silenced selected tracks for " << start << " seconds at " << end << "";
 
-    trackeditProject->pushHistoryState(ss.str(), "Silence");
+    projectHistory()->pushHistoryState(ss.str(), "Silence");
 }
 
 void TrackeditActionsController::pushProjectHistoryPasteState()
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-    trackeditProject->pushHistoryState("Pasted from the clipboard", "Paste");
+    projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
 }
 
 void TrackeditActionsController::pushProjectHistoryDeleteState(secs_t start, secs_t duration)
 {
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    auto trackeditProject = project->trackeditProject();
-
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
 
-    trackeditProject->pushHistoryState(ss.str(), "Delete");
+    projectHistory()->pushHistoryState(ss.str(), "Delete");
 }
 
 bool TrackeditActionsController::actionChecked(const ActionCode& actionCode) const

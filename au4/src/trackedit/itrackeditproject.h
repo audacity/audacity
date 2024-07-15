@@ -28,8 +28,11 @@ public:
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
 
+    virtual void reload() = 0;
+
     virtual void onTrackAdded(const Track& track) = 0;
     virtual void onTrackChanged(const Track& track) = 0;
+    virtual void onTrackRemoved(const Track& track) = 0;
 
     virtual void onClipChanged(const Clip& clip) = 0;
     virtual void onClipAdded(const Clip& clip) = 0;
@@ -40,9 +43,6 @@ public:
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
     virtual secs_t totalTime() const = 0;
-
-    //! TODO Need remove from here to separated service
-    virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
 };
 
 using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
