@@ -11,6 +11,7 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
+#include "UndoManager.h"
 
 using namespace muse;
 using namespace au::trackedit;
@@ -136,6 +137,11 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     return clips;
 }
 
+void Au3TrackeditProject::reload()
+{
+    m_tracksChanged.changed();
+}
+
 void Au3TrackeditProject::onTrackAdded(const Track& track)
 {
     m_tracksChanged.itemAdded(track);
@@ -144,6 +150,11 @@ void Au3TrackeditProject::onTrackAdded(const Track& track)
 void Au3TrackeditProject::onTrackChanged(const Track& track)
 {
     m_tracksChanged.itemChanged(track);
+}
+
+void Au3TrackeditProject::onTrackRemoved(const Track &track)
+{
+    m_tracksChanged.itemRemoved(track);
 }
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
@@ -209,11 +220,6 @@ muse::async::Channel<au::trackedit::TimeSignature> Au3TrackeditProject::timeSign
 secs_t Au3TrackeditProject::totalTime() const
 {
     return m_impl->trackList->GetEndTime();
-}
-
-void Au3TrackeditProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
-{
-    ProjectHistory::Get(*m_impl->prj).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} });
 }
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const

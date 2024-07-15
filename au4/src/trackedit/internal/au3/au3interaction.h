@@ -6,6 +6,8 @@
 #include "../../itrackeditinteraction.h"
 
 #include "Track.h"
+#include "iinteractive.h"
+#include "iprojecthistory.h"
 #include "iselectioncontroller.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -29,6 +31,8 @@ class Au3Interaction : public ITrackeditInteraction
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
 
 public:
     Au3Interaction() = default;
@@ -57,6 +61,8 @@ public:
     void newStereoTrack() override;
     void newLabelTrack() override;
     audio::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+    void undo() override;
+    void redo() override;
 
 private:
     AudacityProject& projectRef() const;

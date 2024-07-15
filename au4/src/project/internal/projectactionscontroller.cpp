@@ -44,9 +44,6 @@ void ProjectActionsController::init()
         bool quitApp = false; //multiInstancesProvider()->instances().size() > 1;
         closeOpenedProject(quitApp);
     });
-
-    dispatcher()->reg(this, "undo", this, &ProjectActionsController::undo);
-    dispatcher()->reg(this, "redo", this, &ProjectActionsController::redo);
 }
 
 bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
@@ -469,6 +466,8 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
     }
 
     globalContext()->setCurrentProject(project);
+
+    projectHistory()->init();
 
     return openPageIfNeed(PROJECT_PAGE_URI);
 }

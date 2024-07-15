@@ -3,6 +3,8 @@
 */
 #include "trackslistclipsmodel.h"
 
+#include "global/async/async.h"
+
 #include "global/containers.h"
 
 using namespace au::projectscene;
@@ -33,15 +35,27 @@ void TracksListClipsModel::load()
         setDataSelectedTracks(tracks);
     });
 
+    m_trackList.onChanged(this, [this]() {
+        muse::async::Async::call(this, [this]() {
+            load();
+        });
+    });
+
     m_trackList.onItemAdded(this, [this](const trackedit::Track& track) {
         beginInsertRows(QModelIndex(), m_trackList.size(), m_trackList.size());
         m_trackList.push_back(track);
         endInsertRows();
     });
 
-    m_trackList.onItemRemoved(this, [](const trackedit::Track& track) {
-        Q_UNUSED(track);
-        NOT_IMPLEMENTED;
+    m_trackList.onItemRemoved(this, [this](const trackedit::Track& track) {
+        for (size_t i = 0; i < m_trackList.size(); ++i) {
+            if (m_trackList.at(i).id == track.id) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_trackList.erase(m_trackList.begin() + i);
+                endRemoveRows();
+                break;
+            }
+        }
     });
 
     m_trackList.onItemChanged(this, [this](const trackedit::Track& track) {

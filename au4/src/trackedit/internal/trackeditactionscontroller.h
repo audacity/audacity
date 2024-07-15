@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include "iprojecthistory.h"
 #include "itrackeditinteraction.h"
 #include "iselectioncontroller.h"
 #include "modularity/ioc.h"
@@ -22,6 +23,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:
     void init();
@@ -32,6 +34,9 @@ public:
 
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
+
+    void undo();
+    void redo();
 
     void doGlobalCopy();
     void doGlobalDelete();
