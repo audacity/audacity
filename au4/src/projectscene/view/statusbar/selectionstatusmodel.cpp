@@ -26,12 +26,8 @@ void SelectionStatusModel::init()
     });
 
     globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
-        auto project = globalContext()->currentProcessingProject();
-        if (!project) {
-            return;
-        }
-
         emit timeSignatureChanged();
+        emit isEnabledChanged();
     });
 }
 
@@ -111,4 +107,9 @@ int SelectionStatusModel::lowerTimeSignature() const
     }
 
     return project->timeSignature().lower;
+}
+
+bool SelectionStatusModel::isEnabled() const
+{
+    return globalContext()->currentProcessingProject() != nullptr;
 }

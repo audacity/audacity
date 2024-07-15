@@ -25,6 +25,8 @@ Canvas {
     width: parent.width
     height: root.showRuler ? prv.indicatorHeight + prv.unitsTextWidth : prv.indicatorHeight
 
+    opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
+
     QtObject {
         id: prv
 

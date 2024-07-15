@@ -74,6 +74,8 @@ RowLayout {
                         isSelected: model.index === timecodeModel.currentEditedFieldIndex
                         isEditable: editable
 
+                        enabled: root.enabled
+
                         onClicked: {
                             timecodeModel.currentEditedFieldIndex = model.index
                         }

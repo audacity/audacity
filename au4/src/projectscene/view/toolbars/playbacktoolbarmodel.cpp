@@ -83,6 +83,8 @@ void PlaybackToolBarModel::load()
 
     context()->currentProjectChanged().onNotify(this, [this]() {
         reload();
+
+        emit isEnabledChanged();
     });
 
     updateActions();
@@ -301,4 +303,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
     }
 
     return result;
+}
+
+bool PlaybackToolBarModel::isEnabled() const
+{
+    return context()->currentProject() != nullptr;
 }

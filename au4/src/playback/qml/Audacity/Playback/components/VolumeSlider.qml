@@ -30,6 +30,8 @@ Slider {
     width: parent.width
     height: handleWidth
 
+    opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
+
     signal increaseRequested()
     signal decreaseRequested()
 

@@ -19,6 +19,8 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY isEnabledChanged)
+
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<context::IGlobalContext> context;
@@ -45,6 +47,11 @@ public:
     Q_ENUM(ItemType)
 
     Q_INVOKABLE void load() override;
+
+    bool isEnabled() const;
+
+signals:
+    void isEnabledChanged();
 
 private:
     void reload();

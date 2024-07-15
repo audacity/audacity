@@ -51,10 +51,12 @@ Item {
 
                 VolumePressureMeter {
                     id: leftVolumePressure
+                    enabled: root.enabled
                 }
                 VolumePressureMeter {
                     id: rightVolumePressure
                     showRuler: true
+                    enabled: root.enabled
                 }
             }
 
@@ -67,6 +69,8 @@ Item {
                 anchors.rightMargin: -handleWidth/2 + leftVolumePressure.overloadWidth
                 anchors.top: parent.top
                 anchors.topMargin: -1
+
+                enabled: root.enabled
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrder
