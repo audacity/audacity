@@ -291,25 +291,25 @@
         <seq>Delete</seq>
     </SC>
     <SC>
-        <key>new</key>
+        <key>file-new</key>
         <seq>Ctrl+N</seq>
     </SC>
     <SC>
-        <key>open</key>
+        <key>file-open</key>
         <seq>Ctrl+O</seq>
     </SC>
     <SC>
-        <key>save</key>
+        <key>file-save</key>
         <seq>Ctrl+S</seq>
     </SC>
     <SC>
-        <key>save-as</key>
+        <key>file-save-as</key>
     </SC>
     <SC>
-        <key>save-copy</key>
+        <key>file-save-copy</key>
     </SC>
     <SC>
-        <key>close</key>
+        <key>file-close</key>
         <seq>Ctrl+W</seq>
     </SC>
     <SC>
@@ -330,7 +330,7 @@
         <key>import-raw</key>
     </SC>
     <SC>
-        <key>exit</key>
+        <key>quit</key>
         <seq>Ctrl+Q</seq>
     </SC>
     <SC>
