@@ -1714,74 +1714,40 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
       return mCachedBestRateOut;
    }
 
-   // In order to cache the value, all early returns should instead set retval
-   // and jump to finished
-   double retval;
-
-   std::vector<long> rates;
    if (capturing) wxLogDebug(wxT("AudioIO::GetBestRate() for capture"));
    if (playing) wxLogDebug(wxT("AudioIO::GetBestRate() for playback"));
    wxLogDebug(wxT("GetBestRate() suggested rate %.0lf Hz"), sampleRate);
 
+   long requestedRate = static_cast<long>(sampleRate);
+   long supportedRate = 0;
+
    if (capturing && !playing) {
-      rates = GetSupportedCaptureRates(-1, sampleRate);
+      supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate);
    }
    else if (playing && !capturing) {
-      rates = GetSupportedPlaybackRates(-1, sampleRate);
+      supportedRate = GetClosestSupportedPlaybackRate(-1, sampleRate);
    }
    else {   // we assume capturing and playing - the alternative would be a
             // bit odd
-      rates = GetSupportedSampleRates(-1, -1, sampleRate);
-   }
-   /* rem rates is the array of hardware-supported sample rates (in the current
-    * configuration), sampleRate is the Project Rate (desired sample rate) */
-   long rate = (long)sampleRate;
-
-   if (make_iterator_range(rates).contains(rate)) {
-      wxLogDebug(wxT("GetBestRate() Returning %.0ld Hz"), rate);
-      retval = rate;
-      goto finished;
-      /* the easy case - the suggested rate (project rate) is in the list, and
-       * we can just accept that and send back to the caller. This should be
-       * the case for most users most of the time (all of the time on
-       * Win MME as the OS does resampling) */
+      supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate);
    }
 
    /* if we get here, there is a problem - the project rate isn't supported
-    * on our hardware, so we can't us it. Need to come up with an alternative
-    * rate to use. The process goes like this:
-    * * If there are no rates to pick from, we're stuck and return 0 (error)
-    * * If there are some rates, we pick the next one higher than the requested
-    *   rate to use.
-    * * If there aren't any higher, we use the highest available rate */
+    * on our hardware, so we can't use it. */
 
-   if (rates.empty()) {
+   if (supportedRate == 0) {
       /* we're stuck - there are no supported rates with this hardware. Error */
       wxLogDebug(wxT("GetBestRate() Error - no supported sample rates"));
-      retval = 0.0;
-      goto finished;
    }
-   int i;
-   for (i = 0; i < (int)rates.size(); i++)  // for each supported rate
-         {
-         if (rates[i] > rate) {
-            // supported rate is greater than requested rate
-            wxLogDebug(wxT("GetBestRate() Returning next higher rate - %.0ld Hz"), rates[i]);
-            retval = rates[i];
-            goto finished;
-         }
-         }
+   else if (supportedRate != requestedRate) {
+      wxLogDebug(wxT("GetBestRate() Returning highest supported rate - %.0ld Hz"), supportedRate);
+   }
 
-   wxLogDebug(wxT("GetBestRate() Returning highest rate - %.0ld Hz"), rates.back());
-   retval = rates.back(); // the highest available rate
-   goto finished;
-
-finished:
    mCachedBestRateIn = sampleRate;
-   mCachedBestRateOut = retval;
+   mCachedBestRateOut = supportedRate;
    mCachedBestRatePlaying = playing;
    mCachedBestRateCapturing = capturing;
-   return retval;
+   return supportedRate;
 }
 
 double AudioIO::GetStreamTime()

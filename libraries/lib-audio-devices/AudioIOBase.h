@@ -15,8 +15,10 @@ Paul Licameli split from AudioIO.h
 #include <cfloat>
 #include <chrono>
 #include <functional>
+#include <map>
 #include <optional>
 #include <vector>
+#include <utility>
 #include <wx/string.h>
 #include "MemoryX.h"
 
@@ -133,11 +135,25 @@ public:
     * You can explicitly give the index of the device.  If you don't
     * give it, the currently selected device from the preferences will be used.
     *
-    * You may also specify a rate for which to check in addition to the
-    * standard rates.
     */
-   static std::vector<long> GetSupportedPlaybackRates(int DevIndex = -1,
-                                                double rate = 0.0);
+   static std::vector<long> GetSupportedPlaybackRates(int DevIndex = -1);
+
+   /** \brief Find the closest supported sample rate for given
+    *         playback device.
+    *
+    * Attempts to find the sample rate that is closest to the requested rate,
+    * and is supported by the playback device.
+    *
+    * If device is not specified the currently selected device will be used.
+    *
+    * Sample rate check order:
+    * - the exact requested rate
+    * - higher available rates
+    * - lower available rates
+    *
+    * returns 0 if none is found or the input rate is invalid.
+    */
+   static long GetClosestSupportedPlaybackRate(int devIndex, long rate);
 
    /** \brief Get a list of sample rates the input (recording) device
     * supports.
@@ -148,11 +164,25 @@ public:
     * You can explicitly give the index of the device.  If you don't
     * give it, the currently selected device from the preferences will be used.
     *
-    * You may also specify a rate for which to check in addition to the
-    * standard rates.
     */
-   static std::vector<long> GetSupportedCaptureRates(int devIndex = -1,
-                                               double rate = 0.0);
+   static std::vector<long> GetSupportedCaptureRates(int devIndex = -1);
+
+   /** \brief Find the closest supported sample rate for given
+    *         recording device.
+    *
+    * Attempts to find the sample rate that is closest to the requested rate,
+    * and is supported by the recording device.
+    *
+    * If device is not specified the currently selected device will be used.
+    *
+    * Sample rate check order:
+    * - the exact requested rate
+    * - higher available rates
+    * - lower available rates
+    *
+    * returns 0 if none is found or the input rate is invalid.
+    */
+   static long GetClosestSupportedCaptureRate(int devIndex, long rate);
 
    /** \brief Get a list of sample rates the current input/output device
     * combination supports.
@@ -165,12 +195,27 @@ public:
     * You can explicitly give the indexes of the playDevice/recDevice.
     * If you don't give them, the selected devices from the preferences
     * will be used.
-    * You may also specify a rate for which to check in addition to the
-    * standard rates.
     */
    static std::vector<long> GetSupportedSampleRates(int playDevice = -1,
-                                              int recDevice = -1,
-                                       double rate = 0.0);
+                                                    int recDevice = -1);
+
+   /** \brief Find the closest supported sample rate for given
+    *         playback and recording devices.
+    *
+    * Attempts to find the sample rate that is closest to the requested rate,
+    * and is supported by both playback and recording devices.
+    *
+    * If devices are not specified the currently selected devices will be used.
+    *
+    * Sample rate check order:
+    * - the exact requested rate
+    * - higher available rates
+    * - lower available rates
+    *
+    * returns 0 if none is found or the input rate is invalid.
+    */
+   static long GetClosestSupportedSampleRate(int playDevice,
+                                             int recDevice, long rate);
 
    /** \brief Get a supported sample rate which can be used a an optimal
     * default.
@@ -181,6 +226,20 @@ public:
     * So all in all not that useful or important really
     */
    static int GetOptimalSupportedSampleRate();
+
+   /** \brief Check if the specified playback rate is supported by a device.
+    *
+    * Verifies if a playback device supports a given rate.
+    * If no device index is specified (devIndex == -1), the preferred device is used.
+    */
+   static bool IsPlaybackRateSupported(int devIndex, long rate);
+
+   /** \brief Check if the specified sample rate is supported by a device.
+    *
+    * Verifies if a recording device supports a given rate.
+    * If no device index is specified (devIndex == -1), the preferred device is used.
+    */
+   static bool IsCaptureRateSupported(int devIndex, long rate);
 
    /** \brief Array of common audio sample rates
     *
@@ -274,11 +333,11 @@ protected:
    bool                mInputMixerWorks;
 
    // For cacheing supported sample rates
-   static int mCachedPlaybackIndex;
-   static std::vector<long> mCachedPlaybackRates;
-   static int mCachedCaptureIndex;
-   static std::vector<long> mCachedCaptureRates;
-   static std::vector<long> mCachedSampleRates;
+   static std::map<int, std::vector<long>> mCachedPlaybackRates;
+   static std::map<int, std::vector<long>> mCachedCaptureRates;
+   static std::map<std::pair<int, int>, std::vector<long>> mCachedSampleRates;
+   static int mCurrentPlaybackIndex;
+   static int mCurrentCaptureIndex;
    static double mCachedBestRateIn;
 
 protected:
