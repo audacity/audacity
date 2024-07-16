@@ -10,6 +10,7 @@ Paul Licameli split from TrackMenus.cpp
 **********************************************************************/
 
 #include "CommonCommandFlags.h"
+#include "CommandContext.h"
 #include "ProjectHistory.h"
 
 #include "SelectUtilities.h"
@@ -28,13 +29,6 @@ void OnNewTimeTrack(const CommandContext &context)
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
 
-   if (*tracks.Any<TimeTrack>().begin()) {
-      AudacityMessageBox(
-         XO(
-"This version of Audacity only allows one time track for each project window.") );
-      return;
-   }
-
    auto t = tracks.AddToHead(std::make_shared<TimeTrack>());
 
    SelectUtilities::SelectNone( project );
@@ -48,9 +42,19 @@ void OnNewTimeTrack(const CommandContext &context)
    Viewport::Get(project).ShowTrack(*t);
 }
 
+const ReservedCommandFlag &TimeTrackDoesNotExistFlag()
+{
+   static ReservedCommandFlag flag{
+      [](const AudacityProject &project){
+         return TrackList::Get(project).Any<const TimeTrack>().empty();
+      }
+   };
+   return flag;
+}
+
 AttachedItem sAttachment{
    Command( wxT("NewTimeTrack"), XXO("&Time Track"),
-        OnNewTimeTrack, AudioIONotBusyFlag()
+        OnNewTimeTrack, AudioIONotBusyFlag() | TimeTrackDoesNotExistFlag()
    ),
    wxT("Tracks/Add/Add")
 };

@@ -1328,7 +1328,7 @@ bool AudioIO::AllocateBuffers(
             const auto timeQueueSize = 1 +
                (playbackBufferSize + TimeQueueGrainSize - 1)
                   / TimeQueueGrainSize;
-            mPlaybackSchedule.mTimeQueue.Resize( timeQueueSize );
+            mPlaybackSchedule.mTimeQueue.Init( timeQueueSize );
          }
 
          if( mNumCaptureChannels > 0 )
@@ -2840,9 +2840,8 @@ bool AudioIoCallback::FillOutputBuffers(
             outputFloats[numPlaybackChannels * i + n] +=
                (oldGain + deltaGain * i) * tempBufs[n][i];
          }
-
-         CallbackCheckCompletion(mCallbackReturn, len);
       }
+      CallbackCheckCompletion(mCallbackReturn, len);
    }
 
    mOldPlaybackGain = gain;

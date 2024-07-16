@@ -289,15 +289,12 @@ void PCMImportFileHandle::Import(
 
    wxASSERT(mFile.get());
 
-   auto track = ImportUtils::NewWaveTrack(
-      *trackFactory,
-      mInfo.channels,
-      mFormat,
-      mInfo.samplerate);
+   const auto format = ImportUtils::ChooseFormat(mFormat);
+   auto trackList = trackFactory->CreateMany(mInfo.channels, format, mInfo.samplerate);
 
    auto fileTotalFrames =
       (sampleCount)mInfo.frames; // convert from sf_count_t
-   auto maxBlockSize = track->GetMaxBlockSize();
+   auto maxBlockSize = (*trackList->Any<WaveTrack>().begin())->GetMaxBlockSize();
 
    {
       // Otherwise, we're in the "copy" mode, where we read in the actual
@@ -353,7 +350,7 @@ void PCMImportFileHandle::Import(
 
          if (block) {
             unsigned c = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            ImportUtils::ForEachChannel(*trackList, [&](auto& channel)
             {
                if (mFormat==int16Sample) {
                   for(int j=0; j<block; j++)
@@ -386,7 +383,7 @@ void PCMImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, *track);
+   ImportUtils::FinalizeImport(outTracks, std::move(*trackList));
 
    const char *str;
 

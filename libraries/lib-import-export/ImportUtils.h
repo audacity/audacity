@@ -34,12 +34,12 @@ public:
    //! Choose appropriate format, which will not be narrower than the specified one
    static sampleFormat ChooseFormat(sampleFormat effectiveFormat);
    
-   //! Builds a wave track and places it into a track list.
+   //! Builds a wave track
    //! The format will not be narrower than the specified one.
    static std::shared_ptr<WaveTrack>
    NewWaveTrack(WaveTrackFactory &trackFactory, unsigned nChannels,
       sampleFormat effectiveFormat, double rate);
-   
+
    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
 
    //! Iterates over channels in each wave track from the list

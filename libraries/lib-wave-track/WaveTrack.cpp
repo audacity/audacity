@@ -761,6 +761,13 @@ const WaveClipHolders &WaveTrack::NarrowClips() const
 Track::Holder WaveTrack::Clone(bool backup) const
 {
    auto newTrack = EmptyCopy(NChannels());
+   if(backup)
+   {
+      //Init-time rate and format should be preserved as initialization
+      //phase is not yet completed for that track.
+      newTrack->mLegacyFormat = mLegacyFormat;
+      newTrack->mLegacyRate = mLegacyRate;
+   }
    newTrack->CopyClips(newTrack->mClips,
       newTrack->mpFactory, this->mClips, backup);
    return newTrack;
@@ -2500,12 +2507,16 @@ void WaveTrack::WriteOneXML(const WaveChannel &channel, XMLWriter &xmlFile,
          : LinkType::None);
    xmlFile.WriteAttr(Linked_attr, linkType);
 
+   // VS: trying to save tracks that didn't pass all necessary
+   // initializations on project read from the disk. 
+   const auto useLegacy = track.mLegacyRate != 0;
+
    // More channel group properties written redundantly
    track.WritableSampleTrack::WriteXMLAttributes(xmlFile);
-   xmlFile.WriteAttr(Rate_attr, track.GetRate());
+   xmlFile.WriteAttr(Rate_attr, useLegacy ? track.mLegacyRate : track.GetRate());
    xmlFile.WriteAttr(Gain_attr, static_cast<double>(track.GetGain()));
    xmlFile.WriteAttr(Pan_attr, static_cast<double>(track.GetPan()));
-   xmlFile.WriteAttr(SampleFormat_attr, static_cast<long>(track.GetSampleFormat()));
+   xmlFile.WriteAttr(SampleFormat_attr, static_cast<long>(useLegacy ? track.mLegacyFormat : track.GetSampleFormat()));
 
    // Other persistent data specified elsewhere;
    // NOT written redundantly any more

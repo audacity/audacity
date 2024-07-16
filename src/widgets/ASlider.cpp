@@ -541,7 +541,7 @@ LWSlider::LWSlider(wxWindow *parent,
       stepValue = STEP_CONTINUOUS;
       break;
    case SPEED_SLIDER:
-      minValue = 0.001f;
+      minValue = 0.01f;
       maxValue = 3.000f;
       stepValue = STEP_CONTINUOUS;
       break;
@@ -1578,7 +1578,7 @@ void LWSlider::Increase(float steps)
 
    if ( stepValue == 0.0 )
    {
-      stepValue = ( mMaxValue - mMinValue ) / 100.0;
+      stepValue = ( mMaxValue - mMinValue ) / 10.0;
    }
 
    mCurrentValue += ( steps * stepValue );
@@ -1601,7 +1601,7 @@ void LWSlider::Decrease(float steps)
 
    if ( stepValue == 0.0 )
    {
-      stepValue = ( mMaxValue - mMinValue ) / 100.0;
+      stepValue = ( mMaxValue - mMinValue ) / 10.0;
    }
 
    mCurrentValue -= ( steps * stepValue );

@@ -1126,7 +1126,7 @@ void OnPlaySpeedInc(const CommandContext &context)
    auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
-      tb->AdjustPlaySpeed(0.01f);
+      tb->AdjustPlaySpeed(0.1f);
    }
 }
 
@@ -1136,7 +1136,7 @@ void OnPlaySpeedDec(const CommandContext &context)
    auto tb = &TranscriptionToolBar::Get( project );
 
    if (tb) {
-      tb->AdjustPlaySpeed(-0.01f);
+      tb->AdjustPlaySpeed(-0.1f);
    }
 }
 
