@@ -1,1033 +1,1033 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Shortcuts>
     <SC>
-        <key>PinnedHead</key>
+        <key>pinned-head</key>
     </SC>
     <SC>
-        <key>ManageMacros</key>
+        <key>manage-macros</key>
     </SC>
     <SC>
-        <key>ApplyMacrosPalette</key>
+        <key>apply-macros-palette</key>
     </SC>
     <SC>
-        <key>PlotSpectrum</key>
+        <key>plot-spectrum</key>
     </SC>
     <SC>
-        <key>UndoHistory</key>
+        <key>undo-history</key>
     </SC>
     <SC>
-        <key>MixerBoard</key>
+        <key>mixer-board</key>
     </SC>
     <SC>
-        <key>EditMetaData</key>
+        <key>edit-meta-data</key>
     </SC>
     <SC>
-        <key>TimerRecord</key>
+        <key>timer-record</key>
         <seq>Shift+T</seq>
     </SC>
     <SC>
-        <key>CompareAudio</key>
+        <key>compare-audio</key>
     </SC>
     <SC>
-        <key>Drag</key>
+        <key>drag</key>
     </SC>
     <SC>
-        <key>GetInfo</key>
+        <key>get-info</key>
     </SC>
     <SC>
-        <key>Help</key>
+        <key>help</key>
     </SC>
     <SC>
-        <key>Import2</key>
+        <key>import2</key>
     </SC>
     <SC>
-        <key>Export2</key>
+        <key>export2</key>
     </SC>
     <SC>
-        <key>Message</key>
+        <key>message</key>
     </SC>
     <SC>
-        <key>OpenProject2</key>
+        <key>open-project2</key>
     </SC>
     <SC>
-        <key>SaveProject2</key>
+        <key>save-project2</key>
     </SC>
     <SC>
-        <key>GetPreference</key>
+        <key>get-preference</key>
     </SC>
     <SC>
-        <key>SetPreference</key>
+        <key>set-preference</key>
     </SC>
     <SC>
-        <key>SelectTime</key>
+        <key>select-time</key>
     </SC>
     <SC>
-        <key>SelectFrequencies</key>
+        <key>select-frequencies</key>
     </SC>
     <SC>
-        <key>SelectTracks</key>
+        <key>select-tracks</key>
     </SC>
     <SC>
-        <key>Select</key>
+        <key>select</key>
     </SC>
     <SC>
-        <key>SetClip</key>
+        <key>set-clip</key>
     </SC>
     <SC>
-        <key>SetEnvelope</key>
+        <key>set-envelope</key>
     </SC>
     <SC>
-        <key>SetLabel</key>
+        <key>set-label</key>
     </SC>
     <SC>
-        <key>SetProject</key>
+        <key>set-project</key>
     </SC>
     <SC>
-        <key>SetTrackStatus</key>
+        <key>set-track-status</key>
     </SC>
     <SC>
-        <key>SetTrackAudio</key>
+        <key>set-track-audio</key>
     </SC>
     <SC>
-        <key>SetTrackVisuals</key>
+        <key>set-track-visuals</key>
     </SC>
     <SC>
-        <key>SetTrack</key>
+        <key>set-track</key>
     </SC>
     <SC>
-        <key>ContrastAnalyser</key>
+        <key>contrast-analyser</key>
         <seq>Ctrl+Shift+T</seq>
     </SC>
     <SC>
-        <key>SelPrevClipBoundaryToCursor</key>
+        <key>sel-prev-clip-boundary-to-cursor</key>
     </SC>
     <SC>
-        <key>SelCursorToNextClipBoundary</key>
+        <key>sel-cursor-to-next-clip-boundary</key>
     </SC>
     <SC>
-        <key>SelPrevClip</key>
+        <key>sel-prev-clip</key>
         <seq>Alt+,</seq>
     </SC>
     <SC>
-        <key>SelNextClip</key>
+        <key>sel-next-clip</key>
         <seq>Alt+.</seq>
     </SC>
     <SC>
-        <key>CursPrevClipBoundary</key>
+        <key>curs-prev-clip-boundary</key>
     </SC>
     <SC>
-        <key>CursNextClipBoundary</key>
+        <key>curs-next-clip-boundary</key>
     </SC>
     <SC>
-        <key>ClipLeft</key>
+        <key>clip-left</key>
     </SC>
     <SC>
-        <key>ClipRight</key>
+        <key>clip-right</key>
     </SC>
     <SC>
-        <key>Undo</key>
+        <key>undo</key>
         <seq>Ctrl+Z</seq>
     </SC>
     <SC>
-        <key>Redo</key>
+        <key>redo</key>
         <seq>Ctrl+Shift+Z</seq>
     </SC>
     <SC>
-        <key>Cut</key>
+        <key>cut</key>
         <seq>Ctrl+X</seq>
     </SC>
     <SC>
-        <key>Delete</key>
+        <key>delete</key>
         <seq>Ctrl+K</seq>
     </SC>
     <SC>
-        <key>Copy</key>
+        <key>copy</key>
         <seq>Ctrl+C</seq>
     </SC>
     <SC>
-        <key>Paste</key>
+        <key>paste</key>
         <seq>Ctrl+V</seq>
     </SC>
     <SC>
-        <key>Duplicate</key>
+        <key>duplicate</key>
         <seq>Ctrl+D</seq>
     </SC>
     <SC>
-        <key>SplitCut</key>
+        <key>split-cut</key>
         <seq>Ctrl+Alt+X</seq>
     </SC>
     <SC>
-        <key>SplitDelete</key>
+        <key>split-delete</key>
         <seq>Ctrl+Alt+K</seq>
     </SC>
     <SC>
-        <key>Silence</key>
+        <key>silence</key>
         <seq>Ctrl+L</seq>
     </SC>
     <SC>
-        <key>Trim</key>
+        <key>trim</key>
         <seq>Ctrl+T</seq>
     </SC>
     <SC>
-        <key>Split</key>
+        <key>split</key>
         <seq>Ctrl+I</seq>
     </SC>
     <SC>
-        <key>SplitNew</key>
+        <key>split-new</key>
         <seq>Ctrl+Alt+I</seq>
     </SC>
     <SC>
-        <key>Join</key>
+        <key>join</key>
         <seq>Ctrl+J</seq>
     </SC>
     <SC>
-        <key>Disjoin</key>
+        <key>disjoin</key>
         <seq>Ctrl+Alt+J</seq>
     </SC>
     <SC>
-        <key>Preferences</key>
+        <key>preferences</key>
         <seq>Ctrl+,</seq>
     </SC>
     <SC>
-        <key>DeleteKey</key>
+        <key>delete-key</key>
         <seq>Backspace</seq>
     </SC>
     <SC>
-        <key>DeleteKey2</key>
+        <key>delete-key2</key>
         <seq>Delete</seq>
     </SC>
     <SC>
-        <key>New</key>
+        <key>new</key>
         <seq>Ctrl+N</seq>
     </SC>
     <SC>
-        <key>Open</key>
+        <key>open</key>
         <seq>Ctrl+O</seq>
     </SC>
     <SC>
-        <key>Save</key>
+        <key>save</key>
         <seq>Ctrl+S</seq>
     </SC>
     <SC>
-        <key>SaveAs</key>
+        <key>save-as</key>
     </SC>
     <SC>
-        <key>SaveCopy</key>
+        <key>save-copy</key>
     </SC>
     <SC>
-        <key>Close</key>
+        <key>close</key>
         <seq>Ctrl+W</seq>
     </SC>
     <SC>
-        <key>Export</key>
+        <key>export</key>
         <seq>Ctrl+Shift+E</seq>
     </SC>
     <SC>
-        <key>ExportLabels</key>
+        <key>export-labels</key>
     </SC>
     <SC>
-        <key>ImportAudio</key>
+        <key>import-audio</key>
         <seq>Ctrl+Shift+I</seq>
     </SC>
     <SC>
-        <key>ImportLabels</key>
+        <key>import-labels</key>
     </SC>
     <SC>
-        <key>ImportRaw</key>
+        <key>import-raw</key>
     </SC>
     <SC>
-        <key>Exit</key>
+        <key>exit</key>
         <seq>Ctrl+Q</seq>
     </SC>
     <SC>
-        <key>ExportMp3</key>
+        <key>export-mp3</key>
     </SC>
     <SC>
-        <key>ExportWav</key>
+        <key>export-wav</key>
     </SC>
     <SC>
-        <key>ExportOgg</key>
+        <key>export-ogg</key>
     </SC>
     <SC>
-        <key>ExportFLAC</key>
+        <key>export-f-l-a-c</key>
     </SC>
     <SC>
-        <key>ExportSel</key>
+        <key>export-sel</key>
     </SC>
     <SC>
-        <key>QuickHelp</key>
+        <key>quick-help</key>
     </SC>
     <SC>
-        <key>Manual</key>
+        <key>manual</key>
     </SC>
     <SC>
-        <key>DeviceInfo</key>
+        <key>device-info</key>
     </SC>
     <SC>
-        <key>Log</key>
+        <key>log</key>
     </SC>
     <SC>
-        <key>CrashReport</key>
+        <key>crash-report</key>
     </SC>
     <SC>
-        <key>RaiseSegfault</key>
+        <key>raise-segfault</key>
     </SC>
     <SC>
-        <key>ThrowException</key>
+        <key>throw-exception</key>
     </SC>
     <SC>
-        <key>ViolateAssertion</key>
+        <key>violate-assertion</key>
     </SC>
     <SC>
-        <key>MenuTree</key>
+        <key>menu-tree</key>
     </SC>
     <SC>
-        <key>FrameStatistics</key>
+        <key>frame-statistics</key>
     </SC>
     <SC>
-        <key>About</key>
+        <key>about</key>
     </SC>
     <SC>
-        <key>EditLabels</key>
+        <key>edit-labels</key>
     </SC>
     <SC>
-        <key>AddLabel</key>
+        <key>add-label</key>
         <seq>Ctrl+B</seq>
     </SC>
     <SC>
-        <key>AddLabelPlaying</key>
+        <key>add-label-playing</key>
         <seq>Ctrl+.</seq>
     </SC>
     <SC>
-        <key>PasteNewLabel</key>
+        <key>paste-new-label</key>
         <seq>Ctrl+Alt+V</seq>
     </SC>
     <SC>
-        <key>TypeToCreateLabel</key>
+        <key>type-to-create-label</key>
     </SC>
     <SC>
-        <key>CutLabels</key>
+        <key>cut-labels</key>
         <seq>Alt+X</seq>
     </SC>
     <SC>
-        <key>DeleteLabels</key>
+        <key>delete-labels</key>
         <seq>Alt+K</seq>
     </SC>
     <SC>
-        <key>SplitCutLabels</key>
+        <key>split-cut-labels</key>
         <seq>Alt+Shift+X</seq>
     </SC>
     <SC>
-        <key>SplitDeleteLabels</key>
+        <key>split-delete-labels</key>
         <seq>Alt+Shift+K</seq>
     </SC>
     <SC>
-        <key>SilenceLabels</key>
+        <key>silence-labels</key>
         <seq>Alt+L</seq>
     </SC>
     <SC>
-        <key>CopyLabels</key>
+        <key>copy-labels</key>
         <seq>Alt+Shift+C</seq>
     </SC>
     <SC>
-        <key>SplitLabels</key>
+        <key>split-labels</key>
         <seq>Alt+I</seq>
     </SC>
     <SC>
-        <key>JoinLabels</key>
+        <key>join-labels</key>
         <seq>Alt+J</seq>
     </SC>
     <SC>
-        <key>DisjoinLabels</key>
+        <key>disjoin-labels</key>
         <seq>Alt+Shift+J</seq>
     </SC>
     <SC>
-        <key>NewLabelTrack</key>
+        <key>new-label-track</key>
     </SC>
     <SC>
-        <key>PrevWindow</key>
+        <key>prev-window</key>
         <seq>Alt+Shift+F6</seq>
     </SC>
     <SC>
-        <key>NextWindow</key>
+        <key>next-window</key>
         <seq>Alt+F6</seq>
     </SC>
     <SC>
-        <key>PrevFrame</key>
+        <key>prev-frame</key>
         <seq>Ctrl+Shift+F6</seq>
     </SC>
     <SC>
-        <key>NextFrame</key>
+        <key>next-frame</key>
         <seq>Ctrl+F6</seq>
     </SC>
     <SC>
-        <key>PrevTrack</key>
+        <key>prev-track</key>
         <seq>Up</seq>
     </SC>
     <SC>
-        <key>NextTrack</key>
+        <key>next-track</key>
         <seq>Down</seq>
     </SC>
     <SC>
-        <key>FirstTrack</key>
+        <key>first-track</key>
         <seq>Ctrl+Home</seq>
     </SC>
     <SC>
-        <key>LastTrack</key>
+        <key>last-track</key>
         <seq>Ctrl+End</seq>
     </SC>
     <SC>
-        <key>ShiftUp</key>
+        <key>shift-up</key>
         <seq>Shift+Up</seq>
     </SC>
     <SC>
-        <key>ShiftDown</key>
+        <key>shift-down</key>
         <seq>Shift+Down</seq>
     </SC>
     <SC>
-        <key>Toggle</key>
+        <key>toggle</key>
         <seq>Return</seq>
     </SC>
     <SC>
-        <key>ToggleAlt</key>
+        <key>toggle-alt</key>
         <seq>NUMPAD_ENTER</seq>
     </SC>
     <SC>
-        <key>ManageGenerators</key>
+        <key>manage-generators</key>
     </SC>
     <SC>
-        <key>ManageEffects</key>
+        <key>manage-effects</key>
     </SC>
     <SC>
-        <key>AddRealtimeEffects</key>
+        <key>add-realtime-effects</key>
         <seq>E</seq>
     </SC>
     <SC>
-        <key>GetMoreEffects</key>
+        <key>get-more-effects</key>
     </SC>
     <SC>
-        <key>ManageAnalyzers</key>
+        <key>manage-analyzers</key>
     </SC>
     <SC>
-        <key>ManageTools</key>
+        <key>manage-tools</key>
     </SC>
     <SC>
-        <key>ConfigReset</key>
+        <key>config-reset</key>
     </SC>
     <SC>
-        <key>Benchmark</key>
+        <key>benchmark</key>
     </SC>
     <SC>
-        <key>SimulateRecordingErrors</key>
+        <key>simulate-recording-errors</key>
     </SC>
     <SC>
-        <key>DetectUpstreamDropouts</key>
+        <key>detect-upstream-dropouts</key>
     </SC>
     <SC>
-        <key>WriteJournal</key>
+        <key>write-journal</key>
     </SC>
     <SC>
-        <key>SelectAll</key>
+        <key>select-all</key>
         <seq>Ctrl+A</seq>
     </SC>
     <SC>
-        <key>SelectNone</key>
+        <key>select-none</key>
         <seq>Ctrl+Shift+A</seq>
     </SC>
     <SC>
-        <key>SelAllTracks</key>
+        <key>sel-all-tracks</key>
         <seq>Ctrl+Shift+K</seq>
     </SC>
     <SC>
-        <key>SelSyncLockTracks</key>
+        <key>sel-sync-lock-tracks</key>
         <seq>Ctrl+Shift+Y</seq>
     </SC>
     <SC>
-        <key>SetLeftSelection</key>
+        <key>set-left-selection</key>
         <seq>[</seq>
     </SC>
     <SC>
-        <key>SetRightSelection</key>
+        <key>set-right-selection</key>
         <seq>]</seq>
     </SC>
     <SC>
-        <key>SelTrackStartToCursor</key>
+        <key>sel-track-start-to-cursor</key>
         <seq>Shift+J</seq>
     </SC>
     <SC>
-        <key>SelCursorToTrackEnd</key>
+        <key>sel-cursor-to-track-end</key>
         <seq>Shift+K</seq>
     </SC>
     <SC>
-        <key>SelTrackStartToEnd</key>
+        <key>sel-track-start-to-end</key>
     </SC>
     <SC>
-        <key>SelSave</key>
+        <key>sel-save</key>
     </SC>
     <SC>
-        <key>SelRestore</key>
+        <key>sel-restore</key>
     </SC>
     <SC>
-        <key>SelCursorStoredCursor</key>
+        <key>sel-cursor-stored-cursor</key>
     </SC>
     <SC>
-        <key>StoreCursorPosition</key>
+        <key>store-cursor-position</key>
     </SC>
     <SC>
-        <key>ZeroCross</key>
+        <key>zero-cross</key>
         <seq>Z</seq>
     </SC>
     <SC>
-        <key>SnapToOff</key>
+        <key>snap-to-off</key>
     </SC>
     <SC>
-        <key>SnapToNearest</key>
+        <key>snap-to-nearest</key>
     </SC>
     <SC>
-        <key>SnapToPrior</key>
+        <key>snap-to-prior</key>
     </SC>
     <SC>
-        <key>SelStart</key>
+        <key>sel-start</key>
         <seq>Shift+Home</seq>
     </SC>
     <SC>
-        <key>SelEnd</key>
+        <key>sel-end</key>
         <seq>Shift+End</seq>
     </SC>
     <SC>
-        <key>SelExtLeft</key>
+        <key>sel-ext-left</key>
         <seq>Shift+Left</seq>
     </SC>
     <SC>
-        <key>SelExtRight</key>
+        <key>sel-ext-right</key>
         <seq>Shift+Right</seq>
     </SC>
     <SC>
-        <key>SelSetExtLeft</key>
+        <key>sel-set-ext-left</key>
     </SC>
     <SC>
-        <key>SelSetExtRight</key>
+        <key>sel-set-ext-right</key>
     </SC>
     <SC>
-        <key>SelCntrLeft</key>
+        <key>sel-cntr-left</key>
         <seq>Ctrl+Shift+Right</seq>
     </SC>
     <SC>
-        <key>SelCntrRight</key>
+        <key>sel-cntr-right</key>
         <seq>Ctrl+Shift+Left</seq>
     </SC>
     <SC>
-        <key>CursSelStart</key>
+        <key>curs-sel-start</key>
     </SC>
     <SC>
-        <key>CursSelEnd</key>
+        <key>curs-sel-end</key>
     </SC>
     <SC>
-        <key>CursTrackStart</key>
+        <key>curs-track-start</key>
         <seq>J</seq>
     </SC>
     <SC>
-        <key>CursTrackEnd</key>
+        <key>curs-track-end</key>
         <seq>K</seq>
     </SC>
     <SC>
-        <key>CursProjectStart</key>
+        <key>curs-project-start</key>
         <seq>Home</seq>
     </SC>
     <SC>
-        <key>CursProjectEnd</key>
+        <key>curs-project-end</key>
         <seq>End</seq>
     </SC>
     <SC>
-        <key>CursorLeft</key>
+        <key>cursor-left</key>
         <seq>Left</seq>
     </SC>
     <SC>
-        <key>CursorRight</key>
+        <key>cursor-right</key>
         <seq>Right</seq>
     </SC>
     <SC>
-        <key>CursorShortJumpLeft</key>
+        <key>cursor-short-jump-left</key>
         <seq>,</seq>
     </SC>
     <SC>
-        <key>CursorShortJumpRight</key>
+        <key>cursor-short-jump-right</key>
         <seq>.</seq>
     </SC>
     <SC>
-        <key>CursorLongJumpLeft</key>
+        <key>cursor-long-jump-left</key>
         <seq>Shift+,</seq>
     </SC>
     <SC>
-        <key>CursorLongJumpRight</key>
+        <key>cursor-long-jump-right</key>
         <seq>Shift+.</seq>
     </SC>
     <SC>
-        <key>SeekLeftShort</key>
+        <key>seek-left-short</key>
         <seq>Left</seq>
     </SC>
     <SC>
-        <key>SeekRightShort</key>
+        <key>seek-right-short</key>
         <seq>Right</seq>
     </SC>
     <SC>
-        <key>SeekLeftLong</key>
+        <key>seek-left-long</key>
         <seq>Shift+Left</seq>
     </SC>
     <SC>
-        <key>SeekRightLong</key>
+        <key>seek-right-long</key>
         <seq>Shift+Right</seq>
     </SC>
     <SC>
-        <key>MinutesAndSeconds</key>
+        <key>minutes-and-seconds</key>
     </SC>
     <SC>
-        <key>BeatsAndMeasures</key>
+        <key>beats-and-measures</key>
     </SC>
     <SC>
-        <key>ResetToolbars</key>
+        <key>reset-toolbars</key>
     </SC>
     <SC>
-        <key>MixAndRender</key>
+        <key>mix-and-render</key>
     </SC>
     <SC>
-        <key>MixAndRenderToNewTrack</key>
+        <key>mix-and-render-to-new-track</key>
         <seq>Ctrl+Shift+M</seq>
     </SC>
     <SC>
-        <key>Resample</key>
+        <key>resample</key>
     </SC>
     <SC>
-        <key>RemoveTracks</key>
+        <key>remove-tracks</key>
     </SC>
     <SC>
-        <key>MuteAllTracks</key>
+        <key>mute-all-tracks</key>
         <seq>Ctrl+U</seq>
     </SC>
     <SC>
-        <key>UnmuteAllTracks</key>
+        <key>unmute-all-tracks</key>
         <seq>Ctrl+Shift+U</seq>
     </SC>
     <SC>
-        <key>MuteTracks</key>
+        <key>mute-tracks</key>
         <seq>Ctrl+Alt+U</seq>
     </SC>
     <SC>
-        <key>UnmuteTracks</key>
+        <key>unmute-tracks</key>
         <seq>Ctrl+Alt+Shift+U</seq>
     </SC>
     <SC>
-        <key>PanLeft</key>
+        <key>pan-left</key>
     </SC>
     <SC>
-        <key>PanRight</key>
+        <key>pan-right</key>
     </SC>
     <SC>
-        <key>PanCenter</key>
+        <key>pan-center</key>
     </SC>
     <SC>
-        <key>MoveSelectionWithTracks</key>
+        <key>move-selection-with-tracks</key>
     </SC>
     <SC>
-        <key>SortByTime</key>
+        <key>sort-by-time</key>
     </SC>
     <SC>
-        <key>SortByName</key>
+        <key>sort-by-name</key>
     </SC>
     <SC>
-        <key>SyncLock</key>
+        <key>sync-lock</key>
     </SC>
     <SC>
-        <key>TrackPan</key>
+        <key>track-pan</key>
         <seq>Shift+P</seq>
     </SC>
     <SC>
-        <key>TrackPanLeft</key>
+        <key>track-pan-left</key>
         <seq>Alt+Shift+Left</seq>
     </SC>
     <SC>
-        <key>TrackPanRight</key>
+        <key>track-pan-right</key>
         <seq>Alt+Shift+Right</seq>
     </SC>
     <SC>
-        <key>TrackGain</key>
+        <key>track-gain</key>
         <seq>Shift+G</seq>
     </SC>
     <SC>
-        <key>TrackGainInc</key>
+        <key>track-gain-inc</key>
         <seq>Alt+Shift+Up</seq>
     </SC>
     <SC>
-        <key>TrackGainDec</key>
+        <key>track-gain-dec</key>
         <seq>Alt+Shift+Down</seq>
     </SC>
     <SC>
-        <key>TrackMenu</key>
+        <key>track-menu</key>
         <seq>Shift+M</seq>
     </SC>
     <SC>
-        <key>TrackMute</key>
+        <key>track-mute</key>
         <seq>Shift+U</seq>
     </SC>
     <SC>
-        <key>TrackSolo</key>
+        <key>track-solo</key>
         <seq>Shift+S</seq>
     </SC>
     <SC>
-        <key>TrackClose</key>
+        <key>track-close</key>
         <seq>Shift+C</seq>
     </SC>
     <SC>
-        <key>TrackMoveUp</key>
+        <key>track-move-up</key>
     </SC>
     <SC>
-        <key>TrackMoveDown</key>
+        <key>track-move-down</key>
     </SC>
     <SC>
-        <key>TrackMoveTop</key>
+        <key>track-move-top</key>
     </SC>
     <SC>
-        <key>TrackMoveBottom</key>
+        <key>track-move-bottom</key>
     </SC>
     <SC>
-        <key>DefaultPlayStop</key>
+        <key>default-play-stop</key>
         <seq>Space</seq>
     </SC>
     <SC>
-        <key>PlayStopSelect</key>
+        <key>play-stop-select</key>
         <seq>X</seq>
     </SC>
     <SC>
-        <key>OncePlayStop</key>
+        <key>once-play-stop</key>
         <seq>Shift+Space</seq>
     </SC>
     <SC>
-        <key>Pause</key>
+        <key>pause</key>
         <seq>P</seq>
     </SC>
     <SC>
-        <key>Record1stChoice</key>
+        <key>record1st-choice</key>
         <seq>R</seq>
     </SC>
     <SC>
-        <key>PunchAndRoll</key>
+        <key>punch-and-roll</key>
         <seq>Shift+D</seq>
     </SC>
     <SC>
-        <key>Pause</key>
+        <key>pause</key>
         <seq>P</seq>
     </SC>
     <SC>
-        <key>TogglePlayRegion</key>
+        <key>toggle-play-region</key>
         <seq>L</seq>
     </SC>
     <SC>
-        <key>ClearPlayRegion</key>
+        <key>clear-play-region</key>
         <seq>Shift+Alt+L</seq>
     </SC>
     <SC>
-        <key>SetPlayRegionToSelection</key>
+        <key>set-play-region-to-selection</key>
         <seq>Shift+L</seq>
     </SC>
     <SC>
-        <key>SetPlayRegionIn</key>
+        <key>set-play-region-in</key>
     </SC>
     <SC>
-        <key>SetPlayRegionOut</key>
+        <key>set-play-region-out</key>
     </SC>
     <SC>
-        <key>RescanDevices</key>
+        <key>rescan-devices</key>
     </SC>
     <SC>
-        <key>SoundActivationLevel</key>
+        <key>sound-activation-level</key>
     </SC>
     <SC>
-        <key>SoundActivation</key>
+        <key>sound-activation</key>
     </SC>
     <SC>
-        <key>Overdub</key>
+        <key>overdub</key>
     </SC>
     <SC>
-        <key>SWPlaythrough</key>
+        <key>s-w-playthrough</key>
     </SC>
     <SC>
-        <key>Play</key>
+        <key>play</key>
     </SC>
     <SC>
-        <key>Stop</key>
+        <key>stop</key>
     </SC>
     <SC>
-        <key>PlayOneSec</key>
+        <key>play-one-sec</key>
         <seq>1</seq>
     </SC>
     <SC>
-        <key>PlayToSelection</key>
+        <key>play-to-selection</key>
         <seq>B</seq>
     </SC>
     <SC>
-        <key>PlayBeforeSelectionStart</key>
+        <key>play-before-selection-start</key>
         <seq>Shift+F5</seq>
     </SC>
     <SC>
-        <key>PlayAfterSelectionStart</key>
+        <key>play-after-selection-start</key>
         <seq>Shift+F6</seq>
     </SC>
     <SC>
-        <key>PlayBeforeSelectionEnd</key>
+        <key>play-before-selection-end</key>
         <seq>Shift+F7</seq>
     </SC>
     <SC>
-        <key>PlayAfterSelectionEnd</key>
+        <key>play-after-selection-end</key>
         <seq>Shift+F8</seq>
     </SC>
     <SC>
-        <key>PlayBeforeAndAfterSelectionStart</key>
+        <key>play-before-and-after-selection-start</key>
         <seq>Ctrl+Shift+F5</seq>
     </SC>
     <SC>
-        <key>PlayBeforeAndAfterSelectionEnd</key>
+        <key>play-before-and-after-selection-end</key>
         <seq>Ctrl+Shift+F7</seq>
     </SC>
     <SC>
-        <key>PlayCutPreview</key>
+        <key>play-cut-preview</key>
         <seq>C</seq>
     </SC>
     <SC>
-        <key>MoveToPrevLabel</key>
+        <key>move-to-prev-label</key>
         <seq>Alt+Left</seq>
     </SC>
     <SC>
-        <key>MoveToNextLabel</key>
+        <key>move-to-next-label</key>
         <seq>Alt+Right</seq>
     </SC>
     <SC>
-        <key>ZoomIn</key>
+        <key>zoom-in</key>
         <seq>Ctrl+1</seq>
     </SC>
     <SC>
-        <key>ZoomNormal</key>
+        <key>zoom-normal</key>
         <seq>Ctrl+2</seq>
     </SC>
     <SC>
-        <key>ZoomOut</key>
+        <key>zoom-out</key>
         <seq>Ctrl+3</seq>
     </SC>
     <SC>
-        <key>ZoomSel</key>
+        <key>zoom-sel</key>
         <seq>Ctrl+E</seq>
     </SC>
     <SC>
-        <key>ZoomToggle</key>
+        <key>zoom-toggle</key>
         <seq>Shift+Z</seq>
     </SC>
     <SC>
-        <key>FitInWindow</key>
+        <key>fit-in-window</key>
         <seq>Ctrl+F</seq>
     </SC>
     <SC>
-        <key>FitV</key>
+        <key>fit-v</key>
         <seq>Ctrl+Shift+F</seq>
     </SC>
     <SC>
-        <key>CollapseAllTracks</key>
+        <key>collapse-all-tracks</key>
         <seq>Ctrl+Shift+C</seq>
     </SC>
     <SC>
-        <key>ExpandAllTracks</key>
+        <key>expand-all-tracks</key>
         <seq>Ctrl+Shift+X</seq>
     </SC>
     <SC>
-        <key>SkipSelStart</key>
+        <key>skip-sel-start</key>
         <seq>Ctrl+[</seq>
     </SC>
     <SC>
-        <key>SkipSelEnd</key>
+        <key>skip-sel-end</key>
         <seq>Ctrl+]</seq>
     </SC>
     <SC>
-        <key>ShowExtraMenus</key>
+        <key>show-extra-menus</key>
     </SC>
     <SC>
-        <key>ShowClipping</key>
+        <key>show-clipping</key>
     </SC>
     <SC>
-        <key>ShowRMS</key>
+        <key>show-r-m-s</key>
     </SC>
     <SC>
-        <key>ShowAudioSetupTB</key>
+        <key>show-audio-setup-t-b</key>
     </SC>
     <SC>
-        <key>ShowCutCopyPasteTB</key>
+        <key>show-cut-copy-paste-t-b</key>
     </SC>
     <SC>
-        <key>ShowTransportTB</key>
+        <key>show-transport-t-b</key>
     </SC>
     <SC>
-        <key>ShowDeviceTB</key>
+        <key>show-device-t-b</key>
     </SC>
     <SC>
-        <key>InputDevice</key>
+        <key>input-device</key>
         <seq>Shift+I</seq>
     </SC>
     <SC>
-        <key>OutputDevice</key>
+        <key>output-device</key>
         <seq>Shift+O</seq>
     </SC>
     <SC>
-        <key>AudioHost</key>
+        <key>audio-host</key>
         <seq>Shift+H</seq>
     </SC>
     <SC>
-        <key>InputChannels</key>
+        <key>input-channels</key>
         <seq>Shift+N</seq>
     </SC>
     <SC>
-        <key>ShowEditTB</key>
+        <key>show-edit-t-b</key>
     </SC>
     <SC>
-        <key>ShowRecordMeterTB</key>
+        <key>show-record-meter-t-b</key>
     </SC>
     <SC>
-        <key>ShowPlayMeterTB</key>
+        <key>show-play-meter-t-b</key>
     </SC>
     <SC>
-        <key>OutputGain</key>
+        <key>output-gain</key>
     </SC>
     <SC>
-        <key>OutputGainInc</key>
+        <key>output-gain-inc</key>
     </SC>
     <SC>
-        <key>OutputGainDec</key>
+        <key>output-gain-dec</key>
     </SC>
     <SC>
-        <key>InputGain</key>
+        <key>input-gain</key>
     </SC>
     <SC>
-        <key>InputGainInc</key>
+        <key>input-gain-inc</key>
     </SC>
     <SC>
-        <key>InputGainDec</key>
+        <key>input-gain-dec</key>
     </SC>
     <SC>
-        <key>ShowSelectionTB</key>
+        <key>show-selection-t-b</key>
     </SC>
     <SC>
-        <key>ShowSnappingTB</key>
+        <key>show-snapping-t-b</key>
     </SC>
     <SC>
-        <key>ShowSpectralSelectionTB</key>
+        <key>show-spectral-selection-t-b</key>
     </SC>
     <SC>
-        <key>ShowTimeSignatureTB</key>
+        <key>show-time-signature-t-b</key>
     </SC>
     <SC>
-        <key>ShowTimeTB</key>
+        <key>show-time-t-b</key>
     </SC>
     <SC>
-        <key>ShowToolsTB</key>
+        <key>show-tools-t-b</key>
     </SC>
     <SC>
-        <key>SelectTool</key>
+        <key>select-tool</key>
         <seq>F1</seq>
     </SC>
     <SC>
-        <key>EnvelopeTool</key>
+        <key>envelope-tool</key>
         <seq>F2</seq>
     </SC>
     <SC>
-        <key>DrawTool</key>
+        <key>draw-tool</key>
         <seq>F3</seq>
     </SC>
     <SC>
-        <key>MultiTool</key>
+        <key>multi-tool</key>
         <seq>F6</seq>
     </SC>
     <SC>
-        <key>PrevTool</key>
+        <key>prev-tool</key>
         <seq>A</seq>
     </SC>
     <SC>
-        <key>NextTool</key>
+        <key>next-tool</key>
         <seq>D</seq>
     </SC>
     <SC>
-        <key>ShowTranscriptionTB</key>
+        <key>show-transcription-t-b</key>
     </SC>
     <SC>
-        <key>PlayAtSpeedLooped</key>
+        <key>play-at-speed-looped</key>
     </SC>
     <SC>
-        <key>PlayAtSpeed</key>
+        <key>play-at-speed</key>
     </SC>
     <SC>
-        <key>PlayAtSpeedCutPreview</key>
+        <key>play-at-speed-cut-preview</key>
     </SC>
     <SC>
-        <key>SetPlaySpeed</key>
+        <key>set-play-speed</key>
     </SC>
     <SC>
-        <key>PlaySpeedInc</key>
+        <key>play-speed-inc</key>
     </SC>
     <SC>
-        <key>PlaySpeedDec</key>
+        <key>play-speed-dec</key>
     </SC>
     <SC>
-        <key>MidiDeviceInfo</key>
+        <key>midi-device-info</key>
     </SC>
     <SC>
-        <key>ToggleSpectralSelection</key>
+        <key>toggle-spectral-selection</key>
         <seq>Q</seq>
     </SC>
     <SC>
-        <key>NextHigherPeakFrequency</key>
+        <key>next-higher-peak-frequency</key>
     </SC>
     <SC>
-        <key>NextLowerPeakFrequency</key>
+        <key>next-lower-peak-frequency</key>
     </SC>
     <SC>
-        <key>RenameClip</key>
+        <key>rename-clip</key>
         <seq>Ctrl+F2</seq>
     </SC>
     <SC>
-        <key>ChangePitchAndSpeed</key>
+        <key>change-pitch-and-speed</key>
         <seq>Ctrl+Shift+P</seq>
     </SC>
     <SC>
-        <key>RenderPitchAndSpeed</key>
+        <key>render-pitch-and-speed</key>
     </SC>
     <SC>
-        <key>PitchUp</key>
+        <key>pitch-up</key>
         <seq>Alt+Up</seq>
     </SC>
     <SC>
-        <key>PitchDown</key>
+        <key>pitch-down</key>
         <seq>Alt+Down</seq>
     </SC>
     <SC>
-        <key>NewMonoTrack</key>
+        <key>new-mono-track</key>
         <seq>Ctrl+Shift+N</seq>
     </SC>
     <SC>
-        <key>NewStereoTrack</key>
+        <key>new-stereo-track</key>
     </SC>
     <SC>
-        <key>NewTimeTrack</key>
+        <key>new-time-track</key>
     </SC>
     <SC>
-        <key>Scrub</key>
+        <key>scrub</key>
     </SC>
     <SC>
-        <key>Seek</key>
+        <key>seek</key>
     </SC>
     <SC>
-        <key>ToggleScrubRuler</key>
+        <key>toggle-scrub-ruler</key>
     </SC>
     <SC>
-        <key>KeyboardScrubBackwards</key>
+        <key>keyboard-scrub-backwards</key>
         <seq>U</seq>
     </SC>
     <SC>
-        <key>KeyboardScrubForwards</key>
+        <key>keyboard-scrub-forwards</key>
         <seq>I</seq>
     </SC>
 </Shortcuts>
