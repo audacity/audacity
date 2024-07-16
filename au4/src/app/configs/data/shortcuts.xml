@@ -1,5 +1,99 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <Shortcuts>
+<!-- Dev -->
+    <SC>
+        <key>nav-dev-show-controls</key>
+        <seq>Ctrl+F1</seq>
+        <autorepeat>0</autorepeat>
+    </SC>
+    <SC>
+        <key>accessibility-dev-show-tree</key>
+        <seq>Ctrl+F2</seq>
+        <autorepeat>0</autorepeat>
+    </SC>
+    <SC>
+        <key>multiinstances-dev-show-info</key>
+        <seq>Ctrl+F3</seq>
+        <autorepeat>0</autorepeat>
+    </SC>
+    <SC>
+        <key>diagnostics-show</key>
+        <seq>Ctrl+F8</seq>
+        <autorepeat>0</autorepeat>
+    </SC>
+<!-- Keyboard navigation -->
+<!-- NOTE special context for navigation shortcuts because the notation has its own navigation system -->
+    <SC>
+        <key>nav-next-section</key>
+        <seq>F6</seq>
+        <seq>`</seq>
+    </SC>
+    <SC>
+        <key>nav-prev-section</key>
+        <seq>Shift+F6</seq>
+        <seq>Shift+`</seq>
+    </SC>
+    <SC>
+        <key>nav-next-panel</key>
+        <seq>Tab</seq>
+    </SC>
+    <SC>
+        <key>nav-prev-panel</key>
+        <seq>Shift+Tab</seq>
+    </SC>
+    <SC>
+        <key>nav-next-tab</key>
+        <seq>Ctrl+Tab</seq>
+    </SC>
+    <SC>
+        <key>nav-prev-tab</key>
+        <seq>Ctrl+Shift+Tab</seq>
+    </SC>
+    <SC>
+        <key>nav-right</key>
+        <seq>Right</seq>
+    </SC>
+    <SC>
+        <key>nav-left</key>
+        <seq>Left</seq>
+    </SC>
+    <SC>
+        <key>nav-up</key>
+        <seq>Up</seq>
+    </SC>
+    <SC>
+        <key>nav-down</key>
+        <seq>Down</seq>
+    </SC>
+    <SC>
+      <key>nav-first-control</key>
+      <seq>Home</seq>
+    </SC>
+    <SC>
+      <key>nav-last-control</key>
+      <seq>End</seq>
+    </SC>
+    <SC>
+      <key>nav-nextrow-control</key>
+      <seq>PgDown</seq>
+    </SC>
+    <SC>
+      <key>nav-prevrow-control</key>
+      <seq>PgUp</seq>
+    </SC>
+    <SC>
+      <key>nav-trigger-control</key>
+      <seq>Return</seq>
+      <seq>Enter</seq>
+      <seq>Space</seq>
+      <autorepeat>0</autorepeat>
+    </SC>
+    <SC>
+      <key>nav-escape</key>
+      <seq>Esc</seq>
+    </SC>
+<!-- end Keyboard navigation -->
+
     <SC>
         <key>pinned-head</key>
     </SC>
