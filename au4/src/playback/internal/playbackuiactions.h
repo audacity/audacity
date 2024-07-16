@@ -13,7 +13,7 @@
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    INJECT(mu::context::IUiContextResolver, uicontextResolver)
+    INJECT(context::IUiContextResolver, uicontextResolver)
 
 public:
     PlaybackUiActions(std::shared_ptr<PlaybackController> controller);

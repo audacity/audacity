@@ -19,29 +19,29 @@ static const ActionCode STOP_ACTION_CODE("stop-record");
 
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_ACTION_CODE,
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Record"),
              TranslatableString("action", "Record"),
              IconCode::Code::RECORD_FILL
              ),
     UiAction(PAUSE_ACTION_CODE,
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Pause"),
              TranslatableString("action", "Pause"),
              IconCode::Code::PAUSE_FILL
              ),
     UiAction(STOP_ACTION_CODE,
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_OPENED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Stop"),
              TranslatableString("action", "Stop record"),
              IconCode::Code::STOP_FILL
              ),
     UiAction("record-level",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_FOCUSED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Record level"),
              TranslatableString("action", "Set record level"),
              IconCode::Code::MICROPHONE

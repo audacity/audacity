@@ -8,7 +8,7 @@
 namespace au::project {
 class ProjectUiActions : public muse::ui::IUiActionsModule
 {
-    muse::Inject<mu::context::IUiContextResolver> uicontextResolver;
+    muse::Inject<context::IUiContextResolver> uicontextResolver;
 
 public:
 

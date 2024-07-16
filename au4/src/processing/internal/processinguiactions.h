@@ -13,7 +13,7 @@
 namespace au::processing {
 class ProcessingUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    INJECT(mu::context::IUiContextResolver, uicontextResolver)
+    INJECT(context::IUiContextResolver, uicontextResolver)
 
 public:
     ProcessingUiActions(std::shared_ptr<ProcessingActionsController> controller);

@@ -24,10 +24,11 @@
 #include "modularity/ioc.h"
 #include "internal/globalcontext.h"
 #include "internal/uicontextresolver.h"
+#include "shortcutcontext.h"
 
 using namespace au::context;
-using namespace muse;
 using namespace muse::modularity;
+using namespace muse::shortcuts;
 
 std::string ContextModule::moduleName() const
 {
@@ -40,12 +41,13 @@ void ContextModule::registerExports()
     m_uicontextResolver = std::make_shared<UiContextResolver>();
 
     ioc()->registerExport<IGlobalContext>(moduleName(), m_globalContext);
-    ioc()->registerExport<muse::ui::IUiContextResolver>(moduleName(), m_uicontextResolver);
+    ioc()->registerExport<IUiContextResolver>(moduleName(), m_uicontextResolver);
+    ioc()->registerExport<IShortcutContextPriority>(moduleName(), new ShortcutContextPriority());
 }
 
-void ContextModule::onInit(const IApplication::RunMode& mode)
+void ContextModule::onInit(const muse::IApplication::RunMode& mode)
 {
-    if (mode != IApplication::RunMode::GuiApp) {
+    if (mode != muse::IApplication::RunMode::GuiApp) {
         return;
     }
 

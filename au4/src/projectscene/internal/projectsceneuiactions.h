@@ -14,7 +14,7 @@
 namespace au::projectscene {
 class ProjectSceneUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
-    muse::Inject<mu::context::IUiContextResolver> uicontextResolver;
+    muse::Inject<context::IUiContextResolver> uicontextResolver;
     muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
