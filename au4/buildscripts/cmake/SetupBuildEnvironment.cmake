@@ -1,6 +1,7 @@
 
 include(GetCompilerInfo)
 include(GetBuildType)
+include(GetPlatformInfo)
 
 set(BUILD_SHARED_LIBS OFF)
 set(SHARED_LIBS_INSTALL_DESTINATION ${CMAKE_INSTALL_PREFIX}/bin)
@@ -70,6 +71,10 @@ elseif(CC_IS_CLANG)
 
     set(CMAKE_CXX_FLAGS_DEBUG   "-g")
     set(CMAKE_CXX_FLAGS_RELEASE "-O2")
+
+    if (OS_IS_LIN)
+        add_link_options("-latomic")
+    endif()
 
     if (MUSE_COMPILE_ASAN)
         add_compile_options("-fsanitize=address")
