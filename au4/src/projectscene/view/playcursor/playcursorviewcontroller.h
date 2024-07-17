@@ -4,6 +4,7 @@
 
 #include "global/async/asyncable.h"
 
+#include "iplaycursorcontroller.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
@@ -11,7 +12,7 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class PlayCursorController : public QObject, public muse::async::Asyncable
+class PlayCursorViewController : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -21,13 +22,15 @@ class PlayCursorController : public QObject, public muse::async::Asyncable
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<projectscene::IPlayCursorController> playCursorController;
 
 public:
-    PlayCursorController(QObject* parent = nullptr);
+    PlayCursorViewController(QObject* parent = nullptr);
 
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
     double positionX() const;
+    double currentTime() const;
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void seekToX(double x);

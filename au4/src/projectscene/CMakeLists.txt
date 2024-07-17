@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstate.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectviewstatecreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaycursorcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/types/projectscenetypes.h
 
@@ -27,6 +28,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playcursorcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playcursorcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/tracksviewstatemodel.h
@@ -77,8 +80,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/snaptimeformatter.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorviewcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorviewcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/statusbar/selectionstatusmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/statusbar/selectionstatusmodel.h

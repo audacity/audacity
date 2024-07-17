@@ -6,6 +6,7 @@
 
 #include "iprocessinginteraction.h"
 #include "iselectioncontroller.h"
+#include "projectscene/iplaycursorcontroller.h"
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
 #include "actions/iactionsdispatcher.h"
@@ -23,6 +24,7 @@ class ProcessingActionsController : public IProcessingActionsController, public 
     INJECT_STATIC(muse::IInteractive, interactive)
     muse::Inject<processing::ISelectionController> selectionController;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
+    muse::Inject<projectscene::IPlayCursorController> playCursorController;
 
 public:
     void init();
@@ -34,10 +36,18 @@ public:
 private:
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
+    // called from clip context menu
     void clipCut();
     void clipCopy();
     void clipDelete();
+
+    // called from app menu
+    void clipCutSelected();
+    void clipCopySelected();
     void clipDeleteSelected();
+
+    void paste();
+
     void toggleLoopRegion();
     void clearLoopRegion();
     void setLoopRegionToSelection();

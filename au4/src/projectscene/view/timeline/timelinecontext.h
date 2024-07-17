@@ -7,7 +7,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "processing/iselectioncontroller.h"
-#include "iprojectsceneconfiguration.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes

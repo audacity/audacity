@@ -1,3 +1,7 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
 #include "processingproject.h"
 
 #include "au3wrap/iau3project.h"
@@ -37,6 +41,12 @@ async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) cons
     return clips;
 }
 
+void ProcessingProject::onClipAdded(const Clip& clip)
+{
+    async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
+    notifier.itemAdded(clip);
+}
+
 void ProcessingProject::onClipChanged(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
@@ -47,12 +57,6 @@ void ProcessingProject::onClipRemoved(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemRemoved(clip);
-}
-
-void ProcessingProject::onClipAdded(const Clip& clip)
-{
-    async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
-    notifer.itemAdded(clip);
 }
 
 TimeSignature ProcessingProject::timeSignature() const
@@ -81,5 +85,9 @@ void ProcessingProject::dump()
     LOGDA() << "tracks: " << tracks.size();
     for (const Track& t : tracks) {
         LOGDA() << "id: " << t.id << ", title: " << t.title;
+        LOGDA() << "clips: " << m_au3->clipList(t.id).size();
+        for (const auto& c : m_au3->clipList(t.id)) {
+            LOGDA() << "startTime: " << c.startTime << " idx: " << c.key.index;
+        }
     }
 }

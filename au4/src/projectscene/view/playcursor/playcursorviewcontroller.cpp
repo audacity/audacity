@@ -1,4 +1,4 @@
-#include "playcursorcontroller.h"
+#include "playcursorviewcontroller.h"
 
 using namespace au::projectscene;
 using namespace muse::actions;
@@ -7,30 +7,30 @@ using namespace muse::actions;
 constexpr double INSURE_VISIBLE_GAP_PX(16);
 constexpr double AUTO_SHIFT_PERCENT(0.75);
 
-PlayCursorController::PlayCursorController(QObject* parent)
+PlayCursorViewController::PlayCursorViewController(QObject* parent)
     : QObject(parent)
 {
 }
 
-au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
+au::context::IPlaybackStatePtr PlayCursorViewController::playbackState() const
 {
     return globalContext()->playbackState();
 }
 
-void PlayCursorController::init()
+void PlayCursorViewController::init()
 {
     playbackState()->playbackPositionChanged().onReceive(this, [this](audio::secs_t secs) {
         updatePositionX(secs);
     });
 }
 
-void PlayCursorController::seekToX(double x)
+void PlayCursorViewController::seekToX(double x)
 {
     double secs = m_context->positionToTime(x);
     dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
 }
 
-void PlayCursorController::insureVisible(audio::secs_t pos)
+void PlayCursorViewController::insureVisible(audio::secs_t pos)
 {
     // move to play cursor position
     if (pos < m_context->frameStartTime()) {
@@ -45,31 +45,40 @@ void PlayCursorController::insureVisible(audio::secs_t pos)
     }
 }
 
-void PlayCursorController::updatePositionX(audio::secs_t secs)
+void PlayCursorViewController::updatePositionX(audio::secs_t secs)
 {
     insureVisible(secs);
 
     m_positionX = m_context->timeToPosition(secs);
     emit positionXChanged();
+
+    playCursorController()->setTimePosition(m_context->positionToTime(m_positionX));
 }
 
-void PlayCursorController::onFrameTimeChanged()
+void PlayCursorViewController::onFrameTimeChanged()
 {
     m_positionX = m_context->timeToPosition(playbackState()->playbackPosition());
     emit positionXChanged();
+
+    playCursorController()->setTimePosition(playbackState()->playbackPosition());
 }
 
-double PlayCursorController::positionX() const
+double PlayCursorViewController::positionX() const
 {
     return m_positionX;
 }
 
-TimelineContext* PlayCursorController::timelineContext() const
+double PlayCursorViewController::currentTime() const
+{
+    return m_context->positionToTime(m_positionX);
+}
+
+TimelineContext* PlayCursorViewController::timelineContext() const
 {
     return m_context;
 }
 
-void PlayCursorController::setTimelineContext(TimelineContext* newContext)
+void PlayCursorViewController::setTimelineContext(TimelineContext* newContext)
 {
     if (m_context == newContext) {
         return;
@@ -82,7 +91,7 @@ void PlayCursorController::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &PlayCursorController::onFrameTimeChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &PlayCursorViewController::onFrameTimeChanged);
     }
 
     emit timelineContextChanged();
