@@ -107,7 +107,7 @@ Mixer::Mixer(
     , mFloatBuffers { 3, mBufferSize, 1, 1 }
 
     // non-interleaved
-    , mTemp { 3, mBufferSize, 1, 1 }
+    , mTemp { mNumChannels, mBufferSize, 1, 1 }
     , mBuffer { initVector<SampleBuffer>(
          mInterleaved ? 1 : mNumChannels,
          [format = mFormat,
