@@ -80,6 +80,7 @@ set(LINK_LIB
     muse::multiinstances
     muse::learn
     muse::languages
+    muse::diagnostics
 
     appshell
     au3wrap
