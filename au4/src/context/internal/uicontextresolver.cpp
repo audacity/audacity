@@ -110,11 +110,11 @@ UiContext UiContextResolver::currentUiContext() const
         INavigationPanel* activePanel = navigationController()->activePanel();
         if (activePanel) {
             if (activePanel->name() == NOTATION_NAVIGATION_PANEL) {
-                return context::UiCtxNotationFocused;
+                return context::UiCtxProjectFocused;
             }
         }
 
-        return context::UiCtxNotationOpened;
+        return context::UiCtxProjectOpened;
     }
 
     return context::UiCtxUnknown;
@@ -126,8 +126,8 @@ bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiConte
         return true;
     }
 
-    //! NOTE If the current context is `UiCtxNotationFocused`, then we allow `UiCtxNotationOpened` too
-    if (currentCtx == context::UiCtxNotationFocused && actCtx == context::UiCtxNotationOpened) {
+    //! NOTE If the current context is `UiCtxProjectFocused`, then we allow `UiCtxProjectOpened` too
+    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectOpened) {
         return true;
     }
 
@@ -151,59 +151,25 @@ async::Notification UiContextResolver::currentUiContextChanged() const
 
 bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) const
 {
-    //! TODO AU4
-    UNUSED(scContext);
-    return false;
+    //! NOTE If (when) there are many different contexts here,
+    //! then the implementation of this method will need to be changed
+    //! so that it does not become spaghetti-code.
+    //! It would be nice if this context as part of the UI context,
+    //! for this we should complicate the implementation of the UI context,
+    //! probably make a tree, for example:
+    //! ProjectOpened
+    //!     ProjectFocused
 
-    // //! NOTE If (when) there are many different contexts here,
-    // //! then the implementation of this method will need to be changed
-    // //! so that it does not become spaghetti-code.
-    // //! It would be nice if this context as part of the UI context,
-    // //! for this we should complicate the implementation of the UI context,
-    // //! probably make a tree, for example:
-    // //! NotationOpened
-    // //!     NotationFocused
-    // //!         NotationStaffTab
+    if (CTX_PROJECT_OPENED == scContext) {
+        return matchWithCurrent(context::UiCtxProjectOpened);
+    } else if (CTX_PROJECT_FOCUSED == scContext) {
+        return matchWithCurrent(context::UiCtxProjectFocused);
+    } else if (CTX_NOT_PROJECT_FOCUSED == scContext) {
+        return !matchWithCurrent(context::UiCtxProjectFocused);
+    }
 
-    // if (CTX_NOTATION_OPENED == scContext) {
-    //     return matchWithCurrent(context::UiCtxNotationOpened);
-    // } else if (CTX_NOTATION_FOCUSED == scContext) {
-    //     return matchWithCurrent(context::UiCtxNotationFocused);
-    // } else if (CTX_NOT_NOTATION_FOCUSED == scContext) {
-    //     return !matchWithCurrent(context::UiCtxNotationFocused);
-    // } else if (CTX_NOTATION_NOT_NOTE_INPUT_STAFF_TAB == scContext) {
-    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-    //         return false;
-    //     }
-    //     auto notation = globalContext()->currentNotation();
-    //     if (!notation) {
-    //         return false;
-    //     }
-    //     auto noteInput = notation->interaction()->noteInput();
-    //     return !noteInput->isNoteInputMode() || noteInput->state().staffGroup != engraving::StaffGroup::TAB;
-    // } else if (CTX_NOTATION_NOTE_INPUT_STAFF_TAB == scContext) {
-    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-    //         return false;
-    //     }
-    //     auto notation = globalContext()->currentNotation();
-    //     if (!notation) {
-    //         return false;
-    //     }
-    //     auto noteInput = notation->interaction()->noteInput();
-    //     return noteInput->isNoteInputMode() && noteInput->state().staffGroup == engraving::StaffGroup::TAB;
-    // } else if (CTX_NOTATION_TEXT_EDITING == scContext) {
-    //     if (!matchWithCurrent(context::UiCtxNotationFocused)) {
-    //         return false;
-    //     }
-    //     auto notation = globalContext()->currentNotation();
-    //     if (!notation) {
-    //         return false;
-    //     }
-    //     return notation->interaction()->isTextEditingStarted();
-    // }
-
-    // IF_ASSERT_FAILED(CTX_ANY == scContext) {
-    //     return true;
-    // }
-    // return true;
+    IF_ASSERT_FAILED(CTX_ANY == scContext) {
+        return true;
+    }
+    return true;
 }

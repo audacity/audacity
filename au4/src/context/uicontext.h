@@ -32,11 +32,11 @@ static constexpr muse::ui::UiContext UiCtxUnknown = muse::ui::UiCtxUnknown;
 static constexpr muse::ui::UiContext UiCtxAny = muse::ui::UiCtxAny;
 
 // pages
-static constexpr muse::ui::UiContext UiCtxNotationOpened = "UiCtxNotationOpened";
+static constexpr muse::ui::UiContext UiCtxProjectOpened = "UiCtxProjectOpened";
 static constexpr muse::ui::UiContext UiCtxHomeOpened = "UiCtxHomeOpened";
 
-// notation detail
-static constexpr muse::ui::UiContext UiCtxNotationFocused = "UiCtxNotationFocused";
+// project detail
+static constexpr muse::ui::UiContext UiCtxProjectFocused = "UiCtxProjectFocused";
 }
 
 #endif // AU_CONTEXT_UICONTEXT_H

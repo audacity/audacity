@@ -104,14 +104,14 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Toolbars
     UiAction("toggle-transport",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_OPENED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "&Playback controls"),
              TranslatableString("action", "Show/hide playback controls"),
              Checkable::Yes
              ),
     UiAction("toggle-noteinput",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "&Note input"),
              TranslatableString("action", "Show/hide note input toolbar"),
@@ -120,29 +120,29 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Vertical panels
     UiAction("toggle-tracks",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "&Tracks"),
              TranslatableString("action", "Show/hide tracks"),
              Checkable::Yes
              ),
     UiAction("toggle-instruments",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Instr&uments"),
              TranslatableString("action", "Open instruments dialog…"),
              Checkable::Yes
              ),
     UiAction("inspector",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Propert&ies"),
              TranslatableString("action", "Show/hide properties"),
              Checkable::Yes
              ),
     UiAction("toggle-selection-filter",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_OPENED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Se&lection filter"),
              TranslatableString("action", "Show/hide selection filter"),
              Checkable::Yes
@@ -150,7 +150,7 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Navigator
     UiAction(TOGGLE_NAVIGATOR_ACTION_CODE,
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "&Navigator"),
              TranslatableString("action", "Show/hide navigator"),
@@ -159,7 +159,7 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Braille panel
     UiAction(TOGGLE_BRAILLE_ACTION_CODE,
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "&Braille"),
              TranslatableString("action", "Show/hide braille panel"),
@@ -168,14 +168,14 @@ const UiActionList ApplicationUiActions::m_actions = {
 
     // Horizontal panels
     UiAction("toggle-timeline",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Tim&eline"),
              TranslatableString("action", "Show/hide timeline"),
              Checkable::Yes
              ),
     UiAction("toggle-mixer",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Mixer"),
              TranslatableString("action", "Show/hide mixer"),
@@ -183,23 +183,23 @@ const UiActionList ApplicationUiActions::m_actions = {
              Checkable::Yes
              ),
     UiAction("toggle-piano-keyboard",
-             au::context::UiCtxNotationOpened,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Piano &keyboard"),
              TranslatableString("action", "Show/hide piano keyboard"),
              Checkable::Yes
              ),
     UiAction("toggle-scorecmp-tool",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_OPENED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Score comparison tool"),
              Checkable::Yes
              ),
 
     // Status bar
     UiAction("toggle-statusbar",
-             au::context::UiCtxNotationOpened,
-             au::context::CTX_NOTATION_OPENED,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "&Status bar"),
              TranslatableString("action", "Show/hide status bar"),
              Checkable::Yes

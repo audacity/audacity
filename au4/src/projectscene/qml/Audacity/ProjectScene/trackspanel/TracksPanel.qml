@@ -59,7 +59,6 @@ Item {
             Layout.rightMargin: contentColumn.sideMargin
 
             navigation.section: root.navigationSection
-            navigation.order: 2
 
             isMovingUpAvailable: tracksModel.isMovingUpAvailable
             isMovingDownAvailable: tracksModel.isMovingDownAvailable
@@ -100,6 +99,9 @@ Item {
 
             model: tracksModel
 
+            navigation.section: root.navigationSection
+            navigation.order: controlPanel.navigation.order + 1
+
             SeparatorLine {
                 anchors.top: parent.top
             }
@@ -110,7 +112,7 @@ Item {
                 isSelected: Boolean(item) ? item.isSelected : false
 
                 navigation.name: Boolean(item) ? item.title + item.index : ""
-                navigationPanel.section: root.navigationSection
+                navigation.panel: view.navigation
                 navigation.row: model.index
                 navigation.accessible.name: Boolean(item) ? item.title : ""
                 navigation.onActiveChanged: {

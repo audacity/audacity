@@ -151,12 +151,13 @@ StyledDialogView {
             onRevertFactorySettingsRequested: {
                 var pages = preferencesModel.availablePages()
 
-                //! TODO AU4: enable when other settings will be available
-                // for (var i in pages) {
-                //     var page = pages[i]
-                //     var obj = root.prv.pagesObjects[page.id]
-                //     obj.reset()
-                // }
+                for (var i in pages) {
+                    var page = pages[i]
+                    var obj = root.prv.pagesObjects[page.id]
+                    if (Boolean(obj)) {
+                        obj.reset()
+                    }
+                }
 
                 preferencesModel.resetFactorySettings()
             }
@@ -170,14 +171,15 @@ StyledDialogView {
                 preferencesModel.apply()
 
                 var ok = true
-                //! TODO AU4: enable when other settings will be available
-                // var pages = preferencesModel.availablePages()
+                var pages = preferencesModel.availablePages()
 
-                // for (var i in pages) {
-                //     var page = pages[i]
-                //     var obj = root.prv.pagesObjects[page.id]
-                //     ok &= obj.apply()
-                // }
+                for (var i in pages) {
+                    var page = pages[i]
+                    var obj = root.prv.pagesObjects[page.id]
+                    if (Boolean(obj)) {
+                        ok &= obj.apply()
+                    }
+                }
 
                 if (ok) {
                     root.hide()
