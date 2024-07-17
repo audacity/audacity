@@ -33,6 +33,7 @@
 #include "framework/actions/actionsmodule.h"
 #include "framework/ui/uimodule.h"
 #include "framework/shortcuts/shortcutsmodule.h"
+#include "framework/accessibility/accessibilitymodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
 #include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
@@ -42,7 +43,6 @@
 
 // need stubs
 #include "framework/stubs/workspace/workspacestubmodule.h"
-#include "framework/stubs/accessibility/accessibilitystubmodule.h"
 #include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
 
 // -----
