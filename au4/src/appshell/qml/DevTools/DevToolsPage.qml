@@ -25,7 +25,11 @@ import Muse.Ui 1.0
 import Muse.UiComponents 1.0
 import Muse.Dock 1.0
 
-import "../dockwindow"
+import "./Gallery"
+import "./Interactive"
+import "./CrashHandler"
+import "./KeyNav"
+import "./Preferences"
 
 DockPage {
     id: root
@@ -33,8 +37,91 @@ DockPage {
     objectName: "DevTools"
     uri: "musescore://devtools"
 
-    central: Text {
-        text: "DevTools"
+    function setCurrentCentral(name) {
+        switch (name) {
+        case "settings": root.central = settingsComp; break
+        case "gallery": root.central = galleryComp; break
+        case "interactive": root.central = interactiveComp; break
+        case "crashhandler": root.central = crashhandlerComp; break
+        case "extensions": root.central = extensionsComp; break
+        case "navigation": root.central = keynavComp; break
+        }
     }
 
+    panels: [
+        DockPanel {
+            id: devtoolsPanel
+
+            objectName: "devtoolsPanel"
+
+            width: maximumWidth
+            minimumWidth: 200
+            maximumWidth: 280
+
+            floatable: false
+            closable: false
+
+            Rectangle {
+                anchors.fill: parent
+                color: ui.theme.backgroundPrimaryColor
+
+                DevToolsMenu {
+                    anchors.fill: parent
+
+                    model: [
+                        { "name": "settings", "title": "Settings" },
+                        { "name": "gallery", "title": "UI Gallery" },
+                        { "name": "interactive", "title": "Interactive" },
+                        { "name": "crashhandler", "title": "Crash handler" },
+                        { "name": "extensions", "title": "Extensions" },
+                        { "name": "navigation", "title": "KeyNav" }
+                    ]
+
+                    onSelected: function(name) {
+                        root.setCurrentCentral(name)
+                    }
+                }
+            }
+        }
+    ]
+
+    central: settingsComp
+
+    Component {
+        id: settingsComp
+
+        SettingsPage {}
+    }
+
+    Component {
+        id: galleryComp
+
+        GeneralComponentsGallery {}
+    }
+
+    Component {
+        id: interactiveComp
+
+        InteractiveTests {}
+    }
+
+    Component {
+        id: crashhandlerComp
+
+        CrashHandlerDevTools {}
+    }
+
+    Component {
+        id: extensionsComp
+
+        Loader {
+            source: "qrc:/qml/DevTools/Extensions/ExtensionsListView.qml"
+        }
+    }
+
+    Component {
+        id: keynavComp
+
+        KeyNavExample {}
+    }
 }
