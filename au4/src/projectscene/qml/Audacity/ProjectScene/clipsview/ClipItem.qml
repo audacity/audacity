@@ -173,7 +173,7 @@ Rectangle {
                         editLoader.isEditState = false
                     }
 
-                    onEscapted: {
+                    onEscaped: {
                         editLoader.isEditState = false
                     }
 
