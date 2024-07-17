@@ -675,7 +675,7 @@ void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey
         return;
     }
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.id);
     IF_ASSERT_FAILED(clip) {
         return;
     }

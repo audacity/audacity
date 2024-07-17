@@ -12,6 +12,6 @@ public:
     // Tracks
     static processing::TrackId trackId(const TrackId& au3trackId);
 
-    static processing::Clip clip(const WaveTrack* waveTrack, const WaveClip* au3clip, int index);
+    static processing::Clip clip(const WaveTrack* waveTrack, const WaveClip* au3clip);
 };
 }

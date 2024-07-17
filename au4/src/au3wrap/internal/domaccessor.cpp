@@ -18,25 +18,22 @@ WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3tr
     return dynamic_cast<WaveTrack*>(track);
 }
 
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, size_t index)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, size_t id)
 {
-    auto clips = track->Intervals();
-    IF_ASSERT_FAILED(index < clips.size()) {
-        return nullptr;
+    auto tracks = track->Intervals();
+    for (auto it = tracks.begin(); it != tracks.end(); ++it) {
+        if ((*it)->GetId() == id) {
+            return *it;
+        }
     }
-
-    auto it = track->Intervals().begin();
-    std::advance(it, index);
-
-    std::shared_ptr<WaveClip> clip = *it;
-    return clip;
+    return std::shared_ptr<WaveClip>();
 }
 
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t id)
 {
     WaveTrack* t = findWaveTrack(prj, au3trackId);
     if (!t) {
         return nullptr;
     }
-    return findWaveClip(t, index);
+    return findWaveClip(t, id);
 }

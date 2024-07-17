@@ -35,6 +35,8 @@
 
 const char *WaveClip::WaveClip_tag = "waveclip";
 
+std::atomic<size_t> WaveClip::sNextId = 0;
+
 WaveClipListener::~WaveClipListener() = default;
 
 void WaveClipListener::WriteXMLAttributes(XMLWriter &) const
@@ -232,6 +234,7 @@ WaveClip::WaveClip(size_t width,
          SampleFormats{narrowestSampleFormat, format});
 
    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
+   mId = GetNextId();
    assert(CheckInvariants());
 }
 
@@ -265,6 +268,7 @@ WaveClip::WaveClip(
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
 
    mName = orig.mName;
+   mId = orig.mId;
 
    if (copyCutlines)
       for (const auto &clip: orig.mCutLines)
@@ -321,6 +325,7 @@ WaveClip::WaveClip(
          std::make_unique<Sequence>(*pSequence, factory));
 
    mEnvelope = std::make_unique<Envelope>(*orig.mEnvelope);
+   mId = GetNextId();
 
    if (copyCutlines)
       for (const auto &cutline : orig.mCutLines)
@@ -1722,6 +1727,11 @@ const wxString& WaveClip::GetName() const
    return mName;
 }
 
+size_t WaveClip::GetId() const
+{
+    return mId;
+}
+
 sampleCount WaveClip::TimeToSamples(double time) const
 {
    return sampleCount(floor(time * mRate / GetStretchRatio() + 0.5));
@@ -1735,6 +1745,11 @@ double WaveClip::SamplesToTime(sampleCount s) const noexcept
 double WaveClip::SnapToTrackSample(double t) const noexcept
 {
    return std::round(t * mRate) / mRate;
+}
+
+size_t WaveClip::GetNextId()
+{
+    return ++sNextId;
 }
 
 void WaveClip::SetSilence(sampleCount offset, sampleCount length)

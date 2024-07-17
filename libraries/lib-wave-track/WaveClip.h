@@ -775,6 +775,8 @@ public:
    void SetName(const wxString& name);
    const wxString& GetName() const;
 
+   size_t GetId() const;
+
    // TimeToSamples and SamplesToTime take clip stretch ratio into account.
    // Use them to convert time / sample offsets.
    sampleCount TimeToSamples(double time) const override;
@@ -883,6 +885,8 @@ private:
    void StretchCutLines(double ratioChange);
    double SnapToTrackSample(double time) const noexcept;
 
+   size_t GetNextId();
+
    //! Fix consistency of cutlines and envelope after deleting from Sequences
    /*!
     This is like a finally object
@@ -976,6 +980,8 @@ private:
    bool mIsPlaceholder { false };
 
    wxString mName;
+   size_t mId = 0;
+   static std::atomic<size_t> sNextId;
 };
 
 #endif
