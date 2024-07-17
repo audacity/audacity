@@ -24,11 +24,14 @@ struct ClipKey
 {
     TrackId trackId = -1;
     size_t index = muse::nidx;
+    size_t id = muse::nidx;
 
     ClipKey() = default;
+    //! TODO AU4 add id to constructor
     ClipKey(const TrackId t, const size_t i)
-        : trackId(t), index(i) {}
+        : trackId(t), index(i) { }
 
+    //! TODO AU4 add id to operator==
     inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && index == k.index; }
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
@@ -44,6 +47,6 @@ struct TimeSignature
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::processing::ClipKey& k)
 {
-    s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
+    s << "{trackId: " << k.trackId << ", clip: " << k.index << ", id: " << k.id << "}";
     return s;
 }

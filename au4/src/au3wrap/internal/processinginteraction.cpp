@@ -131,20 +131,22 @@ bool ProcessingInteraction::paste(double begin, processing::TrackId trackId)
         }
     }
 
-    // paste
+    // paste and update model
     for (const auto& data : s_clipboard.data) {
-        dstWaveTrack->Paste(begin, *data.track);
-        int numClips = dstWaveTrack->GetNumClips();
-
         processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
-        auto waveTrack = dynamic_cast<const WaveTrack*>(data.track.get());
 
-        for (int i = 0; i < numClips; ++i) {
-            std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(dstWaveTrack, i);
-            if (static_cast<processing::secs_t>(clip->Start()) >= static_cast<processing::secs_t>(begin)
-                && static_cast<processing::secs_t>(clip->End())
-                <= static_cast<processing::secs_t>(begin) + static_cast<processing::secs_t>(waveTrack->GetEndTime())) {
-                prj->onClipAdded(DomConverter::clip(dstWaveTrack, clip.get(), i));
+        // use an unordered_set to store the IDs of the clips before the paste
+        std::unordered_set<int> clipIdsBefore;
+        for (const auto& clip : prj->clipList(trackId)) {
+            clipIdsBefore.insert(clip.key.id);
+        }
+
+        dstWaveTrack->Paste(begin, *data.track);
+
+        // Check which clips were added and trigger the onClipAdded event
+        for (const auto& clip : prj->clipList(trackId)) {
+            if (clipIdsBefore.find(clip.key.id) == clipIdsBefore.end()) {
+                prj->onClipAdded(clip);
             }
         }
     }
