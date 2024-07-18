@@ -25,6 +25,8 @@
 #include "AButton.h"
 
 #include "AColor.h"
+#include "AllThemeResources.h"
+#include "Theme.h"
 #include "TrackArt.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
@@ -37,7 +39,6 @@
 #include "ProjectStatus.h"
 #include "../ProjectWindowBase.h"
 #include <wx/tooltip.h>
-
 
 
 BEGIN_EVENT_TABLE(AButton, wxWindow)
@@ -173,6 +174,7 @@ void AButton::SetFrameMid(int mid)
 void AButton::Init(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, bool toggle)
 {
    SetBackgroundStyle(wxBG_STYLE_PAINT);
+   SetBackgroundColour(theTheme.Colour(clrMedium));
 
    // Bug in wxWidgets 2.8.12: by default pressing Enter on an AButton is interpreted as
    // a navigation event - move to next control. As a workaround, the style wxWANTS_CHARS
