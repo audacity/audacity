@@ -42,7 +42,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "MemoryX.h"
 
 #include "ProjectFileIOExtension.h"
-#include "ProjectFormatExtensionsRegistry.h"
+#include "ProjectFormatVersion.h"
 
 #include "BufferedStreamReader.h"
 #include "FromChars.h"
@@ -1973,11 +1973,8 @@ bool ProjectFileIO::WriteDoc(const char *table,
    if (!writeStream("doc", data))
       return false;
 
-   const auto requiredVersion =
-      ProjectFormatExtensionsRegistry::Get().GetRequiredVersion(mProject);
-
    const wxString setVersionSql =
-      wxString::Format("PRAGMA user_version = %u", requiredVersion.GetPacked());
+      wxString::Format("PRAGMA user_version = %u", BaseProjectFormatVersion.GetPacked());
 
    if (!Query(setVersionSql.c_str(), [](auto...) { return 0; }))
    {

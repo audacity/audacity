@@ -12,8 +12,6 @@ and formatter functions, and emitting events when changed.
 set( SOURCES
    Project.cpp
    Project.h
-   ProjectFormatExtensionsRegistry.cpp
-   ProjectFormatExtensionsRegistry.h
    ProjectFormatVersion.cpp
    ProjectFormatVersion.h
    ProjectStatus.cpp

@@ -413,37 +413,6 @@ WaveTrackUtilities::GetClipsIntersecting(const WaveTrack &track,
    return result;
 }
 
-#include "ProjectFormatExtensionsRegistry.h"
-
-namespace {
-using namespace WaveTrackUtilities;
-// If any clips have hidden data, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension smartClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto& clip : GetAllClips(*wt))
-            if (clip->GetTrimLeft() > 0.0 || clip->GetTrimRight() > 0.0)
-               return { 3, 1, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
-
-// If any clips have any stretch, don't allow older versions to open the
-// project.  Otherwise overlapping clips might result.
-ProjectFormatExtensionsRegistry::Extension stretchedClipsExtension(
-   [](const AudacityProject& project) -> ProjectFormatVersion {
-      const TrackList& trackList = TrackList::Get(project);
-      for (auto wt : trackList.Any<const WaveTrack>())
-         for (const auto& clip : GetAllClips(*wt))
-            if (clip->GetStretchRatio() != 1.0)
-               return { 3, 4, 0, 0 };
-      return BaseProjectFormatVersion;
-   }
-);
-}
-
 void WaveTrackUtilities::ExpandClipTillNextOne(
    const WaveTrack& track, WaveTrack::Interval& interval)
 {
