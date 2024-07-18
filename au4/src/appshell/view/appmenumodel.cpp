@@ -23,6 +23,7 @@
 
 #include "types/translatablestring.h"
 
+#include "muse_framework_config.h"
 #include "log.h"
 
 using namespace mu;
@@ -623,17 +624,37 @@ MenuItemList AppMenuModel::makeMacrosItems()
 
 MenuItemList AppMenuModel::makeDiagnosticsItems()
 {
-    MenuItemList items {
-        makeMenuItem("device-info"),
-        makeMenuItem("midi-device-info"),
-        makeMenuItem("log"),
-        makeMenuItem("crash-report"),
-        makeMenuItem("raise-segfault"),
-        makeMenuItem("throw-exception"),
-        makeMenuItem("violate-assertion"),
-        makeMenuItem("menu-tree"),
-        makeMenuItem("frame-statistics")
+    MenuItemList systemItems {
+        makeMenuItem("diagnostic-show-paths"),
+        makeMenuItem("diagnostic-show-profiler"),
     };
+
+    MenuItemList items {
+        makeMenuItem("diagnostic-save-diagnostic-files"),
+        makeMenu(TranslatableString("appshell/menu/diagnostic", "&System"), systemItems, "menu-system")
+    };
+
+    if (globalConfiguration()->devModeEnabled()) {
+#ifdef MUSE_MODULE_ACCESSIBILITY
+        MenuItemList accessibilityItems {
+            makeMenuItem("diagnostic-show-navigation-tree"),
+            makeMenuItem("diagnostic-show-accessible-tree"),
+            makeMenuItem("diagnostic-accessible-tree-dump"),
+        };
+        items << makeMenu(TranslatableString("appshell/menu/diagnostic", "&Accessibility"), accessibilityItems, "menu-accessibility");
+#endif
+
+#ifdef MUSE_MODULE_AUTOBOT
+        MenuItemList autobotItems {
+            makeMenuItem("autobot-show-scripts"),
+        };
+        items << makeMenu(TranslatableString("appshell/menu/diagnostic", "Auto&bot"), autobotItems, "menu-autobot");
+#endif
+
+#ifdef MUSE_MODULE_MULTIINSTANCES
+        items << makeMenuItem("multiinstances-dev-show-info");
+#endif
+    }
 
     return items;
 }
