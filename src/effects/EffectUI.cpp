@@ -365,6 +365,7 @@ void EffectUIHost::BuildTopBar(ShuttleGui &S)
          {
             mEnableBtn = MakeBitmapToggleButton(S.GetParent(),
                theTheme.Image(bmpEffectOn), theTheme.Image(bmpEffectOff));
+            mEnableBtn->SetBackgroundColour(GetBackgroundColour());
             S
                .Position(wxALIGN_CENTER | wxTOP | wxBOTTOM)
                .Name(XO("Power"))
