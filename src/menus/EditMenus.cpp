@@ -652,10 +652,24 @@ void OnPaste(const CommandContext &context)
                   const auto merge = newClipOnPaste ? false : true;
                   const auto preserveExistingBoundaries = newClipOnPaste ? false : true;
                   auto clearByTrimming = newClipOnPaste ? true : false;
-                  wn.ClearAndPaste(
-                     t0, t1, *static_cast<const WaveTrack*>(src),
-                     preserveExistingBoundaries, merge, &warper,
-                     clearByTrimming);
+                  if(src->NChannels() == 1 && wn.NChannels() == 2)
+                  {
+                     // When the source is mono, may paste its only channel
+                     // repeatedly into a stereo track
+                     const auto pastedTrack = std::static_pointer_cast<WaveTrack>(src->Duplicate());
+                     pastedTrack->MonoToStereo();
+                     wn.ClearAndPaste(
+                        t0, t1, *pastedTrack,
+                        preserveExistingBoundaries, merge, &warper,
+                        clearByTrimming);
+                  }
+                  else
+                  {
+                     wn.ClearAndPaste(
+                        t0, t1, *static_cast<const WaveTrack*>(src),
+                        preserveExistingBoundaries, merge, &warper,
+                        clearByTrimming);
+                  }
                },
                [&](LabelTrack &ln){
                   // Per Bug 293, users expect labels to move on a paste into
