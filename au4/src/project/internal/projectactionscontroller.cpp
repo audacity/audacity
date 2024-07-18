@@ -49,6 +49,22 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "redo", this, &ProjectActionsController::redo);
 }
 
+bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode& code) const
+{
+    if (!currentProject()) {
+        static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
+            "file-new",
+            "file-open",
+            "continue-last-session",
+            "clear-recent",
+        };
+
+        return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
+    }
+
+    return true;
+}
+
 IAudacityProjectPtr ProjectActionsController::currentProject() const
 {
     return globalContext()->currentProject();

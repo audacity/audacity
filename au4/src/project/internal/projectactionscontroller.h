@@ -35,6 +35,9 @@ public:
     ProjectActionsController() = default;
 
     void init();
+
+    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
+
     muse::Ret openProject(const ProjectFile& file) override;
     bool isUrlSupported(const QUrl& url) const override;
     bool isFileSupported(const muse::io::path_t& path) const override;
