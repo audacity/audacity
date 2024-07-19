@@ -84,6 +84,11 @@ void Au3SelectionController::resetDataSelection()
     m_selectedEndTime.set(-1.0, true);
 }
 
+bool Au3SelectionController::isDataSelected()
+{
+    return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0;
+}
+
 std::vector<au::processing::TrackId> Au3SelectionController::dataSelectedOnTracks() const
 {
     return m_selectedTrackIds.val;

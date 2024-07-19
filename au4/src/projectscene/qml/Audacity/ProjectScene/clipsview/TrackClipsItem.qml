@@ -44,6 +44,7 @@ Item {
     Item {
         anchors.fill: parent
         anchors.bottomMargin: sep.height
+        z: 1
 
         Repeater {
             id: repeator
@@ -99,6 +100,16 @@ Item {
 
         x: root.context.timeToPosition(root.context.selectionStartTime)
         width: root.context.timeToPosition(root.context.selectionEndTime) - x
+        z: 1
+    }
+
+    Rectangle {
+        id: selectedHighlight
+        z: 0
+        anchors.fill: parent
+        color: ui.theme.white
+        opacity: 0.05
+        visible: root.isDataSelected
     }
 
     MouseArea {
