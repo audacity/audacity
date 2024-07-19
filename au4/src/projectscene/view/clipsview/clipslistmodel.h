@@ -17,6 +17,8 @@
 
 #include "../timeline/timelinecontext.h"
 
+#include "cliplistitem.h"
+
 namespace au::projectscene {
 class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
@@ -43,6 +45,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
+    Q_INVOKABLE bool modeClip(int index, double x);
     Q_INVOKABLE void selectClip(int index);
     Q_INVOKABLE void resetSelectedClip();
 
@@ -51,7 +54,6 @@ public:
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
 signals:
     void trackIdChanged();
@@ -66,20 +68,14 @@ private slots:
 private:
 
     enum RoleNames {
-        ClipKeyRole = Qt::UserRole + 1,
-        ClipTitleRole,
-        ClipColorRole,
-        ClipWidthRole,
-        ClipLeftRole,
-        ClipMoveMaximumXRole,
-        ClipMoveMinimumXRole
+        ClipItemRole = Qt::UserRole + 1,
     };
 
     void update();
 
-    void positionViewAtClip(const processing::Clip& clip);
+    void updateItemsMetrics();
 
-    bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
+    void positionViewAtClip(const processing::Clip& clip);
 
     void onSelectedClip(const processing::ClipKey& k);
 
@@ -88,7 +84,7 @@ private:
     TimelineContext* m_context = nullptr;
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_allClipList;
-    std::vector<au::processing::Clip> m_clipList;
+    QList<ClipListItem*> m_clipList;
     int m_selectedClipIdx = -1;
 };
 }

@@ -21,7 +21,7 @@ Rectangle {
         timelineContext.onResizeFrameWidth(root.width)
     }
 
-    Component.onCompleted: {
+    function init() {
         timelineContext.init(root.width)
     }
 

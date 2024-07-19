@@ -52,22 +52,24 @@ Item {
 
             delegate: ClipItem {
 
+                property QtObject item: model.item
+
                 height: parent.height
-                width: model.clipWidth
-                x: model.clipLeft
+                width: item.width
+                x: item.x
 
                 context: root.context
-                title: model.clipTitle
-                clipColor: model.clipColor
-                clipKey: model.clipKey
+                title: item.title
+                clipColor: item.color
+                clipKey: item.key
                 clipSelected: clipsModel.selectedClipIdx === model.index
                 collapsed: trackViewState.isTrackCollapsed
 
-                dragMaximumX: model.clipMoveMaximumX + borderWidth
-                dragMinimumX: model.clipMoveMinimumX - borderWidth
+                dragMaximumX: item.moveMaximumX + borderWidth
+                dragMinimumX: item.moveMinimumX - borderWidth
 
                 onPositionChanged: function(x) {
-                    model.clipLeft = x
+                    clipsModel.modeClip(model.index, x)
                 }
 
                 onRequestSelected: {

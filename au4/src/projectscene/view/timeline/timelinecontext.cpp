@@ -25,6 +25,7 @@ void TimelineContext::init(double frameWidth)
     m_zoom = configuration()->zoom();
     emit zoomChanged();
 
+    m_frameWidth = frameWidth;
     m_frameStartTime = 0.0;
     emit frameStartTimeChanged();
     m_frameEndTime = positionToTime(frameWidth);
