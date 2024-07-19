@@ -26,7 +26,14 @@ async::NotifyList<Track> ProcessingProject::trackList() const
 
 Clip ProcessingProject::clip(const ClipKey& key) const
 {
-    return m_au3->clipList(key.trackId)[key.index];
+    const auto& clips = m_au3->clipList(key.trackId);
+    for (const auto& clip : clips) {
+        if (clip.key.id == key.id) {
+            return clip;
+        }
+    }
+
+    return Clip();
 }
 
 async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) const

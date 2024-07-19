@@ -244,11 +244,7 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
         return;
     }
 
-    IF_ASSERT_FAILED(key.index < m_clipList.size()) {
-        return;
-    }
-
-    emit requestClipTitleEdit(key.index);
+    emit requestClipTitleEdit(key.id);
 }
 
 bool ClipsListModel::changeClipTitle(int index, const QString& newTitle)
@@ -275,9 +271,9 @@ void ClipsListModel::resetSelectedClip()
 void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
 {
     if (m_trackId != k.trackId) {
-        setSelectedClipIdx(-1);
+        setSelectedClipId(0);
     } else {
-        setSelectedClipIdx(k.index);
+        setSelectedClipId(k.id);
     }
 }
 
@@ -321,16 +317,16 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     emit timelineContextChanged();
 }
 
-int ClipsListModel::selectedClipIdx() const
+int ClipsListModel::selectedClipId() const
 {
-    return m_selectedClipIdx;
+    return m_selectedClipId;
 }
 
-void ClipsListModel::setSelectedClipIdx(int newSelectedClipIdx)
+void ClipsListModel::setSelectedClipId(int newSelectedClipId)
 {
-    if (m_selectedClipIdx == newSelectedClipIdx) {
+    if (m_selectedClipId == newSelectedClipId) {
         return;
     }
-    m_selectedClipIdx = newSelectedClipIdx;
-    emit selectedClipIdxChanged();
+    m_selectedClipId = newSelectedClipId;
+    emit selectedClipIdChanged();
 }

@@ -64,7 +64,7 @@ void ProcessingActionsController::clipDeleteSelected()
 
     //! TODO AU4: improve for deleting multiple selected clips
     // remove single clip when selected via header click
-    if (selectedClipKey.index != nidx) {
+    if (selectedClipKey.id != 0) {
         duration = processingInteraction()->clipDuration(selectedClipKey);
         start = processingInteraction()->clipStartTime(selectedClipKey);
         processingInteraction()->removeClip(selectedClipKey);

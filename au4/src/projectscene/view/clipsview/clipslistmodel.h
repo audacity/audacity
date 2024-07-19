@@ -24,7 +24,7 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
-    Q_PROPERTY(int selectedClipIdx READ selectedClipIdx NOTIFY selectedClipIdxChanged FINAL)
+    Q_PROPERTY(int selectedClipId READ selectedClipId NOTIFY selectedClipIdChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
@@ -38,8 +38,8 @@ public:
     void setTimelineContext(TimelineContext* newContext);
     QVariant trackId() const;
     void setTrackId(const QVariant& newTrackId);
-    int selectedClipIdx() const;
-    void setSelectedClipIdx(int newSelectedClipIdx);
+    int selectedClipId() const;
+    void setSelectedClipId(int newSelectedClipId);
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
@@ -56,7 +56,7 @@ public:
 signals:
     void trackIdChanged();
     void timelineContextChanged();
-    void selectedClipIdxChanged();
+    void selectedClipIdChanged();
 
     void requestClipTitleEdit(int index);
 
@@ -89,6 +89,6 @@ private:
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_allClipList;
     std::vector<au::processing::Clip> m_clipList;
-    int m_selectedClipIdx = -1;
+    int m_selectedClipId = 0;
 };
 }

@@ -245,13 +245,13 @@ void Au3Record::init()
             return;
         }
 
-        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.id);
         IF_ASSERT_FAILED(clip) {
             return;
         }
 
         processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
-        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
+        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
     });
 
     s_recordingListener->commitRequested().onNotify(this, [this]() {
@@ -522,20 +522,6 @@ bool Au3Record::doRecord(AudacityProject& project,
                     transportSequences.prerollSequences.push_back(shared);
                 }
 
-                processing::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), wt->Intervals().size());
-
-                // A function that copies all the non-sample data between
-                // wave tracks; in case the track recorded to changes scale
-                // type (for instance), during the recording.
-                auto updater = [newClipKey](Track& d, const Track& s){
-                    assert(d.NChannels() == s.NChannels());
-                    auto& dst = static_cast<WaveTrack&>(d);
-                    auto& src = static_cast<const WaveTrack&>(s);
-                    dst.Init(src);
-
-                    s_recordingListener->recordingClipChanged().send(newClipKey);
-                };
-
                 // End of current track is before or at recording start time.
                 // Less than or equal, not just less than, to ensure a clip boundary.
                 // when append recording.
@@ -560,6 +546,20 @@ bool Au3Record::doRecord(AudacityProject& project,
                     || lastClip->HasPitchOrSpeed()) {
                     newClip = insertEmptyInterval(*wt, t0, true);
                 }
+
+                processing::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), newClip->GetId());
+
+                // A function that copies all the non-sample data between
+                // wave tracks; in case the track recorded to changes scale
+                // type (for instance), during the recording.
+                auto updater = [newClipKey]  (Track& d, const Track& s) {
+                    assert(d.NChannels() == s.NChannels());
+                    auto& dst = static_cast<WaveTrack&>(d);
+                    auto& src = static_cast<const WaveTrack&>(s);
+                    dst.Init(src);
+
+                    s_recordingListener->recordingClipChanged().send(newClipKey);
+                };
                 // Get a copy of the track to be appended, to be pushed into
                 // undo history only later.
                 const auto pending = static_cast<WaveTrack*>(
@@ -575,7 +575,7 @@ bool Au3Record::doRecord(AudacityProject& project,
                 }
                 transportSequences.captureSequences.push_back(pending->SharedPointer<WaveTrack>());
 
-                processing::Clip _newClip = DomConverter::clip(pending, newClip.get(), newClipKey.index);
+                processing::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
                 prj->onClipAdded(_newClip);
             }

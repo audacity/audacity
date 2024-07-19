@@ -23,13 +23,13 @@ using TrackId = long;
 struct ClipKey
 {
     TrackId trackId = -1;
-    size_t index = muse::nidx;
+    size_t id = 0;
 
     ClipKey() = default;
     ClipKey(const TrackId t, const size_t i)
-        : trackId(t), index(i) {}
+        : trackId(t), id(i) { }
 
-    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && index == k.index; }
+    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && id == k.id; }
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
 
@@ -44,6 +44,6 @@ struct TimeSignature
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::processing::ClipKey& k)
 {
-    s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
+    s << "{trackId: " << k.trackId << ", clipId: " << k.id << "}";
     return s;
 }

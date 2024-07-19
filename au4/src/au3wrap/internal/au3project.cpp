@@ -160,10 +160,8 @@ muse::async::NotifyList<au::processing::Clip> Au3Project::clipList(const au::pro
     }
 
     muse::async::NotifyList<au::processing::Clip> clips;
-    int index = -1;
     for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
-        ++index;
-        au::processing::Clip clip = DomConverter::clip(waveTrack, interval.get(), index);
+        au::processing::Clip clip = DomConverter::clip(waveTrack, interval.get());
         clips.push_back(std::move(clip));
     }
 

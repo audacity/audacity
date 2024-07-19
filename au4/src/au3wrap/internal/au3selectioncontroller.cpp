@@ -65,7 +65,7 @@ au::processing::ClipKey Au3SelectionController::selectedClip() const
 
 void Au3SelectionController::setSelectedClip(const au::processing::ClipKey& clipKey)
 {
-    MYLOG() << "track: " << clipKey.trackId << ", clip: " << clipKey.index;
+    MYLOG() << "track: " << clipKey.trackId << ", clip: " << clipKey.id;
     m_selectedClip.set(clipKey, true);
 }
 
