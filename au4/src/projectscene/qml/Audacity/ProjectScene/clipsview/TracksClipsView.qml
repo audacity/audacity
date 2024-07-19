@@ -75,6 +75,18 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 12
 
+        Rectangle {
+            id: lineCursor
+
+            y: parent.top
+            z: timeline.z + 1
+
+            height: timeline.height
+            width: 1
+
+            color: ui.theme.fontPrimaryColor
+        }
+
         Timeline {
             id: timeline
 
@@ -85,8 +97,18 @@ Rectangle {
             height: 77
             z: 2
 
-            onClicked: function (e) {
-                playCursorController.seekToX(e.x)
+            MouseArea {
+                id: timelineMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+
+                onPositionChanged: function(e) {
+                    lineCursor.x = e.x
+                }
+
+                onClicked: function (e) {
+                    playCursorController.seekToX(e.x)
+                }
             }
         }
 
@@ -126,10 +148,14 @@ Rectangle {
                 timeline.onWheel(wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
 
-            onPressed: e => selectionController.onPressed(e.x, e.y)
+            onPressed: function(e) {
+                playCursorController.seekToX(e.x)
+                selectionController.onPressed(e.x, e.y)
+            }
             onPositionChanged: function(e) {
                 mouseOnTracks = e.y < view.visibleContentHeight
                 selectionController.onPositionChanged(e.x, e.y)
+                lineCursor.x = e.x
             }
             onReleased: e => selectionController.onReleased(e.x, e.y)
         }
