@@ -22,8 +22,13 @@ void SelectionViewController::onPressed(double x, double y)
     m_startPoint = QPointF(x, y);
     emit selectionStarted();
 
-    setSelectionActive(false);
-    selectionController()->resetDataSelection();
+    if (!selectionController()->isDataSelected()) {
+        std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+        selectionController()->setDataSelectedOnTracks(tracks, true);
+    } else {
+        setSelectionActive(false);
+        selectionController()->resetDataSelection();
+    }
 }
 
 void SelectionViewController::onPositionChanged(double x, double y)
