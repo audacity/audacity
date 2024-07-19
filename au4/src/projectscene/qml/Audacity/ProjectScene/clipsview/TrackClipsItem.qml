@@ -50,38 +50,56 @@ Item {
 
             model: clipsModel
 
-            delegate: ClipItem {
-
-                property QtObject item: model.item
+            delegate: Loader {
+                property QtObject clipItem: model.item
 
                 height: parent.height
-                width: item.width
-                x: item.x
+                width: clipItem.width
+                x: clipItem.x
+
+                sourceComponent: clipItem.width < 24 ? placeholderComp : clipComp
+            }
+        }
+
+        Component {
+            id: placeholderComp
+
+            ClipItemSmall {
+
+                clipColor: clipItem.color
+                collapsed: trackViewState.isTrackCollapsed
+            }
+        }
+
+        Component {
+            id: clipComp
+
+            ClipItem {
 
                 context: root.context
-                title: item.title
-                clipColor: item.color
-                clipKey: item.key
-                clipSelected: clipsModel.selectedClipIdx === model.index
+                title: clipItem.title
+                clipColor: clipItem.color
+                clipKey: clipItem.key
+                clipSelected: clipItem.selected
                 collapsed: trackViewState.isTrackCollapsed
 
-                dragMaximumX: item.moveMaximumX + borderWidth
-                dragMinimumX: item.moveMinimumX - borderWidth
+                dragMaximumX: clipItem.moveMaximumX + borderWidth
+                dragMinimumX: clipItem.moveMinimumX - borderWidth
 
                 onPositionChanged: function(x) {
-                    clipsModel.modeClip(model.index, x)
+                    clipsModel.modeClip(clipItem.key, x)
                 }
 
                 onRequestSelected: {
-                    clipsModel.selectClip(model.index)
+                    clipsModel.selectClip(clipItem.key)
                 }
 
                 onTitleEditStarted: {
-                    clipsModel.selectClip(model.index)
+                    clipsModel.selectClip(clipItem.key)
                 }
 
                 onTitleEditAccepted: function(newTitle) {
-                    root.changeClipTitle(model.index, newTitle)
+                    root.changeClipTitle(clipItem.key, newTitle)
                 }
 
                 onTitleEditCanceled: {
@@ -89,6 +107,7 @@ Item {
                 }
             }
         }
+
     }
 
     Rectangle {

@@ -3,6 +3,8 @@
 */
 #include "clipslistmodel.h"
 
+#include "global/async/async.h"
+
 #include "types/projectscenetypes.h"
 
 #include "log.h"
@@ -59,12 +61,9 @@ void ClipsListModel::reload()
             break;
         }
 
-        for (ClipListItem* item : std::as_const(m_clipList)) {
-            if (item->clip().key != clip.key) {
-                continue;
-            }
+        ClipListItem* item = itemByKey(clip.key);
+        if (item) {
             item->setClip(clip);
-            break;
         }
 
         updateItemsMetrics();
@@ -101,6 +100,17 @@ void ClipsListModel::reload()
     update();
 }
 
+ClipListItem* ClipsListModel::itemByKey(const processing::ClipKey& k) const
+{
+    for (ClipListItem* item : std::as_const(m_clipList)) {
+        if (item->clip().key != k) {
+            continue;
+        }
+        return item;
+    }
+    return nullptr;
+}
+
 void ClipsListModel::update()
 {
     //! NOTE First we form a new list, and then we delete old objects,
@@ -129,9 +139,13 @@ void ClipsListModel::update()
 
     updateItemsMetrics();
 
+    onSelectedClip(selectionController()->selectedClip());
+
     endResetModel();
 
-    qDeleteAll(oldList);
+    muse::async::Async::call(this, [oldList]() {
+        qDeleteAll(oldList);
+    });
 }
 
 void ClipsListModel::updateItemsMetrics()
@@ -235,30 +249,22 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
     emit requestClipTitleEdit(key.index);
 }
 
-bool ClipsListModel::changeClipTitle(int index, const QString& newTitle)
+bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
 {
-    const ClipListItem* item = m_clipList.at(index);
-    if (item->title() == newTitle) {
-        return false;
-    }
-
-    bool ok = processingInteraction()->changeClipTitle(item->key().key, newTitle);
+    bool ok = processingInteraction()->changeClipTitle(key.key, newTitle);
     return ok;
 }
 
-bool ClipsListModel::modeClip(int index, double x)
+bool ClipsListModel::modeClip(const ClipKey& key, double x)
 {
-    const ClipListItem* item = m_clipList.at(index);
-
     double sec = m_context->positionToTime(x);
-
-    bool ok = processingInteraction()->changeClipStartTime(item->key().key, sec);
+    bool ok = processingInteraction()->changeClipStartTime(key.key, sec);
     return ok;
 }
 
-void ClipsListModel::selectClip(int index)
+void ClipsListModel::selectClip(const ClipKey& key)
 {
-    selectionController()->setSelectedClip(m_clipList.at(index)->key().key);
+    selectionController()->setSelectedClip(key.key);
 }
 
 void ClipsListModel::resetSelectedClip()
@@ -268,10 +274,21 @@ void ClipsListModel::resetSelectedClip()
 
 void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
 {
+    if (m_selectedItem && m_selectedItem->clip().key == k) {
+        return;
+    }
+
+    if (m_selectedItem) {
+        m_selectedItem->setSelected(false);
+    }
+
     if (m_trackId != k.trackId) {
-        setSelectedClipIdx(-1);
+        m_selectedItem = nullptr;
     } else {
-        setSelectedClipIdx(k.index);
+        m_selectedItem = itemByKey(k);
+        if (m_selectedItem) {
+            m_selectedItem->setSelected(true);
+        }
     }
 }
 
@@ -313,18 +330,4 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     }
 
     emit timelineContextChanged();
-}
-
-int ClipsListModel::selectedClipIdx() const
-{
-    return m_selectedClipIdx;
-}
-
-void ClipsListModel::setSelectedClipIdx(int newSelectedClipIdx)
-{
-    if (m_selectedClipIdx == newSelectedClipIdx) {
-        return;
-    }
-    m_selectedClipIdx = newSelectedClipIdx;
-    emit selectedClipIdxChanged();
 }

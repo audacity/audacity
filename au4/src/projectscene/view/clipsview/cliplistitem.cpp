@@ -13,6 +13,8 @@ ClipListItem::ClipListItem(const processing::Clip& clip)
 void ClipListItem::setClip(const processing::Clip& clip)
 {
     m_clip = clip;
+
+    emit titleChanged();
 }
 
 const au::processing::Clip& ClipListItem::clip() const
@@ -95,4 +97,18 @@ void ClipListItem::setMoveMinimumX(double newMoveMinimumX)
     }
     m_moveMinimumX = newMoveMinimumX;
     emit moveMinimumXChanged();
+}
+
+bool ClipListItem::selected() const
+{
+    return m_selected;
+}
+
+void ClipListItem::setSelected(bool newSelected)
+{
+    if (m_selected == newSelected) {
+        return;
+    }
+    m_selected = newSelected;
+    emit selectedChanged();
 }
