@@ -1356,7 +1356,7 @@ bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
           addToHistory))
       return false;
    // Last track in the project is the one that was just added. Use it for
-   // focus, selection, etc.
+   // focus, etc.
    Track* lastTrack = nullptr;
    const auto range = TrackList::Get(mProject).Any<Track>();
    assert(!range.empty());
@@ -1373,8 +1373,6 @@ bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
       viewPort.ZoomFitHorizontally();
       viewPort.ShowTrack(*track);
       viewPort.HandleResize(); // Adjust scrollers for NEW track sizes.
-      ViewInfo::Get(*project).selectedRegion.setTimes(
-         track->GetStartTime(), track->GetEndTime());
    });
    return true;
 }
