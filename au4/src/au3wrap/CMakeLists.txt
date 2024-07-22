@@ -197,8 +197,6 @@ if (AU3_ADD_AS_SRC)
     ${AU3_LIBRARIES}/lib-project/Project.cpp
     ${AU3_LIBRARIES}/lib-project/Project.h
     # dependencies of project-file-io:
-    ${AU3_LIBRARIES}/lib-project/ProjectFormatExtensionsRegistry.cpp
-    ${AU3_LIBRARIES}/lib-project/ProjectFormatExtensionsRegistry.h
     ${AU3_LIBRARIES}/lib-project/ProjectFormatVersion.cpp
     ${AU3_LIBRARIES}/lib-project/ProjectFormatVersion.h
     # dependencies of project:
