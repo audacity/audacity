@@ -282,6 +282,13 @@ void EditClipboardByLabel(AudacityProject &project,
                   merged->ShiftBy(
                      regions.at(i + 1).start - region.end);
 
+               // If GetEditClipsCanMove is not set, we need to manually
+               // shift the merged track by the end time of the dest clip,
+               // to make room for pasting because Paste does not
+               // handle shifting in this case.
+               if (!GetEditClipsCanMove())
+                  merged->ShiftBy(dest->GetEndTime());
+
                // dest may have a placeholder clip at the end that is
                // removed when pasting, which is okay because we proceed
                // right to left.  Any placeholder already in merged is kept.
