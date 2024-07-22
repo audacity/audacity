@@ -122,19 +122,9 @@ void ClipsListModel::update()
     m_clipList.clear();
 
     for (const au::processing::Clip& c : m_allClipList) {
-        if (c.endTime < m_context->frameStartTime()) {
-            continue;
-        }
-
-        if (c.startTime > m_context->frameEndTime()) {
-            continue;
-        }
-
-        ClipListItem* item = new ClipListItem(c);
-        item->setX(m_context->timeToPosition(c.startTime));
-        item->setWidth((c.endTime - c.startTime) * m_context->zoom());
-
-        m_clipList.push_back(item);
+        ClipListItem* item = new ClipListItem(this);
+        item->setClip(c);
+        m_clipList.append(item);
     }
 
     updateItemsMetrics();
@@ -225,9 +215,14 @@ QVariant ClipsListModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-void ClipsListModel::onTimelineContextValuesChanged()
+void ClipsListModel::onTimelineZoomChanged()
 {
-    update();
+    updateItemsMetrics();
+}
+
+void ClipsListModel::onTimelineFrameTimeChanged()
+{
+    updateItemsMetrics();
 }
 
 void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
@@ -325,8 +320,8 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineContextValuesChanged);
+        connect(m_context, &TimelineContext::zoomChanged, this, &ClipsListModel::onTimelineZoomChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &ClipsListModel::onTimelineFrameTimeChanged);
     }
 
     emit timelineContextChanged();

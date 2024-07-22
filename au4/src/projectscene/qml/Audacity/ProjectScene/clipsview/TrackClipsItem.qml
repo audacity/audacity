@@ -42,6 +42,7 @@ Item {
     }
 
     Item {
+        id: clipsContaner
         anchors.fill: parent
         anchors.bottomMargin: sep.height
         z: 1
@@ -58,12 +59,28 @@ Item {
                 width: clipItem.width
                 x: clipItem.x
 
-                sourceComponent: clipItem.width < 24 ? placeholderComp : clipComp
+                asynchronous: true
+
+                sourceComponent: {
+                    if ((clipItem.x + clipItem.width) < 0) {
+                        return null
+                    }
+
+                    if (clipItem.x > clipsContaner.width) {
+                        return null
+                    }
+
+                    if (clipItem.width < 24) {
+                        return clipSmallComp
+                    }
+
+                    return clipComp
+                }
             }
         }
 
         Component {
-            id: placeholderComp
+            id: clipSmallComp
 
             ClipItemSmall {
 

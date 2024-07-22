@@ -60,8 +60,11 @@ signals:
 
     void requestClipTitleEdit(int index);
 
+    void contentXChanged();
+
 private slots:
-    void onTimelineContextValuesChanged();
+    void onTimelineZoomChanged();
+    void onTimelineFrameTimeChanged();
 
 private:
 
