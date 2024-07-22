@@ -59,7 +59,7 @@ Item {
                 width: clipItem.width
                 x: clipItem.x
 
-                asynchronous: true
+                //asynchronous: true
 
                 sourceComponent: {
                     if ((clipItem.x + clipItem.width) < 0) {
