@@ -13,6 +13,8 @@ Rectangle {
     property alias context: waveView.context
     property alias clipKey: waveView.clipKey
     property alias title: titleLabel.text
+
+    property int clipStartTime: 0
     property color clipColor: "#677CE4"
     property bool clipSelected: false
 
@@ -27,6 +29,10 @@ Rectangle {
     signal titleEditStarted()
     signal titleEditAccepted(var newTitle)
     signal titleEditCanceled()
+
+    // mouse position event is not propagated on overlapping mouse areas
+    // so we are handling it manually
+    signal clipItemMousePositionChanged(real x, real y)
 
     radius: 4
     color: "#000000" // border color
@@ -63,9 +69,14 @@ Rectangle {
         id: hoverArea
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
-        hoverEnabled: root.collapsed
+        hoverEnabled: true
+
         onClicked: function(e) {
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
+        }
+
+        onPositionChanged: {
+            clipItemMousePositionChanged(mouseX, mouseY)
         }
     }
 
@@ -117,6 +128,10 @@ Rectangle {
 
                 onDoubleClicked: {
                     root.editTitle()
+                }
+
+                onPositionChanged: {
+                    clipItemMousePositionChanged(mouseX, mouseY)
                 }
             }
 
@@ -211,6 +226,32 @@ Rectangle {
             clipColor: root.clipColor
             clipLeft: root.x
             clipSelected: root.clipSelected
+        }
+    }
+
+    ClipHandles {
+        id: clipHandles
+
+        // +1 not to overlap with header
+        y: header.height + 1
+        width: root.width
+        clipHovered: hover
+
+        // make sure clip handles are visible on top of nearby clips
+        onHandlesVisibleChanged: {
+            if (handlesVisible) {
+                root.parent.z = 1
+            } else {
+                root.parent.z = 0
+            }
+        }
+
+        clipStartTime: root.clipStartTime
+
+        onClipHandlesMousePositionChanged: function(xWithinClipHandles, yWithinClipHandles) {
+            var xWithinClipItem = xWithinClipHandles
+            var yWithinClipItem = header.height + 1 + yWithinClipHandles
+            clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
         }
     }
 

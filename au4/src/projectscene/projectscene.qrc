@@ -23,5 +23,6 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarActionDelegate.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/ClipItemSmall.qml</file>
+        <file>qml/Audacity/ProjectScene/clipsview/ClipHandles.qml</file>
     </qresource>
 </RCC>

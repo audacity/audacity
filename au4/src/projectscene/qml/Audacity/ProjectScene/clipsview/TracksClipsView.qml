@@ -209,6 +209,10 @@ Rectangle {
                 context: timeline.context
                 trackId: model.trackId
                 isDataSelected: model.isDataSelected
+
+                onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
+                    lineCursor.x = xWithinTrack
+                }
             }
         }
 
