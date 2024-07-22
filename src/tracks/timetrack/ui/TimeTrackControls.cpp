@@ -95,7 +95,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
                wxDefaultPosition,
                wxDefaultSize,
                wxSP_ARROW_KEYS,
-               lower+1, TimeTrackControls::kRangeMax, upper);
+               TimeTrackControls::kRangeMin, TimeTrackControls::kRangeMax, upper);
             S
                .Name(XO("Upper Speed Limit"))
                .Position( wxALIGN_LEFT | wxALL )
@@ -120,7 +120,7 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
 
    if(lower >= upper) {
       AudacityMessageBox(
-         XO("Lower Speed Limit should not be greater than or equal to Upper Speed Limit"),
+         XO("Upper Speed Limit must be greater than the Lower Speed Limit"),
          XO("Invalid Limits"),
          wxOK | wxICON_ERROR,
          mpData->pParent);
