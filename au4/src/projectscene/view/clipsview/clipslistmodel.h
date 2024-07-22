@@ -17,6 +17,8 @@
 
 #include "../timeline/timelinecontext.h"
 
+#include "cliplistitem.h"
+
 namespace au::projectscene {
 class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
 {
@@ -24,7 +26,6 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
-    Q_PROPERTY(int selectedClipIdx READ selectedClipIdx NOTIFY selectedClipIdxChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
@@ -43,15 +44,14 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
-    Q_INVOKABLE void selectClip(int index);
+    Q_INVOKABLE bool modeClip(const ClipKey& key, double x);
+    Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
-
-    Q_INVOKABLE bool changeClipTitle(int index, const QString& newTitle);
+    Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
 
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
 
 signals:
     void trackIdChanged();
@@ -66,29 +66,20 @@ private slots:
 private:
 
     enum RoleNames {
-        ClipKeyRole = Qt::UserRole + 1,
-        ClipTitleRole,
-        ClipColorRole,
-        ClipWidthRole,
-        ClipLeftRole,
-        ClipMoveMaximumXRole,
-        ClipMoveMinimumXRole
+        ClipItemRole = Qt::UserRole + 1,
     };
 
     void update();
-
+    void updateItemsMetrics();
     void positionViewAtClip(const processing::Clip& clip);
-
-    bool changeClipStartTime(const QModelIndex& index, const QVariant& value);
-
     void onSelectedClip(const processing::ClipKey& k);
-
     void onClipRenameAction(const muse::actions::ActionData& args);
+    ClipListItem* itemByKey(const processing::ClipKey& k) const;
 
     TimelineContext* m_context = nullptr;
     processing::TrackId m_trackId = -1;
     muse::async::NotifyList<au::processing::Clip> m_allClipList;
-    std::vector<au::processing::Clip> m_clipList;
-    int m_selectedClipIdx = -1;
+    QList<ClipListItem*> m_clipList;
+    ClipListItem* m_selectedItem = nullptr;
 };
 }

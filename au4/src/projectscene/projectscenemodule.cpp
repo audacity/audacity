@@ -21,6 +21,7 @@
 
 #include "view/clipsview/trackslistclipsmodel.h"
 #include "view/clipsview/clipslistmodel.h"
+#include "view/clipsview/cliplistitem.h"
 #include "view/clipsview/waveview.h"
 #include "view/clipsview/clipcontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
@@ -100,6 +101,7 @@ void ProjectSceneModule::registerUiTypes()
     // clips view
     qmlRegisterType<TracksListClipsModel>("Audacity.ProjectScene", 1, 0, "TracksListClipsModel");
     qmlRegisterType<ClipsListModel>("Audacity.ProjectScene", 1, 0, "ClipsListModel");
+    qmlRegisterUncreatableType<ClipListItem>("Audacity.ProjectScene", 1, 0, "ClipListItem", "Not creatable from QML");
     qmlRegisterType<WaveView>("Audacity.ProjectScene", 1, 0, "WaveView");
     qmlRegisterType<ClipContextMenuModel>("Audacity.ProjectScene", 1, 0, "ClipContextMenuModel");
     qmlRegisterType<SelectionViewController>("Audacity.ProjectScene", 1, 0, "SelectionViewController");

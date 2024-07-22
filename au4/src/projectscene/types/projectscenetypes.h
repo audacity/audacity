@@ -30,6 +30,10 @@ class ClipKey
 
 public:
 
+    ClipKey() = default;
+    ClipKey(const processing::ClipKey& k)
+        : key(k) {}
+
     processing::ClipKey key;
 };
 

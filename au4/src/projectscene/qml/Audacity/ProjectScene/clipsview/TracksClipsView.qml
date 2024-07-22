@@ -40,9 +40,18 @@ Rectangle {
     }
 
     Component.onCompleted: {
+        //! NOTE Models depend on geometry, so let's create a page first and then initialize the models
+        Qt.callLater(root.init)
+    }
+
+    function init() {
+        timeline.init()
         playCursorController.init()
         tracksViewState.init()
-        tracksModel.load()
+        //! NOTE Loading tracks, or rather clips, is the most havy operation.
+        // Let's make sure that everything is loaded and initialized before this,
+        // to avoid double loading at the beginning, when some parameters are initialized.
+        Qt.callLater(tracksModel.load)
     }
 
     Rectangle {
