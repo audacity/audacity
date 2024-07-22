@@ -40,5 +40,5 @@ PROJECT_API bool operator<(ProjectFormatVersion lhs, ProjectFormatVersion rhs) n
 
 //! This constant represents the current version of Audacity
 PROJECT_API extern const ProjectFormatVersion SupportedProjectFormatVersion;
-//! This is a helper constant for the "most compatible" project version with the value (3, 0, 0, 0). 
+//! This is a helper constant for the "most compatible" project version which is the current MAJ.MIN.0.0
 PROJECT_API extern const ProjectFormatVersion BaseProjectFormatVersion;

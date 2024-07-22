@@ -53,4 +53,4 @@ const ProjectFormatVersion SupportedProjectFormatVersion = {
    AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION, AUDACITY_MODLEVEL
 };
 
-const ProjectFormatVersion BaseProjectFormatVersion = { 3, 0, 0, 0 };
+const ProjectFormatVersion BaseProjectFormatVersion = { AUDACITY_VERSION, AUDACITY_RELEASE, 0, 0 };

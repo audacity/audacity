@@ -321,9 +321,9 @@ void AColor::DrawHStretch(wxDC& dc, const wxRect& rect, wxBitmap& bitmap)
    const auto dx1 = rect.x + w0;
    const auto dx2 = rect.x + rect.width - w0;
 
-   dc.StretchBlit(dx0, rect.y, w0, dh, &srcDC, 0, 0, w0, sh);
-   dc.StretchBlit(dx1, rect.y, rect.width - w0 * 2, dh, &srcDC, w0, 0, 1, sh);
-   dc.StretchBlit(dx2, rect.y, w0, dh, &srcDC, bitmap.GetWidth() - w0, 0, w0, sh);
+   dc.StretchBlit(dx0, rect.y, w0, dh, &srcDC, 0, 0, w0, sh, wxCOPY, true);
+   dc.StretchBlit(dx1, rect.y, rect.width - w0 * 2, dh, &srcDC, w0, 0, 1, sh, wxCOPY, true);
+   dc.StretchBlit(dx2, rect.y, w0, dh, &srcDC, bitmap.GetWidth() - w0, 0, w0, sh, wxCOPY, true);
 }
 
 void AColor::DrawFrame(wxDC& dc, const wxRect& r, wxBitmap& bitmap, int mid = 1)

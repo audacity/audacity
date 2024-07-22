@@ -65,8 +65,6 @@ from the project that will own the track.
 
 #include "InconsistencyException.h"
 
-#include "ProjectFormatExtensionsRegistry.h"
-
 #include <cmath>
 
 using std::max;

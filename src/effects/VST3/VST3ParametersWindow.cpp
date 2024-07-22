@@ -157,6 +157,8 @@ namespace
    {
       const wxString mTitle;
       const wxString mUnits;
+      const int mStepCount{};
+      bool mUsePluginConversions{ true };
 
    public:
       VST3DiscreteParameter(wxWindow *parent,
@@ -165,6 +167,7 @@ namespace
              int maxValue,
              const wxString& title,
              const wxString& units,
+             Steinberg::Vst::IEditController& editController,
              const wxPoint& pos = wxDefaultPosition,
              const wxSize& size = wxDefaultSize,
              long style = wxSL_HORIZONTAL,
@@ -174,15 +177,27 @@ namespace
       , VST3ParameterControl(paramId)
       , mTitle(title)
       , mUnits(units)
+      , mStepCount(maxValue)
       {
 #if wxUSE_ACCESSIBILITY
          SetAccessible(safenew WindowAccessible(this));
-#endif        
+#endif
+         // See Issue #4763.
+         // For discrete parmeters, it appears that some plugins do not provide
+         // correct implementations of the functions for converting between plain
+         // and normalized values. When the correct implementations are not provided
+         // the conversion functions just return the input value.
+         // So, to workaround this, test for this, and when valid implementations
+         // are not provided, use the formulas given by Steinberg in their documentation.
+         mUsePluginConversions = mStepCount != editController.plainParamToNormalized(paramId, mStepCount);
       }
 
       void SetNormalizedValue(Steinberg::Vst::IEditController& editController, Steinberg::Vst::ParamValue value) override
       {
-         SetValue(static_cast<int>(editController.normalizedParamToPlain(GetParameterId(), value)));
+         int plainValue = mUsePluginConversions ?
+            static_cast<int>(editController.normalizedParamToPlain(GetParameterId(), value)) :
+            static_cast<int>(std::min(static_cast<double>(mStepCount), value * (mStepCount + 1)));
+         SetValue(plainValue);
          UpdateAccessible(editController, value);
       }
 
@@ -195,7 +210,9 @@ namespace
 
       Steinberg::Vst::ParamValue GetNormalizedValue(Steinberg::Vst::IEditController& editController) const override
       {
-         return editController.plainParamToNormalized(GetParameterId(), GetValue());
+         return mUsePluginConversions ?
+            editController.plainParamToNormalized(GetParameterId(), GetValue()) :
+            GetValue() / static_cast<double>(mStepCount);
       }
    };
 
@@ -332,7 +349,8 @@ VST3ParametersWindow::VST3ParametersWindow(wxWindow *parent,
          else
          {
             auto slider = safenew VST3DiscreteParameter(this, wxID_ANY, parameterInfo.id, parameterInfo.stepCount,
-               VST3Utils::ToWxString(parameterInfo.title), VST3Utils::ToWxString(parameterInfo.units));
+               VST3Utils::ToWxString(parameterInfo.title), VST3Utils::ToWxString(parameterInfo.units),
+               editController);
             sizer->Add(slider, 0, wxEXPAND);
             slider->Bind(wxEVT_SLIDER, &VST3ParametersWindow::OnParameterValueChanged, this);
             RegisterParameterControl(slider);
