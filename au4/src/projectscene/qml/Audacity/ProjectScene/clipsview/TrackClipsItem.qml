@@ -15,6 +15,9 @@ Item {
 
     signal interactionStarted()
     signal interactionEnded()
+    // mouse position event is not propagated on overlapping mouse areas
+    // so we are handling it manually
+    signal trackItemMousePositionChanged(real x, real y)
 
     height: trackViewState.trackHeight
 
@@ -79,6 +82,7 @@ Item {
 
                 context: root.context
                 title: clipItem.title
+                clipStartTime: root.context.positionToTime(clipItem.x)
                 clipColor: clipItem.color
                 clipKey: clipItem.key
                 clipSelected: clipItem.selected
@@ -105,6 +109,12 @@ Item {
 
                 onTitleEditCanceled: {
                     clipsModel.resetSelectedClip()
+                }
+
+                onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
+                    var yWithinTrack = yWithinClip
+                    var xWithinTrack = xWithinClip + clipItem.x
+                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack)
                 }
             }
         }
