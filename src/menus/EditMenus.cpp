@@ -236,8 +236,24 @@ void OnRedo(const CommandContext &context)
       Viewport::Get(project).ShowTrack(*t);
 }
 
+void ClearClipboard()
+{
+   if (wxTheClipboard->Open())
+   {
+      // Clear the data from the clipboard, so that the next paste doesn't
+      // attempt to import whatever the user copied from the OS in a prior
+      // action.
+      const auto success = wxTheClipboard->SetData(safenew wxTextDataObject);
+      assert(success);
+      wxTheClipboard->Clear();
+      wxTheClipboard->Close();
+   }
+}
+
 void OnCut(const CommandContext &context)
 {
+   ClearClipboard();
+
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
    auto &trackPanel = TrackPanel::Get( project );
@@ -356,16 +372,7 @@ void OnDelete(const CommandContext &context)
 
 void OnCopy(const CommandContext &context)
 {
-   if (wxTheClipboard->Open())
-   {
-      // Clear the data from the clipboard, so that the next paste doesn't
-      // attempt to import whatever the user copied from the OS in a prior
-      // action.
-      const auto success = wxTheClipboard->SetData(safenew wxTextDataObject);
-      assert(success);
-      wxTheClipboard->Clear();
-      wxTheClipboard->Close();
-   }
+   ClearClipboard();
 
    auto &project = context.project;
    auto &tracks = TrackList::Get( project );
