@@ -14,6 +14,7 @@ Functions that find and load all LV2 plugins on the system.
 
 *//*******************************************************************/
 #include "LV2Wrapper.h"
+#include "PluginHost.h"
 #include "PluginInterface.h"
 #if defined(USE_LV2)
 
@@ -115,6 +116,12 @@ bool LV2EffectsModule::Initialize()
 
    wxGetEnv(wxT("LV2_PATH"), &mStartupPathVar);
 
+   if(PluginHost::IsHostProcess())
+   {
+      //Plugin validation process does not call `AutoRegisterPlugins`
+      //Register plugins from `LV2_PATH` here
+      lilv_world_load_all(LV2Symbols::gWorld);
+   }
    return true;
 }
 
@@ -145,6 +152,10 @@ const FileExtensions &LV2EffectsModule::GetFileExtensions()
 
 void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &pluginManager)
 {
+   //Plugins aren't registered in PluginManager here, but
+   //instead we update `LV2_PATH` and run `lilv_world_load_all`
+   //to register bundles within LV2 module.
+
    wxString newVar;
 
 #if defined(__WXMAC__)
@@ -199,7 +210,7 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface &pluginManager
       }
    }
    // Start with the LV2_PATH environment variable (if any)
-   wxString pathVar;
+   wxString pathVar = mStartupPathVar;
    if (mStartupPathVar.empty())
       pathVar = newVar.Mid(1);
    else
@@ -282,7 +293,7 @@ bool LV2EffectsModule::CheckPluginExist(const PluginPath & path) const
 }
 
 namespace {
-class LV2PluginValidator : public PluginProvider::Validator
+class LV2PluginValidator final : public PluginProvider::Validator
 {
 public:
    void Validate(ComponentInterface& pluginInterface) override
