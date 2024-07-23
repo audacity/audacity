@@ -88,11 +88,12 @@ public:
    //in DiscoverPluginsAtPath, but some plugin types can safely provide meta
    //data, which is a good reason to ask to avoid such checks during plugin
    //discovery...
-   class Validator
+   class COMPONENTS_API Validator
    {
    public:
       //!\param pluginInterface loaded plugin
       virtual void Validate(ComponentInterface& pluginInterface) = 0;
+      virtual ~Validator();
    };
 
    virtual ~PluginProvider();
