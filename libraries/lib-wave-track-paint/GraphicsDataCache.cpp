@@ -134,7 +134,7 @@ GraphicsDataCacheBase::PerformBaseLookup(
    const int64_t width = right - left;
 
    const int64_t cacheLeft       = left / CacheElementWidth;
-   const int64_t cacheRight      = right / CacheElementWidth + 1;
+   const int64_t cacheRight      = (right + CacheElementWidth - 1) / CacheElementWidth;
    const int64_t cacheItemsCount = cacheRight - cacheLeft;
 
    const int64_t cacheLeftColumn  = cacheLeft * CacheElementWidth;
