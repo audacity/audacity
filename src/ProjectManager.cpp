@@ -530,21 +530,24 @@ void ProjectManager::OnCloseWindow(wxCloseEvent & event)
    // TODO: Is there a Mac issue here??
    // SetMenuBar(NULL);
 
+   // This can reduce reference counts of sample blocks in the project's
+   // tracks. No need to have `SetBypass()` called yet because the `tracks`
+   // object still holds strong references to the tracks.
+   // Do this before `CompactProjectOnClose()`, though, so that changes that are
+   // not track-specific (like project tempo) after the last save don't get
+   // written to the project file.
+   UndoManager::Get(project).ClearStates();
+
    // Compact the project.
    projectFileManager.CompactProjectOnClose();
 
-   // Set (or not) the bypass flag to indicate that deletes that would happen during
-   // the UndoManager::ClearStates() below are not necessary.
+   // Set (or not) the bypass flag to indicate that deletes that would happen
+   // during tracks.Clear() below are not necessary. Must be called after
+   // `CompactProjectOnClose()`.
    projectFileIO.SetBypass();
 
-   {
-      // This can reduce reference counts of sample blocks in the project's
-      // tracks.
-      UndoManager::Get( project ).ClearStates();
-
-      // Delete all the tracks to free up memory
-      tracks.Clear();
-   }
+   // Delete all the tracks to free up memory
+   tracks.Clear();
 
    // Some of the AdornedRulerPanel functions refer to the TrackPanel, so destroy this
    // before the TrackPanel is destroyed. This change was needed to stop Audacity
@@ -799,7 +802,7 @@ void ProjectManager::OnStatusChange(StatusBarField field)
 
    const auto &msg = ProjectStatus::Get( project ).Get( field );
    SetStatusText( msg, field );
-   
+
    if ( field == MainStatusBarField() )
       // When recording, let the NEW status message stay at least as long as
       // the timer interval (if it is not replaced again by this function),
