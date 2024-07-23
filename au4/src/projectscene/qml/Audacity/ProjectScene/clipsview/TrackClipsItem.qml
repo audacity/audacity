@@ -59,14 +59,15 @@ Item {
                 width: clipItem.width
                 x: clipItem.x
 
-                //asynchronous: true
+                asynchronous: true
+                property int cacheBuffer: 200 // px
 
                 sourceComponent: {
-                    if ((clipItem.x + clipItem.width) < 0) {
+                    if ((clipItem.x + clipItem.width) < (0 - cacheBuffer)) {
                         return null
                     }
 
-                    if (clipItem.x > clipsContaner.width) {
+                    if (clipItem.x > (clipsContaner.width + cacheBuffer)) {
                         return null
                     }
 
