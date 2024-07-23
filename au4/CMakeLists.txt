@@ -48,6 +48,7 @@ include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 # AudacityDependencies
 ###########################################
 set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/..)
+set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install")
 add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
 set(AUDACITY_CMAKE_MODULE_PATH "${AUDACITY_ROOT}/cmake-proxies/cmake-modules")
 set(CMAKE_MODULE_PATH
@@ -262,3 +263,7 @@ add_subdirectory(src)
 if (OS_IS_LIN)
     include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
 endif(OS_IS_LIN)
+
+if (MSVC)
+   add_compile_options(/wd4100)
+endif (MSVC)
