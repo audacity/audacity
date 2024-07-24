@@ -7,6 +7,7 @@
 .idea
 .vscode/
 /builds
+build
 /build_overrides.cmake
 build.release
 build.debug
