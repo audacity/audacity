@@ -115,18 +115,19 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
    if (dlg.ShowModal() == wxID_CANCEL)
       return;
 
-   lower = scLower->GetValue();
-   upper = scUpper->GetValue();
-
-   if(lower >= upper) {
+   while(scLower->GetValue() >= scUpper->GetValue()) {
       AudacityMessageBox(
          XO("Upper Speed Limit must be greater than the Lower Speed Limit"),
          XO("Invalid Limits"),
          wxOK | wxICON_ERROR,
          mpData->pParent);
 
-      return;
+      if (dlg.ShowModal() == wxID_CANCEL)
+         return;
    }
+
+   lower = scLower->GetValue();
+   upper = scUpper->GetValue();
 
    if (lower >= TimeTrackControls::kRangeMin &&
        upper <= TimeTrackControls::kRangeMax) {
