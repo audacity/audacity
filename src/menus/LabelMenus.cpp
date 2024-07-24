@@ -626,7 +626,12 @@ void OnJoinLabels(const CommandContext &context)
 
    auto editfunc = [&](Track& track, double t0, double t1, ProgressReporter reportProgress) {
       track.TypeSwitch(
-         [&](WaveTrack& t) { t.Join(t0, t1, std::move(reportProgress)); });
+         [&](WaveTrack& t) {
+            // Extend Join Region by one sample, to ensure
+            // that Split-Join operation on a given label is reversible and consistent
+            const auto sampleTime = 1.0 / t.GetRate();
+            t.Join(t0 - sampleTime, t1 + sampleTime, std::move(reportProgress));
+         });
    };
    TimeStretching::WithClipRenderingProgress(
       [&](ProgressReporter progress) {
