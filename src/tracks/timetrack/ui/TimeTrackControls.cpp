@@ -18,6 +18,10 @@ Paul Licameli split from TrackPanel.cpp
 #include "TimeTrack.h"
 #include "../../../widgets/PopupMenuTable.h"
 #include <wx/numdlg.h>
+#include "ShuttleGui.h"
+#include "wxPanelWrapper.h"
+#include <wx/spinctrl.h>
+#include "AudacityMessageBox.h"
 
 TimeTrackControls::~TimeTrackControls()
 {
@@ -57,23 +61,75 @@ void TimeTrackMenuTable::OnSetTimeTrackRange(wxCommandEvent & /*event*/)
 
    // MB: these lower/upper limits match the maximum allowed range of the time track
    // envelope, but this is not strictly required
-   lower = wxGetNumberFromUser(_("Change lower speed limit (%) to:"),
-      _("Lower speed limit"),
-      _("Lower speed limit"),
-      lower,
-      TimeTrackControls::kRangeMin,
-      TimeTrackControls::kRangeMax);
 
-   upper = wxGetNumberFromUser(_("Change upper speed limit (%) to:"),
-      _("Upper speed limit"),
-      _("Upper speed limit"),
-      upper,
-      lower + 1,
-      TimeTrackControls::kRangeMax);
+   wxDialogWrapper dlg(mpData->pParent, wxID_ANY, XO("Change Speed Limits"));
+   dlg.SetName();
+   ShuttleGui S(&dlg, eIsCreating);
+   wxSpinCtrl *scLower;
+   wxSpinCtrl *scUpper;
+
+   S.StartVerticalLay(true);
+   {
+      S.StartStatic(XO("Change speed limit (%) to:"),1);
+      {
+         S.StartMultiColumn(2, wxEXPAND);
+         {  
+
+            S.SetStretchyCol(1);
+
+            S.AddPrompt(XXO("Lower Speed Limit"));
+            scLower = safenew wxSpinCtrl(S.GetParent(), wxID_ANY,
+               wxT(""),
+               wxDefaultPosition,
+               wxDefaultSize,
+               wxSP_ARROW_KEYS,
+               TimeTrackControls::kRangeMin, TimeTrackControls::kRangeMax, lower);
+            S
+               .Name(XO("Lower Speed Limit"))
+               .Position( wxALIGN_LEFT | wxALL )
+               .AddWindow(scLower);
+
+            S.AddPrompt(XXO("Upper Speed Limit"));
+            scUpper = safenew wxSpinCtrl(S.GetParent(), wxID_ANY,
+               wxT(""),
+               wxDefaultPosition,
+               wxDefaultSize,
+               wxSP_ARROW_KEYS,
+               TimeTrackControls::kRangeMin, TimeTrackControls::kRangeMax, upper);
+            S
+               .Name(XO("Upper Speed Limit"))
+               .Position( wxALIGN_LEFT | wxALL )
+               .AddWindow(scUpper);
+            
+         }
+         S.EndMultiColumn();
+      }
+      S.EndStatic();
+      S.AddStandardButtons();
+   }
+   S.EndVerticalLay();
+
+   dlg.Layout();
+   dlg.Fit();
+   dlg.CenterOnParent();
+   if (dlg.ShowModal() == wxID_CANCEL)
+      return;
+
+   lower = scLower->GetValue();
+   upper = scUpper->GetValue();
+
+   if(lower >= upper) {
+      AudacityMessageBox(
+         XO("Upper Speed Limit must be greater than the Lower Speed Limit"),
+         XO("Invalid Limits"),
+         wxOK | wxICON_ERROR,
+         mpData->pParent);
+
+      return;
+   }
 
    if (lower >= TimeTrackControls::kRangeMin &&
-       upper <= TimeTrackControls::kRangeMax &&
-       lower < upper) {
+       upper <= TimeTrackControls::kRangeMax) {
       AudacityProject *const project = &mpData->project;
       track.SetRangeLower((double)lower / 100.0);
       track.SetRangeUpper((double)upper / 100.0);
