@@ -579,7 +579,7 @@ elseif(OS_IS_MAC)
 
 elseif(OS_IS_WIN)
    set(WXBASE_DEFS ${WXBASE_DEFS} __WXMSW__ WXUSINGDLL)
-   set(MODULE_LINK ${MODULE_LINK} zlib::zlib winmm mmdevapi mfplat)
+   set(MODULE_LINK ${MODULE_LINK} zlib::zlib libjpeg-turbo::libjpeg-turbo libpng::libpng winmm mmdevapi mfplat)
 endif()
 
 # ==================================

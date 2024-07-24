@@ -173,54 +173,51 @@ if (OS_IS_WIN)
 
     # Install Qt
     foreach (QtLibrary ${QT_LIBRARIES})
-        #message(STATUS "Library ${QtLibrary}")
+        # message(STATUS "Library ${QtLibrary}")
         # always use release libs
         # set_target_properties(${QtLibrary} PROPERTIES MAP_IMPORTED_CONFIG_DEBUG "RELEASE")
-        get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_RELEASE)
+        if (BUILD_IS_DEBUG)
+            get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_DEBUG)
+        else()
+            get_target_property(QtSharedLibrary ${QtLibrary} LOCATION_RELEASE)
+        endif()
+
         if (EXISTS ${QtSharedLibrary})
             list (APPEND QtInstallLibraries ${QtSharedLibrary})
         endif (EXISTS ${QtSharedLibrary})
-    endforeach (QtLibrary ${QT_LIBRARIES})
+    endforeach()
     list(REMOVE_DUPLICATES QtInstallLibraries)
 
-    if (MUE_COMPILE_QT5_COMPAT)
-        install(FILES
-                ${PROJECT_SOURCE_DIR}/build/qt.conf
-                ${QtInstallLibraries}
-                ${QT_INSTALL_BINS}/libEGL.dll
-                ${QT_INSTALL_BINS}/libGLESv2.dll
-                ${QT_INSTALL_BINS}/opengl32sw.dll
-                ${QT_INSTALL_BINS}/d3dcompiler_47.dll
-                ${QT_INSTALL_BINS}/Qt5QmlModels.dll
-                ${QT_INSTALL_BINS}/Qt5QmlWorkerScript.dll
-                DESTINATION bin)
-    else()
-        install(FILES
-                #${PROJECT_SOURCE_DIR}/build/qt.conf
-                ${QtInstallLibraries}
-                #${QT_INSTALL_BINS}/libEGL.dll
-                #${QT_INSTALL_BINS}/libGLESv2.dll
-                ${QT_INSTALL_BINS}/opengl32sw.dll
-                ${QT_INSTALL_BINS}/d3dcompiler_47.dll
-                ${QT_INSTALL_BINS}/Qt6QuickControls2Impl.dll
-                ${QT_INSTALL_BINS}/Qt6QuickLayouts.dll
-                ${QT_INSTALL_BINS}/Qt6QmlModels.dll
-                ${QT_INSTALL_BINS}/Qt6QmlWorkerScript.dll
-                DESTINATION bin)
+
+    if (BUILD_IS_DEBUG)
+        set(DLL_SUFFIX "d")
     endif()
 
     install(FILES
-            ${QT_INSTALL_PLUGINS}/iconengines/qsvgicon.dll
+            #${PROJECT_SOURCE_DIR}/build/qt.conf
+            ${QtInstallLibraries}
+            #${QT_INSTALL_BINS}/libEGL.dll
+            #${QT_INSTALL_BINS}/libGLESv2.dll
+            ${QT_INSTALL_BINS}/opengl32sw.dll
+            ${QT_INSTALL_BINS}/d3dcompiler_47.dll
+            ${QT_INSTALL_BINS}/Qt6QuickControls2Impl${DLL_SUFFIX}.dll
+            ${QT_INSTALL_BINS}/Qt6QuickLayouts${DLL_SUFFIX}.dll
+            ${QT_INSTALL_BINS}/Qt6QmlModels${DLL_SUFFIX}.dll
+            ${QT_INSTALL_BINS}/Qt6QmlWorkerScript${DLL_SUFFIX}.dll
+            DESTINATION bin)
+
+    install(FILES
+            ${QT_INSTALL_PLUGINS}/iconengines/qsvgicon${DLL_SUFFIX}.dll
             DESTINATION bin/iconengines)
 
     install(FILES
-            ${QT_INSTALL_PLUGINS}/imageformats/qjpeg.dll
-            ${QT_INSTALL_PLUGINS}/imageformats/qsvg.dll
+            ${QT_INSTALL_PLUGINS}/imageformats/qjpeg${DLL_SUFFIX}.dll
+            ${QT_INSTALL_PLUGINS}/imageformats/qsvg${DLL_SUFFIX}.dll
             DESTINATION bin/imageformats)
 
     install(FILES
-            ${QT_INSTALL_PLUGINS}/platforms/qwindows.dll
-            ${QT_INSTALL_PLUGINS}/platforms/qoffscreen.dll
+            ${QT_INSTALL_PLUGINS}/platforms/qwindows${DLL_SUFFIX}.dll
+            ${QT_INSTALL_PLUGINS}/platforms/qoffscreen${DLL_SUFFIX}.dll
             DESTINATION bin/platforms)
 
     install(FILES
