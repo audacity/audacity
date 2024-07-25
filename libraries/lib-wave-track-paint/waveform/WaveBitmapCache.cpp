@@ -155,7 +155,8 @@ struct WaveBitmapCache::LookupHelper final
       {
          envelope->GetValues(
             EnvelopeValues.data(), static_cast<int>(EnvelopeValues.size()),
-            key.FirstSample / cache->GetScaledSampleRate(),
+            key.FirstSample / cache->GetScaledSampleRate() +
+               envelope->GetOffset(),
             1.0 / key.PixelsPerSecond);
 
          for (size_t column = 0; column < columnsCount; ++column)
