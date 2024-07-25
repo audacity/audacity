@@ -785,13 +785,12 @@ wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
 
 wxString WaveTrack::MakeNewClipName() const
 {
-   auto name = GetName();
    for (auto i = 1;; ++i)
    {
+      //i18n-hint Template for clip name generation on inserting new empty clip
+      auto name = XC("%s.%i", "clip name template").Format(GetName(), i).Translation();
       if (!HasClipNamed(name))
          return name;
-      //i18n-hint Template for clip name generation on inserting new empty clip
-      name = XC("%s %i", "clip name template").Format(GetName(), i).Translation();
    }
 }
 
@@ -1764,7 +1763,6 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
 
     //wxPrintf("Check if we need to make room for the pasted data\n");
 
-    auto pastingFromTempTrack = !other.GetOwner();
     bool editClipCanMove = GetEditClipsCanMove();
 
     const SimpleMessageBoxException notEnoughSpaceException {
@@ -1867,11 +1865,10 @@ void WaveTrack::PasteWaveTrackAtSameTempo(
     for (const auto& clip : other.Intervals()) {
         // AWD Oct. 2009: Don't actually paste in placeholder clips
         if (!clip->GetIsPlaceholder()) {
-            const auto name = (pastingFromTempTrack)
-                //Clips from the tracks which aren't bound to any TrackList are
-                //considered to be new entities, thus named using "new" name template
+            // If clip has no name (i.e. generated), assigning a new name
+            const auto name = clip->GetName().IsEmpty()
                 ? track.MakeNewClipName()
-                : track.MakeClipCopyName(clip->GetName());
+                : clip->GetName();
             const auto oldPlayStart = clip->GetPlayStartTime();
             const auto newSequenceStart =
                (oldPlayStart + t0) - clip->GetTrimLeft();
@@ -3000,7 +2997,7 @@ auto WaveTrack::RightmostOrNewClip() -> IntervalHolder
 {
    if (mClips.empty()) {
       auto pInterval = CreateClip(
-         WaveTrackData::Get(*this).GetOrigin(), MakeNewClipName());
+         WaveTrackData::Get(*this).GetOrigin());
       InsertInterval(pInterval, true, true);
       return pInterval;
    }
