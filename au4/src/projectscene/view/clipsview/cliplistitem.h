@@ -28,7 +28,7 @@ class ClipListItem : public QObject
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
 
 public:
-    ClipListItem(const processing::Clip& clip);
+    ClipListItem(QObject* parent);
 
     void setClip(const processing::Clip& clip);
     const processing::Clip& clip() const;
