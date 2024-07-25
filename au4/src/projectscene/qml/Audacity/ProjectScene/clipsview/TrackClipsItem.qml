@@ -63,14 +63,17 @@ Item {
                 x: clipItem.x
 
                 asynchronous: true
-                property int cacheBuffer: 200 // px
 
                 sourceComponent: {
-                    if ((clipItem.x + clipItem.width) < (0 - cacheBuffer)) {
+                    if ((clipItem.x + clipItem.width) < (0 - clipsModel.cacheBufferPx)) {
                         return null
                     }
 
-                    if (clipItem.x > (clipsContaner.width + cacheBuffer)) {
+                    if (clipItem.x > (clipsContaner.width + clipsModel.cacheBufferPx)) {
+                        return null
+                    }
+
+                    if (clipItem.width < 2) {
                         return null
                     }
 
@@ -103,14 +106,15 @@ Item {
                 clipStartTime: root.context.positionToTime(clipItem.x)
                 clipColor: clipItem.color
                 clipKey: clipItem.key
+                clipTime: clipItem.time
                 clipSelected: clipItem.selected
                 collapsed: trackViewState.isTrackCollapsed
 
                 dragMaximumX: clipItem.moveMaximumX + borderWidth
                 dragMinimumX: clipItem.moveMinimumX - borderWidth
 
-                onPositionChanged: function(x) {
-                    clipsModel.modeClip(clipItem.key, x)
+                onPositionChanged: function(deltaX) {
+                    clipsModel.modeClip(clipItem.key, deltaX)
                 }
 
                 onRequestSelected: {

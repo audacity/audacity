@@ -84,6 +84,9 @@ Rectangle {
         anchors.fill: parent
         anchors.leftMargin: 12
 
+        // anchors.leftMargin: 330
+        // anchors.rightMargin: 330
+
         Rectangle {
             id: lineCursor
 

@@ -22,6 +22,8 @@ class ClipListItem : public QObject
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged FINAL)
     Q_PROPERTY(double width READ width WRITE setWidth NOTIFY widthChanged FINAL)
 
+    Q_PROPERTY(ClipTime time READ time WRITE setTime NOTIFY timeChanged FINAL)
+
     Q_PROPERTY(double moveMaximumX READ moveMaximumX WRITE setMoveMaximumX NOTIFY moveMaximumXChanged FINAL)
     Q_PROPERTY(double moveMinimumX READ moveMinimumX WRITE setMoveMinimumX NOTIFY moveMinimumXChanged FINAL)
 
@@ -54,6 +56,9 @@ public:
     bool selected() const;
     void setSelected(bool newSelected);
 
+    ClipTime time() const;
+    void setTime(const ClipTime &newTime);
+
 signals:
     void titleChanged();
     void xChanged();
@@ -62,6 +67,8 @@ signals:
     void moveMinimumXChanged();
     void selectedChanged();
 
+    void timeChanged();
+
 private:
     processing::Clip m_clip;
     double m_x = 0.0;
@@ -69,5 +76,6 @@ private:
     double m_moveMaximumX = 0.0;
     double m_moveMinimumX = 0.0;
     bool m_selected = false;
+    ClipTime m_time;
 };
 }

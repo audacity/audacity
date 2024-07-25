@@ -46,7 +46,7 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleCha
 
 double ProjectSceneConfiguration::zoom() const
 {
-    return uiConfiguration()->physicalDpi();
+    return uiConfiguration()->physicalDpi() / 4;
 }
 
 int ProjectSceneConfiguration::mouseZoomPrecision() const

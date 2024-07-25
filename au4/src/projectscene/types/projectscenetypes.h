@@ -4,8 +4,9 @@
 #ifndef AU_PROJECTSCENE_TRACKTYPES_H
 #define AU_PROJECTSCENE_TRACKTYPES_H
 
-#include "qobjectdefs.h"
+#include <qobjectdefs.h>
 
+#include "global/types/number.h"
 #include "processing/processingtypes.h"
 
 namespace au::projectscene {
@@ -35,6 +36,29 @@ public:
         : key(k) {}
 
     processing::ClipKey key;
+};
+
+class ClipTime
+{
+    Q_GADGET
+
+public:
+
+    double clipStartTime = 0.0;
+    double clipEndTime = 0.0;
+
+    double itemStartTime = 0.0;
+    double itemEndTime = 0.0;
+
+    inline bool operator==(const ClipTime& other) const
+    {
+        return muse::is_equal(clipStartTime, other.clipStartTime)
+               && muse::is_equal(clipEndTime, other.clipEndTime)
+               && muse::is_equal(itemStartTime, other.itemStartTime)
+               && muse::is_equal(itemEndTime, other.itemEndTime);
+    }
+
+    inline bool operator!=(const ClipTime& other) const { return !this->operator==(other); }
 };
 
 class VerticalRulerTypes

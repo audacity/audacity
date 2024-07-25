@@ -23,16 +23,16 @@ public:
     };
 
     struct Geometry {
-        double clipHeight = 0.0;    // clip view height
-        double clipWidth = 0.0;     // clip view width
-        double relClipLeft = 0.0;   // relatively to frameLeft
-        double frameLeft = 0.0;     // track line shift
-        double frameWidth = 0.0;    // track line visible width
+        double height = 0.0;
+        double width = 0.0;
+        double left = 0.0;
     };
 
     struct Params {
         Geometry geometry;
         double zoom = 0.0;
+        double fromTime = 0.0;
+        double toTime = 0.0;
         Style style;
     };
 

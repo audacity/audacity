@@ -27,6 +27,8 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 
+    Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<processing::IProcessingInteraction> processingInteraction;
     muse::Inject<processing::ISelectionController> selectionController;
@@ -44,7 +46,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
-    Q_INVOKABLE bool modeClip(const ClipKey& key, double x);
+    Q_INVOKABLE bool modeClip(const ClipKey& key, double deltaX);
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
@@ -52,6 +54,8 @@ public:
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
+
+    int cacheBufferPx() const;
 
 signals:
     void trackIdChanged();

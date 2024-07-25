@@ -12,6 +12,7 @@ Rectangle {
 
     property alias context: waveView.context
     property alias clipKey: waveView.clipKey
+    property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
 
     property int clipStartTime: 0
@@ -23,7 +24,7 @@ Rectangle {
 
     property bool collapsed: false
 
-    signal positionChanged(x : double)
+    signal positionChanged(real deltaX)
     signal requestSelected()
 
     signal titleEditStarted()
@@ -115,8 +116,12 @@ Rectangle {
                 cursorShape: Qt.OpenHandCursor
                 drag.target: root
                 drag.axis: Drag.XAxis
-                drag.maximumX: root.dragMaximumX
-                drag.minimumX: root.dragMinimumX
+                // drag.maximumX: root.dragMaximumX
+                // drag.minimumX: root.dragMinimumX
+
+                onPositionChanged: function(mouseX, mouseY) {
+                    root.clipItemMousePositionChanged(mouseX, mouseY)
+                }
 
                 onReleased: {
                     if (drag.active) {
@@ -128,10 +133,6 @@ Rectangle {
 
                 onDoubleClicked: {
                     root.editTitle()
-                }
-
-                onPositionChanged: {
-                    clipItemMousePositionChanged(mouseX, mouseY)
                 }
             }
 
@@ -224,7 +225,6 @@ Rectangle {
             anchors.bottom: parent.bottom
 
             clipColor: root.clipColor
-            clipLeft: root.x
             clipSelected: root.clipSelected
         }
     }

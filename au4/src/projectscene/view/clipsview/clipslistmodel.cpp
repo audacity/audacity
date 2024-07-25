@@ -12,6 +12,7 @@
 using namespace au::projectscene;
 using namespace au::processing;
 
+constexpr int CACHE_BUFFER_PX = 200;
 constexpr double MOVE_MAX = 100000.0;
 constexpr double MOVE_MIN = 0.0;
 
@@ -61,6 +62,7 @@ void ClipsListModel::reload()
             break;
         }
 
+        // LOGDA() << "clip: " << clip.key << ", startTime: " << clip.startTime;
         ClipListItem* item = itemByKey(clip.key);
         if (item) {
             item->setClip(clip);
@@ -141,12 +143,26 @@ void ClipsListModel::update()
 void ClipsListModel::updateItemsMetrics()
 {
     //! NOTE The first step is to calculate the position and width
+    const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
+
     for (int i = 0; i < m_clipList.size(); ++i) {
         ClipListItem* item = m_clipList[i];
         const processing::Clip& clip = item->clip();
 
-        item->setX(m_context->timeToPosition(clip.startTime));
-        item->setWidth((clip.endTime - clip.startTime) * m_context->zoom());
+        ClipTime time;
+        time.clipStartTime = clip.startTime;
+        time.clipEndTime = clip.endTime;
+        time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
+        time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
+
+        item->setTime(time);
+        item->setX(m_context->timeToPosition(time.itemStartTime));
+        item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
+
+        // LOGDA() << "clip: " << clip.key
+        //         << ", clipStartTime: " << time.clipStartTime
+        //         << ", itemStartTime: " << time.itemStartTime
+        //         << ", item->x: " << item->x();
     }
 
     //! NOTE The second step is to calculate the minimum and maximum movement.
@@ -155,23 +171,26 @@ void ClipsListModel::updateItemsMetrics()
 
         // MoveMaximumX
         {
-            int nextIdx = i + 1;
-            if (nextIdx == m_clipList.size()) {
-                item->setMoveMaximumX(MOVE_MAX);
-            } else {
-                const ClipListItem* next = m_clipList.at(nextIdx);
-                item->setMoveMaximumX(next->x() - item->width());
-            }
+            item->setMoveMaximumX(MOVE_MAX);
+
+            // int nextIdx = i + 1;
+            // if (nextIdx == m_clipList.size()) {
+            //     item->setMoveMaximumX(MOVE_MAX);
+            // } else {
+            //     const ClipListItem* next = m_clipList.at(nextIdx);
+            //     item->setMoveMaximumX(next->x() - item->width());
+            // }
         }
 
         // MoveMinimumX
         {
-            if (i == 0) {
-                item->setMoveMaximumX(MOVE_MIN);
-            } else {
-                const ClipListItem* prev = m_clipList.at(i - 1);
-                item->setMoveMinimumX(prev->x() + prev->width());
-            }
+            item->setMoveMaximumX(MOVE_MIN);
+            // if (i == 0) {
+            //     item->setMoveMaximumX(MOVE_MIN);
+            // } else {
+            //     const ClipListItem* prev = m_clipList.at(i - 1);
+            //     item->setMoveMinimumX(prev->x() + prev->width());
+            // }
         }
     }
 }
@@ -250,10 +269,19 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-bool ClipsListModel::modeClip(const ClipKey& key, double x)
+bool ClipsListModel::modeClip(const ClipKey& key, double deltaX)
 {
-    double sec = m_context->positionToTime(x);
-    bool ok = processingInteraction()->changeClipStartTime(key.key, sec);
+    ClipListItem* item = itemByKey(key.key);
+    IF_ASSERT_FAILED(item) {
+        return false;
+    }
+
+    double deltaSec = deltaX / m_context->zoom();
+
+    // LOGDA() << "startTime: " << item->clip().startTime << ", item->x: " << item->x()
+    //         << ", deltaX: " << deltaX << ", deltaSec: " << deltaSec;
+
+    bool ok = processingInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec);
     return ok;
 }
 
@@ -325,4 +353,9 @@ void ClipsListModel::setTimelineContext(TimelineContext* newContext)
     }
 
     emit timelineContextChanged();
+}
+
+int ClipsListModel::cacheBufferPx() const
+{
+    return CACHE_BUFFER_PX;
 }
