@@ -3,6 +3,7 @@
 */
 
 #include "mocks/qtBasicUI.h"
+#include "mocks/progressdialog.h"
 
 QtBasicUI::~QtBasicUI()
 {
@@ -42,7 +43,7 @@ std::unique_ptr<BasicUI::ProgressDialog> QtBasicUI::DoMakeProgress(const Transla
     Q_UNUSED(message);
     Q_UNUSED(flags);
     Q_UNUSED(remainingLabelText);
-    return nullptr;
+    return std::make_unique<ProgressDialog>();
 }
 
 namespace {
