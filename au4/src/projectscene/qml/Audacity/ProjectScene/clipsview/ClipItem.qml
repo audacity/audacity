@@ -36,7 +36,8 @@ Rectangle {
     signal clipItemMousePositionChanged(real x, real y)
 
     radius: 4
-    color: "#000000" // border color
+    color: clipSelected ? "white" : clipColor
+    border.color: "#000000"
 
     property int borderWidth: 1
     property bool hover: hoverArea.containsMouse || headerDragArea.containsMouse
@@ -85,17 +86,18 @@ Rectangle {
         id: inner
 
         anchors.fill: parent
-        anchors.margins: root.borderWidth
+        anchors.margins: root.clipSelected ? 2 : 1
+        border.width: root.clipSelected ? 1 : 0
+        border.color: "white"
 
-        //! NOTE On Linux it often results in a black square
-        // layer.enabled: true
-        // layer.effect: EffectOpacityMask {
-        //     maskSource: RoundedRectangle {
-        //         width: inner.width
-        //         height: inner.height
-        //         radius: root.radius
-        //     }
-        // }
+        layer.enabled: true
+        layer.effect: EffectOpacityMask {
+            maskSource: RoundedRectangle {
+                width: inner.width
+                height: inner.height
+                radius: root.radius
+            }
+        }
 
         Rectangle {
             id: header
