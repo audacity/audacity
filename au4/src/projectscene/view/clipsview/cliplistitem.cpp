@@ -112,3 +112,16 @@ void ClipListItem::setSelected(bool newSelected)
     m_selected = newSelected;
     emit selectedChanged();
 }
+
+ClipTime ClipListItem::time() const
+{
+    return m_time;
+}
+
+void ClipListItem::setTime(const ClipTime &newTime)
+{
+    if (m_time == newTime)
+        return;
+    m_time = newTime;
+    emit timeChanged();
+}

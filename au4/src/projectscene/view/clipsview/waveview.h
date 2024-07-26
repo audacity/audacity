@@ -21,10 +21,7 @@ class WaveView : public QQuickPaintedItem
     Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
     Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
 
-    //! NOTE In a static position, the slip start time corresponds,
-    //! but it can change while dragging the clip, with the not changing start time
-    //! (until the end of dragging)
-    Q_PROPERTY(double clipLeft READ clipLeft WRITE setClipLeft NOTIFY clipLeftChanged FINAL)
+    Q_PROPERTY(ClipTime clipTime READ clipTime WRITE setClipTime NOTIFY clipTimeChanged FINAL)
 
     muse::Inject<au3::IAu3WavePainter> wavePainter;
 
@@ -40,8 +37,8 @@ public:
     void setClipColor(const QColor& newClipColor);
     bool clipSelected() const;
     void setClipSelected(bool newClipSelected);
-    double clipLeft() const;
-    void setClipLeft(double newClipLeft);
+    ClipTime clipTime() const;
+    void setClipTime(const ClipTime& newClipTime);
 
     void paint(QPainter* painter) override;
 
@@ -49,7 +46,7 @@ signals:
     void timelineContextChanged();
     void clipKeyChanged();
     void clipColorChanged();
-    void clipLeftChanged();
+    void clipTimeChanged();
     void clipSelectedChanged();
 
 private:
@@ -61,5 +58,6 @@ private:
     QColor m_clipColor;
     double m_clipLeft = 0;
     bool m_clipSelected = false;
+    ClipTime m_clipTime;
 };
 }
