@@ -68,9 +68,6 @@ populate(portaudio "portaudio/19.7.0")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
-endif()
-
-if (OS_IS_MAC)
     populate(libjpeg-turbo "libjpeg-turbo/2.1.5")
     populate(libpng "libpng/1.6.39")
 endif()
