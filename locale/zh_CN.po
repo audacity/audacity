@@ -8449,12 +8449,12 @@ msgstr "管理插件"
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity发现了%d个无法加载的不兼容插件。我们已经仅用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。"
+msgstr "Audacity发现了%d个无法加载的不兼容插件。我们已经禁用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, fuzzy, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity发现了%d个无法加载的不兼容插件。我们已经仅用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。"
+msgstr "Audacity发现了%d个无法加载的不兼容插件。我们已经禁用了这些插件以避免延迟或崩溃。如果你依然想要尝试使用这些插件，可以在“管理插件”选项中启用它们。否则，请点击“继续”。"
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
