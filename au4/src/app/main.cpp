@@ -29,6 +29,7 @@
 #include "log.h"
 
 // Framework
+#include "diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
 #include "framework/ui/uimodule.h"
@@ -100,7 +101,7 @@ int main(int argc, char** argv)
 
 //! NOTE `diagnostics` must be first, because it installs the crash handler.
 //! For other modules, the order is (an should be) unimportant.
-//app.addModule(new muse::diagnostics::DiagnosticsModule());
+    app.addModule(new muse::diagnostics::DiagnosticsModule());
 
 // framework
     app.addModule(new muse::draw::DrawModule());

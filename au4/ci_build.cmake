@@ -130,7 +130,7 @@ if(BUILD_TYPE STREQUAL "DEBUG")
 elseif(BUILD_TYPE STREQUAL "RELEASE_INSTALL")
 
     set(BUILD_DIR build.release)
-    do_build(Release ${BUILD_DIR})
+    do_build(RelWithDebInfo ${BUILD_DIR})
     do_install(${BUILD_DIR})
 
 elseif(BUILD_TYPE STREQUAL "APPIMAGE")

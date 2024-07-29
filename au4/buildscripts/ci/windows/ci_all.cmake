@@ -16,7 +16,7 @@ set(CONFIGURE_ARGS
 )
 
 execute_process(
-    COMMAND cmake ${CONFIGURE_ARGS} -P ${CI_DIR}/../common/ci_configure.cmake 
+    COMMAND cmake ${CONFIGURE_ARGS} -P ${CI_DIR}/../common/ci_configure.cmake
 )
 
 message(STATUS "~~Build~~")
@@ -27,6 +27,16 @@ set(BUILD_ARGS
 
 execute_process(
     COMMAND cmake ${BUILD_ARGS} -P ${CI_DIR}/ci_build.cmake
+)
+
+message(STATUS "~~Generate dump symbols~~")
+
+set(CONFIG
+    -DAPP_BIN="${CMAKE_CURRENT_LIST_DIR}/build.release/src/app/audacity.pdb"
+)
+
+execute_process(
+    COMMAND cmake ${CONFIG} -P ${CI_DIR}/../crashdumps/ci_generate_dumpsyms.cmake
 )
 
 message(STATUS "~~Package~~")
