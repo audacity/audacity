@@ -110,11 +110,14 @@ Item {
                 clipSelected: clipItem.selected
                 collapsed: trackViewState.isTrackCollapsed
 
-                dragMaximumX: clipItem.moveMaximumX + borderWidth
-                dragMinimumX: clipItem.moveMinimumX - borderWidth
+                onClipMoved: function(deltaX) {
+                    clipsModel.moveClip(clipItem.key, deltaX)
+                }
 
-                onPositionChanged: function(deltaX) {
-                    clipsModel.modeClip(clipItem.key, deltaX)
+                onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
+                    var yWithinTrack = yWithinClip
+                    var xWithinTrack = xWithinClip + clipItem.x
+                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack)
                 }
 
                 onRequestSelected: {
@@ -135,12 +138,6 @@ Item {
 
                 onTitleEditCanceled: {
                     clipsModel.resetSelectedClip()
-                }
-
-                onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {
-                    var yWithinTrack = yWithinClip
-                    var xWithinTrack = xWithinClip + clipItem.x
-                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack)
                 }
             }
         }
@@ -164,7 +161,7 @@ Item {
         id: selectedHighlight
         z: 0
         anchors.fill: parent
-        color: ui.theme.white
+        color: "#FFFFFF"
         opacity: 0.05
         visible: root.isDataSelected
     }
@@ -197,5 +194,6 @@ Item {
         id: sep
         color: "#FFFFFF"
         opacity: 0.1
-        anchors.bottom: parent.bottom }
+        anchors.bottom: parent.bottom
+    }
 }

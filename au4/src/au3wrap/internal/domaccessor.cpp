@@ -40,3 +40,9 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const 
     }
     return findWaveClip(t, index);
 }
+
+std::list<std::shared_ptr<WaveClip> > DomAccessor::waveClipsAsList(WaveTrack* track)
+{
+    std::list<std::shared_ptr<WaveClip> > clips = { track->Intervals().begin(), track->Intervals().end() };
+    return clips;
+}

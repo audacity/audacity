@@ -24,7 +24,7 @@ Rectangle {
 
     property bool collapsed: false
 
-    signal positionChanged(real deltaX)
+    signal clipMoved(real deltaX)
     signal requestSelected()
 
     signal titleEditStarted()
@@ -114,26 +114,32 @@ Rectangle {
 
                 hoverEnabled: true
                 cursorShape: Qt.OpenHandCursor
-                drag.target: root
-                drag.axis: Drag.XAxis
-                // drag.maximumX: root.dragMaximumX
-                // drag.minimumX: root.dragMinimumX
 
-                onPositionChanged: function(mouseX, mouseY) {
-                    root.clipItemMousePositionChanged(mouseX, mouseY)
-                }
+                property bool moveActive: false
+                property int moveLastX: 0
 
-                onReleased: {
-                    if (drag.active) {
-                        root.positionChanged(root.x)
+                onPositionChanged: function(e) {
+                    root.clipItemMousePositionChanged(e.x, e.y)
+
+                    if (headerDragArea.moveActive) {
+                        var gx = mapToGlobal(e.x, e.y).x
+                        root.clipMoved(gx - headerDragArea.moveLastX)
+                        headerDragArea.moveLastX = gx
                     }
                 }
 
-                onClicked: root.requestSelected()
+                onPressed: function(e) {
+                    root.requestSelected()
 
-                onDoubleClicked: {
-                    root.editTitle()
+                    headerDragArea.moveLastX = mapToGlobal(e.x, e.y).x
+                    headerDragArea.moveActive = true
                 }
+
+                onReleased: {
+                    headerDragArea.moveActive = false
+                }
+
+                onDoubleClicked: root.editTitle()
             }
 
             StyledTextLabel {
