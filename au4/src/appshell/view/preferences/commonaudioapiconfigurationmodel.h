@@ -36,8 +36,11 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 {
     Q_OBJECT
 
-    Q_PROPERTY(QString currentDeviceId READ currentDeviceId NOTIFY currentDeviceIdChanged)
-    Q_PROPERTY(QVariantList deviceList READ deviceList NOTIFY deviceListChanged)
+    Q_PROPERTY(QString currentOutputDeviceId READ currentOutputDeviceId NOTIFY currentOutputDeviceIdChanged)
+    Q_PROPERTY(QVariantList outputDeviceList READ outputDeviceList NOTIFY outputDeviceListChanged)
+
+    Q_PROPERTY(QString currentInputDeviceId READ currentInputDeviceId NOTIFY currentInputDeviceIdChanged)
+    Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
 
     Q_PROPERTY(unsigned int bufferSize READ bufferSize NOTIFY bufferSizeChanged)
     Q_PROPERTY(QList<unsigned int> bufferSizeList READ bufferSizeList NOTIFY bufferSizeListChanged)
@@ -51,17 +54,24 @@ public:
 
     Q_INVOKABLE void load();
 
-    QString currentDeviceId() const;
-    QVariantList deviceList() const;
-    Q_INVOKABLE void deviceSelected(const QString& deviceId);
+    QString currentOutputDeviceId() const;
+    QVariantList outputDeviceList() const;
+    Q_INVOKABLE void outputDeviceSelected(const QString& deviceId);
+
+    QString currentInputDeviceId() const;
+    QVariantList inputDeviceList() const;
+    Q_INVOKABLE void inputDeviceSelected(const QString& deviceId);
 
     unsigned int bufferSize() const;
     QList<unsigned int> bufferSizeList() const;
     Q_INVOKABLE void bufferSizeSelected(const QString& bufferSizeStr);
 
 signals:
-    void currentDeviceIdChanged();
-    void deviceListChanged();
+    void currentOutputDeviceIdChanged();
+    void outputDeviceListChanged();
+
+    void currentInputDeviceIdChanged();
+    void inputDeviceListChanged();
 
     void bufferSizeChanged();
     void bufferSizeListChanged();

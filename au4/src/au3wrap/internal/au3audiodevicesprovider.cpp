@@ -55,6 +55,82 @@ async::Notification Au3AudioDevicesProvider::audioOutputDeviceChanged() const
     return m_audioOutputDeviceChanged;
 }
 
+std::vector<std::string> Au3AudioDevicesProvider::audioInputDevices() const
+{
+    std::vector<std::string> inputDevices;
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    auto host = AudioIOHost.Read();
+
+    for (const auto& device : inMaps) {
+        if (device.hostString == host) {
+            inputDevices.push_back(wxToStdSting(MakeDeviceSourceString(&device)));
+        }
+    }
+
+    return inputDevices;
+}
+
+std::string Au3AudioDevicesProvider::currentAudioInputDevice() const
+{
+    return wxToStdSting(AudioIORecordingDevice.Read());
+}
+
+void Au3AudioDevicesProvider::setAudioInputDevice(const std::string& deviceName)
+{
+    std::vector<std::string> inputDevices;
+    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    auto host = AudioIOHost.Read();
+
+    long newChannels = 0;
+    auto oldChannels = AudioIORecordChannels.Read();
+
+    wxArrayStringEx names;
+    for (const auto& device : inMaps) {
+        if (device.hostString == host && wxToStdSting(MakeDeviceSourceString(&device)) == deviceName) {
+            AudioIORecordingDevice.Write(deviceName);
+            AudioIORecordingSourceIndex.Write(device.sourceIndex);
+            if (device.totalSources >= 1) {
+                AudioIORecordingSource.Write(device.sourceString);
+            } else {
+                AudioIORecordingSource.Reset();
+            }
+
+            for (size_t j = 0; j < (unsigned int)device.numChannels; j++) {
+                wxString name;
+
+                if (j == 0) {
+                    name = _("1 (Mono) Recording Channel");
+                } else if (j == 1) {
+                    name = _("2 (Stereo) Recording Channels");
+                } else {
+                    name = wxString::Format(wxT("%d"), (int)j + 1);
+                }
+                names.push_back(name);
+            }
+            newChannels = device.numChannels;
+            if (oldChannels <= newChannels && oldChannels >= 1) {
+                newChannels = oldChannels;
+            }
+            AudioIORecordChannels.Write(newChannels);
+
+            Au3AudioDevicesProvider::handleDeviceChange();
+        }
+    }
+
+    mInputChannels.Set(std::move(names));
+    if (newChannels >= 1) {
+        // Correct to 0-based index in choice
+        mInputChannels.Set(newChannels - 1);
+    }
+
+    m_audioInputDeviceChanged.notify();
+}
+
+async::Notification Au3AudioDevicesProvider::audioInputDeviceChanged() const
+{
+    return m_audioInputDeviceChanged;
+}
+
 void Au3AudioDevicesProvider::handleDeviceChange()
 {
     AudioIO::Get()->HandleDeviceChange();
