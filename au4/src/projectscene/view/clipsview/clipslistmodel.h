@@ -46,7 +46,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
-    Q_INVOKABLE bool modeClip(const ClipKey& key, double deltaX);
+    Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX);
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);

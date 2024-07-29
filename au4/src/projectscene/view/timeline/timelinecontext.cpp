@@ -136,8 +136,14 @@ void TimelineContext::shiftFrameTime(double shift)
     }
 
     // do not shift to negative time values
-    if (m_frameStartTime + shift < 0) {
-        return;
+    if (m_frameStartTime + shift < 0.0) {
+        if (muse::is_equal(m_frameStartTime, 0.0)) {
+            return;
+        }
+        //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
+        else {
+            shift = 0.0 - m_frameStartTime;
+        }
     }
     setFrameStartTime(m_frameStartTime + shift);
     setFrameEndTime(m_frameEndTime + shift);

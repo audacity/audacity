@@ -158,40 +158,6 @@ void ClipsListModel::updateItemsMetrics()
         item->setTime(time);
         item->setX(m_context->timeToPosition(time.itemStartTime));
         item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
-
-        // LOGDA() << "clip: " << clip.key
-        //         << ", clipStartTime: " << time.clipStartTime
-        //         << ", itemStartTime: " << time.itemStartTime
-        //         << ", item->x: " << item->x();
-    }
-
-    //! NOTE The second step is to calculate the minimum and maximum movement.
-    for (int i = 0; i < m_clipList.size(); ++i) {
-        ClipListItem* item = m_clipList[i];
-
-        // MoveMaximumX
-        {
-            item->setMoveMaximumX(MOVE_MAX);
-
-            // int nextIdx = i + 1;
-            // if (nextIdx == m_clipList.size()) {
-            //     item->setMoveMaximumX(MOVE_MAX);
-            // } else {
-            //     const ClipListItem* next = m_clipList.at(nextIdx);
-            //     item->setMoveMaximumX(next->x() - item->width());
-            // }
-        }
-
-        // MoveMinimumX
-        {
-            item->setMoveMaximumX(MOVE_MIN);
-            // if (i == 0) {
-            //     item->setMoveMaximumX(MOVE_MIN);
-            // } else {
-            //     const ClipListItem* prev = m_clipList.at(i - 1);
-            //     item->setMoveMinimumX(prev->x() + prev->width());
-            // }
-        }
     }
 }
 
@@ -269,7 +235,7 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-bool ClipsListModel::modeClip(const ClipKey& key, double deltaX)
+bool ClipsListModel::moveClip(const ClipKey& key, double deltaX)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
