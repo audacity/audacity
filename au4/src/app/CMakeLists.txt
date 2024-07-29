@@ -89,6 +89,7 @@ set(LINK_LIB
     projectscene
     playback
     record
+    effects
 )
 
 ###########################################
