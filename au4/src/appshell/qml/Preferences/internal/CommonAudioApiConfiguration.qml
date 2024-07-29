@@ -53,15 +53,31 @@ Item {
             title: qsTrc("appshell/preferences", "Playback device:")
             columnWidth: root.columnWidth
 
-            currentIndex: indexOfValue(apiModel.currentDeviceId)
-            model: apiModel.deviceList
+            currentIndex: indexOfValue(apiModel.currentOutputDeviceId)
+            model: apiModel.outputDeviceList
 
-            navigation.name: "AudioDeviceBox"
+            navigation.name: "PlaybackDeviceBox"
             navigation.panel: root.navigation
             navigation.row: root.navigationOrderStart
 
             onValueEdited: function(newIndex, newValue) {
-                apiModel.deviceSelected(newValue)
+                apiModel.outputDeviceSelected(newValue)
+            }
+        }
+
+        ComboBoxWithTitle {
+            title: qsTrc("appshell/preferences", "Recording device:")
+            columnWidth: root.columnWidth
+
+            currentIndex: indexOfValue(apiModel.currentInputDeviceId)
+            model: apiModel.inputDeviceList
+
+            navigation.name: "RecordingDeviceBox"
+            navigation.panel: root.navigation
+            navigation.row: root.navigationOrderStart
+
+            onValueEdited: function(newIndex, newValue) {
+                apiModel.inputDeviceSelected(newValue)
             }
         }
 

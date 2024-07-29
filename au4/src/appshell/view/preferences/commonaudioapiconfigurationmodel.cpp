@@ -37,16 +37,17 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
-    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentDeviceIdChanged(); });
-    audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){ emit deviceListChanged(); });
+    audioDevicesProvider()->audioOutputDeviceChanged().onNotify(this, [this]() { emit currentOutputDeviceIdChanged(); });
+    audioDevicesProvider()->audioInputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
+    audioDevicesProvider()->audioApiChanged().onNotify(this, [this](){ emit outputDeviceListChanged(); });
 }
 
-QString CommonAudioApiConfigurationModel::currentDeviceId() const
+QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
 {
     return QString::fromStdString(audioDevicesProvider()->currentAudioOutputDevice());
 }
 
-QVariantList CommonAudioApiConfigurationModel::deviceList() const
+QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 {
     QVariantList result;
     for (const auto& device : audioDevicesProvider()->audioOutputDevices()) {
@@ -56,12 +57,35 @@ QVariantList CommonAudioApiConfigurationModel::deviceList() const
     return result;
 }
 
-void CommonAudioApiConfigurationModel::deviceSelected(const QString& deviceId)
+void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& deviceId)
 {
-    if (deviceId == currentDeviceId()) {
+    if (deviceId == currentOutputDeviceId()) {
         return;
     }
     audioDevicesProvider()->setAudioOutputDevice(deviceId.toStdString());
+}
+
+QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
+{
+    return QString::fromStdString(audioDevicesProvider()->currentAudioInputDevice());
+}
+
+QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
+{
+    QVariantList result;
+    for (const auto& device : audioDevicesProvider()->audioInputDevices()) {
+        result << QString::fromStdString(device);
+    }
+
+    return result;
+}
+
+void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& deviceId)
+{
+    if (deviceId == currentOutputDeviceId()) {
+        return;
+    }
+    audioDevicesProvider()->setAudioInputDevice(deviceId.toStdString());
 }
 
 unsigned int CommonAudioApiConfigurationModel::bufferSize() const

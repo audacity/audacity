@@ -23,6 +23,11 @@ public:
     void setAudioOutputDevice(const std::string& deviceName) override;
     muse::async::Notification audioOutputDeviceChanged() const override;
 
+    std::vector<std::string> audioInputDevices() const override;
+    std::string currentAudioInputDevice() const override;
+    void setAudioInputDevice(const std::string& deviceName) override;
+    muse::async::Notification audioInputDeviceChanged() const override;
+
     void handleDeviceChange() override;
 
     std::vector<std::string> audioApiList() const override;
@@ -104,6 +109,7 @@ private:
     Choices mHost;
 
     muse::async::Notification m_audioOutputDeviceChanged;
+    muse::async::Notification m_audioInputDeviceChanged;
     muse::async::Notification m_audioApiChanged;
 };
 }

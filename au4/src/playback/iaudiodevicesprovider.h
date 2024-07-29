@@ -20,6 +20,11 @@ public:
     virtual void setAudioOutputDevice(const std::string& dev) = 0;
     virtual muse::async::Notification audioOutputDeviceChanged() const = 0;
 
+    virtual std::vector<std::string> audioInputDevices() const = 0;
+    virtual std::string currentAudioInputDevice() const = 0;
+    virtual void setAudioInputDevice(const std::string& dev) = 0;
+    virtual muse::async::Notification audioInputDeviceChanged() const = 0;
+
     virtual std::vector<std::string> audioApiList() const = 0;
     virtual std::string currentAudioApi() const = 0;
     virtual void setAudioApi(const std::string& audioApi) = 0;
