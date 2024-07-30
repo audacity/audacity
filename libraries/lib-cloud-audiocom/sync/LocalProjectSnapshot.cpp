@@ -92,9 +92,19 @@ struct LocalProjectSnapshot::ProjectBlocksLock final : private BlockHashCache
    {
       const auto visitor = [this](const SampleBlockPtr &pBlock){
          const auto id = pBlock->GetBlockID();
-         Blocks.push_back({
-            id, pBlock->GetSampleFormat(), pBlock });
-         BlockIdToIndex[id] = Blocks.size() - 1;
+         if(id >= 0)
+         {
+            Blocks.push_back({
+               id, pBlock->GetSampleFormat(), pBlock });
+            BlockIdToIndex[id] = Blocks.size() - 1;
+         }
+         //Do not compute hashes for negative id's, which describe
+         //the length of a silenced sequence. Making an id record in
+         //project blob is enough to restore block contents fully.
+         //VS: Older versions of Audacity encoded them as a regular
+         //blocks, but due to wrong sanity checks in `WavPackCompressor`
+         //attempt to load them could fail. The check above will purge
+         //such blocks if they are present in old project.
       };
       WaveTrackUtilities::VisitBlocks(tracks, visitor, &BlockIds);
    }
