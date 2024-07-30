@@ -46,8 +46,6 @@ public:
 class WAVE_TRACK_API SampleBlock
 {
 public:
-   using DeletionCallback = std::function<void(const SampleBlock &)>;
-
    virtual ~SampleBlock();
 
    virtual void CloseLock() noexcept = 0;
