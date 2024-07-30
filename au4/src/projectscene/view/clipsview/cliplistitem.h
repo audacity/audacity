@@ -22,6 +22,9 @@ class ClipListItem : public QObject
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged FINAL)
     Q_PROPERTY(double width READ width WRITE setWidth NOTIFY widthChanged FINAL)
 
+    Q_PROPERTY(double leftVisibleMargin READ leftVisibleMargin WRITE setLeftVisibleMargin NOTIFY leftVisibleMarginChanged FINAL)
+    Q_PROPERTY(double rightVisibleMargin READ rightVisibleMargin WRITE setRightVisibleMargin NOTIFY rightVisibleMarginChanged FINAL)
+
     Q_PROPERTY(ClipTime time READ time WRITE setTime NOTIFY timeChanged FINAL)
 
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
@@ -50,12 +53,20 @@ public:
     ClipTime time() const;
     void setTime(const ClipTime& newTime);
 
+    double leftVisibleMargin() const;
+    void setLeftVisibleMargin(double newLeftVisibleMargin);
+
+    double rightVisibleMargin() const;
+    void setRightVisibleMargin(double newRightVisibleMargin);
+
 signals:
     void titleChanged();
     void xChanged();
     void widthChanged();
-    void selectedChanged();
+    void leftVisibleMarginChanged();
+    void rightVisibleMarginChanged();
     void timeChanged();
+    void selectedChanged();
 
 private:
     processing::Clip m_clip;
@@ -63,5 +74,7 @@ private:
     double m_width = 0.0;
     bool m_selected = false;
     ClipTime m_time;
+    double m_leftVisibleMargin = 0.0;
+    double m_rightVisibleMargin = 0.0;
 };
 }
