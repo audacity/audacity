@@ -99,6 +99,7 @@
         <Name>Legacy</Name>
         <Effects>
             <Effect>Legacy Compressor</Effect>
+            <Effect>Legacy Limiter</Effect>
         </Effects>
     </Group>
 </EffectMenuList>

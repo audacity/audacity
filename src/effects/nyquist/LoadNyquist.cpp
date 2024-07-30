@@ -34,7 +34,7 @@ const static wxChar *kShippedEffects[] =
    wxT("equalabel.ny"),
    wxT("highpass.ny"),
    wxT("label-sounds.ny"),
-   wxT("limiter.ny"),
+   wxT("legacy-limiter.ny"),
    wxT("lowpass.ny"),
    wxT("noisegate.ny"),
    wxT("notch.ny"),
@@ -198,7 +198,7 @@ void NyquistEffectsModule::AutoRegisterPlugins(PluginManagerInterface & pm)
            TODO: Currently the names of Nyquist plug-ins cannot have
           context specific translations or internal names different from
           the visible English names.
-   
+
           This makes it unnecessary to pass a second argument to
           IsPluginRegistered for correction of the registry (as is needed
           in the case of built-in effects).

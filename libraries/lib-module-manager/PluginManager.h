@@ -107,7 +107,7 @@ public:
 
    static PluginManager & Get();
 
-   
+
    static PluginID GetID(const PluginProvider *provider);
    static PluginID GetID(const ComponentInterface *command);
    static PluginID OldGetID(const EffectDefinitionInterface* effect);
@@ -253,6 +253,6 @@ private:
 #define NYQUIST_PROMPT_NAME XO("Nyquist Prompt")
 
 // Latest version of the plugin registry config
-constexpr auto REGVERCUR = "1.4";
+constexpr auto REGVERCUR = "1.5";
 
 #endif /* __AUDACITY_PLUGINMANAGER_H__ */
