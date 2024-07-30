@@ -61,7 +61,7 @@ ListItemBlank {
 
         ColumnLayout {
             Layout.margins: 12
-
+            Layout.alignment: Qt.AlignTop
             spacing: 12
 
             RowLayout {
@@ -174,9 +174,11 @@ ListItemBlank {
         SeparatorLine {}
 
         Row {
-            Layout.fillHeight: true
+            Layout.alignment: Qt.AlignTop
             Layout.preferredWidth: childrenRect.width
-            Layout.margins: 8
+            Layout.margins: 5
+            Layout.bottomMargin: 20
+            Layout.preferredHeight: root.height
 
             spacing: 2
 

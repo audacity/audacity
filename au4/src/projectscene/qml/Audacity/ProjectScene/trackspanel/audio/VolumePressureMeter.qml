@@ -9,16 +9,23 @@ import Muse.Ui 1.0
 Canvas {
     id: root
 
+    enum Style {
+        Solid,
+        Gradient
+    }
+
     property real currentVolumePressure: -60.0
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
 
     property bool showRuler: false
+    property int style: VolumePressureMeter.Style.Solid
+    property color meterColor: "#7689E6" // TODO: Use the track color
 
     property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
 
     width: root.showRuler ? prv.indicatorWidth + 20 : prv.indicatorWidth
-    height: prv.indicatorHeight + (prv.overloadHeight * 2)
+    height: parent.height
 
     QtObject {
         id: prv
@@ -26,12 +33,12 @@ Canvas {
         property var gradient: null
         readonly property int overloadHeight: 4
 
-        readonly property real indicatorHeight: 140
-        readonly property real indicatorWidth: 6
+        readonly property real indicatorHeight: root.height - prv.overloadHeight - 6
+        readonly property real indicatorWidth: 8
 
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
-        readonly property real divisionPixels: (prv.indicatorHeight - prv.overloadHeight) / fullValueRangeLength
+        readonly property real heightPerUnit: (prv.indicatorHeight - prv.overloadHeight) / fullValueRangeLength
 
         readonly property real unitsTextWidth: 12
         readonly property color unitTextColor: Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.8)
@@ -60,43 +67,117 @@ Canvas {
         property bool rulerNeedsPaint: true
     }
 
-    function drawRuler(ctx, originVPos, originHPos, fullStep, smallStep, strokeHeight, strokeWidth) {
-        ctx.clearRect(0, prv.indicatorWidth, root.height, root.width - prv.indicatorWidth)
+    // Rounding up fullStep value to the predefined one,
+    // to avoid getting funny intervals like 3, or 7
+    function roundUpToFixedValue(value) {
+        // full and small step is
+        // a number units per each respective notch on the ruler
+        const steps = [
+            { fullStep: 1, smallStep: 0 },
+            { fullStep: 2, smallStep: 1 },
+            { fullStep: 5, smallStep: 1 },
+            { fullStep: 10, smallStep: 2 },
+            { fullStep: 20, smallStep: 4 },
+            { fullStep: 50, smallStep: 10 },
+            { fullStep: 100, smallStep: 20 }
+        ];
+
+        // Find the nearest full step
+        for (let i = 0; i < steps.length; i++) {
+            if (value <= steps[i].fullStep) {
+                return steps[i];
+            }
+        }
+
+        // Should not happen
+        return steps[steps.length - 1];
+    }
+
+    // Draws a rectangle rounded at the top, bottom or both
+    function drawRoundedRect(ctx, fillStyle, x, y, width, height, radius, roundedEdge) {
+        ctx.save();
+        ctx.fillStyle = fillStyle;
+        ctx.beginPath();
+
+        if (roundedEdge === "top" || roundedEdge === "both") {
+            ctx.moveTo(x + radius, y);
+            ctx.arcTo(x + width, y, x + width, y + radius, radius);
+        } else {
+            ctx.moveTo(x, y);
+            ctx.lineTo(x + width, y);
+        }
+
+        if (roundedEdge === "bottom" || roundedEdge === "both") {
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+            ctx.lineTo(x + radius, y + height);
+            ctx.arcTo(x, y + height, x, y + height - radius, radius);
+        } else {
+            ctx.lineTo(x + width, y + height);
+            ctx.lineTo(x, y + height);
+        }
+
+        if (roundedEdge === "top" || roundedEdge === "both") {
+            ctx.lineTo(x, y + radius);
+            ctx.arcTo(x, y, x + radius, y, radius);
+        } else {
+            ctx.lineTo(x, y);
+        }
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function getMeterFillStyle(ctx) {
+        if (root.style === VolumePressureMeter.Style.Gradient) {
+            if (!prv.gradient) {
+                // Preparing the gradient to draw the volume pressure
+                prv.gradient = ctx.createLinearGradient(0, prv.indicatorHeight - prv.overloadHeight, 0, prv.overloadHeight)
+                prv.gradient.addColorStop(0.0, "#26E386")
+                prv.gradient.addColorStop(0.55, "#CBED41")
+                prv.gradient.addColorStop(0.80, "#FC8226")
+            }
+            return prv.gradient
+        }
+        return root.meterColor
+    }
+
+    function drawRuler(ctx, originHPos, originVPos) {
+        ctx.clearRect(prv.indicatorWidth, 0, root.width - prv.indicatorWidth, root.height)
         ctx.font = prv.unitTextFont
 
-        var currentStrokeVPos = 0
+        // Minimal height of a single full step
+        const minimalFullStepHeight = 20;
+        // Number of full steps to draw
+        const fullStepCount = Math.ceil(root.height / minimalFullStepHeight);
+        // Number of units per full step
+        const unitsPerStep = root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure;
+        // Calculating normalized full and small step value
+        const { fullStep, smallStep } = roundUpToFixedValue(unitsPerStep / fullStepCount);
+        // Number of small steps to draw
+        const smallStepCount = smallStep ? unitsPerStep / smallStep : 0
 
-        for (var i = 0; i <= prv.fullValueRangeLength; i+=smallStep) {
-            if (i == 0) {
-                currentStrokeVPos = originVPos
-            } else {
-                currentStrokeVPos += prv.divisionPixels * smallStep
-            }
+        // Drawing small steps
+        for (let k = 1; k < smallStepCount; k++) {
+            const vPos = originVPos + prv.heightPerUnit * smallStep * k;
+            ctx.fillStyle = prv.shortStrokeColor
+            ctx.fillRect(originHPos, vPos,
+                         prv.shortStrokeWidth,
+                         prv.shortStrokeHeight)
+        }
 
-            if (i % fullStep) {
-                ctx.fillStyle = prv.shortStrokeColor
-                ctx.fillRect(currentStrokeVPos,
-                             originHPos,
-                             prv.shortStrokeHeight,
-                             prv.shortStrokeWidth)
+        // Drawing full steps
+        for (let j = 0; j <= fullStepCount; j++) {
+            const vPos = originVPos + prv.heightPerUnit * fullStep * j;
+            ctx.fillStyle = prv.longStrokeColor
+            ctx.fillRect(originHPos, vPos,
+                         prv.longStrokeWidth,
+                         prv.longStrokeHeight)
 
-            } else {
-                ctx.fillStyle = prv.longStrokeColor
-                ctx.fillRect(currentStrokeVPos,
-                             originHPos,
-                             prv.longStrokeHeight,
-                             prv.longStrokeWidth)
-
-                let textHPos = originHPos + prv.longStrokeWidth + prv.strokeHorizontalMargin
-
-                ctx.save()
-
-                ctx.rotate(Math.PI/2)
-                ctx.fillStyle = prv.unitTextColor
-                ctx.fillText(prv.fullValueRangeLength - i, textHPos, -currentStrokeVPos + 2)
-
-                ctx.restore()
-            }
+            let textHPos = originHPos + prv.longStrokeWidth + prv.strokeHorizontalMargin
+            ctx.fillStyle = prv.unitTextColor
+            ctx.fillText(fullStep * j, textHPos, vPos + 2)
         }
 
         prv.rulerNeedsPaint = false
@@ -107,8 +188,6 @@ Canvas {
 
         if (!ctx) {
             ctx = getContext("2d")
-            ctx.translate(0, root.height)
-            ctx.rotate(3 * (Math.PI/2))
 
             if (ui.currentLanguageLayoutDirection() === Qt.RightToLeft) {
                 ctx.textAlign = "end"
@@ -117,30 +196,45 @@ Canvas {
             }
         }
 
-        ctx.clearRect(0, 0, root.height, prv.indicatorWidth)
+        ctx.clearRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
 
-        ctx.fillStyle = "#4D4D4D"
-        ctx.fillRect(prv.overloadHeight, 0, prv.indicatorHeight, prv.indicatorWidth)
+        // Filling the background of the meter
+        drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, prv.indicatorWidth, prv.indicatorHeight, 2, "both")
 
-        ctx.fillStyle = root.isClipping ? "#FF1C1C" : "#666666"
-        ctx.fillRect(prv.indicatorHeight, 0, prv.overloadHeight, prv.indicatorWidth)
+        // Drawing the Overload indicator
+        const overloadStyle = root.isClipping ? "#EF476F" : ui.theme.buttonColor
+        drawRoundedRect(ctx, overloadStyle, 0, 0, prv.indicatorWidth, prv.overloadHeight, 2, "top")
 
-        if (!prv.gradient) {
-            prv.gradient = ctx.createLinearGradient(prv.overloadHeight, 0, prv.indicatorHeight - prv.overloadHeight, prv.indicatorWidth)
-            prv.gradient.addColorStop(0.0, "#26E386")
-            prv.gradient.addColorStop(0.55, "#CBED41")
-            prv.gradient.addColorStop(0.80, "#FC8226")
+        // Clamping the current volume pressure
+        const volumePressure = Math.max(minDisplayedVolumePressure,
+                                    Math.min(currentVolumePressure, maxDisplayedVolumePressure));
+        // calculating the current volume height depending on the panel height
+        const meterHeight = prv.heightPerUnit * (volumePressure - root.minDisplayedVolumePressure)
+
+        if (meterHeight > 0) {
+            // Drawing the volume pressure
+            drawRoundedRect(ctx, getMeterFillStyle(ctx),
+                            0, root.height - 10 - meterHeight,
+                            prv.indicatorWidth, meterHeight,
+                            /* radius */ 2, /* rounded edge */ "bottom")
         }
-
-        ctx.fillStyle = prv.gradient
-        ctx.fillRect(prv.overloadHeight, 0, prv.divisionPixels * (prv.fullValueRangeLength - Math.abs(root.currentVolumePressure)), prv.indicatorWidth)
 
         if (prv.rulerNeedsPaint) {
             var originVPos = prv.overloadHeight
             var originHPos = prv.indicatorWidth + prv.strokeHorizontalMargin
 
-            drawRuler(ctx, originVPos, originHPos, 6/*fullStep*/, 3/*smallStep*/)
+            drawRuler(ctx, originHPos, originVPos)
         }
+
+    }
+
+    onHeightChanged: {
+        // Gradient and the ruler need to be updated
+        prv.rulerNeedsPaint = true
+        console.log("resetting the gradient");
+        prv.gradient = null
+        requestPaint();
+
     }
 
     onCurrentVolumePressureChanged: {
