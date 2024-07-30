@@ -290,6 +290,14 @@ void ClipsListModel::selectClip(const ClipKey& key)
     selectionController()->setSelectedClip(key.key);
 }
 
+void ClipsListModel::unselectClip(const ClipKey& key)
+{
+    //! TODO AU4: this will need to be improved when
+    //! having an option to select multiple clips
+    Q_UNUSED(key)
+    selectionController()->resetSelectedClip();
+}
+
 void ClipsListModel::resetSelectedClip()
 {
     selectionController()->resetSelectedClip();
