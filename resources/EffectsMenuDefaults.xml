@@ -95,4 +95,10 @@
             <Effect>Spectral Edit Shelves</Effect>
         </Effects>
     </Group>
+    <Group>
+        <Name>Legacy</Name>
+        <Effects>
+            <Effect>Legacy Compressor</Effect>
+        </Effects>
+    </Group>
 </EffectMenuList>

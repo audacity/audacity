@@ -397,6 +397,8 @@ set( SOURCES
       effects/Generator.h
       effects/Invert.cpp
       effects/Invert.h
+      effects/LegacyCompressor.cpp
+      effects/LegacyCompressor.h
       effects/Limiter.cpp
       effects/Limiter.h
       effects/LimiterEditor.cpp
