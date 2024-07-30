@@ -412,7 +412,7 @@ void ProjectCloudExtension::OnUpdateSaved(const ProjectSerializer& serializer)
 
    std::memcpy(data.data(), &dictSizeData, sizeof(uint64_t));
 
-   uint64_t offset = sizeof(dictSize);
+   uint64_t offset = sizeof(uint64_t);
 
    for (const auto [chunkData, size] : serializer.GetDict())
    {
