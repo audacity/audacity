@@ -126,7 +126,10 @@ const ComponentInterfaceSymbol EffectScienFilter::Symbol
 { XO("Classic Filters") };
 
 // true argument means don't automatically enable this effect
-namespace{ BuiltinEffectsModule::Registration< EffectScienFilter > reg( true ); }
+namespace
+{
+BuiltinEffectsModule::Registration<EffectScienFilter> reg(false);
+}
 
 BEGIN_EVENT_TABLE(EffectScienFilter, wxEvtHandler)
    EVT_SIZE(EffectScienFilter::OnSize)
