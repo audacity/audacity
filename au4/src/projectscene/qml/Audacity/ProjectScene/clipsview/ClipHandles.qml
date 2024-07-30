@@ -5,7 +5,6 @@ import Muse.UiComponents
 
 Item {
 
-    property int clipStartTime: 0
     property bool handlesHovered: false
     property bool clipHovered: false
     property bool handlesVisible: (handlesHovered || clipHovered)
@@ -25,7 +24,7 @@ Item {
         height: 32
         width: 36
 
-        visible: handlesVisible && clipStartTime > 0
+        visible: handlesVisible
 
         Rectangle {
             anchors.fill: parent
@@ -178,7 +177,7 @@ Item {
         height: 32
         width: 36
 
-        visible: handlesVisible && clipStartTime > 0
+        visible: handlesVisible
 
         Rectangle {
             anchors.fill: parent
