@@ -37,7 +37,7 @@ au::audio::secs_t ProcessingInteraction::clipStartTime(const processing::ClipKey
     return clip->Start();
 }
 
-bool ProcessingInteraction::changeClipStartTime(const processing::ClipKey& clipKey, double newStartTime)
+bool ProcessingInteraction::changeClipStartTime(const processing::ClipKey& clipKey, double newStartTime, bool completed)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -125,7 +125,15 @@ bool ProcessingInteraction::changeClipStartTime(const processing::ClipKey& clipK
     processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
 
+    m_clipStartTimeChanged.send(clipKey, newStartTime, completed);
+
     return true;
+}
+
+muse::async::Channel<au::processing::ClipKey, double /*newStartTime*/, bool /*completed*/>
+ProcessingInteraction::clipStartTimeChanged() const
+{
+    return m_clipStartTimeChanged;
 }
 
 bool ProcessingInteraction::changeClipTitle(const processing::ClipKey& clipKey, const muse::String& newTitle)

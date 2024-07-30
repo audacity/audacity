@@ -34,6 +34,24 @@ void ClipsListModel::init()
         onSelectedClip(k);
     });
 
+    processingInteraction()->clipStartTimeChanged().onReceive(this, [this](const processing::ClipKey& k, double, bool) {
+        ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+        if (!prj) {
+            return;
+        }
+
+        Clip clip = prj->clip(k);
+        IF_ASSERT_FAILED(clip.isValid()) {
+            return;
+        }
+
+        ClipListItem* item = itemByKey(k);
+        if (item) {
+            item->setClip(clip);
+            updateItemsMetrics(item);
+        }
+    });
+
     reload();
 }
 
@@ -142,23 +160,28 @@ void ClipsListModel::update()
 
 void ClipsListModel::updateItemsMetrics()
 {
+    for (int i = 0; i < m_clipList.size(); ++i) {
+        ClipListItem* item = m_clipList[i];
+        updateItemsMetrics(item);
+    }
+}
+
+void ClipsListModel::updateItemsMetrics(ClipListItem* item)
+{
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
 
-    for (int i = 0; i < m_clipList.size(); ++i) {
-        ClipListItem* item = m_clipList[i];
-        const processing::Clip& clip = item->clip();
+    const processing::Clip& clip = item->clip();
 
-        ClipTime time;
-        time.clipStartTime = clip.startTime;
-        time.clipEndTime = clip.endTime;
-        time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
-        time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
+    ClipTime time;
+    time.clipStartTime = clip.startTime;
+    time.clipEndTime = clip.endTime;
+    time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
+    time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
 
-        item->setTime(time);
-        item->setX(m_context->timeToPosition(time.itemStartTime));
-        item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
-    }
+    item->setTime(time);
+    item->setX(m_context->timeToPosition(time.itemStartTime));
+    item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
 }
 
 void ClipsListModel::positionViewAtClip(const Clip& clip)
@@ -235,7 +258,7 @@ bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle
     return ok;
 }
 
-bool ClipsListModel::moveClip(const ClipKey& key, double deltaX)
+bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
 {
     ClipListItem* item = itemByKey(key.key);
     IF_ASSERT_FAILED(item) {
@@ -244,10 +267,7 @@ bool ClipsListModel::moveClip(const ClipKey& key, double deltaX)
 
     double deltaSec = deltaX / m_context->zoom();
 
-    // LOGDA() << "startTime: " << item->clip().startTime << ", item->x: " << item->x()
-    //         << ", deltaX: " << deltaX << ", deltaSec: " << deltaSec;
-
-    bool ok = processingInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec);
+    bool ok = processingInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec, completed);
     return ok;
 }
 

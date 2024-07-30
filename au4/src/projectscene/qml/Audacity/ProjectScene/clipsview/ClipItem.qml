@@ -24,7 +24,7 @@ Rectangle {
 
     property bool collapsed: false
 
-    signal clipMoved(real deltaX)
+    signal clipMoved(real deltaX, bool completed)
     signal requestSelected()
 
     signal titleEditStarted()
@@ -123,7 +123,7 @@ Rectangle {
 
                     if (headerDragArea.moveActive) {
                         var gx = mapToGlobal(e.x, e.y).x
-                        root.clipMoved(gx - headerDragArea.moveLastX)
+                        root.clipMoved(gx - headerDragArea.moveLastX, false)
                         headerDragArea.moveLastX = gx
                     }
                 }
@@ -135,7 +135,9 @@ Rectangle {
                     headerDragArea.moveActive = true
                 }
 
-                onReleased: {
+                onReleased: function(e) {
+                    var gx = mapToGlobal(e.x, e.y).x
+                    root.clipMoved(gx - headerDragArea.moveLastX, true)
                     headerDragArea.moveActive = false
                 }
 

@@ -110,8 +110,8 @@ Item {
                 clipSelected: clipItem.selected
                 collapsed: trackViewState.isTrackCollapsed
 
-                onClipMoved: function(deltaX) {
-                    clipsModel.moveClip(clipItem.key, deltaX)
+                onClipMoved: function(deltaX, completed) {
+                    clipsModel.moveClip(clipItem.key, deltaX, completed)
                 }
 
                 onClipItemMousePositionChanged: function(xWithinClip, yWithinClip) {

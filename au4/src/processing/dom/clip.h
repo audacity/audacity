@@ -14,6 +14,8 @@ struct Clip {
     muse::draw::Color color;
     double startTime = 0.0;
     double endTime = 0.0;
+
+    inline bool isValid() const { return key.isValid(); }
 };
 
 using Clips = std::vector<Clip>;
