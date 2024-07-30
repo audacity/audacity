@@ -15,7 +15,10 @@ public:
     ProcessingInteraction() = default;
 
     audio::secs_t clipStartTime(const processing::ClipKey& clipKey) const override;
-    bool changeClipStartTime(const processing::ClipKey& clipKey, double sec) override;
+
+    bool changeClipStartTime(const processing::ClipKey& clipKey, double newStartTime, bool completed) override;
+    muse::async::Channel<processing::ClipKey, double /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
+
     bool changeClipTitle(const processing::ClipKey& clipKey, const muse::String& newTitle) override;
     bool removeClip(const processing::ClipKey& clipKey) override;
     bool removeClipData(const processing::ClipKey& clipKey, double begin, double end) override;
@@ -23,5 +26,7 @@ public:
 
 private:
     AudacityProject& projectRef() const;
+
+    muse::async::Channel<processing::ClipKey, double /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
 };
 }

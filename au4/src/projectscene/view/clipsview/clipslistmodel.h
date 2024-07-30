@@ -46,7 +46,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
-    Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX);
+    Q_INVOKABLE bool moveClip(const ClipKey& key, double deltaX, bool completed);
     Q_INVOKABLE void selectClip(const ClipKey& key);
     Q_INVOKABLE void unselectClip(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClip();
@@ -79,6 +79,7 @@ private:
 
     void update();
     void updateItemsMetrics();
+    void updateItemsMetrics(ClipListItem* item);
     void positionViewAtClip(const processing::Clip& clip);
     void onSelectedClip(const processing::ClipKey& k);
     void onClipRenameAction(const muse::actions::ActionData& args);

@@ -2,8 +2,8 @@
 
 #include "modularity/imoduleinterface.h"
 
-#include "global/types/retval.h"
 #include "global/types/string.h"
+#include "global/async/channel.h"
 
 #include "processingtypes.h"
 
@@ -19,7 +19,12 @@ public:
     virtual ~IProcessingInteraction() = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
-    virtual bool changeClipStartTime(const ClipKey& clipKey, double sec) = 0;
+
+    //! NOTE Can be called by moving a clip
+    //! if the changes is completed, then it is necessary to pass: `completed = true`
+    virtual bool changeClipStartTime(const ClipKey& clipKey, double newStartTime, bool completed) = 0;
+    virtual muse::async::Channel<ClipKey, double /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const = 0;
+
     virtual bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) = 0;
     virtual bool removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClipData(const ClipKey& clipKey, double begin, double end) = 0;

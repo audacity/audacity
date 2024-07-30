@@ -29,6 +29,8 @@ struct ClipKey
     ClipKey(const TrackId t, const size_t i)
         : trackId(t), index(i) {}
 
+    inline bool isValid() const { return trackId != -1 && index != muse::nidx; }
+
     inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && index == k.index; }
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
