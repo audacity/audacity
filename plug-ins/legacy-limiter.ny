@@ -1,7 +1,7 @@
 $nyquist plug-in
 $version 4
 $type process
-$name (_ "Limiter")
+$name (_ "Legacy Limiter")
 $debugbutton false
 $preview enabled
 $author (_ "Steve Daulton")
@@ -43,7 +43,7 @@ $control MAKEUP (_ "Apply Make-up Gain") choice ((_ "No") (_ "Yes")) 0
 
 
 ;;; brick wall limiter
-(defun hardlimit (sig limit)   
+(defun hardlimit (sig limit)
   (let* ((time (/ HOLD 3000.0))  ; lookahead time (seconds)
          (samples (round (* time *sound-srate*)))  ; lookahead in samples
          (peak-env (get-env sig samples time limit)))
@@ -59,7 +59,7 @@ $control MAKEUP (_ "Apply Make-up Gain") choice ((_ "No") (_ "Yes")) 0
          (padding (snd-const (peak sig pad-s) 0 *sound-srate* pad-time))
          (peak-env (snd-avg sig (* 4 step) step OP-PEAK)))
     (extract 0 1
-        (s-max 1 
+        (s-max 1
                (sim padding
                     (at-abs pad-time (cue peak-env)))))))
 
@@ -89,7 +89,7 @@ $control MAKEUP (_ "Apply Make-up Gain") choice ((_ "No") (_ "Yes")) 0
                (kcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee)))
                (ikcurve (mult knee (osc (hz-to-step (/ (* 4 knee))) knee *sine-table* -90)))
                (lin (pwlv -0.5 knee -0.5
-                               (+ knee (/ 2.0 pi)) 0.5 
+                               (+ knee (/ 2.0 pi)) 0.5
                                2.0 0.5
                                2.0 (+ 0.5 knee)
                                2.1 (+ 0.5 knee))))

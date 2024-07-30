@@ -21,7 +21,7 @@ set( SOURCES
    equalabel.ny
    highpass.ny
    label-sounds.ny
-   limiter.ny
+   legacy-limiter.ny
    lowpass.ny
    noisegate.ny
    notch.ny
