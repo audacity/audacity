@@ -86,9 +86,7 @@ Rectangle {
         id: inner
 
         anchors.fill: parent
-        anchors.margins: root.clipSelected ? 2 : 1
-        border.width: root.clipSelected ? 1 : 0
-        border.color: "white"
+        anchors.margins: 1
 
         layer.enabled: true
         layer.effect: EffectOpacityMask {
@@ -228,6 +226,16 @@ Rectangle {
 
             clipColor: root.clipColor
             clipSelected: root.clipSelected
+        }
+
+        Rectangle {
+            id: selectionHighlight
+            anchors.fill: parent
+            border.width: 1
+            border.color: root.clipSelected ? "white" : "transparent"
+            color: "transparent"
+            radius: root.radius
+            z: 2
         }
     }
 
