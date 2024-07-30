@@ -164,6 +164,8 @@ void ClipsListModel::updateItemsMetrics(ClipListItem* item)
     item->setTime(time);
     item->setX(m_context->timeToPosition(time.itemStartTime));
     item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
+    item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
+    item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }
 
 void ClipsListModel::positionViewAtClip(const Clip& clip)

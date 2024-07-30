@@ -98,3 +98,29 @@ void ClipListItem::setTime(const ClipTime& newTime)
     m_time = newTime;
     emit timeChanged();
 }
+
+double ClipListItem::leftVisibleMargin() const
+{
+    return m_leftVisibleMargin;
+}
+
+void ClipListItem::setLeftVisibleMargin(double newLeftVisibleMargin)
+{
+    if (qFuzzyCompare(m_leftVisibleMargin, newLeftVisibleMargin))
+        return;
+    m_leftVisibleMargin = newLeftVisibleMargin;
+    emit leftVisibleMarginChanged();
+}
+
+double ClipListItem::rightVisibleMargin() const
+{
+    return m_rightVisibleMargin;
+}
+
+void ClipListItem::setRightVisibleMargin(double newRightVisibleMargin)
+{
+    if (qFuzzyCompare(m_rightVisibleMargin, newRightVisibleMargin))
+        return;
+    m_rightVisibleMargin = newRightVisibleMargin;
+    emit rightVisibleMarginChanged();
+}

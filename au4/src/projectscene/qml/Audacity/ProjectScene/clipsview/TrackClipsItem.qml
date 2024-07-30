@@ -107,6 +107,8 @@ Item {
                 clipKey: clipItem.key
                 clipTime: clipItem.time
                 clipSelected: clipItem.selected
+                leftVisibleMargin: clipItem.leftVisibleMargin
+                rightVisibleMargin: clipItem.rightVisibleMargin
                 collapsed: trackViewState.isTrackCollapsed
 
                 onClipMoved: function(deltaX, completed) {

@@ -17,8 +17,8 @@ Rectangle {
     property color clipColor: "#677CE4"
     property bool clipSelected: false
 
-    property real dragMaximumX: 100000
-    property real dragMinimumX: -100000
+    property real leftVisibleMargin: 0
+    property real rightVisibleMargin: 0
 
     property bool collapsed: false
 
@@ -148,7 +148,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: menuBtn.left
-                anchors.leftMargin: 4
+                anchors.leftMargin: root.leftVisibleMargin + 4
                 anchors.rightMargin: 8
                 horizontalAlignment: Qt.AlignLeft
             }
@@ -212,7 +212,7 @@ Rectangle {
                 width: 16
                 height: 16
                 anchors.right: parent.right
-                anchors.rightMargin: 4
+                anchors.rightMargin: root.rightVisibleMargin + 4
                 anchors.verticalCenter: parent.verticalCenter
 
                 menuModel: contextMenuModel
