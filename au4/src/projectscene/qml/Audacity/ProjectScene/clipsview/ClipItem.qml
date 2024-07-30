@@ -14,8 +14,6 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
-
-    property int clipStartTime: 0
     property color clipColor: "#677CE4"
     property bool clipSelected: false
 
@@ -263,8 +261,6 @@ Rectangle {
                 root.parent.z = 0
             }
         }
-
-        clipStartTime: root.clipStartTime
 
         onClipHandlesMousePositionChanged: function(xWithinClipHandles, yWithinClipHandles) {
             var xWithinClipItem = xWithinClipHandles

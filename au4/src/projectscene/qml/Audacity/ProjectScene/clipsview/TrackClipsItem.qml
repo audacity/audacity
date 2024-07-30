@@ -103,7 +103,6 @@ Item {
 
                 context: root.context
                 title: clipItem.title
-                clipStartTime: root.context.positionToTime(clipItem.x)
                 clipColor: clipItem.color
                 clipKey: clipItem.key
                 clipTime: clipItem.time

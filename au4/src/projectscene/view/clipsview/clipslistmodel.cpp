@@ -34,24 +34,6 @@ void ClipsListModel::init()
         onSelectedClip(k);
     });
 
-    processingInteraction()->clipStartTimeChanged().onReceive(this, [this](const processing::ClipKey& k, double, bool) {
-        ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
-        if (!prj) {
-            return;
-        }
-
-        Clip clip = prj->clip(k);
-        IF_ASSERT_FAILED(clip.isValid()) {
-            return;
-        }
-
-        ClipListItem* item = itemByKey(k);
-        if (item) {
-            item->setClip(clip);
-            updateItemsMetrics(item);
-        }
-    });
-
     reload();
 }
 
