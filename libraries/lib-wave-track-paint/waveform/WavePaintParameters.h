@@ -56,6 +56,7 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
 
    //! Color outside the waveform area
    graphics::Color BlankColor;
+   graphics::Color ZeroLineColor;
 
    //! Waveform background color
    ColorPair BackgroundColors;
@@ -72,6 +73,8 @@ struct WAVE_TRACK_PAINT_API WavePaintParameters final
    WavePaintParameters& SetDBParameters(double dbRange, bool dbScale) noexcept;
    //! Sets the blank color
    WavePaintParameters& SetBlankColor(graphics::Color color) noexcept;
+   //! Sets the horizontal zero line color
+   WavePaintParameters& SetZeroLineColor(graphics::Color color) noexcept;
    //! Sets the background colors
    WavePaintParameters& SetBackgroundColors(
       graphics::Color normal, graphics::Color selected) noexcept;
