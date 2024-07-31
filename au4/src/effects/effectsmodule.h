@@ -7,6 +7,9 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
+class IEffectsProvider;
+class IEffectsConfiguration;
+class EffectsActionsController;
 class EffectsModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -16,6 +19,11 @@ public:
     void registerResources() override;
     void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
+    void onDelayedInit() override;
+
+private:
+    std::shared_ptr<IEffectsProvider> m_provider;
+    std::shared_ptr<IEffectsConfiguration> m_configuration;
+    std::shared_ptr<EffectsActionsController> m_actionsController;
 };
 }
