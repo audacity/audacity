@@ -38,6 +38,7 @@ public:
     virtual void setNeedAutoSave(bool val) = 0;
     virtual muse::async::Notification needSaveChanged() const { return muse::async::Notification(); }
     virtual muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
+    virtual muse::async::Notification captureThumbnailRequested() const = 0;
 
     virtual const au::processing::ProcessingProjectPtr processingProject() const = 0;
 

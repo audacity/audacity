@@ -81,6 +81,7 @@ void RecentProjectsModel::updateRecentProjects()
         obj[PATH_KEY] = file.path.toQString();
         obj[SUFFIX_KEY] = QString::fromStdString(suffix);
         obj[FILE_SIZE_KEY] = fileSizeString;
+        obj[THUMBNAIL_URL_KEY] = file.path.toQString().replace(QString::fromStdString(suffix), "png");
         // obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
         // obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
         obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
