@@ -155,7 +155,7 @@ Item {
                 name: project.name
                 path: project.path ?? ""
                 suffix: project.suffix ?? ""
-                thumbnailUrl: project.thumbnailUrl ?? ""
+                thumbnailUrl: Qt.resolvedUrl("file:" + project.thumbnailUrl) ?? ""
                 isCreateNew: project.isCreateNew
                 isNoResultsFound: project.isNoResultsFound
                 isCloud: project.isCloud

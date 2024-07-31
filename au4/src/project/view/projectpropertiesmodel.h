@@ -27,7 +27,7 @@
 #include "modularity/ioc.h"
 
 namespace au::project {
-class ProjectPropertiesModel : public QAbstractListModel
+class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -62,6 +62,7 @@ public:
 
 signals:
     void propertyAdded(int index);
+    void captureThumbnail();
 
 private:
     enum Roles {

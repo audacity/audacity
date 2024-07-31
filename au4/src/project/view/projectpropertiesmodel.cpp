@@ -35,6 +35,10 @@ ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
     // if (project) {
     //     m_projectMetaInfo = project->metaInfo();
     // }
+
+    m_project->captureThumbnailRequested().onNotify(this, [this]() {
+        captureThumbnail();
+    });
 }
 
 void ProjectPropertiesModel::load()

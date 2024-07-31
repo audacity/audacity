@@ -234,6 +234,11 @@ Ret Audacity4Project::save(const muse::io::path_t& path, SaveMode saveMode)
     return make_ret(Err::UnknownError);
 }
 
+async::Notification Audacity4Project::captureThumbnailRequested() const
+{
+    return m_captureThumbnailRequested;
+}
+
 Ret Audacity4Project::saveProject(const muse::io::path_t& path, const std::string& fileSuffix, bool generateBackup, bool createThumbnail)
 {
     return doSave(path, generateBackup, createThumbnail);
@@ -244,7 +249,10 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
     TRACEFUNC;
 
     UNUSED(generateBackup);
-    UNUSED(createThumbnail);
+
+    if (createThumbnail) {
+        m_captureThumbnailRequested.notify();
+    }
 
     if ((fileSystem()->exists(savePath) && !fileSystem()->isWritable(savePath))) {
         LOGE() << "failed save, not writable path: " << savePath;
