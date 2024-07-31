@@ -39,6 +39,7 @@ Q_MOC_INCLUDE(< QWindow >)
 #include "iappshellconfiguration.h"
 #include "internal/iappmenumodelhook.h"
 #include "global/iglobalconfiguration.h"
+#include "effects/ieffectsprovider.h"
 
 //! TODO AU4
 // #include "workspace/iworkspacemanager.h"
@@ -60,6 +61,7 @@ public:
     INJECT(muse::IGlobalConfiguration, globalConfiguration)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(IAppMenuModelHook, appMenuModelHook)
+    INJECT(effects::IEffectsProvider, effectsProvider);
 
 //! TODO AU4
     // INJECT(workspace::IWorkspaceManager, workspacesManager)
@@ -112,6 +114,7 @@ private:
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makePluginsItems();
+    muse::uicomponents::MenuItemList makeEffectsItems();
 };
 }
 

@@ -118,10 +118,10 @@ void AppMenuModel::setupConnections()
     //     pluginsMenu.setSubitems(makePluginsMenuSubitems());
     // });
 
-    // extensionsProvider()->manifestChanged().onReceive(this, [this](const Manifest&) {
-    //     MenuItem& pluginsItem = findMenu("menu-plugins");
-    //     pluginsItem.setSubitems(makePluginsMenuSubitems());
-    // });
+    effectsProvider()->manifestListChanged().onNotify(this, [this]() {
+        MenuItem& pluginsItem = findMenu("menu-effect");
+        pluginsItem.setSubitems(makeEffectsItems());
+    });
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
@@ -297,33 +297,7 @@ MenuItem* AppMenuModel::makeGenerateMenu()
 
 MenuItem* AppMenuModel::makeEffectMenu()
 {
-    MenuItemList effectItems {
-        makeMenuItem("effect-plugin-manager"),
-        makeMenuItem("add-realtime-effects"),
-        makeSeparator(),
-        makeMenuItem("repeat-last-effect"),
-        makeSeparator(),
-        makeMenuItem("favourite-effect-1"),
-        makeMenuItem("favourite-effect-2"),
-        makeMenuItem("favourite-effect-3"),
-        makeSeparator(),
-        //! TODO AU4 - expand effects
-        makeMenu(TranslatableString("appshell/menu/volumecomp", "Volume and compression"),
-                 makeVolumeAndCompressionItems(), "menu-volumecomp"),
-        makeMenu(TranslatableString("appshell/menu/fading", "Fading"), makeVolumeAndCompressionItems(), "menu-fading"),
-        makeMenu(TranslatableString("appshell/menu/pitchtempo", "Pitch and tempo"), makeVolumeAndCompressionItems(), "menu-pitchtempo"),
-        makeMenu(TranslatableString("appshell/menu/eq", "EQ & filters"), makeVolumeAndCompressionItems(), "menu-eq"),
-        makeMenu(TranslatableString("appshell/menu/noiserepair", "Noise removal & repair"),
-                 makeVolumeAndCompressionItems(), "menu-noiserepair"),
-        makeMenu(TranslatableString("appshell/menu/delayreverb", "Delay & reverb"), makeVolumeAndCompressionItems(), "menu-delayreverb"),
-        makeMenu(TranslatableString("appshell/menu/distmod", "Distortion & modulation"), makeVolumeAndCompressionItems(), "menu-distmod"),
-        makeMenu(TranslatableString("appshell/menu/special", "Special"), makeVolumeAndCompressionItems(), "menu-special"),
-        makeMenu(TranslatableString("appshell/menu/spectral", "Spectral tools"), makeVolumeAndCompressionItems(), "menu-spectral"),
-        makeSeparator(),
-        makeMenuItem("plugins-omitted")
-    };
-
-    return makeMenu(TranslatableString("appshell/menu/effect", "&Effect"), effectItems, "menu-effect");
+    return makeMenu(TranslatableString("appshell/menu/effect", "&Effect"), makeEffectsItems(), "menu-effect");
 }
 
 MenuItem* AppMenuModel::makeAnalyzeMenu()
@@ -778,4 +752,32 @@ MenuItemList AppMenuModel::makePluginsItems()
     // }
 
     return result;
+}
+
+MenuItemList AppMenuModel::makeEffectsItems()
+{
+    MenuItemList items {
+        makeMenuItem("effect-plugin-manager"),
+        makeMenuItem("add-realtime-effects"),
+        makeSeparator(),
+        makeMenuItem("repeat-last-effect"),
+        makeSeparator(),
+        makeMenuItem("favourite-effect-1"),
+        makeMenuItem("favourite-effect-2"),
+        makeMenuItem("favourite-effect-3"),
+        makeSeparator(),
+    };
+
+    effects::ManifestList manifestList = effectsProvider()->manifestList();
+
+    for (const effects::Manifest& manifest : manifestList) {
+        MenuItem* item = makeMenuItem("effect-open", TranslatableString::untranslatable(manifest.title));
+        item->setArgs(ActionData::make_arg1<muse::String>(manifest.id));
+        items << item;
+    }
+
+    items << makeSeparator()
+          << makeMenuItem("plugins-omitted");
+
+    return items;
 }
