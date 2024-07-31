@@ -32,6 +32,7 @@
 #include "context/iglobalcontext.h"
 #include "internal/audacityproject.h"
 
+#include "view/projectpropertiesmodel.h"
 #include "view/projectspagemodel.h"
 #include "view/recentprojectsmodel.h"
 #include "internal/opensaveprojectscenario.h"
@@ -108,6 +109,7 @@ void ProjectModule::registerUiTypes()
     qmlRegisterType<NewProjectModel>("Audacity.Project", 1, 0, "NewProjectModel");
     qmlRegisterType<ProjectThumbnailLoader>("Audacity.Project", 1, 0, "ProjectThumbnailLoader");
     qmlRegisterType<PixmapProjectThumbnailView>("Audacity.Project", 1, 0, "PixmapProjectThumbnailView");
+    qmlRegisterType<ProjectPropertiesModel>("Audacity.Project", 1, 0, "ProjectPropertiesModel");
 
     qmlRegisterUncreatableType<QMLSaveLocationType>("Audacity.Project", 1, 0, "SaveLocationType",
                                                     "Not creatable as it is an enum type");

@@ -95,6 +95,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/pixmapprojectthumbnailview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/newprojectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/newprojectmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/projectpropertiesmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/projectpropertiesmodel.h
 )
 
 set(MODULE_LINK au3wrap)
