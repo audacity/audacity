@@ -354,6 +354,7 @@ void DrawWaveform(
          rect.GetHeight(), zoomMin, zoomMax, artist->mShowClipping)
       .SetDBParameters(dBRange, dB)
       .SetBlankColor(ColorFromWXBrush(artist->blankBrush))
+      .SetZeroLineColor(graphics::Colors::Black)
       .SetShowRMS(ShowRMSPref().Read())
       .SetSampleColors(
          ColorFromWXPen(muted ? artist->muteSamplePen : artist->samplePen),
