@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-05 09:02+0200\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2024-04-06 16:47+0000\n"
 "Last-Translator: Michele Locati <michele@locati.it>, 2024\n"
 "Language-Team: Italian (https://app.transifex.com/klyok/teams/690/it/)\n"
@@ -1285,13 +1285,13 @@ msgstr ""
 "Usare solo moduli da fonti attendibili"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Sì"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "No"
 
@@ -2928,18 +2928,12 @@ msgid "Wave Track"
 msgstr "Traccia d'onda"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -8118,8 +8112,9 @@ msgstr "Frequenza logaritmica"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8681,7 +8676,7 @@ msgstr "Disabilita"
 msgid "Enable"
 msgstr "Abilita"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Tipo"
 
@@ -8784,10 +8779,10 @@ msgstr "Troppo poche tracce compatibili selezionate"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s n°%d"
+msgid "%s.%d"
+msgstr "%s.%i"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11025,7 +11020,8 @@ msgstr "Lunghezza della dissolvenza in entrata &verso il basso:"
 msgid "Inner &fade up length:"
 msgstr "Lunghezza della dissolvenza in entrata vers&o l'alto:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Soglia:"
 
@@ -11357,7 +11353,7 @@ msgstr "La selezione deve essere più larga di %d campioni."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Soglia (più è bassa più è sensibile):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Soglia"
 
@@ -11766,7 +11762,7 @@ msgstr "Limitatore percussioni"
 msgid "Upper Threshold"
 msgstr "Soglia superiore"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Rumore di fondo"
 
@@ -12652,8 +12648,135 @@ msgstr "Inverti"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Ribalta i campioni audio, invertendone la polarità"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Compressore glue"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%3d dB"
+msgstr "%d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f sec"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.1f secs"
+msgstr "%.2f sec"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.0f:1"
+msgstr "%.0f ms"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.1f:1"
+msgstr "%.1f %%"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "Rumore di fondo"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "Rapport&o:"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ratio"
+msgstr "Rapport&o:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "Tempo di attacco"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Attack Time"
+msgstr "Tempo di attacco"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "Tempo di rilascio"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Release Time"
+msgstr "Tempo di rilascio"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr ""
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "C&ompress based on Peaks"
+msgstr "Confronta un intervallo in due tracce."
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Threshold %d dB"
+msgstr "&Soglia (dB)"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Noise Floor %d dB"
+msgstr "Rumore di fondo"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Tempo di atta&cco (sec):"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Release Time %.1f secs"
+msgstr "Tempo di r&ilascio (sec):"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Limitatore"
 
@@ -13542,11 +13665,6 @@ msgstr "Usa predefiniti"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Ripristina predefiniti"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f sec"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19072,20 +19190,33 @@ msgid "WaveColor Change"
 msgstr "Cambiamento colore onda"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Cambia velocità"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Cambia il limite inferiore della velocità (%) a:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Limite inferiore della velocità"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Cambia il limite superiore della velocità (%) a:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Limite superiore della velocità"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Limite superiore della velocità"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Limite rigido"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19136,10 +19267,6 @@ msgstr "Inte&rvallo..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "&Interpolazione logaritmica"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Questa versione di Audacity permette solo una traccia temporale per ciascuna finestra di progetto."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19774,7 +19901,7 @@ msgstr "Filtro shelf"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19908,7 +20035,7 @@ msgstr "Piattaforma di modifica spettrale"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20461,24 +20588,29 @@ msgstr ""
 "                 almeno due suoni.~%~\n"
 "                 È stato rilevato un solo suono."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Limitatore di voce fuori campo"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Limite morbido"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Limite rigido"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Clip morbido"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Clipping rigido"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -20486,7 +20618,7 @@ msgstr ""
 "Guadagno ingresso (dB)\n"
 "mono/sinistro"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20494,15 +20626,15 @@ msgstr ""
 "Guadagno ingresso (dB)\n"
 "Canale destro"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Limita a (dB):"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Trattieni (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Applica guadagno composizione"
 
@@ -21339,3 +21471,22 @@ msgstr "Rimozione voce"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Strumenti spettrali"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy"
+msgstr "Note legali"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s n°%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Cambia il limite superiore della velocità (%) a:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Questa versione di Audacity permette solo una traccia temporale per ciascuna finestra di progetto."

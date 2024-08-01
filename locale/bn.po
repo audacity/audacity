@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2005-09-26 13:47-0800\n"
 "Last-Translator: mak <makl10n@yahoo.com>\n"
 "Language-Team: Bangladeshi <makl10n@yahoo.com>\n"
@@ -1209,13 +1209,13 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "No"
 msgstr "কোনটিই নয়"
@@ -2779,17 +2779,11 @@ msgid "Wave Track"
 msgstr "রেকর্ড"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -7844,8 +7838,9 @@ msgstr ""
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8414,7 +8409,7 @@ msgstr "(নিষ্ক্রিয়)"
 msgid "Enable"
 msgstr "সক্রিয়"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr ""
 
@@ -8519,7 +8514,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -10749,7 +10744,8 @@ msgstr ""
 msgid "Inner &fade up length:"
 msgstr ""
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr ""
 
@@ -11094,7 +11090,7 @@ msgstr ""
 msgid "&Threshold (lower is more sensitive):"
 msgstr ""
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr ""
 
@@ -11499,7 +11495,7 @@ msgstr ""
 msgid "Upper Threshold"
 msgstr ""
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr ""
 
@@ -12372,8 +12368,130 @@ msgstr "ইনভার্ট"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "সংকোচক..."
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr ""
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr ""
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ratio"
+msgstr "কাজ"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr ""
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr ""
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "একটি মিডি ফাইল নির্বাচন করুন"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Release Time"
+msgstr "একটি মিডি ফাইল নির্বাচন করুন"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr ""
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Release Time %.1f secs"
+msgstr "একটি মিডি ফাইল নির্বাচন করুন"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr ""
 
@@ -13245,11 +13363,6 @@ msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
-msgstr ""
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
 msgstr ""
 
 #: src/effects/ScoreAlignDialog.cpp
@@ -18996,19 +19109,29 @@ msgid "WaveColor Change"
 msgstr "চ্যানেল"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "গতি পরিবর্তন"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
+msgstr "গতি পরিবর্তন"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+msgid "Lower Speed Limit"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+msgid "Upper Speed Limit"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
+msgid "Invalid Limits"
 msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
@@ -19064,10 +19187,6 @@ msgstr "নাম..."
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "ইন্টারফেস"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19729,7 +19848,7 @@ msgstr "লাভ"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19857,7 +19976,7 @@ msgstr "নির্বাচনের শেষে"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20430,45 +20549,50 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "সাঁটো"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr ""
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Limit to (dB)"
 msgstr "গতি বৃদ্ধি"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr ""
 
@@ -21327,6 +21451,10 @@ msgstr "নির্বাচনের শুরুতে"
 msgid "Spectral Tools"
 msgstr "নির্বাচনের শেষে"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "সকল ফাইল (*)|*"
@@ -21350,10 +21478,6 @@ msgstr "নির্বাচনের শেষে"
 #, fuzzy
 #~ msgid "View online"
 #~ msgstr "নির্বাচনের শেষে"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "একটি মিডি ফাইল নির্বাচন করুন"
 
 #, fuzzy
 #~ msgid "Preferences for Warnings"
@@ -21647,10 +21771,6 @@ msgstr "নির্বাচনের শেষে"
 #, fuzzy
 #~ msgid "Reverb: %s"
 #~ msgstr "উল্টা"
-
-#, fuzzy
-#~ msgid "Location"
-#~ msgstr "কাজ"
 
 #, fuzzy
 #~ msgid "Copy selection"

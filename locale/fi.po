@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2024-05-27 11:13+0300\n"
 "Last-Translator: Heino Keränen, 2024\n"
 "Language-Team: Finnish (https://app.transifex.com/klyok/teams/690/fi/)\n"
@@ -1294,13 +1294,13 @@ msgstr ""
 "Käytä vain luotetuista lähteistä saatuja moduuleja"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Kyllä"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Ei"
 
@@ -2935,18 +2935,12 @@ msgid "Wave Track"
 msgstr "Aaltoraita"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -8123,8 +8117,9 @@ msgstr "Logaritminen taajuus"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8686,7 +8681,7 @@ msgstr "Poista käytöstä"
 msgid "Enable"
 msgstr "Ota käyttöön"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Tyyppi"
 
@@ -8789,10 +8784,10 @@ msgstr "Ei tarpeeksi yhteensopivia raitoja valittu"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%i"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11029,7 +11024,8 @@ msgstr "&Sisemmän laskun pituus:"
 msgid "Inner &fade up length:"
 msgstr "Sisemmän n&oston pituus:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Kynnysarvo:"
 
@@ -11361,7 +11357,7 @@ msgstr "Valinnan tulee olla vähintään %d näytettä."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Kynnysarvo (ma&talampi on herkempi):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Kynnysarvo"
 
@@ -11770,7 +11766,7 @@ msgstr "Lyömäsoittimien rajoitin"
 msgid "Upper Threshold"
 msgstr "Ylempi kynnys"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Kohinataso"
 
@@ -12663,8 +12659,127 @@ msgstr "Käännä vaihe"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Kääntää ääninäytteet ja niiden napaisuuden ylösalaisin"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Kompressori"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "Kompressoi äänen dynaamista aluetta"
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f sek"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f sek"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Suhde %.0f -> 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Suhde %.1f -> 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "Kohi&nataso:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Suhde:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Suhde"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "Nousu&aika:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Nousuaika"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "Vapautu&saika:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Vapautusaika"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "Vahvista ääni 0 dB:n tasolle &kompressoinnin jälkeen"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "Kompressoi h&uippujen perusteella"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Kynnysarvo %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Kohinataso %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Nousuaika %.2f sek"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Vapautusaika %.1f sek"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Rajoitin"
 
@@ -13555,11 +13670,6 @@ msgstr "Käytä oletuksia"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Palauta oletukset"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f sek"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19082,20 +19192,33 @@ msgid "WaveColor Change"
 msgstr "Aaltovärin muutos"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Vaihtunut nopeus"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Muuta alempi nopeusrajoitus (%) olemaan:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Alempi nopeusrajoitus"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Muuta ylempi nopeusrajoitus (%) olemaan:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Ylempi nopeusrajoitus"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Ylempi nopeusrajoitus"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Kova rajoitus"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19146,10 +19269,6 @@ msgstr "&Alue..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritminen &interpolointi"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Tämä Audacityn versio sallii vain yhden aikaraidan kussakin projekti-ikkunassa."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19784,7 +19903,7 @@ msgstr "Hyllysuodatin"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19918,7 +20037,7 @@ msgstr "Spektrin hyllyjen muokkaus"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20471,24 +20590,29 @@ msgstr ""
 "vähintään kaksi ääntä.~%~\n"
 "Vain yksi ääni havaittu."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Rajoitin"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Pehmeä rajoitus"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Kova rajoitus"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Pehmeä leikkaaminen"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Kova leikkaaminen"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -20496,7 +20620,7 @@ msgstr ""
 "Tulovahvistus (dB)\n"
 "mono/Vasen"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20504,15 +20628,15 @@ msgstr ""
 "Tulovahvistus (dB)\n"
 "Oikea kanava"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Rajoita tasolle (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Pito (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Käytä korvaavaa vahvistusta"
 
@@ -21350,6 +21474,25 @@ msgstr "Lauluäänen poistaja"
 msgid "Spectral Tools"
 msgstr "Spektrityökalut"
 
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy"
+msgstr "Laillisuus"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Muuta ylempi nopeusrajoitus (%) olemaan:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Tämä Audacityn versio sallii vain yhden aikaraidan kussakin projekti-ikkunassa."
+
 #~ msgid "Master effects"
 #~ msgstr "Pääefektit"
 
@@ -21462,66 +21605,6 @@ msgstr "Spektrityökalut"
 
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " [[https://forum.audacityteam.org/|Foorumi]] - kysy kysymyksesi suoraan verkossa."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "Kompressoi äänen dynaamista aluetta"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f sek"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Suhde %.0f -> 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Suhde %.1f -> 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "Kohi&nataso:"
-
-#~ msgid "&Ratio:"
-#~ msgstr "&Suhde:"
-
-#~ msgid "Ratio"
-#~ msgstr "Suhde"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "Nousu&aika:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Nousuaika"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "Vapautu&saika:"
-
-#~ msgid "Release Time"
-#~ msgstr "Vapautusaika"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "Vahvista ääni 0 dB:n tasolle &kompressoinnin jälkeen"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "Kompressoi h&uippujen perusteella"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Kynnysarvo %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Kohinataso %d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Nousuaika %.2f sek"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Vapautusaika %.1f sek"
 
 #~ msgid "Warnings"
 #~ msgstr "Varoitukset"

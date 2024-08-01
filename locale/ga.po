@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2020-06-18 18:43+0200\n"
 "Last-Translator: Seanán Ó Coistín <seananoc@gmail.com>\n"
 "Language-Team: Seanán Ó Coistín <seananoc@gmail.com>\n"
@@ -1222,13 +1222,13 @@ msgid ""
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr ""
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Ná"
 
@@ -2840,17 +2840,11 @@ msgid "Wave Track"
 msgstr "Bog an Rian"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -7989,8 +7983,9 @@ msgstr "Minicíocht log"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8567,7 +8562,7 @@ msgstr "Díchumasaithe"
 msgid "Enable"
 msgstr "Cumasaigh"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Cineál"
 
@@ -8677,7 +8672,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -10884,7 +10879,8 @@ msgstr ""
 msgid "Inner &fade up length:"
 msgstr ""
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Tairseach:"
 
@@ -11235,7 +11231,7 @@ msgstr ""
 msgid "&Threshold (lower is more sensitive):"
 msgstr ""
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Tairseach"
 
@@ -11643,7 +11639,7 @@ msgstr ""
 msgid "Upper Threshold"
 msgstr "Tairseach Uasta"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr ""
 
@@ -12539,8 +12535,132 @@ msgstr "Inbheartaigh"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Comhbhrúiteoir"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f soic"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f soic"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Ratio %.0f go 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Ratio %.1f go 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "Torainn:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "&Cóimheas:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Cóimheas"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "Aga Ionsaithe:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Attack Time"
+msgstr "Aga Ionsaithe:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "Aga Ionsaithe: %.1f soic"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Release Time"
+msgstr "Aga Ionsaithe: %.1f soic"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr ""
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Tairseach %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Noise Floor %d dB"
+msgstr "Torainn:"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Aga Ionsaithe: %.1f soic"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Release Time %.1f secs"
+msgstr "Aga Ionsaithe: %.1f soic"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr ""
 
@@ -13440,11 +13560,6 @@ msgstr "Bain feidhm as na réamhshocruithe"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Athshocraigh na Réamhshocraithe"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f soic"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19270,20 +19385,33 @@ msgid "WaveColor Change"
 msgstr "Athrú Ráta"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Athraigh idir Luas is Airde"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Athraigh íosteorainn an luasa (%) go:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Íosteorainn luasa"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Athraigh uasteorainn an luasa (%) go:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Uastheorann luasa"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Uastheorann luasa"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Teorainn Chrua"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19336,10 +19464,6 @@ msgstr "&Raon..."
 #, fuzzy
 msgid "Logarithmic &Interpolation"
 msgstr "Idirlonnú Sinc Thapaidh"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -20013,7 +20137,7 @@ msgstr "Phaser á Fhorchur"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20140,7 +20264,7 @@ msgstr "Socraigh Pointe an Rogha"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20727,44 +20851,49 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Teorainn dB"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Teorainn Bhog"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Teorainn Chrua"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Gearrthóg Bhog"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Gearrthóg Chrua"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Teorannaigh go (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Greim (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr ""
 
@@ -21621,6 +21750,13 @@ msgstr "Asbhaint Riain"
 msgid "Spectral Tools"
 msgstr "S&peictreach"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Athraigh uasteorainn an luasa (%) go:"
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "Réamhamharc an maisiú"
@@ -21663,53 +21799,6 @@ msgstr "S&peictreach"
 
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " [[https://forum.audacityteam.org/|Forum]] - cuir do cheist go díreach, ar an ngréasán."
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f soic"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Ratio %.0f go 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Ratio %.1f go 1"
-
-#, fuzzy
-#~ msgid "&Noise Floor:"
-#~ msgstr "Torainn:"
-
-#~ msgid "&Ratio:"
-#~ msgstr "&Cóimheas:"
-
-#~ msgid "Ratio"
-#~ msgstr "Cóimheas"
-
-#, fuzzy
-#~ msgid "&Attack Time:"
-#~ msgstr "Aga Ionsaithe:"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "Aga Ionsaithe: %.1f soic"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Tairseach %d dB"
-
-#, fuzzy
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Aga Ionsaithe: %.1f soic"
-
-#, fuzzy
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Aga Ionsaithe: %.1f soic"
 
 #~ msgid "Warnings"
 #~ msgstr "Rabhaidh"
@@ -23281,10 +23370,6 @@ msgstr "S&peictreach"
 #, fuzzy
 #~ msgid "Percentage"
 #~ msgstr "Céatadán an Athraithe:"
-
-#, fuzzy
-#~ msgid "AttackTime"
-#~ msgstr "Aga Ionsaithe:"
 
 #, fuzzy
 #~ msgid "Repeats"

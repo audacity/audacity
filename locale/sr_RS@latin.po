@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2014-10-06 05:34-0000\n"
 "Last-Translator: Miroslav Nikolic\n"
 "Language-Team: Serbian <>\n"
@@ -1319,13 +1319,13 @@ msgstr ""
 "Koristite module samo iz poverljivih izvora"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Da"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Ne"
 
@@ -2977,17 +2977,11 @@ msgid "Wave Track"
 msgstr "Premeštena je numera"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -8403,8 +8397,9 @@ msgstr "Logaritamska učestalost"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8998,7 +8993,7 @@ msgstr "isključeno"
 msgid "Enable"
 msgstr "uključeno"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Type"
 msgstr "Vrsta &propusnika:"
@@ -9109,7 +9104,7 @@ msgstr ""
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -11487,7 +11482,8 @@ msgstr "Trajanje unutrašnjeg iščezavanja:"
 msgid "Inner &fade up length:"
 msgstr "Trajanje unutrašnjeg pojavljivanja:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 #, fuzzy
 msgid "&Threshold:"
 msgstr "Osetljivost:"
@@ -11858,7 +11854,7 @@ msgstr "Izbor mora biti veći od %d uzorka."
 msgid "&Threshold (lower is more sensitive):"
 msgstr "Osetljivost (niže je osetljivije):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Osetljivost"
 
@@ -12282,7 +12278,7 @@ msgstr ""
 msgid "Upper Threshold"
 msgstr "Osetljivost"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Pod buke"
 
@@ -13224,8 +13220,133 @@ msgstr "Preokreni"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr ""
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Sažimatelj"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d dB"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, fuzzy, c-format
+msgid "%.2f secs"
+msgstr "%.1f sek."
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "%.1f sek."
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f:1"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f:1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "Srazmera %.0f do 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "Srazmera %.1f do 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "Pod buke:"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "Odnos:"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "Odnos"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "Vreme napada:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "Vreme napada"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "Vreme otpuštanja:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "Vreme otpuštanja"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "Napravi pojačanje od 0 dB nakon sažimanja"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "C&ompress based on Peaks"
+msgstr "Sažmi na osnovu vrhunaca"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "Osetljivost %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "Pod buke %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Vreme napada %.1f sek."
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "Vreme otpuštanja %.1f sek."
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Limiter"
 msgstr "Ograničavač"
@@ -14177,11 +14298,6 @@ msgstr "&Osnovno"
 #, fuzzy
 msgid "Restore Defaults"
 msgstr "Postavi &osnovno"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, fuzzy, c-format
-msgid "%.2f secs"
-msgstr "%.1f sek."
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -20233,20 +20349,33 @@ msgid "WaveColor Change"
 msgstr "Promena protoka"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Izmeni brzinu"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Promeni donje ograničenje brzine na (%):"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Donje ograničenje brzine"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Promeni gornje ograničenje brzine na (%):"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Gornje ograničenje brzine"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Gornje ograničenje brzine"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Ograničavač"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20300,10 +20429,6 @@ msgstr "Preimenuj..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Logaritamsko &umetanje"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "Ovo izdanje Odvažnosti dopušta samo jednu vremensku numeru za svaki prozor projekta."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -21000,7 +21125,7 @@ msgstr "Trajanje filtera"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 #, fuzzy
@@ -21130,7 +21255,7 @@ msgstr "Izbor"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -21742,49 +21867,54 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Ograničavač"
+
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Limit"
 msgstr "Ograničavač"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Limit"
 msgstr "Ograničavač"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Soft Clip"
 msgstr "Sledeći alat"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Hard Clip"
 msgstr "Nađite odsečke"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Limit to (dB)"
 msgstr "&Nivo (dB):"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 #, fuzzy
 msgid "Apply Make-up Gain"
 msgstr "Primeni lanac"
@@ -22688,6 +22818,16 @@ msgstr "Uklonjena je numera"
 msgid "Spectral Tools"
 msgstr "Spektar"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Promeni gornje ograničenje brzine na (%):"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "Ovo izdanje Odvažnosti dopušta samo jednu vremensku numeru za svaki prozor projekta."
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "&Prikaži"
@@ -22774,70 +22914,6 @@ msgstr "Spektar"
 #, fuzzy
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " <a href=\"http://forum.audacityteam.org/\">Forum</a> (postavite vaše pitanje direktno, na Internetu)"
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d dB"
-
-#~ msgid "%.1f secs"
-#~ msgstr "%.1f sek."
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f:1"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f:1"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "Srazmera %.0f do 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "Srazmera %.1f do 1"
-
-#, fuzzy
-#~ msgid "&Noise Floor:"
-#~ msgstr "Pod buke:"
-
-#, fuzzy
-#~ msgid "&Ratio:"
-#~ msgstr "Odnos:"
-
-#~ msgid "Ratio"
-#~ msgstr "Odnos"
-
-#, fuzzy
-#~ msgid "&Attack Time:"
-#~ msgstr "Vreme napada:"
-
-#~ msgid "Attack Time"
-#~ msgstr "Vreme napada"
-
-#, fuzzy
-#~ msgid "R&elease Time:"
-#~ msgstr "Vreme otpuštanja:"
-
-#~ msgid "Release Time"
-#~ msgstr "Vreme otpuštanja"
-
-#, fuzzy
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "Napravi pojačanje od 0 dB nakon sažimanja"
-
-#, fuzzy
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "Sažmi na osnovu vrhunaca"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "Osetljivost %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "Pod buke %d dB"
-
-#, fuzzy
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "Vreme napada %.1f sek."
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "Vreme otpuštanja %.1f sek."
 
 #~ msgid "Warnings"
 #~ msgstr "Upozorenja"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2021-11-06 08:05+0000\n"
 "Last-Translator: Aishwarya Kulkarni\n"
 "Language-Team: Marathi (http://www.transifex.com/klyok/audacity/language/mr/)\n"
@@ -1285,13 +1285,13 @@ msgstr ""
 "केवळ विश्वासार्ह स्त्रोतांमधूनच घटक वापरा"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "होय"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "नाही"
 
@@ -2905,17 +2905,11 @@ msgid "Wave Track"
 msgstr "गीतपट्टा हलवा"
 
 #. i18n-hint Template for clip name generation on copy-paste
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s.%i"
-msgstr ""
-
 #. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s %i"
+msgid "%s.%i"
 msgstr ""
 
 #: libraries/lib-wave-track/WaveTrack.cpp
@@ -8133,8 +8127,9 @@ msgstr "क्रमलेख (लॉग) वारंवारता"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8703,7 +8698,7 @@ msgstr "निष्क्रिय"
 msgid "Enable"
 msgstr "सक्रिय"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "प्रकार"
 
@@ -8815,7 +8810,7 @@ msgstr "खूप थोडे सुसंगत गीतपट्टे न�
 #: src/ProjectAudioManager.cpp
 #, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
+msgid "%s.%d"
 msgstr ""
 
 #: src/ProjectAudioManager.cpp
@@ -11026,7 +11021,8 @@ msgstr "अंतर्गत फेड कमी लांबी(&o):"
 msgid "Inner &fade up length:"
 msgstr "अंतर्गत फेड जास्त लांबी(&F):"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "सीमा(&T):"
 
@@ -11359,7 +11355,7 @@ msgstr "निवड %d नमुन्यांपेक्षा मोठी 
 msgid "&Threshold (lower is more sensitive):"
 msgstr "सुरवात (कमी अधिक संवेदनशील आहे):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "सीमा"
 
@@ -11768,7 +11764,7 @@ msgstr "आघाताची मर्यादा"
 msgid "Upper Threshold"
 msgstr "वरची सीमा"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "गोंगाट तळ"
 
@@ -12669,8 +12665,127 @@ msgstr "उलटे"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "नमुने उलट करून ध्वनी त्यांची ध्रुवीयता उलट करते."
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "संकुचित करणारा"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr "\"ध्वनी ची गतिमान श्रेणी संकुचित करा \""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%3d dB"
+msgstr "%3d डी.बी."
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f सेकंद"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f secs"
+msgstr "% .1f सेकंद"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.0f:1"
+msgstr "%.0f: १"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "%.1f:1"
+msgstr "%.1f: १"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr "प्रमाण %.0f to 1"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr "प्रमाण %.1f to 1"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Noise Floor:"
+msgstr "गोंगाट तळ(&N):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "&Ratio:"
+msgstr "प्रमाण(&R):"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Ratio"
+msgstr "गुणोत्तर"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "&Attack Time:"
+msgstr "लागू करण्याची वेळ(&A):"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+msgid "Attack Time"
+msgstr "लागू करण्याची वेळ"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "R&elease Time:"
+msgstr "प्रकाशन वेळ:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+msgid "Release Time"
+msgstr "प्रकाशन वेळ"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr "संकुचन केल्यावर 0 डीबीसाठी मेक&-अप मिळवला"
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+msgid "C&ompress based on Peaks"
+msgstr "टोकावर आधारित संकुचन"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Threshold %d dB"
+msgstr "सीमा %d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Noise Floor %d dB"
+msgstr "गोंगाट तळ%d dB"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Attack Time %.2f secs"
+msgstr "लागू करण्याची वेळ %.2f सेकंद"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Release Time %.1f secs"
+msgstr "प्रकाशन वेळ %.1f से"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "मर्यादित"
 
@@ -13564,11 +13679,6 @@ msgstr "पूर्वनिर्धारित वापरा"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "पूर्वनिर्धारीत करा"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f सेकंद"
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19186,20 +19296,33 @@ msgid "WaveColor Change"
 msgstr "लहरी रंग बदला"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "वेग बदला"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "कमी गती मर्यादा (%) यावर बदला:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "न्यूनतम गति-सीमा"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "जास्तीत जास्त वेग मर्यादा (%) यावर बदला:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "जास्तीत जास्त वेग"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "जास्तीत जास्त वेग"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "कठीण मर्यादा"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19250,10 +19373,6 @@ msgstr "(&R)श्रेणी..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "लघुगणकीय अंतर्वेषण(&I)"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "ऑड्यासिटीची ही आवृत्ती प्रत्येक प्रोजेक्ट विंडोसाठी फक्त एक वेळ ट्रॅक करण्यास अनुमती देते."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19896,7 +20015,7 @@ msgstr "खाच फिल्टर"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -20036,7 +20155,7 @@ msgstr "वर्णक्रमीय संपादन शेल्फ"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20584,30 +20703,35 @@ msgid ""
 "                 Only one sound detected."
 msgstr ""
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "मर्यादित"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "मृदू मर्यादा"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "कठीण मर्यादा"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "मृदू फीत"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "कठीण  फीत"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
 msgstr "पुरवणे गेन (डीबी) मोनो / डावे"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20615,15 +20739,15 @@ msgstr ""
 "पुरवणे गेन (डीबी)\n"
 "उजवे वाहिनी"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "मर्यादित (dB)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "धरून ठेवा (ms)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "मेक-अप गेन लागू करा"
 
@@ -21475,6 +21599,16 @@ msgstr "गीतपट्टा काढा"
 msgid "Spectral Tools"
 msgstr "वर्णक्रमीय (&p)"
 
+#: resources/EffectsMenuDefaults.xml
+msgid "Legacy"
+msgstr ""
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "जास्तीत जास्त वेग मर्यादा (%) यावर बदला:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "ऑड्यासिटीची ही आवृत्ती प्रत्येक प्रोजेक्ट विंडोसाठी फक्त एक वेळ ट्रॅक करण्यास अनुमती देते."
+
 #, fuzzy
 #~ msgid "Master effects"
 #~ msgstr "प्रभाव पूर्वालोकन"
@@ -21579,66 +21713,6 @@ msgstr "वर्णक्रमीय (&p)"
 
 #~ msgid " [[https://forum.audacityteam.org/|Forum]] - ask your question directly, online."
 #~ msgstr " [[https://forum.audacityteam.org/|मंच]] - आपला प्रश्न थेट, महाजालावर विचारा."
-
-#~ msgid "Compresses the dynamic range of audio"
-#~ msgstr "\"ध्वनी ची गतिमान श्रेणी संकुचित करा \""
-
-#~ msgid "%3d dB"
-#~ msgstr "%3d डी.बी."
-
-#~ msgid "%.1f secs"
-#~ msgstr "% .1f सेकंद"
-
-#~ msgid "%.0f:1"
-#~ msgstr "%.0f: १"
-
-#~ msgid "%.1f:1"
-#~ msgstr "%.1f: १"
-
-#~ msgid "Ratio %.0f to 1"
-#~ msgstr "प्रमाण %.0f to 1"
-
-#~ msgid "Ratio %.1f to 1"
-#~ msgstr "प्रमाण %.1f to 1"
-
-#~ msgid "&Noise Floor:"
-#~ msgstr "गोंगाट तळ(&N):"
-
-#~ msgid "&Ratio:"
-#~ msgstr "प्रमाण(&R):"
-
-#~ msgid "Ratio"
-#~ msgstr "गुणोत्तर"
-
-#~ msgid "&Attack Time:"
-#~ msgstr "लागू करण्याची वेळ(&A):"
-
-#~ msgid "Attack Time"
-#~ msgstr "लागू करण्याची वेळ"
-
-#~ msgid "R&elease Time:"
-#~ msgstr "प्रकाशन वेळ:"
-
-#~ msgid "Release Time"
-#~ msgstr "प्रकाशन वेळ"
-
-#~ msgid "Ma&ke-up gain for 0 dB after compressing"
-#~ msgstr "संकुचन केल्यावर 0 डीबीसाठी मेक&-अप मिळवला"
-
-#~ msgid "C&ompress based on Peaks"
-#~ msgstr "टोकावर आधारित संकुचन"
-
-#~ msgid "Threshold %d dB"
-#~ msgstr "सीमा %d dB"
-
-#~ msgid "Noise Floor %d dB"
-#~ msgstr "गोंगाट तळ%d dB"
-
-#~ msgid "Attack Time %.2f secs"
-#~ msgstr "लागू करण्याची वेळ %.2f सेकंद"
-
-#~ msgid "Release Time %.1f secs"
-#~ msgstr "प्रकाशन वेळ %.1f से"
 
 #~ msgid "Warnings"
 #~ msgstr "खबरदारीचा इशारा"

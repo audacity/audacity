@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2024-07-02 21:05+0300\n"
+"POT-Creation-Date: 2024-08-01 14:17+0300\n"
 "PO-Revision-Date: 2024-07-04 10:46+0500\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 3.3.2\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -411,6 +411,12 @@ msgstr "Склеивающий компрессор"
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
 msgstr "Мягкий"
+
+#. i18n-hint: This is the name of an effect preset.
+#: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+#, fuzzy
+msgid "Beat Booster"
+msgstr "Подъём НЧ"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1274,13 +1280,13 @@ msgstr ""
 "Используйте модули только из надёжных источников"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 #: plug-ins/sample-data-export.ny
 msgid "Yes"
 msgstr "Да"
 
 #: libraries/lib-module-manager/ModuleManager.cpp src/TimerRecordDialog.cpp
-#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/limiter.ny
+#: plug-ins/delay.ny plug-ins/equalabel.ny plug-ins/legacy-limiter.ny
 msgid "No"
 msgstr "Нет"
 
@@ -2916,18 +2922,12 @@ msgid "Wave Track"
 msgstr "Волнотрек"
 
 #. i18n-hint Template for clip name generation on copy-paste
+#. i18n-hint Template for clip name generation on inserting new empty clip
 #: libraries/lib-wave-track/WaveTrack.cpp
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%i"
 msgstr "%s.%i"
-
-#. i18n-hint Template for clip name generation on inserting new empty clip
-#: libraries/lib-wave-track/WaveTrack.cpp
-#, c-format
-msgctxt "clip name template"
-msgid "%s %i"
-msgstr "%s %i"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "There is not enough room available to paste the selection"
@@ -5902,15 +5902,8 @@ msgid "Save to the Cloud (free)"
 msgstr "Сохранить в облаке (беслатно)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-msgid ""
-"Your project is backed up privately on audio.com. You can access your work "
-"from any device and collaborate on your project with others. Cloud saving is "
-"free for a limited number of projects."
-msgstr ""
-"Резервные конфиденциальные копии вашего проекта хранятся на audio.com. "
-"Вы можете получить доступ к вашей работе с любого устройства и сотрудничать "
-"над вашим проектом с другими пользователями. Сохранение в облаке "
-"бесплатно для ограниченного числа проектов."
+msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
+msgstr "Резервные конфиденциальные копии вашего проекта хранятся на audio.com. Вы можете получить доступ к вашей работе с любого устройства и сотрудничать над вашим проектом с другими пользователями. Сохранение в облаке бесплатно для ограниченного числа проектов."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
@@ -5926,8 +5919,7 @@ msgid ""
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
 "Файлы хранятся на вашем устройстве.\n"
-"Примечание: для экспорта в файлы MP3 и WAV, воспользуйтесь "
-"вместо этого пункт \"Файл > Экспорт аудиоданных\"."
+"Примечание: для экспорта в файлы MP3 и WAV, воспользуйтесь вместо этого пункт \"Файл > Экспорт аудиоданных\"."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
@@ -6102,12 +6094,8 @@ msgid "Project version conflict detected"
 msgstr "Выявлен конфликт версий проекта"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-msgid ""
-"There's a newer version of this Audacity project on Audio.com. Saving this "
-"project will replace it as the newest version instead."
-msgstr ""
-"На audio.com обнаружена более новая версия этого проекта Audacity. Сохранение "
-"этого проекта заменит ее текущей версией."
+msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
+msgstr "На audio.com обнаружена более новая версия этого проекта Audacity. Сохранение этого проекта заменит ее текущей версией."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Save this project"
@@ -8118,8 +8106,9 @@ msgstr "Логарифмический масштаб"
 
 #. i18n-hint: short form of 'decibels'.
 #: src/FreqWindow.cpp src/effects/AutoDuck.cpp src/effects/EqualizationUI.cpp
-#: src/effects/Loudness.cpp src/effects/Normalize.cpp
-#: src/effects/ScienFilter.cpp src/effects/TruncSilence.cpp
+#: src/effects/LegacyCompressor.cpp src/effects/Loudness.cpp
+#: src/effects/Normalize.cpp src/effects/ScienFilter.cpp
+#: src/effects/TruncSilence.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVRulerControls.cpp
 #: src/widgets/MeterPanel.cpp plug-ins/sample-data-export.ny
 msgid "dB"
@@ -8681,7 +8670,7 @@ msgstr "Выключить"
 msgid "Enable"
 msgstr "Включить"
 
-#: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
+#: src/PluginDataViewCtrl.cpp plug-ins/legacy-limiter.ny
 msgid "Type"
 msgstr "Тип"
 
@@ -8784,10 +8773,10 @@ msgstr "Выбрано слишком мало совместимых треко
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, c-format
+#, fuzzy, c-format
 msgctxt "clip name template"
-msgid "%s #%d"
-msgstr "%s #%d"
+msgid "%s.%d"
+msgstr "%s.%i"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10204,13 +10193,8 @@ msgstr "Новое в Audacity %s"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"Watch the [[%s|release video]] or read the [[https://support.audacityteam."
-"org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
-"Посмотрите [[%s|видео о выпуске]] или прочитайте [[https://support."
-"audacityteam.org/additional-resources/changelog/changelog]], "
-"чтобы узнать больше!</p>"
+msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
+msgstr "Посмотрите [[%s|видео о выпуске]] или прочитайте [[https://support.audacityteam.org/additional-resources/changelog/changelog]], чтобы узнать больше!</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
@@ -10218,12 +10202,8 @@ msgstr "Получите бесплатные плагины и звуки"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
-msgid ""
-"<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for "
-"Audacity users</p>"
-msgstr ""
-"<p>Попробуйте наше [[%s|приложение Muse Hub]], чтобы получить множество "
-" аудио плагинов для пользователей Audacity</p>"
+msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
+msgstr "<p>Попробуйте наше [[%s|приложение Muse Hub]], чтобы получить множество  аудио плагинов для пользователей Audacity</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -11033,7 +11013,8 @@ msgstr "Длина в&нутреннего затухания:"
 msgid "Inner &fade up length:"
 msgstr "Длина &внутреннего нарастания:"
 
-#: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
+#: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
+#: src/effects/TruncSilence.cpp
 msgid "&Threshold:"
 msgstr "&Порог:"
 
@@ -11365,7 +11346,7 @@ msgstr "Выделение должно быть больше %d сэмплов.
 msgid "&Threshold (lower is more sensitive):"
 msgstr "&Порог (чем ниже, тем чувствительней):"
 
-#: src/effects/ClickRemoval.cpp
+#: src/effects/ClickRemoval.cpp src/effects/LegacyCompressor.cpp
 msgid "Threshold"
 msgstr "Порог"
 
@@ -11383,8 +11364,7 @@ msgstr "Компрессор"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
-"Сужает динамический диапазон или разницу между громкими и тихими частями."
+msgstr "Сужает динамический диапазон или разницу между громкими и тихими частями."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -11775,7 +11755,7 @@ msgstr "Ограничитель перкуссии"
 msgid "Upper Threshold"
 msgstr "Верхний порог"
 
-#: src/effects/Distortion.cpp
+#: src/effects/Distortion.cpp src/effects/LegacyCompressor.cpp
 msgid "Noise Floor"
 msgstr "Нижний порог шумов"
 
@@ -12659,8 +12639,135 @@ msgstr "Инвертировать"
 msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Отражает звуковые сэмплы вертикально, изменяя их полярность"
 
-#: src/effects/Limiter.cpp plug-ins/limiter.ny
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Compressor"
+msgstr "Склеивающий компрессор"
+
+#: src/effects/LegacyCompressor.cpp
+msgid "Compresses the dynamic range of audio"
+msgstr ""
+
+#. i18n-hint: usually leave this as is as dB doesn't get translated
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%3d dB"
+msgstr "%d дБ"
+
+#: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
+#, c-format
+msgid "%.2f secs"
+msgstr "%.2f сек."
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.1f secs"
+msgstr "%.2f сек."
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.0f:1"
+msgstr "%.0f мс"
+
+#. i18n-hint: Unless your language has a different convention for ratios,
+#. * like 8:1, leave as is.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "%.1f:1"
+msgstr "%.1f %%"
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.0f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, c-format
+msgid "Ratio %.1f to 1"
+msgstr ""
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Noise Floor:"
+msgstr "Нижний порог шумов"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Ratio:"
+msgstr "&Пропорции:"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Ratio"
+msgstr "&Пропорции:"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "&Attack Time:"
+msgstr "Время атаки"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' where the
+#. * sound dies away.  So this means 'onset duration'.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Attack Time"
+msgstr "Время атаки"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "R&elease Time:"
+msgstr "Время затухания"
+
+#. i18n-hint: Particularly in percussion, sounds can be regarded as having
+#. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
+#. * sound dies away.
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "Release Time"
+msgstr "Время затухания"
+
+#. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
+#: src/effects/LegacyCompressor.cpp
+msgid "Ma&ke-up gain for 0 dB after compressing"
+msgstr ""
+
+#. i18n-hint: "Compress" here means reduce variations of sound volume,
+#. NOT related to file-size compression; Peaks means extremes in volume
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy
+msgid "C&ompress based on Peaks"
+msgstr "Сравнивает диапазон двух треков."
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Threshold %d dB"
+msgstr "Поро&г (дБ)"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Noise Floor %d dB"
+msgstr "Нижний порог шумов"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Attack Time %.2f secs"
+msgstr "Время &атаки (сек.):"
+
+#: src/effects/LegacyCompressor.cpp
+#, fuzzy, c-format
+msgid "Release Time %.1f secs"
+msgstr "Время &затухания (сек.)"
+
+#: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
 msgstr "Ограничитель"
 
@@ -13549,11 +13656,6 @@ msgstr "Использовать умолчания"
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Restore Defaults"
 msgstr "Сброс в умолчание"
-
-#: src/effects/ScoreAlignDialog.cpp
-#, c-format
-msgid "%.2f secs"
-msgstr "%.2f сек."
 
 #: src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -19080,20 +19182,33 @@ msgid "WaveColor Change"
 msgstr "Изменение цвета волны"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change lower speed limit (%) to:"
+#, fuzzy
+msgid "Change Speed Limits"
+msgstr "Скорость изменена"
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Change speed limit (%) to:"
 msgstr "Изменить нижний предел скорости (%) до:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Lower speed limit"
+#, fuzzy
+msgid "Lower Speed Limit"
 msgstr "Предел понижения скорости"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Change upper speed limit (%) to:"
-msgstr "Изменить верхний предел скорости (%) до:"
+#, fuzzy
+msgid "Upper Speed Limit"
+msgstr "Предел повышения скорости"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-msgid "Upper speed limit"
-msgstr "Предел повышения скорости"
+msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
+msgstr ""
+
+#: src/tracks/timetrack/ui/TimeTrackControls.cpp
+#, fuzzy
+msgid "Invalid Limits"
+msgstr "Жёсткое ограничение"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19144,10 +19259,6 @@ msgstr "&Диапазон..."
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Logarithmic &Interpolation"
 msgstr "Логарифмическая &интерполяция"
-
-#: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
-msgid "This version of Audacity only allows one time track for each project window."
-msgstr "В этой версии Audacity в каждом из окон проекта можно использовать только 1 трек времени."
 
 #: src/tracks/timetrack/ui/TimeTrackMenuItems.cpp
 msgid "Created new time track"
@@ -19782,7 +19893,7 @@ msgstr "Полочный фильтр"
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/delay.ny plug-ins/equalabel.ny
-#: plug-ins/label-sounds.ny plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/label-sounds.ny plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
 msgid "Steve Daulton"
@@ -19916,7 +20027,7 @@ msgstr "Полки правки спектра"
 #: plug-ins/SpectralEditShelves.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
 #: plug-ins/crossfadetracks.ny plug-ins/equalabel.ny plug-ins/label-sounds.ny
-#: plug-ins/limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny plug-ins/notch.ny
 #: plug-ins/nyquist-plug-in-installer.ny plug-ins/rissetdrum.ny
 #: plug-ins/sample-data-export.ny plug-ins/sample-data-import.ny
 #: plug-ins/spectral-delete.ny plug-ins/tremolo.ny
@@ -20469,24 +20580,29 @@ msgstr ""
 "               требуется~%минимум два звука.~%~\n"
 "               Обнаружен только один звук."
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy Limiter"
+msgstr "Ограничитель для озвучивания"
+
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
 msgstr "Мягкое ограничение"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Limit"
 msgstr "Жёсткое ограничение"
 
 #. i18n-hint: clipping of wave peaks and troughs, not division of a track into clips
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Soft Clip"
 msgstr "Мягкая обрезка"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Hard Clip"
 msgstr "Жёсткая обрезка"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "mono/Left"
@@ -20494,7 +20610,7 @@ msgstr ""
 "Входное усиление (дБ)\n"
 "моно/левый"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid ""
 "Input Gain (dB)\n"
 "Right channel"
@@ -20502,15 +20618,15 @@ msgstr ""
 "Входное усиление (дБ)\n"
 "правый канал"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Limit to (dB)"
 msgstr "Ограничение до (дБ)"
 
-#: plug-ins/limiter.ny plug-ins/noisegate.ny
+#: plug-ins/legacy-limiter.ny plug-ins/noisegate.ny
 msgid "Hold (ms)"
 msgstr "Удержание (мс)"
 
-#: plug-ins/limiter.ny
+#: plug-ins/legacy-limiter.ny
 msgid "Apply Make-up Gain"
 msgstr "Применить компенсацию усиления"
 
@@ -21347,3 +21463,22 @@ msgstr "Удаление вокала"
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
 msgstr "Инструменты спектра"
+
+#: resources/EffectsMenuDefaults.xml
+#, fuzzy
+msgid "Legacy"
+msgstr "Юридические сведения"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s %i"
+#~ msgstr "%s %i"
+
+#~ msgctxt "clip name template"
+#~ msgid "%s #%d"
+#~ msgstr "%s #%d"
+
+#~ msgid "Change upper speed limit (%) to:"
+#~ msgstr "Изменить верхний предел скорости (%) до:"
+
+#~ msgid "This version of Audacity only allows one time track for each project window."
+#~ msgstr "В этой версии Audacity в каждом из окон проекта можно использовать только 1 трек времени."
