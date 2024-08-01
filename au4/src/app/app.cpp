@@ -131,8 +131,8 @@ int App::run(int argc, char** argv)
     }
 
     QCoreApplication::setApplicationName(appName);
-    QCoreApplication::setOrganizationName("MuseScore");
-    QCoreApplication::setOrganizationDomain("musescore.org");
+    QCoreApplication::setOrganizationName("Audacity");
+    QCoreApplication::setOrganizationDomain("audacityteam.org");
     // QCoreApplication::setApplicationVersion(QString::fromStdString(MUVersion::fullVersion().toStdString()));
 
 // #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
