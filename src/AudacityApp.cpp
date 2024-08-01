@@ -453,7 +453,7 @@ void InitCrashreports()
 #if defined(USE_BREAKPAD)
       BreakpadConfigurer configurer;
       configurer.SetDatabasePathUTF8(databasePath.GetPath().ToUTF8().data())
-         .SetSenderPathUTF8(wxFileName(wxStandardPaths::Get().GetExecutablePath()).GetPath().ToUTF8().data())
+         .SetSenderPathUTF8(wxFileName(PlatformCompatibility::GetExecutablePath()).GetPath().ToUTF8().data())
     #if defined(CRASH_REPORT_URL)
          .SetReportURL(CRASH_REPORT_URL)
     #endif

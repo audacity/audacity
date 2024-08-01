@@ -24,6 +24,7 @@
 #include "ModuleManager.h"
 
 #include "wxArrayStringEx.h"
+#include "PlatformCompatibility.h"
 #include "PluginInterface.h"
 #include "PluginProvider.h"
 #include "PluginProvider.h"
@@ -180,7 +181,7 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface &pluginManager)
 
    // bundled/app specific
    {
-      auto path = wxFileName(wxStandardPaths::Get().GetExecutablePath());
+      auto path = wxFileName(PlatformCompatibility::GetExecutablePath());
 #ifdef __WXGTK__
       path.AppendDir("vst3");
 #else
