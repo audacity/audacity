@@ -30,6 +30,7 @@ set( SOURCES
    ${PlatformCompatibilityOsSpecific}.cpp
    PlatformCompatibility.cpp
    PlatformCompatibility.h
+   PlatformCompatibilityWX.cpp # requires a wxWidgets app ; alternative impl needed if not using wxWidgets.
    TempDirectory.cpp
    TempDirectory.h
    wxFileNameWrapper.h
