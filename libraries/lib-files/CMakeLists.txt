@@ -8,6 +8,14 @@ for temporary projects.
 Also the global logger which can save to a file.
 ]]
 
+if(WIN32)
+   set( PlatformCompatibilityOsSpecific PlatformCompatibilityWindows )
+elseif(APPLE)
+   set( PlatformCompatibilityOsSpecific PlatformCompatibilityMacOS )
+else()
+   set( PlatformCompatibilityOsSpecific PlatformCompatibilityLinux )
+endif()
+
 set( SOURCES
    AudacityLogger.cpp
    AudacityLogger.h
@@ -19,6 +27,7 @@ set( SOURCES
    FileNames.h
    PathList.cpp
    PathList.h
+   ${PlatformCompatibilityOsSpecific}.cpp
    PlatformCompatibility.cpp
    PlatformCompatibility.h
    TempDirectory.cpp
@@ -29,6 +38,8 @@ set( LIBRARIES
    lib-exceptions-interface
    lib-preferences-interface
 )
-audacity_library( lib-files "${SOURCES}" "${LIBRARIES}"
-   "" ""
+set(DEFINES
+   PRIVATE
+      -DAUDACITY_VERSION=${AUDACITY_VERSION}
 )
+audacity_library( lib-files "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")

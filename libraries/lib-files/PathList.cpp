@@ -10,6 +10,7 @@
 
 #include "PathList.h"
 
+#include "PlatformCompatibility.h"
 #include "FileNames.h"
 #include "TempDirectory.h"
 #include <wx/stdpaths.h>
@@ -36,13 +37,13 @@ wxString GetLibraryPath()
 
 void FileNames::InitializePathList()
 {
-   auto &standardPaths = wxStandardPaths::Get();
-   const auto programPath = standardPaths.GetExecutablePath();
+   const auto programPath = PlatformCompatibility::GetExecutablePath();
 
    //
    // Paths: set search path and temp dir path
    //
    FilePaths audacityPathList;
+   auto &standardPaths = wxStandardPaths::Get();
 
 #ifdef __WXGTK__
    const auto portablePrefix = wxPathOnly(wxPathOnly(programPath));
