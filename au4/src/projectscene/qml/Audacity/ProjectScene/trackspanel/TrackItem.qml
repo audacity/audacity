@@ -174,25 +174,52 @@ ListItemBlank {
         SeparatorLine {}
 
         Row {
-            Layout.alignment: Qt.AlignTop
-            Layout.preferredWidth: childrenRect.width
-            Layout.margins: 5
-            Layout.bottomMargin: 20
+            id: volumePressureContainer
+            Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+            Layout.preferredWidth: 24
             Layout.preferredHeight: root.height
+            topPadding: 5
 
             spacing: 2
-
-            VolumePressureMeter {
-                id: leftPressure
-                height: parent.height
-                currentVolumePressure: root.item.leftChannelPressure
+            Repeater {
+                id: volumePressureMeters
+                model: root.item.channelCount
+                VolumePressureMeter {
+                    currentVolumePressure: index === 0 ? root.item.leftChannelPressure :
+                                                         root.item.rightChannelPressure
+                }
             }
 
-            VolumePressureMeter {
-                id: rightPressure
-                height: parent.height
-                currentVolumePressure: root.item.rightChannelPressure
-            }
+            states: [
+                State {
+                    when: root.item.channelCount === 1
+                    name: "mono"
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        leftPadding: 8
+                    }
+                    PropertyChanges {
+                        target: volumePressureMeters.itemAt(0)
+                        indicatorWidth: 8
+                    }
+                },
+                State {
+                    when: root.item.channelCount === 2
+                    name: "stereo"
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        leftPadding: 4
+                    }
+                    PropertyChanges {
+                        target: volumePressureMeters.itemAt(0)
+                        indicatorWidth: 7
+                    }
+                    PropertyChanges {
+                        target: volumePressureMeters.itemAt(1)
+                        indicatorWidth: 7
+                    }
+                }
+            ]
         }
     }
 

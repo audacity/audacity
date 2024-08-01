@@ -38,6 +38,7 @@ TrackItem::~TrackItem()
 void TrackItem::init(const processing::Track& track)
 {
     m_trackId = track.id;
+    m_trackType = track.type;
     setTitle(track.title);
 }
 
@@ -54,6 +55,17 @@ QVariant TrackItem::trackId_property() const
 QString TrackItem::title() const
 {
     return m_title;
+}
+
+int TrackItem::channelCount() const {
+    switch (m_trackType) {
+    case processing::TrackType::Mono:
+        return 1;
+    case processing::TrackType::Stereo:
+        return 2;
+    default:
+       return 0;
+    }
 }
 
 float TrackItem::leftChannelPressure() const
