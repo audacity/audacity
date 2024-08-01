@@ -21,6 +21,7 @@ class TrackItem : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(QVariant trackId READ trackId_property CONSTANT)
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
+    Q_PROPERTY(int channelCount READ channelCount CONSTANT)
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float rightChannelPressure READ rightChannelPressure NOTIFY rightChannelPressureChanged)
@@ -43,6 +44,7 @@ public:
     processing::TrackId trackId() const;
     QVariant trackId_property() const;
     QString title() const;
+    int channelCount() const;
 
     float leftChannelPressure() const;
     float rightChannelPressure() const;
@@ -112,6 +114,7 @@ protected:
     audio::AudioOutputParams m_outParams;
 
     processing::TrackId m_trackId = -1;
+    processing::TrackType m_trackType = processing::TrackType::Undefined;
     QString m_title;
     bool m_outputOnly = false;
 

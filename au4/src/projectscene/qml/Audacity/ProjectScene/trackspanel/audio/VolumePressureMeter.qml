@@ -18,13 +18,14 @@ Canvas {
     property real minDisplayedVolumePressure: -60.0
     property real maxDisplayedVolumePressure: 0.0
 
+    property real indicatorWidth
     property bool showRuler: false
     property int style: VolumePressureMeter.Style.Solid
     property color meterColor: "#7689E6" // TODO: Use the track color
 
     property bool isClipping: currentVolumePressure >= maxDisplayedVolumePressure
 
-    width: root.showRuler ? prv.indicatorWidth + 20 : prv.indicatorWidth
+    width: root.showRuler ? indicatorWidth + 20 : indicatorWidth
     height: parent.height
 
     QtObject {
@@ -34,7 +35,7 @@ Canvas {
         readonly property int overloadHeight: 4
 
         readonly property real indicatorHeight: root.height - prv.overloadHeight - 6
-        readonly property real indicatorWidth: 8
+
 
         // value ranges
         readonly property int fullValueRangeLength: root.maxDisplayedVolumePressure - root.minDisplayedVolumePressure
@@ -144,7 +145,7 @@ Canvas {
     }
 
     function drawRuler(ctx, originHPos, originVPos) {
-        ctx.clearRect(prv.indicatorWidth, 0, root.width - prv.indicatorWidth, root.height)
+        ctx.clearRect(indicatorWidth, 0, root.width - indicatorWidth, root.height)
         ctx.font = prv.unitTextFont
 
         // Minimal height of a single full step
@@ -196,14 +197,14 @@ Canvas {
             }
         }
 
-        ctx.clearRect(0, 0, prv.indicatorWidth, prv.indicatorHeight)
+        ctx.clearRect(0, 0, indicatorWidth, prv.indicatorHeight)
 
         // Filling the background of the meter
-        drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, prv.indicatorWidth, prv.indicatorHeight, 2, "both")
+        drawRoundedRect(ctx, ui.theme.strokeColor, 0, 0, indicatorWidth, prv.indicatorHeight, 2, "both")
 
         // Drawing the Overload indicator
         const overloadStyle = root.isClipping ? "#EF476F" : ui.theme.buttonColor
-        drawRoundedRect(ctx, overloadStyle, 0, 0, prv.indicatorWidth, prv.overloadHeight, 2, "top")
+        drawRoundedRect(ctx, overloadStyle, 0, 0, indicatorWidth, prv.overloadHeight, 2, "top")
 
         // Clamping the current volume pressure
         const volumePressure = Math.max(minDisplayedVolumePressure,
@@ -215,13 +216,13 @@ Canvas {
             // Drawing the volume pressure
             drawRoundedRect(ctx, getMeterFillStyle(ctx),
                             0, root.height - 10 - meterHeight,
-                            prv.indicatorWidth, meterHeight,
+                            indicatorWidth, meterHeight,
                             /* radius */ 2, /* rounded edge */ "bottom")
         }
 
         if (prv.rulerNeedsPaint) {
             var originVPos = prv.overloadHeight
-            var originHPos = prv.indicatorWidth + prv.strokeHorizontalMargin
+            var originHPos = indicatorWidth + prv.strokeHorizontalMargin
 
             drawRuler(ctx, originHPos, originVPos)
         }
