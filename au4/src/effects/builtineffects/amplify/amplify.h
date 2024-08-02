@@ -19,8 +19,10 @@
 
 #include "effects/view/abstracteffectmodel.h"
 
+#include "effects/builtineffects/StatefulPerTrackEffect.h"
+
 namespace au::effects {
-class EffectAmplify : public AbstractEffectModel
+class EffectAmplify : public AbstractEffectModel, public StatefulPerTrackEffect
 {
     Q_OBJECT
 
@@ -51,14 +53,14 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    // EffectType GetType() const override;
-    // OptionalMessage LoadFactoryDefaults(EffectSettings& settings)
-    // const override;
-    // OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
+    EffectType GetType() const override;
+    OptionalMessage LoadFactoryDefaults(EffectSettings& settings)
+    const override;
+    OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
 
-    // unsigned GetAudioInCount() const override;
-    // unsigned GetAudioOutCount() const override;
-    // size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
+    unsigned GetAudioInCount() const override;
+    unsigned GetAudioOutCount() const override;
+    size_t ProcessBlock(EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
 
     // Effect implementation
 
@@ -69,7 +71,7 @@ public:
     // bool TransferDataToWindow(const EffectSettings& settings) override;
     // bool TransferDataFromWindow(EffectSettings& settings) override;
 
-    // std::shared_ptr<EffectInstance> MakeInstance() const override;
+    std::shared_ptr<EffectInstance> MakeInstance() const override;
 
 // private:
 //     struct Instance : StatefulPerTrackEffect::Instance {
@@ -77,7 +79,7 @@ public:
 //         ~Instance() override;
 //     };
 
-//     void ClampRatio();
+    void ClampRatio();
 
 //     // EffectAmplify implementation
 

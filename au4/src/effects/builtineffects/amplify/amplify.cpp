@@ -185,56 +185,56 @@ void EffectAmplify::CheckClip()
 //     return L"Amplify";
 // }
 
-// // EffectDefinitionInterface implementation
+// EffectDefinitionInterface implementation
 
-// EffectType EffectAmplify::GetType() const
-// {
-//     return EffectTypeProcess;
-// }
+EffectType EffectAmplify::GetType() const
+{
+    return EffectTypeProcess;
+}
 
-// unsigned EffectAmplify::GetAudioInCount() const
-// {
-//     return 1;
-// }
+unsigned EffectAmplify::GetAudioInCount() const
+{
+    return 1;
+}
 
-// unsigned EffectAmplify::GetAudioOutCount() const
-// {
-//     return 1;
-// }
+unsigned EffectAmplify::GetAudioOutCount() const
+{
+    return 1;
+}
 
-// size_t EffectAmplify::ProcessBlock(EffectSettings&,
-//                                    const float* const* inBlock, float* const* outBlock, size_t blockLen)
-// {
-//     for (decltype(blockLen) i = 0; i < blockLen; i++) {
-//         outBlock[0][i] = inBlock[0][i] * mRatio;
-//     }
+size_t EffectAmplify::ProcessBlock(EffectSettings&,
+                                   const float* const* inBlock, float* const* outBlock, size_t blockLen)
+{
+    for (decltype(blockLen) i = 0; i < blockLen; i++) {
+        outBlock[0][i] = inBlock[0][i] * m_ratio.value.toDouble();
+    }
 
-//     return blockLen;
-// }
+    return blockLen;
+}
 
-// OptionalMessage
-// EffectAmplify::LoadFactoryDefaults(EffectSettings& settings) const
-// {
-//     // To do: externalize state so const_cast isn't needed
-//     return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults(settings);
-// }
+OptionalMessage
+EffectAmplify::LoadFactoryDefaults(EffectSettings& settings) const
+{
+    // To do: externalize state so const_cast isn't needed
+    return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults(settings);
+}
 
-// OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings& settings)
-// {
-//     Init();
+OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings& settings)
+{
+    Init();
 
-//     mRatioClip = 0.0;
-//     if (mPeak > 0.0) {
-//         mRatio = 1.0 / mPeak;
-//         mRatioClip = mRatio;
-//     } else {
-//         mRatio = 1.0;
-//     }
-//     mCanClip = false;
+    m_ratioMaxForClip = 0.0;
+    if (m_peakAmp > 0.0) {
+        m_ratio.value = muse::Val(1.0 / m_peakAmp);
+        m_ratioMaxForClip = m_ratio.value.toDouble();
+    } else {
+        m_ratio.value = muse::Val(1.0);
+    }
+    setAllowCliping(false);
 
-//     ClampRatio();
-//     return { nullptr };
-// }
+    ClampRatio();
+    return { nullptr };
+}
 
 // // Effect implementation
 
@@ -346,18 +346,18 @@ void EffectAmplify::CheckClip()
 //     return nullptr;
 // }
 
-// void EffectAmplify::ClampRatio()
-// {
-//     // limit range of gain
-//     double dBInit = LINEAR_TO_DB(mRatio);
-//     double dB = std::clamp<double>(dBInit, Amp.min, Amp.max);
-//     if (dB != dBInit) {
-//         mRatio = DB_TO_LINEAR(dB);
-//     }
+void EffectAmplify::ClampRatio()
+{
+    // limit range of gain
+    double dBInit = linearToDB(m_ratio.value.toDouble());
+    double dB = std::clamp<double>(dBInit, m_amp.minValue.toDouble(), m_amp.maxValue.toDouble());
+    if (dB != dBInit) {
+        m_ratio.value = muse::Val(dBToLinear(dB));
+    }
 
-//     mAmp = LINEAR_TO_DB(mRatio);
-//     mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
-// }
+    setAmp(linearToDB(m_amp.maxValue.toDouble()));
+    setNewPeakAmp(linearToDB(m_amp.maxValue.toDouble() * m_newPeakAmp));
+}
 
 // bool EffectAmplify::TransferDataToWindow(const EffectSettings&)
 // {
@@ -393,12 +393,12 @@ void EffectAmplify::CheckClip()
 //     return true;
 // }
 
-// std::shared_ptr<EffectInstance> EffectAmplify::MakeInstance() const
-// {
-//     // Cheat with const_cast to return an object that calls through to
-//     // non-const methods of a stateful effect.
-//     return std::make_shared<Instance>(const_cast<EffectAmplify&>(*this));
-// }
+std::shared_ptr<EffectInstance> EffectAmplify::MakeInstance() const
+{
+    // Cheat with const_cast to return an object that calls through to
+    // non-const methods of a stateful effect.
+    return std::make_shared<Instance>(const_cast<EffectAmplify&>(*this));
+}
 
 // // EffectAmplify implementation
 
