@@ -181,16 +181,14 @@ static const TranslatableStrings varModeNames {
 };
 */
 static const TranslatableStrings setRateNames {
-   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
-   XO("Insane, 320 kbps"),
+   XO("Excessive, 320 kbps"),
    XO("Extreme, 220-260 kbps"),
    XO("Standard, 170-210 kbps"),
    XO("Medium, 145-185 kbps"),
 };
 
 static const TranslatableStrings setRateNamesShort {
-   /* i18n-hint: Slightly humorous - as in use an insane precision with MP3.*/
-   XO("Insane"),
+   XO("Excessive"),
    XO("Extreme"),
    XO("Standard"),
    XO("Medium"),
