@@ -32,6 +32,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxtypes_convert.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/wxlogwrap.h

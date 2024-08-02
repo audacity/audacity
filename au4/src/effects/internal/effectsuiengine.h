@@ -10,6 +10,8 @@
 #include "modularity/ioc.h"
 #include "ui/iuiengine.h"
 
+#include "ui/view/qmltranslation.h"
+
 namespace au::effects {
 class QmlApiEngine;
 class EffectsUiEngine : public QObject, public IEffectsUiEngine
@@ -28,5 +30,6 @@ private:
     void setup();
 
     QQmlEngine* m_engine = nullptr;
+    muse::ui::QmlTranslation* m_translation = nullptr;
 };
 }

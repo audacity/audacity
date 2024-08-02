@@ -1,0 +1,3 @@
+module Audacity.Effect
+
+EffectBase 1.0 EffectBase.qml

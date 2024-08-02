@@ -10,6 +10,7 @@ namespace au::effects {
 class IEffectsProvider;
 class IEffectsConfiguration;
 class EffectsActionsController;
+class EffectsParametersService;
 class EffectsModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -26,5 +27,6 @@ private:
     std::shared_ptr<IEffectsProvider> m_provider;
     std::shared_ptr<IEffectsConfiguration> m_configuration;
     std::shared_ptr<EffectsActionsController> m_actionsController;
+    std::shared_ptr<EffectsParametersService> m_effectsParametersService;
 };
 }

@@ -14,6 +14,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectsparametersservice.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.h
@@ -27,6 +28,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsparametersservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsparametersservice.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.h

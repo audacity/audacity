@@ -11,6 +11,7 @@
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
+#include "internal/effectsparametersservice.h"
 
 #include "view/effectbuilder.h"
 
@@ -33,10 +34,12 @@ void EffectsModule::registerExports()
     m_provider = std::make_shared<EffectsProvider>();
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
+    m_effectsParametersService = std::make_shared<EffectsParametersService>();
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
+    ioc()->registerExport<EffectsParametersService>(moduleName(), m_effectsParametersService);
 }
 
 void EffectsModule::resolveImports()
@@ -59,7 +62,8 @@ void EffectsModule::registerResources()
 void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectBuilder>("Audacity.Effects", 1, 0, "EffectBuilder");
-    qmlRegisterType<EffectAmplify>("Audacity.Effects", 1, 0, "EffectAmplify");
+
+    qmlRegisterType<EffectAmplify>("Audacity.Effects", 1, 0, "EffectAmplify"); // todo
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode& mode)
