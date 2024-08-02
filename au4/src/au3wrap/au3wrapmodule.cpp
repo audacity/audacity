@@ -9,7 +9,6 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
 
-#include "mocks/au3settingsmock.h"
 #include "mocks/qtBasicUI.h"
 
 #include "modularity/ioc.h"
@@ -22,6 +21,7 @@
 #include "internal/au3record.h"
 #include "internal/au3audiodevicesprovider.h"
 #include "internal/au3selectioncontroller.h"
+#include "internal/au3commonsettings.h"
 
 #include "log.h"
 
@@ -54,7 +54,7 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     m_wxLog = new WxLogWrap();
     wxLog::SetActiveTarget(m_wxLog);
 
-    std::unique_ptr<Au3SettingsMock> auset = std::make_unique<Au3SettingsMock>();
+    std::unique_ptr<Au3CommonSettings> auset = std::make_unique<Au3CommonSettings>();
     InitPreferences(std::move(auset));
 
     AudioIO::Init();

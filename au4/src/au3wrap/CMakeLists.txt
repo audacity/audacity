@@ -29,8 +29,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iau3record.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audioinput.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3settingsmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/qtBasicUI.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/qtBasicUI.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/progressdialog.cpp
@@ -67,6 +65,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3selectioncontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3selectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.h
     )
 
 # ==================================
