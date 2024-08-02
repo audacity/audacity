@@ -10,6 +10,7 @@ Rectangle {
 
     id: root
 
+    property bool clipHovered: false
     color: ui.theme.backgroundPrimaryColor
 
     TracksListClipsModel {
@@ -176,8 +177,17 @@ Rectangle {
                 mouseOnTracks = e.y < view.visibleContentHeight
                 selectionController.onPositionChanged(e.x, e.y)
                 lineCursor.x = e.x
+                if (root.clipHovered) {
+                    root.clipHovered = false
+                }
             }
             onReleased: e => selectionController.onReleased(e.x, e.y)
+
+            onClicked: {
+                if (!root.clipHovered) {
+                    selectionController.resetSelectedClip()
+                }
+            }
         }
 
         StyledListView {
@@ -220,6 +230,9 @@ Rectangle {
 
                 onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
                     lineCursor.x = xWithinTrack
+                    if (!root.clipHovered) {
+                        root.clipHovered = true
+                    }
                 }
             }
         }

@@ -35,6 +35,7 @@ public:
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
     Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
+    Q_INVOKABLE void resetSelectedClip();
 
     bool selectionActive() const;
     void setSelectionActive(bool newSelectionActive);

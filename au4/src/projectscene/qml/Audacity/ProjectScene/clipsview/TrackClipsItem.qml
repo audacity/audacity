@@ -122,11 +122,7 @@ Item {
                 }
 
                 onRequestSelected: {
-                    if (clipItem.selected) {
-                        clipsModel.unselectClip(clipItem.key)
-                    } else {
-                        clipsModel.selectClip(clipItem.key)
-                    }
+                    clipsModel.selectClip(clipItem.key)
                 }
 
                 onTitleEditStarted: {

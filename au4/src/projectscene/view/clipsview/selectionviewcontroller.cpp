@@ -98,6 +98,11 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), completed);
 }
 
+void SelectionViewController::resetSelectedClip()
+{
+    selectionController()->resetSelectedClip();
+}
+
 IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();
