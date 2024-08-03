@@ -8,10 +8,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-07-17 00:00+0000\n"
+"PO-Revision-Date: 2024-08-03 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -3336,7 +3336,7 @@ msgstr "Nie można odnaleźć folderu projektu: „%s”"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
-msgstr "Ścieżki MIDI znalezione w pliku projektu, ale ta kompilacja Audacity nie obejmuje obsługi MIDI, pomijając ścieżkę."
+msgstr "Ścieżki MIDI zostały znalezione w pliku projektu, ale ta kompilacja Audacity nie obejmuje obsługi MIDI, pomijając ścieżkę."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "The active project already has a time track and one was encountered in the project being imported, bypassing imported time track."
@@ -4544,7 +4544,7 @@ msgstr "Nieprawidłowa długość w pliku LOF."
 
 #: modules/import-export/mod-lof/ImportLOF.cpp
 msgid "MIDI tracks cannot be offset individually, only audio files can be."
-msgstr "Ścieżki MIDI nie mogą być przesuwane indywidualnie, mogą to być jedynie pliki dźwiękowe."
+msgstr "Ścieżki MIDI nie mogą być przesuwane indywidualnie. Mogą to być jedynie pliki dźwiękowe."
 
 #. i18n-hint: You do not need to translate "LOF"
 #: modules/import-export/mod-lof/ImportLOF.cpp
@@ -8768,10 +8768,10 @@ msgstr "Zaznaczono za mało kompatybilnych ścieżek"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%i"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -12636,19 +12636,18 @@ msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Odwraca sample do góry nogami, odwracając ich biegunowość"
 
 #: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Compressor"
-msgstr "Glue Compressor"
+msgstr "Legacy Compressor"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "Compresses the dynamic range of audio"
-msgstr ""
+msgstr "Kompresuje zakres dynamiki dźwięku"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%3d dB"
-msgstr "%d dB"
+msgstr "%3d dB"
 
 #: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -12656,62 +12655,57 @@ msgid "%.2f secs"
 msgstr "%.2f sek."
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f secs"
-msgstr "%.2f sek."
+msgstr "%.1f sek."
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.0f:1"
-msgstr "%.0f ms"
+msgstr "%.0f:1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f:1"
-msgstr "%.1f %%"
+msgstr "%.1f:1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.0f to 1"
-msgstr ""
+msgstr "Współczynnik kompresji %.0f do 1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.1f to 1"
-msgstr ""
+msgstr "Współczynnik kompresji %.1f to 1"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "Poziom szumu"
+msgstr "Pozio&m szumu:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Ratio:"
-msgstr "Współczynnik k&ompresji:"
+msgstr "Współczynnik komp&resji:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Ratio"
-msgstr "Współczynnik k&ompresji:"
+msgstr "Współczynnik kompresji"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "Czas narastania"
+msgstr "Cz&as narastania:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Attack Time"
 msgstr "Czas narastania"
 
@@ -12719,49 +12713,46 @@ msgstr "Czas narastania"
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "Czas zanikania"
+msgstr "&Czas zanikania:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Release Time"
 msgstr "Czas zanikania"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr ""
+msgstr "Upię&kszanie wzmocnienia dla 0 dB po skompresowaniu"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "Porównuje zakres na dwóch ścieżkach."
+msgstr "K&ompresja oparta na szczytach"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Threshold %d dB"
-msgstr "&Próg (dB)"
+msgstr "Próg %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Noise Floor %d dB"
-msgstr "Poziom szumu"
+msgstr "Poziom szumu %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Attack Time %.2f secs"
-msgstr "Czas narastania (se&kundy):"
+msgstr "Czas narastania %.2f sek."
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release Time %.1f secs"
-msgstr "Czas zanikania (s&ekundy):"
+msgstr "Czas zanikania %.1f sek."
 
 #: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -16847,7 +16838,7 @@ msgstr "Nieużywane filtry:"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?"
-msgstr "W jednym z elementów istnieją znaki niedrukowalne (spacje, znaki nowej linii, tabulatory lub znaki końca linii). Na pewno popsują one dopasowywanie do wzorca. Zalecane jest obcięcie spacji, chyba że wiesz, co robisz. Chcesz, aby Audacity obciął spacje za Ciebie?"
+msgstr "W jednym z elementów występują znaki niedrukowalne (spacje, znaki nowej linii, tabulatory lub znaki końca linii). Na pewno popsują one dopasowywanie do wzorca. Zalecane jest obcięcie spacji, chyba że wiesz, co robisz. Chcesz, aby Audacity obciął spacje za Ciebie?"
 
 #: src/prefs/ExtImportPrefs.cpp
 msgid "Spaces detected"
@@ -19183,33 +19174,28 @@ msgid "WaveColor Change"
 msgstr "Zmień kolor fali"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change Speed Limits"
-msgstr "Zmieniono prędkość"
+msgstr "Zmień granice prędkości"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change speed limit (%) to:"
-msgstr "Zmień dolną granicę prędkości (%) na:"
+msgstr "Zmień granicę prędkości (%) na:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Lower Speed Limit"
 msgstr "Dolna granica prędkości"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Upper Speed Limit"
 msgstr "Górna granica prędkości"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr ""
+msgstr "Górna granica prędkości musi być większa niż dolna granica prędkości"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Invalid Limits"
-msgstr "Twardy limit"
+msgstr "Nieprawidłowe granice"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20582,9 +20568,8 @@ msgstr ""
 "                 Wykryto tylko jeden dźwięk."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Limiter"
-msgstr "VO Limiter"
+msgstr "Legacy Limiter"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21466,20 +21451,5 @@ msgid "Spectral Tools"
 msgstr "Narzędzia widma"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy"
-msgstr "Informacje prawne"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s #%d"
-#~ msgstr "%s #%d"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Zmień górną granicę prędkości (%) na:"
-
-#~ msgid "This version of Audacity only allows one time track for each project window."
-#~ msgstr "Ta wersja Audacity pozwala tylko na jedną ścieżkę czasową dla każdego okna projektu."
+msgstr "Legacy"
