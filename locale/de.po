@@ -13,10 +13,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.6.0\n"
+"Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-07-08 00:00+0000\n"
+"PO-Revision-Date: 2024-08-05 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: German (https://app.transifex.com/klyok/teams/690/de/)\n"
 "Language: de\n"
@@ -8771,10 +8771,10 @@ msgstr "Zu wenig kompatible Spuren ausgewählt"
 
 #. i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
 #: src/ProjectAudioManager.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr "%s.%i"
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10272,7 +10272,7 @@ msgstr "Verzögerung (Sekunden):"
 
 #: src/commands/Demo.cpp
 msgid "Decay factor:"
-msgstr "Abklingfaktor:"
+msgstr "Decay factor:"
 
 #: src/commands/Demo.h
 msgid "Does the demo action."
@@ -11999,11 +11999,11 @@ msgstr "&Lookahead (ms)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "Attac&k (ms)"
-msgstr "&Ansprechen (ms)"
+msgstr "Attac&k (ms)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Release (ms)"
-msgstr "&Abklingen (ms)"
+msgstr "&Release (ms)"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Input"
@@ -12040,7 +12040,7 @@ msgstr "&Verzögerungszeit (Sekunden):"
 
 #: src/effects/Echo.cpp
 msgid "D&ecay factor:"
-msgstr "Abkl&ingfaktor:"
+msgstr "D&ecay factor:"
 
 #: src/effects/EffectManager.cpp
 #, c-format
@@ -12636,19 +12636,18 @@ msgid "Flips the audio samples upside-down, reversing their polarity"
 msgstr "Stellt die Audiosamples auf den Kopf, wodurch die Polarität umgekehrt wird"
 
 #: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Compressor"
-msgstr "Glue Compressor"
+msgstr "Legacy Compressor"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "Compresses the dynamic range of audio"
-msgstr ""
+msgstr "Komprimiert die dynamische Reichweite von Audio"
 
 #. i18n-hint: usually leave this as is as dB doesn't get translated
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%3d dB"
-msgstr "%d dB"
+msgstr "%3d dB"
 
 #: src/effects/LegacyCompressor.cpp src/effects/ScoreAlignDialog.cpp
 #, c-format
@@ -12656,112 +12655,104 @@ msgid "%.2f secs"
 msgstr "%.2f Sekunden"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f secs"
-msgstr "%.2f Sekunden"
+msgstr "%.1f Sekunden"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.0f:1"
-msgstr "%.0f ms"
+msgstr "%.0f:1"
 
 #. i18n-hint: Unless your language has a different convention for ratios,
 #. * like 8:1, leave as is.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f:1"
-msgstr "%.1f %%"
+msgstr "%.1f:1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.0f to 1"
-msgstr ""
+msgstr "Verhältnis %.0f zu 1"
 
 #: src/effects/LegacyCompressor.cpp
 #, c-format
 msgid "Ratio %.1f to 1"
-msgstr ""
+msgstr "Verhältnis %.1f zu 1"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Noise Floor:"
-msgstr "Grundrauschen"
+msgstr "Gru&ndrauschen:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Ratio:"
-msgstr "&Verhältnis:"
+msgstr "Ve&rhältnis:"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Ratio"
-msgstr "&Verhältnis:"
+msgstr "Verhältnis"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "&Attack Time:"
-msgstr "Ansprechzeit"
+msgstr "&Attack Time:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Attack Time"
-msgstr "Ansprechzeit"
+msgstr "Attack Time"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "R&elease Time:"
-msgstr "Abklingzeit"
+msgstr "R&elease Time:"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "Release Time"
-msgstr "Abklingzeit"
+msgstr "Release Time"
 
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr ""
+msgstr "Ma&ke-up Verstärkung auf 0 dB nach dem Komprimieren"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy
 msgid "C&ompress based on Peaks"
-msgstr "Vergleicht einen Bereich auf zwei Spuren."
+msgstr "Basierend auf Spitzen k&omprimieren"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Threshold %d dB"
-msgstr "Schwellenwer&t (dB)"
+msgstr "Schwellenwert %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Noise Floor %d dB"
-msgstr "Grundrauschen"
+msgstr "Grundgeräusche %d dB"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Attack Time %.2f secs"
-msgstr "Ansprechzeit (Sek.):"
+msgstr "Attack Time %.2f Sekunden"
 
 #: src/effects/LegacyCompressor.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Release Time %.1f secs"
-msgstr "A&bklingzeit (Sek.):"
+msgstr "Release Time %.1f Sekunden"
 
 #: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
@@ -12932,19 +12923,19 @@ msgstr "Empfindlichkeit"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attac&k time (secs):"
-msgstr "Ansprechzeit (Sek.):"
+msgstr "Attac&k Time (Sek.):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Attack time"
-msgstr "Ansprechzeit"
+msgstr "Attack Time"
 
 #: src/effects/NoiseReduction.cpp
 msgid "R&elease time (secs):"
-msgstr "A&bklingzeit (Sek.):"
+msgstr "R&elease Time (Sek.):"
 
 #: src/effects/NoiseReduction.cpp
 msgid "Release time"
-msgstr "Abklingzeit"
+msgstr "Release Time"
 
 #: src/effects/NoiseReduction.cpp
 msgid "&Frequency smoothing (bands):"
@@ -19176,33 +19167,28 @@ msgid "WaveColor Change"
 msgstr "WellenFarbe ändern"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change Speed Limits"
-msgstr "Geschwindigkeit geändert"
+msgstr "Geschwindigkeitsgrenzen ändern"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Change speed limit (%) to:"
-msgstr "Untere Geschwindigkeitsgrenze (%) ändern zu:"
+msgstr "Geschwindigkeitsgrenze (%) ändern zu:"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Lower Speed Limit"
-msgstr "Minimalwert"
+msgstr "Untere Geschwindigkeitsgrenze"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Upper Speed Limit"
-msgstr "Maximalwert"
+msgstr "Obere Geschwindigkeitsgrenze"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
-msgstr ""
+msgstr "Die obere Geschwindigkeitsgrenze muss größer sein als die untere Geschwindigkeitsgrenze"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
-#, fuzzy
 msgid "Invalid Limits"
-msgstr "Harte Begrenzung"
+msgstr "Ungültige Grenzen"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -20577,9 +20563,8 @@ msgstr ""
 "                 Nur ein Geräusch wurde gefunden."
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy Limiter"
-msgstr "VO Limiter"
+msgstr "Legacy Limiter"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -20672,11 +20657,11 @@ msgstr "Pegel-Reduktion (dB)"
 
 #: plug-ins/noisegate.ny
 msgid "Attack (ms)"
-msgstr "Ansprechen (ms)"
+msgstr "Attack (ms)"
 
 #: plug-ins/noisegate.ny
 msgid "Decay (ms)"
-msgstr "Abklingen (ms)"
+msgstr "Decay (ms)"
 
 #: plug-ins/noisegate.ny
 #, lisp-format
@@ -20981,7 +20966,7 @@ msgstr "Steven Jones"
 
 #: plug-ins/rissetdrum.ny
 msgid "Decay (seconds)"
-msgstr "Abklingen (Sekunden)"
+msgstr "Decay (Sekunden)"
 
 #: plug-ins/rissetdrum.ny
 msgid "Center frequency of noise (Hz)"
@@ -21461,20 +21446,5 @@ msgid "Spectral Tools"
 msgstr "Spektralwerkzeuge"
 
 #: resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Legacy"
-msgstr "Rechtliches"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s %i"
-#~ msgstr "%s %i"
-
-#~ msgctxt "clip name template"
-#~ msgid "%s #%d"
-#~ msgstr "%s #%d"
-
-#~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "Obere Geschwindigkeitsgrenze (%) ändern zu:"
-
-#~ msgid "This version of Audacity only allows one time track for each project window."
-#~ msgstr "Diese Audacity-Version unterstützt nur eine Zeitspur pro Projektfenster."
+msgstr "Legacy"
