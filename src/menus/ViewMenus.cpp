@@ -340,7 +340,7 @@ auto ViewMenu()
       Section( "Windows" ),
 
       Section( "Other",
-         Command( wxT("ShowExtraMenus"), XXO("Enable E&xtra Menus"),
+         Command( wxT("ShowExtraMenus"), XXO("E&xtra Menus"),
             OnShowExtraMenus, AlwaysEnabledFlag,
             Options{}.CheckTest( wxT("/GUI/ShowExtraMenus"), false ) ),
          Command( wxT("ShowClipping"), XXO("&Show Clipping in Waveform"),
