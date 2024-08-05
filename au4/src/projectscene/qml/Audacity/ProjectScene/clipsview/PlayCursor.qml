@@ -6,14 +6,41 @@ Rectangle {
 
     width: 3
     color: "#ffffff"
-    border.width: 1
-    border.color: "#000000"
+    property color borderColor: "#000000"
+    property int borderWidth: 1
+
+    // draw borders without top one
+    Rectangle {
+        id: leftBorder
+        color: borderColor
+        width: borderWidth
+        height: parent.height
+        anchors.left: parent.left
+    }
+    Rectangle {
+        id: rightBorder
+        color: borderColor
+        width: borderWidth
+        height: parent.height
+        anchors.right: parent.right
+    }
+    Rectangle {
+        id: bottomBorder
+        color: borderColor
+        width: root.width
+        height: borderWidth
+        anchors.bottom: parent.bottom
+    }
 
     Canvas {
         id: marker
 
         width: 17
-        height: 18
+        height: baseRectHeight + vectorPulldown
+
+        property real baseRectHeight: 11
+        property real vectorPulldown: 5
+
         x: -(marker.width - 3)  / 2
         y: -marker.height
 
@@ -32,28 +59,35 @@ Rectangle {
 
             let b = ctx.lineWidth / 2
 
+            // start with top-left corner, move clockwise
             ctx.moveTo(radius, b)
 
             ctx.lineTo(width - radius, b)
-            ctx.quadraticCurveTo(width - b, b, width - b, radius)
+            ctx.quadraticCurveTo(width - b, b + 1, width - b, radius)
 
-
-            ctx.lineTo(width - b, (height / 2))
-            // {
-            //     let cx1 = width - radius - b
-            //     let cx2 = height / 2 - b
-            //     let ang1 = 45 * (Math.PI / 180)
-            //     let x1 = cx1 + (radius * Math.cos(ang1));
-            //     let y1 = cx2 + (radius * Math.sin(ang1));
-            //     ctx.quadraticCurveTo(width - b, height / 2 - b, x1, y1)
-            // }
+            ctx.lineTo(width - b, (baseRectHeight - 1))
+            {
+                let cx1 = width - radius - b
+                let cx2 = baseRectHeight - b
+                let ang1 = 45 * (Math.PI / 180)
+                let x1 = cx1 + (radius * Math.cos(ang1));
+                let y1 = cx2 + (radius * Math.sin(ang1));
+                ctx.quadraticCurveTo(width - b, baseRectHeight - b, x1, y1)
+            }
 
             ctx.lineTo((width / 2) + radius, height - radius)
             ctx.quadraticCurveTo(width / 2, height, (width / 2) - radius, height - radius)
 
+            {
+                let cx1 = b
+                let cx2 = baseRectHeight - b
+                let ang1 = 135 * (Math.PI / 180)
+                let x1 = cx1 + (radius * Math.cos(ang1));
+                let y1 = cx2 + (radius * Math.sin(ang1));
+                ctx.lineTo(b - x1, y1)
+            }
 
-            ctx.lineTo(b, (height / 2))
-           // ctx.quadraticCurveTo(width, height / 2, x1, y1)
+            ctx.quadraticCurveTo(b, baseRectHeight - b, b, (baseRectHeight - 1))
 
             ctx.lineTo(b, radius)
             ctx.quadraticCurveTo(b, b, radius, b)
