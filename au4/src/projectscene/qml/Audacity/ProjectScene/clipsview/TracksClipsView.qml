@@ -63,6 +63,7 @@ Rectangle {
         timeline.init()
         playCursorController.init()
         tracksViewState.init()
+        project.init()
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.

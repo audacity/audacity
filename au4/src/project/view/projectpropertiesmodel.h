@@ -31,7 +31,7 @@ class ProjectPropertiesModel : public QAbstractListModel, public muse::async::As
 {
     Q_OBJECT
 
-    muse::Inject<context::IGlobalContext> context;
+    muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
@@ -42,6 +42,8 @@ class ProjectPropertiesModel : public QAbstractListModel, public muse::async::As
 
 public:
     explicit ProjectPropertiesModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
 
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;

@@ -31,7 +31,20 @@ using namespace au::project;
 ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
     : QAbstractListModel(parent)
 {
-    m_project = context()->currentProject();
+}
+
+void ProjectPropertiesModel::init()
+{
+    m_project = globalContext()->currentProject();
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        m_project = globalContext()->currentProject();
+    });
+
+    if (!m_project) {
+        return;
+    }
+
     // if (project) {
     //     m_projectMetaInfo = project->metaInfo();
     // }
@@ -39,6 +52,8 @@ ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
     m_project->captureThumbnailRequested().onNotify(this, [this]() {
         captureThumbnail();
     });
+
+    load();
 }
 
 void ProjectPropertiesModel::load()
