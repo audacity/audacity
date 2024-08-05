@@ -19,7 +19,7 @@ void ProjectViewState::changeTracksVericalY(int deltaY)
     m_tracksVericalY.set(deltaY);
 }
 
-ProjectViewState::TrackData& ProjectViewState::makeTrackData(const processing::TrackId& trackId) const
+ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
 {
     TrackData d;
     d.height.val = DEFAULT_HEIGHT;
@@ -27,7 +27,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const processing::T
     return m_tracks.insert({ trackId, d }).first->second;
 }
 
-muse::ValCh<int> ProjectViewState::trackHeight(const processing::TrackId& trackId) const
+muse::ValCh<int> ProjectViewState::trackHeight(const trackedit::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
@@ -38,7 +38,7 @@ muse::ValCh<int> ProjectViewState::trackHeight(const processing::TrackId& trackI
     return d.height;
 }
 
-muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const processing::TrackId& trackId) const
+muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
@@ -49,7 +49,7 @@ muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const processing::TrackId& 
     return d.collapsed;
 }
 
-void ProjectViewState::changeTrackHeight(const processing::TrackId& trackId, int deltaY)
+void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int deltaY)
 {
     TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);

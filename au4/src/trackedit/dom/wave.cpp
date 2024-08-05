@@ -2,7 +2,7 @@
 
 #include <cstring>
 
-using namespace au::processing;
+using namespace au::trackedit;
 Wave::Wave(const int16_t* data, size_t size)
 {
     m_data = std::make_shared<Data>();

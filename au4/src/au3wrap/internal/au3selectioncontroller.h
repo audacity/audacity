@@ -6,11 +6,11 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "processing/iselectioncontroller.h"
+#include "trackedit/iselectioncontroller.h"
 
 class AudacityProject;
 namespace au::au3 {
-class Au3SelectionController : public processing::ISelectionController
+class Au3SelectionController : public trackedit::ISelectionController
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -19,34 +19,34 @@ public:
 
     // track selection
     void resetSelectedTrack() override;
-    processing::TrackId selectedTrack() const override;
-    void setSelectedTrack(processing::TrackId trackId) override;
-    muse::async::Channel<processing::TrackId> trackSelected() const override;
+    trackedit::TrackId selectedTrack() const override;
+    void setSelectedTrack(trackedit::TrackId trackId) override;
+    muse::async::Channel<trackedit::TrackId> trackSelected() const override;
 
     // clip selection
     void resetSelectedClip() override;
-    processing::ClipKey selectedClip() const override;
-    void setSelectedClip(const processing::ClipKey& clipKey) override;
-    muse::async::Channel<processing::ClipKey> clipSelected() const override;
+    trackedit::ClipKey selectedClip() const override;
+    void setSelectedClip(const trackedit::ClipKey& clipKey) override;
+    muse::async::Channel<trackedit::ClipKey> clipSelected() const override;
 
     // data selection
     void resetDataSelection() override;
     bool isDataSelected() override;
 
-    std::vector<processing::TrackId> dataSelectedOnTracks() const override;
-    void setDataSelectedOnTracks(const std::vector<processing::TrackId>& trackIds, bool complete) override;
-    muse::async::Channel<std::vector<processing::TrackId>> dataSelectedOnTracksChanged() const override;
-    muse::async::Channel<std::vector<processing::TrackId>> dataSelectedOnTracksSelected() const override;
+    std::vector<trackedit::TrackId> dataSelectedOnTracks() const override;
+    void setDataSelectedOnTracks(const std::vector<trackedit::TrackId>& trackIds, bool complete) override;
+    muse::async::Channel<std::vector<trackedit::TrackId>> dataSelectedOnTracksChanged() const override;
+    muse::async::Channel<std::vector<trackedit::TrackId>> dataSelectedOnTracksSelected() const override;
 
-    processing::secs_t dataSelectedStartTime() const override;
-    void setDataSelectedStartTime(processing::secs_t time, bool complete) override;
-    muse::async::Channel<processing::secs_t> dataSelectedStartTimeChanged() const override;
-    muse::async::Channel<processing::secs_t> dataSelectedStartTimeSelected() const override;
+    trackedit::secs_t dataSelectedStartTime() const override;
+    void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;
+    muse::async::Channel<trackedit::secs_t> dataSelectedStartTimeChanged() const override;
+    muse::async::Channel<trackedit::secs_t> dataSelectedStartTimeSelected() const override;
 
-    processing::secs_t dataSelectedEndTime() const override;
-    void setDataSelectedEndTime(processing::secs_t time, bool complete) override;
-    muse::async::Channel<processing::secs_t> dataSelectedEndTimeChanged() const override;
-    muse::async::Channel<processing::secs_t> dataSelectedEndTimeSelected() const override;
+    trackedit::secs_t dataSelectedEndTime() const override;
+    void setDataSelectedEndTime(trackedit::secs_t time, bool complete) override;
+    muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeChanged() const override;
+    muse::async::Channel<trackedit::secs_t> dataSelectedEndTimeSelected() const override;
 
 private:
     AudacityProject& projectRef() const;
@@ -68,14 +68,14 @@ private:
     };
 
     // track selection
-    Val<processing::TrackId> m_selectedTrack;
+    Val<trackedit::TrackId> m_selectedTrack;
 
     // clip selection
-    Val<processing::ClipKey> m_selectedClip;
+    Val<trackedit::ClipKey> m_selectedClip;
 
     // data selection
-    Val<std::vector<processing::TrackId>> m_selectedTrackIds;
-    Val<processing::secs_t> m_selectedStartTime;
-    Val<processing::secs_t> m_selectedEndTime;
+    Val<std::vector<trackedit::TrackId>> m_selectedTrackIds;
+    Val<trackedit::secs_t> m_selectedStartTime;
+    Val<trackedit::secs_t> m_selectedEndTime;
 };
 }

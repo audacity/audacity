@@ -1,35 +1,35 @@
-#include "processingproject.h"
+#include "trackeditproject.h"
 
 #include "au3wrap/iau3project.h"
 
 #include "log.h"
 
 using namespace muse;
-using namespace au::processing;
+using namespace au::trackedit;
 
-ProcessingProject::ProcessingProject() {}
+TrackeditProject::TrackeditProject() {}
 
-void ProcessingProject::setAudacity3Project(std::shared_ptr<au::au3::IAu3Project> au3)
+void TrackeditProject::setAudacity3Project(std::shared_ptr<au::au3::IAu3Project> au3)
 {
     m_au3 = au3;
 }
 
-std::vector<TrackId> ProcessingProject::trackIdList() const
+std::vector<TrackId> TrackeditProject::trackIdList() const
 {
     return m_au3->trackIdList();
 }
 
-async::NotifyList<Track> ProcessingProject::trackList() const
+async::NotifyList<Track> TrackeditProject::trackList() const
 {
     return m_au3->trackList();
 }
 
-Clip ProcessingProject::clip(const ClipKey& key) const
+Clip TrackeditProject::clip(const ClipKey& key) const
 {
     return m_au3->clipList(key.trackId)[key.index];
 }
 
-async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) const
+async::NotifyList<Clip> TrackeditProject::clipList(const TrackId& trackId) const
 {
     async::NotifyList<Clip> clips = m_au3->clipList(trackId);
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[trackId];
@@ -37,45 +37,45 @@ async::NotifyList<Clip> ProcessingProject::clipList(const TrackId& trackId) cons
     return clips;
 }
 
-void ProcessingProject::onClipChanged(const Clip& clip)
+void TrackeditProject::onClipChanged(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemChanged(clip);
 }
 
-void ProcessingProject::onClipRemoved(const Clip& clip)
+void TrackeditProject::onClipRemoved(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
     notifier.itemRemoved(clip);
 }
 
-void ProcessingProject::onClipAdded(const Clip& clip)
+void TrackeditProject::onClipAdded(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifer = m_clipsChanged[clip.key.trackId];
     notifer.itemAdded(clip);
 }
 
-TimeSignature ProcessingProject::timeSignature() const
+TimeSignature TrackeditProject::timeSignature() const
 {
     return m_au3->timeSignature();
 }
 
-void ProcessingProject::setTimeSignature(const TimeSignature& timeSignature)
+void TrackeditProject::setTimeSignature(const TimeSignature& timeSignature)
 {
     m_au3->setTimeSignature(timeSignature);
 }
 
-muse::async::Channel<TimeSignature> ProcessingProject::timeSignatureChanged() const
+muse::async::Channel<TimeSignature> TrackeditProject::timeSignatureChanged() const
 {
     return m_au3->timeSignatureChanged();
 }
 
-void ProcessingProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
+void TrackeditProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
     m_au3->pushHistoryState(longDescription, shortDescription);
 }
 
-void ProcessingProject::dump()
+void TrackeditProject::dump()
 {
     async::NotifyList<Track> tracks = trackList();
     LOGDA() << "tracks: " << tracks.size();

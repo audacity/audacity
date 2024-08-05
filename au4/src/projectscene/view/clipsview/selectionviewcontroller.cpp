@@ -7,7 +7,7 @@
 
 using namespace au::projectscene;
 using namespace au::project;
-using namespace au::processing;
+using namespace au::trackedit;
 
 constexpr double MIN_SELECTION_PX = 12.0;
 
@@ -111,7 +111,7 @@ IProjectViewStatePtr SelectionViewController::viewState() const
 
 std::vector<TrackId> SelectionViewController::trackIdList() const
 {
-    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->trackIdList() : std::vector<TrackId>();
 }
 

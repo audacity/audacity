@@ -4,7 +4,7 @@
 #include <QRect>
 
 #include "modularity/imoduleinterface.h"
-#include "processing/processingtypes.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::au3 {
 class IAu3WavePainter : MODULE_EXPORT_INTERFACE
@@ -36,6 +36,6 @@ public:
         Style style;
     };
 
-    virtual void paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params) = 0;
+    virtual void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params) = 0;
 };
 }

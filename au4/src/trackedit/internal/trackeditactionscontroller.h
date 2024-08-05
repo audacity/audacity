@@ -1,10 +1,9 @@
 ﻿/*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROCESSING_PROCESSINGACTIONSCONTROLLER_H
-#define AU_PROCESSING_PROCESSINGACTIONSCONTROLLER_H
+#pragma once
 
-#include "iprocessinginteraction.h"
+#include "itrackeditinteraction.h"
 #include "iselectioncontroller.h"
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
@@ -13,16 +12,16 @@
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
 
-#include "../iprocessingactionscontroller.h"
+#include "../itrackeditactionscontroller.h"
 
-namespace au::processing {
-class ProcessingActionsController : public IProcessingActionsController, public muse::actions::Actionable, public muse::async::Asyncable
+namespace au::trackedit {
+class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable
 {
-    INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT_STATIC(au::context::IGlobalContext, globalContext)
-    INJECT_STATIC(muse::IInteractive, interactive)
-    muse::Inject<processing::ISelectionController> selectionController;
-    muse::Inject<processing::IProcessingInteraction> processingInteraction;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:
     void init();
@@ -48,5 +47,3 @@ private:
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 };
 }
-
-#endif // AU_PROCESSING_PROCESSINGACTIONSCONTROLLER_H

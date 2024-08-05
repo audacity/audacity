@@ -1,22 +1,21 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROCESSING_PROCESSINGUIACTIONS_H
-#define AU_PROCESSING_PROCESSINGUIACTIONS_H
+#pragma once
 
 #include "ui/iuiactionsmodule.h"
-#include "processingactionscontroller.h"
+#include "trackeditactionscontroller.h"
 #include "modularity/ioc.h"
 #include "context/iuicontextresolver.h"
 #include "async/asyncable.h"
 
-namespace au::processing {
-class ProcessingUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
+namespace au::trackedit {
+class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
     INJECT(context::IUiContextResolver, uicontextResolver)
 
 public:
-    ProcessingUiActions(std::shared_ptr<ProcessingActionsController> controller);
+    TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller);
 
     void init();
 
@@ -31,10 +30,8 @@ public:
 private:
     static const muse::ui::UiActionList m_actions;
 
-    std::shared_ptr<ProcessingActionsController> m_controller;
+    std::shared_ptr<TrackeditActionsController> m_controller;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionEnabledChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };
 }
-
-#endif // AU_PROCESSING_PROCESSINGUIACTIONS_H

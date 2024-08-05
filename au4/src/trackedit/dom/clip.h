@@ -1,13 +1,15 @@
-#ifndef AU_PROСESSING_CLIP_H
-#define AU_PROСESSING_CLIP_H
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
 
 #include <vector>
 
 #include "global/types/string.h"
 #include "draw/types/color.h"
-#include "../processingtypes.h"
+#include "../trackedittypes.h"
 
-namespace au::processing {
+namespace au::trackedit {
 struct Clip {
     ClipKey key;
     muse::String title;
@@ -20,5 +22,3 @@ struct Clip {
 
 using Clips = std::vector<Clip>;
 }
-
-#endif // AU_PROСESSING_CLIP_H

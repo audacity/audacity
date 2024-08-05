@@ -65,7 +65,7 @@ private:
     muse::ValCh<int> m_tracksVericalY;
 
     // context of track
-    processing::TrackId m_trackId = -1;
+    trackedit::TrackId m_trackId = -1;
     muse::ValCh<int> m_trackHeight;
     muse::ValCh<bool> m_isTrackCollapsed;
 };

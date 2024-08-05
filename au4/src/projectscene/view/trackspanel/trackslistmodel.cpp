@@ -6,7 +6,7 @@
 
 using namespace au::projectscene;
 using namespace au::project;
-using namespace au::processing;
+using namespace au::trackedit;
 
 TracksListModel::TracksListModel(QObject* parent)
     : QAbstractListModel(parent)
@@ -26,7 +26,7 @@ TracksListModel::TracksListModel(QObject* parent)
     });
 
     onSelectedTrack(selectionController()->selectedTrack());
-    selectionController()->trackSelected().onReceive(this, [this](processing::TrackId k) {
+    selectionController()->trackSelected().onReceive(this, [this](trackedit::TrackId k) {
         onSelectedTrack(k);
     });
 
@@ -35,7 +35,7 @@ TracksListModel::TracksListModel(QObject* parent)
     });
 
     onProjectChanged();
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this]() {
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
 }
@@ -55,8 +55,8 @@ void TracksListModel::load()
 
     beginResetModel();
     deleteItems();
-
-    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    
+    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -443,8 +443,8 @@ void TracksListModel::onProjectChanged()
         m_projectChangedWhileLoadingWasBlocked = true;
         return;
     }
-
-    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    
+    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     if (prj) {
         load();
@@ -463,7 +463,7 @@ TrackItem* TracksListModel::buildTrackItem(const Track& track)
     return item;
 }
 
-TrackItem* TracksListModel::findTrackItem(const processing::TrackId& trackId)
+TrackItem* TracksListModel::findTrackItem(const trackedit::TrackId& trackId)
 {
     for (TrackItem* track: m_trackList) {
         if (track->trackId() == trackId) {
@@ -502,7 +502,7 @@ TrackItem* TracksListModel::modelIndexToItem(const QModelIndex& index) const
     return m_trackList.at(index.row());
 }
 
-void TracksListModel::onSelectedTrack(processing::TrackId trackId)
+void TracksListModel::onSelectedTrack(trackedit::TrackId trackId)
 {
     for (TrackItem* item : m_trackList) {
         item->setIsSelected(item->trackId() == trackId);

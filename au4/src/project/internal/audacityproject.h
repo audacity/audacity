@@ -15,16 +15,16 @@ class Au3Project;
 namespace au::project {
 //! NOTE There are quite a lot of "projects" right now, it can get confusing
 //! The main project of AU4 is au::project::Audacity4Project
-//! It contains (will contain) a processing project (au::processing::ProcessingProject)
-//! and various settings that are not directly related to processing
+//! It contains a trackedit project (au::trackedit::TrackeditProject)
+//! and various settings that are not directly related to trackedit
 //! (for example, mixer settings, selected effects, etc.).
-//! A processing project is the main project for processing samples, tracks, operations on them...
+//! A trackedit project is the main project for editing of samples, tracks, operations on them...
 //!
 //! Perhaps now the division into two projects seems unnecessary.
 //! But in the future, there will be a lot of data that needs
 //! to be stored with the project (even covers, notes, etc.),
-//! which are not related to processing.
-//! At the same time, the processing project will be inherently complex,
+//! which are not related to tracks edit.
+//! At the same time, the trackedit project will be inherently complex,
 //! so we want to simplify it and remove from it everything that does not concern it.
 //!
 //! There is also a project from AU3 (::AudacityProject),
@@ -69,7 +69,7 @@ public:
 
     muse::async::Notification captureThumbnailRequested() const override;
 
-    const au::processing::ProcessingProjectPtr processingProject() const override;
+    const au::trackedit::TrackeditProjectPtr trackeditProject() const override;
 
     projectscene::IProjectViewStatePtr viewState() const override;
 
@@ -102,7 +102,7 @@ private:
 
     std::shared_ptr<au::au3::IAu3Project> m_au3Project;
 
-    processing::ProcessingProjectPtr m_processingProject;
+    trackedit::TrackeditProjectPtr m_trackeditProject;
 
     projectscene::IProjectViewStatePtr m_viewState;
 };

@@ -10,14 +10,14 @@ using namespace au::projectscene;
 void SelectionStatusModel::init()
 {
     m_startTime = selectionController()->dataSelectedStartTime();
-    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](processing::secs_t time) {
-        m_startTime = !time.is_negative() ? time : processing::secs_t(0.0);
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
+        m_startTime = !time.is_negative() ? time : trackedit::secs_t(0.0);
         emit startTimeChanged();
     });
 
     m_endTime = selectionController()->dataSelectedEndTime();
-    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](processing::secs_t time) {
-        m_endTime = !time.is_negative() ? time : processing::secs_t(0.0);
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t time) {
+        m_endTime = !time.is_negative() ? time : trackedit::secs_t(0.0);
         emit endTimeChanged();
     });
 
@@ -25,7 +25,7 @@ void SelectionStatusModel::init()
         emit sampleRateChanged();
     });
 
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         emit timeSignatureChanged();
         emit isEnabledChanged();
     });
@@ -81,7 +81,7 @@ double SelectionStatusModel::sampleRate() const
 
 double SelectionStatusModel::tempo() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }
@@ -91,7 +91,7 @@ double SelectionStatusModel::tempo() const
 
 int SelectionStatusModel::upperTimeSignature() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0;
     }
@@ -101,7 +101,7 @@ int SelectionStatusModel::upperTimeSignature() const
 
 int SelectionStatusModel::lowerTimeSignature() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }
@@ -111,5 +111,5 @@ int SelectionStatusModel::lowerTimeSignature() const
 
 bool SelectionStatusModel::isEnabled() const
 {
-    return globalContext()->currentProcessingProject() != nullptr;
+    return globalContext()->currentTrackeditProject() != nullptr;
 }

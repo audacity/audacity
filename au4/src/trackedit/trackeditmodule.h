@@ -6,10 +6,10 @@
 
 #include "modularity/imodulesetup.h"
 
-namespace au::processing {
-class ProcessingActionsController;
-class ProcessingUiActions;
-class ProcessingModule : public muse::modularity::IModuleSetup
+namespace au::trackedit {
+class TrackeditActionsController;
+class TrackeditUiActions;
+class TrackeditModule : public muse::modularity::IModuleSetup
 {
 public:
 
@@ -20,8 +20,8 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<ProcessingActionsController> m_processingController;
-    std::shared_ptr<ProcessingUiActions> m_processingUiActions;
+    std::shared_ptr<TrackeditActionsController> m_trackeditController;
+    std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
 };
 }
 

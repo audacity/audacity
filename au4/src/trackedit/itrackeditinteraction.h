@@ -5,18 +5,18 @@
 #include "global/types/string.h"
 #include "global/async/channel.h"
 
-#include "processingtypes.h"
+#include "trackedittypes.h"
 
-namespace au::processing {
+namespace au::trackedit {
 //! NOTE Interface for interacting with the project
 //! When it gets big, maybe we’ll divide it into several
 //! Currently implemented in the au3wrap module
-class IProcessingInteraction : MODULE_EXPORT_INTERFACE
+class ITrackeditInteraction : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IProcessingInteraction)
+    INTERFACE_ID(ITrackeditInteraction)
 
 public:
-    virtual ~IProcessingInteraction() = default;
+    virtual ~ITrackeditInteraction() = default;
 
     virtual secs_t clipStartTime(const ClipKey& clipKey) const = 0;
 

@@ -43,8 +43,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/processinginteraction.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.cpp

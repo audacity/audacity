@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include <memory>
@@ -6,18 +9,19 @@
 #include "async/channel.h"
 
 #include "track.h"
-#include "../processingtypes.h"
+#include "clip.h"
+#include "../trackedittypes.h"
 
 namespace au::au3 {
 class IAu3Project;
 }
 
-namespace au::processing {
+namespace au::trackedit {
 //! NOTE See description of Audacity4Project
-class ProcessingProject
+class TrackeditProject
 {
 public:
-    ProcessingProject();
+    TrackeditProject();
 
     void setAudacity3Project(std::shared_ptr<au::au3::IAu3Project> au3);
     const std::shared_ptr<au::au3::IAu3Project>& audacity3Project() const { return m_au3; }
@@ -31,9 +35,9 @@ public:
     void onClipAdded(const Clip& clip);
     void onClipRemoved(const Clip& clip);
 
-    processing::TimeSignature timeSignature() const;
-    void setTimeSignature(const processing::TimeSignature& timeSignature);
-    muse::async::Channel<processing::TimeSignature> timeSignatureChanged() const;
+    trackedit::TimeSignature timeSignature() const;
+    void setTimeSignature(const trackedit::TimeSignature& timeSignature);
+    muse::async::Channel<trackedit::TimeSignature> timeSignatureChanged() const;
 
     void pushHistoryState(const std::string& longDescription, const std::string& shortDescription);
 
@@ -47,5 +51,5 @@ private:
     mutable std::map<TrackId, muse::async::ChangedNotifier<Clip>> m_clipsChanged;
 };
 
-using ProcessingProjectPtr = std::shared_ptr<ProcessingProject>;
+using TrackeditProjectPtr = std::shared_ptr<TrackeditProject>;
 }

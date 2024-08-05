@@ -30,20 +30,20 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
     return Au3Project::create();
 }
 
-static au::processing::TrackType trackType(const Track* track)
+static au::trackedit::TrackType trackType(const Track* track)
 {
     switch (track->NChannels()) {
     case 0:
-        return au::processing::TrackType::Label;
+        return au::trackedit::TrackType::Label;
     case 1:
-        return au::processing::TrackType::Mono;
+        return au::trackedit::TrackType::Mono;
     case 2:
-        return au::processing::TrackType::Stereo;
+        return au::trackedit::TrackType::Stereo;
     default:
         break;
     }
 
-    return au::processing::TrackType::Undefined;
+    return au::trackedit::TrackType::Undefined;
 }
 
 struct au::au3::Au3ProjectData
@@ -120,9 +120,9 @@ std::string Au3Project::title() const
     return wxToStdSting(m_data->project->GetProjectName());
 }
 
-std::vector<au::processing::TrackId> Au3Project::trackIdList() const
+std::vector<au::trackedit::TrackId> Au3Project::trackIdList() const
 {
-    std::vector<au::processing::TrackId> au4trackIds;
+    std::vector<au::trackedit::TrackId> au4trackIds;
 
     TrackList& tracks = TrackList::Get(m_data->projectRef());
 
@@ -133,15 +133,15 @@ std::vector<au::processing::TrackId> Au3Project::trackIdList() const
     return au4trackIds;
 }
 
-muse::async::NotifyList<au::processing::Track> Au3Project::trackList() const
+muse::async::NotifyList<au::trackedit::Track> Au3Project::trackList() const
 {
-    muse::async::NotifyList<au::processing::Track> au4tracks;
+    muse::async::NotifyList<au::trackedit::Track> au4tracks;
     au4tracks.setNotify(m_trackChangedNotifier.notify());
 
     TrackList& tracks = TrackList::Get(m_data->projectRef());
 
     for (const Track* t : tracks) {
-        au::processing::Track au4t;
+        au::trackedit::Track au4t;
         au4t.id = DomConverter::trackId(t->GetId());
         au4t.title = wxToSting(t->GetName());
         au4t.type = trackType(t);
@@ -152,31 +152,31 @@ muse::async::NotifyList<au::processing::Track> Au3Project::trackList() const
     return au4tracks;
 }
 
-muse::async::NotifyList<au::processing::Clip> Au3Project::clipList(const au::processing::TrackId& trackId) const
+muse::async::NotifyList<au::trackedit::Clip> Au3Project::clipList(const au::trackedit::TrackId& trackId) const
 {
     const WaveTrack* waveTrack = DomAccessor::findWaveTrack(m_data->projectRef(), TrackId(trackId));
     IF_ASSERT_FAILED(waveTrack) {
-        return muse::async::NotifyList<au::processing::Clip>();
+        return muse::async::NotifyList<au::trackedit::Clip>();
     }
 
-    muse::async::NotifyList<au::processing::Clip> clips;
+    muse::async::NotifyList<au::trackedit::Clip> clips;
     int index = -1;
     for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
         ++index;
-        au::processing::Clip clip = DomConverter::clip(waveTrack, interval.get(), index);
+        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get(), index);
         clips.push_back(std::move(clip));
     }
 
     return clips;
 }
 
-au::processing::TimeSignature Au3Project::timeSignature() const
+au::trackedit::TimeSignature Au3Project::timeSignature() const
 {
     if (!m_data->project) {
-        return processing::TimeSignature();
+        return trackedit::TimeSignature();
     }
 
-    processing::TimeSignature result;
+    trackedit::TimeSignature result;
 
     ProjectTimeSignature& timeSig = ProjectTimeSignature::Get(m_data->projectRef());
     result.tempo = timeSig.GetTempo();
@@ -186,7 +186,7 @@ au::processing::TimeSignature Au3Project::timeSignature() const
     return result;
 }
 
-void Au3Project::setTimeSignature(const processing::TimeSignature& timeSignature)
+void Au3Project::setTimeSignature(const trackedit::TimeSignature& timeSignature)
 {
     if (!m_data->project) {
         return;
@@ -200,7 +200,7 @@ void Au3Project::setTimeSignature(const processing::TimeSignature& timeSignature
     m_timeSignatureChanged.send(timeSignature);
 }
 
-muse::async::Channel<au::processing::TimeSignature> Au3Project::timeSignatureChanged() const
+muse::async::Channel<au::trackedit::TimeSignature> Au3Project::timeSignatureChanged() const
 {
     return m_timeSignatureChanged;
 }

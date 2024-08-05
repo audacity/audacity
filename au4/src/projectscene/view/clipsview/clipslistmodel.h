@@ -7,13 +7,13 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "processing/iprocessinginteraction.h"
-#include "processing/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
+#include "trackedit/iselectioncontroller.h"
 #include "actions/iactionsdispatcher.h"
 #include "actions/actionable.h"
 
 #include "global/async/asyncable.h"
-#include "processing/processingtypes.h"
+#include "trackedit/trackedittypes.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -30,8 +30,8 @@ class ClipsListModel : public QAbstractListModel, public muse::async::Asyncable,
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<processing::IProcessingInteraction> processingInteraction;
-    muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:
@@ -80,14 +80,14 @@ private:
     void update();
     void updateItemsMetrics();
     void updateItemsMetrics(ClipListItem* item);
-    void positionViewAtClip(const processing::Clip& clip);
-    void onSelectedClip(const processing::ClipKey& k);
+    void positionViewAtClip(const trackedit::Clip& clip);
+    void onSelectedClip(const trackedit::ClipKey& k);
     void onClipRenameAction(const muse::actions::ActionData& args);
-    ClipListItem* itemByKey(const processing::ClipKey& k) const;
+    ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
 
     TimelineContext* m_context = nullptr;
-    processing::TrackId m_trackId = -1;
-    muse::async::NotifyList<au::processing::Clip> m_allClipList;
+    trackedit::TrackId m_trackId = -1;
+    muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     QList<ClipListItem*> m_clipList;
     ClipListItem* m_selectedItem = nullptr;
 };

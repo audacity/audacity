@@ -17,7 +17,7 @@ TracksListClipsModel::TracksListClipsModel(QObject* parent)
 
 void TracksListClipsModel::load()
 {
-    au::processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    au::trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -31,7 +31,7 @@ void TracksListClipsModel::load()
     //! TODO Subscribe on tracks changed
 
     m_dataSelectedTracks = selectionController()->dataSelectedOnTracks();
-    selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const std::vector<processing::TrackId>& tracks) {
+    selectionController()->dataSelectedOnTracksChanged().onReceive(this, [this](const std::vector<trackedit::TrackId>& tracks) {
         setDataSelectedTracks(tracks);
     });
 
@@ -49,7 +49,7 @@ QVariant TracksListClipsModel::data(const QModelIndex& index, int role) const
         return QVariant();
     }
 
-    const au::processing::Track& track = m_trackList.at(index.row());
+    const au::trackedit::Track& track = m_trackList.at(index.row());
     switch (role) {
     case TrackIdRole:
         return QVariant::fromValue(track.id);
@@ -89,7 +89,7 @@ void TracksListClipsModel::setIsVerticalRulersVisible(bool isVerticalRulersVisib
     emit isVerticalRulersVisibleChanged(m_isVerticalRulersVisible);
 }
 
-void TracksListClipsModel::setDataSelectedTracks(const std::vector<processing::TrackId>& tracks)
+void TracksListClipsModel::setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks)
 {
     if (m_dataSelectedTracks == tracks) {
         return;

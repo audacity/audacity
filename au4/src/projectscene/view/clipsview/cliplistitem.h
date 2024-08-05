@@ -7,7 +7,7 @@
 #include <QString>
 #include <QColor>
 
-#include "processing/dom/clip.h"
+#include "trackedit/dom/clip.h"
 #include "../../types/projectscenetypes.h"
 
 namespace au::projectscene {
@@ -32,8 +32,8 @@ class ClipListItem : public QObject
 public:
     ClipListItem(QObject* parent);
 
-    void setClip(const processing::Clip& clip);
-    const processing::Clip& clip() const;
+    void setClip(const trackedit::Clip& clip);
+    const trackedit::Clip& clip() const;
 
     ClipKey key() const;
     QString title() const;
@@ -69,7 +69,7 @@ signals:
     void selectedChanged();
 
 private:
-    processing::Clip m_clip;
+    trackedit::Clip m_clip;
     double m_x = 0.0;
     double m_width = 0.0;
     bool m_selected = false;

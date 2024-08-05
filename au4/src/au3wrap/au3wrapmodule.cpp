@@ -15,7 +15,7 @@
 
 #include "internal/wxlogwrap.h"
 #include "internal/au3project.h"
-#include "internal/processinginteraction.h"
+#include "internal/trackeditinteraction.h"
 #include "internal/au3wavepainter.h"
 #include "internal/au3playback.h"
 #include "internal/au3record.h"
@@ -43,9 +43,9 @@ void Au3WrapModule::registerExports()
     ioc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
     ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
     ioc()->registerExport<IAu3Record>(moduleName(), m_record);
-    ioc()->registerExport<processing::IProcessingInteraction>(moduleName(), new ProcessingInteraction());
+    ioc()->registerExport<trackedit::ITrackeditInteraction>(moduleName(), new TrackeditInteraction());
     ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
-    ioc()->registerExport<processing::ISelectionController>(moduleName(), new Au3SelectionController());
+    ioc()->registerExport<trackedit::ISelectionController>(moduleName(), new Au3SelectionController());
     ioc()->registerExport<playback::IAudioDevicesProvider>(moduleName(), m_audioDevicesProvider);
 }
 

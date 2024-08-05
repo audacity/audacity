@@ -7,7 +7,7 @@
 #include "global/types/number.h"
 #include "global/logstream.h"
 
-namespace au::processing {
+namespace au::trackedit {
 using msecs_t = int64_t;
 using secs_t = muse::number_t<double>;
 using samples_t = uint64_t;
@@ -44,7 +44,7 @@ struct TimeSignature
 };
 }
 
-inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::processing::ClipKey& k)
+inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
 {
     s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
     return s;

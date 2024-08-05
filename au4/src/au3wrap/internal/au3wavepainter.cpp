@@ -599,7 +599,7 @@ AudacityProject& Au3WavePainter::projectRef() const
     return *project;
 }
 
-void Au3WavePainter::paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params)
+void Au3WavePainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params)
 {
     //! NOTE Please don't remove, need for debug
     // if (!(clipKey.trackId == 2 && clipKey.index == 0)) {

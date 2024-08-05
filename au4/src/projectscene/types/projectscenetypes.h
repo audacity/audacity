@@ -7,7 +7,7 @@
 #include <qobjectdefs.h>
 
 #include "global/types/number.h"
-#include "processing/processingtypes.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::projectscene {
 class TrackTypes
@@ -15,7 +15,7 @@ class TrackTypes
     Q_GADGET
 
 public:
-    //! NOTE: must be in sync with au::processing::TrackType
+    //! NOTE: must be in sync with au::trackedit::TrackType
     enum class Type {
         UNDEFINED = 0,
         MONO,
@@ -32,10 +32,10 @@ class ClipKey
 public:
 
     ClipKey() = default;
-    ClipKey(const processing::ClipKey& k)
+    ClipKey(const trackedit::ClipKey& k)
         : key(k) {}
 
-    processing::ClipKey key;
+    trackedit::ClipKey key;
 };
 
 class ClipTime

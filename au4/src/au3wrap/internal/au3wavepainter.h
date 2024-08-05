@@ -16,7 +16,7 @@ class Au3WavePainter : public IAu3WavePainter
 public:
     Au3WavePainter() = default;
 
-    void paint(QPainter& painter, const processing::ClipKey& clipKey, const Params& params) override;
+    void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params) override;
 
 private:
     AudacityProject& projectRef() const;
