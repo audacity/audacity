@@ -8,6 +8,7 @@ Rectangle {
     color: "#ffffff"
     property color borderColor: "#000000"
     property int borderWidth: 1
+    property bool timelinePressed: false
 
     // draw borders without top one
     Rectangle {
@@ -32,6 +33,9 @@ Rectangle {
         anchors.bottom: parent.bottom
     }
 
+    signal setPlayCursorPosition(real x)
+    signal playCursorMousePositionChanged(real x)
+
     Canvas {
         id: marker
 
@@ -45,6 +49,20 @@ Rectangle {
         y: -marker.height
 
         property real radius: 2
+
+        MouseArea {
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: pressed || timelinePressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
+
+            onPositionChanged: function(e) {
+                var ix = mapToItem(root.parent, e.x, e.y).x
+                if (pressed) {
+                    setPlayCursorPosition(ix)
+                }
+                playCursorMousePositionChanged(ix)
+            }
+        }
 
         onPaint: {
             const ctx = getContext("2d")
