@@ -1117,6 +1117,9 @@ public:
    //! Remove and return the first track
    Track::Holder DetachFirst();
 
+   Track *GetPrev(Track &, bool linked = false) const;
+   Track *GetNext(Track &, bool linked = false) const;
+
 private:
    using ListOfTracks::size;
 
@@ -1148,9 +1151,6 @@ private:
       auto e = const_cast<TrackList*>(this)->getEnd();
       return { { b, b, e, pred }, { b, e, e, pred } };
    }
-
-   Track *GetPrev(Track &, bool linked = false) const;
-   Track *GetNext(Track &, bool linked = false) const;
 
    template < typename TrackType >
       TrackIter< TrackType >

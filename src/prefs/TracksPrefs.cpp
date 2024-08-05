@@ -275,6 +275,27 @@ WaveChannelViewConstants::ZoomPresets TracksPrefs::Zoom2Choice()
 }
 
 //////////
+static EnumSetting<NewTracksPlacementEnum> NewTracksPlacementSetting{
+   wxT("/Tracks/NewTrackPlacement"),
+   {
+      EnumValueSymbol{ wxT("TopOfProject"), XXO("Top of project") },
+      EnumValueSymbol{ wxT("AboveCurrentTrack"), XXO("Above current track") },
+      EnumValueSymbol{ wxT("BelowCurrentTrack"), XXO("Below current track") },
+      EnumValueSymbol{ wxT("BottomOfProject"), XXO("Bottom of project") }
+   },
+
+   3, // Bottom of project
+
+   {
+      NewTracksPlacementEnum::TopOfProject,
+      NewTracksPlacementEnum::AboveCurrentTrack,
+      NewTracksPlacementEnum::BelowCurrentTrack,
+      NewTracksPlacementEnum::BottomOfProject
+   },
+};
+
+
+//////////
 TracksPrefs::TracksPrefs(wxWindow * parent, wxWindowID winid)
 /* i18n-hint: "Tracks" include audio recordings but also other collections of
  * data associated with a time line, such as sequences of labels, and musical
@@ -364,10 +385,6 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
 
          S.TieChoice(XXO("Display &samples:"),
                      sampleDisplaySetting );
-
-         S.TieTextBox(XXO("Default audio track &name:"),
-                      AudioTrackNameSetting,
-                      30);
       }
       S.EndMultiColumn();
    }
@@ -383,8 +400,25 @@ void TracksPrefs::PopulateOrExchange(ShuttleGui & S)
          S.TieChoice(XXO("Preset 2:"),
                      zoom2Setting );
       }
+      S.EndMultiColumn();
    }
    S.EndStatic();
+
+   S.StartStatic(XO("New tracks"));
+   {
+      S.StartMultiColumn(2);
+      {
+         S.TieTextBox(XXO("Default audio track &name:"),
+                      AudioTrackNameSetting,
+                      30);
+
+         S.TieChoice(XXO("Placement:"),
+                     NewTracksPlacementSetting );
+      }
+      S.EndMultiColumn();
+   }
+   S.EndStatic();
+   
    S.EndScroller();
 }
 
