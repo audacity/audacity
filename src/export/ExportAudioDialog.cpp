@@ -43,6 +43,7 @@
 #include "ExportFilePanel.h"
 #include "ExportProgressUI.h"
 #include "ImportExport.h"
+#include "RealtimeEffectList.h"
 #include "WindowAccessible.h"
 
 #if wxUSE_ACCESSIBILITY
@@ -237,7 +238,11 @@ ExportAudioDialog::ExportAudioDialog(wxWindow* parent,
    if (ExportAudioExportRange.Read() != "split" || (!hasLabels && !hasMultipleWaveTracks))
       mSplitsPanel->Hide();
 
-   mExportOptionsPanel->SetCustomMappingEnabled(!mRangeSplit->GetValue());
+   mExportOptionsPanel->SetCustomMappingEnabled(
+      !mRangeSplit->GetValue() &&
+      //Custom channel export isn't available when master channel has effects assigned
+      RealtimeEffectList::Get(project).GetStatesCount() == 0
+   );
 
    mIncludeAudioBeforeFirstLabel->Enable(mSplitByLabels->GetValue());
 
