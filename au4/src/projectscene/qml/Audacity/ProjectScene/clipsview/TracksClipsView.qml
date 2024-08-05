@@ -111,6 +111,9 @@ Rectangle {
 
             onPositionChanged: function(e) {
                 lineCursor.x = e.x
+                if (pressed) {
+                    playCursorController.seekToX(e.x)
+                }
             }
 
             onClicked: function (e) {
@@ -250,6 +253,15 @@ Rectangle {
             anchors.bottom: parent.bottom
             x: playCursorController.positionX
             z: 2
+            timelinePressed: timelineMouseArea.pressed
+
+            onSetPlayCursorPosition: function(ix) {
+                playCursorController.seekToX(ix)
+            }
+
+            onPlayCursorMousePositionChanged: function(ix) {
+                lineCursor.x = ix
+            }
         }
 
         VerticalRulersPanel {
