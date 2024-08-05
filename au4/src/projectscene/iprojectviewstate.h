@@ -5,7 +5,7 @@
 #include "global/types/retval.h"
 
 #include "types/projectscenetypes.h"
-#include "processing/processingtypes.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::projectscene {
 class IProjectViewState
@@ -18,9 +18,9 @@ public:
     virtual void changeTracksVericalY(int deltaY) = 0;
 
     // context of track
-    virtual muse::ValCh<int> trackHeight(const processing::TrackId& trackId) const = 0;
-    virtual muse::ValCh<bool> isTrackCollapsed(const processing::TrackId& trackId) const = 0;
-    virtual void changeTrackHeight(const processing::TrackId& trackId, int deltaY) = 0;
+    virtual muse::ValCh<int> trackHeight(const trackedit::TrackId& trackId) const = 0;
+    virtual muse::ValCh<bool> isTrackCollapsed(const trackedit::TrackId& trackId) const = 0;
+    virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
 
     // snap
     virtual muse::ValCh<bool> isSnapEnabled() const = 0;

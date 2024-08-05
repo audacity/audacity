@@ -10,7 +10,7 @@ PlaybackToolBarBPMItem::PlaybackToolBarBPMItem(const muse::ui::UiAction& action,
                                                QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         onProjectChanged();
     });
 
@@ -27,25 +27,25 @@ void PlaybackToolBarBPMItem::setCurrentValue(double value)
     if (qFuzzyCompare(m_currentValue, value)) {
         return;
     }
-
-    auto project = globalContext()->currentProcessingProject();
+    
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    processing::TimeSignature timeSignature = project->timeSignature();
+    trackedit::TimeSignature timeSignature = project->timeSignature();
     timeSignature.tempo = value;
     project->setTimeSignature(timeSignature);
 }
 
 void PlaybackToolBarBPMItem::onProjectChanged()
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature&) {
+    project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
         updateValues();
     });
 
@@ -54,12 +54,12 @@ void PlaybackToolBarBPMItem::onProjectChanged()
 
 void PlaybackToolBarBPMItem::updateValues()
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    processing::TimeSignature timeSignature = project->timeSignature();
+    trackedit::TimeSignature timeSignature = project->timeSignature();
 
     m_currentValue = timeSignature.tempo;
     emit currentValueChanged();

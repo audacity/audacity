@@ -1,10 +1,12 @@
-#ifndef AU_PROСESSING_WAVE_H
-#define AU_PROСESSING_WAVE_H
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
 
 #include <memory>
 #include <vector>
 
-namespace au::processing {
+namespace au::trackedit {
 class Wave
 {
 public:
@@ -25,5 +27,3 @@ private:
     std::shared_ptr<Data> m_data;
 };
 }
-
-#endif // AU_PROСESSING_WAVE_H

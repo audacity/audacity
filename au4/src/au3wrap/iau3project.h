@@ -11,7 +11,7 @@
 #include "async/notifylist.h"
 #include "async/channel.h"
 
-#include "processing/dom/track.h"
+#include "trackedit/dom/track.h"
 
 namespace au::au3 {
 class IAu3Project
@@ -26,13 +26,13 @@ public:
 
     virtual std::string title() const = 0;
 
-    virtual std::vector<processing::TrackId> trackIdList() const = 0;
-    virtual muse::async::NotifyList<processing::Track> trackList() const = 0;
-    virtual muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const = 0;
+    virtual std::vector<trackedit::TrackId> trackIdList() const = 0;
+    virtual muse::async::NotifyList<trackedit::Track> trackList() const = 0;
+    virtual muse::async::NotifyList<trackedit::Clip> clipList(const trackedit::TrackId& trackId) const = 0;
 
-    virtual processing::TimeSignature timeSignature() const = 0;
-    virtual void setTimeSignature(const processing::TimeSignature& timeSignature) = 0;
-    virtual muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const = 0;
+    virtual trackedit::TimeSignature timeSignature() const = 0;
+    virtual void setTimeSignature(const trackedit::TimeSignature& timeSignature) = 0;
+    virtual muse::async::Channel<au::trackedit::TimeSignature> timeSignatureChanged() const = 0;
 
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
 

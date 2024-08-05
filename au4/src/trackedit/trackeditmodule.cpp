@@ -19,51 +19,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#include "processingmodule.h"
+#include "trackeditmodule.h"
 
 #include "modularity/ioc.h"
 
-#include "internal/processinguiactions.h"
-#include "internal/processingactionscontroller.h"
+#include "internal/trackedituiactions.h"
+#include "internal/trackeditactionscontroller.h"
 
 #include "ui/iuiactionsregister.h"
 
-using namespace au::processing;
+using namespace au::trackedit;
 using namespace muse;
 using namespace muse::modularity;
 using namespace muse::ui;
 using namespace muse::actions;
 
-//! NOTE This is essentially the core of the application;
-//! here is the application’s domain model and its main functions for audio processing.
-
-std::string ProcessingModule::moduleName() const
+std::string TrackeditModule::moduleName() const
 {
-    return "processing";
+    return "trackedit";
 }
 
-void ProcessingModule::registerExports()
+void TrackeditModule::registerExports()
 {
-    m_processingController = std::make_shared<ProcessingActionsController>();
-    m_processingUiActions = std::make_shared<ProcessingUiActions>(m_processingController);
+    m_trackeditController = std::make_shared<TrackeditActionsController>();
+    m_trackeditUiActions = std::make_shared<TrackeditUiActions>(m_trackeditController);
 
-    ioc()->registerExport<IProcessingActionsController>(moduleName(), m_processingController);
+    ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
 }
 
-void ProcessingModule::resolveImports()
+void TrackeditModule::resolveImports()
 {
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
-        ar->reg(std::make_shared<ProcessingUiActions>(m_processingController));
+        ar->reg(std::make_shared<TrackeditUiActions>(m_trackeditController));
     }
 }
 
-void ProcessingModule::onInit(const muse::IApplication::RunMode&)
+void TrackeditModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_processingController->init();
-    m_processingUiActions->init();
+    m_trackeditController->init();
+    m_trackeditUiActions->init();
 }
 
-void ProcessingModule::onDeinit()
+void TrackeditModule::onDeinit()
 {
 }

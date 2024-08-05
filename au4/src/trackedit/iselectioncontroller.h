@@ -4,13 +4,13 @@
 
 #include "global/async/channel.h"
 
-#include "processing/processingtypes.h"
+#include "trackedit/trackedittypes.h"
 
-namespace au::processing {
+namespace au::trackedit {
 //! NOTE Currently implemented in the au3wrap module
 class ISelectionController : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(processing::ISelectionController)
+    INTERFACE_ID(trackedit::ISelectionController)
 
 public:
     virtual ~ISelectionController() = default;

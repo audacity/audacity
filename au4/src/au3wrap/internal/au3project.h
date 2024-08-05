@@ -24,13 +24,13 @@ public:
 
     std::string title() const override;
 
-    std::vector<processing::TrackId> trackIdList() const override;
-    muse::async::NotifyList<processing::Track> trackList() const override;
-    muse::async::NotifyList<processing::Clip> clipList(const processing::TrackId& trackId) const override;
+    std::vector<trackedit::TrackId> trackIdList() const override;
+    muse::async::NotifyList<trackedit::Track> trackList() const override;
+    muse::async::NotifyList<trackedit::Clip> clipList(const trackedit::TrackId& trackId) const override;
 
-    processing::TimeSignature timeSignature() const override;
-    void setTimeSignature(const processing::TimeSignature& timeSignature) override;
-    muse::async::Channel<au::processing::TimeSignature> timeSignatureChanged() const override;
+    trackedit::TimeSignature timeSignature() const override;
+    void setTimeSignature(const trackedit::TimeSignature& timeSignature) override;
+    muse::async::Channel<au::trackedit::TimeSignature> timeSignatureChanged() const override;
 
     void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
 
@@ -40,8 +40,8 @@ public:
 private:
 
     std::shared_ptr<Au3ProjectData> m_data;
-    mutable muse::async::ChangedNotifier<processing::Track> m_trackChangedNotifier;
-    mutable muse::async::Channel<au::processing::TimeSignature> m_timeSignatureChanged;
+    mutable muse::async::ChangedNotifier<trackedit::Track> m_trackChangedNotifier;
+    mutable muse::async::Channel<au::trackedit::TimeSignature> m_timeSignatureChanged;
 };
 
 class Au3ProjectCreator : public IAu3ProjectCreator

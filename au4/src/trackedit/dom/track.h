@@ -1,14 +1,16 @@
-#ifndef AU_PROСESSING_TRACK_H
-#define AU_PROСESSING_TRACK_H
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
 
 #include <vector>
 
-#include "../processingtypes.h"
+#include "../trackedittypes.h"
 #include "global/types/string.h"
 
-#include "clip.h"
+#include "clip.h" // IWYU pragma: export
 
-namespace au::processing {
+namespace au::trackedit {
 enum class TrackType {
     Undefined,
     Mono,
@@ -24,5 +26,3 @@ struct Track {
 
 using TrackList = std::vector<Track>;
 }
-
-#endif // AU_PROСESSING_TRACK_H

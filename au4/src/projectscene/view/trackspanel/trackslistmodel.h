@@ -8,7 +8,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "types/projectscenetypes.h"
-#include "processing/iselectioncontroller.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "trackitem.h"
 
@@ -31,7 +31,7 @@ class TracksListModel : public QAbstractListModel, public muse::async::Asyncable
     Q_PROPERTY(bool isAddingAvailable READ isAddingAvailable NOTIFY isAddingAvailableChanged)
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
 
-    muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
     TracksListModel(QObject* parent = nullptr);
@@ -89,10 +89,10 @@ private:
     bool removeRows(int row, int count, const QModelIndex& parent) override;
 
     void onProjectChanged();
-    void onSelectedTrack(processing::TrackId trackId);
+    void onSelectedTrack(trackedit::TrackId trackId);
 
-    TrackItem* buildTrackItem(const processing::Track& track);
-    TrackItem* findTrackItem(const processing::TrackId& trackId);
+    TrackItem* buildTrackItem(const trackedit::Track& track);
+    TrackItem* findTrackItem(const trackedit::TrackId& trackId);
 
     void setLoadingBlocked(bool blocked);
 

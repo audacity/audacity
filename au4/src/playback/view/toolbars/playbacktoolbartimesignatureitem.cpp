@@ -10,7 +10,7 @@ PlaybackToolBarTimeSignatureItem::PlaybackToolBarTimeSignatureItem(const muse::u
                                                                    QObject* parent)
     : muse::uicomponents::ToolBarItem(action, type, parent)
 {
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         onProjectChanged();
     });
 
@@ -27,13 +27,13 @@ void PlaybackToolBarTimeSignatureItem::setUpper(int newUpper)
     if (m_upper == newUpper) {
         return;
     }
-
-    auto project = globalContext()->currentProcessingProject();
+    
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    processing::TimeSignature timeSignature = project->timeSignature();
+    trackedit::TimeSignature timeSignature = project->timeSignature();
     timeSignature.upper = newUpper;
     project->setTimeSignature(timeSignature);
 }
@@ -48,25 +48,25 @@ void PlaybackToolBarTimeSignatureItem::setLower(int newLower)
     if (m_lower == newLower) {
         return;
     }
-
-    auto project = globalContext()->currentProcessingProject();
+    
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    processing::TimeSignature timeSignature = project->timeSignature();
+    trackedit::TimeSignature timeSignature = project->timeSignature();
     timeSignature.lower = newLower;
     project->setTimeSignature(timeSignature);
 }
 
 void PlaybackToolBarTimeSignatureItem::onProjectChanged()
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    project->timeSignatureChanged().onReceive(this, [this](const processing::TimeSignature&) {
+    project->timeSignatureChanged().onReceive(this, [this](const trackedit::TimeSignature&) {
         updateValues();
     });
 
@@ -75,12 +75,12 @@ void PlaybackToolBarTimeSignatureItem::onProjectChanged()
 
 void PlaybackToolBarTimeSignatureItem::updateValues()
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
 
-    processing::TimeSignature timeSignature = project->timeSignature();
+    trackedit::TimeSignature timeSignature = project->timeSignature();
 
     m_upper = timeSignature.upper;
     emit upperChanged();

@@ -72,7 +72,7 @@ QVariant TracksViewStateModel::trackId() const
 
 void TracksViewStateModel::setTrackId(const QVariant& _newTrackId)
 {
-    processing::TrackId newTrackId = _newTrackId.toInt();
+    trackedit::TrackId newTrackId = _newTrackId.toInt();
     if (m_trackId == newTrackId) {
         return;
     }

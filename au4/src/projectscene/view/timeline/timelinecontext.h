@@ -6,7 +6,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "processing/iselectioncontroller.h"
+#include "trackedit/iselectioncontroller.h"
 #include "iprojectsceneconfiguration.h"
 
 //! NOTE This class does two things:
@@ -35,7 +35,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
@@ -120,8 +120,8 @@ private:
     int m_timeSigUpper = 4;
     int m_timeSigLower = 4;
 
-    processing::secs_t m_selecitonStartTime = -1.0;
-    processing::secs_t m_selectionEndTime = -1.0;
+    trackedit::secs_t m_selecitonStartTime = -1.0;
+    trackedit::secs_t m_selectionEndTime = -1.0;
     bool m_selectionActive = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;

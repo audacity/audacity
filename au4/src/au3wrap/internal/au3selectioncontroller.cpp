@@ -27,15 +27,15 @@ void Au3SelectionController::resetSelectedTrack()
         au3Track->SetSelected(false);
     }
 
-    m_selectedTrack.set(au::processing::TrackId(), true);
+    m_selectedTrack.set(au::trackedit::TrackId(), true);
 }
 
-au::processing::TrackId Au3SelectionController::selectedTrack() const
+au::trackedit::TrackId Au3SelectionController::selectedTrack() const
 {
     return m_selectedTrack.val;
 }
 
-void Au3SelectionController::setSelectedTrack(processing::TrackId trackId)
+void Au3SelectionController::setSelectedTrack(trackedit::TrackId trackId)
 {
     MYLOG() << "track: " << trackId;
 
@@ -47,7 +47,7 @@ void Au3SelectionController::setSelectedTrack(processing::TrackId trackId)
     m_selectedTrack.set(trackId, true);
 }
 
-muse::async::Channel<au::processing::TrackId> Au3SelectionController::trackSelected() const
+muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::trackSelected() const
 {
     return m_selectedTrack.selected;
 }
@@ -55,21 +55,21 @@ muse::async::Channel<au::processing::TrackId> Au3SelectionController::trackSelec
 void Au3SelectionController::resetSelectedClip()
 {
     MYLOG() << "resetSelectedClip";
-    m_selectedClip.set(au::processing::ClipKey(), true);
+    m_selectedClip.set(au::trackedit::ClipKey(), true);
 }
 
-au::processing::ClipKey Au3SelectionController::selectedClip() const
+au::trackedit::ClipKey Au3SelectionController::selectedClip() const
 {
     return m_selectedClip.val;
 }
 
-void Au3SelectionController::setSelectedClip(const au::processing::ClipKey& clipKey)
+void Au3SelectionController::setSelectedClip(const au::trackedit::ClipKey& clipKey)
 {
     MYLOG() << "track: " << clipKey.trackId << ", clip: " << clipKey.index;
     m_selectedClip.set(clipKey, true);
 }
 
-muse::async::Channel<au::processing::ClipKey> Au3SelectionController::clipSelected() const
+muse::async::Channel<au::trackedit::ClipKey> Au3SelectionController::clipSelected() const
 {
     return m_selectedClip.selected;
 }
@@ -79,7 +79,7 @@ muse::async::Channel<au::processing::ClipKey> Au3SelectionController::clipSelect
 void Au3SelectionController::resetDataSelection()
 {
     MYLOG() << "resetDataSelection";
-    m_selectedTrackIds.set(std::vector<au::processing::TrackId>(), true);
+    m_selectedTrackIds.set(std::vector<au::trackedit::TrackId>(), true);
     m_selectedStartTime.set(-1.0, true);
     m_selectedEndTime.set(-1.0, true);
 }
@@ -89,69 +89,69 @@ bool Au3SelectionController::isDataSelected()
     return muse::RealIsEqualOrMore(m_selectedStartTime.val, 0.0) && m_selectedEndTime.val > 0.0;
 }
 
-std::vector<au::processing::TrackId> Au3SelectionController::dataSelectedOnTracks() const
+std::vector<au::trackedit::TrackId> Au3SelectionController::dataSelectedOnTracks() const
 {
     return m_selectedTrackIds.val;
 }
 
 void Au3SelectionController::setDataSelectedOnTracks(
-    const std::vector<au::processing::TrackId>& trackIds,
+    const std::vector<au::trackedit::TrackId>& trackIds,
     bool complete)
 {
     MYLOG() << "trackIds: " << trackIds << ", complete: " << complete;
     m_selectedTrackIds.set(trackIds, complete);
 }
 
-muse::async::Channel<std::vector<au::processing::TrackId> >
+muse::async::Channel<std::vector<au::trackedit::TrackId> >
 Au3SelectionController::dataSelectedOnTracksChanged() const
 {
     return m_selectedTrackIds.changed;
 }
 
-muse::async::Channel<std::vector<au::processing::TrackId> >
+muse::async::Channel<std::vector<au::trackedit::TrackId> >
 Au3SelectionController::dataSelectedOnTracksSelected() const
 {
     return m_selectedTrackIds.selected;
 }
 
-au::processing::secs_t Au3SelectionController::dataSelectedStartTime() const
+au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
 {
     return m_selectedStartTime.val;
 }
 
-void Au3SelectionController::setDataSelectedStartTime(au::processing::secs_t time, bool complete)
+void Au3SelectionController::setDataSelectedStartTime(au::trackedit::secs_t time, bool complete)
 {
     MYLOG() << "start time: " << time << ", complete: " << complete;
     m_selectedStartTime.set(time, complete);
 }
 
-muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelectedStartTimeChanged() const
+muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedStartTimeChanged() const
 {
     return m_selectedStartTime.changed;
 }
 
-muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelectedStartTimeSelected() const
+muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedStartTimeSelected() const
 {
     return m_selectedStartTime.selected;
 }
 
-au::processing::secs_t Au3SelectionController::dataSelectedEndTime() const
+au::trackedit::secs_t Au3SelectionController::dataSelectedEndTime() const
 {
     return m_selectedEndTime.val;
 }
 
-void Au3SelectionController::setDataSelectedEndTime(au::processing::secs_t time, bool complete)
+void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, bool complete)
 {
     MYLOG() << "end time: " << time << ", complete: " << complete;
     m_selectedEndTime.set(time, complete);
 }
 
-muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
+muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;
 }
 
-muse::async::Channel<au::processing::secs_t> Au3SelectionController::dataSelectedEndTimeSelected() const
+muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeSelected() const
 {
     return m_selectedEndTime.selected;
 }

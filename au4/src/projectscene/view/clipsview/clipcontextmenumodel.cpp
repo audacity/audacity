@@ -13,7 +13,7 @@ void ClipContextMenuModel::load()
 
     auto makeItemWithArg = [this](const ActionCode& actionCode) {
         MenuItem* item = makeMenuItem(actionCode);
-        item->setArgs(ActionData::make_arg1<processing::ClipKey>(m_clipKey.key));
+        item->setArgs(ActionData::make_arg1<trackedit::ClipKey>(m_clipKey.key));
         return item;
     };
 

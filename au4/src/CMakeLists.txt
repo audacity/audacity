@@ -38,7 +38,7 @@ if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)
 endif()
 
-add_subdirectory(processing)
+add_subdirectory(trackedit)
 
 if (AU_BUILD_PLAYBACK_MODULE)
     add_subdirectory(playback)

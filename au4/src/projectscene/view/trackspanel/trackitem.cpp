@@ -9,7 +9,7 @@
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace au::processing;
+using namespace au::trackedit;
 using namespace au::audio;
 
 static constexpr float BALANCE_SCALING_FACTOR = 100.f;
@@ -35,14 +35,14 @@ TrackItem::~TrackItem()
     // m_audioSignalChanges.resetOnReceive(this);
 }
 
-void TrackItem::init(const processing::Track& track)
+void TrackItem::init(const trackedit::Track& track)
 {
     m_trackId = track.id;
     m_trackType = track.type;
     setTitle(track.title);
 }
 
-au::processing::TrackId TrackItem::trackId() const
+au::trackedit::TrackId TrackItem::trackId() const
 {
     return m_trackId;
 }
@@ -59,9 +59,9 @@ QString TrackItem::title() const
 
 int TrackItem::channelCount() const {
     switch (m_trackType) {
-    case processing::TrackType::Mono:
+    case trackedit::TrackType::Mono:
         return 1;
-    case processing::TrackType::Stereo:
+    case trackedit::TrackType::Stereo:
         return 2;
     default:
        return 0;
@@ -258,7 +258,7 @@ void TrackItem::setMuted(bool mute)
     }
 }
 
-void TrackItem::setAudioChannelVolumePressure(const processing::audioch_t chNum, const float newValue)
+void TrackItem::setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue)
 {
     if (chNum == 0) {
         setLeftChannelPressure(newValue);

@@ -52,7 +52,7 @@
 #include "project/projectmodule.h"
 #include "projectscene/projectscenemodule.h"
 #include "playback/playbackmodule.h"
-#include "processing/processingmodule.h"
+#include "trackedit/trackeditmodule.h"
 #include "record/recordmodule.h"
 
 #include "au3wrap/au3wrapmodule.h"
@@ -125,7 +125,7 @@ int main(int argc, char** argv)
     app.addModule(new au::projectscene::ProjectSceneModule());
     app.addModule(new au::au3::Au3WrapModule());
     app.addModule(new au::playback::PlaybackModule());
-    app.addModule(new au::processing::ProcessingModule());
+    app.addModule(new au::trackedit::TrackeditModule());
     app.addModule(new au::record::RecordModule());
 
 #if (defined (_MSCVER) || defined (_MSC_VER))

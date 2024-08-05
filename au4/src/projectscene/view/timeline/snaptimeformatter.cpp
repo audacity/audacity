@@ -116,12 +116,12 @@ au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type,
 
 au::audio::secs_t SnapTimeFormatter::snapTimeBar(audio::secs_t time) const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }
 
-    processing::TimeSignature timeSig = project->timeSignature();
+    trackedit::TimeSignature timeSig = project->timeSignature();
 
     double quarterDuration = 60.0 / timeSig.tempo;
     double beatDuration = quarterDuration * 4.0 / timeSig.lower;
@@ -133,12 +133,12 @@ au::audio::secs_t SnapTimeFormatter::snapTimeBar(audio::secs_t time) const
 
 au::audio::secs_t SnapTimeFormatter::snapTimeBeats(audio::secs_t time, SnapType type, bool triplets) const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }
 
-    processing::TimeSignature timeSig = project->timeSignature();
+    trackedit::TimeSignature timeSig = project->timeSignature();
 
     double quarterDuration = 60.0 / timeSig.tempo;
 

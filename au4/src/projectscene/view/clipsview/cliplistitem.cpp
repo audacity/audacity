@@ -10,14 +10,14 @@ ClipListItem::ClipListItem(QObject* parent)
 {
 }
 
-void ClipListItem::setClip(const processing::Clip& clip)
+void ClipListItem::setClip(const trackedit::Clip& clip)
 {
     m_clip = clip;
 
     emit titleChanged();
 }
 
-const au::processing::Clip& ClipListItem::clip() const
+const au::trackedit::Clip& ClipListItem::clip() const
 {
     return m_clip;
 }

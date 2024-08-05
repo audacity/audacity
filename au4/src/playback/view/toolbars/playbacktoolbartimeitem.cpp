@@ -22,8 +22,8 @@ PlaybackToolBarTimeItem::PlaybackToolBarTimeItem(const muse::ui::UiAction& actio
         emit sampleRateChanged();
     });
 
-    globalContext()->currentProcessingProjectChanged().onNotify(this, [this](){
-        auto project = globalContext()->currentProcessingProject();
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
+        auto project = globalContext()->currentTrackeditProject();
         if (!project) {
             return;
         }
@@ -73,7 +73,7 @@ double PlaybackToolBarTimeItem::sampleRate() const
 
 double PlaybackToolBarTimeItem::tempo() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }
@@ -83,7 +83,7 @@ double PlaybackToolBarTimeItem::tempo() const
 
 int PlaybackToolBarTimeItem::upperTimeSignature() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0;
     }
@@ -93,7 +93,7 @@ int PlaybackToolBarTimeItem::upperTimeSignature() const
 
 int PlaybackToolBarTimeItem::lowerTimeSignature() const
 {
-    auto project = globalContext()->currentProcessingProject();
+    auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return 0.0;
     }

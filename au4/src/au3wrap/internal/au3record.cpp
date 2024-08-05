@@ -65,14 +65,14 @@ public:
     Notification updateRequested() { return m_updateRequested; }
     Notification commitRequested() { return m_commitRequested; }
     Notification finished() { return m_finished; }
-    async::Channel<processing::ClipKey> recordingClipChanged() { return m_recordingClipChanged; }
+    async::Channel<trackedit::ClipKey> recordingClipChanged() { return m_recordingClipChanged; }
 
 private:
     Notification m_updateRequested;
     Notification m_commitRequested;
     Notification m_finished;
 
-    async::Channel<processing::ClipKey> m_recordingClipChanged;
+    async::Channel<trackedit::ClipKey> m_recordingClipChanged;
 
     muse::Timer m_timer;
 };
@@ -236,7 +236,7 @@ void Au3Record::init()
         pendingTracks.UpdatePendingTracks();
     });
 
-    s_recordingListener->recordingClipChanged().onReceive(this, [this](const processing::ClipKey& clipKey) {
+    s_recordingListener->recordingClipChanged().onReceive(this, [this](const trackedit::ClipKey& clipKey) {
         Track* track = &PendingTracks::Get(projectRef())
                        .SubstitutePendingChangedTrack(*DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId)));
 
@@ -249,8 +249,8 @@ void Au3Record::init()
         IF_ASSERT_FAILED(clip) {
             return;
         }
-
-        processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+        
+        trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
     });
 
@@ -522,7 +522,7 @@ bool Au3Record::doRecord(AudacityProject& project,
                     transportSequences.prerollSequences.push_back(shared);
                 }
 
-                processing::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), wt->Intervals().size());
+                trackedit::ClipKey newClipKey(DomConverter::trackId(wt->GetId()), wt->Intervals().size());
 
                 // A function that copies all the non-sample data between
                 // wave tracks; in case the track recorded to changes scale
@@ -575,8 +575,8 @@ bool Au3Record::doRecord(AudacityProject& project,
                 }
                 transportSequences.captureSequences.push_back(pending->SharedPointer<WaveTrack>());
 
-                processing::Clip _newClip = DomConverter::clip(pending, newClip.get(), newClipKey.index);
-                processing::ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+                trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get(), newClipKey.index);
+                trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
                 prj->onClipAdded(_newClip);
             }
             pendingTracks.UpdatePendingTracks();

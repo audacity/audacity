@@ -12,7 +12,7 @@ set(MODULE_TEST_SRC
 set(MODULE_TEST_LINK
     playback
     record
-    processing
+    trackedit
 
     muse::uicomponents
     muse::ui

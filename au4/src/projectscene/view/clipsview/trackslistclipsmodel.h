@@ -10,9 +10,9 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "iprojectsceneconfiguration.h"
-#include "processing/iselectioncontroller.h"
+#include "trackedit/iselectioncontroller.h"
 
-#include "processing/dom/track.h"
+#include "trackedit/dom/track.h"
 
 namespace au::projectscene {
 class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyncable
@@ -23,7 +23,7 @@ class TracksListClipsModel : public QAbstractListModel, public muse::async::Asyn
 
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<IProjectSceneConfiguration> configuration;
-    muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
 
 public:
 
@@ -50,10 +50,10 @@ private:
         IsDataSelectedRole
     };
 
-    void setDataSelectedTracks(const std::vector<processing::TrackId>& tracks);
+    void setDataSelectedTracks(const std::vector<trackedit::TrackId>& tracks);
 
-    muse::async::NotifyList<au::processing::Track> m_trackList;
-    std::vector<processing::TrackId> m_dataSelectedTracks;
+    muse::async::NotifyList<au::trackedit::Track> m_trackList;
+    std::vector<trackedit::TrackId> m_dataSelectedTracks;
     bool m_isVerticalRulersVisible = false;
 };
 }

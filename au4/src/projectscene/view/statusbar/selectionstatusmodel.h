@@ -9,7 +9,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
-#include "processing/iselectioncontroller.h"
+#include "trackedit/iselectioncontroller.h"
 #include "playback/iplayback.h"
 
 namespace au::projectscene {
@@ -30,7 +30,7 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY isEnabledChanged)
 
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<processing::ISelectionController> selectionController;
+    muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<playback::IPlayback> playback;
 
 public:

@@ -10,7 +10,7 @@
 #include "log.h"
 
 using namespace au::projectscene;
-using namespace au::processing;
+using namespace au::trackedit;
 
 constexpr int CACHE_BUFFER_PX = 200;
 constexpr double MOVE_MAX = 100000.0;
@@ -30,7 +30,7 @@ void ClipsListModel::init()
     dispatcher()->reg(this, "clip-rename", this, &ClipsListModel::onClipRenameAction);
 
     onSelectedClip(selectionController()->selectedClip());
-    selectionController()->clipSelected().onReceive(this, [this](const processing::ClipKey& k) {
+    selectionController()->clipSelected().onReceive(this, [this](const trackedit::ClipKey& k) {
         onSelectedClip(k);
     });
 
@@ -39,7 +39,7 @@ void ClipsListModel::init()
 
 void ClipsListModel::reload()
 {
-    ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
+    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -72,8 +72,8 @@ void ClipsListModel::reload()
     });
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
-        ProcessingProjectPtr prj = globalContext()->currentProcessingProject();
-        muse::async::NotifyList<au::processing::Clip> newList = prj->clipList(m_trackId);
+        TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        muse::async::NotifyList<au::trackedit::Clip> newList = prj->clipList(m_trackId);
         for (size_t i = 0; i < newList.size(); ++i) {
             if (newList.at(i).key != clip.key) {
                 continue;
@@ -102,7 +102,7 @@ void ClipsListModel::reload()
     update();
 }
 
-ClipListItem* ClipsListModel::itemByKey(const processing::ClipKey& k) const
+ClipListItem* ClipsListModel::itemByKey(const trackedit::ClipKey& k) const
 {
     for (ClipListItem* item : std::as_const(m_clipList)) {
         if (item->clip().key != k) {
@@ -123,7 +123,7 @@ void ClipsListModel::update()
 
     m_clipList.clear();
 
-    for (const au::processing::Clip& c : m_allClipList) {
+    for (const au::trackedit::Clip& c : m_allClipList) {
         ClipListItem* item = new ClipListItem(this);
         item->setClip(c);
         m_clipList.append(item);
@@ -153,7 +153,7 @@ void ClipsListModel::updateItemsMetrics(ClipListItem* item)
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = CACHE_BUFFER_PX / m_context->zoom();
 
-    const processing::Clip& clip = item->clip();
+    const trackedit::Clip& clip = item->clip();
 
     ClipTime time;
     time.clipStartTime = clip.startTime;
@@ -223,7 +223,7 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
         return;
     }
 
-    processing::ClipKey key = args.arg<processing::ClipKey>(0);
+    trackedit::ClipKey key = args.arg<trackedit::ClipKey>(0);
 
     if (key.trackId != m_trackId) {
         return;
@@ -238,7 +238,7 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
 
 bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)
 {
-    bool ok = processingInteraction()->changeClipTitle(key.key, newTitle);
+    bool ok = trackeditInteraction()->changeClipTitle(key.key, newTitle);
     return ok;
 }
 
@@ -250,8 +250,8 @@ bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
     }
 
     double deltaSec = deltaX / m_context->zoom();
-
-    bool ok = processingInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec, completed);
+    
+    bool ok = trackeditInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec, completed);
     return ok;
 }
 
@@ -273,7 +273,7 @@ void ClipsListModel::resetSelectedClip()
     selectionController()->resetSelectedClip();
 }
 
-void ClipsListModel::onSelectedClip(const processing::ClipKey& k)
+void ClipsListModel::onSelectedClip(const trackedit::ClipKey& k)
 {
     if (m_selectedItem && m_selectedItem->clip().key == k) {
         return;
@@ -300,7 +300,7 @@ QVariant ClipsListModel::trackId() const
 
 void ClipsListModel::setTrackId(const QVariant& _newTrackId)
 {
-    processing::TrackId newTrackId = _newTrackId.toInt();
+    trackedit::TrackId newTrackId = _newTrackId.toInt();
     if (m_trackId == newTrackId) {
         return;
     }
