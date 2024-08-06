@@ -36,6 +36,8 @@ Dial {
     signal newValueRequested(real newValue)
     signal increaseRequested()
     signal decreaseRequested()
+    signal mouseEntered()
+    signal mouseExited()
 
     QtObject {
         id: prv
@@ -60,6 +62,7 @@ Dial {
         property real initialValue: 0
         property real dragStartX: 0
         property real dragStartY: 0
+        property bool dragActive: false
 
         function requestNewValue(newValue) {
             newValue = Math.max(root.from, Math.min(newValue, root.to))
@@ -176,6 +179,7 @@ Dial {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
+        hoverEnabled: true
         onDoubleClicked: {
             prv.requestNewValue(0)
         }
@@ -194,16 +198,37 @@ Dial {
             prv.initialValue = root.value
             prv.dragStartX = mouse.x
             prv.dragStartY = mouse.y
+            prv.dragActive = true
+        }
+
+        onEntered: {
+            mouseEntered()
+        }
+
+        onExited: {
+            // Consider the mouse is still inside,
+            // if we are dragging outside
+            if (!prv.dragActive) {
+                mouseExited()
+            }
+        }
+
+        onReleased: {
+            prv.dragActive = false
+            if (!containsMouse) {
+                mouseExited()
+            }
         }
 
         onPositionChanged: function(mouse)  {
-            let dx = mouse.x - prv.dragStartX
-            let dy = mouse.y - prv.dragStartY
-            let dist = Math.sqrt(dx * dx + dy * dy)
-            let sgn = (dy < dx) ? 1 : -1
-            let newValue = prv.initialValue + dist * root.stepSize * sgn
-
-            prv.requestNewValue(newValue)
+            if (prv.dragActive) {
+                let dx = mouse.x - prv.dragStartX
+                let dy = mouse.y - prv.dragStartY
+                let dist = Math.sqrt(dx * dx + dy * dy)
+                let sgn = (dy < dx) ? 1 : -1
+                let newValue = prv.initialValue + dist * root.stepSize * sgn
+                prv.requestNewValue(newValue)
+            }
         }
 
         // We also listen for wheel events here, but for a different reason:

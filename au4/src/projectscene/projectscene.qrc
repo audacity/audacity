@@ -11,6 +11,8 @@
         <file>qml/Audacity/ProjectScene/trackspanel/TracksControlPanel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/KnobControl.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/audio/BalanceKnob.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/audio/BalanceTooltip.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureMeter.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/clipsview/PlayCursor.qml</file>
