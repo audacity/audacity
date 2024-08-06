@@ -26,19 +26,20 @@
 
 #include "au3audioinput.h"
 
-#include "domconverter.h"
-#include "domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/domaccessor.h"
 
 #include "log.h"
 
 using namespace muse;
 using namespace muse::async;
+using namespace au::record;
 using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
-namespace au::au3 {
+namespace au::record {
 class RecordingListener : public AudioIOListener, public async::Asyncable
 {
 public:
@@ -249,7 +250,7 @@ void Au3Record::init()
         IF_ASSERT_FAILED(clip) {
             return;
         }
-        
+
         trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
     });
@@ -434,7 +435,7 @@ void Au3Record::stop()
     }
 }
 
-IAu3AudioInputPtr Au3Record::audioInput() const
+IAudioInputPtr Au3Record::audioInput() const
 {
     return m_audioInput;
 }

@@ -64,31 +64,31 @@ void RecordController::toggleRecord()
 
 void RecordController::start()
 {
-    IF_ASSERT_FAILED(au3Record()) {
+    IF_ASSERT_FAILED(record()) {
         return;
     }
-
-    au3Record()->start();
+    
+    record()->start();
     setCurrentRecordStatus(RecordStatus::Running);
 }
 
 void RecordController::pause()
 {
-    IF_ASSERT_FAILED(au3Record()) {
+    IF_ASSERT_FAILED(record()) {
         return;
     }
-
-    au3Record()->pause();
+    
+    record()->pause();
     setCurrentRecordStatus(RecordStatus::Paused);
 }
 
 void RecordController::stop()
 {
-    IF_ASSERT_FAILED(au3Record()) {
+    IF_ASSERT_FAILED(record()) {
         return;
     }
-
-    au3Record()->stop();
+    
+    record()->stop();
     setCurrentRecordStatus(RecordStatus::Stopped);
 }
 

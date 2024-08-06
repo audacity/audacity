@@ -1,8 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_AU3WRAP_PROJECTMODULE_H
-#define AU_AU3WRAP_PROJECTMODULE_H
+#pragma once
 
 #include "modularity/imodulesetup.h"
 
@@ -25,9 +24,6 @@ private:
     WxLogWrap* m_wxLog = nullptr;
 
     std::shared_ptr<Au3Playback> m_playback;
-    std::shared_ptr<Au3Record> m_record;
     std::shared_ptr<Au3AudioDevicesProvider> m_audioDevicesProvider;
 };
 }
-
-#endif // AU_AU3WRAP_PROJECTMODULE_H

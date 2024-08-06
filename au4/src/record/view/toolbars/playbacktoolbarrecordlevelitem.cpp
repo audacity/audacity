@@ -6,7 +6,6 @@
 #include <QVariantMap>
 
 using namespace au::record;
-using namespace au::au3;
 using namespace au::audio;
 
 PlaybackToolBarRecordLevelItem::PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action,

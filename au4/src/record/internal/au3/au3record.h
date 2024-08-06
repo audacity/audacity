@@ -2,23 +2,22 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AU3RECORD_H
-#define AU_AU3WRAP_AU3RECORD_H
+#pragma once
 
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "../iau3record.h"
+#include "../../irecord.h"
 
 class AudacityProject;
 class TransportSequences;
 struct AudioIOStartStreamOptions;
 
-namespace au::au3 {
+namespace au::record {
 class InOutMeter;
-class Au3Record : public IAu3Record, public muse::async::Asyncable
+class Au3Record : public IRecord, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -29,7 +28,7 @@ public:
     void pause() override;
     void stop() override;
 
-    IAu3AudioInputPtr audioInput() const override;
+    IAudioInputPtr audioInput() const override;
 
 private:
     AudacityProject& projectRef() const;
@@ -41,8 +40,6 @@ private:
 
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 
-    IAu3AudioInputPtr m_audioInput;
+    IAudioInputPtr m_audioInput;
 };
 }
-
-#endif // AU_AU3WRAP_AU3RECORD_H
