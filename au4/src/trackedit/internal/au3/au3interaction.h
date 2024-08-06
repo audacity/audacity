@@ -1,18 +1,21 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
-#include "trackedit/itrackeditinteraction.h"
+#include "../../itrackeditinteraction.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
 class AudacityProject;
-namespace au::au3 {
-class TrackeditInteraction : public trackedit::ITrackeditInteraction
+namespace au::trackedit {
+class Au3Interaction : public ITrackeditInteraction
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
 public:
-    TrackeditInteraction() = default;
+    Au3Interaction() = default;
 
     audio::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
 

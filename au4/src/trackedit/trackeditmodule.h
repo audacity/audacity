@@ -1,8 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_PROСESSING_PROСESSINGMODULE_H
-#define AU_PROСESSING_PROСESSINGMODULE_H
+#pragma once
 
 #include "modularity/imodulesetup.h"
 
@@ -24,5 +23,3 @@ private:
     std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
 };
 }
-
-#endif // AU_PROСESSING_PROСESSINGMODULE_H

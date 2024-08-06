@@ -14,7 +14,7 @@
 #define MYLOG LOGN
 #endif
 
-using namespace au::au3;
+using namespace au::trackedit;
 
 // clip selection
 
@@ -22,8 +22,8 @@ void Au3SelectionController::resetSelectedTrack()
 {
     MYLOG() << "resetSelectedTrack";
 
-    auto& tracks = TrackList::Get(projectRef());
-    for (Track* au3Track : tracks) {
+    auto& tracks = ::TrackList::Get(projectRef());
+    for (::Track* au3Track : tracks) {
         au3Track->SetSelected(false);
     }
 
@@ -39,9 +39,9 @@ void Au3SelectionController::setSelectedTrack(trackedit::TrackId trackId)
 {
     MYLOG() << "track: " << trackId;
 
-    auto& tracks = TrackList::Get(projectRef());
-    for (Track* au3Track : tracks) {
-        au3Track->SetSelected(au3Track->GetId() == TrackId(trackId));
+    auto& tracks = ::TrackList::Get(projectRef());
+    for (::Track* au3Track : tracks) {
+        au3Track->SetSelected(au3Track->GetId() == ::TrackId(trackId));
     }
 
     m_selectedTrack.set(trackId, true);

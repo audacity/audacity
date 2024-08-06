@@ -26,6 +26,10 @@
 #include "internal/trackedituiactions.h"
 #include "internal/trackeditactionscontroller.h"
 
+#include "internal/au3/au3trackeditproject.h"
+#include "internal/au3/au3interaction.h"
+#include "internal/au3/au3selectioncontroller.h"
+
 #include "ui/iuiactionsregister.h"
 
 using namespace au::trackedit;
@@ -45,6 +49,9 @@ void TrackeditModule::registerExports()
     m_trackeditUiActions = std::make_shared<TrackeditUiActions>(m_trackeditController);
 
     ioc()->registerExport<ITrackeditActionsController>(moduleName(), m_trackeditController);
+    ioc()->registerExport<ITrackeditProjectCreator>(moduleName(), new Au3TrackeditProjectCreator());
+    ioc()->registerExport<ITrackeditInteraction>(moduleName(), new Au3Interaction());
+    ioc()->registerExport<ISelectionController>(moduleName(), new Au3SelectionController());
 }
 
 void TrackeditModule::resolveImports()

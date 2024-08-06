@@ -111,7 +111,7 @@ IProjectViewStatePtr SelectionViewController::viewState() const
 
 std::vector<TrackId> SelectionViewController::trackIdList() const
 {
-    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     return prj ? prj->trackIdList() : std::vector<TrackId>();
 }
 

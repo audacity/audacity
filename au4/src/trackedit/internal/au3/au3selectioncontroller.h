@@ -3,14 +3,14 @@
 */
 #pragma once
 
+#include "../../iselectioncontroller.h"
+
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "trackedit/iselectioncontroller.h"
-
 class AudacityProject;
-namespace au::au3 {
-class Au3SelectionController : public trackedit::ISelectionController
+namespace au::trackedit {
+class Au3SelectionController : public ISelectionController
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 

@@ -20,8 +20,8 @@ public:
     virtual void setCurrentProject(const au::project::IAudacityProjectPtr& project) = 0;
     virtual au::project::IAudacityProjectPtr currentProject() const = 0;
     virtual muse::async::Notification currentProjectChanged() const = 0;
-    
-    virtual au::trackedit::TrackeditProjectPtr currentTrackeditProject() const = 0;
+
+    virtual au::trackedit::ITrackeditProjectPtr currentTrackeditProject() const = 0;
     virtual muse::async::Notification currentTrackeditProjectChanged() const = 0;
 
     virtual void setPlayer(const au::playback::IPlayerPtr& player) = 0;

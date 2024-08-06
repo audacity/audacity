@@ -19,7 +19,7 @@ static QString projectDefaultTitle()
 
 Audacity4Project::Audacity4Project()
 {
-    m_trackeditProject = std::make_shared<TrackeditProject>();
+    m_trackeditProject = trackeditProjectCreator()->create();
 }
 
 muse::Ret Audacity4Project::load(const muse::io::path_t& path, bool forceMode, const std::string& format_)
@@ -70,11 +70,6 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, bool forceMode, const
     }
 
     LOGI() << "success loaded au3 project: " << m_au3Project->title();
-
-    m_trackeditProject = std::make_shared<trackedit::TrackeditProject>();
-    m_trackeditProject->setAudacity3Project(m_au3Project);
-
-    m_trackeditProject->dump();
 
     //! NOTE At the moment, view state don't saved and loaded
     m_viewState = viewStateCreator()->createViewState();
@@ -402,7 +397,7 @@ void Audacity4Project::setNeedSave(bool needSave)
     // m_needSaveNotification.notify();
 }
 
-const TrackeditProjectPtr Audacity4Project::trackeditProject() const
+const ITrackeditProjectPtr Audacity4Project::trackeditProject() const
 {
     return m_trackeditProject;
 }

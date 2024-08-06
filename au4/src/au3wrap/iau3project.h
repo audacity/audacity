@@ -8,12 +8,9 @@
 
 #include "modularity/imoduleinterface.h"
 #include "global/io/path.h"
-#include "async/notifylist.h"
-#include "async/channel.h"
-
-#include "trackedit/dom/track.h"
 
 namespace au::au3 {
+//! NOTE It's exactly IAu3Project, not just IProject
 class IAu3Project
 {
 public:
@@ -25,16 +22,6 @@ public:
     virtual void close() = 0;
 
     virtual std::string title() const = 0;
-
-    virtual std::vector<trackedit::TrackId> trackIdList() const = 0;
-    virtual muse::async::NotifyList<trackedit::Track> trackList() const = 0;
-    virtual muse::async::NotifyList<trackedit::Clip> clipList(const trackedit::TrackId& trackId) const = 0;
-
-    virtual trackedit::TimeSignature timeSignature() const = 0;
-    virtual void setTimeSignature(const trackedit::TimeSignature& timeSignature) = 0;
-    virtual muse::async::Channel<au::trackedit::TimeSignature> timeSignatureChanged() const = 0;
-
-    virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
 
     // internal
     virtual uintptr_t au3ProjectPtr() const = 0;
