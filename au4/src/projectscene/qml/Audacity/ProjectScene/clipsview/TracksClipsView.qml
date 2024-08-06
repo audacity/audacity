@@ -45,6 +45,11 @@ Rectangle {
         context: timeline.context
     }
 
+    PlayPositionActionController {
+        id: playPositionActionController
+        context: timeline.context
+    }
+
     SelectionViewController {
         id: selectionController
         context: timeline.context
@@ -62,6 +67,7 @@ Rectangle {
     function init() {
         timeline.init()
         playCursorController.init()
+        playPositionActionController.init()
         tracksViewState.init()
         project.init()
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
@@ -255,7 +261,7 @@ Rectangle {
             z: 2
             timelinePressed: timelineMouseArea.pressed
 
-            onSetPlayCursorPosition: function(ix) {
+            onSetPlaybackPosition: function(ix) {
                 playCursorController.seekToX(ix)
             }
 

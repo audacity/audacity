@@ -33,7 +33,7 @@ Rectangle {
         anchors.bottom: parent.bottom
     }
 
-    signal setPlayCursorPosition(real x)
+    signal setPlaybackPosition(real x)
     signal playCursorMousePositionChanged(real x)
 
     Canvas {
@@ -58,7 +58,7 @@ Rectangle {
             onPositionChanged: function(e) {
                 var ix = mapToItem(root.parent, e.x, e.y).x
                 if (pressed) {
-                    setPlayCursorPosition(ix)
+                    setPlaybackPosition(ix)
                 }
                 playCursorMousePositionChanged(ix)
             }
