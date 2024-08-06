@@ -39,7 +39,7 @@ void ClipsListModel::init()
 
 void ClipsListModel::reload()
 {
-    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -72,7 +72,7 @@ void ClipsListModel::reload()
     });
 
     m_allClipList.onItemAdded(this, [this](const Clip& clip) {
-        TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         muse::async::NotifyList<au::trackedit::Clip> newList = prj->clipList(m_trackId);
         for (size_t i = 0; i < newList.size(); ++i) {
             if (newList.at(i).key != clip.key) {
@@ -250,7 +250,7 @@ bool ClipsListModel::moveClip(const ClipKey& key, double deltaX, bool completed)
     }
 
     double deltaSec = deltaX / m_context->zoom();
-    
+
     bool ok = trackeditInteraction()->changeClipStartTime(key.key, item->clip().startTime + deltaSec, completed);
     return ok;
 }

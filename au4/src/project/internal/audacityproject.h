@@ -7,6 +7,7 @@
 #include "au3wrap/iau3project.h"
 #include "io/ifilesystem.h"
 #include "projectscene/iprojectviewstatecreator.h"
+#include "trackedit/itrackeditproject.h"
 
 namespace au::au3 {
 class Au3Project;
@@ -38,6 +39,7 @@ namespace au::project {
 class Audacity4Project : public IAudacityProject
 {
     muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
+    muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
     muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
     muse::Inject<context::IGlobalContext> globalContext;
@@ -69,7 +71,7 @@ public:
 
     muse::async::Notification captureThumbnailRequested() const override;
 
-    const au::trackedit::TrackeditProjectPtr trackeditProject() const override;
+    const au::trackedit::ITrackeditProjectPtr trackeditProject() const override;
 
     projectscene::IProjectViewStatePtr viewState() const override;
 
@@ -102,7 +104,7 @@ private:
 
     std::shared_ptr<au::au3::IAu3Project> m_au3Project;
 
-    trackedit::TrackeditProjectPtr m_trackeditProject;
+    trackedit::ITrackeditProjectPtr m_trackeditProject;
 
     projectscene::IProjectViewStatePtr m_viewState;
 };

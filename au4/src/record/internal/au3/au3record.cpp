@@ -251,7 +251,7 @@ void Au3Record::init()
             return;
         }
 
-        trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
     });
 
@@ -577,7 +577,7 @@ bool Au3Record::doRecord(AudacityProject& project,
                 transportSequences.captureSequences.push_back(pending->SharedPointer<WaveTrack>());
 
                 trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get(), newClipKey.index);
-                trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+                trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
                 prj->onClipAdded(_newClip);
             }
             pendingTracks.UpdatePendingTracks();

@@ -1,4 +1,4 @@
-#include "trackeditinteraction.h"
+#include "au3interaction.h"
 
 #include <algorithm>
 
@@ -8,23 +8,24 @@
 #include "libraries/lib-track/Track.h"
 #include "libraries/lib-wave-track/WaveClip.h"
 
-#include "domaccessor.h"
-#include "domconverter.h"
-#include "wxtypes_convert.h"
+#include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domconverter.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
 
+using namespace au::trackedit;
 using namespace au::au3;
 
-AudacityProject& TrackeditInteraction::projectRef() const
+AudacityProject& Au3Interaction::projectRef() const
 {
     AudacityProject* project = reinterpret_cast<AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
     return *project;
 }
 
-au::audio::secs_t TrackeditInteraction::clipStartTime(const trackedit::ClipKey& clipKey) const
+au::audio::secs_t Au3Interaction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return -1.0;
     }
@@ -37,9 +38,9 @@ au::audio::secs_t TrackeditInteraction::clipStartTime(const trackedit::ClipKey& 
     return clip->Start();
 }
 
-bool TrackeditInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey, double newStartTime, bool completed)
+bool Au3Interaction::changeClipStartTime(const trackedit::ClipKey& clipKey, double newStartTime, bool completed)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -122,7 +123,7 @@ bool TrackeditInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey
     //        << " clip: " << clipKey.index
     //        << " new PlayStartTime: " << newStartTime;
 
-    trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
 
     m_clipStartTimeChanged.send(clipKey, newStartTime, completed);
@@ -131,14 +132,14 @@ bool TrackeditInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey
 }
 
 muse::async::Channel<au::trackedit::ClipKey, double /*newStartTime*/, bool /*completed*/>
-TrackeditInteraction::clipStartTimeChanged() const
+Au3Interaction::clipStartTimeChanged() const
 {
     return m_clipStartTimeChanged;
 }
 
-bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
+bool Au3Interaction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -151,15 +152,15 @@ bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, co
     clip->SetName(wxFromString(newTitle));
     LOGD() << "changed name of clip: " << clipKey.index << ", track: " << clipKey.trackId;
 
-    trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
 
     return true;
 }
 
-bool TrackeditInteraction::removeClip(const trackedit::ClipKey& clipKey)
+bool Au3Interaction::removeClip(const trackedit::ClipKey& clipKey)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -171,15 +172,15 @@ bool TrackeditInteraction::removeClip(const trackedit::ClipKey& clipKey)
 
     clip->Clear(clip->Start(), clip->End());
 
-    trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
 
     return true;
 }
 
-bool TrackeditInteraction::removeClipData(const trackedit::ClipKey& clipKey, double begin, double end)
+bool Au3Interaction::removeClipData(const trackedit::ClipKey& clipKey, double begin, double end)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return false;
     }
@@ -194,7 +195,7 @@ bool TrackeditInteraction::removeClipData(const trackedit::ClipKey& clipKey, dou
 
     clip->Clear(begin, end);
 
-    trackedit::TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (begin <= initialClipStart && end >= initialClipEnd) {
         prj->onClipRemoved(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
     } else {
@@ -204,9 +205,9 @@ bool TrackeditInteraction::removeClipData(const trackedit::ClipKey& clipKey, dou
     return true;
 }
 
-au::audio::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
+au::audio::secs_t Au3Interaction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), TrackId(clipKey.trackId));
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
         return -1.0;
     }

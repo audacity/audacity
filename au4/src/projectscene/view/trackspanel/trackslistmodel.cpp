@@ -55,8 +55,8 @@ void TracksListModel::load()
 
     beginResetModel();
     deleteItems();
-    
-    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
     }
@@ -443,8 +443,8 @@ void TracksListModel::onProjectChanged()
         m_projectChangedWhileLoadingWasBlocked = true;
         return;
     }
-    
-    TrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     if (prj) {
         load();

@@ -16,8 +16,8 @@ public:
     void setCurrentProject(const au::project::IAudacityProjectPtr& project) override;
     au::project::IAudacityProjectPtr currentProject() const override;
     muse::async::Notification currentProjectChanged() const override;
-    
-    au::trackedit::TrackeditProjectPtr currentTrackeditProject() const override;
+
+    au::trackedit::ITrackeditProjectPtr currentTrackeditProject() const override;
     muse::async::Notification currentTrackeditProjectChanged() const override;
 
     void setPlayer(const au::playback::IPlayerPtr& player) override;

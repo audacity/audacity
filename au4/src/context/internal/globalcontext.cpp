@@ -49,7 +49,7 @@ muse::async::Notification GlobalContext::currentProjectChanged() const
     return m_currentProjectChanged;
 }
 
-au::trackedit::TrackeditProjectPtr GlobalContext::currentTrackeditProject() const
+au::trackedit::ITrackeditProjectPtr GlobalContext::currentTrackeditProject() const
 {
     return m_currentProject ? m_currentProject->trackeditProject() : nullptr;
 }
