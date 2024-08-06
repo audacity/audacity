@@ -2,21 +2,23 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AU3AUDIOINPUT_H
-#define AU_AU3WRAP_AU3AUDIOINPUT_H
+#pragma once
 
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "../iau3audioinput.h"
+#include "../../iaudioinput.h"
 
 class AudacityProject;
 
 namespace au::au3 {
 class InOutMeter;
-class Au3AudioInput : public IAu3AudioInput, public muse::async::Asyncable
+}
+
+namespace au::record {
+class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -36,8 +38,6 @@ private:
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 
-    std::shared_ptr<InOutMeter> m_inputMeter;
+    std::shared_ptr<au3::InOutMeter> m_inputMeter;
 };
 }
-
-#endif // AU_AU3WRAP_AU3AUDIOINPUT_H

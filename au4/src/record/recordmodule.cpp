@@ -13,6 +13,7 @@
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recorduiactions.h"
+#include "internal/au3/au3record.h"
 
 using namespace au::record;
 using namespace muse;
@@ -35,9 +36,11 @@ void RecordModule::registerExports()
     m_configuration = std::make_shared<RecordConfiguration>();
     m_controller = std::make_shared<RecordController>();
     m_uiActions = std::make_shared<RecordUiActions>(m_controller);
+    m_record = std::make_shared<Au3Record>();
 
     ioc()->registerExport<IRecordConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecordController>(moduleName(), m_controller);
+    ioc()->registerExport<IRecord>(moduleName(), m_record);
 }
 
 void RecordModule::resolveImports()
@@ -61,6 +64,7 @@ void RecordModule::onInit(const IApplication::RunMode& mode)
 
     m_controller->init();
     m_uiActions->init();
+    m_record->init();
 }
 
 void RecordModule::onDeinit()

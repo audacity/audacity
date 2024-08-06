@@ -11,9 +11,9 @@
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iinteractive.h"
-#include "au3wrap/iau3record.h"
 #include "playback/iplaybackcontroller.h"
 
+#include "../irecord.h"
 #include "../irecordcontroller.h"
 
 namespace au::record {
@@ -22,7 +22,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au3::IAu3Record> au3Record;
+    muse::Inject<IRecord> record;
     muse::Inject<playback::IPlaybackController> playbackController;
 
 public:

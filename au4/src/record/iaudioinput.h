@@ -2,8 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_IAU3AUDIOINPUT_H
-#define AU_AU3WRAP_IAU3AUDIOINPUT_H
+#pragma once
 
 #include <memory>
 
@@ -12,11 +11,11 @@
 
 #include "playback/audiotypes.h"
 
-namespace au::au3 {
-class IAu3AudioInput
+namespace au::record {
+class IAudioInput
 {
 public:
-    virtual ~IAu3AudioInput() = default;
+    virtual ~IAudioInput() = default;
 
     virtual muse::async::Promise<float> recordVolume() const = 0;
     virtual void setRecordVolume(float volume) = 0;
@@ -25,7 +24,6 @@ public:
     virtual muse::async::Promise<muse::async::Channel<audio::audioch_t, audio::AudioSignalVal>> recordSignalChanges() const = 0;
 };
 
-using IAu3AudioInputPtr = std::shared_ptr<IAu3AudioInput>;
+using IAudioInputPtr = std::shared_ptr<IAudioInput>;
 }
 
-#endif // AU_AU3WRAP_IAU3AUDIOINPUT_H

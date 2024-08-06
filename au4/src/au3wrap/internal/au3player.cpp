@@ -14,8 +14,6 @@
 
 #include "wxtypes_convert.h"
 
-#include "internal/au3audioinput.h"
-
 #include "log.h"
 
 using namespace au::au3;

@@ -12,6 +12,7 @@ namespace au::record {
 class RecordConfiguration;
 class RecordController;
 class RecordUiActions;
+class Au3Record;
 class RecordModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -27,6 +28,7 @@ private:
     std::shared_ptr<RecordConfiguration> m_configuration;
     std::shared_ptr<RecordController> m_controller;
     std::shared_ptr<RecordUiActions> m_uiActions;
+    std::shared_ptr<Au3Record> m_record;
 };
 }
 

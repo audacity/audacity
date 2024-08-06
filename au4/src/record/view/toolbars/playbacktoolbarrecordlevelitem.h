@@ -7,7 +7,7 @@
 #include <QString>
 
 #include "modularity/ioc.h"
-#include "au3wrap/iau3record.h"
+#include "record/irecord.h"
 #include "record/irecordcontroller.h"
 
 #include "uicomponents/view/toolbaritem.h"
@@ -27,11 +27,12 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(float rightRecentPeak READ rightRecentPeak NOTIFY rightRecentPeakChanged FINAL)
     Q_PROPERTY(float rightMaxPeak READ rightMaxPeak NOTIFY rightMaxPeakChanged FINAL)
 
-    muse::Inject<au3::IAu3Record> record;
+    muse::Inject<record::IRecord> record;
     muse::Inject<record::IRecordController> recordController;
 
 public:
-    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type, QObject* parent = nullptr);
+    explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+                                            QObject* parent = nullptr);
 
     int level() const;
     void setLevel(int newLevel);
