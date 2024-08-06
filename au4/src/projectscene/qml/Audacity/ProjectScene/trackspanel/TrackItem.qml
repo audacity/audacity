@@ -109,6 +109,21 @@ ListItemBlank {
 
                 spacing: 16
 
+                BalanceKnob {
+                    value: root.item.balance
+
+                    onNewValueRequested: function(newValue) {
+                        root.item.balance = newValue
+                    }
+                }
+
+                StyledSlider {
+                    Layout.fillWidth: true
+
+                    value: root.item.volumeLevel
+                }
+
+
                 RowLayout {
                     Layout.fillWidth: true
 
@@ -136,24 +151,6 @@ ListItemBlank {
                         onToggled: {
                             root.item.solo = !checked
                         }
-                    }
-                }
-
-                StyledSlider {
-                    Layout.fillWidth: true
-
-                    value: root.item.volumeLevel
-                }
-
-                KnobControl {
-                    from: -100
-                    to: 100
-                    value: root.item.balance
-                    stepSize: 1
-                    isBalanceKnob: true
-
-                    onNewValueRequested: function(newValue) {
-                        root.item.balance = newValue
                     }
                 }
             }
