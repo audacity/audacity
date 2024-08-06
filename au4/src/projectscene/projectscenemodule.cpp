@@ -34,6 +34,7 @@
 #include "view/timeline/gridlines.h"
 
 #include "view/playcursor/playcursorcontroller.h"
+#include "view/playcursor/playpositionactioncontroller.h"
 
 #include "view/statusbar/selectionstatusmodel.h"
 
@@ -118,6 +119,7 @@ void ProjectSceneModule::registerUiTypes()
 
     // play cursor
     qmlRegisterType<PlayCursorController>("Audacity.ProjectScene", 1, 0, "PlayCursorController");
+    qmlRegisterType<PlayPositionActionController>("Audacity.ProjectScene", 1, 0, "PlayPositionActionController");
 
     // status bar
     qmlRegisterType<SelectionStatusModel>("Audacity.ProjectScene", 1, 0, "SelectionStatusModel");

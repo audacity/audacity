@@ -31,7 +31,10 @@ using namespace muse::ui;
 static const Uri HOME_PAGE_URI("musescore://home");
 static const Uri PROJECT_PAGE_URI("audacity://project");
 
-static const QString NOTATION_NAVIGATION_PANEL("ScoreView");
+//! TODO AU4: this should point to sth like ProjectView
+//! but we don't have that yet, so binding it to
+//! area that's being focused when opening a project
+static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
 
 void UiContextResolver::init()
 {
@@ -46,8 +49,8 @@ void UiContextResolver::init()
 #endif
 
     //! TODO AU4
-    // globalContext()->currentNotationChanged().onNotify(this, [this]() {
-    //     auto notation = globalContext()->currentNotation();
+    // globalContext()->currentProjectChanged().onNotify(this, [this]() {
+    //     auto project = globalContext()->currentProject();
     //     if (notation) {
     //         notation->interaction()->selectionChanged().onNotify(this, [this]() {
     //             notifyAboutContextChanged();
@@ -109,7 +112,7 @@ UiContext UiContextResolver::currentUiContext() const
 
         INavigationPanel* activePanel = navigationController()->activePanel();
         if (activePanel) {
-            if (activePanel->name() == NOTATION_NAVIGATION_PANEL) {
+            if (activePanel->name() == PROJECT_NAVIGATION_PANEL) {
                 return context::UiCtxProjectFocused;
             }
         }

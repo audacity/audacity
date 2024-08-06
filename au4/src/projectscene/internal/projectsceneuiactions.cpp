@@ -169,6 +169,18 @@ const UiActionList ProjectSceneUiActions::m_actions = {
              TranslatableString("action", "Rename clip"),
              TranslatableString("action", "Rename clip")
              ),
+    UiAction("play-position-decrease",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Move play cursor left"),
+             TranslatableString("action", "Move play cursor left")
+             ),
+    UiAction("play-position-increase",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Move play cursor right"),
+             TranslatableString("action", "Move play cursor right")
+             ),
 };
 
 ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)

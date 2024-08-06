@@ -633,11 +633,11 @@
         <seq>End</seq>
     </SC>
     <SC>
-        <key>cursor-left</key>
+        <key>play-position-decrease</key>
         <seq>Left</seq>
     </SC>
     <SC>
-        <key>cursor-right</key>
+        <key>play-position-increase</key>
         <seq>Right</seq>
     </SC>
     <SC>

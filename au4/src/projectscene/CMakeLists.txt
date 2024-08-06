@@ -86,6 +86,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playcursorcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playpositionactioncontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/playcursor/playpositionactioncontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/statusbar/selectionstatusmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/statusbar/selectionstatusmodel.h
