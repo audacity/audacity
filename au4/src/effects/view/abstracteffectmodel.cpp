@@ -9,6 +9,11 @@ AbstractEffectModel::AbstractEffectModel(QObject* parent)
 {
 }
 
+void AbstractEffectModel::apply()
+{
+    effectsProcessing()->process(muse::String(m_id));
+}
+
 QString AbstractEffectModel::id() const
 {
     return m_id;

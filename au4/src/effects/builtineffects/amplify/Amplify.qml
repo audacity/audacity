@@ -13,8 +13,16 @@ EffectBase {
 
     width: 450
 
+    function apply() {
+        effectModel.apply()
+    }
+
     EffectAmplify {
         id: effectModel
+
+        onCloseRequested: {
+            root.closeRequested()
+        }
     }
 
     Row {

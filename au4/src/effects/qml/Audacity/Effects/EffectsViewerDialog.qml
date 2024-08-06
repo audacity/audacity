@@ -50,6 +50,8 @@ StyledDialogView {
             onStandardButtonClicked: function(buttonId) {
                 if (buttonId === ButtonBoxModel.Cancel) {
                     root.reject()
+                } else if (buttonId === ButtonBoxModel.Apply) {
+                    viewer.apply()
                 }
             }
         }

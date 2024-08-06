@@ -54,8 +54,7 @@ public:
     // EffectDefinitionInterface implementation
 
     EffectType GetType() const override;
-    OptionalMessage LoadFactoryDefaults(EffectSettings& settings)
-    const override;
+    OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
     OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
 
     unsigned GetAudioInCount() const override;
@@ -64,7 +63,7 @@ public:
 
     // Effect implementation
 
-    // bool Init() override;
+    bool Init() override;
     // // std::any BeginPreview(const EffectSettings& settings) override;
     // std::unique_ptr<EffectEditor> PopulateOrExchange(
     //     ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access, const EffectOutputs* pOutputs) override;

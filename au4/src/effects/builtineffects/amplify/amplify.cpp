@@ -20,6 +20,13 @@
 
 #include "amplify.h"
 
+#include <math.h>
+
+#include "libraries/lib-track/Track.h"
+#include "libraries/lib-wave-track/TimeStretching.h"
+#include "libraries/lib-wave-track/WaveChannelUtilities.h"
+#include "libraries/lib-effects/EffectOutputTracks.h"
+
 using namespace au::effects;
 
 enum
@@ -77,6 +84,7 @@ EffectAmplify::EffectAmplify()
     };
 
     effectsParametersService()->regEffectParameters(muse::String(id()), params);
+    effectsProcessing()->regEffect(muse::String(id()), this);
 
     emit ampChanged();
     emit ampSliderValueChanged();
@@ -86,6 +94,7 @@ EffectAmplify::EffectAmplify()
 
 EffectAmplify::~EffectAmplify()
 {
+    effectsProcessing()->unregEffect(muse::String(id()));
 }
 
 void EffectAmplify::onAmpTextChanged()
@@ -238,27 +247,27 @@ OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings& settings)
 
 // // Effect implementation
 
-// bool EffectAmplify::Init()
-// {
-//     auto range = inputTracks()->Selected<const WaveTrack>();
-//     bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
-//         return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
-//     });
-//     if (hasPitchOrSpeed) {
-//         range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
-//     }
-//     mPeak = 0.0;
-//     for (auto t : range) {
-//         for (const auto pChannel : t->Channels()) {
-//             auto pair
-//                 =WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
-//             const float min = pair.first, max = pair.second;
-//             const float newpeak = std::max(fabs(min), fabs(max));
-//             mPeak = std::max<double>(mPeak, newpeak);
-//         }
-//     }
-//     return true;
-// }
+bool EffectAmplify::Init()
+{
+    auto range = inputTracks()->Selected<const WaveTrack>();
+    bool hasPitchOrSpeed = std::any_of(begin(range), end(range), [this](auto* pTrack) {
+        return TimeStretching::HasPitchOrSpeed(*pTrack, mT0, mT1);
+    });
+    if (hasPitchOrSpeed) {
+        range = MakeOutputTracks()->Get().Selected<const WaveTrack>();
+    }
+    m_peakAmp = 0.0;
+    for (auto t : range) {
+        for (const auto pChannel : t->Channels()) {
+            auto pair
+                =WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
+            const float min = pair.first, max = pair.second;
+            const float newpeak = std::max(fabs(min), fabs(max));
+            m_peakAmp = std::max<double>(m_peakAmp, newpeak);
+        }
+    }
+    return true;
+}
 
 // std::any EffectAmplify::BeginPreview(const EffectSettings& settings)
 // {

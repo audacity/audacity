@@ -13,6 +13,8 @@
 #include "internal/effectsuiactions.h"
 #include "internal/effectsparametersservice.h"
 
+#include "au3wrap/au3effectsprocessing.h"
+
 #include "view/effectbuilder.h"
 
 #include "builtineffects/amplify/amplify.h"
@@ -35,11 +37,13 @@ void EffectsModule::registerExports()
     m_configuration = std::make_shared<EffectsConfiguration>();
     m_actionsController = std::make_shared<EffectsActionsController>();
     m_effectsParametersService = std::make_shared<EffectsParametersService>();
+    m_effectsProcessing = std::make_shared<Au3EffectsProcessing>();
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
     ioc()->registerExport<EffectsParametersService>(moduleName(), m_effectsParametersService);
+    ioc()->registerExport<IEffectsProcessing>(moduleName(), m_effectsProcessing);
 }
 
 void EffectsModule::resolveImports()

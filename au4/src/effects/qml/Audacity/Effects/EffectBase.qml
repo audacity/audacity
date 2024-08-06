@@ -7,4 +7,6 @@ Column {
     property string id: ""
 
     spacing: 8
+
+    signal closeRequested()
 }

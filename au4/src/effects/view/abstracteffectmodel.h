@@ -7,6 +7,7 @@
 
 #include "modularity/ioc.h"
 #include "effects/ieffectsprovider.h"
+#include "effects/ieffectsprocessing.h"
 
 namespace au::effects {
 class AbstractEffectModel : public QObject
@@ -17,8 +18,13 @@ class AbstractEffectModel : public QObject
 
     muse::Inject<IEffectsProvider> effectsProvider;
 
+protected: // todo
+    muse::Inject<IEffectsProcessing> effectsProcessing;
+
 public:
     AbstractEffectModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void apply();
 
     QString id() const;
     void setId(const QString& newId);

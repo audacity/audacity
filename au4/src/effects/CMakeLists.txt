@@ -15,6 +15,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsparametersservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectsprocessing.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.h
@@ -39,6 +40,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/builtineffects/amplify/amplify.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtineffects/amplify/amplify.h
+
+    # au3wrap
+    ${CMAKE_CURRENT_LIST_DIR}/au3wrap/au3effectsprocessing.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3wrap/au3effectsprocessing.h
 
     # effects helpers
     ${CMAKE_CURRENT_LIST_DIR}/builtineffects/StatefulPerTrackEffect.cpp
@@ -196,6 +201,10 @@ if (AU3_ADD_AS_SRC)
         ${AU3_LIBRARIES}/lib-wave-track/WaveTrackSink.h
         ${AU3_LIBRARIES}/lib-wave-track/TimeStretching.cpp
         ${AU3_LIBRARIES}/lib-wave-track/TimeStretching.h
+        ${AU3_LIBRARIES}/lib-wave-track/WaveChannelUtilities.cpp
+        ${AU3_LIBRARIES}/lib-wave-track/WaveChannelUtilities.h
+        ${AU3_LIBRARIES}/lib-wave-track/WaveClipUtilities.cpp
+        ${AU3_LIBRARIES}/lib-wave-track/WaveClipUtilities.h
 
         ${AU3_LIBRARIES}/lib-channel/Channel.cpp
         ${AU3_LIBRARIES}/lib-channel/Channel.h
