@@ -112,7 +112,7 @@ void Au3TrackeditProject::onClipAdded(const Clip& clip)
 
 au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 {
-    if (au3ProjectPtr()) {
+    if (!au3ProjectPtr()) {
         return trackedit::TimeSignature();
     }
 
