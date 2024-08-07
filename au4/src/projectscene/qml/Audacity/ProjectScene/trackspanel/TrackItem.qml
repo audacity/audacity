@@ -104,6 +104,16 @@ ListItemBlank {
                 }
             }
 
+            TextField {
+                id: snapRange
+                placeholderText: "Snap range"
+                validator: DoubleValidator {
+                    bottom: 0
+                    top: 10.0
+                }
+                text:"2"
+            }
+
             RowLayout {
                 Layout.fillWidth: true
 
@@ -116,6 +126,8 @@ ListItemBlank {
                         root.item.balance = newValue
                     }
                 }
+
+
 
                 StyledSlider {
                     id: volumeSlider
@@ -150,7 +162,6 @@ ListItemBlank {
                         }
                     }
                     property double snapPoint: 0.0
-                    property double snapRange: 0.9
 
                     signal mouseEntered()
                     signal mouseExited()
@@ -171,7 +182,7 @@ ListItemBlank {
 
                     onMoved: {
 
-                        if (Math.abs(value - snapPoint) < snapRange) {
+                        if (Math.abs(value - snapPoint) < parseFloat(snapRange.text)) {
 
                             value = snapPoint
                         }
