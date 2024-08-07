@@ -2,10 +2,9 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AU3AUDIOOUTPUT_H
-#define AU_AU3WRAP_AU3AUDIOOUTPUT_H
+#pragma once
 
-#include "playback/iaudiooutput.h"
+#include "../../iaudiooutput.h"
 
 #include "global/async/asyncable.h"
 
@@ -14,9 +13,9 @@
 
 class AudacityProject;
 
-namespace au::au3 {
+namespace au::playback {
 class InOutMeter;
-class Au3AudioOutput : public playback::IAudioOutput, public muse::async::Asyncable
+class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -45,5 +44,3 @@ private:
     std::shared_ptr<InOutMeter> m_outputMeter;
 };
 }
-
-#endif // AU_AU3WRAP_AU3AUDIOOUTPUT_H

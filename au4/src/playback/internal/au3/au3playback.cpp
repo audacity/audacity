@@ -3,7 +3,7 @@
 #include "au3player.h"
 #include "au3audiooutput.h"
 
-using namespace au::au3;
+using namespace au::playback;
 
 au::playback::IPlayerPtr Au3Playback::player(audio::TrackSequenceId) const
 {

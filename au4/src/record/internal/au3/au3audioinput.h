@@ -13,7 +13,7 @@
 
 class AudacityProject;
 
-namespace au::au3 {
+namespace au::playback {
 class InOutMeter;
 }
 
@@ -38,6 +38,6 @@ private:
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
 
-    std::shared_ptr<au3::InOutMeter> m_inputMeter;
+    std::shared_ptr<playback::InOutMeter> m_inputMeter;
 };
 }

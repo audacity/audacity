@@ -9,7 +9,7 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-io/ProjectAudioIO.h"
 
-#include "au3wrap/internal/au3audioinoutmeter.h"
+#include "playback/internal/au3/au3audioinoutmeter.h"
 #include "au3wrap/internal/au3types.h"
 
 #include "playback/audiotypes.h"
@@ -19,6 +19,7 @@
 using namespace muse;
 using namespace muse::async;
 using namespace au::record;
+using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioInput::Au3AudioInput()

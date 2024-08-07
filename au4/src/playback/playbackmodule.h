@@ -12,6 +12,7 @@ namespace au::playback {
 class PlaybackConfiguration;
 class PlaybackController;
 class PlaybackUiActions;
+class Au3Playback;
 class PlaybackModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -28,6 +29,7 @@ private:
     std::shared_ptr<PlaybackConfiguration> m_configuration;
     std::shared_ptr<PlaybackController> m_controller;
     std::shared_ptr<PlaybackUiActions> m_uiActions;
+    std::shared_ptr<Au3Playback> m_playback;
 };
 }
 

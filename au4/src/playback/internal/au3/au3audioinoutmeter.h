@@ -2,8 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifndef AU_AU3WRAP_AU3AUDIOINOUTMETER_H
-#define AU_AU3WRAP_AU3AUDIOINOUTMETER_H
+#pragma once
 
 #include "global/async/asyncable.h"
 #include "global/async/promise.h"
@@ -13,7 +12,7 @@
 
 #include "libraries/lib-audio-devices/Meter.h"
 
-namespace au::au3 {
+namespace au::playback {
 class InOutMeter : public Meter, public muse::async::Asyncable
 {
 public:
@@ -31,5 +30,3 @@ private:
     muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> m_audioSignalChanges;
 };
 }
-
-#endif // AU_AU3WRAP_AU3AUDIOINOUTMETER_H

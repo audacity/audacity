@@ -1,8 +1,9 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_AU3WRAP_AU3PLAYBACK_H
-#define AU_AU3WRAP_AU3PLAYBACK_H
+#pragma once
+
+#include "../../iplayer.h"
 
 #include "global/async/asyncable.h"
 #include "global/types/retval.h"
@@ -11,14 +12,12 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 
-#include "playback/iplayer.h"
-
 class AudacityProject;
 class TrackList;
 struct TransportSequences;
 
-namespace au::au3 {
-class Au3Player : public playback::IPlayer, public muse::async::Asyncable
+namespace au::playback {
+class Au3Player : public IPlayer, public muse::async::Asyncable
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
@@ -55,5 +54,3 @@ private:
     muse::ValCh<audio::secs_t> m_playbackPosition;
 };
 }
-
-#endif // AU_AU3WRAP_AU3PLAYBACK_H
