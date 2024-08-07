@@ -21,11 +21,11 @@
 
 #include "libraries/lib-track/PendingTracks.h"
 
-#include "domaccessor.h"
+#include "au3wrap/internal/domaccessor.h"
 
 constexpr double CLIPVIEW_WIDTH_MIN = 4; // px
 
-using Style = au::au3::Au3WavePainter::Style;
+using Style = au::projectscene::Au3WavePainter::Style;
 
 namespace WaveChannelViewConstants {
 // Only two types of sample display for now, but
@@ -591,6 +591,7 @@ static void DrawWaveform(int channelIndex,
     }
 }
 
+using namespace au::projectscene;
 using namespace au::au3;
 
 AudacityProject& Au3WavePainter::projectRef() const

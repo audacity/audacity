@@ -6,12 +6,12 @@
 #include "modularity/imoduleinterface.h"
 #include "trackedit/trackedittypes.h"
 
-namespace au::au3 {
-class IAu3WavePainter : MODULE_EXPORT_INTERFACE
+namespace au::projectscene {
+class IWavePainter : MODULE_EXPORT_INTERFACE
 {
-    INTERFACE_ID(IAu3WavePainter)
+    INTERFACE_ID(IWavePainter)
 public:
-    virtual ~IAu3WavePainter() = default;
+    virtual ~IWavePainter() = default;
 
     struct Style {
         QColor blankBrush;

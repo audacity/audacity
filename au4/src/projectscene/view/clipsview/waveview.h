@@ -6,7 +6,7 @@
 #include <QQuickPaintedItem>
 
 #include "modularity/ioc.h"
-#include "au3wrap/iau3wavepainter.h"
+#include "iwavepainter.h"
 
 #include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
@@ -23,7 +23,7 @@ class WaveView : public QQuickPaintedItem
 
     Q_PROPERTY(ClipTime clipTime READ clipTime WRITE setClipTime NOTIFY clipTimeChanged FINAL)
 
-    muse::Inject<au3::IAu3WavePainter> wavePainter;
+    muse::Inject<IWavePainter> wavePainter;
 
 public:
     WaveView(QQuickItem* parent = nullptr);

@@ -1,6 +1,9 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
-#include "../iau3wavepainter.h"
+#include "../iwavepainter.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -8,8 +11,8 @@
 class WaveTrack;
 class WaveClip;
 class AudacityProject;
-namespace au::au3 {
-class Au3WavePainter : public IAu3WavePainter
+namespace au::projectscene {
+class Au3WavePainter : public IWavePainter
 {
     muse::Inject<au::context::IGlobalContext> globalContext;
 
