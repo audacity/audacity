@@ -1,0 +1,9 @@
+{
+    "id": "amplify",
+    "title": "Amplify",
+    "description": "Increases or decreases the volume of the audio you have selected",
+    "version":  "3.6.1",
+    "vendor": "Audacity",
+
+    "url": "Amplify.qml"
+}
