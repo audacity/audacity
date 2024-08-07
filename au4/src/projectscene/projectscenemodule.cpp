@@ -23,6 +23,7 @@
 #include "view/clipsview/clipslistmodel.h"
 #include "view/clipsview/cliplistitem.h"
 #include "view/clipsview/waveview.h"
+#include "view/clipsview/au3/au3wavepainter.h"
 #include "view/clipsview/clipcontextmenumodel.h"
 #include "view/clipsview/selectionviewcontroller.h"
 
@@ -68,6 +69,7 @@ void ProjectSceneModule::registerExports()
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
+    ioc()->registerExport<IWavePainter>(moduleName(), new Au3WavePainter());
 }
 
 void ProjectSceneModule::resolveImports()

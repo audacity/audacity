@@ -15,7 +15,6 @@
 
 #include "internal/wxlogwrap.h"
 #include "internal/au3project.h"
-#include "internal/au3wavepainter.h"
 #include "internal/au3audiodevicesprovider.h"
 #include "internal/au3commonsettings.h"
 
@@ -34,7 +33,6 @@ void Au3WrapModule::registerExports()
     m_audioDevicesProvider = std::make_shared<Au3AudioDevicesProvider>();
 
     ioc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
-    ioc()->registerExport<IAu3WavePainter>(moduleName(), new Au3WavePainter());
     ioc()->registerExport<playback::IAudioDevicesProvider>(moduleName(), m_audioDevicesProvider);
 }
 

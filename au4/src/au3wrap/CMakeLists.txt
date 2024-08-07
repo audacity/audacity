@@ -25,7 +25,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
-    ${CMAKE_CURRENT_LIST_DIR}/iau3wavepainter.h
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/qtBasicUI.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/qtBasicUI.h
@@ -41,10 +40,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/domaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3project.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3wavepainter.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiodevicesprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.cpp

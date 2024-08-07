@@ -60,6 +60,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/trackslistclipsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/iwavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/au3wavepainter.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/au3/WaveformScale.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipsview/selectionviewcontroller.h
 

@@ -40,7 +40,7 @@ void WaveView::paint(QPainter* painter)
     // QElapsedTimer timer;
     // timer.start();
 
-    au3::IAu3WavePainter::Params params;
+    IWavePainter::Params params;
     params.geometry.height = height();
     params.geometry.width = width();
     params.geometry.left = 0.0;
