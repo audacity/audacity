@@ -118,6 +118,80 @@ ListItemBlank {
                 }
 
                 StyledSlider {
+                    id: volumeSlider
+                    from: -60.0
+                    to: 12.0
+                    StyledPopupView {
+                        parent: volumeSlider.handle
+                        id: popup
+                        placement: PopupView.Above
+                        openPolicies: PopupView.NoActivateFocus
+                        padding: 8
+                        margins: 8
+                        contentWidth: contentRect.width
+                        contentHeight: contentRect.height
+                        FontMetrics {
+                            id: fontMetrics
+                            font: content.font
+                        }
+                        property rect contentRect: fontMetrics.boundingRect("-60.0dB")
+
+                        Item {
+                            anchors.fill: parent
+                            id: content
+
+                            Text {
+                                anchors.right: parent.right
+                                text: {
+                                    let value = volumeSlider.value.toFixed(1);
+                                    return `${value}dB`
+                                }
+                            }
+                        }
+                    }
+                    property double snapPoint: 0.0
+                    property double snapRange: 0.9
+
+                    signal mouseEntered()
+                    signal mouseExited()
+
+                    MouseArea {
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            volumeSlider.mouseEntered()
+                        }
+                        onExited: {
+                            volumeSlider.mouseExited()
+                        }
+                    }
+
+
+
+                    onMoved: {
+
+                        if (Math.abs(value - snapPoint) < snapRange) {
+
+                            value = snapPoint
+                        }
+                    }
+
+                    Timer {
+                        id: popupTimer
+                        interval: 200
+                        repeat: false
+                        onTriggered: popup.open()
+                    }
+
+                    onMouseEntered: {
+                        popupTimer.start()
+                    }
+
+                    onMouseExited: {
+                        popupTimer.stop()
+                        popup.close()
+                    }
                     Layout.fillWidth: true
 
                     value: root.item.volumeLevel
