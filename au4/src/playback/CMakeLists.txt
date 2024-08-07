@@ -27,6 +27,15 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3player.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3player.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audioinoutmeter.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
 
@@ -61,9 +70,12 @@ set(MODULE_SRC
 
     )
 
-set(MODULE_LINK
-    record
-)
+# AU3
+include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3defs.cmake)
+
+set(MODULE_INCLUDE ${AU3_INCLUDE})
+set(MODULE_DEF ${AU3_DEF})
+set(MODULE_LINK au3wrap)
 
 setup_module()
 

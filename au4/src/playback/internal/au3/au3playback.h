@@ -1,11 +1,14 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
-#include "playback/iplayback.h"
+#include "../../iplayback.h"
 
-namespace au::au3 {
+namespace au::playback {
 class Au3Player;
 class Au3AudioOutput;
-class Au3Playback : public playback::IPlayback
+class Au3Playback : public IPlayback
 {
 public:
     Au3Playback() = default;

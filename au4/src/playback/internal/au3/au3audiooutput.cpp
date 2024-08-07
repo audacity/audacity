@@ -11,14 +11,15 @@
 #include "libraries/lib-project-rate/ProjectRate.h"
 
 #include "au3audioinoutmeter.h"
-#include "au3types.h"
+#include "au3wrap/internal/au3types.h"
 
-#include "playback/audiotypes.h"
+#include "../../audiotypes.h"
 
 #include "log.h"
 
 using namespace muse;
 using namespace muse::async;
+using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput()

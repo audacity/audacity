@@ -12,11 +12,11 @@
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-audio-devices/Meter.h"
 
-#include "wxtypes_convert.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 #include "log.h"
 
-using namespace au::au3;
+using namespace au::playback;
 
 Au3Player::Au3Player()
     : m_positionUpdateTimer(std::chrono::microseconds(1000))

@@ -14,6 +14,8 @@
 #include "internal/playbackcontroller.h"
 #include "internal/playbackuiactions.h"
 
+#include "internal/au3/au3playback.h"
+
 #include "view/common/playbackstatemodel.h"
 
 #include "view/toolbars/components/timecodemodel.h"
@@ -40,9 +42,11 @@ void PlaybackModule::registerExports()
     m_configuration = std::make_shared<PlaybackConfiguration>();
     m_controller = std::make_shared<PlaybackController>();
     m_uiActions = std::make_shared<PlaybackUiActions>(m_controller);
+    m_playback = std::make_shared<Au3Playback>();
 
     ioc()->registerExport<PlaybackConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
+    ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
 }
 
 void PlaybackModule::resolveImports()

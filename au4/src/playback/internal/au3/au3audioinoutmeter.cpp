@@ -11,11 +11,11 @@
 using namespace muse;
 using namespace muse::async;
 
-void au::au3::InOutMeter::Clear()
+void au::playback::InOutMeter::Clear()
 {
 }
 
-void au::au3::InOutMeter::Reset(double sampleRate, bool resetClipping)
+void au::playback::InOutMeter::Reset(double sampleRate, bool resetClipping)
 {
     UNUSED(sampleRate);
     UNUSED(resetClipping);
@@ -26,7 +26,7 @@ void au::au3::InOutMeter::Reset(double sampleRate, bool resetClipping)
     m_audioSignalChanges.send(1, au::audio::AudioSignalVal { 0, zero });
 }
 
-void au::au3::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long numFrames, const float* sampleData)
+void au::playback::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long numFrames, const float* sampleData)
 {
     auto sptr = sampleData;
     unsigned int num = 2;
@@ -71,31 +71,32 @@ void au::au3::InOutMeter::UpdateDisplay(unsigned int numChannels, unsigned long 
     // LOGD() << "=============== change " << LINEAR_TO_DB(peak[0]) << " - " << LINEAR_TO_DB(peak[1]);
 }
 
-bool au::au3::InOutMeter::IsMeterDisabled() const
+bool au::playback::InOutMeter::IsMeterDisabled() const
 {
     //NOT_IMPLEMENTED;
     return false;
 }
 
-float au::au3::InOutMeter::GetMaxPeak() const
+float au::playback::InOutMeter::GetMaxPeak() const
 {
     NOT_IMPLEMENTED;
     return 0.0;
 }
 
-bool au::au3::InOutMeter::IsClipping() const
+bool au::playback::InOutMeter::IsClipping() const
 {
     NOT_IMPLEMENTED;
     return false;
 }
 
-int au::au3::InOutMeter::GetDBRange() const
+int au::playback::InOutMeter::GetDBRange() const
 {
     NOT_IMPLEMENTED;
     return 0;
 }
 
-muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> > au::au3::InOutMeter::signalChanges() const
+muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >
+au::playback::InOutMeter::signalChanges() const
 {
     return muse::async::Promise<muse::async::Channel<au::audio::audioch_t, au::audio::AudioSignalVal> >([this](auto resolve, auto /*reject*/) {
         return resolve(
