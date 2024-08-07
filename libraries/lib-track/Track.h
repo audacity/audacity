@@ -1104,6 +1104,9 @@ public:
    static TrackListHolder Temporary(AudacityProject *pProject,
       const Track::Holder &pTrack = {});
 
+   //! Assigns a new unique non-persistent id to a track
+   static void AssignUniqueId(const Track::Holder &track);
+
    //! Remove all tracks from `list` and put them at the end of `this`
    /*!
     @param assignIds ignored if `this` is a temporary list; else if false,

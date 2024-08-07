@@ -867,6 +867,11 @@ TrackListHolder TrackList::Temporary(AudacityProject *pProject,
    return tempList;
 }
 
+void TrackList::AssignUniqueId(const Track::Holder &track)
+{
+   track->SetId(TrackId{ ++sCounter });
+}
+
 void TrackList::Append(TrackList &&list, bool assignIds)
 {
    auto iter = list.ListOfTracks::begin(),
