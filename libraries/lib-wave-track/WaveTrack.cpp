@@ -1052,6 +1052,7 @@ auto WaveTrack::SplitChannels() -> std::vector<Holder>
       for (auto &pClip : mClips)
          pNewTrack->mClips.emplace_back(pClip->SplitChannels());
       this->mRightChannel.reset();
+      TrackList::AssignUniqueId(pNewTrack);
       auto iter = pOwner->Find(this);
       pOwner->Insert(*++iter, pNewTrack);
       // Fix up the channel attachments to avoid waste of space
