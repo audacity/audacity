@@ -205,6 +205,7 @@ option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ON)
 option(AU_BUILD_RECORD_MODULE "Build record module" ON)
 option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
 option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
+option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
 
 # === Setup ===
 
