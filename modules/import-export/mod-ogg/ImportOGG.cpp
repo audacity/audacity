@@ -131,7 +131,7 @@ private:
 
    ArrayOf<int> mStreamUsage;
    TranslatableStrings mStreamInfo;
-   std::vector<WaveTrack::Holder> mStreams;
+   std::vector<TrackListHolder> mStreams;
 };
 
 
@@ -231,11 +231,9 @@ void OggImportFileHandle::Import(
       vorbis_info *vi = ov_info(mVorbisFile.get(), i);
 
       // The format agrees with what is always passed to Append() below
-      mStreams.push_back(ImportUtils::NewWaveTrack(
-         *trackFactory,
-         vi->channels,
-         int16Sample,
-         vi->rate));
+      auto tracks = trackFactory->CreateMany(vi->channels, int16Sample, vi->rate);
+
+      mStreams.push_back(tracks);
    }
 
    /* The number of bytes to get from the codec in each run */
@@ -337,7 +335,11 @@ void OggImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, mStreams);
+   for (auto& stream : mStreams)
+   {
+      ImportUtils::FinalizeImport(outTracks, std::move(*stream));
+   }
+   mStreams.clear();
 
    //\todo { Extract comments from each stream? }
    if (mVorbisFile->vc[0].comments > 0) {
