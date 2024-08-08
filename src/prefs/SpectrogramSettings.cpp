@@ -170,7 +170,7 @@ SpectrogramSettings::SpectrogramSettings(const SpectrogramSettings &other)
 #endif
 
    // Do not copy these!
-   , hFFT{}
+   , transformer{}
    , window{}
    , tWindow{}
    , dWindow{}
@@ -527,7 +527,7 @@ auto SpectrogramSettings::Clone() const -> PointerType
 
 void SpectrogramSettings::DestroyWindows()
 {
-   hFFT.reset();
+   transformer.Reset();
    window.reset();
    dWindow.reset();
    tWindow.reset();
@@ -592,14 +592,14 @@ namespace
 
 void SpectrogramSettings::CacheWindows()
 {
-   if (hFFT == NULL || window == NULL) {
+   if (!transformer || !window) {
 
       double scale;
       auto factor = ZeroPaddingFactor();
       const auto fftLen = WindowSize() * factor;
       const auto padding = (WindowSize() * (factor - 1)) / 2;
 
-      hFFT = GetFFT(fftLen);
+      transformer.Reset(fftLen);
       RecreateWindow(window, WINDOW, fftLen, padding, windowType, windowSize, scale);
       if (algorithm == algReassignment) {
          RecreateWindow(tWindow, TWINDOW, fftLen, padding, windowType, windowSize, scale);
