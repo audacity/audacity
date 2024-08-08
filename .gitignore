@@ -142,6 +142,8 @@ win/.vs/
 win/packages
 win/.nuget
 win-alt-build
+/audacity-binaries
+/.vs
 
 # All those help files
 help/manual*
