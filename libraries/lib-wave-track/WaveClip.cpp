@@ -628,8 +628,45 @@ double WaveClip::GetStretchRatio() const
       mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
          *mRawAudioTempo / *mProjectTempo :
          1.0;
-   return mClipStretchRatio * dstSrcRatio;
+   double stretchRatio = mClipStretchRatio * dstSrcRatio;
+
+   double lowestStretchRatio = 100 / (double)99999;
+
+   if (stretchRatio < lowestStretchRatio) {
+      stretchRatio = lowestStretchRatio;
+   }
+
+   return stretchRatio;
 }
+
+double WaveClip::GetStretchRatio()
+{
+   const auto dstSrcRatio =
+      mProjectTempo.has_value() && mRawAudioTempo.has_value() ?
+      *mRawAudioTempo / *mProjectTempo :
+      1.0;
+   double stretchRatio = mClipStretchRatio * dstSrcRatio;
+
+   double lowestStretchRatio = 100 / (double)99999;
+
+   if (stretchRatio < lowestStretchRatio) {
+      stretchRatio = lowestStretchRatio;
+      UpdateTemposForLowestRatio(stretchRatio);
+   }
+
+   return stretchRatio;
+}
+
+void WaveClip::UpdateTemposForLowestRatio(double stretchRatio)
+{
+   if (mProjectTempo.has_value()) {
+      mRawAudioTempo = *mProjectTempo * (stretchRatio / mClipStretchRatio);
+   }
+   else if (mRawAudioTempo.has_value()) {
+      mProjectTempo = *mRawAudioTempo / (stretchRatio / mClipStretchRatio);
+   }
+}
+
 
 int WaveClip::GetCentShift() const
 {
