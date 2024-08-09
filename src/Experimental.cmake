@@ -88,7 +88,7 @@ set( EXPERIMENTAL_OPTIONS_LIST
    #METER_LED_STYLE
 
    # Define to enable the device change handler
-   #DEVICE_CHANGE_HANDLER
+   DEVICE_CHANGE_HANDLER
 
    # PRL 11 Jul 2017
    # Highlight more things in TrackPanel when the mouse moves over them,
