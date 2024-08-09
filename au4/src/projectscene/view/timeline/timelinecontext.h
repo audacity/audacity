@@ -70,6 +70,7 @@ public:
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
+    double singleStepToTime(double position, Direction direction, bool snapEnabled) const;
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);

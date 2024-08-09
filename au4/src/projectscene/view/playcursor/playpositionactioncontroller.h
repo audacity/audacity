@@ -31,12 +31,7 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-enum class Direction {
-    Left = 0,
-    Right
-};
-
-class PlayPositionActionController : public QObject, public muse::actions::Actionable
+class PlayPositionActionController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -60,6 +55,7 @@ signals:
     void timelineContextChanged();
 
 private:
+    void snapCurrentPosition();
     void applySingleStep(Direction direction);
 
     TimelineContext* m_context = nullptr;
