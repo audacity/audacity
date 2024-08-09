@@ -166,14 +166,6 @@ namespace  EffectUI {
    AUDACITY_DLL_API
    DialogFactoryResults DialogFactory(wxWindow &parent, EffectBase &host,
       EffectUIServices &client, EffectSettingsAccess &access);
-
-   /** Run an effect given the plugin ID */
-   // Returns true on success.  Will only operate on tracks that
-   // have the "selected" flag set to true, which is consistent with
-   // Audacity's standard UI.
-   AUDACITY_DLL_API bool DoEffect(
-      const PluginID & ID, const CommandContext &context, unsigned flags );
-
 }
 
 class ShuttleGui;

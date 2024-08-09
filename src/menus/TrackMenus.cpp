@@ -23,7 +23,7 @@
 #include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
-#include "../effects/EffectManager.h"
+#include "EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "QualitySettings.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
@@ -31,6 +31,7 @@
 #include "../widgets/ASlider.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
+#include "DoEffect.h"
 
 #include <wx/combobox.h>
 
@@ -552,8 +553,7 @@ void OnStereoToMono(const CommandContext &context)
 {
    EffectUI::DoEffect(
       EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      context,
-      EffectManager::kConfigured);
+      context.project, EffectManager::kConfigured);
 }
 
 void OnMixAndRender(const CommandContext &context)

@@ -18,13 +18,14 @@
 #define __COMMAND__
 
 #include "CommandSignature.h"
-#include "../commands/AudacityCommand.h"
+#include "ComponentInterfaceSymbol.h"
 
+class AudacityProject;
 class AudacityApp;
 class CommandContext;
 class CommandOutputTargets;
 
-// Abstract base class for command interface.  
+// Abstract base class for command interface.
 class OldStyleCommand /* not final */
 {
 public:

@@ -13,6 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include <thread>
 #include <vector>
+#include <wx/event.h>
 #include <wx/longlong.h>
 
 #include "../../ScrubState.h" // for ScrubbingOptions
@@ -41,7 +42,7 @@ class AUDACITY_DLL_API Scrubber final
    , private PrefsListener
    , public std::enable_shared_from_this< Scrubber >
 {
-public:   
+public:
    static Scrubber &Get( AudacityProject &project );
    static const Scrubber &Get( const AudacityProject &project );
 
@@ -52,7 +53,7 @@ public:
    ~Scrubber();
 
    static bool ShouldScrubPinned();
-   
+
    // Assume xx is relative to the left edge of TrackPanel!
    void MarkScrubStart(wxCoord xx, bool smoothScrolling, bool seek);
 

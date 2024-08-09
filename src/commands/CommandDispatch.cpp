@@ -12,13 +12,14 @@
 
 #include "CommandDispatch.h"
 
+#include "DoEffect.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 #include "PluginManager.h"
 #include "ProjectAudioManager.h"
 #include "ProjectWindows.h"
 #include "Viewport.h"
-#include "../effects/EffectManager.h"
+#include "EffectManager.h"
 #include "../effects/EffectUI.h"
 #include <wx/log.h>
 #include <wx/frame.h>
@@ -46,8 +47,7 @@ bool CommandDispatch::HandleTextualCommand(
    for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
       if (em.GetCommandIdentifier(plug.GetID()) == Str)
          return EffectUI::DoEffect(
-            plug.GetID(), context,
-            EffectManager::kConfigured);
+            plug.GetID(), context.project, EffectManager::kConfigured);
 
    return false;
 }
@@ -60,7 +60,6 @@ bool CommandDispatch::DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags )
 {
    auto &project = context.project;
-   auto &window = GetProjectFrame(project);
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
       return false;
@@ -74,7 +73,6 @@ bool CommandDispatch::DoAudacityCommand(
    EffectManager & em = EffectManager::Get();
    bool success = em.DoAudacityCommand(ID,
       context,
-      &window,
       (flags & EffectManager::kConfigured) == 0);
 
    if (!success)

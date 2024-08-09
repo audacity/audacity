@@ -18,7 +18,7 @@
 
 class EffectSettingsManager;
 
-class EffectSettings;
+struct EffectSettings;
 class EffectSettingsAccess;
 class EffectPlugin;
 

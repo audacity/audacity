@@ -36,7 +36,7 @@
 #include "AColor.h"
 #include "WaveTrack.h"
 #include "effects/EffectUI.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "RealtimeEffectList.h"
 #include "RealtimeEffectState.h"
 #include "effects/RealtimeEffectStateUI.h"

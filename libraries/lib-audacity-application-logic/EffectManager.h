@@ -12,25 +12,26 @@
 #ifndef __AUDACITY_EFFECTMANAGER__
 #define __AUDACITY_EFFECTMANAGER__
 
+#include "EffectInterface.h"
+#include "Identifier.h"
+#include "AudacityApplicationLogicTypes.h"
+
+#include <functional>
 #include <memory>
+#include <unordered_map>
+#include <variant>
 #include <vector>
 
-#include <unordered_map>
-#include "EffectInterface.h"
-#include "EffectUIServices.h" // for EffectDialogFactory
-#include "Identifier.h"
-
-class AudacityCommand;
+class IAudacityCommand;
 class AudacityProject;
 class CommandContext;
-class CommandMessageTarget;
 class ComponentInterfaceSymbol;
-class TrackList;
-class SelectedRegion;
 class wxString;
 typedef wxString PluginID;
-
-#include "EffectInterface.h"
+class Effect;
+class EffectPlugin;
+class EffectSettings;
+class EffectInstance;
 
 struct EffectAndDefaultSettings{
    EffectPlugin *effect{};
@@ -38,13 +39,21 @@ struct EffectAndDefaultSettings{
 };
 
 using EffectMap = std::unordered_map<wxString, EffectAndDefaultSettings>;
-using AudacityCommandMap = std::unordered_map<wxString, AudacityCommand *>;
+using AudacityCommandMap = std::unordered_map<wxString, IAudacityCommand *>;
 using EffectOwnerMap = std::unordered_map< wxString, std::shared_ptr<EffectPlugin> >;
 
-class AudacityCommand;
+class IAudacityCommand;
 
+AUDACITY_APPLICATION_LOGIC_API
+RegistryPaths GetUserPresets(EffectPlugin& host);
 
-class AUDACITY_DLL_API EffectManager
+AUDACITY_APPLICATION_LOGIC_API
+bool HasCurrentSettings(EffectPlugin& host);
+
+AUDACITY_APPLICATION_LOGIC_API
+bool HasFactoryDefaults(EffectPlugin& host);
+
+class AUDACITY_APPLICATION_LOGIC_API EffectManager
 {
 public:
 
@@ -64,22 +73,27 @@ public:
    };
 
    /*! Find the singleton EffectInstanceFactory for ID. */
-   static
-   const EffectInstanceFactory *GetInstanceFactory(const PluginID &ID);
+   static const EffectInstanceFactory*
+   GetInstanceFactory(const PluginID& ID);
 
    /** Get the singleton instance of the EffectManager. Probably not safe
        for multi-thread use. */
-   static EffectManager & Get();
+   static EffectManager& Get();
 
-//
-// public methods
-//
-// Used by the outside program to register the list of effects and retrieve
-// them by index number, usually when the user selects one from a menu.
-//
+   //
+   // public methods
+   //
+   // Used by the outside program to register the list of effects and retrieve
+   // them by index number, usually when the user selects one from a menu.
+   //
 public:
    EffectManager();
    virtual ~EffectManager();
+
+   using DialogInvoker = std::function<bool(
+      Effect&, EffectSettings&, std::shared_ptr<EffectInstance>&)>;
+   using EffectPresetDialog = std::function<std::optional<wxString>(
+      EffectPlugin&, const wxString& preset)>;
 
    //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
    /** Register an effect so it can be executed.
@@ -92,11 +106,9 @@ public:
    TranslatableString GetVendorName(const PluginID & ID);
 
    /** Run a command given the plugin ID */
-   // Returns true on success. 
-   bool DoAudacityCommand(const PluginID & ID,
-                         const CommandContext &,
-                         wxWindow *parent,
-                         bool shouldPrompt  = true );
+   // Returns true on success.
+   bool DoAudacityCommand(
+      const PluginID& ID, const CommandContext&,bool shouldPrompt = true);
 
    // Renamed from 'Effect' to 'Command' prior to moving out of this class.
    ComponentInterfaceSymbol GetCommandSymbol(const PluginID & ID);
@@ -106,17 +118,19 @@ public:
    ManualPageID GetCommandUrl(const PluginID & ID);
    TranslatableString GetCommandTip(const PluginID & ID);
    // flags control which commands are included.
-   void GetCommandDefinition(const PluginID & ID, const CommandContext & context, int flags);
+   void GetCommandDefinition(const PluginID& ID, const CommandContext & context, int flags);
    bool IsHidden(const PluginID & ID);
 
    /** Support for batch commands */
    bool SupportsAutomation(const PluginID & ID);
    wxString GetEffectParameters(const PluginID & ID);
    bool SetEffectParameters(const PluginID & ID, const wxString & params);
-   bool PromptUser( const PluginID & ID, const EffectDialogFactory &factory,
-      wxWindow &parent );
+   bool PromptUser(
+      const PluginID& ID, AudacityProject& project,
+      DialogInvoker dialogInvoker);
    bool HasPresets(const PluginID & ID);
-   wxString GetPreset(const PluginID & ID, const wxString & params, wxWindow * parent);
+   wxString
+   GetPreset(const PluginID& ID, const wxString& params, EffectPresetDialog);
    wxString GetDefaultPreset(const PluginID & ID);
 
 private:
@@ -149,23 +163,23 @@ public:
    const PluginID & GetEffectByIdentifier(const CommandID & strTarget);
 
    /*! Return an effect by its ID. */
-   EffectPlugin *GetEffect(const PluginID & ID);
+   EffectPlugin* GetEffect(const PluginID& ID);
 
    /*! Get default settings by effect ID.  May return nullptr */
-   EffectSettings *GetDefaultSettings(const PluginID & ID);
+   EffectSettings* GetDefaultSettings(const PluginID& ID);
 
    /*! Get effect and default settings by effect ID. */
    /*!
     @post `result: !result.first || result.second`
     (if first member is not null, then the second is not null)
     */
-   std::pair<EffectPlugin *, EffectSettings *>
-   GetEffectAndDefaultSettings(const PluginID & ID);
+   std::pair<EffectPlugin*, EffectSettings*>
+   GetEffectAndDefaultSettings(const PluginID& ID);
 
 private:
-   EffectAndDefaultSettings &DoGetEffect(const PluginID & ID);
+   EffectAndDefaultSettings& DoGetEffect(const PluginID& ID);
 
-   AudacityCommand *GetAudacityCommand(const PluginID & ID);
+   IAudacityCommand* GetAudacityCommand(const PluginID& ID);
 
    EffectMap mEffects;
    AudacityCommandMap mCommands;
@@ -173,7 +187,7 @@ private:
 
    int mNumEffects;
 
-   // Set true if we want to skip pushing state 
+   // Set true if we want to skip pushing state
    // after processing at effect run time.
    bool mSkipStateFlag;
 };

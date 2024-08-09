@@ -31,7 +31,7 @@ This class now lists
 #include "../ProjectWindows.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
-#include "../effects/EffectManager.h"
+#include "EffectManager.h"
 #include "../widgets/Overlay.h"
 #include "TrackFocus.h"
 #include "../TrackPanel.h"

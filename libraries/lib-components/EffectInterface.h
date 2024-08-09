@@ -50,7 +50,6 @@
 #include <memory>
 #include <optional>
 #include <type_traits>
-#include <wx/event.h>
 
 #include "Observer.h"
 
@@ -404,9 +403,6 @@ public:
    virtual std::unique_ptr<EffectOutputs> MakeOutputs() const;
    //! @}
 };
-
-class wxDialog;
-class wxWindow;
 
 // ----------------------------------------------------------------------------
 // Supported channel assignments

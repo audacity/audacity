@@ -22,6 +22,7 @@
 #include <optional>
 #include <vector>
 
+#include <wx/dialog.h>
 #include <wx/timer.h>
 #include <wx/weakref.h>
 #include <wx/window.h>

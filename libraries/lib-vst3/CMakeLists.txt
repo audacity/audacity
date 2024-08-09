@@ -37,6 +37,7 @@ set( LIBRARIES
    vst3sdk::sdk_hosting
    vst3sdk::sdk_common
    lib-effects-interface
+   lib-files-interface
 )
 audacity_library( lib-vst3 "${SOURCES}" "${LIBRARIES}"
    "" ""

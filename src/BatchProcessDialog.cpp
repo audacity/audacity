@@ -14,6 +14,7 @@
 
 *//*******************************************************************/
 #include "BatchProcessDialog.h"
+#include "DoEffect.h"
 
 #include <wx/setup.h> // for wxUSE_* macros
 
@@ -47,7 +48,7 @@
 #include "Track.h"
 #include "CommandManager.h"
 #include "Effect.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "effects/EffectUI.h"
 #include "../images/Arrow.xpm"
 #include "../images/Empty9x16.xpm"
@@ -1231,7 +1232,7 @@ void MacrosWindow::OnEditCommandParams(wxCommandEvent & WXUNUSED(event))
    wxString params  = mMacroCommands.GetParams(item);
    wxString oldParams = params;
 
-   params = MacroCommands::PromptForParamsFor(command, params, *this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, mProject).Trim();
    Raise();
 
    if (oldParams == params)
@@ -1396,7 +1397,6 @@ void MacrosWindow::UpdatePrefs()
 
 #include "CommonCommandFlags.h"
 #include "CommandContext.h"
-#include "effects/EffectManager.h"
 namespace {
 
 AttachedWindows::RegisteredFactory sMacrosWindowKey{
@@ -1421,10 +1421,8 @@ void OnRepeatLastTool(const CommandContext& context)
      {
         auto lastEffect = commandManager.mLastTool;
         if (!lastEffect.empty())
-        {
            EffectUI::DoEffect(
-              lastEffect, context, commandManager.mRepeatToolFlags);
-        }
+              lastEffect, context.project, commandManager.mRepeatToolFlags);
      }
        break;
      case CommandManager::repeattypeunique:

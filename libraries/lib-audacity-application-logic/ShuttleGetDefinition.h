@@ -17,7 +17,7 @@
 /**************************************************************************//**
 \brief SettingsVisitor that retrieves a JSON format definition of a command's parameters.
 ********************************************************************************/
-class AUDACITY_DLL_API ShuttleGetDefinition final
+class AUDACITY_APPLICATION_LOGIC_API ShuttleGetDefinition final
    : public ConstSettingsVisitor, public CommandMessageTargetDecorator
 {
 public:

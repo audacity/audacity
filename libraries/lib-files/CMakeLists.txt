@@ -21,6 +21,7 @@ set( SOURCES
    PathList.h
    PlatformCompatibility.cpp
    PlatformCompatibility.h
+   PlatformCompatibilityWX.cpp # requires a wxWidgets app ; alternative impl needed if not using wxWidgets.
    TempDirectory.cpp
    TempDirectory.h
    wxFileNameWrapper.h
@@ -29,6 +30,8 @@ set( LIBRARIES
    lib-exceptions-interface
    lib-preferences-interface
 )
-audacity_library( lib-files "${SOURCES}" "${LIBRARIES}"
-   "" ""
+set(DEFINES
+   PRIVATE
+      -DAUDACITY_VERSION=${AUDACITY_VERSION}
 )
+audacity_library( lib-files "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "")

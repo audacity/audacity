@@ -91,7 +91,8 @@ class MacroCommands final {
 
    static wxString GetCurrentParamsFor(const CommandID & command);
    static wxString PromptForParamsFor(
-      const CommandID & command, const wxString & params, wxWindow &parent);
+      const CommandID& command, const wxString& params,
+      AudacityProject& project);
    static wxString PromptForPresetFor(const CommandID & command, const wxString & params, wxWindow *parent);
 
    // These commands do depend on the command list.
@@ -119,14 +120,14 @@ class MacroCommands final {
    void Split(const wxString & str, wxString & command, wxString & param);
    wxString Join(const wxString & command, const wxString & param);
 
-private:	
+private:
    AudacityProject &mProject;
 
    CommandIDs mCommandMacro;
    wxArrayString mParamsMacro;
    bool mAbort;
    wxString mMessage;
-   
+
    wxString mFileName;
 };
 
