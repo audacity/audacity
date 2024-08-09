@@ -97,11 +97,16 @@ enum class SnapType {
 
     CDDAFrames
 };
-}
 
 enum class TimelineRulerMode {
     MINUTES_AND_SECONDS = 0,
     BEATS_AND_MEASURES
 };
+
+enum class Direction {
+    Left = 0,
+    Right
+};
+}
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

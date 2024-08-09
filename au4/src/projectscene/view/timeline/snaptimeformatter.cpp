@@ -99,22 +99,43 @@ static double frameMultiplier(SnapType type)
 
 au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type, bool triplets) const
 {
-    if (isBarSnap(type)) {
-        return snapTimeBar(time);
-    } else if (isBeatsSnap(type)) {
-        return snapTimeBeats(time, type, triplets);
-    } else if (isTimeSnap(type)) {
-        return snapTimeTime(time, type);
-    } else if (isSamplesSnap(type)) {
-        return snapTimeSamples(time);
-    } else if (isFrameSnap(type)) {
-        return snapTimeFrames(time, type);
-    }
+    double multiplier = snapTypeMultiplier(type, triplets);
 
+    if (!muse::RealIsNull(multiplier)) {
+        return std::round(time * multiplier) / multiplier;
+    }
     return 0.0;
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTimeBar(audio::secs_t time) const
+au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, SnapType type, bool triplets, Direction direction) const
+{
+    double multiplier = snapTypeMultiplier(type, triplets);
+
+    if (!muse::RealIsNull(multiplier)) {
+        return std::round(time * multiplier) / multiplier + determineStep(multiplier, direction);
+    }
+    return 0.0;
+}
+
+double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets) const
+{
+    double multiplier = 0.0;
+    if (isBarSnap(type)) {
+        multiplier = barMultiplier();
+    } else if (isBeatsSnap(type)) {
+        multiplier = beatsMultiplier(type, triplets);
+    } else if (isTimeSnap(type)) {
+        multiplier = timeMultiplier(type);
+    } else if (isSamplesSnap(type)) {
+        multiplier = playback()->audioOutput()->sampleRate();
+    } else if (isFrameSnap(type)) {
+        multiplier = frameMultiplier(type);
+    }
+
+    return multiplier;
+}
+
+double SnapTimeFormatter::barMultiplier() const
 {
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
@@ -128,10 +149,10 @@ au::audio::secs_t SnapTimeFormatter::snapTimeBar(audio::secs_t time) const
     double barDuration = beatDuration * timeSig.upper;
     double multiplier = 1 / barDuration;
 
-    return std::round(time * multiplier) / multiplier;
+    return multiplier;
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTimeBeats(audio::secs_t time, SnapType type, bool triplets) const
+double SnapTimeFormatter::beatsMultiplier(SnapType type, bool triplets) const
 {
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
@@ -150,26 +171,14 @@ au::audio::secs_t SnapTimeFormatter::snapTimeBeats(audio::secs_t time, SnapType 
     double fracDuration = quarterDuration * 4.0 / divisor;
     double multiplier = 1.0 / fracDuration;
 
-    return std::round(time * multiplier) / multiplier;
+    return multiplier;
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTimeTime(audio::secs_t time, SnapType type) const
+double SnapTimeFormatter::determineStep(double multiplier, Direction direction) const
 {
-    double multiplier = timeMultiplier(type);
-
-    return std::round(time * multiplier) / multiplier;
-}
-
-au::audio::secs_t SnapTimeFormatter::snapTimeSamples(audio::secs_t time) const
-{
-    double sampleRate = playback()->audioOutput()->sampleRate();
-
-    return std::round(time * sampleRate) / sampleRate;
-}
-
-au::audio::secs_t SnapTimeFormatter::snapTimeFrames(audio::secs_t time, SnapType type) const
-{
-    double multiplier = frameMultiplier(type);
-
-    return std::round(time * multiplier) / multiplier;
+    if (direction == Direction::Left) {
+        return -1 / multiplier;
+    } else {
+        return 1 / multiplier;
+    }
 }

@@ -205,6 +205,18 @@ double TimelineContext::positionToTime(double position, bool withSnap) const
     return result;
 }
 
+double TimelineContext::singleStepToTime(double position, Direction direction, bool snapEnabled) const
+{
+    double result = m_frameStartTime + position / m_zoom;
+    auto viewState = this->viewState();
+
+    if (viewState && snapEnabled) {
+        result = m_snapTimeFormatter->singleStep(result, viewState->snapType().val, viewState->isSnapTripletsEnabled().val, direction);
+    }
+
+    return result;
+}
+
 double TimelineContext::zoom() const
 {
     return m_zoom;

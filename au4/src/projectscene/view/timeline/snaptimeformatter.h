@@ -18,12 +18,14 @@ class SnapTimeFormatter
 
 public:
     audio::secs_t snapTime(audio::secs_t time, SnapType type, bool triplets) const;
+    audio::secs_t singleStep(audio::secs_t time, SnapType type, bool triplets, Direction direction) const;
 
 private:
-    audio::secs_t snapTimeBar(audio::secs_t time) const;
-    audio::secs_t snapTimeBeats(audio::secs_t time, SnapType type, bool triplets) const;
-    audio::secs_t snapTimeTime(audio::secs_t time, SnapType type) const;
-    audio::secs_t snapTimeSamples(audio::secs_t time) const;
-    audio::secs_t snapTimeFrames(audio::secs_t time, SnapType type) const;
+    double snapTypeMultiplier(SnapType type, bool triplets) const;
+
+    double barMultiplier() const;
+    double beatsMultiplier(SnapType type, bool triplets) const;
+
+    double determineStep(double multiplier, Direction direction) const;
 };
 }
