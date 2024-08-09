@@ -7,7 +7,7 @@ extern LVAL xlc_log(void);
 extern LVAL xlc_snd_sref(void);
 extern LVAL xlc_sref_inverse(void);
 extern LVAL xlc_snd_stop_time(void);
-extern LVAL xlc_snd_time(void);
+extern LVAL xlc_snd_time_legacy(void);
 extern LVAL xlc_snd_srate(void);
 extern LVAL xlc_snd_t0(void);
 extern LVAL xlc_snd_xform(void);

@@ -207,9 +207,12 @@ LOCAL void putqstring(LVAL fptr, LVAL str)
 
     /* output each character in the string */
     for (p = getstring(str); (ch = *p) != '\0'; ++p)
-
         /* check for a control character */
-        if (ch < 040 || ch == '\\' || ch > 0176 /* || ch == '"' */) {
+        if (ch < 040 || ch == '\\' ||  /* ch > 0176 || ch == '"' */
+            /* RBD: don't escape things that look like UTF-8 multibyte
+               (but this will allow some invald UTF-8 bytes as well): */
+            ch == 0x7f || ch == 0xC0 || ch == 0xC1 || ch >= 0xF5
+            ) {
             xlputc(fptr,'\\');
             switch (ch) {
             case '\011':

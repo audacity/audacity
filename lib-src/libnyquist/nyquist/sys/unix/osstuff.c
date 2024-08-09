@@ -406,6 +406,12 @@ LOCAL int rawtchar(void)
     return ch;
 }
 
+/* RBD: for UTF-8 (which is minimally supported), position is not
+   incremented if this is not the first byte of a character encoding.
+   Any byte with high order 2 bits = 10 is not the first byte.
+ */
+#define EXTRABYTE(ch) (((ch) & 0xC0) == 0x80)
+
 int ostgetc(void)
 {
 /*
@@ -427,7 +433,9 @@ int ostgetc(void)
         lbuf[lcount] = ch;
         lpos[lcount] = lposition;
         lcount++;
-        lposition++;
+        if (!EXTRABYTE(ch)) {
+            lposition++;
+        }
         
         /* now do all the special character processing */
         switch (ch) {
@@ -452,6 +460,8 @@ int ostgetc(void)
             lposition--;
             if (lcount) {
                 lcount--;
+                /* remove entire multi-byte character encoding */
+                while (lcount && EXTRABYTE(lbuf[lcount])) lcount--;
                 while (lposition > lpos[lcount]) {
 		 		    if (echo_enabled) {
                         putchar('\010');

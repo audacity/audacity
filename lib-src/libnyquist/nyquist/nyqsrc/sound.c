@@ -288,7 +288,7 @@ sound_type sound_create(
     last_sound = sound; /* debug */
     if (t0 < 0) xlfail("attempt to create a sound with negative starting time");
     /* nyquist_printf("sound_create %p gets %g\n", sound, t0); */
-    sound->t0 = sound->true_t0 = sound->time = t0;
+    sound->t0 = sound->true_t0 = /* sound->time = */ t0;
     sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->current = 0;
@@ -784,6 +784,16 @@ time_type snd_stop_time(sound_type s)
 
 /* snd_xform -- return a sound with transformations applied */
 /*
+ * Makes a copy of sound and then alters it in the following order:
+ * (1) the start time (snd-t0) of the sound is shifted to time,
+ * (2) the sound is stretched as a result of setting the sample rate
+ * to sr (the start time is unchanged by this),
+ * (3) the sound is clipped from start to stop, 
+ * (4) if start is greater than time, the sound is shifted shifted by
+ * time - start, so that the start time is time, 
+ * (5) the sound is scaled by scale.  An empty (zero) sound at time
+ * will be returned if all samples are clipped.
+ *
  * The "logical" sound starts at snd->time and runs until some
  * as yet unknown termination time.  (There is also a possibly
  * as yet unknown logical stop time that is irrelevant here.)
@@ -1781,7 +1791,7 @@ sound_type sound_zero(time_type t0,rate_type sr)
     sound->get_next = SND_get_first;
     sound->list = zero_snd_list;
     sound->logical_stop_cnt = sound->current = 0;
-    sound->true_t0 = sound->t0 = sound->time = t0;
+    sound->true_t0 = sound->t0 = /* sound->time = */ t0;
     sound->stop = MAX_STOP;
     sound->sr = sr;
     sound->scale = 1.0F;
