@@ -104,6 +104,16 @@ ListItemBlank {
                 }
             }
 
+            TextField {
+                id: snapRange
+                placeholderText: "Snap range"
+                validator: DoubleValidator {
+                    bottom: 0
+                    top: 10.0
+                }
+                text:"2"
+            }
+
             RowLayout {
                 Layout.fillWidth: true
 
@@ -117,7 +127,82 @@ ListItemBlank {
                     }
                 }
 
+
+
                 StyledSlider {
+                    id: volumeSlider
+                    from: -60.0
+                    to: 12.0
+                    StyledPopupView {
+                        parent: volumeSlider.handle
+                        id: popup
+                        placement: PopupView.Above
+                        openPolicies: PopupView.NoActivateFocus
+                        padding: 8
+                        margins: 8
+                        contentWidth: contentRect.width
+                        contentHeight: contentRect.height
+                        FontMetrics {
+                            id: fontMetrics
+                            font: content.font
+                        }
+                        property rect contentRect: fontMetrics.boundingRect("-60.0dB")
+
+                        Item {
+                            anchors.fill: parent
+                            id: content
+
+                            Text {
+                                anchors.right: parent.right
+                                text: {
+                                    let value = volumeSlider.value.toFixed(1);
+                                    return `${value}dB`
+                                }
+                            }
+                        }
+                    }
+                    property double snapPoint: 0.0
+
+                    signal mouseEntered()
+                    signal mouseExited()
+
+                    MouseArea {
+                        acceptedButtons: Qt.NoButton
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onEntered: {
+                            volumeSlider.mouseEntered()
+                        }
+                        onExited: {
+                            volumeSlider.mouseExited()
+                        }
+                    }
+
+
+
+                    onMoved: {
+
+                        if (Math.abs(value - snapPoint) < parseFloat(snapRange.text)) {
+
+                            value = snapPoint
+                        }
+                    }
+
+                    Timer {
+                        id: popupTimer
+                        interval: 200
+                        repeat: false
+                        onTriggered: popup.open()
+                    }
+
+                    onMouseEntered: {
+                        popupTimer.start()
+                    }
+
+                    onMouseExited: {
+                        popupTimer.stop()
+                        popup.close()
+                    }
                     Layout.fillWidth: true
 
                     value: root.item.volumeLevel
