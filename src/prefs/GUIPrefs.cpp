@@ -196,6 +196,7 @@ void GUIPrefs::PopulateOrExchange(ShuttleGui & S)
 
 bool GUIPrefs::Commit()
 {
+   Identifier oldTheme = GUITheme().Read();
    ShuttleGui S(this, eIsSavingToPrefs);
    PopulateOrExchange(S);
 
@@ -210,6 +211,7 @@ bool GUIPrefs::Commit()
    }
 
    // Reads preference GUITheme
+   if ( oldTheme != GUITheme().Read() )
    {
       wxBusyCursor busy;
       theTheme.LoadPreferredTheme();
