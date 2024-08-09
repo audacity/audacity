@@ -52,9 +52,7 @@ class AUDACITY_DLL_API GUIPrefs final : public PrefsPanel
    int mDefaultRangeIndex;
 };
 
-AUDACITY_DLL_API
-int ShowClippingPrefsID();
-
 AUDACITY_DLL_API BoolSetting& ShowRMSPref();
+AUDACITY_DLL_API BoolSetting& ShowClippingPref();
 
 #endif

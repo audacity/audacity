@@ -347,7 +347,7 @@ class PREFERENCES_API BoolSetting final : public Setting< bool >
 public:
    using Setting::Setting;
 
-   //! Write the negation of the previous value, and then return the current value.
+   //! Write the negation of the previous value, and return true if successful
    bool Toggle();
 };
 
