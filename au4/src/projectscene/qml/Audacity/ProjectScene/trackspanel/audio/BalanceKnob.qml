@@ -9,8 +9,8 @@ import Muse.UiComponents 1.0
 
 KnobControl {
     id: root
-    isBalanceKnob: true
 
+    isBalanceKnob: true
     from: -100
     to: 100
     stepSize: 1

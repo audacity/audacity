@@ -9,26 +9,33 @@ import Muse.UiComponents 1.0
 
 StyledPopupView {
     id: root
-    placement: PopupView.Above
-    openPolicies: PopupView.NoActivateFocus
+
     padding: 8
     margins: 8
     contentWidth: contentRect.width
     contentHeight: contentRect.height
+    placement: PopupView.Above
+    openPolicies: PopupView.NoActivateFocus
 
-    property rect contentRect: fontMetrics.boundingRect("Pan: 100R")
+    property rect contentRect: fontMetrics.boundingRect(qsTrc("projectscene", "Pan: 100R"))
     property double value: 0
 
     Item {
-        anchors.fill: parent
         id: content
-        Text {
-            anchors.fill: parent
-            text: "Pan:"
+
+        anchors.fill: parent
+
+        StyledTextLabel {
+            id: label
+
+            anchors.left: parent.left
+
+            text: qsTrc("projectscene", "Pan:")
         }
 
-        Text {
+        StyledTextLabel {
             anchors.right: parent.right
+
             text: {
                 let value = Math.round(root.value);
                 let direction = value < 0 ? 'L' : value > 0 ? 'R' : '';
@@ -39,13 +46,16 @@ StyledPopupView {
 
     FontMetrics {
         id: fontMetrics
-        font: content.font
+
+        font: label.font
     }
 
     Timer {
         id: openTimer
+
         interval: ui.theme.tooltipDelay
         repeat: false
+
         onTriggered: {
             open()
         }
@@ -53,8 +63,10 @@ StyledPopupView {
 
     Timer {
         id: closeTimer
+
         interval: ui.theme.tooltipDelay
         repeat: false
+
         onTriggered: {
             close()
         }
