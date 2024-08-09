@@ -17,7 +17,7 @@ StyledPopupView {
     placement: PopupView.Above
     openPolicies: PopupView.NoActivateFocus
 
-    property rect contentRect: fontMetrics.boundingRect("Pan: 100R")
+    property rect contentRect: fontMetrics.boundingRect(qsTrc("projectscene", "Pan: 100R"))
     property double value: 0
 
     Item {
@@ -26,9 +26,11 @@ StyledPopupView {
         anchors.fill: parent
 
         StyledTextLabel {
+            id: label
+
             anchors.left: parent.left
 
-            text: "Pan:"
+            text: qsTrc("projectscene", "Pan:")
         }
 
         StyledTextLabel {
@@ -45,7 +47,7 @@ StyledPopupView {
     FontMetrics {
         id: fontMetrics
 
-        font: content.font
+        font: label.font
     }
 
     Timer {
