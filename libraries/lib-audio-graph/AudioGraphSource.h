@@ -28,6 +28,8 @@ class AUDIO_GRAPH_API Source {
 public:
    using Buffers = AudioGraph::Buffers;
 
+   Source() = default;
+
    virtual ~Source();
 
    virtual bool AcceptsBuffers(const Buffers &buffers) const = 0;

@@ -15,6 +15,7 @@
 
 *//*******************************************************************/
 #include "Mix.h"
+#include "Mix.h"
 #include "MixerSource.h"
 
 #include <cmath>
@@ -24,6 +25,8 @@
 #include "WideSampleSequence.h"
 #include "float_cast.h"
 #include <numeric>
+
+#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
 
 namespace {
 template<typename T, typename F> std::vector<T>
@@ -45,6 +48,21 @@ initVector(size_t dim1, size_t dim2)
 
 namespace
 {
+
+void MixBuffers(unsigned numChannels,
+   const unsigned char *channelFlags, const float *gains,
+   const float &src, AudioGraph::Buffers &dests, int len)
+{
+   const auto pSrc = &src;
+   for (unsigned int c = 0; c < numChannels; c++) {
+      if (!channelFlags[c])
+         continue;
+      auto dest = &dests.GetWritePosition(c);
+      for (int j = 0; j < len; ++j)
+         dest[j] += pSrc[j] * gains[c];   // the actual mixing process
+   }
+}
+
 void ConsiderStages(const Mixer::Stages& stages, size_t& blockSize)
 {
    for (const auto& stage : stages)
@@ -78,6 +96,214 @@ size_t FindBufferSize(
 
    return blockSize;
 }
+
+//! Describes an input source for DownmixStage
+class DownmixSource
+{
+public:
+   DownmixSource() = default;
+
+   virtual ~DownmixSource() = default;
+   //! Returns underlying `AudioGraph::Source` processed by Mixer
+   virtual AudioGraph::Source& GetDownstream() const = 0;
+   //! Number of output channels of the underlying Source
+   virtual size_t NChannels() const = 0;
+   //! Gain multiplier that should be applied to the channel
+   virtual float GetChannelGain(size_t channel) const = 0;
+   //! For the given `iChannel` fills the channelFlags array, that describes
+   //! to which output it should go.
+   virtual void FindChannelFlags(unsigned char *channelFlags, size_t numChannels, size_t iChannel) = 0;
+   //! Returns true if source channels could be combined into mono if needed
+   virtual bool CanMakeMono() const = 0;
+};
+
+class SequenceDownmixSource final : public DownmixSource
+{
+   AudioGraph::Source& mDownstream;
+   const WideSampleSequence& mSequence;
+   //! many-to-one mixing of channels
+   //! Pointer into array of arrays
+   const ArrayOf<bool> * mpMap {};
+public:
+
+   SequenceDownmixSource(AudioGraph::Source& downstream,
+                         const WideSampleSequence& sequence,
+                         //! Null or else must have a lifetime enclosing this objects's
+                         const ArrayOf<bool> *channelMap)
+      : mDownstream(downstream)
+      , mSequence(sequence)
+      , mpMap(channelMap)
+   {
+   }
+
+   AudioGraph::Source& GetDownstream() const override { return mDownstream; }
+   size_t NChannels() const override { return mSequence.NChannels(); }
+   float GetChannelGain(size_t channel) const override { return mSequence.GetChannelGain(channel); }
+   void FindChannelFlags(unsigned char *channelFlags, size_t numChannels, size_t iChannel) override
+   {
+      const bool* map = mpMap ? mpMap[iChannel].get() : nullptr;
+      const auto end = channelFlags + numChannels;
+      std::fill(channelFlags, end, 0);
+      if (map)
+         // ignore left and right when downmixing is customized
+         std::copy(map, map + numChannels, channelFlags);
+      else if (AudioGraph::IsMono(mSequence))
+         std::fill(channelFlags, end, 1);
+      else if (iChannel == 0)
+         channelFlags[0] = 1;
+      else if (iChannel == 1) {
+         if (numChannels >= 2)
+            channelFlags[1] = 1;
+         else
+            channelFlags[0] = 1;
+      }
+   }
+   bool CanMakeMono() const override { return mpMap == nullptr; }
+};
+
+class StereoToMono final : public DownmixSource
+{
+   AudioGraph::Source& mMasterSource;
+public:
+
+   StereoToMono(AudioGraph::Source& masterSource)
+      : mMasterSource(masterSource)
+   { }
+
+   AudioGraph::Source& GetDownstream() const override { return mMasterSource; }
+   size_t NChannels() const override { return 2; }
+   float GetChannelGain(size_t) const override { return 1.f; }
+   void FindChannelFlags(unsigned char* channelFlags, size_t numChannels, size_t) override
+   {
+      for(size_t i = 0; i < numChannels; ++i)
+         channelFlags[i] = true;
+   }
+   bool CanMakeMono() const override { return true; }
+};
+
+//! Combines multiple audio graph sources into a single source
+class DownmixStage final : public AudioGraph::Source
+{
+   std::vector<std::unique_ptr<DownmixSource>> mDownmixSources;
+   // Resample into these buffers, or produce directly when not resampling
+   AudioGraph::Buffers mFloatBuffers;
+   size_t mNumChannels;
+   Mixer::ApplyGain mApplyGain;
+
+public:
+
+   DownmixStage(std::vector<std::unique_ptr<DownmixSource>> downmixSources,
+                size_t numChannels,
+                size_t bufferSize,
+                Mixer::ApplyGain applyGain)
+      : mDownmixSources(std::move(downmixSources))
+    // PRL:  Bug2536: see other comments below for the last, padding argument
+    // TODO: more-than-two-channels
+    // Issue 3565 workaround:  allocate one extra buffer when applying a
+    // GVerb effect stage.  It is simply discarded
+    // See also issue 3854, when the number of out channels expected by the
+    // plug-in is yet larger
+      , mFloatBuffers { 3, bufferSize, 1, 1 }
+      , mNumChannels(numChannels)
+      , mApplyGain(applyGain)
+   {
+      
+   }
+
+   ~DownmixStage() override = default;
+
+   bool AcceptsBuffers(const Buffers& buffers) const override
+   {
+      return buffers.Channels() == mNumChannels &&
+         AcceptsBlockSize(buffers.BlockSize());  
+   }
+
+   bool AcceptsBlockSize(size_t blockSize) const override
+   {
+      return blockSize <= mFloatBuffers.BufferSize();
+   }
+
+   std::optional<size_t> Acquire(Buffers& data, size_t maxToProcess) override
+   {
+      // TODO: more-than-two-channels
+      auto maxChannels = std::max(2u, mFloatBuffers.Channels());
+      const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
+      const auto gains = stackAllocate(float, mNumChannels);
+      if (mApplyGain == Mixer::ApplyGain::Discard)
+         std::fill(gains, gains + mNumChannels, 1.0f);
+
+      size_t maxOut = 0;
+      for (auto c = 0;c < data.Channels(); ++c)
+         data.ClearBuffer(c, maxToProcess);
+
+      for (auto& downmixSource : mDownmixSources)
+      {
+         auto oResult = downmixSource->GetDownstream().Acquire(mFloatBuffers, maxToProcess);
+         // One of MixVariableRates or MixSameRate assigns into mTemp[*][*]
+         // which are the sources for the CopySamples calls, and they copy into
+         // mBuffer[*][*]
+         if (!oResult)
+            return 0;
+         const auto result = *oResult;
+         maxOut = std::max(maxOut, result);
+
+         // Insert effect stages here!  Passing them all channels of the track
+
+         const auto limit = std::min<size_t>(downmixSource->NChannels(), maxChannels);
+         for (size_t j = 0; j < limit; ++j)
+         {
+            const auto pFloat = (const float*)mFloatBuffers.GetReadPosition(j);
+            if (mApplyGain != Mixer::ApplyGain::Discard)
+            {
+               for (size_t c = 0; c < mNumChannels; ++c)
+               {
+                  if (mNumChannels > 1)
+                     gains[c] = downmixSource->GetChannelGain(c);
+                  else
+                     gains[c] = downmixSource->GetChannelGain(j);
+               }
+               if (mApplyGain == Mixer::ApplyGain::Mixdown &&
+                   mNumChannels == 1 &&
+                   downmixSource->CanMakeMono())
+               {
+                  gains[0] /= static_cast<float>(limit);
+               }
+            }
+
+            downmixSource->FindChannelFlags(channelFlags, mNumChannels, j);
+            MixBuffers(mNumChannels, channelFlags, gains, *pFloat, data, result);
+         }
+
+         downmixSource->GetDownstream().Release();
+         mFloatBuffers.Advance(result);
+         mFloatBuffers.Rotate();
+      }
+
+      // MB: this doesn't take warping into account, replaced with code based on mSamplePos
+      //mT += (maxOut / mRate);
+
+      assert(maxOut <= maxToProcess);
+      return maxOut;
+   }
+   sampleCount Remaining() const override
+   {
+      return std::accumulate(
+         mDownmixSources.begin(), mDownmixSources.end(), sampleCount { 0 },
+         [](sampleCount sum, const auto& source) {
+            return std::max(sum, source->GetDownstream().Remaining());
+         });
+   }
+
+   bool Release() override
+   {
+      return true;
+   }
+};
+
+auto NeedsDitherPred(const MixerOptions::StageSpecification &spec) {
+   return spec.mpFirstInstance && spec.mpFirstInstance->NeedsDither();
+};
+
 } // namespace
 
 Mixer::Mixer(
@@ -98,14 +324,6 @@ Mixer::Mixer(
     , mTimesAndSpeed { std::make_shared<TimesAndSpeed>(TimesAndSpeed {
          startTime, stopTime, warpOptions.initialSpeed, startTime }) }
 
-    // PRL:  Bug2536: see other comments below for the last, padding argument
-    // TODO: more-than-two-channels
-    // Issue 3565 workaround:  allocate one extra buffer when applying a
-    // GVerb effect stage.  It is simply discarded
-    // See also issue 3854, when the number of out channels expected by the
-    // plug-in is yet larger
-    , mFloatBuffers { 3, mBufferSize, 1, 1 }
-
     // non-interleaved
     , mTemp { mNumChannels, mBufferSize, 1, 1 }
     , mBuffer { initVector<SampleBuffer>(
@@ -125,16 +343,11 @@ Mixer::Mixer(
    // This finds a sufficient, but not necessary, condition to do dithering
    bool needsDither = std::any_of(mInputs.begin(), mInputs.end(),
       [](const Input &input){
-         return std::any_of(input.stages.begin(), input.stages.end(),
-            [](const MixerOptions::StageSpecification &spec){
-               return spec.mpFirstInstance &&
-                  spec.mpFirstInstance->NeedsDither(); } ); } );
+         return std::any_of(input.stages.begin(), input.stages.end(), NeedsDitherPred); }
+   );
    if (mMasterEffects)
       needsDither |= std::any_of(
-         mMasterEffects->begin(), mMasterEffects->end(),
-         [](const MixerOptions::StageSpecification& spec) {
-            return spec.mpFirstInstance && spec.mpFirstInstance->NeedsDither();
-         });
+         mMasterEffects->begin(), mMasterEffects->end(), NeedsDitherPred);
 
    auto pMixerSpec = ( mixerSpec &&
       mixerSpec->GetNumChannels() == mNumChannels &&
@@ -150,45 +363,76 @@ Mixer::Mixer(
       std::accumulate(
          mInputs.begin(), mInputs.end(), 0,
          [](auto sum, const auto& input) {
-            return sum + input.stages.size() * input.pSequence->NChannels();
+            return sum + input.stages.size();
          }) +
       nMasterStages;
    mSettings.reserve(nStages);
    mStageBuffers.reserve(nStages);
 
    size_t i = 0;
+   std::vector<std::unique_ptr<DownmixSource>> mixdownSources;
    for (auto &input : mInputs) {
       const auto &sequence = input.pSequence;
       if (!sequence) {
          assert(false);
          break;
       }
-      auto increment = finally([&]{ i += sequence->NChannels(); });
 
       auto &source = mSources.emplace_back(sequence, BufferSize(), outRate,
-         warpOptions, highQuality, mayThrow, mTimesAndSpeed,
-         (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
+         warpOptions, highQuality, mayThrow, mTimesAndSpeed);
       AudioGraph::Source *pDownstream = &source;
       for (const auto &stage : input.stages)
          if (
             auto& pNewDownstream =
-               RegisterEffectStage(*pDownstream, stage, outRate))
+               RegisterEffectStage(*pDownstream, sequence->NChannels(), stage, outRate))
          {
             pDownstream = pNewDownstream.get();
          }
-      mDecoratedSources.emplace_back(Source{ source, *pDownstream });
-   }
+      mixdownSources.emplace_back(
+         std::make_unique<SequenceDownmixSource>(
+            *pDownstream,
+            *sequence,
+            pMixerSpec ? &pMixerSpec->mMap[i] : nullptr
+         )
+      );
 
-   if (mMasterEffects)
+      i += sequence->NChannels();
+   }
+   
+   if (mMasterEffects && !mMasterEffects->empty())
    {
-      AudioGraph::Source* pDownstream = this;
+      mMixDownStage = std::make_unique<DownmixStage>(
+         std::move(mixdownSources), 2, mBufferSize, ApplyGain::MapChannels
+      );
+
+      AudioGraph::Source* pDownstream = mMixDownStage.get();
       for (const auto& stage : *mMasterEffects)
          if (
             auto& pNewDownstream =
-               RegisterEffectStage(*pDownstream, stage, outRate))
+               RegisterEffectStage(*pDownstream, 2, stage, outRate))
          {
-            mMasterStages.emplace_back(pDownstream = pNewDownstream.get());
+            pDownstream = pNewDownstream.get();
          }
+      if(mNumChannels == 1)
+      {
+         std::vector<std::unique_ptr<DownmixSource>> masterMixdownSources;
+         masterMixdownSources.push_back(std::make_unique<StereoToMono>(*pDownstream));
+         mMasterMixStage = std::make_unique<DownmixStage>(
+            std::move(masterMixdownSources), 1u, mBufferSize, ApplyGain::Mixdown);
+         mDownstream = mMasterMixStage.get();
+      }
+      else
+         mDownstream = pDownstream;
+   }
+   else
+   {
+      mMixDownStage = std::make_unique<DownmixStage>(
+         std::move(mixdownSources),
+         mNumChannels,
+         mBufferSize,
+         mApplyGain
+      );
+      mDownstream = mMixDownStage.get();
    }
 
    // Decide once at construction time
@@ -265,22 +509,6 @@ void Mixer::Clear()
       mTemp.ClearBuffer(c, mBufferSize);
 }
 
-static void MixBuffers(unsigned numChannels,
-   const unsigned char *channelFlags, const float *gains,
-   const float &src, AudioGraph::Buffers &dests, int len)
-{
-   const auto pSrc = &src;
-   for (unsigned int c = 0; c < numChannels; c++) {
-      if (!channelFlags[c])
-         continue;
-      auto dest = &dests.GetWritePosition(c);
-      for (int j = 0; j < len; ++j)
-         dest[j] += pSrc[j] * gains[c];   // the actual mixing process
-   }
-}
-
-#define stackAllocate(T, count) static_cast<T*>(alloca(count * sizeof(T)))
-
 size_t Mixer::Process(const size_t maxToProcess)
 {
    assert(maxToProcess <= BufferSize());
@@ -298,14 +526,10 @@ size_t Mixer::Process(const size_t maxToProcess)
    Clear();
 
    std::optional<size_t> maxOut;
-   if (mMasterStages.empty())
-      maxOut = Acquire(mTemp, maxToProcess);
-   else
-   {
-      const auto stage = mMasterStages.back();
-      maxOut = stage->Acquire(mTemp, maxToProcess);
-      stage->Release();
-   }
+   
+   maxOut = mDownstream->Acquire(mTemp, maxToProcess);
+   mDownstream->Release();
+
    if (!maxOut)
       return 0;
 
@@ -404,117 +628,9 @@ void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
    mSpeed = fabs(speed);
 }
 
-bool Mixer::AcceptsBuffers(const Buffers& buffers) const
-{
-   return buffers.Channels() == mNumChannels &&
-          AcceptsBlockSize(buffers.BlockSize());
-}
-
-bool Mixer::AcceptsBlockSize(size_t blockSize) const
-{
-   return blockSize <= BufferSize();
-}
-
-sampleCount Mixer::Remaining() const
-{
-   return std::accumulate(
-      mDecoratedSources.begin(), mDecoratedSources.end(), sampleCount { 0 },
-      [](sampleCount sum, const Source& source) {
-         return std::max(sum, source.downstream.Remaining());
-      });
-}
-
-bool Mixer::Release()
-{
-   return true;
-}
-
-std::optional<size_t> Mixer::Acquire(Buffers& data, size_t maxToProcess)
-{
-   // TODO: more-than-two-channels
-   auto maxChannels = std::max(2u, mFloatBuffers.Channels());
-   const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
-   const auto gains = stackAllocate(float, mNumChannels);
-   if (mApplyGain == ApplyGain::Discard)
-      std::fill(gains, gains + mNumChannels, 1.0f);
-
-   // Decides which output buffers an input channel accumulates into
-   auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
-   (const bool *map, const WideSampleSequence &sequence, size_t iChannel){
-      const auto end = channelFlags + numChannels;
-      std::fill(channelFlags, end, 0);
-      if (map)
-         // ignore left and right when downmixing is customized
-         std::copy(map, map + numChannels, channelFlags);
-      else if (IsMono(sequence))
-         std::fill(channelFlags, end, 1);
-      else if (iChannel == 0)
-         channelFlags[0] = 1;
-      else if (iChannel == 1) {
-         if (numChannels >= 2)
-            channelFlags[1] = 1;
-         else
-            channelFlags[0] = 1;
-      }
-      return channelFlags;
-   };
-
-   size_t maxOut = 0;
-   for (auto c = 0;c < data.Channels(); ++c)
-      data.ClearBuffer(c, maxToProcess);
-
-   for (auto& [upstream, downstream] : mDecoratedSources)
-   {
-      auto oResult = downstream.Acquire(mFloatBuffers, maxToProcess);
-      // One of MixVariableRates or MixSameRate assigns into mTemp[*][*]
-      // which are the sources for the CopySamples calls, and they copy into
-      // mBuffer[*][*]
-      if (!oResult)
-         return 0;
-      const auto result = *oResult;
-      maxOut = std::max(maxOut, result);
-
-      // Insert effect stages here!  Passing them all channels of the track
-
-      const auto limit = std::min<size_t>(upstream.Channels(), maxChannels);
-      for (size_t j = 0; j < limit; ++j)
-      {
-         const auto pFloat = (const float*)mFloatBuffers.GetReadPosition(j);
-         auto& sequence = upstream.GetSequence();
-         if (mApplyGain != ApplyGain::Discard)
-         {
-            for (size_t c = 0; c < mNumChannels; ++c)
-            {
-               if (mNumChannels > 1)
-                  gains[c] = sequence.GetChannelGain(c);
-               else
-                  gains[c] = sequence.GetChannelGain(j);
-            }
-            if (
-               mApplyGain == ApplyGain::Mixdown && !mHasMixerSpec &&
-               mNumChannels == 1)
-               gains[0] /= static_cast<float>(limit);
-         }
-
-         const auto flags =
-            findChannelFlags(upstream.MixerSpec(j), sequence, j);
-         MixBuffers(mNumChannels, flags, gains, *pFloat, data, result);
-      }
-
-      downstream.Release();
-      mFloatBuffers.Advance(result);
-      mFloatBuffers.Rotate();
-   }
-
-   // MB: this doesn't take warping into account, replaced with code based on mSamplePos
-   //mT += (maxOut / mRate);
-
-   assert(maxOut <= maxToProcess);
-   return maxOut;
-}
-
 std::unique_ptr<EffectStage>& Mixer::RegisterEffectStage(
-   AudioGraph::Source& upstream, const MixerOptions::StageSpecification& stage,
+   AudioGraph::Source& upstream, size_t numChannels,
+   const MixerOptions::StageSpecification& stage,
    double outRate)
 {
    // Make a mutable copy of stage.settings
@@ -530,7 +646,7 @@ std::unique_ptr<EffectStage>& Mixer::RegisterEffectStage(
                                      stage.factory();
    };
    auto& pNewDownstream = mStages.emplace_back(EffectStage::Create(
-      -1, mNumChannels, upstream, stageInput, factory, settings, outRate,
+      -1, numChannels, upstream, stageInput, factory, settings, outRate,
       std::nullopt));
    if (!pNewDownstream)
    {

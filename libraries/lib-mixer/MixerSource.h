@@ -41,17 +41,13 @@ public:
    MixerSource(const std::shared_ptr<const WideSampleSequence> &seq,
       size_t bufferSize,
       double rate, const MixerOptions::Warp &options, bool highQuality,
-      bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
-      //! Null or else must have a lifetime enclosing this objects's
-      const ArrayOf<bool> *pMap
+      bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
    );
-   MixerSource(MixerSource&&) = default;
-   MixerSource &operator=(MixerSource&&) = delete;
-   ~MixerSource();
+   MixerSource(MixerSource&&) noexcept = default;
+   ~MixerSource() override;
 
    unsigned Channels() const { return mnChannels; }
    const WideSampleSequence &GetSequence() const;
-   const bool *MixerSpec(unsigned iChannel) const;
 
    bool AcceptsBuffers(const Buffers &buffers) const override;
    bool AcceptsBlockSize(size_t blockSize) const override;
@@ -129,10 +125,6 @@ private:
 
    //! Gain envelopes are applied to input before other transformations
    std::vector<double> mEnvValues;
-
-   //! many-to-one mixing of channels
-   //! Pointer into array of arrays
-   const ArrayOf<bool> *const mpMap;
 
    //! Remember how many channels were passed to Acquire()
    unsigned mMaxChannels{};
