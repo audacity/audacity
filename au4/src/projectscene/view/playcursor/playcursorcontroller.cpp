@@ -48,7 +48,10 @@ void PlayCursorController::init()
 
 void PlayCursorController::seekToX(double x)
 {
-    double secs = m_context->positionToTime(x);
+    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+    bool snapEnabled = viewState->isSnapEnabled().val;
+
+    double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
     }
