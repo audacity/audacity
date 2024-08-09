@@ -529,7 +529,7 @@ auto FileMenu()
          //   AudioIONotBusyFlag(), wxT("Shift+A") )
       ),
 
-      Section( "Close", Command( wxT("Close"), XXO("&Close"), OnClose,
+      Section( "Close", Command( wxT("Close"), XXO("&Close Project"), OnClose,
             AudioIONotBusyFlag(), wxT("Ctrl+W") )
       ),
 
@@ -558,7 +558,7 @@ auto FileMenu()
          // pull it out
          // and put it in the Audacity menu for us based on its ID.
          /* i18n-hint: (verb) It's item on a menu. */
-         Command( wxT("Exit"), XXO("E&xit"), OnExit,
+         Command( wxT("Exit"), XXO("Quit Audacity"), OnExit,
             AlwaysEnabledFlag, wxT("Ctrl+Q") )
       )
    ) };
