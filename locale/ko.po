@@ -12622,7 +12622,7 @@ msgstr "오디오 샘플의 극성을 반전하여 위아래로 뒤집습니다"
 #: src/effects/LegacyCompressor.cpp resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Legacy Compressor"
-msgstr "Glue Compressor"
+msgstr "레거시 컴프레서"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "Compresses the dynamic range of audio"
@@ -12670,11 +12670,11 @@ msgstr "비율 %.1f 대 1"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "&Noise Floor:"
-msgstr "노이즈 플로어:"
+msgstr "노이즈 플로어 (&N):"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "&Ratio:"
-msgstr "비율:"
+msgstr "비율 (&R):"
 
 #: src/effects/LegacyCompressor.cpp
 msgid "Ratio"
@@ -12685,7 +12685,7 @@ msgstr "비율"
 #. * sound dies away.  So this means 'onset duration'.
 #: src/effects/LegacyCompressor.cpp
 msgid "&Attack Time:"
-msgstr "어택 시간:"
+msgstr "어택 시간 (&A):"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' where the
@@ -12699,7 +12699,7 @@ msgstr "어택 시간"
 #. * sound dies away.
 #: src/effects/LegacyCompressor.cpp
 msgid "R&elease Time:"
-msgstr "릴리즈 시간:"
+msgstr "릴리즈 시간 (&R):"
 
 #. i18n-hint: Particularly in percussion, sounds can be regarded as having
 #. * an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
@@ -12711,7 +12711,7 @@ msgstr "릴리즈 시간"
 #. i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.
 #: src/effects/LegacyCompressor.cpp
 msgid "Ma&ke-up gain for 0 dB after compressing"
-msgstr "컴프레싱 후 피크 레벨 0 dB까지 메이크업 게인 적용"
+msgstr "컴프레싱 후 피크 레벨 0 dB까지 메이크업 게인 적용 (&K)"
 
 #. i18n-hint: "Compress" here means reduce variations of sound volume,
 #. NOT related to file-size compression; Peaks means extremes in volume
@@ -19174,7 +19174,7 @@ msgstr ""
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, fuzzy
 msgid "Invalid Limits"
-msgstr "하드 리미트"
+msgstr "잘못된 리미트"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -21433,7 +21433,7 @@ msgstr "특수 도구"
 #: resources/EffectsMenuDefaults.xml
 #, fuzzy
 msgid "Legacy"
-msgstr "법률정보"
+msgstr "레거시"
 
 #~ msgctxt "clip name template"
 #~ msgid "%s %i"
@@ -21444,7 +21444,7 @@ msgstr "법률정보"
 #~ msgstr "%s #%d"
 
 #~ msgid "Change upper speed limit (%) to:"
-#~ msgstr "최대 속도 한계 변경 (%):"
+#~ msgstr "최대 속도 한계를 변경 (%):"
 
 #~ msgid "This version of Audacity only allows one time track for each project window."
 #~ msgstr "이 버전의 오데시티에서는 각 프로젝트 창에 한 개의 시간 트랙만 사용할 수 있습니다."
@@ -22341,4 +22341,4 @@ msgstr "법률정보"
 #~ "           센터 제거로 좋은 결과를 기대할 수 없습니다."
 
 #~ msgid "This plug-in works only with stereo tracks."
-#~ msgstr "이 플러그인은 스테레오 트랙에만 작동함."
+#~ msgstr "이 플러그인은 스테레오 트랙에만 작동합니다."
