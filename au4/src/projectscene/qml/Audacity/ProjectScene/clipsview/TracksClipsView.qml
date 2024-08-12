@@ -182,6 +182,7 @@ Rectangle {
             onPressed: function(e) {
                 playCursorController.seekToX(e.x)
                 selectionController.onPressed(e.x, e.y)
+                selectionController.resetSelectedClip()
             }
             onPositionChanged: function(e) {
                 mouseOnTracks = e.y < view.visibleContentHeight
@@ -243,6 +244,11 @@ Rectangle {
                     if (!root.clipHovered) {
                         root.clipHovered = true
                     }
+                }
+
+                onClipSelectedRequested: {
+                    selectionController.resetDataSelection()
+                    clipsSelection.active = false
                 }
             }
         }

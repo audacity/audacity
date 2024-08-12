@@ -18,6 +18,7 @@ Item {
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
     signal trackItemMousePositionChanged(real x, real y)
+    signal clipSelectedRequested()
 
     height: trackViewState.trackHeight
 
@@ -123,6 +124,7 @@ Item {
 
                 onRequestSelected: {
                     clipsModel.selectClip(clipItem.key)
+                    root.clipSelectedRequested()
                 }
 
                 onTitleEditStarted: {
