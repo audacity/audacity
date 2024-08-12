@@ -33,4 +33,19 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectmodel.h
     )
 
+# AU3
+include(${CMAKE_CURRENT_LIST_DIR}/../au3wrap/au3defs.cmake)
+
+set(MODULE_INCLUDE ${AU3_INCLUDE})
+set(MODULE_DEF ${AU3_DEF})
+set(MODULE_LINK au3wrap)
+
+install(DIRECTORY
+      builtineffects
+      DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}
+      PATTERN ".*" EXCLUDE
+      PATTERN "*.h" EXCLUDE
+      PATTERN "*.cpp" EXCLUDE
+      )
+
 setup_module()
