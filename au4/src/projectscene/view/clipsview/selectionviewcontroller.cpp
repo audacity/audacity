@@ -103,6 +103,12 @@ void SelectionViewController::resetSelectedClip()
     selectionController()->resetSelectedClip();
 }
 
+void SelectionViewController::resetDataSelection()
+{
+    setSelectionActive(false);
+    selectionController()->resetDataSelection();
+}
+
 IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();
