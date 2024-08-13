@@ -197,34 +197,33 @@ double TimelineContext::positionToTime(double position, bool withSnap) const
 
     if (withSnap) {
         auto viewState = this->viewState();
-        if (viewState && viewState->isSnapEnabled().val) {
+        if (viewState && viewState->isSnapEnabled()) {
             auto project = globalContext()->currentTrackeditProject();
             if (!project) {
                 return 0.0;
             }
 
             trackedit::TimeSignature timeSig = project->timeSignature();
-            result = m_snapTimeFormatter->snapTime(result, viewState->snapType().val, viewState->isSnapTripletsEnabled().val, timeSig);
+            result = m_snapTimeFormatter->snapTime(result, viewState->snap().val, timeSig);
         }
     }
 
     return result;
 }
 
-double TimelineContext::singleStepToTime(double position, Direction direction, bool snapEnabled) const
+double TimelineContext::singleStepToTime(double position, Direction direction, const Snap& snap) const
 {
     double result = m_frameStartTime + position / m_zoom;
     auto viewState = this->viewState();
 
-    if (viewState && snapEnabled) {
+    if (viewState && snap.enabled) {
         auto project = globalContext()->currentTrackeditProject();
         if (!project) {
             return 0.0;
         }
 
         trackedit::TimeSignature timeSig = project->timeSignature();
-        result = m_snapTimeFormatter->singleStep(result, viewState->snapType().val,
-                                                 viewState->isSnapTripletsEnabled().val, direction, timeSig);
+        result = m_snapTimeFormatter->singleStep(result, viewState->snap().val, direction, timeSig);
     }
 
     return result;

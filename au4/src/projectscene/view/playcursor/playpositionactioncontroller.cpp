@@ -62,22 +62,8 @@ void PlayPositionActionController::init()
 {
     IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
 
-    viewState->isSnapEnabled().ch.onReceive(this, [this](bool snapEnabled){
-        if (snapEnabled) {
-            snapCurrentPosition();
-        }
-    });
-
-    viewState->snapType().ch.onReceive(this, [this, viewState](SnapType snapType){
-        Q_UNUSED(snapType);
-        if (viewState->isSnapEnabled().val) {
-            snapCurrentPosition();
-        }
-    });
-
-    viewState->isSnapTripletsEnabled().ch.onReceive(this, [this, viewState](bool tripletsEnabled){
-        Q_UNUSED(tripletsEnabled);
-        if (viewState->isSnapEnabled().val) {
+    viewState->snap().ch.onReceive(this, [this](const Snap& snap){
+        if (snap.enabled) {
             snapCurrentPosition();
         }
     });
@@ -99,14 +85,14 @@ void PlayPositionActionController::snapCurrentPosition()
 void PlayPositionActionController::applySingleStep(Direction direction)
 {
     IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-    bool snapEnabled = viewState->isSnapEnabled().val;
+    bool snapEnabled = viewState->isSnapEnabled();
 
     audio::secs_t currentPlaybackPosition = globalContext()->playbackState()->playbackPosition();
     audio::secs_t secs = 0;
 
     if (snapEnabled) {
         double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
-        secs = m_context->singleStepToTime(currentXPosition, direction, snapEnabled);
+        secs = m_context->singleStepToTime(currentXPosition, direction, viewState->snap().val);
     } else {
         double newXPosition = 0.0;
         if (direction == Direction::Left) {

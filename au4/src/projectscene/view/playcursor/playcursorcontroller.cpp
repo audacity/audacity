@@ -49,7 +49,7 @@ void PlayCursorController::init()
 void PlayCursorController::seekToX(double x)
 {
     IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-    bool snapEnabled = viewState->isSnapEnabled().val;
+    bool snapEnabled = viewState->isSnapEnabled();
 
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {

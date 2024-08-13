@@ -115,14 +115,18 @@ void SnapToolBarItem::onProjectChanged()
         return;
     }
 
-    projectViewState->isSnapEnabled().ch.onReceive(this, [this](bool enabled){
-        m_isSnapEnabled = enabled;
-        emit isSnapEnabledChanged();
-    });
+    projectViewState->snap().ch.onReceive(this, [this](const Snap& snap){
+        if (m_isSnapEnabled != snap.enabled) {
+            m_isSnapEnabled = snap.enabled;
+            emit isSnapEnabledChanged();
+        }
 
-    projectViewState->snapType().ch.onReceive(this, [this](SnapType snapType){
         if (m_isTripletsEnabled) {
-            m_isTripletsEnabled = isEnableTripletsAvailable(snapType);
+            m_isTripletsEnabled = isEnableTripletsAvailable(snap.type);
+        }
+
+        if (m_isTripletsEnabled != snap.isSnapTriplets) {
+            m_isTripletsEnabled = snap.isSnapTriplets;
         }
 
         updateCheckedState();
@@ -130,12 +134,7 @@ void SnapToolBarItem::onProjectChanged()
         emit currentValueChanged();
     });
 
-    projectViewState->isSnapTripletsEnabled().ch.onReceive(this, [this](bool enabled){
-        m_isTripletsEnabled = enabled;
-        updateCheckedState();
-    });
-
-    m_isSnapEnabled = projectViewState->isSnapEnabled().val;
+    m_isSnapEnabled = projectViewState->isSnapEnabled();
     emit isSnapEnabledChanged();
 
     updateCheckedState();
@@ -306,7 +305,7 @@ void SnapToolBarItem::doUpdateCheckedState(muse::uicomponents::MenuItemList& ite
             checked = m_isTripletsEnabled;
         } else {
             SnapType snapType = idToSnapType(itemId);
-            checked = snapType == viewState()->snapType().val;
+            checked = snapType == viewState()->snapType();
         }
 
         UiActionState state;
