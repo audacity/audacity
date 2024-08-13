@@ -100,7 +100,7 @@ QStringList PlaybackPreferencesModel::audioApiList() const
 {
     QStringList result;
     for (const std::string& api: audioDevicesProvider()->audioApiList()) {
-        result.push_back(QString::fromStdString(api));
+        result.emplace_back(QString::fromStdString(api));
     }
 
     return result;

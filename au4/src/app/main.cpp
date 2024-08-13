@@ -145,7 +145,7 @@ int main(int argc, char** argv)
 
     std::vector<char*> argvUTF8;
     for (auto& arg : argvUTF8Q) {
-        argvUTF8.push_back(arg.data());
+        argvUTF8.emplace_back(arg.data());
     }
 
     // Don't use the arguments passed to main(), because they're in the local ANSI code page.

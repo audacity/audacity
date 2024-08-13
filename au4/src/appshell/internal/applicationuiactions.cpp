@@ -64,17 +64,17 @@ const UiActionList ApplicationUiActions::m_actions = {
     UiAction("about-musescore",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&About MuseScoreâ€¦")
+             TranslatableString("action", "&About MuseScoreâ€?")
              ),
     UiAction("about-qt",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "About &Qtâ€¦")
+             TranslatableString("action", "About &Qtâ€?")
              ),
     UiAction("about-musicxml",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "About &MusicXMLâ€¦")
+             TranslatableString("action", "About &MusicXMLâ€?")
              ),
     UiAction("online-handbook",
              au::context::UiCtxAny,
@@ -130,7 +130,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Instr&uments"),
-             TranslatableString("action", "Open instruments dialogâ€¦"),
+             TranslatableString("action", "Open instruments dialogâ€?"),
              Checkable::Yes
              ),
     UiAction("inspector",
@@ -209,7 +209,7 @@ const UiActionList ApplicationUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Preferences"),
-             TranslatableString("action", "Preferencesâ€¦")
+             TranslatableString("action", "Preferencesâ€?")
              )
 };
 
@@ -251,7 +251,7 @@ void ApplicationUiActions::listenOpenedDocksChanged(IDockWindow* window)
             const DockName& dockName = toggleDockActions()[toggleDockAction];
 
             if (dockNames.contains(dockName)) {
-                actions.push_back(toggleDockAction);
+                actions.emplace_back(toggleDockAction);
             }
         }
 

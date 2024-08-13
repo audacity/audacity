@@ -61,7 +61,7 @@ const UiActionList PlaybackUiActions::m_mainActions = {
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Loop playback"),
-             TranslatableString("action", "Toggle ‘Loop playback’"),
+             TranslatableString("action", "Toggle ‘Loop playback�?"),
              IconCode::Code::LOOP,
              Checkable::Yes
              ),
@@ -161,7 +161,7 @@ void PlaybackUiActions::init()
         ActionCodeList codes;
 
         for (const UiAction& action : actionsList()) {
-            codes.push_back(action.code);
+            codes.emplace_back(action.code);
         }
 
         m_actionEnabledChanged.send(codes);

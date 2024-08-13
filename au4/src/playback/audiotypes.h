@@ -5,6 +5,7 @@
 #define AU_AU3WRAP_AUDIOTYPES_H
 
 #include <string>
+#include <unordered_map>
 
 #include "global/types/number.h"
 #include "global/realfn.h"
@@ -88,7 +89,7 @@ private:
     static constexpr volume_dbfs_t PRESSURE_MINIMAL_VALUABLE_DIFF = 2.5f;
     static constexpr volume_dbfs_t MINIMUM_OPERABLE_DBFS_LEVEL = -100.f;
 
-    std::map<audioch_t, AudioSignalVal> m_signalValuesMap;
+    std::unordered_map<audioch_t, AudioSignalVal> m_signalValuesMap;
 };
 
 enum class PlaybackStatus {

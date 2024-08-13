@@ -30,7 +30,7 @@ std::vector<std::string> Au3AudioDevicesProvider::audioOutputDevices() const
 
     for (const auto& device : outMaps) {
         if (device.hostString == host) {
-            outputDevices.push_back(wxToStdSting(MakeDeviceSourceString(&device)));
+            outputDevices.emplace_back(wxToStdSting(MakeDeviceSourceString(&device)));
         }
     }
 
@@ -63,7 +63,7 @@ std::vector<std::string> Au3AudioDevicesProvider::audioInputDevices() const
 
     for (const auto& device : inMaps) {
         if (device.hostString == host) {
-            inputDevices.push_back(wxToStdSting(MakeDeviceSourceString(&device)));
+            inputDevices.emplace_back(wxToStdSting(MakeDeviceSourceString(&device)));
         }
     }
 
@@ -105,7 +105,7 @@ void Au3AudioDevicesProvider::setAudioInputDevice(const std::string& deviceName)
                 } else {
                     name = wxString::Format(wxT("%d"), (int)j + 1);
                 }
-                names.push_back(name);
+                names.emplace_back(name);
             }
             newChannels = device.numChannels;
             if (oldChannels <= newChannels && oldChannels >= 1) {
@@ -144,7 +144,7 @@ std::vector<std::string> Au3AudioDevicesProvider::audioApiList() const
     for (const auto& device : outMaps) {
         std::string host = wxToStdSting(device.hostString);
         if (std::find(hosts.begin(), hosts.end(), host) == hosts.end()) {
-            hosts.push_back(host);
+            hosts.emplace_back(host);
         }
     }
     return hosts;
@@ -192,13 +192,13 @@ void Au3AudioDevicesProvider::initHosts()
 
     for (auto& device : inMaps) {
         if (!make_iterator_range(hosts).contains(device.hostString)) {
-            hosts.push_back(device.hostString);
+            hosts.emplace_back(device.hostString);
         }
     }
 
     for (auto& device : outMaps) {
         if (!make_iterator_range(hosts).contains(device.hostString)) {
-            hosts.push_back(device.hostString);
+            hosts.emplace_back(device.hostString);
         }
     }
 
@@ -261,7 +261,7 @@ void Au3AudioDevicesProvider::initHostDevices()
     for (size_t i = 0; i < inMaps.size(); ++i) {
         auto& device = inMaps[i];
         if (foundHostIndex == device.hostIndex) {
-            mInputDeviceNames.push_back(MakeDeviceSourceString(&device));
+            mInputDeviceNames.emplace_back(MakeDeviceSourceString(&device));
             if (host.empty()) {
                 host = device.hostString;
                 AudioIOHost.Write(host);
@@ -275,7 +275,7 @@ void Au3AudioDevicesProvider::initHostDevices()
     for (size_t i = 0; i < outMaps.size(); ++i) {
         auto& device = outMaps[i];
         if (foundHostIndex == device.hostIndex) {
-            mOutputDeviceNames.push_back(MakeDeviceSourceString(&device));
+            mOutputDeviceNames.emplace_back(MakeDeviceSourceString(&device));
             if (host.empty()) {
                 host = device.hostString;
                 AudioIOHost.Write(host);
@@ -318,7 +318,7 @@ void Au3AudioDevicesProvider::initInputChannels()
                 } else {
                     name = wxString::Format(wxT("%d"), (int)j + 1);
                 }
-                names.push_back(name);
+                names.emplace_back(name);
             }
             newChannels = dev.numChannels;
             if (oldChannels <= newChannels && oldChannels >= 1) {

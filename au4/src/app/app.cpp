@@ -60,7 +60,7 @@ App::App()
 
 void App::addModule(modularity::IModuleSetup* module)
 {
-    m_modules.push_back(module);
+    m_modules.emplace_back(module);
 }
 
 int App::run(int argc, char** argv)

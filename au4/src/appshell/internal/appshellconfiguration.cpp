@@ -288,7 +288,7 @@ muse::io::paths_t AppShellConfiguration::parseSessionProjectsPaths(const QByteAr
     for (const QVariant& pathVal : pathsList) {
         io::path_t path = pathVal.toString().toStdString();
         if (!path.empty()) {
-            result.push_back(path);
+            result.emplace_back(path);
         }
     }
 
