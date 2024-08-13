@@ -22,15 +22,13 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectToneGen :
-    public StatefulPerTrackEffect,
-    public StatefulEffectUIServices
+class ToneGenBase : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectToneGen *
-   FetchParameters(EffectToneGen &e, EffectSettings &) { return &e; }
-   EffectToneGen(bool isChirp);
-   virtual ~EffectToneGen();
+   static inline ToneGenBase *
+   FetchParameters(ToneGenBase &e, EffectSettings &) { return &e; }
+   ToneGenBase(bool isChirp);
+   virtual ~ToneGenBase();
 
    // ComponentInterface implementation
 
@@ -49,29 +47,17 @@ public:
       const float *const *inBlock, float *const *outBlock, size_t blockLen)
       override;
 
-   // Effect implementation
-
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
-
-private:
-   // EffectToneGen implementation
-
-   void OnControlUpdate(wxCommandEvent & evt);
-
-   wxWeakRef<wxWindow> mUIParent{};
-
+protected:
    double mSampleRate{};
    const bool mChirp;
 
+private:
    // mSample is an external placeholder to remember the last "buffer"
    // position so we use it to reinitialize from where we left
    sampleCount mSample;
    double mPositionInCycles;
 
+protected:
    // If we made these static variables,
    // Tone and Chirp would share the same parameters.
    int mWaveform;
@@ -80,15 +66,15 @@ private:
    double mFrequency1;
    double mAmplitude0;
    double mAmplitude1;
-   double mLogFrequency[2];
 
-   NumericTextCtrl *mToneDurationT;
+private:
+   double mLogFrequency[2];
 
    void PostSet();
 
    const EffectParameterMethods& Parameters() const override;
-   DECLARE_EVENT_TABLE()
 
+protected:
    enum kWaveforms
    {
       kSine,
@@ -111,22 +97,50 @@ private:
    static const EnumValueSymbol kInterStrings[nInterpolations];
 
 // Yes, mFrequency0 and mAmplitude0 are each associated with more than one
-static constexpr EffectParameter StartFreq{ &EffectToneGen::mFrequency0,
+static constexpr EffectParameter StartFreq{ &ToneGenBase::mFrequency0,
    L"StartFreq",     440.0,   1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter EndFreq{ &EffectToneGen::mFrequency1,
+static constexpr EffectParameter EndFreq{ &ToneGenBase::mFrequency1,
    L"EndFreq",       1320.0,  1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter StartAmp{ &EffectToneGen::mAmplitude0,
+static constexpr EffectParameter StartAmp{ &ToneGenBase::mAmplitude0,
    L"StartAmp",      0.8,     0.0,     1.0,                    1  };
-static constexpr EffectParameter EndAmp{ &EffectToneGen::mAmplitude1,
+static constexpr EffectParameter EndAmp{ &ToneGenBase::mAmplitude1,
    L"EndAmp",        0.1,     0.0,     1.0,                    1  };
-static constexpr EffectParameter Frequency{ &EffectToneGen::mFrequency0,
+static constexpr EffectParameter Frequency{ &ToneGenBase::mFrequency0,
    L"Frequency",     440.0,   1.0,     DBL_MAX,                1  };
-static constexpr EffectParameter Amplitude{ &EffectToneGen::mAmplitude0,
+static constexpr EffectParameter Amplitude{ &ToneGenBase::mAmplitude0,
    L"Amplitude",     0.8,     0.0,     1.0,                    1  };
-static constexpr EnumParameter Waveform{ &EffectToneGen::mWaveform,
+static constexpr EnumParameter Waveform{ &ToneGenBase::mWaveform,
    L"Waveform",      0,       0,       nWaveforms - 1,      1, kWaveStrings, nWaveforms  };
-static constexpr EnumParameter Interp{ &EffectToneGen::mInterpolation,
+static constexpr EnumParameter Interp{ &ToneGenBase::mInterpolation,
    L"Interpolation", 0,       0,       nInterpolations - 1, 1, kInterStrings, nInterpolations  };
+};
+
+class EffectToneGen : public ToneGenBase, public StatefulEffectUIServices
+{
+public:
+   EffectToneGen(bool isChirp)
+       : ToneGenBase { isChirp }
+   {
+   }
+
+   // Effect implementation
+
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui & S, EffectInstance &instance,
+      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings &settings) override;
+   bool TransferDataFromWindow(EffectSettings &settings) override;
+
+protected:
+   DECLARE_EVENT_TABLE()
+
+private:
+   // ToneGenBase implementation
+
+   void OnControlUpdate(wxCommandEvent & evt);
+
+   wxWeakRef<wxWindow> mUIParent{};
+   NumericTextCtrl *mToneDurationT;
 };
 
 class EffectChirp final : public EffectToneGen
@@ -135,6 +149,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectChirp() : EffectToneGen{ true } {}
+   ~EffectChirp() override = default;
 };
 
 
@@ -144,6 +159,7 @@ public:
    static const ComponentInterfaceSymbol Symbol;
 
    EffectTone() : EffectToneGen{ false } {}
+   ~EffectTone() override = default;
 };
 
 #endif

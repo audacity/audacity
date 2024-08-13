@@ -32,14 +32,14 @@ frequency changes smoothly during the tone.
 #include "../widgets/valnum.h"
 #include "../widgets/NumericTextCtrl.h"
 
-const EnumValueSymbol EffectToneGen::kInterStrings[nInterpolations] =
+const EnumValueSymbol ToneGenBase::kInterStrings[nInterpolations] =
 {
    // These are acceptable dual purpose internal/visible names
    { XO("Linear") },
    { XO("Logarithmic") }
 };
 
-const EnumValueSymbol EffectToneGen::kWaveStrings[nWaveforms] =
+const EnumValueSymbol ToneGenBase::kWaveStrings[nWaveforms] =
 {
    { XO("Sine") },
    { XO("Square") },
@@ -48,18 +48,18 @@ const EnumValueSymbol EffectToneGen::kWaveStrings[nWaveforms] =
    { XC("Triangle", "waveform") }
 };
 
-const EffectParameterMethods& EffectToneGen::Parameters() const
+const EffectParameterMethods& ToneGenBase::Parameters() const
 {
    static const auto postSet =
-   [](EffectToneGen &, EffectSettings &, EffectToneGen &e, bool updating) {
+   [](ToneGenBase &, EffectSettings &, ToneGenBase &e, bool updating) {
       if (updating)
          e.PostSet();
       return true;
    };
-   static CapturedParameters<EffectToneGen,
+   static CapturedParameters<ToneGenBase,
       StartFreq, EndFreq, StartAmp, EndAmp, Waveform, Interp
    > chirpParameters{ postSet };
-   static CapturedParameters<EffectToneGen,
+   static CapturedParameters<ToneGenBase,
       Frequency, Amplitude, Waveform, Interp
    > toneParameters{ postSet };
    if (mChirp)
@@ -69,7 +69,7 @@ const EffectParameterMethods& EffectToneGen::Parameters() const
 }
 
 //
-// EffectToneGen
+// ToneGenBase
 //
 
 const ComponentInterfaceSymbol EffectChirp::Symbol
@@ -86,7 +86,7 @@ BEGIN_EVENT_TABLE(EffectToneGen, wxEvtHandler)
     EVT_TEXT(wxID_ANY, EffectToneGen::OnControlUpdate)
 END_EVENT_TABLE();
 
-EffectToneGen::EffectToneGen(bool isChirp)
+ToneGenBase::ToneGenBase(bool isChirp)
    : mChirp{ isChirp }
 {
    Parameters().Reset(*this);
@@ -102,27 +102,27 @@ EffectToneGen::EffectToneGen(bool isChirp)
       SetLinearEffectFlag(true);
 }
 
-EffectToneGen::~EffectToneGen()
+ToneGenBase::~ToneGenBase()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol EffectToneGen::GetSymbol() const
+ComponentInterfaceSymbol ToneGenBase::GetSymbol() const
 {
    return mChirp
       ? EffectChirp::Symbol
       : EffectTone::Symbol;
 }
 
-TranslatableString EffectToneGen::GetDescription() const
+TranslatableString ToneGenBase::GetDescription() const
 {
    return mChirp
       ? XO("Generates an ascending or descending tone of one of four types")
       : XO("Generates a constant frequency tone of one of four types");
 }
 
-ManualPageID EffectToneGen::ManualPage() const
+ManualPageID ToneGenBase::ManualPage() const
 {
    return mChirp
       ? L"Chirp"
@@ -131,17 +131,17 @@ ManualPageID EffectToneGen::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectToneGen::GetType() const
+EffectType ToneGenBase::GetType() const
 {
    return EffectTypeGenerate;
 }
 
-unsigned EffectToneGen::GetAudioOutCount() const
+unsigned ToneGenBase::GetAudioOutCount() const
 {
    return 1;
 }
 
-bool EffectToneGen::ProcessInitialize(
+bool ToneGenBase::ProcessInitialize(
    EffectSettings &, double sampleRate, ChannelNames chanMap)
 {
    mSampleRate = sampleRate;
@@ -150,7 +150,7 @@ bool EffectToneGen::ProcessInitialize(
    return true;
 }
 
-size_t EffectToneGen::ProcessBlock(EffectSettings &,
+size_t ToneGenBase::ProcessBlock(EffectSettings &,
    const float *const *, float *const *outBlock, size_t blockLen)
 {
    float *buffer = outBlock[0];
@@ -252,7 +252,7 @@ size_t EffectToneGen::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-void EffectToneGen::PostSet()
+void ToneGenBase::PostSet()
 {
    if (!mChirp) {
       mFrequency1 = mFrequency0;
@@ -420,7 +420,7 @@ bool EffectToneGen::TransferDataFromWindow(EffectSettings &settings)
    return true;
 }
 
-// EffectToneGen implementation
+// ToneGenBase implementation
 
 void EffectToneGen::OnControlUpdate(wxCommandEvent & WXUNUSED(evt))
 {
