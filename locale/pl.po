@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-08-05 00:00+0000\n"
+"PO-Revision-Date: 2024-08-14 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -2146,7 +2146,7 @@ msgstr "[Projekt %02i] Audacity „%s”"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp src/ProjectFileManager.cpp
 msgid "<untitled>"
-msgstr "<untitled>"
+msgstr "<bez nazwy>"
 
 #. i18n-hint: E.g this is recovered audio that had been lost.
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
@@ -6823,7 +6823,7 @@ msgstr "Kliknij i przeciągnij, aby zdefiniować zapętlony obszar."
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline actions disabled during recording"
-msgstr "Działania osi czasu są wyłączone podczas nagrywania"
+msgstr "Czynności osi czasu są wyłączone podczas nagrywania"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
@@ -8245,7 +8245,7 @@ msgstr "&Zarządzaj historią"
 
 #: src/HistoryWindow.cpp src/effects/TruncSilence.cpp
 msgid "Action"
-msgstr "Działanie"
+msgstr "Czynność"
 
 #: src/HistoryWindow.cpp
 msgid "Used Space"
@@ -9756,7 +9756,7 @@ msgstr "Automatyczny eksport włączony:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Action after Timer Recording:"
-msgstr "Działanie po nagrywaniu czasowym:"
+msgstr "Czynność po nagrywaniu czasowym:"
 
 #: src/TimerRecordDialog.cpp
 msgid "Audacity Timer Record Progress"
@@ -10276,7 +10276,7 @@ msgstr "Współczynnik opadania:"
 
 #: src/commands/Demo.h
 msgid "Does the demo action."
-msgstr "Robi działanie demo."
+msgstr "Robi demo."
 
 #: src/commands/DragCommand.cpp
 msgid "Drag"
@@ -12815,7 +12815,7 @@ msgstr "Normalizuj kanały &stereo niezależnie"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
-msgstr "&Traktuj mono jako dual-mono (rekomendowane)"
+msgstr "&Traktuj mono jako dual-mono (zalecane)"
 
 #: src/effects/Loudness.cpp src/effects/Normalize.cpp
 msgid "(Maximum 0dB)"
