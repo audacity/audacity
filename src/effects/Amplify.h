@@ -25,23 +25,17 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectAmplify :
-    public StatefulPerTrackEffect,
-    public StatefulEffectUIServices
+class AmplifyBase : public StatefulPerTrackEffect
 {
 public:
-   static inline EffectAmplify *
-   FetchParameters(EffectAmplify &e, EffectSettings &){ return &e; }
+   static inline AmplifyBase* FetchParameters(AmplifyBase& e, EffectSettings&)
+   {
+      return &e;
+   }
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectAmplify();
-   virtual ~EffectAmplify();
-
-   // ComponentInterface implementation
-
-   ComponentInterfaceSymbol GetSymbol() const override;
-   TranslatableString GetDescription() const override;
-   ManualPageID ManualPage() const override;
+   AmplifyBase();
+   virtual ~AmplifyBase();
 
    // EffectDefinitionInterface implementation
 
@@ -60,33 +54,18 @@ public:
 
    bool Init() override;
    std::any BeginPreview(const EffectSettings &settings) override;
-   std::unique_ptr<EffectEditor> PopulateOrExchange(
-      ShuttleGui & S, EffectInstance &instance,
-      EffectSettingsAccess &access, const EffectOutputs *pOutputs) override;
-   bool TransferDataToWindow(const EffectSettings &settings) override;
-   bool TransferDataFromWindow(EffectSettings &settings) override;
 
-   std::shared_ptr<EffectInstance> MakeInstance() const override;
-
-private:
+protected:
    struct Instance : StatefulPerTrackEffect::Instance {
       using StatefulPerTrackEffect::Instance::Instance;
       ~Instance() override;
    };
 
+protected:
    void ClampRatio();
 
-   // EffectAmplify implementation
-
-   void OnAmpText(wxCommandEvent & evt);
-   void OnPeakText(wxCommandEvent & evt);
-   void OnAmpSlider(wxCommandEvent & evt);
-   void OnClipCheckBox(wxCommandEvent & evt);
-   void CheckClip();
-
-private:
-   wxWeakRef<wxWindow> mUIParent{};
-
+   // AmplifyBase implementation
+protected:
    double mPeak      = 1.0;
 
    double mRatio     = 1.0;
@@ -95,22 +74,56 @@ private:
    double mNewPeak   = 1.0;
    bool   mCanClip   = true;
 
+private:
+
+   const EffectParameterMethods& Parameters() const override;
+
+protected:
+   static constexpr EffectParameter Ratio {
+      &AmplifyBase::mRatio, L"Ratio", 0.9f, 0.003162f, 316.227766f, 1.0f
+   };
+   // Amp is not saved in settings!
+   static constexpr EffectParameter Amp {
+      &AmplifyBase::mAmp, L"", -0.91515f, -50.0f, 50.0f, 10.0f
+   };
+   static constexpr EffectParameter Clipping {
+      &AmplifyBase::mCanClip, L"AllowClipping", false, false, true, 1
+   };
+};
+
+class EffectAmplify : public AmplifyBase, public StatefulEffectUIServices
+{
+public:
+   std::shared_ptr<EffectInstance> MakeInstance() const override;
+
+   // ComponentInterface implementation
+
+   ComponentInterfaceSymbol GetSymbol() const override;
+   TranslatableString GetDescription() const override;
+   ManualPageID ManualPage() const override;
+
+   std::unique_ptr<EffectEditor> PopulateOrExchange(
+      ShuttleGui& S, EffectInstance& instance, EffectSettingsAccess& access,
+      const EffectOutputs* pOutputs) override;
+   bool TransferDataToWindow(const EffectSettings& settings) override;
+   bool TransferDataFromWindow(EffectSettings& settings) override;
+
+DECLARE_EVENT_TABLE()
+
+   void OnAmpText(wxCommandEvent& evt);
+   void OnPeakText(wxCommandEvent & evt);
+   void OnAmpSlider(wxCommandEvent & evt);
+   void OnClipCheckBox(wxCommandEvent & evt);
+
+   void CheckClip();
+
+private:
+   wxWeakRef<wxWindow> mUIParent {};
+
    wxSlider *mAmpS;
    wxTextCtrl *mAmpT;
    wxTextCtrl *mNewPeakT;
    wxCheckBox *mClip;
-
-   const EffectParameterMethods& Parameters() const override;
-
-   DECLARE_EVENT_TABLE()
-
-static constexpr EffectParameter Ratio{ &EffectAmplify::mRatio,
-   L"Ratio",            0.9f,       0.003162f,  316.227766f,   1.0f  };
-// Amp is not saved in settings!
-static constexpr EffectParameter Amp{ &EffectAmplify::mAmp,
-   L"",                -0.91515f,  -50.0f,     50.0f,         10.0f };
-static constexpr EffectParameter Clipping{ &EffectAmplify::mCanClip,
-   L"AllowClipping",    false,    false,  true,    1  };
 };
 
 #endif // __AUDACITY_EFFECT_AMPLIFY__

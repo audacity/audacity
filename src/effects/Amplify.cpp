@@ -18,7 +18,6 @@
 
 *//*******************************************************************/
 
-
 #include "Amplify.h"
 #include "EffectEditor.h"
 #include "LoadEffects.h"
@@ -50,19 +49,18 @@ enum
    ID_Clip
 };
 
-const EffectParameterMethods& EffectAmplify::Parameters() const
+const EffectParameterMethods& AmplifyBase::Parameters() const
 {
-   static CapturedParameters<EffectAmplify,
+   static CapturedParameters<
+      AmplifyBase,
       // Interactive case
-      Ratio, Clipping
-   > parameters;
+      Ratio, Clipping>
+      parameters;
 
-   static CapturedParameters<EffectAmplify,
-      Ratio
-   > batchParameters{
+   static CapturedParameters<AmplifyBase, Ratio> batchParameters {
       // If invoking Amplify from a macro, mCanClip is not a parameter
       // but is always true
-      [](EffectAmplify &, EffectSettings &, EffectAmplify &e, bool) {
+      [](AmplifyBase&, EffectSettings&, AmplifyBase& e, bool) {
          e.mCanClip = true;
          return true;
       },
@@ -77,11 +75,10 @@ const EffectParameterMethods& EffectAmplify::Parameters() const
 }
 
 //
-// EffectAmplify
+// AmplifyBase
 //
 
-const ComponentInterfaceSymbol EffectAmplify::Symbol
-{ XO("Amplify") };
+const ComponentInterfaceSymbol AmplifyBase::Symbol { XO("Amplify") };
 
 namespace{ BuiltinEffectsModule::Registration< EffectAmplify > reg; }
 
@@ -92,13 +89,13 @@ BEGIN_EVENT_TABLE(EffectAmplify, wxEvtHandler)
    EVT_CHECKBOX(ID_Clip, EffectAmplify::OnClipCheckBox)
 END_EVENT_TABLE()
 
-EffectAmplify::Instance::~Instance()
+AmplifyBase::Instance::~Instance()
 {
    // In case the dialog is cancelled before effect processing
-   static_cast<EffectAmplify&>(GetEffect()).DestroyOutputTracks();
+   static_cast<AmplifyBase&>(GetEffect()).DestroyOutputTracks();
 }
 
-EffectAmplify::EffectAmplify()
+AmplifyBase::AmplifyBase()
 {
    mAmp = Amp.def;
    // Ratio.def == DB_TO_LINEAR(Amp.def)
@@ -109,7 +106,7 @@ EffectAmplify::EffectAmplify()
    SetLinearEffectFlag(true);
 }
 
-EffectAmplify::~EffectAmplify()
+AmplifyBase::~AmplifyBase()
 {
 }
 
@@ -133,23 +130,24 @@ ManualPageID EffectAmplify::ManualPage() const
 
 // EffectDefinitionInterface implementation
 
-EffectType EffectAmplify::GetType() const
+EffectType AmplifyBase::GetType() const
 {
    return EffectTypeProcess;
 }
 
-unsigned EffectAmplify::GetAudioInCount() const
+unsigned AmplifyBase::GetAudioInCount() const
 {
    return 1;
 }
 
-unsigned EffectAmplify::GetAudioOutCount() const
+unsigned AmplifyBase::GetAudioOutCount() const
 {
    return 1;
 }
 
-size_t EffectAmplify::ProcessBlock(EffectSettings &,
-   const float *const *inBlock, float *const *outBlock, size_t blockLen)
+size_t AmplifyBase::ProcessBlock(
+   EffectSettings&, const float* const* inBlock, float* const* outBlock,
+   size_t blockLen)
 {
    for (decltype(blockLen) i = 0; i < blockLen; i++)
    {
@@ -159,14 +157,13 @@ size_t EffectAmplify::ProcessBlock(EffectSettings &,
    return blockLen;
 }
 
-OptionalMessage
-EffectAmplify::LoadFactoryDefaults(EffectSettings &settings) const
+OptionalMessage AmplifyBase::LoadFactoryDefaults(EffectSettings& settings) const
 {
    // To do: externalize state so const_cast isn't needed
-   return const_cast<EffectAmplify&>(*this).DoLoadFactoryDefaults(settings);
+   return const_cast<AmplifyBase&>(*this).DoLoadFactoryDefaults(settings);
 }
 
-OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
+OptionalMessage AmplifyBase::DoLoadFactoryDefaults(EffectSettings& settings)
 {
    Init();
 
@@ -188,7 +185,7 @@ OptionalMessage EffectAmplify::DoLoadFactoryDefaults(EffectSettings &settings)
 
 // Effect implementation
 
-bool EffectAmplify::Init()
+bool AmplifyBase::Init()
 {
    auto range = inputTracks()->Selected<const WaveTrack>();
    bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {
@@ -209,7 +206,7 @@ bool EffectAmplify::Init()
    return true;
 }
 
-std::any EffectAmplify::BeginPreview(const EffectSettings &settings)
+std::any AmplifyBase::BeginPreview(const EffectSettings& settings)
 {
    return { std::pair{
       CopyableValueRestorer(mRatio), CopyableValueRestorer(mPeak)
@@ -300,7 +297,7 @@ std::unique_ptr<EffectEditor> EffectAmplify::PopulateOrExchange(
    return nullptr;
 }
 
-void EffectAmplify::ClampRatio()
+void AmplifyBase::ClampRatio()
 {
    // limit range of gain
    double dBInit = LINEAR_TO_DB(mRatio);
@@ -355,7 +352,7 @@ std::shared_ptr<EffectInstance> EffectAmplify::MakeInstance() const
    return std::make_shared<Instance>(const_cast<EffectAmplify&>(*this));
 }
 
-// EffectAmplify implementation
+// AmplifyBase implementation
 
 void EffectAmplify::CheckClip()
 {
