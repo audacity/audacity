@@ -17,6 +17,7 @@ Vaughan Johnson (Preview)
 
 #include "Biquad.h"
 
+#include "StatefulEffectUIServices.h"
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
 #include "wxPanelWrapper.h"
@@ -32,7 +33,9 @@ class ShuttleGui;
 
 class EffectScienFilterPanel;
 
-class EffectScienFilter final : public StatefulPerTrackEffect
+class EffectScienFilter final :
+    public StatefulPerTrackEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectScienFilter *

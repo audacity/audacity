@@ -13,9 +13,12 @@
 #ifndef __AUDACITY_EFFECT_INVERT__
 #define __AUDACITY_EFFECT_INVERT__
 
+#include "StatefulEffectUIServices.h"
 #include "StatefulPerTrackEffect.h"
 
-class EffectInvert final : public StatefulPerTrackEffect
+class EffectInvert final :
+    public StatefulPerTrackEffect,
+    public StatefulEffectUIServices
 {
 public:
    static const ComponentInterfaceSymbol Symbol;

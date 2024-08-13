@@ -19,6 +19,8 @@ set( SOURCES
    PerTrackEffect.h
    StatefulEffectBase.cpp
    StatefulEffectBase.h
+   StatefulPerTrackEffect.cpp
+   StatefulPerTrackEffect.h
 )
 set( LIBRARIES
    lib-command-parameters-interface

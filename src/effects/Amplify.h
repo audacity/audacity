@@ -15,6 +15,7 @@
 #ifndef __AUDACITY_EFFECT_AMPLIFY__
 #define __AUDACITY_EFFECT_AMPLIFY__
 
+#include "StatefulEffectUIServices.h"
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
@@ -24,7 +25,9 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectAmplify final : public StatefulPerTrackEffect
+class EffectAmplify :
+    public StatefulPerTrackEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectAmplify *
