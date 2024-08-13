@@ -97,9 +97,9 @@ static double frameMultiplier(SnapType type)
     return muse::value(rates, type, 1);
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type, bool triplets, trackedit::TimeSignature timeSig) const
+au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const
 {
-    double multiplier = snapTypeMultiplier(type, triplets, timeSig);
+    double multiplier = snapTypeMultiplier(snap.type, snap.isSnapTriplets, timeSig);
 
     if (!muse::RealIsNull(multiplier)) {
         return std::round(time * multiplier) / multiplier;
@@ -107,10 +107,10 @@ au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type,
     return 0.0;
 }
 
-au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, SnapType type, bool triplets, Direction direction,
+au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, const Snap& snap, Direction direction,
                                                 trackedit::TimeSignature timeSig) const
 {
-    double multiplier = snapTypeMultiplier(type, triplets, timeSig);
+    double multiplier = snapTypeMultiplier(snap.type, snap.isSnapTriplets, timeSig);
 
     if (!muse::RealIsNull(multiplier)) {
         return std::round(time * multiplier) / multiplier + determineStep(multiplier, direction);

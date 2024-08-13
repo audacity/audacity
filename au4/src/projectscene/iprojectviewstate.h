@@ -8,6 +8,12 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::projectscene {
+struct Snap {
+    SnapType type = SnapType::Bar;
+    bool enabled = false;
+    bool isSnapTriplets = false;
+};
+
 class IProjectViewState
 {
 public:
@@ -23,14 +29,17 @@ public:
     virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
 
     // snap
-    virtual muse::ValCh<bool> isSnapEnabled() const = 0;
+    virtual bool isSnapEnabled() const = 0;
     virtual void setIsSnapEnabled(bool enabled) = 0;
 
-    virtual muse::ValCh<SnapType> snapType() const = 0;
+    virtual SnapType snapType() const = 0;
     virtual void setSnapType(SnapType type) = 0;
 
-    virtual muse::ValCh<bool> isSnapTripletsEnabled() const = 0;
+    virtual bool isSnapTripletsEnabled() const = 0;
     virtual void setIsSnapTripletsEnabled(bool enabled) = 0;
+
+    virtual void setSnap(const Snap& s) = 0;
+    virtual muse::ValCh<Snap> snap() const = 0;
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;

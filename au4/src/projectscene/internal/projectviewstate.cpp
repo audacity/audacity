@@ -64,32 +64,48 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
     d->collapsed.set(newVal < COLLAPSE_HEIGHT);
 }
 
-muse::ValCh<bool> ProjectViewState::isSnapEnabled() const
+bool ProjectViewState::isSnapEnabled() const
 {
-    return m_isSnapEnabled;
+    return m_snap.val.enabled;
 }
 
 void ProjectViewState::setIsSnapEnabled(bool enabled)
 {
-    m_isSnapEnabled.set(enabled);
+    Snap s = this->snap().val;
+    s.enabled = enabled;
+    setSnap(s);
 }
 
-muse::ValCh<SnapType> ProjectViewState::snapType() const
+SnapType ProjectViewState::snapType() const
 {
-    return m_snapType;
+    return m_snap.val.type;
 }
 
 void ProjectViewState::setSnapType(SnapType type)
 {
-    m_snapType.set(type);
+    Snap s = this->snap().val;
+    s.type = type;
+    setSnap(s);
 }
 
-muse::ValCh<bool> ProjectViewState::isSnapTripletsEnabled() const
+bool ProjectViewState::isSnapTripletsEnabled() const
 {
-    return m_isSnapTripletsEnabled;
+    return m_snap.val.isSnapTriplets;
 }
 
 void ProjectViewState::setIsSnapTripletsEnabled(bool enabled)
 {
-    m_isSnapTripletsEnabled.set(enabled);
+    Snap s = this->snap().val;
+    s.isSnapTriplets = enabled;
+    setSnap(s);
+}
+
+void ProjectViewState::setSnap(const Snap& s)
+{
+    m_snap.set(s);
+}
+
+muse::ValCh<Snap> ProjectViewState::snap() const
+{
+    return m_snap;
 }
