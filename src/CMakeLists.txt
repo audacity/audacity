@@ -1333,6 +1333,7 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
+   lib-builtin-effects
 )
 
 if (USE_VST)
