@@ -97,9 +97,9 @@ static double frameMultiplier(SnapType type)
     return muse::value(rates, type, 1);
 }
 
-au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type, bool triplets) const
+au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type, bool triplets, trackedit::TimeSignature timeSig) const
 {
-    double multiplier = snapTypeMultiplier(type, triplets);
+    double multiplier = snapTypeMultiplier(type, triplets, timeSig);
 
     if (!muse::RealIsNull(multiplier)) {
         return std::round(time * multiplier) / multiplier;
@@ -107,9 +107,10 @@ au::audio::secs_t SnapTimeFormatter::snapTime(audio::secs_t time, SnapType type,
     return 0.0;
 }
 
-au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, SnapType type, bool triplets, Direction direction) const
+au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, SnapType type, bool triplets, Direction direction,
+                                                trackedit::TimeSignature timeSig) const
 {
-    double multiplier = snapTypeMultiplier(type, triplets);
+    double multiplier = snapTypeMultiplier(type, triplets, timeSig);
 
     if (!muse::RealIsNull(multiplier)) {
         return std::round(time * multiplier) / multiplier + determineStep(multiplier, direction);
@@ -117,13 +118,13 @@ au::audio::secs_t SnapTimeFormatter::singleStep(audio::secs_t time, SnapType typ
     return 0.0;
 }
 
-double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets) const
+double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets, trackedit::TimeSignature timeSig) const
 {
     double multiplier = 0.0;
     if (isBarSnap(type)) {
-        multiplier = barMultiplier();
+        multiplier = barMultiplier(timeSig);
     } else if (isBeatsSnap(type)) {
-        multiplier = beatsMultiplier(type, triplets);
+        multiplier = beatsMultiplier(type, triplets, timeSig);
     } else if (isTimeSnap(type)) {
         multiplier = timeMultiplier(type);
     } else if (isSamplesSnap(type)) {
@@ -135,15 +136,8 @@ double SnapTimeFormatter::snapTypeMultiplier(SnapType type, bool triplets) const
     return multiplier;
 }
 
-double SnapTimeFormatter::barMultiplier() const
+double SnapTimeFormatter::barMultiplier(trackedit::TimeSignature timeSig) const
 {
-    auto project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return 0.0;
-    }
-
-    trackedit::TimeSignature timeSig = project->timeSignature();
-
     double quarterDuration = 60.0 / timeSig.tempo;
     double beatDuration = quarterDuration * 4.0 / timeSig.lower;
     double barDuration = beatDuration * timeSig.upper;
@@ -152,15 +146,8 @@ double SnapTimeFormatter::barMultiplier() const
     return multiplier;
 }
 
-double SnapTimeFormatter::beatsMultiplier(SnapType type, bool triplets) const
+double SnapTimeFormatter::beatsMultiplier(SnapType type, bool triplets, trackedit::TimeSignature timeSig) const
 {
-    auto project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        return 0.0;
-    }
-
-    trackedit::TimeSignature timeSig = project->timeSignature();
-
     double quarterDuration = 60.0 / timeSig.tempo;
 
     int divisor = timeDivisor(type);
