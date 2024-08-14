@@ -118,7 +118,7 @@ void AppMenuModel::setupConnections()
     //     pluginsMenu.setSubitems(makePluginsMenuSubitems());
     // });
 
-    effectsProvider()->manifestListChanged().onNotify(this, [this]() {
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         MenuItem& pluginsItem = findMenu("menu-effect");
         pluginsItem.setSubitems(makeEffectsItems());
     });
@@ -768,12 +768,19 @@ MenuItemList AppMenuModel::makeEffectsItems()
         makeSeparator(),
     };
 
-    effects::ManifestList manifestList = effectsProvider()->manifestList();
+    std::map<muse::String, MenuItemList> effectsToCategoryMap;
 
-    for (const effects::Manifest& manifest : manifestList) {
-        MenuItem* item = makeMenuItem("effect-open", TranslatableString::untranslatable(manifest.title));
-        item->setArgs(ActionData::make_arg1<muse::String>(manifest.id));
-        items << item;
+    effects::EffectMetaList metaList = effectsProvider()->effectMetaList();
+
+    for (const effects::EffectMeta& meta : metaList) {
+        MenuItem* item = makeMenuItem("effect-open", TranslatableString::untranslatable(meta.title));
+        item->setArgs(ActionData::make_arg1<muse::String>(meta.id));
+
+        effectsToCategoryMap[meta.categoryId].push_back(item);
+    }
+
+    for (const effects::EffectCategory& category : effectsProvider()->effectsCategoryList()) {
+        items << makeMenu(TranslatableString::untranslatable(category.title), effectsToCategoryMap[category.id]);
     }
 
     items << makeSeparator()

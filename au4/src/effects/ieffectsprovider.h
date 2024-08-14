@@ -20,9 +20,11 @@ public:
 
     virtual void reloadEffects() = 0;
 
-    virtual ManifestList manifestList() const = 0;
-    virtual muse::async::Notification manifestListChanged() const = 0;
+    virtual EffectMetaList effectMetaList() const = 0;
+    virtual muse::async::Notification effectMetaListChanged() const = 0;
 
-    virtual Manifest manifest(const muse::String& id) const = 0;
+    virtual EffectCategoryList effectsCategoryList() const = 0;
+
+    virtual EffectMeta meta(const muse::String& id) const = 0;
 };
 }

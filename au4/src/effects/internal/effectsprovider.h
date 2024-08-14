@@ -4,6 +4,7 @@
 #pragma once
 
 #include "modularity/ioc.h"
+#include "audioplugins/iknownaudiopluginsregister.h"
 #include "effects/ieffectsconfiguration.h"
 
 #include "effects/ieffectsprovider.h"
@@ -12,17 +13,22 @@ namespace au::effects {
 class EffectsProvider : public IEffectsProvider
 {
     muse::Inject<IEffectsConfiguration> configuration;
+    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
 public:
     void reloadEffects() override;
 
-    ManifestList manifestList() const override;
-    muse::async::Notification manifestListChanged() const override;
+    EffectMetaList effectMetaList() const override;
+    muse::async::Notification effectMetaListChanged() const override;
 
-    Manifest manifest(const muse::String& id) const override;
+    EffectCategoryList effectsCategoryList() const override;
+
+    EffectMeta meta(const muse::String& id) const override;
 
 private:
-    mutable ManifestList m_manifests;
-    muse::async::Notification m_manifestListChanged;
+    mutable EffectMetaList m_effects;
+    muse::async::Notification m_effectsChanged;
+
+    mutable EffectCategoryList m_effectsCategories;
 };
 }

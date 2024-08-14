@@ -32,7 +32,7 @@ bool EffectsUiActions::actionEnabled(const UiAction&) const
 
 bool EffectsUiActions::actionChecked(const UiAction&) const
 {
-    return true;
+    return false;
 }
 
 muse::async::Channel<ActionCodeList> EffectsUiActions::actionEnabledChanged() const
