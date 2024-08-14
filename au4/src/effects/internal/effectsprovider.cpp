@@ -7,31 +7,63 @@
 
 using namespace au::effects;
 
+static muse::String VST_CATEGORY_ID = u"vst";
+
+static muse::String categoryId(muse::audio::AudioResourceType type)
+{
+    switch (type) {
+    case muse::audio::AudioResourceType::VstPlugin: return VST_CATEGORY_ID;
+    default: break;
+    }
+
+    return u"";
+}
+
 void EffectsProvider::reloadEffects()
 {
-    //! todo: get list of effects
+    m_effects.clear();
+    m_effectsCategories.clear();
 
-    m_manifestListChanged.notify();
+    std::vector<muse::audioplugins::AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+
+    for (const muse::audioplugins::AudioPluginInfo& info : allEffects) {
+        EffectMeta meta;
+        meta.id = muse::String(info.meta.id.c_str());
+        meta.title = muse::String(info.meta.id.c_str());
+
+        meta.categoryId = categoryId(info.meta.type);
+
+        m_effects.push_back(meta);
+    }
+
+    m_effectsChanged.notify();
 }
 
-ManifestList EffectsProvider::manifestList() const
+EffectMetaList EffectsProvider::effectMetaList() const
 {
-    return m_manifests;
+    return m_effects;
 }
 
-muse::async::Notification EffectsProvider::manifestListChanged() const
+muse::async::Notification EffectsProvider::effectMetaListChanged() const
 {
-    return m_manifestListChanged;
+    return m_effectsChanged;
 }
 
-Manifest EffectsProvider::manifest(const muse::String& id) const
+EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
-    for (const Manifest& manifest : m_manifests) {
-        if (manifest.id == id) {
-            return manifest;
+    return {
+        { VST_CATEGORY_ID, u"VST" }
+    };
+}
+
+EffectMeta EffectsProvider::meta(const muse::String& id) const
+{
+    for (const EffectMeta& meta : m_effects) {
+        if (meta.id == id) {
+            return meta;
         }
     }
 
-    LOGE() << "not found manifest: " << id;
-    return Manifest();
+    LOGE() << "not found meta: " << id;
+    return EffectMeta();
 }

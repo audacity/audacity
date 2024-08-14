@@ -9,19 +9,7 @@
 #include "global/io/path.h"
 
 namespace au::effects {
-/*
-manifest.json
-{
-
-"title": String,
-"description": String,
-"version": String,
-"vendor": String,
-
-"url": String                    // Name of qml file // todo
-}*/
-
-struct Manifest {
+struct EffectMeta {
     muse::String id;
     muse::io::path_t url;
     muse::String title;
@@ -29,8 +17,19 @@ struct Manifest {
     muse::String version;
     muse::String vendor;
 
-    bool isValid() const { return !id.empty() && !url.empty(); }
+    muse::String categoryId;
+
+    bool isValid() const { return !id.empty(); }
 };
 
-using ManifestList = std::vector<Manifest>;
+using EffectMetaList = std::vector<EffectMeta>;
+
+struct EffectCategory {
+    muse::String id;
+    muse::String title;
+
+    bool isValid() const { return !id.empty(); }
+};
+
+using EffectCategoryList = std::vector<EffectCategory>;
 }
