@@ -15,6 +15,7 @@ Item {
 
     property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: view.count > 0 ? view.itemAtIndex(0).navigationPanel : null // first panel
+    property alias tracksModel: tracksModel
     // property alias contextMenuModel: contextMenuModel
 
     TracksListModel {
@@ -50,43 +51,9 @@ Item {
         readonly property int sideMargin: 12
         spacing: sideMargin
 
-        TracksControlPanel {
-            id: controlPanel
-            Layout.fillWidth: true
-            Layout.alignment: Qt.AlignTop
-
-            Layout.leftMargin: contentColumn.sideMargin
-            Layout.rightMargin: contentColumn.sideMargin
-
-            navigation.section: root.navigationSection
-
-            isMovingUpAvailable: tracksModel.isMovingUpAvailable
-            isMovingDownAvailable: tracksModel.isMovingDownAvailable
-            isAddingAvailable: tracksModel.isAddingAvailable
-            isRemovingAvailable: tracksModel.isRemovingAvailable
-
-            onAddRequested: function(type, quantity) {
-                tracksModel.addTracks(type, quantity)
-            }
-
-            onMoveUpRequested: {
-                tracksModel.moveSelectedRowsUp()
-            }
-
-            onMoveDownRequested: {
-                tracksModel.moveSelectedRowsDown()
-            }
-
-            onRemovingRequested: {
-                tracksModel.removeSelectedRows()
-            }
-        }
-
-        SeparatorLine { }
-
         StyledListView {
             id: view
-            Layout.topMargin: -contentColumn.sideMargin
+            Layout.topMargin: 1
             Layout.fillWidth: true
             Layout.fillHeight: true
 
@@ -102,7 +69,7 @@ Item {
             model: tracksModel
 
             navigation.section: root.navigationSection
-            navigation.order: controlPanel.navigation.order + 1
+            navigation.order: 1
 
             delegate: TrackItem {
                 item: itemData
