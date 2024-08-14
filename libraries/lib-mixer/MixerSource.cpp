@@ -289,8 +289,7 @@ void MixerSource::ZeroFill(
 MixerSource::MixerSource(
    const std::shared_ptr<const WideSampleSequence> &seq, size_t bufferSize,
    double rate, const MixerOptions::Warp &options, bool highQuality,
-   bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
-   const ArrayOf<bool> *pMap
+   bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed
 )  : mpSeq{ seq }
    , mnChannels{ mpSeq->NChannels() }
    , mRate{ rate }
@@ -303,7 +302,6 @@ MixerSource::MixerSource(
    , mResampleParameters{ highQuality, mpSeq->GetRate(), rate, options }
    , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
-   , mpMap{ pMap }
 {
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
@@ -316,11 +314,6 @@ MixerSource::~MixerSource() = default;
 const WideSampleSequence &MixerSource::GetSequence() const
 {
    return *mpSeq;
-}
-
-const bool *MixerSource::MixerSpec(unsigned iChannel) const
-{
-   return mpMap ? mpMap[iChannel].get() : nullptr;
 }
 
 bool MixerSource::AcceptsBuffers(const Buffers &buffers) const

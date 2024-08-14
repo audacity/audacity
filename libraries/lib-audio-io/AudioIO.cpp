@@ -2110,7 +2110,7 @@ bool AudioIO::ProcessPlaybackSlices(
 
          if(len > 0)
          {
-            for(unsigned i = 0; i < seq->NChannels(); ++i)
+            for(unsigned i = 0, cnt = std::min(seq->NChannels(), mNumPlaybackChannels); i < cnt; ++i)
                pointers[i] = mProcessingBuffers[bufferIndex + i].data() + offset;
 
             for(unsigned i = seq->NChannels(); i < mNumPlaybackChannels; ++i)
@@ -2178,7 +2178,7 @@ bool AudioIO::ProcessPlaybackSlices(
          const auto numChannels = seq->NChannels();
          if(numChannels > 1)
          {
-            for(unsigned n = 0; n < seq->NChannels(); ++n)
+            for(unsigned n = 0, cnt = std::min(numChannels, mNumPlaybackChannels); n < cnt; ++n)
             {
                const auto gain = seq->GetChannelGain(n);
                for(unsigned i = 0; i < samplesAvailable; ++i)
@@ -2240,9 +2240,6 @@ bool AudioIO::ProcessPlaybackSlices(
          );
       }
    }
-
-   for(auto& buffer : mMasterBuffers)
-      buffer.clear();
 
    return progress;
 }

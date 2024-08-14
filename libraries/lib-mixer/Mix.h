@@ -18,6 +18,8 @@
 #include "SampleFormat.h"
 #include <optional>
 
+#include "DownmixStage.h"
+
 class sampleCount;
 class BoundedEnvelope;
 class EffectStage;
@@ -25,7 +27,7 @@ class MixerSource;
 class TrackList;
 class WideSampleSequence;
 
-class MIXER_API Mixer : public AudioGraph::Source
+class MIXER_API Mixer final
 {
 public:
    using WarpOptions = MixerOptions::Warp;
@@ -46,21 +48,16 @@ public:
    };
    using Inputs = std::vector<Input>;
 
-   enum class ApplyGain
-   {
-      Discard,//< No source gain is applied
-      MapChannels, //< Apply gains per source's channel
-      Mixdown, //< Average gains from all channels in the source, numOutChannels should be 1
-   };
+   using ApplyGain = DownmixStage::ApplyGain;
 
    //
    // Constructor / Destructor
    //
 
    /*!
+    * When creating with master effects stages `applyGain` is ignored
     @pre all sequences in `inputs` are non-null
-    @pre any left channels in inputs are immediately followed by their
-       partners
+    @pre !!masterEffects && mixerSpec == nullptr && numOutChannels <= 2
     @post `BufferSize() <= outBufferSize` (equality when no inputs have stages)
     */
    Mixer(
@@ -73,9 +70,11 @@ public:
       ApplyGain applyGain = ApplyGain::MapChannels);
 
    Mixer(const Mixer&) = delete;
+   Mixer(Mixer&&) noexcept = delete;
    Mixer &operator=(const Mixer&) = delete;
+   Mixer &operator=(Mixer&&) noexcept = delete;
 
-   virtual ~ Mixer();
+   ~Mixer();
 
    size_t BufferSize() const { return mBufferSize; }
 
@@ -123,17 +122,8 @@ public:
 
    void Clear();
 
-   // AudioGraph::Source
-private:
-   bool AcceptsBuffers(const Buffers& buffers) const override;
-   bool AcceptsBlockSize(size_t blockSize) const override;
-   std::optional<size_t> Acquire(Buffers& data, size_t bound) override;
-   sampleCount Remaining() const override;
-   bool Release() override;
-
-private:
    std::unique_ptr<EffectStage>& RegisterEffectStage(
-      AudioGraph::Source& upstream,
+      AudioGraph::Source& upstream, size_t numChannels,
       const MixerOptions::StageSpecification& stage, double outRate);
 
    // Input
@@ -164,9 +154,6 @@ private:
 
    // BUFFERS
 
-   // Resample into these buffers, or produce directly when not resampling
-   AudioGraph::Buffers mFloatBuffers;
-
    // Each channel's data is transformed, including application of
    // gains and pans, and then (maybe many-to-one) mixer specifications
    // determine where in mTemp it is accumulated
@@ -179,9 +166,8 @@ private:
    std::vector<EffectSettings> mSettings;
    std::vector<AudioGraph::Buffers> mStageBuffers;
    std::vector<std::unique_ptr<EffectStage>> mStages;
-   std::vector<AudioGraph::Source*> mMasterStages;
-
-   struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
-   std::vector<Source> mDecoratedSources;
+   std::unique_ptr<AudioGraph::Source> mDownmixStage;
+   std::unique_ptr<AudioGraph::Source> mMasterDownmixStage;
+   AudioGraph::Source* mDownstream{};
 };
 #endif
