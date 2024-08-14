@@ -21,6 +21,8 @@
 # This module stores global state
 declare_module(au3wrap)
 
+add_subdirectory("vst3")
+
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
@@ -358,6 +360,8 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-components/ComponentInterfaceSymbol.h
     ${AU3_LIBRARIES}/lib-components/SettingsVisitor.cpp
     ${AU3_LIBRARIES}/lib-components/SettingsVisitor.h
+    ${AU3_LIBRARIES}/lib-components/PluginProvider.cpp
+    ${AU3_LIBRARIES}/lib-components/PluginProvider.h
 
     ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.cpp
     ${AU3_LIBRARIES}/lib-time-frequency-selection/SelectedRegion.h
@@ -423,10 +427,58 @@ set(AU3_SRC
     ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.h
     ${AU3_LIBRARIES}/lib-effects/Effect.cpp
     ${AU3_LIBRARIES}/lib-effects/Effect.h
+    ${AU3_LIBRARIES}/lib-effects/LoadEffects.cpp
+    ${AU3_LIBRARIES}/lib-effects/LoadEffects.h
+
+    ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.cpp
+    ${AU3_LIBRARIES}/lib-audio-unit/AudioUnitEffectsModule.h
 
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.cpp
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.h
+
+    ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
+    ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
+    ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.cpp
+    ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.h
+    ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.cpp
+    ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.h
+    ${AU3_LIBRARIES}/lib-vst3/VST3Instance.cpp
+    ${AU3_LIBRARIES}/lib-vst3/VST3Instance.h
+    ${AU3_LIBRARIES}/lib-vst3/VST3Utils.cpp
+    ${AU3_LIBRARIES}/lib-vst3/VST3Utils.h
+    ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.cpp
+    ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.h
+    ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
+    ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
+    ${AU3_LIBRARIES}/lib-vst3/memorystream.cpp
+    ${AU3_LIBRARIES}/lib-vst3/memorystream.h
 )
+
+include(GetPlatformInfo)
+
+if(OS_IS_WIN)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
+        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityWindows.cpp
+    )
+elseif(OS_IS_LIN)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
+        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityLinux.cpp
+    )
+elseif(OS_IS_MAC)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
+        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityMacOS.cpp
+    )
+
+    set_source_files_properties(
+        ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
+        PROPERTIES
+        SKIP_UNITY_BUILD_INCLUSION ON
+        SKIP_PRECOMPILE_HEADERS ON
+        )
+endif()
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
@@ -434,12 +486,18 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 
 # ==================================
-set(MODULE_INCLUDE ${AU3_INCLUDE})
+set(MODULE_INCLUDE ${AU3_INCLUDE} ${MUSE_MODULE_VST_VST3_SDK_PATH})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
-set(MODULE_LINK ${AU3_LINK})
+set(MODULE_LINK ${AU3_LINK} vst_sdk_3)
 
 set(MODULE_USE_PCH_NONE ON)
 set(MODULE_USE_UNITY_NONE ON)
 
 setup_module()
+
+target_no_warning(${MODULE} -w)
+
+if (CC_IS_CLANG)
+    set_property(TARGET ${MODULE} APPEND_STRING PROPERTY COMPILE_FLAGS "-fobjc-arc")
+endif()
