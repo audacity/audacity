@@ -30,7 +30,7 @@ Item {
 
         anchors.verticalCenter: parent.verticalCenter
 
-        rowHeight: 48
+        rowHeight: root.height - view.spacing - 1
 
         model: PlaybackToolBarModel {}
 

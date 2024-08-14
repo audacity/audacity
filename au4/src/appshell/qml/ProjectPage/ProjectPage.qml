@@ -87,7 +87,7 @@ DockPage {
         Qt.callLater(pageModel.init)
     }
 
-    readonly property int verticalPanelDefaultWidth: 300
+    readonly property int verticalPanelDefaultWidth: 281
 
     readonly property int horizontalPanelMinHeight: 100
     readonly property int horizontalPanelMaxHeight: 520
@@ -157,6 +157,8 @@ DockPage {
         DockPanel {
             id: tracksPanel
 
+            signal add(type: int, quantity: int)
+
             objectName: pageModel.tracksPanelName()
             title: qsTrc("appshell", "Tracks")
 
@@ -170,8 +172,23 @@ DockPage {
 
             dropDestinations: root.verticalPanelDropDestinations
 
+            titleBar: TracksTitleBar {
+                onAddRequested: function(type, quantity) {
+                    tracksPanel.add(type, quantity)
+                }
+            }
+
             TracksPanel {
+                id: tp
                 navigationSection: tracksPanel.navigationSection
+
+                Connections {
+                    target: tracksPanel
+
+                    function onAdd(type, quantity) {
+                        tp.tracksModel.addTracks(type, quantity)
+                    }
+                }
 
                 Component.onCompleted: {
                     tracksPanel.contextMenuModel = contextMenuModel
