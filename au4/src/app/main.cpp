@@ -32,6 +32,7 @@
 #include "diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
+#include "framework/audioplugins/audiopluginsmodule.h"
 #include "framework/ui/uimodule.h"
 #include "framework/shortcuts/shortcutsmodule.h"
 #include "framework/accessibility/accessibilitymodule.h"
@@ -107,6 +108,7 @@ int main(int argc, char** argv)
 // framework
     app.addModule(new muse::draw::DrawModule());
     app.addModule(new muse::actions::ActionsModule());
+    app.addModule(new muse::audioplugins::AudioPluginsModule());
     app.addModule(new muse::ui::UiModule());
     app.addModule(new muse::uicomponents::UiComponentsModule());
     app.addModule(new muse::dock::DockModule());

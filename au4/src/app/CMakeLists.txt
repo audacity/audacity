@@ -81,6 +81,7 @@ set(LINK_LIB
     muse::learn
     muse::languages
     muse::diagnostics
+    muse::audioplugins
 
     appshell
     au3wrap
