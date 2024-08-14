@@ -59,6 +59,8 @@ set(AU3_DEF
     -DEXPERIMENTAL_SPECTRAL_EDITING
 
     -DEFFECTS_API=
+    -DVST3_API=
+
     -DCOMMAND_PARAMETERS_API=
 )
 
@@ -124,7 +126,10 @@ set(AU3_INCLUDE
 
     # effects
     ${AU3_LIBRARIES}/lib-effects
+    ${AU3_LIBRARIES}/lib-audio-unit
     ${AU3_LIBRARIES}/lib-command-parameters
+
+    ${AU3_LIBRARIES}/lib-vst3
 )
 
 set(WXBASE_RESTRICTIONS
