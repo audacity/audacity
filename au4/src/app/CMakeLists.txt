@@ -107,8 +107,8 @@ add_executable(${EXECUTABLE_NAME}
     main.cpp
     app.cpp
     app.h
-    #commandlineparser.cpp
-    #commandlineparser.h
+    commandlineparser.cpp
+    commandlineparser.h
 )
 
 target_include_directories(audacity PUBLIC

@@ -116,12 +116,11 @@ int App::run(int argc, char** argv)
     // ====================================================
     // Parse command line options
     // ====================================================
-    // CommandLineParser commandLineParser;
-    // commandLineParser.init();
-    // commandLineParser.parse(argc, argv);
+    CommandLineParser commandLineParser;
+    commandLineParser.init();
+    commandLineParser.parse(argc, argv);
 
-    // IApplication::RunMode runMode = commandLineParser.runMode();
-    IApplication::RunMode runMode = IApplication::RunMode::GuiApp;
+    IApplication::RunMode runMode = commandLineParser.runMode();
     QCoreApplication* app = nullptr;
 
     if (runMode == IApplication::RunMode::AudioPluginRegistration) {
@@ -140,7 +139,7 @@ int App::run(int argc, char** argv)
 //     QGuiApplication::setDesktopFileName("org.musescore.MuseScore" MU_APP_INSTALL_SUFFIX ".desktop");
 // #endif
 
-    // commandLineParser.processBuiltinArgs(*app);
+    commandLineParser.processBuiltinArgs(*app);
 
     // ====================================================
     // Setup modules: Resources, Exports, Imports, UiTypes
@@ -171,7 +170,7 @@ int App::run(int argc, char** argv)
     // ====================================================
     //! TODO Temporary fix
     dynamic_cast<muse::BaseApplication*>(muapplication().get())->setRunMode(runMode);
-    //applyCommandLineOptions(commandLineParser.options(), runMode);
+    applyCommandLineOptions(commandLineParser.options());
 
     // ====================================================
     // Setup modules: onPreInit
@@ -335,12 +334,12 @@ int App::run(int argc, char** argv)
 #endif // MUE_BUILD_APPSHELL_MODULE
     } break;
     case IApplication::RunMode::AudioPluginRegistration: {
-        // CommandLineParser::AudioPluginRegistration pluginRegistration = commandLineParser.audioPluginRegistration();
+        CommandLineParser::AudioPluginRegistration pluginRegistration = commandLineParser.audioPluginRegistration();
 
-        // QMetaObject::invokeMethod(qApp, [this, pluginRegistration]() {
-        //         int code = processAudioPluginRegistration(pluginRegistration);
-        //         qApp->exit(code);
-        //     }, Qt::QueuedConnection);
+        QMetaObject::invokeMethod(qApp, [this, pluginRegistration]() {
+                int code = processAudioPluginRegistration(pluginRegistration);
+                qApp->exit(code);
+            }, Qt::QueuedConnection);
     } break;
     }
 
@@ -393,4 +392,44 @@ int App::run(int argc, char** argv)
     delete app;
 
     return retCode;
+}
+
+void App::applyCommandLineOptions(const CommandLineParser::Options& options)
+{
+    if (options.app.revertToFactorySettings) {
+        appshellConfiguration()->revertToFactorySettings(options.app.revertToFactorySettings.value());
+    }
+
+    startupScenario()->setStartupType(options.startup.type);
+
+    if (options.startup.scoreUrl.has_value()) {
+        project::ProjectFile file { options.startup.scoreUrl.value() };
+
+        if (options.startup.scoreDisplayNameOverride.has_value()) {
+            file.displayNameOverride = options.startup.scoreDisplayNameOverride.value();
+        }
+
+        startupScenario()->setStartupScoreFile(file);
+    }
+
+    if (options.app.loggerLevel) {
+        globalModule.setLoggerLevel(options.app.loggerLevel.value());
+    }
+}
+
+int App::processAudioPluginRegistration(const CommandLineParser::AudioPluginRegistration& task)
+{
+    Ret ret = make_ret(Ret::Code::Ok);
+
+    if (task.failedPlugin) {
+        ret = registerAudioPluginsScenario()->registerFailedPlugin(task.pluginPath, task.failCode);
+    } else {
+        ret = registerAudioPluginsScenario()->registerPlugin(task.pluginPath);
+    }
+
+    if (!ret) {
+        LOGE() << ret.toString();
+    }
+
+    return ret.code();
 }
