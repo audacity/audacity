@@ -8,6 +8,7 @@ set(MODULE_QRC effects.qrc)
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 
 set(MODULE_SRC
+    #public
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/effectstypes.h
@@ -15,6 +16,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
 
+    #internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsactionscontroller.cpp
@@ -25,6 +27,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.h
+
+    #internal/au3
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/vst3pluginsscanner.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/vst3pluginsscanner.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/vst3pluginsmetareader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/vst3pluginsmetareader.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.h

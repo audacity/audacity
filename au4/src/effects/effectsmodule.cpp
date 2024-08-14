@@ -6,11 +6,19 @@
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
 
+#include "audioplugins/iaudiopluginsscannerregister.h"
+#include "audioplugins/iaudiopluginmetareaderregister.h"
+
 #include "internal/effectsprovider.h"
 #include "internal/effectsconfiguration.h"
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
+
+#include "internal/au3/vst3pluginsscanner.h"
+#include "internal/au3/vst3pluginsmetareader.h"
+
+#include "internal/au3/au3pluginssettings.h"
 
 #include "view/effectbuilder.h"
 
@@ -46,6 +54,16 @@ void EffectsModule::resolveImports()
     auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://effects/viewer"), "Audacity/Effects/EffectsViewerDialog.qml");
+    }
+
+    auto scannerRegister = ioc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(moduleName());
+    if (scannerRegister) {
+        scannerRegister->registerScanner(std::make_shared<Vst3PluginsScanner>());
+    }
+
+    auto metaReaderRegister = ioc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
+    if (metaReaderRegister) {
+        metaReaderRegister->registerReader(std::make_shared<Vst3PluginsMetaReader>());
     }
 }
 
