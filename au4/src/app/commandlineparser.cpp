@@ -24,11 +24,11 @@
 #include <QDir>
 
 #include "global/io/dir.h"
-#include "global/muversion.h"
 
 #include "log.h"
 
-using namespace mu::app;
+using namespace au::app;
+using namespace muse;
 
 static QStringList prepareArguments(int argc, char** argv)
 {
@@ -202,7 +202,7 @@ void CommandLineParser::parse(int argc, char** argv)
     }
 
     if (m_parser.isSet("d")) {
-        m_options.app.loggerLevel = mu::logger::Level::Debug;
+        m_options.app.loggerLevel = muse::logger::Level::Debug;
     }
 
     if (m_parser.isSet("D")) {
@@ -487,7 +487,7 @@ void CommandLineParser::processBuiltinArgs(const QCoreApplication& app)
     m_parser.process(app);
 }
 
-mu::IApplication::RunMode CommandLineParser::runMode() const
+muse::IApplication::RunMode CommandLineParser::runMode() const
 {
     return m_runMode;
 }
@@ -519,11 +519,13 @@ CommandLineParser::AudioPluginRegistration CommandLineParser::audioPluginRegistr
 
 void CommandLineParser::printLongVersion() const
 {
-    if (MUVersion::unstable()) {
-        printf("MuseScore: Music Score Editor\nUnstable Prerelease for Version %s; Build %s\n",
-               MUVersion::version().toStdString().c_str(), MUVersion::revision().toStdString().c_str());
-    } else {
-        printf("MuseScore: Music Score Editor; Version %s; Build %s\n",
-               MUVersion::version().toStdString().c_str(), MUVersion::revision().toStdString().c_str());
-    }
+    NOT_IMPLEMENTED;
+
+    // if (MUVersion::unstable()) {
+    //     printf("MuseScore: Music Score Editor\nUnstable Prerelease for Version %s; Build %s\n",
+    //            MUVersion::version().toStdString().c_str(), MUVersion::revision().toStdString().c_str());
+    // } else {
+    //     printf("MuseScore: Music Score Editor; Version %s; Build %s\n",
+    //            MUVersion::version().toStdString().c_str(), MUVersion::revision().toStdString().c_str());
+    // }
 }

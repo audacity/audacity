@@ -28,14 +28,18 @@
 #include "modularity/imodulesetup.h"
 #include "modularity/ioc.h"
 #include "appshell/istartupscenario.h"
+#include "audioplugins/iregisteraudiopluginsscenario.h"
+#include "appshell/iappshellconfiguration.h"
 
-//#include "commandlineparser.h"
+#include "commandlineparser.h"
 
 namespace au::app {
 class App
 {
     muse::Inject<muse::IApplication> muapplication;
     muse::Inject<appshell::IStartupScenario> startupScenario;
+    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
+    muse::Inject<appshell::IAppShellConfiguration> appshellConfiguration;
 
 public:
     App();
@@ -45,6 +49,8 @@ public:
     int run(int argc, char** argv);
 
 private:
+    void applyCommandLineOptions(const CommandLineParser::Options& options);
+    int processAudioPluginRegistration(const CommandLineParser::AudioPluginRegistration& task);
 
     QList<muse::modularity::IModuleSetup*> m_modules;
 };
