@@ -1504,6 +1504,7 @@ void AdornedRulerPanel::DoIdle()
 
    auto &project = *mProject;
    auto &viewInfo = ViewInfo::Get( project );
+   const bool isIconized = ProjectWindow::Get(project).IsIconized();
    const auto &selectedRegion = viewInfo.selectedRegion;
    const auto &playRegion = viewInfo.playRegion;
 
@@ -1515,7 +1516,7 @@ void AdornedRulerPanel::DoIdle()
      || mLastDrawnZoom != viewInfo.GetZoom()
      || mLastPlayRegionActive != viewInfo.playRegion.Active()
    ;
-   if (changed)
+   if (changed && !isIconized)
       // Cause ruler redraw anyway, because we may be zooming or scrolling,
       // showing or hiding the scrub bar, etc.
       Refresh();
