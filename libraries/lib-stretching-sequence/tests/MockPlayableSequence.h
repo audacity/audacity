@@ -36,7 +36,7 @@ public:
       return numChannels;
    }
 
-   float GetChannelGain(int channel) const override
+   float GetChannelVolume(int channel) const override
    {
       return 1.f;
    }

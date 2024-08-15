@@ -36,7 +36,7 @@ public:
 
    // WideSampleSequence
    size_t NChannels() const override;
-   float GetChannelGain(int channel) const override;
+   float GetChannelVolume(int channel) const override;
    double GetStartTime() const override;
    double GetEndTime() const override;
    double GetRate() const override;

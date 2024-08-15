@@ -265,9 +265,9 @@ public:
    /*! Read by worker threads but unchanging during playback */
    RingBuffers mPlaybackBuffers;
    ConstPlayableSequences      mPlaybackSequences;
-   // Old gain is used in playback in linearly interpolating
-   // the gain.
-   float mOldPlaybackGain;
+   // Old volume is used in playback in linearly interpolating
+   // the volume.
+   float mOldPlaybackVolume;
    // Temporary buffers, each as large as the playback buffers
    std::vector<SampleBuffer> mScratchBuffers;
    std::vector<float *> mScratchPointers; //!< pointing into mScratchBuffers
@@ -500,7 +500,7 @@ public:
     * methods use whatever device is specified by the preferences.  If a
     * stream *is* running, naturally they manipulate the mixer associated
     * with that stream.  If no mixer is available, output is emulated and
-    * input is stuck at 1.0f (a gain is applied to output samples).
+    * input is stuck at 1.0f (a volume gain is applied to output samples).
     */
    void SetMixer(int inputSource, float inputVolume,
                  float playbackVolume);

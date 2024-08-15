@@ -39,7 +39,7 @@ std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(
       true, Mixer::WarpOptions { tracks.GetOwner() }, startTime, stopTime,
       numOutChannels, outBufferSize, outInterleaved, outRate, outFormat, true,
       mixerSpec,
-      mixerSpec ? Mixer::ApplyGain::MapChannels : Mixer::ApplyGain::Mixdown);
+      mixerSpec ? Mixer::ApplyVolume::MapChannels : Mixer::ApplyVolume::Mixdown);
 }
 
 namespace

@@ -93,8 +93,8 @@ public:
 
    size_t NChannels() const override;
 
-   //! Takes gain and pan into account
-   float GetChannelGain(int channel) const override;
+   //! Takes volume and pan into account
+   float GetChannelVolume(int channel) const override;
 
    //! This fails if any clip overlapping the range has non-unit stretch ratio!
    bool DoGet(
@@ -311,15 +311,15 @@ public:
    void SetRate(double newRate);
 
    // Multiplicative factor.  Only converted to dB for display.
-   float GetGain() const;
-   void SetGain(float newGain);
+   float GetVolume() const;
+   void SetVolume(float newVolume);
 
    // -1.0 (left) -> 1.0 (right)
    float GetPan() const;
    void SetPan(float newPan);
 
-   //! Takes gain and pan into account
-   float GetChannelGain(int channel) const override;
+   //! Takes volume and pan into account
+   float GetChannelVolume(int channel) const override;
 
    sampleCount GetVisibleSampleCount() const;
 
@@ -788,7 +788,7 @@ private:
       sampleCount* pNumWithinClips) const;
 
    void DoSetPan(float value);
-   void DoSetGain(float value);
+   void DoSetVolume(float value);
 
    /*
     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`

@@ -78,13 +78,13 @@ public:
 
 public:
    double mPan;
-   double mGain;
+   double mVolume;
    bool bSolo;
    bool bMute;
 
 // For tracking optional parameters.
    bool bHasPan;
-   bool bHasGain;
+   bool bHasVolume;
    bool bHasSolo;
    bool bHasMute;
 };
@@ -148,7 +148,7 @@ public:
 public:
 
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S ) {
-      return 
+      return
          mSetStatus.VisitSettings(S) &&
          mSetAudio.VisitSettings(S) &&
          mSetVisuals.VisitSettings(S);
@@ -161,7 +161,7 @@ public:
       mSetVisuals.PopulateOrExchange(S);
    };
    bool ApplyInner(const CommandContext & context, Track &t) override {
-      return 
+      return
          mSetStatus.ApplyInner(context, t) &&
          mSetAudio.ApplyInner(context, t) &&
          mSetVisuals.ApplyInner(context, t);

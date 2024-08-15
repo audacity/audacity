@@ -233,7 +233,7 @@ public:
     * methods use whatever device is specified by the preferences.  If a
     * stream *is* running, naturally they manipulate the mixer associated
     * with that stream.  If no mixer is available, output is emulated and
-    * input is stuck at 1.0f (a gain is applied to output samples).
+    * input is stuck at 1.0f (a volume gain is applied to output samples).
     */
    void SetMixer(int inputSource);
 

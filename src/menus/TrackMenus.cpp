@@ -521,7 +521,7 @@ void SetTrackGain(AudacityProject &project, WaveTrack * wt, LWSlider * slider)
    wxASSERT(wt);
    float newValue = slider->Get();
 
-   wt->SetGain(newValue);
+   wt->SetVolume(newValue);
 
    ProjectHistory::Get( project )
       .PushState(XO("Adjusted gain"), XO("Gain"), UndoPush::CONSOLIDATE);
@@ -974,7 +974,7 @@ void OnTrackGain(const CommandContext &context)
    /// This will pop up the track gain dialog for specified track
    const auto track = TrackFocus::Get( project ).Get();
    if (track) track->TypeSwitch( [&](WaveTrack &wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
+      LWSlider *slider = WaveTrackControls::VolumeSlider( trackPanel, wt );
       if (slider->ShowDialog())
          SetTrackGain(project, &wt, slider);
    });
@@ -987,7 +987,7 @@ void OnTrackGainInc(const CommandContext &context)
 
    const auto track = TrackFocus::Get( project ).Get();
    if (track) track->TypeSwitch( [&](WaveTrack &wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
+      LWSlider *slider = WaveTrackControls::VolumeSlider( trackPanel, wt );
       slider->Increase(1);
       SetTrackGain(project, &wt, slider);
    });
@@ -1000,7 +1000,7 @@ void OnTrackGainDec(const CommandContext &context)
 
    const auto track = TrackFocus::Get( project ).Get();
    if (track) track->TypeSwitch( [&](WaveTrack &wt) {
-      LWSlider *slider = WaveTrackControls::GainSlider( trackPanel, wt );
+      LWSlider *slider = WaveTrackControls::VolumeSlider( trackPanel, wt );
       slider->Decrease(1);
       SetTrackGain(project, &wt, slider);
    });

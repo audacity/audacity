@@ -94,7 +94,7 @@ public:
 
    //void UpdatePrefs();
 
-   void HandleResize(); // For wxSizeEvents, update gain slider and meter.
+   void HandleResize(); // For wxSizeEvents, update volume slider and meter.
 
    void HandleSliderGain(const bool bWantPushState = false);
    void HandleSliderVelocity(const bool bWantPushState = false);
@@ -121,8 +121,6 @@ private:
    void OnSlider_Pan(wxCommandEvent& event);
    void OnButton_Mute(wxCommandEvent& event);
    void OnButton_Solo(wxCommandEvent& event);
-   //v void OnSliderScroll_Gain(wxScrollEvent& event);
-
 
 public:
    //! Invariant not null
@@ -138,7 +136,7 @@ private:
    AButton* mToggleButton_Mute;
    AButton* mToggleButton_Solo;
    MixerTrackSlider* mSlider_Pan;
-   MixerTrackSlider* mSlider_Gain;
+   MixerTrackSlider* mSlider_Volume;
    MixerTrackSlider* mSlider_Velocity;
    wxWeakRef<MeterPanel> mMeter;
    ChannelGroupSampleView mSampleView;
