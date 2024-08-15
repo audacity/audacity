@@ -15,6 +15,7 @@
 #include "../EffectEditor.h"
 #include "LadspaInstance.h" // for LadspaEffectSettings
 
+#include <wx/dialog.h>
 #include <wx/weakref.h>
 
 struct LadspaInstance;

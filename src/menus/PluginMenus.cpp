@@ -4,7 +4,6 @@
 #include "../PluginRegistrationDialog.h"
 #include "../ProjectWindows.h"
 #include "../commands/CommandDispatch.h"
-#include "../effects/EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "../prefs/PrefsDialog.h"
 #include "../toolbars/SelectionBar.h"
@@ -13,6 +12,7 @@
 #include "AudioIO.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
+#include "EffectManager.h"
 #include "HelpSystem.h"
 #include "Journal.h"
 #include "MenuHelper.h"
@@ -30,6 +30,7 @@
 #include "UndoManager.h"
 #include "Viewport.h"
 #include "prefs/EffectsPrefs.h"
+#include "DoEffect.h"
 
 // private helper classes and functions
 namespace {
@@ -127,7 +128,7 @@ void OnManageGenerators(const CommandContext &context)
 void OnEffect(const CommandContext &context)
 {
    // using GET to interpret parameter as a PluginID
-   EffectUI::DoEffect(context.parameter.GET(), context, 0);
+   EffectUI::DoEffect(context.parameter.GET(), context.project, 0);
 }
 
 void OnManageEffects(const CommandContext &context)
@@ -149,10 +150,9 @@ void OnRepeatLastGenerator(const CommandContext &context)
    auto& commandManager = CommandManager::Get(context.project);
    auto lastEffect = commandManager.mLastGenerator;
    if (!lastEffect.empty())
-   {
       EffectUI::DoEffect(
-         lastEffect, context, commandManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
-   }
+         lastEffect, context.project,
+         commandManager.mRepeatGeneratorFlags | EffectManager::kRepeatGen);
 }
 
 void OnRepeatLastEffect(const CommandContext &context)
@@ -160,10 +160,7 @@ void OnRepeatLastEffect(const CommandContext &context)
    auto& commandManager = CommandManager::Get(context.project);
    auto lastEffect = commandManager.mLastEffect;
    if (!lastEffect.empty())
-   {
-      EffectUI::DoEffect(
-         lastEffect, context, commandManager.mRepeatEffectFlags);
-   }
+      EffectUI::DoEffect(lastEffect, context.project, commandManager.mRepeatEffectFlags);
 }
 
 void OnRepeatLastAnalyzer(const CommandContext& context)
@@ -174,10 +171,8 @@ void OnRepeatLastAnalyzer(const CommandContext& context)
      {
        auto lastEffect = commandManager.mLastAnalyzer;
        if (!lastEffect.empty())
-       {
-         EffectUI::DoEffect(
-            lastEffect, context, commandManager.mRepeatAnalyzerFlags);
-       }
+          EffectUI::DoEffect(
+             lastEffect, context.project, commandManager.mRepeatAnalyzerFlags);
      }
       break;
    case CommandManager::repeattypeunique:
@@ -285,8 +280,9 @@ auto GenerateMenu()
                CommandManager::Get(project).mLastGenerator;
             TranslatableString buildMenuLabel;
             if (!lastGenerator.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format(EffectManager::Get().GetCommandName(lastGenerator));
+               buildMenuLabel =
+                  XO("Repeat %s")
+                     .Format(PluginManager::Get().GetName(lastGenerator));
             else
                buildMenuLabel = XO("Repeat Last Generator");
 
@@ -382,8 +378,9 @@ auto EffectMenu()
             const auto &lastEffect = CommandManager::Get(project).mLastEffect;
             TranslatableString buildMenuLabel;
             if (!lastEffect.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format( EffectManager::Get().GetCommandName(lastEffect) );
+               buildMenuLabel =
+                  XO("Repeat %s")
+                     .Format(PluginManager::Get().GetName(lastEffect));
             else
                buildMenuLabel = XO("Repeat Last Effect");
 
@@ -406,7 +403,8 @@ auto EffectMenu()
                EffectsGroupBy.Read(),
                &OnEffect);
             return result;
-         })) };
+         }))
+   };
    return menu;
 }
 
@@ -442,8 +440,9 @@ auto AnalyzeMenu()
                CommandManager::Get(project).mLastAnalyzer;
             TranslatableString buildMenuLabel;
             if (!lastAnalyzer.empty())
-               buildMenuLabel = XO("Repeat %s")
-                  .Format(EffectManager::Get().GetCommandName(lastAnalyzer));
+               buildMenuLabel =
+                  XO("Repeat %s")
+                     .Format(PluginManager::Get().GetName(lastAnalyzer));
             else
                buildMenuLabel = XO("Repeat Last Analyzer");
 

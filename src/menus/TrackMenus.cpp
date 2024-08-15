@@ -23,7 +23,7 @@
 #include "Viewport.h"
 #include "WaveTrack.h"
 #include "CommandContext.h"
-#include "../effects/EffectManager.h"
+#include "EffectManager.h"
 #include "../effects/EffectUI.h"
 #include "QualitySettings.h"
 #include "../tracks/playabletrack/wavetrack/ui/WaveTrackControls.h"
@@ -31,6 +31,7 @@
 #include "../widgets/ASlider.h"
 #include "AudacityMessageBox.h"
 #include "ProgressDialog.h"
+#include "DoEffect.h"
 
 #include <wx/combobox.h>
 
@@ -551,9 +552,8 @@ namespace {
 void OnStereoToMono(const CommandContext &context)
 {
    EffectUI::DoEffect(
-      EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono")),
-      context,
-      EffectManager::kConfigured);
+      PluginManager::Get().GetByCommandIdentifier(wxT("StereoToMono")),
+      context.project, EffectManager::kConfigured);
 }
 
 void OnMixAndRender(const CommandContext &context)
@@ -1138,7 +1138,7 @@ auto TracksMenu()
             // hide it.
             [](AudacityProject&) -> std::unique_ptr<CommandItem> {
                const PluginID ID =
-                  EffectManager::Get().GetEffectByIdentifier(wxT("StereoToMono"));
+                  PluginManager::Get().GetByCommandIdentifier(wxT("StereoToMono"));
                const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
                if (plug && plug->IsEnabled())
                   return Command( wxT("Stereo to Mono"),

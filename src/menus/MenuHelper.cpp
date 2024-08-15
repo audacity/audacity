@@ -1,6 +1,6 @@
 #include "MenuHelper.h"
 #include "PluginManager.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "CommonCommandFlags.h"
 #include "BatchCommands.h"
 #include "BatchProcessDialog.h"

@@ -10,34 +10,41 @@
 ********************************************************************//*!
 
 \class MacroCommands
-\brief Maintains the list of commands for batch/macro 
+\brief Maintains the list of commands for batch/macro
 processing.  See also MacrosWindow and ApplyMacroDialog.
 
 *//*******************************************************************/
 #define wxLOG_COMPONENT "MacroCommands"
 
 #include "BatchCommands.h"
+#include "DoEffect.h"
+#include "EffectAndCommandPluginManager.h"
 
-#include <wx/defs.h>
 #include <wx/datetime.h>
+#include <wx/defs.h>
 #include <wx/dir.h>
+#include <wx/frame.h>
 #include <wx/log.h>
 #include <wx/textfile.h>
 #include <wx/time.h>
 
-#include "Project.h"
-#include "ProjectHistory.h"
-#include "ProjectSettings.h"
-#include "effects/EffectManager.h"
-#include "effects/EffectUI.h"
+#include "Effect.h"
+#include "EffectManager.h"
 #include "FileNames.h"
 #include "PluginManager.h"
 #include "Prefs.h"
+#include "Project.h"
+#include "ProjectHistory.h"
+#include "ProjectSettings.h"
+#include "ProjectWindows.h"
 #include "SelectFile.h"
 #include "SelectUtilities.h"
 #include "SettingsVisitor.h"
 #include "Track.h"
 #include "UndoManager.h"
+#include "effects/EffectPresetDialog.h"
+#include "effects/EffectUI.h"
+#include "effects/EffectUIServices.h"
 
 #include "AllThemeResources.h"
 
@@ -303,11 +310,11 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
    Entries commands;
 
    PluginManager & pm = PluginManager::Get();
-   EffectManager & em = EffectManager::Get();
+   EffectManager& em = EffectManager::Get();
    {
       for (auto &plug
            : pm.PluginsOfType(PluginTypeEffect|PluginTypeAudacityCommand)) {
-         auto command = em.GetCommandIdentifier(plug.GetID());
+         auto command = pm.GetCommandIdentifier(plug.GetID());
          if (!command.empty())
             commands.push_back( {
                { command, plug.GetSymbol().Msgid() },
@@ -338,7 +345,7 @@ MacroCommandsCatalog::MacroCommandsCatalog( const AudacityProject *project )
          else {
             // We'll disambiguate if the squashed name is short and shorter than the internal name.
             // Otherwise not.
-            // This means we won't have repetitive items like "Cut (Cut)" 
+            // This means we won't have repetitive items like "Cut (Cut)"
             // But we will show important disambiguation like "All (SelectAll)" and "By Date (SortByDate)"
             // Disambiguation is no longer essential as the details box will show it.
             // PRL:  I think this reasoning applies only when locale is English.
@@ -438,42 +445,70 @@ auto MacroCommandsCatalog::ByTranslation(const wxString &translation) const
 
 wxString MacroCommands::GetCurrentParamsFor(const CommandID & command)
 {
-   const PluginID & ID =
-      EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID& ID = PluginManager::Get().GetByCommandIdentifier(command);
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
    }
 
-   return EffectManager::Get().GetEffectParameters(ID);
+   return EffectAndCommandPluginManager::Get().GetEffectParameters(ID);
 }
 
 wxString MacroCommands::PromptForParamsFor(
-   const CommandID & command, const wxString & params, wxWindow &parent)
+   const CommandID& command, const wxString& params, AudacityProject& project)
 {
-   const PluginID & ID =
-      EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID& ID = PluginManager::Get().GetByCommandIdentifier(command);
    if (ID.empty())
       return wxEmptyString;   // effect not found
 
    wxString res = params;
-   auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
-   if (EffectManager::Get().SetEffectParameters(ID, params))
-      if (EffectManager::Get().PromptUser(ID, EffectUI::DialogFactory, parent))
-         res = EffectManager::Get().GetEffectParameters(ID);
+   auto cleanup = EffectAndCommandPluginManager::Get().SetBatchProcessing(ID);
+   if (EffectAndCommandPluginManager::Get().SetEffectParameters(ID, params))
+   {
+      auto dialogInvoker =
+         [&](
+            Effect& effect, EffectSettings& settings,
+            std::shared_ptr<EffectInstance>& pInstance) -> bool {
+         const auto pServices = dynamic_cast<EffectUIServices*>(&effect);
+         return pServices && pServices->ShowHostInterface(effect,
+            GetProjectFrame(project), EffectUI::DialogFactory,
+            pInstance,
+            *std::make_shared<SimpleEffectSettingsAccess>(settings),
+            effect.IsBatchProcessing() ) != 0;
+      };
+      if (EffectAndCommandPluginManager::Get().PromptUser(
+             ID, project, std::move(dialogInvoker)))
+         res = EffectAndCommandPluginManager::Get().GetEffectParameters(ID);
+   }
    return res;
 }
 
 wxString MacroCommands::PromptForPresetFor(const CommandID & command, const wxString & params, wxWindow *parent)
 {
-   const PluginID & ID =
-      EffectManager::Get().GetEffectByIdentifier(command);
+   const PluginID& ID = PluginManager::Get().GetByCommandIdentifier(command);
    if (ID.empty())
    {
       return wxEmptyString;   // effect not found.
    }
 
-   wxString preset = EffectManager::Get().GetPreset(ID, params, parent);
+   EffectManager::EffectPresetDialog dialog =
+      [parent](
+         EffectPlugin& effect,
+         const wxString& preset) -> std::optional<wxString> {
+      EffectPresetsDialog dlg(parent, &effect);
+      dlg.Layout();
+      dlg.Fit();
+      dlg.SetSize(dlg.GetMinSize());
+      dlg.CenterOnParent();
+      dlg.SetSelected(preset);
+
+      if (dlg.ShowModal())
+         return std::make_optional(dlg.GetSelected());
+      else
+         return {};
+   };
+   wxString preset =
+      EffectManager::Get().GetPreset(ID, params, std::move(dialog));
 
    // Preset will be empty if the user cancelled the dialog, so return the original
    // parameter value.
@@ -518,10 +553,10 @@ bool MacroCommands::ApplyEffectCommand(
 
    bool res = false;
 
-   auto cleanup = EffectManager::Get().SetBatchProcessing(ID);
+   auto cleanup = EffectAndCommandPluginManager::Get().SetBatchProcessing(ID);
 
    // transfer the parameters to the effect...
-   if (EffectManager::Get().SetEffectParameters(ID, params))
+   if (EffectAndCommandPluginManager::Get().SetEffectParameters(ID, params))
    {
       if( plug->GetPluginType() == PluginTypeAudacityCommand )
          // and apply the effect...
@@ -532,11 +567,10 @@ bool MacroCommands::ApplyEffectCommand(
             EffectManager::kDontRepeatLast);
       else
          // and apply the effect...
-         res = EffectUI::DoEffect(ID,
-            Context,
-            EffectManager::kConfigured |
-            EffectManager::kSkipState |
-            EffectManager::kDontRepeatLast);
+         res = EffectUI::DoEffect(
+            ID, Context.project,
+            EffectManager::kConfigured | EffectManager::kSkipState |
+               EffectManager::kDontRepeatLast);
    }
 
    return res;
@@ -547,8 +581,7 @@ bool MacroCommands::ApplyCommand( const TranslatableString &friendlyCommand,
    CommandContext const *const pContext)
 {
    // Test for an effect.
-   const PluginID & ID =
-      EffectManager::Get().GetEffectByIdentifier( command );
+   const PluginID& ID = PluginManager::Get().GetByCommandIdentifier(command);
    if (!ID.empty())
    {
       if( pContext )

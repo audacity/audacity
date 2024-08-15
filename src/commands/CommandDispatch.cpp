@@ -12,13 +12,15 @@
 
 #include "CommandDispatch.h"
 
+#include "DoEffect.h"
 #include "CommandContext.h"
 #include "CommandManager.h"
 #include "PluginManager.h"
 #include "ProjectAudioManager.h"
 #include "ProjectWindows.h"
 #include "Viewport.h"
-#include "../effects/EffectManager.h"
+#include "EffectAndCommandPluginManager.h"
+#include "EffectManager.h"
 #include "../effects/EffectUI.h"
 #include <wx/log.h>
 #include <wx/frame.h>
@@ -42,12 +44,11 @@ bool CommandDispatch::HandleTextualCommand(
    // Not one of the singleton commands.
    // We could/should try all the list-style commands.
    // instead we only try the effects.
-   EffectManager & em = EffectManager::Get();
+   auto& pm = PluginManager::Get();
    for (auto &plug : PluginManager::Get().PluginsOfType(PluginTypeEffect))
-      if (em.GetCommandIdentifier(plug.GetID()) == Str)
+      if (pm.GetCommandIdentifier(plug.GetID()) == Str)
          return EffectUI::DoEffect(
-            plug.GetID(), context,
-            EffectManager::kConfigured);
+            plug.GetID(), context.project, EffectManager::kConfigured);
 
    return false;
 }
@@ -60,7 +61,6 @@ bool CommandDispatch::DoAudacityCommand(
    const PluginID & ID, const CommandContext & context, unsigned flags )
 {
    auto &project = context.project;
-   auto &window = GetProjectFrame(project);
    const PluginDescriptor *plug = PluginManager::Get().GetPlugin(ID);
    if (!plug)
       return false;
@@ -71,10 +71,8 @@ bool CommandDispatch::DoAudacityCommand(
 //    SelectAllIfNone();
    }
 
-   EffectManager & em = EffectManager::Get();
-   bool success = em.DoAudacityCommand(ID,
+   bool success = EffectAndCommandPluginManager::Get().DoAudacityCommand(ID,
       context,
-      &window,
       (flags & EffectManager::kConfigured) == 0);
 
    if (!success)
@@ -101,6 +99,6 @@ void CommandDispatch::OnAudacityCommand(const CommandContext & ctx)
    wxLogDebug( "Command was: %s", ctx.parameter.GET());
    // Not configured, so prompt user.
    CommandDispatch::DoAudacityCommand(
-      EffectManager::Get().GetEffectByIdentifier(ctx.parameter),
-      ctx, EffectManager::kNone);
+      PluginManager::Get().GetByCommandIdentifier(ctx.parameter), ctx,
+      EffectManager::kNone);
 }

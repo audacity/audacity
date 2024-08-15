@@ -222,7 +222,7 @@ void TrackMenuTable::OnSetName(wxCommandEvent &)
    SetTrackNameCommand Command;
    Command.mName = oldName;
    // Bug 1837 : We need an OK/Cancel result if we are to enter a blank string.
-   bool bResult = Command.PromptUser( &GetProjectFrame( *proj ) );
+   bool bResult = Command.PromptUser(*proj);
    if (bResult)
    {
       wxString newName = Command.mName;
@@ -358,7 +358,7 @@ void CommonTrackControls::Draw(
       // Given rectangle excludes left and right margins, and encompasses a
       // channel group of tracks, plus the resizer area below
       auto pTrack = FindTrack();
-      
+
       // Vaughan, 2010-08-24: No longer doing this.
       // Draw sync-lock tiles in ruler area.
       //if (SyncLock::IsSyncLockSelected(t)) {

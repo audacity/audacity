@@ -107,7 +107,7 @@ public:
 
    static PluginManager & Get();
 
-   
+
    static PluginID GetID(const PluginProvider *provider);
    static PluginID GetID(const ComponentInterface *command);
    static PluginID OldGetID(const EffectDefinitionInterface* effect);
@@ -163,7 +163,10 @@ public:
    bool IsPluginEnabled(const PluginID & ID);
    void EnablePlugin(const PluginID & ID, bool enable);
 
-   const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID);
+   const ComponentInterfaceSymbol & GetSymbol(const PluginID & ID) const;
+   TranslatableString GetName(const PluginID& ID) const;
+   CommandID GetCommandIdentifier(const PluginID& ID) const;
+   const PluginID& GetByCommandIdentifier(const CommandID& strTarget);
    ComponentInterface *Load(const PluginID & ID);
 
    void ClearEffectPlugins();
