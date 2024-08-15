@@ -512,7 +512,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
    auto captureFormat_saved = captureFormat;
    // Special case: Our 24-bit sample format is different from PortAudio's
    // 3-byte packed format. So just make PortAudio return float samples,
-   // since we need float values anyway to apply the gain.
+   // since we need float values anyway to apply the volume.
    // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to
    // be set to floatSample below.
    // JKC: YES that's right.  Internally Audacity uses float, and float has space for
@@ -1284,7 +1284,7 @@ bool AudioIO::AllocateBuffers(
                ((mPlaybackQueueMinimum + mPlaybackSamplesToCopy - 1) / mPlaybackSamplesToCopy);
 
             // Bug 1763 - We must fade in from zero to avoid a click on starting.
-            mOldPlaybackGain = 0.0f;
+            mOldPlaybackVolume = 0.0f;
             for (unsigned int i = 0; i < mPlaybackSequences.size(); i++) {
                const auto &pSequence = mPlaybackSequences[i];
 
@@ -1321,7 +1321,7 @@ bool AudioIO::AllocateBuffers(
                   mRate, floatSample,
                   false,   // low quality dithering and resampling
                   nullptr, // no custom mix-down
-                  Mixer::ApplyGain::Discard // don't apply gains
+                  Mixer::ApplyVolume::Discard // don't apply volume
                   ));
             }
 
@@ -2180,9 +2180,9 @@ bool AudioIO::ProcessPlaybackSlices(
          {
             for(unsigned n = 0; n < seq->NChannels(); ++n)
             {
-               const auto gain = seq->GetChannelGain(n);
+               const auto volume = seq->GetChannelVolume(n);
                for(unsigned i = 0; i < samplesAvailable; ++i)
-                  mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i] * gain;
+                  mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex + n][i] * volume;
             }
          }
          else if(numChannels == 1)
@@ -2190,9 +2190,9 @@ bool AudioIO::ProcessPlaybackSlices(
             //mono source is duplicated into every output channel
             for(unsigned n = 0; n < mNumPlaybackChannels; ++n)
             {
-               const auto gain = seq->GetChannelGain(n);
+               const auto volume = seq->GetChannelVolume(n);
                for(unsigned i = 0; i < samplesAvailable; ++i)
-                  mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * gain;
+                  mMasterBuffers[n][i] += mProcessingBuffers[bufferIndex][i] * volume;
             }
          }
          bufferIndex += seq->NChannels();
@@ -2753,14 +2753,14 @@ bool AudioIoCallback::FillOutputBuffers(
 
    // JKC: The original code attempted to be faster by doing nothing on silenced audio.
    // This, IMHO, is 'premature optimisation'.  Instead clearer and cleaner code would
-   // simply use a gain of 0.0 for silent audio and go on through to the stage of
-   // applying that 0.0 gain to the data mixed into the buffer.
+   // simply use a volume of 0.0 for silent audio and go on through to the stage of
+   // applying that 0.0 volume to the data mixed into the buffer.
    // Then (and only then) we would have if needed fast paths for:
-   // - Applying a uniform gain of 0.0.
-   // - Applying a uniform gain of 1.0.
-   // - Applying some other uniform gain.
-   // - Applying a linearly interpolated gain.
-   // I would expect us not to need the fast paths, since linearly interpolated gain
+   // - Applying a uniform volume of 0.0.
+   // - Applying a uniform volume of 1.0.
+   // - Applying some other uniform volume.
+   // - Applying a linearly interpolated volume.
+   // I would expect us not to need the fast paths, since linearly interpolated volume
    // is very cheap to process.
 
    // ------ MEMORY ALLOCATION ----------------------
@@ -2772,9 +2772,9 @@ bool AudioIoCallback::FillOutputBuffers(
       tempBufs[c] = stackAllocate(float, framesPerBuffer);
    // ------ End of MEMORY ALLOCATION ---------------
 
-   auto gain = ExpGain(GetMixerOutputVol());
+   auto playbackVolume = ExpGain(GetMixerOutputVol());
    if (mForceFadeOut.load(std::memory_order_relaxed) || IsPaused())
-      gain = 0.0;
+      playbackVolume = 0.0;
 
    for(unsigned n = 0; n < numPlaybackChannels; ++n)
    {
@@ -2822,29 +2822,29 @@ bool AudioIoCallback::FillOutputBuffers(
          {
             for ( unsigned i = 0; i < len; ++i)
                outputMeterFloats[numPlaybackChannels*i+n] +=
-                  gain*tempBufs[n][i];
+                  playbackVolume*tempBufs[n][i];
          }
 
-         auto oldGain = mOldPlaybackGain;
+         auto oldVolume = mOldPlaybackVolume;
          // if no microfades, jump in volume.
          if (!mbMicroFades)
-            oldGain = gain;
+            oldVolume = playbackVolume;
 
          // Linear interpolate.
          // PRL todo:  choose denominator differently, so it doesn't depend on
          // framesPerBuffer, which is influenced by the portAudio implementation in
          // opaque ways
-         const float deltaGain = (gain - oldGain) / len;
+         const float deltaVolume = (playbackVolume - oldVolume) / len;
          for (unsigned i = 0; i < len; i++)
          {
             outputFloats[numPlaybackChannels * i + n] +=
-               (oldGain + deltaGain * i) * tempBufs[n][i];
+               (oldVolume + deltaVolume * i) * tempBufs[n][i];
          }
       }
       CallbackCheckCompletion(mCallbackReturn, len);
    }
 
-   mOldPlaybackGain = gain;
+   mOldPlaybackVolume = playbackVolume;
 
    // wxASSERT( maxLen == toGet );
 
@@ -3240,7 +3240,7 @@ int AudioIoCallback::AudioCallback(
 
    // Test for no sequence audio to play (because we are paused and have faded
    // out)
-   if( IsPaused() &&  (( !mbMicroFades ) || mOldPlaybackGain == 0.0f ))
+   if( IsPaused() &&  (( !mbMicroFades ) || mOldPlaybackVolume == 0.0f ))
       return mCallbackReturn;
 
    // To add sequence output to output (to play sound on speaker)

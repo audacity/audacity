@@ -204,23 +204,23 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mStaticText_TrackName->SetPosition( ctrlPos );
 
 
-   // gain and velocity sliders at left (both in same place)
+   // volume and velocity sliders at left (both in same place)
    ctrlPos.x = kDoubleInset;
    ctrlPos.y += TRACK_NAME_HEIGHT + kDoubleInset;
    const int nGainSliderHeight =
       size.GetHeight() - ctrlPos.y - kQuadrupleInset;
    ctrlSize.Set(kLeftSideStackWidth - kQuadrupleInset, nGainSliderHeight);
 
-   mSlider_Gain =
+   mSlider_Volume =
       safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
-            /* i18n-hint: title of the Gain slider, used to adjust the volume */
-            XO("Gain"),
+            /* i18n-hint: title of the Volume slider, used to adjust the volume */
+            XO("Volume"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( DB_SLIDER )
                .Orientation( wxVERTICAL ));
-   mSlider_Gain->SetName(_("Gain"));
+   mSlider_Volume->SetName(_("Volume"));
 
    mSlider_Velocity =
       safenew MixerTrackSlider(
@@ -365,7 +365,7 @@ void MixerTrackCluster::UpdatePrefs()
 }
 #endif
 
-void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider and meter.
+void MixerTrackCluster::HandleResize() // For wxSizeEvents, update volume slider and meter.
 {
    wxSize scrolledWindowClientSize = this->GetParent()->GetClientSize();
    const int newClusterHeight =
@@ -375,14 +375,14 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
 
    this->SetSize(-1, newClusterHeight);
 
-   // Change only the heights of mSlider_Gain and mMeter.
+   // Change only the heights of mSlider_Volume and mMeter.
    // But update shown status of mToggleButton_Solo, which affects top of mMeter.
    const int nGainSliderHeight =
       newClusterHeight -
       (kInset + // margin above mStaticText_TrackName
          TRACK_NAME_HEIGHT + kDoubleInset) - // mStaticText_TrackName + margin
-      kQuadrupleInset; // margin below gain slider
-   mSlider_Gain->SetSize(-1, nGainSliderHeight);
+      kQuadrupleInset; // margin below volume slider
+   mSlider_Volume->SetSize(-1, nGainSliderHeight);
    mSlider_Velocity->SetSize(-1, nGainSliderHeight);
 
    const int nRequiredHeightAboveMeter =
@@ -400,15 +400,15 @@ void MixerTrackCluster::HandleResize() // For wxSizeEvents, update gain slider a
 
 void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
 {
-   float fValue = mSlider_Gain->Get();
+   float fValue = mSlider_Volume->Get();
    if (GetWave())
-      GetWave()->SetGain(fValue);
+      GetWave()->SetVolume(fValue);
 
    // Update the TrackPanel correspondingly.
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       ProjectHistory::Get( *mProject )
-         .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE );
+         .PushState(XO("Moved volume slider"), XO("Volume"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false*/)
@@ -483,9 +483,9 @@ void MixerTrackCluster::UpdateForStateChange()
       mSlider_Pan->Set(GetWave()->GetPan());
 
    if (!GetWave())
-      mSlider_Gain->Hide();
+      mSlider_Volume->Hide();
    else
-      mSlider_Gain->Set(GetWave()->GetGain());
+      mSlider_Volume->Set(GetWave()->GetVolume());
 
    if (!GetNote())
       mSlider_Velocity->Hide();
@@ -586,11 +586,11 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //{
    //   for (i = 0; i < kFramesPerBuffer; i++)
    //   {
-   //      float gain = mTrack->GetChannelGain(0);
+   //      float gain = mTrack->GetChannelVolume(0);
    //      maxLeft[i] *= gain;
    //      rmsLeft[i] *= gain;
    //      if (mRightTrack)
-   //         gain = mRightTrack->GetChannelGain(1);
+   //         gain = mRightTrack->GetChannelVolume(1);
    //      maxRight[i] *= gain;
    //      rmsRight[i] *= gain;
    //   }
@@ -657,12 +657,12 @@ void MixerTrackCluster::UpdateMeter(const double t0, const double t1)
    //const bool bWantPostFadeValues = true; //v Turn this into a checkbox on MixerBoard? For now, always true.
    //if (bSuccess && bWantPostFadeValues)
    //vvv Need to apply envelope, too? See Mixer::MixSameRate.
-   float gain = pTrack->GetChannelGain(0);
+   float volume = pTrack->GetChannelVolume(0);
    for (unsigned int index = 0; index < nFrames; index++)
-      meterFloatsArray[2 * index] *= gain;
-   gain = pTrack->GetChannelGain(1);
+      meterFloatsArray[2 * index] *= volume;
+   volume = pTrack->GetChannelVolume(1);
    for (unsigned int index = 0; index < nFrames; index++)
-      meterFloatsArray[(2 * index) + 1] *= gain;
+      meterFloatsArray[(2 * index) + 1] *= volume;
    // Clip to [-1.0, 1.0] range.
    for (unsigned int index = 0; index < 2 * nFrames; index++)
       if (meterFloatsArray[index] < -1.0)
@@ -709,7 +709,7 @@ void MixerTrackCluster::OnPaint(wxPaintEvent & WXUNUSED(event))
    if (mMeter)
       mMeter->SetBackgroundColour( col );
    mStaticText_TrackName->SetBackgroundColour( col );
-   mSlider_Gain->SetBackgroundColour( col );
+   mSlider_Volume->SetBackgroundColour( col );
    mSlider_Pan->SetBackgroundColour( col );
 
    wxPaintDC dc(this);
@@ -740,21 +740,6 @@ void MixerTrackCluster::OnSlider_Velocity(wxCommandEvent& WXUNUSED(event))
 {
    this->HandleSliderVelocity();
 }
-
-//v void MixerTrackCluster::OnSliderScroll_Gain(wxScrollEvent& WXUNUSED(event))
-//{
-   //int sliderValue = (int)(mSlider_Gain->Get()); //v mSlider_Gain->GetValue();
-   //#ifdef __WXMSW__
-   //   // Negate because wxSlider on Windows has min at top, max at bottom.
-   //   // mSlider_Gain->GetValue() is in [-6,36]. wxSlider has min at top, so this is [-36dB,6dB].
-   //   sliderValue = -sliderValue;
-   //#endif
-   //wxString str = _("Gain: ");
-   //if (sliderValue > 0)
-   //   str += "+";
-   //str += wxString::Format("%d dB", sliderValue);
-   //mSlider_Gain->SetToolTip(str);
-//}
 
 void MixerTrackCluster::OnSlider_Pan(wxCommandEvent& WXUNUSED(event))
 {

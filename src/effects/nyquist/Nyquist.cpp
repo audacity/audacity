@@ -1367,8 +1367,13 @@ bool NyquistEffect::ProcessOne(
                               Internat::ToString(startTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
                               Internat::ToString(endTime));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
-                              Internat::ToString(mCurChannelGroup->GetGain()));
+      cmd += wxString::Format(
+         wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"), // https://github.com/audacity/audacity/issues/7097:
+                                                       // not to break all
+                                                       // nyquist scripts out
+                                                       // there, we keep the old
+                                                       // name.
+         Internat::ToString(mCurChannelGroup->GetVolume()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
                               Internat::ToString(mCurChannelGroup->GetPan()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'RATE)\n"),

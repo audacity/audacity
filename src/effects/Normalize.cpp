@@ -35,7 +35,7 @@
 const EffectParameterMethods& EffectNormalize::Parameters() const
 {
    static CapturedParameters<EffectNormalize,
-      PeakLevel, ApplyGain, RemoveDC, StereoInd
+      PeakLevel, ApplyVolume, RemoveDC, StereoInd
    > parameters;
    return parameters;
 }

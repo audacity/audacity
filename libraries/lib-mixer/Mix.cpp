@@ -86,12 +86,12 @@ Mixer::Mixer(
    const double stopTime, const unsigned numOutChannels,
    const size_t outBufferSize, const bool outInterleaved, double outRate,
    sampleFormat outFormat, const bool highQuality, MixerSpec* const mixerSpec,
-   ApplyGain applyGain)
+   ApplyVolume applyVolume)
     : mNumChannels { numOutChannels }
     , mInputs { move(inputs) }
     , mMasterEffects { move(masterEffects) }
     , mBufferSize { FindBufferSize(mInputs, mMasterEffects, outBufferSize) }
-    , mApplyGain { applyGain }
+    , mApplyVolume { applyVolume }
     , mHighQuality { highQuality }
     , mFormat { outFormat }
     , mInterleaved { outInterleaved }
@@ -218,18 +218,18 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       if (sequence.GetRate() != rate)
          // Also leads to MixVariableRates(), needs nontrivial resampling
          needsDither = true;
-      else if (mApplyGain == ApplyGain::Mixdown &&
+      else if (mApplyVolume == ApplyVolume::Mixdown &&
          !mHasMixerSpec &&
          sequence.NChannels() > 1 && mNumChannels == 1)
       {
          needsDither = true;
       }
-      else if (mApplyGain != ApplyGain::Discard) {
+      else if (mApplyVolume != ApplyVolume::Discard) {
          /// TODO: more-than-two-channels
          for (auto c : {0, 1}) {
-            const auto gain = sequence.GetChannelGain(c);
-            if (!(gain == 0.0 || gain == 1.0))
-               // Fractional gain may be applied even in MixSameRate
+            const auto volume = sequence.GetChannelVolume(c);
+            if (!(volume == 0.0 || volume == 1.0))
+               // Fractional volume may be applied even in MixSameRate
                needsDither = true;
          }
       }
@@ -238,7 +238,7 @@ Mixer::NeedsDither(bool needsDither, double rate) const
       // that, remember that some mixers change their time bounds after
       // construction, as when scrubbing.)
       if (!sequence.HasTrivialEnvelope())
-         // Varying or non-unit gain may be applied even in MixSameRate
+         // Varying or non-unit volume may be applied even in MixSameRate
          needsDither = true;
       auto effectiveFormat = sequence.WidestEffectiveFormat();
       if (effectiveFormat > mFormat)
@@ -266,7 +266,7 @@ void Mixer::Clear()
 }
 
 static void MixBuffers(unsigned numChannels,
-   const unsigned char *channelFlags, const float *gains,
+   const unsigned char *channelFlags, const float *volumes,
    const float &src, AudioGraph::Buffers &dests, int len)
 {
    const auto pSrc = &src;
@@ -275,7 +275,7 @@ static void MixBuffers(unsigned numChannels,
          continue;
       auto dest = &dests.GetWritePosition(c);
       for (int j = 0; j < len; ++j)
-         dest[j] += pSrc[j] * gains[c];   // the actual mixing process
+         dest[j] += pSrc[j] * volumes[c];   // the actual mixing process
    }
 }
 
@@ -434,9 +434,9 @@ std::optional<size_t> Mixer::Acquire(Buffers& data, size_t maxToProcess)
    // TODO: more-than-two-channels
    auto maxChannels = std::max(2u, mFloatBuffers.Channels());
    const auto channelFlags = stackAllocate(unsigned char, mNumChannels);
-   const auto gains = stackAllocate(float, mNumChannels);
-   if (mApplyGain == ApplyGain::Discard)
-      std::fill(gains, gains + mNumChannels, 1.0f);
+   const auto volumes = stackAllocate(float, mNumChannels);
+   if (mApplyVolume == ApplyVolume::Discard)
+      std::fill(volumes, volumes + mNumChannels, 1.0f);
 
    // Decides which output buffers an input channel accumulates into
    auto findChannelFlags = [&channelFlags, numChannels = mNumChannels]
@@ -481,24 +481,24 @@ std::optional<size_t> Mixer::Acquire(Buffers& data, size_t maxToProcess)
       {
          const auto pFloat = (const float*)mFloatBuffers.GetReadPosition(j);
          auto& sequence = upstream.GetSequence();
-         if (mApplyGain != ApplyGain::Discard)
+         if (mApplyVolume != ApplyVolume::Discard)
          {
             for (size_t c = 0; c < mNumChannels; ++c)
             {
                if (mNumChannels > 1)
-                  gains[c] = sequence.GetChannelGain(c);
+                  volumes[c] = sequence.GetChannelVolume(c);
                else
-                  gains[c] = sequence.GetChannelGain(j);
+                  volumes[c] = sequence.GetChannelVolume(j);
             }
             if (
-               mApplyGain == ApplyGain::Mixdown && !mHasMixerSpec &&
+               mApplyVolume == ApplyVolume::Mixdown && !mHasMixerSpec &&
                mNumChannels == 1)
-               gains[0] /= static_cast<float>(limit);
+               volumes[0] /= static_cast<float>(limit);
          }
 
          const auto flags =
             findChannelFlags(upstream.MixerSpec(j), sequence, j);
-         MixBuffers(mNumChannels, flags, gains, *pFloat, data, result);
+         MixBuffers(mNumChannels, flags, volumes, *pFloat, data, result);
       }
 
       downstream.Release();

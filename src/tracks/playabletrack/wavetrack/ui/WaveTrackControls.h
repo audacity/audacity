@@ -19,7 +19,7 @@ class LWSlider;
 class MuteButtonHandle;
 class SoloButtonHandle;
 class EffectsButtonHandle;
-class GainSliderHandle;
+class VolumeSliderHandle;
 class PanSliderHandle;
 class WaveTrack;
 class wxEvent;
@@ -45,11 +45,11 @@ public:
    const TCPLines& GetTCPLines() const override;
 
    static unsigned DefaultWaveTrackHeight();
-   static void GetGainRect(const wxRect &rect, wxRect &dest);
+   static void GetVolumeRect(const wxRect &rect, wxRect &dest);
    static void GetPanRect(const wxRect &rect, wxRect &dest);
 
-   static LWSlider *GainSlider( CellularPanel &panel, const WaveTrack &wt );
-   static LWSlider * GainSlider
+   static LWSlider *VolumeSlider( CellularPanel &panel, const WaveTrack &wt );
+   static LWSlider * VolumeSlider
       (const wxRect &sliderRect, const WaveTrack *t, bool captured,
        wxWindow *pParent);
 
@@ -62,12 +62,12 @@ public:
 
 private:
    static void ReCreatePanSlider(struct ThemeChangeMessage);
-   static void ReCreateGainSlider(struct ThemeChangeMessage);
+   static void ReCreateVolumeSlider(struct ThemeChangeMessage);
 
    std::weak_ptr<MuteButtonHandle> mMuteHandle;
    std::weak_ptr<SoloButtonHandle> mSoloHandle;
    std::weak_ptr<EffectsButtonHandle> mEffectsHandle;
-   std::weak_ptr<GainSliderHandle> mGainHandle;
+   std::weak_ptr<VolumeSliderHandle> mVolumeHandle;
    std::weak_ptr<PanSliderHandle> mPanHandle;
 };
 

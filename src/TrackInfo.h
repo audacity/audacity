@@ -32,7 +32,7 @@ namespace TrackInfo
          kItemStatusInfo1      = 1 << 1,
          kItemMute             = 1 << 2,
          kItemSolo             = 1 << 3,
-         kItemGain             = 1 << 4,
+         kItemVolume           = 1 << 4,
          kItemPan              = 1 << 5,
          kItemVelocity         = 1 << 6,
          kItemMidiControlsRect = 1 << 7,

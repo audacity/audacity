@@ -89,9 +89,9 @@ size_t StretchingSequence::NChannels() const
    return mSequence.NChannels();
 }
 
-float StretchingSequence::GetChannelGain(int channel) const
+float StretchingSequence::GetChannelVolume(int channel) const
 {
-   return mSequence.GetChannelGain(channel);
+   return mSequence.GetChannelVolume(channel);
 }
 
 bool StretchingSequence::DoGet(

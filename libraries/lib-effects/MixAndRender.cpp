@@ -96,7 +96,7 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
 
    auto mix = trackFactory->Create(mono ? 1 : 2, *first);
    mix->SetPan(0);
-   mix->SetGain(1.0f);
+   mix->SetVolume(1.0f);
    mix->SetRate(rate);
    mix->ConvertToSampleFormat(format);
    if(!oneinput)

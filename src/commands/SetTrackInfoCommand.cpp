@@ -10,7 +10,7 @@
 ******************************************************************//**
 
 \file SetTrackCommand.cpp
-\brief Definitions for SetTrackCommand built up from 
+\brief Definitions for SetTrackCommand built up from
 SetTrackBase, SetTrackStatusCommand, SetTrackAudioCommand and
 SetTrackVisualsCommand
 
@@ -23,7 +23,7 @@ one track.
 \brief A SetTrackBase that sets name, selected and focus.
 
 \class SetTrackAudioCommand
-\brief A SetTrackBase that sets pan, gain, mute and solo.
+\brief A SetTrackBase that sets pan, volume, mute and solo.
 
 \class SetTrackVisualsCommand
 \brief A SetTrackBase that sets appearance of a track.
@@ -135,7 +135,7 @@ bool SetTrackAudioCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
 
-   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       0.0,  -36.0, 36.0);
+   S.OptionalN( bHasVolume         ).Define(     mVolume,         wxT("Volume"),     0.0,  -36.0, 36.0);
    S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -100.0, 100.0);
    return true;
 };
@@ -158,7 +158,7 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasGain        ).TieSlider(          XXO("Gain:"),          mGain, 36.0,-36.0);
+      S.Optional( bHasVolume      ).TieSlider(          XXO("Volume:"),        mVolume, 36.0,-36.0);
       S.Optional( bHasPan         ).TieSlider(          XXO("Pan:"),           mPan,  100.0, -100.0);
    }
    S.EndMultiColumn();
@@ -170,8 +170,8 @@ bool SetTrackAudioCommand::ApplyInner(const CommandContext & context, Track &t)
    auto wt = dynamic_cast<WaveTrack *>(&t);
    auto pt = dynamic_cast<PlayableTrack *>(&t);
 
-   if (wt && bHasGain)
-      wt->SetGain(DB_TO_LINEAR(mGain));
+   if (wt && bHasVolume)
+      wt->SetVolume(DB_TO_LINEAR(mVolume));
    if (wt && bHasPan)
       wt->SetPan(mPan/100.0);
 
@@ -250,7 +250,7 @@ static EnumValueSymbols DiscoverSubViewTypes()
 }
 
 template<bool Const>
-bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){ 
+bool SetTrackVisualsCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalN( bHasHeight         ).Define(     mHeight,         wxT("Height"),     120, 44, 2000 );
 
    {
@@ -287,7 +287,7 @@ void SetTrackVisualsCommand::PopulateOrExchange(ShuttleGui & S)
       S.Optional( bHasHeight      ).TieNumericTextBox(  XXO("Height:"),        mHeight );
       S.Optional( bHasColour      ).TieChoice(          XXO("Color:"),         mColour,
          Msgids(  kColourStrings, nColours ) );
-      
+
       {
          auto symbols = DiscoverSubViewTypes();
          auto typeNames = transform_container<TranslatableStrings>(

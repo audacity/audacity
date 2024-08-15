@@ -33,7 +33,7 @@ public:
 
    //! Extra gain factor to apply to a channel when mixing,
    //! may change asynchronously
-   virtual float GetChannelGain(int channel) const = 0;
+   virtual float GetChannelVolume(int channel) const = 0;
 
    //! Retrieve samples from a sequence in floating-point format, regardless of
    //! the storage format

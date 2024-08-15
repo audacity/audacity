@@ -46,11 +46,10 @@ public:
    };
    using Inputs = std::vector<Input>;
 
-   enum class ApplyGain
-   {
-      Discard,//< No source gain is applied
-      MapChannels, //< Apply gains per source's channel
-      Mixdown, //< Average gains from all channels in the source, numOutChannels should be 1
+   enum class ApplyVolume   {
+      Discard,//< No volume is applied on the sources' (including effect stages) output
+      MapChannels, //< Apply volume per source's channel
+      Mixdown, //< Average volume from all channels in the source, numOutChannels should be 1
    };
 
    //
@@ -70,7 +69,7 @@ public:
       double outRate, sampleFormat outFormat, bool highQuality = true,
       //! Null or else must have a lifetime enclosing this object's
       MixerSpec* mixerSpec = nullptr,
-      ApplyGain applyGain = ApplyGain::MapChannels);
+      ApplyVolume applyVolume = ApplyVolume::MapChannels);
 
    Mixer(const Mixer&) = delete;
    Mixer &operator=(const Mixer&) = delete;
@@ -150,7 +149,7 @@ private:
  private:
 
    // Output
-   const ApplyGain  mApplyGain;
+   const ApplyVolume mApplyVolume;
    const bool       mHighQuality; // dithering
    const sampleFormat mFormat; // output format also influences dithering
    const bool       mInterleaved;

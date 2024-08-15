@@ -74,8 +74,8 @@ std::vector<UIHandlePtr> WaveTrackControls::HitTest
             mEffectsHandle, state, rect, pProject, track)))
             return result;
 
-         if (NULL != (result = GainSliderHandle::HitTest(
-            mGainHandle, state, rect, track)))
+         if (NULL != (result = VolumeSliderHandle::HitTest(
+            mVolumeHandle, state, rect, track)))
             return result;
 
          if (NULL != (result = PanSliderHandle::HitTest(
@@ -978,11 +978,11 @@ void PanSliderDrawFunction
       pParent, captured, hit);
 }
 
-void GainSliderDrawFunction
+void VolumeSliderDrawFunction
 ( TrackPanelDrawingContext &context,
   const wxRect &rect, const Track *pTrack )
 {
-   auto target = dynamic_cast<GainSliderHandle*>( context.target.get() );
+   auto target = dynamic_cast<VolumeSliderHandle*>( context.target.get() );
    auto dc = &context.dc;
    bool hit = target && target->GetTrack().get() == pTrack;
    if( hit )
@@ -993,7 +993,7 @@ void GainSliderDrawFunction
    auto pParent = FindProjectFrame( artist->parent->GetProject() );
 
    SliderDrawFunction(
-      &WaveTrackControls::GainSlider, dc, rect, pTrack,
+      &WaveTrackControls::VolumeSlider, dc, rect, pTrack,
       pParent, captured, hit);
 }
 
@@ -1008,19 +1008,19 @@ static const struct WaveTrackTCPLines
       PlayableTrackControls::StaticWaveTCPLines();
    insert( end(), {
 
-      { TCPLine::kItemGain, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
-        GainSliderDrawFunction },
+      { TCPLine::kItemVolume, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
+        VolumeSliderDrawFunction },
       { TCPLine::kItemPan, kTrackInfoSliderHeight, kTrackInfoSliderExtra,
         PanSliderDrawFunction },
 
    } );
 } } waveTrackTCPLines;
 
-void WaveTrackControls::GetGainRect(const wxRect &rect_, wxRect & dest)
+void WaveTrackControls::GetVolumeRect(const wxRect &rect_, wxRect & dest)
 {
    const auto rect = wxRect(rect_).Deflate(CommonTrackInfo::Margin);
    CommonTrackInfo::GetSliderHorizontalBounds( rect, dest );
-   const auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemGain );
+   const auto results = CalcItemY( waveTrackTCPLines, TCPLine::kItemVolume );
    dest.y = rect.y + results.first;
    dest.height = results.second;
 }
@@ -1047,43 +1047,43 @@ const TCPLines &WaveTrackControls::GetTCPLines() const
 namespace
 {
 std::unique_ptr<LWSlider>
-   gGainCaptured
+   gVolumeCaptured
    , gPanCaptured
-   , gGain
+   , gVolume
    , gPan;
 }
 
-LWSlider *WaveTrackControls::GainSlider(
+LWSlider *WaveTrackControls::VolumeSlider(
    CellularPanel &panel, const WaveTrack &wt )
 {
    auto &controls = TrackControls::Get( wt );
    const auto rect = panel.FindRect( controls ).Deflate(CommonTrackInfo::Margin);
    wxRect sliderRect;
-   GetGainRect( rect, sliderRect );
-   return GainSlider( sliderRect, &wt, false, &panel );
+   GetVolumeRect( rect, sliderRect );
+   return VolumeSlider( sliderRect, &wt, false, &panel );
 }
 
-LWSlider * WaveTrackControls::GainSlider
+LWSlider * WaveTrackControls::VolumeSlider
 (const wxRect &sliderRect, const WaveTrack *t, bool captured, wxWindow *pParent)
 {
    static std::once_flag flag;
-   std::call_once( flag, []{ ReCreateGainSlider({}); });
-   static auto subscription = theTheme.Subscribe(ReCreateGainSlider);
+   std::call_once( flag, []{ ReCreateVolumeSlider({}); });
+   static auto subscription = theTheme.Subscribe(ReCreateVolumeSlider);
 
    wxPoint pos = sliderRect.GetPosition();
-   float gain = t ? t->GetGain() : 1.0;
+   float volume = t ? t->GetVolume() : 1.0;
 
-   gGain->Move(pos);
-   gGain->Set(gain);
-   gGainCaptured->Move(pos);
-   gGainCaptured->Set(gain);
+   gVolume->Move(pos);
+   gVolume->Set(volume);
+   gVolumeCaptured->Move(pos);
+   gVolumeCaptured->Set(volume);
 
-   auto slider = (captured ? gGainCaptured : gGain).get();
+   auto slider = (captured ? gVolumeCaptured : gVolume).get();
    slider->SetParent( pParent );
    return slider;
 }
 
-void WaveTrackControls::ReCreateGainSlider(ThemeChangeMessage message)
+void WaveTrackControls::ReCreateVolumeSlider(ThemeChangeMessage message)
 {
    if (message.appearance)
       return;
@@ -1091,18 +1091,18 @@ void WaveTrackControls::ReCreateGainSlider(ThemeChangeMessage message)
    const auto sliderRect = wxRect(0, 0, kTrackInfoSliderWidth, kTrackInfoSliderHeight);
 
    float defPos = 1.0;
-   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(nullptr, XO("Gain"),
+   /* i18n-hint: Title of the Volume slider, used to adjust the volume */
+   gVolume = std::make_unique<LWSlider>(nullptr, XO("Volume"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
-   gGain->SetDefaultValue(defPos);
+   gVolume->SetDefaultValue(defPos);
 
-   gGainCaptured = std::make_unique<LWSlider>(nullptr, XO("Gain"),
+   gVolumeCaptured = std::make_unique<LWSlider>(nullptr, XO("Volume"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
-   gGainCaptured->SetDefaultValue(defPos);
+   gVolumeCaptured->SetDefaultValue(defPos);
 }
 
 LWSlider *WaveTrackControls::PanSlider(
