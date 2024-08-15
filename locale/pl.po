@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.2\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-08-14 00:00+0000\n"
+"PO-Revision-Date: 2024-08-16 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024\n"
 "Language-Team: Polish (https://app.transifex.com/klyok/teams/690/pl/)\n"
 "Language: pl\n"
@@ -5540,7 +5540,7 @@ msgstr "Nie znaleziono żadnych dopasowań"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Code has been modified. Are you sure?"
-msgstr "Kod został zmodyfikowany. Jesteś pewny/a?"
+msgstr "Kod został zmodyfikowany. Kontynuować?"
 
 #: modules/nyquist/mod-nyq-bench/NyqBench.cpp
 msgid "Untitled"
@@ -6827,7 +6827,7 @@ msgstr "Czynności osi czasu są wyłączone podczas nagrywania"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Click and drag to adjust, double-click to reset"
-msgstr "Kliknij i przeciągnij, aby dostosować, kliknij podwójnie myszką, aby zresetować"
+msgstr "Kliknij i przeciągnij, aby dostosować, kliknij dwukrotnie myszką, aby zresetować"
 
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
@@ -7184,7 +7184,7 @@ msgstr ""
 "Pliki projektów Audacity (.aup3) nie są \n"
 "obecnie przypisane do programu Audacity. \n"
 "\n"
-"Przypisać je, aby móc otworzyć je programem przez podwójne kliknięcie przyciskiem myszki?"
+"Przypisać je, aby móc otworzyć je programem przez dwukrotne kliknięcie przyciskiem myszki?"
 
 #: src/AudacityApp.cpp
 msgid "Audacity Project Files"
@@ -8359,7 +8359,7 @@ msgstr "Nowy..."
 
 #: src/LabelDialog.cpp
 msgid "Press F2 or double click to edit cell contents."
-msgstr "Naciśnij F2 lub kliknij podwójnie myszką, aby edytować zawartość komórek."
+msgstr "Naciśnij F2 lub kliknij dwukrotnie myszką, aby edytować zawartość komórek."
 
 #: src/LabelDialog.cpp src/menus/FileMenus.cpp
 msgid "Select a text file containing labels"
@@ -10071,7 +10071,7 @@ msgstr " Zaznacz wł."
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to adjust relative size of stereo tracks, double-click to make heights equal"
-msgstr "Kliknij i przeciągnij, aby dostosować relatywny rozmiar ścieżek stereo, kliknij podwójnie myszką, aby wyrównać wysokości"
+msgstr "Kliknij i przeciągnij, aby dostosować relatywny rozmiar ścieżek stereo, kliknij dwukrotnie myszką, aby wyrównać wysokości"
 
 #: src/TrackPanelResizeHandle.cpp
 msgid "Click and drag to resize the track."
@@ -18793,7 +18793,7 @@ msgstr "Kliknij prawym przyciskiem myszki, aby wyświetlić menu. Ctrl+rolka, ab
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
-msgstr "Kliknij i przeciągnij, aby dostosować rozmiary widoków podrzędnych, kliknij podwójnie myszką, aby podzielić równomiernie"
+msgstr "Kliknij i przeciągnij, aby dostosować rozmiary widoków podrzędnych, kliknij dwukrotnie myszką, aby podzielić równomiernie"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to rearrange sub-views"
@@ -19519,7 +19519,7 @@ msgstr "Kliknij, aby powiększyć podgląd; kliknij z Shift, aby pomniejszyć"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Drag to Zoom Into Region, Right-Click to Zoom Out"
-msgstr "Przeciągnij lewym przyciskiem myszki, aby powiększyć; kliknij z prawym przyciskiem myszki, aby pomniejszyć"
+msgstr "Przeciągnij, aby powiększyć obszar; kliknij prawym przyciskiem myszki, aby pomniejszyć"
 
 #: src/tracks/ui/ZoomHandle.cpp
 msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
