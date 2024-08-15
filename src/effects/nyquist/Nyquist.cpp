@@ -1367,7 +1367,7 @@ bool NyquistEffect::ProcessOne(
                               Internat::ToString(startTime));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'END-TIME)\n"),
                               Internat::ToString(endTime));
-      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"),
+      cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'GAIN)\n"), // https://github.com/audacity/audacity/issues/7097: keep it that way ?
                               Internat::ToString(mCurChannelGroup->GetGain()));
       cmd += wxString::Format(wxT("(putprop '*TRACK* (float %s) 'PAN)\n"),
                               Internat::ToString(mCurChannelGroup->GetPan()));

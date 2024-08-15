@@ -214,13 +214,13 @@ MixerTrackCluster::MixerTrackCluster(wxWindow* parent,
    mSlider_Gain =
       safenew MixerTrackSlider(
             this, ID_SLIDER_GAIN,
-            /* i18n-hint: title of the Gain slider, used to adjust the volume */
-            XO("Gain"),
+            /* i18n-hint: title of the Volume slider, used to adjust the volume */
+            XO("Volume"),
             ctrlPos, ctrlSize,
             ASlider::Options{}
                .Style( DB_SLIDER )
                .Orientation( wxVERTICAL ));
-   mSlider_Gain->SetName(_("Gain"));
+   mSlider_Gain->SetName(_("Volume"));
 
    mSlider_Velocity =
       safenew MixerTrackSlider(
@@ -408,7 +408,7 @@ void MixerTrackCluster::HandleSliderGain(const bool bWantPushState /*= false*/)
    TrackPanel::Get( *mProject ).RefreshTrack(mTrack.get());
    if (bWantPushState)
       ProjectHistory::Get( *mProject )
-         .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE );
+         .PushState(XO("Moved volume slider"), XO("Volume"), UndoPush::CONSOLIDATE );
 }
 
 void MixerTrackCluster::HandleSliderVelocity(const bool bWantPushState /*= false*/)

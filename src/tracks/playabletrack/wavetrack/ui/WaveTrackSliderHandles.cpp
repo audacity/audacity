@@ -58,7 +58,7 @@ UIHandle::Result GainSliderHandle::CommitChanges
 (const wxMouseEvent &, AudacityProject *pProject)
 {
    ProjectHistory::Get( *pProject )
-      .PushState(XO("Moved gain slider"), XO("Gain"), UndoPush::CONSOLIDATE);
+      .PushState(XO("Moved volume slider"), XO("Volume"), UndoPush::CONSOLIDATE);
    return RefreshCode::RefreshCell;
 }
 
@@ -79,7 +79,7 @@ TranslatableString GainSliderHandle::Tip(
    val = XO("%+.1f dB").Format(LINEAR_TO_DB(value));
 
    /* i18n-hint: An item name followed by a value, with appropriate separating punctuation */
-   return XO("%s: %s").Format(XO("Gain"), val);
+   return XO("%s: %s").Format(XO("Volume"), val);
 }
 
 UIHandlePtr GainSliderHandle::HitTest

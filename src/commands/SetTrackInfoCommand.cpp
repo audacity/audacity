@@ -135,7 +135,7 @@ bool SetTrackAudioCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    S.OptionalN( bHasMute           ).Define(     bMute,           wxT("Mute"),       false );
    S.OptionalN( bHasSolo           ).Define(     bSolo,           wxT("Solo"),       false );
 
-   S.OptionalN( bHasGain           ).Define(     mGain,           wxT("Gain"),       0.0,  -36.0, 36.0);
+   S.OptionalN( bHasGain           ).Define(     mVolume,         wxT("Volume"),     0.0,  -36.0, 36.0);
    S.OptionalN( bHasPan            ).Define(     mPan,            wxT("Pan"),        0.0, -100.0, 100.0);
    return true;
 };
@@ -158,7 +158,7 @@ void SetTrackAudioCommand::PopulateOrExchange(ShuttleGui & S)
    S.StartMultiColumn(3, wxEXPAND);
    {
       S.SetStretchyCol( 2 );
-      S.Optional( bHasGain        ).TieSlider(          XXO("Gain:"),          mGain, 36.0,-36.0);
+      S.Optional( bHasGain        ).TieSlider(          XXO("Volume:"),        mVolume, 36.0,-36.0);
       S.Optional( bHasPan         ).TieSlider(          XXO("Pan:"),           mPan,  100.0, -100.0);
    }
    S.EndMultiColumn();

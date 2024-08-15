@@ -1091,14 +1091,14 @@ void WaveTrackControls::ReCreateGainSlider(ThemeChangeMessage message)
    const auto sliderRect = wxRect(0, 0, kTrackInfoSliderWidth, kTrackInfoSliderHeight);
 
    float defPos = 1.0;
-   /* i18n-hint: Title of the Gain slider, used to adjust the volume */
-   gGain = std::make_unique<LWSlider>(nullptr, XO("Gain"),
+   /* i18n-hint: Title of the Volume slider, used to adjust the volume */
+   gVolume = std::make_unique<LWSlider>(nullptr, XO("Volume"),
                         wxPoint(sliderRect.x, sliderRect.y),
                         wxSize(sliderRect.width, sliderRect.height),
                         DB_SLIDER);
    gGain->SetDefaultValue(defPos);
 
-   gGainCaptured = std::make_unique<LWSlider>(nullptr, XO("Gain"),
+   gVolumeCaptured = std::make_unique<LWSlider>(nullptr, XO("Volume"),
                                 wxPoint(sliderRect.x, sliderRect.y),
                                 wxSize(sliderRect.width, sliderRect.height),
                                 DB_SLIDER);
