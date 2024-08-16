@@ -13,6 +13,7 @@ set(AU3_DEF
     # This value is used in the resource compiler for Windows
     -DAUDACITY_FILE_VERSION=L"${AUDACITY_VERSION},${AUDACITY_RELEASE},${AUDACITY_REVISION},${AUDACITY_MODLEVEL}"
 
+    -Dsafenew=new
 
     -DUTILITY_API=
     -DPROJECT_API=
