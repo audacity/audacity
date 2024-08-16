@@ -31,6 +31,7 @@
 #include "actions/iactionsdispatcher.h"
 #include "iappshellconfiguration.h"
 #include "isessionsmanager.h"
+#include "audioplugins/iregisteraudiopluginsscenario.h"
 
 //! TODO AU4
 // #include "multiinstances/imultiinstancesprovider.h"
@@ -39,10 +40,11 @@
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable
 {
-    INJECT(muse::IInteractive, interactive)
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(ISessionsManager, sessionsManager)
+    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<ISessionsManager> sessionsManager;
+    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
 
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
@@ -56,7 +58,8 @@ public:
     const au::project::ProjectFile& startupScoreFile() const override;
     void setStartupScoreFile(const std::optional<au::project::ProjectFile>& file) override;
 
-    void run() override;
+    void runOnSplashScreen() override;
+    void runAfterSplashScreen() override;
     bool startupCompleted() const override;
 
 private:
