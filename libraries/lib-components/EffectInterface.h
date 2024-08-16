@@ -47,6 +47,7 @@
 #include "EffectAutomationParameters.h"
 
 #include "TypedAny.h"
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <type_traits>

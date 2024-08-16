@@ -10,6 +10,7 @@
 #include "MultipartData.h"
 
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
 
 #include "AudacityException.h"
