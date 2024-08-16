@@ -35,11 +35,11 @@
 #include "iinteractive.h"
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
+#include "project/iprojectfilescontroller.h"
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
 // #include "multiinstances/imultiinstancesprovider.h"
-// #include "project/iprojectfilescontroller.h"
 // #include "audio/isoundfontrepository.h"
 // #include "istartupscenario.h"
 
@@ -54,10 +54,10 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     INJECT(muse::IInteractive, interactive)
     INJECT(muse::IApplication, application)
     INJECT(IAppShellConfiguration, configuration)
+    INJECT(project::IProjectFilesController, projectFilesController)
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    // INJECT(project::IProjectFilesController, projectFilesController)
     // INJECT(audio::ISoundFontRepository, soundFontRepository)
     // INJECT(IStartupScenario, startupScenario)
 public:

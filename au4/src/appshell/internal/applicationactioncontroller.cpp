@@ -193,16 +193,15 @@ bool ApplicationActionController::quit(bool isAllInstances, const muse::io::path
 
 void ApplicationActionController::restart()
 {
-    //! TODO AU4
-    // if (projectFilesController()->closeOpenedProject()) {
-    //     if (multiInstancesProvider()->instances().size() == 1) {
-    //         application()->restart();
-    //     } else {
-    //         multiInstancesProvider()->quitAllAndRestartLast();
+    if (projectFilesController()->closeOpenedProject()) {
+        // if (multiInstancesProvider()->instances().size() == 1) {
+        // application()->restart();
+        // } else {
+        // multiInstancesProvider()->quitAllAndRestartLast();
 
-    //         QCoreApplication::exit();
-    //     }
-    // }
+        QCoreApplication::exit();
+        // }
+    }
 }
 
 void ApplicationActionController::toggleFullScreen()
