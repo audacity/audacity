@@ -8,6 +8,7 @@
  
  **********************************************************************/
 
+#include <cstdint>
 #include "MemoryX.h"
 
 // Make the symbol table non-empty
