@@ -33,6 +33,18 @@ au::projectscene::PlayPositionActionController::PlayPositionActionController(QOb
 {
 }
 
+void PlayPositionActionController::init()
+{
+    dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
+    dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
+
+    globalContext()->currentProjectChanged().onNotify(this, [this](){
+        onProjectChanged();
+    });
+
+    onProjectChanged();
+}
+
 TimelineContext* PlayPositionActionController::timelineContext() const
 {
     return m_context;
@@ -56,20 +68,6 @@ void PlayPositionActionController::playPositionDecrease()
 void PlayPositionActionController::playPositionIncrease()
 {
     applySingleStep(Direction::Right);
-}
-
-void PlayPositionActionController::init()
-{
-    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-
-    viewState->snap().ch.onReceive(this, [this](const Snap& snap){
-        if (snap.enabled) {
-            snapCurrentPosition();
-        }
-    });
-
-    dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
-    dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
 }
 
 void PlayPositionActionController::snapCurrentPosition()
@@ -107,4 +105,20 @@ void PlayPositionActionController::applySingleStep(Direction direction)
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
     }
+}
+
+void PlayPositionActionController::onProjectChanged()
+{
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return;
+    }
+
+    IProjectViewStatePtr viewState = currentProject->viewState();
+
+    viewState->snap().ch.onReceive(this, [this](const Snap& snap){
+        if (snap.enabled) {
+            snapCurrentPosition();
+        }
+    });
 }
