@@ -43,18 +43,20 @@ class PlayPositionActionController : public QObject, public muse::actions::Actio
 public:
     PlayPositionActionController(QObject* parent = nullptr);
 
+    Q_INVOKABLE void init();
+
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
 
     void playPositionDecrease();
     void playPositionIncrease();
 
-    Q_INVOKABLE void init();
-
 signals:
     void timelineContextChanged();
 
 private:
+    void onProjectChanged();
+
     void snapCurrentPosition();
     void applySingleStep(Direction direction);
 
