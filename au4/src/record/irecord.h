@@ -6,6 +6,8 @@
 
 #include <memory>
 
+#include "global/types/ret.h"
+
 #include "modularity/imoduleinterface.h"
 
 #include "iaudioinput.h"
@@ -17,9 +19,9 @@ class IRecord : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IRecord() = default;
 
-    virtual void start() = 0;
-    virtual void pause() = 0;
-    virtual void stop() = 0;
+    virtual muse::Ret start() = 0;
+    virtual muse::Ret pause() = 0;
+    virtual muse::Ret stop() = 0;
 
     virtual IAudioInputPtr audioInput() const = 0;
 };

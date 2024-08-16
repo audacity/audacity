@@ -24,17 +24,17 @@ class Au3Record : public IRecord, public muse::async::Asyncable
 public:
     void init();
 
-    void start() override;
-    void pause() override;
-    void stop() override;
+    muse::Ret start() override;
+    muse::Ret pause() override;
+    muse::Ret stop() override;
 
     IAudioInputPtr audioInput() const override;
 
 private:
     AudacityProject& projectRef() const;
 
-    bool doRecord(AudacityProject& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
-                  const AudioIOStartStreamOptions& options);
+    muse::Ret doRecord(AudacityProject& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
+                       const AudioIOStartStreamOptions& options);
     void cancelRecording();
     bool canStopAudioStream() const;
 

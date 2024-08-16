@@ -3,6 +3,8 @@
 */
 #include "recordcontroller.h"
 
+#include "translation.h"
+
 using namespace muse;
 using namespace au::audio;
 using namespace au::record;
@@ -67,8 +69,13 @@ void RecordController::start()
     IF_ASSERT_FAILED(record()) {
         return;
     }
-    
-    record()->start();
+
+    Ret ret = record()->start();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
     setCurrentRecordStatus(RecordStatus::Running);
 }
 
@@ -77,8 +84,13 @@ void RecordController::pause()
     IF_ASSERT_FAILED(record()) {
         return;
     }
-    
-    record()->pause();
+
+    Ret ret = record()->pause();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
     setCurrentRecordStatus(RecordStatus::Paused);
 }
 
@@ -87,8 +99,13 @@ void RecordController::stop()
     IF_ASSERT_FAILED(record()) {
         return;
     }
-    
-    record()->stop();
+
+    Ret ret = record()->stop();
+    if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
     setCurrentRecordStatus(RecordStatus::Stopped);
 }
 

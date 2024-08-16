@@ -11,6 +11,7 @@ set(MODULE_SRC
     #public
     ${CMAKE_CURRENT_LIST_DIR}/recordmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/recordmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/recorderrors.h
     ${CMAKE_CURRENT_LIST_DIR}/irecordconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/irecordcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecord.h
