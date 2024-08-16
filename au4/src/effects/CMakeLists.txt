@@ -58,12 +58,4 @@ endif()
 
 set(MODULE_LINK au3wrap)
 
-install(DIRECTORY
-      builtineffects
-      DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}
-      PATTERN ".*" EXCLUDE
-      PATTERN "*.h" EXCLUDE
-      PATTERN "*.cpp" EXCLUDE
-      )
-
 setup_module()
