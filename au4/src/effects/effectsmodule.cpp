@@ -18,8 +18,10 @@
 #include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
 
+#ifdef AU_MODULE_VST
 #include "internal/au3/vst3pluginsscanner.h"
 #include "internal/au3/vst3pluginsmetareader.h"
+#endif
 
 #include "effectsettings.h"
 
@@ -61,12 +63,16 @@ void EffectsModule::resolveImports()
 
     auto scannerRegister = ioc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(moduleName());
     if (scannerRegister) {
+#ifdef AU_MODULE_VST
         scannerRegister->registerScanner(std::make_shared<Vst3PluginsScanner>());
+#endif
     }
 
     auto metaReaderRegister = ioc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
     if (metaReaderRegister) {
+#ifdef AU_MODULE_VST
         metaReaderRegister->registerReader(std::make_shared<Vst3PluginsMetaReader>());
+#endif
     }
 }
 

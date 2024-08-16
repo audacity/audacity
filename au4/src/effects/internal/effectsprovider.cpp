@@ -52,7 +52,9 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
     return {
+#ifdef AU_MODULE_VST
         { VST_CATEGORY_ID, u"VST" }
+#endif
     };
 }
 

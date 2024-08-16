@@ -21,7 +21,9 @@
 # This module stores global state
 declare_module(au3wrap)
 
-add_subdirectory("vst3")
+if(AU_MODULE_VST)
+    add_subdirectory("vst3")
+endif()
 
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
@@ -435,49 +437,69 @@ set(AU3_SRC
 
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.cpp
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.h
-
-    ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
-    ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
-    ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.cpp
-    ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.h
-    ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.cpp
-    ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.h
-    ${AU3_LIBRARIES}/lib-vst3/VST3Instance.cpp
-    ${AU3_LIBRARIES}/lib-vst3/VST3Instance.h
-    ${AU3_LIBRARIES}/lib-vst3/VST3Utils.cpp
-    ${AU3_LIBRARIES}/lib-vst3/VST3Utils.h
-    ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.cpp
-    ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.h
-    ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
-    ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
-    ${AU3_LIBRARIES}/lib-vst3/memorystream.cpp
-    ${AU3_LIBRARIES}/lib-vst3/memorystream.h
 )
+
+if(AU_MODULE_VST)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.cpp
+        ${AU3_LIBRARIES}/lib-vst3/AudacityVst3HostApplication.h
+        ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.cpp
+        ${AU3_LIBRARIES}/lib-vst3/VST3EffectBase.h
+        ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.cpp
+        ${AU3_LIBRARIES}/lib-vst3/VST3EffectsModule.h
+        ${AU3_LIBRARIES}/lib-vst3/VST3Instance.cpp
+        ${AU3_LIBRARIES}/lib-vst3/VST3Instance.h
+        ${AU3_LIBRARIES}/lib-vst3/VST3Utils.cpp
+        ${AU3_LIBRARIES}/lib-vst3/VST3Utils.h
+        ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.cpp
+        ${AU3_LIBRARIES}/lib-vst3/VST3Wrapper.h
+        ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.cpp
+        ${AU3_LIBRARIES}/lib-vst3/internal/ConnectionProxy.h
+        ${AU3_LIBRARIES}/lib-vst3/memorystream.cpp
+        ${AU3_LIBRARIES}/lib-vst3/memorystream.h
+    )
+endif()
 
 include(GetPlatformInfo)
 
 if(OS_IS_WIN)
     set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
         ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityWindows.cpp
     )
+
+    if (AU_MODULE_VST)
+        set(MODULE_SRC ${MODULE_SRC}
+            ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
+        )
+    endif()
+
 elseif(OS_IS_LIN)
     set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
         ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityLinux.cpp
     )
+
+    if (AU_MODULE_VST)
+        set(MODULE_SRC ${MODULE_SRC}
+            ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
+        )
+    endif()
 elseif(OS_IS_MAC)
     set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
         ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityMacOS.cpp
     )
 
-    set_source_files_properties(
-        ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
-        PROPERTIES
-        SKIP_UNITY_BUILD_INCLUSION ON
-        SKIP_PRECOMPILE_HEADERS ON
+    if (AU_MODULE_VST)
+        set(MODULE_SRC ${MODULE_SRC}
+            ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
         )
+
+        set_source_files_properties(
+            ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
+            PROPERTIES
+            SKIP_UNITY_BUILD_INCLUSION ON
+            SKIP_PRECOMPILE_HEADERS ON
+            )
+    endif()
 endif()
 
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sqlite au3-sqlite)
@@ -486,10 +508,15 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 
 # ==================================
-set(MODULE_INCLUDE ${AU3_INCLUDE} ${MUSE_MODULE_VST_VST3_SDK_PATH})
+set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 set(MODULE_SRC ${MODULE_SRC} ${AU3_SRC})
-set(MODULE_LINK ${AU3_LINK} vst_sdk_3)
+set(MODULE_LINK ${AU3_LINK})
+
+if (AU_MODULE_VST)
+    set(MODULE_INCLUDE ${MODULE_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
+    set(MODULE_LINK ${MODULE_LINK} vst_sdk_3)
+endif()
 
 set(MODULE_USE_PCH_NONE ON)
 set(MODULE_USE_UNITY_NONE ON)
