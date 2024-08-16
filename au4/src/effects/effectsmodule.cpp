@@ -3,6 +3,9 @@
 */
 #include "effectsmodule.h"
 
+#include "libraries/lib-files/FileNames.h"
+#include "libraries/lib-module-manager/PluginManager.h"
+
 #include "ui/iuiactionsregister.h"
 #include "ui/iinteractiveuriregister.h"
 
@@ -18,7 +21,7 @@
 #include "internal/au3/vst3pluginsscanner.h"
 #include "internal/au3/vst3pluginsmetareader.h"
 
-#include "internal/au3/au3pluginssettings.h"
+#include "effectsettings.h"
 
 #include "view/effectbuilder.h"
 
@@ -82,6 +85,10 @@ void EffectsModule::onInit(const muse::IApplication::RunMode& mode)
     if (mode != muse::IApplication::RunMode::GuiApp) {
         return;
     }
+
+    PluginManager::Get().Initialize([](const FilePath& localFileName) {
+        return std::make_unique<au3::EffectSettings>(localFileName.ToStdString());
+    });
 
     m_actionsController->init();
 }

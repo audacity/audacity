@@ -9,8 +9,6 @@
 #include "libraries/lib-preferences/Prefs.h"
 #include "libraries/lib-audio-io/AudioIO.h"
 #include "libraries/lib-project-file-io/ProjectFileIO.h"
-#include "libraries/lib-files/FileNames.h"
-#include "libraries/lib-module-manager/PluginManager.h"
 
 #include "mocks/qtBasicUI.h"
 
@@ -46,10 +44,6 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
 
     std::unique_ptr<Au3CommonSettings> auset = std::make_unique<Au3CommonSettings>();
     InitPreferences(std::move(auset));
-
-    PluginManager::Get().Initialize([](const FilePath& localFileName) {
-       return std::make_unique<EffectSettings>(localFileName.ToStdString());
-    });
 
     AudioIO::Init();
 
