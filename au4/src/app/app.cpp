@@ -302,6 +302,8 @@ int App::run(int argc, char** argv)
                     // Setup modules: onDelayedInit
                     // ====================================================
 
+                    startupScenario()->runOnSplashScreen();
+
                     globalModule.onDelayedInit();
                     for (modularity::IModuleSetup* m : m_modules) {
                         m->onDelayedInit();
@@ -312,7 +314,7 @@ int App::run(int argc, char** argv)
                         delete splashScreen;
                     }
 
-                    startupScenario()->run();
+                    startupScenario()->runAfterSplashScreen();
                 }
             }, Qt::QueuedConnection);
 
