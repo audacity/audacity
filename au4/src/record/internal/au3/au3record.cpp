@@ -28,6 +28,9 @@
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "recorderrors.h"
 
 #include "log.h"
 
@@ -261,7 +264,7 @@ void Au3Record::init()
     });
 }
 
-void Au3Record::start()
+muse::Ret Au3Record::start()
 {
     //! NOTE: copied from ProjectAudioManager::OnRecord
 
@@ -273,15 +276,6 @@ void Au3Record::start()
     const bool appendRecord = true;//(altAppearance == bPreferNewTrack);
 
     AudacityProject& project = projectRef();
-
-    //---------
-    auto& tracks = TrackList::Get(project);
-
-    auto& _selectedRegion = ViewInfo::Get(project).selectedRegion;
-    _selectedRegion.setTimes(tracks.GetStartTime(), tracks.GetEndTime());
-    // _selectedRegion.SetEnd(tracks.GetEndTime());
-
-    //---------
 
     const auto& selectedRegion = ViewInfo::Get(project).selectedRegion;
     double t0 = selectedRegion.t0();
@@ -302,12 +296,7 @@ void Au3Record::start()
     const bool allSameRate{ selectedTracks.allSameRate };
 
     if (!allSameRate) {
-        // AudacityMessageBox(XO("The tracks selected "
-        //                       "for recording must all have the same sampling rate"),
-        //                    XO("Mismatched Sampling Rates"),
-        //                    wxICON_ERROR | wxCENTRE);
-
-        return;
+        return make_ret(Err::MismatchedSamplingRatesError);
     }
 
     if (appendRecord) {
@@ -321,14 +310,7 @@ void Au3Record::start()
             options.rate = rateOfSelected;
         } else {
             if (anySelected && rateOfSelected != options.rate) {
-                // AudacityMessageBox(XO(
-                //                        "Too few tracks are selected for recording at this sample rate.\n"
-                //                        "(Audacity requires two channels at the same sample rate for\n"
-                //                        "each stereo track)"),
-                //                    XO("Too Few Compatible Tracks Selected"),
-                //                    wxICON_ERROR | wxCENTRE);
-
-                return;
+                return make_ret(Err::TooFewCompatibleTracksSelected);
             }
 
             existingTracks = ChooseExistingRecordingTracks(project, false, options.rate);
@@ -384,27 +366,29 @@ void Au3Record::start()
     std::copy(existingTracks.begin(), existingTracks.end(),
               back_inserter(transportTracks.captureSequences));
 
-    doRecord(project, transportTracks, t0, t1, altAppearance, options);
+    return doRecord(project, transportTracks, t0, t1, altAppearance, options);
 }
 
-void Au3Record::pause()
+muse::Ret Au3Record::pause()
 {
     if (!canStopAudioStream()) {
-        return;
+        return make_ret(Err::RecordingStopError);
     }
 
     auto gAudioIO = AudioIO::Get();
 
     gAudioIO->SetPaused(true);
+
+    return make_ok();
 }
 
-void Au3Record::stop()
+muse::Ret Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop
     bool stopStream = true;
 
     if (!canStopAudioStream()) {
-        return;
+        return make_ret(Err::RecordingStopError);
     }
 
     auto gAudioIO = AudioIO::Get();
@@ -433,6 +417,8 @@ void Au3Record::stop()
     if (meter) {
         meter->Clear();
     }
+
+    return make_ok();
 }
 
 IAudioInputPtr Au3Record::audioInput() const
@@ -446,17 +432,18 @@ AudacityProject& Au3Record::projectRef() const
     return *project;
 }
 
-bool Au3Record::doRecord(AudacityProject& project,
-                         const TransportSequences& sequences,
-                         double t0, double t1,
-                         bool altAppearance,
-                         const AudioIOStartStreamOptions& options)
+Ret Au3Record::doRecord(AudacityProject& project,
+                        const TransportSequences& sequences,
+                        double t0, double t1,
+                        bool altAppearance,
+                        const AudioIOStartStreamOptions& options)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
     auto gAudioIO = AudioIO::Get();
     if (gAudioIO->IsBusy()) {
-        return false;
+        LOGE() << "Audio IO is busy";
+        return make_ret(Ret::Code::InternalError);
     }
 
     // projectAudioManager.SetAppending(!altAppearance);
@@ -683,23 +670,22 @@ bool Au3Record::doRecord(AudacityProject& project,
         } else {
             cancelRecording();
 
-            // Show error message if stream could not be opened
-            auto msg = XO("Error opening recording device.\nError code: %s")
-                       .Format(gAudioIO->LastPaErrorString());
-            using namespace BasicUI;
-            // ShowErrorDialog(*ProjectFramePlacement(&mProject),
-            //                 XO("Error"), msg, wxT("Error_opening_sound_device"),
-            //                 ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
+            Ret ret = make_ret(Err::RecordingError);
+            ret.setText(String::fromStdString(ret.text()).arg(wxToSting(gAudioIO->LastPaErrorString())).toStdString());
+
+            return ret;
         }
     }
 
-    return success;
+    return make_ok();
 }
 
 void Au3Record::cancelRecording()
 {
     AudacityProject& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
+
+    //todo: reset tracks
 }
 
 bool Au3Record::canStopAudioStream() const
