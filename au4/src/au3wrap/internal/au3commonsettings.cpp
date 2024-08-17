@@ -12,7 +12,12 @@ using namespace au::au3;
 
 static muse::Settings::Key make_key(const wxString& key)
 {
-    return muse::Settings::Key("au3wrap", wxToStdSting(key));
+    wxString _key = key;
+    if (!_key.starts_with("/")) {
+        _key += "/";
+    }
+
+    return muse::Settings::Key("au3wrap", wxToStdSting(_key));
 }
 
 Au3CommonSettings::Au3CommonSettings()
