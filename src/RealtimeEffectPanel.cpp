@@ -665,6 +665,17 @@ namespace
                   /*! i18n-hint: undo history record
                    first parameter - realtime effect name */
                   XO("Replace %s").Format(oldName));
+               
+               const auto ID = state->GetID();
+               const auto effectPlugin = EffectManager::Get().GetEffect(ID);
+
+               if(effectPlugin == nullptr)
+                  return;
+               
+               auto& effectStateUI = RealtimeEffectStateUI::Get(*state);
+
+               effectStateUI.SetTargetName(mDelegate->GetSourceName());
+               effectStateUI.Toggle(*mProject);
             }
          }
       }
@@ -1084,6 +1095,17 @@ public:
             XO("Added %s to %s").Format(effectName, mDelegate->GetSourceName()),
             //i18n-hint: undo history record
             XO("Add %s").Format(effectName));
+
+         const auto ID = state->GetID();
+         const auto effectPlugin = EffectManager::Get().GetEffect(ID);
+
+         if(effectPlugin == nullptr)
+            return;
+
+         auto& effectStateUI = RealtimeEffectStateUI::Get(*state);
+
+         effectStateUI.SetTargetName(mDelegate->GetSourceName());
+         effectStateUI.Toggle(*mProject);
       }
    }
 
