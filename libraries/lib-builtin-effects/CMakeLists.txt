@@ -7,6 +7,8 @@ set( SOURCES
    AmplifyBase.h
    CompressorInstance.cpp
    CompressorInstance.h
+   ToneGenBase.cpp
+   ToneGenBase.h
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
