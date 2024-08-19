@@ -31,7 +31,7 @@ This class now lists
 #include "../ProjectWindows.h"
 #include "CommandManager.h"
 #include "CommandTargets.h"
-#include "../effects/EffectManager.h"
+#include "EffectAndCommandPluginManager.h"
 #include "../widgets/Overlay.h"
 #include "TrackFocus.h"
 #include "../TrackPanel.h"
@@ -430,13 +430,13 @@ bool GetInfoCommand::SendCommands(const CommandContext &context, int flags )
 {
    context.StartArray();
    PluginManager & pm = PluginManager::Get();
-   EffectManager & em = EffectManager::Get();
    {
       for (auto &plug
            : pm.PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand)) {
-         auto command = em.GetCommandIdentifier(plug.GetID());
+         auto command = pm.GetCommandIdentifier(plug.GetID());
          if (!command.empty()){
-            em.GetCommandDefinition( plug.GetID(), context, flags );
+            EffectAndCommandPluginManager::Get().GetCommandDefinition(
+               plug.GetID(), context, flags);
          }
       }
    }

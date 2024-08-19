@@ -58,6 +58,7 @@ class MacroCommandDialog final : public wxDialogWrapper {
 
    CommandID mInternalCommandName;
 
+   AudacityProject& mProject;
    const MacroCommandsCatalog mCatalog;
 
    DECLARE_EVENT_TABLE()

@@ -16,8 +16,9 @@
 #include "VSTWrapper.h"
 #include "../EffectEditor.h"
 
-#include <wx/weakref.h>
+#include <wx/dialog.h>
 #include <wx/event.h>
+#include <wx/weakref.h>
 
 class VSTInstance;
 class wxSlider;

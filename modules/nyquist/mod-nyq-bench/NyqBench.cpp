@@ -30,7 +30,7 @@
 #include "Prefs.h"
 #include "Project.h"
 #include "ShuttleGui.h"
-#include "effects/EffectManager.h"
+#include "EffectManager.h"
 #include "effects/EffectUI.h"
 #include "effects/nyquist/Nyquist.h"
 #include "../images/AudacityLogo.xpm"

@@ -122,7 +122,7 @@ public:
    template<bool Const> bool VisitSettings( SettingsVisitorBase<Const> &S );
    bool VisitSettings( SettingsVisitor & S ) override;
    bool VisitSettings( ConstSettingsVisitor & S ) override;
-   bool PromptUser(wxWindow *parent) override;
+   bool PromptUser(AudacityProject& project) override;
    bool Apply(const CommandContext & context) override;
 
    // AudacityCommand overrides

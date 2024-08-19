@@ -34,9 +34,9 @@ class AudacityProject;
 class CommandContext;
 class ProgressDialog;
 
-
-class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
-                                public ComponentInterface
+class AUDACITY_DLL_API AudacityCommand /* not final */ :
+    public wxEvtHandler,
+    public ComponentInterface
 {
  public:
    //std::unique_ptr<CommandOutputTargets> mOutput;
@@ -44,7 +44,7 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
  public:
    AudacityCommand();
    virtual ~AudacityCommand();
-   
+
    // ComponentInterface implementation
 
    //These four can be defaulted....
@@ -62,17 +62,18 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
    virtual ManualPageID ManualPage() { return {}; }
    virtual bool IsBatchProcessing() const { return mIsBatch; }
    virtual void SetBatchProcessing(bool start) { mIsBatch = start; }
-   
+
    virtual bool Apply(const CommandContext & WXUNUSED(context) ) { return false; }
 
    bool ShowInterface(wxWindow *parent, bool forceModal = false);
 
    wxDialog *CreateUI(wxWindow *parent, AudacityCommand *client);
 
-   bool SaveSettingsAsString(wxString & parms);
-   bool LoadSettingsFromString(const wxString & parms);
+   bool SaveSettingsAsString(wxString& parms);
+   bool LoadSettingsFromString(const wxString& parms);
 
-   bool DoAudacityCommand(wxWindow *parent, const CommandContext & context,bool shouldPrompt = true);
+   bool DoAudacityCommand(
+      const CommandContext& context, bool shouldPrompt = true);
 
    // Nonvirtual
    // Display a message box, using effect's (translated) name as the prefix
@@ -97,9 +98,9 @@ class AUDACITY_DLL_API AudacityCommand /* not final */ : public wxEvtHandler,
 
    // If necessary, open a dialog to get parameters from the user.
    // This method will not always be called (for example if a user
-   // repeats a command using 'repeat last command') but if it is called, 
+   // repeats a command using 'repeat last command') but if it is called,
    // it will be called after Init.
-   virtual bool PromptUser(wxWindow *parent);
+   virtual bool PromptUser(AudacityProject&);
 
    // Check whether command should be skipped
    // Typically this is only useful in macros, for example

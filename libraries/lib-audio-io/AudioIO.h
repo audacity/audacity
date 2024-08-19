@@ -23,6 +23,7 @@
 #include <thread>
 #include <utility>
 #include <wx/atomic.h> // member variable
+#include <wx/thread.h>
 
 #include "PluginProvider.h" // for PluginID
 #include "Observer.h"

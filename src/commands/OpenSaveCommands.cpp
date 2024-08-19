@@ -214,7 +214,7 @@ bool ClearLogCommand::VisitSettings( SettingsVisitor & S )
 bool ClearLogCommand::VisitSettings( ConstSettingsVisitor & S )
    { return VisitSettings<true>(S); }
 
-bool ClearLogCommand::PromptUser(wxWindow *parent)
+bool ClearLogCommand::PromptUser(AudacityProject& project)
 {
    return true;
 }

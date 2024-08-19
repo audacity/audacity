@@ -18,6 +18,7 @@
 
 #include "EqualizationCurvesList.h"
 #include "EqualizationFilter.h"
+#include <wx/event.h>
 
 class wxSlider;
 

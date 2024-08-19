@@ -35,12 +35,12 @@ selected command.
 #include <wx/listctrl.h>
 #include <wx/button.h>
 
-
-#include "Project.h"
-#include "effects/EffectManager.h"
-#include "ShuttleGui.h"
+#include "DoEffect.h"
+#include "EffectManager.h"
 #include "HelpSystem.h"
-
+#include "PluginManager.h"
+#include "Project.h"
+#include "ShuttleGui.h"
 
 #define CommandsListID        7001
 #define EditParamsButtonID    7002
@@ -57,11 +57,12 @@ BEGIN_EVENT_TABLE(MacroCommandDialog, wxDialogWrapper)
 END_EVENT_TABLE();
 
 MacroCommandDialog::MacroCommandDialog(
-   wxWindow * parent, wxWindowID id, AudacityProject &project):
-   wxDialogWrapper(parent, id, XO("Select Command"),
-            wxDefaultPosition, wxDefaultSize,
-            wxCAPTION | wxRESIZE_BORDER)
-   , mCatalog{ &project }
+   wxWindow* parent, wxWindowID id, AudacityProject& project)
+    : wxDialogWrapper(
+         parent, id, XO("Select Command"), wxDefaultPosition, wxDefaultSize,
+         wxCAPTION | wxRESIZE_BORDER)
+    , mProject { project }
+    , mCatalog { &project }
 {
    SetLabel(XO("Select Command"));         // Provide visual label
    SetName(XO("Select Command"));          // Provide audible label
@@ -177,7 +178,8 @@ void MacroCommandDialog::OnItemSelected(wxListEvent &event)
    const auto &command = mCatalog[ event.GetIndex() ];
 
    EffectManager & em = EffectManager::Get();
-   PluginID ID = em.GetEffectByIdentifier( command.name.Internal() );
+   PluginID ID =
+      PluginManager::Get().GetByCommandIdentifier(command.name.Internal());
 
    // If ID is empty, then the effect wasn't found, in which case, the user must have
    // selected one of the "special" commands.
@@ -213,7 +215,7 @@ void MacroCommandDialog::OnEditParams(wxCommandEvent & WXUNUSED(event))
    auto command = mInternalCommandName;
    wxString params  = mParameters->GetValue();
 
-   params = MacroCommands::PromptForParamsFor(command, params, *this).Trim();
+   params = MacroCommands::PromptForParamsFor(command, params, mProject).Trim();
 
    mParameters->SetValue(params);
    mParameters->Refresh();
@@ -251,12 +253,11 @@ void MacroCommandDialog::SetCommandAndParams(const CommandID &Command, const wxS
       mChoices->SetItemState(iter - mCatalog.begin(),
                              wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
 
-      EffectManager & em = EffectManager::Get();
-      PluginID ID = em.GetEffectByIdentifier(Command);
+      PluginID ID = PluginManager::Get().GetByCommandIdentifier(Command);
 
       // If ID is empty, then the effect wasn't found, in which case, the user must have
       // selected one of the "special" commands.
       mEditParams->Enable(!ID.empty());
-      mUsePreset->Enable(em.HasPresets(ID));
+      mUsePreset->Enable(EffectManager::Get().HasPresets(ID));
    }
 }

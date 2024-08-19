@@ -1,11 +1,11 @@
 /*!********************************************************************
- 
+
  Audacity: A Digital Audio Editor
- 
+
  @file ActiveProject.cpp
- 
+
  Paul Licameli split from Project.cpp
- 
+
  **********************************************************************/
 
 #include "ActiveProject.h"

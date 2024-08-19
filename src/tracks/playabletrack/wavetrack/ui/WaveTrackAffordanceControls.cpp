@@ -377,7 +377,7 @@ bool WaveTrackAffordanceControls::StartEditClipName(AudacityProject& project, In
         SetWaveClipNameCommand Command;
         auto oldName = interval->GetName();
         Command.mName = oldName;
-        auto result = Command.PromptUser(&GetProjectFrame(project));
+        auto result = Command.PromptUser(project);
         if (result && Command.mName != oldName)
         {
             interval->SetName(Command.mName);

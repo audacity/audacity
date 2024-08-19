@@ -1131,7 +1131,8 @@ void PluginManager::EnablePlugin(const PluginID & ID, bool enable)
       iter->second.SetEnabled(enable);
 }
 
-const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
+const ComponentInterfaceSymbol&
+PluginManager::GetSymbol(const PluginID& ID) const
 {
    if (auto iter = mRegisteredPlugins.find(ID); iter == mRegisteredPlugins.end()) {
       static ComponentInterfaceSymbol empty;
@@ -1139,6 +1140,38 @@ const ComponentInterfaceSymbol & PluginManager::GetSymbol(const PluginID & ID)
    }
    else
       return iter->second.GetSymbol();
+}
+
+TranslatableString PluginManager::GetName(const PluginID& ID) const
+{
+   return GetSymbol(ID).Msgid();
+}
+
+CommandID PluginManager::GetCommandIdentifier(const PluginID& ID) const
+{
+   const auto name = GetSymbol(ID).Internal();
+   return EffectDefinitionInterface::GetSquashedName(name);
+}
+
+const PluginID&
+PluginManager::GetByCommandIdentifier(const CommandID& strTarget)
+{
+   static PluginID empty;
+   if (strTarget.empty()) // set GetCommandIdentifier to wxT("") to not show an
+                          // effect in Batch mode
+   {
+      return empty;
+   }
+
+   // Effects OR Generic commands...
+   for (auto& plug :
+        PluginsOfType(PluginTypeEffect | PluginTypeAudacityCommand))
+   {
+      auto& ID = plug.GetID();
+      if (GetCommandIdentifier(ID) == strTarget)
+         return ID;
+   }
+   return empty;
 }
 
 ComponentInterface *PluginManager::Load(const PluginID & ID)
