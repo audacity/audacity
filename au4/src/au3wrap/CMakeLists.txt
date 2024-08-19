@@ -50,6 +50,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3commonsettings.h
     )
 
+
+if(OS_IS_WIN)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitywindows.cpp)
+elseif(OS_IS_LIN)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitylinux.cpp)
+elseif(OS_IS_MAC)
+    set(MODULE_SRC ${MODULE_SRC}
+        ${CMAKE_CURRENT_LIST_DIR}/internal/au3platformcompatibilitymacos.cpp)
+endif()
+
 # ==================================
 # === AU3 ===
 # ==================================
@@ -463,10 +475,6 @@ endif()
 include(GetPlatformInfo)
 
 if(OS_IS_WIN)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityWindows.cpp
-    )
-
     if (AU_MODULE_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_win32.cpp
@@ -474,20 +482,12 @@ if(OS_IS_WIN)
     endif()
 
 elseif(OS_IS_LIN)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityLinux.cpp
-    )
-
     if (AU_MODULE_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_linux.cpp
         )
     endif()
 elseif(OS_IS_MAC)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${AU3_LIBRARIES}/lib-files/PlatformCompatibilityMacOS.cpp
-    )
-
     if (AU_MODULE_VST)
         set(MODULE_SRC ${MODULE_SRC}
             ${AU3_LIBRARIES}/lib-vst3/module_mac.mm
