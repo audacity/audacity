@@ -49,6 +49,7 @@ using RemoteProjectSnapshotStateCallback =
    std::function<void(RemoteProjectSnapshotState)>;
 
 class RemoteProjectSnapshot final
+   : public std::enable_shared_from_this<RemoteProjectSnapshot>
 {
    struct Tag
    {
