@@ -55,9 +55,9 @@
           LabelUnselectedBrush: #c0c0c0;
             LabelSelectedBrush: #ebf2ff;
               LabelSurroundPen: #14151a;
-                   TrackFocus0: #677ce4;
-                   TrackFocus1: #677ce4;
-                   TrackFocus2: #677ce4;
+                   TrackFocus0: #97A8FD;
+                   TrackFocus1: #97A8FD;
+                   TrackFocus2: #97A8FD;
                      SnapGuide: #ffff00;
                      TrackInfo: #f8f8f9;
              TrackInfoSelected: #dbe7ff;
