@@ -17,8 +17,6 @@
 
 *//*******************************************************************/
 #include "StatefulPerTrackEffect.h"
-#include "ShuttleGui.h"
-#include <wx/sizer.h>
 
 StatefulPerTrackEffect::Instance::~Instance() = default;
 

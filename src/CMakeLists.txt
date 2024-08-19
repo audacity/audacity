@@ -446,8 +446,6 @@ set( SOURCES
       effects/StatefulEffect.h
       effects/StatefulEffectUIServices.cpp
       effects/StatefulEffectUIServices.h
-      effects/StatefulPerTrackEffect.cpp
-      effects/StatefulPerTrackEffect.h
       effects/StatelessPerTrackEffect.cpp
       effects/StatelessPerTrackEffect.h
       effects/StereoToMono.cpp
@@ -1335,6 +1333,7 @@ set( AUDACITY_LIBRARIES
    lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
+   lib-builtin-effects
 )
 
 if (USE_VST)

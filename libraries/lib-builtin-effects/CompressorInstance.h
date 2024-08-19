@@ -10,8 +10,8 @@
 **********************************************************************/
 #pragma once
 
-#include "DynamicRangeProcessorTypes.h"
 #include "CompressorProcessor.h"
+#include "DynamicRangeProcessorTypes.h"
 #include "EffectInterface.h"
 #include "Observer.h"
 #include "PerTrackEffect.h"
@@ -23,7 +23,7 @@ using InitializeProcessingSettingsPublisher =
    Observer::Publisher<std::optional<InitializeProcessingSettings>>;
 using RealtimeResumePublisher = Observer::Publisher<Unbypassed>;
 
-class AUDACITY_APPLICATION_LOGIC_API CompressorInstance final :
+class BUILTIN_EFFECTS_API CompressorInstance final :
     public PerTrackEffect::Instance,
     public EffectInstanceWithBlockSize,
     public InitializeProcessingSettingsPublisher,

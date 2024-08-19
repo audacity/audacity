@@ -13,6 +13,7 @@
 #ifndef __AUDACITY_EFFECT_TONEGEN__
 #define __AUDACITY_EFFECT_TONEGEN__
 
+#include "StatefulEffectUIServices.h"
 #include "StatefulPerTrackEffect.h"
 #include "ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
@@ -21,7 +22,9 @@
 class NumericTextCtrl;
 class ShuttleGui;
 
-class EffectToneGen : public StatefulPerTrackEffect
+class EffectToneGen :
+    public StatefulPerTrackEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectToneGen *
