@@ -128,7 +128,7 @@ au::trackedit::TimeSignature Au3TrackeditProject::timeSignature() const
 
 void Au3TrackeditProject::setTimeSignature(const trackedit::TimeSignature& timeSignature)
 {
-    if (au3ProjectPtr()) {
+    if (!au3ProjectPtr()) {
         return;
     }
 
