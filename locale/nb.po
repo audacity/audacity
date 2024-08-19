@@ -1,5 +1,5 @@
 # Audacity Strings for Translation.
-# Copyright (C) 1999 and beyond Audacity Development Team
+# Copyright © 1999 and beyond Audacity Development Team
 # This file is distributed under the same license as Audacity.
 # Audacity Team <audacity-translation@lists.sourceforge.net>, 1999 and beyond.
 #
@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-07-02 21:05+0300\n"
-"PO-Revision-Date: 2022-09-15 18:54+0200\n"
-"Last-Translator: Stian F. Kristensen <stiank@proton.me>\n"
-"Language-Team: Imre Kristoffer Eilertsen <imreeil42@gmail.com>\n"
+"PO-Revision-Date: 2024-08-19 21:02+0200\n"
+"Last-Translator: Imre Eilertsen <imreeil42@gmail.com>\n"
+"Language-Team: Imre Eilertsen <imreeil42@gmail.com>\n"
 "Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.4.4\n"
 "X-Poedit-Bookmarks: 1429,-1,-1,-1,-1,-1,-1,-1,-1,-1\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
@@ -319,9 +319,9 @@ msgid "Could not initialize component"
 msgstr "Kunne ikke starte opp komponenten"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr "Kunne ikke sette klasseinfo for “%s”-innstilling"
+msgstr "Mislyktes i å dekode «%s»-forhåndsinnstillingen"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
@@ -329,9 +329,9 @@ msgid "Failed to convert \"%s\" preset to internal format"
 msgstr "Kunne ikke konvertere “%s”-forhåndsinnstilling til internt format"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr "Kunne ikke lage egenskapsliste for innstilling"
+msgstr "Mislyktes i å lage en egenskapsliste for «%s»-forhåndsvalget"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
@@ -367,23 +367,21 @@ msgstr "Kan ikke fortsette opplasting."
 #. i18n-hint: database operation has failed because the requested item was not found
 #: libraries/lib-cloud-audiocom/sync/DataUploader.cpp
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File not found"
-msgstr "Filen “%s” ble ikke funnet."
+msgstr "Filen ble ikke funnet"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
 msgid "Project was closed before snapshot was created"
-msgstr ""
+msgstr "Prosjektet ble lukket før øyeblikksbildet ble opprettet"
 
 #: libraries/lib-cloud-audiocom/sync/LocalProjectSnapshot.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Invalid Response: %s"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "Ugyldig svar: %s"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
-#, fuzzy
 msgid "Export failed"
-msgstr "Eksporter filer til:"
+msgstr "Eksporteringen mislyktes"
 
 #: libraries/lib-cloud-audiocom/sync/MixdownUploader.cpp
 #: libraries/lib-import-export/ExportProgressUI.cpp
@@ -393,93 +391,82 @@ msgid "Export error"
 msgstr "Eksportfeil"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to attach to the Cloud project database"
-msgstr "Kunne ikke åpne prosjektets database"
+msgstr "Mislyktes i å tilknyttes til skylagringsprosjekt-databasen"
 
 #: libraries/lib-cloud-audiocom/sync/RemoteProjectSnapshot.cpp
-#, fuzzy
 msgid "Failed to decompress the Cloud project block"
-msgstr "Kunne ikke åpne prosjektets database"
+msgstr "Mislyktes i å pakke ut skylagingsprosjektblokken"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
-msgstr ""
+msgstr "Lokale prosjektdata ble fjernet før synkroniseringen var ferdig"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
-#, fuzzy
 msgid "Failed to deserialize the response"
-msgstr "Kunne ikke hente innhold i innstilling"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern"
-msgstr "Modus:"
+msgstr "Moderne"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Glue Compressor"
-msgstr "Komprimering"
+msgstr "Limkompressor"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Gentle"
-msgstr ""
+msgstr "Skånsom"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beat Booster"
-msgstr "BassBoost"
+msgstr "Beatbooster"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Deep Dive Master"
-msgstr ""
+msgstr "Deep Dive Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Beefy Master"
-msgstr "Lim inn"
+msgstr "Beefy Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Make It Right Master"
-msgstr ""
+msgstr "Make It Right Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr ""
+msgstr "Brick Wall Master"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Lead Vocals"
-msgstr "Fjern vokal"
+msgstr "Hovedvokal"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Fat Vocals"
-msgstr "Isoler vokal"
+msgstr "Fet vokal"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Power Vocals"
-msgstr "Fjern vokal"
+msgstr "Kraftig vokal"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Vocal Control"
-msgstr "Tonekontrollere"
+msgstr "Vokalkontroll"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -494,103 +481,97 @@ msgstr ""
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Podcast/Radio"
-msgstr ""
+msgstr "Podkast/Radio"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Piano"
-msgstr ""
+msgstr "Piano"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Acoustic Guitar"
-msgstr ""
+msgstr "Akustisk gitar"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Bass Guitar"
-msgstr "Basskutt"
+msgstr "Bassgitar"
 
 #. i18n-hint: This is the name of an effect preset. Strings is violins, etc
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Strings"
-msgstr "&Valg"
+msgstr "Strenger"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Kick Drums"
-msgstr ""
+msgstr "Sparketrommer"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr ""
+msgstr "Trommekontroll"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Climax Impulser SFX"
-msgstr ""
+msgstr "Climax Impulser SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr ""
+msgstr "Engine Breathing SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr ""
+msgstr "Great Impact SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr ""
+msgstr "Great Body SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr ""
+msgstr "Great Tail SFX"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Smack Explosion SFX"
-msgstr ""
+msgstr "Smack Explosion SFX"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Master Limiter"
-msgstr "Begrenser"
+msgstr "Master-begrenser"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "SFX Limiter"
-msgstr "Begrenser"
+msgstr "SFX-begrenser"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "VO Limiter"
-msgstr "Begrenser"
+msgstr "VO-begrenser"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch"
-msgstr ""
+msgstr "Modern Punch"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch 2"
-msgstr ""
+msgstr "Modern Punch 2"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
-#, fuzzy
 msgid "Play it Loud"
-msgstr "Lydavspilling"
+msgstr "Play it Loud"
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-preference-pages/PrefsPanel.cpp
@@ -741,14 +722,13 @@ msgid "Audacity successfully wrote a file in %s but failed to rename it as %s."
 msgstr "Audacity lyktes i å lagre en fil i %s, men mislyktes i å gi den det nye navnet %s."
 
 #: libraries/lib-files/FileException.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
-"Audacity kunne ikke skrive til en fil.\n"
-"Kanskje %s ikke kan skrivbar, eller disken er full.\n"
-"Trykk på Hjelp-knappen for tips om å frigjøre plass."
+"Klarte ikke å lagre prosjektet.\n"
+"Kanskje %s ikke kan skrives til, eller disken er full."
 
 #  i18n-hint: You do not need to translate "LOF"
 #: libraries/lib-files/FileException.h
@@ -864,9 +844,8 @@ msgid "Export"
 msgstr "Eksporter"
 
 #: libraries/lib-import-export/ExportProgressUI.cpp
-#, fuzzy
 msgid "Export completed with error."
-msgstr "Eksporterer markert lyd"
+msgstr "Eksporteringen lyktes men med feil."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "All supported files"
@@ -884,18 +863,17 @@ msgstr ""
 "Audacity kan ikke åpne denne filtypen."
 
 #: libraries/lib-import-export/Import.cpp
-#, fuzzy
 msgid "Importing files"
-msgstr "Importerer %s"
+msgstr "Importerer filer"
 
 #: libraries/lib-import-export/Import.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Importing %s..."
-msgstr "Importerer %s"
+msgstr "Importerer %s..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
-msgstr ""
+msgstr "Handlingen ble avbrutt av brukeren"
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -1380,12 +1358,9 @@ msgid "Nyquist Prompt"
 msgstr "Nyquist-varsel"
 
 #: libraries/lib-network-manager/MultipartData.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to open the file for upload: %s"
-msgstr ""
-"Kunne ikke åpne databasefil:\n"
-"\n"
-"%s"
+msgstr "Mislyktes i å åpne filen for opplasting: %s"
 
 #: libraries/lib-note-track/MIDIPlay.cpp
 msgid "There was an error initializing the midi i/o layer.\n"
@@ -1505,19 +1480,18 @@ msgstr "oktaver"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
-#, fuzzy
 msgid "bar"
-msgstr "Verkt&øylinje"
+msgstr "bar"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "beat"
-msgstr ""
+msgstr "beat"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements.
 #: libraries/lib-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp
 msgid "bar:beat"
-msgstr ""
+msgstr "bar:beat"
 
 #. i18n-hint: "bar" and "beat" are musical notation elements. "tick"
 #. corresponds to a 16th note.
@@ -1535,9 +1509,8 @@ msgstr "01000,01000 sekunder"
 #. i18n-hint: Name of time display format that shows time in seconds
 #. * and milliseconds (1/1000 second)
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "seconds + milliseconds"
-msgstr "tt.mm.ss + millisekunder"
+msgstr "sekunder + millisekunder"
 
 #. i18n-hint: Format string for displaying time in seconds and milliseconds
 #. * as fractional seconds. Change the comma in the middle to the 1000s separator
@@ -1545,9 +1518,8 @@ msgstr "tt.mm.ss + millisekunder"
 #. * Don't change the numbers. The decimal separator is specified using '<' if
 #. * your languages uses a ',' or to '>' if your language uses a '.'.
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
-#, fuzzy
 msgid "01000,01000>01000 seconds"
-msgstr "01000,01000 sekunder"
+msgstr "01000 01000<01000 sekunder"
 
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 #: src/prefs/DevicePrefs.cpp src/prefs/RecordingPrefs.cpp
@@ -1929,6 +1901,8 @@ msgid ""
 "Disk is full.\n"
 "%s"
 msgstr ""
+"Lagringsdisken er full.\n"
+"%s"
 
 #: libraries/lib-project-file-io/DBConnection.cpp
 #, c-format
@@ -2312,14 +2286,12 @@ msgid "Plug-in items at %s specify conflicting placements"
 msgstr "Plug-in på %s angir motstridende plasseringer"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
-#, fuzzy
 msgid "Sample Track"
-msgstr "Gi spor ny samplingsfrekvens"
+msgstr "Sporeksempel"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
-#, fuzzy
 msgid "Writable Sample Track"
-msgstr "Gi spor ny samplingsfrekvens"
+msgstr "Skrivbart sporeksempel"
 
 #: libraries/lib-shuttlegui/ShuttleGui.cpp libraries/lib-wx-init/LogWindow.cpp
 #: src/effects/Contrast.cpp src/menus/FileMenus.cpp
@@ -2352,108 +2324,98 @@ msgstr "Debu&g"
 
 #. i18n-hint: The music theory "beat"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#, fuzzy
 msgid "Beats"
-msgstr "&Slag"
+msgstr "Beats"
 
 #. i18n-hint: The music theory "bar"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#, fuzzy
 msgid "Bar"
-msgstr "Bark"
+msgstr "Bjelke"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#, fuzzy
 msgid "1/2"
-msgstr "128"
+msgstr "1/2"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/4"
-msgstr ""
+msgstr "1/4"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
-#, fuzzy
 msgid "1/8"
-msgstr "128"
+msgstr "1/8"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/16"
-msgstr ""
+msgstr "1/16"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/32"
-msgstr ""
+msgstr "1/32"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/64"
-msgstr ""
+msgstr "1/64"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/128"
-msgstr ""
+msgstr "1/128"
 
 #. i18n-hint: The music theory "triplet"
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "Triplets"
-msgstr ""
+msgstr "Triplet-er"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/2 (triplets)"
-msgstr ""
+msgstr "1/2 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/4 (triplets)"
-msgstr ""
+msgstr "1/4 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/8 (triplets)"
-msgstr ""
+msgstr "1/8 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/16 (triplets)"
-msgstr ""
+msgstr "1/16 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/32 (triplets)"
-msgstr ""
+msgstr "1/32 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/64 (triplets)"
-msgstr ""
+msgstr "1/64 (triplet-er)"
 
 #: libraries/lib-snapping/details/BeatsSnapFunctions.cpp
 msgid "1/128 (triplets)"
-msgstr ""
+msgstr "1/128 (triplet-er)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
-#, fuzzy
 msgid "Video frames"
-msgstr "NTSC-bilderate"
+msgstr "Videobildefrekvenser"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
-#, fuzzy
 msgid "Film frames (24 fps)"
-msgstr "filmbilderate (24 fps)"
+msgstr "Film-bildefrekvens (24fps)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
-#, fuzzy
 msgid "NTSC frames (29.97 fps)"
-msgstr "CDDA-bilderate (75 fps)"
+msgstr "NTSC-bildefrekvens (29,97fps)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
-#, fuzzy
 msgid "NTSC frames (30 fps)"
-msgstr "CDDA-bilderate (75 fps)"
+msgstr "NTSC-bildefrekvens (30fps)"
 
 #: libraries/lib-snapping/details/FrameSnapFunctions.cpp
-#, fuzzy
 msgid "CD frames"
-msgstr "NTSC-bilderate"
+msgstr "CD-bildefrekvens"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
-#, fuzzy
 msgid "Seconds && samples"
-msgstr "Nest største"
+msgstr "Sekunder &og samplinger"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp plug-ins/sample-data-export.ny
@@ -2461,19 +2423,16 @@ msgid "Seconds"
 msgstr "Sekunder"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
-#, fuzzy
 msgid "Deciseconds"
-msgstr "centisekunder"
+msgstr "Desisekunder"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
-#, fuzzy
 msgid "Centiseconds"
-msgstr "centisekunder"
+msgstr "Centisekunder"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
-#, fuzzy
 msgid "Milliseconds"
-msgstr "millisekunder"
+msgstr "Millisekunder"
 
 #: libraries/lib-snapping/details/TimeSnapFunctions.cpp
 #: src/prefs/TracksPrefs.cpp
@@ -2481,32 +2440,28 @@ msgid "Samples"
 msgstr "Samplinger"
 
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "SQLite3 error"
-msgstr "Intern feil"
+msgstr "SQLite3-feil"
 
 #. i18n-hint: database operation was successful
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "No error"
-msgstr "Ukjent feil"
+msgstr "Ingen feil"
 
 #. i18n-hint: database operation has failed, but there is no specific reason
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Generic error"
-msgstr "Generisk"
+msgstr "Generisk feil"
 
 #. i18n-hint: database operation has failed due to the internal error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Internal logic error in SQLite"
-msgstr "Intern logisk feil"
+msgstr "Intern logikkfeil i SQLite"
 
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Access permission denied"
-msgstr ""
+msgstr "Tilgangstillatelse ble avslått"
 
 #. i18n-hint: database operation was aborted by the callback
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2516,67 +2471,62 @@ msgstr ""
 #. i18n-hint: database operation has failed because database is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database file is locked"
-msgstr ""
+msgstr "Databasefilen er låst"
 
 #. i18n-hint: database operation has failed because table is locked
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A table in the database is locked"
-msgstr ""
+msgstr "En tabell i databasen er låst"
 
 #. i18n-hint: database operation has failed due to the lack of memory
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "A malloc() failed"
-msgstr ""
+msgstr "En malloc() mislyktes"
 
 #. i18n-hint: database operation has failed because database is read-only
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Attempt to write a read-only database"
-msgstr ""
+msgstr "Forsøkte å skrive til en skrivebeskyttet database"
 
 #. i18n-hint: database operation was interrupted
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Operation terminated"
-msgstr "kunne ikke fastslå"
+msgstr "Handlingen ble stoppet"
 
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "En I/O-feil oppstod"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database disk image is malformed"
-msgstr ""
+msgstr "Databasens lagringsavbildning er feil utformet"
 
 #. i18n-hint: database operation has failed because the drive is full
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Insertion failed because the drive is full"
-msgstr ""
+msgstr "Innsetting mislyktes fordi lagringsplassen er full"
 
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Unable to open the database file"
-msgstr ""
-"Kunne ikke åpne databasefil:\n"
-"\n"
-"%s"
+msgstr "Klarte ikke å åpne databasefilen"
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Database lock protocol error"
-msgstr ""
+msgstr "Databaselåsings-protokollfeil"
 
 #. i18n-hint: database operation has failed because the database schema has changed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The database schema changed"
-msgstr ""
+msgstr "Databaseskjemaet ble endret"
 
 #. i18n-hint: database operation has failed because the string or BLOB exceeds size limit
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "String or BLOB exceeds size limit"
-msgstr ""
+msgstr "Strengen eller BLOB-filen overskrider størrelsesgrensen"
 
 #. i18n-hint: database operation has failed due to the constraint violation
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2586,42 +2536,37 @@ msgstr ""
 #. i18n-hint: database operation has failed due to the data type mismatch
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Data type mismatch"
-msgstr ""
+msgstr "Manglende samsvar mellom datatyper"
 
 #. i18n-hint: database operation has failed due to the library misuse
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Library used incorrectly"
-msgstr ""
+msgstr "Kodebiblioteket ble brukt på feil måte"
 
 #. i18n-hint: database operation has failed because the large file support is disabled
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "The large file support is disabled"
-msgstr ""
+msgstr "Støtte for store filer er skrudd av"
 
 #. i18n-hint: database operation has failed due to the authorization error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Authorization denied"
-msgstr ""
+msgstr "Autorisasjon avslått"
 
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "Not used"
-msgstr "(Ikke brukt):"
+msgstr "Ikke i bruk"
 
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "2nd parameter to sqlite3_bind out of range"
-msgstr ""
+msgstr "sqlite_bind sitt 2. parameter er utenfor rekkevidde"
 
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
-#, fuzzy
 msgid "File opened that is not a database file "
-msgstr ""
-"Kunne ikke åpne databasefil:\n"
-"\n"
-"%s"
+msgstr "Filen som ble åpnet er ikke en databasefil "
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -2631,11 +2576,11 @@ msgstr "Ukjent feil"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "Cut/Copy/Paste"
-msgstr ""
+msgstr "Klipp ut / Kopier / Lim inn"
 
 #: libraries/lib-strings/FutureStrings.h src/toolbars/CutCopyPasteToolBar.cpp
 msgid "&Cut/Copy/Paste Toolbar"
-msgstr ""
+msgstr "«&Klipp ut / Kopier / Lim inn»-verktøylinjen"
 
 #: libraries/lib-strings/Internat.cpp
 msgid "Unable to determine"
@@ -2842,9 +2787,8 @@ msgid "Custom"
 msgstr "Tilpasset"
 
 #: libraries/lib-time-frequency-selection/ViewInfo.cpp
-#, fuzzy
 msgid "Enable &Looping"
-msgstr "&Looping"
+msgstr "Skru på g&jentaking"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this is a Time track.
@@ -2967,14 +2911,12 @@ msgid "Warning - Truncating Overlong Block File"
 msgstr "Advarsel - Korter ned i overkant lange blokkfiler"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
-#, fuzzy
 msgid "Pre-processing"
-msgstr "&Behandler: "
+msgstr "Forhåndsprosessering"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
-#, fuzzy
 msgid "Rendering Clip"
-msgstr "Endre navn på klipp…"
+msgstr ""
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -3010,7 +2952,7 @@ msgstr "Det er ikke nok plass tilgjengelig til å lime inn markeringen"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr ""
+msgstr "Et spor har en ødelagt samplingssekvens."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
@@ -3021,22 +2963,22 @@ msgid "Show &Log..."
 msgstr "Vis &logg..."
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "More information about this error may be available %s."
-msgstr "Enhetsinformasjon er ikke tilgjengelig."
+msgstr ""
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "here"
-msgstr ""
+msgstr "her"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
 msgid "Would you like to send a report to help us fix this issue?"
-msgstr ""
+msgstr "Vil du sende en rapport for å hjelpe oss med å løse dette problemet?"
 
 #: libraries/lib-wx-init/ErrorReportDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "All reports are anonymous. See %s for more info."
-msgstr "Se %s for mer info."
+msgstr "Alle rapporter er anonyme. Se %s for mer informasjon."
 
 #. i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".
 #: libraries/lib-wx-init/ErrorReportDialog.cpp src/AboutDialog.cpp
@@ -3158,9 +3100,8 @@ msgid "No Local Help"
 msgstr "Ingen lokale hjelpefiler"
 
 #: libraries/lib-wx-init/HelpText.cpp
-#, fuzzy
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
-msgstr "Audacity kan importere ubeskyttede filer i mange andre formater (slik som M4A og WMA, komprimerte WAV-filer fra bærbare opptakere, og lyd fra videofiler) hvis du laster ned og installerer det valgfrie [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#foreign|FFmpeg-biblioteket]] til din maskin."
+msgstr "Audacity kan importere ubeskyttede filer i mange andre formater (for eksempel M4A og WMA, komprimerte WAV-filer fra bærbare opptakere, og lyd fra videofiler) hvis du laster ned og installerer det valgfrie [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg-biblioteket]] på datamaskinen din."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
@@ -3271,9 +3212,8 @@ msgid "Specify New Filename:"
 msgstr "Angi nytt filnavn:"
 
 #: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
-#, fuzzy
 msgid "Don't ask me again"
-msgstr "&Ikke send"
+msgstr "Ikke spør meg igjen"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -3358,6 +3298,10 @@ msgid ""
 "These stereo tracks have been split into mono tracks.\n"
 "Please verify that everything works as intended before saving."
 msgstr ""
+"%s\n"
+"Denne funksjonen støttes ikke i Audacity versjon 3.3.3 eller nyere.\n"
+"Disse stereosporene har blitt delt inn i monospor.\n"
+"Sjekk at alt fungerer som det skal før du lagrer."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
@@ -3596,14 +3540,12 @@ msgstr "%.2f kb/s"
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Bit Rate"
-msgstr "Bitrate:"
+msgstr "Bitfrekvens"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
-#, fuzzy
 msgid "Quality (kbps)"
-msgstr "Kvalitet (kbps):"
+msgstr "Kvalitet (kb/s)"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 msgid "Compression"
@@ -3611,9 +3553,8 @@ msgstr "Komprimering"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Frame Duration"
-msgstr "Rammevarighet:"
+msgstr "Rammevarighet"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
@@ -3646,9 +3587,8 @@ msgid "60 ms"
 msgstr "60 ms"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
-#, fuzzy
 msgid "Vbr Mode"
-msgstr "Vbr-modus:"
+msgstr "VBR-modus"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
@@ -3682,9 +3622,8 @@ msgstr "Lav forsinkelse"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Cutoff"
-msgstr "Avkutting:"
+msgstr "Avkutting"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp src/AboutDialog.cpp
 #: src/PluginDataViewCtrl.cpp src/PluginRegistrationDialog.cpp
@@ -3992,14 +3931,12 @@ msgid "Show All Codecs"
 msgstr "Vis alle kodeker"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-#, fuzzy
 msgid "Formats"
-msgstr "Format:"
+msgstr "Formater"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
-#, fuzzy
 msgid "Codecs"
-msgstr "Kodek:"
+msgstr "Kodeker"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "General Options"
@@ -4409,9 +4346,8 @@ msgid "Only avformat.dll"
 msgstr "Bare avformat.dll"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
-#, fuzzy
 msgid "Only libavformat.dylib"
-msgstr "Bare libavformat.so"
+msgstr "Kun libavformat.dylib"
 
 #: modules/import-export/mod-ffmpeg/FFmpeg.cpp
 msgid "Only libavformat.so"
@@ -4520,11 +4456,8 @@ msgid "FFmpeg-compatible files"
 msgstr "FFmpeg-kompatible filer"
 
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
-#, fuzzy
 msgid "Try installing FFmpeg.\n"
-msgstr ""
-"Prøv å installere FFmpeg.\n"
-"\n"
+msgstr "Forsøk å installere FFmpeg.\n"
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp
@@ -4534,9 +4467,8 @@ msgstr "Indeks[%02x] Kodek[%s], Språk[%s], Bitrate[%s], Kanaler[%d], Varighet[%
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Bit Depth"
-msgstr "Bit-dybde:"
+msgstr "Bitdybde"
 
 #: modules/import-export/mod-flac/ExportFLAC.cpp
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
@@ -4645,17 +4577,16 @@ msgid "Invalid track offset in LOF file."
 msgstr "Sporet har feil startposisjon i LOF-fila."
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
-#, fuzzy
 msgid "Version"
-msgstr "Versjon: %s"
+msgstr "Versjon"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG2"
-msgstr ""
+msgstr "MPEG2"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MPEG1"
-msgstr ""
+msgstr "MPEG1"
 
 #: modules/import-export/mod-mp2/ExportMP2.cpp
 msgid "MP2 Files"
@@ -4759,9 +4690,8 @@ msgid "Medium"
 msgstr "Middels"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Bit Rate Mode"
-msgstr "Bitrate-modus:"
+msgstr "Bitfrekvensmodus"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Preset"
@@ -4848,9 +4778,8 @@ msgid "Only libmp3lame.dylib"
 msgstr "Bare libmp3lame.dylib"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
-#, fuzzy
 msgid "Only libmp3lame.so"
-msgstr "Bare libmp3lame.so.0"
+msgstr "Kun libmp3lame.so"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Primary shared object files"
@@ -5017,196 +4946,165 @@ msgid "Internal logic fault"
 msgstr "Intern logisk feil"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "no error"
-msgstr "Ukjent feil"
+msgstr "ingen feil"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid argument"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "ugyldig argument"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "buffer too small"
-msgstr ""
+msgstr "bufferen er for liten"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "internal error"
-msgstr "Intern feil"
+msgstr "intern feil"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid packet"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "ugyldig pakke"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not implemented"
-msgstr ""
+msgstr "ikke implementert"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "invalid state"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "ugyldig tilstand"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "memory allocation has failed"
-msgstr "Kunne ikke opprette mappe."
+msgstr "minnetildeling mislyktes"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Auto"
-msgstr "Autodukk"
+msgstr "Automatisk"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Maximum"
-msgstr "(Maksimalt 0dB)"
+msgstr "Maksimum"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "VBR Mode"
-msgstr "Vbr-modus:"
+msgstr "VBR-modus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
-msgstr ""
+msgstr "Optimaliser for"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
-msgstr ""
+msgstr "Tale"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Buffer overflow in OGG packet"
+msgstr "Bufferoverstiging i OGG-pakke"
+
+#: modules/import-export/mod-opus/ExportOpus.cpp
+msgid "Unable to write OGG page header"
 msgstr ""
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
-msgid "Unable to write OGG page header"
-msgstr "Kunne ikke skrive til mappe: %s."
-
-#: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to write OGG page"
-msgstr "Kan ikke fastslå"
+msgstr "Klarte ikke å lagre OGG-side"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Opus Files"
-msgstr "%s-filer"
+msgstr "Opus-filer"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unsupported sample rate"
-msgstr "Ikke-støttet filtype:"
+msgstr "Ustøttet samplingsfrekvens"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Exporting selected audio as Opus"
-msgstr "Eksporterer valgt lyd som %s"
+msgstr "Eksporterer den valgte lyd som Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Exporting the audio as Opus"
-msgstr "Eksporterer lyden som %s"
+msgstr "Eksporterer lyden som Opus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to create Opus encoder"
-msgstr "Klarte ikke å sette strømmen på pause."
+msgstr "Kunne ikke opprette Opus-koder"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set bitrate"
-msgstr "Kan ikke fastslå"
+msgstr "Klarte ikke å angi bitfrekvens"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set complexity"
-msgstr "Kan ikke fastslå"
+msgstr "Klarte ikke å angi kompleksitet"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set bandwidth"
-msgstr "Kunne ikke lagre %s"
+msgstr "Klarte ikke å angi båndbredden"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set VBR mode"
-msgstr "Kan ikke fastslå"
+msgstr "Klarer ikke å angi VBR-modus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to set CVBR mode"
-msgstr "Kan ikke fastslå"
+msgstr "Klarer ikke å angi CVBR-modus"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Unable to get lookahead"
-msgstr "Kunne ikke hente inn oppfyllingsbufferen"
+msgstr ""
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Failed to calculate correct preskip"
-msgstr "Kunne ikke sette klasseinfo for “%s”-innstilling"
+msgstr ""
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
-#, fuzzy
 msgid "Failed to encode input buffer"
-msgstr "Kunne ikke kode forhåndsinnstillinger fra “%s”"
+msgstr "Mislyktes i å kode inndatabufferen"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "Opus files"
-msgstr "%s-filer"
+msgstr "Opus-filer"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "File has changed the number of channels in the middle."
+msgstr "Filen har endret antall kanaler i midten."
+
+#: modules/import-export/mod-opus/ImportOpus.cpp
+msgid "IO error reading from file"
+msgstr "IO-feil under lesing fra fil"
+
+#: modules/import-export/mod-opus/ImportOpus.cpp
+msgid "not an Opus file"
+msgstr "ikke en Opus-fil"
+
+#: modules/import-export/mod-opus/ImportOpus.cpp
+msgid "invalid header"
 msgstr ""
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
-msgid "IO error reading from file"
-msgstr "Feil ved skriving til fil"
-
-#: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
-msgid "not an Opus file"
-msgstr "Ikke en Ogg Vorbis fil"
-
-#: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
-msgid "invalid header"
-msgstr "Valgfri toppområdetekst"
-
-#: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "unsupported version"
-msgstr "Alle støttede filer"
+msgstr "ustøttet versjon"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid stream structure"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "ugyldig strømmingsstruktur"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "stream is not seekable"
-msgstr ""
+msgstr "strømmen er ikke søkbar"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy
 msgid "invalid timestamp"
-msgstr "Ugyldig samplingsfrekvens"
+msgstr "ugyldig tidsstempel"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Failed to decode Opus file: %s"
-msgstr "Kunne ikke kode forhåndsinnstillinger fra “%s”"
+msgstr "Mislyktes i å dekode Opus-filen: %s"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 #: modules/import-export/mod-pcm/ImportPCM.cpp
@@ -5219,14 +5117,12 @@ msgid "WAV (Microsoft)"
 msgstr "WAV (Microsoft)"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
-#, fuzzy
 msgid "Encoding"
-msgstr "Omkoding:"
+msgstr "Koding"
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
-#, fuzzy
 msgid "Header"
-msgstr "Filhode:"
+msgstr ""
 
 #: modules/import-export/mod-pcm/ExportPCM.cpp
 msgid "Other uncompressed files"
@@ -5452,59 +5348,50 @@ msgid "Vorbis"
 msgstr "Vorbis"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Low Quality (Fast)"
-msgstr "Lav kvalitet (Raskest)"
+msgstr "Lav kvalitet (Rask)"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Normal Quality"
-msgstr "Kvalitet"
+msgstr "Normal kvalitet"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "High Quality (Slow)"
-msgstr "Høy kvalitet"
+msgstr "Høy kvalitet (Treg)"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Very High Quality (Slowest)"
-msgstr "Beste kvalitet (Tregest)"
+msgstr "Veldig høy kvalitet (Tregest)"
 
 #. i18n-hint bps abbreviates "bits per sample"
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.1f bps"
-msgstr "%.1f sek"
+msgstr "%.1f bps"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Hybrid Mode"
-msgstr "Vbr-modus:"
+msgstr "Hybridmodus"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Create Correction(.wvc) File"
-msgstr ""
+msgstr "Opprett .wvc-fil for korrigeringer"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "WavPack Files"
 msgstr "WavPack-filer"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Unable to create target file for writing"
-msgstr "Klarte ikke åpne målfil for skriving"
+msgstr "Klarte ikke å opprette målfilen for lagring"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Exporting selected audio as WavPack"
-msgstr "Eksporterer valgt lyd som %s"
+msgstr "Eksporterer den valgte lyden som WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
-#, fuzzy
 msgid "Exporting the audio as WavPack"
-msgstr "Eksporterer lyden som %s"
+msgstr "Eksporterer lyden som WavPack"
 
 #: modules/import-export/mod-wavpack/ImportWavPack.cpp
 msgid "WavPack files"
@@ -5857,9 +5744,8 @@ msgstr "Stopp skript"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
-#, fuzzy
 msgid "Waiting for audio.com"
-msgstr "audio.com"
+msgstr "Venter på audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/AuthorizationHandler.cpp
 msgid "An action on audio.com is required before you can continue. You can cancel this operation."
@@ -5869,89 +5755,76 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to audio.com"
-msgstr "audio.com"
+msgstr "Lagre til audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
-#, fuzzy
 msgid "Generating audio preview..."
-msgstr "Klargjør lyd…"
+msgstr "Genererer forhåndsvisning av lyd..."
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Open trace audio.com"
-msgstr "audio.com"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectOpenUtils.cpp
-#, fuzzy
 msgid "Synchronizing project"
-msgstr "Lagrer prosjekt"
+msgstr "Synkroniserer prosjektet"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Previews can be updated only for Cloud projects"
-msgstr ""
+msgstr "Forhåndsvisninger kan bare oppdateres for skylagringsprosjekter"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Save &To Cloud..."
-msgstr "Lagre som..."
+msgstr "&Lagre til skylagring..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "&Update Cloud Audio Preview"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Fro&m Cloud..."
-msgstr "Åpne menyen ..."
+msgstr "Åpne fra s&kylagring..."
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "S&hare Audio..."
-msgstr "Del lyd"
+msgstr "D&el lyd..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Cloud"
-msgstr ""
+msgstr "Sky"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Account"
-msgstr "&Koble sammen konto"
+msgstr "Konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Export behavior"
-msgstr "Eksportfeil"
+msgstr "Eksportatferd"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
-msgstr ""
+msgstr "Vis \"H&vordan vil du eksportere?\"-dialogen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Save behavior"
-msgstr "Oppførsler"
+msgstr "Lagringsatferd"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &ask"
-msgstr ""
+msgstr "Alltid &spør"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always &save to cloud"
-msgstr "&Bølgefarge"
+msgstr "Alltid lagre til &skylagringen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Always save to the co&mputer"
-msgstr "Lagrer innholdet i loggen."
+msgstr "Alltid lagre til data&maskinen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Temporary Cloud files directory"
-msgstr "Mappe for midlertidige filer"
+msgstr "Mappe for midlertidige skylagringsfiler"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -5965,17 +5838,15 @@ msgstr "&Bla gjennom..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "days"
-msgstr ""
+msgstr "dager"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "&Remove temporary files after:"
-msgstr "Mappe for midlertidige filer"
+msgstr "&Fjern midlertidige filer etter:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
-#, fuzzy
 msgid "Preferences for Cloud"
-msgstr "Innstillinger for mus"
+msgstr "Innstillinger for skylagring"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
@@ -5993,22 +5864,21 @@ msgid "Cannot set the preference."
 msgstr "Kan ikke sette innstilling."
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
-#, fuzzy
 msgid "Failed."
-msgstr "Mislyktes"
+msgstr "Mislyktes."
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 #, c-format
 msgid "Syncing to audio.com... (%d%%)"
-msgstr ""
+msgstr "Synkroniserer til audio.com ... (%d%%)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
+msgstr "Prosjektet synkroniseres med audio.com. Vil du stoppe synkroniseringsprosessen?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Waiting for space to free up"
-msgstr ""
+msgstr "Venter på at det skal bli ledig plass"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
@@ -6027,9 +5897,8 @@ msgid "&Share Audio Toolbar"
 msgstr "&Lyddelingslinje"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
-#, fuzzy
 msgid "Account not linked"
-msgstr "Kontoen ble koblet!"
+msgstr "Kontoen er ikke tilknyttet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Link Account"
@@ -6040,93 +5909,85 @@ msgid "&Unlink Account"
 msgstr "&Frakoble konto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Open from audio.com"
-msgstr "audio.com"
+msgstr "Åpne fra audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
-#, fuzzy
 msgid "Don't show this again"
-msgstr "Ikke vis denne advarselen igjen"
+msgstr "Ikke vis dette igjen"
 
 #. i18n-hint: A title that is shown on the first project save that allows the
 #. user to select Cloud or local save.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "How would you like to save?"
-msgstr ""
+msgstr "Hvordan vil du lagre den?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to the Cloud (free)"
-msgstr "Lagre logg i:"
+msgstr "Lagre til skylagringen (gratis)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Save to Cloud"
-msgstr "&Bølgefarge"
+msgstr "&Lagre til skylagring"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr ""
+msgstr "På datamaskinen din"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid ""
 "Files are saved on your device.\n"
 "Note: To export MP3 and WAV files, use File > Export Audio instead."
 msgstr ""
+"Filene lagres på enheten din.\n"
+"Bemerk: Hvis du vil eksportere MP3- og WAV-filer, bruker du 'Fil' → 'Eksporter lyd' i stedet."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Save to &computer"
-msgstr "Lagrer innholdet i loggen."
+msgstr "Lagre til &datamaskinen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Remember my choice and don't show again"
-msgstr ""
+msgstr "&Husk valget mitt og ikke vis igjen"
 
 #. i18n-hint: A title that is shown on export that allows the user to select
 #. Cloud or local export.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "How would you like to export?"
-msgstr ""
+msgstr "Hvordan vil du eksportere det?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Share to audio.com"
-msgstr "Del lyd"
+msgstr "Del til audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
-msgstr ""
+msgstr "Laster opp en ukomprimert lydfil og genererer en delbar lenke. Denne lenken gjør det mulig for andre å laste ned filen i enten .wav- eller .mp3-format."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Share to audio.com"
-msgstr "Del lyd"
+msgstr "&Del til audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
-msgstr ""
+msgstr "Eksporter MP3-filer, WAV-filer, FLAC-filer og andre formater til datamaskinen din."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "Export to &computer"
-msgstr "Eksportfeil"
+msgstr "Eksporter til &datamaskinen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
-#, fuzzy
 msgid "&Don't show again"
-msgstr "Ikke vis denne advarselen igjen"
+msgstr "&Ikke vis igjen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Project Name"
-msgstr "Prosjekt"
+msgstr "Prosjektets navn"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Cloud saving requires a free audio.com account linked to Audacity. Press \"Link account\" above to proceed."
@@ -6134,44 +5995,41 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
-msgstr ""
+msgstr "Privat"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Ikke oppført"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Offentlig"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
-#, fuzzy
 msgid "Save to computer..."
-msgstr "Lagre prosjekt ..."
+msgstr "Lagre på datamaskinen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "We encountered an issue syncing your file"
-msgstr ""
+msgstr "Vi støtte på et problem med å synkronisere filen din"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "You are not signed in"
-msgstr "Du kan ikke tilegne en knapp til denne funksjonen"
+msgstr "Du er ikke pålogget"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
-msgstr ""
+msgstr "Logg inn på audio.com for å fortsette."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
-#, fuzzy
 msgid "Sign in"
-msgstr "Koordiner slutten"
+msgstr "Logg på"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
@@ -6220,7 +6078,7 @@ msgstr "Koble sammen audio.com-konto…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
-msgstr ""
+msgstr "Dette prosjektet er ikke lenger skylagret"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
@@ -6232,63 +6090,57 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
-#, fuzzy
 msgid "Save to computer"
-msgstr "Lagrer innholdet i loggen."
+msgstr "Lagre på datamaskinen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
-#, fuzzy
 msgid "Save to Cloud"
-msgstr "Lagre logg i:"
+msgstr "Lagre til skylagringen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
-msgstr ""
+msgstr "Prosjektlagringsgrensen din er nådd."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
-msgstr ""
+msgstr "Du kan bli nødt til å fjerne eldre prosjekter for å frigjøre plass. For flere alternativer, besøk audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You can also save this project locally to avoid losing changes."
-msgstr ""
+msgstr "Du kan også lagre prosjektet lokalt for å unngå å miste endringer."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Visit audio.com"
-msgstr "audio.com"
+msgstr "Besøk audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project version conflict detected"
-msgstr ""
+msgstr "Konflikt mellom prosjektversjoner ble oppdaget"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Save this project"
-msgstr "Lagrer et prosjekt."
+msgstr "Lagre dette prosjektet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Discard and open latest version"
-msgstr ""
+msgstr "Forkast og åpne den nyeste versjonen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open local project"
-msgstr "Åpner et prosjekt."
+msgstr "Åpne lokalt prosjekt"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Cloud project conflict"
-msgstr "Komprimert prosjektfil"
+msgstr "Konflikt i skyprosjektet"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open."
@@ -6296,92 +6148,78 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr ""
+msgstr "Behold den nåværende åpne versjonen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
-#, fuzzy
 msgid "Open new version"
-msgstr "Samplingsfrekvenskonvertering"
+msgstr "Åpne en ny versjon"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Open from Cloud"
-msgstr ""
+msgstr "Åpne fra skylagringen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "less than 1 minute"
-msgstr "Mindre enn 1 minutt"
+msgstr "mindre enn 1 minutt"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 #, c-format
 msgid "one minutes ago"
 msgid_plural "%d minutes ago"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ett minutt siden"
+msgstr[1] "%d minutter siden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one hour ago"
 msgid_plural "%d hours ago"
-msgstr[0] "Tonevarighet:"
-msgstr[1] "Tonevarighet:"
+msgstr[0] "en time siden"
+msgstr[1] "%d timer siden"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Modified"
-msgstr "Endret kommentar"
+msgstr "Endret"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to authorize account"
-msgstr "Kunne ikke gjenopprette tilkobling"
+msgstr "Mislyktes i å autorisere kontoen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Loading projects list..."
-msgstr "Å lagre &prosjekter"
+msgstr "Laster inn prosjektlisten..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Failed to get projects list"
-msgstr "Kunne ikke importere prosjekt"
+msgstr "Mislyktes i å hente prosjektlisten"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Cloud saved projects"
-msgstr "Komprimert prosjektfil"
+msgstr "Skylagrede prosjekter"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Search:"
-msgstr "Sø&k:"
+msgstr "Søk:"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "Prev"
-msgstr "Forhånds&visning"
+msgstr "Forrige"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy
 msgid "View in audio.com"
-msgstr "audio.com"
+msgstr "Vis i audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Page %d of %d"
-msgstr "%s %d av %d"
+msgstr "Side %d av %d"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Anyone will be able to listen to this audio."
-msgstr ""
-"Du vil ikke kunne spille av eller inn lyd.\n"
-"\n"
+msgstr "Hvem som helst vil kunne lytte til denne lyden."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
-#, fuzzy
 msgid "Only you and people you share a link with will be able to listen to this audio."
-msgstr "Bare folk du deler denne lenken med får tilgang til lyden din"
+msgstr "Kun du og de du deler en lenke med, vil kunne lytte til denne lyden."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Are you sure you want to cancel?"
@@ -6436,15 +6274,15 @@ msgstr "Klargjør lyd…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You are not authorized to access this project."
-msgstr ""
+msgstr "Du har ikke tilgang til dette prosjektet."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You tried to access a project that has expired."
-msgstr ""
+msgstr "Du forsøkte å få tilgang til et prosjekt som har utløpt."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity had trouble connecting to the server."
-msgstr ""
+msgstr "Audacity hadde problemer med å koble til serveren."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
@@ -6452,12 +6290,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "You don't have access to this project."
-msgstr ""
+msgstr "Du har ikke tilgang til dette prosjektet."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "The project could not be found."
-msgstr "Målprosjektet kunne ikke frakobles"
+msgstr "Prosjektet ble ikke funnet."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The server responded with something Audacity could not understand."
@@ -6465,33 +6302,32 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity encountered an internal error."
-msgstr ""
+msgstr "Audacity støtte på en intern feil."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audio.com encountered an internal error."
-msgstr ""
+msgstr "Audio.com støtet på en intern feil."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Audacity encountered an unknown error."
-msgstr "Audacity-konfigureringsfeil"
+msgstr "Audacity støtte på en ukjent feil."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy
 msgid "Sync failed"
-msgstr " Synkroniseringslåst"
+msgstr "Synkronisering mislyktes"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Error details:\n"
 "%s"
-msgstr "Feildetaljer"
+msgstr ""
+"Detaljer om feilen:\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
-#, fuzzy
 msgid "Syncing your project"
-msgstr "Sikkerhetskopierer prosjekt"
+msgstr "Synkroniserer prosjektet ditt"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
@@ -6499,14 +6335,12 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Continue"
-msgstr "F&ortsett"
+msgstr "Fortsett"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
-#, fuzzy
 msgid "Success!"
-msgstr "Vellykket"
+msgstr "Suksess!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
@@ -6514,35 +6348,31 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
-msgstr ""
+msgstr "Ferdig"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Cloud project incomplete"
-msgstr "Klarte ikke å finne komponenten"
+msgstr "Skylagringsprosjektet er ikke fullført"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
-#, fuzzy
 msgid "Load latest"
-msgstr "Åpne filer"
+msgstr "Last inn nyligste"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UploadCanceledDialog.cpp
-#, fuzzy
 msgid "You have canceled this upload to audio.com"
-msgstr "Stans opplasting til Audio.com"
+msgstr "Du har avbrutt denne opplastingen til audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
-#, fuzzy
 msgid "Retry"
-msgstr "&Prøv igjen"
+msgstr "Prøv igjen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
@@ -6650,9 +6480,9 @@ msgstr "%s, medskaper og utvikler"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, designer"
-msgstr "%s, tester"
+msgstr "%s, designer"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
@@ -6734,9 +6564,9 @@ msgstr "%s, grafikk"
 
 #. i18n-hint: For "About Audacity..." credits, substituting a person's proper name
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, effects presets"
-msgstr "Velg forhåndsinnstilling"
+msgstr "%s, effektforhåndsinnstillinger"
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -6823,9 +6653,9 @@ msgstr "%s nettsted: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2024 %s Team."
-msgstr "%s programvare er copyright %s 1999-2021 %s Team."
+msgstr "%s-programvaren har opphavsrett %s 1999-2024 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -6871,9 +6701,9 @@ msgid "%s, 64 bits"
 msgstr "%s, 64 bit"
 
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s, 32 bits"
-msgstr "%s, 64 bit"
+msgstr "%s, 32-bit"
 
 #: src/AboutDialog.cpp
 msgid "Build type:"
@@ -6889,23 +6719,20 @@ msgid "Installation Prefix:"
 msgstr "Installeringsprefiks:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Cache folder:"
-msgstr "Innstillingsmappe:"
+msgstr "Mellomlagringsmappe:"
 
 #: src/AboutDialog.cpp
 msgid "Settings folder:"
 msgstr "Innstillingsmappe:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Data folder:"
-msgstr "Innstillingsmappe:"
+msgstr "Datamappe:"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "State folder:"
-msgstr "Innstillingsmappe:"
+msgstr "Tilstandsmappe:"
 
 #. i18n-hint: Libraries that are essential to audacity
 #: src/AboutDialog.cpp
@@ -6929,16 +6756,14 @@ msgid "File Format Support"
 msgstr "Filformatstøtte"
 
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "MP3 Import"
 msgstr "MP3-importering"
 
 #. i18n-hint: LAME is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "MP3 Export"
-msgstr "MP2-eksportering"
+msgstr "MP3-eksportering"
 
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
@@ -6946,9 +6771,8 @@ msgstr "MP2-eksportering"
 #. i18n-hint: Opus is the codec name. This name should not be translated
 #.
 #: src/AboutDialog.cpp
-#, fuzzy
 msgid "Opus Import and Export"
-msgstr "Ogg Vorbis-importering og -eksportering"
+msgstr "Opus-importering og -eksportering"
 
 #. i18n-hint: Ogg is the container format. Vorbis is the compression codec.
 #. * Both are proper nouns and shouldn't be translated
@@ -7035,9 +6859,8 @@ msgstr "Klikk og dra for å justere, dobbeltklikk for å tilbakestille"
 #. i18n-hint: This text is a tooltip on the icon (of a pin) representing
 #. the temporal position in the audio.
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Record/Playhead"
-msgstr "Ta opp / Spill av toppområde"
+msgstr "Spill inn / Avspillingspunkt"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Timeline"
@@ -7109,25 +6932,22 @@ msgstr "Tidslinjevalg"
 
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "Minutes and Seconds"
-msgstr "femtedeler av sekunder"
+msgstr "Minutter og sekunder"
 
 #: src/AdornedRulerPanel.cpp src/TimeDisplayMode.cpp
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "Beats and Measures"
-msgstr "Slagoppdager"
+msgstr "Beats og målinger"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Setting a loop region also makes an audio selection"
-msgstr ""
+msgstr "Å velge et gjentakelsesområde, lager også en lydvelging"
 
 #. i18n-hint Clear is a verb
 #: src/AdornedRulerPanel.cpp
-#, fuzzy
 msgid "Clear Loop"
-msgstr "T&øm loop"
+msgstr "Tøm gjentaking"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Set Loop To Selection"
@@ -7135,11 +6955,11 @@ msgstr "Sett loop til valg"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Scroll view to playhead"
-msgstr ""
+msgstr "Skroll visningen til avspillingspunktet"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Continuous scrolling"
-msgstr ""
+msgstr "Kontinuerlig rulling"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -7279,17 +7099,12 @@ msgid "Audacity Startup Failure"
 msgstr "Audacity oppstartsfeil"
 
 #: src/AudacityApp.cpp
-#, fuzzy
 msgid ""
 "Unable to acquire semaphores.\n"
 "\n"
 "This is likely due to a resource shortage\n"
 "and a reboot may be required."
 msgstr ""
-"Kunne ikke skaffe låse-semaforer.\n"
-"\n"
-"Dette skyldes trolig ressursmangel\n"
-"og en omstart kan være nødvendig."
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -7380,7 +7195,7 @@ msgstr "lyd- eller prosjekt-filnavn"
 #. i18n-hint: This option is used to handle custom URLs in Audacity
 #: src/AudacityApp.cpp
 msgid "Handle 'audacity://' url"
-msgstr ""
+msgstr "Håndter 'audacity://'-URL-er"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -7403,7 +7218,7 @@ msgid "Audacity Configuration Error"
 msgstr "Audacity-konfigureringsfeil"
 
 #: src/AudacityFileConfig.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "The following configuration file could not be accessed:\n"
 "\n"
@@ -7415,15 +7230,6 @@ msgid ""
 "\n"
 "If you choose to \"Quit Audacity\", your project may be left in an unsaved state which will be recovered the next time you open it."
 msgstr ""
-"Følgende konfigurasjonsfil kunne ikke leses:\n"
-"\n"
-"\t%s\n"
-"\n"
-"Dette kan ha mange årsaker, men den mest sannsynlige er at disken er full eller at du ikke har skriverettigheter til filen. Du kan få mer informasjon ved å trykke på Hjelp-knappen nedenfor.\n"
-"\n"
-"Du kan prøve å fikse årsaken og trykke “Prøv igjen” for å fortsette.\n"
-"\n"
-"Hvis du velger “Avslutt Audacity”, kan prosjektet havne i en ulagret tilstand som vil gjenopprettes neste gang du åpner det."
 
 #: src/AudacityFileConfig.cpp src/AutoRecoveryDialog.cpp
 msgid "&Quit Audacity"
@@ -7435,12 +7241,11 @@ msgstr "&Prøv igjen"
 
 #: src/AudacityMirProject.cpp
 msgid "Configure Project from Music File"
-msgstr ""
+msgstr "Sett opp prosjekt fra musikkfil"
 
 #: src/AudacityMirProject.cpp
-#, fuzzy
 msgid "Automatic Music Configuration"
-msgstr "Audacity-konfigureringsfeil"
+msgstr "Automatisk musikkoppsett"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7448,6 +7253,8 @@ msgid ""
 "Audacity detected this file to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
+"Audacity oppdaget at denne filen er %s bpm.\n"
+"Vil du skru på musikkvisning og sette prosjekttempoet til %s?"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -7455,11 +7262,12 @@ msgid ""
 "Audacity detected one or more files to be %s bpm.\n"
 "Would you like to enable music view and set the project tempo to %s?"
 msgstr ""
+"Audacity oppdaget at en eller flere filer er %s bpm.\n"
+"Vil du skru på musikkvisning og sette prosjekttempoet til %s?"
 
 #: src/AudacityMirProject.cpp
-#, fuzzy
 msgid "Music Import"
-msgstr "MP3-importering"
+msgstr "Musikkimportering"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -7473,15 +7281,16 @@ msgid ""
 "Selected audio only.\n"
 "Only the selected portion of the source clip will be pasted."
 msgstr ""
+"Kun den valgte lyden.\n"
+"Kun den valgte delen av kildeklippet vil bli limt inn."
 
 #: src/AudioPasteDialog.cpp
-#, fuzzy
 msgid "Paste audio"
-msgstr "Del lyd"
+msgstr "Lim inn lyd"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr ""
+msgstr "Hvordan vil du lime inn lyden din?"
 
 #. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
@@ -7491,7 +7300,7 @@ msgstr ""
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Husk valget mitt og ikke spør igjen"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -8366,9 +8175,8 @@ msgid "&Replot..."
 msgstr "&Tegn igjen..."
 
 #: src/FreqWindow.cpp
-#, fuzzy
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr "For å tegne spektrumet må alle markerte spor være samme datafrekvens."
+msgstr ""
 
 #: src/FreqWindow.cpp
 msgid ""
@@ -8499,24 +8307,20 @@ msgstr "Komprimering frigjorde %s med diskplass."
 #. i18n-hint: Clicking this menu item shows the various editing steps
 #. that have been taken.
 #: src/HistoryWindow.cpp
-#, fuzzy
 msgid "&History"
-msgstr "Historie"
+msgstr "&Historikk"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "New Plugins"
-msgstr "Behandle tillegg"
+msgstr "Nye tillegg"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "Incompatible plugin(s) found"
-msgstr "Ingen kompatible FFmpeg-biblioteker ble funnet"
+msgstr "Inkompatible tillegg ble funnet"
 
 #: src/IncompatiblePluginsDialog.cpp
-#, fuzzy
 msgid "&Manage Plugins"
-msgstr "Behandle tillegg"
+msgstr "&Behandle tillegg"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -8610,14 +8414,12 @@ msgid "Label Track"
 msgstr "Kommentarspor"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "SubRip text file"
-msgstr "Tekstfil"
+msgstr "SubRip-tekstfil"
 
 #: src/LabelTrack.cpp
-#, fuzzy
 msgid "WebVTT file"
-msgstr "HTML-fil"
+msgstr "WebVTT-fil"
 
 #: src/LabelTrack.cpp src/commands/GetInfoCommand.cpp
 #: src/commands/GetTrackInfoCommand.cpp src/export/ExportAudioDialog.cpp
@@ -8638,7 +8440,7 @@ msgstr "Eksportert merkelappstil:"
 
 #: src/LabelTrack.cpp
 msgid "Importing WebVTT files is not currently supported."
-msgstr ""
+msgstr "Å importere WebVTT-filer støttes ikke for øyeblikket."
 
 #: src/LabelTrack.cpp
 msgid "One or more saved labels could not be read."
@@ -8755,9 +8557,8 @@ msgid "Moved pan slider"
 msgstr "Flyttet glidebryter for panorering"
 
 #: src/MixerBoard.cpp
-#, fuzzy
 msgid "&Mixer"
-msgstr "Mikser"
+msgstr "&Mikser"
 
 #. i18n-hint: Name of a musical note in the 12-tone chromatic scale
 #: src/PitchName.cpp
@@ -8879,14 +8680,12 @@ msgstr ""
 "%s"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Disable"
-msgstr "Av"
+msgstr "Skru av"
 
 #: src/PluginDataViewCtrl.cpp
-#, fuzzy
 msgid "Enable"
-msgstr "På"
+msgstr "Skru på"
 
 #: src/PluginDataViewCtrl.cpp plug-ins/limiter.ny
 msgid "Type"
@@ -8905,57 +8704,48 @@ msgid "Generator"
 msgstr "Generator"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Analyzer"
-msgstr "Analyser"
+msgstr "Analysator"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Tool"
 msgstr "Verktøy"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Manage Plugins"
-msgstr "Behandle tillegg"
+msgstr "Behandle programtillegg"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Native Audacity"
-msgstr "Oppdater Audacity"
+msgstr "Innebygd Audacity"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Show:"
-msgstr "Vis:"
+msgstr "&Vis:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Type:"
-msgstr "Type:"
+msgstr "&Type:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "C&ategory:"
-msgstr "Kategori"
+msgstr "K&ategori:"
 
 #: src/PluginRegistrationDialog.cpp src/prefs/KeyConfigPrefs.cpp
 msgid "Searc&h:"
 msgstr "Sø&k:"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "Plugin"
-msgstr "Plug-in"
+msgstr "Tillegg"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Rescan"
-msgstr "Skann på nytt"
+msgstr "&Skann på nytt"
 
 #: src/PluginRegistrationDialog.cpp
-#, fuzzy
 msgid "&Get more effects..."
-msgstr "Sanntidseffekter"
+msgstr "&Få flere effekter..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
@@ -9208,6 +8998,11 @@ msgid ""
 "As a result, some realtime effects may be missing.\n"
 "Please verify that everything works as intended before saving."
 msgstr ""
+"%s\n"
+"Denne funksjonen støttes ikke i Audacity versjon 3.3.3 eller nyere.\n"
+"Disse stereosporene har blitt delt inn i monospor.\n"
+"Som et resultat av dette kan noen sanntidseffekter mangle.\n"
+"Sjekk at alt fungerer som det skal før du lagrer."
 
 #: src/ProjectFileManager.cpp
 msgid ""
@@ -9384,22 +9179,22 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "A channel of a stereo track was missing."
-msgstr ""
+msgstr "En kanal i et stereospor manglet."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample rates per channel."
-msgstr ""
+msgstr "Prosjektet inneholdt stereospor med forskjellige samplingsfrekvenser per kanal."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with different sample formats in channels."
-msgstr ""
+msgstr "Prosjektet inneholdt stereospor med forskjellige samplingsformater i kanalene."
 
 #. i18n-hint: explains why opened project was auto-modified
 #: src/ProjectFileManager.cpp
 msgid "This project contained stereo tracks with non-aligned content."
-msgstr ""
+msgstr "Dette prosjektet inneholdt stereospor hvis innhold ikke var justert med hverandre."
 
 #: src/ProjectFileManager.cpp
 msgid "Project was recovered"
@@ -9435,13 +9230,12 @@ msgid "Importing %s"
 msgstr "Importerer %s"
 
 #: src/ProjectFileManager.cpp
-#, fuzzy
 msgid "Music Information Retrieval"
-msgstr "Kompileringsinformasjon"
+msgstr "Innhenting av musikkinformasjon"
 
 #: src/ProjectFileManager.cpp
 msgid "Analyzing imported audio"
-msgstr ""
+msgstr "Analyserer den importert lyden"
 
 #: src/ProjectFileManager.cpp
 msgid "Failed to import project"
@@ -9544,136 +9338,130 @@ msgid "Vertical Scrollbar"
 msgstr "Vertikal skrollelinje"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "No Effect"
-msgstr "Effekt"
+msgstr "Ingen effekt"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get more effects..."
-msgstr "Sanntidseffekter"
+msgstr "Få flere effekter..."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
 msgstr "Analyser"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s (missing)"
-msgstr "Manglende"
+msgstr "%s (mangler)"
 
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Effect %d"
-msgstr "Effekt"
+msgstr "Effekt %d"
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
-msgstr ""
+msgstr "Strøm"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Replace effect"
-msgstr "Sanntidseffekter"
+msgstr "Erstatt effekt"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
 #.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Removed %s from %s"
-msgstr "Importerte kommentarer fra «%s»"
+msgstr "Fjernet %s fra %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Remove %s"
-msgstr "Fjern"
+msgstr "Fjern %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
 #.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Replaced %s with %s"
-msgstr "Overskriv forhåndsinnstillingen '%s'?"
+msgstr "Erstattet %s med %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Replace %s"
-msgstr "Overskriv forhåndsinnstillingen '%s'?"
+msgstr "Erstatt %s"
 
 #: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Unknown"
-msgstr "Ukjent feil"
+msgstr "Ukjent"
 
 #. i18n-hint: master channel display name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master"
-msgstr "Lim inn"
+msgstr "Mester"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Add effect"
-msgstr "Legg til sanntidseffekter"
+msgstr "Legg til effekt"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
 #.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %s up in %s"
-msgstr "Flyttet «%s» opp"
+msgstr "Flyttet %s opp i %s"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
 #.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %s down in %s"
-msgstr "Flyttet «%s» ned"
+msgstr "Flyttet %s ned i %s"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Change effect order"
-msgstr "Endre hastighet"
+msgstr "Endre effektrekkefølge"
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid ""
 "This plugin could not be loaded.\n"
 "It may have been deleted."
 msgstr ""
+"Dette tillegget kunne ikke lastes inn.\n"
+"Den kan ha blitt slettet."
 
 #  i18n-hint: You do not need to translate "LOF"
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
-#, fuzzy
 msgid "Plugin Error"
-msgstr "Verdifeil"
+msgstr "Tilleggsfeil"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #. second parameter - track name
 #.
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Added %s to %s"
-msgstr "Endret «%s» til %s"
+msgstr "La til %s i %s"
 
 #. i18n-hint: undo history record
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Legg til %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects"
@@ -9681,32 +9469,29 @@ msgstr "Sanntidseffekter"
 
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Realtime effects for %s"
-msgstr "Sanntidseffekter"
+msgstr "Sanntidseffekter for %s"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Realtime Effects"
 msgstr "Sanntidseffekter"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr ""
+msgstr "Se video"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
-msgstr ""
+msgstr "Sanntidseffekter er ikke-destruktive og kan endres når som helst."
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Master Effects"
-msgstr "Sanntidseffekter"
+msgstr "Master-effekter"
 
 #: src/RealtimeEffectPanel.cpp
-#, fuzzy
 msgid "Applies to all tracks"
-msgstr "Kløyv til nytt spor"
+msgstr "Gjelder for alle spor"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -9874,9 +9659,8 @@ msgid "Metadata Tags"
 msgstr "Metadatamerker"
 
 #: src/TagsEditor.cpp
-#, fuzzy
 msgid "&Metadata Editor"
-msgstr "&Metadata"
+msgstr "&Metadata-redigerer"
 
 #. i18n-hint: This string is used to configure the controls which shows the recording
 #. * duration. As such it is important that only the alphabetic parts of the string
@@ -10238,14 +10022,12 @@ msgid "Export Audio"
 msgstr "Eksporter lyd"
 
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Edit &Metadata..."
-msgstr "Rediger metadata-tagger"
+msgstr "Rediger &metadata..."
 
 #: src/TimerRecordExportDialog.cpp
-#, fuzzy
 msgid "O&K"
-msgstr "OK"
+msgstr "O&K"
 
 # Visstnok brukt to ganger, men som substantiv begge gangene?
 #: src/TimerRecordExportDialog.cpp src/export/ExportAudioDialog.cpp
@@ -10326,9 +10108,9 @@ msgid "Remove Track"
 msgstr "Fjern spor"
 
 #: src/TrackUtilities.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Removed track '%s'."
-msgstr "Fjernet spor «%s.»"
+msgstr "Fjernet '%s'-sporet."
 
 #: src/TrackUtilities.cpp
 msgid "Track Remove"
@@ -10378,18 +10160,16 @@ msgstr "Flytt spor ned"
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Playing"
-msgstr "Spi&ll av"
+msgstr "Spiller av"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
 #. progressive verb form
 #: src/TransportUtilities.cpp src/prefs/MidiIOPrefs.cpp
 #: src/toolbars/ControlToolBar.cpp
-#, fuzzy
 msgid "Recording"
-msgstr "Opptak"
+msgstr "Tar opp"
 
 #. i18n-hint: Voice key is an experimental/incomplete feature that
 #. is used to navigate in vocal recordings, to move forwards and
@@ -10432,16 +10212,16 @@ msgstr "Hva er nytt i Audacity %s"
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!</p>"
-msgstr ""
+msgstr "Se [[%s|lanseringsvideoen]] eller les [[https://support.audacityteam.org/additional-resources/changelog|endringsloggen]] for å lære mer!</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
-msgstr ""
+msgstr "Få gratis tillegg og lyder"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
 msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-msgstr ""
+msgstr "<p>Ta en titt på [[%s|Muse Hub-appen]] for et bredt utvalg av lydtillegg for Audacity-brukere</p>"
 
 #: src/WhatsNewDialog.cpp
 msgid "Welcome to Audacity!"
@@ -10449,12 +10229,11 @@ msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "Se veiledninger"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "Visit our forum"
-msgstr "audio.com"
+msgstr "Besøk forumet vårt"
 
 #: src/WhatsNewDialog.cpp src/update/UpdatePopupDialog.cpp
 msgid "Don't show this again at start up"
@@ -11088,9 +10867,8 @@ msgstr "Bestem sporets visualiteter"
 #. i18n-hint: abbreviates amplitude
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (amp)"
-msgstr "Lineær inn"
+msgstr "Lineær (amp)"
 
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
@@ -11101,9 +10879,8 @@ msgstr "Logaritmisk (dB)"
 #. i18n-hint: abbreviates decibels
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/TracksPrefs.cpp
 #: src/prefs/WaveformSettings.cpp
-#, fuzzy
 msgid "Linear (dB)"
-msgstr "Lineær"
+msgstr "Lineær (dB)"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Reset"
@@ -11147,10 +10924,9 @@ msgstr "Spekterutvalg"
 
 #. i18n-hint Scheme refers to a color scheme for spectrogram colors
 #: src/commands/SetTrackInfoCommand.cpp src/prefs/SpectrumPrefs.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Sche&me:"
-msgstr "Skje&ma"
+msgstr "Te&ma:"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track"
@@ -11439,9 +11215,8 @@ msgid "78"
 msgstr "78"
 
 #: src/effects/ChangeSpeed.cpp resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Change Speed and Pitch"
-msgstr "Endre hastighet"
+msgstr "Endre hastighet og tonehøyde"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Changes the speed of a track, also changing its pitch"
@@ -11609,7 +11384,7 @@ msgstr "Komprimering"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr ""
+msgstr "Reduserer \"dynamisk område\", eller forskjeller mellom høylytte og stille partier."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
@@ -12185,60 +11960,50 @@ msgstr "%0.f ms"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "I&nput"
-msgstr ""
+msgstr "I&nndata"
 
 #. i18n-hint: show input on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show input"
-msgstr "Vis utdata"
+msgstr "Vis inndata"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "O&utput"
-msgstr "Utdata"
+msgstr "U&tdata"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "A&ctual compression"
-msgstr "Komprimering"
+msgstr "Fa&ktisk komprimering"
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show actual compression"
-msgstr "Volum og komprimering"
+msgstr "Vis faktisk komprimering"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Tar&get compression"
-msgstr "Komprimering"
+msgstr "Tilsiktet komprimerin&g"
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Show target compression"
-msgstr "Volum og komprimering"
+msgstr "Vis tilsiktet komprimering"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Compression curve"
-msgstr "Komprimering"
+msgstr "Kompresjonskurve"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
-#, fuzzy
 msgid "Smoothing"
-msgstr "Ikke gjør noe"
+msgstr "Utjevning"
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Threshold (dB)"
-msgstr "Terskelnivå (dB)"
+msgstr "&Terskelverdi (dB)"
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Make-up gain (dB)"
-msgstr "Oppveiingsforsterkning"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Make-up target (dB)"
@@ -12249,41 +12014,36 @@ msgid "Knee &width (dB)"
 msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "Rati&o:"
-msgstr "&Ratio:"
+msgstr "F&orhold:"
 
 #: src/effects/DynamicRangeProcessorEditor.h
 msgid "&Lookahead (ms)"
 msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "Attac&k (ms)"
-msgstr "Attack (ms)"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.h
-#, fuzzy
 msgid "&Release (ms)"
-msgstr "Slipptid"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Input"
-msgstr ""
+msgstr "Inndata"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Actual Compression"
-msgstr "Komprimering"
+msgstr "Faktisk komprimering"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
-#, fuzzy
 msgid "Target Compression"
-msgstr "Komprimering"
+msgstr "Tilsiktet komprimering"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
-msgstr ""
+msgstr "venter på avspilling"
 
 #: src/effects/Echo.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -12876,10 +12636,10 @@ msgstr "Klipping"
 #. "second", etc.)
 #.
 #: src/effects/FindClipping.cpp
-#, fuzzy, c-format
+#, c-format
 msgctxt "find clipping"
 msgid "%lld of %lld"
-msgstr "%s %d av %d"
+msgstr "%lld av %lld"
 
 #: src/effects/FindClipping.cpp
 msgid "&Start threshold (samples):"
@@ -12908,7 +12668,7 @@ msgstr "Begrenser"
 
 #: src/effects/Limiter.cpp
 msgid "Augments loudness while minimizing distortion."
-msgstr ""
+msgstr "Øker lydstyrken samtidig som forvrengningen minimeres."
 
 #: src/effects/Loudness.cpp
 msgid "perceived loudness"
@@ -13426,7 +13186,7 @@ msgstr "Velger toppbredden for én eller flere spor"
 
 #: src/effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
+msgstr "Reparasjonseffekten kan ikke brukes innenfor strukkede eller krympede klipp"
 
 #: src/effects/Repair.cpp
 msgid ""
@@ -13489,24 +13249,22 @@ msgstr "Advarsel: Ingen loop."
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "Akustisk"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Ambience"
-msgstr "Stillhet"
+msgstr "Frisk"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Artificial"
-msgstr ""
+msgstr "Kunstig"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Clean"
-msgstr "T&øm"
+msgstr "Ren"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13520,20 +13278,18 @@ msgstr "Vokal II"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Dance Vocal"
-msgstr "Isoler vokal"
+msgstr "Danseklubbvokal"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
-#, fuzzy
 msgid "Modern Vocal"
-msgstr "Fjern vokal"
+msgstr "Moderne vokal"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Voice Tail"
-msgstr ""
+msgstr "Voice Tail"
 
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
@@ -13573,7 +13329,7 @@ msgstr "Katedral"
 #. i18n-hint: This is the name of an effect preset
 #: src/effects/Reverb.cpp
 msgid "Big Cave"
-msgstr ""
+msgstr "Big Cave"
 
 #: src/effects/Reverb.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverb"
@@ -14138,9 +13894,8 @@ msgstr ""
 "%s"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
-#, fuzzy
 msgid "Export Audio Unit Presets"
-msgstr "Importer lydenhetsinnstillinger"
+msgstr "Eksporter lydenhetsinnstillinger"
 
 #: src/effects/audiounits/AudioUnitEffect.cpp
 #, c-format
@@ -14487,18 +14242,16 @@ msgid "Vamp"
 msgstr "Vamp"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Entire &Project"
-msgstr "&Prosjekt"
+msgstr "Hele &prosjektet"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "M&ultiple Files"
-msgstr ""
+msgstr "F&lere filer"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Curren&t Selection"
-msgstr "Nåværende markeringsvarighet: %s"
+msgstr "Nåværende &valg"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Using Label/Track Name"
@@ -14514,29 +14267,24 @@ msgstr "Nummerering etter filnavn"
 
 # Visstnok brukt to ganger, men som substantiv begge gangene?
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export Range:"
-msgstr "Eksporter merker"
+msgstr "Eksporteringslengde:"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export entire project"
-msgstr "Eksporter prosjekt som:"
+msgstr "Eksporter hele prosjektet"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export multiple files"
 msgstr "Eksporter flere filer"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Export current selection"
-msgstr "Eksporter forhåndsinnstillinger"
+msgstr "Eksporter det nåværende valget"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Trim blank space before first clip"
-msgstr "Stillhet før første slag"
+msgstr "Trim vekk tomrom før første klipping"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Split files based on:"
@@ -14564,9 +14312,8 @@ msgid "&Export"
 msgstr "&Eksporter"
 
 #: src/export/ExportAudioDialog.cpp
-#, fuzzy
 msgid "Unable to create destination folder"
-msgstr "Kunne ikke koble til måldatabase"
+msgstr "Klarte ikke å opprette målmappen"
 
 #: src/export/ExportAudioDialog.cpp
 #, c-format
@@ -14607,9 +14354,8 @@ msgid "Continue to export remaining files?"
 msgstr "Fortsett å eksportere resten av filene?"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Custom Sample Rate"
-msgstr "Tekst for tilpasset navn"
+msgstr "Selvvalgt samplingsfrekvens"
 
 #: src/export/ExportFilePanel.cpp src/menus/TrackMenus.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -14617,59 +14363,50 @@ msgid "New sample rate (Hz):"
 msgstr "Ny samplingsfrekvens (Hz):"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "File &Name:"
-msgstr "Filnavn:"
+msgstr "Fil&navn:"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Fo&lder:"
-msgstr "Mappe:"
+msgstr "Ma&ppe:"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "&Format:"
-msgstr "Format:"
+msgstr "&Format:"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Audio options"
-msgstr "Lydposisjon"
+msgstr "Lydinnstillinger"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Channels"
-msgstr "Kanaler:"
+msgstr "Kanaler"
 
 #: src/export/ExportFilePanel.cpp
 msgid "M&ono"
-msgstr ""
+msgstr "M&ono"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "&Stereo"
-msgstr "Stereo"
+msgstr "&Stereo"
 
 #. i18n-hint refers to custom channel mapping configuration
 #: src/export/ExportFilePanel.cpp
 msgid "Custom mappin&g"
-msgstr ""
+msgstr "Tilpasset mappin&g"
 
 #. i18n-hint accessibility hint, refers to export channel configuration
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Configure custom mapping"
-msgstr "Konfigurer selvlagde FFmpeg-alternativer"
+msgstr "Sett opp tilpasset mapping"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Configure"
-msgstr "Bekreft"
+msgstr "Sett opp"
 
 #: src/export/ExportFilePanel.cpp
-#, fuzzy
 msgid "Sample &Rate"
-msgstr "Datarater"
+msgstr "Samplingsf&rekvens"
 
 #: src/export/ExportFilePanel.cpp
 msgid "Choose a location to save the exported files"
@@ -14682,7 +14419,7 @@ msgstr "Avanserte mikservalg"
 #: src/export/ExportFilePanel.cpp
 #, c-format
 msgid "%d Hz (custom)"
-msgstr ""
+msgstr "%d Hz (selvvalgt)"
 
 #: src/export/ExportFilePanel.cpp src/prefs/DevicePrefs.cpp
 msgid "Other..."
@@ -14873,19 +14610,16 @@ msgstr[0] "%s, %d av %d klipp %s"
 msgstr[1] "%s, %d av %d klipp %s"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Moved clips to the right"
-msgstr "Flyttet klipp til et annet spor"
+msgstr "Flyttet klipp til høyre"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Moved clips to the left"
-msgstr "Flyttet klipp til et annet spor"
+msgstr "Flyttet klipp til venstre"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Move audio clips"
-msgstr "Lydklipp"
+msgstr "Flytt lydklipp"
 
 #: src/menus/ClipMenus.cpp
 msgid "clip not moved"
@@ -14969,21 +14703,20 @@ msgid "Deleted %.2f seconds at t=%.2f"
 msgstr "Slettet %.2f sekunder ved t=%.2f"
 
 #: src/menus/EditMenus.cpp
-#, fuzzy
 msgid "Paste clip"
-msgstr "Lim inn fra utklippstavlen"
+msgstr "Lim inn klipp"
 
 #: src/menus/EditMenus.cpp
 msgid "Pasting clip contents, please wait"
-msgstr ""
+msgstr "Limer inn klippets innhold, vennligst vent"
 
 #: src/menus/EditMenus.cpp
 msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
-msgstr ""
+msgstr "Innholdet du prøver å lime inn, vil spenne over flere spor enn du har tilgjengelig for øyeblikket. Legg til flere spor og prøv på nytt."
 
 #: src/menus/EditMenus.cpp
 msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
-msgstr ""
+msgstr "Det er ikke nok valgte spor til å få plass til det kopierte innholdet. Velg flere spor og prøv på nytt."
 
 #: src/menus/EditMenus.cpp
 msgid "Duplicated"
@@ -15149,9 +14882,8 @@ msgid "Ext&ra"
 msgstr "Ekst&ra"
 
 #: src/menus/ExtraMenus.cpp
-#, fuzzy
 msgid "Enable &Full Screen"
-msgstr "Hele skjermen"
+msgstr "Skru på &fullskjerm"
 
 #: src/menus/FileMenus.cpp
 msgid "Cannot proceed to export."
@@ -15217,9 +14949,8 @@ msgid "&Export Audio..."
 msgstr "&Eksporter lyd..."
 
 #: src/menus/FileMenus.cpp
-#, fuzzy
 msgid "Expo&rt Other"
-msgstr "Eksportfeil"
+msgstr "Ekspo&rter annet"
 
 #: src/menus/FileMenus.cpp
 msgid "Export &Labels..."
@@ -15453,9 +15184,8 @@ msgid "&Labels"
 msgstr "&Merker"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "Label &Editor"
-msgstr "&Rediger kommentar"
+msgstr "Etikettr&edigerer"
 
 #: src/menus/LabelMenus.cpp
 msgid "Add Label at &Selection"
@@ -15470,9 +15200,8 @@ msgid "Paste Te&xt to New Label"
 msgstr "Lim inn tekst til ny komment&ar"
 
 #: src/menus/LabelMenus.cpp
-#, fuzzy
 msgid "&Typing Creates New Labels"
-msgstr "&Skriv inn for å lage en merking"
+msgstr "&Tekstskriving lager nye etiketter"
 
 #: src/menus/LabelMenus.cpp
 msgid "La&beled Audio"
@@ -15615,9 +15344,8 @@ msgid "No journal will be recorded after Audacity restarts."
 msgstr "Journalen blir ikke lagret når Audacity startes på nytt."
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Plugin Manager"
-msgstr "Innstillinger for tillegg"
+msgstr "Tilleggshåndterer"
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Generator"
@@ -15632,9 +15360,8 @@ msgid "Add Realtime Effects"
 msgstr "Legg til sanntidseffekter"
 
 #: src/menus/PluginMenus.cpp
-#, fuzzy
 msgid "Get AI effects..."
-msgstr "Sanntidseffekter"
+msgstr "Få AI-effekter..."
 
 #: src/menus/PluginMenus.cpp
 msgid "Repeat Last Effect"
@@ -15946,9 +15673,8 @@ msgid "Long Seek Rig&ht During Playback"
 msgstr "Langt søk mot hø&yre under avspilling"
 
 #: src/menus/TimelineMenus.cpp
-#, fuzzy
 msgid "Tim&eline"
-msgstr "Tidslinje"
+msgstr "Tidslinj&e"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16274,9 +16000,8 @@ msgid "Align &Together"
 msgstr "Koordiner s&por sammen"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "&Move Selection with Tracks"
-msgstr "&Flytt utvalget med sporene (på/av)"
+msgstr "&Flytt utvalget med spor"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Sele&ction and Tracks"
@@ -16296,7 +16021,7 @@ msgstr "Etter &navn"
 
 #: src/menus/TrackMenus.cpp
 msgid "Keep tracks synchronized (Sync-&Lock)"
-msgstr ""
+msgstr "Hold sporene synkronisert (Synkroniser-&Lås)"
 
 #: src/menus/TrackMenus.cpp
 msgid "&Track"
@@ -16339,9 +16064,8 @@ msgid "&Solo/Unsolo Focused Track"
 msgstr "&Solo/ikke-solo for fokusert spor"
 
 #: src/menus/TrackMenus.cpp
-#, fuzzy
 msgid "Delete Fo&cused Track"
-msgstr "&Lukk det fokuserte sporet"
+msgstr "Slett det fo&kuserte sporet"
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
@@ -16478,23 +16202,20 @@ msgid "Transport &Options"
 msgstr "Transport&innstillinger"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Set sound activation le&vel..."
-msgstr "Lydaktiveringsnivå..."
+msgstr "Still inn lydakti&veringsnivået..."
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Enable sound a&ctivated recording"
-msgstr "Lydaktivert opptak"
+msgstr "Skru på lydaktivert opptak"
 
 #: src/menus/TransportMenus.cpp
-#, fuzzy
 msgid "Hear &other tracks during recording"
-msgstr "S&pill av andre spor under opptak (Overdubbing)"
+msgstr "Hør &andre spor under opptak"
 
 #: src/menus/TransportMenus.cpp
 msgid "Enable audible input &monitoring"
-msgstr ""
+msgstr "Skru på hørbar overvåking av inndata"
 
 #: src/menus/TransportMenus.cpp
 msgid "A&utomated Recording Level Adjustment (on/off)"
@@ -16623,19 +16344,16 @@ msgid "Skip to Selection End"
 msgstr "Hopp til slutten av markeringen"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Enable E&xtra Menus"
-msgstr "Aktiver kli&ppepunkt-linjer"
+msgstr "Skru på e&kstra menyer"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "&Show Clipping in Waveform"
-msgstr "Vis klip&ping (av/på)"
+msgstr "&Vis klipping i bølgeform"
 
 #: src/menus/ViewMenus.cpp
-#, fuzzy
 msgid "Show &RMS in Waveform"
-msgstr "Vis klip&ping (av/på)"
+msgstr "Vis &RMS i bølgeform"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -16673,9 +16391,8 @@ msgid "&Don't apply effects in batch mode"
 msgstr "&Ikke anvend effekter i satsvis modus"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "Audio Settings"
-msgstr "Innstillinger for tillegg"
+msgstr "Lydinnstillinger"
 
 #: src/prefs/DevicePrefs.cpp
 #, c-format
@@ -16722,18 +16439,16 @@ msgid "Cha&nnels:"
 msgstr "Kan&aler:"
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "&Project Sample Rate:"
-msgstr "Datarate:"
+msgstr "&Prosjektets samplingsfrekvens:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Sample Rate used when recording new tracks, mixing down tracks and for playback in this project."
-msgstr ""
+msgstr "Samplingsfrekvens som brukes ved innspilling av nye spor, nedmiksing av spor, og avspilling i dette prosjektet."
 
 #: src/prefs/DevicePrefs.cpp
-#, fuzzy
 msgid "D&efault Sample Rate:"
-msgstr "Standard data&rate:"
+msgstr "Standard samplingsfr&ekvens:"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "Default Sample &Format:"
@@ -16915,9 +16630,8 @@ msgid "'Macro Output' directory cannot be set."
 msgstr "‘Makro-utdata’-mappe kan ikke settes."
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Add new location"
-msgstr "&Legg til ny regel"
+msgstr "Legg til ny plassering"
 
 #: src/prefs/EffectsPrefs.cpp src/prefs/EffectsPrefs.h
 #: src/tracks/playabletrack/ui/PlayableTrackButtonHandles.cpp
@@ -16930,39 +16644,32 @@ msgid "Preferences for Effects"
 msgstr "Innstillinger for effekter"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by effect name"
-msgstr "Sortert etter effektnavn"
+msgstr "Sorter etter effektnavn"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by publisher and effect name"
-msgstr "Sortert etter utvikler og effektnavn"
+msgstr "Sorter etter utgiver og effektnavn"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Sort by type and effect name"
-msgstr "Sortert etter type og effektnavn"
+msgstr "Sorter etter type og effektnavn"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by publisher"
-msgstr "Sortert etter utvikler"
+msgstr "Gruppér etter utgiver"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type"
-msgstr "Sortert etter type"
+msgstr "Gruppér etter type"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by category"
-msgstr "Sortert etter type"
+msgstr "Gruppér etter kategori"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Group by type and publisher"
-msgstr "Sortert etter utvikler"
+msgstr "Gruppér etter type og utgiver"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect Options"
@@ -16970,12 +16677,11 @@ msgstr "Effektinnstillinger"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Effect menu &organization:"
-msgstr ""
+msgstr "Effektmeny-&organisering:"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Realtime effect o&rganization:"
-msgstr "Sanntidseffekter"
+msgstr "Sanntidseffekt-organisering:"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "Instruction Set"
@@ -16989,18 +16695,17 @@ msgstr "&Bruk SSE/SSE\"/.../AVX"
 #. * First argument is replaced with plugin type (e.g. "LV2 plugin locations")
 #.
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s plugin locations"
-msgstr "Velg plassering"
+msgstr "%s tilleggs-filplasseringer"
 
 #: src/prefs/EffectsPrefs.cpp
 msgid "&Skip effects scanning at startup"
-msgstr ""
+msgstr "&Hopp over effektskanning ved oppstart"
 
 #: src/prefs/EffectsPrefs.cpp
-#, fuzzy
 msgid "Open Plugin &Manager"
-msgstr "Innstillinger for tillegg"
+msgstr "Åpne tille&ggsbehandleren"
 
 #. i18n-hint:  Title of dialog governing "Extended", or "advanced,"
 #. * audio file import options
@@ -17190,21 +16895,19 @@ msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Ask me each time"
-msgstr ""
+msgstr "&Spør meg hver gang"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Do &nothing"
-msgstr "Ikke gjør noe"
+msgstr "Ikke gjør &noe"
 
 #: src/prefs/ImportExportPrefs.cpp
-#, fuzzy
 msgid "Music Imports"
-msgstr "MP3-importering"
+msgstr "Musikkimporteringer"
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "When Audacity detects music in file imported on empty project"
-msgstr ""
+msgstr "Når Audacity oppdager musikk i en fil som er importert i et tomt prosjekt"
 
 #: src/prefs/ImportExportPrefs.h
 msgid "IMPORT EXPORT"
@@ -17212,9 +16915,8 @@ msgstr "IMPORT EKSPORT"
 
 # I'm hoping it's "cut" as in something that has been placed on the system's clipboard.
 #: src/prefs/KeyConfigPrefs.cpp
-#, fuzzy
 msgid "Shortcuts"
-msgstr "Kort utklipp"
+msgstr "Snarveier"
 
 #: src/prefs/KeyConfigPrefs.cpp
 msgid "Preferences for KeyConfig"
@@ -17443,13 +17145,12 @@ msgid ""
 msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
-#, fuzzy
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr "Endringer i disse innstillingene trer først i kraft når Audacity startes på nytt."
+msgstr "Endringer i disse innstillingene trer først i kraft når du starter Audacity på nytt.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
-msgstr ""
+msgstr "Spør alltid"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Failed"
@@ -17457,11 +17158,11 @@ msgstr "Mislyktes"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "No choice made"
-msgstr ""
+msgstr "Ingen valg er tatt"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Error: No modules were found. This may indicate a faulty installation."
-msgstr ""
+msgstr "Feil: Ingen moduler ble funnet. Dette kan tyde på en installasjon som er i dårlig stand."
 
 #: src/prefs/ModulePrefs.h
 msgid "Module"
@@ -17559,9 +17260,8 @@ msgid "Preferences for Recording"
 msgstr "Innstillinger for innspilling"
 
 #: src/prefs/RecordingPrefs.cpp
-#, fuzzy
 msgid "Hear &other tracks while recording (overdub)"
-msgstr "S&pill av andre spor under opptak (Overdubbing)"
+msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Use &hardware to play other tracks"
@@ -17569,7 +17269,7 @@ msgstr "Bruk &maskinvare til å spille av andre spor"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Audible input &monitoring"
-msgstr ""
+msgstr "Hørbar overvåking av inndata"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Record on a new track"
@@ -17693,10 +17393,9 @@ msgstr "Periode"
 
 #. i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme
 #: src/prefs/SpectrogramSettings.cpp
-#, fuzzy
 msgctxt "spectrum prefs"
 msgid "Color (Roseus)"
-msgstr "Farge (standard)"
+msgstr "Farge (Roseus)"
 
 #. i18n-hint: Classic color scheme(from theme) for spectrograms
 #: src/prefs/SpectrogramSettings.cpp
@@ -17985,6 +17684,8 @@ msgid ""
 "Ask me each time.\n"
 "Show dialog each time audio is pasted."
 msgstr ""
+"Spør meg hver gang.\n"
+"Vis dialogen hver gang lyd limes inn."
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Select all audio, if selection required"
@@ -18001,7 +17702,7 @@ msgstr "Å redigere et klipp kan &flytte på andre klipp"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "&Always paste audio as new clips"
-msgstr ""
+msgstr "&Lim alltid inn lyd som nye klipp"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
 msgid "\"Move track focus\" c&ycles repeatedly through tracks"
@@ -18020,14 +17721,12 @@ msgid "Solo &Button:"
 msgstr "Solo-&knapp:"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Pasted audio"
-msgstr "Ma&rkert lyd"
+msgstr "Innlimt lyd"
 
 #: src/prefs/TracksBehaviorsPrefs.cpp
-#, fuzzy
 msgid "Paste audio from other Audacity project as"
-msgstr "Limt inn fra utklippstavlen"
+msgstr "Lim inn lyd fra et annet Audacity-prosjekt som"
 
 #: src/prefs/TracksPrefs.cpp src/prefs/WaveformPrefs.h
 msgid "Waveform"
@@ -18165,52 +17864,43 @@ msgstr "Bølgeformenes dB-&rekkevidde:"
 
 #. i18n-hint: Audio setup button text, keep as short as possible
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "Audio Setup"
-msgstr "Lydfil"
+msgstr "Lydoppsett"
 
 #. i18n-hint: Audio setup menu
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Host"
-msgstr "&Vert:"
+msgstr "&Vert"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Playback Device"
-msgstr "Avspillingsenhet"
+msgstr "&Avspillingsenhet"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Recording Device"
-msgstr "Opptaksenhet"
+msgstr "&Opptaksenhet"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "Recording &Channels"
-msgstr "Opptakskanaler"
+msgstr "Opptaks&kanaler"
 
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Audio Settings..."
-msgstr "S&pektrograminnstillinger ..."
+msgstr "&Lydinnstillinger..."
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
-#, fuzzy
 msgid "1 (Mono) Recording Channel"
-msgstr "Opptakskanaler"
+msgstr "1 (mono) opptakskanal"
 
 #: src/toolbars/AudioSetupToolBar.cpp src/toolbars/DeviceToolBar.cpp
-#, fuzzy
 msgid "2 (Stereo) Recording Channels"
-msgstr "Velg opptakskanaler"
+msgstr "2 (stereo) opptakskanaler"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that manages the audio devices
 #: src/toolbars/AudioSetupToolBar.cpp
-#, fuzzy
 msgid "&Audio Setup Toolbar"
-msgstr "&Redigeringsverktøylinje"
+msgstr "&Verktøylinje for lydoppsett"
 
 #. i18n-hint: These are strings for the status bar, and indicate whether Audacity
 #. is playing or recording or stopped, and whether it is paused;
@@ -18496,9 +18186,8 @@ msgid "Center"
 msgstr "Midtstilt"
 
 #: src/toolbars/SelectionBar.cpp
-#, fuzzy
 msgid "Selection Toolbar Setup"
-msgstr "&Markeringsverktøylinje"
+msgstr "Oppsett for valg-verktøylinje"
 
 #: src/toolbars/SelectionBar.cpp
 msgid "Start and End of Selection"
@@ -18523,26 +18212,23 @@ msgid "&Selection Toolbar"
 msgstr "&Markeringsverktøylinje"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snap"
-msgstr "Smett på"
+msgstr "Smett"
 
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "Snapping"
-msgstr "(fester til)"
+msgstr "Smetting"
 
 #. i18n-hint: combo box is the type of the control/widget
 #: src/toolbars/SnappingToolBar.cpp
 msgid "Snap to combo box"
-msgstr ""
+msgstr "Smett på til komboboksen"
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/SnappingToolBar.cpp
-#, fuzzy
 msgid "&Snapping Toolbar"
-msgstr "&Markeringsverktøylinje"
+msgstr "&Smettings-verktøylinje"
 
 #: src/toolbars/SpectralSelectionBar.cpp
 msgid "Spectral Selection"
@@ -18575,14 +18261,12 @@ msgid "Spe&ctral Selection Toolbar"
 msgstr "Verktøy&linje for spektrumsutvalg"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature"
-msgstr "Tidslinje"
+msgstr "Tidssignatur"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo"
-msgstr "Tone/Tempo"
+msgstr "Tempo"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
@@ -18593,9 +18277,8 @@ msgid "Lower Time Signature"
 msgstr ""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Tempo Changed"
-msgstr "Endelig endring i tempo (%)"
+msgstr "Endret tempo"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
@@ -18608,9 +18291,8 @@ msgstr ""
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
 #: src/toolbars/TimeSignatureToolBar.cpp
-#, fuzzy
 msgid "Time Signature Toolbar"
-msgstr "Tidslinje"
+msgstr "Verktøylinje for tidssignatur"
 
 #: src/toolbars/TimeToolBar.cpp
 msgid "Time"
@@ -18866,52 +18548,44 @@ msgid "Stretch"
 msgstr "Strekk"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipOverflowButtonHandle.cpp
-#, fuzzy
 msgid "Click to open clip context menu."
-msgstr "Klikk for å redigere merketeksten"
+msgstr "Klikk for å åpne klippkontekstmeny."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Pitch"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Not enough space"
-msgstr "Ikke nok data valgt."
+msgstr "Ikke nok plass"
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "There is not enough space to expand the clip to its original speed."
-msgstr "Det er ikke nok plass tilgjengelig til å lime inn markeringen"
+msgstr "Det er ikke nok plass til å utvide klippet til dens opprinnelige hastighet."
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Reset Clip Speed"
-msgstr " Sammenklippet "
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip pitch."
-msgstr "Venstreklikk for å slå sammen klipp"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip pitch, Cmd + click to reset."
-msgstr "Klikk og dra for å justere, dobbeltklikk for å tilbakestille"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip pitch, Ctrl + click to reset."
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to reset clip speed."
-msgstr "Venstreklikk for å slå sammen klipp"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
-#, fuzzy
 msgid "Click to change clip speed, Cmd + click to reset."
-msgstr "Klikk og dra for å justere, dobbeltklikk for å tilbakestille"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Click to change clip speed, Ctrl + click to reset."
@@ -18935,51 +18609,44 @@ msgid "Removed Cut Line"
 msgstr "Fjernet utklippslinjen"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Pitch and Speed"
-msgstr "Tonehøyde og tempo"
+msgstr "Tonehøyde og hastighet"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Pitch"
-msgstr "Tone"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "se&mitones:"
-msgstr "semitoner + cent"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&cents:"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Clip Speed"
-msgstr " Sammenklippet "
+msgstr "Klipphastighet"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&speed %: "
-msgstr ""
+msgstr "&hastighet %: "
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "General"
-msgstr "&Generer"
+msgstr "Generelt"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&Optimize for Voice"
-msgstr ""
+msgstr "&Optimaliser for stemme"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Speed"
-msgstr "Endre hastighet"
+msgstr "Endret hastighet"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
-#, fuzzy
 msgid "Changed Pitch"
-msgstr "Endre tonehøyde"
+msgstr "Endret tonehøyde"
 
 #: src/tracks/playabletrack/wavetrack/ui/SampleHandle.cpp
 msgid "Click and drag to edit the samples"
@@ -19008,9 +18675,8 @@ msgstr "Zoom og tilpass"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumVZoomHandle.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveformVZoomHandle.cpp
-#, fuzzy
 msgid "Reset Zoom"
-msgstr "Tilbakestill"
+msgstr "Tilbakestill forstørring"
 
 #: src/tracks/playabletrack/wavetrack/ui/SpectrumView.cpp
 msgid "&Spectrogram"
@@ -19054,9 +18720,8 @@ msgid "Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelVZoomHandle.cpp
-#, fuzzy
 msgid "Right-click for menu. Ctrl+scroll to zoom."
-msgstr "Høyreklikk for å se menyen."
+msgstr "Høyreklikk for meny. Ctrl+rull for å zoome."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveChannelView.cpp
 msgid "Click and drag to adjust sizes of sub-views, double-click to split evenly"
@@ -19103,9 +18768,9 @@ msgstr ""
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Trim by %.02fs"
-msgstr "Flyttet med %.02f"
+msgstr "Trim av %.02fs"
 
 #. i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
@@ -19118,27 +18783,24 @@ msgid "Click and drag to move clip boundary in time"
 msgstr "Klikk og dra for å flytte et klipps rammer i tid"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipAdjustBorderHandle.cpp
-#, fuzzy
 msgid "Click and drag to stretch clip"
-msgstr "Klikk og dra for å strekke det valgte området."
+msgstr "Klikk og dra for å strekke klippet"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Split Clip"
 msgstr "Splitt klipp"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
-#, fuzzy
 msgid "Join Clips"
-msgstr "Klippinger"
+msgstr "Fest sammen klipp"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Rename Clip..."
 msgstr "Endre navn på klipp…"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
-#, fuzzy
 msgid "Pitch and Speed..."
-msgstr "Endre hastighet"
+msgstr "Tonehøyde og hastighet..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
@@ -19149,14 +18811,14 @@ msgstr ""
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
-msgstr ""
+msgstr "Endret klippets hastighet til %.01f%%"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "Changed Speed to %.01f%%"
-msgstr "Endre hastighet"
+msgstr "Endret hastigheten til %.01f%%"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Set Wave Clip Name"
@@ -19175,43 +18837,36 @@ msgid "Clip Name Edit"
 msgstr "Rediger klippnavn"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Rendered time-stretched audio"
-msgstr "Eksporterer den markerte lyden"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch Shift"
-msgstr "Siste toneskifte"
+msgstr "Toneskifte"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Changed Pitch Shift"
-msgstr "Endre tonehøyde"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "&Rename Clip..."
-msgstr "Endre navn på klipp…"
+msgstr "&Gi nytt navn til klipp..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "&Pitch and Speed..."
-msgstr "Endre hastighet"
+msgstr "&Tonehøyde og hastighet..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Up"
-msgstr "Tone"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
-#, fuzzy
 msgid "Pitch &Down"
-msgstr "Tone"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 msgid "&Format"
@@ -19342,9 +18997,8 @@ msgid ""
 msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
-#, fuzzy
 msgid "Combine mono to stereo"
-msgstr "Kombinert måler"
+msgstr "Kombiner mono til stereo"
 
 #. i18n-hint: The string names a track
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -19556,9 +19210,8 @@ msgid "Brush tool selection"
 msgstr "Børsteverktøyutvalg"
 
 #: src/tracks/ui/CommonTrackControls.cpp
-#, fuzzy
 msgid "Re&name Track..."
-msgstr "Gi spor ny samplingsfrekvens"
+msgstr "Gi &nytt navn til spor..."
 
 #: src/tracks/ui/CommonTrackControls.cpp
 msgid "Move Track &Up"
@@ -19725,18 +19378,16 @@ msgid "Time shifted tracks/clips left %.02f seconds"
 msgstr "Tidsforskjøv spor/klipp mot venstre med %.02f sekunder"
 
 #: src/tracks/ui/TimeShiftHandle.cpp
-#, fuzzy
 msgid "Move Clip"
-msgstr "Flytt opp"
+msgstr "Flytt klipp"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Collapse"
 msgstr "Rull sammen"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
-#, fuzzy
 msgid "Delete Track"
-msgstr "Velg spor"
+msgstr "Slett spor"
 
 #: src/tracks/ui/TrackButtonHandles.cpp
 msgid "Open menu..."
@@ -19918,13 +19569,12 @@ msgstr "Knapp"
 
 #. i18n-hint: whether a button is pressed or not pressed
 #: src/widgets/AButton.cpp
-#, fuzzy
 msgid "pressed"
-msgstr "Trykk"
+msgstr "trykket"
 
 #: src/widgets/AButton.cpp
 msgid "not pressed"
-msgstr ""
+msgstr "ikke trykket"
 
 #  i18n-hint: One-letter abbreviation for Left, in the Pan slider
 #. i18n-hint: One-letter abbreviation for Left, in the Pan slider
@@ -19942,9 +19592,9 @@ msgstr "H"
 
 #. i18n-hint: "x" suggests a multiplicative factor
 #: src/widgets/ASlider.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%.3fx"
-msgstr "%.3f"
+msgstr "%.3fx"
 
 #: src/widgets/FileHistory.cpp
 msgid "&Clear"
@@ -19972,14 +19622,12 @@ msgid "Meter"
 msgstr "Lydnivå"
 
 #: src/widgets/MeterPanel.cpp
-#, fuzzy
 msgid "Disable Silent Monitoring"
-msgstr "Stans overvåking"
+msgstr "Skru av stille overvåking"
 
 #: src/widgets/MeterPanel.cpp
-#, fuzzy
 msgid "Enable Silent Monitoring"
-msgstr "Stans overvåking"
+msgstr "Skru på stille overvåking"
 
 #: src/widgets/MeterPanel.cpp
 msgid "Recording Meter Options"
@@ -20040,9 +19688,8 @@ msgid "Vertical"
 msgstr "Vertikal"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
-#, fuzzy
 msgid "Missing Plugins"
-msgstr "Behandle tillegg"
+msgstr "Manglende tillegg"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "This project contains some realtime effect plugins that cannot be found on this system."
@@ -20052,11 +19699,11 @@ msgstr ""
 #: src/widgets/MissingPluginsErrorDialog.cpp
 #, c-format
 msgid "The project may sound different than intended. %s"
-msgstr ""
+msgstr "Prosjektet kan høres annerledes ut enn tilsiktet. %s"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Learn more"
-msgstr ""
+msgstr "Lær mer"
 
 #: src/widgets/NumericTextCtrl.cpp
 msgid "(Use context menu to change format.)"
@@ -20146,9 +19793,8 @@ msgid "Value must not be greater than %s"
 msgstr "Verdien kan ikke være større enn %s"
 
 #: plug-ins/ShelfFilter.ny resources/EffectsMenuDefaults.xml
-#, fuzzy
 msgid "Shelf Filter"
-msgstr "Trinnfilter"
+msgstr ""
 
 #: plug-ins/ShelfFilter.ny plug-ins/StudioFadeOut.ny
 #: plug-ins/adjustable-fade.ny plug-ins/crossfadeclips.ny
@@ -20167,9 +19813,8 @@ msgid "GNU General Public License v2.0"
 msgstr "GNU General Public License v2.0"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Filter type"
-msgstr "Filtype:"
+msgstr "Filtertype"
 
 #: plug-ins/ShelfFilter.ny
 msgid "Low-shelf"
@@ -20185,14 +19830,13 @@ msgid "Frequency (Hz)"
 msgstr "Frekvens (Hz)"
 
 #: plug-ins/ShelfFilter.ny
-#, fuzzy
 msgid "Amount (dB)"
-msgstr "Venstre (dB)"
+msgstr "Mengde (dB)"
 
 #: plug-ins/ShelfFilter.ny
 #, lisp-format
 msgid "Error.~%Frequency set too high for selected track."
-msgstr ""
+msgstr "Feil: ~%Ffrekvensen er satt for høyt for det valgte sporet."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
@@ -20427,15 +20071,12 @@ msgid "~aPercentage values cannot be more than 1000 %."
 msgstr "~aProsentverdiene kan ikke være mer enn 1 000%."
 
 #: plug-ins/adjustable-fade.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "~adB values cannot be more than +100 dB.~%~%~\n"
 "                                      Hint: 6 dB doubles the amplitude~%~\n"
 "                                      -6 dB halves the amplitude."
 msgstr ""
-"~adB-verdier kan ikke være høyere enn +100 dB,~%~%~\n"
-"                                 Hint: 6 dB dobler amplituden~%~\n"
-"                                 -6 dB halverer amplituden."
 
 #: plug-ins/beat.ny
 msgid "Beat Finder"
@@ -20485,7 +20126,6 @@ msgid "Crossfade Tracks"
 msgstr "Krysston spor"
 
 #: plug-ins/crossfadetracks.ny
-#, fuzzy
 msgid "Fade TYPE"
 msgstr "Uttoningstype"
 
@@ -20567,9 +20207,8 @@ msgid "Low-quality Pitch Shift"
 msgstr "Lavkvalitets toneskifte"
 
 #: plug-ins/delay.ny
-#, fuzzy
 msgid "High-quality Pitch Shift"
-msgstr "Lavkvalitets toneskifte"
+msgstr "Høykvalitets tonehøydeskifte"
 
 #: plug-ins/delay.ny
 msgid "Pitch change per echo (semitones)"
@@ -20740,7 +20379,7 @@ msgid "Frequency must be at least 0.1 Hz."
 msgstr "Frekvensen må være minst 0,1 Hz."
 
 #: plug-ins/highpass.ny plug-ins/lowpass.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "                 Track sample rate is ~a Hz~%~\n"
@@ -20827,19 +20466,19 @@ msgid "Too many silences detected.~%Only the first 10000 labels added."
 msgstr "For mange stillheter oppdaget. ~%Bare de første 10000 merkelappene ble lagt til."
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "No sounds found.~%~\n"
 "                 Try lowering 'Threshold level (dB)'."
-msgstr "Ingen lyder ble funnet.~%Prøv å redusere stillhetsnivået og minimumsstillhetsvarigheten."
+msgstr ""
 
 #: plug-ins/label-sounds.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Labelling regions between sounds requires~%~\n"
 "                 at least two sounds.~%~\n"
 "                 Only one sound detected."
-msgstr "Merking av regioner mellom lyder krever~%minst to lyder.~%Kun én lyd ble funnet."
+msgstr ""
 
 #: plug-ins/limiter.ny
 msgid "Soft Limit"
@@ -20939,37 +20578,28 @@ msgid "Decay (ms)"
 msgstr "Decay (ms)"
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                             Gate frequencies above: ~s kHz~%~\n"
 "                             is too high for selected track.~%~\n"
 "                             Set the control below ~a kHz."
 msgstr ""
-"Feil.\n"
-"\"Gate frekvenser over: ~s kHz\"\n"
-"er for høyt for valgt spor.\n"
-"Sett kontrollen under ~a kHz."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error.~%~\n"
 "                            Insufficient audio selected.~%~\n"
 "                            Make the selection longer than ~a ms."
 msgstr ""
-"Feil.\n"
-"Ikke nok lyd er valgt.\n"
-"Gjør utvalget lengre enn ~a ms."
 
 #: plug-ins/noisegate.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Peak based on first ~a seconds ~a dB~%~\n"
 "               Suggested Threshold Setting ~a dB."
 msgstr ""
-"Topp basert på de første ~a sekundene ~a dB~%\n"
-"Foreslått terskelverdi ~a dB."
 
 #. i18n-hint: hours and minutes. Do not translate "~a".
 #: plug-ins/noisegate.ny
@@ -20990,7 +20620,7 @@ msgid "Q (higher value reduces width)"
 msgstr "Q (Høyere verdi reduserer bredde)"
 
 #: plug-ins/notch.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~\n"
 "               Track sample rate is ~a Hz.~%~\n"
@@ -21001,9 +20631,8 @@ msgstr ""
 "                 Frekvensen må være mindre enn ~a Hz."
 
 #: plug-ins/nyquist-plug-in-installer.ny
-#, fuzzy
 msgid "Nyquist Plugin Installer"
-msgstr "Nyquist-tillegg-installerer"
+msgstr "Nyquist-tilleggsinstallatør"
 
 #. i18n-hint: "Browse..." is text on a button that launches a file browser.
 #: plug-ins/nyquist-plug-in-installer.ny
@@ -21224,13 +20853,11 @@ msgid "MIDI pitch of weak beat"
 msgstr "MIDI-tonen til et svakt slag"
 
 #: plug-ins/rhythmtrack.ny
-#, fuzzy, lisp-format
+#, lisp-format
 msgid ""
 "Set either 'Number of bars' or~%~\n"
 "                    'Rhythm track duration' to greater than zero."
 msgstr ""
-"Sett enten 'Antall linjer' eller\n"
-"'Rytmesporvarighet' til et nummer høyere enn null."
 
 #: plug-ins/rissetdrum.ny
 msgid "Risset Drum"
@@ -21612,9 +21239,8 @@ msgid "Waveform type"
 msgstr "Bølgeformtype"
 
 #: plug-ins/tremolo.ny
-#, fuzzy
 msgid "Triangle"
-msgstr "Triangel"
+msgstr "Trekant"
 
 #: plug-ins/tremolo.ny
 msgid "Inverse Sawtooth"
