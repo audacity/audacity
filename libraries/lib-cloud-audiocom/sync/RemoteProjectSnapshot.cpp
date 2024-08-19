@@ -381,8 +381,12 @@ void RemoteProjectSnapshot::DownloadBlob(
    }
 
    response->setRequestFinishedCallback(
-      [this, onSuccess = std::move(onSuccess), retries, response](auto)
+      [this, self = weak_from_this(), onSuccess = std::move(onSuccess), retries, response](auto)
       {
+         auto strong = self.lock();
+         if(!strong)
+            return;
+
          mDownloadedBytes.fetch_add(
             response->getBytesAvailable(), std::memory_order_acq_rel);
 
