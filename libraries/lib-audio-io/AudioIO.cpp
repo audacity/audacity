@@ -2726,7 +2726,6 @@ bool AudioIoCallback::FillOutputBuffers(
    // PRL:  Also consume frbom the single playback ring buffer
    if (numPlaybackSequences == 0) {
       mMaxFramesOutput = mPlaybackBuffers[0]->Discard(toGet);
-      CallbackCheckCompletion(mCallbackReturn, 0);
       mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
       return false;
    }
@@ -2821,7 +2820,6 @@ bool AudioIoCallback::FillOutputBuffers(
                (oldVolume + deltaVolume * i) * tempBufs[n][i];
          }
       }
-      CallbackCheckCompletion(mCallbackReturn, len);
    }
 
    mOldPlaybackVolume = playbackVolume;
@@ -2869,12 +2867,6 @@ void AudioIoCallback::DrainInputBuffers(
       return;
    if( numCaptureChannels <= 0 )
       return;
-
-   // If there are no playback sequences, and we are recording, then the
-   // earlier checks for being past the end won't happen, so do it here.
-   if (mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0)) {
-      mCallbackReturn = paComplete;
-   }
 
    // The error likely from a too-busy CPU falling behind real-time data
    // is paInputOverflow
@@ -3304,22 +3296,6 @@ int AudioIoCallback::CallbackDoSeek()
       .store(true, std::memory_order_relaxed);
 
    return paContinue;
-}
-
-void AudioIoCallback::CallbackCheckCompletion(
-   int &callbackReturn, unsigned long len)
-{
-   if (IsPaused())
-      return;
-
-   bool done =
-      mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, len);
-   if (!done)
-      return;
-
-   for( auto &ext : Extensions() )
-      ext.SignalOtherCompletion();
-   callbackReturn = paComplete;
 }
 
 auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt &

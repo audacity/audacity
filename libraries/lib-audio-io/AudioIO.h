@@ -175,10 +175,6 @@ public:
    // Part of the callback
    int CallbackDoSeek();
 
-   // Part of the callback
-   void CallbackCheckCompletion(
-      int &callbackReturn, unsigned long len);
-
    int mbHasSoloSequences;
    int mCallbackReturn;
    // Helpers to determine if sequences have already been faded out.
