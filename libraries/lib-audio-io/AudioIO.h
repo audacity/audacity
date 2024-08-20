@@ -477,6 +477,8 @@ public:
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; }
 
+   bool IsPlayheadMoving(std::optional<int> token) /* const */ override;
+
    // To be called from main thread only.
    void SetLetRing(bool value);
 

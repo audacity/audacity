@@ -160,16 +160,17 @@ bool TransportUtilities::DoStopPlaying(const CommandContext &context)
    auto token = ProjectAudioIO::Get(project).GetAudioIOToken();
 
    //If this project is playing, stop playing, make sure everything is unpaused.
-   if (gAudioIO->IsStreamActive(token)) {
+   if (gAudioIO->IsPlayheadMoving(token)) {
       toolbar.SetStop();         //Pushes stop down
-      projectAudioManager.Stop();
+      constexpr auto stopStream = false;
+      projectAudioManager.Stop(stopStream);
       // Playing project was stopped.  All done.
       return true;
    }
 
    // This project isn't playing.
    // If some other project is playing, stop playing it
-   if (gAudioIO->IsStreamActive()) {
+   if (gAudioIO->IsPlayheadMoving({})) {
 
       //find out which project we need;
       auto start = AllProjects{}.begin(), finish = AllProjects{}.end(),
@@ -185,7 +186,10 @@ bool TransportUtilities::DoStopPlaying(const CommandContext &context)
          auto &otherProjectAudioManager =
             ProjectAudioManager::Get(*otherProject);
          otherToolbar.SetStop();         //Pushes stop down
-         otherProjectAudioManager.Stop();
+         constexpr auto stopStream =
+            true; // We don't want the tail of some effect of some other project
+                  // to ring in this one.
+         otherProjectAudioManager.Stop(stopStream);
       }
    }
    return false;
@@ -197,7 +201,10 @@ void TransportUtilities::DoStartPlaying(
    auto &project = context.project;
    auto gAudioIO = AudioIOBase::Get();
    //play the front project
-   if (!gAudioIO->IsBusy()) {
+   // TODO verify that other project - if any - does get stopped.
+   if (!gAudioIO->IsPlayheadMoving(
+          ProjectAudioIO::Get(project).GetAudioIOToken()))
+   {
       //Otherwise, start playing (assuming audio I/O isn't busy)
 
       // Will automatically set mLastPlayMode

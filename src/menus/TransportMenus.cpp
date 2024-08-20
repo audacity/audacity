@@ -61,7 +61,7 @@ bool MakeReadyToPlay(AudacityProject &project)
 
    // If it didn't stop playing quickly, or if some other
    // project is playing, return
-   if (gAudioIO->IsBusy())
+   if (gAudioIO->IsPlayheadMoving({}))
       return false;
 
    return true;
@@ -335,7 +335,7 @@ void OnPunchAndRoll(const CommandContext &context)
       // play recording tracks only
       for (auto &pTrack : tracks)
          transportTracks.playbackSequences.push_back(pTrack);
-      
+
    // Unlike with the usual recording, a track may be chosen both for playback
    // and recording.
    std::copy(tracks.begin(), tracks.end(),

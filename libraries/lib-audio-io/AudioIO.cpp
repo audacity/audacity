@@ -1691,6 +1691,13 @@ void AudioIO::StopStream()
    mPlaybackSchedule.ResetMode();
 }
 
+bool AudioIO::IsPlayheadMoving(std::optional<int> token) /* const */
+{
+   return (token.has_value() ? IsStreamActive(*token) : IsStreamActive()) &&
+          !mLetRing &&
+          !mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0);
+}
+
 void AudioIO::SetLetRing(bool value)
 {
    mLetRing = value;
@@ -2057,6 +2064,9 @@ bool AudioIO::ProcessPlaybackSlices(
       done = policy ? policy->RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
          frames, available ) : false;
    } while (available && !done);
+
+   if (policy && policy->Done(mPlaybackSchedule, 0))
+      mLetRing = true;
 
    //stop here if there are no sample sources to process...
    if(mPlaybackSequences.empty())

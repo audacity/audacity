@@ -324,7 +324,9 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
-      return -1;
+      // Brute-force approach. Maybe there's a slicker way, but for now we keep
+      // things simple.
+      gAudioIO->StopStream();
 
    const bool cutpreview = mode == PlayMode::cutPreviewPlay;
    if (cutpreview && t0==t1)
@@ -1174,6 +1176,7 @@ bool ProjectAudioManager::Playing() const
 {
    auto gAudioIO = AudioIO::Get();
    return
+      gAudioIO->IsPlayheadMoving({}) &&
       gAudioIO->IsBusy() &&
       CanStopAudioStream() &&
       // ... and not merely monitoring
@@ -1194,7 +1197,7 @@ bool ProjectAudioManager::Recording() const
 bool ProjectAudioManager::CanStopAudioStream() const
 {
    auto gAudioIO = AudioIO::Get();
-   return (!gAudioIO->IsStreamActive() ||
+   return (!gAudioIO->IsPlayheadMoving({}) ||
            gAudioIO->IsMonitoring() ||
            gAudioIO->GetOwningProject().get() == &mProject );
 }

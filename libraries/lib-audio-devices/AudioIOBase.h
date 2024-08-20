@@ -262,6 +262,8 @@ public:
 
    virtual void StopStream() = 0;
 
+   virtual bool IsPlayheadMoving(std::optional<int> token) /* const */ = 0;
+
    /** \brief  Returns true if audio i/o is busy starting, stopping, playing,
     * or recording.
     *
