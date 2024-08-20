@@ -1761,7 +1761,7 @@ double AudioIO::GetStreamTime(bool ignorePlaybackState) const
 {
    // Sequence time readout for the main thread
 
-   if (!ignorePlaybackState && !IsStreamActive())
+   if(!ignorePlaybackState && (!IsStreamActive() || mLetRing) )
       return BAD_STREAM_TIME;
 
    return mPlaybackSchedule.GetSequenceTime();
