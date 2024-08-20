@@ -80,6 +80,13 @@ public:
          return false;
       }
 
+      // If the append buffer was flushed during the copy operation,
+      // then outBlock content is no longer valid
+      if (mFirstClipSampleID != clip.GetSequence(0)->GetNumSamples() ||
+         appendedSamples > clip.GetAppendBufferLen(channelIndex)) {
+         return false;
+      }
+
       return true;
    }
 
@@ -188,18 +195,31 @@ MakeDefaultDataProvider(const WaveClip& clip, int channelIndex)
       if (requiredSample < 0)
          return false;
 
-      if (requiredSample >= sequence->GetNumSamples())
+      auto sequenceSampleCount = sequence->GetNumSamples();
+      if (requiredSample >= sequenceSampleCount)
       {
-         requiredSample -= sequence->GetNumSamples().as_long_long();
+         auto appendBufferOffset = requiredSample - sequence->GetNumSamples().as_long_long();
 
-         if (requiredSample >= clip->GetAppendBufferLen(channelIndex))
+         if (appendBufferOffset >= clip->GetAppendBufferLen(channelIndex))
             return false;
 
          outBlock.DataType    = dataType;
-         outBlock.FirstSample = sequence->GetNumSamples().as_long_long();
+         outBlock.FirstSample = sequenceSampleCount.as_long_long();
          outBlock.NumSamples  = clip->GetAppendBufferLen(channelIndex);
 
-         return appendBufferHelper.FillBuffer(*clip, outBlock, channelIndex);
+         bool success = appendBufferHelper.FillBuffer(*clip, outBlock, channelIndex);
+
+         // While we were filling outBlock from the append buffer
+         // it wasn't flushed to sequence, we are good to go 
+         if (sequenceSampleCount == sequence->GetNumSamples()) {
+            return success;
+         }
+         
+         if (requiredSample >= sequence->GetNumSamples()) {
+            return false;
+         }
+         // if the data was moved to sequence,
+         // then continue with the rest of the function
       }
 
       const auto blockIndex  = sequence->FindBlock(requiredSample);
