@@ -84,6 +84,7 @@ private:
     void onSelectedClip(const trackedit::ClipKey& k);
     void onClipRenameAction(const muse::actions::ActionData& args);
     ClipListItem* itemByKey(const trackedit::ClipKey& k) const;
+    int indexByKey(const trackedit::ClipKey& k) const;
 
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;

@@ -1,5 +1,7 @@
 #include "domaccessor.h"
 
+#include "domau3types.h"
+
 #include "log.h"
 
 using namespace au::au3;
@@ -18,18 +20,15 @@ WaveTrack* DomAccessor::findWaveTrack(AudacityProject& prj, const TrackId& au3tr
     return dynamic_cast<WaveTrack*>(track);
 }
 
-std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, size_t index)
+std::shared_ptr<WaveClip> DomAccessor::findWaveClip(WaveTrack* track, uint64_t au3ClipId)
 {
-    auto clips = track->Intervals();
-    IF_ASSERT_FAILED(index < clips.size()) {
-        return nullptr;
+    for (const std::shared_ptr<WaveClip>& interval : track->Intervals()) {
+        if (WaveClipID(interval.get()).id == au3ClipId) {
+            return interval;
+        }
     }
 
-    auto it = track->Intervals().begin();
-    std::advance(it, index);
-
-    std::shared_ptr<WaveClip> clip = *it;
-    return clip;
+    return nullptr;
 }
 
 std::shared_ptr<WaveClip> DomAccessor::findWaveClip(AudacityProject& prj, const TrackId& au3trackId, size_t index)

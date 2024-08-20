@@ -113,6 +113,16 @@ ClipListItem* ClipsListModel::itemByKey(const trackedit::ClipKey& k) const
     return nullptr;
 }
 
+int ClipsListModel::indexByKey(const trackedit::ClipKey& k) const
+{
+    for (int i = 0; i < m_clipList.size(); ++i) {
+        if (m_clipList.at(i)->clip().key == k) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 void ClipsListModel::update()
 {
     //! NOTE First we form a new list, and then we delete old objects,
@@ -224,16 +234,13 @@ void ClipsListModel::onClipRenameAction(const muse::actions::ActionData& args)
     }
 
     trackedit::ClipKey key = args.arg<trackedit::ClipKey>(0);
+    int idx = indexByKey(key);
 
-    if (key.trackId != m_trackId) {
+    IF_ASSERT_FAILED(idx != -1) {
         return;
     }
 
-    IF_ASSERT_FAILED(key.index < m_clipList.size()) {
-        return;
-    }
-
-    emit requestClipTitleEdit(key.index);
+    emit requestClipTitleEdit(idx);
 }
 
 bool ClipsListModel::changeClipTitle(const ClipKey& key, const QString& newTitle)

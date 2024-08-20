@@ -64,7 +64,7 @@ void TrackeditActionsController::clipDeleteSelected()
 
     //! TODO AU4: improve for deleting multiple selected clips
     // remove single clip when selected via header click
-    if (selectedClipKey.index != nidx) {
+    if (selectedClipKey.isValid()) {
         duration = trackeditInteraction()->clipDuration(selectedClipKey);
         start = trackeditInteraction()->clipStartTime(selectedClipKey);
         trackeditInteraction()->removeClip(selectedClipKey);
