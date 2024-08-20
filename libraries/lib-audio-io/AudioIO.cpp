@@ -835,6 +835,8 @@ int AudioIO::StartStream(const TransportSequences &sequences,
          return pGroup; }
    ));
 
+   mLetRing = false;
+
    const auto &pStartTime = options.pStartTime;
    t1 = std::min(t1, mixerLimit);
 
@@ -1688,6 +1690,11 @@ void AudioIO::StopStream()
    mPlaybackSchedule.ResetMode();
 }
 
+void AudioIO::SetLetRing(bool value)
+{
+   mLetRing = value;
+}
+
 void AudioIO::SetPaused(bool state, bool publish)
 {
    if (state != IsPaused())
@@ -1958,7 +1965,8 @@ void AudioIO::FillPlayBuffers()
 bool AudioIO::ProcessPlaybackSlices(
    std::optional<RealtimeEffects::ProcessingScope> &pScope, size_t available)
 {
-   auto &policy = mPlaybackSchedule.GetPolicy();
+   PlaybackPolicy* const policy =
+      !mLetRing ? &mPlaybackSchedule.GetPolicy() : nullptr;
 
    // msmeyer: When playing a very short selection in looped
    // mode, the selection must be copied to the buffer multiple
@@ -1976,17 +1984,23 @@ bool AudioIO::ProcessPlaybackSlices(
       processingBufferOffsets[n] = mProcessingBuffers[n].size();
 
    do {
-      const auto slice =
-         policy.GetPlaybackSlice(mPlaybackSchedule, available);
-      const auto &[frames, toProduce] = slice;
-      progress = progress || toProduce > 0;
+      size_t frames = available;
+      size_t toProduce = available;
+      if (policy)
+      {
+         const auto slice =
+            policy->GetPlaybackSlice(mPlaybackSchedule, available);
+         frames = slice.frames;
+         toProduce = slice.toProduce;
+         progress = progress || toProduce > 0;
 
-      // Update the time queue.  This must be done before writing to the
-      // ring buffers of samples, for proper synchronization with the
-      // consumer side in the PortAudio thread, which reads the time
-      // queue after reading the sample queues.  The sample queues use
-      // atomic variables, the time queue doesn't.
-      mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
+         // Update the time queue.  This must be done before writing to the
+         // ring buffers of samples, for proper synchronization with the
+         // consumer side in the PortAudio thread, which reads the time
+         // queue after reading the sample queues.  The sample queues use
+         // atomic variables, the time queue doesn't.
+         mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
+      }
 
       // mPlaybackMixers correspond one-to-one with mPlaybackSequences
       size_t iSequence = 0;
@@ -2039,8 +2053,8 @@ bool AudioIO::ProcessPlaybackSlices(
          // Produce silence in the single ring buffer
          mPlaybackBuffers[0]->Put(nullptr, floatSample, 0, frames);
 
-      done = policy.RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
-         frames, available );
+      done = policy ? policy->RepositionPlayback( mPlaybackSchedule, mPlaybackMixers,
+         frames, available ) : false;
    } while (available && !done);
 
    //stop here if there are no sample sources to process...

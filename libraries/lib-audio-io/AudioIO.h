@@ -481,6 +481,9 @@ public:
     * by the specified amount from where it is now */
    void SeekStream(double seconds) { mSeek = seconds; }
 
+   // To be called from main thread only.
+   void SetLetRing(bool value);
+
    using PostRecordingAction = std::function<void()>;
 
    //! Enqueue action for main thread idle time, not before the end of any recording in progress
@@ -652,6 +655,7 @@ private:
    PostRecordingAction mPostRecordingAction;
 
    bool mDelayingActions{ false };
+   bool mLetRing { false };
 };
 
 AUDIO_IO_API extern BoolSetting SoundActivatedRecord;
