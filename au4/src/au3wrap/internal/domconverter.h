@@ -12,6 +12,6 @@ public:
     // Tracks
     static trackedit::TrackId trackId(const TrackId& au3trackId);
 
-    static trackedit::Clip clip(const WaveTrack* waveTrack, const WaveClip* au3clip, int index);
+    static trackedit::Clip clip(const WaveTrack* waveTrack, const WaveClip* au3clip);
 };
 }

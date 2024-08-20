@@ -3,7 +3,6 @@
 */
 #pragma once
 
-#include "global/containers.h"
 #include "global/types/number.h"
 #include "global/logstream.h"
 
@@ -19,19 +18,20 @@ using gain_t = float;
 using balance_t = float;
 
 using TrackId = long;
+using ClipId = uint64_t;
 
 struct ClipKey
 {
     TrackId trackId = -1;
-    size_t index = muse::nidx;
+    ClipId clipId = -1;
 
     ClipKey() = default;
-    ClipKey(const TrackId t, const size_t i)
-        : trackId(t), index(i) {}
+    ClipKey(const TrackId t, const ClipId c)
+        : trackId(t), clipId(c) {}
 
-    inline bool isValid() const { return trackId != -1 && index != muse::nidx; }
+    inline bool isValid() const { return trackId != -1 && clipId != static_cast<ClipId>(-1); }
 
-    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && index == k.index; }
+    inline bool operator==(const ClipKey& k) const { return trackId == k.trackId && clipId == k.clipId; }
     inline bool operator!=(const ClipKey& k) const { return !this->operator==(k); }
 };
 
@@ -46,6 +46,6 @@ struct TimeSignature
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::ClipKey& k)
 {
-    s << "{trackId: " << k.trackId << ", clip: " << k.index << "}";
+    s << "{trackId: " << k.trackId << ", clip: " << k.clipId << "}";
     return s;
 }

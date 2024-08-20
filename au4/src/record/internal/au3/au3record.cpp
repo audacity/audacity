@@ -249,13 +249,13 @@ void Au3Record::init()
             return;
         }
 
-        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.index);
+        std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.clipId);
         IF_ASSERT_FAILED(clip) {
             return;
         }
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get(), clipKey.index));
+        prj->onClipChanged(DomConverter::clip(waveTrack, clip.get()));
     });
 
     s_recordingListener->commitRequested().onNotify(this, [this]() {
@@ -563,7 +563,7 @@ Ret Au3Record::doRecord(AudacityProject& project,
                 }
                 transportSequences.captureSequences.push_back(pending->SharedPointer<WaveTrack>());
 
-                trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get(), newClipKey.index);
+                trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
                 prj->onClipAdded(_newClip);
             }

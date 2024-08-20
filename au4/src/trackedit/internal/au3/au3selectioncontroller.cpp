@@ -70,7 +70,7 @@ au::trackedit::ClipKey Au3SelectionController::selectedClip() const
 
 void Au3SelectionController::setSelectedClip(const au::trackedit::ClipKey& clipKey)
 {
-    MYLOG() << "track: " << clipKey.trackId << ", clip: " << clipKey.index;
+    MYLOG() << clipKey;
     m_selectedClip.set(clipKey, true);
 }
 

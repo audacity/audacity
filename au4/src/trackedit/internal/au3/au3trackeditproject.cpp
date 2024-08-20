@@ -6,6 +6,7 @@
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "au3wrap/internal/domau3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace muse;
@@ -74,10 +75,8 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     }
 
     muse::async::NotifyList<au::trackedit::Clip> clips;
-    int index = -1;
     for (const std::shared_ptr<const WaveClip>& interval : waveTrack->Intervals()) {
-        ++index;
-        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get(), index);
+        au::trackedit::Clip clip = DomConverter::clip(waveTrack, interval.get());
         clips.push_back(std::move(clip));
     }
 
@@ -87,9 +86,19 @@ muse::async::NotifyList<au::trackedit::Clip> Au3TrackeditProject::clipList(const
     return clips;
 }
 
-Clip Au3TrackeditProject::clip(const ClipKey& key) const
+au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
-    return clipList(key.trackId)[key.index];
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(*au3ProjectPtr(), ::TrackId(key.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return Clip();
+    }
+
+    std::shared_ptr<WaveClip> au3Clip = DomAccessor::findWaveClip(waveTrack, key.clipId);
+    IF_ASSERT_FAILED(au3Clip) {
+        return Clip();
+    }
+
+    return DomConverter::clip(waveTrack, au3Clip.get());
 }
 
 void Au3TrackeditProject::onClipChanged(const Clip& clip)
