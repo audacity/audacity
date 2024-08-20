@@ -88,14 +88,14 @@ double DefaultPlaybackPolicy::OffsetSequenceTime(
    if (mpStartTime) {
       if (mLoopEnabled) {
          if (time < schedule.mT0)
-            time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+            time = std::min(std::max(time + offset, schedule.mT1), *mpStartTime);
          else
-            time = std::clamp(time + offset, schedule.mT0, schedule.mT1);
+            time = std::min(std::max(time + offset, schedule.mT0), *mpStartTime);
       }
       else {
          // this includes the case where the start time is after the
          // looped region, and mLoopEnabled is set to false
-         time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
+         time = std::min(std::max(time + offset, schedule.mT1), *mpStartTime);
       }
    }
 
