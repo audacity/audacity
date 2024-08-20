@@ -257,7 +257,7 @@ size_t MixerSource::MixSameRate(unsigned nChannels, const size_t maxOut,
       // Now redundant in case of failure
       // for (size_t iChannel = 0; iChannel < nChannels; ++iChannel)
          // memset(floatBuffers[iChannel], 0, sizeof(float) * slen);
-      
+
    }
 
    mpSeq->GetEnvelopeValues(mEnvValues.data(), slen, t, backwards);
@@ -290,7 +290,7 @@ MixerSource::MixerSource(
    const std::shared_ptr<const WideSampleSequence> &seq, size_t bufferSize,
    double rate, const MixerOptions::Warp &options, bool highQuality,
    bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
-   const ArrayOf<bool> *pMap
+   const ArrayOf<bool> *pMap, const std::function<bool()>& pullFromTrack
 )  : mpSeq{ seq }
    , mnChannels{ mpSeq->NChannels() }
    , mRate{ rate }
@@ -304,6 +304,7 @@ MixerSource::MixerSource(
    , mResample( mnChannels )
    , mEnvValues( std::max(sQueueMaxLen, bufferSize) )
    , mpMap{ pMap }
+   , mPullFromTrack{ pullFromTrack }
 {
    assert(mTimesAndSpeed);
    auto t0 = mTimesAndSpeed->mT0;
@@ -347,16 +348,17 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
    // TODO: more-than-two-channels
    const auto maxChannels = mMaxChannels = data.Channels();
    const auto limit = std::min<size_t>(mnChannels, maxChannels);
-   size_t maxTrack = 0;
    const auto mixed = stackAllocate(size_t, maxChannels);
    const auto pFloats = stackAllocate(float *, limit);
    for (size_t j = 0; j < limit; ++j)
       pFloats[j] = &data.GetWritePosition(j);
    const auto rate = GetSequence().GetRate();
-   auto result = (mResampleParameters.mVariableRates || rate != mRate)
-      ? MixVariableRates(limit, bound, pFloats)
-      : MixSameRate(limit, bound, pFloats);
-   maxTrack = std::max(maxTrack, result);
+   const auto result =
+      mPullFromTrack == nullptr || mPullFromTrack() ?
+         (mResampleParameters.mVariableRates || rate != mRate) ?
+         MixVariableRates(limit, bound, pFloats) :
+         MixSameRate(limit, bound, pFloats) :
+         0;
    auto newT = mSamplePos.as_double() / rate;
    if (backwards)
       mTime = std::min(mTime, newT);
@@ -369,15 +371,11 @@ std::optional<size_t> MixerSource::Acquire(Buffers &data, size_t bound)
    for (size_t j = 0; j < limit; ++j) {
       const auto pFloat = &data.GetWritePosition(j);
       const auto result = mixed[j];
-      ZeroFill(result, maxTrack, *pFloat);
+      ZeroFill(result, bound, *pFloat);
    }
 
-   mLastProduced = maxTrack;
-   assert(maxTrack <= bound);
-   assert(maxTrack <= data.Remaining());
-   assert(maxTrack <= Remaining());
+   mLastProduced = bound;
    assert(data.Remaining() > 0);
-   assert(bound == 0 || Remaining() == 0 || maxTrack > 0);
    return { mLastProduced };
 }
 

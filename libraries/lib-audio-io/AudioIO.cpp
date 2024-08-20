@@ -1313,6 +1313,7 @@ bool AudioIO::AllocateBuffers(
 
                Mixer::Inputs mixSequences;
                mixSequences.push_back(Mixer::Input{ pSequence });
+               auto pullFromTracks = [this] { return !mLetRing; };
                mPlaybackMixers.emplace_back(std::make_unique<Mixer>(
                   std::move(mixSequences), std::nullopt,
                   // Don't throw for read errors, just play silence:
@@ -1323,8 +1324,8 @@ bool AudioIO::AllocateBuffers(
                   mRate, floatSample,
                   false,   // low quality dithering and resampling
                   nullptr, // no custom mix-down
-                  Mixer::ApplyVolume::Discard // don't apply volume
-                  ));
+                  Mixer::ApplyVolume::Discard, // don't apply volume
+                  std::move(pullFromTracks)));
             }
 
             const auto timeQueueSize = 1 +

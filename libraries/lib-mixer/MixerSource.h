@@ -38,13 +38,12 @@ public:
    /*!
     @pre `pTimesAndSpeed != nullptr`
     */
-   MixerSource(const std::shared_ptr<const WideSampleSequence> &seq,
-      size_t bufferSize,
-      double rate, const MixerOptions::Warp &options, bool highQuality,
+   MixerSource(
+      const std::shared_ptr<const WideSampleSequence>& seq, size_t bufferSize,
+      double rate, const MixerOptions::Warp& options, bool highQuality,
       bool mayThrow, std::shared_ptr<TimesAndSpeed> pTimesAndSpeed,
       //! Null or else must have a lifetime enclosing this objects's
-      const ArrayOf<bool> *pMap
-   );
+      const ArrayOf<bool>* pMap, const std::function<bool()>& pullFromTrack);
    MixerSource(MixerSource&&) = default;
    MixerSource &operator=(MixerSource&&) = delete;
    ~MixerSource();
@@ -137,5 +136,7 @@ private:
    //! Remember how many channels were passed to Acquire()
    unsigned mMaxChannels{};
    size_t mLastProduced{};
+
+   const std::function<bool()>& mPullFromTrack;
 };
 #endif

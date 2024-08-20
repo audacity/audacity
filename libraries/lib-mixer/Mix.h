@@ -69,7 +69,8 @@ public:
       double outRate, sampleFormat outFormat, bool highQuality = true,
       //! Null or else must have a lifetime enclosing this object's
       MixerSpec* mixerSpec = nullptr,
-      ApplyVolume applyVolume = ApplyVolume::MapChannels);
+      ApplyVolume applyVolume = ApplyVolume::MapChannels,
+      std::function<bool()> pullFromTracks = {});
 
    Mixer(const Mixer&) = delete;
    Mixer &operator=(const Mixer&) = delete;
@@ -182,5 +183,6 @@ private:
 
    struct Source { MixerSource &upstream; AudioGraph::Source &downstream; };
    std::vector<Source> mDecoratedSources;
+   const std::function<bool()> mPullFromTracks;
 };
 #endif

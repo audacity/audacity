@@ -86,7 +86,7 @@ Mixer::Mixer(
    const double stopTime, const unsigned numOutChannels,
    const size_t outBufferSize, const bool outInterleaved, double outRate,
    sampleFormat outFormat, const bool highQuality, MixerSpec* const mixerSpec,
-   ApplyVolume applyVolume)
+   ApplyVolume applyVolume, std::function<bool()> pullFromTracks)
     : mNumChannels { numOutChannels }
     , mInputs { move(inputs) }
     , mMasterEffects { move(masterEffects) }
@@ -114,6 +114,7 @@ Mixer::Mixer(
           size = mBufferSize * (mInterleaved ? mNumChannels : 1)](
             auto& buffer) { buffer.Allocate(size, format); }) }
     , mEffectiveFormat { floatSample }
+    , mPullFromTracks { move(pullFromTracks) }
 {
    assert(BufferSize() <= outBufferSize);
    const auto nChannelsIn =
@@ -165,9 +166,10 @@ Mixer::Mixer(
       }
       auto increment = finally([&]{ i += sequence->NChannels(); });
 
-      auto &source = mSources.emplace_back(sequence, BufferSize(), outRate,
-         warpOptions, highQuality, mayThrow, mTimesAndSpeed,
-         (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr));
+      auto& source = mSources.emplace_back(
+         sequence, BufferSize(), outRate, warpOptions, highQuality, mayThrow,
+         mTimesAndSpeed, (pMixerSpec ? &pMixerSpec->mMap[i] : nullptr),
+         mPullFromTracks);
       AudioGraph::Source *pDownstream = &source;
       for (const auto &stage : input.stages)
          if (
