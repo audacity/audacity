@@ -6319,7 +6319,7 @@ msgstr "Синхронизация проекта будет выполнена 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 #: src/AudioPasteDialog.cpp
 msgid "Continue"
-msgstr "Подождите"
+msgstr "Продолжить"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
@@ -7332,11 +7332,11 @@ msgstr "Имя"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Discard Selected"
-msgstr "О&тменить выбор"
+msgstr "У&далить выбранные"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "&Recover Selected"
-msgstr "&Восстановить выбор"
+msgstr "&Восстановить выбранные"
 
 #: src/AutoRecoveryDialog.cpp src/PluginStartupRegistration.cpp
 msgid "&Skip"
