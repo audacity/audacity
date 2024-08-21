@@ -283,12 +283,9 @@
         <seq>Ctrl+,</seq>
     </SC>
     <SC>
-        <key>delete-key</key>
+        <key>delete</key>
+        <seq>Del</seq>
         <seq>Backspace</seq>
-    </SC>
-    <SC>
-        <key>delete-key2</key>
-        <seq>Delete</seq>
     </SC>
     <SC>
         <key>file-new</key>

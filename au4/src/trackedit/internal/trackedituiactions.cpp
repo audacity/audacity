@@ -50,6 +50,13 @@ const UiActionList TrackeditUiActions::m_actions = {
              TranslatableString("action", "Set loop region out"),
              TranslatableString("action", "Set loop region out")
              ),
+    UiAction("delete",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "De&lete"),
+             TranslatableString("action", "Delete"),
+             IconCode::Code::DELETE_TANK
+             ),
     // clip
     UiAction("clip-cut",
              au::context::UiCtxAny,
