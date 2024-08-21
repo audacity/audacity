@@ -9,23 +9,25 @@ Paul Licameli split from TrackPanel.cpp
 **********************************************************************/
 #include "TimeShiftHandle.h"
 
-#include "ChannelView.h"
-#include "AColor.h"
+#include "../../../images/Cursors.h"
 #include "../../HitTestResult.h"
-#include "ProjectAudioIO.h"
-#include "ProjectHistory.h"
 #include "../../ProjectSettings.h"
 #include "../../RefreshCode.h"
-#include "Snap.h"
-#include "SyncLock.h"
-#include "Track.h"
 #include "../../TrackArt.h"
 #include "../../TrackArtist.h"
 #include "../../TrackPanelDrawingContext.h"
 #include "../../TrackPanelMouseEvent.h"
+#include "AColor.h"
+#include "ChannelView.h"
+#include "EditUtils.h"
+#include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
+#include "ProjectHistory.h"
+#include "Snap.h"
+#include "SyncLock.h"
+#include "Track.h"
 #include "UndoManager.h"
 #include "ViewInfo.h"
-#include "../../../images/Cursors.h"
 
 #include <cassert>
 
@@ -57,11 +59,9 @@ void TimeShiftHandle::Enter(bool, AudacityProject *)
 #endif
 }
 
-HitTestPreview TimeShiftHandle::HitPreview
-(const AudacityProject *WXUNUSED(pProject), bool unsafe)
+HitTestPreview
+TimeShiftHandle::HitPreview(const AudacityProject* WXUNUSED(pProject))
 {
-   static auto disabledCursor =
-      ::MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto slideCursor =
       MakeCursor(wxCURSOR_SIZEWE, TimeCursorXpm, 16, 16);
    // TODO: Should it say "track or clip" ?  Non-wave tracks can move, or clips in a wave track.
@@ -69,12 +69,7 @@ HitTestPreview TimeShiftHandle::HitPreview
    //  -- but not all of that is available in multi tool.
    auto message = XO("Click and drag to move a track in time");
 
-   return {
-      message,
-      (unsafe
-       ? &*disabledCursor
-       : &*slideCursor)
-   };
+   return { message, &*slideCursor };
 }
 
 UIHandlePtr TimeShiftHandle::HitAnywhere
@@ -458,9 +453,6 @@ UIHandle::Result TimeShiftHandle::Click(
    const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   if ( unsafe )
-      return Cancelled;
 
    const wxMouseEvent &event = evt.event;
    const wxRect &rect = evt.rect;
@@ -810,11 +802,6 @@ UIHandle::Result TimeShiftHandle::Drag
 (const TrackPanelMouseEvent &evt, AudacityProject *pProject)
 {
    using namespace RefreshCode;
-   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   if (unsafe) {
-      this->Cancel(pProject);
-      return RefreshAll | Cancelled;
-   }
 
    const wxMouseEvent &event = evt.event;
    auto &viewInfo = ViewInfo::Get( *pProject );
@@ -909,10 +896,7 @@ UIHandle::Result TimeShiftHandle::Drag
 HitTestPreview TimeShiftHandle::Preview
 (const TrackPanelMouseState &, AudacityProject *pProject)
 {
-   // After all that, it still may be unsafe to drag.
-   // Even if so, make an informative cursor change from default to "banned."
-   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   return HitPreview(pProject, unsafe);
+   return HitPreview(pProject);
 }
 
 UIHandle::Result TimeShiftHandle::Release
@@ -920,9 +904,9 @@ UIHandle::Result TimeShiftHandle::Release
  wxWindow *)
 {
    using namespace RefreshCode;
-   const bool unsafe = ProjectAudioIO::Get( *pProject ).IsAudioActive();
-   if (unsafe)
-      return this->Cancel(pProject);
+
+   if (mClipMoveState.wasMoved)
+      EditUtils::StopAndResumePlayback(*pProject);
 
    Result result = RefreshNone;
 

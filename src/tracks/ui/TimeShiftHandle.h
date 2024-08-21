@@ -73,7 +73,7 @@ public:
 
    //! Return special intervals of the track that may move
    const Intervals &MovingIntervals() const { return mMoving; }
-   
+
    //! Change intervals satisfying a predicate from fixed to moving
    void UnfixIntervals(std::function<bool(const ChannelGroupInterval&)> pred);
 
@@ -88,7 +88,7 @@ public:
       TimeInterval(double start, double end)
          : mStart{ start }, mEnd{ std::max(start, end) }
       {}
-      
+
       double Start() const { return mStart; }
       double End() const { return mEnd; }
    private:
@@ -165,9 +165,9 @@ public:
 
    //! When dragging is done, do (once) the final steps of migration (which may be expensive)
    /*! @return success
-   
+
        In case of failure, track states are unspecified
-    
+
        Default implementation does nothing and returns true */
    virtual bool FinishMigration();
 
@@ -243,7 +243,7 @@ struct AUDACITY_DLL_API ClipMoveState {
    ClipMoveState& operator =(ClipMoveState&&) = default;
 
    using ShifterMap = std::unordered_map<Track*, std::unique_ptr<TrackShifter>>;
-   
+
    //! Will associate a TrackShifter with each track in the list
    void Init(
       AudacityProject &project,
@@ -292,8 +292,7 @@ struct AUDACITY_DLL_API ClipMoveState {
 class AUDACITY_DLL_API TimeShiftHandle : public UIHandle
 {
    TimeShiftHandle(const TimeShiftHandle&) = delete;
-   static HitTestPreview HitPreview
-      (const AudacityProject *pProject, bool unsafe);
+   static HitTestPreview HitPreview(const AudacityProject* pProject);
 
 public:
    TimeShiftHandle(std::shared_ptr<Track> pTrack, bool gripHit);

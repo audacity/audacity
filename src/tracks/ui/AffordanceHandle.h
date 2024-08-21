@@ -16,7 +16,7 @@ class AUDACITY_DLL_API AffordanceHandle : public TimeShiftHandle
 {
     constexpr static double MoveThreshold { 5.0 };
 
-    static HitTestPreview HitPreview(const AudacityProject*, bool unsafe, bool moving);
+    static HitTestPreview HitPreview(const AudacityProject*, bool moving);
 
     bool mMoving { false };
     wxPoint mClickPosition { };

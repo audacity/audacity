@@ -22,9 +22,8 @@
 #include <wx/cursor.h>
 #include <wx/event.h>
 
-HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe, bool moving)
+HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool moving)
 {
-    static wxCursor arrowCursor{ wxCURSOR_ARROW };
     static auto handOpenCursor =
         MakeCursor(wxCURSOR_HAND, RearrangeCursorXpm, 16, 16);
     static auto handClosedCursor =
@@ -33,8 +32,6 @@ HitTestPreview AffordanceHandle::HitPreview(const AudacityProject*, bool unsafe,
     auto message = XO("Drag clips to reposition them."\
         " Hold Shift and drag to move all clips on the same track.");
 
-    if (unsafe)
-        return { message, &arrowCursor };
     return {
         message,
         (moving
@@ -51,8 +48,7 @@ void AffordanceHandle::Enter(bool forward, AudacityProject* pProject)
 
 HitTestPreview AffordanceHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
 {
-    const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
-    return HitPreview(pProject, unsafe, Clicked());
+    return HitPreview(pProject, Clicked());
 }
 
 AffordanceHandle::AffordanceHandle(const std::shared_ptr<Track>& track)
