@@ -114,7 +114,7 @@ Rectangle {
                 cursorShape: Qt.OpenHandCursor
 
                 property bool moveActive: false
-                property int moveLastX: 0
+                property real moveLastX: 0.0
 
                 onPositionChanged: function(e) {
                     root.clipItemMousePositionChanged(e.x, e.y)
