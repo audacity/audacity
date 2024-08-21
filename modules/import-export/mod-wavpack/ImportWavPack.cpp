@@ -168,14 +168,11 @@ void WavPackImportFileHandle::Import(
 
    outTracks.clear();
 
-   auto track = ImportUtils::NewWaveTrack(
-      *trackFactory,
-      mNumChannels,
-      mFormat,
-      mSampleRate);
+   auto tracks = trackFactory->CreateMany(mNumChannels, mFormat, mSampleRate);
+
 
    /* The number of samples to read in each loop */
-   const size_t SAMPLES_TO_READ = track->GetMaxBlockSize();
+   const size_t SAMPLES_TO_READ = (*tracks->Any<WaveTrack>().begin())->GetMaxBlockSize();
    uint32_t totalSamplesRead = 0;
 
    {
@@ -203,7 +200,7 @@ void WavPackImportFileHandle::Import(
                   int16Buffer[c] = static_cast<int16_t>(wavpackBuffer[c]);
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            ImportUtils::ForEachChannel(*tracks, [&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(int16Buffer.get() + chn),
@@ -216,7 +213,7 @@ void WavPackImportFileHandle::Import(
             });
          } else if (mFormat == int24Sample || (wavpackMode & MODE_FLOAT) == MODE_FLOAT) {
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            ImportUtils::ForEachChannel(*tracks, [&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(wavpackBuffer.get() + chn),
@@ -232,7 +229,7 @@ void WavPackImportFileHandle::Import(
                floatBuffer[c] = static_cast<float>(wavpackBuffer[c] / static_cast<double>(std::numeric_limits<int32_t>::max()));
 
             unsigned chn = 0;
-            ImportUtils::ForEachChannel(*track, [&](auto& channel)
+            ImportUtils::ForEachChannel(*tracks, [&](auto& channel)
             {
                channel.AppendBuffer(
                   reinterpret_cast<constSamplePtr>(floatBuffer.get() + chn),
@@ -267,7 +264,8 @@ void WavPackImportFileHandle::Import(
       return;
    }
 
-   ImportUtils::FinalizeImport(outTracks, *track);
+   
+   ImportUtils::FinalizeImport(outTracks, std::move(*tracks));
 
    if (wavpackMode & MODE_VALID_TAG) {
       bool apeTag = wavpackMode & MODE_APETAG;
