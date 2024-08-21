@@ -8,7 +8,7 @@
 
  **********************************************************************/
 
-#pragma once 
+#pragma once
 
 #include "UIHandle.h"
 #include "WaveClip.h"
@@ -24,14 +24,14 @@ private:
 
     static constexpr int BoundaryThreshold = 5;
 
-    static HitTestPreview HitPreviewTrim(const AudacityProject*, bool unsafe, bool isLeftBorder);
-    static HitTestPreview HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder);
+    static HitTestPreview HitPreviewTrim(bool isLeftBorder);
+    static HitTestPreview HitPreviewStretch(bool isLeftBorder);
 
     std::unique_ptr<AdjustPolicy> mAdjustPolicy{};
     std::shared_ptr<const WaveTrack> mpTrack;
     bool mIsStretchMode;
     bool mIsLeftBorder;
-    
+
 public:
     WaveClipAdjustBorderHandle(std::unique_ptr<AdjustPolicy>& adjustPolicy,
         std::shared_ptr<const WaveTrack> pTrack,

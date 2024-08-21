@@ -14,21 +14,23 @@
 
 #include <wx/event.h>
 
-#include "ClipParameters.h"
+#include "../../../../../images/Cursors.h"
 #include "../../../../TrackArt.h"
 #include "../../../../TrackArtist.h"
-#include "Snap.h"
 #include "../../../../TrackPanelDrawingContext.h"
-#include "../../../../../images/Cursors.h"
-#include "WaveClip.h"
-#include "WaveTrack.h"
-#include "WaveChannelView.h"
+#include "ClipParameters.h"
+#include "EditUtils.h"
 #include "HitTestResult.h"
-#include "TrackPanelMouseEvent.h"
-#include "ViewInfo.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
+#include "Snap.h"
+#include "TrackPanelMouseEvent.h"
 #include "UndoManager.h"
+#include "ViewInfo.h"
+#include "WaveChannelView.h"
+#include "WaveClip.h"
 #include "WaveClipUIUtilities.h"
+#include "WaveTrack.h"
 
 namespace {
 
@@ -282,6 +284,8 @@ public:
             /*i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown*/
                 XO("Trim by %.02fs").Format(dt));
          }
+
+         EditUtils::StopAndResumePlayback(project);
       }
    }
 
@@ -307,40 +311,27 @@ public:
    }
 };
 
-HitTestPreview WaveClipAdjustBorderHandle::HitPreviewTrim(const AudacityProject*, bool unsafe, bool isLeftBorder)
+HitTestPreview WaveClipAdjustBorderHandle::HitPreviewTrim(bool isLeftBorder)
 {
-   static auto disabledCursor =
-      MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto trimCursorLeft =
       MakeCursor(wxCURSOR_SIZEWE, ClipTrimLeftXpm , 16, 16);
    static auto trimCursorRight =
       MakeCursor(wxCURSOR_SIZEWE, ClipTrimRightXpm, 16, 16);
    auto message = XO("Click and drag to move clip boundary in time");
 
-   return {
-      message,
-      (unsafe
-         ? &*disabledCursor
-         : &*(isLeftBorder ? trimCursorLeft : trimCursorRight))
-   };
+   return { message, &*(isLeftBorder ? trimCursorLeft : trimCursorRight) };
 }
 
-HitTestPreview WaveClipAdjustBorderHandle::HitPreviewStretch(const AudacityProject*, bool unsafe, bool isLeftBorder)
+HitTestPreview WaveClipAdjustBorderHandle::HitPreviewStretch(bool isLeftBorder)
 {
-   static auto disabledCursor =
-      MakeCursor(wxCURSOR_NO_ENTRY, DisabledCursorXpm, 16, 16);
    static auto stretchCursorLeft =
       MakeCursor(wxCURSOR_SIZEWE, ClipStretchLeftXpm, 16, 16);
    static auto stretchCursorRight =
       MakeCursor(wxCURSOR_SIZEWE, ClipStretchRightXpm, 16, 16);
    auto message = XO("Click and drag to stretch clip");
 
-   return {
-      message,
-      (unsafe
-         ? &*disabledCursor
-         : &*(isLeftBorder ? stretchCursorLeft : stretchCursorRight))
-   };
+   return { message,
+            &*(isLeftBorder ? stretchCursorLeft : stretchCursorRight) };
 }
 
 WaveClipAdjustBorderHandle::WaveClipAdjustBorderHandle(
@@ -485,24 +476,18 @@ UIHandlePtr WaveClipAdjustBorderHandle::HitTest(std::weak_ptr<WaveClipAdjustBord
     return {};
 }
 
-
-
-HitTestPreview WaveClipAdjustBorderHandle::Preview(const TrackPanelMouseState& mouseState, AudacityProject* pProject)
+HitTestPreview WaveClipAdjustBorderHandle::Preview(
+   const TrackPanelMouseState& mouseState, AudacityProject*)
 {
-   const bool unsafe = ProjectAudioIO::Get(*pProject).IsAudioActive();
-   return mIsStretchMode
-      ? HitPreviewStretch(pProject, unsafe, mIsLeftBorder)
-      : HitPreviewTrim(pProject, unsafe, mIsLeftBorder);
+   return mIsStretchMode ? HitPreviewStretch(mIsLeftBorder) :
+                           HitPreviewTrim(mIsLeftBorder);
 }
 
-UIHandle::Result WaveClipAdjustBorderHandle::Click
-(const TrackPanelMouseEvent& event, AudacityProject* pProject)
+UIHandle::Result WaveClipAdjustBorderHandle::Click(
+   const TrackPanelMouseEvent& event, AudacityProject*)
 {
-   if (!ProjectAudioIO::Get(*pProject).IsAudioActive())
-   {
-      if (mAdjustPolicy->Init(event))
-         return RefreshCode::RefreshNone;
-   }
+   if (mAdjustPolicy->Init(event))
+      return RefreshCode::RefreshNone;
    return RefreshCode::Cancelled;
 }
 

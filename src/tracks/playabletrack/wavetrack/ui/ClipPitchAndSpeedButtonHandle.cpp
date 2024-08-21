@@ -11,6 +11,7 @@
 #include "ClipPitchAndSpeedButtonHandle.h"
 #include "AllThemeResources.h"
 #include "BasicUI.h"
+#include "EditUtils.h"
 #include "HitTestResult.h"
 #include "LowlitClipButton.h"
 #include "PitchAndSpeedDialog.h"
@@ -18,8 +19,8 @@
 #include "ProjectHistory.h"
 #include "RefreshCode.h"
 #include "Theme.h"
-#include "TimeStretching.h"
 #include "TimeAndPitchInterface.h"
+#include "TimeStretching.h"
 #include "TrackPanelMouseEvent.h"
 #include "WaveClip.h"
 #include "WaveClipUIUtilities.h"
@@ -138,6 +139,7 @@ UIHandle::Result ClipPitchAndSpeedButtonHandle::DoRelease(
       else
       {
          WaveClipUIUtilities::SelectClip(*pProject, *mClip);
+         EditUtils::StopAndResumePlayback(*pProject);
          ProjectHistory::Get(*pProject).PushState(
             XO("Reset Clip Speed"), XO("Reset Clip Speed"));
       }
