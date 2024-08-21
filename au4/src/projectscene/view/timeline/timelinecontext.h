@@ -101,8 +101,6 @@ private:
     void setFrameEndTime(double newFrameEndTime);
     void updateFrameTime();
 
-    void changeZoom(int direction);
-
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
     void updateSelectionActive();
