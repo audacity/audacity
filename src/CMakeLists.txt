@@ -105,6 +105,8 @@ set( SOURCES
       Diags.cpp
       Diags.h
       DropTarget.cpp
+      EditUtils.cpp
+      EditUtils.h
       EffectAndCommandPluginManager.cpp
       EffectAndCommandPluginManager.h
       DropoutDetector.cpp
