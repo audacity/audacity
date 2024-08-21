@@ -90,7 +90,6 @@ private:
     muse::uicomponents::MenuItem* makeGenerateMenu();
     muse::uicomponents::MenuItem* makeEffectMenu();
     muse::uicomponents::MenuItem* makeAnalyzeMenu();
-    muse::uicomponents::MenuItemList makePluginsMenuSubitems();
     muse::uicomponents::MenuItem* makeToolsMenu();
     muse::uicomponents::MenuItem* makeExtraMenu();
     muse::uicomponents::MenuItem* makeHelpMenu();
@@ -113,7 +112,6 @@ private:
     muse::uicomponents::MenuItemList makeFramesItems();
     muse::uicomponents::MenuItemList makeWorkspacesItems();
     muse::uicomponents::MenuItemList makeShowItems();
-    muse::uicomponents::MenuItemList makePluginsItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
 };
 }
