@@ -66,8 +66,10 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack> &trackRange,
    Mixer::Inputs waveArray;
 
    for (auto wt : trackRange) {
-      const auto stretchingSequence =
-         StretchingSequence::Create(*wt, wt->GetClipInterfaces());
+      const auto stretchingSequence = StretchingSequence::Create(
+         std::dynamic_pointer_cast<const PlayableSequence>(
+            wt->shared_from_this()),
+         wt->GetClipInterfaces());
       waveArray.emplace_back(stretchingSequence, GetEffectStages(*wt));
       tstart = wt->GetStartTime();
       tend = wt->GetEndTime();

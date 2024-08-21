@@ -220,8 +220,10 @@ TransportSequences MakeTransportTracks(
       const auto range = trackList.Any<WaveTrack>()
          + (selectedOnly ? &Track::IsSelected : &Track::Any);
       for (auto pTrack : range)
-         result.playbackSequences.push_back(
-            StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+         result.playbackSequences.push_back(StretchingSequence::Create(
+            std::dynamic_pointer_cast<const PlayableSequence>(
+               pTrack->shared_from_this()),
+            pTrack->GetClipInterfaces()));
    }
    if (nonWaveToo) {
       const auto range = trackList.Any<const PlayableTrack>() +

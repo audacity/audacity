@@ -51,7 +51,7 @@ TEST_CASE("StretchingSequence integration tests")
          [](auto& clip) { clip.SetPlayStartTime(3.0); });
 
       const auto sut = StretchingSequence::Create(
-         *mockSequence, ClipConstHolders { minusClip, plusClip });
+         mockSequence, ClipConstHolders { minusClip, plusClip });
       const auto track = trackMaker.Track({ minusClip, plusClip });
       constexpr auto backwards = false;
       AudioContainer sutOutput(totalLength, numChannels);

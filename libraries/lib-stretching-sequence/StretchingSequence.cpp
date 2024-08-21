@@ -27,8 +27,8 @@ void GetOffsetBuffer(
 } // namespace
 
 StretchingSequence::StretchingSequence(
-   const PlayableSequence& sequence, int sampleRate, size_t numChannels,
-   std::unique_ptr<AudioSegmentFactoryInterface> factory)
+   std::shared_ptr<const PlayableSequence> sequence, int sampleRate,
+   size_t numChannels, std::unique_ptr<AudioSegmentFactoryInterface> factory)
     : mSequence { sequence }
     , mAudioSegmentFactory { std::move(factory) }
 {
@@ -54,10 +54,10 @@ bool StretchingSequence::GetNext(
    {
       const auto& segment = *mActiveAudioSegmentIt;
       // More-than-stereo isn't supported
-      assert(mSequence.NChannels() <= 2);
+      assert(mSequence->NChannels() <= 2);
       float* offsetBuffers[2] {};
       GetOffsetBuffer(
-         offsetBuffers, buffers, mSequence.NChannels(), numProcessedSamples);
+         offsetBuffers, buffers, mSequence->NChannels(), numProcessedSamples);
       numProcessedSamples += segment->GetFloats(
          offsetBuffers,
          numSamples - numProcessedSamples); // No need to reverse, we feed the
@@ -70,11 +70,11 @@ bool StretchingSequence::GetNext(
    if (remaining > 0u)
    {
       // More-than-stereo isn't supported
-      assert(mSequence.NChannels() <= 2);
+      assert(mSequence->NChannels() <= 2);
       float* offsetBuffers[2] {};
       GetOffsetBuffer(
-         offsetBuffers, buffers, mSequence.NChannels(), numProcessedSamples);
-      for (auto i = 0u; i < mSequence.NChannels(); ++i)
+         offsetBuffers, buffers, mSequence->NChannels(), numProcessedSamples);
+      for (auto i = 0u; i < mSequence->NChannels(); ++i)
          std::fill(offsetBuffers[i], offsetBuffers[i] + remaining, 0.f);
    }
    mExpectedStart =
@@ -86,12 +86,12 @@ bool StretchingSequence::GetNext(
 
 size_t StretchingSequence::NChannels() const
 {
-   return mSequence.NChannels();
+   return mSequence->NChannels();
 }
 
 float StretchingSequence::GetChannelVolume(int channel) const
 {
-   return mSequence.GetChannelVolume(channel);
+   return mSequence->GetChannelVolume(channel);
 }
 
 bool StretchingSequence::DoGet(
@@ -105,53 +105,53 @@ bool StretchingSequence::DoGet(
 
 const ChannelGroup* StretchingSequence::FindChannelGroup() const
 {
-   return mSequence.FindChannelGroup();
+   return mSequence->FindChannelGroup();
 }
 
 bool StretchingSequence::GetSolo() const
 {
-   return mSequence.GetSolo();
+   return mSequence->GetSolo();
 }
 
 bool StretchingSequence::GetMute() const
 {
-   return mSequence.GetMute();
+   return mSequence->GetMute();
 }
 
 double StretchingSequence::GetStartTime() const
 {
-   return mSequence.GetStartTime();
+   return mSequence->GetStartTime();
 }
 
 double StretchingSequence::GetEndTime() const
 {
-   return mSequence.GetEndTime();
+   return mSequence->GetEndTime();
 }
 
 double StretchingSequence::GetRate() const
 {
-   return mSequence.GetRate();
+   return mSequence->GetRate();
 }
 
 sampleFormat StretchingSequence::WidestEffectiveFormat() const
 {
-   return mSequence.WidestEffectiveFormat();
+   return mSequence->WidestEffectiveFormat();
 }
 
 bool StretchingSequence::HasTrivialEnvelope() const
 {
-   return mSequence.HasTrivialEnvelope();
+   return mSequence->HasTrivialEnvelope();
 }
 
 void StretchingSequence::GetEnvelopeValues(
    double* buffer, size_t bufferLen, double t0, bool backwards) const
 {
-   mSequence.GetEnvelopeValues(buffer, bufferLen, t0, backwards);
+   mSequence->GetEnvelopeValues(buffer, bufferLen, t0, backwards);
 }
 
 AudioGraph::ChannelType StretchingSequence::GetChannelType() const
 {
-   return mSequence.GetChannelType();
+   return mSequence->GetChannelType();
 }
 
 bool StretchingSequence::GetFloats(
@@ -178,7 +178,7 @@ bool StretchingSequence::MutableGet(
       !mExpectedStart.has_value() || *mExpectedStart != start ||
       (mPlaybackDirection == PlaybackDirection::backward != backwards))
    {
-      const auto t = start.as_double() / mSequence.GetRate();
+      const auto t = start.as_double() / mSequence->GetRate();
       ResetCursor(
          t,
          backwards ? PlaybackDirection::backward : PlaybackDirection::forward);
@@ -187,11 +187,12 @@ bool StretchingSequence::MutableGet(
 }
 
 std::shared_ptr<StretchingSequence> StretchingSequence::Create(
-   const PlayableSequence& sequence, const ClipConstHolders& clips)
+   std::shared_ptr<const PlayableSequence> sequence,
+   const ClipConstHolders& clips)
 {
-   const int sampleRate = sequence.GetRate();
+   const int sampleRate = sequence->GetRate();
    return std::make_shared<StretchingSequence>(
-      sequence, sampleRate, sequence.NChannels(),
+      sequence, sampleRate, sequence->NChannels(),
       std::make_unique<AudioSegmentFactory>(
-         sampleRate, sequence.NChannels(), clips));
+         sampleRate, sequence->NChannels(), clips));
 }

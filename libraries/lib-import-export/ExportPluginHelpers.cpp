@@ -30,7 +30,10 @@ std::unique_ptr<Mixer> ExportPluginHelpers::CreateMixer(
    const auto& tracks = TrackList::Get(project);
    for (auto pTrack: ExportUtils::FindExportWaveTracks(tracks, selectionOnly))
       inputs.emplace_back(
-         StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()),
+         StretchingSequence::Create(
+            std::dynamic_pointer_cast<const PlayableSequence>(
+               pTrack->shared_from_this()),
+            pTrack->GetClipInterfaces()),
          GetEffectStages(*pTrack));
    // MB: the stop time should not be warped, this was a bug.
    return std::make_unique<Mixer>(

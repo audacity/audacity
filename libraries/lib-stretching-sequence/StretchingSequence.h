@@ -28,10 +28,10 @@ class STRETCHING_SEQUENCE_API StretchingSequence final : public PlayableSequence
 {
 public:
    static std::shared_ptr<StretchingSequence>
-   Create(const PlayableSequence&, const ClipConstHolders& clips);
+   Create(std::shared_ptr<const PlayableSequence>, const ClipConstHolders& clips);
 
    StretchingSequence(
-      const PlayableSequence&, int sampleRate, size_t numChannels,
+      std::shared_ptr<const PlayableSequence>, int sampleRate, size_t numChannels,
       std::unique_ptr<AudioSegmentFactoryInterface>);
 
    // WideSampleSequence
@@ -52,7 +52,7 @@ public:
       sampleCount* pNumWithinClips = nullptr) const override;
 
    // PlayableSequence
-   const ChannelGroup *FindChannelGroup() const override;
+   const ChannelGroup* FindChannelGroup() const override;
    bool GetSolo() const override;
    bool GetMute() const override;
 
@@ -67,12 +67,12 @@ private:
    using AudioSegments = std::vector<std::shared_ptr<AudioSegment>>;
 
    void ResetCursor(double t, PlaybackDirection);
-   bool GetNext(float *const buffers[], size_t numChannels, size_t numSamples);
+   bool GetNext(float* const buffers[], size_t numChannels, size_t numSamples);
    bool MutableGet(
       size_t iChannel, size_t nBuffers, const samplePtr buffers[],
       sampleFormat format, sampleCount start, size_t len, bool backwards);
 
-   const PlayableSequence& mSequence;
+   std::shared_ptr<const PlayableSequence> mSequence;
    const std::unique_ptr<AudioSegmentFactoryInterface> mAudioSegmentFactory;
    AudioSegments mAudioSegments;
    AudioSegments::const_iterator mActiveAudioSegmentIt = mAudioSegments.end();
