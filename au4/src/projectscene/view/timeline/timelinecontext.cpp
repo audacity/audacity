@@ -9,7 +9,8 @@
 
 #include "log.h"
 
-static constexpr double ZOOM_MIN = 0.1;
+static constexpr double ZOOM_MIN = 0.001;
+static constexpr double ZOOM_MAX = 6000000;
 static constexpr int PIXELSSTEPSFACTOR = 5;
 
 using namespace au::projectscene;
@@ -100,16 +101,6 @@ void TimelineContext::onWheel(const QPoint& pixelDelta, const QPoint& angleDelta
             emit shiftViewByY(dy* correction);
         }
     }
-}
-
-void TimelineContext::changeZoom(int direction)
-{
-    double step = m_zoom * 0.04;
-
-    double zoom = m_zoom + (step * direction);
-    zoom = std::max(zoom, ZOOM_MIN);
-
-    setZoom(zoom);
 }
 
 void TimelineContext::onResizeFrameWidth(double frameWidth)
@@ -236,6 +227,8 @@ double TimelineContext::zoom() const
 
 void TimelineContext::setZoom(double zoom)
 {
+    zoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
+
     if (m_zoom != zoom) {
         m_zoom = zoom;
         emit zoomChanged();
