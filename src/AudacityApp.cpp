@@ -1267,6 +1267,80 @@ AudacityApp::~AudacityApp()
 {
 }
 
+void AudacityApp::ShowSplashScreen() {
+   // Bug 718: Position splash screen on same screen 
+   // as where Audacity project will appear.
+   wxRect wndRect;
+   bool bMaximized = false;
+   bool bIconized = false;
+   GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
+
+   // BG: Create a temporary window to set as the top window
+   wxImage logoimage((const char**)Audacity_splash_xpm);
+   logoimage.Scale(logoimage.GetWidth() * (2.0 / 3.0), logoimage.GetHeight() * (2.0 / 3.0), wxIMAGE_QUALITY_HIGH);
+   if (GetLayoutDirection() == wxLayout_RightToLeft)
+      logoimage = logoimage.Mirror();
+   wxBitmap logo(logoimage);
+
+   mSplashScreen = std::make_unique<wxSplashScreen>(
+      logo,
+      wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
+      0,
+      nullptr,
+      wxID_ANY,
+      wndRect.GetTopLeft(),
+      wxDefaultSize,
+      wxSTAY_ON_TOP);
+
+   // Unfortunately with the Windows 10 Creators update, the splash screen 
+   // now appears before setting its position.
+   // On a dual monitor screen it will appear on one screen and then 
+   // possibly jump to the second.
+   // We could fix this by writing our own splash screen and using Hide() 
+   // until the splash scren was correctly positioned, then Show()
+
+   // Possibly move it on to the second screen...
+   mSplashScreen->SetPosition(wndRect.GetTopLeft());
+   // Centered on whichever screen it is on.
+   mSplashScreen->Center();
+   mSplashScreen->SetTitle(_("Audacity is starting up..."));
+   SetTopWindow(mSplashScreen.get());
+   mSplashScreen->Raise();
+}
+
+void AudacityApp::HideSplashScreen(bool fadeOut)
+{
+   const int fadeDurationMs = 120;
+   const int fadeStepMs = 16;
+
+   const int maxTransparency = 255;
+   const int numSteps = fadeDurationMs / fadeStepMs;
+   const int transparencyDecrement = maxTransparency / numSteps;
+
+   int currentAlpha = maxTransparency;
+
+   if (!fadeOut) {
+      mSplashScreen->Destroy();
+      mSplashScreen.reset();
+      return;
+   }
+
+   mSplashTimer.Start(fadeStepMs);
+
+   mSplashTimer.Bind(wxEVT_TIMER, [this, currentAlpha, transparencyDecrement](wxTimerEvent& evt) mutable {
+      currentAlpha -= transparencyDecrement;
+
+      if (currentAlpha <= 0) {
+         mSplashTimer.Stop();
+         mSplashScreen->Destroy();
+         mSplashScreen.reset();
+      }
+      else if (mSplashScreen->CanSetTransparent()) {
+         mSplashScreen->SetTransparent(currentAlpha);
+      }
+   });
+}
+
 // Some of the many initialization steps
 void AudacityApp::OnInit0()
 {
@@ -1503,47 +1577,11 @@ bool AudacityApp::InitPart2()
    if (playingJournal)
       Journal::SetInputFileName( journalFileName );
 
-   // BG: Create a temporary window to set as the top window
-   wxImage logoimage((const char **)Audacity_splash_xpm);
-   logoimage.Scale(logoimage.GetWidth() * (2.0/3.0), logoimage.GetHeight() * (2.0/3.0), wxIMAGE_QUALITY_HIGH);
-   if( GetLayoutDirection() == wxLayout_RightToLeft)
-      logoimage = logoimage.Mirror();
-   wxBitmap logo(logoimage);
-
    AudacityProject *project;
+
+   ShowSplashScreen();
+
    {
-      // Bug 718: Position splash screen on same screen 
-      // as where Audacity project will appear.
-      wxRect wndRect;
-      bool bMaximized = false;
-      bool bIconized = false;
-      GetNextWindowPlacement(&wndRect, &bMaximized, &bIconized);
-
-      wxSplashScreen temporarywindow(
-         logo,
-         wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
-         0,
-         NULL,
-         wxID_ANY,
-         wndRect.GetTopLeft(),
-         wxDefaultSize,
-         wxSTAY_ON_TOP);
-
-      // Unfortunately with the Windows 10 Creators update, the splash screen 
-      // now appears before setting its position.
-      // On a dual monitor screen it will appear on one screen and then 
-      // possibly jump to the second.
-      // We could fix this by writing our own splash screen and using Hide() 
-      // until the splash scren was correctly positioned, then Show()
-
-      // Possibly move it on to the second screen...
-      temporarywindow.SetPosition( wndRect.GetTopLeft() );
-      // Centered on whichever screen it is on.
-      temporarywindow.Center();
-      temporarywindow.SetTitle(_("Audacity is starting up..."));
-      SetTopWindow(&temporarywindow);
-      temporarywindow.Raise();
-
       // ANSWER-ME: Why is YieldFor needed at all?
       //wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI|wxEVT_CATEGORY_USER_INPUT|wxEVT_CATEGORY_UNKNOWN);
       wxEventLoopBase::GetActive()->YieldFor(wxEVT_CATEGORY_UI);
@@ -1582,7 +1620,6 @@ bool AudacityApp::InitPart2()
       recentFiles.UseMenu(recentMenu);
 
 #endif //__WXMAC__
-      temporarywindow.Show(false);
    }
 
    //Search for the new plugins
@@ -1753,6 +1790,9 @@ bool AudacityApp::InitPart2()
 #endif
 
    HandleAppInitialized();
+
+   bool splashFadeOut = !playingJournal;
+   HideSplashScreen(splashFadeOut);
 
    return TRUE;
 }
