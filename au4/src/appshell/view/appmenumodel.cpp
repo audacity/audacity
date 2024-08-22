@@ -708,8 +708,5 @@ MenuItemList AppMenuModel::makeEffectsItems()
         items << makeMenu(TranslatableString::untranslatable(category.title), effectsToCategoryMap[category.id]);
     }
 
-    items << makeSeparator()
-          << makeMenuItem("plugins-omitted");
-
     return items;
 }

@@ -3,11 +3,16 @@
 */
 #include "effectsprovider.h"
 
+#include "global/translation.h"
+
+#include "au3/buildineffects.h"
+
 #include "log.h"
 
 using namespace au::effects;
 
 static muse::String VST_CATEGORY_ID = u"vst";
+static muse::String BUILDIN_CATEGORY_ID = u"buildin";
 
 static muse::String categoryId(muse::audio::AudioResourceType type)
 {
@@ -24,16 +29,29 @@ void EffectsProvider::reloadEffects()
     m_effects.clear();
     m_effectsCategories.clear();
 
-    std::vector<muse::audioplugins::AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+    // build-in
+    {
+        BuildInEffects loader;
+        EffectMetaList metaList = loader.effectMetaList();
+        for (EffectMeta meta : metaList) {
+            meta.categoryId = BUILDIN_CATEGORY_ID;
+            m_effects.push_back(std::move(meta));
+        }
+    }
 
-    for (const muse::audioplugins::AudioPluginInfo& info : allEffects) {
-        EffectMeta meta;
-        meta.id = muse::String(info.meta.id.c_str());
-        meta.title = muse::String(info.meta.id.c_str());
+    // plugins
+    {
+        std::vector<muse::audioplugins::AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
-        meta.categoryId = categoryId(info.meta.type);
+        for (const muse::audioplugins::AudioPluginInfo& info : allEffects) {
+            EffectMeta meta;
+            meta.id = muse::String(info.meta.id.c_str());
+            meta.title = muse::String(info.meta.id.c_str());
 
-        m_effects.push_back(meta);
+            meta.categoryId = categoryId(info.meta.type);
+
+            m_effects.push_back(std::move(meta));
+        }
     }
 
     m_effectsChanged.notify();
@@ -51,11 +69,16 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
-    return {
+    static const EffectCategoryList list = {
+        { BUILDIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") },
 #ifdef AU_MODULE_VST
-        { VST_CATEGORY_ID, u"VST" }
+        {
+            VST_CATEGORY_ID, u"VST"
+        }
 #endif
     };
+
+    return list;
 }
 
 EffectMeta EffectsProvider::meta(const muse::String& id) const
