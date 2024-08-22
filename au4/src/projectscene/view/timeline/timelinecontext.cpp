@@ -10,7 +10,7 @@
 #include "log.h"
 
 static constexpr double ZOOM_MIN = 0.001;
-static constexpr double ZOOM_MAX = 6000000;
+static constexpr double ZOOM_MAX = 6000000.0;
 static constexpr int PIXELSSTEPSFACTOR = 5;
 
 using namespace au::projectscene;
@@ -126,20 +126,43 @@ void TimelineContext::shiftFrameTime(double shift)
         return;
     }
 
+    double startTimeShift = shift;
+    double endTimeShift = shift;
+
+    double minStartTime = 0.0;
+    double maxEndTime = std::max(m_lastZoomEndTime, trackEditProject()->totalTime().to_double());
+
     // do not shift to negative time values
-    if (m_frameStartTime + shift < 0.0) {
-        if (muse::is_equal(m_frameStartTime, 0.0)) {
+    if (m_frameStartTime + startTimeShift < minStartTime) {
+        if (muse::is_equal(m_frameStartTime, minStartTime)) {
             return;
         }
         //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
         else {
-            shift = 0.0 - m_frameStartTime;
+            startTimeShift = minStartTime - m_frameStartTime;
         }
     }
-    setFrameStartTime(m_frameStartTime + shift);
-    setFrameEndTime(m_frameEndTime + shift);
+
+    if (m_frameEndTime + endTimeShift > maxEndTime) {
+        if (muse::is_equal(m_frameEndTime, maxEndTime)) {
+            return;
+        }
+        //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
+        else {
+            endTimeShift = maxEndTime - m_frameEndTime;
+        }
+    }
+
+    setFrameStartTime(m_frameStartTime + startTimeShift);
+    setFrameEndTime(m_frameEndTime + endTimeShift);
 
     emit frameTimeChanged();
+}
+
+au::trackedit::ITrackeditProjectPtr TimelineContext::trackEditProject() const
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    return prj ? prj->trackeditProject() : nullptr;
 }
 
 IProjectViewStatePtr TimelineContext::viewState() const
@@ -233,11 +256,16 @@ void TimelineContext::setZoom(double mouseX, double zoom)
         m_zoom = zoom;
         emit zoomChanged();
 
-        double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * (m_frameEndTime - m_frameStartTime);
-        double newRange = positionToTime(m_frameWidth) - m_frameStartTime;
+        double timeRange = m_frameEndTime - m_frameStartTime;
+        double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * timeRange;
+        double newTimeRange = positionToTime(m_frameWidth) - m_frameStartTime;
 
-        setFrameStartTime(mouseTime - (mouseX / m_frameWidth) * newRange);
-        setFrameEndTime(mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newRange);
+        double newStartTime = mouseTime - (mouseX / m_frameWidth) * newTimeRange;
+        setFrameStartTime(std::max(newStartTime, 0.0));
+
+        double newEndTime = mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newTimeRange;
+        m_lastZoomEndTime = newEndTime;
+        setFrameEndTime(newEndTime);
 
         emit frameTimeChanged();
     }

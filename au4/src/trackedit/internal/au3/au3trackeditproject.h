@@ -30,6 +30,8 @@ public:
     void setTimeSignature(const TimeSignature& timeSignature) override;
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
+    secs_t totalTime() const override;
+
     void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) override;
 
 private:

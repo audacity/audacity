@@ -93,6 +93,7 @@ signals:
     void shiftViewByY(double dy);
 
 private:
+    trackedit::ITrackeditProjectPtr trackEditProject() const;
     IProjectViewStatePtr viewState() const;
     void onProjectChanged();
 
@@ -112,6 +113,8 @@ private:
 
     double m_frameStartTime = 0.0;
     double m_frameEndTime = 0.0;
+
+    double m_lastZoomEndTime = 0.0;
 
     double m_zoom = 1.0; // see init
     int m_BPM = 120;

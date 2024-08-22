@@ -32,6 +32,8 @@ public:
     virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
+    virtual secs_t totalTime() const = 0;
+
     //! TODO Need remove from here to separated service
     virtual void pushHistoryState(const std::string& longDescription, const std::string& shortDescription) = 0;
 };

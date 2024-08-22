@@ -154,6 +154,11 @@ muse::async::Channel<au::trackedit::TimeSignature> Au3TrackeditProject::timeSign
     return m_timeSignatureChanged;
 }
 
+secs_t Au3TrackeditProject::totalTime() const
+{
+    return ::TrackList::Get(*au3ProjectPtr()).GetEndTime();
+}
+
 void Au3TrackeditProject::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
 {
     auto project = reinterpret_cast<AudacityProject*>(au3ProjectPtr());
