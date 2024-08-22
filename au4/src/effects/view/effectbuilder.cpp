@@ -45,11 +45,11 @@ void EffectBuilder::load(const QString& id, QObject* itemParent)
 
     setTitle(meta.title);
 
-    QQmlEngine* engin = engine()->qmlEngine();
+    QQmlEngine* qmlEngine = engine()->qmlEngine();
 
     //! NOTE We create extension UI using a separate engine to control what we provide,
     //! making it easier to maintain backward compatibility and stability.
-    QQmlComponent component = QQmlComponent(engin, meta.qmlUrl.toQString());
+    QQmlComponent component = QQmlComponent(qmlEngine, meta.qmlUrl.toQString());
     if (!component.isReady()) {
         LOGE() << "Failed to load QML file: " << meta.qmlUrl;
         LOGE() << component.errorString();

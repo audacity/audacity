@@ -30,16 +30,25 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.h
 
-    # internal/au3
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/buildineffects.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/buildineffects.h
-
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectmodel.h
+    # build-in
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.h
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.h
     )
 
 if (AU_MODULE_VST)
@@ -81,5 +90,4 @@ endif()
 set(MODULE_LINK au3wrap)
 
 setup_module()
-
 

@@ -3,14 +3,14 @@
 */
 #pragma once
 
-#include "../../effectstypes.h"
+#include "../effectstypes.h"
 
 namespace au::effects {
-class BuildInEffects
+class BuiltinEffects
 {
 public:
-
-    BuildInEffects() = default;
+    
+    BuiltinEffects() = default;
 
     static void init();
 

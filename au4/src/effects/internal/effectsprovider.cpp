@@ -5,7 +5,7 @@
 
 #include "global/translation.h"
 
-#include "au3/buildineffects.h"
+#include "../builtin/builtineffects.h"
 
 #include "log.h"
 
@@ -28,7 +28,7 @@ void EffectsProvider::reloadEffects()
 
     // build-in
     {
-        BuildInEffects loader;
+        BuiltinEffects loader;
         EffectMetaList metaList = loader.effectMetaList();
         for (EffectMeta meta : metaList) {
             m_effects.push_back(std::move(meta));
@@ -66,7 +66,7 @@ muse::async::Notification EffectsProvider::effectMetaListChanged() const
 EffectCategoryList EffectsProvider::effectsCategoryList() const
 {
     static const EffectCategoryList list = {
-        { BUILDIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") },
+        { BUILTIN_CATEGORY_ID, muse::mtrc("effects", "Build-in") },
 #ifdef AU_MODULE_VST
         {
             VST_CATEGORY_ID, u"VST"

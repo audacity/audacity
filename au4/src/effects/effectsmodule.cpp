@@ -17,7 +17,7 @@
 #include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
 
-#include "internal/au3/buildineffects.h"
+#include "builtin/builtineffects.h"
 
 #ifdef AU_MODULE_VST
 #include "internal/au3/vst3pluginsscanner.h"
@@ -90,7 +90,7 @@ void EffectsModule::registerUiTypes()
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     //! NOTE Should be before PluginManager::Get().Initialize
-    BuildInEffects::init();
+    BuiltinEffects::init();
 
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
         return std::make_unique<au3::EffectSettings>(localFileName.ToStdString());
