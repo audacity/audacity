@@ -109,6 +109,11 @@ void SelectionViewController::resetDataSelection()
     selectionController()->resetDataSelection();
 }
 
+bool SelectionViewController::isLeftSelection(double x)
+{
+    return m_startPoint.x() > x;
+}
+
 IProjectViewStatePtr SelectionViewController::viewState() const
 {
     IAudacityProjectPtr prj = globalContext()->currentProject();
