@@ -11,7 +11,7 @@
 namespace au::effects {
 struct EffectMeta {
     muse::String id;
-    muse::io::path_t url;
+    muse::io::path_t qmlUrl;
     muse::String title;
     muse::String description;
     muse::String version;
@@ -32,4 +32,7 @@ struct EffectCategory {
 };
 
 using EffectCategoryList = std::vector<EffectCategory>;
+
+constexpr const char16_t* VST_CATEGORY_ID = u"vst";
+constexpr const char16_t* BUILDIN_CATEGORY_ID = u"buildin";
 }

@@ -11,9 +11,6 @@
 
 using namespace au::effects;
 
-static muse::String VST_CATEGORY_ID = u"vst";
-static muse::String BUILDIN_CATEGORY_ID = u"buildin";
-
 static muse::String categoryId(muse::audio::AudioResourceType type)
 {
     switch (type) {
@@ -34,7 +31,6 @@ void EffectsProvider::reloadEffects()
         BuildInEffects loader;
         EffectMetaList metaList = loader.effectMetaList();
         for (EffectMeta meta : metaList) {
-            meta.categoryId = BUILDIN_CATEGORY_ID;
             m_effects.push_back(std::move(meta));
         }
     }

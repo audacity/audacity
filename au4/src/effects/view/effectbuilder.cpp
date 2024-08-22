@@ -35,6 +35,8 @@ EffectBuilder::EffectBuilder(QObject* parent)
 
 void EffectBuilder::load(const QString& id, QObject* itemParent)
 {
+    LOGD() << "id: " << id;
+
     EffectMeta meta = provider()->meta(id);
     if (!meta.isValid()) {
         LOGE() << "Not found manifest, id: " << id;
@@ -47,9 +49,9 @@ void EffectBuilder::load(const QString& id, QObject* itemParent)
 
     //! NOTE We create extension UI using a separate engine to control what we provide,
     //! making it easier to maintain backward compatibility and stability.
-    QQmlComponent component = QQmlComponent(engin, meta.url.toQString());
+    QQmlComponent component = QQmlComponent(engin, meta.qmlUrl.toQString());
     if (!component.isReady()) {
-        LOGE() << "Failed to load QML file: " << meta.url;
+        LOGE() << "Failed to load QML file: " << meta.qmlUrl;
         LOGE() << component.errorString();
         return;
     }
@@ -58,7 +60,7 @@ void EffectBuilder::load(const QString& id, QObject* itemParent)
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
     if (!m_contentItem) {
-        LOGE() << "Component not QuickItem, file: " << meta.url;
+        LOGE() << "Component not QuickItem, file: " << meta.qmlUrl;
     }
 
     if (m_contentItem) {

@@ -699,6 +699,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
 
     for (const effects::EffectMeta& meta : metaList) {
         MenuItem* item = makeMenuItem("effect-open", TranslatableString::untranslatable(meta.title));
+        item->setId(meta.id);
         item->setArgs(ActionData::make_arg1<muse::String>(meta.id));
 
         effectsToCategoryMap[meta.categoryId].push_back(item);

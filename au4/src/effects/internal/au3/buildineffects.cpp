@@ -14,6 +14,8 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "../../effectstypes.h"
+
 #include "log.h"
 
 using namespace au::effects;
@@ -37,6 +39,17 @@ public:
     ManualPageID ManualPage() const override
     {
         return L"Amplify";
+    }
+
+    static EffectMeta meta(const ::PluginID& pluginId)
+    {
+        EffectMeta meta;
+        meta.id = au3::wxToSting(pluginId);
+        meta.title = muse::mtrc("effects", "Amplify");
+        meta.categoryId = BUILDIN_CATEGORY_ID;
+        meta.qmlUrl = "qrc:/qml/Audacity/Effects/Buildin/AmplifyEffect.qml";
+
+        return meta;
     }
 };
 
@@ -72,6 +85,17 @@ public:
     EffectChirp()
         : EffectToneGen{true} {}
     ~EffectChirp() override = default;
+
+    static EffectMeta meta(const ::PluginID& pluginId)
+    {
+        EffectMeta meta;
+        meta.id = au3::wxToSting(pluginId);
+        meta.title = muse::mtrc("effects", "Chirp");
+        meta.categoryId = BUILDIN_CATEGORY_ID;
+        meta.qmlUrl = "qrc:/qml/Audacity/Effects/Buildin/ChirpEffect.qml";
+
+        return meta;
+    }
 };
 
 class EffectTone final : public EffectToneGen
@@ -82,6 +106,17 @@ public:
     EffectTone()
         : EffectToneGen{false} {}
     ~EffectTone() override = default;
+
+    static EffectMeta meta(const ::PluginID& pluginId)
+    {
+        EffectMeta meta;
+        meta.id = au3::wxToSting(pluginId);
+        meta.title = muse::mtrc("effects", "Tone");
+        meta.categoryId = BUILDIN_CATEGORY_ID;
+        meta.qmlUrl = "qrc:/qml/Audacity/Effects/Buildin/ToneEffect.qml";
+
+        return meta;
+    }
 };
 
 const ComponentInterfaceSymbol EffectChirp::Symbol{ XO("Chirp") };
@@ -94,22 +129,6 @@ ComponentInterfaceSymbol EffectToneGen::GetSymbol() const
 }
 
 // BuildInEffects ----
-static muse::String effectTitle(const ::ComponentInterfaceSymbol& symbol)
-{
-    //! NOTE This is necessary so that the translated names get into the translation system,
-    //! we translate them and use them depending on the current language.
-
-    if (symbol == EffectAmplify::Symbol) {
-        return muse::mtrc("effects", "Amplify");
-    } else if (symbol == EffectChirp::Symbol) {
-        return muse::mtrc("effects", "Chirp");
-    } else if (symbol == EffectTone::Symbol) {
-        return muse::mtrc("effects", "Tone");
-    }
-
-    UNREACHABLE;
-    return muse::String();
-}
 
 void BuildInEffects::init()
 {
@@ -121,16 +140,29 @@ void BuildInEffects::init()
 EffectMetaList BuildInEffects::effectMetaList() const
 {
     EffectMetaList list;
+
     auto range = PluginManager::Get().PluginsOfType(PluginTypeEffect);
     for (const PluginDescriptor& desc : range) {
-        // LOGDA() << " ID: " << au3::wxToStdSting(desc.GetID())
-        //         << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
+        LOGDA() << " ID: " << au3::wxToStdSting(desc.GetID())
+                << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
 
-        EffectMeta meta;
-        meta.id = au3::wxToSting(desc.GetID());
-        meta.title = effectTitle(desc.GetSymbol());
+        //! NOTE Effects become plugins, with their interface...
+        //! The plugin interface for forming the meta effect is not enough for us,
+        //! for example, we need a URL to the Qml representation
+        //! And we can't just add virtual methods to the effect to return the meta.
+        //!
+        //! And we can't just make a meta list from the built-in plugins we know about,
+        //! so the plugin ID is used as the effect ID.
+        //!
+        //! So here is such a design, perhaps we can do it better somehow
 
-        list.push_back(std::move(meta));
+        if (desc.GetSymbol() == EffectAmplify::Symbol) {
+            list.push_back(EffectAmplify::meta(desc.GetID()));
+        } else if (desc.GetSymbol() == EffectChirp::Symbol) {
+            list.push_back(EffectChirp::meta(desc.GetID()));
+        } else if (desc.GetSymbol() == EffectTone::Symbol) {
+            list.push_back(EffectTone::meta(desc.GetID()));
+        }
     }
 
     return list;
