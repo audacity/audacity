@@ -8,6 +8,8 @@
 namespace au::effects {
 class AbstractEffectModel : public QObject
 {
+    Q_OBJECT
+
 public:
     AbstractEffectModel(QObject* parent = nullptr);
 };
