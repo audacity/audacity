@@ -54,6 +54,8 @@ void PlayCursorController::seekToX(double x)
     double secs = m_context->positionToTime(x, snapEnabled);
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(secs));
+    } else if (!muse::RealIsEqual(playbackState()->playbackPosition(), 0.0)) {
+        dispatcher()->dispatch("playback_seek", ActionData::make_arg1<double>(0.0));
     }
 }
 
