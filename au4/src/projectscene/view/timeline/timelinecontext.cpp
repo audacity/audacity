@@ -51,7 +51,7 @@ void TimelineContext::init(double frameWidth)
     onProjectChanged();
 }
 
-void TimelineContext::onWheel(const QPoint& pixelDelta, const QPoint& angleDelta)
+void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPoint& angleDelta)
 {
     QPoint pixelsScrolled = pixelDelta;
     QPoint stepsScrolled = angleDelta;
@@ -89,7 +89,7 @@ void TimelineContext::onWheel(const QPoint& pixelDelta, const QPoint& angleDelta
         qreal absSteps = sqrt(stepsX * stepsX + stepsY * stepsY) * (stepsY > -stepsX ? 1 : -1);
         double scale = zoom() * qPow(zoomSpeed, absSteps);
 
-        setZoom(scale);
+        setZoom(mouseX, scale);
     } else {
         qreal correction = 1.0 / zoom();
 
@@ -225,14 +225,21 @@ double TimelineContext::zoom() const
     return m_zoom;
 }
 
-void TimelineContext::setZoom(double zoom)
+void TimelineContext::setZoom(double mouseX, double zoom)
 {
     zoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
 
     if (m_zoom != zoom) {
         m_zoom = zoom;
         emit zoomChanged();
-        updateFrameTime();
+
+        double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * (m_frameEndTime - m_frameStartTime);
+        double newRange = positionToTime(m_frameWidth) - m_frameStartTime;
+
+        setFrameStartTime(mouseTime - (mouseX / m_frameWidth) * newRange);
+        setFrameEndTime(mouseTime + ((m_frameWidth - mouseX) / m_frameWidth) * newRange);
+
+        emit frameTimeChanged();
     }
 }
 
