@@ -1081,7 +1081,6 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
       THROW_INCONSISTENCY_EXCEPTION;
 
    auto newTrack = EmptyCopy(NChannels());
-   const auto endTime = std::max(GetEndTime(), t1);
    for (const auto pClip : Intervals()) {
       // PRL:  Why shouldn't cutlines be copied and pasted too?  I don't know,
       // but that was the old behavior.  But this function is also used by the
@@ -1096,7 +1095,7 @@ Track::Holder WaveTrack::Copy(double t0, double t1, bool forClipboard) const
          newTrack->CopyPartOfClip(*pClip, t0, t1, forClipboard);
       }
    }
-   newTrack->FinishCopy(t0, t1, endTime, forClipboard);
+   newTrack->FinishCopy(t0, t1, forClipboard);
    return newTrack;
 }
 
@@ -1124,13 +1123,13 @@ void WaveTrack::CopyPartOfClip(const Interval &clip,
 }
 
 void WaveTrack::FinishCopy(
-   double t0, double t1, double endTime, bool forClipboard)
+   double t0, double t1, bool forClipboard)
 {
    // AWD, Oct 2009: If the selection ends in whitespace, create a
    // placeholder clip representing that whitespace
    // PRL:  Only if we want the track for pasting into other tracks.  Not if
    // it goes directly into a project as in the Duplicate command.
-   if (forClipboard && endTime + 1.0 / GetRate() < t1 - t0) {
+   if (forClipboard && GetEndTime() + 1.0 / GetRate() < t1 - t0) {
       auto placeholder = CreateClip();
       placeholder->SetIsPlaceholder(true);
       placeholder->InsertSilence(0, (t1 - t0) - GetEndTime());
