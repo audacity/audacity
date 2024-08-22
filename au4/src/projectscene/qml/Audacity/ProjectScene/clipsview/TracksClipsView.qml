@@ -197,6 +197,7 @@ Rectangle {
                     playCursorController.seekToX(e.x)
                 }
                 selectionController.onReleased(e.x, e.y)
+                clipsSelection.active = false
             }
 
             onClicked: {
