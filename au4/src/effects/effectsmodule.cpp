@@ -3,7 +3,6 @@
 */
 #include "effectsmodule.h"
 
-#include "libraries/lib-files/FileNames.h"
 #include "libraries/lib-module-manager/PluginManager.h"
 
 #include "ui/iuiactionsregister.h"
@@ -17,6 +16,8 @@
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
+
+#include "internal/au3/buildineffects.h"
 
 #ifdef AU_MODULE_VST
 #include "internal/au3/vst3pluginsscanner.h"
@@ -86,20 +87,21 @@ void EffectsModule::registerUiTypes()
     qmlRegisterType<EffectBuilder>("Audacity.Effects", 1, 0, "EffectBuilder");
 }
 
-void EffectsModule::onInit(const muse::IApplication::RunMode& mode)
+void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    if (mode != muse::IApplication::RunMode::GuiApp) {
-        return;
-    }
+    //! NOTE Should be before PluginManager::Get().Initialize
+    BuildInEffects::init();
 
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
         return std::make_unique<au3::EffectSettings>(localFileName.ToStdString());
     });
 
     m_actionsController->init();
+
+    m_provider->reloadEffects();
 }
 
 void EffectsModule::onDelayedInit()
 {
-    m_provider->reloadEffects();
+    // m_provider->reloadEffects();
 }
