@@ -6,8 +6,7 @@ import Muse.UiComponents
 Item {
 
     property bool handlesHovered: false
-    property bool clipHovered: false
-    property bool handlesVisible: (handlesHovered || clipHovered)
+    property bool handlesVisible: false
 
     property int animationDuration: 100
 
