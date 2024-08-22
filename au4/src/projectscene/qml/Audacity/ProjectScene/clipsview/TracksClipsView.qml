@@ -192,7 +192,12 @@ Rectangle {
                     root.clipHovered = false
                 }
             }
-            onReleased: e => selectionController.onReleased(e.x, e.y)
+            onReleased: e => {
+                if (selectionController.isLeftSelection(e.x)) {
+                    playCursorController.seekToX(e.x)
+                }
+                selectionController.onReleased(e.x, e.y)
+            }
 
             onClicked: {
                 if (!root.clipHovered) {
