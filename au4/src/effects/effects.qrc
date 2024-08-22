@@ -2,5 +2,8 @@
     <qresource prefix="/">
         <file>qml/Audacity/Effects/EffectsViewerDialog.qml</file>
         <file>qml/Audacity/Effects/EffectsViewer.qml</file>
+        <file>qml/Audacity/Effects/Buildin/AmplifyEffect.qml</file>
+        <file>qml/Audacity/Effects/Buildin/ChirpEffect.qml</file>
+        <file>qml/Audacity/Effects/Buildin/ToneEffect.qml</file>
     </qresource>
 </RCC>
