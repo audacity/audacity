@@ -251,7 +251,7 @@ Rectangle {
         // +1 not to overlap with header
         y: header.height + 1
         width: root.width
-        clipHovered: hover
+        handlesVisible: root.clipSelected
 
         // make sure clip handles are visible on top of nearby clips
         onHandlesVisibleChanged: {
