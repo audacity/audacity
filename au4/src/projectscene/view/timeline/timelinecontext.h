@@ -27,7 +27,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     //          | ~~~~~ ~~~~ ~~~|
     Q_PROPERTY(double frameStartTime READ frameStartTime NOTIFY frameStartTimeChanged FINAL)
     Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
-    Q_PROPERTY(double zoom READ zoom WRITE setZoom NOTIFY zoomChanged FINAL)
+    Q_PROPERTY(double zoom READ zoom NOTIFY zoomChanged FINAL)
     Q_PROPERTY(int BPM READ BPM WRITE setBPM NOTIFY BPMChanged FINAL)
 
     Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
@@ -46,7 +46,7 @@ public:
     double frameEndTime() const;
 
     double zoom() const;
-    void setZoom(double zoom);
+    void setZoom(double mouseX, double zoom);
 
     int BPM() const;
     void setBPM(int BPM);
@@ -66,7 +66,7 @@ public:
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
     Q_INVOKABLE void onResizeFrameHeight(double frameHeight);
 
-    Q_INVOKABLE void onWheel(const QPoint& pixelDelta, const QPoint& angleDelta);
+    Q_INVOKABLE void onWheel(double mouseX, const QPoint& pixelDelta, const QPoint& angleDelta);
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;

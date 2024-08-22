@@ -27,8 +27,8 @@ Rectangle {
 
     //! ~~~ TimelineContext ~~~
     //! NOTE See comment in TimelineContext (.h)
-    function onWheel(pixelDelta, angleDelta) {
-        return timelineContext.onWheel(pixelDelta, angleDelta)
+    function onWheel(mouseX, pixelDelta, angleDelta) {
+        return timelineContext.onWheel(mouseX, pixelDelta, angleDelta)
     }
 
     function onSelection(x1, x2) {

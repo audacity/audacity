@@ -176,7 +176,7 @@ Rectangle {
             }
 
             onWheel: function(wheelEvent) {
-                timeline.onWheel(wheelEvent.pixelDelta, wheelEvent.angleDelta)
+                timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
             }
 
             onPressed: function(e) {
