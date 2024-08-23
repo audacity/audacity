@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 
 import Muse.Ui
 import Muse.UiComponents
@@ -34,8 +35,8 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVericalYChanged: {
-            if (!view.moving) {
-                view.contentY = tracksViewState.tracksVericalY
+            if (!tracksClipsView.moving) {
+                tracksClipsView.contentY = tracksViewState.tracksVericalY
             }
         }
     }
@@ -185,7 +186,7 @@ Rectangle {
                 selectionController.resetSelectedClip()
             }
             onPositionChanged: function(e) {
-                mouseOnTracks = e.y < view.visibleContentHeight
+                mouseOnTracks = e.y < tracksClipsView.visibleContentHeight
                 selectionController.onPositionChanged(e.x, e.y)
                 lineCursor.x = e.x
                 if (root.clipHovered) {
@@ -208,55 +209,99 @@ Rectangle {
             }
         }
 
-        StyledListView {
-            id: view
+        StyledViewScrollAndZoomArea {
+            id: tracksClipsViewArea
 
             anchors.fill: parent
-            clip: false
 
-            property real visibleContentHeight: view.contentHeight - view.contentY
+            view: tracksClipsView
 
-            onContentYChanged: {
-                tracksViewState.changeTracksVericalY(view.contentY)
-            }
+            horizontalScrollbarSize: timeline.context.horizontalScrollbarSize
+            startHorizontalScrollPosition: timeline.context.startHorizontalScrollPosition
 
-            onHeightChanged: {
-                timeline.context.onResizeFrameHeight(view.height)
-            }
+            verticalScrollbarSize: timeline.context.verticalScrollbarSize
+            startVerticalScrollPosition: timeline.context.startVerticalScrollPosition
 
-            Connections {
-                target: timeline.context
+            StyledListView {
+                id: tracksClipsView
 
-                function onShiftViewByY(shift) {
-                    if (shift > 0) {
-                        view.flick(0, view.maximumFlickVelocity)
-                    } else if (shift < 0) {
-                        view.flick(0, -view.maximumFlickVelocity)
+                anchors.fill: parent
+                clip: false
+
+                property real visibleContentHeight: tracksClipsView.contentHeight - tracksClipsView.contentY
+
+                ScrollBar.horizontal: null
+                ScrollBar.vertical: null
+
+                onContentYChanged: {
+                    tracksViewState.changeTracksVericalY(tracksClipsView.contentY)
+                    timeline.context.startVerticalScrollPosition = tracksClipsView.contentY
+                }
+
+                onContentHeightChanged: {
+                    timeline.context.onResizeFrameContentHeight(tracksClipsView.contentHeight)
+                }
+
+                onHeightChanged: {
+                    timeline.context.onResizeFrameHeight(tracksClipsView.height)
+                }
+
+                Connections {
+                    target: timeline.context
+
+                    function onShiftViewByY(shift) {
+                        if (shift > 0) {
+                            tracksClipsView.flick(0, tracksClipsView.maximumFlickVelocity)
+                        } else if (shift < 0) {
+                            tracksClipsView.flick(0, -tracksClipsView.maximumFlickVelocity)
+                        }
+                    }
+
+                    function onViewContentYChangeRequested(contentY) {
+                        if (tracksClipsView.contentY + contentY + tracksClipsView.height > tracksClipsView.contentHeight) {
+                            tracksClipsView.contentY += tracksClipsView.contentHeight - (tracksClipsView.contentY + tracksClipsView.height)
+                        } else if (tracksClipsView.contentY + contentY < 0) {
+                            tracksClipsView.contentY = 0 - tracksClipsView.contentY
+                        } else {
+                            tracksClipsView.contentY += contentY
+                        }
+                    }
+                }
+
+                interactive: false
+
+                model: tracksModel
+
+                delegate: TrackClipsItem {
+                    width: tracksClipsView.width
+                    context: timeline.context
+                    trackId: model.trackId
+                    isDataSelected: model.isDataSelected
+
+                    onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
+                        lineCursor.x = xWithinTrack
+                        if (!root.clipHovered) {
+                            root.clipHovered = true
+                        }
+                    }
+
+                    onClipSelectedRequested: {
+                        selectionController.resetDataSelection()
+                        clipsSelection.active = false
                     }
                 }
             }
 
-            interactive: false
+            onPinchToZoom: function(scale, pos) {
+                timeline.context.pinchToZoom(scale, pos)
+            }
 
-            model: tracksModel
+            onScrollHorizontal: function(newPos) {
+                timeline.context.scrollHorizontal(newPos)
+            }
 
-            delegate: TrackClipsItem {
-                width: view.width
-                context: timeline.context
-                trackId: model.trackId
-                isDataSelected: model.isDataSelected
-
-                onTrackItemMousePositionChanged: function(xWithinTrack, yWithinTrack) {
-                    lineCursor.x = xWithinTrack
-                    if (!root.clipHovered) {
-                        root.clipHovered = true
-                    }
-                }
-
-                onClipSelectedRequested: {
-                    selectionController.resetDataSelection()
-                    clipsSelection.active = false
-                }
+            onScrollVertical: function(newPos) {
+                timeline.context.scrollVertical(newPos)
             }
         }
 
@@ -268,7 +313,7 @@ Rectangle {
 
         PlayCursor {
             id: playCursor
-            anchors.top: view.top
+            anchors.top: tracksClipsViewArea.top
             anchors.bottom: parent.bottom
             x: playCursorController.positionX
             z: 2
@@ -287,8 +332,8 @@ Rectangle {
             id: verticalRulers
 
             height: parent.height - timeline.height
-            anchors.right: view.right
-            anchors.bottom: view.bottom
+            anchors.right: tracksClipsViewArea.right
+            anchors.bottom: tracksClipsViewArea.bottom
 
             visible: tracksModel.isVerticalRulersVisible
         }

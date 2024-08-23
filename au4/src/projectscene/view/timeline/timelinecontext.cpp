@@ -31,6 +31,8 @@ void TimelineContext::init(double frameWidth)
     emit frameStartTimeChanged();
     m_frameEndTime = positionToTime(frameWidth);
 
+    m_lastZoomEndTime = m_frameEndTime;
+
     emit frameEndTimeChanged();
     emit frameTimeChanged();
 
@@ -48,7 +50,22 @@ void TimelineContext::init(double frameWidth)
         onProjectChanged();
     });
 
+    connect(this, &TimelineContext::horizontalScrollChanged, [this]() {
+        m_previousHorizontalScrollPosition = startHorizontalScrollPosition();
+    });
+
+    connect(this, &TimelineContext::verticalScrollChanged, [this]() {
+        m_previousVerticalScrollPosition = startVerticalScrollPosition();
+    });
+
+    connect(this, &TimelineContext::frameTimeChanged, [this]() {
+        emit horizontalScrollChanged();
+    });
+
     onProjectChanged();
+
+    emit horizontalScrollChanged();
+    emit verticalScrollChanged();
 }
 
 void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPoint& angleDelta)
@@ -87,9 +104,9 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
     if (modifiers.testFlag(Qt::ControlModifier)) {
         double zoomSpeed = qPow(2.0, 1.0 / configuration()->mouseZoomPrecision());
         qreal absSteps = sqrt(stepsX * stepsX + stepsY * stepsY) * (stepsY > -stepsX ? 1 : -1);
-        double scale = zoom() * qPow(zoomSpeed, absSteps);
+        double newZoom = zoom() * qPow(zoomSpeed, absSteps);
 
-        setZoom(mouseX, scale);
+        setZoom(newZoom, mouseX);
     } else {
         qreal correction = 1.0 / zoom();
 
@@ -103,6 +120,40 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
     }
 }
 
+void TimelineContext::pinchToZoom(qreal scaleFactor, const QPointF& pos)
+{
+    double newZoom = zoom() * scaleFactor;
+    setZoom(newZoom, pos.x());
+}
+
+void TimelineContext::scrollHorizontal(qreal newPos)
+{
+    TRACEFUNC;
+
+    qreal scrollStep = newPos - m_previousHorizontalScrollPosition;
+    if (qFuzzyIsNull(scrollStep)) {
+        return;
+    }
+
+    qreal correction = 1.0 / zoom();
+    qreal dx = horizontalScrollableSize() * scrollStep;
+
+    shiftFrameTime(dx * correction);
+}
+
+void TimelineContext::scrollVertical(qreal newPos)
+{
+    TRACEFUNC;
+
+    qreal scrollStep = newPos - m_previousVerticalScrollPosition;
+    if (qFuzzyIsNull(scrollStep)) {
+        return;
+    }
+
+    static constexpr qreal correction = 100.0;
+    emit viewContentYChangeRequested(scrollStep* correction);
+}
+
 void TimelineContext::onResizeFrameWidth(double frameWidth)
 {
     m_frameWidth = frameWidth;
@@ -112,6 +163,13 @@ void TimelineContext::onResizeFrameWidth(double frameWidth)
 void TimelineContext::onResizeFrameHeight(double frameHeight)
 {
     m_frameHeight = frameHeight;
+}
+
+void TimelineContext::onResizeFrameContentHeight(double frameHeight)
+{
+    m_frameContentHeight = frameHeight;
+
+    emit verticalScrollChanged();
 }
 
 void TimelineContext::moveToFrameTime(double startTime)
@@ -126,20 +184,20 @@ void TimelineContext::shiftFrameTime(double shift)
         return;
     }
 
-    double startTimeShift = shift;
+    double timeShift = shift;
     double endTimeShift = shift;
 
     double minStartTime = 0.0;
     double maxEndTime = std::max(m_lastZoomEndTime, trackEditProject()->totalTime().to_double());
 
     // do not shift to negative time values
-    if (m_frameStartTime + startTimeShift < minStartTime) {
+    if (m_frameStartTime + timeShift < minStartTime) {
         if (muse::is_equal(m_frameStartTime, minStartTime)) {
             return;
         }
         //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
         else {
-            startTimeShift = minStartTime - m_frameStartTime;
+            timeShift = minStartTime - m_frameStartTime;
         }
     }
 
@@ -149,12 +207,12 @@ void TimelineContext::shiftFrameTime(double shift)
         }
         //! NOTE If we haven't reached the limit yet, then it shifts as much as possible
         else {
-            endTimeShift = maxEndTime - m_frameEndTime;
+            timeShift = std::min(timeShift, maxEndTime - m_frameEndTime);
         }
     }
 
-    setFrameStartTime(m_frameStartTime + startTimeShift);
-    setFrameEndTime(m_frameEndTime + endTimeShift);
+    setFrameStartTime(m_frameStartTime + timeShift);
+    setFrameEndTime(m_frameEndTime + timeShift);
 
     emit frameTimeChanged();
 }
@@ -248,7 +306,7 @@ double TimelineContext::zoom() const
     return m_zoom;
 }
 
-void TimelineContext::setZoom(double mouseX, double zoom)
+void TimelineContext::setZoom(double zoom, double mouseX)
 {
     zoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
 
@@ -267,6 +325,7 @@ void TimelineContext::setZoom(double mouseX, double zoom)
         m_lastZoomEndTime = newEndTime;
         setFrameEndTime(newEndTime);
 
+        emit verticalScrollChanged();
         emit frameTimeChanged();
     }
 }
@@ -405,4 +464,74 @@ void TimelineContext::updateTimeSignature()
     emit BPMChanged();
 
     updateFrameTime();
+}
+
+qreal TimelineContext::horizontalScrollableSize() const
+{
+    double maxEndTime = std::max(m_lastZoomEndTime, trackEditProject()->totalTime().to_double());
+    return timeToContentPosition(maxEndTime);
+}
+
+qreal TimelineContext::verticalScrollableSize() const
+{
+    return m_frameContentHeight;
+}
+
+double TimelineContext::timeToContentPosition(double time) const
+{
+    return std::floor(0.5 + m_zoom * time);
+}
+
+qreal TimelineContext::startHorizontalScrollPosition() const
+{
+    qreal scrollableWidth = horizontalScrollableSize();
+    if (qFuzzyIsNull(scrollableWidth)) {
+        return 0;
+    }
+
+    double left = timeToContentPosition(m_frameStartTime);
+
+    return left / scrollableWidth;
+}
+
+qreal TimelineContext::horizontalScrollbarSize() const
+{
+    qreal scrollableWidth = horizontalScrollableSize();
+    if (qFuzzyIsNull(scrollableWidth)) {
+        return 0;
+    }
+
+    double viewportWidth = timeToPosition(m_frameEndTime);
+
+    return viewportWidth / scrollableWidth;
+}
+
+qreal TimelineContext::startVerticalScrollPosition() const
+{
+    qreal scrollableWidth = verticalScrollableSize();
+    if (qFuzzyIsNull(scrollableWidth)) {
+        return 0;
+    }
+
+    return m_startVerticalScrollPosition / scrollableWidth;
+}
+
+qreal TimelineContext::verticalScrollbarSize() const
+{
+    qreal scrollableWidth = verticalScrollableSize();
+    if (qFuzzyIsNull(scrollableWidth)) {
+        return 0;
+    }
+
+    return m_frameHeight / scrollableWidth;
+}
+
+void TimelineContext::setStartVerticalScrollPosition(qreal position)
+{
+    if (qFuzzyCompare(m_startVerticalScrollPosition, position)) {
+        return;
+    }
+
+    m_startVerticalScrollPosition = position;
+    emit verticalScrollChanged();
 }
