@@ -34,6 +34,12 @@ class TimelineContext : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
 
+    Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
+    Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
+    Q_PROPERTY(
+        qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY verticalScrollChanged)
+    Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<IProjectSceneConfiguration> configuration;
@@ -46,7 +52,7 @@ public:
     double frameEndTime() const;
 
     double zoom() const;
-    void setZoom(double mouseX, double zoom);
+    void setZoom(double zoom, double mouseX);
 
     int BPM() const;
     void setBPM(int BPM);
@@ -65,8 +71,12 @@ public:
 
     Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
     Q_INVOKABLE void onResizeFrameHeight(double frameHeight);
+    Q_INVOKABLE void onResizeFrameContentHeight(double frameHeight);
 
     Q_INVOKABLE void onWheel(double mouseX, const QPoint& pixelDelta, const QPoint& angleDelta);
+    Q_INVOKABLE void pinchToZoom(qreal scaleFactor, const QPointF& pos);
+    Q_INVOKABLE void scrollHorizontal(qreal newPos);
+    Q_INVOKABLE void scrollVertical(qreal newPos);
 
     Q_INVOKABLE double timeToPosition(double time) const;
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
@@ -74,6 +84,14 @@ public:
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
+
+    qreal startHorizontalScrollPosition() const;
+    qreal horizontalScrollbarSize() const;
+
+    qreal startVerticalScrollPosition() const;
+    void setStartVerticalScrollPosition(qreal position);
+
+    qreal verticalScrollbarSize() const;
 
 signals:
 
@@ -90,7 +108,11 @@ signals:
     void selectionEndTimeChanged();
     void selectionActiveChanged();
 
+    void viewContentYChangeRequested(double contentY);
     void shiftViewByY(double dy);
+
+    void horizontalScrollChanged();
+    void verticalScrollChanged();
 
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;
@@ -108,8 +130,14 @@ private:
 
     void updateTimeSignature();
 
+    qreal horizontalScrollableSize() const;
+    qreal verticalScrollableSize() const;
+
+    double timeToContentPosition(double time) const;
+
     double m_frameWidth = 0.0;
     double m_frameHeight = 0.0;
+    double m_frameContentHeight = 0.0;
 
     double m_frameStartTime = 0.0;
     double m_frameEndTime = 0.0;
@@ -127,5 +155,10 @@ private:
     bool m_selectionActive = false;
 
     std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
+
+    qreal m_previousVerticalScrollPosition = 0.0;
+    qreal m_previousHorizontalScrollPosition = 0.0;
+
+    qreal m_startVerticalScrollPosition = 0.0;
 };
 }
