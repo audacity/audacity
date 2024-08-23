@@ -312,11 +312,9 @@ RegisteredMenuItemEnabler stopAudioStream {
         const auto wasPlaying = pam.Playing();
         if (wasPlaying)
            pam.Stop(stopStream);
-        return [&, wasPlaying = wasPlaying]
-        {
+        return [&, wasPlaying = wasPlaying] {
            if (wasPlaying && !pam.Playing())
-              ; // ResumePlayback in follow-up commit
-            //   ProjectAudioManager::Get(project).ResumePlayback();
+              ProjectAudioManager::Get(project).ResumePlayback();
         };
      } }
 };

@@ -471,7 +471,12 @@ int ProjectAudioManager::PlayPlayRegion(const SelectedRegion &selectedRegion,
 void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
                                        bool cutpreview /* = false */)
 {
-   auto &projectAudioManager = *this;
+   DoPlayCurrentRegion(newDefault, cutpreview, false);
+}
+
+void ProjectAudioManager::DoPlayCurrentRegion(
+   bool newDefault, bool cutpreview, bool resume)
+{   auto &projectAudioManager = *this;
    bool canStop = projectAudioManager.CanStopAudioStream();
 
    if ( !canStop )
@@ -492,10 +497,22 @@ void ProjectAudioManager::PlayCurrentRegion(bool newDefault /* = false */,
          cutpreview ? PlayMode::cutPreviewPlay
          : newDefault ? PlayMode::loopedPlay
          : PlayMode::normalPlay;
+      if (const auto io = AudioIO::Get(); io && resume)
+      {
+         constexpr auto ignorePlaybackState = true;
+         options.pStartTime = io->GetStreamTime(true);
+      }
       PlayPlayRegion(SelectedRegion(playRegion.GetStart(), playRegion.GetEnd()),
                      options,
                      mode);
    }
+}
+
+void ProjectAudioManager::ResumePlayback()
+{
+   // What are these `cutpreview` and `newDefault` flags? Nowhere is
+   // PlayCurrentRegion called with any of them set to `trzue`.
+   DoPlayCurrentRegion(false, false, true);
 }
 
 void ProjectAudioManager::Stop(bool stopStream /* = true*/)
