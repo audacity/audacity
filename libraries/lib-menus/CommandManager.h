@@ -307,8 +307,11 @@ private:
 
    // Command Handling
    bool ReportIfActionNotAllowed(
-      const TranslatableString& Name, CommandFlag& flags, CommandFlag flagsRqd);
-   bool TryToMakeActionAllowed(CommandFlag& flags, CommandFlag flagsRqd);
+      const TranslatableString& Name, CommandFlag& flags, CommandFlag flagsRqd,
+      std::vector<MenuItemEnabler::PostCommandAction>& posts);
+   bool TryToMakeActionAllowed(
+      CommandFlag& flags, CommandFlag flagsRqd,
+      std::vector<MenuItemEnabler::PostCommandAction>& posts);
 
 protected:
    bool HandleCommandEntry(

@@ -1310,16 +1310,18 @@ void ProjectAudioManager::DoPlayStopSelect()
    }
 }
 
-static RegisteredMenuItemEnabler stopIfPaused{{
-   []{ return PausedFlag(); },
-   []{ return AudioIONotBusyFlag(); },
-   []( const AudacityProject &project ){
-      return CommandManager::Get( project ).mStopIfWasPaused; },
-   []( AudacityProject &project, CommandFlag ){
-      if ( CommandManager::Get( project ).mStopIfWasPaused )
-         ProjectAudioManager::Get( project ).StopIfPaused();
-   }
-}};
+static RegisteredMenuItemEnabler stopIfPaused {
+   { [] { return PausedFlag(); }, [] { return AudioIONotBusyFlag(); },
+     [](const AudacityProject& project) {
+        return CommandManager::Get(project).mStopIfWasPaused;
+     },
+     [](AudacityProject& project,
+        CommandFlag) -> MenuItemEnabler::PostCommandAction {
+        if (CommandManager::Get(project).mStopIfWasPaused)
+           ProjectAudioManager::Get(project).StopIfPaused();
+        return {};
+     } }
+};
 
 // GetSelectedProperties collects information about
 // currently selected audio tracks

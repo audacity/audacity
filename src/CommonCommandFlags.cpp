@@ -20,6 +20,7 @@ Paul Licameli split from Menus.cpp
 #include "LabelTrack.h"
 #include "Project.h"
 #include "ProjectAudioIO.h"
+#include "ProjectAudioManager.h"
 #include "ProjectHistory.h"
 #include "ProjectWindows.h"
 #include "SyncLock.h"
@@ -294,3 +295,28 @@ const ReservedCommandFlag&
      [](const AudacityProject &){ return true; }
    }; return flag; } // jkc
 
+// Enablers
+
+RegisteredMenuItemEnabler stopAudioStream {
+   { [] { return AlwaysEnabledFlag; }, [] { return AudioIONotBusyFlag(); },
+     [](const AudacityProject&) {
+        // For now we return `false` because we don't want any behavioral change
+        // yet. Set this to true now and you're in for a surprise :D
+
+        // return true;
+        return false;
+     },
+     [](AudacityProject& project, CommandFlag) -> std::function<void()> {
+        auto& pam = ProjectAudioManager::Get(project);
+        constexpr auto stopStream = true;
+        const auto wasPlaying = pam.Playing();
+        if (wasPlaying)
+           pam.Stop(stopStream);
+        return [&, wasPlaying = wasPlaying]
+        {
+           if (wasPlaying && !pam.Playing())
+              ; // ResumePlayback in follow-up commit
+            //   ProjectAudioManager::Get(project).ResumePlayback();
+        };
+     } }
+};
