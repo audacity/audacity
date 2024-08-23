@@ -6,12 +6,10 @@
 #include <vector>
 
 #include "global/types/string.h"
-#include "global/io/path.h"
 
 namespace au::effects {
 struct EffectMeta {
     muse::String id;
-    muse::io::path_t qmlUrl;
     muse::String title;
     muse::String description;
     muse::String version;

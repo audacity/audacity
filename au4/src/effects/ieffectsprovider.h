@@ -25,6 +25,6 @@ public:
 
     virtual EffectCategoryList effectsCategoryList() const = 0;
 
-    virtual EffectMeta meta(const muse::String& id) const = 0;
+    virtual EffectMeta meta(const muse::String& effectId) const = 0;
 };
 }

@@ -450,6 +450,69 @@ set(AU3_SRC
 
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.cpp
     ${AU3_LIBRARIES}/lib-command-parameters/ShuttleAutomation.h
+    ${AU3_LIBRARIES}/lib-command-parameters/ShuttlePrefs.cpp
+    ${AU3_LIBRARIES}/lib-command-parameters/ShuttlePrefs.h
+    ${AU3_LIBRARIES}/lib-command-parameters/WrappedType.cpp
+    ${AU3_LIBRARIES}/lib-command-parameters/WrappedType.h
+
+    ${AU3_LIBRARIES}/lib-menus/CommandContext.cpp
+    ${AU3_LIBRARIES}/lib-menus/CommandContext.h
+    ${AU3_LIBRARIES}/lib-menus/CommandFlag.cpp
+    ${AU3_LIBRARIES}/lib-menus/CommandFlag.h
+    ${AU3_LIBRARIES}/lib-menus/CommandFunctors.h
+    ${AU3_LIBRARIES}/lib-menus/CommandManager.cpp
+    ${AU3_LIBRARIES}/lib-menus/CommandManager.h
+    ${AU3_LIBRARIES}/lib-menus/CommandTargets.cpp
+    ${AU3_LIBRARIES}/lib-menus/CommandTargets.h
+    ${AU3_LIBRARIES}/lib-menus/Keyboard.cpp
+    ${AU3_LIBRARIES}/lib-menus/Keyboard.h
+    ${AU3_LIBRARIES}/lib-menus/MenuRegistry.cpp
+    ${AU3_LIBRARIES}/lib-menus/MenuRegistry.h
+
+    ${AU3_LIBRARIES}/lib-audacity-application-logic/EffectManager.cpp
+    ${AU3_LIBRARIES}/lib-audacity-application-logic/EffectManager.h
+    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.cpp
+    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogic.h
+    ${AU3_LIBRARIES}/lib-audacity-application-logic/AudacityApplicationLogicTypes.h
+
+    ${AU3_LIBRARIES}/lib-effects/EffectBase.cpp
+    ${AU3_LIBRARIES}/lib-effects/EffectBase.h
+    ${AU3_LIBRARIES}/lib-effects/Effect.cpp
+    ${AU3_LIBRARIES}/lib-effects/Effect.h
+    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.cpp
+    ${AU3_LIBRARIES}/lib-effects/EffectOutputTracks.h
+    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.cpp
+    ${AU3_LIBRARIES}/lib-effects/EffectPlugin.h
+    ${AU3_LIBRARIES}/lib-effects/LoadEffects.cpp
+    ${AU3_LIBRARIES}/lib-effects/LoadEffects.h
+    ${AU3_LIBRARIES}/lib-effects/MixAndRender.cpp
+    ${AU3_LIBRARIES}/lib-effects/MixAndRender.h
+    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.cpp
+    ${AU3_LIBRARIES}/lib-effects/PerTrackEffect.h
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.cpp
+    ${AU3_LIBRARIES}/lib-effects/StatefulEffectBase.h
+
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/CompressorProcessor.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DownwardMeterValueProvider.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DownwardMeterValueProvider.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorClock.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorClock.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorHistory.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorHistory.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorTypes.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorUtils.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/MeterValueProvider.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/MeterValueProvider.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/UpwardMeterValueProvider.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/UpwardMeterValueProvider.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/GainReductionComputer.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/GainReductionComputer.h
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.cpp
+    ${AU3_LIBRARIES}/lib-dynamic-range-processor/SimpleCompressor/LookAheadGainReduction.h
+
+
 )
 
 if(AU_MODULE_VST)

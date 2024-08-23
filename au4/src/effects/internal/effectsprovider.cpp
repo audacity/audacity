@@ -77,14 +77,14 @@ EffectCategoryList EffectsProvider::effectsCategoryList() const
     return list;
 }
 
-EffectMeta EffectsProvider::meta(const muse::String& id) const
+EffectMeta EffectsProvider::meta(const muse::String& effectId) const
 {
     for (const EffectMeta& meta : m_effects) {
-        if (meta.id == id) {
+        if (meta.id == effectId) {
             return meta;
         }
     }
 
-    LOGE() << "not found meta: " << id;
+    LOGE() << "not found meta: " << effectId;
     return EffectMeta();
 }

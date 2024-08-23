@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectsviewregister.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.cpp
@@ -27,14 +28,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiengine.h
 
     # view
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectbuilder.h
 
-    # build-in
+    # built-in
     ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtin/builtineffects.h
     ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.cpp
@@ -49,6 +52,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/chirpeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtin/tonegen/toneeffect.h
+
+    # temp_concept
+    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.h
+    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/ieffectdialog.h
     )
 
 if (AU_MODULE_VST)
@@ -90,4 +98,3 @@ endif()
 set(MODULE_LINK au3wrap)
 
 setup_module()
-

@@ -33,7 +33,6 @@ EffectMeta ChirpEffect::meta()
     EffectMeta meta;
     meta.title = muse::mtrc("effects", "Chirp");
     meta.categoryId = BUILTIN_CATEGORY_ID;
-    meta.qmlUrl = "qrc:/builtin/tonegen/ChirpView.qml";
 
     return meta;
 }
