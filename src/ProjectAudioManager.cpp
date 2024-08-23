@@ -762,17 +762,6 @@ bool ProjectAudioManager::DoRecord(AudacityProject &project,
 {
    auto &projectAudioManager = *this;
 
-   CommandFlag flags = AlwaysEnabledFlag; // 0 means recalc flags.
-
-   // NB: The call may have the side effect of changing flags.
-   bool allowed = CommandManager::Get(project).TryToMakeActionAllowed(
-      flags,
-      AudioIONotBusyFlag() | CanStopAudioStreamFlag());
-
-   if (!allowed)
-      return false;
-   // ...end of code from CommandHandler.
-
    auto gAudioIO = AudioIO::Get();
    if (gAudioIO->IsBusy())
       return false;

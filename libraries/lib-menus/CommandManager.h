@@ -80,14 +80,8 @@ public:
    CommandFlag GetUpdateFlags(bool quick = false) const;
    void UpdatePrefs() override;
 
-   // Command Handling
-   bool ReportIfActionNotAllowed(
-      const TranslatableString & Name, CommandFlag & flags, CommandFlag flagsRqd );
-   bool TryToMakeActionAllowed(
-      CommandFlag & flags, CommandFlag flagsRqd );
-
    CommandFlag mLastFlags = AlwaysEnabledFlag;
-   
+
    // Last effect applied to this project
    PluginID mLastGenerator{};
    PluginID mLastEffect{};
@@ -135,7 +129,7 @@ public:
       void DoVisit(const Registry::SingleItem &item);
       void DoEndGroup(
          const MenuRegistry::GroupItem<MenuRegistry::Traits> &item);
-      
+
       //! Called by DoBeginGroup
       //! Default implementation does nothing
       virtual void BeginMenu(const TranslatableString & tName);
@@ -310,7 +304,12 @@ public:
 private:
 
    static int NextIdentifier(int ID);
-   
+
+   // Command Handling
+   bool ReportIfActionNotAllowed(
+      const TranslatableString& Name, CommandFlag& flags, CommandFlag flagsRqd);
+   bool TryToMakeActionAllowed(CommandFlag& flags, CommandFlag flagsRqd);
+
 protected:
    bool HandleCommandEntry(
       const CommandListEntry * entry, CommandFlag flags,
