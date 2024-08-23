@@ -127,6 +127,19 @@ const ReservedCommandFlag&
       .QuickTest()
       .Priority( 1 )
    }; return flag; }//lll
+// Same as above AudioIONotBusyFlag, but a hook will be attached to try and stop audio.
+const ReservedCommandFlag&
+   StopAudioIOIfBusyFlag() { static ReservedCommandFlag flag{
+      [](const AudacityProject &project ){
+         return !AudioIOBusyPred( project );
+      },
+      CommandFlagOptions{ []( const TranslatableString& ) { return
+         // This reason will not be shown, because options that require it will be greyed out.
+         XO("You can only do this when playing and recording are\nstopped. (Pausing is not sufficient.)");
+      } ,"FAQ:Errors:Audio Must Be Stopped"}
+      .QuickTest()
+      .Priority( 1 )
+   }; return flag; }//lll
 const ReservedCommandFlag&
    StereoRequiredFlag() { static ReservedCommandFlag flag{
       [](const AudacityProject &project){
@@ -297,14 +310,13 @@ const ReservedCommandFlag&
 
 // Enablers
 
-RegisteredMenuItemEnabler stopAudioStream {
+RegisteredMenuItemEnabler stopAndResumeAudioStream {
    { [] { return AlwaysEnabledFlag; }, [] { return AudioIONotBusyFlag(); },
      [](const AudacityProject&) {
         // For now we return `false` because we don't want any behavioral change
         // yet. Set this to true now and you're in for a surprise :D
 
-        // return true;
-        return false;
+        return true;
      },
      [](AudacityProject& project, CommandFlag) -> std::function<void()> {
         auto& pam = ProjectAudioManager::Get(project);
@@ -316,5 +328,19 @@ RegisteredMenuItemEnabler stopAudioStream {
            if (wasPlaying && !pam.Playing())
               ProjectAudioManager::Get(project).ResumePlayback();
         };
+     } }
+};
+
+RegisteredMenuItemEnabler stopAudioStream {
+   { [] { return AlwaysEnabledFlag; }, [] { return StopAudioIOIfBusyFlag(); },
+     [](const AudacityProject&) { return true; },
+     [](AudacityProject& project, CommandFlag) -> std::function<void()>
+     {
+        auto& pam = ProjectAudioManager::Get(project);
+        constexpr auto stopStream = true;
+        const auto wasPlaying = pam.Playing();
+        if (wasPlaying)
+           pam.Stop(stopStream);
+        return {};
      } }
 };

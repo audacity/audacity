@@ -29,6 +29,7 @@ const CommandFlagOptions &cutCopyOptions();
 
 extern AUDACITY_DLL_API const ReservedCommandFlag
    &AudioIONotBusyFlag(),
+   &StopAudioIOIfBusyFlag(),
    &StereoRequiredFlag(),  //lda
    &NoiseReductionTimeSelectedFlag(),
    &TimeSelectedFlag(), // This is equivalent to check if there is a valid selection, so it's used for Zoom to Selection too
