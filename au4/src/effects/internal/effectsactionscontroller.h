@@ -21,6 +21,6 @@ public:
     void init();
 
 private:
-    void onOpenEffectViewer(const muse::actions::ActionData& args);
+    void doEffect(const muse::actions::ActionData& args);
 };
 }

@@ -63,6 +63,9 @@ set(AU3_DEF
     -DVST3_API=
 
     -DCOMMAND_PARAMETERS_API=
+    -DAUDACITY_APPLICATION_LOGIC_API=
+    -DMENUS_API=
+    -DDYNAMIC_RANGE_PROCESSOR_API=
 )
 
 set(AU3_LIBRARIES ${AUDACITY_ROOT}/libraries)
@@ -129,6 +132,7 @@ set(AU3_INCLUDE
     ${AU3_LIBRARIES}/lib-effects
     ${AU3_LIBRARIES}/lib-audio-unit
     ${AU3_LIBRARIES}/lib-command-parameters
+    ${AU3_LIBRARIES}/lib-menus
 
     ${AU3_LIBRARIES}/lib-vst3
 )

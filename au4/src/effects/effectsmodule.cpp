@@ -14,7 +14,6 @@
 #include "internal/effectsprovider.h"
 #include "internal/effectsconfiguration.h"
 #include "internal/effectsactionscontroller.h"
-#include "internal/effectsuiengine.h"
 #include "internal/effectsuiactions.h"
 
 #include "builtin/builtineffects.h"
@@ -26,7 +25,9 @@
 
 #include "effectsettings.h"
 
+#include "view/effectsviewregister.h"
 #include "view/effectbuilder.h"
+#include "view/effectsuiengine.h"
 
 using namespace au::effects;
 
@@ -48,6 +49,7 @@ void EffectsModule::registerExports()
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_provider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
+    ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
 }
 

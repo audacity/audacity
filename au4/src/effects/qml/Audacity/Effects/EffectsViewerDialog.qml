@@ -10,47 +10,32 @@ import Muse.UiComponents
 StyledDialogView {
     id: root
 
-    property alias id: viewer.id
+    property alias type: viewer.type
+    property alias instanceId: viewer.instanceId
 
     title: viewer.title
 
-    contentWidth: content.implicitWidth
-    contentHeight: content.implicitHeight
+    contentWidth: Math.max(viewer.implicitWidth, bbox.implicitWidth)
+    contentHeight: viewer.implicitHeight + bbox.implicitHeight + 16
 
     margins: 16
 
-    Column {
-        id: content
+    EffectsViewer {
+        id: viewer
+        width: parent.width
+    }
 
-        spacing: 16
+    ButtonBox {
+        id: bbox
+        width: parent.width
+        anchors.bottom: parent.bottom
 
-        FlatButton {
-            text: qsTrc("effects", "Presets & settings")
-        }
+        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Apply ]
 
-        EffectsViewer {
-            id: viewer
-        }
-
-        ButtonBox {
-            width: parent.width
-
-            buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Apply ]
-
-            FlatButton {
-                text: qsTrc("effects", "Preview")
-                buttonRole: ButtonBoxModel.CustomRole
-                buttonId: ButtonBoxModel.CustomButton + 1
-                isLeftSide: true
-
-                onClicked: {
-                }
-            }
-
-            onStandardButtonClicked: function(buttonId) {
-                if (buttonId === ButtonBoxModel.Cancel) {
-                    root.reject()
-                }
+        onStandardButtonClicked: function(buttonId) {
+            switch(buttonId) {
+            case ButtonBoxModel.Cancel: root.reject(); break;
+            case ButtonBoxModel.Apply: root.accept(); break;
             }
         }
     }

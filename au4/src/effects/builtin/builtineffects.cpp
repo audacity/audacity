@@ -23,11 +23,19 @@ using namespace au::effects;
 
 void BuiltinEffects::init()
 {
-    static BuiltinEffectsModule::Registration< au::effects::AmplifyEffect > regAmplify;
-    qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
+    auto regView = [](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
+        BuiltinEffects::effectsViewRegister()->regUrl(au3::wxToSting(symbol.Internal()), url);
+    };
 
-    static BuiltinEffectsModule::Registration< au::effects::ChirpEffect > regChirp;
-    static BuiltinEffectsModule::Registration< au::effects::ToneEffect > regTone;
+    static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
+    qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
+    regView(AmplifyEffect::Symbol, u"qrc:/builtin/amplify/AmplifyView.qml");
+
+    static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
+    regView(ChirpEffect::Symbol, u"qrc:/builtin/tonegen/ChirpView.qml");
+
+    static BuiltinEffectsModule::Registration< ToneEffect > regTone;
+    regView(ToneEffect::Symbol, u"qrc:/builtin/tonegen/ToneView.qml");
 }
 
 EffectMetaList BuiltinEffects::effectMetaList() const

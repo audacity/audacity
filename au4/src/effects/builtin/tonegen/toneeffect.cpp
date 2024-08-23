@@ -33,7 +33,6 @@ EffectMeta ToneEffect::meta()
     EffectMeta meta;
     meta.title = muse::mtrc("effects", "Tone");
     meta.categoryId = BUILTIN_CATEGORY_ID;
-    meta.qmlUrl = "qrc:/builtin/tonegen/ToneView.qml";
 
     return meta;
 }
