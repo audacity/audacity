@@ -14,8 +14,12 @@
 #define __AUDACITY_EFFECT_NOISE_REDUCTION__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 
-class EffectNoiseReduction final : public StatefulEffect {
+class EffectNoiseReduction final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
+{
 public:
    static const ComponentInterfaceSymbol Symbol;
 

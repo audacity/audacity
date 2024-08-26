@@ -14,6 +14,7 @@
 #define __AUDACITY_EFFECT_CHANGESPEED__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
 
@@ -25,7 +26,9 @@ class NumericTextCtrl;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectChangeSpeed final : public StatefulEffect
+class EffectChangeSpeed final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectChangeSpeed *

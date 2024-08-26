@@ -16,17 +16,13 @@
 
 #include "StatefulEffectBase.h"
 #include "Effect.h"
-#include "StatefulEffectUIServices.h"
 
 //! Subclass of Effect, to be eliminated after all of its subclasses
 //! are rewritten to be stateless
-class AUDACITY_DLL_API StatefulEffect
-   : public StatefulEffectBase
-   , public Effect
-   , public StatefulEffectUIServices
+class EFFECTS_API StatefulEffect : public StatefulEffectBase, public Effect
 {
 public:
-   class AUDACITY_DLL_API Instance : public StatefulEffectBase::Instance {
+   class EFFECTS_API Instance : public StatefulEffectBase::Instance {
    public:
       using StatefulEffectBase::Instance::Instance;
       bool Process(EffectSettings &settings) override;

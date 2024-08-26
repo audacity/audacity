@@ -25,6 +25,7 @@ the audio, rather than actually finding the clicks.
 
 #include "AudacityMessageBox.h"
 #include "EffectOutputTracks.h"
+#include "EffectUIServices.h"
 #include "InterpolateAudio.h"
 #include "LoadEffects.h"
 #include "WaveTrack.h"

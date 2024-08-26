@@ -12,13 +12,16 @@
 
 #include "StatefulEffect.h"
 #include "ShuttleAutomation.h"
+#include "StatefulEffectUIServices.h"
 #include <float.h> // for FLT_MAX
 #include <wx/weakref.h>
 
 class ShuttleGui;
 class WaveChannel;
 
-class EffectPaulstretch final : public StatefulEffect
+class EffectPaulstretch final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectPaulstretch *
@@ -51,7 +54,7 @@ public:
 
 private:
    // EffectPaulstretch implementation
-   
+
    void OnText(wxCommandEvent & evt);
    size_t GetBufferSize(double rate) const;
 

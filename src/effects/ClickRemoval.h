@@ -17,6 +17,7 @@
 #define __AUDACITY_EFFECT_CLICK_REMOVAL__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
 
@@ -26,7 +27,9 @@ class Envelope;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectClickRemoval final : public StatefulEffect
+class EffectClickRemoval final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectClickRemoval *

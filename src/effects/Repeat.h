@@ -12,6 +12,7 @@
 #define __AUDACITY_EFFECT_REPEAT__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
 
@@ -20,7 +21,9 @@ class ShuttleGui;
 
 class wxStaticText;
 
-class EffectRepeat final : public StatefulEffect
+class EffectRepeat final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectRepeat *

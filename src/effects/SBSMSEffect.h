@@ -19,6 +19,7 @@
 #if USE_SBSMS
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include <sbsms.h>
 
 using namespace _sbsms_;
@@ -26,7 +27,9 @@ using namespace _sbsms_;
 class LabelTrack;
 class TimeWarper;
 
-class EffectSBSMS /* not final */ : public StatefulEffect
+class EffectSBSMS /* not final */ :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    bool Process(EffectInstance &instance, EffectSettings &settings) override;

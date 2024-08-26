@@ -19,6 +19,8 @@ set( SOURCES
    PerTrackEffect.h
    StatefulEffectBase.cpp
    StatefulEffectBase.h
+   StatefulEffect.cpp
+   StatefulEffect.h
    StatefulPerTrackEffect.cpp
    StatefulPerTrackEffect.h
 )
