@@ -200,10 +200,11 @@ Rectangle {
                 clipsSelection.active = false
             }
 
-            onClicked: {
+            onClicked: e => {
                 if (!root.clipHovered) {
                     selectionController.resetSelectedClip()
                 }
+                selectionController.onClicked(e.x, e.y)
             }
         }
 

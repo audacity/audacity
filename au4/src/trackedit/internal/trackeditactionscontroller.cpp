@@ -151,10 +151,10 @@ void TrackeditActionsController::paste()
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackList();
     double selectedStartTime = globalContext()->playbackState()->playbackPosition();
+    TrackId selectedTrackId = selectionController()->selectedTrack();
 
     if (!tracks.empty() && selectedStartTime >= 0) {
-        //! TODO AU4: paste into correct track (need to get info about selected track)
-        trackeditInteraction()->pasteIntoClipboard(selectedStartTime, tracks[0].id);
+        trackeditInteraction()->pasteIntoClipboard(selectedStartTime, selectedTrackId);
     }
 }
 
