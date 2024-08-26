@@ -11,6 +11,7 @@
 #include "Fade.h"
 #include "Invert.h"
 #include "LoadEffects.h"
+#include "Repair.h"
 #include "Reverse.h"
 #include "StereoToMono.h"
 
@@ -24,5 +25,6 @@ BuiltinEffectsModule::Registration<FadeIn> fadeIn;
 BuiltinEffectsModule::Registration<FadeOut> fadeOut;
 BuiltinEffectsModule::Registration<Reverse> reverse;
 BuiltinEffectsModule::Registration<StereoToMono> stereoToMono;
+BuiltinEffectsModule::Registration<Repair> repair;
 BuiltinEffectsModule::Registration<Invert> invert;
 } // namespace

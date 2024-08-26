@@ -11,6 +11,8 @@ set( SOURCES
    Fade.h
    Invert.cpp
    Invert.h
+   Repair.cpp
+   Repair.h
    Reverse.cpp
    Reverse.h
    StereoToMono.cpp

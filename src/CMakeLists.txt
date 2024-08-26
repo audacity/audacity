@@ -419,8 +419,6 @@ set( SOURCES
       effects/RealtimeEffectStateUI.h
       effects/RegisterBuiltinEffects.cpp
       effects/RegisterBuiltinEffects.h
-      effects/Repair.cpp
-      effects/Repair.h
       effects/Repeat.cpp
       effects/Repeat.h
       effects/Reverb.cpp
