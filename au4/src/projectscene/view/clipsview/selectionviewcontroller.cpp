@@ -80,11 +80,25 @@ void SelectionViewController::onReleased(double x, double y)
 
     // tracks
     std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    if (!tracks.empty()) {
+        selectionController()->setSelectedTrack(tracks[0]);
+    }
     selectionController()->setDataSelectedOnTracks(tracks, true);
 
     // time
     selectionController()->setDataSelectedStartTime(m_context->positionToTime(x1, true /*withSnap*/), true);
     selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), true);
+}
+
+void SelectionViewController::onClicked(double x, double y)
+{
+    Q_UNUSED(x);
+    std::vector<TrackId> tracks = determinateTracks(m_startPoint.y(), y);
+    if (!tracks.empty()) {
+        selectionController()->setSelectedTrack(tracks[0]);
+    } else {
+        selectionController()->resetSelectedTrack();
+    }
 }
 
 void SelectionViewController::onSelectionDraged(double x1, double x2, bool completed)
