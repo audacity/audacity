@@ -440,8 +440,6 @@ set( SOURCES
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp
       effects/StatelessPerTrackEffect.h
-      effects/StereoToMono.cpp
-      effects/StereoToMono.h
       effects/TimeScale.cpp
       effects/TimeScale.h
       effects/ToneGen.cpp

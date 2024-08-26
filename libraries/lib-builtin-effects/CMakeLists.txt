@@ -13,6 +13,8 @@ set( SOURCES
    Invert.h
    Reverse.cpp
    Reverse.h
+   StereoToMono.cpp
+   StereoToMono.h
    ToneGenBase.cpp
    ToneGenBase.h
 )
