@@ -36,7 +36,7 @@ void TempConceptExecutor::execute(const std::string& effectId_)
         //! NOTE This implementation is temporary
         //! Probably we need to register instances with their IDs somewhere
         //! and get an instance from this register in a view model.
-        muse::String instanceId = muse::String::number(reinterpret_cast<size_t>(this));
+        muse::String instanceId = muse::String::number(reinterpret_cast<size_t>(&effect));
         muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
         if (!ret) {
             LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();

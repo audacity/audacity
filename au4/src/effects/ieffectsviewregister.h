@@ -15,7 +15,9 @@ class IEffectsViewRegister : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectsViewRegister() = default;
 
+    virtual void setDefaultUrl(const muse::String& viewUrl) = 0;
     virtual void regUrl(const muse::String& effectName, const muse::String& viewUrl) = 0;
+
     virtual const muse::String& viewUrl(const muse::String& effectName) const = 0;
 };
 }

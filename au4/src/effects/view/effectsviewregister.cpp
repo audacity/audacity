@@ -5,6 +5,11 @@
 
 using namespace au::effects;
 
+void EffectsViewRegister::setDefaultUrl(const muse::String& viewUrl)
+{
+    m_defaultUrl = viewUrl;
+}
+
 void EffectsViewRegister::regUrl(const muse::String& effectName, const muse::String& viewUrl)
 {
     m_data.insert({ effectName, viewUrl });
@@ -17,6 +22,5 @@ const muse::String& EffectsViewRegister::viewUrl(const muse::String& effectName)
         return it->second;
     }
 
-    static muse::String nofound;
-    return nofound;
+    return m_defaultUrl;
 }
