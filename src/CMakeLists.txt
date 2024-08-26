@@ -397,8 +397,6 @@ set( SOURCES
       effects/FindClipping.h
       effects/Generator.cpp
       effects/Generator.h
-      effects/Invert.cpp
-      effects/Invert.h
       effects/Limiter.cpp
       effects/Limiter.h
       effects/LimiterEditor.cpp

@@ -9,6 +9,8 @@ set( SOURCES
    CompressorInstance.h
    Fade.cpp
    Fade.h
+   Invert.cpp
+   Invert.h
    ToneGenBase.cpp
    ToneGenBase.h
 )
