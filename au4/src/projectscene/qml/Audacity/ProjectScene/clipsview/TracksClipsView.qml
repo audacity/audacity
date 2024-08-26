@@ -147,6 +147,8 @@ Rectangle {
         anchors.left: parent.left
         anchors.right: parent.right
 
+        clip: true
+
         // anchors.leftMargin: 130
         // anchors.rightMargin: 130
 
