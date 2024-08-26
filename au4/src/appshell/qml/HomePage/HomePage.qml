@@ -29,8 +29,6 @@ import Audacity.Project 1.0
 import Muse.Cloud 1.0
 import Muse.Learn 1.0
 
-import "../dockwindow"
-
 DockPage {
     id: root
 

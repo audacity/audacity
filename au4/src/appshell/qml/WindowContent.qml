@@ -31,7 +31,6 @@ import "./HomePage"
 import "./ProjectPage"
 import "./PublishPage"
 import "./DevTools"
-import "./dockwindow"
 
 DockWindow {
     id: root

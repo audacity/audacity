@@ -64,16 +64,6 @@
         <file>qml/PublishPage/PublishPage.qml</file>
         <file>qml/PublishPage/PublishToolBar.qml</file>
         <file>qml/DevTools/DevToolsPage.qml</file>
-        <file>qml/dockwindow/DockWidget.qml</file>
-        <file>qml/dockwindow/DockTitleBar.qml</file>
-        <file>qml/dockwindow/DockToolBar.qml</file>
-        <file>qml/dockwindow/DockFrame.qml</file>
-        <file>qml/dockwindow/DockPanelTab.qml</file>
-        <file>qml/dockwindow/DockSeparator.qml</file>
-        <file>qml/dockwindow/DockFloatingWindow.qml</file>
-        <file>qml/dockwindow/DockPage.qml</file>
-        <file>qml/dockwindow/DockPanel.qml</file>
-        <file>qml/dockwindow/DockingHolder.qml</file>
         <file>qml/AppWindow.qml</file>
         <file>qml/WindowContent.qml</file>
         <file>qml/platform/linux/Main.qml</file>
