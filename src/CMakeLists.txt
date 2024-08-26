@@ -421,6 +421,8 @@ set( SOURCES
       effects/CompressorEditor.h
       effects/RealtimeEffectStateUI.cpp
       effects/RealtimeEffectStateUI.h
+      effects/RegisterBuiltinEffects.cpp
+      effects/RegisterBuiltinEffects.h
       effects/Repair.cpp
       effects/Repair.h
       effects/Repeat.cpp

@@ -73,21 +73,7 @@ size_t Fade::ProcessBlock(
    return blockLen;
 }
 
-#include "LoadEffects.h"
-
 const ComponentInterfaceSymbol FadeIn::Symbol { XO("Fade In") };
-
-namespace
-{
-BuiltinEffectsModule::Registration<FadeIn> reg;
-}
-
-const ComponentInterfaceSymbol FadeOut::Symbol { XO("Fade Out") };
-
-namespace
-{
-BuiltinEffectsModule::Registration<FadeOut> reg2;
-}
 
 FadeIn::FadeIn()
     : Fade { true }
@@ -102,9 +88,9 @@ ComponentInterfaceSymbol FadeIn::GetSymbol() const
 TranslatableString FadeIn::GetDescription() const
 {
    return XO("Applies a linear fade-in to the selected audio");
-   // ? XO("Applies a linear fade-in to the selected audio") :
-   //   XO("Applies a linear fade-out to the selected audio");
 }
+
+const ComponentInterfaceSymbol FadeOut::Symbol { XO("Fade Out") };
 
 FadeOut::FadeOut()
     : Fade { false }
