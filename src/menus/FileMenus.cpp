@@ -461,11 +461,11 @@ auto FileMenu()
       Section( "Basic",
          /*i18n-hint: "New" is an action (verb) to create a NEW project*/
          Command( wxT("New"), XXO("&New"), OnNew,
-            AudioIONotBusyFlag(), wxT("Ctrl+N") ),
+            StopAudioIOIfBusyFlag(), wxT("Ctrl+N") ),
 
          /*i18n-hint: (verb)*/
          Command( wxT("Open"), XXO("&Open..."), OnOpen,
-            AudioIONotBusyFlag(), wxT("Ctrl+O") ),
+            StopAudioIOIfBusyFlag(), wxT("Ctrl+O") ),
 
    #ifdef EXPERIMENTAL_RESET
          // Empty the current project and forget its name and path.  DANGEROUS
@@ -473,7 +473,7 @@ auto FileMenu()
          // Do not translate this menu item (no XXO).
          // It MUST not be shown to regular users.
          Command( wxT("Reset"), XXO("&Dangerous Reset..."), OnProjectReset,
-            AudioIONotBusyFlag() ),
+            StopAudioIOIfBusyFlag() ),
    #endif
 
    /////////////////////////////////////////////////////////////////////////////
