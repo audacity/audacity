@@ -57,6 +57,11 @@ AmplifyBase::~AmplifyBase()
 {
 }
 
+ComponentInterfaceSymbol AmplifyBase::GetSymbol() const
+{
+    return Symbol;
+}
+
 EffectType AmplifyBase::GetType() const
 {
    return EffectTypeProcess;
