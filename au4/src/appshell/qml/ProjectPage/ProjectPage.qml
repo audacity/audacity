@@ -30,7 +30,6 @@ import Audacity.AppShell
 import Audacity.ProjectScene
 import Audacity.Playback
 
-import "../dockwindow"
 
 DockPage {
     id: root
