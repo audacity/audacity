@@ -9,7 +9,7 @@
 #include "libraries/lib-module-manager/PluginManager.h"
 #include "libraries/lib-command-parameters/ShuttleAutomation.h"
 
-#include "ieffectdialog.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::effects;
 
@@ -19,9 +19,9 @@ void TempConceptExecutor::execute(const std::string& effectId_)
 
     auto& project = *reinterpret_cast<::AudacityProject*>(globalContext()->currentProject()->au3ProjectPtr());
 
-    auto showEffectHostInterfaceCb = [](Effect& effect,
-                                        std::shared_ptr<EffectInstance>& instance,
-                                        SimpleEffectSettingsAccess& settings)
+    auto showEffectHostInterfaceCb = [this](Effect& effect,
+                                            std::shared_ptr<EffectInstance>& instance,
+                                            SimpleEffectSettingsAccess& settings)
     {
         const std::optional<EffectPlugin::InstancePointer> result = EffectBase::FindInstance(effect);
         if (!result.has_value()) {
@@ -31,17 +31,15 @@ void TempConceptExecutor::execute(const std::string& effectId_)
         if (!instance) {
             return false;
         }
-        // Here show the interface and adjust the parameters
-        // Not sure how use `settings`, but in some (all?) cases,
-        // the file settings are automagically bound to the instance via the
-        // definition of `EffectParameter`s. (E.g. see AmplifyBase).
-        // The `au::au3::IEffectDialog` implementation can therefore proceed
-        // with no further arguments.
-        IEffectDialog* dialog = dynamic_cast<IEffectDialog*>(&effect);
-        if (!dialog) {
-            return false;
-        }
-        if (!dialog->show()) {
+
+        muse::String type = au3::wxToSting(effect.GetSymbol().Internal());
+        //! NOTE This implementation is temporary
+        //! Probably we need to register instances with their IDs somewhere
+        //! and get an instance from this register in a view model.
+        muse::String instanceId = muse::String::number(reinterpret_cast<size_t>(this));
+        muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
+        if (!ret) {
+            LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
             return false;
         }
 

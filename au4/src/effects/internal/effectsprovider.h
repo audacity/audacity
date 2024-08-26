@@ -27,6 +27,8 @@ public:
 
     EffectMeta meta(const muse::String& effectId) const override;
 
+    muse::Ret showEffect(const muse::String& type, const EffectInstanceId& instanceId) override;
+
 private:
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
