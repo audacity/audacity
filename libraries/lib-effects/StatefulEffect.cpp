@@ -13,8 +13,6 @@
 **********************************************************************/
 #include "StatefulEffect.h"
 #include "SampleCount.h"
-#include "ShuttleGui.h"
-#include <wx/sizer.h>
 
 bool StatefulEffect::Instance::Process(EffectSettings &settings)
 {

@@ -18,7 +18,8 @@
 #include <vamp-hostsdk/PluginLoader.h>
 
 #include <wx/weakref.h>
-#include "../StatefulEffect.h"
+#include "StatefulEffect.h"
+#include "../StatefulEffectUIServices.h"
 #include "MemoryX.h"
 
 class wxStaticText;
@@ -35,7 +36,7 @@ using Floats = ArrayOf<float>;
    It is not an abbreviation for anything.  See http://vamp-plugins.org */
 #define VAMPEFFECTS_FAMILY XO("Vamp")
 
-class VampEffect final : public StatefulEffect
+class VampEffect final : public StatefulEffect, public StatefulEffectUIServices
 {
 public:
    VampEffect(std::unique_ptr<Vamp::Plugin> &&plugin,

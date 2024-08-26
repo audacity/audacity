@@ -18,6 +18,7 @@
 #include <wx/weakref.h>
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "Biquad.h"
 #include "ShuttleAutomation.h"
 #include "Track.h"
@@ -29,7 +30,9 @@ class ShuttleGui;
 class WaveChannel;
 using Floats = ArrayOf<float>;
 
-class EffectLoudness final : public StatefulEffect
+class EffectLoudness final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    enum kNormalizeTargets

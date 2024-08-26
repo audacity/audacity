@@ -11,7 +11,8 @@
 #ifndef __AUDACITY_EFFECT_NYQUIST__
 #define __AUDACITY_EFFECT_NYQUIST__
 
-#include "../StatefulEffect.h"
+#include "StatefulEffect.h"
+#include "../StatefulEffectUIServices.h"
 #include "FileNames.h"
 #include "SampleCount.h"
 #include "wxPanelWrapper.h"
@@ -73,8 +74,9 @@ struct NyquistSettings {
    // Other fields, to do
 };
 
-class AUDACITY_DLL_API NyquistEffect final
-   : public EffectWithSettings<NyquistSettings, StatefulEffect>
+class AUDACITY_DLL_API NyquistEffect final :
+    public EffectWithSettings<NyquistSettings, StatefulEffect>,
+    public StatefulEffectUIServices
 {
 public:
 
@@ -91,7 +93,7 @@ public:
    VendorSymbol GetVendor() const override;
    wxString GetVersion() const override;
    TranslatableString GetDescription() const override;
-   
+
    ManualPageID ManualPage() const override;
    FilePath HelpPage() const override;
 

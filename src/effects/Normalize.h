@@ -13,6 +13,7 @@
 #define __AUDACITY_EFFECT_NORMALIZE__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "Biquad.h"
 #include "ShuttleAutomation.h"
 #include <wx/weakref.h>
@@ -24,7 +25,9 @@ class wxTextCtrl;
 class ShuttleGui;
 class WaveChannel;
 
-class EffectNormalize final : public StatefulEffect
+class EffectNormalize final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectNormalize *

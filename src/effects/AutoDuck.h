@@ -12,6 +12,7 @@
 #define __AUDACITY_EFFECT_AUTODUCK__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleAutomation.h"
 #include <float.h> // for DBL_MAX
 #include "wxPanelWrapper.h"
@@ -23,7 +24,9 @@ class WaveChannel;
 
 #define AUTO_DUCK_PANEL_NUM_CONTROL_POINTS 5
 
-class EffectAutoDuck final : public StatefulEffect
+class EffectAutoDuck final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectAutoDuck *

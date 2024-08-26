@@ -442,8 +442,6 @@ set( SOURCES
       effects/Silence.h
       effects/SoundTouchEffect.cpp
       effects/SoundTouchEffect.h
-      effects/StatefulEffect.cpp
-      effects/StatefulEffect.h
       effects/StatefulEffectUIServices.cpp
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp

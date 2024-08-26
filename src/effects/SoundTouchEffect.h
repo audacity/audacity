@@ -20,6 +20,7 @@
 #define __AUDACITY_EFFECT_SOUNDTOUCH__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 
 // forward declaration of a class defined in SoundTouch.h
 // which is not included here
@@ -32,10 +33,12 @@ class NoteTrack;
 class WaveChannel;
 class WaveTrack;
 
-class EffectSoundTouch /* not final */ : public StatefulEffect
+class EffectSoundTouch /* not final */ :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
-   
+
    // EffectSoundTouch implementation
 
 #ifdef USE_MIDI

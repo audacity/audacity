@@ -18,6 +18,7 @@
 #define __AUDACITY_EFFECT_TRUNC_SILENCE__
 
 #include "StatefulEffect.h"
+#include "StatefulEffectUIServices.h"
 #include "ShuttleAutomation.h"
 #include "Track.h"
 #include <wx/weakref.h>
@@ -29,7 +30,9 @@ class wxCheckBox;
 
 class RegionList;
 
-class EffectTruncSilence final : public StatefulEffect
+class EffectTruncSilence final :
+    public StatefulEffect,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectTruncSilence *
