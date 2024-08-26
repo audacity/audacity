@@ -426,8 +426,6 @@ set( SOURCES
       effects/Reverb.cpp
       effects/Reverb.h
       effects/Reverb_libSoX.h
-      effects/Reverse.cpp
-      effects/Reverse.h
       effects/SBSMSEffect.cpp
       effects/SBSMSEffect.h
       effects/ScienFilter.cpp

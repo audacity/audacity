@@ -11,6 +11,8 @@ set( SOURCES
    Fade.h
    Invert.cpp
    Invert.h
+   Reverse.cpp
+   Reverse.h
    ToneGenBase.cpp
    ToneGenBase.h
 )

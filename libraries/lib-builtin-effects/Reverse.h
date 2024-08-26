@@ -9,35 +9,26 @@
   This class reverses the selected audio.
 
 **********************************************************************/
-
-#ifndef __AUDACITY_EFFECT_REVERSE__
-#define __AUDACITY_EFFECT_REVERSE__
+#pragma once
 
 #include "StatefulEffect.h"
-#include <functional>
 
-class EffectReverse final : public StatefulEffect
+class BUILTIN_EFFECTS_API Reverse : public StatefulEffect
 {
 public:
+   Reverse();
+   virtual ~Reverse();
+
    static const ComponentInterfaceSymbol Symbol;
 
-   EffectReverse();
-   virtual ~EffectReverse();
-
    // ComponentInterface implementation
-
    ComponentInterfaceSymbol GetSymbol() const override;
    TranslatableString GetDescription() const override;
 
    // EffectDefinitionInterface implementation
-
    EffectType GetType() const override;
    bool IsInteractive() const override;
 
    // Effect implementation
-
-   bool Process(EffectInstance &instance, EffectSettings &settings) override;
- };
-
-#endif
-
+   bool Process(EffectInstance& instance, EffectSettings& settings) override;
+};
