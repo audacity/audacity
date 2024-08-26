@@ -119,6 +119,7 @@ class AUDACITY_DLL_API LabelTrack final
    void SetLabel( size_t iLabel, const LabelStruct &newLabel );
 
    void MoveTo(double dOffset) override;
+   void ShiftBy(double t0, double delta) override;
 
    void SetSelected(bool s) override;
 

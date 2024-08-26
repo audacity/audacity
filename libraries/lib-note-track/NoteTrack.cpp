@@ -217,6 +217,12 @@ Track::Holder NoteTrack::Clone(bool) const
    return duplicate;
 }
 
+void NoteTrack::ShiftBy(double t0, double delta)
+{
+   if(t0 <= mOrigin)
+      mOrigin += delta;
+}
+
 void NoteTrack::WarpAndTransposeNotes(double t0, double t1,
                                       const TimeWarper &warper,
                                       double semitones)

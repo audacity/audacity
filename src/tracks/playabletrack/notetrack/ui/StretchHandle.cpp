@@ -317,7 +317,7 @@ void StretchHandle::Stretch(AudacityProject *pProject, int mouseXCoordinate, int
             return;
          nt.StretchRegion
             ( mStretchState.mBeat0, mStretchState.mBeat1, dur );
-         nt.ShiftBy(moveto - t0);
+         nt.ChannelGroup::ShiftBy(moveto - t0);
          mStretchState.mBeat0.first = moveto;
          viewInfo.selectedRegion.setT0(moveto);
          break;
