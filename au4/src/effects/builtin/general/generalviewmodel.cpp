@@ -13,14 +13,7 @@ using namespace au::effects;
 
 void GeneralViewModel::init()
 {
-    IF_ASSERT_FAILED(!instanceId().isEmpty()) {
-        return;
-    }
-
-    //! NOTE Temporary solution
-    m_effect = reinterpret_cast<Effect*>(instanceId().toLongLong());
-
-    LOGDA() << au3::wxToSting(m_effect->GetSymbol().Internal());
+    LOGDA() << au3::wxToSting(effect()->GetSymbol().Internal());
 
     //! NOTE This is where it's needed
     //! * Get a list of parameters
