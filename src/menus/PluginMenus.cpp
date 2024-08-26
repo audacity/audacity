@@ -269,7 +269,7 @@ auto GenerateMenu()
    Menu( wxT("Generate"), XXO("&Generate"),
       Section( "Manage",
          Command( wxT("ManageGenerators"), XXO("Plugin Manager"),
-            OnManageGenerators, AudioIONotBusyFlag() )
+            OnManageGenerators, StopAudioIOIfBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -347,7 +347,7 @@ auto EffectMenu()
       Section(
          "Manage", Command(
                       wxT("ManageEffects"), XXO("Plugin Manager"),
-                      OnManageEffects, AudioIONotBusyFlag())),
+                      OnManageEffects, StopAudioIOIfBusyFlag())),
 
       Section(
          "RealtimeEffects",
@@ -429,7 +429,7 @@ auto AnalyzeMenu()
    Menu( wxT("Analyze"), XXO("&Analyze"),
       Section( "Manage",
          Command( wxT("ManageAnalyzers"), XXO("Plugin Manager"),
-            OnManageAnalyzers, AudioIONotBusyFlag() )
+            OnManageAnalyzers, StopAudioIOIfBusyFlag() )
       ),
 
       Section("RepeatLast",
@@ -481,7 +481,7 @@ auto ToolsMenu()
    Menu( wxT("Tools"), XXO("T&ools"),
       Section( "Manage",
          Command( wxT("ManageTools"), XXO("Plugin Manager"),
-            OnManageTools, AudioIONotBusyFlag() )
+            OnManageTools, StopAudioIOIfBusyFlag() )
 
          //Separator(),
       ),
