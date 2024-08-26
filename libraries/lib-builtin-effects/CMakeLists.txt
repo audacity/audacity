@@ -7,6 +7,8 @@ set( SOURCES
    AmplifyBase.h
    CompressorInstance.cpp
    CompressorInstance.h
+   Fade.cpp
+   Fade.h
    ToneGenBase.cpp
    ToneGenBase.h
 )
