@@ -11,6 +11,8 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "general/generalviewmodel.h"
+
 #include "amplify/amplifyeffect.h"
 #include "amplify/amplifyviewmodel.h"
 
@@ -27,15 +29,20 @@ void BuiltinEffects::init()
         BuiltinEffects::effectsViewRegister()->regUrl(au3::wxToSting(symbol.Internal()), url);
     };
 
+    // General
+    qmlRegisterType<GeneralViewModel>("Audacity.Effects", 1, 0, "GeneralViewModel");
+    effectsViewRegister()->setDefaultUrl(u"qrc:/builtin/general/GeneralEffectView.qml");
+
+    // Specific
     static BuiltinEffectsModule::Registration< AmplifyEffect > regAmplify;
     qmlRegisterType<AmplifyViewModel>("Audacity.Effects", 1, 0, "AmplifyViewModel");
     regView(AmplifyEffect::Symbol, u"qrc:/builtin/amplify/AmplifyView.qml");
 
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
-    regView(ChirpEffect::Symbol, u"qrc:/builtin/tonegen/ChirpView.qml");
+    //regView(ChirpEffect::Symbol, u"qrc:/builtin/tonegen/ChirpView.qml");
 
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
-    regView(ToneEffect::Symbol, u"qrc:/builtin/tonegen/ToneView.qml");
+    //regView(ToneEffect::Symbol, u"qrc:/builtin/tonegen/ToneView.qml");
 }
 
 EffectMetaList BuiltinEffects::effectMetaList() const

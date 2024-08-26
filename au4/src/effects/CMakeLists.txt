@@ -43,6 +43,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtin/abstracteffectmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/general/generalviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/builtin/general/generalviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/builtin/amplify/amplifyviewmodel.cpp
@@ -97,3 +100,4 @@ endif()
 set(MODULE_LINK au3wrap)
 
 setup_module()
+
