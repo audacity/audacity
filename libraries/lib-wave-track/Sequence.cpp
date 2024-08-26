@@ -89,7 +89,9 @@ size_t Sequence::GetIdealBlockSize() const
 
 bool Sequence::CloseLock() noexcept
 {
-   for (unsigned int i = 0; i < mBlock.size(); i++)
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
+
+   for (unsigned int i = 0; i < blockCount; i++)
       mBlock[i].sb->CloseLock();
 
    return true;
@@ -99,17 +101,6 @@ SampleFormats Sequence::GetSampleFormats() const
 {
    return mSampleFormats;
 }
-
-/*
-bool Sequence::SetSampleFormat(sampleFormat format)
-{
-   if (mBlock.size() > 0 || mNumSamples > 0)
-      return false;
-
-   mSampleFormat = format;
-   return true;
-}
-*/
 
 namespace {
    void ensureSampleBufferSize(SampleBuffer &buffer, sampleFormat format,
@@ -144,7 +135,9 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
       // no change
       return false;
 
-   if (mBlock.size() == 0)
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
+   
+   if (blockCount == 0)
    {
       // Effective format can be made narrowest when there is no content
       mSampleFormats = { narrowestSampleFormat, format };
@@ -174,10 +167,6 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
    } );
 
    BlockArray newBlockArray;
-   // Use the ratio of old to NEW mMaxSamples to make a reasonable guess
-   // at allocation.
-   newBlockArray.reserve
-      (1 + mBlock.size() * ((float)oldMaxSamples / (float)mMaxSamples));
 
    {
       size_t oldSize = oldMaxSamples;
@@ -185,7 +174,7 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
       size_t newSize = oldMaxSamples;
       SampleBuffer bufferNew(newSize, format);
 
-      for (size_t i = 0, nn = mBlock.size(); i < nn; i++)
+      for (size_t i = 0; i < blockCount; i++)
       {
          SeqBlock &oldSeqBlock = mBlock[i];
          const auto &oldBlockFile = oldSeqBlock.sb;
@@ -241,7 +230,9 @@ bool Sequence::ConvertToSampleFormat(sampleFormat format,
 std::pair<float, float> Sequence::GetMinMax(
    sampleCount start, sampleCount len, bool mayThrow) const
 {
-   if (len == 0 || mBlock.size() == 0) {
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
+
+   if (len == 0 || blockCount == 0) {
       return {
          0.f,
          // FLT_MAX?  So it doesn't look like a spurious '0' to a caller?
@@ -324,7 +315,9 @@ float Sequence::GetRMS(sampleCount start, sampleCount len, bool mayThrow) const
 {
    // len is the number of samples that we want the rms of.
    // it may be longer than a block, and the code is carefully set up to handle that.
-   if (len == 0 || mBlock.size() == 0)
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
+
+   if (len == 0 || blockCount == 0)
       return 0.f;
 
    double sumsq = 0.0;
@@ -402,17 +395,15 @@ std::unique_ptr<Sequence> Sequence::Copy( const SampleBlockFactoryPtr &pFactory,
    // contents are used -- must copy if factories are different:
    auto pUseFactory = (pFactory == mpFactory) ? nullptr : pFactory.get();
 
-   int numBlocks = mBlock.size();
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
 
    int b0 = FindBlock(s0);
    const int b1 = FindBlock(s1 - 1);
    wxASSERT(b0 >= 0);
-   wxASSERT(b0 < numBlocks);
-   wxASSERT(b1 < numBlocks);
-   wxUnusedVar(numBlocks);
+   wxASSERT(b0 < blockCount);
+   wxASSERT(b1 < blockCount);
+   wxUnusedVar(blockCount);
    wxASSERT(b0 <= b1);
-
-   dest->mBlock.reserve(b1 - b0 + 1);
 
    auto bufferSize = mMaxSamples;
    const auto format = mSampleFormats.Stored();
@@ -531,13 +522,13 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
 
    const BlockArray &srcBlock = src->mBlock;
    auto addedLen = src->mNumSamples;
-   const unsigned int srcNumBlocks = srcBlock.size();
+   const size_t srcNumBlocks = src->mBlockCount.load(std::memory_order_relaxed);
    auto sampleSize = SAMPLE_SIZE(format);
 
    if (addedLen == 0 || srcNumBlocks == 0)
       return;
 
-   const size_t numBlocks = mBlock.size();
+   const size_t numBlocks = mBlockCount.load(std::memory_order_relaxed);
 
    // Decide whether to share sample blocks or make new copies, when whole block
    // contents are used -- must copy if factories are different:
@@ -565,7 +556,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
       return;
    }
 
-   const int b = (s == mNumSamples) ? mBlock.size() - 1 : FindBlock(s);
+   const int b = (s == mNumSamples) ? numBlocks - 1 : FindBlock(s);
    wxASSERT((b >= 0) && (b < (int)numBlocks));
    SeqBlock *const pBlock = &mBlock[b];
    const auto length = pBlock->sb->GetSampleCount();
@@ -619,7 +610,7 @@ void Sequence::Paste(sampleCount s, const Sequence *src)
    // into one big block along with the split block,
    // then resplit it all
    BlockArray newBlock;
-   newBlock.reserve(numBlocks + srcNumBlocks + 2);
+
    newBlock.insert(newBlock.end(), mBlock.begin(), mBlock.begin() + b);
 
    SeqBlock &splitBlock = mBlock[b];
@@ -732,7 +723,6 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
    // Could nBlocks overflow a size_t?  Not very likely.  You need perhaps
    // 2 ^ 52 samples which is over 3000 years at 44.1 kHz.
    auto nBlocks = (len + idealSamples - 1) / idealSamples;
-   sTrack.mBlock.reserve(nBlocks.as_size_t());
 
    const auto format = mSampleFormats.Stored();
    if (len >= idealSamples) {
@@ -752,7 +742,7 @@ void Sequence::InsertSilence(sampleCount s0, sampleCount len)
          factory.CreateSilent(len.as_size_t(), format), pos));
       pos += len;
    }
-
+   sTrack.mBlockCount.store(sTrack.mBlock.size(), std::memory_order_release);
    sTrack.mNumSamples = pos;
 
    // use Strong-guarantee
@@ -795,7 +785,7 @@ size_t Sequence::GetBestBlockSize(sampleCount start) const
       return mMaxSamples;
 
    int b = FindBlock(start);
-   int numBlocks = mBlock.size();
+   const size_t numBlocks = mBlockCount.load(std::memory_order_relaxed);
 
    const SeqBlock &block = mBlock[b];
    // start is in block:
@@ -858,7 +848,6 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList &a
       }
 
       mBlock.push_back(wb);
-
       return true;
    }
 
@@ -959,7 +948,9 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
 
    // Make sure that start times and lengths are consistent
    sampleCount numSamples = 0;
-   for (unsigned b = 0, nn = mBlock.size(); b < nn;  b++)
+   const size_t blockCount = mBlock.size();
+
+   for (unsigned b = 0; b < blockCount;  b++)
    {
       SeqBlock &block = mBlock[b];
       if (block.start != numSamples)
@@ -977,6 +968,8 @@ void Sequence::HandleXMLEndTag(const std::string_view& tag)
       }
       numSamples += block.sb->GetSampleCount();
    }
+
+   mBlockCount.store(mBlock.size(), std::memory_order_release);
 
    if (mNumSamples != numSamples)
    {
@@ -1016,7 +1009,9 @@ void Sequence::WriteXML(XMLWriter &xmlFile) const
       static_cast<size_t>( mSampleFormats.Effective() ));
    xmlFile.WriteAttr(NumSamples_attr, mNumSamples.as_long_long() );
 
-   for (b = 0; b < mBlock.size(); b++) {
+   const size_t blockCount = mBlockCount.load(std::memory_order_relaxed);
+
+   for (b = 0; b < blockCount; b++) {
       const SeqBlock &bb = mBlock[b];
 
       // See http://bugzilla.audacityteam.org/show_bug.cgi?id=451.
@@ -1059,7 +1054,7 @@ int Sequence::FindBlock(sampleCount pos) const
    if (pos == 0)
       return 0;
 
-   int numBlocks = mBlock.size();
+   const size_t numBlocks = mBlockCount.load(std::memory_order_relaxed);
 
    size_t lo = 0, hi = numBlocks, guess;
    sampleCount loSamples = 0, hiSamples = mNumSamples;
@@ -1324,7 +1319,8 @@ void Sequence::SetSamples(constSamplePtr buffer, sampleFormat format,
 
 size_t Sequence::GetIdealAppendLen() const
 {
-   int numBlocks = mBlock.size();
+   const size_t numBlocks = mBlockCount.load(std::memory_order_relaxed);
+
    const auto max = GetMaxBlockSize();
 
    if (numBlocks == 0)
@@ -1559,7 +1555,6 @@ void Sequence::Blockify(SampleBlockFactory &factory,
       return;
 
    auto num = (len + (mMaxSamples - 1)) / mMaxSamples;
-   list.reserve(list.size() + num);
 
    for (decltype(num) i = 0; i < num; i++) {
       SeqBlock b;
@@ -1648,7 +1643,6 @@ void Sequence::Delete(sampleCount start, sampleCount len)
 
    // Create a NEW array of blocks
    BlockArray newBlock;
-   newBlock.reserve(numBlocks - (b1 - b0) + 2);
 
    // Copy the blocks before the deletion point over to
    // the NEW array
@@ -1816,6 +1810,7 @@ void Sequence::CommitChangesIfConsistent
    // use No-fail-guarantee
 
    mBlock.swap(newBlock);
+   mBlockCount.store(mBlock.size(), std::memory_order_release);
    mNumSamples = numSamples;
 }
 
@@ -1834,18 +1829,20 @@ void Sequence::AppendBlocksIfConsistent
 
    if ( replaceLast && ! mBlock.empty() ) {
       tmp = mBlock.back(), tmpValid = true;
+      mBlockCount.store(mBlock.size() - 1, std::memory_order_release);
       mBlock.pop_back();
    }
-
    auto prevSize = mBlock.size();
 
    bool consistent = false;
    auto cleanup = finally( [&] {
       if ( !consistent ) {
          mBlock.resize( prevSize );
+
          if ( tmpValid )
             mBlock.push_back( tmp );
       }
+      mBlockCount.store(mBlock.size(), std::memory_order_release);
    } );
 
    std::copy( additionalBlocks.begin(), additionalBlocks.end(),
