@@ -16,7 +16,7 @@ set( SOURCES
 )
 set( LIBRARIES
    lib-dynamic-range-processor-interface
-   lib-effects-interface
+   lib-label-track-interface
 )
 audacity_library( lib-builtin-effects "${SOURCES}" "${LIBRARIES}"
    "" ""

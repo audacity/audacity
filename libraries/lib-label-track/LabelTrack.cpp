@@ -41,13 +41,27 @@ for drawing different aspects of the label and its text box.
 
 #include "Prefs.h"
 #include "Project.h"
-#include "prefs/ImportExportPrefs.h"
 
 #include "TimeWarper.h"
-#include "AudacityMessageBox.h"
+#include "BasicUI.h"
 
 const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
 const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
+
+EnumSetting<bool> LabelStyleSetting {
+   wxT("/FileFormats/LabelStyleChoice"),
+   {
+      EnumValueSymbol { wxT("Standard"), XXO("S&tandard") },
+      EnumValueSymbol { wxT("Extended"),
+                        XXO("E&xtended (with frequency ranges)") },
+   },
+   0, // true
+
+   {
+      true,
+      false,
+   },
+};
 
 LabelTrack::Interval::~Interval() = default;
 
@@ -379,51 +393,6 @@ void LabelStruct::MoveLabel( int iEdge, double fNewTime)
    updated = true;
 }
 
-
-#include "ShuttleGui.h"
-namespace {
-
-static EnumSetting<bool> LabelStyleSetting{
-   wxT("/FileFormats/LabelStyleChoice"),
-   {
-      EnumValueSymbol{ wxT("Standard"), XXO("S&tandard") },
-      EnumValueSymbol{ wxT("Extended"), XXO("E&xtended (with frequency ranges)") },
-   },
-   0, // true
-
-   {
-      true, false,
-   },
-};
-
-void AddControls(ShuttleGui &S)
-{
-   S.StartStatic(XO("Exported Label Style:"));
-   {
-#if defined(__WXMAC__)
-      // Bug 2692: Place button group in panel so tabbing will work and,
-      // on the Mac, VoiceOver will announce as radio buttons.
-      S.StartPanel();
-#endif
-      {
-         S.StartRadioButtonGroup(LabelStyleSetting);
-         {
-            S.TieRadioButton();
-            S.TieRadioButton();
-         }
-         S.EndRadioButtonGroup();
-      }
-#if defined(__WXMAC__)
-      S.EndPanel();
-#endif
-   }
-   S.EndStatic();
-}
-
-ImportExportPrefs::RegisteredControls reg{ wxT("LabelStyle"), AddControls };
-
-}
-
 static double SubRipTimestampToDouble(const wxString &ts)
 {
    wxString::const_iterator end;
@@ -716,7 +685,7 @@ LabelFormat LabelTrack::FormatForFileName(const wxString & fileName)
 void LabelTrack::Import(wxTextFile & in, LabelFormat format)
 {
    if (format == LabelFormat::WEBVTT) {
-      ::AudacityMessageBox( XO("Importing WebVTT files is not currently supported.") );
+      BasicUI::ShowMessageBox( XO("Importing WebVTT files is not currently supported.") );
       return;
    }
 
@@ -738,7 +707,7 @@ void LabelTrack::Import(wxTextFile & in, LabelFormat format)
       catch(const LabelStruct::BadFormatException&) { error = true; }
    }
    if (error)
-      ::AudacityMessageBox( XO("One or more saved labels could not be read.") );
+      BasicUI::ShowMessageBox( XO("One or more saved labels could not be read.") );
    SortLabels();
 }
 

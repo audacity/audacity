@@ -17,7 +17,7 @@
 #include "WaveClip.h"
 #include "WaveTrack.h"
 #include "WaveTrackUtilities.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "CommandContext.h"
 #include "MenuRegistry.h"
 #include "../toolbars/ControlToolBar.h"

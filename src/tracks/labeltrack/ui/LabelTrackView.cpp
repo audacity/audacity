@@ -15,7 +15,7 @@ Paul Licameli split from TrackPanel.cpp
 #include "LabelGlyphHandle.h"
 #include "LabelTextHandle.h"
 
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 
 #include "AColor.h"
 #include "../../../widgets/BasicMenu.h"
@@ -247,7 +247,7 @@ wxFont LabelTrackView::GetFont(const wxString &faceName, int size)
       encoding = wxFONTENCODING_DEFAULT;
    else
       encoding = wxFONTENCODING_SYSTEM;
-   
+
    auto fontInfo = size == 0 ? wxFontInfo() : wxFontInfo(size);
    fontInfo
       .Encoding(encoding)
@@ -443,7 +443,7 @@ void LabelTrackView::ComputeLayout(const wxRect & r, const ZoomInfo &zoomInfo) c
    // Initially none of the rows have been used.
    // So set a value that is less than any valid value.
    {
-      // Bug 502: With dragging left of zeros, labels can be in 
+      // Bug 502: With dragging left of zeros, labels can be in
       // negative space.  So set least possible value as starting point.
       const int xStart = INT_MIN;
       for (auto &x : xUsed)
@@ -507,8 +507,8 @@ void LabelTrackView::DrawLines(
    auto &y = ls.y;
 
    // Bug 2388 - Point label and range label can appear identical
-   // If the start and end times are not actually the same, but they 
-   // would appear so when drawn as lines at current zoom, be sure to draw 
+   // If the start and end times are not actually the same, but they
+   // would appear so when drawn as lines at current zoom, be sure to draw
    // two lines - i.e. displace the second line slightly.
    if (ls.getT0() != ls.getT1()) {
       if (x == x1)
@@ -671,7 +671,7 @@ void LabelTrackView::DrawHighlight( wxDC & dc, const LabelStruct &ls,
    int xPos1, int xPos2, int charHeight)
 {
    const int yFrameHeight = mTextHeight + TextFramePadding * 2;
-   
+
    dc.SetPen(*wxTRANSPARENT_PEN);
    wxBrush curBrush = dc.GetBrush();
    curBrush.SetColour(wxString(wxT("BLUE")));
@@ -847,8 +847,8 @@ const
 #ifdef EXPERIMENTAL_TRACK_PANEL_HIGHLIGHTING
          highlight = highlightTrack && target->GetLabelNum() == i;
 #endif
-         
-         dc.SetBrush(mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i) 
+
+         dc.SetBrush(mNavigationIndex == i || (pHit && pHit->mMouseOverLabel == i)
             ? AColor::labelTextEditBrush : AColor::labelTextNormalBrush);
          DrawBar(dc, labelStruct, r);
 
@@ -1234,7 +1234,7 @@ void LabelTrackView::OverGlyph(
          hit.mMouseOverLabelRight = -1;
          break;
       }
-   
+
       //over left or right selection bound
       //Check right bound first, since it is drawn after left bound,
       //so give it precedence for matching/highlighting.
@@ -1636,7 +1636,7 @@ bool LabelTrackView::DoKeyDown(
             if (mods != wxMOD_SHIFT)
                mInitialCursorPos = mCurrentCursorPos;
          }
-         
+
          break;
 
       case WXK_RIGHT:
@@ -1813,7 +1813,7 @@ bool LabelTrackView::DoChar(
       event.Skip();
       return false;
    }
-   
+
    // If we've reached this point and aren't currently editing, add NEW label
    const auto pTrack = FindLabelTrack();
    if (!IsValidIndex(mTextEditIndex, project)) {
@@ -1879,7 +1879,7 @@ bool LabelTrackView::DoChar(
 
    //moving cursor position forward
    mInitialCursorPos = ++mCurrentCursorPos;
-   
+
    return true;
 }
 
@@ -2109,7 +2109,7 @@ void LabelTrackView::OnLabelDeleted(const LabelTrackEvent &e)
    // THEN set no label selected.
    if (mTextEditIndex == index)
       ResetTextSelection();
-   
+
    // IF we removed a label before the selected label
    // THEN the NEW selected label number is one less.
    else if( index < mTextEditIndex)

@@ -13,7 +13,7 @@ Paul Licameli split from TrackPanel.cpp
 
 #include "LabelTrackView.h"
 #include "../../../HitTestResult.h"
-#include "../../../LabelTrack.h"
+#include "LabelTrack.h"
 #include "ProjectHistory.h"
 #include "../../../RefreshCode.h"
 #include "../../../TrackPanelMouseEvent.h"
@@ -57,7 +57,7 @@ void LabelTrackHit::OnLabelPermuted( const LabelTrackEvent &e )
       else if ( former > index && index >= present )
          ++ index;
    };
-   
+
    update( mMouseOverLabelLeft );
    update( mMouseOverLabelRight );
    update( mMouseOverLabel );
@@ -139,7 +139,7 @@ void LabelGlyphHandle::HandleGlyphClick
          view.ResetTextSelection();
 
          double t = 0.0;
-         
+
          // When we start dragging the label(s) we don't want them to jump.
          // so we calculate the displacement of the mouse from the drag center
          // and use that in subsequent dragging calculations.  The mouse stays
@@ -161,14 +161,14 @@ void LabelGlyphHandle::HandleGlyphClick
             t = (mLabels[ hit.mMouseOverLabelRight ].getT1() +
                  mLabels[ hit.mMouseOverLabelLeft ].getT0()) / 2.0f;
 
-            // If we're moving two edges of same label then it's a move 
+            // If we're moving two edges of same label then it's a move
             // (label is shrunk to zero and size of zero is preserved)
-            // If we're on a boundary between two different labels, 
+            // If we're on a boundary between two different labels,
             // then it's an adjust.
             // In both cases the two points coalesce.
-            // 
+            //
             // NOTE: seems that it's not necessary that hitting the both
-            // left and right handles mean that we're dealing with a point, 
+            // left and right handles mean that we're dealing with a point,
             // but the range will be turned into a point on click
             bool isPointLabel = hit.mMouseOverLabelLeft == hit.mMouseOverLabelRight;
             // Except!  We don't coalesce if both ends are from the same label and
@@ -341,7 +341,7 @@ bool LabelGlyphHandle::HandleGlyphDragRelease
 
               // PRL: bug1659 -- make selection change undo correctly
               updated = !ProjectAudioIO::Get(project).IsAudioActive();
-              
+
               auto& view = LabelTrackView::Get(*pTrack);
               view.SetNavigationIndex(hit.mMouseOverLabel);
           }

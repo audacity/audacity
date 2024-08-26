@@ -74,6 +74,7 @@ set( LIBRARIES
    lib-dynamic-range-processor
    lib-audacity-application-logic
    lib-builtin-effects
+   lib-label-track
 )
 
 if ( ${_OPT}use_lv2 )

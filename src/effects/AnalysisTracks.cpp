@@ -18,7 +18,7 @@
 *//*******************************************************************/
 #include "AnalysisTracks.h"
 #include "Effect.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 
 AddedAnalysisTrack::AddedAnalysisTrack(Effect *pEffect, const wxString &name)
    : mpEffect(pEffect)

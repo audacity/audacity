@@ -1,5 +1,5 @@
 #include "../CommonCommandFlags.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "MixAndRender.h"
 
 #include "Prefs.h"

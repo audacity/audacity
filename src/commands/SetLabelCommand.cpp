@@ -25,7 +25,7 @@
 #include "LoadCommands.h"
 #include "ViewInfo.h"
 #include "WaveTrack.h"
-#include "../LabelTrack.h"
+#include "LabelTrack.h"
 #include "ProjectHistory.h"
 #include "SettingsVisitor.h"
 #include "ShuttleGui.h"

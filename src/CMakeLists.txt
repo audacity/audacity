@@ -107,6 +107,7 @@ set( SOURCES
       DropTarget.cpp
       EffectAndCommandPluginManager.cpp
       EffectAndCommandPluginManager.h
+      ExportLabelTrack.cpp
       DropoutDetector.cpp
       EnvelopeEditor.cpp
       EnvelopeEditor.h
@@ -129,9 +130,6 @@ set( SOURCES
       KeyboardCapture.h
       LabelDialog.cpp
       LabelDialog.h
-      LabelTrack.cpp
-      LabelTrack.h
-      LabelTrackEditing.cpp
       LangChoice.cpp
       LangChoice.h
       Legacy.cpp
