@@ -5,7 +5,6 @@
 
 #include "../abstracteffectmodel.h"
 
-class Effect;
 namespace au::effects {
 class GeneralViewModel : public AbstractEffectModel
 {

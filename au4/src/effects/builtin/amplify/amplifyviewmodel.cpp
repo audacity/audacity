@@ -11,12 +11,10 @@ using namespace au::effects;
 
 void AmplifyViewModel::init()
 {
-    IF_ASSERT_FAILED(!instanceId().isEmpty()) {
+    m_effect = dynamic_cast<AmplifyEffect*>(this->effect());
+    IF_ASSERT_FAILED(m_effect) {
         return;
     }
-
-    //! NOTE Temporary solution
-    m_effect = reinterpret_cast<AmplifyEffect*>(instanceId().toLongLong());
 }
 
 double AmplifyViewModel::ratio() const

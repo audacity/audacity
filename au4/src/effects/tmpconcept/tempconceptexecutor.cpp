@@ -33,11 +33,18 @@ void TempConceptExecutor::execute(const std::string& effectId_)
         }
 
         muse::String type = au3::wxToSting(effect.GetSymbol().Internal());
-        //! NOTE This implementation is temporary
-        //! Probably we need to register instances with their IDs somewhere
-        //! and get an instance from this register in a view model.
-        muse::String instanceId = muse::String::number(reinterpret_cast<size_t>(&effect));
+        //! NOTE The goal is that we need to pass the instance ID to the view model
+        //! and get a pointer to the effect instance there.
+        //! For built-in effects, we can register and unregister the instance
+        //! in the constructor and destructor.
+        //! But now I'm not sure we can do this for all effects.
+        //! Therefore, we register here and immediately unregister here.
+        //! This is a hack...
+        //! But it looks like later everything will be different, at some point we will remove it
+
+        EffectInstanceId instanceId = effectInstancesRegister()->regInstance(&effect);
         muse::Ret ret = effectsProvider()->showEffect(type, instanceId);
+        effectInstancesRegister()->unregInstance(&effect);
         if (!ret) {
             LOGE() << "failed show effect: " << type << ", ret: " << ret.toString();
             return false;
