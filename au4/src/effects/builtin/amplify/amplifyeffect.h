@@ -7,12 +7,11 @@
 
 #include "../../effectstypes.h"
 
-#include "../../tmpconcept/ieffectdialog.h"
 #include "modularity/ioc.h"
 #include "global/iinteractive.h"
 
 namespace au::effects {
-class AmplifyEffect : public ::AmplifyBase, public IEffectDialog
+class AmplifyEffect : public ::AmplifyBase
 {
     muse::Inject<muse::IInteractive> interactive;
 
@@ -22,9 +21,6 @@ public:
     ComponentInterfaceSymbol GetSymbol() const override;
     TranslatableString GetDescription() const override;
     ManualPageID ManualPage() const override;
-
-    // IEffectDialog
-    bool show() override;
 
     // params
     double ratio() const;

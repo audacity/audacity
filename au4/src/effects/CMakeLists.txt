@@ -56,7 +56,6 @@ set(MODULE_SRC
     # temp_concept
     ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/tempconceptexecutor.h
-    ${CMAKE_CURRENT_LIST_DIR}/tmpconcept/ieffectdialog.h
     )
 
 if (AU_MODULE_VST)

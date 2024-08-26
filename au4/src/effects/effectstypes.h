@@ -33,4 +33,6 @@ using EffectCategoryList = std::vector<EffectCategory>;
 
 constexpr const char16_t* VST_CATEGORY_ID = u"vst";
 constexpr const char16_t* BUILTIN_CATEGORY_ID = u"builtin";
+
+using EffectInstanceId = muse::String;
 }

@@ -9,7 +9,10 @@
 
 #include "log.h"
 
+using namespace muse;
 using namespace au::effects;
+
+static const char16_t* VIEWER_URI = u"audacity://effects/viewer?type=%1&instanceId=%2";
 
 static muse::String categoryId(muse::audio::AudioResourceType type)
 {
@@ -87,4 +90,15 @@ EffectMeta EffectsProvider::meta(const muse::String& effectId) const
 
     LOGE() << "not found meta: " << effectId;
     return EffectMeta();
+}
+
+muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInstanceId& instanceId)
+{
+    LOGD() << "try open effect: " << type << ", instanceId: " << instanceId;
+
+    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type, instanceId).toStdString());
+
+    LOGD() << "open ret: " << rv.ret.toString();
+
+    return rv.ret;
 }
