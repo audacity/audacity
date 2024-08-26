@@ -5,6 +5,8 @@
 
 #include <QtQml>
 
+#include "global/translation.h"
+
 #include "libraries/lib-module-manager/PluginManager.h"
 
 #include "libraries/lib-effects/LoadEffects.h"
@@ -22,6 +24,24 @@
 #include "log.h"
 
 using namespace au::effects;
+
+static EffectMeta effectMeta(const ComponentInterfaceSymbol& symbol)
+{
+    EffectMeta meta;
+    meta.categoryId = BUILTIN_CATEGORY_ID;
+    if (symbol == AmplifyEffect::Symbol) {
+        meta.title = muse::mtrc("effects", "Amplify");
+        meta.description = muse::mtrc("effects", "Increases or decreases the volume of the audio you have selected");
+    } else if (symbol == ChirpEffect::Symbol) {
+        meta.title = muse::mtrc("effects", "Chirp");
+        meta.description = muse::mtrc("effects", "Generates an ascending or descending tone of one of four types");
+    } else if (symbol == ToneEffect::Symbol) {
+        meta.title = muse::mtrc("effects", "Tone");
+        meta.description = muse::mtrc("effects", "Generates a constant frequency tone of one of four types");
+    }
+
+    return meta;
+}
 
 void BuiltinEffects::init()
 {
@@ -54,29 +74,9 @@ EffectMetaList BuiltinEffects::effectMetaList() const
         LOGDA() << " ID: " << au3::wxToStdSting(desc.GetID())
                 << ", Symbol: " << au3::wxToStdSting(desc.GetSymbol().Internal());
 
-        //! NOTE Effects become plugins, with their interface...
-        //! The plugin interface for forming the meta effect is not enough for us,
-        //! for example, we need a URL to the Qml representation
-        //! And we can't just add virtual methods to the effect to return the meta.
-        //!
-        //! And we can't just make a meta list from the built-in plugins we know about,
-        //! so the plugin ID is used as the effect ID.
-        //!
-        //! So here is such a design, perhaps we can do it better somehow
-
-        if (desc.GetSymbol() == AmplifyEffect::Symbol) {
-            EffectMeta meta = AmplifyEffect::meta();
-            meta.id = au3::wxToSting(desc.GetID());
-            list.push_back(std::move(meta));
-        } else if (desc.GetSymbol() == ChirpEffect::Symbol) {
-            EffectMeta meta = ChirpEffect::meta();
-            meta.id = au3::wxToSting(desc.GetID());
-            list.push_back(std::move(meta));
-        } else if (desc.GetSymbol() == ToneEffect::Symbol) {
-            EffectMeta meta = ToneEffect::meta();
-            meta.id = au3::wxToSting(desc.GetID());
-            list.push_back(std::move(meta));
-        }
+        EffectMeta meta = effectMeta(desc.GetSymbol());
+        meta.id = au3::wxToSting(desc.GetID());
+        list.push_back(std::move(meta));
     }
 
     return list;

@@ -42,6 +42,7 @@ void EffectBuilder::load(const QString& type, const QString& instanceId, QObject
         LOGE() << "Not found view for type: " << type;
         return;
     }
+    LOGD() << "found view for type: " << type << ", url: " << url;
 
     QQmlEngine* qmlEngine = engine()->qmlEngine();
 

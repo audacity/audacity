@@ -96,7 +96,7 @@ muse::Ret EffectsProvider::showEffect(const muse::String& type, const EffectInst
 {
     LOGD() << "try open effect: " << type << ", instanceId: " << instanceId;
 
-    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(instanceId).toStdString());
+    RetVal<Val> rv = interactive()->open(String(VIEWER_URI).arg(type).arg(size_t(instanceId)).toStdString());
 
     LOGD() << "open ret: " << rv.ret.toString();
 

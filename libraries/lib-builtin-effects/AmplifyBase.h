@@ -17,6 +17,7 @@ public:
 
    // EffectDefinitionInterface implementation
 
+   ComponentInterfaceSymbol GetSymbol() const override;
    EffectType GetType() const override;
    OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
    OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
