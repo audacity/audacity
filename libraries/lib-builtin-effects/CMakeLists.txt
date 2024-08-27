@@ -9,6 +9,8 @@ set( SOURCES
    BassTrebleBase.h
    CompressorInstance.cpp
    CompressorInstance.h
+   EchoBase.cpp
+   EchoBase.h
    Fade.cpp
    Fade.h
    Invert.cpp
