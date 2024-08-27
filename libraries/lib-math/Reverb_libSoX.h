@@ -12,6 +12,7 @@
 
 **********************************************************************/
 
+#include <cassert>
 #include <cstring>
 #include <cstdlib>
 #ifdef __WXMSW__
@@ -20,6 +21,7 @@
    #include <cmath>
 #endif
 #include <algorithm>
+#include <wx/types.h>
 using std::min;
 using std::max;
 
@@ -295,12 +297,12 @@ static void filter_t_resize_preserving(filter_t* p, size_t newSize)
    //                  ptr goes from right to left and when falling off the left side, it wraps back to the right;
    //    <--ptr--      it reads the most distant sample in the past, and after reading it will write a new sample.
    //        |         Imagine someone just recorded "A B C D E", and now we are going to read "A", but a resize request comes.
-   //        v         
+   //        v
    //  | C B A E D |
    //
-   
+
    // Depending on the new requested size and where ptr is, we can have these cases:
-   // 
+   //
    //        v
    //  | C B A 0 E D |  bigger size: right-shift what is right of ptr,
    //                   and fill the resulting gap with zeros.
@@ -309,10 +311,10 @@ static void filter_t_resize_preserving(filter_t* p, size_t newSize)
    //        v
    //  | C B A D |      smaller size, and ptr is within it (but not at the edge): left-shift what is to the right of ptr,
    //                   discarding samples.
-   // 
+   //
    //        V
    //  | C B A |        smaller size, and ptr would be at the new right edge; do nothing.
-   // 
+   //
    //      v
    //  | B A |          smaller size, and ptr would be beyond the new right edge: left-shift what is ahead of ptr,
    //                   AND move ptr to size-1
@@ -332,7 +334,7 @@ static void filter_t_resize_preserving(filter_t* p, size_t newSize)
       {
          // right-shift what is right of ptr
          memcpy(p->ptr + 1 + sizeDiff, p->ptr + 1, numSamplesBehindPtr * sizeof(float));
-      }      
+      }
 
       // fill the created gap with zeros
       memset(p->ptr + 1, 0, sizeDiff * sizeof(float));
@@ -340,12 +342,12 @@ static void filter_t_resize_preserving(filter_t* p, size_t newSize)
    else if (sizeDiff < 0)
    {
       // case: smaller size
-            
+
       if (ptrPos < newSize-1)
       {
          size_t lenOfBlockToShift = newSize - 1 - ptrPos;
          float* ptrToBlockToShift = p->buffer + p->size - lenOfBlockToShift;
-         memcpy(p->ptr + 1, ptrToBlockToShift, lenOfBlockToShift * sizeof(float));         
+         memcpy(p->ptr + 1, ptrToBlockToShift, lenOfBlockToShift * sizeof(float));
       }
       else if (ptrPos == newSize - 1)
       {
@@ -536,7 +538,7 @@ static void reverb_clear(reverb_t* p)
          allpass.store = 0.0f;
       }
    } // loop on channels
-      
+
    fifo_clear( &(p->input_fifo) );
 }
 
