@@ -148,8 +148,6 @@ set( SOURCES
       MovableControl.cpp
       MovableControl.h
       NoteTrackEditing.cpp
-      PitchName.cpp
-      PitchName.h
       PluginDataModel.cpp
       PluginDataModel.h
       PluginDataViewCtrl.cpp

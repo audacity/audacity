@@ -16,6 +16,8 @@ set( SOURCES
    LinearFit.h
    Matrix.cpp
    Matrix.h
+   PitchName.cpp
+   PitchName.h
    Resample.cpp
    Resample.h
    Reverb_libSoX.h
