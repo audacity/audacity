@@ -11,6 +11,8 @@ set( SOURCES
    ChangePitchBase.h
    ChangeTempoBase.cpp
    ChangeTempoBase.h
+   ChangeSpeedBase.cpp
+   ChangeSpeedBase.h
    CompressorInstance.cpp
    CompressorInstance.h
    EchoBase.cpp
