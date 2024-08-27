@@ -223,7 +223,7 @@ bool EffectChangePitch::Process(EffectInstance &, EffectSettings &settings)
       // eliminate the next line:
       mSemitones = m_dSemitonesChange;
 #endif
-      return EffectSoundTouch::ProcessWithTimeWarper(initer, warper, true);
+      return SoundTouchBase::ProcessWithTimeWarper(initer, warper, true);
    }
 }
 

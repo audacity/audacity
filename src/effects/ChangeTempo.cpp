@@ -10,7 +10,7 @@
 *******************************************************************//**
 
 \class EffectChangeTempo
-\brief An EffectSoundTouch provides speeding up or
+\brief A SoundTouchBase provides speeding up or
   slowing down tempo without changing pitch.
 
 *//*******************************************************************/
@@ -182,7 +182,7 @@ bool EffectChangeTempo::Process(EffectInstance &, EffectSettings &settings)
       double mT1Dashed = mT0 + (mT1 - mT0)/(m_PercentChange/100.0 + 1.0);
       RegionTimeWarper warper{ mT0, mT1,
          std::make_unique<LinearTimeWarper>(mT0, mT0, mT1, mT1Dashed )  };
-      success = EffectSoundTouch::ProcessWithTimeWarper(initer, warper, false);
+      success = SoundTouchBase::ProcessWithTimeWarper(initer, warper, false);
    }
 
    if(success)

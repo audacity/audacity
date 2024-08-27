@@ -33,19 +33,17 @@ class NoteTrack;
 class WaveChannel;
 class WaveTrack;
 
-class EffectSoundTouch /* not final */ :
-    public StatefulEffect,
-    public StatefulEffectUIServices
+class SoundTouchBase /* not final */ : public StatefulEffect
 {
 public:
 
-   // EffectSoundTouch implementation
+   // SoundTouchBase implementation
 
 #ifdef USE_MIDI
    double mSemitones; // pitch change for NoteTracks
-   EffectSoundTouch();
+   SoundTouchBase();
 #endif
-   ~EffectSoundTouch() override;
+   ~SoundTouchBase() override;
 
 protected:
    // Effect implementation

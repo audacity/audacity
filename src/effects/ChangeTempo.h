@@ -30,7 +30,9 @@ class wxCheckBox;
 class wxTextCtrl;
 class ShuttleGui;
 
-class EffectChangeTempo final : public EffectSoundTouch
+class EffectChangeTempo final :
+    public SoundTouchBase,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectChangeTempo *

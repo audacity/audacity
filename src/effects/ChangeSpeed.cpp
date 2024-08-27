@@ -209,7 +209,7 @@ auto EffectChangeSpeed::FindGaps(
 
 bool EffectChangeSpeed::Process(EffectInstance &, EffectSettings &)
 {
-   // Similar to EffectSoundTouch::Process()
+   // Similar to SoundTouchBase::Process()
 
    // Iterate over each track.
    // All needed because this effect needs to introduce

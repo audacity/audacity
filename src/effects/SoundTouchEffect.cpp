@@ -42,17 +42,17 @@ effect that uses SoundTouch to do its processing (ChangeTempo
 #include "SoundTouch.h"
 
 #ifdef USE_MIDI
-EffectSoundTouch::EffectSoundTouch()
+SoundTouchBase::SoundTouchBase()
 {
    mSemitones = 0;
 }
 #endif
 
-EffectSoundTouch::~EffectSoundTouch()
+SoundTouchBase::~SoundTouchBase()
 {
 }
 
-bool EffectSoundTouch::ProcessLabelTrack(
+bool SoundTouchBase::ProcessLabelTrack(
    LabelTrack *lt, const TimeWarper &warper)
 {
 //   SetTimeWarper(std::make_unique<RegionTimeWarper>(mT0, mT1,
@@ -63,14 +63,14 @@ bool EffectSoundTouch::ProcessLabelTrack(
 }
 
 #ifdef USE_MIDI
-bool EffectSoundTouch::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
+bool SoundTouchBase::ProcessNoteTrack(NoteTrack *nt, const TimeWarper &warper)
 {
    nt->WarpAndTransposeNotes(mT0, mT1, warper, mSemitones);
    return true;
 }
 #endif
 
-bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
+bool SoundTouchBase::ProcessWithTimeWarper(InitFunction initer,
                                              const TimeWarper &warper,
                                              bool preserveLength)
 {
@@ -166,7 +166,7 @@ bool EffectSoundTouch::ProcessWithTimeWarper(InitFunction initer,
 
 //ProcessOne() takes a track, transforms it to bunch of buffer-blocks,
 //and executes ProcessSoundTouch on these blocks
-bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
+bool SoundTouchBase::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    WaveChannel &orig, WaveTrack &out,
    sampleCount start, sampleCount end,
    const TimeWarper &warper)
@@ -241,7 +241,7 @@ bool EffectSoundTouch::ProcessOne(soundtouch::SoundTouch *pSoundTouch,
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
+bool SoundTouchBase::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
    WaveTrack &orig, WaveTrack &outputTrack,
    sampleCount start, sampleCount end, const TimeWarper &warper)
 {
@@ -344,7 +344,7 @@ bool EffectSoundTouch::ProcessStereo(soundtouch::SoundTouch *pSoundTouch,
    return true;
 }
 
-bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
+bool SoundTouchBase::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
    const size_t outputCount,
    WaveChannel &outputLeftTrack,
    WaveChannel &outputRightTrack)
@@ -368,7 +368,7 @@ bool EffectSoundTouch::ProcessStereoResults(soundtouch::SoundTouch *pSoundTouch,
    return true;
 }
 
-void EffectSoundTouch::Finalize(
+void SoundTouchBase::Finalize(
    WaveTrack &orig, WaveTrack &out, const TimeWarper &warper)
 {
    assert(out.NChannels() == orig.NChannels());

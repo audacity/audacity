@@ -36,7 +36,9 @@ class wxTextCtrl;
 class wxSpinCtrl;
 class ShuttleGui;
 
-class EffectChangePitch final : public EffectSoundTouch
+class EffectChangePitch final :
+    public SoundTouchBase,
+    public StatefulEffectUIServices
 {
 public:
    static inline EffectChangePitch *
